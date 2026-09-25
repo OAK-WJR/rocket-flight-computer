@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "scope": "bench register snapshot + optional external DC measurements",
+  "board_sha256": "cd647b9400a4e2bfca729b0c96e97cb2fb97ec3455387bfe58a5aeb008527f72",
+  "assembly_id": "SYNTHETIC-NOT-A-BOARD",
+  "origin": "SYNTHETIC_FIXTURE",
+  "captured_at": "2026-09-25T23:09:53.700893+00:00",
+  "capture_state": "IDENTITY_UNCONFIRMED",
+  "capture_error": null,
+  "overall": "ISSUES_FOUND",
+  "first_failed_check": "DBG_IDENTITY",
+  "hardware_qualified": false,
+  "fabrication_release": false,
+  "synthetic": true,
+  "checks": [
+    {
+      "id": "CAPTURE_COMPLETENESS",
+      "status": "INCONCLUSIVE",
+      "finding": "Capture state=IDENTITY_UNCONFIRMED; only retained readings are interpreted.",
+      "next_step": "Errors / timeouts / missing data are never evidence of a pass.",
+      "evidence": null
+    },
+    {
+      "id": "DBG_IDENTITY",
+      "status": "FAIL",
+      "finding": "CPUID=0x411fc271, DEV_ID=0x483, REV_ID=0x1000.",
+      "next_step": "These fields only confirm the core and compatible family, not the exact part number, package or authenticity.",
+      "evidence": {
+        "variant": 1,
+        "revision": 1
+      }
+    },
+    {
+      "id": "DEVICE_TESTS",
+      "status": "NOT_TESTED",
+      "finding": "Device identity not confirmed; part-specific registers are not interpreted.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "POWER_MEASUREMENTS",
+      "status": "NOT_TESTED",
+      "finding": "No external instrument voltage evidence.",
+      "next_step": "Fill in an independent bench measurement sheet; never use the ADC reference to prove its own supply is correct.",
+      "evidence": null
+    },
+    {
+      "id": "SPI_SENSOR",
+      "status": "NOT_TESTED",
+      "finding": "IMU identity, sample liveness, noise and interrupt not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "I2C_SENSOR",
+      "status": "NOT_TESTED",
+      "finding": "Barometer PROM CRC, conversion and noise not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "QSPI_DATA",
+      "status": "NOT_TESTED",
+      "finding": "External flash quad write/read verification not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "USB_DATA",
+      "status": "NOT_TESTED",
+      "finding": "USB enumeration and data transfer not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "WATCHDOG",
+      "status": "NOT_TESTED",
+      "finding": "Real watchdog timeout reset not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "TRANSIENTS",
+      "status": "NOT_TESTED",
+      "finding": "Power start-up, ripple and load steps not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "GNSS",
+      "status": "NOT_POPULATED",
+      "finding": "U6 is not fitted in this assembly configuration; the physical configuration still needs recording.",
+      "next_step": "",
+      "evidence": null
+    }
+  ]
+}

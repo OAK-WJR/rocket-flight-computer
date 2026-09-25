@@ -1,0 +1,1724 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_core_schematic")
+	(uuid c0ef9bec-0349-5cca-9467-c554a35cf9d9)
+	(paper "A3")
+	(title_block
+		(title "09 | Camera UART, separate supply domains")
+		(date "2026-09-07")
+		(rev "M3-ASSY-R1")
+		(company "Single-board M3 candidate; full system incomplete"))
+	(lib_symbols
+		(symbol "M3:C"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762)
+						(xy 2.032 0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -2.032 -0.762)
+						(xy 2.032 -0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:CameraUART"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "CameraUART_0_1"
+				(rectangle
+					(start -22.86 6.35)
+					(end 22.86 -6.35)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "CameraUART_1_1"
+				(pin input line
+					(at -27.939999999999998 3.8099999999999996 0)
+					(length 5.08)
+					(name "A1 TX INPUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin tri_state line
+					(at -27.939999999999998 1.2699999999999996 0)
+					(length 5.08)
+					(name "A2Y RX OUTPUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -27.939999999999998 -1.2700000000000005 0)
+					(length 5.08)
+					(name "OE"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -27.939999999999998 -3.8100000000000005 0)
+					(length 5.08)
+					(name "VCCA MCU"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 27.939999999999998 3.8099999999999996 180)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin tri_state line
+					(at 27.939999999999998 1.2699999999999996 180)
+					(length 5.08)
+					(name "B1Y TO CAMERA"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "8"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at 27.939999999999998 -1.2700000000000005 180)
+					(length 5.08)
+					(name "B2 FROM CAMERA"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 27.939999999999998 -3.8100000000000005 180)
+					(length 5.08)
+					(name "VCCB CAMERA"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "7"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_TXU0202_DCU"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:CameraUARTSupply"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "CameraUARTSupply_0_1"
+				(rectangle
+					(start -22.86 5.08)
+					(end 22.86 -5.08)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "CameraUARTSupply_1_1"
+				(pin power_in line
+					(at -27.939999999999998 2.54 0)
+					(length 5.08)
+					(name "IN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -27.939999999999998 0.0 0)
+					(length 5.08)
+					(name "EN LEAVE OPEN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -27.939999999999998 -2.54 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_out line
+					(at 27.939999999999998 2.54 180)
+					(length 5.08)
+					(name "OUT3.3V"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin no_connect line
+					(at 27.939999999999998 0.0 180)
+					(length 5.08)
+					(name "NC"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_TPS709_DBV"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:TestPoint"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.762)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TestPad_1.5"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes)))))
+	(text "09 | Camera UART, separate supply domains"
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 2.54 2.54))
+			(justify left))
+		(uuid 68996258-fa3b-55a7-8c8f-7baf8977e25c))
+	(symbol
+		(lib_id "M3:CameraUART")
+		(at 259.08 78.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid ffa6852b-02ca-574f-98e6-174b22abfc16)
+		(property "Reference" "U12"
+			(at 259.08 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "TXU0202DCUR"
+			(at 259.08 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TXU0202_DCU"
+			(at 259.08 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 259.08 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 259.08 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "U12")
+					(unit 1))))
+		(property "Manufacturer" "Texas Instruments"
+			(at 259.08 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "TXU0202DCUR"
+			(at 259.08 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" ""
+			(at 259.08 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 231.14 74.93)
+			(xy 226.05999999999997 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d8150ec0-a695-5c61-bc2a-2cec2eab9fd0))
+	(global_label "CAM_MCU_TX"
+		(shape passive)
+		(at 226.05999999999997 74.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5dc780b7-3f70-5189-8409-b8cc8919d3f1))
+	(wire
+		(pts
+			(xy 231.14 77.47)
+			(xy 226.05999999999997 77.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f6dcdec9-c153-5453-823d-d6aeef932a38))
+	(global_label "CAM_MCU_RX"
+		(shape passive)
+		(at 226.05999999999997 77.47 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c694b8e0-5e73-5ec2-86d9-24c014b7a59e))
+	(wire
+		(pts
+			(xy 231.14 80.01)
+			(xy 226.05999999999997 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 731fd6bc-9a0e-5f89-815b-3ab94a5d56b1))
+	(global_label "CAM_UART_OE"
+		(shape passive)
+		(at 226.05999999999997 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4d19837b-fab1-5f4c-859d-b7a4aeb73efa))
+	(wire
+		(pts
+			(xy 231.14 82.55)
+			(xy 226.05999999999997 82.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1c7e6fd6-fde0-5ffd-b692-6a730f02a0cb))
+	(global_label "3V3"
+		(shape passive)
+		(at 226.05999999999997 82.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 486e01d5-b6c5-516d-8fcb-eccd3b5e3d4a))
+	(wire
+		(pts
+			(xy 287.02 74.93)
+			(xy 292.09999999999997 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0b87cc4c-610a-5a45-a6e7-645821d9a5d2))
+	(global_label "GND"
+		(shape passive)
+		(at 292.09999999999997 74.93 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid dff8b395-b76e-5cd5-a345-33f5a7578bf2))
+	(wire
+		(pts
+			(xy 287.02 77.47)
+			(xy 292.09999999999997 77.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f464dcb8-2903-5c7c-869e-b601667b9a03))
+	(global_label "CAM_TX_BUFFER"
+		(shape passive)
+		(at 292.09999999999997 77.47 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 03a284c9-5f0d-5116-b5a1-59803ae8e4de))
+	(wire
+		(pts
+			(xy 287.02 80.01)
+			(xy 292.09999999999997 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 487846d1-79d2-5420-a559-0441029287dc))
+	(global_label "CAM_RX_BUFFER"
+		(shape passive)
+		(at 292.09999999999997 80.01 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 467605ab-d387-5cd9-b77a-4abb867c0d3b))
+	(wire
+		(pts
+			(xy 287.02 82.55)
+			(xy 292.09999999999997 82.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ad7c6cd4-875f-51c1-ae3d-1773195111b7))
+	(global_label "CAM_IO_3V3"
+		(shape passive)
+		(at 292.09999999999997 82.55 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 5beef15e-6f01-58f1-bc7e-efe3f9d83e11))
+	(symbol
+		(lib_id "M3:CameraUARTSupply")
+		(at 78.74 78.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 0f727f03-8852-5d82-97ab-08866af84040)
+		(property "Reference" "U13"
+			(at 78.74 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "TPS70933DBVR"
+			(at 78.74 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TPS709_DBV"
+			(at 78.74 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 78.74 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C89347"
+			(at 78.74 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "U13")
+					(unit 1))))
+		(property "Manufacturer" "Texas Instruments"
+			(at 78.74 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "TPS70933DBVR"
+			(at 78.74 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C89347"
+			(at 78.74 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 50.8 76.2)
+			(xy 45.72 76.2))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5aa58a81-82d9-589f-b8b7-feeb03337618))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 45.72 76.2 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3f720f56-1b6d-505f-81d6-ceeeafdf8428))
+	(no_connect
+		(at 50.8 78.74)
+		(uuid 9f9d2e02-a35f-5c73-b826-5c8b9419fd64))
+	(wire
+		(pts
+			(xy 50.8 81.28)
+			(xy 45.72 81.28))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4406ed87-8e04-505f-aa72-759594145e21))
+	(global_label "GND"
+		(shape passive)
+		(at 45.72 81.28 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6f422372-a144-5285-b8f4-3f1ecdbe60bb))
+	(wire
+		(pts
+			(xy 106.68 76.2)
+			(xy 111.76 76.2))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d32bbf41-e64c-5c1d-9634-e496cb53cda8))
+	(global_label "CAM_IO_3V3"
+		(shape passive)
+		(at 111.76 76.2 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid ba4e461b-6628-5f8b-b628-6af83a34176a))
+	(no_connect
+		(at 106.68 78.74)
+		(uuid 3375d03a-9ee8-5d40-b5fa-278c7ca83b2a))
+	(symbol
+		(lib_id "M3:R")
+		(at 91.44 193.04 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 2fec403d-410c-5f0d-be5e-753c86b67db2)
+		(property "Reference" "R100"
+			(at 93.98 191.76999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 1%"
+			(at 93.98 194.30999999999997 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 91.44 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 91.44 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C22548"
+			(at 91.44 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "R100")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 91.44 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RC0603FR-071KL"
+			(at 91.44 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C22548"
+			(at 91.44 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 91.44 189.23)
+			(xy 83.82 189.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d0bf0116-2628-516d-9b7d-0a0e6bc6a887))
+	(global_label "CAM_RX_WIRE"
+		(shape passive)
+		(at 83.82 189.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 82a12270-a5c5-54e2-8e73-efdbf65a5723))
+	(wire
+		(pts
+			(xy 91.44 196.85)
+			(xy 83.82 196.85))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 999715b6-3ef2-51cd-89f9-1149815c52da))
+	(global_label "CAM_RX_BUFFER"
+		(shape passive)
+		(at 83.82 196.85 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 13bfeca4-6650-548c-8cc7-6457fe65b0a4))
+	(symbol
+		(lib_id "M3:R")
+		(at 172.72 193.04 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid cf77c787-5ff4-5b89-8d4c-6c896a482aeb)
+		(property "Reference" "R101"
+			(at 175.26 191.76999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 1%"
+			(at 175.26 194.30999999999997 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 172.72 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 172.72 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C22548"
+			(at 172.72 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "R101")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 172.72 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RC0603FR-071KL"
+			(at 172.72 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C22548"
+			(at 172.72 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 172.72 189.23)
+			(xy 165.1 189.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b745e8b1-13d3-538c-9466-492ad03d3e43))
+	(global_label "CAM_TX_BUFFER"
+		(shape passive)
+		(at 165.1 189.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f58bbcab-143b-5d42-a2bb-402d1b6315c0))
+	(wire
+		(pts
+			(xy 172.72 196.85)
+			(xy 165.1 196.85))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 241fec7e-4d17-57bf-906c-7c54f35687bf))
+	(global_label "CAM_TX_WIRE"
+		(shape passive)
+		(at 165.1 196.85 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d6a991f4-5610-55a6-8cdc-74a2a0c48ce2))
+	(symbol
+		(lib_id "M3:R")
+		(at 330.2 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e259b1ed-b1bf-51d3-a33e-fb22a00370e8)
+		(property "Reference" "R102"
+			(at 332.74 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 0.1%"
+			(at 332.74 138.42999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 330.2 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 330.2 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C95204"
+			(at 330.2 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "R102")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 330.2 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD0710KL"
+			(at 330.2 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C95204"
+			(at 330.2 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 330.2 133.35)
+			(xy 322.58 133.35))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 09725e2c-7be6-5942-a63c-070a40bd942b))
+	(global_label "CAM_UART_OE"
+		(shape passive)
+		(at 322.58 133.35 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d483f128-bcee-5777-ada5-536b467af96d))
+	(wire
+		(pts
+			(xy 330.2 140.97)
+			(xy 322.58 140.97))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid feba291d-b34a-5b82-a40a-9ef0c0069dfe))
+	(global_label "GND"
+		(shape passive)
+		(at 322.58 140.97 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 50e69d3e-9077-5f15-b5d0-0f42c26e8316))
+	(symbol
+		(lib_id "M3:R")
+		(at 147.32 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid c6d01592-7b24-565e-8a85-106a5e564250)
+		(property "Reference" "R103"
+			(at 149.85999999999999 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 1%"
+			(at 149.85999999999999 138.42999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 147.32 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 147.32 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C22548"
+			(at 147.32 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "R103")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 147.32 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RC0603FR-071KL"
+			(at 147.32 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C22548"
+			(at 147.32 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 147.32 133.35)
+			(xy 139.7 133.35))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 20e24757-6af0-592a-a7b0-f60d967e2d58))
+	(global_label "CAM_IO_3V3"
+		(shape passive)
+		(at 139.7 133.35 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bc0b1127-b182-5fe4-9f33-af87530bff20))
+	(wire
+		(pts
+			(xy 147.32 140.97)
+			(xy 139.7 140.97))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 037c4d8f-9dbe-5321-90e9-f863b676820c))
+	(global_label "GND"
+		(shape passive)
+		(at 139.7 140.97 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c00b7c0d-87ce-546d-bb54-f7844cc95dd7))
+	(symbol
+		(lib_id "M3:C")
+		(at 213.36 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d17b4ca1-6896-5e86-a05b-9c05229ad8df)
+		(property "Reference" "C90"
+			(at 215.9 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 215.9 138.42999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 213.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 213.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C1591"
+			(at 213.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "C90")
+					(unit 1))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 213.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL10B104KB8NNNC"
+			(at 213.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C1591"
+			(at 213.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 213.36 133.35)
+			(xy 205.74 133.35))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 67d57a5b-b877-5857-ba8b-da4a48fdcd40))
+	(global_label "3V3"
+		(shape passive)
+		(at 205.74 133.35 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0915efe6-0a47-58bf-8033-76b64f49ef33))
+	(wire
+		(pts
+			(xy 213.36 140.97)
+			(xy 205.74 140.97))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a8f5201b-7555-5a86-b8ac-c0138cd24ba9))
+	(global_label "GND"
+		(shape passive)
+		(at 205.74 140.97 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4e45e576-a902-56af-9149-dfc2c7e12c75))
+	(symbol
+		(lib_id "M3:C")
+		(at 35.56 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 288a1e6e-1f53-5b2c-9f2c-8b02ab911723)
+		(property "Reference" "C91"
+			(at 38.1 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1uF 50V X7R 10%"
+			(at 38.1 138.42999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_1206_3216Metric"
+			(at 35.56 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 35.56 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C1848"
+			(at 35.56 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "C91")
+					(unit 1))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 35.56 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL31B105KBHNNNE"
+			(at 35.56 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C1848"
+			(at 35.56 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 35.56 133.35)
+			(xy 27.94 133.35))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ed325cc2-58c2-5f09-be38-4ec0163eaeb8))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 27.94 133.35 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e638ea41-751a-5081-a521-b95d40d2746d))
+	(wire
+		(pts
+			(xy 35.56 140.97)
+			(xy 27.94 140.97))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 06cb0489-a19a-5ca5-b01c-4da2e72987d8))
+	(global_label "GND"
+		(shape passive)
+		(at 27.94 140.97 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid be75fef3-1745-5744-a306-0f017d0e4b6e))
+	(symbol
+		(lib_id "M3:C")
+		(at 91.44 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 586c2371-cb10-55d1-a276-3792c18b785f)
+		(property "Reference" "C92"
+			(at 93.98 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 93.98 138.42999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 91.44 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 91.44 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 91.44 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "C92")
+					(unit 1))))
+		(property "Manufacturer" "Murata"
+			(at 91.44 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 91.44 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C21397"
+			(at 91.44 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 91.44 133.35)
+			(xy 83.82 133.35))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid cb3a592c-c129-5f22-bce2-fb74456b44b9))
+	(global_label "CAM_IO_3V3"
+		(shape passive)
+		(at 83.82 133.35 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e0bb1d7a-9bf2-5fb4-a8ba-dde727e6eda2))
+	(wire
+		(pts
+			(xy 91.44 140.97)
+			(xy 83.82 140.97))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b8e97e56-4edf-53fc-bb96-77c928a2e19b))
+	(global_label "GND"
+		(shape passive)
+		(at 83.82 140.97 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0d091e3b-130f-5e06-9a3b-e4e05ae953eb))
+	(symbol
+		(lib_id "M3:C")
+		(at 269.24 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 9254786f-22fa-5658-b5e7-c07b1f7454e3)
+		(property "Reference" "C93"
+			(at 271.78000000000003 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 271.78000000000003 138.42999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 269.24 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 269.24 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C1591"
+			(at 269.24 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "C93")
+					(unit 1))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 269.24 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL10B104KB8NNNC"
+			(at 269.24 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C1591"
+			(at 269.24 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 269.24 133.35)
+			(xy 261.62 133.35))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 408772b4-d752-5eb5-8b18-27f7bbfa5f8e))
+	(global_label "CAM_IO_3V3"
+		(shape passive)
+		(at 261.62 133.35 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f96ecc8f-7936-5182-837b-496fb1137922))
+	(wire
+		(pts
+			(xy 269.24 140.97)
+			(xy 261.62 140.97))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 879061ca-eaeb-5afe-a853-66025e59f8f7))
+	(global_label "GND"
+		(shape passive)
+		(at 261.62 140.97 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c3f3faf1-e983-500a-86e4-747ba8cf4167))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 264.16 193.04 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid a9ec69cd-69b2-5110-b9bf-6f2e7ba8322a)
+		(property "Reference" "TP90"
+			(at 264.16 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "CAM_IO_3V3"
+			(at 264.16 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 264.16 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 264.16 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 264.16 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "TP90")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 264.16 193.04)
+			(xy 256.54 193.04))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8b251026-5cad-53ad-9ffb-93432b2ffd7c))
+	(global_label "CAM_IO_3V3"
+		(shape passive)
+		(at 256.54 193.04 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bfcd833a-0f07-547d-904c-30ed5f6b6572))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 335.28 193.04 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 6d3bd86d-6784-5d12-9a85-d3d2923f0a7a)
+		(property "Reference" "TP91"
+			(at 335.28 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "CAM_UART_OE"
+			(at 335.28 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 335.28 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 335.28 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 335.28 193.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "TP91")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 335.28 193.04)
+			(xy 327.65999999999997 193.04))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid eff1721f-acbb-5222-92ae-2d83bd42f81a))
+	(global_label "CAM_UART_OE"
+		(shape passive)
+		(at 327.65999999999997 193.04 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5055f561-cefb-55e6-a83f-11b078a580e3))
+	(text "PB10/pin46 USART3_TX and PB11/pin47 USART3_RX use AF7. PC13/pin7 controls OE as GPIO."
+		(at 20.32 231.14 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid a963204a-4bd7-500f-b196-bac03401f8cd))
+	(text "U12 A-port=MCU3V3. B-port=U13 camera-derived3V3. Never substitute CAM5V for VCCB."
+		(at 20.32 237.48999999999998 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid fa416378-2418-5fb7-bcd6-1b30d9250d57))
+	(text "Reset: R102 holds OE LOW. Set TX idle HIGH before OE; disable OE before power-down."
+		(at 20.32 243.83999999999997 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 0c0538bb-6744-570a-a30d-55b4256021a5))
+	(text "U13 EN is internally biased: leave pin3 OPEN, not tied to IN. Pin4 is NC."
+		(at 20.32 250.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid d60eff85-2b73-5251-b7d2-e77de7e4ff58))
+	(text "UART is 3.3V, not RS232. TXU input operating range0..5.5V is not a cable battery-short rating."
+		(at 20.32 256.53999999999996 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 43105498-380f-5fde-b1ac-de66d5c0f781))
+	(text "Camera VIH/VIL/VOH/VOL and timing remain unmeasured. Verify at TP75/76/90 before qualification."
+		(at 20.32 262.89 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid a90e40a7-675a-5694-ad5d-5626518d190c))
+	(text "Existing v0.2 bench firmware keeps camera OFF and does not operate this UART. Full system incomplete."
+		(at 20.32 269.24 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 415e371b-131c-5d32-8310-b12dc26f0763))
+	(sheet_instances
+		(path "/"
+			(page "9"))))

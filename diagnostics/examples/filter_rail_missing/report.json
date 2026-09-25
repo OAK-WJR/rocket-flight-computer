@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "scope": "bench register snapshot + optional external DC measurements",
+  "board_sha256": "cd647b9400a4e2bfca729b0c96e97cb2fb97ec3455387bfe58a5aeb008527f72",
+  "assembly_id": "SYNTHETIC-NOT-A-BOARD",
+  "origin": "SYNTHETIC_FIXTURE",
+  "captured_at": "2026-09-25T23:09:53.689986+00:00",
+  "capture_state": "CAPTURED",
+  "capture_error": null,
+  "overall": "ISSUES_FOUND",
+  "first_failed_check": "DC_3V3A",
+  "hardware_qualified": false,
+  "fabrication_release": false,
+  "synthetic": true,
+  "checks": [
+    {
+      "id": "DBG_IDENTITY",
+      "status": "PASS",
+      "finding": "CPUID=0x411fc271, DEV_ID=0x450, REV_ID=0x2003.",
+      "next_step": "These fields only confirm the core and compatible family, not the exact part number, package or authenticity.",
+      "evidence": {
+        "variant": 1,
+        "revision": 1
+      }
+    },
+    {
+      "id": "FLASH_CAPACITY",
+      "status": "PASS",
+      "finding": "Flash size register=2048 KiB; the current VI part expects 2048 KiB.",
+      "next_step": "This reads the size identifier; it is not a write / erase / read-back test.",
+      "evidence": null
+    },
+    {
+      "id": "BOARD_UID",
+      "status": "PASS",
+      "finding": "UID=00000000-01234567-89abcdef",
+      "next_step": "Register the UID against the physical assembly ID; a single zero 32-bit word is not a device error.",
+      "evidence": null
+    },
+    {
+      "id": "RESET_HISTORY",
+      "status": "INFO",
+      "finding": "Reset flags: POR",
+      "next_step": "Flags may accumulate or have been cleared by firmware; they cannot uniquely identify the last reset cause. This program never clears them.",
+      "evidence": [
+        "POR"
+      ]
+    },
+    {
+      "id": "CLOCK_SNAPSHOT",
+      "status": "INFO",
+      "finding": "System clock source=HSI; selected source ready=True.",
+      "next_step": "Only configuration / ready state is checked; frequency accuracy, start-up margin and jitter still need measurement.",
+      "evidence": null
+    },
+    {
+      "id": "HSE_STATE",
+      "status": "NOT_TESTED",
+      "finding": "HSE enabled=False, ready=False.",
+      "next_step": "HSE not enabled does not mean the crystal is bad; enabled but not ready must be separated into still initialising, software configuration, or a Y1/C25/C26 problem.",
+      "evidence": null
+    },
+    {
+      "id": "CPU_FAULT_FLAGS",
+      "status": "INFO",
+      "finding": "CPU fault flags recorded; state not cleared.",
+      "next_step": "Flags set do not mean a fault is still present, and zero flags do not prove the firmware correct. Fault addresses are interpreted only when VALID is set.",
+      "evidence": {
+        "CFSR": "0x00000000",
+        "HFSR": "0x00000000"
+      }
+    },
+    {
+      "id": "VOLTAGE_SCALING",
+      "status": "INFO",
+      "finding": "VOS code=1, VOSRDY=True.",
+      "next_step": "Digital state is not a measured VCAP voltage; interpret with the silicon revision and operating mode.",
+      "evidence": null
+    },
+    {
+      "id": "DC_3V3",
+      "status": "PASS",
+      "finding": "3V3 measured interval=[3.2980,3.3020] V.",
+      "next_step": "3.3 V ±5% is only a DC screening window, not proof that every chip or transient is acceptable.",
+      "evidence": null
+    },
+    {
+      "id": "DC_3V3A",
+      "status": "FAIL",
+      "finding": "3V3A measured interval=[0.0480,0.0520] V.",
+      "next_step": "3.3 V ±5% is only a DC screening window, not proof that every chip or transient is acceptable.",
+      "evidence": null
+    },
+    {
+      "id": "POWER_PATH",
+      "status": "FAIL",
+      "finding": "3V3 present but 3V3A not established.",
+      "next_step": "Check the L2 connection and sensor-side load shorts first, then SPI/I2C.",
+      "evidence": null
+    },
+    {
+      "id": "DIV_VLOGIC",
+      "status": "INFO",
+      "finding": "Measured interval [0.41618,0.42018] V; the 1% resistor + meter input loading model expects [0.41009,0.42564] V.",
+      "next_step": "Overlap only means consistency with this model; if they do not overlap, check wiring / meter / fitted resistor values first, then the divider and ADC side.",
+      "evidence": null
+    },
+    {
+      "id": "DIV_3V3",
+      "status": "INFO",
+      "finding": "Measured interval [1.64800,1.65200] V; the 1% resistor + meter input loading model expects [1.63169,1.66668] V.",
+      "next_step": "Overlap only means consistency with this model; if they do not overlap, check wiring / meter / fitted resistor values first, then the divider and ADC side.",
+      "evidence": null
+    },
+    {
+      "id": "SPI_SENSOR",
+      "status": "NOT_TESTED",
+      "finding": "IMU identity, sample liveness, noise and interrupt not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "I2C_SENSOR",
+      "status": "NOT_TESTED",
+      "finding": "Barometer PROM CRC, conversion and noise not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "QSPI_DATA",
+      "status": "NOT_TESTED",
+      "finding": "External flash quad write/read verification not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "USB_DATA",
+      "status": "NOT_TESTED",
+      "finding": "USB enumeration and data transfer not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "WATCHDOG",
+      "status": "NOT_TESTED",
+      "finding": "Real watchdog timeout reset not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "TRANSIENTS",
+      "status": "NOT_TESTED",
+      "finding": "Power start-up, ripple and load steps not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "GNSS",
+      "status": "NOT_POPULATED",
+      "finding": "U6 is not fitted in this assembly configuration; the physical configuration still needs recording.",
+      "next_step": "",
+      "evidence": null
+    }
+  ]
+}

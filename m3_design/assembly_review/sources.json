@@ -1,0 +1,82 @@
+{
+  "LED1": {
+    "manufacturer": "NATIONSTAR",
+    "mpn": "NCD0805R1",
+    "lcsc": "C84256",
+    "footprint": "M3_NCD0805R1_K1",
+    "cathode": "1",
+    "center": 0.85,
+    "land": [
+      0.8,
+      1.2
+    ],
+    "body_max": [
+      2.1,
+      1.3,
+      0.7
+    ],
+    "nominal": [
+      2.0,
+      1.2,
+      0.6
+    ],
+    "color": [
+      0.75,
+      0.08,
+      0.06
+    ],
+    "pdf": "ncd0805r1.pdf",
+    "page": 2,
+    "url": "https://datasheet.lcsc.com/datasheet/pdf/e3e35db60c068efe42b02d21fe498cf3.pdf?productCode=C84256",
+    "pdf_sha256": "3a6caf350b15816633bfee4b063cc7ad5a3f337d32b0366817f95e4b7b77eb76",
+    "supplier_url": "https://www.lcsc.com/product-detail/C84256.html",
+    "drawing_visually_read": true,
+    "stock_reserved": false
+  },
+  "LED2": {
+    "manufacturer": "Hubei KENTO Elec",
+    "mpn": "KT-0805Y",
+    "lcsc": "C2296",
+    "footprint": "M3_KT0805Y_A1",
+    "cathode": "2",
+    "center": 0.95,
+    "land": [
+      1.0,
+      1.4
+    ],
+    "body_max": [
+      2.1,
+      1.35,
+      0.95
+    ],
+    "nominal": [
+      2.0,
+      1.25,
+      0.85
+    ],
+    "color": [
+      0.9,
+      0.65,
+      0.06
+    ],
+    "pdf": "kt_0805y.pdf",
+    "page": 2,
+    "url": "https://datasheet.lcsc.com/datasheet/pdf/3f6a14f9ea2fc39f6e05d2ab0fa53e2b.pdf?productCode=C2296",
+    "pdf_sha256": "d8a2b8369f288161dcff4afa195ea47335d87a620086e1a2aa5c1f197573c972",
+    "supplier_url": "https://www.lcsc.com/product-detail/C2296.html",
+    "drawing_visually_read": true,
+    "stock_reserved": false
+  },
+  "U3": {
+    "manufacturer": "Winbond",
+    "mpn": "W25Q128JVSIQ",
+    "lcsc": "C97521",
+    "pdf": "w25q128jv_revg.pdf",
+    "page": 68,
+    "url": "https://www.winbond.com/resource-files/w25q128jv%20revg%2004082019%20plus.pdf",
+    "pdf_sha256": "5e2f6a77e0225a5c61b8f4b5b9680b57e0e1fe68cfc011465e30f665fe282057",
+    "supplier_url": "https://www.lcsc.com/product-detail/C97521.html",
+    "drawing_visually_read": true,
+    "stock_reserved": false
+  }
+}

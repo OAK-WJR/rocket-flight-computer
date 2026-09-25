@@ -1,0 +1,9 @@
+(version 1)
+# HRO TYPE-C-31-M-12, drawing page 4; NPTH-to-copper minimum 0.20 mm.
+# Source: https://jlcpcb.com/capabilities/pcb-capabilities (2026-09-07).
+# General board spacing remains 0.25 mm; this is not an ignored violation.
+(rule "General copper to hole clearance"
+  (constraint hole_clearance (min 0.25mm)))
+(rule "HRO M-12 internal SMD lands to locating holes"
+  (condition "A.memberOfFootprint('J3') && B.memberOfFootprint('J3') && ((A.Pad_Type == 'NPTH, mechanical' && B.Pad_Type == 'SMD') || (B.Pad_Type == 'NPTH, mechanical' && A.Pad_Type == 'SMD'))")
+  (constraint hole_clearance (min 0.20mm)))

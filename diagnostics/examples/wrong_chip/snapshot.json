@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "origin": "SYNTHETIC_FIXTURE",
+  "capture_id": "75b12a3f-0b33-4a71-9783-dc20e436f159",
+  "captured_at": "2026-09-25T23:09:53.700893+00:00",
+  "assembly_id": "SYNTHETIC-NOT-A-BOARD",
+  "board_sha256": "cd647b9400a4e2bfca729b0c96e97cb2fb97ec3455387bfe58a5aeb008527f72",
+  "state": "IDENTITY_UNCONFIRMED",
+  "driver": {
+    "kind": "SYNTHETIC_FIXTURE",
+    "not_a_hardware_driver": true
+  },
+  "error": null,
+  "reads": [
+    {
+      "name": "CPUID",
+      "sample": 0,
+      "address": "0xe000ed00",
+      "bits": 32,
+      "value": "0x411fc271",
+      "error": null,
+      "elapsed_ms": 0.1712499999999978
+    },
+    {
+      "name": "DBGMCU_IDCODE",
+      "sample": 0,
+      "address": "0x5c001000",
+      "bits": 32,
+      "value": "0x10000483",
+      "error": null,
+      "elapsed_ms": 0.3473329999999983
+    }
+  ],
+  "finished_at": "2026-09-25T23:09:53.701416+00:00"
+}

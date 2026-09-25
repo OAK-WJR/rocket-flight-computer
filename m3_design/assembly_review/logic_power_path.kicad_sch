@@ -1,0 +1,2262 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_core_schematic")
+	(uuid 81cc9770-50b5-5b54-a4e1-2de2eba99b02)
+	(paper "A3")
+	(title_block
+		(title "08 | USB limit, source mux and hold-up")
+		(date "2026-09-07")
+		(rev "M3-ASSY-R1")
+		(company "Single-board M3 candidate; full system incomplete"))
+	(lib_symbols
+		(symbol "M3:C"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762)
+						(xy 2.032 0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -2.032 -0.762)
+						(xy 2.032 -0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:LogicMux"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "LogicMux_0_1"
+				(rectangle
+					(start -20.32 8.89)
+					(end 20.32 -8.89)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "LogicMux_1_1"
+				(pin power_in line
+					(at -25.4 6.3500000000000005 0)
+					(length 5.08)
+					(name "IN1 USB"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "7"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -25.4 3.8100000000000005 0)
+					(length 5.08)
+					(name "IN2 BAT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -25.4 1.2700000000000005 0)
+					(length 5.08)
+					(name "PR1"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -25.4 -1.2699999999999996 0)
+					(length 5.08)
+					(name "CP2"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -25.4 -3.8099999999999987 0)
+					(length 5.08)
+					(name "OV1"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -25.4 -6.35 0)
+					(length 5.08)
+					(name "OV2"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 25.4 6.3500000000000005 180)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "12"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_out line
+					(at 25.4 3.8100000000000005 180)
+					(length 5.08)
+					(name "OUT_A"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 25.4 1.2700000000000005 180)
+					(length 5.08)
+					(name "OUT_B"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "8"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin open_collector line
+					(at 25.4 -1.2699999999999996 180)
+					(length 5.08)
+					(name "ST"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "9"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 25.4 -3.8099999999999987 180)
+					(length 5.08)
+					(name "ILIM"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "10"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 25.4 -6.35 180)
+					(length 5.08)
+					(name "SS"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "11"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_TPS2121_RUX"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:PolarCap"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Value" "C_Polarized"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Polarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "PolarCap_0_1"
+				(rectangle
+					(start -2.286 0.508)
+					(end 2.286 1.016)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.778 2.286)
+						(xy -0.762 2.286))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.27 2.794)
+						(xy -1.27 1.778))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(rectangle
+					(start 2.286 -0.508)
+					(end -2.286 -1.016)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type outline))))
+			(symbol "PolarCap_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_OSCON_F12"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:TestPoint"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.762)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TestPad_1.5"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:USBCurrentLimit"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "USBCurrentLimit_0_1"
+				(rectangle
+					(start -20.32 5.08)
+					(end 20.32 -5.08)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "USBCurrentLimit_1_1"
+				(pin power_in line
+					(at -25.4 2.54 0)
+					(length 5.08)
+					(name "IN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -25.4 0.0 0)
+					(length 5.08)
+					(name "EN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -25.4 -2.54 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_out line
+					(at 25.4 2.54 180)
+					(length 5.08)
+					(name "OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 25.4 0.0 180)
+					(length 5.08)
+					(name "ILIM"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin open_collector line
+					(at 25.4 -2.54 180)
+					(length 5.08)
+					(name "FAULT_N"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_TPS2553_DBV"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes)))))
+	(text "08 | USB limit, source mux and hold-up"
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 2.54 2.54))
+			(justify left))
+		(uuid b69e8969-7218-523e-8ecf-13907298688f))
+	(symbol
+		(lib_id "M3:USBCurrentLimit")
+		(at 76.2 76.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e6c5195b-705f-58ff-9909-7a72f0607647)
+		(property "Reference" "U10"
+			(at 76.2 66.03999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "TPS2553DBVR"
+			(at 76.2 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TPS2553_DBV"
+			(at 76.2 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 76.2 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C55266"
+			(at 76.2 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "U10")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 50.8 73.66)
+			(xy 45.72 73.66))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 66b35498-05fc-5edc-8679-0e900f8b7d63))
+	(global_label "VBUS"
+		(shape passive)
+		(at 45.72 73.66 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3d0afb8d-397e-56bd-92ed-e752e6d62242))
+	(wire
+		(pts
+			(xy 50.8 76.2)
+			(xy 45.72 76.2))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bbfaa035-6ad1-5c41-8dc0-eff935b472b8))
+	(global_label "VBUS"
+		(shape passive)
+		(at 45.72 76.2 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1ec12634-6b41-519c-961d-48c7ee940ec6))
+	(wire
+		(pts
+			(xy 50.8 78.74)
+			(xy 45.72 78.74))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 25d9d6ef-8279-5efe-ad87-85e000a9d336))
+	(global_label "GND"
+		(shape passive)
+		(at 45.72 78.74 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 231addad-24b7-5127-a4f1-737a301b8c45))
+	(wire
+		(pts
+			(xy 101.6 73.66)
+			(xy 106.67999999999999 73.66))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3973864d-4e69-5363-b849-411abd1204f4))
+	(global_label "USB_LIMITED"
+		(shape passive)
+		(at 106.67999999999999 73.66 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid d455d9cf-0262-5736-9098-6ccc03966301))
+	(wire
+		(pts
+			(xy 101.6 76.2)
+			(xy 106.67999999999999 76.2))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5d26aea4-3b35-5bdc-b9e0-80a73f67df07))
+	(global_label "USB_ILIM"
+		(shape passive)
+		(at 106.67999999999999 76.2 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 68cc2f61-e6d3-57a5-b5f8-f743f7d5b680))
+	(wire
+		(pts
+			(xy 101.6 78.74)
+			(xy 106.67999999999999 78.74))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2fc647c4-8441-5322-969f-03152feaf7ba))
+	(global_label "USB_FAULT_N"
+		(shape passive)
+		(at 106.67999999999999 78.74 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 8a2dd503-21d8-59b3-a088-294dea2a1cb8))
+	(symbol
+		(lib_id "M3:LogicMux")
+		(at 274.32 76.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 980a591c-c02b-5f95-b493-d25e207e0043)
+		(property "Reference" "U11"
+			(at 274.32 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "TPS2121RUXR"
+			(at 274.32 66.03999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TPS2121_RUX"
+			(at 274.32 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 274.32 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C485916"
+			(at 274.32 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "U11")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 248.92 69.85)
+			(xy 243.83999999999997 69.85))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7d83925f-0a8e-593d-93db-454e3411340f))
+	(global_label "USB_LIMITED"
+		(shape passive)
+		(at 243.83999999999997 69.85 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4b439cb6-a7d1-5c36-895a-b90144b13dae))
+	(wire
+		(pts
+			(xy 248.92 72.39)
+			(xy 243.83999999999997 72.39))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 590d169a-aaff-537c-bda9-646bef5b2c69))
+	(global_label "RAW_PROTECTED"
+		(shape passive)
+		(at 243.83999999999997 72.39 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0776339e-9acf-5a54-af20-787de5a900d6))
+	(wire
+		(pts
+			(xy 248.92 74.93)
+			(xy 243.83999999999997 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7b777f2a-9fde-52cc-9ba7-0b5920d2c7e0))
+	(global_label "GND"
+		(shape passive)
+		(at 243.83999999999997 74.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4c2d8bbf-0b50-5cdf-9f6a-a36d2cb11281))
+	(wire
+		(pts
+			(xy 248.92 77.47)
+			(xy 243.83999999999997 77.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3f6f77db-92ca-5e03-ba44-97cc66f2b0f5))
+	(global_label "GND"
+		(shape passive)
+		(at 243.83999999999997 77.47 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5f743d80-822e-56e4-b464-f42cc3bb9abf))
+	(wire
+		(pts
+			(xy 248.92 80.01)
+			(xy 243.83999999999997 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 44462280-db73-58b0-9405-4b68ecd4fb66))
+	(global_label "USB_OVLO"
+		(shape passive)
+		(at 243.83999999999997 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0ede22fe-0871-527f-a3c3-46b1794ea8ba))
+	(wire
+		(pts
+			(xy 248.92 82.55)
+			(xy 243.83999999999997 82.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 46736d0f-6f2d-5a7a-bbe2-b0ef6142fd56))
+	(global_label "GND"
+		(shape passive)
+		(at 243.83999999999997 82.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid adbc4565-7893-590d-877d-4ad02e1dccb3))
+	(wire
+		(pts
+			(xy 299.72 69.85)
+			(xy 304.8 69.85))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c126e019-db9c-58e3-9913-c267c9efd2ed))
+	(global_label "GND"
+		(shape passive)
+		(at 304.8 69.85 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid bacd422e-3048-5b2b-92a3-9aa79214a787))
+	(wire
+		(pts
+			(xy 299.72 72.39)
+			(xy 304.8 72.39))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4c09f200-be2e-5a3e-8802-b207ae38f3ce))
+	(global_label "VLOGIC"
+		(shape passive)
+		(at 304.8 72.39 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 253a95f0-d1c5-5fd5-a8b7-322461653563))
+	(wire
+		(pts
+			(xy 299.72 74.93)
+			(xy 304.8 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3e290c66-e970-5778-b549-88093f160e77))
+	(global_label "VLOGIC"
+		(shape passive)
+		(at 304.8 74.93 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 98766ba9-95b5-59a3-8a2a-eac90ba9771a))
+	(wire
+		(pts
+			(xy 299.72 77.47)
+			(xy 304.8 77.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 054f5c6d-678a-5aa1-83ee-fc185d5a81a3))
+	(global_label "LOGIC_SOURCE_ST"
+		(shape passive)
+		(at 304.8 77.47 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid ab21f581-660a-5f98-ac89-96899dfecdf2))
+	(wire
+		(pts
+			(xy 299.72 80.01)
+			(xy 304.8 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a5fdc3f9-33a9-5a14-9a3f-cbd7055457bb))
+	(global_label "LOGIC_ILIM"
+		(shape passive)
+		(at 304.8 80.01 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid cf96ca8d-e2ef-51a8-8fdd-5f2193cb82e6))
+	(wire
+		(pts
+			(xy 299.72 82.55)
+			(xy 304.8 82.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 95ba53fc-f09d-5e26-8d6d-e3c5cb61fe31))
+	(global_label "LOGIC_SS"
+		(shape passive)
+		(at 304.8 82.55 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid d0d63d57-b2c1-53ad-9244-8872f1307075))
+	(symbol
+		(lib_id "M3:C")
+		(at 43.18 127 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid a6fd8aaf-d2e4-568b-90d3-20475605afd3)
+		(property "Reference" "C83"
+			(at 45.72 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 45.72 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 43.18 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 43.18 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C1591"
+			(at 43.18 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "C83")
+					(unit 1))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 43.18 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL10B104KB8NNNC"
+			(at 43.18 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C1591"
+			(at 43.18 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 43.18 123.19)
+			(xy 35.56 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f02a0537-8b5c-5154-9be2-e9971c6c6244))
+	(global_label "VBUS"
+		(shape passive)
+		(at 35.56 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 07f26ce5-e8c7-5d41-bed7-b463d6038362))
+	(wire
+		(pts
+			(xy 43.18 130.81)
+			(xy 35.56 130.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 52d2af87-8734-5bef-90a9-0e2f0c741ff3))
+	(global_label "GND"
+		(shape passive)
+		(at 35.56 130.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7a9647ad-d0fd-5a24-abfa-67b8f8de41aa))
+	(symbol
+		(lib_id "M3:PolarCap")
+		(at 360.68 127 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid a4f1fa8f-3c00-5b53-bcc1-e2084938a46e)
+		(property "Reference" "C84"
+			(at 360.68 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "330uF 25V"
+			(at 360.68 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_OSCON_F12"
+			(at 360.68 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 360.68 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C178367"
+			(at 360.68 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "C84")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 360.68 123.19)
+			(xy 353.06 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 71cb353b-5f2e-5b1c-8d3d-d570ae60ca95))
+	(global_label "VLOGIC"
+		(shape passive)
+		(at 353.06 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 39cd6849-80c7-56cf-bccc-5cffed96d93f))
+	(wire
+		(pts
+			(xy 360.68 130.81)
+			(xy 353.06 130.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c82848c2-1c6c-5465-bdaa-a41e1314ebce))
+	(global_label "GND"
+		(shape passive)
+		(at 353.06 130.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6a751110-b063-5a89-9512-30be355dcdb3))
+	(symbol
+		(lib_id "M3:C")
+		(at 309.88 127 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid fc448ab0-8eec-57cf-a7e0-6c7dc9911906)
+		(property "Reference" "C85"
+			(at 312.42 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "470nF 25V X7R 10%"
+			(at 312.42 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 309.88 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 309.88 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C1623"
+			(at 309.88 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "C85")
+					(unit 1))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 309.88 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL10B474KA8NNNC"
+			(at 309.88 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C1623"
+			(at 309.88 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 309.88 123.19)
+			(xy 302.26 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f3d703cc-2d91-59c8-aeae-11549d6af7a9))
+	(global_label "LOGIC_SS"
+		(shape passive)
+		(at 302.26 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 032497d7-7aa0-553a-991d-948f28c97455))
+	(wire
+		(pts
+			(xy 309.88 130.81)
+			(xy 302.26 130.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6d7ee1c4-de8d-5ddd-9d03-4a343f30d56e))
+	(global_label "GND"
+		(shape passive)
+		(at 302.26 130.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d9ff6083-8ba6-5659-9cd5-418a29c44355))
+	(symbol
+		(lib_id "M3:C")
+		(at 208.28 127 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 5da58c05-7707-5bb4-8ccc-42652bdc9763)
+		(property "Reference" "C86"
+			(at 210.82 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1uF 25V X7R 10%"
+			(at 210.82 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 208.28 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 208.28 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C29936"
+			(at 208.28 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "C86")
+					(unit 1))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 208.28 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL10B105KA8NNNC"
+			(at 208.28 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C29936"
+			(at 208.28 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 208.28 123.19)
+			(xy 200.66 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid aeb8f4bf-ef6d-59bd-bdba-7a4e36cdc24b))
+	(global_label "USB_LIMITED"
+		(shape passive)
+		(at 200.66 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1ba01cd5-0449-54e0-ad84-d824a317f832))
+	(wire
+		(pts
+			(xy 208.28 130.81)
+			(xy 200.66 130.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d2eaa583-381e-5ab4-a949-ee519018f7c1))
+	(global_label "GND"
+		(shape passive)
+		(at 200.66 130.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fb496388-676d-5565-b9fb-ea188406b92d))
+	(symbol
+		(lib_id "M3:R")
+		(at 96.52 127 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 1fc710b2-52c4-50a4-af99-97e2f0d5e46f)
+		(property "Reference" "R85"
+			(at 99.06 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "66.5k 1%"
+			(at 99.06 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 96.52 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 96.52 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C137691"
+			(at 96.52 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "R85")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 96.52 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RC0603FR-0766K5L"
+			(at 96.52 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C137691"
+			(at 96.52 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 96.52 123.19)
+			(xy 88.89999999999999 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f32d7c17-03bd-5b9d-b888-aa850385d324))
+	(global_label "USB_ILIM"
+		(shape passive)
+		(at 88.89999999999999 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 46ba7892-2389-50a9-a8c4-6bc29564d7a7))
+	(wire
+		(pts
+			(xy 96.52 130.81)
+			(xy 88.89999999999999 130.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4aebe1dc-8528-5a7b-a43e-2093e202d483))
+	(global_label "GND"
+		(shape passive)
+		(at 88.89999999999999 130.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ae172b8c-363c-5f2c-ac7c-1356c46734cd))
+	(symbol
+		(lib_id "M3:R")
+		(at 259.08 127 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 95c2e79a-0b21-59c8-8631-7ebf9b1a0b8a)
+		(property "Reference" "R86"
+			(at 261.62 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "80k 0.1%"
+			(at 261.62 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 259.08 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 259.08 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" ""
+			(at 259.08 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "R86")
+					(unit 1))))
+		(property "Manufacturer" "Vishay Dale Thin Film"
+			(at 259.08 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "PTN0603Y8002BST1"
+			(at 259.08 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" ""
+			(at 259.08 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 259.08 123.19)
+			(xy 251.45999999999998 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a2c668f1-ad18-51e2-bfb7-9abdf99a1909))
+	(global_label "LOGIC_ILIM"
+		(shape passive)
+		(at 251.45999999999998 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 46836baf-ed5d-5b17-9158-91850d3c900a))
+	(wire
+		(pts
+			(xy 259.08 130.81)
+			(xy 251.45999999999998 130.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f0e93728-57cd-5585-83b2-2ecad40080b4))
+	(global_label "GND"
+		(shape passive)
+		(at 251.45999999999998 130.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6b3f67fa-e44f-55ca-b795-14061940a680))
+	(symbol
+		(lib_id "M3:R")
+		(at 208.28 180.34 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid cbc4cb2f-c0c4-540c-9b03-441e36e3a087)
+		(property "Reference" "R87"
+			(at 210.82 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "44.2k 0.1%"
+			(at 210.82 181.60999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 208.28 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 208.28 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C861410"
+			(at 208.28 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "R87")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 208.28 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD0744K2L"
+			(at 208.28 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C861410"
+			(at 208.28 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 208.28 176.53)
+			(xy 200.66 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4fd5129b-555c-5361-8a0e-520dc43b73a3))
+	(global_label "USB_LIMITED"
+		(shape passive)
+		(at 200.66 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2ee02379-9eaa-5e50-95bc-7660519bbe7e))
+	(wire
+		(pts
+			(xy 208.28 184.15)
+			(xy 200.66 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9e0f4ddd-29be-55fd-8ca9-d3b90e010116))
+	(global_label "USB_OVLO"
+		(shape passive)
+		(at 200.66 184.15 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 099fbe62-e778-576e-a54b-f0b84f916751))
+	(symbol
+		(lib_id "M3:R")
+		(at 259.08 180.34 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 7893f37a-9851-54db-b208-14ee4e76cc3c)
+		(property "Reference" "R88"
+			(at 261.62 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 0.1%"
+			(at 261.62 181.60999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 259.08 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 259.08 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C95204"
+			(at 259.08 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "R88")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 259.08 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD0710KL"
+			(at 259.08 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C95204"
+			(at 259.08 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 259.08 176.53)
+			(xy 251.45999999999998 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6290cbd5-734b-5506-8710-1586a775a444))
+	(global_label "USB_OVLO"
+		(shape passive)
+		(at 251.45999999999998 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c4d20d94-73ae-5d1d-81e8-a36426e3f1cf))
+	(wire
+		(pts
+			(xy 259.08 184.15)
+			(xy 251.45999999999998 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2a8d25cc-889e-5685-a568-580e0c903ea8))
+	(global_label "GND"
+		(shape passive)
+		(at 251.45999999999998 184.15 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 18cc6588-f5a8-5b21-af72-bb9dd0872019))
+	(symbol
+		(lib_id "M3:R")
+		(at 149.86 127 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4543475b-d3e6-5afc-9a52-e038f942a8ce)
+		(property "Reference" "R90"
+			(at 152.4 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 0.1%"
+			(at 152.4 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 149.86 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 149.86 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C95204"
+			(at 149.86 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "R90")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 149.86 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD0710KL"
+			(at 149.86 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C95204"
+			(at 149.86 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 149.86 123.19)
+			(xy 142.24 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 530715a4-e9cd-588c-a9af-c30418ba8c22))
+	(global_label "3V3"
+		(shape passive)
+		(at 142.24 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9f94467b-1e36-510c-95ac-39e89004b62b))
+	(wire
+		(pts
+			(xy 149.86 130.81)
+			(xy 142.24 130.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b70ac46a-3c57-5c48-8646-0dc0fb3b37bd))
+	(global_label "USB_FAULT_N"
+		(shape passive)
+		(at 142.24 130.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cc11283e-be6e-57f1-9abe-4402da85c561))
+	(symbol
+		(lib_id "M3:R")
+		(at 309.88 180.34 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4bc4a920-5569-5db1-99af-d5467b7402ec)
+		(property "Reference" "R91"
+			(at 312.42 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 0.1%"
+			(at 312.42 181.60999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 309.88 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 309.88 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C95204"
+			(at 309.88 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "R91")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 309.88 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD0710KL"
+			(at 309.88 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C95204"
+			(at 309.88 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 309.88 176.53)
+			(xy 302.26 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0f5b49a2-828d-53d0-ac09-9b98e6fa7d98))
+	(global_label "3V3"
+		(shape passive)
+		(at 302.26 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4983b3eb-b681-54b9-baa9-b648654b1794))
+	(wire
+		(pts
+			(xy 309.88 184.15)
+			(xy 302.26 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 00f39447-bf1d-5e27-9a08-228754156be7))
+	(global_label "LOGIC_SOURCE_ST"
+		(shape passive)
+		(at 302.26 184.15 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d4fad102-d8a7-52ea-978c-e9e47ea9fa3c))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 43.18 213.36 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 3a20ae85-ccaa-599f-b2ee-8aef8d15b011)
+		(property "Reference" "TP82"
+			(at 43.18 205.74 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "USB_LIMITED"
+			(at 43.18 209.55 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 43.18 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 43.18 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 43.18 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "TP82")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 43.18 213.36)
+			(xy 35.56 213.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bc65d8d9-ec22-54b5-bb97-9359ef5d2e1f))
+	(global_label "USB_LIMITED"
+		(shape passive)
+		(at 35.56 213.36 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0f888c60-4164-5700-93f4-0271d7bba1bf))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 132.08 213.36 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 2fb21041-0d9b-5112-aaa5-4f95ddae4f4f)
+		(property "Reference" "TP83"
+			(at 132.08 205.74 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "VLOGIC"
+			(at 132.08 209.55 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 132.08 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 132.08 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 132.08 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "TP83")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 132.08 213.36)
+			(xy 124.46000000000001 213.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d39c67a9-4fd3-5fb7-8a29-9cbe895df19d))
+	(global_label "VLOGIC"
+		(shape passive)
+		(at 124.46000000000001 213.36 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b333d418-868d-5d1a-a335-282e7192a9e0))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 223.52 213.36 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid fe5fa01e-d517-5599-a198-2c11e4bff0a6)
+		(property "Reference" "TP86"
+			(at 223.52 205.74 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "USB_FAULT_N"
+			(at 223.52 209.55 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 223.52 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 223.52 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 223.52 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "TP86")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 223.52 213.36)
+			(xy 215.9 213.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6042295f-aaa3-5c21-8a44-c0a9f11dd023))
+	(global_label "USB_FAULT_N"
+		(shape passive)
+		(at 215.9 213.36 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 51ef8d7b-e4e3-5b3e-ae0d-2f62e70ef766))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 330.2 213.36 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 20598e4b-81a5-574f-a4d1-c80ea149db5b)
+		(property "Reference" "TP87"
+			(at 330.2 205.74 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "LOGIC_SOURCE_ST"
+			(at 330.2 209.55 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 330.2 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 330.2 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 330.2 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "TP87")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 330.2 213.36)
+			(xy 322.58 213.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 993b490f-ca9c-5d88-b295-2440c8e19ce9))
+	(global_label "LOGIC_SOURCE_ST"
+		(shape passive)
+		(at 322.58 213.36 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b1071d42-3d62-5456-ba59-bd986aca1380))
+	(text "D3 USB-to-VLOGIC Schottky removed: no bypass around U10/U11. Camera rail attaches only to protected battery."
+		(at 20.32 236.22 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 24cdbd21-8bd7-597d-80ce-0d1edd589eda))
+	(text "U11 IN1=USB_LIMITED, IN2=RAW_PROTECTED. PR1/CP2 low: VCOMP selects the higher input with hysteresis."
+		(at 20.32 242.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid a485ff50-980a-57c0-b185-ba1e527f6335))
+	(text "VCOMP switch time100us is typical, NOT the5us fast-comparator mode and NOT a guaranteed worst case."
+		(at 20.32 248.92 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid a1addcd9-7ace-5648-8931-c2371ac8a054))
+	(text "R85=66.5k1%: TI table2 current-limit range351.2..448.7mA; this does not authorize USB pre-enumeration current."
+		(at 20.32 255.26999999999998 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f0cb40b0-704a-5dbc-9d13-53d57152523f))
+	(text "Firmware must meet USB100mA pre-configuration and suspend budgets. Boot current/compliance has NOT been demonstrated."
+		(at 20.32 261.62 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid e8b5bcfc-7729-5410-b420-c8ac3fea3c8c))
+	(text "Status and fault pull-ups are3V3; they are invalid while the core supply is absent. FAULT/ST are not power-good tests."
+		(at 20.32 267.97 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f95b88be-45ee-51c9-b1ed-e1d199f47e37))
+	(text "ST LOW = IN2 battery. ST HIGH = IN1 USB OR both sources invalid; always cross-check TP81/82/83."
+		(at 20.32 274.32 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 5d80c160-d7c2-5aef-a62e-a216d253328c))
+	(text "C84 provides source-transition buffering; it is not an independent battery and not a quantified full-system hold time."
+		(at 20.32 280.67 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 28183e46-b9a3-5826-b967-252f4c7d2b21))
+	(sheet_instances
+		(path "/"
+			(page "8"))))

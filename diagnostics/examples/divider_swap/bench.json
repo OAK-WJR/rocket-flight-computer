@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "origin": "SYNTHETIC_FIXTURE",
+  "assembly_id": "SYNTHETIC-NOT-A-BOARD",
+  "capture_id": "67f1b5e7-9aa7-4e0d-a45e-b3c65f871578",
+  "board_sha256": "cd647b9400a4e2bfca729b0c96e97cb2fb97ec3455387bfe58a5aeb008527f72",
+  "points": [
+    {
+      "net": "VBUS",
+      "probe": "C28.1",
+      "board_xy_mm": [
+        9.5,
+        51.9
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ],
+      "measurement": {
+        "value": 5.0,
+        "unit": "V",
+        "uncertainty_v": 0.002,
+        "input_ohm": 10000000.0,
+        "instrument": "SYNTHETIC METER",
+        "measured_at": "2026-09-25T23:09:53.695573+00:00"
+      }
+    },
+    {
+      "net": "VLOGIC",
+      "probe": "C6.1",
+      "board_xy_mm": [
+        11.53,
+        15.77
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ],
+      "measurement": {
+        "value": 4.6,
+        "unit": "V",
+        "uncertainty_v": 0.002,
+        "input_ohm": 10000000.0,
+        "instrument": "SYNTHETIC METER",
+        "measured_at": "2026-09-25T23:09:53.695573+00:00"
+      }
+    },
+    {
+      "net": "3V3",
+      "probe": "J2.5",
+      "board_xy_mm": [
+        41.81,
+        54.5
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ],
+      "measurement": {
+        "value": 3.3,
+        "unit": "V",
+        "uncertainty_v": 0.002,
+        "input_ohm": 10000000.0,
+        "instrument": "SYNTHETIC METER",
+        "measured_at": "2026-09-25T23:09:53.695573+00:00"
+      }
+    },
+    {
+      "net": "3V3A",
+      "probe": "C10.1",
+      "board_xy_mm": [
+        29.6,
+        18.3
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ],
+      "measurement": {
+        "value": 3.29,
+        "unit": "V",
+        "uncertainty_v": 0.002,
+        "input_ohm": 10000000.0,
+        "instrument": "SYNTHETIC METER",
+        "measured_at": "2026-09-25T23:09:53.695573+00:00"
+      }
+    },
+    {
+      "net": "VLOGIC_SENSE",
+      "probe": "R61.1",
+      "board_xy_mm": [
+        19.97,
+        25.9
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ],
+      "measurement": {
+        "value": 4.18,
+        "unit": "V",
+        "uncertainty_v": 0.002,
+        "input_ohm": 10000000.0,
+        "instrument": "SYNTHETIC METER",
+        "measured_at": "2026-09-25T23:09:53.695573+00:00"
+      }
+    },
+    {
+      "net": "V3V3_SENSE",
+      "probe": "R63.1",
+      "board_xy_mm": [
+        19.47,
+        27.2
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ],
+      "measurement": {
+        "value": 1.65,
+        "unit": "V",
+        "uncertainty_v": 0.002,
+        "input_ohm": 10000000.0,
+        "instrument": "SYNTHETIC METER",
+        "measured_at": "2026-09-25T23:09:53.695573+00:00"
+      }
+    }
+  ]
+}

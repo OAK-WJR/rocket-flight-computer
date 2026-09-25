@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+ -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+  
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/assets/styles/main.css">
+
+  <title>Session options list &mdash; pyOCD</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2RKCB4KZ7S"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2RKCB4KZ7S');
+  </script>
+</head>
+
+  <body id="top">
+    <div class="full-view-height d-flex flex-column">
+      <div class="flex-shrink-0">
+        <nav class="navbar navbar-expand-md navbar-dark py-1">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <img src="/assets/pyocd_logo_white.svg" height="42" width="auto" alt=""></img>
+    </a>
+    <a class="navbar-brand color-secondary" href="/">
+      <span class="display-lg project-name">pyOCD</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
+      <ul class="navbar-nav">
+        
+        
+        <li class="nav-item mr-auto mx-1">
+          <a class="nav-link" href="/docs/">Documentation</a>
+        </li>
+        
+        <li class="nav-item mr-auto mx-1">
+          <a class="nav-link" href="/posts/">Posts</a>
+        </li>
+        
+        <li class="nav-item mr-auto mx-1">
+          <a class="nav-link" href="https://github.com/pyocd/pyOCD"><i class="bi bi-github"></i></a>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      </div>
+      <div class="container-fluid flex-grow-1 p-0">
+        <div class="row">
+          <div class="col-md-3 col-sm-0 d-sm-none d-md-block p-0">
+            
+
+<div class="sidebar docs-sidebar-1" id="sidebar1">
+  <div class="p-4">
+    <h5 class="sidebar-header level-1">Getting started</h5>
+    <ul class="list-unstyled level-1">
+    <li class="sidebar-item level-1">
+            <a href="/docs/installing.html" class="sidebar-link ">Installing</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/installing_on_non_x86.html" class="sidebar-link ">Installing on non-x86 platforms</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/gdb_setup.html" class="sidebar-link ">GDB setup</a>
+            </li>
+          </ul>
+    <h5 class="sidebar-header level-1">User guide</h5>
+    <ul class="list-unstyled level-1">
+    <li class="sidebar-item level-1">
+            <a href="/docs/target_support.html" class="sidebar-link ">Target support</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/debug_probes.html" class="sidebar-link ">Debug probes</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/configuration.html" class="sidebar-link ">Configuration</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/open_cmsis_pack_support.html" class="sidebar-link ">Open-CMSIS-Pack support</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/gdbserver.html" class="sidebar-link ">gdb remote server</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/user_scripts.html" class="sidebar-link ">User scripts</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/remote_probe_access.html" class="sidebar-link ">Remote probe access</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/configuring_logging.html" class="sidebar-link ">Configuring logging</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/security.html" class="sidebar-link ">Security and protection</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/multicore_debug.html" class="sidebar-link ">Multicore debug</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/semihosting.html" class="sidebar-link ">Semihosting</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/swo_swv.html" class="sidebar-link ">SWO/SWV</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/memory_attributes.html" class="sidebar-link ">Memory transfer attributes</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/target_family_notes.html" class="sidebar-link ">Target family usage notes</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/faq.html" class="sidebar-link ">FAQ</a>
+            </li>
+          </ul>
+    <h5 class="sidebar-header level-1">Reference</h5>
+    <ul class="list-unstyled level-1">
+    <li class="sidebar-item level-1">
+            <a href="/docs/terminology.html" class="sidebar-link ">Terminology</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/builtin-targets.html" class="sidebar-link ">Built-in targets</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <p class="sidebar-item-selected">Session options list</p>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/command_reference.html" class="sidebar-link ">Command reference</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/env_vars.html" class="sidebar-link ">Environment variables</a>
+            </li>
+          </ul>
+    <h5 class="sidebar-header level-1">Python API</h5>
+    <ul class="list-unstyled level-1">
+    <li class="sidebar-item level-1">
+            <a href="/docs/api/architecture.html" class="sidebar-link ">Architecture</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/python_api.html" class="sidebar-link ">Introduction to the API</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/api_examples.html" class="sidebar-link ">Python API examples</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/api/using_session_options.html" class="sidebar-link ">Using session options</a>
+            </li>
+          </ul>
+    <h5 class="sidebar-header level-1">Developers</h5>
+    <ul class="list-unstyled level-1">
+    <li class="sidebar-item level-1">
+            <a href="/docs/developers_guide.html" class="sidebar-link ">Developers’ guide</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/adding_new_targets.html" class="sidebar-link ">Adding a new built-in target</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/automated_tests.html" class="sidebar-link ">Automated tests</a>
+            </li>
+          <li>
+        <p class="sidebar-header level-2">
+          Internal design
+        </p>
+        <ul class="list-unstyled level-2">
+        <li class="sidebar-item level-2">
+              <a href="/docs/architecture.html" class="sidebar-link ">Architecture</a>
+              </li>
+            <li class="sidebar-item level-2">
+              <a href="/docs/developer/board_ids.html" class="sidebar-link ">Board IDs</a>
+              </li>
+            <li class="sidebar-item level-2">
+              <a href="/docs/remote_probe_protocol.html" class="sidebar-link ">Remote probe protocol</a>
+              </li>
+            </ul>
+        </li></ul>
+    </div>
+</div>
+
+          </div>
+          <div class="col-md-9 col-sm-12 p-0">
+            <main role="main" class="content-scroll p-4" data-spy="scroll" data-target="#components-nav" data-offset="0">
+
+              
+
+              
+              <div class="row">
+                <div class="d-sm-block d-md-none">
+                  <p class=""><b>&larr;</b> <a href="/docs/index">Documentation index</a></p>
+                </div>
+              </div>
+              
+
+              <div class="row">
+                <div class="container docs-content">
+                  
+                  <h1 class="mb-4 mt-0">Session options list</h1>
+                  
+
+                  <!-- floating table of contents -->
+                  <div class="col-lg-4 col-md-3 float-md-end ms-md-3 mb-sm-3" id="toc-div">
+                    <div class="sidebar docs-sidebar-2 p-4">
+                        <h5 class="sidebar-header">On this page</h5>
+                        <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h2"><a href="#general-options">General options</a></li>
+<li class="toc-entry toc-h2"><a href="#extended-options-with-multicore-support">Extended options with multicore support</a></li>
+<li class="toc-entry toc-h2"><a href="#rtt-and-systemview-options">RTT and SystemView options</a></li>
+<li class="toc-entry toc-h2"><a href="#gdb-server-options">GDB server options</a></li>
+<li class="toc-entry toc-h2"><a href="#cmsis-dap-probe-options">CMSIS-DAP probe options</a></li>
+<li class="toc-entry toc-h2"><a href="#j-link-probe-options">J-Link probe options</a></li>
+<li class="toc-entry toc-h2"><a href="#picoprobe-options">Picoprobe options</a></li>
+<li class="toc-entry toc-h2"><a href="#stlink-options">STLink options</a></li>
+</ul>
+                    </div>
+                  </div>
+
+                  <p><em><strong>Note:</strong> The names of these options are expected to change with the 1.0 release of pyOCD, so
+they will be better normalized and grouped.</em></p>
+
+<h2 id="general-options">General options</h2>
+
+<p>Note that the <code class="highlighter-rouge">project_dir</code>, <code class="highlighter-rouge">no_config</code>, and <code class="highlighter-rouge">config</code> options must come from either a keyword
+argument or the <em>options</em> parameter passed to the <code class="highlighter-rouge">Session</code> constructor due to how early they are
+processed. The consequence of this is that these options cannot be set in a YAML config file.</p>
+
+<table class="docs-table">
+
+<tr><th>Option Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+
+<tr><td>adi.v5.max_invalid_ap_count</td>
+<td>int</td>
+<td>3</td>
+<td>
+If this number of invalid APs is found in a row, then AP scanning will stop. The 'scan_all_aps' option
+takes precedence over this option if set.
+</td></tr>
+
+<tr><td>allow_no_cores</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Prevents raising an error if no cores were found after CoreSight discovery.
+</td></tr>
+
+<tr><td>auto_unlock</td>
+<td>bool</td>
+<td>True</td>
+<td>
+If the target is locked, it will by default be automatically mass erased in order to gain debug
+access. Set this option to False to disable auto unlock.
+</td></tr>
+
+<tr><td>cache.enable_memory</td>
+<td>bool</td>
+<td>True</td>
+<td>
+Enable the memory read cache. Affects memory accesses made through the target debug context, including the
+gdbserver.
+</td></tr>
+
+<tr><td>cache.enable_register</td>
+<td>bool</td>
+<td>True</td>
+<td>
+Enable the core register cache. Affects core register accesses made through the target debug context,
+including the gdbserver.
+</td></tr>
+
+<tr><td>cache.read_code_from_elf</td>
+<td>bool</td>
+<td>True</td>
+<td>
+Controls whether reads of code sections will be taken from an attached ELF file instead of the target memory.
+This can improve performance, especially over slow target connections. Requires an ELF file to be set.
+</td></tr>
+
+<tr><td>chip_erase</td>
+<td>str</td>
+<td>'sector'</td>
+<td>
+Whether to perform a chip erase or sector erases when programming flash. The value must be one of
+'auto', 'sector', or 'chip'.
+</td></tr>
+
+<tr><td>cmsis_dap.prefer_v1</td>
+<td>bool</td>
+<td>False</td>
+<td>
+If a device provides both CMSIS-DAP v1 and v2 interfaces, use the v1 interface in preference of v2.
+Normal behaviour is to prefer the v2 interface. This option is primarily intended for testing.
+</td></tr>
+
+<tr><td>commander.history_length</td>
+<td>int</td>
+<td>1000</td>
+<td>
+Number of entries in the pyOCD Commander command history. Set to -1 for unlimited.
+</td></tr>
+
+<tr><td>config_file</td>
+<td>str</td>
+<td><i>See description</i></td>
+<td>
+Relative path to a YAML config file that lets you specify session options either globally or per probe.
+The format of the file is documented above. The default is a <tt>pyocd.yaml</tt> or <tt>pyocd.yml</tt> file in the
+working directory.
+</td></tr>
+
+<tr><td>connect_mode</td>
+<td>str</td>
+<td>'halt'</td>
+<td>
+Controls how pyOCD connects to the target. One of 'halt', 'pre-reset', 'under-reset', 'attach'.
+<ul>
+<li>'halt': immediately halt all accessible cores upon connect.</li>
+<li>'pre-reset': perform a hardware reset prior to connect and halt.</li>
+<li>'under-reset': assert hardware reset during the connect sequence, then deassert after the cores are halted.
+    This connect mode is often necessary to gain control of a target that is in a deep low power mode.</li>
+<li>'attach': connect to a running target without halting cores.</li>
+</ul>
+</td></tr>
+
+<tr><td>cpu.step.instruction.timeout</td>
+<td>float</td>
+<td>0.0</td>
+<td>
+<p>Timeout in seconds for instruction step operations. The default of 0 means no timeout.</p>
+<p>Note that stepping may take a very long time for to return in cases such as stepping over a branch
+into the Secure world where the debugger doesn't have secure debug access, or similar for Privileged
+code in the case of UDE.</p>
+</td></tr>
+
+<tr><td>dap_protocol</td>
+<td>str</td>
+<td>'default'</td>
+<td>
+Wire protocol, either 'swd', 'jtag', or 'default'.
+</td></tr>
+
+<tr><td>dap_swj_enable</td>
+<td>bool</td>
+<td>True</td>
+<td>
+Send SWJ transition sequence to switch between SWD and JTAG.
+</td></tr>
+
+<tr><td>dap_swj_use_dormant</td>
+<td>bool</td>
+<td>False</td>
+<td>
+When switching between SWD and JTAG, use the SWJ sequence added in ADIv5.2 that transitions through
+a new dormant state. Requires a SWJ-DPv2. Note that if the connection attempt fails using the
+deprecated sequence (when this option is disabled), then pyOCD will automatically attempt to use the
+new sequence. This option simply skips the deprecated sequence in case it causes problems or it is
+known that dormant state is required for the target.
+</td></tr>
+
+<tr><td>debug.log_flm_info</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Log details of loaded .FLM flash algos.
+</td></tr>
+
+<tr><td>debug.traceback</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Print tracebacks for exceptions, including errors that are only logged as well as critical errors that cause pyocd to terminate.
+
+Disabled by default, unless the log level is raised to Debug.
+</td></tr>
+
+<tr><td>enable_multicore_debug</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Whether to put pyOCD into multicore debug mode. The primary effect is to modify the default software
+reset type for secondary cores to use VECTRESET, which will fall back to emulated reset for
+secondary cores that are not v7-M architecture (VECTRESET is only supported on v7-M). The core that is
+considered the primary core is selected by the `primary_core` option.
+</td></tr>
+
+<tr><td>fast_program</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Setting this option to True will use CRC checks of existing flash sector
+contents to determine whether pages need to be programmed.
+</td></tr>
+
+<tr><td>flash.timeout.init</td>
+<td>float</td>
+<td>5.0</td>
+<td>
+Flash algorithm init and uninit timeout in seconds.
+</td></tr>
+
+<tr><td>flash.timeout.analyzer</td>
+<td>float</td>
+<td>30.0</td>
+<td>
+Flash CRC analyzer timeout in seconds.
+</td></tr>
+
+<tr><td>flash.timeout.erase_all</td>
+<td>float</td>
+<td>240.0</td>
+<td>
+Flash algorithm erase all timeout in seconds.
+</td></tr>
+
+<tr><td>flash.timeout.erase_sector</td>
+<td>float</td>
+<td>10.0</td>
+<td>
+Flash algorithm sector erase timeout in seconds.
+</td></tr>
+
+<tr><td>flash.timeout.program</td>
+<td>float</td>
+<td>10.0</td>
+<td>
+Flash algorithm programming timeout in seconds.
+</td></tr>
+
+<tr><td>frequency</td>
+<td>int</td>
+<td>1000000 (1 MHz)</td>
+<td>
+SWD/JTAG frequency in Hertz.
+</td></tr>
+
+<tr><td>hide_programming_progress</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Disables flash programming progress bar when True.
+</td></tr>
+
+<tr><td>keep_unwritten</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Whether to preserve existing flash content for ranges of sectors that will be erased but not written
+with new data.
+</td></tr>
+
+<tr><td>load.pre_reset</td>
+<td>str</td>
+<td><i>No default</i></td>
+<td>
+Specify the type of reset to perform before programming. The value must be one of
+'off', 'default', 'hardware', 'system', 'core', 'n_srst', 'sysresetreq', 'vectreset' or 'emulated'.
+</td></tr>
+
+<tr><td>load.post_reset</td>
+<td>str</td>
+<td><i>No default</i></td>
+<td>
+Specify the type of reset to perform after programming. The value must be one of
+'off', 'default', 'hardware', 'system', 'core', 'n_srst', 'sysresetreq', 'vectreset' or 'emulated'.
+</td></tr>
+
+<tr><td>logging</td>
+<td>str, dict</td>
+<td><i>No default</i></td>
+<td>
+Either a dictionary with logging configuration, or a path to a separate yaml logging configuration
+file. See the <a href="/docs/configuring_logging.html">logging configuration documentation</a> for details of how to
+use this option.
+</td></tr>
+
+<tr><td>no_config</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Do not use default config file.
+</td></tr>
+
+<tr><td>pack</td>
+<td>str, list of str</td>
+<td><i>No default</i></td>
+<td>
+Path or list of paths to CMSIS Device Family Packs. Devices defined in the pack(s) are added to the
+list of available targets.
+</td></tr>
+
+<tr><td>pack.debug_sequences.debugvars</td>
+<td>str</td>
+<td><i>No default</i></td>
+<td>
+Variable definition statements to change configurable variables defined by and used in the target's debug sequences.
+Should be set to a string containing C-style variable assignment statements. C-compatible integer expressions
+are allowed, and can refer to previously defined variables. Only those debug variables whose value is being
+changed need to be assigned a value; others will retain their default value.
+</td></tr>
+
+<tr><td>pack.debug_sequences.disabled_sequences</td>
+<td>str, list of str</td>
+<td><i>No default</i></td>
+<td>
+Comma-separated list of names of debug sequences to disable for a CMSIS-Pack based target.
+Disabled sequences can be restricted to a given core by appending a colon and processor
+name to the sequence's name. If set in a YAML config file, the value must be a list of sequence
+names instead of using a single comma-separated value.
+
+Only top-level sequences can be disabled. If a sequence is called from another sequence it will
+always be executed even if listed in this option.
+
+Ignored for builtin targets.
+</td></tr>
+
+<tr><td>pack.debug_sequences.enable</td>
+<td>bool</td>
+<td><i>True</i></td>
+<td>
+Global enable for debug sequences for CMSIS-Pack based targets. Ignored for builtin targets.
+</td></tr>
+
+<tr><td>primary_core</td>
+<td>int</td>
+<td>0</td>
+<td>
+Core number for the primary/boot core of an asymmetric multicore target. Becomes the default selected
+core in the commander and the `SoCTarget` class. Also the core that will control system reset when
+`enable_multicore_debug` is set.
+</td></tr>
+
+<tr><td>probeserver.port</td>
+<td>int</td>
+<td>5555</td>
+<td>
+TCP port for the debug probe server.
+</td></tr>
+
+<tr><td>project_dir</td>
+<td>str</td>
+<td><i>See description</i></td>
+<td>
+Path to the session's project directory. Defaults to the working directory when the pyocd tool was
+executed.
+</td></tr>
+
+<tr><td>reset_type</td>
+<td>str</td>
+<td>'default'</td>
+<td>
+Which type of reset to use. Must be one of 'default', 'hardware', 'system', 'core', 'n_srst',
+'sysresetreq', 'vectreset' or 'emulated'. The 'default' option causes the target type's
+default reset type to be used; this is usually `system`. If `enable_multicore_debug` is
+set to true, then secondary cores will default to `core`.
+</td></tr>
+
+<tr><td>reset.hold_time</td>
+<td>float</td>
+<td>0.1</td>
+<td>
+Number of seconds to hold hardware reset asserted.
+</td></tr>
+
+<tr><td>reset.post_delay</td>
+<td>float</td>
+<td>0.1</td>
+<td>
+Number of seconds to delay after a reset is issued.
+</td></tr>
+
+<tr><td>reset.dap_recover.timeout</td>
+<td>float</td>
+<td>5.0</td>
+<td>
+Timeout for waiting for the DAP to be accessible after reset, in seconds. If the timeout lapses, an attempt
+will be made to reconnect the DP and retry.
+</td></tr>
+
+<tr><td>reset.core_recover.timeout</td>
+<td>float</td>
+<td>2.0</td>
+<td>
+Timeout in seconds for waiting for a core to be accessible after reset. A warning is printed if the timeout
+lapses. Set to 0 to disable the core accessibility test. For halting reset, this is also the timeout for waiting
+for the core to halt.
+</td></tr>
+
+<tr><td>reset.halt_timeout</td>
+<td>float</td>
+<td>2.0</td>
+<td>
+Timeout in seconds for waiting for the core to halt after a reset and halt.
+</td></tr>
+
+<tr><td>resume_on_disconnect</td>
+<td>bool</td>
+<td>True</td>
+<td>
+Whether to disable debug control and resume the target when disconnecting.
+
+When True, then upon disconnect all CPUs are resumed, and DWT and other trace related blocks are disabled (`DEMCR` system register is cleared).
+If False, the target CPU states are left unchanged and any enabled debug hardware (DWT, ITM) remains enabled.
+In all cases, breakpoints and watchpoints are removed prior to disconnect.
+</td></tr>
+
+<tr><td>scan_all_aps</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Controls whether all 256 ADIv5 AP addresses will be probed.
+</td></tr>
+
+<tr><td>serve_local_only</td>
+<td>bool</td>
+<td>True</td>
+<td>
+When this option is True, the GDB server, probe server, semihosting telnet, and raw SWV server are only served
+on localhost, making them inaccessible across the network. Set to False to enable connecting to these ports
+from any machine on the network.
+</td></tr>
+
+<tr><td>smart_flash</td>
+<td>bool</td>
+<td>True</td>
+<td>
+If set to True, the flash loader will attempt to not program pages whose contents are not going to
+change by scanning target flash memory. A value of False will force all pages to be erased and
+programmed.
+</td></tr>
+
+<tr><td>target_override</td>
+<td>str</td>
+<td><i>No default</i></td>
+<td>
+Target type name to use instead of default board target or default <tt>cortex_m</tt>.
+</td></tr>
+
+<tr><td>test_binary</td>
+<td>str</td>
+<td><i>No default</i></td>
+<td>
+Specify the test binary file name used by the functional test suite (in the <tt>test/</tt> directory). The
+binary must be in the <tt>binaries/</tt> directory. This option is most useful when set in a board config
+file for running the functional tests on boards that cannot be automatically detected.
+</td></tr>
+
+<tr><td>user_script</td>
+<td>str</td>
+<td><i>No default</i></td>
+<td>
+Path of the user script file.
+</td></tr>
+
+<tr><td>warning.cortex_m_default</td>
+<td>bool</td>
+<td><i>True</i></td>
+<td>Whether to show the warning when no target type is selected and the default cortex_m target
+type is used. The warning is never shown if the cortex_m target type is explicitly specified.
+</td></tr>
+
+</table>
+
+<h2 id="extended-options-with-multicore-support">Extended options with multicore support</h2>
+
+<p>These session options offer extended configuration using either a single setting or a per-core setting,
+using a list with an entry for each core. When one of the following options is set using a comma separated list
+inside square brackets [], the per-core assignment is encoded by the index (position) of the value in
+that list. When using a list, all cores must have a corresponding entry.</p>
+
+<table>
+
+<tr><th>Option Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+
+<tr><td>gdbserver_port</td>
+<td>int, list of int</td>
+<td>3333</td>
+<td>Base TCP port for the GDB Server. For multicore targets the zero-based core number will be added to
+the value unless a list is specified.
+
+Examples:
+<ul>
+<li><tt>3343</tt>, where in case of a multicore target, TCP port 3343 is assigned to
+<tt>core0</tt>, TCP port 3344 is assigned to <tt>core1</tt>, and so on.</li>
+<li><tt>[3343, 3334]</tt>, where TCP port 3343 is assigned to <tt>core0</tt> and TCP port
+3334 is assigned to <tt>core1</tt>.</li>
+</ul>
+</td></tr>
+
+<tr><td>telnet_mode</td>
+<td>str, list of str</td>
+<td>'server'</td>
+<td>Controls connection to standard I/O. Must be one of 'off', 'console', 'server', or 'file'. For multicore devices
+the mode applies to all cores unless it is specified as a list. This session option is preferred over the
+<tt>semihost_console_type</tt> option.
+
+Examples:
+<ul>
+<li><tt>console</tt>, where the standard I/O for all cores is routed to the console.</li>
+<li><tt>[console, server]</tt>, where the standard I/O for <tt>core0</tt> is routed to the
+console and the standard I/O for <tt>core1</tt> is routed to the Telnet Server.</li>
+</ul>
+</td></tr>
+
+<tr><td>telnet_port</td>
+<td>int, list of int</td>
+<td>4444</td>
+<td>The option applies only when <tt>telnet_mode</tt> is set to 'server'. Base TCP port for the Telnet Server.
+For multicore targets the zero-based core number will be added to the value unless a list is specified.
+
+Examples:
+<ul>
+<li><tt>4434</tt>, where in case of a multicore target, TCP port 4434 is assigned to
+<tt>core0</tt>, TCP port 4435 is assigned to <tt>core1</tt>, and so on.</li>
+<li><tt>[4434, 4443]</tt>, where TCP port 4434 is assigned to <tt>core0</tt> and TCP port
+4443 is assigned to <tt>core1</tt>.</li>
+</ul>
+</td></tr>
+
+<tr><td>telnet_file_in</td>
+<td>str, list of str</td>
+<td><i>&lt;target&gt;.in</i></td>
+<td>The option applies only when <tt>telnet_mode</tt> is set to 'file'. Input filename to use as <i>stdin</i>.
+When a single string is used, the core number (_&lt;core&gt;) will be appended to the filename
+in case of multicore targets.
+
+Examples:
+<ul>
+<li><tt>mytarget.in</tt>, where in case of a multicore target, the filenames will be
+<tt>mytarget_0.in</tt> assigned to <tt>core0</tt>, <tt>mytarget_1.in</tt> assigned to <tt>core1</tt>,
+and so on.</li>
+<li><tt>[mytarget_cm4.in, mytarget_cm0.in]</tt>, where <tt>mytarget_cm4.in</tt> is
+assigned to <tt>core0</tt> and <tt>mytarget_cm0.in</tt> is assigned to <tt>core1</tt>.</li>
+</ul>
+</td></tr>
+
+<tr><td>telnet_file_out</td>
+<td>str, list of str</td>
+<td><i>&lt;target&gt;.out</i></td>
+<td>The option applies only when <tt>telnet_mode</tt> is set to 'file'. Output filename to use as <i>stdout</i>.
+When a single string is used, the core number (_&lt;core&gt;) will be appended to the filename
+in case of multicore targets.
+
+Examples:
+<ul>
+<li><tt>mytarget.out</tt>, where in case of a multicore target, the filenames will be
+<tt>mytarget_0.out</tt> assigned to <tt>core0</tt>, <tt>mytarget_1.out</tt> assigned to <tt>core1</tt>,
+and so on.</li>
+<li><tt>[mytarget_cm4.out, mytarget_cm0.out]</tt>, where <tt>mytarget_cm4.out</tt> is
+assigned to <tt>core0</tt> and <tt>mytarget_cm0.out</tt> is assigned to <tt>core1</tt>.</li>
+</ul>
+</td></tr>
+
+</table>
+
+<h2 id="rtt-and-systemview-options">RTT and SystemView options</h2>
+
+<table>
+
+<tr><th>Option Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+
+<tr><td>rtt</td>
+<td>YAML Node</td>
+<td><i>No default</i></td>
+<td><p>Configuration for <a href="https://www.segger.com/products/debug-probes/j-link/technology/about-real-time-transfer/">SEGGER RTT</a></p>
+<pre>
+rtt:
+  - pname:         # [optional] Processor identifier (required for multicore devices).
+    control-block: # [required] RTT control block discovery in target memory.
+      address:     # [optional] Explicit address or start of scan range when size is provided.
+      size:        # [optional] Size of the memory range to scan.
+      auto-detect: # [optional] Scan default RAM regions. Default=false
+    channel:       # [required] List of RTT channel configurations.
+      - number:    # [required] Channel number.
+        mode:      # [required] Channel mode:
+                   #   stdio             - Connects channel to standard input/output.
+                   #   server            - Exposes channel over a TCP server.
+                   #   systemview        - Saves channel data to *.SVDat file for SEGGER SystemView.
+                   #   systemview-server - Streams live data to SEGGER SystemView.
+        port:      # [optional] TCP port number (required for 'server' and 'systemview-server').
+</pre>
+<p>Example:</p>
+<ul>
+<li>Command line:<br />
+<tt>-O rtt="[{control-block: {address: 0x20000000, size: 0x00020000}, channel: [{number: 0, mode: stdio}, {number: 1, mode: systemview}]}]"</tt></li>
+<li>Config file:<br />
+<pre>rtt:
+  - control-block:
+      address: 0x20000000
+      size: 0x00020000
+    channel:
+      - number: 0
+        mode: stdio
+      - number: 1
+        mode: systemview
+</pre></li></ul></td></tr>
+
+<tr><td>systemview_file</td>
+<td>str</td>
+<td><i>&lt;target&gt;.SVDat</i></td>
+<td>Output filename to capture SystemView data.</td></tr>
+
+<tr><td>systemview_auto_start</td>
+<td>bool</td>
+<td>True</td>
+<td>Whether to automatically start SystemView recording.</td></tr>
+
+<tr><td>systemview_auto_stop</td>
+<td>bool</td>
+<td>True</td>
+<td>Whether to automatically stop SystemView recording.</td></tr>
+
+</table>
+
+<h2 id="gdb-server-options">GDB server options</h2>
+
+<p>These session options are currently only applied when running the GDB server.</p>
+
+<table>
+
+<tr><th>Option Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+
+<tr><td>enable_semihosting</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Set to True to handle semihosting requests. Also see the <tt>semihost_console_type</tt> option.
+</td></tr>
+
+<tr><td>enable_swv</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Whether to enable SWV printf output over the semihosting console. Requires the <tt>swv_system_clock</tt>
+option to be set. The SWO baud rate can be controlled with the <tt>swv_clock</tt> option.
+</td></tr>
+
+<tr><td>debug.status_fault_retry_timeout</td>
+<td>float</td>
+<td>1</td>
+<td>
+Duration in seconds that a failed target status check will be retried before an error is raised. Only
+applies while the target is running after a resume operation in the debugger and pyOCD is waiting for
+it to halt again.
+</td></tr>
+
+<tr><td>gdbserver_port</td>
+<td>int</td>
+<td>3333</td>
+<td>
+Base TCP port for the gdbserver. The core number, which is 0 for the primary core, will be added to
+this value.
+</td></tr>
+
+<tr><td>persist</td>
+<td>bool</td>
+<td>False</td>
+<td>
+If True, the GDB server will not exit after GDB disconnects.
+</td></tr>
+
+<tr><td>report_core_number</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Whether gdb server should report core number as part of the per-thread information.
+</td></tr>
+
+<tr><td>rtos.enable</td>
+<td>bool</td>
+<td>True</td>
+<td>
+Overall enable flag for RTOS aware debugging. By default it's enabled but can be switched off
+if necessary.
+</td></tr>
+
+<tr><td>rtos.name</td>
+<td>str</td>
+<td><i>No default</i></td>
+<td>
+Name of the RTOS plugin to use. If not set, all RTOS plugins are given a chance to load.
+</td></tr>
+
+<tr><td>semihost_console_type</td>
+<td>str</td>
+<td>'telnet'</td>
+<td>
+If set to 'telnet' then the semihosting telnet server will be started. If set to 'console' then
+semihosting will print to the console.
+</td></tr>
+
+<tr><td>semihost_use_syscalls</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Whether to use GDB syscalls for semihosting file access operations, or to have pyOCD perform the
+operations. This is most useful if GDB is running on a remote system.
+</td></tr>
+
+<tr><td>semihost.commandline</td>
+<td>str</td>
+<td><i>Empty</i></td>
+<td>
+Program command line string, used for the SYS_GET_CMDLINE semihosting request.
+</td></tr>
+
+<tr><td>step_into_interrupt</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Set this option to True to enable interrupts when performing step operations. Otherwise
+interrupts will be disabled and step operations cannot be interrupted.
+</td></tr>
+
+<tr><td>swv_clock</td>
+<td>int</td>
+<td>1000000 (1 MHz)</td>
+<td>
+Frequency in Hertz of the SWO baud rate.
+</td></tr>
+
+<tr><td>swv_system_clock</td>
+<td>int</td>
+<td><i>No default</i></td>
+<td>
+Frequency in Hertz of the target's system clock. Used to compute the SWO baud rate
+divider.
+</td></tr>
+
+<tr><td>swv_raw_enable</td>
+<td>bool</td>
+<td>True</td>
+<td>
+Enable flag for the raw SWV stream server.
+</td></tr>
+
+<tr><td>swv_raw_port</td>
+<td>int</td>
+<td>3443</td>
+<td>
+TCP port number for the raw SWV stream server.
+</td></tr>
+
+<tr><td>telnet_port</td>
+<td>int</td>
+<td>4444</td>
+<td>
+Base TCP port number for the semihosting telnet server. The core number, which will be 0 for the
+primary core, is added to this value.
+</td></tr>
+
+<tr><td>vector_catch</td>
+<td>str</td>
+<td>'h'</td>
+<td>
+Enable vector catch sources, one letter per enabled source in any order, or
+<tt>all</tt> or <tt>none</tt>.
+
+The source letters are:
+- <tt>h</tt>=hard fault
+- <tt>b</tt>=bus fault
+- <tt>m</tt>=mem fault
+- <tt>e</tt>=secure fault
+- <tt>i</tt>=irq err
+- <tt>s</tt>=state err
+- <tt>c</tt>=check err
+- <tt>p</tt>=nocp
+- <tt>r</tt>=reset
+- <tt>a</tt>=all
+- <tt>n</tt>=none
+</td></tr>
+
+<tr><td>register_fields</td>
+<td>bool</td>
+<td>True</td>
+<td>
+When set to True, registers with bitfields will have their respective bitfields defined for
+presentation in gdb.
+</td></tr>
+
+</table>
+
+<h2 id="cmsis-dap-probe-options">CMSIS-DAP probe options</h2>
+
+<p>These session options are available when the CMSIS-DAP debug probe plugin is active.</p>
+
+<table>
+
+<tr><th>Option Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+
+<tr><td>cmsis_dap.deferred_transfers</td>
+<td>bool</td>
+<td>True</td>
+<td>
+Whether to use deferred transfers in the CMSIS-DAP probe backend. By disabling deferred transfers,
+all writes take effect immediately. However, performance is negatively affected.
+</td></tr>
+
+<tr><td>cmsis_dap.limit_packets</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Restrict CMSIS-DAP backend to using a single in-flight command at a time. This is useful on some systems
+where USB is problematic, in particular virtual machines.
+</td></tr>
+
+</table>
+
+<h2 id="j-link-probe-options">J-Link probe options</h2>
+
+<p>These session options are available when the SEGGER J-Link debug probe plugin is active.</p>
+
+<table>
+
+<tr><th>Option Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+
+<tr><td>jlink.device</td>
+<td>str</td>
+<td><i>No default</i></td>
+<td>
+If this option is set to a supported J-Link device name, then the J-Link will be asked connect
+using this name. Otherwise, when unset, the J-Link is configured for only the low-level CoreSight operations
+required by pyOCD. Ordinarily, it does not need to be set.
+</td></tr>
+
+<tr><td>jlink.non_interactive</td>
+<td>bool</td>
+<td>True</td>
+<td>
+Controls whether the J-Link DLL is allowed to present UI dialog boxes and its control
+panel. Note that dialog boxes will actually still be visible, but the default option
+will be chosen automatically after 5 seconds.
+
+Note: This has the effect of also silencing dialog boxes that appear when
+updating firmware / to confirm updating firmware.
+</td></tr>
+
+<tr><td>jlink.power</td>
+<td>bool</td>
+<td>True</td>
+<td>
+Enable target power when connecting via a JLink probe, and disable power when disconnecting.
+Default is True.
+</td></tr>
+
+</table>
+
+<h2 id="picoprobe-options">Picoprobe options</h2>
+
+<p>These session options are available when the Picoprobe debug probe plugin is active.</p>
+
+<table>
+
+<tr><th>Option Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+
+<tr><td>picoprobe.safeswd</td>
+<td>bool</td>
+<td>False</td>
+<td>
+Use safer but slower SWD transfer function with Picoprobe.
+Default is False, so possible WAIT or FAULT SWD acknowledges and protocol errors will not be caught immediately.
+</td></tr>
+
+</table>
+
+<h2 id="stlink-options">STLink options</h2>
+
+<p>These session options are available when the STLink debug probe plugin is active.</p>
+
+<table>
+
+<tr><th>Option Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+
+<tr><td>stlink.v3_prescaler</td>
+<td>int</td>
+<td>1</td>
+<td>
+Sets the HCLK prescaler of an STLinkV3, changing performance versus power tradeoff.
+The value must be one of 1=high performance (default), 2=normal, or 4=low power.
+</td></tr>
+
+</table>
+
+
+                </div>
+              </div>
+            </main>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-shrink-0">
+        <footer class="pyocd-footer p-0 mt-3">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-4">
+    <div class="col-3">
+      <p class="small">
+          Copyright &copy; 2021-2026 PyOCD Authors.
+      </p>
+      <p class="small">
+        Site and docs are <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.<br/>
+        Project code is <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.
+      </p>
+    </div>
+    <div class="col-3">  <!-- mt-3 mb-3 mx-4 -->
+      <h5>Links</h5>
+      <ul class="list-unstyled">
+        <li>
+          <a href="/docs/">Documentation</a>
+        </li>
+        <li>
+          <a href="/posts/">Posts</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/pyOCD/blob/main/CONTRIBUTING.md">Contributing</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/.github/blob/main/CODE_OF_CONDUCT.md">Code of Conduct</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/">GitHub</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-3">
+      <h5>Projects</h5>
+      <ul class="list-unstyled">
+        <li>
+          <a href="https://github.com/pyocd/pyOCD">pyOCD</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/cmsis-pack-manager">cmsis-pack-manager</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/FlashAlgo">FlashAlgo</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-3">
+      <h5>Community</h5>
+      <ul class="list-unstyled">
+        <li>
+          <a href="https://github.com/pyocd/pyOCD/issues">Issues</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/pyOCD/discussions">Discussions</a>
+        </li>
+        <li>
+          <a href="https://join.slack.com/t/pyocd/shared_invite/zt-zqjv6zr5-ZfGAXl_mFCGGmFlB_8riHA">Slack</a>
+        </li>
+        <li>
+          <a href="https://groups.google.com/g/pyocd">Mailing list</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+      </div>
+
+      <a href="#top" title="Scroll to top" id="scroll-top-link" aria-hidden="true">
+        <i class="bi bi-arrow-up-short"></i>
+      </a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+<script src="/assets/javascript/jquery-3.6.0.slim.min.js"></script>
+<!-- 
+<script type="text/javascript" src="/assets/javascript/index.js"></script>
+ -->
+
+  </body>
+
+<script>
+// Hide the page's floating TOC if there are no sections.
+if ($('#toc').children().length < 1) {
+  $('#toc-div').hide()
+}
+
+// Insert icons for alerts.
+$(".alert-warning").prepend("<div class=\"alert-icon\"><i class=\"bi bi-exclamation-triangle\"></i></div>")
+$(".alert-info").prepend("<div class=\"alert-icon\"><i class=\"bi bi-info-circle\"></i></div>")
+$(".alert-success").prepend("<div class=\"alert-icon\"><i class=\"bi bi-check-circle\"></i></div>")
+</script>
+</html>

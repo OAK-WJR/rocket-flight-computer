@@ -1,0 +1,2785 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_core_schematic")
+	(uuid 5fe62d29-5f56-5202-9e1e-56e4f8398e97)
+	(paper "A3")
+	(title_block
+		(title "05 | Camera branch protection and regulator")
+		(date "2026-09-07")
+		(rev "M3-ASSY-R1")
+		(company "Single-board M3 candidate; full system incomplete"))
+	(lib_symbols
+		(symbol "M3:C"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762)
+						(xy 2.032 0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -2.032 -0.762)
+						(xy 2.032 -0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:CameraBuck"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "CameraBuck_0_1"
+				(rectangle
+					(start -17.78 5.08)
+					(end 17.78 -5.08)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "CameraBuck_1_1"
+				(pin input line
+					(at -22.86 2.54 0)
+					(length 5.08)
+					(name "FB"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -22.86 0.0 0)
+					(length 5.08)
+					(name "EN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -22.86 -2.54 0)
+					(length 5.08)
+					(name "IN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 22.86 2.54 180)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin output line
+					(at 22.86 0.0 180)
+					(length 5.08)
+					(name "SW"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 22.86 -2.54 180)
+					(length 5.08)
+					(name "BST"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_AP63200_TSOT26"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:CameraEFuse"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "CameraEFuse_0_1"
+				(rectangle
+					(start -17.78 8.89)
+					(end 17.78 -8.89)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "CameraEFuse_1_1"
+				(pin power_in line
+					(at -22.86 6.3500000000000005 0)
+					(length 5.08)
+					(name "IN_A"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -22.86 3.8100000000000005 0)
+					(length 5.08)
+					(name "IN_B"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -22.86 1.2700000000000005 0)
+					(length 5.08)
+					(name "EN/UVLO"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -22.86 -1.2699999999999996 0)
+					(length 5.08)
+					(name "dVdt"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -22.86 -3.8099999999999987 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "8"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -22.86 -6.35 0)
+					(length 5.08)
+					(name "EP/GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "9"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_out line
+					(at 22.86 6.3500000000000005 180)
+					(length 5.08)
+					(name "OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin open_collector line
+					(at 22.86 3.8100000000000005 180)
+					(length 5.08)
+					(name "FLT_N"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 22.86 1.2700000000000005 180)
+					(length 5.08)
+					(name "ILM"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "7"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_TPS2595_DSG"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:L"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 1.016)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "L"
+				(at -1.27 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "L"
+				(at 1.905 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Inductor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "inductor choke coil reactor magnetic"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "L_0_1"
+				(arc
+					(start 0 2.54)
+					(mid 0.6323 1.905)
+					(end 0 1.27)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(arc
+					(start 0 1.27)
+					(mid 0.6323 0.635)
+					(end 0 0)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(arc
+					(start 0 0)
+					(mid 0.6323 -0.635)
+					(end 0 -1.27)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(arc
+					(start 0 -1.27)
+					(mid 0.6323 -1.905)
+					(end 0 -2.54)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "L_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "IND-SMD_L4.0-W4.0 M3_SRP5030TA"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:TestPoint"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.762)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TestPad_1.5"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes)))))
+	(text "05 | Camera branch protection and regulator"
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 2.54 2.54))
+			(justify left))
+		(uuid ae4a4b8c-e7ff-539c-ab8f-02faaa3c4e6b))
+	(symbol
+		(lib_id "M3:CameraEFuse")
+		(at 83.82 76.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 143976bd-6d22-53e7-b9f7-8863d81f1ce1)
+		(property "Reference" "U7"
+			(at 83.82 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "TPS259570DSGR"
+			(at 83.82 66.03999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TPS2595_DSG"
+			(at 83.82 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 83.82 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C1849463"
+			(at 83.82 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "U7")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 60.96 69.85)
+			(xy 55.88 69.85))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3a754710-0d0a-5392-9107-152b8e92a64c))
+	(global_label "RAW_PROTECTED"
+		(shape passive)
+		(at 55.88 69.85 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e5564c3d-a252-5c1d-af20-37cd917dba56))
+	(wire
+		(pts
+			(xy 60.96 72.39)
+			(xy 55.88 72.39))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5e9df187-8163-5c27-b5d6-008f98878107))
+	(global_label "RAW_PROTECTED"
+		(shape passive)
+		(at 55.88 72.39 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1f243e2f-1a1c-57fd-8d58-81cb10499eea))
+	(wire
+		(pts
+			(xy 60.96 74.93)
+			(xy 55.88 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2e55e44c-6893-575a-b445-b2cc6a3fdb7a))
+	(global_label "CAM_EN"
+		(shape passive)
+		(at 55.88 74.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9065d31d-c98a-56f0-915c-587ed3c865a6))
+	(wire
+		(pts
+			(xy 60.96 77.47)
+			(xy 55.88 77.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5afeb4c0-1869-5f37-a74c-9fcd8c583299))
+	(global_label "CAM_DVDT"
+		(shape passive)
+		(at 55.88 77.47 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7495270b-f16e-5c1f-8f3c-575da3792e87))
+	(wire
+		(pts
+			(xy 60.96 80.01)
+			(xy 55.88 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c46738cc-6ed7-5447-8d2c-604afd42de83))
+	(global_label "GND"
+		(shape passive)
+		(at 55.88 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7c393376-cf93-5691-bdd5-b062e9fdbc7a))
+	(wire
+		(pts
+			(xy 60.96 82.55)
+			(xy 55.88 82.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8fd80eed-9919-5bae-a1ec-86f51774a211))
+	(global_label "GND"
+		(shape passive)
+		(at 55.88 82.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 49bb6d95-810d-55dd-a5fb-5c160d53103a))
+	(wire
+		(pts
+			(xy 106.68 69.85)
+			(xy 111.76 69.85))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d61904ba-7d41-57f5-bd2d-d531bc37a270))
+	(global_label "CAM_INPUT_LIMITED"
+		(shape passive)
+		(at 111.76 69.85 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 54e81f95-291d-5578-b0d0-9cd3a9d7b97c))
+	(wire
+		(pts
+			(xy 106.68 72.39)
+			(xy 111.76 72.39))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 60f7c74b-1f98-5517-89c6-a0a710f0622e))
+	(global_label "CAM_FLT_RAW"
+		(shape passive)
+		(at 111.76 72.39 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 367d2fb9-d7f3-5d68-81a0-929df682f610))
+	(wire
+		(pts
+			(xy 106.68 74.93)
+			(xy 111.76 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3e446959-96bc-5586-b517-4c0931ad1929))
+	(global_label "CAM_ILIM"
+		(shape passive)
+		(at 111.76 74.93 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 4fc072cb-51f9-55eb-8906-4d81bce11fcb))
+	(symbol
+		(lib_id "M3:CameraBuck")
+		(at 276.86 76.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e7c29998-dc15-5782-9621-cf9b4383b0d6)
+		(property "Reference" "U8"
+			(at 276.86 66.03999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "AP63200WU-7"
+			(at 276.86 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_AP63200_TSOT26"
+			(at 276.86 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 276.86 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C2071868"
+			(at 276.86 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "U8")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 254.0 73.66)
+			(xy 248.92 73.66))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 26a41749-afea-548a-a232-b70a48e577ad))
+	(global_label "CAM_FB"
+		(shape passive)
+		(at 248.92 73.66 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 41db115c-7ce2-5a2f-81a4-0a7f51fd17c4))
+	(wire
+		(pts
+			(xy 254.0 76.2)
+			(xy 248.92 76.2))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5c2ce685-e814-519b-988c-131dfedbd070))
+	(global_label "CAM_INPUT_LIMITED"
+		(shape passive)
+		(at 248.92 76.2 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 111f1946-3588-5254-b9c1-7586da16bfee))
+	(wire
+		(pts
+			(xy 254.0 78.74)
+			(xy 248.92 78.74))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d0f6a4bc-de81-5dff-915b-4ef367b61ad5))
+	(global_label "CAM_INPUT_LIMITED"
+		(shape passive)
+		(at 248.92 78.74 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid aaa415e7-c1b0-5bb7-af4c-f8ebb95b31a0))
+	(wire
+		(pts
+			(xy 299.72 73.66)
+			(xy 304.8 73.66))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7159d6d8-e88b-5c18-89fe-0fd995c1ccc4))
+	(global_label "GND"
+		(shape passive)
+		(at 304.8 73.66 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 651566c1-c1ce-5700-bb81-c3f5e0611b33))
+	(wire
+		(pts
+			(xy 299.72 76.2)
+			(xy 304.8 76.2))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4134a80f-6ea2-5255-a784-c6cf2c93a060))
+	(global_label "CAM_SW"
+		(shape passive)
+		(at 304.8 76.2 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 0c4f24dc-13b2-58a0-af5e-8f6174fdfc13))
+	(wire
+		(pts
+			(xy 299.72 78.74)
+			(xy 304.8 78.74))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ea62fc2b-d371-533f-8107-c621dd21273c))
+	(global_label "CAM_BST"
+		(shape passive)
+		(at 304.8 78.74 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid d2476087-a188-513a-a04f-b72b44cf9267))
+	(symbol
+		(lib_id "M3:L")
+		(at 236.22 162.56 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 14643730-31e7-5687-80f4-b243427fb23c)
+		(property "Reference" "L3"
+			(at 238.76 161.29 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10uH"
+			(at 238.76 163.82999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_SRP5030TA"
+			(at 236.22 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 236.22 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C3223923"
+			(at 236.22 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "L3")
+					(unit 1))))
+		(property "Manufacturer" "Bourns"
+			(at 236.22 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "SRP5030TA-100M"
+			(at 236.22 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C3223923"
+			(at 236.22 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 236.22 158.75)
+			(xy 228.6 158.75))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2d5bf4df-1af3-5523-901a-dc235ceef902))
+	(global_label "CAM_SW"
+		(shape passive)
+		(at 228.6 158.75 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bb87c3cc-27ba-5749-9545-7d4272b28633))
+	(wire
+		(pts
+			(xy 236.22 166.37)
+			(xy 228.6 166.37))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7849255f-177c-5c11-88d0-b063135e778d))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 228.6 166.37 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7af7c2f9-5e7a-590a-9f0c-8ff3c47502e9))
+	(symbol
+		(lib_id "M3:C")
+		(at 101.6 127 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid da54e557-0d5c-5a61-97b3-099fea27cb03)
+		(property "Reference" "C70"
+			(at 104.14 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "4.7nF 50V C0G 5%"
+			(at 104.14 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 101.6 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 101.6 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C85980"
+			(at 101.6 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C70")
+					(unit 1))))
+		(property "Manufacturer" "Murata"
+			(at 101.6 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "GRM1885C1H472JA01D"
+			(at 101.6 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C85980"
+			(at 101.6 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 101.6 123.19)
+			(xy 93.97999999999999 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 19900f12-c615-5548-9064-7c82ff8e3277))
+	(global_label "CAM_DVDT"
+		(shape passive)
+		(at 93.97999999999999 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d9df6664-e602-5c79-a662-b446048590ad))
+	(wire
+		(pts
+			(xy 101.6 130.81)
+			(xy 93.97999999999999 130.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f22a9fbd-6aa4-5976-841b-7ebe1a400732))
+	(global_label "GND"
+		(shape passive)
+		(at 93.97999999999999 130.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1a399bbd-722b-5f2d-bcaa-b58c63d0167f))
+	(symbol
+		(lib_id "M3:C")
+		(at 48.26 170.18 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 2ccf4c35-7b35-5c06-b25c-4c3dcd659244)
+		(property "Reference" "C71"
+			(at 50.8 168.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 50.8 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 48.26 170.18 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 48.26 170.18 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C1591"
+			(at 48.26 170.18 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C71")
+					(unit 1))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 48.26 170.18 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL10B104KB8NNNC"
+			(at 48.26 170.18 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C1591"
+			(at 48.26 170.18 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 48.26 166.37)
+			(xy 40.64 166.37))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 05510019-89ec-5a29-87ce-323f91b13d26))
+	(global_label "RAW_PROTECTED"
+		(shape passive)
+		(at 40.64 166.37 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f997447b-3b0a-5682-b840-3759610dc34d))
+	(wire
+		(pts
+			(xy 48.26 173.99)
+			(xy 40.64 173.99))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1bb87068-2dac-5516-b776-1357a27f7913))
+	(global_label "GND"
+		(shape passive)
+		(at 40.64 173.99 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1817c3df-1479-5fa0-8364-0ab4267c6d36))
+	(symbol
+		(lib_id "M3:C")
+		(at 228.6 121.92 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f859a7ed-0415-55e2-89fe-dd88a2e084cd)
+		(property "Reference" "C72"
+			(at 231.14 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 231.14 123.19000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 228.6 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 228.6 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 228.6 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C72")
+					(unit 1))))
+		(property "Manufacturer" "Murata"
+			(at 228.6 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 228.6 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C21397"
+			(at 228.6 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 228.6 118.11)
+			(xy 220.98 118.11))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bd75ebe7-c116-57be-b447-e4b945d759fb))
+	(global_label "CAM_INPUT_LIMITED"
+		(shape passive)
+		(at 220.98 118.11 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bef1d765-851b-575a-b411-837d0ffcee56))
+	(wire
+		(pts
+			(xy 228.6 125.73)
+			(xy 220.98 125.73))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9053cc5b-ab84-5cb4-b371-170f44d77a29))
+	(global_label "GND"
+		(shape passive)
+		(at 220.98 125.73 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2b19dec1-4dfa-57b0-acd2-d794554f45fe))
+	(symbol
+		(lib_id "M3:C")
+		(at 276.86 121.92 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 5bb157f0-031f-5b69-9d3a-e5edbd577cdf)
+		(property "Reference" "C73"
+			(at 279.40000000000003 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 279.40000000000003 123.19000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 276.86 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 276.86 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 276.86 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C73")
+					(unit 1))))
+		(property "Manufacturer" "Murata"
+			(at 276.86 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 276.86 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C21397"
+			(at 276.86 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 276.86 118.11)
+			(xy 269.24 118.11))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 46a705fc-ff32-5077-bb06-832438afc181))
+	(global_label "CAM_INPUT_LIMITED"
+		(shape passive)
+		(at 269.24 118.11 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 57a603b7-4bcd-57de-902a-86bc04c84846))
+	(wire
+		(pts
+			(xy 276.86 125.73)
+			(xy 269.24 125.73))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b6d525d1-7575-50ac-ad22-222586581c55))
+	(global_label "GND"
+		(shape passive)
+		(at 269.24 125.73 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c5fa216f-bed0-5932-9920-57df0a4ec2ac))
+	(symbol
+		(lib_id "M3:C")
+		(at 325.12 121.92 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d1c2318b-d932-54f3-98d3-761cf7ca75d1)
+		(property "Reference" "C74"
+			(at 327.66 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 327.66 123.19000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 325.12 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 325.12 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C1591"
+			(at 325.12 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C74")
+					(unit 1))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 325.12 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL10B104KB8NNNC"
+			(at 325.12 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C1591"
+			(at 325.12 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 325.12 118.11)
+			(xy 317.5 118.11))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6e42b1ef-5e82-5aee-ae56-32a6c18ebd17))
+	(global_label "CAM_SW"
+		(shape passive)
+		(at 317.5 118.11 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1d017192-22ad-5fa5-bf61-574a5fe7a510))
+	(wire
+		(pts
+			(xy 325.12 125.73)
+			(xy 317.5 125.73))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c318cd48-5de9-57a8-9149-78434d2f64bf))
+	(global_label "CAM_BST"
+		(shape passive)
+		(at 317.5 125.73 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8211d201-f152-56b2-b20a-f2dd838f9163))
+	(symbol
+		(lib_id "M3:C")
+		(at 284.48 162.56 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 000ada0f-4805-5b9a-852a-a5422bb8cc1b)
+		(property "Reference" "C75"
+			(at 287.02000000000004 161.29 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 287.02000000000004 163.82999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 284.48 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 284.48 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 284.48 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C75")
+					(unit 1))))
+		(property "Manufacturer" "Murata"
+			(at 284.48 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 284.48 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C21397"
+			(at 284.48 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 284.48 158.75)
+			(xy 276.86 158.75))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a278a5b8-8d02-5240-b078-f4cc653e6b21))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 276.86 158.75 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 069ed85d-1c3b-54be-8bd0-d4dd40be547c))
+	(wire
+		(pts
+			(xy 284.48 166.37)
+			(xy 276.86 166.37))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2aac8237-5c09-5a35-93ff-4240ff8311cb))
+	(global_label "GND"
+		(shape passive)
+		(at 276.86 166.37 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b0c7749e-a2b6-54cf-9740-33cd2387daed))
+	(symbol
+		(lib_id "M3:C")
+		(at 332.74 162.56 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid b06c919c-1af6-57ae-8a6e-12ecabfc2a5c)
+		(property "Reference" "C76"
+			(at 335.28000000000003 161.29 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 335.28000000000003 163.82999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 332.74 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 332.74 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 332.74 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C76")
+					(unit 1))))
+		(property "Manufacturer" "Murata"
+			(at 332.74 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 332.74 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C21397"
+			(at 332.74 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 332.74 158.75)
+			(xy 325.12 158.75))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b687cfba-5b47-5148-8aa4-6445fc675c9e))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 325.12 158.75 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 730e469f-aabd-56f7-838e-09501b010449))
+	(wire
+		(pts
+			(xy 332.74 166.37)
+			(xy 325.12 166.37))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 987bae8b-1b24-506b-971b-ea562fb6b176))
+	(global_label "GND"
+		(shape passive)
+		(at 325.12 166.37 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a86d797b-431b-5298-9d2a-3c113fa62c9f))
+	(symbol
+		(lib_id "M3:C")
+		(at 332.74 208.28 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid dea24db0-bbe4-53b9-95af-f404b7e8dbd7)
+		(property "Reference" "C77"
+			(at 335.28000000000003 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100pF 50V C0G 5%"
+			(at 335.28000000000003 209.54999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 332.74 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 332.74 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14858"
+			(at 332.74 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C77")
+					(unit 1))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 332.74 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL10C101JB8NNNC"
+			(at 332.74 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C14858"
+			(at 332.74 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 332.74 204.47)
+			(xy 325.12 204.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4264d5c4-1de0-5c3b-bc76-37bdbb79b9d8))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 325.12 204.47 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fdce2e09-8b7c-5e9b-8321-2a44974368b8))
+	(wire
+		(pts
+			(xy 332.74 212.09)
+			(xy 325.12 212.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 942417dd-ff12-564c-b8bb-ee750b7e26b6))
+	(global_label "CAM_FB"
+		(shape passive)
+		(at 325.12 212.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 46b502b9-7b50-5392-b02a-97d91d1247b4))
+	(symbol
+		(lib_id "M3:R")
+		(at 50.8 127 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid c8a55ca8-30dc-5072-9d8d-bef81b52b590)
+		(property "Reference" "R70"
+			(at 53.339999999999996 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1.78k 0.1%"
+			(at 53.339999999999996 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 50.8 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 50.8 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C861207"
+			(at 50.8 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R70")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 50.8 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD071K78L"
+			(at 50.8 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C861207"
+			(at 50.8 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 50.8 123.19)
+			(xy 43.18 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 77bff796-ddc5-5fef-bd0f-c09db2087a03))
+	(global_label "CAM_ILIM"
+		(shape passive)
+		(at 43.18 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e274e2dc-0e0a-5c18-a0f9-cc3acfb25205))
+	(wire
+		(pts
+			(xy 50.8 130.81)
+			(xy 43.18 130.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0327b8b2-f0b0-5605-8342-82bf12eb0212))
+	(global_label "GND"
+		(shape passive)
+		(at 43.18 130.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 458b34a9-220a-5127-856e-67876322013c))
+	(symbol
+		(lib_id "M3:R")
+		(at 236.22 208.28 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 55390b2f-1f8e-5358-bf77-693b7c492e28)
+		(property "Reference" "R71"
+			(at 238.76 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "172k 0.1%"
+			(at 238.76 209.54999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 236.22 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 236.22 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C861162"
+			(at 236.22 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R71")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 236.22 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD07172KL"
+			(at 236.22 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C861162"
+			(at 236.22 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 236.22 204.47)
+			(xy 228.6 204.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 382888b8-0300-5aae-adb7-956874f9cbc3))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 228.6 204.47 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2f00cd54-e1b1-533c-9f5c-6b5b72ac0292))
+	(wire
+		(pts
+			(xy 236.22 212.09)
+			(xy 228.6 212.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d3e1c7a7-942b-5337-a793-736e502a547d))
+	(global_label "CAM_FB"
+		(shape passive)
+		(at 228.6 212.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 38f02cc4-0874-5efa-8d4d-277b320bb353))
+	(symbol
+		(lib_id "M3:R")
+		(at 284.48 208.28 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 67d3a9a0-c5cc-5a3d-bcf8-12d4e22faeec)
+		(property "Reference" "R72"
+			(at 287.02000000000004 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "30.9k 0.1%"
+			(at 287.02000000000004 209.54999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 284.48 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 284.48 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C861313"
+			(at 284.48 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R72")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 284.48 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD0730K9L"
+			(at 284.48 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C861313"
+			(at 284.48 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 284.48 204.47)
+			(xy 276.86 204.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d67fcf4b-845e-5601-9d7a-d89e5ddc66f5))
+	(global_label "CAM_FB"
+		(shape passive)
+		(at 276.86 204.47 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3431351b-3eb9-5416-b169-6964206282ed))
+	(wire
+		(pts
+			(xy 284.48 212.09)
+			(xy 276.86 212.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3eaa3952-78bb-5cb0-9715-2d93b6896fad))
+	(global_label "GND"
+		(shape passive)
+		(at 276.86 212.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9827d3f2-c32b-5c09-9a32-f5a6827ee834))
+	(symbol
+		(lib_id "M3:R")
+		(at 53.34 213.36 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid ffe8c8dc-0c59-51c5-8c84-8ff8ac28fbd4)
+		(property "Reference" "R74"
+			(at 55.88 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 1%"
+			(at 55.88 214.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 53.34 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 53.34 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C22548"
+			(at 53.34 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R74")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 53.34 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RC0603FR-071KL"
+			(at 53.34 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C22548"
+			(at 53.34 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 53.34 209.55)
+			(xy 45.720000000000006 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9cf5de1a-e425-5507-8ffc-15160e99ec36))
+	(global_label "CAM_PWR_EN"
+		(shape passive)
+		(at 45.720000000000006 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9692e62e-48dc-503d-b686-aa5c72d5941a))
+	(wire
+		(pts
+			(xy 53.34 217.17)
+			(xy 45.720000000000006 217.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 84d1ebfd-3359-5072-87ef-8f597620bb1c))
+	(global_label "CAM_EN"
+		(shape passive)
+		(at 45.720000000000006 217.17 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a5bc1042-ce44-5927-b4a7-a0d35f2d6e76))
+	(symbol
+		(lib_id "M3:R")
+		(at 104.14 213.36 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6498e962-715f-5d3a-a917-b3950351a4cc)
+		(property "Reference" "R75"
+			(at 106.68 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 0.1%"
+			(at 106.68 214.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 104.14 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 104.14 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C95204"
+			(at 104.14 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R75")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 104.14 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD0710KL"
+			(at 104.14 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C95204"
+			(at 104.14 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 104.14 209.55)
+			(xy 96.52 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 81bdd3dd-9499-5537-9d28-deb9d6bcc19c))
+	(global_label "CAM_EN"
+		(shape passive)
+		(at 96.52 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1838a9c8-22a2-56db-a606-a9c697f49eba))
+	(wire
+		(pts
+			(xy 104.14 217.17)
+			(xy 96.52 217.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1fe744cb-8609-59c9-8eed-4b3fb40c9144))
+	(global_label "GND"
+		(shape passive)
+		(at 96.52 217.17 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid dac63025-196b-5d94-839e-16bb919742c4))
+	(symbol
+		(lib_id "M3:R")
+		(at 53.34 254 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6035b803-662b-5446-9c11-664218351377)
+		(property "Reference" "R76"
+			(at 55.88 252.73 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 0.1%"
+			(at 55.88 255.26999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 53.34 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 53.34 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C95204"
+			(at 53.34 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R76")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 53.34 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD0710KL"
+			(at 53.34 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C95204"
+			(at 53.34 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 53.34 250.19)
+			(xy 45.720000000000006 250.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 07e2e401-3c73-517a-8037-27e7870aaead))
+	(global_label "3V3"
+		(shape passive)
+		(at 45.720000000000006 250.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ddfb3823-7ee9-5ec4-ba3e-b64876e456e0))
+	(wire
+		(pts
+			(xy 53.34 257.81)
+			(xy 45.720000000000006 257.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 99d6e8e7-385b-541c-b0d4-fb50fbd6a0d3))
+	(global_label "CAM_FAULT_N"
+		(shape passive)
+		(at 45.720000000000006 257.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1ab955a8-e3a1-5e2e-b2a4-78f11dfe26c5))
+	(symbol
+		(lib_id "M3:R")
+		(at 104.14 254 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 3d12b1b6-9289-5669-ab33-29101d0a3567)
+		(property "Reference" "R77"
+			(at 106.68 252.73 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 1%"
+			(at 106.68 255.26999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 104.14 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 104.14 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C22548"
+			(at 104.14 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R77")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 104.14 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RC0603FR-071KL"
+			(at 104.14 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C22548"
+			(at 104.14 254 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 104.14 250.19)
+			(xy 96.52 250.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0768c770-794e-53e5-95f4-e635a2d492c0))
+	(global_label "CAM_FAULT_N"
+		(shape passive)
+		(at 96.52 250.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e1dcb79f-9627-59ca-bbd3-a1f275d6eb6a))
+	(wire
+		(pts
+			(xy 104.14 257.81)
+			(xy 96.52 257.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d896364a-76df-5b11-a928-af48f0157c9e))
+	(global_label "CAM_FLT_RAW"
+		(shape passive)
+		(at 96.52 257.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e6ccb2c1-70ce-5c3f-890b-a16260f87527))
+	(symbol
+		(lib_id "M3:R")
+		(at 378.46 208.28 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 96c11bcb-fa32-54bb-92b1-fcddbb7b9546)
+		(property "Reference" "R78"
+			(at 381.0 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 0.1%"
+			(at 381.0 209.54999999999998 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 378.46 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 378.46 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C95204"
+			(at 378.46 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R78")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 378.46 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD0710KL"
+			(at 378.46 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C95204"
+			(at 378.46 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 378.46 204.47)
+			(xy 370.84 204.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2ac2043b-1fcb-53c1-bbf4-1ef5fd2c23df))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 370.84 204.47 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bd2ace83-7900-5519-bffb-46fd89a089f0))
+	(wire
+		(pts
+			(xy 378.46 212.09)
+			(xy 370.84 212.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 61205b22-45c5-587e-ab11-17bad1fa080a))
+	(global_label "GND"
+		(shape passive)
+		(at 370.84 212.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9b071792-9246-575e-972a-32aa3e345de9))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 142.24 132.08 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid b3b3edb7-4695-5591-92d6-de0418d175e3)
+		(property "Reference" "TP70"
+			(at 142.24 124.46000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "RAW_PROTECTED"
+			(at 142.24 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 142.24 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 142.24 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 142.24 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "TP70")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 142.24 132.08)
+			(xy 134.62 132.08))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 69b3a652-3516-55eb-9f66-aea323122fe7))
+	(global_label "RAW_PROTECTED"
+		(shape passive)
+		(at 134.62 132.08 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 57e29024-75ec-59ce-9e3e-36638ea0f908))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 142.24 170.18 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 352f16d1-9366-5064-acdf-a7d0f93dc43f)
+		(property "Reference" "TP71"
+			(at 142.24 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "CAM_INPUT_LIMITED"
+			(at 142.24 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 142.24 170.18 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 142.24 170.18 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 142.24 170.18 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "TP71")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 142.24 170.18)
+			(xy 134.62 170.18))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b1ef79f2-1391-540c-b07d-c6bc8a1dd4cf))
+	(global_label "CAM_INPUT_LIMITED"
+		(shape passive)
+		(at 134.62 170.18 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ecdca104-3ffc-58a8-ad53-30f96644746d))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 142.24 208.28 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 79d5ef69-a5af-5bb6-9d94-d12e8a430377)
+		(property "Reference" "TP73"
+			(at 142.24 200.66 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "CAM_ILIM"
+			(at 142.24 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 142.24 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 142.24 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 142.24 208.28 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "TP73")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 142.24 208.28)
+			(xy 134.62 208.28))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a08db1de-bbdd-541f-ba62-19cb08ff5429))
+	(global_label "CAM_ILIM"
+		(shape passive)
+		(at 134.62 208.28 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ff402b6b-9f12-5ac8-b9c9-48d582a2e6fe))
+	(text "RAW_PROTECTED: supplied by U9 battery protection; not connected to USB."
+		(at 185.42 241.3 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f0996607-2148-5d2b-945c-c3f97914e30d))
+	(text "CAM_PWR_EN LOW/reset = OFF. FLT_N reports protection, not power-good."
+		(at 185.42 248.92000000000002 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid cc6cb657-32ad-5739-b148-ffed5752e1bb))
+	(text "5 V camera class: 5.253 V nominal at output caps; 1 A target, bench qualification pending."
+		(at 185.42 256.54 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid a5488fa4-99df-5eaa-b137-dc84bbe67537))
+	(sheet_instances
+		(path "/"
+			(page "5"))))

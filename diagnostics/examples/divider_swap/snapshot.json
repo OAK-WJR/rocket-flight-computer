@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "origin": "SYNTHETIC_FIXTURE",
+  "capture_id": "67f1b5e7-9aa7-4e0d-a45e-b3c65f871578",
+  "captured_at": "2026-09-25T23:09:53.695573+00:00",
+  "assembly_id": "SYNTHETIC-NOT-A-BOARD",
+  "board_sha256": "cd647b9400a4e2bfca729b0c96e97cb2fb97ec3455387bfe58a5aeb008527f72",
+  "state": "CAPTURED",
+  "driver": {
+    "kind": "SYNTHETIC_FIXTURE",
+    "not_a_hardware_driver": true
+  },
+  "error": null,
+  "reads": [
+    {
+      "name": "CPUID",
+      "sample": 0,
+      "address": "0xe000ed00",
+      "bits": 32,
+      "value": "0x411fc271",
+      "error": null,
+      "elapsed_ms": 0.18604100000000484
+    },
+    {
+      "name": "DBGMCU_IDCODE",
+      "sample": 0,
+      "address": "0x5c001000",
+      "bits": 32,
+      "value": "0x20030450",
+      "error": null,
+      "elapsed_ms": 0.3877499999999992
+    },
+    {
+      "name": "RCC_RSR",
+      "sample": 0,
+      "address": "0x580244d0",
+      "bits": 32,
+      "value": "0x00800000",
+      "error": null,
+      "elapsed_ms": 0.571166000000005
+    },
+    {
+      "name": "FLASH_SIZE_KIB",
+      "sample": 0,
+      "address": "0x1ff1e880",
+      "bits": 16,
+      "value": "0x0800",
+      "error": null,
+      "elapsed_ms": 0.7540000000000047
+    },
+    {
+      "name": "UID0",
+      "sample": 0,
+      "address": "0x1ff1e800",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 0.9400830000000013
+    },
+    {
+      "name": "UID1",
+      "sample": 0,
+      "address": "0x1ff1e804",
+      "bits": 32,
+      "value": "0x01234567",
+      "error": null,
+      "elapsed_ms": 1.1231660000000019
+    },
+    {
+      "name": "UID2",
+      "sample": 0,
+      "address": "0x1ff1e808",
+      "bits": 32,
+      "value": "0x89abcdef",
+      "error": null,
+      "elapsed_ms": 1.3022500000000048
+    },
+    {
+      "name": "RCC_CR",
+      "sample": 0,
+      "address": "0x58024400",
+      "bits": 32,
+      "value": "0x00000005",
+      "error": null,
+      "elapsed_ms": 1.4947910000000022
+    },
+    {
+      "name": "RCC_CFGR",
+      "sample": 0,
+      "address": "0x58024410",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 1.6898750000000005
+    },
+    {
+      "name": "PWR_D3CR",
+      "sample": 0,
+      "address": "0x58024818",
+      "bits": 32,
+      "value": "0x00006000",
+      "error": null,
+      "elapsed_ms": 1.8825410000000016
+    },
+    {
+      "name": "CFSR",
+      "sample": 0,
+      "address": "0xe000ed28",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 2.0943750000000025
+    },
+    {
+      "name": "HFSR",
+      "sample": 0,
+      "address": "0xe000ed2c",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 2.527500000000002
+    },
+    {
+      "name": "MMFAR",
+      "sample": 0,
+      "address": "0xe000ed34",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 2.7634160000000048
+    },
+    {
+      "name": "BFAR",
+      "sample": 0,
+      "address": "0xe000ed38",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 2.9880000000000044
+    },
+    {
+      "name": "RCC_RSR",
+      "sample": 1,
+      "address": "0x580244d0",
+      "bits": 32,
+      "value": "0x00800000",
+      "error": null,
+      "elapsed_ms": 3.246249999999999
+    },
+    {
+      "name": "RCC_CR",
+      "sample": 1,
+      "address": "0x58024400",
+      "bits": 32,
+      "value": "0x00000005",
+      "error": null,
+      "elapsed_ms": 3.535125
+    },
+    {
+      "name": "RCC_CFGR",
+      "sample": 1,
+      "address": "0x58024410",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 3.7891660000000034
+    }
+  ],
+  "finished_at": "2026-09-25T23:09:53.699592+00:00"
+}

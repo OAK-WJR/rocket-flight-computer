@@ -1,0 +1,19 @@
+{
+  "PB2": "QSPI_CLK",
+  "PB3": "SPI1_SCK",
+  "PB4": "SPI1_MISO",
+  "PB5": "SPI1_MOSI",
+  "PB6": "QSPI_NCS",
+  "PB7": "IMU_CS",
+  "PB8": "I2C1_SCL",
+  "PB9": "I2C1_SDA",
+  "PD3": "CAM_PWR_EN",
+  "PD11": "QSPI_IO0",
+  "PD12": "QSPI_IO1",
+  "PD13": "QSPI_IO3",
+  "PE2": "QSPI_IO2",
+  "PE3": "LED_RED",
+  "PE7": "LED_YEL",
+  "PC2_C": "VLOGIC_SENSE",
+  "PC3_C": "V3V3_SENSE"
+}

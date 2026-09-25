@@ -1,0 +1,506 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_core_schematic")
+	(uuid 45e3195d-5a87-5550-807b-5b6d574de5a7)
+	(paper "A3")
+	(title_block
+		(title "10 | USB cable presence, ordinary GPIO sensing")
+		(date "2026-09-07")
+		(rev "M3-ASSY-R1")
+		(company "Single-board M3 candidate; full system incomplete"))
+	(lib_symbols
+		(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:TestPoint"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.762)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TestPad_1.5"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes)))))
+	(text "10 | USB cable presence, ordinary GPIO sensing"
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 2.54 2.54))
+			(justify left))
+		(uuid 1ee5e5a3-8769-55aa-b78f-ccc8fa2bbd4e))
+	(symbol
+		(lib_id "M3:R")
+		(at 78.74 83.82 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 64cb1186-65f7-5ffe-97e0-40d5ba5f0255)
+		(property "Reference" "R9"
+			(at 81.28 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "6.2k 1%"
+			(at 81.28 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 78.74 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 78.74 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" ""
+			(at 78.74 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/7323b515-8986-5814-85b5-9e04db992507"
+					(reference "R9")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 78.74 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RC0402FR-076K2L"
+			(at 78.74 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" ""
+			(at 78.74 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 78.74 80.01)
+			(xy 71.11999999999999 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d33ae719-e386-51d2-bc21-3b7d939853f2))
+	(global_label "VBUS"
+		(shape passive)
+		(at 71.11999999999999 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3ec24f25-be6f-558f-bc6e-640301191e23))
+	(wire
+		(pts
+			(xy 78.74 87.63)
+			(xy 71.11999999999999 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 16250838-748d-58c3-bc7a-5d7a022e8f1c))
+	(global_label "VBUS_SENSE"
+		(shape passive)
+		(at 71.11999999999999 87.63 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 39f74aa8-1acf-508c-8726-6f08520a7e09))
+	(symbol
+		(lib_id "M3:R")
+		(at 162.56 83.82 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid bf72a118-b3f5-5609-9413-a33ea8c3910a)
+		(property "Reference" "R110"
+			(at 165.1 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 0.1%"
+			(at 165.1 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 162.56 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 162.56 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C95204"
+			(at 162.56 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/7323b515-8986-5814-85b5-9e04db992507"
+					(reference "R110")
+					(unit 1))))
+		(property "Manufacturer" "Yageo"
+			(at 162.56 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "RT0603BRD0710KL"
+			(at 162.56 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C95204"
+			(at 162.56 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)))))
+	(wire
+		(pts
+			(xy 162.56 80.01)
+			(xy 154.94 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 18545109-e0cd-53b4-9905-0fa8a6f151ac))
+	(global_label "VBUS_SENSE"
+		(shape passive)
+		(at 154.94 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0227277b-0d2e-576f-9b0c-aa978c7d7f90))
+	(wire
+		(pts
+			(xy 162.56 87.63)
+			(xy 154.94 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8657f9df-f242-5c18-9dd2-7054728b9b91))
+	(global_label "GND"
+		(shape passive)
+		(at 154.94 87.63 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d5fd5e19-2147-56ba-a0d9-2285cb5d878c))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 256.54 83.82 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 975ce4e4-ef26-5199-99a9-c3c9119243d5)
+		(property "Reference" "TP92"
+			(at 256.54 76.19999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "VBUS_SENSE"
+			(at 256.54 80.00999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 256.54 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 256.54 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 256.54 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/7323b515-8986-5814-85b5-9e04db992507"
+					(reference "TP92")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 256.54 83.82)
+			(xy 248.92000000000002 83.82))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5cb2376b-e0ea-5b91-847f-a34e7b66e6e0))
+	(global_label "VBUS_SENSE"
+		(shape passive)
+		(at 248.92000000000002 83.82 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 518f5ef6-36fa-508f-af1b-eb0af9f3ca44))
+	(text "PD15 / U1 pin62 is a regular FT_h GPIO input. PA9 remains NC. D+/D- are unchanged."
+		(at 20.32 137.16 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 3c2f066c-5afe-5892-b82e-b7d3bdb87f81))
+	(text "R9=6.2k 1%, R110=10k 0.1%; TP92 measures their junction. No internal pull-up/down."
+		(at 20.32 147.32 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid f72c9822-90b2-56b1-bde1-6e667d32847e))
+	(text "Input range and tolerance calculation uses DS12110 Rev11, Tables14/112 and50/147."
+		(at 20.32 157.48 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 471557a9-6037-5b25-a820-f4c46731d0c0))
+	(text "Use software attach/detach from PD15. Do NOT enable native PA9 VBUS sensing (VBDEN)."
+		(at 20.32 167.64 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid ecfe6dc9-58a3-51ec-9f58-e8efadad67f5))
+	(text "USB 48MHz source, descriptors, suspend current and actual enumeration remain unqualified."
+		(at 20.32 177.8 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid a24035c6-f19e-5987-860e-1c28caf5108e))
+	(text "VBUS decay depends on C28/C83/C86 and mux/switch leakage. RC estimates are conditional."
+		(at 20.32 187.95999999999998 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid bc3b0792-ea13-5023-b137-dbbaec90ed46))
+	(text "Measure reset/unpowered input, USB plug/unplug, discharge and hot leakage before acceptance."
+		(at 20.32 198.12 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 07a246dd-bc2d-56db-aae6-5934a7bf2687))
+	(text "Old v0.2-v0.5 firmware is bound to previous board hashes, not to this new candidate."
+		(at 20.32 208.28 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 54433017-da7c-5eb4-a81f-ae8fe7aaafa7))
+	(sheet_instances
+		(path "/"
+			(page "10"))))

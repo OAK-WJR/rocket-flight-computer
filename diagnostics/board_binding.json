@@ -1,0 +1,116 @@
+{
+  "profile": "CORE-R3",
+  "board_sha256": "cd647b9400a4e2bfca729b0c96e97cb2fb97ec3455387bfe58a5aeb008527f72",
+  "gnss_dnp": true,
+  "probes": {
+    "VBUS": {
+      "probe": "C28.1",
+      "board_xy_mm": [
+        9.5,
+        51.9
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ]
+    },
+    "VLOGIC": {
+      "probe": "C6.1",
+      "board_xy_mm": [
+        11.53,
+        15.77
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ]
+    },
+    "3V3": {
+      "probe": "J2.5",
+      "board_xy_mm": [
+        41.81,
+        54.5
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ]
+    },
+    "3V3A": {
+      "probe": "C10.1",
+      "board_xy_mm": [
+        29.6,
+        18.3
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ]
+    },
+    "VCAP1": {
+      "probe": "C19.1",
+      "board_xy_mm": [
+        13.57,
+        47.4
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ]
+    },
+    "VCAP2": {
+      "probe": "C20.1",
+      "board_xy_mm": [
+        29.3,
+        51.9
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ]
+    },
+    "NRST": {
+      "probe": "J2.4",
+      "board_xy_mm": [
+        39.27,
+        54.5
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ]
+    },
+    "VLOGIC_SENSE": {
+      "probe": "R61.1",
+      "board_xy_mm": [
+        19.97,
+        25.9
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ]
+    },
+    "V3V3_SENSE": {
+      "probe": "R63.1",
+      "board_xy_mm": [
+        19.47,
+        27.2
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        54.5
+      ]
+    }
+  },
+  "binding_note": "Expected design only; assembly tag and UID enrollment still required. Not automatic proof of physical PCB identity."
+}

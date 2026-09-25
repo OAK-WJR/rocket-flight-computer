@@ -1,0 +1,1914 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_core_schematic")
+	(uuid cc8f1f7a-ff6e-560a-98ca-132be207d1ea)
+	(paper "A3")
+	(title_block
+		(title "04 | Voltage diagnosis, indicators and GNSS receiver")
+		(date "2026-09-07")
+		(rev "M3-ASSY-R1")
+		(company "Single-board M3 candidate; full system incomplete"))
+	(lib_symbols
+		(symbol "M3:C"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762)
+						(xy 2.032 0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -2.032 -0.762)
+						(xy 2.032 -0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:GNSS"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "GNSS_0_1"
+				(rectangle
+					(start -20.32 13.97)
+					(end 20.32 -13.97)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "GNSS_1_1"
+				(pin power_in line
+					(at -25.4 11.43 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -25.4 8.89 0)
+					(length 5.08)
+					(name "V_IO"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -25.4 6.3500000000000005 0)
+					(length 5.08)
+					(name "V_BCKP"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -25.4 3.8100000000000005 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -25.4 1.2700000000000014 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -25.4 -1.2699999999999996 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin output line
+					(at -25.4 -3.8100000000000005 0)
+					(length 5.08)
+					(name "TIMEPULSE"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "7"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -25.4 -6.35 0)
+					(length 5.08)
+					(name "SAFEBOOT_N"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "8"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin bidirectional line
+					(at -25.4 -8.889999999999999 0)
+					(length 5.08)
+					(name "SDA"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "9"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -25.4 -11.429999999999998 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "10"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 25.4 11.43 180)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "11"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at 25.4 8.89 180)
+					(length 5.08)
+					(name "SCL"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "12"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin output line
+					(at 25.4 6.3500000000000005 180)
+					(length 5.08)
+					(name "TXD"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "13"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at 25.4 3.8100000000000005 180)
+					(length 5.08)
+					(name "RXD"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "14"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 25.4 1.2700000000000014 180)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "15"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 25.4 -1.2699999999999996 180)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "16"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 25.4 -3.8100000000000005 180)
+					(length 5.08)
+					(name "VCC"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "17"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at 25.4 -6.35 180)
+					(length 5.08)
+					(name "RESET_N"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "18"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at 25.4 -8.889999999999999 180)
+					(length 5.08)
+					(name "EXTINT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "19"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 25.4 -11.429999999999998 180)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "20"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:LED_A1"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 1.016)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "LED"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Light emitting diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Sim.Pins" "1=K 2=A"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "LED diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "LED_A1_0_1"
+				(polyline
+					(pts
+						(xy -3.048 -0.762)
+						(xy -4.572 -2.286)
+						(xy -3.81 -2.286)
+						(xy -4.572 -2.286)
+						(xy -4.572 -1.524))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.778 -0.762)
+						(xy -3.302 -2.286)
+						(xy -2.54 -2.286)
+						(xy -3.302 -2.286)
+						(xy -3.302 -1.524))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.27 0)
+						(xy 1.27 0))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.27 -1.27)
+						(xy -1.27 1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 1.27 -1.27)
+						(xy 1.27 1.27)
+						(xy -1.27 0)
+						(xy 1.27 -1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "LED_A1_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_KT0805Y_A1"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:LED_K1"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 1.016)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "LED"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Light emitting diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Sim.Pins" "1=K 2=A"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "LED diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "LED_K1_0_1"
+				(polyline
+					(pts
+						(xy -3.048 -0.762)
+						(xy -4.572 -2.286)
+						(xy -3.81 -2.286)
+						(xy -4.572 -2.286)
+						(xy -4.572 -1.524))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.778 -0.762)
+						(xy -3.302 -2.286)
+						(xy -2.54 -2.286)
+						(xy -3.302 -2.286)
+						(xy -3.302 -1.524))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.27 0)
+						(xy 1.27 0))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.27 -1.27)
+						(xy -1.27 1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 1.27 -1.27)
+						(xy 1.27 1.27)
+						(xy -1.27 0)
+						(xy 1.27 -1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "LED_K1_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_NCD0805R1_K1"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes)))))
+	(text "04 | Voltage diagnosis, indicators and GNSS receiver"
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 2.54 2.54))
+			(justify left))
+		(uuid 35e69594-186b-5911-9b8a-65f36b0d9b73))
+	(symbol
+		(lib_id "M3:GNSS")
+		(at 91.44 83.82 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 62f50117-14c1-514d-90ca-8bc9074898ac)
+		(property "Reference" "U6"
+			(at 91.44 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "SAM-M10Q-00B"
+			(at 91.44 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B"
+			(at 91.44 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" "https://content.u-blox.com/sites/default/files/documents/SAM-M10Q_DataSheet_UBX-22013293.pdf"
+			(at 91.44 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C5443880"
+			(at 91.44 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "U6")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 66.04 72.39)
+			(xy 60.96000000000001 72.39))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bd9deaf9-ac0b-5e5e-9b0f-28bcaa564cbf))
+	(global_label "GND"
+		(shape passive)
+		(at 60.96000000000001 72.39 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d28ebb08-70ca-5227-9798-b6a906cbc3b5))
+	(wire
+		(pts
+			(xy 66.04 74.93)
+			(xy 60.96000000000001 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d3651993-1cf0-58b4-985b-962585f5784f))
+	(global_label "3V3A"
+		(shape passive)
+		(at 60.96000000000001 74.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2f50ccb3-4adc-5041-9382-bf2635fbe668))
+	(no_connect
+		(at 66.04 77.47)
+		(uuid 9afb5656-afc0-5d4a-bcae-01314de86575))
+	(wire
+		(pts
+			(xy 66.04 80.01)
+			(xy 60.96000000000001 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 24a60e9a-e79f-5a66-baac-7100ab2cb276))
+	(global_label "GND"
+		(shape passive)
+		(at 60.96000000000001 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bb74a66b-6dcb-5b85-9ffb-fe1834b17fd6))
+	(wire
+		(pts
+			(xy 66.04 82.55)
+			(xy 60.96000000000001 82.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 36838be8-94bd-5b14-86cd-1a0b2cb97119))
+	(global_label "GND"
+		(shape passive)
+		(at 60.96000000000001 82.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cea39c56-2d37-5657-a1af-c6e4e86694e4))
+	(wire
+		(pts
+			(xy 66.04 85.09)
+			(xy 60.96000000000001 85.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d973c665-17fe-5b62-a792-d4eae676d239))
+	(global_label "GND"
+		(shape passive)
+		(at 60.96000000000001 85.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 98540c0e-a6bc-5e0d-a5fe-3377f8b0eb78))
+	(no_connect
+		(at 66.04 87.63)
+		(uuid 11f53173-e196-58c2-8c82-be029c51e5b0))
+	(no_connect
+		(at 66.04 90.17)
+		(uuid 25ea31fa-5ea8-5394-a378-58b6467b2fa5))
+	(no_connect
+		(at 66.04 92.71)
+		(uuid 8f11eae5-f6aa-55ca-b5c5-a218aece62ef))
+	(wire
+		(pts
+			(xy 66.04 95.25)
+			(xy 60.96000000000001 95.25))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2ebf52af-c09b-5d68-a37a-abdd2c1083b1))
+	(global_label "GND"
+		(shape passive)
+		(at 60.96000000000001 95.25 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3fe78c79-9c58-53bb-a187-c614fb1656f4))
+	(wire
+		(pts
+			(xy 116.84 72.39)
+			(xy 121.92 72.39))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bbbaee1b-da24-57df-9a57-6c7fa53a2e84))
+	(global_label "GND"
+		(shape passive)
+		(at 121.92 72.39 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 22303ca1-81f9-5e7b-848b-e009ab8d9cf2))
+	(no_connect
+		(at 116.84 74.93)
+		(uuid c2e4bc0a-7410-5461-8c6e-a48527b56ac6))
+	(wire
+		(pts
+			(xy 116.84 77.47)
+			(xy 121.92 77.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 853aa707-a799-5994-a7cd-0e1622eb82c8))
+	(global_label "GPS_RX"
+		(shape passive)
+		(at 121.92 77.47 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 452e21b6-3f20-53b9-8301-f678276bf95c))
+	(wire
+		(pts
+			(xy 116.84 80.01)
+			(xy 121.92 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c3e1d0bb-e45d-5806-bad3-3fd4b35cb392))
+	(global_label "GPS_TX"
+		(shape passive)
+		(at 121.92 80.01 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid ce65365e-7cd9-5a35-8608-ab5d92972986))
+	(wire
+		(pts
+			(xy 116.84 82.55)
+			(xy 121.92 82.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 38b342f6-7a99-575d-8436-26bbd24d75d7))
+	(global_label "GND"
+		(shape passive)
+		(at 121.92 82.55 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid b1780b0c-ef59-5dc9-85ec-3403d5f8993f))
+	(wire
+		(pts
+			(xy 116.84 85.09)
+			(xy 121.92 85.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 811217a4-20ce-5355-89f7-69574da6c204))
+	(global_label "GND"
+		(shape passive)
+		(at 121.92 85.09 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 3d4adede-801d-5034-aeca-3d6d617b925b))
+	(wire
+		(pts
+			(xy 116.84 87.63)
+			(xy 121.92 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 362a821f-7fe3-5d98-9403-adf36f560c6d))
+	(global_label "3V3A"
+		(shape passive)
+		(at 121.92 87.63 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 1d3be872-63c9-5930-af57-946481f1b55b))
+	(no_connect
+		(at 116.84 90.17)
+		(uuid c32af68e-92c8-5efd-8c2a-44d3ca57809a))
+	(no_connect
+		(at 116.84 92.71)
+		(uuid 6e68abae-710c-51d0-8a64-437253d3e24f))
+	(wire
+		(pts
+			(xy 116.84 95.25)
+			(xy 121.92 95.25))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 08e74616-1a49-5021-9ef4-a323c78a1224))
+	(global_label "GND"
+		(shape passive)
+		(at 121.92 95.25 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid e601c070-2f41-52b6-b951-d89eff1bbe34))
+	(symbol
+		(lib_id "M3:C")
+		(at 68.58 132.08 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6eecd755-0873-58fe-bcf9-27473656bb95)
+		(property "Reference" "C33"
+			(at 71.12 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF"
+			(at 71.12 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0402"
+			(at 68.58 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 68.58 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C1525"
+			(at 68.58 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "C33")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 68.58 128.27)
+			(xy 60.96 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3e0d9f29-fd66-58f8-ba6b-1a0c2a862c1f))
+	(global_label "3V3A"
+		(shape passive)
+		(at 60.96 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f801897f-9e88-5451-9089-a12d630ce19e))
+	(wire
+		(pts
+			(xy 68.58 135.89)
+			(xy 60.96 135.89))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c166cce6-0ef6-5a9f-9452-5cbbc8c7a9a2))
+	(global_label "GND"
+		(shape passive)
+		(at 60.96 135.89 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3fb8f7aa-4b80-5b68-8932-8dc97106e762))
+	(symbol
+		(lib_id "M3:C")
+		(at 109.22 132.08 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid ddbec8bb-5a8e-5cb0-b945-30619c3a26a8)
+		(property "Reference" "C34"
+			(at 111.76 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF"
+			(at 111.76 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0805"
+			(at 109.22 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 109.22 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C45783"
+			(at 109.22 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "C34")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 109.22 128.27)
+			(xy 101.6 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b6cfffaa-d0e0-50fd-b65a-dbd2a7fb181b))
+	(global_label "3V3A"
+		(shape passive)
+		(at 101.6 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 333a64d0-7b06-5143-b903-5423e485b2f0))
+	(wire
+		(pts
+			(xy 109.22 135.89)
+			(xy 101.6 135.89))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 647708ae-9a8f-5f61-a4dc-8a4b02de9dc2))
+	(global_label "GND"
+		(shape passive)
+		(at 101.6 135.89 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5aa4a8db-110f-5299-8df0-4eed2217f711))
+	(symbol
+		(lib_id "M3:R")
+		(at 243.84 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d3bb7198-7971-5809-a555-f9f221c1c5ef)
+		(property "Reference" "R60"
+			(at 246.38 69.85000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100k"
+			(at 246.38 72.39000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 243.84 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 243.84 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25741"
+			(at 243.84 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "R60")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 243.84 67.31)
+			(xy 236.22 67.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 783a93fa-d442-5516-99a9-013bcb9e3a88))
+	(global_label "VLOGIC"
+		(shape passive)
+		(at 236.22 67.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d0fc0b45-39f0-52f5-877c-c46ec109bde7))
+	(wire
+		(pts
+			(xy 243.84 74.93)
+			(xy 236.22 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4f1b5802-cb8d-5e9b-807e-564225ac3575))
+	(global_label "VLOGIC_SENSE"
+		(shape passive)
+		(at 236.22 74.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 91a58e37-4b37-5542-87bc-9a1a3a8afb13))
+	(symbol
+		(lib_id "M3:R")
+		(at 243.84 111.76 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 7949c93e-13bb-5739-8458-46ddb4e8bf73)
+		(property "Reference" "R61"
+			(at 246.38 110.49000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 246.38 113.03000000000002 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 243.84 111.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 243.84 111.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25744"
+			(at 243.84 111.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "R61")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 243.84 107.95)
+			(xy 236.22 107.95))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid dd68e555-242a-5ea4-8561-2e625635ced6))
+	(global_label "VLOGIC_SENSE"
+		(shape passive)
+		(at 236.22 107.95 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0eff51c6-2e5f-59fd-9197-33951e068a9d))
+	(wire
+		(pts
+			(xy 243.84 115.57)
+			(xy 236.22 115.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 061cd8bf-2aa4-557b-b154-ab89fda51aa9))
+	(global_label "GND"
+		(shape passive)
+		(at 236.22 115.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 522718c8-34cd-53ca-9ca5-59f78633042c))
+	(symbol
+		(lib_id "M3:R")
+		(at 350.52 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 301a63f1-5123-5b40-9794-0496a3f625fe)
+		(property "Reference" "R62"
+			(at 353.06 69.85000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 353.06 72.39000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 350.52 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 350.52 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25744"
+			(at 350.52 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "R62")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 350.52 67.31)
+			(xy 342.9 67.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 66d20d21-8915-5ec3-9ebd-b9b25d891956))
+	(global_label "3V3"
+		(shape passive)
+		(at 342.9 67.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b96a6c93-5347-5070-be47-ddbc59bb69be))
+	(wire
+		(pts
+			(xy 350.52 74.93)
+			(xy 342.9 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 55102ae8-3d97-5730-aca8-d7de1d297c66))
+	(global_label "V3V3_SENSE"
+		(shape passive)
+		(at 342.9 74.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d6895a93-05d7-523d-afa7-a81a3bf984d0))
+	(symbol
+		(lib_id "M3:R")
+		(at 350.52 111.76 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid c4ebfabe-2027-556e-a987-0c1ce7d7aa05)
+		(property "Reference" "R63"
+			(at 353.06 110.49000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 353.06 113.03000000000002 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 350.52 111.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 350.52 111.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25744"
+			(at 350.52 111.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "R63")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 350.52 107.95)
+			(xy 342.9 107.95))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9eec05eb-40a5-5c9f-bf92-f828fe6d7838))
+	(global_label "V3V3_SENSE"
+		(shape passive)
+		(at 342.9 107.95 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c74d673a-c194-578f-ac1e-a6d03e3b0ea4))
+	(wire
+		(pts
+			(xy 350.52 115.57)
+			(xy 342.9 115.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e2fe934e-1081-5939-a358-ba33f040e4ed))
+	(global_label "GND"
+		(shape passive)
+		(at 342.9 115.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 12ce724a-86c9-5668-adfd-30df35d45746))
+	(symbol
+		(lib_id "M3:C")
+		(at 292.1 111.76 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 533915e8-8d31-5122-affd-69c68098feff)
+		(property "Reference" "C60"
+			(at 294.64000000000004 110.49000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10nF"
+			(at 294.64000000000004 113.03000000000002 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0603"
+			(at 292.1 111.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 292.1 111.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C57112"
+			(at 292.1 111.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "C60")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 292.1 107.95)
+			(xy 284.48 107.95))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 81f84157-8565-5193-a91b-09813938835a))
+	(global_label "VLOGIC_SENSE"
+		(shape passive)
+		(at 284.48 107.95 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6a4419e4-966f-5901-ac93-5de89790dcf4))
+	(wire
+		(pts
+			(xy 292.1 115.57)
+			(xy 284.48 115.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6fa081e1-2be9-5c6b-8add-436737b2a9b5))
+	(global_label "GND"
+		(shape passive)
+		(at 284.48 115.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a666f0dd-8dba-5c22-be52-de014abaa542))
+	(symbol
+		(lib_id "M3:LED_K1")
+		(at 243.84 213.36 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 5a40b9a6-052d-59b9-b391-df65518c7075)
+		(property "Reference" "LED1"
+			(at 243.84 205.74 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "RED"
+			(at 243.84 209.55 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_NCD0805R1_K1"
+			(at 243.84 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/e3e35db60c068efe42b02d21fe498cf3.pdf?productCode=C84256"
+			(at 243.84 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C84256"
+			(at 243.84 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "LED1")
+					(unit 1))))
+(property "Manufacturer" "NATIONSTAR" (at 0 0 0)  (effects (font (size 1 1)(thickness .15))(hide yes)))
+(property "Manufacturer Part" "NCD0805R1" (at 0 0 0)  (effects (font (size 1 1)(thickness .15))(hide yes)))
+)
+	(wire
+		(pts
+			(xy 240.03 213.36)
+			(xy 234.95 213.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 379ae959-dadf-5b2f-8837-c6a14567fc84))
+	(global_label "GND"
+		(shape passive)
+		(at 234.95 213.36 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7293f41b-0ee5-5668-af90-04136434c4f8))
+	(wire
+		(pts
+			(xy 247.65 213.36)
+			(xy 252.73000000000002 213.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2fb206c9-eafc-5504-a907-868da18c224e))
+	(global_label "LED_RED_A"
+		(shape passive)
+		(at 252.73000000000002 213.36 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid ad38fab5-b541-5bbd-9bcf-85c8903f0089))
+	(symbol
+		(lib_id "M3:LED_A1")
+		(at 350.52 213.36 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 40d74a01-5cbe-50bd-b3f7-1b54d5067357)
+		(property "Reference" "LED2"
+			(at 350.52 205.74 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "YEL"
+			(at 350.52 209.55 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_KT0805Y_A1"
+			(at 350.52 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/3f6a14f9ea2fc39f6e05d2ab0fa53e2b.pdf?productCode=C2296"
+			(at 350.52 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C2296"
+			(at 350.52 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "LED2")
+					(unit 1))))
+(property "Manufacturer" "Hubei KENTO Elec" (at 0 0 0)  (effects (font (size 1 1)(thickness .15))(hide yes)))
+(property "Manufacturer Part" "KT-0805Y" (at 0 0 0)  (effects (font (size 1 1)(thickness .15))(hide yes)))
+)
+	(wire
+		(pts
+			(xy 346.71 213.36)
+			(xy 341.63 213.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 203e665b-e01c-5fc6-acb1-ad27deed675e))
+	(global_label "GND"
+		(shape passive)
+		(at 341.63 213.36 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0d66a3ed-87e8-50b5-83f5-5e15ec715372))
+	(wire
+		(pts
+			(xy 354.33 213.36)
+			(xy 359.40999999999997 213.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 57c1e4c0-50a2-5fbd-9f29-a099f493502a))
+	(global_label "LED_YEL_A"
+		(shape passive)
+		(at 359.40999999999997 213.36 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 616ac245-7df4-58c3-8310-c80a4a8a38dd))
+	(symbol
+		(lib_id "M3:R")
+		(at 243.84 177.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 2b173018-d330-5390-886a-65dcd16aacfe)
+		(property "Reference" "R32"
+			(at 246.38 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "220R"
+			(at 246.38 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0805"
+			(at 243.84 177.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 243.84 177.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C17557"
+			(at 243.84 177.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "R32")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 243.84 173.99)
+			(xy 236.22 173.99))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid cc14b57c-0ce5-526c-bce3-1487a432d2ac))
+	(global_label "LED_RED"
+		(shape passive)
+		(at 236.22 173.99 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e8a2b273-d8aa-53f5-b375-c85c8eef367f))
+	(wire
+		(pts
+			(xy 243.84 181.61)
+			(xy 236.22 181.61))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ac2e9b18-63de-5a98-9e04-6a286d7f73c9))
+	(global_label "LED_RED_A"
+		(shape passive)
+		(at 236.22 181.61 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 78a863d1-1a7c-5ba1-9647-b823764e306d))
+	(symbol
+		(lib_id "M3:R")
+		(at 350.52 177.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4f85ed56-c801-574d-a8aa-7dcc680a9f57)
+		(property "Reference" "R33"
+			(at 353.06 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "220R"
+			(at 353.06 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0805"
+			(at 350.52 177.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 350.52 177.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C17557"
+			(at 350.52 177.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "R33")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 350.52 173.99)
+			(xy 342.9 173.99))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f21b6c40-993d-5fc6-aca5-657f5ee603da))
+	(global_label "LED_YEL"
+		(shape passive)
+		(at 342.9 173.99 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bc968f47-0ab1-5b47-be0f-f8d88ac1d233))
+	(wire
+		(pts
+			(xy 350.52 181.61)
+			(xy 342.9 181.61))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e641ae45-8237-5855-b7e2-c5430e6c3063))
+	(global_label "LED_YEL_A"
+		(shape passive)
+		(at 342.9 181.61 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 21ac0f9c-2c04-5664-894e-dc79b8adde8d))
+	(text "U6 fitted: SAM-M10Q-00B. V_BCKP remains NC; no backup supply (UBX-22020019 R02 4.1.3)."
+		(at 20.32 154.94 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid d8d9d9f2-684b-5f68-a441-53eb1e4957cc))
+	(text "Measure VLOGIC and 3V3 directly, then compare divider outputs: VLOGIC/11 and 3V3/2."
+		(at 20.32 246.38 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid fa44e9a6-8bf8-5ba1-af8f-20199ea6b890))
+	(text "ADC calibration / reference measurement needed; ADC ratios alone cannot verify their own supply."
+		(at 20.32 254 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid b2f8304f-5679-5312-b0e7-84f3338532db))
+	(text "LED1: K=1 A=2. LED2: A=1 K=2. Pin numbering follows the selected footprint."
+		(at 20.32 261.62 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid ec65bdb5-4185-5601-8629-770668d0965f))
+	(sheet_instances
+		(path "/"
+			(page "4"))))

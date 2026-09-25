@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "scope": "bench register snapshot + optional external DC measurements",
+  "board_sha256": "cd647b9400a4e2bfca729b0c96e97cb2fb97ec3455387bfe58a5aeb008527f72",
+  "assembly_id": "SYNTHETIC-NOT-A-BOARD",
+  "origin": "SYNTHETIC_FIXTURE",
+  "captured_at": "2026-09-25T23:09:53.702714+00:00",
+  "capture_state": "PARTIAL",
+  "capture_error": null,
+  "overall": "INCOMPLETE",
+  "first_failed_check": null,
+  "hardware_qualified": false,
+  "fabrication_release": false,
+  "synthetic": true,
+  "checks": [
+    {
+      "id": "CAPTURE_COMPLETENESS",
+      "status": "INCONCLUSIVE",
+      "finding": "Capture state=PARTIAL; only retained readings are interpreted.",
+      "next_step": "Errors / timeouts / missing data are never evidence of a pass.",
+      "evidence": null
+    },
+    {
+      "id": "DBG_IDENTITY",
+      "status": "PASS",
+      "finding": "CPUID=0x411fc271, DEV_ID=0x450, REV_ID=0x2003.",
+      "next_step": "These fields only confirm the core and compatible family, not the exact part number, package or authenticity.",
+      "evidence": {
+        "variant": 1,
+        "revision": 1
+      }
+    },
+    {
+      "id": "FLASH_CAPACITY",
+      "status": "PASS",
+      "finding": "Flash size register=2048 KiB; the current VI part expects 2048 KiB.",
+      "next_step": "This reads the size identifier; it is not a write / erase / read-back test.",
+      "evidence": null
+    },
+    {
+      "id": "BOARD_UID",
+      "status": "PASS",
+      "finding": "UID=00000000-01234567-89abcdef",
+      "next_step": "Register the UID against the physical assembly ID; a single zero 32-bit word is not a device error.",
+      "evidence": null
+    },
+    {
+      "id": "RESET_HISTORY",
+      "status": "NOT_TESTED",
+      "finding": "RCC_RSR not read.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "CLOCK_SNAPSHOT",
+      "status": "INFO",
+      "finding": "System clock source=HSI; selected source ready=True.",
+      "next_step": "Only configuration / ready state is checked; frequency accuracy, start-up margin and jitter still need measurement.",
+      "evidence": null
+    },
+    {
+      "id": "HSE_STATE",
+      "status": "NOT_TESTED",
+      "finding": "HSE enabled=False, ready=False.",
+      "next_step": "HSE not enabled does not mean the crystal is bad; enabled but not ready must be separated into still initialising, software configuration, or a Y1/C25/C26 problem.",
+      "evidence": null
+    },
+    {
+      "id": "CPU_FAULT_FLAGS",
+      "status": "INFO",
+      "finding": "CPU fault flags recorded; state not cleared.",
+      "next_step": "Flags set do not mean a fault is still present, and zero flags do not prove the firmware correct. Fault addresses are interpreted only when VALID is set.",
+      "evidence": {
+        "CFSR": "0x00000000",
+        "HFSR": "0x00000000"
+      }
+    },
+    {
+      "id": "VOLTAGE_SCALING",
+      "status": "INFO",
+      "finding": "VOS code=1, VOSRDY=True.",
+      "next_step": "Digital state is not a measured VCAP voltage; interpret with the silicon revision and operating mode.",
+      "evidence": null
+    },
+    {
+      "id": "POWER_MEASUREMENTS",
+      "status": "NOT_TESTED",
+      "finding": "No external instrument voltage evidence.",
+      "next_step": "Fill in an independent bench measurement sheet; never use the ADC reference to prove its own supply is correct.",
+      "evidence": null
+    },
+    {
+      "id": "SPI_SENSOR",
+      "status": "NOT_TESTED",
+      "finding": "IMU identity, sample liveness, noise and interrupt not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "I2C_SENSOR",
+      "status": "NOT_TESTED",
+      "finding": "Barometer PROM CRC, conversion and noise not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "QSPI_DATA",
+      "status": "NOT_TESTED",
+      "finding": "External flash quad write/read verification not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "USB_DATA",
+      "status": "NOT_TESTED",
+      "finding": "USB enumeration and data transfer not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "WATCHDOG",
+      "status": "NOT_TESTED",
+      "finding": "Real watchdog timeout reset not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "TRANSIENTS",
+      "status": "NOT_TESTED",
+      "finding": "Power start-up, ripple and load steps not yet performed.",
+      "next_step": "",
+      "evidence": null
+    },
+    {
+      "id": "GNSS",
+      "status": "NOT_POPULATED",
+      "finding": "U6 is not fitted in this assembly configuration; the physical configuration still needs recording.",
+      "next_step": "",
+      "evidence": null
+    }
+  ]
+}

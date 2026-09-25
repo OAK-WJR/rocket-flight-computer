@@ -1,0 +1,5 @@
+Generic KiCad package models copied from the installed KiCad 10.0.6 library.
+Sources: https://gitlab.com/kicad/libraries/kicad-packages3D
+KiCad library license: https://www.kicad.org/libraries/license/
+Renderer rotation convention: https://docs.kicad.org/doxygen/render__3d__opengl_8cpp_source.html
+These models illustrate package geometry; do not use as proof of a specific supplier part.

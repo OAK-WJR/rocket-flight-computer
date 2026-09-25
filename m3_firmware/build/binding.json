@@ -1,0 +1,116 @@
+{
+  "profile": "M3-PWR-R3",
+  "board_sha256": "2fdf1bf82d7feb3f303060bdddbded2f45cf8956eb2b051c99a18c57dc286d16",
+  "gnss_dnp": true,
+  "probes": {
+    "VBUS": {
+      "probe": "C28.1",
+      "board_xy_mm": [
+        9.5,
+        123.9
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        126.5
+      ]
+    },
+    "VLOGIC": {
+      "probe": "C6.1",
+      "board_xy_mm": [
+        11.53,
+        87.77
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        126.5
+      ]
+    },
+    "3V3": {
+      "probe": "J2.5",
+      "board_xy_mm": [
+        41.81,
+        126.5
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        126.5
+      ]
+    },
+    "3V3A": {
+      "probe": "C10.1",
+      "board_xy_mm": [
+        29.6,
+        90.3
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        126.5
+      ]
+    },
+    "VCAP1": {
+      "probe": "C19.1",
+      "board_xy_mm": [
+        13.57,
+        119.4
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        126.5
+      ]
+    },
+    "VCAP2": {
+      "probe": "C20.1",
+      "board_xy_mm": [
+        29.3,
+        123.9
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        126.5
+      ]
+    },
+    "NRST": {
+      "probe": "J2.4",
+      "board_xy_mm": [
+        39.27,
+        126.5
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        126.5
+      ]
+    },
+    "VLOGIC_SENSE": {
+      "probe": "R61.1",
+      "board_xy_mm": [
+        19.97,
+        97.9
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        126.5
+      ]
+    },
+    "V3V3_SENSE": {
+      "probe": "R63.1",
+      "board_xy_mm": [
+        19.47,
+        99.2
+      ],
+      "ground": "J2.1",
+      "ground_xy_mm": [
+        31.65,
+        126.5
+      ]
+    }
+  },
+  "binding_note": "Expected CAD identity only; assembly enrollment and external instruments still required. Read-only CORE registers retained. Power TP/FAULT/ST have no new MCU readback."
+}

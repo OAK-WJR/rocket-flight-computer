@@ -1,0 +1,65 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-09-08T05:01:05",
+    "ignored_checks": [],
+    "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+    ],
+    "kicad_version": "10.0.6",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8",
+            "violations": []
+        },
+        {
+            "path": "/02 | MCU, clock and debug/",
+            "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8",
+            "violations": []
+        },
+        {
+            "path": "/03 | Memory and sensors/",
+            "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0",
+            "violations": []
+        },
+        {
+            "path": "/04 | Voltage diagnosis, indicators and GNSS receiver/",
+            "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19",
+            "violations": []
+        },
+        {
+            "path": "/05 | Camera branch protection and regulator/",
+            "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73",
+            "violations": []
+        },
+        {
+            "path": "/06 | Camera terminal and characterization/",
+            "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4",
+            "violations": []
+        },
+        {
+            "path": "/07 | Battery input, contact and protection/",
+            "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5",
+            "violations": []
+        },
+        {
+            "path": "/08 | USB limit, source mux and hold-up/",
+            "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da",
+            "violations": []
+        },
+        {
+            "path": "/09 | Camera UART, separate supply domains/",
+            "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab",
+            "violations": []
+        },
+        {
+            "path": "/10 | USB cable presence, ordinary GPIO sensing/",
+            "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/7323b515-8986-5814-85b5-9e04db992507",
+            "violations": []
+        }
+    ],
+    "source": "m3.kicad_sch"
+}

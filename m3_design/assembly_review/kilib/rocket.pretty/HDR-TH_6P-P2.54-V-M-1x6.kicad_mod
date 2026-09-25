@@ -1,0 +1,117 @@
+(footprint "HDR-TH_6P-P2.54-V-M-1x6"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -2.12 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "ca0a54d1-d28a-416d-90f9-1468f9602276")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "HDR-TH_6P-P2.54-V-M-1x6"
+		(at 0 2.6 0)
+		(layer "F.Fab")
+		(uuid "8bc3ec4d-6df3-4bac-a2c7-21e8743d7411")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	
+	
+	
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -7.62 -1.27)
+		(end -7.62 1.27)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "6a425617-43f6-41b8-933f-23d36a234871")
+	)
+	(fp_line
+		(start 7.62 -1.27)
+		(end 7.62 1.27)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "b1edae8d-95c2-4aa6-977e-698eb4109edc")
+	)
+	
+	(pad "1" thru_hole rect
+		(at -6.35 0)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "df3fbcbe-0612-4564-a6b6-e82ce3dc74cd")
+	)
+	(pad "2" thru_hole circle
+		(at -3.81 0)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "a097c799-3b3d-483a-a24d-65ed70dc142c")
+	)
+	(pad "3" thru_hole circle
+		(at -1.27 0)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "49b9cde9-a806-4b5b-84a3-24315c1734cf")
+	)
+	(pad "4" thru_hole circle
+		(at 1.27 0)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "2be7d7d3-d8e9-4490-ada3-aae74d271431")
+	)
+	(pad "5" thru_hole circle
+		(at 3.81 0)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "82a93be0-685c-40db-a55e-82046eebf873")
+	)
+	(pad "6" thru_hole circle
+		(at 6.35 0)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "2009b8f3-a4d3-46be-be72-db6fe4d38cdb")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/kilib/generic.3dshapes/PinHeader_1x06_P2.54mm_Vertical.step"
+		(offset
+			(xyz -6.35 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 -90)
+		)
+	)
+
+(fp_rect (start -8.12 -1.77) (end 8.12 1.77) (stroke (width .05) (type solid)) (fill no) (layer "F.CrtYd") (uuid "dabe0a37-d4c3-5c99-ab0e-4f673af89013"))
+)

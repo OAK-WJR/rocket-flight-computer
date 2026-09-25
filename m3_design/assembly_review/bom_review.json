@@ -1,0 +1,1368 @@
+{
+  "revision": "M3-ASSY-R1",
+  "board_sha256": "e432d3436d5029de0a74a4b0ebcd02ec092dedf6d4252ce310f7be301558627f",
+  "rows": [
+    {
+      "ref": "C10",
+      "value": "22uF",
+      "footprint": "rocket:C0805",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C45783",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C11",
+      "value": "22uF",
+      "footprint": "rocket:C0805",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C45783",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C13",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C14",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C15",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C16",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C17",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C18",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C19",
+      "value": "2.2uF",
+      "footprint": "rocket:C0603",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C23630",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C20",
+      "value": "2.2uF",
+      "footprint": "rocket:C0603",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C23630",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C21",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C22",
+      "value": "1uF",
+      "footprint": "rocket:C0603",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C15849",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C23",
+      "value": "4.7uF",
+      "footprint": "rocket:C0603",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C19666",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C24",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C25",
+      "value": "10pF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C32949",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C26",
+      "value": "10pF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C32949",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C28",
+      "value": "4.7uF",
+      "footprint": "rocket:C0603",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C19666",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C29",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C30",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C31",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C32",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C33",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C34",
+      "value": "22uF",
+      "footprint": "rocket:C0805",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C45783",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C5",
+      "value": "100nF",
+      "footprint": "rocket:C0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1525",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C6",
+      "value": "22uF",
+      "footprint": "rocket:C0805",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C45783",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C60",
+      "value": "10nF",
+      "footprint": "rocket:C0603",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C57112",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C7",
+      "value": "22uF",
+      "footprint": "rocket:C0805",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C45783",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C70",
+      "value": "4.7nF 50V C0G 5%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "manufacturer": "Murata",
+      "manufacturer_part": "GRM1885C1H472JA01D",
+      "lcsc": "C85980",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C71",
+      "value": "100nF 50V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "manufacturer_part": "CL10B104KB8NNNC",
+      "lcsc": "C1591",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C72",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "manufacturer": "Murata",
+      "manufacturer_part": "GRM32ER71E226KE15L",
+      "lcsc": "C21397",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C73",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "manufacturer": "Murata",
+      "manufacturer_part": "GRM32ER71E226KE15L",
+      "lcsc": "C21397",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C74",
+      "value": "100nF 50V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "manufacturer_part": "CL10B104KB8NNNC",
+      "lcsc": "C1591",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C75",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "manufacturer": "Murata",
+      "manufacturer_part": "GRM32ER71E226KE15L",
+      "lcsc": "C21397",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C76",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "manufacturer": "Murata",
+      "manufacturer_part": "GRM32ER71E226KE15L",
+      "lcsc": "C21397",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C77",
+      "value": "100pF 50V C0G 5%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "manufacturer_part": "CL10C101JB8NNNC",
+      "lcsc": "C14858",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C8",
+      "value": "22uF",
+      "footprint": "rocket:C0805",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C45783",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C80",
+      "value": "1uF 50V X7R 10%",
+      "footprint": "rocket:C_1206_3216Metric",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "manufacturer_part": "CL31B105KBHNNNE",
+      "lcsc": "C1848",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C81",
+      "value": "4.7nF 50V C0G 5%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "manufacturer": "Murata",
+      "manufacturer_part": "GRM1885C1H472JA01D",
+      "lcsc": "C85980",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C82",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "manufacturer": "Murata",
+      "manufacturer_part": "GRM32ER71E226KE15L",
+      "lcsc": "C21397",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C83",
+      "value": "100nF 50V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "manufacturer_part": "CL10B104KB8NNNC",
+      "lcsc": "C1591",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C84",
+      "value": "330uF 25V",
+      "footprint": "rocket:M3_OSCON_F12",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C178367",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C85",
+      "value": "470nF 25V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "manufacturer_part": "CL10B474KA8NNNC",
+      "lcsc": "C1623",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C86",
+      "value": "1uF 25V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "manufacturer_part": "CL10B105KA8NNNC",
+      "lcsc": "C29936",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C9",
+      "value": "22uF",
+      "footprint": "rocket:C0805",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C45783",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C90",
+      "value": "100nF 50V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "manufacturer_part": "CL10B104KB8NNNC",
+      "lcsc": "C1591",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C91",
+      "value": "1uF 50V X7R 10%",
+      "footprint": "rocket:C_1206_3216Metric",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "manufacturer_part": "CL31B105KBHNNNE",
+      "lcsc": "C1848",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C92",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "manufacturer": "Murata",
+      "manufacturer_part": "GRM32ER71E226KE15L",
+      "lcsc": "C21397",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "C93",
+      "value": "100nF 50V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "manufacturer_part": "CL10B104KB8NNNC",
+      "lcsc": "C1591",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "D4",
+      "value": "USBLC6-2SC6",
+      "footprint": "rocket:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C7519",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "D8",
+      "value": "SMBJ9.0CA",
+      "footprint": "rocket:D_SMB",
+      "manufacturer": "Diodes Incorporated",
+      "manufacturer_part": "SMBJ9.0CA-13-F",
+      "lcsc": "C135111",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "D9",
+      "value": "B340A-13-F",
+      "footprint": "rocket:D_SMA",
+      "manufacturer": "Diodes Incorporated",
+      "manufacturer_part": "B340A-13-F",
+      "lcsc": "C85098",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "J1",
+      "value": "BAT+ / GND / SW / SW",
+      "footprint": "rocket:M3_DB128V_4P_Entry",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C2915641",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "J2",
+      "value": "SWD+DFU 1x6",
+      "footprint": "rocket:HDR-TH_6P-P2.54-V-M-1x6",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C2337",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "J3",
+      "value": "USB-C 2.0",
+      "footprint": "rocket:USB-C_SMD-TYPE-C-31-M-12_1",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C165948",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "J9",
+      "value": "CAM 5V / GND / RX / TX",
+      "footprint": "rocket:M3_DB128V_4P",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C2915641",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "L1",
+      "value": "4.7uH",
+      "footprint": "rocket:IND-SMD_L4.0-W4.0",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C57269",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "L2",
+      "value": "4.7uH",
+      "footprint": "rocket:IND-SMD_L4.0-W4.0",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C57269",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "L3",
+      "value": "10uH",
+      "footprint": "rocket:M3_SRP5030TA",
+      "manufacturer": "Bourns",
+      "manufacturer_part": "SRP5030TA-100M",
+      "lcsc": "C3223923",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "LED1",
+      "value": "RED",
+      "footprint": "rocket:M3_NCD0805R1_K1",
+      "manufacturer": "NATIONSTAR",
+      "manufacturer_part": "NCD0805R1",
+      "lcsc": "C84256",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED",
+      "source_pdf": "sources/ncd0805r1.pdf"
+    },
+    {
+      "ref": "LED2",
+      "value": "YEL",
+      "footprint": "rocket:M3_KT0805Y_A1",
+      "manufacturer": "Hubei KENTO Elec",
+      "manufacturer_part": "KT-0805Y",
+      "lcsc": "C2296",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED",
+      "source_pdf": "sources/kt_0805y.pdf"
+    },
+    {
+      "ref": "R10",
+      "value": "10k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25744",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R100",
+      "value": "1k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RC0603FR-071KL",
+      "lcsc": "C22548",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R101",
+      "value": "1k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RC0603FR-071KL",
+      "lcsc": "C22548",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R102",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0710KL",
+      "lcsc": "C95204",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R103",
+      "value": "1k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RC0603FR-071KL",
+      "lcsc": "C22548",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R11",
+      "value": "10k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25744",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R110",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0710KL",
+      "lcsc": "C95204",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R12",
+      "value": "4.7k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25900",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R13",
+      "value": "4.7k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25900",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R32",
+      "value": "220R",
+      "footprint": "rocket:R0805",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C17557",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R33",
+      "value": "220R",
+      "footprint": "rocket:R0805",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C17557",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R5",
+      "value": "10k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25744",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R60",
+      "value": "100k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25741",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R61",
+      "value": "10k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25744",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R62",
+      "value": "10k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25744",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R63",
+      "value": "10k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25744",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R64",
+      "value": "10k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25744",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R7",
+      "value": "5.1k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25905",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R70",
+      "value": "1.78k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD071K78L",
+      "lcsc": "C861207",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R71",
+      "value": "172k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD07172KL",
+      "lcsc": "C861162",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R72",
+      "value": "30.9k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0730K9L",
+      "lcsc": "C861313",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R74",
+      "value": "1k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RC0603FR-071KL",
+      "lcsc": "C22548",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R75",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0710KL",
+      "lcsc": "C95204",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R76",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0710KL",
+      "lcsc": "C95204",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R77",
+      "value": "1k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RC0603FR-071KL",
+      "lcsc": "C22548",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R78",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0710KL",
+      "lcsc": "C95204",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R8",
+      "value": "5.1k",
+      "footprint": "rocket:R0402",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C25905",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R80",
+      "value": "1M 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD071ML",
+      "lcsc": "C326730",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R81",
+      "value": "280k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD07280KL",
+      "lcsc": "C705755",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R82",
+      "value": "2M 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Vishay Beyschlag",
+      "manufacturer_part": "MCT0603MD2004BP500",
+      "lcsc": "C4241878",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R83",
+      "value": "300k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD07300KL",
+      "lcsc": "C705762",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R84",
+      "value": "1.65k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD071K65L",
+      "lcsc": null,
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R85",
+      "value": "66.5k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RC0603FR-0766K5L",
+      "lcsc": "C137691",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R86",
+      "value": "80k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Vishay Dale Thin Film",
+      "manufacturer_part": "PTN0603Y8002BST1",
+      "lcsc": null,
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R87",
+      "value": "44.2k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0744K2L",
+      "lcsc": "C861410",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R88",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0710KL",
+      "lcsc": "C95204",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R89",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0710KL",
+      "lcsc": "C95204",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R9",
+      "value": "6.2k 1%",
+      "footprint": "rocket:R0402",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RC0402FR-076K2L",
+      "lcsc": null,
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R90",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0710KL",
+      "lcsc": "C95204",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R91",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0710KL",
+      "lcsc": "C95204",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "R92",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "manufacturer_part": "RT0603BRD0710KL",
+      "lcsc": "C95204",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "TP70",
+      "value": "RAW_PROTECTED",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP71",
+      "value": "CAM_INPUT_LIMITED",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP72",
+      "value": "CAM_5V",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP73",
+      "value": "CAM_ILIM",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP74",
+      "value": "GND",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP75",
+      "value": "CAM_RX_TEST",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP76",
+      "value": "CAM_TX_TEST",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP80",
+      "value": "BAT_IN",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP81",
+      "value": "RAW_PROTECTED",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP82",
+      "value": "USB_LIMITED",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP83",
+      "value": "VLOGIC",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP84",
+      "value": "BAT_ENABLE",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP85",
+      "value": "BAT_FAULT_N",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP86",
+      "value": "USB_FAULT_N",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP87",
+      "value": "LOGIC_SOURCE_ST",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP88",
+      "value": "GND",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP89",
+      "value": "BAT_ILIM",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP90",
+      "value": "CAM_IO_3V3",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP91",
+      "value": "CAM_UART_OE",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "TP92",
+      "value": "VBUS_SENSE",
+      "footprint": "rocket:M3_TestPad_1.5",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": null,
+      "fitted_quantity": 0,
+      "state": "TEST_PAD"
+    },
+    {
+      "ref": "U1",
+      "value": "STM32H743VIT6",
+      "footprint": "rocket:LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C5271084",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "U10",
+      "value": "TPS2553DBVR",
+      "footprint": "rocket:M3_TPS2553_DBV",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C55266",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "U11",
+      "value": "TPS2121RUXR",
+      "footprint": "rocket:M3_TPS2121_RUX",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C485916",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "U12",
+      "value": "TXU0202DCUR",
+      "footprint": "rocket:M3_TXU0202_DCU",
+      "manufacturer": "Texas Instruments",
+      "manufacturer_part": "TXU0202DCUR",
+      "lcsc": null,
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "U13",
+      "value": "TPS70933DBVR",
+      "footprint": "rocket:M3_TPS709_DBV",
+      "manufacturer": "Texas Instruments",
+      "manufacturer_part": "TPS70933DBVR",
+      "lcsc": "C89347",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "U2",
+      "value": "AP63203WU-7",
+      "footprint": "rocket:TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C780769",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "U3",
+      "value": "W25Q128JVSIQ",
+      "footprint": "rocket:SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL",
+      "manufacturer": "Winbond",
+      "manufacturer_part": "W25Q128JVSIQ",
+      "lcsc": "C97521",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED",
+      "source_pdf": "sources/w25q128jv_revg.pdf"
+    },
+    {
+      "ref": "U4",
+      "value": "ICM-45686",
+      "footprint": "rocket:LGA-14_L3.0-W2.5-P0.50-TL",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C22459454",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "U5",
+      "value": "MS561101BA03",
+      "footprint": "rocket:SENSORS-SMD_MS5611-01BA03",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C15639",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "U6",
+      "value": "SAM-M10Q-00B",
+      "footprint": "rocket:LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B",
+      "manufacturer": "u-blox",
+      "manufacturer_part": "SAM-M10Q-00B",
+      "lcsc": "C5443880",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "U7",
+      "value": "TPS259570DSGR",
+      "footprint": "rocket:M3_TPS2595_DSG",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1849463",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "U8",
+      "value": "AP63200WU-7",
+      "footprint": "rocket:M3_AP63200_TSOT26",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C2071868",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "U9",
+      "value": "TPS259470LRPWR",
+      "footprint": "rocket:M3_TPS25947_RPW",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C3662793",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    },
+    {
+      "ref": "Y1",
+      "value": "25MHz CL8pF",
+      "footprint": "rocket:CRYSTAL-SMD_4P-L3.2-W2.5-BL",
+      "manufacturer": null,
+      "manufacturer_part": null,
+      "lcsc": "C1985619",
+      "fitted_quantity": 1,
+      "state": "NOT_HARDWARE_QUALIFIED"
+    }
+  ],
+  "fitted_count": 115,
+  "testpads": 20,
+  "stock_reserved": false,
+  "complete_cost_usd": null,
+  "assembly_procurement_confirmed": false,
+  "hardware_tested": false,
+  "fabrication_release": false,
+  "full_m3_complete": false,
+  "change_note": "Separate LED cathode/lands/models, identity fields for LED1/LED2/U3; all routes retained."
+}

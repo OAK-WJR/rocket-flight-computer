@@ -1,0 +1,5 @@
+#VRML V2.0 utf8
+# Conservative16x16x6.8mm envelope, NOT manufacturer STEP. UBX-22013293R05p16.
+Transform { translation 0.000000 0.000000 0.157480 children [ Shape { appearance Appearance { material Material { diffuseColor .06 .25 .10 } } geometry Box { size 6.299213 6.299213 0.314961 } } ] }
+Transform { translation 0.000000 0.000000 1.496063 children [ Shape { appearance Appearance { material Material { diffuseColor .67 .59 .48 } } geometry Box { size 6.141732 6.141732 2.362205 } } ] }
+Transform { translation -2.598425 1.496063 0.354331 children [ Shape { appearance Appearance { material Material { diffuseColor .8 .08 .04 } } geometry Box { size 0.472441 0.472441 0.078740 } } ] }

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+ -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+  
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/assets/styles/main.css">
+
+  <title>Python API examples &mdash; pyOCD</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2RKCB4KZ7S"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2RKCB4KZ7S');
+  </script>
+</head>
+
+  <body id="top">
+    <div class="full-view-height d-flex flex-column">
+      <div class="flex-shrink-0">
+        <nav class="navbar navbar-expand-md navbar-dark py-1">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <img src="/assets/pyocd_logo_white.svg" height="42" width="auto" alt=""></img>
+    </a>
+    <a class="navbar-brand color-secondary" href="/">
+      <span class="display-lg project-name">pyOCD</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
+      <ul class="navbar-nav">
+        
+        
+        <li class="nav-item mr-auto mx-1">
+          <a class="nav-link" href="/docs/">Documentation</a>
+        </li>
+        
+        <li class="nav-item mr-auto mx-1">
+          <a class="nav-link" href="/posts/">Posts</a>
+        </li>
+        
+        <li class="nav-item mr-auto mx-1">
+          <a class="nav-link" href="https://github.com/pyocd/pyOCD"><i class="bi bi-github"></i></a>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      </div>
+      <div class="container-fluid flex-grow-1 p-0">
+        <div class="row">
+          <div class="col-md-3 col-sm-0 d-sm-none d-md-block p-0">
+            
+
+<div class="sidebar docs-sidebar-1" id="sidebar1">
+  <div class="p-4">
+    <h5 class="sidebar-header level-1">Getting started</h5>
+    <ul class="list-unstyled level-1">
+    <li class="sidebar-item level-1">
+            <a href="/docs/installing.html" class="sidebar-link ">Installing</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/installing_on_non_x86.html" class="sidebar-link ">Installing on non-x86 platforms</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/gdb_setup.html" class="sidebar-link ">GDB setup</a>
+            </li>
+          </ul>
+    <h5 class="sidebar-header level-1">User guide</h5>
+    <ul class="list-unstyled level-1">
+    <li class="sidebar-item level-1">
+            <a href="/docs/target_support.html" class="sidebar-link ">Target support</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/debug_probes.html" class="sidebar-link ">Debug probes</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/configuration.html" class="sidebar-link ">Configuration</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/open_cmsis_pack_support.html" class="sidebar-link ">Open-CMSIS-Pack support</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/gdbserver.html" class="sidebar-link ">gdb remote server</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/user_scripts.html" class="sidebar-link ">User scripts</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/remote_probe_access.html" class="sidebar-link ">Remote probe access</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/configuring_logging.html" class="sidebar-link ">Configuring logging</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/security.html" class="sidebar-link ">Security and protection</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/multicore_debug.html" class="sidebar-link ">Multicore debug</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/semihosting.html" class="sidebar-link ">Semihosting</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/swo_swv.html" class="sidebar-link ">SWO/SWV</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/memory_attributes.html" class="sidebar-link ">Memory transfer attributes</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/target_family_notes.html" class="sidebar-link ">Target family usage notes</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/faq.html" class="sidebar-link ">FAQ</a>
+            </li>
+          </ul>
+    <h5 class="sidebar-header level-1">Reference</h5>
+    <ul class="list-unstyled level-1">
+    <li class="sidebar-item level-1">
+            <a href="/docs/terminology.html" class="sidebar-link ">Terminology</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/builtin-targets.html" class="sidebar-link ">Built-in targets</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/options.html" class="sidebar-link ">Session options list</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/command_reference.html" class="sidebar-link ">Command reference</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/env_vars.html" class="sidebar-link ">Environment variables</a>
+            </li>
+          </ul>
+    <h5 class="sidebar-header level-1">Python API</h5>
+    <ul class="list-unstyled level-1">
+    <li class="sidebar-item level-1">
+            <a href="/docs/api/architecture.html" class="sidebar-link ">Architecture</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/python_api.html" class="sidebar-link ">Introduction to the API</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <p class="sidebar-item-selected">Python API examples</p>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/api/using_session_options.html" class="sidebar-link ">Using session options</a>
+            </li>
+          </ul>
+    <h5 class="sidebar-header level-1">Developers</h5>
+    <ul class="list-unstyled level-1">
+    <li class="sidebar-item level-1">
+            <a href="/docs/developers_guide.html" class="sidebar-link ">Developers’ guide</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/adding_new_targets.html" class="sidebar-link ">Adding a new built-in target</a>
+            </li>
+          <li class="sidebar-item level-1">
+            <a href="/docs/automated_tests.html" class="sidebar-link ">Automated tests</a>
+            </li>
+          <li>
+        <p class="sidebar-header level-2">
+          Internal design
+        </p>
+        <ul class="list-unstyled level-2">
+        <li class="sidebar-item level-2">
+              <a href="/docs/architecture.html" class="sidebar-link ">Architecture</a>
+              </li>
+            <li class="sidebar-item level-2">
+              <a href="/docs/developer/board_ids.html" class="sidebar-link ">Board IDs</a>
+              </li>
+            <li class="sidebar-item level-2">
+              <a href="/docs/remote_probe_protocol.html" class="sidebar-link ">Remote probe protocol</a>
+              </li>
+            </ul>
+        </li></ul>
+    </div>
+</div>
+
+          </div>
+          <div class="col-md-9 col-sm-12 p-0">
+            <main role="main" class="content-scroll p-4" data-spy="scroll" data-target="#components-nav" data-offset="0">
+
+              
+
+              
+              <div class="row">
+                <div class="d-sm-block d-md-none">
+                  <p class=""><b>&larr;</b> <a href="/docs/index">Documentation index</a></p>
+                </div>
+              </div>
+              
+
+              <div class="row">
+                <div class="container docs-content">
+                  
+                  <h1 class="mb-4 mt-0">Python API examples</h1>
+                  
+
+                  <!-- floating table of contents -->
+                  <div class="col-lg-4 col-md-3 float-md-end ms-md-3 mb-sm-3" id="toc-div">
+                    <div class="sidebar docs-sidebar-2 p-4">
+                        <h5 class="sidebar-header">On this page</h5>
+                        <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h2"><a href="#hello-world-example-code">Hello World example code</a></li>
+<li class="toc-entry toc-h2"><a href="#elf-files-and-breakpoints">ELF files and breakpoints</a></li>
+<li class="toc-entry toc-h2"><a href="#alternative-ways-to-create-a-session">Alternative ways to create a session</a></li>
+<li class="toc-entry toc-h2"><a href="#semihosting">Semihosting</a></li>
+</ul>
+                    </div>
+                  </div>
+
+                  <h2 id="hello-world-example-code">Hello World example code</h2>
+
+<p>This example shows basic connection, loading a firmware binary, and some simple target control.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span><span class="kn">from</span> <span class="nn">pyocd.core.helpers</span> <span class="kn">import</span> <span class="n">ConnectHelper</span>
+<span class="kn">from</span> <span class="nn">pyocd.flash.file_programmer</span> <span class="kn">import</span> <span class="n">FileProgrammer</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logging</span><span class="p">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">ConnectHelper</span><span class="p">.</span><span class="n">session_with_chosen_probe</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+
+    <span class="n">board</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="n">board</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">board</span><span class="p">.</span><span class="n">target</span>
+    <span class="n">flash</span> <span class="o">=</span> <span class="n">target</span><span class="p">.</span><span class="n">memory_map</span><span class="p">.</span><span class="n">get_boot_memory</span><span class="p">()</span>
+
+    <span class="c1"># Load firmware into device.
+</span>    <span class="n">FileProgrammer</span><span class="p">(</span><span class="n">session</span><span class="p">).</span><span class="n">program</span><span class="p">(</span><span class="s">"my_firmware.bin"</span><span class="p">)</span>
+
+    <span class="c1"># Reset
+</span>    <span class="n">target</span><span class="p">.</span><span class="n">reset_and_halt</span><span class="p">()</span>
+    
+    <span class="c1"># Read some registers.
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"pc: 0x%X"</span> <span class="o">%</span> <span class="n">target</span><span class="p">.</span><span class="n">read_core_register</span><span class="p">(</span><span class="s">"pc"</span><span class="p">))</span>
+
+    <span class="n">target</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"pc: 0x%X"</span> <span class="o">%</span> <span class="n">target</span><span class="p">.</span><span class="n">read_core_register</span><span class="p">(</span><span class="s">"pc"</span><span class="p">))</span>
+
+    <span class="n">target</span><span class="p">.</span><span class="n">resume</span><span class="p">()</span>
+    <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">target</span><span class="p">.</span><span class="n">halt</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"pc: 0x%X"</span> <span class="o">%</span> <span class="n">target</span><span class="p">.</span><span class="n">read_core_register</span><span class="p">(</span><span class="s">"pc"</span><span class="p">))</span>
+
+    <span class="n">target</span><span class="p">.</span><span class="n">reset_and_halt</span><span class="p">()</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">"pc: 0x%X"</span> <span class="o">%</span> <span class="n">target</span><span class="p">.</span><span class="n">read_core_register</span><span class="p">(</span><span class="s">"pc"</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 id="elf-files-and-breakpoints">ELF files and breakpoints</h2>
+
+<p>Expanding on the above example, this code demonstrates reading a symbol address from an ELF file
+and setting a breakpoint. Then the target is reset and run until the breakpoint is hit.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span><span class="kn">from</span> <span class="nn">pyocd.core.helpers</span> <span class="kn">import</span> <span class="n">ConnectHelper</span>
+<span class="kn">from</span> <span class="nn">pyocd.core.target</span> <span class="kn">import</span> <span class="n">Target</span>
+<span class="kn">from</span> <span class="nn">pyocd.debug.elf.symbols</span> <span class="kn">import</span> <span class="n">ELFSymbolProvider</span>
+
+<span class="c1"># Connect to the target.
+</span><span class="k">with</span> <span class="n">ConnectHelper</span><span class="p">.</span><span class="n">session_with_chosen_probe</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="n">target</span>
+
+    <span class="c1"># Set ELF file on target.
+</span>    <span class="n">target</span><span class="p">.</span><span class="n">elf</span> <span class="o">=</span> <span class="s">"my_firmware.elf"</span>
+
+    <span class="c1"># Look up address of main().
+</span>    <span class="n">provider</span> <span class="o">=</span> <span class="n">ELFSymbolProvider</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">elf</span><span class="p">)</span>
+    <span class="n">addr</span> <span class="o">=</span> <span class="n">provider</span><span class="p">.</span><span class="n">get_symbol_value</span><span class="p">(</span><span class="s">"main"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"main() address: 0x%X"</span> <span class="o">%</span> <span class="n">addr</span><span class="p">)</span>
+
+    <span class="c1"># Set breakpoint.
+</span>    <span class="n">target</span><span class="p">.</span><span class="n">set_breakpoint</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+
+    <span class="c1"># Reset and run.
+</span>    <span class="n">target</span><span class="p">.</span><span class="n">reset</span><span class="p">()</span>
+
+    <span class="c1"># Wait until breakpoint is hit.
+</span>    <span class="k">while</span> <span class="n">target</span><span class="p">.</span><span class="n">get_state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">Target</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">HALTED</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Print PC.
+</span>    <span class="n">pc</span> <span class="o">=</span> <span class="n">target</span><span class="p">.</span><span class="n">read_core_register</span><span class="p">(</span><span class="s">"pc"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"pc: 0x%X"</span> <span class="o">%</span> <span class="n">pc</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">pc</span> <span class="o">==</span> <span class="n">addr</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mh">0x01</span>                         <span class="c1"># mask off LSB
+</span>
+    <span class="c1"># Remove breakpoint.
+</span>    <span class="n">target</span><span class="p">.</span><span class="n">remove_breakpoint</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Note that you currently need to manually remove a breakpoint in order to step or run over it.</p>
+
+<h2 id="alternative-ways-to-create-a-session">Alternative ways to create a session</h2>
+
+<p>It’s important to understand that the <code class="highlighter-rouge">ConnectHelper.session_with_chosen_probe()</code> method doesn’t
+itself open the session for you. Instead, it’s using the session object as a context manager that
+does this.</p>
+
+<p>Here is an example where the <code class="highlighter-rouge">with</code> statement is separated from the creation of the session.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Connect to the target.
+</span><span class="n">session</span> <span class="o">=</span> <span class="n">ConnectHelper</span><span class="p">.</span><span class="n">session_with_chosen_probe</span><span class="p">()</span>
+
+<span class="c1"># Manually open the session. When the 'with' statement exits, the session is closed.
+</span><span class="k">with</span> <span class="n">session</span><span class="p">:</span>
+    <span class="c1"># ... control the target
+</span></code></pre></div></div>
+
+<p>This example demonstrates complete manual control of session opening and closing.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Connect to the target.
+</span><span class="n">session</span> <span class="o">=</span> <span class="n">ConnectHelper</span><span class="p">.</span><span class="n">session_with_chosen_probe</span><span class="p">()</span>
+
+<span class="c1"># Manually open the session.
+</span><span class="n">session</span><span class="p">.</span><span class="nb">open</span><span class="p">()</span>
+
+<span class="c1"># ... control the target
+</span>
+<span class="c1"># Close the session and connection.
+</span><span class="n">session</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>In reality you might want to put the call to <code class="highlighter-rouge">close()</code> in a <code class="highlighter-rouge">finally</code> clause of an exception handler.</p>
+
+<p>The example here shows how the <code class="highlighter-rouge">auto_open</code> parameter can be used to achieve a combination of the
+above approaches. When set to False, the session will <em>not</em> be opened upon entry into a <code class="highlighter-rouge">with</code>
+statement. This allows using a <code class="highlighter-rouge">with</code> statement to ensure the session is properly closed, but with
+manual opening so you could, perhaps, further configure the session before it is opened.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Here we set auto_open to False, so the 'with' statement won't open the session.
+</span><span class="n">session</span> <span class="o">=</span> <span class="n">ConnectHelper</span><span class="p">.</span><span class="n">session_with_chosen_probe</span><span class="p">(</span><span class="n">auto_open</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="c1"># When the 'with' statement exits, the session is closed.
+</span><span class="k">with</span> <span class="n">session</span><span class="p">:</span>
+    <span class="c1"># ... modify the session
+</span>
+    <span class="c1"># Manually open the session.
+</span>    <span class="n">session</span><span class="p">.</span><span class="nb">open</span><span class="p">()</span>
+
+    <span class="c1"># ... control the target
+</span></code></pre></div></div>
+
+<p>Selecting a probe and configuring the target connection is done as follows:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Connect to the target with some options.
+</span><span class="n">session</span> <span class="o">=</span> <span class="n">ConnectHelper</span><span class="p">.</span><span class="n">session_with_chosen_probe</span><span class="p">(</span><span class="n">unique_id</span> <span class="o">=</span> <span class="s">"E6616407E3646B29"</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s">"frequency"</span><span class="p">:</span> <span class="mi">4000000</span><span class="p">,</span> <span class="s">"target_override"</span><span class="p">:</span> <span class="s">"nrf52840"</span><span class="p">})</span>
+
+<span class="k">with</span> <span class="n">session</span><span class="p">:</span>
+    <span class="c1"># ...
+</span></code></pre></div></div>
+
+<p>More options can be found <a href="options.md">here</a>.</p>
+
+<h2 id="semihosting">Semihosting</h2>
+
+<p>For in-target tests it is sometimes convenient to use semihosting, e.g. write coverage data into the hosts file system.
+To execute semihosting requests a <code class="highlighter-rouge">wait_for_halt()</code> function must be implemented.  If writing the profile data is
+explicitly done at end of <code class="highlighter-rouge">main()</code>, a breakpoint on return is also helpful.  Implementation could be like this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span><span class="kn">from</span> <span class="nn">pyocd.core.helpers</span> <span class="kn">import</span> <span class="n">ConnectHelper</span>
+<span class="kn">from</span> <span class="nn">pyocd.core.target</span> <span class="kn">import</span> <span class="n">Target</span>
+<span class="kn">from</span> <span class="nn">pyocd.debug.elf.symbols</span> <span class="kn">import</span> <span class="n">ELFSymbolProvider</span>
+<span class="kn">from</span> <span class="nn">pyocd.flash.file_programmer</span> <span class="kn">import</span> <span class="n">FileProgrammer</span>
+<span class="kn">from</span> <span class="nn">pyocd.debug</span> <span class="kn">import</span> <span class="n">semihost</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logging</span><span class="p">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">)</span>
+
+
+<span class="n">image_name</span> <span class="o">=</span> <span class="s">"profiling.elf"</span>
+
+
+<span class="k">def</span> <span class="nf">wait_for_halt</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">semihost</span><span class="p">):</span>
+    <span class="n">go_on</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">while</span> <span class="n">go_on</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">target</span><span class="p">.</span><span class="n">get_state</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="n">Target</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">HALTED</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Handle semihosting
+</span>                <span class="n">go_on</span> <span class="o">=</span> <span class="n">semihost</span><span class="p">.</span><span class="n">check_and_handle_semihost_request</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">go_on</span><span class="p">:</span>
+                    <span class="c1"># target was halted due to semihosting request
+</span>                    <span class="n">target</span><span class="p">.</span><span class="n">resume</span><span class="p">()</span>
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">"semihost exception/resume------"</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">traceback</span><span class="p">.</span><span class="n">format_exc</span><span class="p">())</span>
+                <span class="n">target</span><span class="p">.</span><span class="n">resume</span><span class="p">()</span>
+                <span class="n">go_on</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+
+    
+<span class="n">session</span> <span class="o">=</span> <span class="n">ConnectHelper</span><span class="p">.</span><span class="n">session_with_chosen_probe</span><span class="p">(</span><span class="n">unique_id</span> <span class="o">=</span> <span class="s">"E6616407E3646B29"</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s">"frequency"</span><span class="p">:</span> <span class="mi">4000000</span><span class="p">,</span> 
+                                                                                             <span class="s">"target_override"</span><span class="p">:</span> <span class="s">"nrf52840"</span><span class="p">,</span>
+                                                                                             <span class="s">"enable_semihosting"</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                                                                                             <span class="s">"semihost_use_syscalls"</span><span class="p">:</span> <span class="bp">False</span><span class="p">})</span>
+
+<span class="k">with</span> <span class="n">session</span><span class="p">:</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="n">target</span>
+    <span class="n">target_context</span> <span class="o">=</span> <span class="n">target</span><span class="p">.</span><span class="n">get_target_context</span><span class="p">()</span>
+    <span class="n">semihost_io_handler</span> <span class="o">=</span> <span class="n">semihost</span><span class="p">.</span><span class="n">InternalSemihostIOHandler</span><span class="p">()</span>
+    <span class="n">semihost</span> <span class="o">=</span> <span class="n">semihost</span><span class="p">.</span><span class="n">SemihostAgent</span><span class="p">(</span><span class="n">target_context</span><span class="p">,</span> <span class="n">io_handler</span><span class="o">=</span><span class="n">semihost_io_handler</span><span class="p">,</span> <span class="n">console</span><span class="o">=</span><span class="n">semihost_io_handler</span><span class="p">)</span>
+
+    <span class="c1"># Load firmware into device.
+</span>    <span class="n">FileProgrammer</span><span class="p">(</span><span class="n">session</span><span class="p">).</span><span class="n">program</span><span class="p">(</span><span class="n">image_name</span><span class="p">)</span>
+    
+    <span class="c1"># Set ELF file on target.
+</span>    <span class="n">target</span><span class="p">.</span><span class="n">elf</span> <span class="o">=</span> <span class="n">image_name</span>
+    <span class="n">provider</span> <span class="o">=</span> <span class="n">ELFSymbolProvider</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">elf</span><span class="p">)</span>
+    
+    <span class="c1"># Look up address of main().
+</span>    <span class="n">addr</span> <span class="o">=</span> <span class="n">provider</span><span class="p">.</span><span class="n">get_symbol_value</span><span class="p">(</span><span class="s">"main"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"main() address: 0x%X"</span> <span class="o">%</span> <span class="n">addr</span><span class="p">)</span>
+
+    <span class="c1"># Set breakpoint.
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"set breakpoint to entry of main()"</span><span class="p">)</span>
+    <span class="n">target</span><span class="p">.</span><span class="n">set_breakpoint</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+
+    <span class="n">target</span><span class="p">.</span><span class="n">reset_and_halt</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"execute"</span><span class="p">)</span>
+    <span class="n">target</span><span class="p">.</span><span class="n">resume</span><span class="p">()</span>
+
+    <span class="c1"># Wait until breakpoint is hit.
+</span>    <span class="n">wait_for_halt</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">semihost</span><span class="p">)</span>
+
+    <span class="c1"># Print PC.
+</span>    <span class="n">pc</span> <span class="o">=</span> <span class="n">target</span><span class="p">.</span><span class="n">read_core_register</span><span class="p">(</span><span class="s">"pc"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"  pc: 0x%X"</span> <span class="o">%</span> <span class="n">pc</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">pc</span> <span class="o">==</span> <span class="n">addr</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mh">0x01</span>                    <span class="c1"># mask off LSB
+</span>    <span class="n">target</span><span class="p">.</span><span class="n">remove_breakpoint</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+
+    <span class="c1"># set breakpoint to return address and execute til there
+</span>    <span class="n">lr</span> <span class="o">=</span> <span class="n">target</span><span class="p">.</span><span class="n">read_core_register</span><span class="p">(</span><span class="s">"lr"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"  lr: 0x%X (return address)"</span> <span class="o">%</span> <span class="n">lr</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"set breakpoint to return of main()"</span><span class="p">)</span>
+    <span class="n">target</span><span class="p">.</span><span class="n">set_breakpoint</span><span class="p">(</span><span class="n">lr</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"execute"</span><span class="p">)</span>
+    <span class="n">target</span><span class="p">.</span><span class="n">resume</span><span class="p">()</span>
+    <span class="n">wait_for_halt</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">semihost</span><span class="p">)</span>
+
+    <span class="n">pc</span> <span class="o">=</span> <span class="n">target</span><span class="p">.</span><span class="n">read_core_register</span><span class="p">(</span><span class="s">"pc"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"  pc: 0x%X"</span> <span class="o">%</span> <span class="n">pc</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">pc</span> <span class="o">==</span> <span class="n">lr</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mh">0x01</span>                      <span class="c1"># mask off LSB
+</span>    <span class="n">target</span><span class="p">.</span><span class="n">remove_breakpoint</span><span class="p">(</span><span class="n">lr</span><span class="p">)</span>
+</code></pre></div></div>
+
+
+                </div>
+              </div>
+            </main>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-shrink-0">
+        <footer class="pyocd-footer p-0 mt-3">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-4">
+    <div class="col-3">
+      <p class="small">
+          Copyright &copy; 2021-2026 PyOCD Authors.
+      </p>
+      <p class="small">
+        Site and docs are <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.<br/>
+        Project code is <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.
+      </p>
+    </div>
+    <div class="col-3">  <!-- mt-3 mb-3 mx-4 -->
+      <h5>Links</h5>
+      <ul class="list-unstyled">
+        <li>
+          <a href="/docs/">Documentation</a>
+        </li>
+        <li>
+          <a href="/posts/">Posts</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/pyOCD/blob/main/CONTRIBUTING.md">Contributing</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/.github/blob/main/CODE_OF_CONDUCT.md">Code of Conduct</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/">GitHub</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-3">
+      <h5>Projects</h5>
+      <ul class="list-unstyled">
+        <li>
+          <a href="https://github.com/pyocd/pyOCD">pyOCD</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/cmsis-pack-manager">cmsis-pack-manager</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/FlashAlgo">FlashAlgo</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-3">
+      <h5>Community</h5>
+      <ul class="list-unstyled">
+        <li>
+          <a href="https://github.com/pyocd/pyOCD/issues">Issues</a>
+        </li>
+        <li>
+          <a href="https://github.com/pyocd/pyOCD/discussions">Discussions</a>
+        </li>
+        <li>
+          <a href="https://join.slack.com/t/pyocd/shared_invite/zt-zqjv6zr5-ZfGAXl_mFCGGmFlB_8riHA">Slack</a>
+        </li>
+        <li>
+          <a href="https://groups.google.com/g/pyocd">Mailing list</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+      </div>
+
+      <a href="#top" title="Scroll to top" id="scroll-top-link" aria-hidden="true">
+        <i class="bi bi-arrow-up-short"></i>
+      </a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+<script src="/assets/javascript/jquery-3.6.0.slim.min.js"></script>
+<!-- 
+<script type="text/javascript" src="/assets/javascript/index.js"></script>
+ -->
+
+  </body>
+
+<script>
+// Hide the page's floating TOC if there are no sections.
+if ($('#toc').children().length < 1) {
+  $('#toc-div').hide()
+}
+
+// Insert icons for alerts.
+$(".alert-warning").prepend("<div class=\"alert-icon\"><i class=\"bi bi-exclamation-triangle\"></i></div>")
+$(".alert-info").prepend("<div class=\"alert-icon\"><i class=\"bi bi-info-circle\"></i></div>")
+$(".alert-success").prepend("<div class=\"alert-icon\"><i class=\"bi bi-check-circle\"></i></div>")
+</script>
+</html>

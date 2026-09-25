@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "origin": "SYNTHETIC_FIXTURE",
+  "capture_id": "6fdb8c93-a08a-4fa7-b3ac-fb2c37c778af",
+  "captured_at": "2026-09-25T23:09:53.702714+00:00",
+  "assembly_id": "SYNTHETIC-NOT-A-BOARD",
+  "board_sha256": "cd647b9400a4e2bfca729b0c96e97cb2fb97ec3455387bfe58a5aeb008527f72",
+  "state": "PARTIAL",
+  "driver": {
+    "kind": "SYNTHETIC_FIXTURE",
+    "not_a_hardware_driver": true
+  },
+  "error": null,
+  "reads": [
+    {
+      "name": "CPUID",
+      "sample": 0,
+      "address": "0xe000ed00",
+      "bits": 32,
+      "value": "0x411fc271",
+      "error": null,
+      "elapsed_ms": 0.18304100000000184
+    },
+    {
+      "name": "DBGMCU_IDCODE",
+      "sample": 0,
+      "address": "0x5c001000",
+      "bits": 32,
+      "value": "0x20030450",
+      "error": null,
+      "elapsed_ms": 0.39450000000000596
+    },
+    {
+      "name": "RCC_RSR",
+      "sample": 0,
+      "address": "0x580244d0",
+      "bits": 32,
+      "value": null,
+      "error": "TimeoutError: synthetic timeout",
+      "elapsed_ms": 0.5827080000000012
+    },
+    {
+      "name": "FLASH_SIZE_KIB",
+      "sample": 0,
+      "address": "0x1ff1e880",
+      "bits": 16,
+      "value": "0x0800",
+      "error": null,
+      "elapsed_ms": 0.7681250000000015
+    },
+    {
+      "name": "UID0",
+      "sample": 0,
+      "address": "0x1ff1e800",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 0.944125000000004
+    },
+    {
+      "name": "UID1",
+      "sample": 0,
+      "address": "0x1ff1e804",
+      "bits": 32,
+      "value": "0x01234567",
+      "error": null,
+      "elapsed_ms": 1.1240830000000048
+    },
+    {
+      "name": "UID2",
+      "sample": 0,
+      "address": "0x1ff1e808",
+      "bits": 32,
+      "value": "0x89abcdef",
+      "error": null,
+      "elapsed_ms": 1.3877080000000013
+    },
+    {
+      "name": "RCC_CR",
+      "sample": 0,
+      "address": "0x58024400",
+      "bits": 32,
+      "value": "0x00000005",
+      "error": null,
+      "elapsed_ms": 1.5812080000000006
+    },
+    {
+      "name": "RCC_CFGR",
+      "sample": 0,
+      "address": "0x58024410",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 1.7949579999999994
+    },
+    {
+      "name": "PWR_D3CR",
+      "sample": 0,
+      "address": "0x58024818",
+      "bits": 32,
+      "value": "0x00006000",
+      "error": null,
+      "elapsed_ms": 1.9996660000000042
+    },
+    {
+      "name": "CFSR",
+      "sample": 0,
+      "address": "0xe000ed28",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 2.2126660000000022
+    },
+    {
+      "name": "HFSR",
+      "sample": 0,
+      "address": "0xe000ed2c",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 2.421916000000003
+    },
+    {
+      "name": "MMFAR",
+      "sample": 0,
+      "address": "0xe000ed34",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 2.6280830000000033
+    },
+    {
+      "name": "BFAR",
+      "sample": 0,
+      "address": "0xe000ed38",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 2.8522909999999997
+    },
+    {
+      "name": "RCC_RSR",
+      "sample": 1,
+      "address": "0x580244d0",
+      "bits": 32,
+      "value": null,
+      "error": "TimeoutError: synthetic timeout",
+      "elapsed_ms": 3.0902499999999957
+    },
+    {
+      "name": "RCC_CR",
+      "sample": 1,
+      "address": "0x58024400",
+      "bits": 32,
+      "value": "0x00000005",
+      "error": null,
+      "elapsed_ms": 3.4499160000000044
+    },
+    {
+      "name": "RCC_CFGR",
+      "sample": 1,
+      "address": "0x58024410",
+      "bits": 32,
+      "value": "0x00000000",
+      "error": null,
+      "elapsed_ms": 3.686250000000009
+    }
+  ],
+  "finished_at": "2026-09-25T23:09:53.706624+00:00"
+}

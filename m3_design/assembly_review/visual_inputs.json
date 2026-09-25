@@ -1,0 +1,92 @@
+{
+  "board_sha256": "e432d3436d5029de0a74a4b0ebcd02ec092dedf6d4252ce310f7be301558627f",
+  "images_sha256": {
+    "schematic_overview.png": "e5af08aca23a9602c40820f22b77949717c710f613aad6ee57978a0e60c3eca0",
+    "bottom.png": "cf14e37b9920b0b4e7b12075b8499ebfdee04b3a16ffaca49f0aa9a8e655bd4f",
+    "top.png": "c4c547325bdcd431d7dafe1bb4f1f2011a1163f9fe808edf8aee29d9c31c29db",
+    "led_detail.png": "7a42ea9011ab7ddcd50687ad50cfbd63a23d0e8166df45b052ac2fe305e1fb77",
+    "led_native_closeup.png": "5362374f05eeecafad2d0427653719b7147af7fc4a26d460b7a1cd219fc89937",
+    "sheets/m3.png": "ac2e3b9b3c2b7eac1d175a207d542a00483b1a151caa00e96c782e07faf08ec4",
+    "sheets/m3-04 | Voltage diagnosis, indicators and GNSS receiver.png": "a88a78e50fc145782e09a0a126491107b49fd0959ead5761d95c4c46f6c366be",
+    "sheets/m3-04 | Voltage diagnosis, indicators and GNSS receiver.svg": "fa90eca53a8254ff6db75bd1abb335eb5013d7acd8371c8e24c5e933abb6fb0d",
+    "sheets/m3.svg": "08c404c4e7df24c22a28f5528b99bbe24ac88523fb27c75f27c7ef6c6d5ce2fd",
+    "sheets/m3-03 | Memory and sensors.png": "fb7f13a9f7314c79bd20ef2fd9182c66947e49a0f5e2d69891e9b5ac0fbbfbdb",
+    "sheets/m3-10 | USB cable presence, ordinary GPIO sensing.svg": "6e3fdbc002f8de6f6ec9d8c8eaa80dd64c5a9f7db3cfd99e124744fd027bb17d",
+    "sheets/m3-02 | MCU, clock and debug.svg": "72d791714ffdb214ed66e12ec675b29315f7015a65f53bc16064826a130a04b1",
+    "sheets/m3-06 | Camera terminal and characterization.png": "6fbf114c0c1af1150a8d24cafea533a7340e5baf96a8737616f7d0e2105783fb",
+    "sheets/m3-07 | Battery input, contact and protection.png": "b0276bc5e07399b731988dbbb37bf645a08ba259716c43c385df515ec63edbfd",
+    "sheets/m3-05 | Camera branch protection and regulator.svg": "394c32b98e5101f34c6c5e26733660c679f46dba7485c8bb360a3965268e0e9a",
+    "sheets/m3-09 | Camera UART, separate supply domains.png": "31f233fe93f1b0690d221dfd1c5bc62835f6345018f44c0bc8d86b3aafd87ee7",
+    "sheets/m3-08 | USB limit, source mux and hold-up.png": "227143c6f90235b4dc90d52166e3d62d9f73d51a569a01d96248db7c050b03c1",
+    "sheets/m3-09 | Camera UART, separate supply domains.svg": "fc0014a872673985c420a782ab3227265b6a958b2deb0676e4206a33a05f661e",
+    "sheets/m3-08 | USB limit, source mux and hold-up.svg": "033009c3162e67081851295fa701941635f66551ee810a939f677f6deb35bd37",
+    "sheets/m3-05 | Camera branch protection and regulator.png": "e89643c0586278d78d8368786386bfeea8ae8fb86afaaaf7842e5ef370091e32",
+    "sheets/m3-07 | Battery input, contact and protection.svg": "48bec157d511841c09c61348bae048d2bc537082a52cc7ae079d6d68525da9c9",
+    "sheets/m3-06 | Camera terminal and characterization.svg": "48ecb7ce3503d8731cb851ffd79e840a19f6ae8e26668d4eba8a027a9c8cd88b",
+    "sheets/m3-02 | MCU, clock and debug.png": "d2454855e1d9896619ae56b84feda81afcbb54b7529bf695c320149aa8e16c84",
+    "sheets/m3-10 | USB cable presence, ordinary GPIO sensing.png": "7d9f0784b62509384c5eeeae2cdc9b9544fb7b28937437d5ea1573ab7e49d003",
+    "sheets/m3-03 | Memory and sensors.svg": "9479634839c51138b39fbbfea0a4a2506c2162e15433207be7abfddac2217107"
+  },
+  "visually_reviewed": false,
+  "physical_fit_verified": false,
+  "model_scope": "Retained project models/envelopes; not measured assemblies",
+  "commands": [
+    {
+      "args": [
+        "pcb",
+        "render",
+        "--output",
+        "m3_design/assembly_review/top.png",
+        "--width",
+        "1100",
+        "--height",
+        "2900",
+        "--side",
+        "top",
+        "--background",
+        "opaque",
+        "--quality",
+        "high",
+        "m3_design/assembly_review/m3.kicad_pcb"
+      ],
+      "returncode": 0,
+      "stdout": "Loading\u2026\nBuild board outline\n\nCreate layers\nCreate tracks and vias\nCreate zones\nBuild Tech layers\nBuild Tech layer 11\nBuild Tech layer 9\nBuild Tech layer 15\nBuild Tech layer 13\nBuild Tech layer 7\nBuild Tech layer 5\nBuild Tech layer 3\nBuild Tech layer 1\nBuild Tech layer 17\nBuild Tech layer 19\nBuild Tech layer 21\nBuild Tech layer 23\nBuild Tech layer 39\nBuild Tech layer 41\nBuild Tech layer 43\nBuild Tech layer 45\nBuild Tech layer 47\nBuild Tech layer 49\nBuild Tech layer 51\nBuild Tech layer 53\nBuild Tech layer 55\nBuild Tech layer 57\nBuild Tech layer 59\nBuild Tech layer 61\nBuild Tech layer 63\nBuild Tech layer 65\nBuild Tech layer 67\nBuild Tech layer 69\nBuild Tech layer 71\nBuild Tech layer 73\nBuild Tech layer 75\nBuild Tech layer 77\nBuild Tech layer 79\nBuild Tech layer 81\nBuild Tech layer 83\nBuild Tech layer 85\nBuild Tech layer 87\nBuild Tech layer 89\nBuild Tech layer 91\nBuild Tech layer 93\nBuild Tech layer 95\nBuild Tech layer 97\nBuild Tech layer 99\nBuild Tech layer 101\nBuild Tech layer 103\nBuild Tech layer 105\nBuild Tech layer 107\nBuild Tech layer 109\nBuild Tech layer 111\nBuild Tech layer 113\nBuild Tech layer 115\nBuild Tech layer 117\nBuild Tech layer 119\nBuild Tech layer 121\nBuild Tech layer 123\nBuild Tech layer 125\nBuild Tech layer 127\nSimplifying copper layer polygons\nCalculating plated copper\nSimplify holes contours\nBuild BVH for holes and vias\nLoad Raytracing: board\nLoad Raytracing: layers\nLoading 3D models...\nReload time 0.263 s\nRendering: 23 %\nRendering: 33 %\nRendering: 44 %\nRendering: 55 %\nRendering: 66 %\nRendering: 81 %\nRendering: 92 %\nRendering: 100 %\nRendering: Post processing shader\nRendering time 5.875 s\nSuccessfully created 3D render image\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "pcb",
+        "render",
+        "--output",
+        "m3_design/assembly_review/bottom.png",
+        "--width",
+        "1100",
+        "--height",
+        "2900",
+        "--side",
+        "bottom",
+        "--background",
+        "opaque",
+        "--quality",
+        "high",
+        "m3_design/assembly_review/m3.kicad_pcb"
+      ],
+      "returncode": 0,
+      "stdout": "Loading\u2026\nBuild board outline\n\nCreate layers\nCreate tracks and vias\nCreate zones\nBuild Tech layers\nBuild Tech layer 11\nBuild Tech layer 9\nBuild Tech layer 15\nBuild Tech layer 13\nBuild Tech layer 7\nBuild Tech layer 5\nBuild Tech layer 3\nBuild Tech layer 1\nBuild Tech layer 17\nBuild Tech layer 19\nBuild Tech layer 21\nBuild Tech layer 23\nBuild Tech layer 39\nBuild Tech layer 41\nBuild Tech layer 43\nBuild Tech layer 45\nBuild Tech layer 47\nBuild Tech layer 49\nBuild Tech layer 51\nBuild Tech layer 53\nBuild Tech layer 55\nBuild Tech layer 57\nBuild Tech layer 59\nBuild Tech layer 61\nBuild Tech layer 63\nBuild Tech layer 65\nBuild Tech layer 67\nBuild Tech layer 69\nBuild Tech layer 71\nBuild Tech layer 73\nBuild Tech layer 75\nBuild Tech layer 77\nBuild Tech layer 79\nBuild Tech layer 81\nBuild Tech layer 83\nBuild Tech layer 85\nBuild Tech layer 87\nBuild Tech layer 89\nBuild Tech layer 91\nBuild Tech layer 93\nBuild Tech layer 95\nBuild Tech layer 97\nBuild Tech layer 99\nBuild Tech layer 101\nBuild Tech layer 103\nBuild Tech layer 105\nBuild Tech layer 107\nBuild Tech layer 109\nBuild Tech layer 111\nBuild Tech layer 113\nBuild Tech layer 115\nBuild Tech layer 117\nBuild Tech layer 119\nBuild Tech layer 121\nBuild Tech layer 123\nBuild Tech layer 125\nBuild Tech layer 127\nSimplifying copper layer polygons\nCalculating plated copper\nSimplify holes contours\nBuild BVH for holes and vias\nLoad Raytracing: board\nLoad Raytracing: layers\nLoading 3D models...\nReload time 0.209 s\nRendering: 24 %\nRendering: 37 %\nRendering: 52 %\nRendering: 64 %\nRendering: 79 %\nRendering: 92 %\nRendering: 100 %\nRendering: Post processing shader\nRendering time 5.153 s\nSuccessfully created 3D render image\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "sch",
+        "export",
+        "svg",
+        "--output",
+        "m3_design/assembly_review/sheets",
+        "m3_design/assembly_review/m3.kicad_sch"
+      ],
+      "returncode": 0,
+      "stdout": "Plotted to 'm3_design/assembly_review/sheets/m3.svg'.\nPlotted to 'm3_design/assembly_review/sheets/m3-02 | MCU, clock and debug.svg'.\nPlotted to 'm3_design/assembly_review/sheets/m3-03 | Memory and sensors.svg'.\nPlotted to 'm3_design/assembly_review/sheets/m3-04 | Voltage diagnosis, indicators and GNSS receiver.svg'.\nPlotted to 'm3_design/assembly_review/sheets/m3-05 | Camera branch protection and regulator.svg'.\nPlotted to 'm3_design/assembly_review/sheets/m3-06 | Camera terminal and characterization.svg'.\nPlotted to 'm3_design/assembly_review/sheets/m3-07 | Battery input, contact and protection.svg'.\nPlotted to 'm3_design/assembly_review/sheets/m3-08 | USB limit, source mux and hold-up.svg'.\nPlotted to 'm3_design/assembly_review/sheets/m3-09 | Camera UART, separate supply domains.svg'.\nPlotted to 'm3_design/assembly_review/sheets/m3-10 | USB cable presence, ordinary GPIO sensing.svg'.\nDone.\n",
+      "stderr": ""
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+(footprint "TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 2.525 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "82b5e84d-ca0d-49e3-a2d5-0ae7d40bfbf9")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL"
+		(at 0 5.2 0)
+		(layer "F.Fab")
+		(uuid "8f91fb9c-44d5-4aa5-a4ec-6fec4085e7cb")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	
+	
+	
+	
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -1.5 -0.8)
+		(end -1.43 -0.8)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "74eeea38-fe96-4c30-8d99-b1f775d26f07")
+	)
+	(fp_line
+		(start -1.5 -0.57)
+		(end -1.5 -0.8)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "61d0cc6c-5733-4b5d-8042-0f4010fa5b4e")
+	)
+	(fp_line
+		(start -1.5 0.57)
+		(end -1.5 -0.57)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "73251fac-c7f4-4e23-888e-00e77a116e5d")
+	)
+	(fp_line
+		(start -1.5 0.57)
+		(end -1.5 0.8)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "fd170b80-8d52-4f9d-92c4-f6c935b89158")
+	)
+	(fp_line
+		(start -1.5 0.8)
+		(end -1.43 0.8)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "83a45691-5a16-4a0d-bf21-bde7d4738d63")
+	)
+	(fp_line
+		(start 1.5 -0.8)
+		(end 1.43 -0.8)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "25d0b5da-68d0-4974-97eb-c08cab33818f")
+	)
+	(fp_line
+		(start 1.5 -0.57)
+		(end 1.5 -0.8)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "016f4a45-f413-4be6-9703-a7f49d95228a")
+	)
+	(fp_line
+		(start 1.5 -0.57)
+		(end 1.5 0.57)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "a28b700e-ac63-4e4b-b86b-7c247c7261ee")
+	)
+	(fp_line
+		(start 1.5 0.57)
+		(end 1.5 0.8)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "65145cfb-4098-4039-b59a-fb7ebfb22724")
+	)
+	(fp_line
+		(start 1.5 0.8)
+		(end 1.43 0.8)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "6b509ce4-8965-460e-9e59-02bbfd00bd68")
+	)
+	(fp_poly
+		(pts
+			(xy -1.341476 0.299999) (xy -0.85852 0.299999) (xy -1.341476 0.299999)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.SilkS")
+		(uuid "74cb5be8-948e-4b8d-a29e-d06b4b72840a")
+	)
+	(fp_circle
+		(center -1 1.4)
+		(end -0.9 1.4)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(fill no)
+		(layer "Cmts.User")
+		(uuid "be491681-f529-4660-89f3-5e8c565fd244")
+	)
+	
+	
+	
+	
+	(fp_circle
+		(center -1.45 1.4)
+		(end -1.42 1.4)
+		(stroke
+			(width 0.06)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "3693aac4-7d25-4be3-9cf6-64ffcd61826e")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "2f1f0bc1-9019-4e87-81bf-92de0c1a5aac")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -0.95 1.2 180)
+		(size 0.55 1.1)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "4192fa28-7026-4067-8683-385d270835aa")
+	)
+	(pad "2" smd rect
+		(at 0 1.2 180)
+		(size 0.55 1.1)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "d605cd71-761e-43ea-9499-718a63c06610")
+	)
+	(pad "3" smd rect
+		(at 0.95 1.2 180)
+		(size 0.55 1.1)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "3acc4896-2892-48be-9149-6355d21cfec6")
+	)
+	(pad "4" smd rect
+		(at 0.95 -1.2 180)
+		(size 0.55 1.1)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "63d6912a-6073-4175-8017-02314fbe5f3b")
+	)
+	(pad "5" smd rect
+		(at 0 -1.2 180)
+		(size 0.55 1.1)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "3974f3fd-edb8-4b47-b7d5-ffeec11d3551")
+	)
+	(pad "6" smd rect
+		(at -0.95 -1.2 180)
+		(size 0.55 1.1)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "ec47ac36-972d-4ef6-81ff-b84a7ed6e3ff")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/kilib/rocket.3dshapes/TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+
+(fp_rect (start -1.70 -2.00) (end 1.70 2.00) (stroke (width .05) (type solid)) (fill no) (layer "F.CrtYd") (uuid "ca550e3c-d4c4-51ea-b078-ad406cfbcaf9"))
+)

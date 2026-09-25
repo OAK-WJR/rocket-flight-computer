@@ -1,0 +1,169 @@
+(footprint "M3_KT0805Y_A1"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "YEL; diagnostic status indicator")
+	(property "Reference" "REF**"
+		(at 5.35 -5.2 270)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "549318d4-3c23-422c-b98c-b38494f34cd7")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "M3_KT0805Y_A1"
+		(at 0 4 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "934520b4-cfcc-4146-972b-fbc711f5d885")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/3f6a14f9ea2fc39f6e05d2ab0fa53e2b.pdf?productCode=C2296"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e2254b0f-1aaf-4a63-b48c-56fe49f62d5f")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "bfdda51d-2883-43d0-95f2-59e0e34be0c4")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "LCSC Part" "C2296"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "4de6f8a7-e14f-4637-915a-b7296f350086")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "LCSC" "C2296"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b23d72dc-0a35-4779-9cc9-b1f5bf356362")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer" "Hubei KENTO Elec"
+		(at 0 0 270)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "afc19ddb-e9d9-4033-be47-9547150976b8")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer Part" "KT-0805Y"
+		(at 0 0 270)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "db1379d7-1d18-4a91-a4fc-7befaa1d531b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start 1.75 -0.7)
+		(end 1.75 0.7)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "6c9e0492-3c2d-5d3a-bfac-d200e01dd440")
+	)
+	(fp_rect
+		(start -1.7 -0.95)
+		(end 1.7 0.95)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "c7a7b1f1-026d-51bc-9087-8b2b22df530c")
+	)
+	(fp_line
+		(start 0.7 -0.55)
+		(end 0.7 0.55)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "4957e0d9-7ec6-5364-90ae-bda8a1a4f196")
+	)
+	(fp_rect
+		(start -1.05 -0.675)
+		(end 1.05 0.675)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "b898577f-988b-5d8c-bc37-ba9b11783c7f")
+	)
+	(pad "1" smd rect
+		(at -0.95 0)
+		(size 1 1.4)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "77128a6a-88e5-407e-a1f6-65e317970d9c")
+	)
+	(pad "2" smd rect
+		(at 0.95 0)
+		(size 1 1.4)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "ecc72bae-b5f7-499f-bc8c-b3ae6e766472")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/kilib/rocket.3dshapes/M3_KT0805Y_A1.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

@@ -1,0 +1,32 @@
+[
+  {
+    "file": "stm32h743xx.h",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/cmsis-device-h7/81db1ec63cdc191fae1565b772da3ea5aa29a683/Include/stm32h743xx.h",
+    "sha256": "9a4ea0860707868a1cc562140ba214d535fb5a64fde91b451b2767276eef7e03"
+  },
+  {
+    "file": "ST_LICENSE.md",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/cmsis-device-h7/81db1ec63cdc191fae1565b772da3ea5aa29a683/LICENSE.md",
+    "sha256": "053a83960032ab6bbd2231a3b6300bde3b4e526dcf11a61394907c0bdaacd713"
+  },
+  {
+    "file": "pyocd_options.html",
+    "url": "https://pyocd.io/docs/options.html",
+    "sha256": "dadc25a978ca68fec675e2f93686e6b24bb31845e2388da038eaca58bb85a03a"
+  },
+  {
+    "file": "pyocd_api.html",
+    "url": "https://pyocd.io/docs/api_examples.html",
+    "sha256": "fa57609b8d941dc4c7bae843043e555f7a6afb81e1dba847424863ff7a0fb7e4"
+  },
+  {
+    "file": "core_cm7.h",
+    "url": "https://raw.githubusercontent.com/ARM-software/CMSIS_6/1c1840af7a7e757d6e2fec3ddb0e5ce0dfcc93c8/CMSIS/Core/Include/core_cm7.h",
+    "sha256": "2927d0c055445d19cef7d311e076961ffa86f7af4bcbc5673dbd14d9c160ac29"
+  },
+  {
+    "file": "ARM_LICENSE",
+    "url": "https://raw.githubusercontent.com/ARM-software/CMSIS_6/1c1840af7a7e757d6e2fec3ddb0e5ce0dfcc93c8/LICENSE",
+    "sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1"
+  }
+]

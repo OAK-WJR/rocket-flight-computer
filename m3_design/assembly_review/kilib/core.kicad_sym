@@ -1,0 +1,3347 @@
+(kicad_symbol_lib
+	(version 20250114)
+	(generator "m3_core_schematic")
+	(symbol "MCU"
+		(pin_names
+			(offset 1.016))
+		(in_bom yes)
+		(on_board yes)
+		(symbol "MCU_0_1"
+			(rectangle
+				(start -22.86 64.77)
+				(end 22.86 -64.77)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "MCU_1_1"
+			(pin bidirectional line
+				(at -27.939999999999998 62.23 0)
+				(length 5.08)
+				(name "PE2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 59.69 0)
+				(length 5.08)
+				(name "PE3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -27.939999999999998 57.15 0)
+				(length 5.08)
+				(name "VBAT"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -27.939999999999998 54.61 0)
+				(length 5.08)
+				(name "VSS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "10"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -27.939999999999998 52.06999999999999 0)
+				(length 5.08)
+				(name "VDD"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "11"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 49.529999999999994 0)
+				(length 5.08)
+				(name "PH0"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "12"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 46.989999999999995 0)
+				(length 5.08)
+				(name "PH1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "13"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at -27.939999999999998 44.449999999999996 0)
+				(length 5.08)
+				(name "NRST"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "14"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 41.91 0)
+				(length 5.08)
+				(name "PC2_C"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "17"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 39.37 0)
+				(length 5.08)
+				(name "PC3_C"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "18"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -27.939999999999998 36.83 0)
+				(length 5.08)
+				(name "VSSA"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "19"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at -27.939999999999998 34.28999999999999 0)
+				(length 5.08)
+				(name "VREF+"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "20"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -27.939999999999998 31.749999999999993 0)
+				(length 5.08)
+				(name "VDDA"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "21"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -27.939999999999998 29.209999999999994 0)
+				(length 5.08)
+				(name "VSS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "26"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -27.939999999999998 26.669999999999995 0)
+				(length 5.08)
+				(name "VDD"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "27"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 24.129999999999995 0)
+				(length 5.08)
+				(name "PB2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "36"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 21.589999999999996 0)
+				(length 5.08)
+				(name "PE7"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "37"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 19.049999999999997 0)
+				(length 5.08)
+				(name "PE10"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "40"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_out line
+				(at -27.939999999999998 16.509999999999998 0)
+				(length 5.08)
+				(name "VCAP"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "48"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -27.939999999999998 13.969999999999999 0)
+				(length 5.08)
+				(name "VSS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "49"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -27.939999999999998 11.429999999999993 0)
+				(length 5.08)
+				(name "VDD"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "50"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 8.889999999999993 0)
+				(length 5.08)
+				(name "PD11"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "58"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 6.349999999999994 0)
+				(length 5.08)
+				(name "PD12"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "59"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 3.809999999999995 0)
+				(length 5.08)
+				(name "PD13"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "60"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 1.269999999999996 0)
+				(length 5.08)
+				(name "PD15"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "62"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -1.2700000000000102 0)
+				(length 5.08)
+				(name "PC6"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "63"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -3.8100000000000023 0)
+				(length 5.08)
+				(name "PC7"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "64"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -6.3500000000000085 0)
+				(length 5.08)
+				(name "PA11"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "70"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -8.89 0)
+				(length 5.08)
+				(name "PA12"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "71"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -11.430000000000007 0)
+				(length 5.08)
+				(name "PA13"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "72"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_out line
+				(at -27.939999999999998 -13.969999999999999 0)
+				(length 5.08)
+				(name "VCAP"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "73"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -27.939999999999998 -16.510000000000005 0)
+				(length 5.08)
+				(name "VSS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "74"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -27.939999999999998 -19.05000000000001 0)
+				(length 5.08)
+				(name "VDD"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "75"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -21.590000000000003 0)
+				(length 5.08)
+				(name "PA14"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "76"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -24.13000000000001 0)
+				(length 5.08)
+				(name "PB3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "89"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -26.67 0)
+				(length 5.08)
+				(name "PB4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "90"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -29.210000000000008 0)
+				(length 5.08)
+				(name "PB5"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "91"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -31.75 0)
+				(length 5.08)
+				(name "PB6"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "92"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -34.290000000000006 0)
+				(length 5.08)
+				(name "PB7"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "93"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at -27.939999999999998 -36.83 0)
+				(length 5.08)
+				(name "BOOT0"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "94"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -39.370000000000005 0)
+				(length 5.08)
+				(name "PB8"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "95"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -41.91000000000001 0)
+				(length 5.08)
+				(name "PB9"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "96"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -27.939999999999998 -44.45 0)
+				(length 5.08)
+				(name "VSS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "99"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -27.939999999999998 -46.99000000000001 0)
+				(length 5.08)
+				(name "VDD"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "100"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -49.53 0)
+				(length 5.08)
+				(name "PE4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -52.07000000000001 0)
+				(length 5.08)
+				(name "PE5"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -54.61 0)
+				(length 5.08)
+				(name "PE6"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -57.150000000000006 0)
+				(length 5.08)
+				(name "PC13"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "7"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -59.69000000000001 0)
+				(length 5.08)
+				(name "PC14"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "8"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -27.939999999999998 -62.230000000000004 0)
+				(length 5.08)
+				(name "PC15"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "9"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 62.23 180)
+				(length 5.08)
+				(name "PC0"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "15"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 59.69 180)
+				(length 5.08)
+				(name "PC1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "16"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 57.15 180)
+				(length 5.08)
+				(name "PA0"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "22"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 54.61 180)
+				(length 5.08)
+				(name "PA1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "23"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 52.06999999999999 180)
+				(length 5.08)
+				(name "PA2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "24"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 49.529999999999994 180)
+				(length 5.08)
+				(name "PA3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "25"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 46.989999999999995 180)
+				(length 5.08)
+				(name "PA4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "28"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 44.449999999999996 180)
+				(length 5.08)
+				(name "PA5"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "29"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 41.91 180)
+				(length 5.08)
+				(name "PA6"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "30"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 39.37 180)
+				(length 5.08)
+				(name "PA7"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "31"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 36.83 180)
+				(length 5.08)
+				(name "PC4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "32"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 34.28999999999999 180)
+				(length 5.08)
+				(name "PC5"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "33"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 31.749999999999993 180)
+				(length 5.08)
+				(name "PB0"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "34"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 29.209999999999994 180)
+				(length 5.08)
+				(name "PB1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "35"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 26.669999999999995 180)
+				(length 5.08)
+				(name "PE8"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "38"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 24.129999999999995 180)
+				(length 5.08)
+				(name "PE9"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "39"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 21.589999999999996 180)
+				(length 5.08)
+				(name "PE11"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "41"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 19.049999999999997 180)
+				(length 5.08)
+				(name "PE12"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "42"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 16.509999999999998 180)
+				(length 5.08)
+				(name "PE13"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "43"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 13.969999999999999 180)
+				(length 5.08)
+				(name "PE14"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "44"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 11.429999999999993 180)
+				(length 5.08)
+				(name "PE15"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "45"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 8.889999999999993 180)
+				(length 5.08)
+				(name "PB10"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "46"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 6.349999999999994 180)
+				(length 5.08)
+				(name "PB11"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "47"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 3.809999999999995 180)
+				(length 5.08)
+				(name "PB12"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "51"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 1.269999999999996 180)
+				(length 5.08)
+				(name "PB13"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "52"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -1.2700000000000102 180)
+				(length 5.08)
+				(name "PB14"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "53"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -3.8100000000000023 180)
+				(length 5.08)
+				(name "PB15"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "54"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -6.3500000000000085 180)
+				(length 5.08)
+				(name "PD8"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "55"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -8.89 180)
+				(length 5.08)
+				(name "PD9"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "56"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -11.430000000000007 180)
+				(length 5.08)
+				(name "PD10"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "57"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -13.969999999999999 180)
+				(length 5.08)
+				(name "PD14"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "61"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -16.510000000000005 180)
+				(length 5.08)
+				(name "PC8"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "65"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -19.05000000000001 180)
+				(length 5.08)
+				(name "PC9"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "66"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -21.590000000000003 180)
+				(length 5.08)
+				(name "PA8"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "67"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -24.13000000000001 180)
+				(length 5.08)
+				(name "PA9"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "68"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -26.67 180)
+				(length 5.08)
+				(name "PA10"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "69"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -29.210000000000008 180)
+				(length 5.08)
+				(name "PA15"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "77"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -31.75 180)
+				(length 5.08)
+				(name "PC10"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "78"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -34.290000000000006 180)
+				(length 5.08)
+				(name "PC11"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "79"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -36.83 180)
+				(length 5.08)
+				(name "PC12"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "80"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -39.370000000000005 180)
+				(length 5.08)
+				(name "PD0"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "81"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -41.91000000000001 180)
+				(length 5.08)
+				(name "PD1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "82"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -44.45 180)
+				(length 5.08)
+				(name "PD2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "83"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -46.99000000000001 180)
+				(length 5.08)
+				(name "PD3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "84"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -49.53 180)
+				(length 5.08)
+				(name "PD4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "85"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -52.07000000000001 180)
+				(length 5.08)
+				(name "PD5"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "86"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -54.61 180)
+				(length 5.08)
+				(name "PD6"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "87"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -57.150000000000006 180)
+				(length 5.08)
+				(name "PD7"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "88"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -59.69000000000001 180)
+				(length 5.08)
+				(name "PE0"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "97"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 27.939999999999998 -62.230000000000004 180)
+				(length 5.08)
+				(name "PE1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "98"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(property "ki_fp_filters" "LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "Buck"
+		(pin_names
+			(offset 1.016))
+		(in_bom yes)
+		(on_board yes)
+		(symbol "Buck_0_1"
+			(rectangle
+				(start -17.78 5.08)
+				(end 17.78 -5.08)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "Buck_1_1"
+			(pin input line
+				(at -22.86 2.54 0)
+				(length 5.08)
+				(name "FB"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at -22.86 0.0 0)
+				(length 5.08)
+				(name "EN"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -22.86 -2.54 0)
+				(length 5.08)
+				(name "IN"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at 22.86 2.54 180)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin output line
+				(at 22.86 0.0 180)
+				(length 5.08)
+				(name "SW"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 22.86 -2.54 180)
+				(length 5.08)
+				(name "BST"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(property "ki_fp_filters" "TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "Flash"
+		(pin_names
+			(offset 1.016))
+		(in_bom yes)
+		(on_board yes)
+		(symbol "Flash_0_1"
+			(rectangle
+				(start -17.78 6.35)
+				(end 17.78 -6.35)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "Flash_1_1"
+			(pin input line
+				(at -22.86 3.8099999999999996 0)
+				(length 5.08)
+				(name "~{CS}"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -22.86 1.2699999999999996 0)
+				(length 5.08)
+				(name "DO/IO_{1}"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -22.86 -1.2700000000000005 0)
+				(length 5.08)
+				(name "~{WP}/IO_{2}"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -22.86 -3.8100000000000005 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 22.86 3.8099999999999996 180)
+				(length 5.08)
+				(name "DI/IO_{0}"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at 22.86 1.2699999999999996 180)
+				(length 5.08)
+				(name "CLK"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 22.86 -1.2700000000000005 180)
+				(length 5.08)
+				(name "~{HOLD}/~{RESET}/IO_{3}"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "7"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at 22.86 -3.8100000000000005 180)
+				(length 5.08)
+				(name "VCC"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "8"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(property "ki_fp_filters" "SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "Barometer"
+		(pin_names
+			(offset 1.016))
+		(in_bom yes)
+		(on_board yes)
+		(symbol "Barometer_0_1"
+			(rectangle
+				(start -17.78 6.35)
+				(end 17.78 -6.35)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "Barometer_1_1"
+			(pin power_in line
+				(at -22.86 3.8099999999999996 0)
+				(length 5.08)
+				(name "VDD"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at -22.86 1.2699999999999996 0)
+				(length 5.08)
+				(name "PS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -22.86 -1.2700000000000005 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at -22.86 -3.8100000000000005 0)
+				(length 5.08)
+				(name "CSB"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at 22.86 3.8099999999999996 180)
+				(length 5.08)
+				(name "CSB"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin output line
+				(at 22.86 1.2699999999999996 180)
+				(length 5.08)
+				(name "SDO"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 22.86 -1.2700000000000005 180)
+				(length 5.08)
+				(name "SDI/SDA"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "7"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at 22.86 -3.8100000000000005 180)
+				(length 5.08)
+				(name "SCLK"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "8"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(property "ki_fp_filters" "SENSORS-SMD_MS5611-01BA03"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "USB_ESD"
+		(pin_names
+			(offset 1.016))
+		(in_bom yes)
+		(on_board yes)
+		(symbol "USB_ESD_0_1"
+			(rectangle
+				(start -17.78 5.08)
+				(end 17.78 -5.08)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "USB_ESD_1_1"
+			(pin passive line
+				(at -22.86 2.54 0)
+				(length 5.08)
+				(name "I/O1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -22.86 0.0 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -22.86 -2.54 0)
+				(length 5.08)
+				(name "I/O2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 22.86 2.54 180)
+				(length 5.08)
+				(name "I/O2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 22.86 0.0 180)
+				(length 5.08)
+				(name "VBUS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 22.86 -2.54 180)
+				(length 5.08)
+				(name "I/O1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(property "ki_fp_filters" "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "IMU_SPI"
+		(pin_names
+			(offset 1.016))
+		(in_bom yes)
+		(on_board yes)
+		(symbol "IMU_SPI_0_1"
+			(rectangle
+				(start -24.13 10.16)
+				(end 24.13 -10.16)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "IMU_SPI_1_1"
+			(pin output line
+				(at -29.21 7.62 0)
+				(length 5.08)
+				(name "AP_SDO"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -29.21 5.08 0)
+				(length 5.08)
+				(name "RESV_2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -29.21 2.54 0)
+				(length 5.08)
+				(name "RESV_3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin output line
+				(at -29.21 0.0 0)
+				(length 5.08)
+				(name "INT1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -29.21 -2.539999999999999 0)
+				(length 5.08)
+				(name "VDDIO"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -29.21 -5.08 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -29.21 -7.620000000000001 0)
+				(length 5.08)
+				(name "RESV_7"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "7"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at 29.21 7.62 180)
+				(length 5.08)
+				(name "VDD"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "8"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at 29.21 5.08 180)
+				(length 5.08)
+				(name "INT2/FSYNC/CLKIN"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "9"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 29.21 2.54 180)
+				(length 5.08)
+				(name "RESV_10"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "10"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 29.21 0.0 180)
+				(length 5.08)
+				(name "RESV_11"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "11"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at 29.21 -2.539999999999999 180)
+				(length 5.08)
+				(name "AP_CS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "12"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at 29.21 -5.08 180)
+				(length 5.08)
+				(name "AP_SCLK"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "13"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at 29.21 -7.620000000000001 180)
+				(length 5.08)
+				(name "AP_SDI"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "14"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(property "ki_fp_filters" "LGA-14_L3.0-W2.5-P0.50-TL"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "GNSS"
+		(pin_names
+			(offset 1.016))
+		(in_bom yes)
+		(on_board yes)
+		(symbol "GNSS_0_1"
+			(rectangle
+				(start -20.32 13.97)
+				(end 20.32 -13.97)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "GNSS_1_1"
+			(pin power_in line
+				(at -25.4 11.43 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -25.4 8.89 0)
+				(length 5.08)
+				(name "V_IO"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at -25.4 6.3500000000000005 0)
+				(length 5.08)
+				(name "V_BCKP"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -25.4 3.8100000000000005 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -25.4 1.2700000000000014 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -25.4 -1.2699999999999996 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin output line
+				(at -25.4 -3.8100000000000005 0)
+				(length 5.08)
+				(name "TIMEPULSE"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "7"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at -25.4 -6.35 0)
+				(length 5.08)
+				(name "SAFEBOOT_N"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "8"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin bidirectional line
+				(at -25.4 -8.889999999999999 0)
+				(length 5.08)
+				(name "SDA"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "9"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -25.4 -11.429999999999998 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "10"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at 25.4 11.43 180)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "11"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at 25.4 8.89 180)
+				(length 5.08)
+				(name "SCL"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "12"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin output line
+				(at 25.4 6.3500000000000005 180)
+				(length 5.08)
+				(name "TXD"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "13"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at 25.4 3.8100000000000005 180)
+				(length 5.08)
+				(name "RXD"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "14"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at 25.4 1.2700000000000014 180)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "15"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at 25.4 -1.2699999999999996 180)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "16"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at 25.4 -3.8100000000000005 180)
+				(length 5.08)
+				(name "VCC"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "17"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at 25.4 -6.35 180)
+				(length 5.08)
+				(name "RESET_N"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "18"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin input line
+				(at 25.4 -8.889999999999999 180)
+				(length 5.08)
+				(name "EXTINT"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "19"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at 25.4 -11.429999999999998 180)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "20"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(property "ki_fp_filters" "LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "USB_C_HRO"
+		(pin_names
+			(offset 1.016))
+		(in_bom yes)
+		(on_board yes)
+		(symbol "USB_C_HRO_0_1"
+			(rectangle
+				(start -15.24 11.43)
+				(end 15.24 -11.43)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "USB_C_HRO_1_1"
+			(pin passive line
+				(at -20.32 8.89 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "A1B12"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -20.32 6.35 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "B1A12"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -20.32 3.8099999999999996 0)
+				(length 5.08)
+				(name "VBUS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "A4B9"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -20.32 1.2699999999999996 0)
+				(length 5.08)
+				(name "VBUS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "B4A9"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -20.32 -1.2699999999999996 0)
+				(length 5.08)
+				(name "CC1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "A5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -20.32 -3.8100000000000005 0)
+				(length 5.08)
+				(name "CC2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "B5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -20.32 -6.350000000000001 0)
+				(length 5.08)
+				(name "D+"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "A6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -20.32 -8.89 0)
+				(length 5.08)
+				(name "D+"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "B6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 20.32 8.89 180)
+				(length 5.08)
+				(name "D-"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "A7"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 20.32 6.35 180)
+				(length 5.08)
+				(name "D-"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "B7"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 20.32 3.8099999999999996 180)
+				(length 5.08)
+				(name "SBU1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "A8"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 20.32 1.2699999999999996 180)
+				(length 5.08)
+				(name "SBU2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "B8"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 20.32 -1.2699999999999996 180)
+				(length 5.08)
+				(name "SHELL_1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 20.32 -3.8100000000000005 180)
+				(length 5.08)
+				(name "SHELL_2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 20.32 -6.350000000000001 180)
+				(length 5.08)
+				(name "SHELL_3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 20.32 -8.89 180)
+				(length 5.08)
+				(name "SHELL_4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(property "ki_fp_filters" "USB-C_SMD-TYPE-C-31-M-12_1"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "R"
+		(pin_numbers
+			(hide yes))
+		(pin_names
+			(offset 0))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "R"
+			(at 2.032 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "R"
+			(at 0 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at -1.778 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Resistor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "R res resistor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "R_0_1"
+			(rectangle
+				(start -1.016 -2.54)
+				(end 1.016 2.54)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type none))))
+		(symbol "R_1_1"
+			(pin passive line
+				(at 0 3.81 270)
+				(length 1.27)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 0 -3.81 90)
+				(length 1.27)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "R0402 R0805"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "C"
+		(pin_numbers
+			(hide yes))
+		(pin_names
+			(offset 0.254))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "C"
+			(at 0.635 2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "C"
+			(at 0.635 -2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" ""
+			(at 0.9652 -3.81 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Unpolarized capacitor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "cap capacitor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "C_0_1"
+			(polyline
+				(pts
+					(xy -2.032 0.762)
+					(xy 2.032 0.762))
+				(stroke
+					(width 0.508)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -2.032 -0.762)
+					(xy 2.032 -0.762))
+				(stroke
+					(width 0.508)
+					(type default))
+				(fill
+					(type none))))
+		(symbol "C_1_1"
+			(pin passive line
+				(at 0 3.81 270)
+				(length 2.794)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 0 -3.81 90)
+				(length 2.794)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "C0402 C0603 C0805"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "L"
+		(pin_numbers
+			(hide yes))
+		(pin_names
+			(offset 1.016)
+			(hide yes))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "L"
+			(at -1.27 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "L"
+			(at 1.905 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Inductor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "inductor choke coil reactor magnetic"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "L_0_1"
+			(arc
+				(start 0 2.54)
+				(mid 0.6323 1.905)
+				(end 0 1.27)
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(arc
+				(start 0 1.27)
+				(mid 0.6323 0.635)
+				(end 0 0)
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(arc
+				(start 0 0)
+				(mid 0.6323 -0.635)
+				(end 0 -1.27)
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(arc
+				(start 0 -1.27)
+				(mid 0.6323 -1.905)
+				(end 0 -2.54)
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none))))
+		(symbol "L_1_1"
+			(pin passive line
+				(at 0 3.81 270)
+				(length 1.27)
+				(name "1"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 0 -3.81 90)
+				(length 1.27)
+				(name "2"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "IND-SMD_L4.0-W4.0"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "Schottky"
+		(pin_numbers
+			(hide yes))
+		(pin_names
+			(offset 1.016)
+			(hide yes))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "D"
+			(at 0 2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "D_Schottky"
+			(at 0 -2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Schottky diode"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "diode Schottky"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "Schottky_0_1"
+			(polyline
+				(pts
+					(xy -1.905 0.635)
+					(xy -1.905 1.27)
+					(xy -1.27 1.27)
+					(xy -1.27 -1.27)
+					(xy -0.635 -1.27)
+					(xy -0.635 -0.635))
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy 1.27 1.27)
+					(xy 1.27 -1.27)
+					(xy -1.27 0)
+					(xy 1.27 1.27))
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy 1.27 0)
+					(xy -1.27 0))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none))))
+		(symbol "Schottky_1_1"
+			(pin passive line
+				(at -3.81 0 0)
+				(length 2.54)
+				(name "K"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 3.81 0 180)
+				(length 2.54)
+				(name "A"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "SMA_L4.3-W2.6-LS5.2-RD"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "LED_K1"
+		(pin_numbers
+			(hide yes))
+		(pin_names
+			(offset 1.016)
+			(hide yes))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "D"
+			(at 0 2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "LED"
+			(at 0 -2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Light emitting diode"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Sim.Pins" "1=K 2=A"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "LED diode"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "LED_K1_0_1"
+			(polyline
+				(pts
+					(xy -3.048 -0.762)
+					(xy -4.572 -2.286)
+					(xy -3.81 -2.286)
+					(xy -4.572 -2.286)
+					(xy -4.572 -1.524))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -1.778 -0.762)
+					(xy -3.302 -2.286)
+					(xy -2.54 -2.286)
+					(xy -3.302 -2.286)
+					(xy -3.302 -1.524))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -1.27 0)
+					(xy 1.27 0))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -1.27 -1.27)
+					(xy -1.27 1.27))
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy 1.27 -1.27)
+					(xy 1.27 1.27)
+					(xy -1.27 0)
+					(xy 1.27 -1.27))
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type none))))
+		(symbol "LED_K1_1_1"
+			(pin passive line
+				(at -3.81 0 0)
+				(length 2.54)
+				(name "K"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 3.81 0 180)
+				(length 2.54)
+				(name "A"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "M3_NCD0805R1_K1"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "Crystal"
+		(pin_names
+			(offset 1.016)
+			(hide yes))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "Y"
+			(at 3.175 5.08 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "Crystal_GND24"
+			(at 3.175 3.175 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Four pin crystal, GND on pins 2 and 4"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property private "KLC_S3.3" "The rectangle is not a symbol body but a graphical element"
+			(at 0 -12.7 0)
+			(show_name yes)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property private "KLC_S4.1" "Some pins are on 50mil grid to make the symbol small"
+			(at 0 -15.24 0)
+			(show_name yes)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "quartz ceramic resonator oscillator"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "Crystal_0_1"
+			(polyline
+				(pts
+					(xy -2.54 2.286)
+					(xy -2.54 3.556)
+					(xy 2.54 3.556)
+					(xy 2.54 2.286))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -2.54 0)
+					(xy -2.032 0))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -2.54 -2.286)
+					(xy -2.54 -3.556)
+					(xy 2.54 -3.556)
+					(xy 2.54 -2.286))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -2.032 -1.27)
+					(xy -2.032 1.27))
+				(stroke
+					(width 0.508)
+					(type default))
+				(fill
+					(type none)))
+			(rectangle
+				(start -1.143 2.54)
+				(end 1.143 -2.54)
+				(stroke
+					(width 0.3048)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy 0 -3.81)
+					(xy 0 -3.556))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy 2.032 0)
+					(xy 2.54 0))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy 2.032 -1.27)
+					(xy 2.032 1.27))
+				(stroke
+					(width 0.508)
+					(type default))
+				(fill
+					(type none))))
+		(symbol "Crystal_1_1"
+			(pin passive line
+				(at -3.81 0 0)
+				(length 1.27)
+				(name "1"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 0 -5.08 90)
+				(length 1.27)
+				(name "G"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 3.81 0 180)
+				(length 1.27)
+				(name "3"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 0 -5.08 90)
+				(length 1.27)
+				(hide yes)
+				(name "G"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "4"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "CRYSTAL-SMD_4P-L3.2-W2.5-BL"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "LED_A1"
+		(pin_numbers
+			(hide yes))
+		(pin_names
+			(offset 1.016)
+			(hide yes))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "D"
+			(at 0 2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "LED"
+			(at 0 -2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Light emitting diode"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Sim.Pins" "1=K 2=A"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "LED diode"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "LED_A1_0_1"
+			(polyline
+				(pts
+					(xy -3.048 -0.762)
+					(xy -4.572 -2.286)
+					(xy -3.81 -2.286)
+					(xy -4.572 -2.286)
+					(xy -4.572 -1.524))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -1.778 -0.762)
+					(xy -3.302 -2.286)
+					(xy -2.54 -2.286)
+					(xy -3.302 -2.286)
+					(xy -3.302 -1.524))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -1.27 0)
+					(xy 1.27 0))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -1.27 -1.27)
+					(xy -1.27 1.27))
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy 1.27 -1.27)
+					(xy 1.27 1.27)
+					(xy -1.27 0)
+					(xy 1.27 -1.27))
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type none))))
+		(symbol "LED_A1_1_1"
+			(pin passive line
+				(at -3.81 0 0)
+				(length 2.54)
+				(name "K"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 3.81 0 180)
+				(length 2.54)
+				(name "A"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "M3_KT0805Y_A1"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "Header"
+		(pin_names
+			(offset 1.016)
+			(hide yes))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "J"
+			(at 0 7.62 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "Conn_01x06"
+			(at 0 -10.16 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "connector"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "Header_1_1"
+			(rectangle
+				(start -1.27 6.35)
+				(end 1.27 -8.89)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background)))
+			(rectangle
+				(start -1.27 5.207)
+				(end 0 4.953)
+				(stroke
+					(width 0.1524)
+					(type default))
+				(fill
+					(type none)))
+			(rectangle
+				(start -1.27 2.667)
+				(end 0 2.413)
+				(stroke
+					(width 0.1524)
+					(type default))
+				(fill
+					(type none)))
+			(rectangle
+				(start -1.27 0.127)
+				(end 0 -0.127)
+				(stroke
+					(width 0.1524)
+					(type default))
+				(fill
+					(type none)))
+			(rectangle
+				(start -1.27 -2.413)
+				(end 0 -2.667)
+				(stroke
+					(width 0.1524)
+					(type default))
+				(fill
+					(type none)))
+			(rectangle
+				(start -1.27 -4.953)
+				(end 0 -5.207)
+				(stroke
+					(width 0.1524)
+					(type default))
+				(fill
+					(type none)))
+			(rectangle
+				(start -1.27 -7.493)
+				(end 0 -7.747)
+				(stroke
+					(width 0.1524)
+					(type default))
+				(fill
+					(type none)))
+			(pin passive line
+				(at -5.08 5.08 0)
+				(length 3.81)
+				(name "Pin_1"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at -5.08 2.54 0)
+				(length 3.81)
+				(name "Pin_2"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at -5.08 0 0)
+				(length 3.81)
+				(name "Pin_3"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at -5.08 -2.54 0)
+				(length 3.81)
+				(name "Pin_4"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "4"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at -5.08 -5.08 0)
+				(length 3.81)
+				(name "Pin_5"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "5"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at -5.08 -7.62 0)
+				(length 3.81)
+				(name "Pin_6"
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "6"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "HDR-TH_6P-P2.54-V-M-1x6"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+	(symbol "PWR_FLAG"
+		(power global)
+		(pin_numbers
+			(hide yes))
+		(pin_names
+			(offset 0)
+			(hide yes))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "#FLG"
+			(at 0 1.905 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "PWR_FLAG"
+			(at 0 3.81 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "flag power"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "PWR_FLAG_0_0"
+			(pin power_out line
+				(at 0 0 90)
+				(length 0)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(symbol "PWR_FLAG_0_1"
+			(polyline
+				(pts
+					(xy 0 0)
+					(xy 0 1.27)
+					(xy -1.016 1.905)
+					(xy 0 2.54)
+					(xy 1.016 1.905)
+					(xy 0 1.27))
+				(stroke
+					(width 0)
+					(type default))
+				(fill
+					(type none))))
+		(embedded_fonts no)))

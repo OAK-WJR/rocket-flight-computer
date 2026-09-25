@@ -1,0 +1,574 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_core_schematic")
+	(uuid ca933be8-355e-5c3e-9e8c-72863d0fbd60)
+	(paper "A3")
+	(title_block
+		(title "06 | Camera terminal and characterization")
+		(date "2026-09-07")
+		(rev "M3-ASSY-R1")
+		(company "Single-board M3 candidate; full system incomplete"))
+	(lib_symbols
+		(symbol "M3:CameraTerminal"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "CameraTerminal_0_1"
+				(rectangle
+					(start -22.86 6.35)
+					(end 22.86 -6.35)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "CameraTerminal_1_1"
+				(pin passive line
+					(at -27.939999999999998 3.8099999999999996 0)
+					(length 5.08)
+					(name "5V OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -27.939999999999998 1.2699999999999996 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -27.939999999999998 -1.2700000000000005 0)
+					(length 5.08)
+					(name "RX FROM CAMERA TX"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -27.939999999999998 -3.8100000000000005 0)
+					(length 5.08)
+					(name "TX TO CAMERA RX"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_DB128V_4P"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:TestPoint"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.762)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TestPad_1.5"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes)))))
+	(text "06 | Camera terminal and characterization"
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 2.54 2.54))
+			(justify left))
+		(uuid daeb40dd-c14c-5c2a-a4f9-cf25499e1780))
+	(symbol
+		(lib_id "M3:CameraTerminal")
+		(at 76.2 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid de97252f-36d4-5832-b733-dc798db304e1)
+		(property "Reference" "J9"
+			(at 76.2 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "CAM 5V / GND / RX / TX"
+			(at 76.2 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_DB128V_4P"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C2915641"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
+					(reference "J9")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 48.26 85.09)
+			(xy 43.18 85.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5a353511-3dc1-597c-b36d-cf3dd719c024))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 43.18 85.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fb44e988-88ea-5b56-8ee9-53807c36f107))
+	(wire
+		(pts
+			(xy 48.26 87.63)
+			(xy 43.18 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5149975d-e2a9-55ea-84e4-182b00503fb3))
+	(global_label "GND"
+		(shape passive)
+		(at 43.18 87.63 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 116eacbd-570b-510e-89d3-d32336646416))
+	(wire
+		(pts
+			(xy 48.26 90.17)
+			(xy 43.18 90.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b7747c12-992a-5eb1-89cd-48684e45a4d4))
+	(global_label "CAM_RX_WIRE"
+		(shape passive)
+		(at 43.18 90.17 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f8d6eb09-7372-5a94-abc9-aec530dc8c4f))
+	(wire
+		(pts
+			(xy 48.26 92.71)
+			(xy 43.18 92.71))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 072ae790-4dbe-5106-9ce5-c688aa0d3647))
+	(global_label "CAM_TX_WIRE"
+		(shape passive)
+		(at 43.18 92.71 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f4fee09a-b55f-5ac0-8582-1a9092809040))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 170.18 58.42 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 78628bd3-598e-50bb-a977-2e614d353bd2)
+		(property "Reference" "TP72"
+			(at 170.18 50.800000000000004 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "CAM_5V"
+			(at 170.18 54.61000000000001 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 170.18 58.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 170.18 58.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 170.18 58.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
+					(reference "TP72")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 170.18 58.42)
+			(xy 162.56 58.42))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c6fc5fb2-e035-5749-b42f-311fe81a3fc4))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 162.56 58.42 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 20cb4007-c73c-5669-8a65-7428367aa40f))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 170.18 88.9 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid e9342493-fbc1-56a8-b2ce-a1908663356f)
+		(property "Reference" "TP74"
+			(at 170.18 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "GND"
+			(at 170.18 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 170.18 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 170.18 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 170.18 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
+					(reference "TP74")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 170.18 88.9)
+			(xy 162.56 88.9))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7a8442c8-904e-5ce1-9bf0-dee2a0a71481))
+	(global_label "GND"
+		(shape passive)
+		(at 162.56 88.9 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2aecc2cf-6104-5935-b702-97ded790c010))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 170.18 119.38 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 5895f940-1832-5bfa-af3b-c2585ddd145f)
+		(property "Reference" "TP75"
+			(at 170.18 111.75999999999999 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "CAM_RX_TEST"
+			(at 170.18 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 170.18 119.38 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 170.18 119.38 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 170.18 119.38 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
+					(reference "TP75")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 170.18 119.38)
+			(xy 162.56 119.38))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid dc5e4d1d-3487-5fc8-b0df-c243a9fe619c))
+	(global_label "CAM_RX_WIRE"
+		(shape passive)
+		(at 162.56 119.38 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid daa3d1fa-275f-5baf-89cd-ab93287a563e))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 170.18 149.86 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 894aa248-0f96-59f0-8c65-3d66c00ae4e1)
+		(property "Reference" "TP76"
+			(at 170.18 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "CAM_TX_TEST"
+			(at 170.18 146.05 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 170.18 149.86 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 170.18 149.86 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 170.18 149.86 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
+					(reference "TP76")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 170.18 149.86)
+			(xy 162.56 149.86))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7d3b83db-29af-52bc-a5ed-71901cd34f79))
+	(global_label "CAM_TX_WIRE"
+		(shape passive)
+		(at 162.56 149.86 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d4096269-50ab-5585-bb31-ed0a5dbc09d2))
+	(text "J9 is a dedicated camera output, not a generic USB 5 V source."
+		(at 20.32 180.34 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 62a17457-ab83-5101-8bf3-8c4340baa438))
+	(text "Pin 1: regulated power. Pin 2: GND. Pin 3: from camera TX. Pin 4: to camera RX."
+		(at 20.32 187.96 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 2c52830c-9f80-5612-83e3-291ea1825902))
+	(text "Pins 3/4: UART through U12; TP75/76 remain wire-side measurement points."
+		(at 20.32 195.58 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 351812cc-0ad4-5b13-8110-0cf4b7c1152b))
+	(text "3.3V signalling candidate. Actual camera thresholds and power-off leakage need measurement."
+		(at 20.32 203.2 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 43793254-6686-5e82-b194-6cd2f2429bd3))
+	(text "Battery entry added in PWR-R1; dynamic/thermal/USB qualification is pending."
+		(at 20.32 210.82 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 9ab77afe-82ba-5f4e-b525-e5bf0745000b))
+	(text "TP70 -> TP71 -> TP72 localizes input / eFuse / regulator faults."
+		(at 20.32 218.44 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 881da4d7-727a-591a-8d44-3844020d627e))
+	(text "Measure TP73 with >=10 Mohm input; loading ILM alters the current limit."
+		(at 20.32 226.06 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 38b37ebf-ba8b-5f17-afbc-19e7f92ce26a))
+	(text "Camera power toggling can corrupt recording: stop recording before normal shutdown."
+		(at 20.32 233.68 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 81fb4704-c41a-54d3-9ccf-85586bc44d3a))
+	(text "RunCam manual: 5-20 V regulated input; source capability >=1 A; max 450 mA at 5 V."
+		(at 20.32 241.3 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 18e5c042-fc5e-53a3-9472-205f3d30ed99))
+	(text "This is an engineering candidate; it is not released for fabrication or flight."
+		(at 20.32 248.92000000000002 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 957a0d00-9e50-5f55-8992-5f8c548f3733))
+	(sheet_instances
+		(path "/"
+			(page "6"))))

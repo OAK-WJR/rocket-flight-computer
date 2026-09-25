@@ -1,0 +1,15 @@
+{
+  "board_sha256": "e432d3436d5029de0a74a4b0ebcd02ec092dedf6d4252ce310f7be301558627f",
+  "visually_reviewed": true,
+  "reviewed_images": {
+    "top.png": "c4c547325bdcd431d7dafe1bb4f1f2011a1163f9fe808edf8aee29d9c31c29db",
+    "bottom.png": "cf14e37b9920b0b4e7b12075b8499ebfdee04b3a16ffaca49f0aa9a8e655bd4f",
+    "led_native_closeup.png": "f47545f9c07ce4bb3bf8844a67db521d5be4c7af70ef8d16a69b31be67298748",
+    "led_detail.png": "7a42ea9011ab7ddcd50687ad50cfbd63a23d0e8166df45b052ac2fe305e1fb77",
+    "sheets/m3-03 | Memory and sensors.png": "fb7f13a9f7314c79bd20ef2fd9182c66947e49a0f5e2d69891e9b5ac0fbbfbdb",
+    "sheets/m3-04 | Voltage diagnosis, indicators and GNSS receiver.png": "a88a78e50fc145782e09a0a126491107b49fd0959ead5761d95c4c46f6c366be"
+  },
+  "scope": "Viewed native top/bottom, saved-pad orientation detail, native LED closeup and changed memory/diagnosis sheets. Native cathode green stripes are now visible at the same end as the board silk. All three board revision labels show ASSY-R1. This review does not qualify all remaining packages or physical fit.",
+  "physical_fit_verified": false,
+  "full_m3_complete": false
+}
