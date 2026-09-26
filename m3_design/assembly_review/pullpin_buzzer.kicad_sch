@@ -1,0 +1,1466 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_r2_actuators")
+	(uuid 169afdd7-d08d-585a-bb42-706654a24862)
+	(paper "A3")
+	(title_block
+		(title "14 | Launch pull-pin and buzzer")
+		(date "2026-09-25")
+		(rev "M3-ASSY-R2")
+		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
+	(lib_symbols
+		(symbol "M3:BAT54S"
+		(pin_names
+			(offset 0.508))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "D"
+			(at 0 5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "BAT54S"
+			(at 0 -5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Dual Schottky, series (1 A1, 2 K2, 3 K1/A2)"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "BAT54S_0_1"
+			(rectangle
+				(start -2.54 2.54)
+				(end 2.54 -2.54)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "BAT54S_1_1"
+			(pin passive line
+				(at -7.62 0 0)
+				(length 5.08)
+				(name "A1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 7.62 0 180)
+				(length 5.08)
+				(name "K2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 0 -7.62 90)
+				(length 5.08)
+				(name "K1A2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+		(symbol "M3:Buzzer_4pad"
+		(pin_names
+			(offset 0.508))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "LS"
+			(at 0 7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "Buzzer_4pad"
+			(at 0 -7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "SMD magnetic buzzer, 1 = +lead, 2 = -lead, 3/4 = dummy pads"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "Buzzer_4pad_0_1"
+			(rectangle
+				(start -5.08 5.08)
+				(end 5.08 -5.08)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "Buzzer_4pad_1_1"
+			(pin passive line
+				(at -10.16 2.54 0)
+				(length 5.08)
+				(name "+"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -10.16 -2.54 0)
+				(length 5.08)
+				(name "-"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 10.16 2.54 180)
+				(length 5.08)
+				(name "DUMMY"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 10.16 -2.54 180)
+				(length 5.08)
+				(name "DUMMY"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+			(symbol "M3:C"
+		(pin_numbers
+			(hide yes))
+		(pin_names
+			(offset 0.254))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "C"
+			(at 0.635 2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "C"
+			(at 0.635 -2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" ""
+			(at 0.9652 -3.81 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Unpolarized capacitor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "cap capacitor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "C_0_1"
+			(polyline
+				(pts
+					(xy -2.032 0.762)
+					(xy 2.032 0.762))
+				(stroke
+					(width 0.508)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -2.032 -0.762)
+					(xy 2.032 -0.762))
+				(stroke
+					(width 0.508)
+					(type default))
+				(fill
+					(type none))))
+		(symbol "C_1_1"
+			(pin passive line
+				(at 0 3.81 270)
+				(length 2.794)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 0 -3.81 90)
+				(length 2.794)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+		(symbol "M3:Conn_1x2"
+		(pin_names
+			(offset 0.508))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "J"
+			(at 0 5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "Conn_1x2"
+			(at 0 -5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "2-position connector"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "Conn_1x2_0_1"
+			(rectangle
+				(start -2.54 2.54)
+				(end 2.54 -2.54)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "Conn_1x2_1_1"
+			(pin passive line
+				(at -7.62 1.27 0)
+				(length 5.08)
+				(name "1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -1.27 0)
+				(length 5.08)
+				(name "2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+		(symbol "M3:D_Schottky_KA"
+		(pin_names
+			(offset 0.508))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "D"
+			(at 0 3.81 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "D_Schottky_KA"
+			(at 0 -3.81 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Schottky diode, pin 1 = K, pin 2 = A"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "D_Schottky_KA_0_1"
+			(rectangle
+				(start -2.54 1.27)
+				(end 2.54 -1.27)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "D_Schottky_KA_1_1"
+			(pin passive line
+				(at -7.62 0 0)
+				(length 5.08)
+				(name "A"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 7.62 0 180)
+				(length 5.08)
+				(name "K"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+		(symbol "M3:NMOS_SOT23"
+		(pin_names
+			(offset 0.508))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "Q"
+			(at 0 7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "NMOS_SOT23"
+			(at 0 -7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "N-MOSFET SOT-23 (1 G, 2 S, 3 D)"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "NMOS_SOT23_0_1"
+			(rectangle
+				(start -5.08 5.08)
+				(end 5.08 -5.08)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "NMOS_SOT23_1_1"
+			(pin passive line
+				(at -10.16 0 0)
+				(length 5.08)
+				(name "G"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 0 -10.16 90)
+				(length 5.08)
+				(name "S"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 0 10.16 270)
+				(length 5.08)
+				(name "D"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+			(symbol "M3:R"
+		(pin_numbers
+			(hide yes))
+		(pin_names
+			(offset 0))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "R"
+			(at 2.032 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "R"
+			(at 0 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at -1.778 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Resistor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "R res resistor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "R_0_1"
+			(rectangle
+				(start -1.016 -2.54)
+				(end 1.016 2.54)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type none))))
+		(symbol "R_1_1"
+			(pin passive line
+				(at 0 3.81 270)
+				(length 1.27)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 0 -3.81 90)
+				(length 1.27)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes)))))
+	(symbol
+		(lib_id "M3:Conn_1x2")
+		(at 40.64 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f14a72d8-b5ef-574a-9770-ce840f6656ec)
+		(property "Reference" "J123"
+			(at 44.45 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "PULL-PIN 1x2"
+			(at 44.45 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_PULLPIN_1x2"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C2337"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "J123")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 33.02 49.53)
+			(xy 27.94 49.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6a598039-4b81-56c8-acad-87f433b6218f))
+	(global_label "PULLPIN_EXT"
+		(shape passive)
+		(at 27.94 49.53 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid db00ad15-bf82-59c3-8f93-d45b9bf14883))
+	(wire
+		(pts
+			(xy 33.02 52.07)
+			(xy 27.94 52.07))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 19c1d6c3-c460-5d35-9e41-c0c0d6a98c52))
+	(global_label "GND"
+		(shape passive)
+		(at 27.94 52.07 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a1669829-3efe-579b-8753-d49429047128))
+	(symbol
+		(lib_id "M3:R")
+		(at 99.06 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 76acb321-f1bc-5df9-9045-eba4a751850f)
+		(property "Reference" "R160"
+			(at 102.87 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k"
+			(at 102.87 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C11702"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "R160")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 99.06 46.99)
+			(xy 99.06 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 76c3226e-1873-5f59-9709-5c92b3ca805f))
+	(global_label "PULLPIN_EXT"
+		(shape passive)
+		(at 99.06 41.91 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f4c22d9d-edc5-5589-a35b-7a7765edb5b6))
+	(wire
+		(pts
+			(xy 99.06 54.61)
+			(xy 99.06 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 198ff86d-2991-5b2e-a297-c905d034b5ee))
+	(global_label "PULLPIN"
+		(shape passive)
+		(at 99.06 59.69 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 03585788-170c-595f-a226-4e3f4940ed0f))
+	(symbol
+		(lib_id "M3:R")
+		(at 157.48 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6d91a63f-e927-5d3b-99ff-3acda81009e1)
+		(property "Reference" "R161"
+			(at 161.29 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 161.29 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C25744"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "R161")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 157.48 46.99)
+			(xy 157.48 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8647041c-50c2-5e8e-9800-ca7b963bfb92))
+	(global_label "3V3"
+		(shape passive)
+		(at 157.48 41.91 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid ad4e3a81-927c-52c5-a008-f4f7d0e5a588))
+	(wire
+		(pts
+			(xy 157.48 54.61)
+			(xy 157.48 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8254116c-4434-593b-b633-77f503986a10))
+	(global_label "PULLPIN"
+		(shape passive)
+		(at 157.48 59.69 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b73a70a9-0f6d-5e67-86d8-164439a61b00))
+	(symbol
+		(lib_id "M3:C")
+		(at 215.9 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 76995d75-e433-5d05-b6cf-da7cef87b5c0)
+		(property "Reference" "C160"
+			(at 219.71 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF"
+			(at 219.71 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0402"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C1525"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "C160")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 215.9 46.99)
+			(xy 215.9 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 79d57adb-bfa7-52db-81c7-965e39d931db))
+	(global_label "PULLPIN"
+		(shape passive)
+		(at 215.9 41.91 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid aa54d235-5e1c-5770-b805-c5e136906c7c))
+	(wire
+		(pts
+			(xy 215.9 54.61)
+			(xy 215.9 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d5f99c6f-889b-50e0-94ce-37a1f51ccde2))
+	(global_label "GND"
+		(shape passive)
+		(at 215.9 59.69 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid dd6ee54a-6c12-5c18-84cd-ac8c885ca1f5))
+	(symbol
+		(lib_id "M3:BAT54S")
+		(at 274.32 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d87fd5f7-3f04-50c0-ac78-3b71aae7b65d)
+		(property "Reference" "D122"
+			(at 278.13 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "BAT54S"
+			(at 278.13 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C47546"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Nexperia"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "BAT54S,215"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "D122")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 266.7 50.8)
+			(xy 261.62 50.8))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d34fafe9-48f7-5ffe-8c8f-2bca38f920a2))
+	(global_label "GND"
+		(shape passive)
+		(at 261.62 50.8 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 85d1ae55-9817-5978-9c2e-9001ffebaa91))
+	(wire
+		(pts
+			(xy 281.94 50.8)
+			(xy 287.02 50.8))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid abfe41c8-8529-5d33-874d-c4a875816d61))
+	(global_label "3V3"
+		(shape passive)
+		(at 287.02 50.8 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid d3c310dd-c424-5f44-a879-820eb04f41e6))
+	(wire
+		(pts
+			(xy 274.32 58.42)
+			(xy 274.32 63.5))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c4594c44-8f36-5ff4-954a-374a81a7f61a))
+	(global_label "PULLPIN"
+		(shape passive)
+		(at 274.32 63.5 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5f9d4da7-8a68-5bc8-b10b-72383d913e48))
+	(symbol
+		(lib_id "M3:Buzzer_4pad")
+		(at 332.74 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 147908ea-9ac1-5282-8959-c1434d74a21d)
+		(property "Reference" "LS120"
+			(at 336.55 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "MLT-8530"
+			(at 336.55 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:BUZ-SMD_4P-L8.5-W8.5-P8.50-BR"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C94599"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Jiangsu Huaneng Elec"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "MLT-8530"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "LS120")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 322.58 48.26)
+			(xy 317.5 48.26))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9ad0036e-47d7-5307-b5e3-0c438c13d530))
+	(global_label "3V3"
+		(shape passive)
+		(at 317.5 48.26 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 173d611f-8ed8-5758-a35a-f9d64032176a))
+	(wire
+		(pts
+			(xy 322.58 53.34)
+			(xy 317.5 53.34))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 544bc287-33fd-5aed-a0a8-7fdc26eb9fd9))
+	(global_label "BUZZ_OUT"
+		(shape passive)
+		(at 317.5 53.34 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 885908b0-a46b-5244-90c2-2601dc424442))
+	(no_connect
+		(at 342.9 48.26)
+		(uuid 8671c8f0-23ed-5403-886f-aa2c06397b43))
+	(no_connect
+		(at 342.9 53.34)
+		(uuid 00e1e502-4ccf-5943-b109-83f5a6aebecc))
+	(symbol
+		(lib_id "M3:D_Schottky_KA")
+		(at 40.64 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 51aadcbc-2da4-5844-9db2-6a6022a277cb)
+		(property "Reference" "D123"
+			(at 44.45 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1N5819WS"
+			(at 44.45 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:SOD-323_L1.8-W1.3-LS2.5-RD"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C191023"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Guangdong Hottech"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "1N5819WS"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "D123")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 33.02 114.3)
+			(xy 27.94 114.3))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1d58868d-b07f-5147-8afe-9ea6f324e619))
+	(global_label "BUZZ_OUT"
+		(shape passive)
+		(at 27.94 114.3 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 479951aa-478d-5f06-891b-c99d3ae6b403))
+	(wire
+		(pts
+			(xy 48.26 114.3)
+			(xy 53.34 114.3))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 383c2145-350b-5b9c-833d-2aeebe222c99))
+	(global_label "3V3"
+		(shape passive)
+		(at 53.34 114.3 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 53fd45cf-fc1c-5934-bb73-97923b3e6be4))
+	(symbol
+		(lib_id "M3:NMOS_SOT23")
+		(at 99.06 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 25615ebf-59b4-59da-9087-652c7c36d1d4)
+		(property "Reference" "Q123"
+			(at 102.87 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "AO3400A"
+			(at 102.87 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C20917"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Alpha & Omega Semicon"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "AO3400A"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "Q123")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 88.9 114.3)
+			(xy 83.82 114.3))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 029e6510-ddea-537e-8739-7d840bf893cd))
+	(global_label "BUZZ_G"
+		(shape passive)
+		(at 83.82 114.3 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3567b7d1-b034-584d-af30-5efe993ddd68))
+	(wire
+		(pts
+			(xy 99.06 124.46)
+			(xy 99.06 129.54))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8ffb6a66-9e53-577d-8e50-b6628e505eed))
+	(global_label "GND"
+		(shape passive)
+		(at 99.06 129.54 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 12676ad1-fa5b-5baa-b99d-0092ae99f542))
+	(wire
+		(pts
+			(xy 99.06 104.14)
+			(xy 99.06 99.06))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 522db46c-7c7a-5c9b-8fa9-52de888fb03f))
+	(global_label "BUZZ_OUT"
+		(shape passive)
+		(at 99.06 99.06 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 2242edff-01cf-5c91-8691-3c1f8690c1f3))
+	(symbol
+		(lib_id "M3:R")
+		(at 157.48 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6a71a63c-5726-5897-8c0a-e5737d5110d8)
+		(property "Reference" "R162"
+			(at 161.29 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "220R"
+			(at 161.29 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0805"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C17557"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "R162")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 157.48 110.49)
+			(xy 157.48 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4e7c8598-a951-57b4-8fff-54da1a16b6c2))
+	(global_label "BUZZ_DRV"
+		(shape passive)
+		(at 157.48 105.41 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 1859907f-6d54-5549-a9ea-7fb2ed44b58b))
+	(wire
+		(pts
+			(xy 157.48 118.11)
+			(xy 157.48 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 99de25e2-7778-505c-bdda-ba483173aaa4))
+	(global_label "BUZZ_G"
+		(shape passive)
+		(at 157.48 123.19 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5388fb6e-4fc3-5083-971b-afcfe9faa339))
+	(symbol
+		(lib_id "M3:R")
+		(at 215.9 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d219091c-ae7a-5444-9408-0ff31439bad9)
+		(property "Reference" "R163"
+			(at 219.71 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 219.71 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C25744"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "R163")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 215.9 110.49)
+			(xy 215.9 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid aa1018c5-9eb6-5d72-87f3-f85f8b4e3065))
+	(global_label "BUZZ_G"
+		(shape passive)
+		(at 215.9 105.41 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid fdf295d8-ad83-5c3b-a93e-e9e8901c0d86))
+	(wire
+		(pts
+			(xy 215.9 118.11)
+			(xy 215.9 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ac48e9be-2669-5578-be06-092d380087ec))
+	(global_label "GND"
+		(shape passive)
+		(at 215.9 123.19 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 06597c7a-706b-5445-9940-f1c9c740e312))
+	(text "14 | Launch pull-pin and buzzer"
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 2.54 2.54))
+			(justify left))
+		(uuid f9d4e91b-e386-52f4-ab19-bd289fa6eff7))
+	(text "Pull-pin: PC14 (pin 8) reads LOW with the pin inserted, HIGH when pulled. Advisory only (FMEA F-7); ignored after launch."
+		(at 20.32 245 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid d386b156-bac9-5863-a9c0-449a6f4bdcc3))
+	(text "D122 BAT54S clamps PULLPIN to 3V3/GND: an 8.4 V chafe would otherwise put 7.94 V on the pin (FMEA H-10)."
+		(at 20.32 252.62 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid dde5b69a-71e6-57c0-9829-2913f7e3935e))
+	(text "LS120 MLT-8530: pad 1 = + lead, pad 2 = - lead, pads 3/4 = dummy (Huaneng spec 5.2). Closes CIRCUIT_REVIEW 3.4."
+		(at 20.32 260.24 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid bd454544-a8f7-52a8-92ea-81cbb5cbd667))
+	(text "BUZZ_DRV = PA5 (pin 29), moved off PE6 (P1-10). 2.7 kHz 50 % duty, software toggle or TIM8_CH1N (AF3, inference). Never TIM2."
+		(at 20.32 267.86 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 9b6eda0c-dc2d-529d-acd1-9acd1c5f825e))
+	(sheet_instances
+		(path "/"
+			(page "14"))))

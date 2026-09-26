@@ -1,3 +1,9 @@
+# M3-ASSY-R2 — actuator merge (current)
+
+2026-09-25. R2 adds the actuator power switch, dual independently fused pyro channels with a complete arming break, four servo outputs, the launch pull-pin and the buzzer to R1, on a 46 × 238 mm board (203 positions, 178 fitted parts, 25 test pads, 14 sheets). Design rationale, datasheet evidence, routing method and the open verification list: [docs/M3_ACTUATOR_MERGE.md](../../docs/M3_ACTUATOR_MERGE.md). `top.png`, `bottom.png`, `drc.json`, `erc.json`, `schematic.net.xml` and `sheets/` are regenerated for R2. The R1 evidence files (`verification_assembly.json`, `visual_review.json`, `bom_review.json`, `visual_inputs.json`) are kept as the R1 record; they are bound to the R1 hash and do not describe R2. Manufacturing files: `fab/` (from `tools/export_fab.py`).
+
+---
+
 # M3-ASSY-R1 assembly correction review
 
 2026-09-08. This revision is still a bench candidate: one 46 × 186 mm four-layer board for ordinary power / acquisition / logging / camera interface / bench diagnostics. 135 footprint positions: 115 nominally fitted parts and 20 test points. It does not implement every rocket function in the requirements; the full gap list is in [the requirement status](../../STATUS.md).

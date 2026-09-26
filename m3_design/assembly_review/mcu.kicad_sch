@@ -1785,22 +1785,6 @@
 		(uuid 53e427e0-1431-5c6f-88d1-3dae535a2de6))
 	(wire
 		(pts
-			(xy 63.5 72.39)
-			(xy 58.42 72.39))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4e80a989-6fb9-579c-b0fb-ec06b1c4d7df))
-	(global_label "LED_RED"
-		(shape passive)
-		(at 58.42 72.39 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 9daa3fdd-2861-59cd-9f2a-df35ac8a7e56))
-	(wire
-		(pts
 			(xy 63.5 74.93)
 			(xy 58.42 74.93))
 		(stroke
@@ -2552,44 +2536,14 @@
 			(justify right))
 		(uuid b79edcf3-6672-5cdb-84c0-863e80ba9d1a))
 	(no_connect
-		(at 63.5 194.31)
-		(uuid 614cd951-fcfb-5a7d-ba99-ac5cb23ea255))
-	(no_connect
-		(at 119.38 69.85)
-		(uuid 061c1887-1da6-5aa7-953b-255734dfc5ff))
-	(no_connect
 		(at 119.38 72.39)
 		(uuid 68ebba14-79b6-58bc-81db-26f054699f53))
-	(no_connect
-		(at 119.38 74.93)
-		(uuid 8ed796f5-b8ab-5a88-a81f-36f0644d95a1))
 	(no_connect
 		(at 119.38 77.47)
 		(uuid 6c7d8bd8-ad1d-5f0c-858d-43eb1329c062))
 	(no_connect
-		(at 119.38 80.01)
-		(uuid 4a40bba5-ee99-5d3b-a322-4bc0631f8a3e))
-	(no_connect
-		(at 119.38 82.55)
-		(uuid 69a19501-a126-5d8f-aade-64b9c44a8c1b))
-	(no_connect
-		(at 119.38 85.09)
-		(uuid 25e218b2-4215-5042-a21d-6266647d1c0a))
-	(no_connect
-		(at 119.38 87.63)
-		(uuid dd0e902e-1e71-5a21-9a56-99fac4cbeafb))
-	(no_connect
-		(at 119.38 90.17)
-		(uuid 952809c4-c485-5dac-b225-878978974f5e))
-	(no_connect
-		(at 119.38 92.71)
-		(uuid 8b092c9d-2b03-5cdf-bc16-4a94f03d2751))
-	(no_connect
 		(at 119.38 95.25)
 		(uuid cd765f7d-cc93-50af-a6cc-2dbb107826f7))
-	(no_connect
-		(at 119.38 97.79)
-		(uuid f88496e0-0e0a-5713-af6a-5a686145fe4b))
 	(no_connect
 		(at 119.38 100.33)
 		(uuid 21a7516d-9925-5ecd-a1ee-7b30974fd4de))
@@ -2597,20 +2551,8 @@
 		(at 119.38 102.87)
 		(uuid 66622c3a-072d-5370-8363-a4e1b5ee2558))
 	(no_connect
-		(at 119.38 105.41)
-		(uuid 3a01d547-04e0-5994-9127-94d1cba6645d))
-	(no_connect
-		(at 119.38 107.95)
-		(uuid f9a2d567-37d0-5ef9-a505-aa06128d7a1a))
-	(no_connect
-		(at 119.38 110.49)
-		(uuid 22b6c206-3148-54af-bda9-f40765a6907d))
-	(no_connect
 		(at 119.38 113.03)
 		(uuid 3bd69203-212c-52af-9b12-fc5c7bf4fa22))
-	(no_connect
-		(at 119.38 115.57)
-		(uuid 10e0d4c7-a9bf-50cd-8f11-24bb0b2a20f4))
 	(no_connect
 		(at 119.38 118.11)
 		(uuid 44cfb8b1-3951-5d13-bb8a-50eca5a7ece7))
@@ -4138,6 +4080,240 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid d045dbca-6349-5b9b-bd93-990a515158d6))
+	(wire
+		(pts
+			(xy 63.5 194.31)
+			(xy 55.88 194.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b0fc028c-35d4-57b2-b602-4605695459d5))
+	(global_label "PYRO1_GATE_N"
+		(shape passive)
+		(at 55.88 194.31 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f447e3cc-323d-5dba-b6fc-d5f8ea54a15c))
+	(wire
+		(pts
+			(xy 119.38 69.85)
+			(xy 127 69.85))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid aab6d460-b6d7-5987-9eef-6aff74ae776a))
+	(global_label "PYRO2_GATE_N"
+		(shape passive)
+		(at 127 69.85 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 574126c6-ed3d-5077-b626-d3334a0818db))
+	(wire
+		(pts
+			(xy 119.38 80.01)
+			(xy 127 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7baaa541-30b9-5b15-9271-3e1e07cb9ad6))
+	(global_label "PYRO1_CONT"
+		(shape passive)
+		(at 127 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 085ee3a6-8232-5d2e-b73a-6ec810b18d75))
+	(wire
+		(pts
+			(xy 119.38 82.55)
+			(xy 127 82.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 00059037-c35d-5011-b3c7-215b1c8ae055))
+	(global_label "PYRO2_CONT"
+		(shape passive)
+		(at 127 82.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid bf6ede09-6806-5f6e-935f-8bc24d88ccc7))
+	(wire
+		(pts
+			(xy 119.38 85.09)
+			(xy 127 85.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b7d38ba4-9598-50d5-9eb0-a7548be937df))
+	(global_label "SERVO1_MCU"
+		(shape passive)
+		(at 127 85.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid c1c5ce60-6425-540e-bcb7-d9771b41e409))
+	(wire
+		(pts
+			(xy 119.38 87.63)
+			(xy 127 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f4e9cc9b-762f-5168-941a-c8f0ee500037))
+	(global_label "SERVO2_MCU"
+		(shape passive)
+		(at 127 87.63 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid ca7fb33e-f6b9-5cdb-89ce-4c7edefb0646))
+	(wire
+		(pts
+			(xy 119.38 90.17)
+			(xy 127 90.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid fa5409a7-5c2e-5c52-a041-07970aa99ec9))
+	(global_label "SERVO3_MCU"
+		(shape passive)
+		(at 127 90.17 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 25bff4e2-8b61-572c-a53c-151ee798cf02))
+	(wire
+		(pts
+			(xy 119.38 92.71)
+			(xy 127 92.71))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f71c043b-6d77-5d51-a5b9-d059a7032bf8))
+	(global_label "SERVO4_MCU"
+		(shape passive)
+		(at 127 92.71 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid b32a803e-4b8a-57b7-ada7-dc90b7d2bcfa))
+	(wire
+		(pts
+			(xy 119.38 105.41)
+			(xy 127 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c80abdba-fa8e-589e-81d2-8c124c0a2791))
+	(global_label "ARM2_SENSE"
+		(shape passive)
+		(at 127 105.41 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 50c5ee76-53bb-5533-9df3-80952c6b70c5))
+	(wire
+		(pts
+			(xy 119.38 107.95)
+			(xy 127 107.95))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid aac83a04-2b68-5d67-b417-0cbaf9d6a397))
+	(global_label "ARM1_SENSE"
+		(shape passive)
+		(at 127 107.95 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 37d30ce7-6ce2-5596-8e1b-fb7de6aeaa22))
+	(wire
+		(pts
+			(xy 119.38 110.49)
+			(xy 127 110.49))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 834f24b3-135d-5c7d-9eff-03b5b4b874b3))
+	(global_label "RAW_ACT_SENSE"
+		(shape passive)
+		(at 127 110.49 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid df46ba5e-15e8-53f1-b2a5-c872b94c599e))
+	(wire
+		(pts
+			(xy 119.38 115.57)
+			(xy 127 115.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b5c11a95-9334-5f50-a32f-01a3981f9766))
+	(global_label "LED_RED"
+		(shape passive)
+		(at 127 115.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f7117d91-6f2c-53e6-b77e-a44013cd9303))
+	(wire
+		(pts
+			(xy 119.38 97.79)
+			(xy 127 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 623632ed-8b9e-56d6-921c-282e8f191529))
+	(global_label "BUZZ_DRV"
+		(shape passive)
+		(at 127 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 049d8c61-2bd6-5786-9111-639cd89913d7))
+	(wire
+		(pts
+			(xy 119.38 74.93)
+			(xy 127 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9715a3be-ed40-5df2-99f6-707ee32cf9c5))
+	(global_label "PULLPIN"
+		(shape passive)
+		(at 127 74.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 5068265c-dd5c-543c-8f7b-d13196c3a90f))
+	(no_connect
+		(at 63.5 72.39)
+		(uuid 67c55654-f2b5-5dac-b265-c59aabf849eb))
+	(text "R2: PE3 (pin 2) and PE6 (pin 5) are pyro-gate sentinels - no net, firmware drives them low. LED_RED moved to PE8."
+		(at 20.32 280 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid fce0d5f6-5ce5-5c42-a8ea-4dde4bdae02d))
 	(sheet_instances
 		(path "/"
 			(page "2")))
