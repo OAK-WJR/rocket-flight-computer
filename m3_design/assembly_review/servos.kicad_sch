@@ -1,0 +1,1723 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_r2_actuators")
+	(uuid 09986bc4-c797-5903-8d56-80a25ac9c1eb)
+	(paper "A3")
+	(title_block
+		(title "13 | Servo outputs")
+		(date "2026-09-25")
+		(rev "M3-ASSY-R2")
+		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
+	(lib_symbols
+			(symbol "M3:C"
+		(pin_numbers
+			(hide yes))
+		(pin_names
+			(offset 0.254))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "C"
+			(at 0.635 2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "C"
+			(at 0.635 -2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" ""
+			(at 0.9652 -3.81 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Unpolarized capacitor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "cap capacitor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "C_0_1"
+			(polyline
+				(pts
+					(xy -2.032 0.762)
+					(xy 2.032 0.762))
+				(stroke
+					(width 0.508)
+					(type default))
+				(fill
+					(type none)))
+			(polyline
+				(pts
+					(xy -2.032 -0.762)
+					(xy 2.032 -0.762))
+				(stroke
+					(width 0.508)
+					(type default))
+				(fill
+					(type none))))
+		(symbol "C_1_1"
+			(pin passive line
+				(at 0 3.81 270)
+				(length 2.794)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 0 -3.81 90)
+				(length 2.794)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+		(symbol "M3:Conn_3x4"
+		(pin_names
+			(offset 0.508))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "J"
+			(at 0 17.78 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "Conn_3x4"
+			(at 0 -17.78 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "3x4 pin header, column-major (1/2/3 = one column)"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "Conn_3x4_0_1"
+			(rectangle
+				(start -2.54 15.24)
+				(end 2.54 -15.24)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "Conn_3x4_1_1"
+			(pin passive line
+				(at -7.62 13.97 0)
+				(length 5.08)
+				(name "1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 11.43 0)
+				(length 5.08)
+				(name "2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 8.89 0)
+				(length 5.08)
+				(name "3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 6.35 0)
+				(length 5.08)
+				(name "4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 3.81 0)
+				(length 5.08)
+				(name "5"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 1.27 0)
+				(length 5.08)
+				(name "6"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -1.27 0)
+				(length 5.08)
+				(name "7"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "7"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -3.81 0)
+				(length 5.08)
+				(name "8"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "8"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -6.35 0)
+				(length 5.08)
+				(name "9"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "9"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -8.89 0)
+				(length 5.08)
+				(name "10"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "10"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -11.43 0)
+				(length 5.08)
+				(name "11"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "11"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -13.97 0)
+				(length 5.08)
+				(name "12"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "12"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+			(symbol "M3:R"
+		(pin_numbers
+			(hide yes))
+		(pin_names
+			(offset 0))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "R"
+			(at 2.032 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "R"
+			(at 0 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at -1.778 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Resistor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "R res resistor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "R_0_1"
+			(rectangle
+				(start -1.016 -2.54)
+				(end 1.016 2.54)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type none))))
+		(symbol "R_1_1"
+			(pin passive line
+				(at 0 3.81 270)
+				(length 1.27)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)))))
+			(pin passive line
+				(at 0 -3.81 90)
+				(length 1.27)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27))))
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27))))))
+		(embedded_fonts no)
+		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(hide yes))))
+		(symbol "M3:SRV05_4"
+		(pin_names
+			(offset 0.508))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "D"
+			(at 0 10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "SRV05_4"
+			(at 0 -10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "4-line rail clamp (1/3/4/6 IO, 2 GND, 5 VCC)"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "SRV05_4_0_1"
+			(rectangle
+				(start -5.08 7.62)
+				(end 5.08 -7.62)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "SRV05_4_1_1"
+			(pin passive line
+				(at -10.16 5.08 0)
+				(length 5.08)
+				(name "IO1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -10.16 2.54 0)
+				(length 5.08)
+				(name "IO2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -10.16 0 0)
+				(length 5.08)
+				(name "IO3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -10.16 -2.54 0)
+				(length 5.08)
+				(name "IO4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 0 12.7 270)
+				(length 5.08)
+				(name "VCC"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 0 -12.7 90)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no)))
+	(symbol
+		(lib_id "M3:Conn_3x4")
+		(at 40.64 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 91e60751-8f2e-5a17-bb30-10efcf7de97b)
+		(property "Reference" "J122"
+			(at 44.45 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "SERVO 3x4"
+			(at 44.45 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C32713291"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "J122")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 33.02 36.83)
+			(xy 27.94 36.83))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b7bf5d2a-9873-5885-9cdd-7616cfc4f55d))
+	(global_label "SERVO1_OUT"
+		(shape passive)
+		(at 27.94 36.83 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cddc78de-4e61-5529-9ddf-95fe1694231d))
+	(wire
+		(pts
+			(xy 33.02 39.37)
+			(xy 27.94 39.37))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7cf38dea-433d-58c8-a212-f99e1e842716))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 27.94 39.37 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 377d34bb-b1e8-5435-ab69-b2c67a3a2055))
+	(wire
+		(pts
+			(xy 33.02 41.91)
+			(xy 27.94 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b812df91-5026-54c4-93a9-c213832f5fa6))
+	(global_label "GND"
+		(shape passive)
+		(at 27.94 41.91 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 46a6c6e0-bc67-5c1e-9239-9fcc00c81f4a))
+	(wire
+		(pts
+			(xy 33.02 44.45)
+			(xy 27.94 44.45))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 43b30d6a-fb1a-514e-a989-eb0297cf2bf4))
+	(global_label "SERVO2_OUT"
+		(shape passive)
+		(at 27.94 44.45 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 236e22f5-afc7-5de8-a670-c2f11ac557dc))
+	(wire
+		(pts
+			(xy 33.02 46.99)
+			(xy 27.94 46.99))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ba0a69bc-dc28-572d-a55f-93953953c733))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 27.94 46.99 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0e370855-05ee-5cf9-99d2-f321d81846c4))
+	(wire
+		(pts
+			(xy 33.02 49.53)
+			(xy 27.94 49.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2af8e83a-aa29-5828-9cf7-1a37c3fa51ec))
+	(global_label "GND"
+		(shape passive)
+		(at 27.94 49.53 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3eb2e440-3511-5550-9535-34a862b6cb40))
+	(wire
+		(pts
+			(xy 33.02 52.07)
+			(xy 27.94 52.07))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c3d7ceb7-36d7-53e7-bff7-6604eaa82ad9))
+	(global_label "SERVO3_OUT"
+		(shape passive)
+		(at 27.94 52.07 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 30c66191-bede-5050-9db5-38fb1ad13133))
+	(wire
+		(pts
+			(xy 33.02 54.61)
+			(xy 27.94 54.61))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9d628447-6b88-5d18-b096-31fd13f221be))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 27.94 54.61 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid dd26ff43-32b4-50ae-8965-034f7b1c2883))
+	(wire
+		(pts
+			(xy 33.02 57.15)
+			(xy 27.94 57.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 140b7d1b-eb88-57ca-9228-cba9ac285074))
+	(global_label "GND"
+		(shape passive)
+		(at 27.94 57.15 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9480c129-24cd-576b-883b-ae7110a7f653))
+	(wire
+		(pts
+			(xy 33.02 59.69)
+			(xy 27.94 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8ea5ae2b-85c2-5f69-a4f8-d0a73f829531))
+	(global_label "SERVO4_OUT"
+		(shape passive)
+		(at 27.94 59.69 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a863961c-fc79-5c48-9f5f-5f76a5ba9438))
+	(wire
+		(pts
+			(xy 33.02 62.23)
+			(xy 27.94 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5f62e02e-c686-54dc-9b36-68fbceac7432))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 27.94 62.23 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0a4fa21f-a048-58d3-b8c4-2ec0b0014604))
+	(wire
+		(pts
+			(xy 33.02 64.77)
+			(xy 27.94 64.77))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3b8e8ff4-9c56-5f59-b4ec-176a78dea517))
+	(global_label "GND"
+		(shape passive)
+		(at 27.94 64.77 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cfbf39c3-205d-5266-a339-bd6bfa9766b9))
+	(symbol
+		(lib_id "M3:R")
+		(at 99.06 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid a0e85516-460d-5a2b-970e-e10a33d89c40)
+		(property "Reference" "R150"
+			(at 102.87 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0805"
+			(at 102.87 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0805"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C17513"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0805W8F1001T5E"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R150")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 99.06 46.99)
+			(xy 99.06 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d2c6b1cb-942c-523d-937d-63c16a165038))
+	(global_label "SERVO1_MCU"
+		(shape passive)
+		(at 99.06 41.91 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 74886b4c-cf07-5faf-8fba-25b9a770f90b))
+	(wire
+		(pts
+			(xy 99.06 54.61)
+			(xy 99.06 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9647c1e5-564e-5ea8-b206-a4068c7b5701))
+	(global_label "SERVO1_OUT"
+		(shape passive)
+		(at 99.06 59.69 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d255d9f9-0526-55f6-9f2c-d61ebaa08a98))
+	(symbol
+		(lib_id "M3:R")
+		(at 157.48 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 9a6f217f-f08c-5e2c-a632-c64cab7d1016)
+		(property "Reference" "R154"
+			(at 161.29 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 161.29 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C25744"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R154")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 157.48 46.99)
+			(xy 157.48 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid fc34f340-2080-5397-8aad-c7ef58b5cb20))
+	(global_label "SERVO1_MCU"
+		(shape passive)
+		(at 157.48 41.91 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid c54c1926-1c37-53c7-9c55-021e81affd26))
+	(wire
+		(pts
+			(xy 157.48 54.61)
+			(xy 157.48 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid cb27b966-5db7-5f8c-9a4a-ed9d8435c927))
+	(global_label "GND"
+		(shape passive)
+		(at 157.48 59.69 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5bb14e6f-856f-5888-97f9-bae519c3e481))
+	(symbol
+		(lib_id "M3:R")
+		(at 215.9 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 8b9abd3c-8933-5279-80b4-36cb9ec23d12)
+		(property "Reference" "R151"
+			(at 219.71 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0805"
+			(at 219.71 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0805"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C17513"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0805W8F1001T5E"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R151")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 215.9 46.99)
+			(xy 215.9 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9cb12312-6a15-535e-919f-5f8379e9e245))
+	(global_label "SERVO2_MCU"
+		(shape passive)
+		(at 215.9 41.91 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 21db2654-e399-5d19-b7b6-b90fa17aabb6))
+	(wire
+		(pts
+			(xy 215.9 54.61)
+			(xy 215.9 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid edfb4b1f-5289-57a2-873b-4dae7f798f08))
+	(global_label "SERVO2_OUT"
+		(shape passive)
+		(at 215.9 59.69 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e5a7fd26-e82b-5afb-913f-dd2983a9df0f))
+	(symbol
+		(lib_id "M3:R")
+		(at 274.32 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 7ff6c836-53d4-5af0-9be9-debb16af28ed)
+		(property "Reference" "R155"
+			(at 278.13 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 278.13 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C25744"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R155")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 274.32 46.99)
+			(xy 274.32 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 413fb90c-33bd-507c-a520-84e2d6aaed18))
+	(global_label "SERVO2_MCU"
+		(shape passive)
+		(at 274.32 41.91 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid d3f74d75-681f-59ec-8f05-153c00352088))
+	(wire
+		(pts
+			(xy 274.32 54.61)
+			(xy 274.32 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid de5774d3-873c-53df-987a-a574aa08b7b0))
+	(global_label "GND"
+		(shape passive)
+		(at 274.32 59.69 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2b6bae0f-0884-5618-8ad5-a0408130f84c))
+	(symbol
+		(lib_id "M3:R")
+		(at 332.74 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e6c07d33-44f7-5ff0-b126-3c2578a07b7c)
+		(property "Reference" "R152"
+			(at 336.55 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0805"
+			(at 336.55 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0805"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C17513"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0805W8F1001T5E"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R152")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 332.74 46.99)
+			(xy 332.74 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c5d47f66-9091-53b0-a3d4-d5bb69a662ec))
+	(global_label "SERVO3_MCU"
+		(shape passive)
+		(at 332.74 41.91 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f8489016-64eb-5645-a9ea-184e52af994e))
+	(wire
+		(pts
+			(xy 332.74 54.61)
+			(xy 332.74 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2282959a-8d19-51bb-8cda-ff6a99d96783))
+	(global_label "SERVO3_OUT"
+		(shape passive)
+		(at 332.74 59.69 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 143f3620-6a82-5d7c-999d-affb2f78e097))
+	(symbol
+		(lib_id "M3:R")
+		(at 40.64 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid a7658dcd-1866-5155-8a0d-3aa5455ab0a8)
+		(property "Reference" "R156"
+			(at 44.45 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 44.45 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C25744"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R156")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 40.64 110.49)
+			(xy 40.64 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6cbc1cf2-eccc-5b65-b11c-bca221f57942))
+	(global_label "SERVO3_MCU"
+		(shape passive)
+		(at 40.64 105.41 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid bfa84acb-a300-5d75-a0b7-3c5197be817f))
+	(wire
+		(pts
+			(xy 40.64 118.11)
+			(xy 40.64 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5a7b4acb-2b78-5108-a6cd-2699a85c3270))
+	(global_label "GND"
+		(shape passive)
+		(at 40.64 123.19 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7f4d5570-f7a8-58f2-b5b9-c0b07ee013b3))
+	(symbol
+		(lib_id "M3:R")
+		(at 99.06 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4853c618-40f5-5386-8b42-c7f87a4b1e03)
+		(property "Reference" "R153"
+			(at 102.87 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0805"
+			(at 102.87 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0805"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C17513"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0805W8F1001T5E"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R153")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 99.06 110.49)
+			(xy 99.06 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 71814370-426f-5333-b565-8e2e0353e2cd))
+	(global_label "SERVO4_MCU"
+		(shape passive)
+		(at 99.06 105.41 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 30301b1e-fa54-5523-8775-9f60873a2ecf))
+	(wire
+		(pts
+			(xy 99.06 118.11)
+			(xy 99.06 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2d1a9c78-fb0a-5d2d-a67a-7829af5a3b85))
+	(global_label "SERVO4_OUT"
+		(shape passive)
+		(at 99.06 123.19 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4ca900ba-54dc-5a2f-b2f0-a0102598cca6))
+	(symbol
+		(lib_id "M3:R")
+		(at 157.48 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid afde7621-984c-58b1-a910-df7dcd1ce260)
+		(property "Reference" "R157"
+			(at 161.29 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 161.29 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C25744"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R157")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 157.48 110.49)
+			(xy 157.48 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 66189f2d-9b1b-5650-8155-2ed70661094a))
+	(global_label "SERVO4_MCU"
+		(shape passive)
+		(at 157.48 105.41 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 6e3a995b-e94b-5cfe-8003-9a0ab569a794))
+	(wire
+		(pts
+			(xy 157.48 118.11)
+			(xy 157.48 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8e3888da-e831-5e71-8bb3-e1cae94b91c0))
+	(global_label "GND"
+		(shape passive)
+		(at 157.48 123.19 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b81272c2-35ce-5de0-b874-1906dd3709fa))
+	(symbol
+		(lib_id "M3:SRV05_4")
+		(at 215.9 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4fddcc2f-dfb5-5cfb-abc1-33e41c053bae)
+		(property "Reference" "D121"
+			(at 219.71 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "SRV05-4"
+			(at 219.71 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C13612"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "SEMTECH"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "SRV05-4.TCT"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "D121")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 205.74 109.22)
+			(xy 200.66 109.22))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 854d5b9e-bd84-525e-b3f7-f040aa0aed66))
+	(global_label "SERVO1_MCU"
+		(shape passive)
+		(at 200.66 109.22 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9ab922de-7ac2-5492-8fe7-a5fbd00470f0))
+	(wire
+		(pts
+			(xy 205.74 111.76)
+			(xy 200.66 111.76))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7e776a82-09b2-5a1f-ad36-3c8f2950fa7a))
+	(global_label "SERVO2_MCU"
+		(shape passive)
+		(at 200.66 111.76 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b9e53217-d3ea-5ddc-b4bc-a81ff2c136f6))
+	(wire
+		(pts
+			(xy 205.74 114.3)
+			(xy 200.66 114.3))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3c815252-e463-5743-ab2b-744e0e5d23bb))
+	(global_label "SERVO3_MCU"
+		(shape passive)
+		(at 200.66 114.3 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1fbb3084-8a95-5477-af52-f2b75bbfc15a))
+	(wire
+		(pts
+			(xy 205.74 116.84)
+			(xy 200.66 116.84))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1122d899-2332-5030-959a-346a5984b902))
+	(global_label "SERVO4_MCU"
+		(shape passive)
+		(at 200.66 116.84 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bd64ebe5-eb3a-5f05-a316-85387e72caee))
+	(wire
+		(pts
+			(xy 215.9 101.6)
+			(xy 215.9 96.52))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0c13f317-4fbe-5f80-b477-ee51430e7891))
+	(global_label "3V3"
+		(shape passive)
+		(at 215.9 96.52 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 728ae3f3-ce10-58eb-a8ac-7e5b6bc2a082))
+	(wire
+		(pts
+			(xy 215.9 127)
+			(xy 215.9 132.08))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 564dcd72-2ed9-5902-bbb5-f04c9c10558c))
+	(global_label "GND"
+		(shape passive)
+		(at 215.9 132.08 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1a568775-e9ba-5d76-997e-9dfaa096171f))
+	(symbol
+		(lib_id "M3:C")
+		(at 274.32 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid fc148709-0c42-5d76-b20f-8eb01f29f0cd)
+		(property "Reference" "C150"
+			(at 278.13 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF"
+			(at 278.13 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0805"
+			(at 274.32 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 274.32 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C45783"
+			(at 274.32 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "C150")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 274.32 110.49)
+			(xy 274.32 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0e943542-0322-5d5e-b3b5-a9847b924071))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 274.32 105.41 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid e6c026c5-bfa7-50d6-bac2-dc666ee0eadb))
+	(wire
+		(pts
+			(xy 274.32 118.11)
+			(xy 274.32 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 87f0e52a-a25d-5826-90af-fb6ac4da55e5))
+	(global_label "GND"
+		(shape passive)
+		(at 274.32 123.19 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 49d2c9dc-2171-52c0-a9cd-41584e4eb369))
+	(symbol
+		(lib_id "M3:C")
+		(at 332.74 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 3be76b79-3ccd-5843-b1ed-9fee1bbdd2cb)
+		(property "Reference" "C151"
+			(at 336.55 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF"
+			(at 336.55 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0805"
+			(at 332.74 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 332.74 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C45783"
+			(at 332.74 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "C151")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 332.74 110.49)
+			(xy 332.74 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4e69c150-97f4-52f6-b674-eb8bce149b9d))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 332.74 105.41 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid cfc77f7b-b5e7-51cb-86f0-bf78bcb0c4b2))
+	(wire
+		(pts
+			(xy 332.74 118.11)
+			(xy 332.74 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a1cd2ae3-81e0-5580-85d5-5d6528d77854))
+	(global_label "GND"
+		(shape passive)
+		(at 332.74 123.19 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4b9a753f-80f0-5803-8457-f3cd4d01b54a))
+	(text "13 | Servo outputs"
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 2.54 2.54))
+			(justify left))
+		(uuid 0108ab5e-3506-5f47-8387-c039d56afe2f))
+	(text "J122 column-major: 1/4/7/10 = SIGNAL 1-4, 2/5/8/11 = RAW_ACT (+), 3/6/9/12 = GND. HV servos only, stall <= 3 A per pin."
+		(at 20.32 245 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid f326da66-07f8-5dd3-896a-ce17f27fb3aa))
+	(text "Order from the MCU: 10k pull-down and SRV05-4 clamp on the MCU side, then 1.0k 0805 series (P0-5), then the header."
+		(at 20.32 252.62 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 33b9c1be-7c01-5aa3-8639-b309d5f8b2fc))
+	(text "PA0-PA3 = TIM5_CH1-4 (AF2). PUPDR = 00, OSPEEDR = 00, drive low at boot. TIM2 never gets a channel."
+		(at 20.32 260.24 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 4cfb0c81-ee76-5da3-a91e-3355f572847b))
+	(text "Quiet the servos (unloaded centre) before a pyro fire (P1-8). Two zip-tie holes straddle J122."
+		(at 20.32 267.86 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 6c3bd72b-9ef1-5304-b56d-adb5d3fca376))
+	(sheet_instances
+		(path "/"
+			(page "13"))))
