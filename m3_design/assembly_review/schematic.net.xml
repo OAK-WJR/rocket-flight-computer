@@ -2,7 +2,7 @@
 <export version="E">
   <design>
     <source>m3_design/assembly_review/m3.kicad_sch</source>
-    <date>2026-09-27T21:47:36</date>
+    <date>2026-09-27T22:30:31</date>
     <tool>Eeschema 10.0.6</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -1036,12 +1036,14 @@
       <footprint>rocket:HDR-TH_6P-P2.54-V-M-1x6</footprint>
       <fields>
         <field name="LCSC">C2337</field>
+        <field name="JLC_Assembly">Hand: cut 1x6 from the 1x40 strip C2337 (one strip covers J2 and J123)</field>
         <field name="Footprint">rocket:HDR-TH_6P-P2.54-V-M-1x6</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="Header" description="Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
       <property name="LCSC" value="C2337"/>
+      <property name="JLC_Assembly" value="Hand: cut 1x6 from the 1x40 strip C2337 (one strip covers J2 and J123)"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="connector"/>
@@ -1878,12 +1880,14 @@
       <datasheet>https://content.u-blox.com/sites/default/files/documents/SAM-M10Q_DataSheet_UBX-22013293.pdf</datasheet>
       <fields>
         <field name="LCSC">C5443880</field>
+        <field name="JLC_Assembly">Consign or JLC Global Sourcing: SAM-M10Q-00B from DigiKey (JLC stock 0 on 2026-09-27)</field>
         <field name="Footprint">rocket:LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B</field>
         <field name="Datasheet">https://content.u-blox.com/sites/default/files/documents/SAM-M10Q_DataSheet_UBX-22013293.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="GNSS" description=""/>
       <property name="LCSC" value="C5443880"/>
+      <property name="JLC_Assembly" value="Consign or JLC Global Sourcing: SAM-M10Q-00B from DigiKey (JLC stock 0 on 2026-09-27)"/>
       <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_fp_filters" value="LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B"/>
@@ -2141,22 +2145,22 @@
       </units>
     </comp>
     <comp ref="C77">
-      <value>100pF 50V C0G 5%</value>
+      <value>47pF 50V C0G 5%</value>
       <footprint>rocket:C_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC">C14858</field>
+        <field name="LCSC">C1671</field>
         <field name="Manufacturer">Samsung Electro-Mechanics</field>
-        <field name="Manufacturer Part">CL10C101JB8NNNC</field>
-        <field name="LCSC Part">C14858</field>
+        <field name="Manufacturer Part">CL10C470JB8NNNC</field>
+        <field name="LCSC Part">C1671</field>
         <field name="Footprint">rocket:C_0603_1608Metric</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C14858"/>
+      <property name="LCSC" value="C1671"/>
       <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
-      <property name="Manufacturer Part" value="CL10C101JB8NNNC"/>
-      <property name="LCSC Part" value="C14858"/>
+      <property name="Manufacturer Part" value="CL10C470JB8NNNC"/>
+      <property name="LCSC Part" value="C1671"/>
       <property name="Sheetname" value="05 | Camera branch protection and regulator"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -2173,22 +2177,22 @@
       </units>
     </comp>
     <comp ref="L3">
-      <value>10uH</value>
+      <value>6.8uH</value>
       <footprint>rocket:M3_SRP5030TA</footprint>
       <fields>
-        <field name="LCSC">C3223923</field>
+        <field name="LCSC">C1329837</field>
         <field name="Manufacturer">Bourns</field>
-        <field name="Manufacturer Part">SRP5030TA-100M</field>
-        <field name="LCSC Part">C3223923</field>
+        <field name="Manufacturer Part">SRP5030T-6R8M</field>
+        <field name="LCSC Part">C1329837</field>
         <field name="Footprint">rocket:M3_SRP5030TA</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="L" description="Inductor"/>
-      <property name="LCSC" value="C3223923"/>
+      <property name="LCSC" value="C1329837"/>
       <property name="Manufacturer" value="Bourns"/>
-      <property name="Manufacturer Part" value="SRP5030TA-100M"/>
-      <property name="LCSC Part" value="C3223923"/>
+      <property name="Manufacturer Part" value="SRP5030T-6R8M"/>
+      <property name="LCSC Part" value="C1329837"/>
       <property name="Sheetname" value="05 | Camera branch protection and regulator"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="inductor choke coil reactor magnetic"/>
@@ -2571,16 +2575,16 @@
       </units>
     </comp>
     <comp ref="U8">
-      <value>AP63200WU-7</value>
+      <value>AP63300WU-7</value>
       <footprint>rocket:M3_AP63200_TSOT26</footprint>
       <fields>
-        <field name="LCSC">C2071868</field>
+        <field name="LCSC">C2158012</field>
         <field name="Footprint">rocket:M3_AP63200_TSOT26</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="CameraBuck" description=""/>
-      <property name="LCSC" value="C2071868"/>
+      <property name="LCSC" value="C2158012"/>
       <property name="Sheetname" value="05 | Camera branch protection and regulator"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_fp_filters" value="M3_AP63200_TSOT26"/>
@@ -3363,16 +3367,22 @@
       </units>
     </comp>
     <comp ref="C84">
-      <value>330uF 25V</value>
+      <value>330uF 35V</value>
       <footprint>rocket:M3_OSCON_F12</footprint>
       <fields>
-        <field name="LCSC">C178367</field>
+        <field name="LCSC">C178373</field>
+        <field name="LCSC Part">C178373</field>
+        <field name="Manufacturer">Panasonic</field>
+        <field name="Manufacturer Part">35SVPK330M</field>
         <field name="Footprint">rocket:M3_OSCON_F12</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="PolarCap" description="Polarized capacitor"/>
-      <property name="LCSC" value="C178367"/>
+      <property name="LCSC" value="C178373"/>
+      <property name="LCSC Part" value="C178373"/>
+      <property name="Manufacturer" value="Panasonic"/>
+      <property name="Manufacturer Part" value="35SVPK330M"/>
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -6021,12 +6031,14 @@
       <footprint>rocket:M3_PULLPIN_1x2</footprint>
       <fields>
         <field name="LCSC">C2337</field>
+        <field name="JLC_Assembly">Hand: cut 1x2 from the same 1x40 strip C2337 as J2</field>
         <field name="Footprint">rocket:M3_PULLPIN_1x2</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="Conn_1x2" description="2-position connector"/>
       <property name="LCSC" value="C2337"/>
+      <property name="JLC_Assembly" value="Hand: cut 1x2 from the same 1x40 strip C2337 as J2"/>
       <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
       <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>

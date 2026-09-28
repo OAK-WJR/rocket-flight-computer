@@ -15638,6 +15638,18 @@
 				)
 			)
 		)
+		(property "JLC_Assembly" "Consign or JLC Global Sourcing: SAM-M10Q-00B from DigiKey (JLC stock 0 on 2026-09-27)"
+			(at 0 0 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "fc2fd924-41e1-406b-a23e-0952af533020")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/62f50117-14c1-514d-90ca-8bc9074898ac")
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
@@ -23426,7 +23438,7 @@
 				)
 			)
 		)
-		(property "Value" "100pF 50V C0G 5%"
+		(property "Value" "47pF 50V C0G 5%"
 			(at 0 1.43 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -23472,7 +23484,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C14858"
+		(property "LCSC" "C1671"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -23484,7 +23496,7 @@
 				)
 			)
 		)
-		(property "LCSC Part" "C14858"
+		(property "LCSC Part" "C1671"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -23508,7 +23520,7 @@
 				)
 			)
 		)
-		(property "Manufacturer Part" "CL10C101JB8NNNC"
+		(property "Manufacturer Part" "CL10C470JB8NNNC"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -23915,6 +23927,18 @@
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "d101b854-2151-4057-885b-b97901a11280")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "JLC_Assembly" "Hand: cut 1x6 from the 1x40 strip C2337 (one strip covers J2 and J123)"
+			(at 0 0 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "d360a5c6-1690-4633-a80c-377a18a6b8a0")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28099,6 +28123,18 @@
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "a0d82445-ee4b-4533-a47f-89ecd2669b2a")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "JLC_Assembly" "Hand: cut 1x2 from the same 1x40 strip C2337 as J2"
+			(at 0 0 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "b8d765db-903d-4c84-8c50-421acddfaff5")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -34156,7 +34192,7 @@
 				)
 			)
 		)
-		(property "Value" "10uH"
+		(property "Value" "6.8uH"
 			(at 0 4.1 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -34190,7 +34226,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C3223923"
+		(property "LCSC" "C1329837"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -34202,7 +34238,7 @@
 				)
 			)
 		)
-		(property "LCSC Part" "C3223923"
+		(property "LCSC Part" "C1329837"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -34226,7 +34262,7 @@
 				)
 			)
 		)
-		(property "Manufacturer Part" "SRP5030TA-100M"
+		(property "Manufacturer Part" "SRP5030T-6R8M"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -39666,7 +39702,7 @@
 				)
 			)
 		)
-		(property "Value" "330uF 25V"
+		(property "Value" "330uF 35V"
 			(at 0 6.6 0)
 			(layer "F.Fab")
 			(uuid "4850813a-3dd6-439f-9501-7f4b301b1763")
@@ -39699,7 +39735,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C178367"
+		(property "LCSC" "C178373"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -39711,7 +39747,7 @@
 				)
 			)
 		)
-		(property "LCSC Part" "C178367"
+		(property "LCSC Part" "C178373"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -39720,6 +39756,28 @@
 				(font
 					(size 1.27 1.27)
 					(thickness 0.15)
+				)
+			)
+		)
+		(property "Manufacturer" "Panasonic"
+			(at 0 0 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "e91e3b37-9fdf-453c-8387-cbc81234e2d3")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer Part" "35SVPK330M"
+			(at 0 0 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "17c9392d-4309-4589-a45c-a653966fbfc9")
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
 		)
@@ -41981,7 +42039,7 @@
 				)
 			)
 		)
-		(property "Value" "AP63200WU-7"
+		(property "Value" "AP63300WU-7"
 			(at 0 2.85 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -42015,7 +42073,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C2071868"
+		(property "LCSC" "C2158012"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -42027,11 +42085,35 @@
 				)
 			)
 		)
-		(property "LCSC Part" "C2071868"
+		(property "LCSC Part" "C2158012"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "34d9172d-2853-4112-bc0c-8b43d7886268")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Manufacturer" "Diodes Incorporated"
+			(at 0 0 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "3c018d7b-e427-4821-911c-21988450cbb0")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Manufacturer Part" "AP63300WU-7"
+			(at 0 0 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "7d7bee2d-e7c8-467b-aed9-acfeec8817a3")
 			(effects
 				(font
 					(size 1.27 1.27)

@@ -22,8 +22,8 @@ MCU_NUMBERS = {'PD3': '84', 'PD4': '85'}
 # are also machine-readable below, so a value-only BOM is not sufficient.
 PARTS = {
  'U7':['C1849463','M3_TPS2595_DSG','TPS259570DSGR','Camera input eFuse; latch-off after thermal shutdown'],
- 'U8':['C2071868','M3_AP63200_TSOT26','AP63200WU-7','Dedicated adjustable camera buck'],
- 'L3':['','M3_SRP5030TA','10uH','Bourns SRP5030TA-100M; 128mR max at 25C'],
+ 'U8':['C2158012','M3_AP63200_TSOT26','AP63300WU-7','Dedicated adjustable camera buck (AP63300: same TSOT26 pinout as AP63200)'],
+ 'L3':['C1329837','M3_SRP5030TA','6.8uH','Bourns SRP5030T-6R8M (same body/land as SRP5030TA); AP63300 Table 1'],
  'J9':['C2915641','M3_DB128V_4P','CAM 5V / GND / RX / TX','4-position screw terminal; UART characterization only in R1'],
  'R70':['','R_0603_1608Metric','1.78k 0.1%','Input current limit; manufacturer-characterized resistance'],
  'R71':['','R_0603_1608Metric','172k 0.1%','Output feedback upper arm; dedicated camera voltage headroom'],
@@ -40,7 +40,7 @@ PARTS = {
  'C74':['','C_0603_1608Metric','100nF 25V','Bootstrap capacitor, between BST and SW'],
  'C75':['','C_1206_3216Metric','22uF 25V X7R','Camera output capacitor'],
  'C76':['','C_1206_3216Metric','22uF 25V X7R','Camera output capacitor'],
- 'C77':['','C_0603_1608Metric','100pF C0G','Feed-forward capacitor across upper feedback resistor'],
+ 'C77':['C1671','C_0603_1608Metric','47pF C0G','Feed-forward capacitor across upper feedback resistor (AP63300 Table 1)'],
 }
 
 PINS = {

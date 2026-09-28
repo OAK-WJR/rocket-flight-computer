@@ -1145,7 +1145,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Value" "330uF 25V"
+		(property "Value" "330uF 35V"
 			(at 360.68 119.38 0)
 			(effects
 				(font
@@ -1162,7 +1162,25 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C178367"
+		(property "LCSC" "C178373"
+			(at 360.68 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC Part" "C178373"
+			(at 360.68 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Panasonic"
+			(at 360.68 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "35SVPK330M"
 			(at 360.68 127 0)
 			(hide yes)
 			(effects

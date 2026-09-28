@@ -70,11 +70,9 @@ All 99 BOM lines / 205 positions were checked against manufacturer datasheets in
 - SRV05-4 row spacing is 2.30 mm against Semtech's 2.50 mm; acceptable.
 - U8 is set to 5.25 V on purpose (camera rail).
 
-**Stock to confirm when ordering.** LCSC showed zero stock for these, and JLC pages list them without a stock figure:
-- AP63200WU-7 (C2071868)
-- SRP5030TA-100M (C3223923)
-- 25SVPF330M (C178367)
-- R70 (C861207), which has low stock.
+**Stock (2026-09-27, JLC assembly stock via `tools/jlc_stock.py`).** Every line has enough stock for 5 boards except U6 SAM-M10Q, which must be consigned or bought through Global Sourcing (DigiKey had stock). Parts with zero stock were replaced with verified drop-ins: U8, L3, C77, C84 (`docs/ORDERING.md` §5).
+
+**Placement orientation.** Every CPL row is corrected against the LCSC/EasyEDA footprint of its own LCSC code (`tools/jlc_orient.py`). Without the correction, U7, U8, U10, U11, U12, U13, D121 and LED2 would have been placed rotated.
 
 ## 4. FMEA hardware items (H-1 … H-10) on R2
 

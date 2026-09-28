@@ -1,0 +1,1111 @@
+{
+ "source": "easyeda.com/api/products/<LCSC>/components, matched by pad number",
+ "tolerance_mm": 0.35,
+ "parts": {
+  "C11702": {
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C1329837": {
+   "footprint": "M3_SRP5030TA",
+   "easyeda": "IND-SMD_L5.7-W5.2",
+   "easyeda_proxy": "C189932 (SRP5030T-100M, same SRP5030T package; EasyEDA has no entry for C1329837)",
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.15,
+   "next_best_mm": 3.219,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C135111": {
+   "footprint": "D_SMB",
+   "easyeda": "SMB_L4.6-W3.6-LS5.3-BI",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.241,
+   "next_best_mm": 3.215,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C13612": {
+   "footprint": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+   "easyeda": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR",
+   "easyeda_proxy": null,
+   "theta": 90,
+   "offset": [
+    0.0,
+    -0.0
+   ],
+   "residual_mm": 0.2,
+   "next_best_mm": 2.309,
+   "pads_ours": 6,
+   "pads_easyeda": 6,
+   "pads_matched": 6,
+   "status": "OK"
+  },
+  "C137691": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C1525": {
+   "footprint": "C0402",
+   "easyeda": "C0402",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 0.594,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C15639": {
+   "footprint": "SENSORS-SMD_MS5611-01BA03",
+   "easyeda": "SENSORS-SMD_MS5611-01BA03",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    -0.0,
+    -0.0001
+   ],
+   "residual_mm": 0.005,
+   "next_best_mm": 3.232,
+   "pads_ours": 8,
+   "pads_easyeda": 8,
+   "pads_matched": 8,
+   "status": "OK"
+  },
+  "C15849": {
+   "footprint": "C0603",
+   "easyeda": "C0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 0.99,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C1591": {
+   "footprint": "C_0603_1608Metric",
+   "easyeda": "C0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.075,
+   "next_best_mm": 1.044,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C1623": {
+   "footprint": "C_0603_1608Metric",
+   "easyeda": "C0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.075,
+   "next_best_mm": 1.044,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C165948": {
+   "footprint": "USB-C_SMD-TYPE-C-31-M-12_1",
+   "easyeda": "USB-C_SMD-TYPE-C-31-M-12_1",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    -0.095
+   ],
+   "residual_mm": 0.099,
+   "next_best_mm": 7.073,
+   "pads_ours": 16,
+   "pads_easyeda": 16,
+   "pads_matched": 16,
+   "status": "OK"
+  },
+  "C1671": {
+   "footprint": "C_0603_1608Metric",
+   "easyeda": "C0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.075,
+   "next_best_mm": 1.044,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C17513": {
+   "footprint": "R0805",
+   "easyeda": "R0805",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 1.414,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C17557": {
+   "footprint": "R0805",
+   "easyeda": "R0805",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 1.414,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C178373": {
+   "footprint": "M3_OSCON_F12",
+   "easyeda": "CAP-SMD_BD10.0-L10.3-W10.3-FD",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.15,
+   "next_best_mm": 6.259,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C1848": {
+   "footprint": "C_1206_3216Metric",
+   "easyeda": "C1206",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.118,
+   "next_best_mm": 2.171,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C1849463": {
+   "footprint": "M3_TPS2595_DSG",
+   "easyeda": "WDFN-8_L2.0-W2.0-P0.50-BL-EP",
+   "easyeda_proxy": null,
+   "theta": 90,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.05,
+   "next_best_mm": 1.707,
+   "pads_ours": 9,
+   "pads_easyeda": 9,
+   "pads_matched": 9,
+   "status": "OK"
+  },
+  "C191023": {
+   "footprint": "SOD-323_L1.8-W1.3-LS2.5-RD",
+   "easyeda": "SOD-323_L1.8-W1.3-LS2.5-RD",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.002,
+   "next_best_mm": 1.656,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C19666": {
+   "footprint": "C0603",
+   "easyeda": "C0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 0.99,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C1985619": {
+   "footprint": "CRYSTAL-SMD_4P-L3.2-W2.5-BL",
+   "easyeda": "CRYSTAL-SMD_4P-L3.2-W2.5-BL",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 1.966,
+   "pads_ours": 4,
+   "pads_easyeda": 4,
+   "pads_matched": 4,
+   "status": "OK"
+  },
+  "C20917": {
+   "footprint": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+   "easyeda": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 1.951,
+   "pads_ours": 3,
+   "pads_easyeda": 3,
+   "pads_matched": 3,
+   "status": "OK"
+  },
+  "C21120": {
+   "footprint": "C0603",
+   "easyeda": "C0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 0.99,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C21397": {
+   "footprint": "M3_GRM32_1210",
+   "easyeda": "C1210",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.017,
+   "next_best_mm": 2.134,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C2158012": {
+   "footprint": "M3_AP63200_TSOT26",
+   "easyeda": "TSOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR",
+   "easyeda_proxy": null,
+   "theta": 180,
+   "offset": [
+    -0.0,
+    0.0
+   ],
+   "residual_mm": 0.1,
+   "next_best_mm": 2.155,
+   "pads_ours": 6,
+   "pads_easyeda": 6,
+   "pads_matched": 6,
+   "status": "OK"
+  },
+  "C22459454": {
+   "footprint": "LGA-14_L3.0-W2.5-P0.50-TL",
+   "easyeda": "LGA-14_L3.0-W2.5-P0.50-TL",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.002,
+   "next_best_mm": 2.076,
+   "pads_ours": 14,
+   "pads_easyeda": 14,
+   "pads_matched": 14,
+   "status": "OK"
+  },
+  "C22548": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C2296": {
+   "footprint": "M3_KT0805Y_A1",
+   "easyeda": "LED0805-R-RD",
+   "easyeda_proxy": null,
+   "theta": 180,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.1,
+   "next_best_mm": 1.416,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C23630": {
+   "footprint": "C0603",
+   "easyeda": "C0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 0.99,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C25741": {
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C25744": {
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C25900": {
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C25905": {
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C25915": {
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C2760089": {
+   "footprint": "PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL",
+   "easyeda": "PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    -0.0,
+    0.0
+   ],
+   "residual_mm": 0.006,
+   "next_best_mm": 4.908,
+   "pads_ours": 9,
+   "pads_easyeda": 9,
+   "pads_matched": 9,
+   "status": "OK"
+  },
+  "C29936": {
+   "footprint": "C_0603_1608Metric",
+   "easyeda": "C0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.075,
+   "next_best_mm": 1.044,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C3013496": {
+   "footprint": "R2512",
+   "easyeda": "R2512",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.491,
+   "next_best_mm": 4.004,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C326730": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C32949": {
+   "footprint": "C0402",
+   "easyeda": "C0402",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 0.594,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C3662793": {
+   "footprint": "M3_TPS25947_RPW",
+   "easyeda": "VQFN-10_L2.0-W2.0-P0.45-TL",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.2,
+   "next_best_mm": 1.813,
+   "pads_ours": 10,
+   "pads_easyeda": 10,
+   "pads_matched": 10,
+   "status": "OK"
+  },
+  "C4241878": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C431195": {
+   "footprint": "M3_AON7524_DFN3x3A",
+   "easyeda": "DFN-8_L3.0-W3.0-P0.65-BL",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 1.379,
+   "pads_ours": 5,
+   "pads_easyeda": 9,
+   "pads_matched": 4,
+   "status": "OK"
+  },
+  "C45783": {
+   "footprint": "C0805",
+   "easyeda": "C0805",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 1.414,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C46550466": {
+   "footprint": "CAP-SMD_BD8.0-L8.3-W8.3-LS9.0-FD_H10.5",
+   "easyeda": "CAP-SMD_BD8.0-L8.3-W8.3-LS9.0-FD_H10.5",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    -0.0,
+    0.0
+   ],
+   "residual_mm": 0.005,
+   "next_best_mm": 4.663,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C47546": {
+   "footprint": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+   "easyeda": "SOT-23-3_L3.0-W1.7-P0.95-LS2.9-BR",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.101,
+   "next_best_mm": 2.052,
+   "pads_ours": 3,
+   "pads_easyeda": 3,
+   "pads_matched": 3,
+   "status": "OK"
+  },
+  "C485916": {
+   "footprint": "M3_TPS2121_RUX",
+   "easyeda": "VQFN-HR-12_L2.5-W2.0-P0.50-BL",
+   "easyeda_proxy": null,
+   "theta": 90,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 1.942,
+   "pads_ours": 12,
+   "pads_easyeda": 12,
+   "pads_matched": 12,
+   "status": "OK"
+  },
+  "C5186957": {
+   "footprint": "M3_TXU0202_DCU",
+   "easyeda": "VSSOP-8_L2.3-W2.0-P0.50-LS3.1-BR",
+   "easyeda_proxy": null,
+   "theta": 180,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.147,
+   "next_best_mm": 2.391,
+   "pads_ours": 8,
+   "pads_easyeda": 8,
+   "pads_matched": 8,
+   "status": "OK"
+  },
+  "C5271084": {
+   "footprint": "LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL",
+   "easyeda": "LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 13.638,
+   "pads_ours": 100,
+   "pads_easyeda": 100,
+   "pads_matched": 100,
+   "status": "OK"
+  },
+  "C5443880": {
+   "footprint": "LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B",
+   "easyeda": "LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    -0.0001,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 10.77,
+   "pads_ours": 20,
+   "pads_easyeda": 20,
+   "pads_matched": 20,
+   "status": "OK"
+  },
+  "C55266": {
+   "footprint": "M3_TPS2553_DBV",
+   "easyeda": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR",
+   "easyeda_proxy": null,
+   "theta": 180,
+   "offset": [
+    0.0,
+    -0.0
+   ],
+   "residual_mm": 0.05,
+   "next_best_mm": 2.326,
+   "pads_ours": 6,
+   "pads_easyeda": 6,
+   "pads_matched": 6,
+   "status": "OK"
+  },
+  "C57112": {
+   "footprint": "C0603",
+   "easyeda": "C0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 0.99,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C57269": {
+   "footprint": "IND-SMD_L4.0-W4.0",
+   "easyeda": "IND-SMD_L4.0-W4.0",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 2.263,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C705743": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C705755": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C705762": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C7519": {
+   "footprint": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+   "easyeda": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.001,
+   "next_best_mm": 2.109,
+   "pads_ours": 6,
+   "pads_easyeda": 6,
+   "pads_matched": 6,
+   "status": "OK"
+  },
+  "C780769": {
+   "footprint": "TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL",
+   "easyeda": "TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 2.164,
+   "pads_ours": 6,
+   "pads_easyeda": 6,
+   "pads_matched": 6,
+   "status": "OK"
+  },
+  "C84256": {
+   "footprint": "M3_NCD0805R1_K1",
+   "easyeda": "LED0805-RD",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    -0.0001,
+    -0.0001
+   ],
+   "residual_mm": 0.25,
+   "next_best_mm": 1.39,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C85098": {
+   "footprint": "D_SMA",
+   "easyeda": "SMA_L4.4-W2.6-LS5.0-RD",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.193,
+   "next_best_mm": 2.968,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C8591": {
+   "footprint": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+   "easyeda": "SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    -0.0,
+    0.0
+   ],
+   "residual_mm": 0.235,
+   "next_best_mm": 2.186,
+   "pads_ours": 3,
+   "pads_easyeda": 3,
+   "pads_matched": 3,
+   "status": "OK"
+  },
+  "C85980": {
+   "footprint": "C_0603_1608Metric",
+   "easyeda": "C0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.075,
+   "next_best_mm": 1.044,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C861162": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C861207": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C861313": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "via": "same footprint as C137691 (EasyEDA has no entry for C861313)"
+  },
+  "C861410": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C861568": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C89347": {
+   "footprint": "M3_TPS709_DBV",
+   "easyeda": "SOT-23-5_L3.0-W1.7-P0.95-LS2.8-BR",
+   "easyeda_proxy": null,
+   "theta": 180,
+   "offset": [
+    0.0,
+    -0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 2.277,
+   "pads_ours": 5,
+   "pads_easyeda": 5,
+   "pads_matched": 5,
+   "status": "OK"
+  },
+  "C94599": {
+   "footprint": "BUZ-SMD_4P-L8.5-W8.5-P8.50-BR",
+   "easyeda": "BUZ-SMD_4P-L8.5-W8.5-P8.50-BR",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.001,
+   "next_best_mm": 7.2,
+   "pads_ours": 4,
+   "pads_easyeda": 4,
+   "pads_matched": 4,
+   "status": "OK"
+  },
+  "C95204": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C97521": {
+   "footprint": "SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL",
+   "easyeda": "SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.005,
+   "next_best_mm": 5.674,
+   "pads_ours": 8,
+   "pads_easyeda": 8,
+   "pads_matched": 8,
+   "status": "OK"
+  }
+ }
+}

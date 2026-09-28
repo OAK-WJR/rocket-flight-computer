@@ -832,7 +832,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Value" "AP63200WU-7"
+		(property "Value" "AP63300WU-7"
 			(at 276.86 69.85 0)
 			(effects
 				(font
@@ -849,7 +849,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C2071868"
+		(property "LCSC" "C2158012"
 			(at 276.86 76.2 0)
 			(hide yes)
 			(effects
@@ -970,7 +970,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10uH"
+		(property "Value" "6.8uH"
 			(at 238.76 163.82999999999998 0)
 			(effects
 				(font
@@ -990,7 +990,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C3223923"
+		(property "LCSC" "C1329837"
 			(at 236.22 162.56 0)
 			(hide yes)
 			(effects
@@ -1008,13 +1008,13 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "SRP5030TA-100M"
+		(property "Manufacturer Part" "SRP5030T-6R8M"
 			(at 236.22 162.56 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C3223923"
+		(property "LCSC Part" "C1329837"
 			(at 236.22 162.56 0)
 			(hide yes)
 			(effects
@@ -1738,7 +1738,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100pF 50V C0G 5%"
+		(property "Value" "47pF 50V C0G 5%"
 			(at 335.28000000000003 209.54999999999998 0)
 			(effects
 				(font
@@ -1758,7 +1758,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C14858"
+		(property "LCSC" "C1671"
 			(at 332.74 208.28 0)
 			(hide yes)
 			(effects
@@ -1776,13 +1776,13 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10C101JB8NNNC"
+		(property "Manufacturer Part" "CL10C470JB8NNNC"
 			(at 332.74 208.28 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C14858"
+		(property "LCSC Part" "C1671"
 			(at 332.74 208.28 0)
 			(hide yes)
 			(effects

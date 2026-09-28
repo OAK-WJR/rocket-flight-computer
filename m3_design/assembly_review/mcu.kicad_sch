@@ -2676,6 +2676,12 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "JLC_Assembly" "Hand: cut 1x6 from the 1x40 strip C2337 (one strip covers J2 and J123)"
+			(at 330.2 63.5 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
