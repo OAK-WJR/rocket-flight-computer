@@ -96,19 +96,19 @@ for f in b.GetFootprints():
     # two-pad parts: the lands may differ a lot (e.g. a vendor land pulled inward), the axis cannot
     ok = full and ((worst <= TOL and second - worst >= MARGIN) or (len(common) == 2 and worst <= 0.6 and second - worst >= 2.0))
     rec['status'] = 'OK' if ok else 'CHECK'
-    if not ok: problems.append(lcsc)
-    result[lcsc] = rec; done[key] = 1
+    if not ok: problems.append(f'{lcsc}|{fpname}')
+    result[f'{lcsc}|{fpname}'] = rec; done[key] = 1
 for f in b.GetFootprints():
     lcsc = f.GetField('LCSC').GetText() if f.HasField('LCSC') else ''
     fpname = f.GetFPID().GetLibItemName().wx_str()
-    if lcsc and lcsc not in result and lcsc in EZ and 'pads' not in EZ[lcsc]:
+    if lcsc and f'{lcsc}|{fpname}' not in result and lcsc in EZ and 'pads' not in EZ[lcsc]:
         donor = next((k for k, v in result.items() if v['footprint'] == fpname and v['status'] == 'OK'), None)
         if donor:
-            result[lcsc] = dict(result[donor], via=f'same footprint as {donor} (EasyEDA has no entry for {lcsc})')
+            result[f'{lcsc}|{fpname}'] = dict(result[donor], via=f'same footprint as {donor.split("|")[0]} (EasyEDA has no entry for {lcsc})')
 out = ROOT / 'tools/jlc_corrections.json'
 json.dump(dict(source='easyeda.com/api/products/<LCSC>/components, matched by pad number', tolerance_mm=TOL,
                parts=dict(sorted(result.items()))), open(out, 'w'), indent=1)
 for k, v in sorted(result.items(), key=lambda kv: (kv[1]['status'], kv[0])):
-    print(k.ljust(11), v['status'].ljust(5), f"theta {v['theta']:>3}", f"off {v['offset'][0]:+.3f},{v['offset'][1]:+.3f}",
+    print(k.split('|')[0].ljust(11), v['status'].ljust(5), f"theta {v['theta']:>3}", f"off {v['offset'][0]:+.3f},{v['offset'][1]:+.3f}",
           f"res {v['residual_mm']:.3f}/{v.get('next_best_mm', 0):.2f}", f"pads {v['pads_ours']}/{v['pads_easyeda']}/{v['pads_matched']}", v['footprint'], '|', v['easyeda'])
 print('CHECK:', problems or 'none')

@@ -2,7 +2,7 @@
 <export version="E">
   <design>
     <source>m3_design/assembly_review/m3.kicad_sch</source>
-    <date>2026-09-27T22:30:31</date>
+    <date>2026-09-28T10:50:26</date>
     <tool>Eeschema 10.0.6</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -1035,15 +1035,19 @@
       <value>SWD+DFU 1x6</value>
       <footprint>rocket:HDR-TH_6P-P2.54-V-M-1x6</footprint>
       <fields>
-        <field name="LCSC">C2337</field>
-        <field name="JLC_Assembly">Hand: cut 1x6 from the 1x40 strip C2337 (one strip covers J2 and J123)</field>
+        <field name="LCSC">C492405</field>
+        <field name="LCSC Part">C492405</field>
+        <field name="Manufacturer">XFCN</field>
+        <field name="Manufacturer Part">PZ254V-11-06P</field>
         <field name="Footprint">rocket:HDR-TH_6P-P2.54-V-M-1x6</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="Header" description="Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
-      <property name="LCSC" value="C2337"/>
-      <property name="JLC_Assembly" value="Hand: cut 1x6 from the 1x40 strip C2337 (one strip covers J2 and J123)"/>
+      <property name="LCSC" value="C492405"/>
+      <property name="LCSC Part" value="C492405"/>
+      <property name="Manufacturer" value="XFCN"/>
+      <property name="Manufacturer Part" value="PZ254V-11-06P"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="connector"/>
@@ -6030,15 +6034,19 @@
       <value>PULL-PIN 1x2</value>
       <footprint>rocket:M3_PULLPIN_1x2</footprint>
       <fields>
-        <field name="LCSC">C2337</field>
-        <field name="JLC_Assembly">Hand: cut 1x2 from the same 1x40 strip C2337 as J2</field>
+        <field name="LCSC">C492401</field>
+        <field name="LCSC Part">C492401</field>
+        <field name="Manufacturer">XFCN</field>
+        <field name="Manufacturer Part">PZ254V-11-02P</field>
         <field name="Footprint">rocket:M3_PULLPIN_1x2</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="Conn_1x2" description="2-position connector"/>
-      <property name="LCSC" value="C2337"/>
-      <property name="JLC_Assembly" value="Hand: cut 1x2 from the same 1x40 strip C2337 as J2"/>
+      <property name="LCSC" value="C492401"/>
+      <property name="LCSC Part" value="C492401"/>
+      <property name="Manufacturer" value="XFCN"/>
+      <property name="Manufacturer Part" value="PZ254V-11-02P"/>
       <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
       <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>

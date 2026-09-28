@@ -23910,7 +23910,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C2337"
+		(property "LCSC" "C492405"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -23922,7 +23922,7 @@
 				)
 			)
 		)
-		(property "LCSC Part" "C2337"
+		(property "LCSC Part" "C492405"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -23934,15 +23934,25 @@
 				)
 			)
 		)
-		(property "JLC_Assembly" "Hand: cut 1x6 from the 1x40 strip C2337 (one strip covers J2 and J123)"
+		(property "Manufacturer" "XFCN"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "d360a5c6-1690-4633-a80c-377a18a6b8a0")
+			(uuid "49d0c13e-8d97-4c58-9105-2a0a6a283f18")
 			(effects
 				(font
 					(size 1.27 1.27)
-					(thickness 0.15)
+				)
+			)
+		)
+		(property "Manufacturer Part" "PZ254V-11-06P"
+			(at 0 0 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "7ca877f8-1889-4b7c-8d10-12d7374cc699")
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
 		)
@@ -28106,7 +28116,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C2337"
+		(property "LCSC" "C492401"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -28118,7 +28128,7 @@
 				)
 			)
 		)
-		(property "LCSC Part" "C2337"
+		(property "LCSC Part" "C492401"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -28130,15 +28140,25 @@
 				)
 			)
 		)
-		(property "JLC_Assembly" "Hand: cut 1x2 from the same 1x40 strip C2337 as J2"
+		(property "Manufacturer" "XFCN"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "b8d765db-903d-4c84-8c50-421acddfaff5")
+			(uuid "36ffae9c-e66c-47d2-850b-230d30a9fce8")
 			(effects
 				(font
 					(size 1.27 1.27)
-					(thickness 0.15)
+				)
+			)
+		)
+		(property "Manufacturer Part" "PZ254V-11-02P"
+			(at 0 0 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "578d3bd1-d7b7-404f-80c8-15eda74f4866")
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
 		)
@@ -39767,6 +39787,7 @@
 			(effects
 				(font
 					(size 1.27 1.27)
+					(thickness 0.15)
 				)
 			)
 		)
@@ -39778,6 +39799,7 @@
 			(effects
 				(font
 					(size 1.27 1.27)
+					(thickness 0.15)
 				)
 			)
 		)

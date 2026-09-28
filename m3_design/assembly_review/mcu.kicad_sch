@@ -2670,13 +2670,25 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C2337"
+		(property "LCSC" "C492405"
 			(at 330.2 63.5 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "JLC_Assembly" "Hand: cut 1x6 from the 1x40 strip C2337 (one strip covers J2 and J123)"
+		(property "LCSC Part" "C492405"
+			(at 330.2 63.5 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "XFCN"
+			(at 330.2 63.5 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "PZ254V-11-06P"
 			(at 330.2 63.5 0)
 			(hide yes)
 			(effects

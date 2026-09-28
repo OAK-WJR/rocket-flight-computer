@@ -86,17 +86,18 @@ def main():
             refs = sorted(refs, key=natural)
             tht = any(r['tht'] for r in rows if r['ref'] in refs)
             note = next((r['jlc_asm'] for r in rows if r['ref'] in refs and r['jlc_asm']), '')
-            w.writerow([val, ','.join(refs), fp, lcsc, mpn, len(refs), note or ('THT (hand/THT service)' if tht else 'SMT')])
+            w.writerow([val, ','.join(refs), fp, lcsc, mpn, len(refs), note or ('THT (JLC THT assembly)' if tht else 'SMT')])
     corr_file = ROOT / 'tools/jlc_corrections.json'
     corr = json.load(open(corr_file))['parts'] if corr_file.exists() else {}
     uncorrected = []
     with open(out / f'{stem}_cpl_jlc.csv', 'w', newline='') as f:
         w = csv.writer(f); w.writerow(['Designator', 'Mid X', 'Mid Y', 'Layer', 'Rotation'])
         for r in sorted(rows, key=lambda r: natural(r['ref'])):
-            if r['no_bom'] or r['no_pos'] or not r['smd']: continue
+            # SMD and through-hole parts: JLC's THT assembly also places from the CPL
+            if r['no_bom'] or r['no_pos'] or not (r['smd'] or r['tht']): continue
             x, y, rot = r['x'], r['y'], r['rot']
-            c = corr.get(r['lcsc'])
-            if c and c['status'] == 'OK' and c['footprint'] == r['fp']:
+            c = corr.get(f"{r['lcsc']}|{r['fp']}")
+            if c and c['status'] == 'OK':
                 rot = rot - c['theta']
                 d = kicad_rot(c['offset'], rot)
                 x, y = x - d[0], y - d[1]
