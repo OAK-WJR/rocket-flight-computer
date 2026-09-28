@@ -328,6 +328,22 @@ FIRE_PULSE = 20e-3   # firmware fire-pulse length the fix relies on (FINDINGS.md
 FIRE_PWL = f'0 3.3 100u 3.3 100.01u 0 {100e-6 + FIRE_PULSE:.6f} 0 {100.01e-6 + FIRE_PULSE:.6f} 3.3'
 
 
+def pyro_fire_with_servo_stall():
+    """FMEA V-15: roll-control wind-up can stall all four servos exactly at the fire instant."""
+    case = 'B2. Pyro fire while all four servos are stalled (FMEA V-15)'
+    for vbat, rpack in [(6.0, 0.08), (7.4, 0.04)]:
+        body = (battery(vbat, rpack) + act_switch('0 1 1 1') + 'Rservo RAW_ACT 0 1.096\n' +
+                pyro_channel(fet='AON7524MAX') + pin_driver('PYRO1_GATE_N', 'drive', FIRE_PWL))
+        name = f'fire_stall_{vbat}'.replace('.', 'v')
+        d = run(name, deck(name, body, 'tran 2u 25m 0 5u', ['i(Vibw)', 'v(RAW_ACT)', 'v(BAT_IN)']))
+        t = col(d, 'time'); ib = col(d, 'i(Vibw)'); vb = col(d, 'v(BAT_IN)')
+        k = min(range(len(t)), key=lambda j: abs(t[j] - 5e-3))
+        res(case, f'{vbat} V pack {int(rpack * 1e3)} mOhm, max-RDS FET: bridgewire current', f'{ib[k]:.2f} A (RAW_ACT {col(d, "v(RAW_ACT)")[k]:.2f} V)',
+            '>= 1.0 A recommended all-fire (MJG)', 'PASS' if ib[k] >= 1.0 else 'FAIL')
+        res(case, f'{vbat} V pack {int(rpack * 1e3)} mOhm: BAT_IN during fire + stall', f'min {min(vb[5:]):.2f} V',
+            '>= 5.0 V (logic stays up)', 'PASS' if min(vb[5:]) >= 5.0 else 'FAIL')
+
+
 def pyro_short():
     case = 'C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse'
     for where, br, lr, ll in [('short at J121 terminal', '1m', '5m', '50n'), ('short at the igniter end of 1 m lead', '1m', '0.134', '1u')]:
@@ -504,7 +520,7 @@ def write_report():
 def main():
     if OUT.exists():
         shutil.rmtree(OUT)
-    for f in (actuator_on_off, pyro_fire, pyro_short, plug_insertion, sense_table, servo_chafe, pullpin_chafe):
+    for f in (actuator_on_off, pyro_fire, pyro_fire_with_servo_stall, pyro_short, plug_insertion, sense_table, servo_chafe, pullpin_chafe):
         print('running', f.__name__, flush=True)
         f()
     (HERE / 'results.json').write_text(json.dumps(dict(assumptions=ASSUMPTIONS, results=RESULTS), indent=1))

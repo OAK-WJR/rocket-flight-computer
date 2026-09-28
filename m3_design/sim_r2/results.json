@@ -531,6 +531,38 @@
    "note": ""
   },
   {
+   "case": "B2. Pyro fire while all four servos are stalled (FMEA V-15)",
+   "item": "6.0 V pack 80 mOhm, max-RDS FET: bridgewire current",
+   "value": "1.57 A (RAW_ACT 5.27 V)",
+   "limit": ">= 1.0 A recommended all-fire (MJG)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "B2. Pyro fire while all four servos are stalled (FMEA V-15)",
+   "item": "6.0 V pack 80 mOhm: BAT_IN during fire + stall",
+   "value": "min 5.31 V",
+   "limit": ">= 5.0 V (logic stays up)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "B2. Pyro fire while all four servos are stalled (FMEA V-15)",
+   "item": "7.4 V pack 40 mOhm, max-RDS FET: bridgewire current",
+   "value": "2.03 A (RAW_ACT 6.80 V)",
+   "limit": ">= 1.0 A recommended all-fire (MJG)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "B2. Pyro fire while all four servos are stalled (FMEA V-15)",
+   "item": "7.4 V pack 40 mOhm: BAT_IN during fire + stall",
+   "value": "min 6.85 V",
+   "limit": ">= 5.0 V (logic stays up)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
    "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
    "item": "short at J121 terminal, 8.4 V pack 20 mOhm, as drawn (R134 2 ohm): peak current / fuse",
    "value": "4.1 A; fuse does not open",

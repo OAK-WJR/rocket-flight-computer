@@ -2,7 +2,7 @@
 <export version="E">
   <design>
     <source>m3_design/assembly_review/m3.kicad_sch</source>
-    <date>2026-09-27T21:14:52</date>
+    <date>2026-09-27T21:47:36</date>
     <tool>Eeschema 10.0.6</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -3049,19 +3049,19 @@
       <value>1.65k 0.1%</value>
       <footprint>rocket:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC"/>
-        <field name="Manufacturer">Yageo</field>
+        <field name="LCSC">C705743</field>
+        <field name="Manufacturer">YAGEO</field>
         <field name="Manufacturer Part">RT0603BRD071K65L</field>
-        <field name="LCSC Part"/>
+        <field name="LCSC Part">C705743</field>
         <field name="Footprint">rocket:R_0603_1608Metric</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value=""/>
-      <property name="Manufacturer" value="Yageo"/>
+      <property name="LCSC" value="C705743"/>
+      <property name="Manufacturer" value="YAGEO"/>
       <property name="Manufacturer Part" value="RT0603BRD071K65L"/>
-      <property name="LCSC Part" value=""/>
+      <property name="LCSC Part" value="C705743"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -3485,22 +3485,22 @@
       </units>
     </comp>
     <comp ref="R86">
-      <value>80k 0.1%</value>
+      <value>80.6k 0.1%</value>
       <footprint>rocket:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC"/>
-        <field name="Manufacturer">Vishay Dale Thin Film</field>
-        <field name="Manufacturer Part">PTN0603Y8002BST1</field>
-        <field name="LCSC Part"/>
+        <field name="LCSC">C861568</field>
+        <field name="Manufacturer">YAGEO</field>
+        <field name="Manufacturer Part">RT0603BRD0780K6L</field>
+        <field name="LCSC Part">C861568</field>
         <field name="Footprint">rocket:R_0603_1608Metric</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value=""/>
-      <property name="Manufacturer" value="Vishay Dale Thin Film"/>
-      <property name="Manufacturer Part" value="PTN0603Y8002BST1"/>
-      <property name="LCSC Part" value=""/>
+      <property name="LCSC" value="C861568"/>
+      <property name="Manufacturer" value="YAGEO"/>
+      <property name="Manufacturer Part" value="RT0603BRD0780K6L"/>
+      <property name="LCSC Part" value="C861568"/>
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4195,19 +4195,19 @@
       <value>6.2k 1%</value>
       <footprint>rocket:R0402</footprint>
       <fields>
-        <field name="LCSC"/>
-        <field name="Manufacturer">Yageo</field>
-        <field name="Manufacturer Part">RC0402FR-076K2L</field>
-        <field name="LCSC Part"/>
+        <field name="LCSC">C25915</field>
+        <field name="Manufacturer">UNI-ROYAL</field>
+        <field name="Manufacturer Part">0402WGF6201TCE</field>
+        <field name="LCSC Part">C25915</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value=""/>
-      <property name="Manufacturer" value="Yageo"/>
-      <property name="Manufacturer Part" value="RC0402FR-076K2L"/>
-      <property name="LCSC Part" value=""/>
+      <property name="LCSC" value="C25915"/>
+      <property name="Manufacturer" value="UNI-ROYAL"/>
+      <property name="Manufacturer Part" value="0402WGF6201TCE"/>
+      <property name="LCSC Part" value="C25915"/>
       <property name="Sheetname" value="10 | USB cable presence, ordinary GPIO sensing"/>
       <property name="Sheetfile" value="usb_sense.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
