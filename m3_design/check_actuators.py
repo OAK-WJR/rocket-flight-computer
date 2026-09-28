@@ -34,13 +34,22 @@ def check(text):
     issues = []
     def req(ok, msg):
         if not ok: issues.append(msg)
-    # 1. arming break: each bus touches only its terminal positions and its arm-sense upper arm
-    req(members.get('PYRO1_BUS') == {'J120.3', 'J121.2', 'R132.1'}, 'PYRO1_BUS must be {J120.3, J121.2, R132.1}')
-    req(members.get('PYRO2_BUS') == {'J120.2', 'J121.3', 'R144.1'}, 'PYRO2_BUS must be {J120.2, J121.3, R144.1}')
+    # 1. arming break: each bus touches only its ARM pin, its arm-sense upper arm and its series
+    #    resistor; the igniter side of that resistor touches only the igniter terminal
+    req(members.get('PYRO1_BUS') == {'J120.3', 'R134.2', 'R132.1'}, 'PYRO1_BUS must be {J120.3, R134.2, R132.1}')
+    req(members.get('PYRO2_BUS') == {'J120.2', 'R135.2', 'R144.1'}, 'PYRO2_BUS must be {J120.2, R135.2, R144.1}')
+    req(members.get('PYRO1_IGN') == {'J121.2', 'R134.1'}, 'PYRO1_IGN must be {J121.2, R134.1}')
+    req(members.get('PYRO2_IGN') == {'J121.3', 'R135.1'}, 'PYRO2_IGN must be {J121.3, R135.1}')
+    # 1b. shorted-igniter current limit (sim_r2/FINDINGS.md 1): 2 ohm pulse-rated 2512 per channel
+    for r in ('R134', 'R135'):
+        req(val.get(r) == '2R 1% 2W pulse', f'{r} must be the 2 ohm 2 W pulse resistor')
+    # 1c. cold pull-up strength (sim_r2/FINDINGS.md 2): 10k keeps the plug-out states apart
+    for r in ('R131', 'R143'):
+        req(val.get(r) == '10k', f'{r} cold pull-up must be 10k')
     req({'J120.1', 'J120.4'} <= members.get('RAW_ACT', set()), 'ARM terminal outer pins must be RAW_ACT')
     req(not ({'J120.2', 'J120.3'} & members.get('RAW_ACT', set())), 'no ARM bus pin may be RAW_ACT')
     # 2. no probe points on bus or igniter nets (DESIGN_ASSURANCE: never place TP on BUS/OUT)
-    for n in ('PYRO1_BUS', 'PYRO2_BUS', 'PYRO1_OUT', 'PYRO2_OUT', 'RAW_ACT'):
+    for n in ('PYRO1_BUS', 'PYRO2_BUS', 'PYRO1_IGN', 'PYRO2_IGN', 'PYRO1_OUT', 'PYRO2_OUT', 'RAW_ACT'):
         tps = sorted(p for p in members.get(n, ()) if p.startswith('TP') and n != 'RAW_ACT')
         req(not tps, f'test point on {n}: {tps}')
     # 3. pyro bus comes after the actuator load switch, never straight from the battery

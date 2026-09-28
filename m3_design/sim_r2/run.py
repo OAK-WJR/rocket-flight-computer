@@ -24,6 +24,8 @@ ASSUMPTIONS = [
     ('Pack internal resistance', '20 mOhm (fresh, hot) / 40 mOhm / 80 mOhm (cold, worn)'),
     ('Battery lead', '100 nH + 20 mOhm wiring + 5 mOhm in-line 15 A ATO fuse (MARGIN_PRESCRIPTION P0-3b)'),
     ('Logic load on BAT_IN through U9', '28 ohm (~0.3 A at 8.4 V); U9 itself not modelled, RAW_PROTECTED = BAT_IN x enable'),
+    ('Fire pulse', '20 ms, ended by firmware (requirement from FINDINGS.md 1; firmware for R2 not written yet)'),
+    ('R134/R135', 'Bourns CRM2512-FX-2R00ELF 2 ohm; single-pulse limit from the datasheet chart: 220 W @ 1 ms, 90 W @ 10 ms, 27 W @ 100 ms'),
     ('Arming-plug fuse', 'Littelfuse 217 series 5 A fast-acting 5x20 (0217005): cold R 13.7 mOhm, nominal melting I2t 42.8 A2s (datasheet table); modelled as opening when the integrated I2t reaches 42.8 A2s (arc time ignored)'),
     ('Logic brown-out', 'the R1 hold-up study (docs/SIMULATION.md) gives only ~3 ms of VLOGIC hold-up at 6.0 V / 0.5 A; any BAT_IN collapse longer than that resets the MCU'),
     ('Igniter', 'MJG bridgewire 1.2 ohm + 1 m 26 AWG (134 mOhm) + 1 uH lead (MARGIN_PRESCRIPTION fire row)'),
@@ -104,8 +106,9 @@ Dpin 0 {node} DPINLO
 """
 
 
-def pyro_channel(fet='AON7524', c126=True, bridge='1.2', lead_r='0.134', lead_l='1u', plug_pwl='0 1', rser='1u', fuse_i2t=42.8):
-    """Sheet 12, channel 1, exactly as drawn: plug (J120 pins 4->3 through F1), igniter J121 1-2."""
+def pyro_channel(fet='AON7524', c126=True, bridge='1.2', lead_r='0.134', lead_l='1u', plug_pwl='0 1', rser='2.0', rcold='10k', fuse_i2t=42.8):
+    """Sheet 12, channel 1, as drawn: plug (J120 4->3 through F1) -> PYRO1_BUS -> R134 -> PYRO1_IGN -> J121 1-2.
+    rser='1u' / rcold='47k' reproduce R2 as merged in PR #1 (before the shorted-igniter fix)."""
     c = "C126 PYRO1_GATE 0 220n\n" if c126 else "* C126 omitted (fault case)\n"
     return f"""
 V3v3 V3V3 0 3.3
@@ -119,12 +122,14 @@ Bi2t 0 i2t I=(time > 0) ? i(Vif1)*i(Vif1) : 0
 Ci2t i2t 0 1
 Ri2t i2t 0 1e12
 Bfctl fctl 0 V=v(i2t) < {fuse_i2t} ? 1 : 0
-Lf1 f1b PYRO1_BUS_R 20n
-Rser PYRO1_BUS_R PYRO1_BUS {rser}
+Lf1 f1b PYRO1_BUS 20n
 R132 PYRO1_BUS ARM1_SENSE 10k
 R133 ARM1_SENSE 0 1k
 C129 ARM1_SENSE 0 10n
-Lig PYRO1_BUS ig1 {lead_l}
+Vir PYRO1_BUS rs0 0
+R134 rs0 PYRO1_IGN {rser}
+Bpr pr134 0 V=(v(rs0)-v(PYRO1_IGN))*i(Vir)
+Lig PYRO1_IGN ig1 {lead_l}
 Rlead ig1 ig2 {lead_r}
 Rbw ig2 ig3 {bridge}
 Vibw ig3 PYRO1_OUT 0
@@ -132,7 +137,7 @@ C128 PYRO1_OUT 0 100n
 R129 PYRO1_OUT PYRO1_CONT 10k
 R130 PYRO1_CONT 0 1k
 C127 PYRO1_CONT 0 10n
-R131 PYRO1_OUT PYRO1_COLD 47k
+R131 PYRO1_OUT PYRO1_COLD {rcold}
 D120 V3V3 PYRO1_COLD BAT54
 R127 PYRO1_GATE_N 0 1k
 R126 PYRO1_GATE_N PYRO1_GATE 220
@@ -213,6 +218,17 @@ def pulse_stats(t, p):
     return e, pk, w
 
 
+def crm2512_allow(t):
+    """Bourns CRM2512 (>= 1 ohm) single-pulse peak power vs duration, read from the datasheet's
+    Pulse Load Characteristics chart (log-log interpolation)."""
+    pts = [(1e-4, 650.0), (1e-3, 220.0), (1e-2, 90.0), (1e-1, 27.0), (1.0, 6.0)]
+    t = min(max(t, pts[0][0]), pts[-1][0])
+    for (t0, p0), (t1, p1) in zip(pts, pts[1:]):
+        if t <= t1:
+            f = (math.log10(t) - math.log10(t0)) / (math.log10(t1) - math.log10(t0))
+            return 10 ** (math.log10(p0) + f * (math.log10(p1) - math.log10(p0)))
+
+
 def zth(part, t):
     """Junction-to-ambient step response used for the convolution: package ZthJC(t) from
     Fig. 11, plus the board copper heating linearly up to RthJA(t<=10 s) at 10 s."""
@@ -291,7 +307,7 @@ def pyro_fire():
                     pyro_channel(fet=fet) + pin_driver('PYRO1_GATE_N', 'drive', '0 3.3 100u 3.3 100.01u 0', strong))
             name = f'fire_{vbat}_{fet}_{"strong" if strong else "weak"}'.replace('.', 'v')
             d = run(name, deck(name, body, 'tran 100n 3m 0 200n',
-                               ['v(PYRO1_GATE)', 'v(PYRO1_GATE_N)', 'i(Vibw)', 'v(p124)', 'v(BAT_IN)', 'v(RAW_ACT)', 'i(Vdd)']))
+                               ['v(PYRO1_GATE)', 'v(PYRO1_GATE_N)', 'i(Vibw)', 'v(p124)', 'v(BAT_IN)', 'v(RAW_ACT)', 'i(Vdd)', 'v(pr134)']))
             t = col(d, 'time'); vg = col(d, 'v(PYRO1_GATE)'); ib = col(d, 'i(Vibw)'); idd = col(d, 'i(Vdd)')
             tg = first_cross(t, vg, 2.5, True, 100e-6)
             tag = f'{vbat} V, {"max-RDS FET" if "MAX" in fet else "typ FET"}, {"strong" if strong else "weakest-legal"} GPIO'
@@ -303,40 +319,45 @@ def pyro_fire():
                 'PASS' if max(-x for x in idd) <= 0.020 else 'FAIL')
             p = col(d, 'v(p124)')
             res(case, f'{tag}: FET dissipation while firing', f'{p[-1]:.2f} W', f'< PDSM 3.1 W', 'PASS' if p[-1] < 3.1 else 'FAIL')
+            pr = col(d, 'v(pr134)')[-1]
+            res(case, f'{tag}: R134 during a {FIRE_PULSE * 1e3:.0f} ms fire', f'{pr:.1f} W', f'<= CRM2512 curve / 1.5 ({crm2512_allow(FIRE_PULSE) / 1.5:.0f} W)',
+                'PASS' if pr * 1.5 <= crm2512_allow(FIRE_PULSE) else 'FAIL')
+
+
+FIRE_PULSE = 20e-3   # firmware fire-pulse length the fix relies on (FINDINGS.md 1)
+FIRE_PWL = f'0 3.3 100u 3.3 100.01u 0 {100e-6 + FIRE_PULSE:.6f} 0 {100.01e-6 + FIRE_PULSE:.6f} 3.3'
 
 
 def pyro_short():
-    case = 'C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t'
+    case = 'C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse'
     for where, br, lr, ll in [('short at J121 terminal', '1m', '5m', '50n'), ('short at the igniter end of 1 m lead', '1m', '0.134', '1u')]:
         for vbat, rpack in [(8.4, 0.02), (7.4, 0.04), (6.0, 0.08)]:
-            for rser in ['1u', '1.0']:
-                fix = rser != '1u'
+            for merged in [False, True]:
                 body = (battery(vbat, rpack) + act_switch('0 1 1 1') +
-                        pyro_channel(fet='AON7524MAX', bridge=br, lead_r=lr, lead_l=ll, rser=rser) +
-                        pin_driver('PYRO1_GATE_N', 'drive', '0 3.3 100u 3.3 100.01u 0'))
-                name = f'short_{"term" if "J121" in where else "far"}_{vbat}_{"fix" if fix else "asdrawn"}'.replace('.', 'v')
-                tend = '200m' if fix else '60m'
-                d = run(name, deck(name, body, f'tran 1u {tend} 0 2u', ['i(Vibw)', 'v(p124)', 'v(BAT_IN)', 'v(i2t)', 'v(fctl)']))
+                        pyro_channel(fet='AON7524MAX', bridge=br, lead_r=lr, lead_l=ll, rser='1u' if merged else '2.0') +
+                        pin_driver('PYRO1_GATE_N', 'drive', FIRE_PWL))
+                name = f'short_{"term" if "J121" in where else "far"}_{vbat}_{"merged" if merged else "asdrawn"}'.replace('.', 'v')
+                d = run(name, deck(name, body, 'tran 1u 60m 0 2u', ['i(Vibw)', 'v(p124)', 'v(BAT_IN)', 'v(fctl)', 'v(pr134)']))
                 t = col(d, 'time'); ib = col(d, 'i(Vibw)'); p = col(d, 'v(p124)'); vb = col(d, 'v(BAT_IN)'); fc = col(d, 'v(fctl)')
                 topen = first_cross(t, fc, 0.5, False, 0)
                 dtj = tj_peak('AON7524', t, p)
                 below = sum(t[i] - t[i - 1] for i in range(1, len(t)) if vb[i] < 5.0)
-                tag = f'{where}, {vbat} V pack {int(rpack * 1e3)} mOhm' + (', PROPOSED 1.0 ohm series resistor' if fix else ', as drawn')
-                res(case, f'{tag}: peak current / fuse', f'{max(ib):.1f} A; fuse opens at ' + (f'{(topen - 100e-6) * 1e3:.1f} ms' if topen else f'> {tend}s (does not open)'),
-                    '< IDM 112 A', 'PASS' if max(ib) < 112 else 'FAIL')
-                res(case, f'{tag}: AON7524 junction', f'peak dTj {dtj:.0f} K', 'dTj < 90 K (Tj 150 C from 60 C)', 'PASS' if dtj < 90 else 'FAIL')
+                tag = f'{where}, {vbat} V pack {int(rpack * 1e3)} mOhm, ' + ('R2 as merged in #1 (no R134)' if merged else 'as drawn (R134 2 ohm)')
+                old = (lambda v: 'OLD-' + v if merged and v != 'PASS' else v)
+                res(case, f'{tag}: peak current / fuse', f'{max(ib):.1f} A; fuse ' + (f'opens at {(topen - 100e-6) * 1e3:.1f} ms' if topen else 'does not open'),
+                    '< IDM 112 A', old('PASS' if max(ib) < 112 else 'FAIL'))
+                res(case, f'{tag}: AON7524 junction', f'peak dTj {dtj:.0f} K', 'dTj < 90 K (Tj 150 C from 60 C)', old('PASS' if dtj < 90 else 'FAIL'))
                 res(case, f'{tag}: BAT_IN', f'min {min(vb[5:]):.2f} V, below 5.0 V for {below * 1e3:.1f} ms',
-                    'below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires', 'PASS' if below < 3e-3 else 'FAIL')
-    # the proposed series resistor must not starve a good igniter
-    for vbat, rpack in [(6.0, 0.08)]:
-        body = (battery(vbat, rpack) + act_switch('0 1 1 1') + pyro_channel(fet='AON7524MAX', rser='1.0') +
-                pin_driver('PYRO1_GATE_N', 'drive', '0 3.3 100u 3.3 100.01u 0'))
-        d = run('fire_fix_6v0', deck('fire_fix', body, 'tran 1u 3m 0 2u', ['i(Vibw)']))
-        i = col(d, 'i(Vibw)')[-1]
-        res(case, 'PROPOSED 1.0 ohm: fire current at the worst corner (6.0 V, 80 mOhm, 1.2 ohm + 1 m 26 AWG)', f'{i:.2f} A',
-            '>= 1.0 A recommended all-fire (MJG)', 'PASS' if i >= 1.0 else 'FAIL')
-        res(case, 'PROPOSED 1.0 ohm: resistor pulse energy during a 20 ms fire at 8.4 V', f'{(8.4 / (1.2 + 0.134 + 1.0 + 0.1)) ** 2 * 1.0 * 0.02 * 1e3:.0f} mJ',
-            'needs a pulse-rated 2512 (e.g. >= 1 J / 20 ms class); part not chosen', 'INFO')
+                    'below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires', old('PASS' if below < 3e-3 else 'FAIL'))
+                if not merged:
+                    pr = col(d, 'v(pr134)'); ppk = max(pr); allow = crm2512_allow(FIRE_PULSE)
+                    res(case, f'{tag}: R134 pulse', f'{ppk:.1f} W for {FIRE_PULSE * 1e3:.0f} ms; CRM2512 allows {allow:.0f} W at that length',
+                        'peak power <= CRM2512 single-pulse curve / 1.5', 'PASS' if ppk * 1.5 <= allow else 'FAIL')
+    # if firmware never ends the pulse, how long until R134 reaches its curve at the worst short?
+    p = 8.4 ** 2 / 2.0
+    tt = next(t for t in [i * 1e-3 for i in range(1, 2000)] if crm2512_allow(t) < p)
+    res(case, 'R134 if the gate is left on (firmware fault), 8.4 V dead short', f'{p:.0f} W reaches the CRM2512 curve after ~{tt * 1e3:.0f} ms',
+        'info: the resistor then fails open (channel lost, no fuse action); firmware must end every fire pulse', 'INFO')
 
 
 def plug_insertion():
@@ -380,11 +401,14 @@ def sense_table():
                         pin_driver('PYRO1_GATE_N', 'low') + ('Rshort PYRO1_OUT 0 10m\n' if short else ''))
                 name = 'sense_' + re.sub(r'\W+', '_', label) + f'_{vbat}_{v33}'
                 d = run(name, deck(name, body, 'tran 1m 20m', ['v(PYRO1_CONT)', 'v(ARM1_SENSE)']))
-                vals.append((col(d, 'v(PYRO1_CONT)')[-1], col(d, 'v(ARM1_SENSE)')[-1]))
+                # what the ADC reports: VREF+ is 3V3A, fed from the same 3V3 rail through L2, so the
+                # reading is ratiometric to the cold pull-up supply; express it at a nominal 3.300 V
+                k = 3.3 / v33
+                vals.append((col(d, 'v(PYRO1_CONT)')[-1] * k, col(d, 'v(ARM1_SENSE)')[-1] * k))
         c = [v[0] for v in vals]; a = [v[1] for v in vals]
         # +/-2 % for 1 % resistor pairs
         table[label] = dict(cont=(min(c) * 0.98, max(c) * 1.02), arm=(min(a) * 0.98, max(a) * 1.02))
-        res(case, label, f'CONT {min(c) * 980:.1f}..{max(c) * 1020:.1f} mV, ARM {min(a) * 980:.1f}..{max(a) * 1020:.1f} mV', '', 'INFO')
+        res(case, label, f'CONT {min(c) * 980:.1f}..{max(c) * 1020:.1f} mV, ARM {min(a) * 980:.1f}..{max(a) * 1020:.1f} mV (ADC reading, ratiometric to 3V3A)', '', 'INFO')
     # ground checks the firmware must make with the plug OUT
     adc = 0.020
     def gap(x, y, k):
@@ -464,7 +488,8 @@ def write_report():
            'These are **simulations of the schematic as drawn**, with datasheet-fitted level-1 models. They do not replace the',
            'bench tests listed in `docs/M3_ACTUATOR_MERGE.md` section 4. See `FINDINGS.md` for the interpretation.', '',
            '**Verdict counts:** ' + ', '.join(f'{k} {v}' for k, v in sorted(counts.items())), '',
-           '`DEMO` rows are deliberate fault injections (a part removed) that show why the part is needed; they are expected to exceed the limit.', '',
+           '`DEMO` rows are deliberate fault injections (a part removed) that show why the part is needed; they are expected to exceed the limit.',
+           '`OLD-FAIL` rows re-simulate R2 as merged in PR #1 (no R134/R135) for comparison; they are not the current design.', '',
            '## Assumptions (off-board values)', '', '| Item | Value |', '|---|---|']
     out += [f'| {a} | {b} |' for a, b in ASSUMPTIONS]
     case = None

@@ -9,3 +9,7 @@ Added for M3-ASSY-R2 (2026-09-25), same source (KiCad 10.0.6 installed library):
 - DFN-8-1EP_3x3mm_P0.65mm_EP1.55x2.4mm.step -> Q124/Q125 AON7524 envelope only.
   The AON7524 body is 3.0 x 3.0 x 0.8 mm nominal (AOS PO-00047 rev I); this generic
   3.0 x 3.0 x 0.9 mm DFN model is a height/footprint envelope, not the AOS lead frame.
+
+Added for the R2 shorted-igniter fix (2026-09-27), same source (KiCad 10.0.6 installed library):
+- R_2512_6332Metric.step -> R134/R135 (Bourns CRM2512-FX-2R00ELF, footprint rocket:R2512 = KiCad
+  R_2512_6332Metric IPC-7351 nominal land pattern). Generic 2512 body envelope, not the Bourns drawing.

@@ -6,7 +6,7 @@ Last updated 2026-09-25. Governing requirements: M1/M2 merged into one board, ea
 
 ## Current candidate: M3-ASSY-R2 (actuator merge)
 
-Design record: [docs/M3_ACTUATOR_MERGE.md](docs/M3_ACTUATOR_MERGE.md). One 46 × **238** mm four-layer board: R1 plus a 52 mm actuator band inserted between the battery/logic-power block and the camera block. **203 footprint positions / 178 fitted parts / 25 test pads**, 14 schematic sheets.
+Design record: [docs/M3_ACTUATOR_MERGE.md](docs/M3_ACTUATOR_MERGE.md). One 46 × **238** mm four-layer board: R1 plus a 52 mm actuator band inserted between the battery/logic-power block and the camera block. **205 footprint positions / 180 fitted parts / 25 test pads**, 14 schematic sheets.
 
 Added in R2 (all from the frozen M1 design as corrected by `MARGIN_PRESCRIPTION.md`, `FMEA_REDUNDANCY.md` and `CIRCUIT_REVIEW.md`):
 - **Actuator power switch**: back-to-back AON6403 load switch from the battery input, gated by the logic path so the single external switch still controls everything; 470 µF bulk; RAW_ACT sense/bleed.
@@ -19,7 +19,7 @@ Added in R2 (all from the frozen M1 design as corrected by `MARGIN_PRESCRIPTION.
 Verification, stated separately:
 - **CAD checks (done)**: `tools/check.sh` = DRC 0 / unconnected 0 / schematic parity 0 / ERC 0, metadata and 3D-model audit OK; `quality_audit/verify_board.py` (refilled zones) PASS; `m3_design/check_actuators.py` (arming break, gate networks, sentinels, servo chain, buzzer/pull-pin mapping read from the PCB copper netlist) OK, with negative tests that break the ARM break and a sentinel.
 - **Software tests**: `quality_audit` unit tests pass; **no R2 firmware exists** and v0.8.1 must not run on R2 (see `m3_firmware/README.md`).
-- **Simulation**: ngspice suite for the R2 actuator band in `m3_design/sim_r2/` (`FINDINGS.md`): switch, fire, plug-insertion, chafe cases pass; a shorted igniter on one channel browns out the logic until the 5 A fuse opens (finding 1, owner decision open).
+- **Simulation**: ngspice suite for the R2 actuator band in `m3_design/sim_r2/` (`FINDINGS.md`): every case for the current design passes (switch, fire, fired-into-short, plug insertion, sense states, chafe). The shorted-igniter brown-out found in the merged R2 is fixed by R134/R135 (`docs/M3_ACTUATOR_MERGE.md` §2.6).
 - **Physical tests**: none. No board has been built.
 
 What changed in R1 copper, for reviewers: everything below y = 34 mm moved +52 mm unchanged; seven tracks that crossed the cut continue as straight B.Cu lanes; LED_RED was re-routed to PE8; the CAM_PWR_EN and CAM_FAULT_N routes under U1's top-left corner were re-routed to free the servo/continuity escape; U12 gained its missing LCSC code (C5186957).

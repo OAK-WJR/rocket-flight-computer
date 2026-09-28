@@ -1,57 +1,52 @@
 # M3-ASSY-R2 actuator band — what the simulations say
 
-Scope: sheets 11–14 of the R2 schematic (actuator switch, both pyro channels, servo outputs, pull-pin), simulated with ngspice using the component values as drawn. Every number is in [`RESULTS.md`](RESULTS.md); re-run with `python3 m3_design/sim_r2/run.py` (needs `ngspice`). Models and their datasheet sources are in [`models.inc`](models.inc). **Nothing here is a bench measurement.**
+**Scope.** Sheets 11–14 of the R2 schematic: the actuator switch, both pyro channels, the servo outputs and the pull-pin. They were simulated with ngspice using the component values as drawn.
+- Every number is in [`RESULTS.md`](RESULTS.md).
+- To re-run: `python3 m3_design/sim_r2/run.py` (needs `ngspice`).
+- The models and the datasheets they came from are in [`models.inc`](models.inc).
 
-## Summary
+**Nothing here is a bench measurement.**
+
+## Summary (current design)
 
 | Area | Result |
 |---|---|
-| Actuator switch turn-on / turn-off, 6.0 and 8.4 V, no load / cruise / all four servos stalled, typical and slow AON6403 | **PASS.** RAW_ACT reaches 95 % in 6–13 ms. Worst Q121 junction rise is 30 K (turn-on into four stalled servos). Turn-off is slow (C120 × R120 = 220 ms): Q121 absorbs up to 334 mJ spread over ~300 ms, but the junction rise stays at 18 K |
-| Pyro fire, 6.0 V / 80 mΩ worst corner, max-RDS FET, weakest legal GPIO | **PASS.** The gate reaches 2.5 V in 99 µs, the final VGS is 3.07 V, and the bridgewire current is 4.07 A (recommended all-fire is 1.0 A). The GPIO peaks at 17.2 mA (limit 20 mA) |
-| ARM plug insertion with the FET off (Miller), weakest-threshold part (VGS(th) 0.4 V), contact bounce, MCU unpowered or driving low | **PASS with a wide margin.** Peak VGS is 24 mV, and the igniter sees 2.4 µA²s. With C126 removed (DEMO), the peak becomes 550 mV — above threshold — which confirms that C126 (220 nF) is what makes this safe |
-| Servo signal chafed onto RAW_ACT (8.4 V and 10.5 V), pin low / high / Hi-Z | **PASS.** Pin current is ≤ 10.4 mA (limit 20 mA), R150 dissipates ≤ 108 mW (0805 rating 125 mW), and the Hi-Z node sits at 4.1 V (FT limit 7.3 V) |
-| Pull-pin line chafed onto RAW_ACT | **PASS.** The PC14 node is clamped to 3.69 V, R160 (0402) dissipates 46 mW, and 6.8 mA is pushed back into 3V3 |
-| **Shorted igniter on one channel** | **FAIL — see finding 1** |
-| Continuity / arm-sense with the plug out | **MARGINAL — see finding 2** |
+| Actuator switch on and off: 6.0 and 8.4 V; no load, cruise, or all four servos stalled; typical and slow AON6403 | **PASS.** RAW_ACT reaches 95 % in 6–13 ms. Worst Q121 junction rise is 16 K (turn-off into four stalled servos at 8.4 V) |
+| Pyro fire at the worst corner (6.0 V, 80 mΩ pack, max-RDS FET, weakest legal GPIO) | **PASS.** 1.72 A in a 1.2 Ω bridgewire + 1 m 26 AWG (MJG recommended all-fire is 1.0 A). The gate reaches 2.5 V in 99 µs; GPIO peak current is 17.2 mA (limit 20 mA) |
+| Firing into a shorted igniter, all six corners | **PASS** with R134/R135 (below). The worst case is 4.1 A, BAT_IN ≥ 5.69 V, and ~0 K FET rise. R134 peaks at 33 W; the CRM2512 chart allows 63 W for 20 ms |
+| ARM plug insertion with the FET off (Miller), weakest-threshold part, contact bounce | **PASS.** Peak VGS is 17 mV against a 0.4 V threshold. With C126 removed (DEMO) it reaches 0.5 V, which is why C126 must stay |
+| Plug-out self-test (10 k cold pull-up, ratiometric ADC) | **PASS.** 0 / 95–100 / 141–148 mV for a shorted FET / a good igniter / an open igniter. The good-vs-open gap is 41 mV, so the ADC must be calibrated within ±20 mV |
+| Servo signal and pull-pin line chafed onto RAW_ACT | **PASS.** Pin current ≤ 10.4 mA, resistors within rating, and nodes within the FT limits |
 
-## Finding 1 — a shorted igniter on one channel can take down the computer (and, at the worst corner, the FET)
+## Finding 1 (fixed) — a shorted igniter used to take down the computer
 
-This case is a crushed or shorted igniter, or leads shorted at J121, when the channel fires. Nothing limits the current except the battery, wiring and the 5 A arming-plug fuse. The Littelfuse 217 5 A fast-acting fuse has a melting I²t of 42.8 A²s, so it takes milliseconds to open:
+As merged in PR #1, there was no series resistance in the pyro path. Firing into a shorted igniter was then limited only by the pack, the wiring and the 5 A arming fuse, which has a melting I²t of 42.8 A²s. The `OLD-FAIL` rows in RESULTS.md re-simulate that design:
+- BAT_IN stayed below 5 V for 4–20 ms.
+- That is longer than the ~3 ms of logic hold-up, so the MCU would reset and channel 2 would never fire.
+- At a fresh 8.4 V pack, the AON7524 also carried 131 A (IDM is 112 A) and rose 124 K.
 
-| Short at | Pack | Peak current | Fuse opens | BAT_IN | AON7524 ΔTj |
-|---|---|---|---|---|---|
-| J121 terminal | 8.4 V, 20 mΩ | 131 A (> IDM 112 A) | 4.0 ms | 3.7 V, < 5 V for 3.9 ms | **124 K (fail)** |
-| J121 terminal | 7.4 V, 40 mΩ | 110 A | 8.0 ms | 2.6 V, < 5 V for 7.9 ms | 75 K |
-| J121 terminal | 6.0 V, 80 mΩ | 85 A | 24.5 ms | 1.5 V, < 5 V for 24.6 ms | 28 K |
-| far end of 1 m lead | 6.0 V, 80 mΩ | 30 A | > 60 ms | 3.7 V, < 5 V for 60 ms | 9 K |
+**Fix, now on the board:**
+- R134 and R135 are Bourns CRM2512-FX-2R00ELF (2 Ω, 2 W, pulse-rated), one per channel, between the fused bus and the igniter terminal.
+- R131 and R143 (the cold pull-ups) change from 47 k to 10 k, which is what makes the plug-out self-test above pass.
+- Details are in `docs/M3_ACTUATOR_MERGE.md` §2.6.
 
-The two channels have separate fuses and FETs, but they share the battery. While the fuse is melting, BAT_IN collapses for longer than the ~3 ms of logic hold-up found in the R1 study. So **the MCU is expected to reset, and channel 2 will only fire 2 s later if firmware resumes the flight state after a reset.** That undermines the on-board redundancy ruling for exactly the failure (a damaged igniter) it is meant to cover. At the fresh-battery corner, the AON7524 also exceeds its IDM and its junction limit before the fuse opens.
+**Firmware rules the fix relies on:**
+- Every fire pulse must end after 20 ms. If the gate were left on into a dead short, R134 would reach its pulse limit after about 60 ms and fail open. That loses the channel, but it is not a fire hazard.
+- Flight state must survive an MCU reset.
 
-Options (owner decision, not applied):
+## Finding 2 (fixed) — plug-out self-test margin
 
-1. **Firmware (needed in any case):** keep flight state in backup SRAM and resume after an in-flight reset, so channel 2 still fires. Also limit each fire pulse (for example 50 ms).
-2. **Hardware:** add a series resistor per channel. The script simulates 1.0 Ω. It keeps BAT_IN ≥ 5.4 V and the FET cool in every short case, and still gives 2.42 A of fire current at the worst corner. However, with a short the fuse then no longer opens, and the resistor takes about 62 W for as long as the gate is on. It is only viable together with the firmware pulse limit and a pulse-rated part; no part has been chosen.
-3. **Fuse:** a 5 A fast-acting fuse with a much lower melting I²t opens sooner. MARGIN_PRESCRIPTION P0-3a asks for ≥ 8 A²s so that a legitimate fire does not blow it; the 217 series has 42.8 A²s.
+With the original 47 k pull-up, the three plug-out states were only 18–27 mV apart. Two changes fix this:
+- the 10 k pull-up;
+- evaluating the reading the way the ADC actually sees it. VREF+ is 3V3A, taken from the same 3V3 rail as the pull-up, so the ±5 % tolerance of that rail cancels.
 
-## Finding 2 — plug-out self-test margins are thin
+## Finding 3 (info) — RAW_ACT_SENSE during a TVS clamp
 
-With the plug out, the only signal is the 47 kΩ cold pull-up (FMEA H-1). Worst-case ranges (6.0/8.4 V, 3V3 ± 5 %, 1 % resistors):
-
-| State (plug out) | PYRO_CONT |
-|---|---|
-| igniter OK, FET OK | 27–31 mV |
-| igniter open | 49–57 mV |
-| FET shorted | 0 mV |
-
-"FET shorted" vs "OK" is separated by 27 mV, and "igniter open" vs "OK" by 18 mV. Firmware can tell them apart only if the ADC error after calibration is below about ±9 mV. With the plug in, the separations are about 0.5 V (PASS). A stronger cold pull-up (a smaller R131/R143) would scale these levels up. This needs a bench check of ADC offset before it is relied on.
-
-## Finding 3 — RAW_ACT_SENSE can exceed VDDA during a TVS clamp
-
-If BAT_IN is clamped at 15.4 V (SMBJ9.0CA VC), RAW_ACT_SENSE reaches 4.9 V on PB0 in analog mode (limit VDDA). The current is < 0.2 mA through R124, and only during the transient, so this is INFO.
+If BAT_IN is clamped at 15.4 V, PB0 sees 4.9 V in analog mode. This happens only during the transient, and less than 0.2 mA flows through R124.
 
 ## Not covered here
 
-- U9 (TPS259470L) behaviour: current limit, fault latch and reverse blocking. It is modelled as an ideal switch.
-- The buzzer: see the R1 study; D123 is fitted as that study requires.
-- Servo motor dynamics, EMI, and PCB copper heating of the 2.6 mm servo neck.
-- Everything that needs a real board: the bench tests listed in `docs/M3_ACTUATOR_MERGE.md` §4.
+- U9 (TPS259470L) current limit, fault latch and reverse blocking: U9 is modelled as an ideal switch.
+- The buzzer: see the R1 study. D123 is fitted.
+- Servo motor dynamics, EMI, and copper heating on the PCB.
+- Everything that needs a real board: see `docs/M3_ACTUATOR_MERGE.md` §4.

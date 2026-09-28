@@ -17,6 +17,14 @@
    "28 ohm (~0.3 A at 8.4 V); U9 itself not modelled, RAW_PROTECTED = BAT_IN x enable"
   ],
   [
+   "Fire pulse",
+   "20 ms, ended by firmware (requirement from FINDINGS.md 1; firmware for R2 not written yet)"
+  ],
+  [
+   "R134/R135",
+   "Bourns CRM2512-FX-2R00ELF 2 ohm; single-pulse limit from the datasheet chart: 220 W @ 1 ms, 90 W @ 10 ms, 27 W @ 100 ms"
+  ],
+  [
    "Arming-plug fuse",
    "Littelfuse 217 series 5 A fast-acting 5x20 (0217005): cold R 13.7 mOhm, nominal melting I2t 42.8 A2s (datasheet table); modelled as opening when the integrated I2t reaches 42.8 A2s (arc time ignored)"
   ],
@@ -349,7 +357,7 @@
   {
    "case": "B. Pyro channel fire (sheet 12)",
    "item": "6.0 V, max-RDS FET, weakest-legal GPIO: bridgewire current",
-   "value": "4.07 A steady",
+   "value": "1.72 A steady",
    "limit": ">= 1.0 A recommended all-fire (MJG), 0.6 A minimum",
    "verdict": "PASS",
    "note": ""
@@ -365,8 +373,16 @@
   {
    "case": "B. Pyro channel fire (sheet 12)",
    "item": "6.0 V, max-RDS FET, weakest-legal GPIO: FET dissipation while firing",
-   "value": "0.08 W",
+   "value": "0.01 W",
    "limit": "< PDSM 3.1 W",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "B. Pyro channel fire (sheet 12)",
+   "item": "6.0 V, max-RDS FET, weakest-legal GPIO: R134 during a 20 ms fire",
+   "value": "5.9 W",
+   "limit": "<= CRM2512 curve / 1.5 (42 W)",
    "verdict": "PASS",
    "note": ""
   },
@@ -389,7 +405,7 @@
   {
    "case": "B. Pyro channel fire (sheet 12)",
    "item": "6.0 V, max-RDS FET, strong GPIO: bridgewire current",
-   "value": "4.07 A steady",
+   "value": "1.72 A steady",
    "limit": ">= 1.0 A recommended all-fire (MJG), 0.6 A minimum",
    "verdict": "PASS",
    "note": ""
@@ -405,8 +421,16 @@
   {
    "case": "B. Pyro channel fire (sheet 12)",
    "item": "6.0 V, max-RDS FET, strong GPIO: FET dissipation while firing",
-   "value": "0.08 W",
+   "value": "0.01 W",
    "limit": "< PDSM 3.1 W",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "B. Pyro channel fire (sheet 12)",
+   "item": "6.0 V, max-RDS FET, strong GPIO: R134 during a 20 ms fire",
+   "value": "5.9 W",
+   "limit": "<= CRM2512 curve / 1.5 (42 W)",
    "verdict": "PASS",
    "note": ""
   },
@@ -429,7 +453,7 @@
   {
    "case": "B. Pyro channel fire (sheet 12)",
    "item": "8.4 V, typ FET, weakest-legal GPIO: bridgewire current",
-   "value": "5.96 A steady",
+   "value": "2.46 A steady",
    "limit": ">= 1.0 A recommended all-fire (MJG), 0.6 A minimum",
    "verdict": "PASS",
    "note": ""
@@ -445,8 +469,16 @@
   {
    "case": "B. Pyro channel fire (sheet 12)",
    "item": "8.4 V, typ FET, weakest-legal GPIO: FET dissipation while firing",
-   "value": "0.13 W",
+   "value": "0.02 W",
    "limit": "< PDSM 3.1 W",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "B. Pyro channel fire (sheet 12)",
+   "item": "8.4 V, typ FET, weakest-legal GPIO: R134 during a 20 ms fire",
+   "value": "12.1 W",
+   "limit": "<= CRM2512 curve / 1.5 (42 W)",
    "verdict": "PASS",
    "note": ""
   },
@@ -469,7 +501,7 @@
   {
    "case": "B. Pyro channel fire (sheet 12)",
    "item": "8.4 V, typ FET, strong GPIO: bridgewire current",
-   "value": "5.96 A steady",
+   "value": "2.46 A steady",
    "limit": ">= 1.0 A recommended all-fire (MJG), 0.6 A minimum",
    "verdict": "PASS",
    "note": ""
@@ -485,319 +517,367 @@
   {
    "case": "B. Pyro channel fire (sheet 12)",
    "item": "8.4 V, typ FET, strong GPIO: FET dissipation while firing",
-   "value": "0.13 W",
+   "value": "0.02 W",
    "limit": "< PDSM 3.1 W",
    "verdict": "PASS",
    "note": ""
   },
   {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, as drawn: peak current / fuse",
-   "value": "131.2 A; fuse opens at 4.0 ms",
-   "limit": "< IDM 112 A",
-   "verdict": "FAIL",
+   "case": "B. Pyro channel fire (sheet 12)",
+   "item": "8.4 V, typ FET, strong GPIO: R134 during a 20 ms fire",
+   "value": "12.1 W",
+   "limit": "<= CRM2512 curve / 1.5 (42 W)",
+   "verdict": "PASS",
    "note": ""
   },
   {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, as drawn: AON7524 junction",
-   "value": "peak dTj 124 K",
-   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
-   "verdict": "FAIL",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, as drawn: BAT_IN",
-   "value": "min 3.68 V, below 5.0 V for 3.9 ms",
-   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
-   "verdict": "FAIL",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, PROPOSED 1.0 ohm series resistor: peak current / fuse",
-   "value": "7.9 A; fuse opens at > 200ms (does not open)",
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, as drawn (R134 2 ohm): peak current / fuse",
+   "value": "4.1 A; fuse does not open",
    "limit": "< IDM 112 A",
    "verdict": "PASS",
    "note": ""
   },
   {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, PROPOSED 1.0 ohm series resistor: AON7524 junction",
-   "value": "peak dTj 1 K",
-   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, PROPOSED 1.0 ohm series resistor: BAT_IN",
-   "value": "min 8.04 V, below 5.0 V for 0.0 ms",
-   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, as drawn: peak current / fuse",
-   "value": "109.8 A; fuse opens at 8.0 ms",
-   "limit": "< IDM 112 A",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, as drawn: AON7524 junction",
-   "value": "peak dTj 75 K",
-   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, as drawn: BAT_IN",
-   "value": "min 2.61 V, below 5.0 V for 7.9 ms",
-   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
-   "verdict": "FAIL",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, PROPOSED 1.0 ohm series resistor: peak current / fuse",
-   "value": "6.9 A; fuse opens at > 200ms (does not open)",
-   "limit": "< IDM 112 A",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, PROPOSED 1.0 ohm series resistor: AON7524 junction",
-   "value": "peak dTj 1 K",
-   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, PROPOSED 1.0 ohm series resistor: BAT_IN",
-   "value": "min 6.95 V, below 5.0 V for 0.0 ms",
-   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, as drawn: peak current / fuse",
-   "value": "85.0 A; fuse opens at 24.5 ms",
-   "limit": "< IDM 112 A",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, as drawn: AON7524 junction",
-   "value": "peak dTj 28 K",
-   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, as drawn: BAT_IN",
-   "value": "min 1.53 V, below 5.0 V for 24.6 ms",
-   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
-   "verdict": "FAIL",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, PROPOSED 1.0 ohm series resistor: peak current / fuse",
-   "value": "5.6 A; fuse opens at > 200ms (does not open)",
-   "limit": "< IDM 112 A",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, PROPOSED 1.0 ohm series resistor: AON7524 junction",
-   "value": "peak dTj 1 K",
-   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, PROPOSED 1.0 ohm series resistor: BAT_IN",
-   "value": "min 5.43 V, below 5.0 V for 0.0 ms",
-   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, as drawn: peak current / fuse",
-   "value": "43.3 A; fuse opens at 26.7 ms",
-   "limit": "< IDM 112 A",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, as drawn: AON7524 junction",
-   "value": "peak dTj 27 K",
-   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, as drawn: BAT_IN",
-   "value": "min 6.58 V, below 5.0 V for 0.0 ms",
-   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, PROPOSED 1.0 ohm series resistor: peak current / fuse",
-   "value": "7.0 A; fuse opens at > 200ms (does not open)",
-   "limit": "< IDM 112 A",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, PROPOSED 1.0 ohm series resistor: AON7524 junction",
-   "value": "peak dTj 1 K",
-   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, PROPOSED 1.0 ohm series resistor: BAT_IN",
-   "value": "min 8.07 V, below 5.0 V for 0.0 ms",
-   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, as drawn: peak current / fuse",
-   "value": "37.3 A; fuse opens at 41.5 ms",
-   "limit": "< IDM 112 A",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, as drawn: AON7524 junction",
-   "value": "peak dTj 18 K",
-   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, as drawn: BAT_IN",
-   "value": "min 5.29 V, below 5.0 V for 0.0 ms",
-   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, PROPOSED 1.0 ohm series resistor: peak current / fuse",
-   "value": "6.2 A; fuse opens at > 200ms (does not open)",
-   "limit": "< IDM 112 A",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, PROPOSED 1.0 ohm series resistor: AON7524 junction",
-   "value": "peak dTj 1 K",
-   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, PROPOSED 1.0 ohm series resistor: BAT_IN",
-   "value": "min 6.99 V, below 5.0 V for 0.0 ms",
-   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, as drawn: peak current / fuse",
-   "value": "29.6 A; fuse opens at > 60ms (does not open)",
-   "limit": "< IDM 112 A",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, as drawn: AON7524 junction",
-   "value": "peak dTj 9 K",
-   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, as drawn: BAT_IN",
-   "value": "min 3.66 V, below 5.0 V for 59.8 ms",
-   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
-   "verdict": "FAIL",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, PROPOSED 1.0 ohm series resistor: peak current / fuse",
-   "value": "5.0 A; fuse opens at > 200ms (does not open)",
-   "limit": "< IDM 112 A",
-   "verdict": "PASS",
-   "note": ""
-  },
-  {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, PROPOSED 1.0 ohm series resistor: AON7524 junction",
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, as drawn (R134 2 ohm): AON7524 junction",
    "value": "peak dTj 0 K",
    "limit": "dTj < 90 K (Tj 150 C from 60 C)",
    "verdict": "PASS",
    "note": ""
   },
   {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, PROPOSED 1.0 ohm series resistor: BAT_IN",
-   "value": "min 5.49 V, below 5.0 V for 0.0 ms",
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, as drawn (R134 2 ohm): BAT_IN",
+   "value": "min 8.21 V, below 5.0 V for 0.0 ms",
    "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
    "verdict": "PASS",
    "note": ""
   },
   {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "PROPOSED 1.0 ohm: fire current at the worst corner (6.0 V, 80 mOhm, 1.2 ohm + 1 m 26 AWG)",
-   "value": "2.42 A",
-   "limit": ">= 1.0 A recommended all-fire (MJG)",
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, as drawn (R134 2 ohm): R134 pulse",
+   "value": "33.2 W for 20 ms; CRM2512 allows 63 W at that length",
+   "limit": "peak power <= CRM2512 single-pulse curve / 1.5",
    "verdict": "PASS",
    "note": ""
   },
   {
-   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t",
-   "item": "PROPOSED 1.0 ohm: resistor pulse energy during a 20 ms fire at 8.4 V",
-   "value": "238 mJ",
-   "limit": "needs a pulse-rated 2512 (e.g. >= 1 J / 20 ms class); part not chosen",
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, R2 as merged in #1 (no R134): peak current / fuse",
+   "value": "131.2 A; fuse opens at 4.0 ms",
+   "limit": "< IDM 112 A",
+   "verdict": "OLD-FAIL",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, R2 as merged in #1 (no R134): AON7524 junction",
+   "value": "peak dTj 124 K",
+   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
+   "verdict": "OLD-FAIL",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 8.4 V pack 20 mOhm, R2 as merged in #1 (no R134): BAT_IN",
+   "value": "min 3.68 V, below 5.0 V for 3.9 ms",
+   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
+   "verdict": "OLD-FAIL",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, as drawn (R134 2 ohm): peak current / fuse",
+   "value": "3.6 A; fuse does not open",
+   "limit": "< IDM 112 A",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, as drawn (R134 2 ohm): AON7524 junction",
+   "value": "peak dTj 0 K",
+   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, as drawn (R134 2 ohm): BAT_IN",
+   "value": "min 7.15 V, below 5.0 V for 0.0 ms",
+   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, as drawn (R134 2 ohm): R134 pulse",
+   "value": "25.8 W for 20 ms; CRM2512 allows 63 W at that length",
+   "limit": "peak power <= CRM2512 single-pulse curve / 1.5",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, R2 as merged in #1 (no R134): peak current / fuse",
+   "value": "109.6 A; fuse opens at 8.0 ms",
+   "limit": "< IDM 112 A",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, R2 as merged in #1 (no R134): AON7524 junction",
+   "value": "peak dTj 75 K",
+   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 7.4 V pack 40 mOhm, R2 as merged in #1 (no R134): BAT_IN",
+   "value": "min 2.61 V, below 5.0 V for 7.9 ms",
+   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
+   "verdict": "OLD-FAIL",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, as drawn (R134 2 ohm): peak current / fuse",
+   "value": "2.9 A; fuse does not open",
+   "limit": "< IDM 112 A",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, as drawn (R134 2 ohm): AON7524 junction",
+   "value": "peak dTj 0 K",
+   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, as drawn (R134 2 ohm): BAT_IN",
+   "value": "min 5.69 V, below 5.0 V for 0.0 ms",
+   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, as drawn (R134 2 ohm): R134 pulse",
+   "value": "16.7 W for 20 ms; CRM2512 allows 63 W at that length",
+   "limit": "peak power <= CRM2512 single-pulse curve / 1.5",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, R2 as merged in #1 (no R134): peak current / fuse",
+   "value": "84.9 A; fuse does not open",
+   "limit": "< IDM 112 A",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, R2 as merged in #1 (no R134): AON7524 junction",
+   "value": "peak dTj 28 K",
+   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at J121 terminal, 6.0 V pack 80 mOhm, R2 as merged in #1 (no R134): BAT_IN",
+   "value": "min 1.53 V, below 5.0 V for 20.1 ms",
+   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
+   "verdict": "OLD-FAIL",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, as drawn (R134 2 ohm): peak current / fuse",
+   "value": "3.8 A; fuse does not open",
+   "limit": "< IDM 112 A",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, as drawn (R134 2 ohm): AON7524 junction",
+   "value": "peak dTj 0 K",
+   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, as drawn (R134 2 ohm): BAT_IN",
+   "value": "min 8.22 V, below 5.0 V for 0.0 ms",
+   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, as drawn (R134 2 ohm): R134 pulse",
+   "value": "29.3 W for 20 ms; CRM2512 allows 63 W at that length",
+   "limit": "peak power <= CRM2512 single-pulse curve / 1.5",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, R2 as merged in #1 (no R134): peak current / fuse",
+   "value": "43.3 A; fuse does not open",
+   "limit": "< IDM 112 A",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, R2 as merged in #1 (no R134): AON7524 junction",
+   "value": "peak dTj 30 K",
+   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 8.4 V pack 20 mOhm, R2 as merged in #1 (no R134): BAT_IN",
+   "value": "min 6.58 V, below 5.0 V for 0.0 ms",
+   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, as drawn (R134 2 ohm): peak current / fuse",
+   "value": "3.4 A; fuse does not open",
+   "limit": "< IDM 112 A",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, as drawn (R134 2 ohm): AON7524 junction",
+   "value": "peak dTj 0 K",
+   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, as drawn (R134 2 ohm): BAT_IN",
+   "value": "min 7.17 V, below 5.0 V for 0.0 ms",
+   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, as drawn (R134 2 ohm): R134 pulse",
+   "value": "22.6 W for 20 ms; CRM2512 allows 63 W at that length",
+   "limit": "peak power <= CRM2512 single-pulse curve / 1.5",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, R2 as merged in #1 (no R134): peak current / fuse",
+   "value": "37.3 A; fuse does not open",
+   "limit": "< IDM 112 A",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, R2 as merged in #1 (no R134): AON7524 junction",
+   "value": "peak dTj 19 K",
+   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 7.4 V pack 40 mOhm, R2 as merged in #1 (no R134): BAT_IN",
+   "value": "min 5.29 V, below 5.0 V for 0.0 ms",
+   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, as drawn (R134 2 ohm): peak current / fuse",
+   "value": "2.7 A; fuse does not open",
+   "limit": "< IDM 112 A",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, as drawn (R134 2 ohm): AON7524 junction",
+   "value": "peak dTj 0 K",
+   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, as drawn (R134 2 ohm): BAT_IN",
+   "value": "min 5.70 V, below 5.0 V for 0.0 ms",
+   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, as drawn (R134 2 ohm): R134 pulse",
+   "value": "14.8 W for 20 ms; CRM2512 allows 63 W at that length",
+   "limit": "peak power <= CRM2512 single-pulse curve / 1.5",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, R2 as merged in #1 (no R134): peak current / fuse",
+   "value": "29.6 A; fuse does not open",
+   "limit": "< IDM 112 A",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, R2 as merged in #1 (no R134): AON7524 junction",
+   "value": "peak dTj 9 K",
+   "limit": "dTj < 90 K (Tj 150 C from 60 C)",
+   "verdict": "PASS",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, R2 as merged in #1 (no R134): BAT_IN",
+   "value": "min 3.66 V, below 5.0 V for 20.0 ms",
+   "limit": "below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires",
+   "verdict": "OLD-FAIL",
+   "note": ""
+  },
+  {
+   "case": "C. Shorted igniter on channel 1 (fired into a short), fuse melting at its I2t, 20 ms fire pulse",
+   "item": "R134 if the gate is left on (firmware fault), 8.4 V dead short",
+   "value": "35 W reaches the CRM2512 curve after ~60 ms",
+   "limit": "info: the resistor then fails open (channel lost, no fuse action); firmware must end every fire pulse",
    "verdict": "INFO",
    "note": ""
   },
   {
    "case": "D. ARM plug insertion, FET off (Miller self-turn-on)",
    "item": "C126 fitted, MCU unpowered/reset: peak VGS",
-   "value": "24 mV",
+   "value": "17 mV",
    "limit": "< VGS(th) min 0.4 V",
    "verdict": "PASS",
    "note": ""
@@ -805,7 +885,7 @@
   {
    "case": "D. ARM plug insertion, FET off (Miller self-turn-on)",
    "item": "C126 fitted, MCU unpowered/reset: igniter transient",
-   "value": "peak 1.90 A, I2t 2.44 uA2s; FET peak 0.044 A",
+   "value": "peak 1.23 A, I2t 0.81 uA2s; FET peak 0.029 A",
    "limit": "no-fire 0.30 A continuous (MJG); I2t << 1 mA2s",
    "verdict": "PASS",
    "note": ""
@@ -813,7 +893,7 @@
   {
    "case": "D. ARM plug insertion, FET off (Miller self-turn-on)",
    "item": "C126 fitted, MCU driving low: peak VGS",
-   "value": "24 mV",
+   "value": "17 mV",
    "limit": "< VGS(th) min 0.4 V",
    "verdict": "PASS",
    "note": ""
@@ -821,7 +901,7 @@
   {
    "case": "D. ARM plug insertion, FET off (Miller self-turn-on)",
    "item": "C126 fitted, MCU driving low: igniter transient",
-   "value": "peak 1.90 A, I2t 2.44 uA2s; FET peak 0.044 A",
+   "value": "peak 1.23 A, I2t 0.81 uA2s; FET peak 0.029 A",
    "limit": "no-fire 0.30 A continuous (MJG); I2t << 1 mA2s",
    "verdict": "PASS",
    "note": ""
@@ -829,7 +909,7 @@
   {
    "case": "D. ARM plug insertion, FET off (Miller self-turn-on)",
    "item": "C126 MISSING (fault), MCU unpowered/reset: peak VGS",
-   "value": "550 mV",
+   "value": "499 mV",
    "limit": "< VGS(th) min 0.4 V",
    "verdict": "DEMO",
    "note": ""
@@ -837,7 +917,7 @@
   {
    "case": "D. ARM plug insertion, FET off (Miller self-turn-on)",
    "item": "C126 MISSING (fault), MCU unpowered/reset: igniter transient",
-   "value": "peak 2.69 A, I2t 11.74 uA2s; FET peak 2.578 A",
+   "value": "peak 1.24 A, I2t 2.48 uA2s; FET peak 1.137 A",
    "limit": "no-fire 0.30 A continuous (MJG); I2t << 1 mA2s",
    "verdict": "PASS",
    "note": ""
@@ -845,7 +925,7 @@
   {
    "case": "D. ARM plug insertion, FET off (Miller self-turn-on)",
    "item": "C126 MISSING (fault), MCU driving low: peak VGS",
-   "value": "519 mV",
+   "value": "479 mV",
    "limit": "< VGS(th) min 0.4 V",
    "verdict": "DEMO",
    "note": ""
@@ -853,7 +933,7 @@
   {
    "case": "D. ARM plug insertion, FET off (Miller self-turn-on)",
    "item": "C126 MISSING (fault), MCU driving low: igniter transient",
-   "value": "peak 2.14 A, I2t 4.95 uA2s; FET peak 1.687 A",
+   "value": "peak 1.23 A, I2t 1.16 uA2s; FET peak 0.771 A",
    "limit": "no-fire 0.30 A continuous (MJG); I2t << 1 mA2s",
    "verdict": "PASS",
    "note": ""
@@ -861,7 +941,7 @@
   {
    "case": "E. Continuity / arm-sense states (split buses, cold pull-up)",
    "item": "plug out, igniter OK, FET OK",
-   "value": "CONT 27.0..31.3 mV, ARM 27.0..31.3 mV",
+   "value": "CONT 95.1..99.8 mV, ARM 95.1..99.8 mV (ADC reading, ratiometric to 3V3A)",
    "limit": "",
    "verdict": "INFO",
    "note": ""
@@ -869,7 +949,7 @@
   {
    "case": "E. Continuity / arm-sense states (split buses, cold pull-up)",
    "item": "plug out, igniter OPEN, FET OK",
-   "value": "CONT 48.9..56.6 mV, ARM 0.0..0.0 mV",
+   "value": "CONT 140.8..147.7 mV, ARM 0.0..0.0 mV (ADC reading, ratiometric to 3V3A)",
    "limit": "",
    "verdict": "INFO",
    "note": ""
@@ -877,7 +957,7 @@
   {
    "case": "E. Continuity / arm-sense states (split buses, cold pull-up)",
    "item": "plug out, igniter OK, FET SHORTED",
-   "value": "CONT 0.0..0.0 mV, ARM 0.0..0.0 mV",
+   "value": "CONT 0.0..0.0 mV, ARM 0.0..0.0 mV (ADC reading, ratiometric to 3V3A)",
    "limit": "",
    "verdict": "INFO",
    "note": ""
@@ -885,7 +965,7 @@
   {
    "case": "E. Continuity / arm-sense states (split buses, cold pull-up)",
    "item": "plug out, igniter OPEN, FET SHORTED",
-   "value": "CONT 0.0..0.0 mV, ARM 0.0..0.0 mV",
+   "value": "CONT 0.0..0.0 mV, ARM 0.0..0.0 mV (ADC reading, ratiometric to 3V3A)",
    "limit": "",
    "verdict": "INFO",
    "note": ""
@@ -893,7 +973,7 @@
   {
    "case": "E. Continuity / arm-sense states (split buses, cold pull-up)",
    "item": "plug in, igniter OK, FET OK",
-   "value": "CONT 533.2..777.0 mV, ARM 533.3..777.1 mV",
+   "value": "CONT 507.7..817.7 mV, ARM 507.9..818.0 mV (ADC reading, ratiometric to 3V3A)",
    "limit": "",
    "verdict": "INFO",
    "note": ""
@@ -901,7 +981,7 @@
   {
    "case": "E. Continuity / arm-sense states (split buses, cold pull-up)",
    "item": "plug in, igniter OPEN, FET OK",
-   "value": "CONT 48.9..56.6 mV, ARM 533.3..777.1 mV",
+   "value": "CONT 140.8..147.7 mV, ARM 507.9..818.0 mV (ADC reading, ratiometric to 3V3A)",
    "limit": "",
    "verdict": "INFO",
    "note": ""
@@ -909,23 +989,23 @@
   {
    "case": "E. Continuity / arm-sense states (split buses, cold pull-up)",
    "item": "separation: detect a shorted FET before the plug goes in (FMEA H-1)",
-   "value": "27.0 mV gap between worst-case ranges",
+   "value": "95.1 mV gap between worst-case ranges",
    "limit": "> 2 x 20 mV ADC error",
-   "verdict": "MARGINAL",
+   "verdict": "PASS",
    "note": ""
   },
   {
    "case": "E. Continuity / arm-sense states (split buses, cold pull-up)",
    "item": "separation: igniter continuity with the plug out",
-   "value": "17.6 mV gap between worst-case ranges",
+   "value": "41.0 mV gap between worst-case ranges",
    "limit": "> 2 x 20 mV ADC error",
-   "verdict": "MARGINAL",
+   "verdict": "PASS",
    "note": ""
   },
   {
    "case": "E. Continuity / arm-sense states (split buses, cold pull-up)",
    "item": "separation: bus armed vs not armed",
-   "value": "502.0 mV gap between worst-case ranges",
+   "value": "408.1 mV gap between worst-case ranges",
    "limit": "> 2 x 20 mV ADC error",
    "verdict": "PASS",
    "note": ""
@@ -933,7 +1013,7 @@
   {
    "case": "E. Continuity / arm-sense states (split buses, cold pull-up)",
    "item": "separation: igniter continuity with the plug in",
-   "value": "476.6 mV gap between worst-case ranges",
+   "value": "360.0 mV gap between worst-case ranges",
    "limit": "> 2 x 20 mV ADC error",
    "verdict": "PASS",
    "note": ""

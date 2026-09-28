@@ -35,13 +35,13 @@ Two identical channels. Per channel *n* (1, 2):
 | Gate network | 220 R 0805 series (C17557), **1 k pull-down on the MCU side** (C11702), 10 k gate→source (C25744), **220 nF gate→source** (C21120, 25 V X7R) | P0-1 + P0-2 item ① (220 nF required with AON7524, otherwise Qgd self-turn-on) |
 | Continuity | 10 k / 1 k divider from the drain + 10 nF | frozen §5.2; filter cap from `CIRCUIT_REVIEW.md` §2.5 |
 | Output bypass | 100 nF / 50 V X7R drain→GND at the terminal (C14663) | `CIRCUIT_REVIEW.md` §2.6 (ESD / RF on the igniter lead; slows the plug-insertion drain edge) |
-| Cold pull-up | 47 k (C25792) from each drain to one cathode of **D120 BAT54A** (C8591), common anode = 3V3 | FMEA H-1 (turns "FET shorted" into a measurable state with the plug out) |
+| Cold pull-up | **10 k** (C25744; 47 k in the PR #1 merge, changed in §2.6) from each drain to one cathode of **D120 BAT54A** (C8591), common anode = 3V3 | FMEA H-1 (turns "FET shorted" into a measurable state with the plug out) |
 | Arm sense | 10 k / 1 k divider from **each** fused bus + 10 nF | frozen §5.2 + H-5 (one sense per bus, because the buses are now independent) |
 
 **Arming (FMEA H-5 adopted, DESIGN_ASSURANCE "ARM on its own connector" adopted):**
 
 - J120 **ARM terminal**, 4-pos DB128V on the right-hand long edge: `RAW_ACT / PYRO2_BUS / PYRO1_BUS / RAW_ACT`. The removable arming plug is a four-wire, two-fuse link: pin 4 → F1 (5 A **fast-acting**, P0-3a) → pin 3 (BUS1), pin 1 → F2 (5 A fast-acting) → pin 2 (BUS2). The middle order is chosen so each bus runs as one straight 2 mm strap to the igniter terminal on the opposite edge. With the plug out there is **no copper, part or test point** between `RAW_ACT` and either `PYRO*_BUS` (AGENTS.md safety rule 1; verified by the netlist gate in §4).
-- J121 **igniter terminal**, 4-pos DB128V on the left-hand long edge: `PYRO1_OUT / PYRO1_BUS / PYRO2_BUS / PYRO2_OUT`. Igniter 1 across 1–2, igniter 2 across 3–4.
+- J121 **igniter terminal**, 4-pos DB128V on the left-hand long edge: `PYRO1_OUT / PYRO1_IGN / PYRO2_IGN / PYRO2_OUT`, where `PYRO*_IGN` is the bus after the series resistor R134 / R135 (§2.6). Igniter 1 across 1–2, igniter 2 across 3–4.
 - Both pin orders are **reversal-symmetric**: a terminal wired counting from the wrong end still pairs RAW with a BUS (J120) and BUS with its own OUT (J121). With single deploy, swapping ch1/ch2 is harmless.
 - A short on one igniter now blows only that channel's fuse; the other channel is untouched (V-5 closed). Residual common points, stated honestly: `RAW_ACT`, Q120/Q121, the battery and the MCU.
 
@@ -79,6 +79,16 @@ Not adopted, with reason: per-drain SMAJ18A (H-8, "SHOULD") — the AON7524 is a
 - Silkscreen: references are 1.0 mm (the board's minimum). Where no legal top-side spot exists in the dense pyro/servo cells, the reference is on the bare bottom side, mirrored, at the same location. Bottom silkscreen also carries the terminal pin names (RAW/BUS2/BUS1/RAW, E2−/E2+/E1+/E1−, S + −, PULL/GND) and the arming note.
 - Two Ø3.2 mm zip-tie holes straddle J122.
 
+## 2.6 Shorted-igniter current limit (added 2026-09-27 after simulation)
+
+`m3_design/sim_r2` showed that, as merged, firing into a shorted igniter pulled BAT_IN below 5 V for 4–20 ms until the 5 A arming fuse (Littelfuse 217, 42.8 A²s) melted. That is longer than the logic hold-up, so the MCU reset and channel 2 never fired; at a fresh 8.4 V pack the AON7524 also exceeded IDM (131 A) and its junction limit.
+
+- **R134 / R135: 2 Ω, 2 W, Bourns CRM2512-FX-2R00ELF** (LCSC C3013496), one per channel, in series between the fused bus and the igniter terminal (`PYRO*_BUS` → R → `PYRO*_IGN` → J121). Arm sense stays on the plug side. The Bourns pulse-load chart (≥ 1 Ω) allows 220 W for 1 ms, 90 W for 10 ms and 27 W for 100 ms.
+- Simulated result (worst corners): a dead short now draws ≤ 4.1 A, BAT_IN stays ≥ 5.69 V, the FET junction rise is ~0 K and R134 peaks at 33 W against the 63 W the chart allows for a 20 ms pulse. Fire current into a 1.2 Ω bridgewire + 1 m 26 AWG is 1.72 A at 6.0 V / 80 mΩ and 2.46 A at 8.4 V (MJG recommended all-fire 1.0 A).
+- **Firmware requirements this relies on** (R2 firmware does not exist yet): every fire pulse ends after **20 ms**; if the gate were left on into a dead short, R134 reaches its pulse curve after ~60 ms and fails open (channel lost, no fire hazard from the fuse, which does not open at ~4 A). Flight state must survive an MCU reset (backup SRAM), so an unrelated reset still lets channel 2 fire.
+- **R131 / R143 cold pull-ups 47 k → 10 k.** With the plug out, the ADC reading (ratiometric: VREF+ = 3V3A from the same 3V3 rail) is 0 mV for a shorted FET, 95–100 mV for a good igniter and 141–148 mV for an open igniter, worst case over 1 % parts and 3V3 ± 5 %. The pull-up puts 0.2 mA through the igniter (MJG no-fire 0.30 A).
+- Layout: both resistors sit in line on the 2 mm bus straps between the terminals (x 23.8 mm, y 60.54 / 56.13 mm); the strap is cut between the pads. TP124 moved to (17.9, 58.0); the references of TP122, TP123, R126 and R138 moved to free silkscreen positions (bottom, mirrored, where the top had no room). 205 positions, 180 fitted parts.
+
 ## 3. Datasheet evidence for new footprints / pinouts
 
 | Part | Evidence | URL |
@@ -94,6 +104,8 @@ Not adopted, with reason: per-drain SMAJ18A (H-8, "SHOULD") — the AON7524 is a
 | 100 nF 0603 50 V | C14663 = YAGEO CC0603KRX7R9BB104 | <https://www.lcsc.com/product-detail/C14663.html> |
 | 1.0 k 0805 | C17513 = UNI-ROYAL 0805W8F1001T5E | <https://www.lcsc.com/product-detail/C17513.html> |
 | MLT-8530 pads | Huaneng spec §5.2 (see §2.4) | as above |
+| CRM2512 2 Ω pulse rating (R134/R135) | Bourns CRM2512 datasheet, Pulse Load Characteristics (≥ 1 Ω): 220 W @ 1 ms, 90 W @ 10 ms, 27 W @ 100 ms; LCSC C3013496 | <https://www.bourns.com/docs/product-datasheets/crm.pdf> |
+| 5 A arming fuse melting I²t | Littelfuse 217 series table, 0217005: 13.7 mΩ cold, 42.8 A²s nominal melting | <https://www.littelfuse.com/assetdocs/fuse-217-datasheet?assetguid=af55be94-c42e-41b1-ad43-e070e09443fe> |
 | TXU0202DCUR (existing U12) | LCSC code was empty in R1 and would have blocked JLC assembly; C5186957 = TI TXU0202DCUR, VSSOP-8, 16,760 in stock 2026-09-25 | <https://www.lcsc.com/product-detail/C5186957.html> |
 
 ## 4. Evidence and what still has to be verified before a fab release
@@ -107,7 +119,7 @@ Done (CAD only, 2026-09-25, KiCad 10.0.6):
 Not done — must happen before anything is ordered or flown:
 - Real-board power-up of the actuator switch (turn-on time with C120, inrush into C121, U9 interaction when `RAW_PROTECTED` sags during a servo stall) and a thermal check of the servo feed under stall.
 - Fire tests into a 1 Ω dummy load on each channel, with the plug-insertion (Miller) test of `DESIGN_ASSURANCE.md` repeated 20× per channel.
-- Cold pull-up four-state table (FMEA H-1) measured on the bench; the table in FMEA assumes a single shared bus and must be recomputed for the split buses.
+- Cold pull-up four-state table (FMEA H-1) measured on the bench. The simulated split-bus table (10 k pull-up) is in `m3_design/sim_r2/RESULTS.md` section E; the FMEA table assumes one shared bus and is superseded.
 - Firmware for servo / pyro / pull-pin / buzzer does not exist; v0.8.1 is bound to R1 and must not run on R2.
 - JLC review of CPL rotations, the THT parts (terminals, headers) as hand-solder or THT service, and sourcing for R9 / R84 / R86 (no LCSC code, unchanged from R1).
 - Mechanical: the board is now 238 mm long; sled, bay length, harness exits and the plugged-servo-header height budget (GEOMETRY_REV_G §7) must be re-checked for this length.
