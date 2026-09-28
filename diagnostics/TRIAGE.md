@@ -17,7 +17,7 @@ diagnostics/.venv/bin/python -m diagnostics.triage capture \
   --out diagnostics/runs/BOARD_001_first
 ```
 
-By default it binds to `m3_firmware/build_assembly_inspect/manifest.json` and `m3_design/assembly_review/m3.kicad_pcb`, taking two snapshots 1.2 s apart. `--manifest` selects another exactly matching assembly image; `--samples 2..30` and `--interval 1.2..10` adjust acquisition. Each request has a bounded deadline with no automatic retry. Uses the pinned `pyserial==3.5`; offline `report` needs no serial driver.
+By default it binds to `m3_firmware/build_assembly_inspect/manifest.json` and the archived R1 board `reference/m3_assy_r1/m3.kicad_pcb` (the working PCB is now R2, which this tool and v0.8.1 do not support), taking two snapshots 1.2 s apart. `--manifest` selects another exactly matching assembly image; `--samples 2..30` and `--interval 1.2..10` adjust acquisition. Each request has a bounded deadline with no automatic retry. Uses the pinned `pyserial==3.5`; offline `report` needs no serial driver.
 
 Outputs:
 
