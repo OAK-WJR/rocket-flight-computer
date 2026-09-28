@@ -38,19 +38,18 @@ All three files are in `m3_design/assembly_review/fab/`:
 
 ## 4. Assembly (PCBA)
 
-- Assembly side: **Top**. Every SMD part is on the top.
+- Assembly side: **Top**. Every part is on the top. Choose **PCBA with THT assembly** so JLC also fits the terminals and headers; the CPL contains every part, SMD and THT.
 - Quantity: JLC assembles at least 2 boards; stock was checked for 5.
 - Orientation: the CPL is already corrected per LCSC code. `tools/jlc_orient.py` matched every footprint pad by pad against the LCSC/EasyEDA footprint; the data is in `tools/jlc_easyeda/pads.json` and the results in `tools/jlc_corrections.json`.
   - 8 parts would otherwise have been placed rotated: U7, U8, U10, U11, U12, U13, D121 and LED2. J3 also gets a 0.1 mm position correction.
   - Still confirm in JLC's placement preview. **Check these first:** D9, D120, D122, D123, LED1, LED2, C84 and C121 (polarity); U1–U13 and Q120–Q125 (pin 1); J3 (USB-C position).
 
-**Not placed by JLC SMT**, as the BOM "Assembly" column says:
+**Full PCBA.** JLC can fit every part. The one extra step is U6:
 
 | Part | What to do |
 |---|---|
-| U6 SAM-M10Q-00B | JLC stock is 0. Buy from DigiKey (about 2,600–2,900 in stock on 2026-09-27, via findchips) and consign it, use JLC Global Sourcing, or reflow it by hand |
-| J1, J9, J120, J121 (DB128V-5.08-4P) and J122 (3 × 4 header) | Through-hole: JLC THT service or hand solder |
-| J2 (1 × 6) and J123 (1 × 2) | Hand: cut both from one 1 × 40 strip, C2337 |
+| U6 SAM-M10Q-00B | JLC stock is 0. In the JLC account, add it through **Parts Manager → Global Sourcing** before ordering the PCBA; DigiKey had about 2,600–2,900 in stock on 2026-09-27 (findchips). Alternatively, consign it (ship it to JLC). Either way JLC places it with the rest |
+| J1, J9, J120, J121 (DB128V-5.08-4P), J122 (3 × 4), J2 (1 × 6 PZ254V-11-06P), J123 (1 × 2 PZ254V-11-02P) | Through-hole, all in JLC stock: JLC THT assembly |
 
 ## 5. Parts changed for availability (2026-09-27)
 
@@ -62,6 +61,7 @@ All three files are in `m3_design/assembly_review/fab/`:
 | C84 | 25SVPF330M (JLC 2) | 35SVPK330M C178373 | Same OS-CON size code F12 (Panasonic SVPK catalog) |
 | R86 | 80 k 0.1 % (not orderable) | 80.6 k 0.1 % C861568 | −0.75 %, inside the TPS2121 ILIM tolerance |
 | R84, R9 | no LCSC code / zero stock | C705743, C25915 | exact value |
+| J2, J123 | cut from a 1 × 40 strip (JLC cannot cut) | PZ254V-11-06P C492405, PZ254V-11-02P C492401 | same 2.54 mm pitch; orientation matched to the LCSC footprint |
 
 ## 6. Off-board parts the vehicle needs (not in this BOM)
 
