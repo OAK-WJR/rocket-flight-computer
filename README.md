@@ -11,7 +11,7 @@ Flight computer for an amateur high-power rocket: 2S LiPo, STM32H743VIT6, IMU (I
 | `m3_design/assembly_review/` | **The current KiCad project (the single source of truth)**: `m3.kicad_pro`, fourteen schematic sheets, PCB, project-local footprints, symbols and 3D models, and the review notes `ASSEMBLY_REVIEW.md` |
 | `m3_design/sim_r2/` | ngspice suite for the R2 actuator band (`run.py`, `RESULTS.md`, `FINDINGS.md`) |
 | `reference/` | `m1_power_actuator/`: the legacy M1 actuator board R2 was merged from; `m3_assy_r1/`: the R1 board the v0.8.1 firmware and `diagnostics/` are still bound to |
-| `docs/` | Verification record (`R2_VERIFICATION.md`), actuator merge record (`M3_ACTUATOR_MERGE.md`), design rationale: frozen design and BOM, circuit review, FMEA, margin prescription, airframe geometry, automated test design, simulation, design history |
+| `docs/` | Ordering guide (`ORDERING.md`), verification record (`R2_VERIFICATION.md`), actuator merge record (`M3_ACTUATOR_MERGE.md`), design rationale: frozen design and BOM, circuit review, FMEA, margin prescription, airframe geometry, automated test design, simulation, design history |
 | `m3_firmware/` | Bench diagnostic firmware v0.8.1 source, binding / protocol definitions and tests; `build_assembly_*/` holds prebuilt images **for R1 only — do not run them on R2** |
 | `diagnostics/` | Host-side diagnostic and fault-localisation tools (USB, SWD, log recovery, test-point map) |
 | `quality_audit/` | Board-level audit: metadata conflicts, 3D model paths, DRC / ERC evidence |

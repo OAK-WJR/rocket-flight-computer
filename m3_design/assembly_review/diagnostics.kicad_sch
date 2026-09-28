@@ -793,6 +793,12 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "JLC_Assembly" "Consign or JLC Global Sourcing: SAM-M10Q-00B from DigiKey (JLC stock 0 on 2026-09-27)"
+			(at 91.44 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
