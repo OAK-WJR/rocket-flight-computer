@@ -1915,6 +1915,248 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid ec65bdb5-4185-5601-8629-770668d0965f))
+	(symbol
+		(lib_id "M3:R")
+		(at 101.60 200.66 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d8a04bdf-aca6-4a73-87bc-15701ea47ab8)
+		(property "Reference" "R104"
+			(at 104.14 199.39 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 104.14 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 101.60 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 101.60 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25744"
+			(at 101.60 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "R104")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 101.6 196.85)
+			(xy 101.6 191.77))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 82ea9046-ffa6-432b-83a7-a3fb4ec645ae))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 101.6 191.77 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 66704d59-b67b-4c73-a230-699fdd5c0830))
+	(wire
+		(pts
+			(xy 101.6 204.47)
+			(xy 101.6 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 534b453e-956a-4389-9593-83da8c39f028))
+	(global_label "CAM_5V_SENSE"
+		(shape passive)
+		(at 101.6 209.55 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 95c822b5-62dc-463c-94df-67b649593e60))
+	(symbol
+		(lib_id "M3:R")
+		(at 121.92 200.66 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 72c11e1b-ecc4-4b5e-9bf6-5ba5f05c7888)
+		(property "Reference" "R105"
+			(at 124.46 199.39 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k"
+			(at 124.46 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 121.92 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 121.92 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C11702"
+			(at 121.92 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "R105")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 121.92 196.85)
+			(xy 121.92 191.77))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid aae2ea3f-188b-4991-94c3-854cb836293c))
+	(global_label "CAM_5V_SENSE"
+		(shape passive)
+		(at 121.92 191.77 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 505fa76f-2c6d-4f5e-a30c-07c4ceb59441))
+	(wire
+		(pts
+			(xy 121.92 204.47)
+			(xy 121.92 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ec1a8a14-dcc5-4559-b671-3b7de5d0cf50))
+	(global_label "GND"
+		(shape passive)
+		(at 121.92 209.55 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2f51f35c-76d3-44c3-b32b-91c1aef7efe1))
+	(symbol
+		(lib_id "M3:C")
+		(at 142.24 200.66 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid abbb728f-027c-4f33-a6df-473ec7bb25a2)
+		(property "Reference" "C94"
+			(at 144.78 199.39 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10nF"
+			(at 144.78 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0603"
+			(at 142.24 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 142.24 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C57112"
+			(at 142.24 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "C94")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 142.24 196.85)
+			(xy 142.24 191.77))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 432be073-06df-4b7a-9c32-9d587bcb21a2))
+	(global_label "CAM_5V_SENSE"
+		(shape passive)
+		(at 142.24 191.77 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 227d6467-abb0-48b0-8acd-eebe84fdef6b))
+	(wire
+		(pts
+			(xy 142.24 204.47)
+			(xy 142.24 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid dcb71cde-2be8-4b24-af80-c9c760fe99a7))
+	(global_label "GND"
+		(shape passive)
+		(at 142.24 209.55 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid df9168b9-92cf-4df0-9678-30c01a143634))
+	(text "CAM_5V_SENSE = CAM_5V x 1k/11k -> PB1 (pin 35, ADC12_INP5, TT_u 4.0 V max).\n5.25 V reads 0.477 V; even 15.4 V (TVS clamp, failed regulator) reads 1.40 V.\nLets the USB self-test verify the camera regulator (U8) without a meter."
+		(exclude_from_sim no)
+		(at 96.52 217.17 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left bottom))
+		(uuid cc04a8e1-4d84-4c56-b019-d2a9801b2c00))
 	(sheet_instances
 		(path "/"
 			(page "4"))))

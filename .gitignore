@@ -22,3 +22,8 @@ verification_*/
 **/sources/*.pdf
 gerber/
 m3_design/sim_r2/out/
+
+# KiCad 10 local history (per-user)
+.history/
+**/.history/
+*.lck

@@ -2549,10 +2549,7 @@
 		(uuid 21a7516d-9925-5ecd-a1ee-7b30974fd4de))
 	(no_connect
 		(at 119.38 102.87)
-		(uuid 66622c3a-072d-5370-8363-a4e1b5ee2558))
-	(no_connect
-		(at 119.38 113.03)
-		(uuid 3bd69203-212c-52af-9b12-fc5c7bf4fa22))
+		(uuid bdacfe87-74be-4d80-a873-138bc9c2550f))
 	(no_connect
 		(at 119.38 118.11)
 		(uuid 44cfb8b1-3951-5d13-bb8a-50eca5a7ece7))
@@ -4266,6 +4263,22 @@
 			(width 0)
 			(type default))
 		(uuid 834f24b3-135d-5c7d-9eff-03b5b4b874b3))
+	(wire
+		(pts
+			(xy 119.38 113.03)
+			(xy 127 113.03))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b83dc0e7-389d-4167-9c69-5f9108ce8b9d))
+	(global_label "CAM_5V_SENSE"
+		(shape passive)
+		(at 127 113.03 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 6baa08a9-f799-4d2d-956c-7e75a840098f))
 	(global_label "RAW_ACT_SENSE"
 		(shape passive)
 		(at 127 110.49 0)
