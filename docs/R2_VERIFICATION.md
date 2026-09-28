@@ -74,6 +74,23 @@ All 99 BOM lines / 205 positions were checked against manufacturer datasheets in
 
 **Placement orientation.** Every CPL row is corrected against the LCSC/EasyEDA footprint of its own LCSC code (`tools/jlc_orient.py`). Without the correction, U7, U8, U10, U11, U12, U13, D121 and LED2 would have been placed rotated.
 
+## 3a. Self-test coverage (AUTOTEST_DESIGN.md)
+
+AUTOTEST_DESIGN's minimum sensing set is on the board:
+- VLOGIC → PC2 and 3V3 → PC3, both by divider;
+- RAW_ACT → PB0;
+- VBUS → PD15;
+- per-bus arm sense and per-channel continuity with the cold pull-up (tests T-41 / T-42);
+- the internal VREFINT / VBAT / temperature channels;
+- the buzzer as a load step (T-16).
+
+R2 adds one sense the original design did not have, for the new camera branch: **CAM_5V → R104 / R105 10k / 1k + C94 → PB1 (ADC12_INP5)**. It reads 0.477 V at 5.25 V and stays at 1.40 V even at the 15.4 V TVS clamp, inside PB1's TT 4.0 V limit. It is live only while the board is powered and the camera branch is on, so it adds no always-live path into an unpowered MCU (AUTOTEST §2.4).
+
+Accepted blind spots, unchanged:
+- servo outputs and LEDs;
+- BAT+ upstream of the switch (deliberately no divider, AUTOTEST §2.4);
+- current sensing (AUTOTEST §3).
+
 ## 4. FMEA hardware items (H-1 … H-10) on R2
 
 | Item | Status |
