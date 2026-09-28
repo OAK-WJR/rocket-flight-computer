@@ -401,7 +401,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1908,7 +1908,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" ""
+		(property "LCSC" "C705743"
 			(at 238.76 121.92 0)
 			(hide yes)
 			(effects
@@ -1920,7 +1920,7 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
 					(reference "R84")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "YAGEO"
 			(at 238.76 121.92 0)
 			(hide yes)
 			(effects
@@ -1932,7 +1932,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" ""
+		(property "LCSC Part" "C705743"
 			(at 238.76 121.92 0)
 			(hide yes)
 			(effects

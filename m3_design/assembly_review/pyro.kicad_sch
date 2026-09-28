@@ -472,7 +472,7 @@
 						(font
 							(size 1.27 1.27))))))
 		(embedded_fonts no)
-		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric"
+		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
 			(at 0 0 0)
 			(effects
 				(font
@@ -1304,7 +1304,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "47k"
+		(property "Value" "10k"
 			(at 102.87 123.19 0)
 			(effects
 				(font
@@ -1322,7 +1322,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C25792"
+		(property "LCSC" "C25744"
 			(at 99.06 114.3 0)
 			(hide yes)
 			(effects
@@ -1408,6 +1408,188 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
 					(reference "R132")
 					(unit 1)))))
+	(symbol
+		(lib_id "M3:R")
+		(at 340.36 279.4 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 3e965335-f19a-4f0c-90fe-a4a33a7c1534)
+		(property "Reference" "R134"
+			(at 344.17 270.51 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2R 1% 2W pulse"
+			(at 344.17 288.29 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R2512"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C3013496"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Bourns"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CRM2512-FX-2R00ELF"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R134")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 340.36 275.59)
+			(xy 340.36 270.51))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c39544a1-5398-4085-9689-5ef04a72243e))
+	(global_label "PYRO1_IGN"
+		(shape passive)
+		(at 340.36 270.51 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 61f5d879-6c31-42fa-9307-1c688c35e602))
+	(wire
+		(pts
+			(xy 340.36 283.21)
+			(xy 340.36 288.29))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a3858caf-5780-4fe4-a75a-1bb1dda5c2fe))
+	(global_label "PYRO1_BUS"
+		(shape passive)
+		(at 340.36 288.29 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 394b0807-0478-46f6-ad96-b9e80de08046))
+	(symbol
+		(lib_id "M3:R")
+		(at 360.68 279.4 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e8222041-91ab-4ecb-9804-9b3f1e3dc796)
+		(property "Reference" "R135"
+			(at 364.49 270.51 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2R 1% 2W pulse"
+			(at 364.49 288.29 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R2512"
+			(at 360.68 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 360.68 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C3013496"
+			(at 360.68 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Bourns"
+			(at 360.68 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CRM2512-FX-2R00ELF"
+			(at 360.68 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R135")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 360.68 275.59)
+			(xy 360.68 270.51))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 81ddf6fc-f50e-44d7-a5b2-6ea228ad9688))
+	(global_label "PYRO2_IGN"
+		(shape passive)
+		(at 360.68 270.51 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid a93a6b2a-3dd3-4376-9bc9-e59080265881))
+	(wire
+		(pts
+			(xy 360.68 283.21)
+			(xy 360.68 288.29))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f1803ddc-9ec1-4468-a444-b447d2f5e747))
+	(global_label "PYRO2_BUS"
+		(shape passive)
+		(at 360.68 288.29 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 38690315-fe31-4fb7-af2b-1d26bc886b8f))
+	(text "R134/R135: 2 ohm 2 W pulse-rated (Bourns CRM2512, 90 W for 10 ms).\nLimit a shorted igniter to ~4 A so BAT_IN, the MCU and the other\nchannel survive (m3_design/sim_r2/FINDINGS.md 1). Firmware fire pulse <= 20 ms."
+		(exclude_from_sim no)
+		(at 330.2 313.69 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left bottom))
+		(uuid 7eab5604-a24a-4189-b4aa-11eb60c8834d))
 	(wire
 		(pts
 			(xy 157.48 110.49)
@@ -2390,7 +2572,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "47k"
+		(property "Value" "10k"
 			(at 453.39 186.69 0)
 			(effects
 				(font
@@ -2408,7 +2590,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C25792"
+		(property "LCSC" "C25744"
 			(at 449.58 177.8 0)
 			(hide yes)
 			(effects
@@ -3012,7 +3194,7 @@
 			(width 0)
 			(type default))
 		(uuid 190a45b5-36d7-533a-996b-1656538be9f3))
-	(global_label "PYRO1_BUS"
+	(global_label "PYRO1_IGN"
 		(shape passive)
 		(at 378.46 240.03 180)
 		(effects
@@ -3028,7 +3210,7 @@
 			(width 0)
 			(type default))
 		(uuid 7c5219b1-a97a-5f64-bf95-5e2ef993ee8c))
-	(global_label "PYRO2_BUS"
+	(global_label "PYRO2_IGN"
 		(shape passive)
 		(at 378.46 242.57 180)
 		(effects

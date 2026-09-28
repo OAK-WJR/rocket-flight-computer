@@ -481,7 +481,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1507,7 +1507,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "80k 0.1%"
+		(property "Value" "80.6k 0.1%"
 			(at 261.62 128.27 0)
 			(effects
 				(font
@@ -1527,7 +1527,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" ""
+		(property "LCSC" "C861568"
 			(at 259.08 127 0)
 			(hide yes)
 			(effects
@@ -1539,19 +1539,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
 					(reference "R86")
 					(unit 1))))
-		(property "Manufacturer" "Vishay Dale Thin Film"
+		(property "Manufacturer" "YAGEO"
 			(at 259.08 127 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "PTN0603Y8002BST1"
+		(property "Manufacturer Part" "RT0603BRD0780K6L"
 			(at 259.08 127 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" ""
+		(property "LCSC Part" "C861568"
 			(at 259.08 127 0)
 			(hide yes)
 			(effects

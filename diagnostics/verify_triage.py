@@ -21,7 +21,7 @@ from verify_assembly_firmware import TESTS
 PROTECTED={
  'm3_design/M3_Assembly_Review_v0_8_1.zip':'fad260d2bf28c996fbbebf673454d44291791d0ead9d9f7e00e203cc84f997be',
  'm3_design/M3_PDIAG_Review_v0_8.zip':'87a78b675789c7f26a1c7399ac99e2c3af750ae01dd4aaf9332c15356a8f087f',
- 'm3_design/assembly_review/m3.kicad_pcb':'e432d3436d5029de0a74a4b0ebcd02ec092dedf6d4252ce310f7be301558627f'}
+ 'reference/m3_assy_r1/m3.kicad_pcb':'e432d3436d5029de0a74a4b0ebcd02ec092dedf6d4252ce310f7be301558627f'}
 
 
 def inputs():

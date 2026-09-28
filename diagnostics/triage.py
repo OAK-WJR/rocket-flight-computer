@@ -22,7 +22,7 @@ from .triage_rules import investigations, GROUPS
 from .usb import validate_manifest, serial_client, capture, request_bytes
 
 DEFAULT_MANIFEST = ROOT/'m3_firmware/build_assembly_inspect/manifest.json'
-DEFAULT_BOARD = ROOT/'m3_design/assembly_review/m3.kicad_pcb'
+DEFAULT_BOARD = ROOT/'reference/m3_assy_r1/m3.kicad_pcb'  # v0.8.1 and this tool are bound to R1
 
 
 def sha(path):

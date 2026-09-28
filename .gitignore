@@ -21,3 +21,4 @@ verification_*/
 *.zip
 **/sources/*.pdf
 gerber/
+m3_design/sim_r2/out/

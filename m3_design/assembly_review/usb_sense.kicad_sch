@@ -98,7 +98,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
 				(at 0 0 0)
 				(effects
 					(font
@@ -230,7 +230,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" ""
+		(property "LCSC" "C25915"
 			(at 78.74 83.82 0)
 			(hide yes)
 			(effects
@@ -242,19 +242,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/7323b515-8986-5814-85b5-9e04db992507"
 					(reference "R9")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 78.74 83.82 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RC0402FR-076K2L"
+		(property "Manufacturer Part" "0402WGF6201TCE"
 			(at 78.74 83.82 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" ""
+		(property "LCSC Part" "C25915"
 			(at 78.74 83.82 0)
 			(hide yes)
 			(effects
