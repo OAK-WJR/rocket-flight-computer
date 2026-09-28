@@ -386,7 +386,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "M3_OSCON_F12"
+			(property "ki_fp_filters" "M3_OSCON_F12 CAP-SMD_BD8.0*"
 				(at 0 0 0)
 				(effects
 					(font

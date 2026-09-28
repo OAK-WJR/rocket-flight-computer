@@ -1,5 +1,7 @@
 # M3 bench diagnostic firmware
 
+> **M3-ASSY-R2 (actuator merge, 2026-09-25): no firmware exists for R2 yet.** R2 moves LED_RED from PE3 to PE8 and turns PE3 / PE6 into no-net sentinels beside the pyro gates PE4 / PE5, so **v0.8.1 must not be run on an R2 board** (it drives PE3). `build.py` already refuses to build against the changed PCB hash; the reviewed R2 GPIO roles are in [`pins_r2.json`](pins_r2.json) and the rules in [`../docs/M3_ACTUATOR_MERGE.md`](../docs/M3_ACTUATOR_MERGE.md). A new binding must be written from `assembly_binding.py` together with the first R2 firmware, not by editing the R1 hash.
+
 **Current version: v0.8.1 for M3-ASSY-R1.** Usage: [ASSEMBLY_DIAGNOSTICS.md](ASSEMBLY_DIAGNOSTICS.md). The host-side [triage entry point](../diagnostics/TRIAGE.md) ties USB snapshots, fault history and independent instrument readings to the current PCB's test points, keeping disconnections and partial evidence. **Nothing has been verified on a real board, and the complete M3 is not finished** (see [../STATUS.md](../STATUS.md)).
 
 This is bench firmware: it acquires and logs diagnostic data and exposes it over SWD and USB. It contains **no flight-state estimation, attitude control, servo or pyro actuation**.

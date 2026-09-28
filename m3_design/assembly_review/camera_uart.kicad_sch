@@ -518,7 +518,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" ""
+		(property "LCSC" "C5186957"
 			(at 259.08 78.74 0)
 			(hide yes)
 			(effects
@@ -541,7 +541,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" ""
+		(property "LCSC Part" "C5186957"
 			(at 259.08 78.74 0)
 			(hide yes)
 			(effects

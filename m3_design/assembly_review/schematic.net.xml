@@ -2,7 +2,7 @@
 <export version="E">
   <design>
     <source>m3_design/assembly_review/m3.kicad_sch</source>
-    <date>2026-09-08T05:01:06</date>
+    <date>2026-09-26T00:23:53</date>
     <tool>Eeschema 10.0.6</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -173,6 +173,78 @@
         <rev>M3-ASSY-R1</rev>
         <date>2026-09-07</date>
         <source>usb_sense.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="11" name="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/">
+      <title_block>
+        <title>11 | Actuator power switch</title>
+        <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
+        <rev>M3-ASSY-R2</rev>
+        <date>2026-09-25</date>
+        <source>actuator_power.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="12" name="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/">
+      <title_block>
+        <title>12 | Pyro channels, arming and continuity</title>
+        <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
+        <rev>M3-ASSY-R2</rev>
+        <date>2026-09-25</date>
+        <source>pyro.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="13" name="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/">
+      <title_block>
+        <title>13 | Servo outputs</title>
+        <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
+        <rev>M3-ASSY-R2</rev>
+        <date>2026-09-25</date>
+        <source>servos.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="14" name="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/">
+      <title_block>
+        <title>14 | Launch pull-pin and buzzer</title>
+        <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
+        <rev>M3-ASSY-R2</rev>
+        <date>2026-09-25</date>
+        <source>pullpin_buzzer.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
         <comment number="3" value=""/>
@@ -3304,7 +3376,7 @@
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="M3_OSCON_F12"/>
+      <property name="ki_fp_filters" value="M3_OSCON_F12 CAP-SMD_BD8.0*"/>
       <sheetpath names="/08 | USB limit, source mux and hold-up/" tstamps="/98c21473-b271-5039-bfe5-b3672097f1da/"/>
       <tstamps>a4f1fa8f-3c00-5b53-bcc1-e2084938a46e</tstamps>
       <units>
@@ -4052,19 +4124,19 @@
       <value>TXU0202DCUR</value>
       <footprint>rocket:M3_TXU0202_DCU</footprint>
       <fields>
-        <field name="LCSC"/>
+        <field name="LCSC">C5186957</field>
         <field name="Manufacturer">Texas Instruments</field>
         <field name="Manufacturer Part">TXU0202DCUR</field>
-        <field name="LCSC Part"/>
+        <field name="LCSC Part">C5186957</field>
         <field name="Footprint">rocket:M3_TXU0202_DCU</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="CameraUART" description=""/>
-      <property name="LCSC" value=""/>
+      <property name="LCSC" value="C5186957"/>
       <property name="Manufacturer" value="Texas Instruments"/>
       <property name="Manufacturer Part" value="TXU0202DCUR"/>
-      <property name="LCSC Part" value=""/>
+      <property name="LCSC Part" value="C5186957"/>
       <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
       <property name="Sheetfile" value="camera_uart.kicad_sch"/>
       <property name="ki_fp_filters" value="M3_TXU0202_DCU"/>
@@ -4209,8 +4281,1900 @@
         </unit>
       </units>
     </comp>
+    <comp ref="C120">
+      <value>2.2uF</value>
+      <footprint>rocket:C0603</footprint>
+      <fields>
+        <field name="LCSC">C23630</field>
+        <field name="Footprint">rocket:C0603</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C23630"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>5c13fbaa-53c7-5045-a2e4-81f0e11e0ecc</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C121">
+      <value>470uF 25V</value>
+      <footprint>rocket:CAP-SMD_BD8.0-L8.3-W8.3-LS9.0-FD_H10.5</footprint>
+      <fields>
+        <field name="LCSC">C46550466</field>
+        <field name="Manufacturer">JIERR</field>
+        <field name="Manufacturer Part">MA25V470M8x10</field>
+        <field name="Footprint">rocket:CAP-SMD_BD8.0-L8.3-W8.3-LS9.0-FD_H10.5</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="PolarCap" description="Polarized capacitor"/>
+      <property name="LCSC" value="C46550466"/>
+      <property name="Manufacturer" value="JIERR"/>
+      <property name="Manufacturer Part" value="MA25V470M8x10"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="M3_OSCON_F12 CAP-SMD_BD8.0*"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>e1f3fb87-e35d-558f-b31e-d9d3f7781b14</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C122">
+      <value>10nF</value>
+      <footprint>rocket:C0603</footprint>
+      <fields>
+        <field name="LCSC">C57112</field>
+        <field name="Footprint">rocket:C0603</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C57112"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>05d665d5-eaa9-55d7-a89d-2992f2593a77</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="Q120">
+      <value>AON6403</value>
+      <footprint>rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL</footprint>
+      <fields>
+        <field name="LCSC">C2760089</field>
+        <field name="Manufacturer">Alpha &amp; Omega Semicon</field>
+        <field name="Manufacturer Part">AON6403</field>
+        <field name="Footprint">rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="PMOS_PDFN8" description="P-MOSFET, PDFN5x6-8 (1-3 S, 4 G, 5-8 + tab D)"/>
+      <property name="LCSC" value="C2760089"/>
+      <property name="Manufacturer" value="Alpha &amp; Omega Semicon"/>
+      <property name="Manufacturer Part" value="AON6403"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>2332f5de-f568-55a5-824c-1ef8f2dd9c96</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="4"/>
+            <pin num="5"/>
+            <pin num="6"/>
+            <pin num="7"/>
+            <pin num="8"/>
+            <pin num="9"/>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="Q121">
+      <value>AON6403</value>
+      <footprint>rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL</footprint>
+      <fields>
+        <field name="LCSC">C2760089</field>
+        <field name="Manufacturer">Alpha &amp; Omega Semicon</field>
+        <field name="Manufacturer Part">AON6403</field>
+        <field name="Footprint">rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="PMOS_PDFN8" description="P-MOSFET, PDFN5x6-8 (1-3 S, 4 G, 5-8 + tab D)"/>
+      <property name="LCSC" value="C2760089"/>
+      <property name="Manufacturer" value="Alpha &amp; Omega Semicon"/>
+      <property name="Manufacturer Part" value="AON6403"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>9f0730ac-8cc5-5e0c-b414-00262766385c</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="4"/>
+            <pin num="5"/>
+            <pin num="6"/>
+            <pin num="7"/>
+            <pin num="8"/>
+            <pin num="9"/>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="Q122">
+      <value>AO3400A</value>
+      <footprint>rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR</footprint>
+      <fields>
+        <field name="LCSC">C20917</field>
+        <field name="Manufacturer">Alpha &amp; Omega Semicon</field>
+        <field name="Manufacturer Part">AO3400A</field>
+        <field name="Footprint">rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="NMOS_SOT23" description="N-MOSFET SOT-23 (1 G, 2 S, 3 D)"/>
+      <property name="LCSC" value="C20917"/>
+      <property name="Manufacturer" value="Alpha &amp; Omega Semicon"/>
+      <property name="Manufacturer Part" value="AO3400A"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>c115c1f2-8988-5383-a1c5-c63fc7fce064</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="3"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R120">
+      <value>100k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25741</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25741"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>a6ff2fb8-eb4f-598b-8062-5b63a5a74736</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R121">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>e946a5e7-510b-5ce4-9ddc-2cde70077e89</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R122">
+      <value>100k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25741</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25741"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>ed092670-7d68-546d-aa2f-975b46624b76</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R123">
+      <value>100k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25741</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25741"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>6e436d8f-b7f3-534c-b58c-08c01aaefe2f</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R124">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>01ea6f11-8f73-5cc4-bc19-b1f8bedccefd</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R125">
+      <value>4.7k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25900</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25900"/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>ac2fc83a-00fa-5977-815f-47c064daaed2</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP120">
+      <value>RAW_ACT</value>
+      <footprint>rocket:M3_TestPad_1.5</footprint>
+      <fields>
+        <field name="LCSC"/>
+        <field name="Footprint">rocket:M3_TestPad_1.5</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="TestPoint" description="test point"/>
+      <property name="LCSC" value=""/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>3936aa62-c386-5cd5-b541-318b5a73e037</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP121">
+      <value>ACT_GATE</value>
+      <footprint>rocket:M3_TestPad_1.5</footprint>
+      <fields>
+        <field name="LCSC"/>
+        <field name="Footprint">rocket:M3_TestPad_1.5</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="TestPoint" description="test point"/>
+      <property name="LCSC" value=""/>
+      <property name="Sheetname" value="11 | Actuator power switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
+      <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
+      <tstamps>94912719-40fa-5608-a251-acb922c6e5d3</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C126">
+      <value>220nF 25V X7R</value>
+      <footprint>rocket:C0603</footprint>
+      <fields>
+        <field name="LCSC">C21120</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10B224KA8NNNC</field>
+        <field name="Footprint">rocket:C0603</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C21120"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10B224KA8NNNC"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>2008dcbb-c621-536a-b2c4-6fd095daa06e</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C127">
+      <value>10nF</value>
+      <footprint>rocket:C0603</footprint>
+      <fields>
+        <field name="LCSC">C57112</field>
+        <field name="Footprint">rocket:C0603</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C57112"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>debb2ab0-e450-5850-afd0-20e46b050498</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C128">
+      <value>100nF 50V X7R 10%</value>
+      <footprint>rocket:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="LCSC">C1591</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10B104KB8NNNC</field>
+        <field name="Footprint">rocket:C_0603_1608Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C1591"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10B104KB8NNNC"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>5d7477a1-cf32-5b13-9270-d275c71dfca9</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C129">
+      <value>10nF</value>
+      <footprint>rocket:C0603</footprint>
+      <fields>
+        <field name="LCSC">C57112</field>
+        <field name="Footprint">rocket:C0603</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C57112"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>3fbf81d6-fc8b-52ee-86fe-87ca3e077797</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C138">
+      <value>220nF 25V X7R</value>
+      <footprint>rocket:C0603</footprint>
+      <fields>
+        <field name="LCSC">C21120</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10B224KA8NNNC</field>
+        <field name="Footprint">rocket:C0603</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C21120"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10B224KA8NNNC"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>93e74549-74f4-512c-a7c6-d34a601ea163</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C139">
+      <value>10nF</value>
+      <footprint>rocket:C0603</footprint>
+      <fields>
+        <field name="LCSC">C57112</field>
+        <field name="Footprint">rocket:C0603</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C57112"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>017d95b9-4d49-5251-a15a-7937d4fcedcf</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C140">
+      <value>100nF 50V X7R 10%</value>
+      <footprint>rocket:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="LCSC">C1591</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10B104KB8NNNC</field>
+        <field name="Footprint">rocket:C_0603_1608Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C1591"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10B104KB8NNNC"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>2e95425a-1c62-578e-bf43-f196a2294f16</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C141">
+      <value>10nF</value>
+      <footprint>rocket:C0603</footprint>
+      <fields>
+        <field name="LCSC">C57112</field>
+        <field name="Footprint">rocket:C0603</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C57112"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>14da661f-1873-5716-8b4a-51b112318db1</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D120">
+      <value>BAT54A</value>
+      <footprint>rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR</footprint>
+      <fields>
+        <field name="LCSC">C8591</field>
+        <field name="Manufacturer">JSCJ</field>
+        <field name="Manufacturer Part">BAT54A</field>
+        <field name="Footprint">rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="BAT54A" description="Dual Schottky, common anode (1 K1, 2 K2, 3 A)"/>
+      <property name="LCSC" value="C8591"/>
+      <property name="Manufacturer" value="JSCJ"/>
+      <property name="Manufacturer Part" value="BAT54A"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>f9c06e2f-888f-5be3-a386-de94f2d55ba8</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="3"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J120">
+      <value>ARM: RAW / BUS2 / BUS1 / RAW</value>
+      <footprint>rocket:M3_DB128V_4P</footprint>
+      <fields>
+        <field name="LCSC">C2915641</field>
+        <field name="Footprint">rocket:M3_DB128V_4P</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="Conn_1x4" description="4-position connector"/>
+      <property name="LCSC" value="C2915641"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>d4c8231c-fe2b-56db-aac3-03cf4a1970fe</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J121">
+      <value>E1- / E1+ / E2+ / E2-</value>
+      <footprint>rocket:M3_DB128V_4P</footprint>
+      <fields>
+        <field name="LCSC">C2915641</field>
+        <field name="Footprint">rocket:M3_DB128V_4P</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="Conn_1x4" description="4-position connector"/>
+      <property name="LCSC" value="C2915641"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>312be4d5-4e6a-5856-bf8a-17dc1102db31</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="Q124">
+      <value>AON7524</value>
+      <footprint>rocket:M3_AON7524_DFN3x3A</footprint>
+      <fields>
+        <field name="LCSC">C431195</field>
+        <field name="Manufacturer">Alpha &amp; Omega Semicon</field>
+        <field name="Manufacturer Part">AON7524</field>
+        <field name="Footprint">rocket:M3_AON7524_DFN3x3A</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="NMOS_DFN8EP" description="N-MOSFET DFN3x3 EP (1-3 S, 4 G, 5 D paddle incl. pins 5-8)"/>
+      <property name="LCSC" value="C431195"/>
+      <property name="Manufacturer" value="Alpha &amp; Omega Semicon"/>
+      <property name="Manufacturer Part" value="AON7524"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>54b9c4fb-19e5-5266-95a2-11179c02cbcb</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="4"/>
+            <pin num="5"/>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="Q125">
+      <value>AON7524</value>
+      <footprint>rocket:M3_AON7524_DFN3x3A</footprint>
+      <fields>
+        <field name="LCSC">C431195</field>
+        <field name="Manufacturer">Alpha &amp; Omega Semicon</field>
+        <field name="Manufacturer Part">AON7524</field>
+        <field name="Footprint">rocket:M3_AON7524_DFN3x3A</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="NMOS_DFN8EP" description="N-MOSFET DFN3x3 EP (1-3 S, 4 G, 5 D paddle incl. pins 5-8)"/>
+      <property name="LCSC" value="C431195"/>
+      <property name="Manufacturer" value="Alpha &amp; Omega Semicon"/>
+      <property name="Manufacturer Part" value="AON7524"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>ed381caf-4169-5f1a-803f-fefc7cce3a24</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="4"/>
+            <pin num="5"/>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R126">
+      <value>220R</value>
+      <footprint>rocket:R0805</footprint>
+      <fields>
+        <field name="LCSC">C17557</field>
+        <field name="Footprint">rocket:R0805</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C17557"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>29f62ad7-62e9-5210-bb14-da6a5ebbc8da</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R127">
+      <value>1k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C11702</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C11702"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>f6d5c23f-f3d6-560c-b63e-3b81d85c3d82</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R128">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>69693dcf-2521-592c-8ccd-d025f3db0f6b</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R129">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>4a41b71e-d3d9-5b9f-8bfa-cfaaa9cfc876</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R130">
+      <value>1k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C11702</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C11702"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>abbee15f-d8a2-517e-9cde-2f07defc33da</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R131">
+      <value>47k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25792</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25792"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>3e5e5ce3-bec3-5696-b61d-15e036f150a5</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R132">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>d40390ad-b5bb-5b7e-a716-6a571a133158</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R133">
+      <value>1k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C11702</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C11702"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>c3a0c7bb-6b3d-5b38-895e-9b5bdea6d845</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R138">
+      <value>220R</value>
+      <footprint>rocket:R0805</footprint>
+      <fields>
+        <field name="LCSC">C17557</field>
+        <field name="Footprint">rocket:R0805</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C17557"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>a6c8f958-bbec-54ee-ad01-39d02833340d</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R139">
+      <value>1k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C11702</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C11702"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>189da726-6b38-5d5b-a3d9-2bde6f80c410</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R140">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>e82cb0c2-f868-54ec-b5dc-e0f39fef77ae</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R141">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>dbfefc46-ddd9-50ad-9fa0-1d30c0f1320f</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R142">
+      <value>1k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C11702</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C11702"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>f30eaa7e-b618-5b46-b756-2796d714cb64</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R143">
+      <value>47k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25792</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25792"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>730dbbd2-54a2-52fb-95cf-386c81e0a734</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R144">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>baaf8454-097d-5cbe-976c-487074e4923a</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R145">
+      <value>1k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C11702</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C11702"/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>6ad93ee4-2bc7-5072-91d4-a64fae2731f7</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP122">
+      <value>PYRO1_GATE</value>
+      <footprint>rocket:M3_TestPad_1.5</footprint>
+      <fields>
+        <field name="LCSC"/>
+        <field name="Footprint">rocket:M3_TestPad_1.5</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="TestPoint" description="test point"/>
+      <property name="LCSC" value=""/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>f98f392e-e5f6-5094-b9d4-23084059bbea</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP123">
+      <value>PYRO2_GATE</value>
+      <footprint>rocket:M3_TestPad_1.5</footprint>
+      <fields>
+        <field name="LCSC"/>
+        <field name="Footprint">rocket:M3_TestPad_1.5</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="TestPoint" description="test point"/>
+      <property name="LCSC" value=""/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>4a739087-f889-5cad-94d3-2c4f510b4de6</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP124">
+      <value>GND</value>
+      <footprint>rocket:M3_TestPad_1.5</footprint>
+      <fields>
+        <field name="LCSC"/>
+        <field name="Footprint">rocket:M3_TestPad_1.5</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="TestPoint" description="test point"/>
+      <property name="LCSC" value=""/>
+      <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
+      <property name="Sheetfile" value="pyro.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
+      <sheetpath names="/12 | Pyro channels, arming and continuity/" tstamps="/a44998d3-a410-5959-9243-41a16cadc930/"/>
+      <tstamps>261b5473-cb7e-5ef3-9e10-2279eed4c5a2</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C150">
+      <value>22uF</value>
+      <footprint>rocket:C0805</footprint>
+      <fields>
+        <field name="LCSC">C45783</field>
+        <field name="Footprint">rocket:C0805</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C45783"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>fc148709-0c42-5d76-b20f-8eb01f29f0cd</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C151">
+      <value>22uF</value>
+      <footprint>rocket:C0805</footprint>
+      <fields>
+        <field name="LCSC">C45783</field>
+        <field name="Footprint">rocket:C0805</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C45783"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>3be76b79-3ccd-5843-b1ed-9fee1bbdd2cb</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D121">
+      <value>SRV05-4</value>
+      <footprint>rocket:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL</footprint>
+      <fields>
+        <field name="LCSC">C13612</field>
+        <field name="Manufacturer">SEMTECH</field>
+        <field name="Manufacturer Part">SRV05-4.TCT</field>
+        <field name="Footprint">rocket:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="SRV05_4" description="4-line rail clamp (1/3/4/6 IO, 2 GND, 5 VCC)"/>
+      <property name="LCSC" value="C13612"/>
+      <property name="Manufacturer" value="SEMTECH"/>
+      <property name="Manufacturer Part" value="SRV05-4.TCT"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>4fddcc2f-dfb5-5cfb-abc1-33e41c053bae</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="3"/>
+            <pin num="4"/>
+            <pin num="6"/>
+            <pin num="5"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J122">
+      <value>SERVO 3x4</value>
+      <footprint>rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54</footprint>
+      <fields>
+        <field name="LCSC">C32713291</field>
+        <field name="Footprint">rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="Conn_3x4" description="3x4 pin header, column-major (1/2/3 = one column)"/>
+      <property name="LCSC" value="C32713291"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>91e60751-8f2e-5a17-bb30-10efcf7de97b</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+            <pin num="5"/>
+            <pin num="6"/>
+            <pin num="7"/>
+            <pin num="8"/>
+            <pin num="9"/>
+            <pin num="10"/>
+            <pin num="11"/>
+            <pin num="12"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R150">
+      <value>1k 0805</value>
+      <footprint>rocket:R0805</footprint>
+      <fields>
+        <field name="LCSC">C17513</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0805W8F1001T5E</field>
+        <field name="Footprint">rocket:R0805</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C17513"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0805W8F1001T5E"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>a0e85516-460d-5a2b-970e-e10a33d89c40</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R151">
+      <value>1k 0805</value>
+      <footprint>rocket:R0805</footprint>
+      <fields>
+        <field name="LCSC">C17513</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0805W8F1001T5E</field>
+        <field name="Footprint">rocket:R0805</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C17513"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0805W8F1001T5E"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>8b9abd3c-8933-5279-80b4-36cb9ec23d12</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R152">
+      <value>1k 0805</value>
+      <footprint>rocket:R0805</footprint>
+      <fields>
+        <field name="LCSC">C17513</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0805W8F1001T5E</field>
+        <field name="Footprint">rocket:R0805</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C17513"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0805W8F1001T5E"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>e6c07d33-44f7-5ff0-b126-3c2578a07b7c</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R153">
+      <value>1k 0805</value>
+      <footprint>rocket:R0805</footprint>
+      <fields>
+        <field name="LCSC">C17513</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0805W8F1001T5E</field>
+        <field name="Footprint">rocket:R0805</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C17513"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0805W8F1001T5E"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>4853c618-40f5-5386-8b42-c7f87a4b1e03</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R154">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>9a6f217f-f08c-5e2c-a632-c64cab7d1016</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R155">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>7ff6c836-53d4-5af0-9be9-debb16af28ed</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R156">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>a7658dcd-1866-5155-8a0d-3aa5455ab0a8</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R157">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="13 | Servo outputs"/>
+      <property name="Sheetfile" value="servos.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
+      <tstamps>afde7621-984c-58b1-a910-df7dcd1ce260</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C160">
+      <value>100nF</value>
+      <footprint>rocket:C0402</footprint>
+      <fields>
+        <field name="LCSC">C1525</field>
+        <field name="Footprint">rocket:C0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C1525"/>
+      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <tstamps>76995d75-e433-5d05-b6cf-da7cef87b5c0</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D122">
+      <value>BAT54S</value>
+      <footprint>rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR</footprint>
+      <fields>
+        <field name="LCSC">C47546</field>
+        <field name="Manufacturer">Nexperia</field>
+        <field name="Manufacturer Part">BAT54S,215</field>
+        <field name="Footprint">rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="BAT54S" description="Dual Schottky, series (1 A1, 2 K2, 3 K1/A2)"/>
+      <property name="LCSC" value="C47546"/>
+      <property name="Manufacturer" value="Nexperia"/>
+      <property name="Manufacturer Part" value="BAT54S,215"/>
+      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
+      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <tstamps>d87fd5f7-3f04-50c0-ac78-3b71aae7b65d</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="3"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D123">
+      <value>1N5819WS</value>
+      <footprint>rocket:SOD-323_L1.8-W1.3-LS2.5-RD</footprint>
+      <fields>
+        <field name="LCSC">C191023</field>
+        <field name="Manufacturer">Guangdong Hottech</field>
+        <field name="Manufacturer Part">1N5819WS</field>
+        <field name="Footprint">rocket:SOD-323_L1.8-W1.3-LS2.5-RD</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="D_Schottky_KA" description="Schottky diode, pin 1 = K, pin 2 = A"/>
+      <property name="LCSC" value="C191023"/>
+      <property name="Manufacturer" value="Guangdong Hottech"/>
+      <property name="Manufacturer Part" value="1N5819WS"/>
+      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
+      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <tstamps>51aadcbc-2da4-5844-9db2-6a6022a277cb</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="2"/>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J123">
+      <value>PULL-PIN 1x2</value>
+      <footprint>rocket:M3_PULLPIN_1x2</footprint>
+      <fields>
+        <field name="LCSC">C2337</field>
+        <field name="Footprint">rocket:M3_PULLPIN_1x2</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="Conn_1x2" description="2-position connector"/>
+      <property name="LCSC" value="C2337"/>
+      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
+      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <tstamps>f14a72d8-b5ef-574a-9770-ce840f6656ec</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="LS120">
+      <value>MLT-8530</value>
+      <footprint>rocket:BUZ-SMD_4P-L8.5-W8.5-P8.50-BR</footprint>
+      <fields>
+        <field name="LCSC">C94599</field>
+        <field name="Manufacturer">Jiangsu Huaneng Elec</field>
+        <field name="Manufacturer Part">MLT-8530</field>
+        <field name="Footprint">rocket:BUZ-SMD_4P-L8.5-W8.5-P8.50-BR</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="Buzzer_4pad" description="SMD magnetic buzzer, 1 = +lead, 2 = -lead, 3/4 = dummy pads"/>
+      <property name="LCSC" value="C94599"/>
+      <property name="Manufacturer" value="Jiangsu Huaneng Elec"/>
+      <property name="Manufacturer Part" value="MLT-8530"/>
+      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
+      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <tstamps>147908ea-9ac1-5282-8959-c1434d74a21d</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="Q123">
+      <value>AO3400A</value>
+      <footprint>rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR</footprint>
+      <fields>
+        <field name="LCSC">C20917</field>
+        <field name="Manufacturer">Alpha &amp; Omega Semicon</field>
+        <field name="Manufacturer Part">AO3400A</field>
+        <field name="Footprint">rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="NMOS_SOT23" description="N-MOSFET SOT-23 (1 G, 2 S, 3 D)"/>
+      <property name="LCSC" value="C20917"/>
+      <property name="Manufacturer" value="Alpha &amp; Omega Semicon"/>
+      <property name="Manufacturer Part" value="AO3400A"/>
+      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
+      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <tstamps>25615ebf-59b4-59da-9087-652c7c36d1d4</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="3"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R160">
+      <value>1k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C11702</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C11702"/>
+      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <tstamps>76acb321-f1bc-5df9-9045-eba4a751850f</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R161">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <tstamps>6d91a63f-e927-5d3b-99ff-3acda81009e1</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R162">
+      <value>220R</value>
+      <footprint>rocket:R0805</footprint>
+      <fields>
+        <field name="LCSC">C17557</field>
+        <field name="Footprint">rocket:R0805</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C17557"/>
+      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <tstamps>6a71a63c-5726-5897-8c0a-e5737d5110d8</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R163">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric"/>
+      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <tstamps>d219091c-ae7a-5444-9408-0ff31439bad9</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
   </components>
   <libparts>
+    <libpart lib="M3" part="BAT54A">
+      <description>Dual Schottky, common anode (1 K1, 2 K2, 3 A)</description>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">BAT54A</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Dual Schottky, common anode (1 K1, 2 K2, 3 A)</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K1" type="passive"/>
+        <pin num="2" name="K2" type="passive"/>
+        <pin num="3" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="M3" part="BAT54S">
+      <description>Dual Schottky, series (1 A1, 2 K2, 3 K1/A2)</description>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">BAT54S</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Dual Schottky, series (1 A1, 2 K2, 3 K1/A2)</field>
+      </fields>
+      <pins>
+        <pin num="1" name="A1" type="passive"/>
+        <pin num="2" name="K2" type="passive"/>
+        <pin num="3" name="K1A2" type="passive"/>
+      </pins>
+    </libpart>
     <libpart lib="M3" part="Barometer">
       <footprints>
         <fp>SENSORS-SMD_MS5611-01BA03</fp>
@@ -4293,6 +6257,22 @@
         <pin num="4" name="GND" type="power_in"/>
         <pin num="5" name="SW" type="output"/>
         <pin num="6" name="BST" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="M3" part="Buzzer_4pad">
+      <description>SMD magnetic buzzer, 1 = +lead, 2 = -lead, 3/4 = dummy pads</description>
+      <fields>
+        <field name="Reference">LS</field>
+        <field name="Value">Buzzer_4pad</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">SMD magnetic buzzer, 1 = +lead, 2 = -lead, 3/4 = dummy pads</field>
+      </fields>
+      <pins>
+        <pin num="1" name="+" type="passive"/>
+        <pin num="2" name="-" type="passive"/>
+        <pin num="3" name="DUMMY" type="passive"/>
+        <pin num="4" name="DUMMY" type="passive"/>
       </pins>
     </libpart>
     <libpart lib="M3" part="C">
@@ -4419,6 +6399,60 @@
         <pin num="5" name="OUT3.3V" type="power_out"/>
       </pins>
     </libpart>
+    <libpart lib="M3" part="Conn_1x2">
+      <description>2-position connector</description>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_1x2</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">2-position connector</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="M3" part="Conn_1x4">
+      <description>4-position connector</description>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_1x4</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">4-position connector</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="M3" part="Conn_3x4">
+      <description>3x4 pin header, column-major (1/2/3 = one column)</description>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_3x4</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">3x4 pin header, column-major (1/2/3 = one column)</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="5" name="5" type="passive"/>
+        <pin num="6" name="6" type="passive"/>
+        <pin num="7" name="7" type="passive"/>
+        <pin num="8" name="8" type="passive"/>
+        <pin num="9" name="9" type="passive"/>
+        <pin num="10" name="10" type="passive"/>
+        <pin num="11" name="11" type="passive"/>
+        <pin num="12" name="12" type="passive"/>
+      </pins>
+    </libpart>
     <libpart lib="M3" part="Crystal">
       <description>Four pin crystal, GND on pins 2 and 4</description>
       <footprints>
@@ -4438,6 +6472,20 @@
         <pin num="2" name="G" type="passive"/>
         <pin num="3" name="3" type="passive"/>
         <pin num="4" name="G" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="M3" part="D_Schottky_KA">
+      <description>Schottky diode, pin 1 = K, pin 2 = A</description>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">D_Schottky_KA</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Schottky diode, pin 1 = K, pin 2 = A</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
       </pins>
     </libpart>
     <libpart lib="M3" part="Flash">
@@ -4739,10 +6787,64 @@
         <pin num="100" name="VDD" type="power_in"/>
       </pins>
     </libpart>
+    <libpart lib="M3" part="NMOS_DFN8EP">
+      <description>N-MOSFET DFN3x3 EP (1-3 S, 4 G, 5 D paddle incl. pins 5-8)</description>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">NMOS_DFN8EP</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">N-MOSFET DFN3x3 EP (1-3 S, 4 G, 5 D paddle incl. pins 5-8)</field>
+      </fields>
+      <pins>
+        <pin num="1" name="S" type="passive"/>
+        <pin num="2" name="S" type="passive"/>
+        <pin num="3" name="S" type="passive"/>
+        <pin num="4" name="G" type="passive"/>
+        <pin num="5" name="D" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="M3" part="NMOS_SOT23">
+      <description>N-MOSFET SOT-23 (1 G, 2 S, 3 D)</description>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">NMOS_SOT23</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">N-MOSFET SOT-23 (1 G, 2 S, 3 D)</field>
+      </fields>
+      <pins>
+        <pin num="1" name="G" type="passive"/>
+        <pin num="2" name="S" type="passive"/>
+        <pin num="3" name="D" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="M3" part="PMOS_PDFN8">
+      <description>P-MOSFET, PDFN5x6-8 (1-3 S, 4 G, 5-8 + tab D)</description>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">PMOS_PDFN8</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">P-MOSFET, PDFN5x6-8 (1-3 S, 4 G, 5-8 + tab D)</field>
+      </fields>
+      <pins>
+        <pin num="1" name="S" type="passive"/>
+        <pin num="2" name="S" type="passive"/>
+        <pin num="3" name="S" type="passive"/>
+        <pin num="4" name="G" type="passive"/>
+        <pin num="5" name="D" type="passive"/>
+        <pin num="6" name="D" type="passive"/>
+        <pin num="7" name="D" type="passive"/>
+        <pin num="8" name="D" type="passive"/>
+        <pin num="9" name="D" type="passive"/>
+      </pins>
+    </libpart>
     <libpart lib="M3" part="PolarCap">
       <description>Polarized capacitor</description>
       <footprints>
         <fp>M3_OSCON_F12</fp>
+        <fp>CAP-SMD_BD8.0*</fp>
       </footprints>
       <fields>
         <field name="Reference">C</field>
@@ -4773,6 +6875,24 @@
       <pins>
         <pin num="1" name="" type="passive"/>
         <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="M3" part="SRV05_4">
+      <description>4-line rail clamp (1/3/4/6 IO, 2 GND, 5 VCC)</description>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">SRV05_4</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">4-line rail clamp (1/3/4/6 IO, 2 GND, 5 VCC)</field>
+      </fields>
+      <pins>
+        <pin num="1" name="IO1" type="passive"/>
+        <pin num="2" name="GND" type="passive"/>
+        <pin num="3" name="IO2" type="passive"/>
+        <pin num="4" name="IO3" type="passive"/>
+        <pin num="5" name="VCC" type="passive"/>
+        <pin num="6" name="IO4" type="passive"/>
       </pins>
     </libpart>
     <libpart lib="M3" part="Schottky">
@@ -4914,13 +7034,19 @@
       <node ref="C8" pin="1" pintype="passive"/>
       <node ref="C9" pin="1" pintype="passive"/>
       <node ref="C90" pin="1" pintype="passive"/>
+      <node ref="D120" pin="3" pinfunction="A_3" pintype="passive"/>
+      <node ref="D121" pin="5" pinfunction="VCC_5" pintype="passive"/>
+      <node ref="D122" pin="2" pinfunction="K2_2" pintype="passive"/>
+      <node ref="D123" pin="1" pinfunction="K_1" pintype="passive"/>
       <node ref="J2" pin="5" pinfunction="Pin_5_5" pintype="passive"/>
       <node ref="L1" pin="2" pinfunction="2_2" pintype="passive"/>
       <node ref="L2" pin="1" pinfunction="1_1" pintype="passive"/>
+      <node ref="LS120" pin="1" pinfunction="+_1" pintype="passive"/>
       <node ref="R10" pin="2" pintype="passive"/>
       <node ref="R11" pin="2" pintype="passive"/>
       <node ref="R12" pin="2" pintype="passive"/>
       <node ref="R13" pin="2" pintype="passive"/>
+      <node ref="R161" pin="1" pintype="passive"/>
       <node ref="R62" pin="1" pintype="passive"/>
       <node ref="R76" pin="1" pintype="passive"/>
       <node ref="R89" pin="1" pintype="passive"/>
@@ -4956,59 +7082,117 @@
       <node ref="U6" pin="17" pinfunction="VCC_17" pintype="power_in"/>
       <node ref="U6" pin="2" pinfunction="V_IO_2" pintype="power_in"/>
     </net>
-    <net code="3" name="BARO_SDO" class="Default">
+    <net code="3" name="ACT_DRV" class="Default">
+      <node ref="Q122" pin="3" pinfunction="D_3" pintype="passive"/>
+      <node ref="R121" pin="2" pintype="passive"/>
+    </net>
+    <net code="4" name="ACT_EN" class="Default">
+      <node ref="Q122" pin="1" pinfunction="G_1" pintype="passive"/>
+      <node ref="R122" pin="2" pintype="passive"/>
+      <node ref="R123" pin="1" pintype="passive"/>
+    </net>
+    <net code="5" name="ACT_FET_S" class="Default">
+      <node ref="C120" pin="1" pintype="passive"/>
+      <node ref="Q120" pin="1" pinfunction="S_1" pintype="passive"/>
+      <node ref="Q120" pin="2" pinfunction="S_2" pintype="passive"/>
+      <node ref="Q120" pin="3" pinfunction="S_3" pintype="passive"/>
+      <node ref="Q121" pin="1" pinfunction="S_1" pintype="passive"/>
+      <node ref="Q121" pin="2" pinfunction="S_2" pintype="passive"/>
+      <node ref="Q121" pin="3" pinfunction="S_3" pintype="passive"/>
+      <node ref="R120" pin="1" pintype="passive"/>
+    </net>
+    <net code="6" name="ACT_GATE" class="Default">
+      <node ref="C120" pin="2" pintype="passive"/>
+      <node ref="Q120" pin="4" pinfunction="G_4" pintype="passive"/>
+      <node ref="Q121" pin="4" pinfunction="G_4" pintype="passive"/>
+      <node ref="R120" pin="2" pintype="passive"/>
+      <node ref="R121" pin="1" pintype="passive"/>
+      <node ref="TP121" pin="1" pinfunction="1_1" pintype="passive"/>
+    </net>
+    <net code="7" name="ARM1_SENSE" class="Default">
+      <node ref="C129" pin="1" pintype="passive"/>
+      <node ref="R132" pin="2" pintype="passive"/>
+      <node ref="R133" pin="1" pintype="passive"/>
+      <node ref="U1" pin="33" pinfunction="PC5_33" pintype="bidirectional"/>
+    </net>
+    <net code="8" name="ARM2_SENSE" class="Default">
+      <node ref="C141" pin="1" pintype="passive"/>
+      <node ref="R144" pin="2" pintype="passive"/>
+      <node ref="R145" pin="1" pintype="passive"/>
+      <node ref="U1" pin="32" pinfunction="PC4_32" pintype="bidirectional"/>
+    </net>
+    <net code="9" name="BARO_SDO" class="Default">
       <node ref="R64" pin="1" pintype="passive"/>
       <node ref="U5" pin="6" pinfunction="SDO_6" pintype="output"/>
     </net>
-    <net code="4" name="BAT_DVDT" class="Default">
+    <net code="10" name="BAT_DVDT" class="Default">
       <node ref="C81" pin="1" pintype="passive"/>
       <node ref="U9" pin="7" pinfunction="dVdt_7" pintype="passive"/>
     </net>
-    <net code="5" name="BAT_ENABLE" class="Default">
+    <net code="11" name="BAT_ENABLE" class="Default">
       <node ref="J1" pin="4" pinfunction="SW_RETURN_4" pintype="passive"/>
       <node ref="R81" pin="1" pintype="passive"/>
       <node ref="TP84" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U9" pin="1" pinfunction="EN/UVLO_1" pintype="input"/>
     </net>
-    <net code="6" name="BAT_FAULT_N" class="Default">
+    <net code="12" name="BAT_FAULT_N" class="Default">
       <node ref="R89" pin="2" pintype="passive"/>
       <node ref="TP85" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="81" pinfunction="PD0_81" pintype="bidirectional"/>
       <node ref="U9" pin="4" pinfunction="FLT_N_4" pintype="open_collector"/>
     </net>
-    <net code="7" name="BAT_ILIM" class="Default">
+    <net code="13" name="BAT_ILIM" class="Default">
       <node ref="R84" pin="1" pintype="passive"/>
       <node ref="TP89" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U9" pin="9" pinfunction="ILM_9" pintype="passive"/>
     </net>
-    <net code="8" name="BAT_IN" class="Default">
+    <net code="14" name="BAT_IN" class="Default">
       <node ref="C80" pin="1" pintype="passive"/>
       <node ref="D8" pin="1" pinfunction="A1_1" pintype="passive"/>
       <node ref="J1" pin="1" pinfunction="BAT+_2S_1" pintype="passive"/>
+      <node ref="Q120" pin="5" pinfunction="D_5" pintype="passive"/>
+      <node ref="Q120" pin="6" pinfunction="D_6" pintype="passive"/>
+      <node ref="Q120" pin="7" pinfunction="D_7" pintype="passive"/>
+      <node ref="Q120" pin="8" pinfunction="D_8" pintype="passive"/>
+      <node ref="Q120" pin="9" pinfunction="D_9" pintype="passive"/>
       <node ref="R80" pin="1" pintype="passive"/>
       <node ref="R82" pin="1" pintype="passive"/>
       <node ref="TP80" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U9" pin="5" pinfunction="IN_5" pintype="power_in"/>
     </net>
-    <net code="9" name="BAT_OVLO" class="Default">
+    <net code="15" name="BAT_OVLO" class="Default">
       <node ref="R82" pin="2" pintype="passive"/>
       <node ref="R83" pin="1" pintype="passive"/>
       <node ref="U9" pin="2" pinfunction="OVLO_2" pintype="input"/>
     </net>
-    <net code="10" name="BAT_SW_SOURCE" class="Default">
+    <net code="16" name="BAT_SW_SOURCE" class="Default">
       <node ref="J1" pin="3" pinfunction="SW_SOURCE_3" pintype="passive"/>
       <node ref="R80" pin="2" pintype="passive"/>
     </net>
-    <net code="11" name="BOOT0" class="Default">
+    <net code="17" name="BOOT0" class="Default">
       <node ref="J2" pin="6" pinfunction="Pin_6_6" pintype="passive"/>
       <node ref="R5" pin="1" pintype="passive"/>
       <node ref="U1" pin="94" pinfunction="BOOT0_94" pintype="input"/>
     </net>
-    <net code="12" name="BST" class="Default">
+    <net code="18" name="BST" class="Default">
       <node ref="C5" pin="2" pintype="passive"/>
       <node ref="U2" pin="6" pinfunction="BST_6" pintype="passive"/>
     </net>
-    <net code="13" name="CAM_5V" class="Default">
+    <net code="19" name="BUZZ_DRV" class="Default">
+      <node ref="R162" pin="1" pintype="passive"/>
+      <node ref="U1" pin="29" pinfunction="PA5_29" pintype="bidirectional"/>
+    </net>
+    <net code="20" name="BUZZ_G" class="Default">
+      <node ref="Q123" pin="1" pinfunction="G_1" pintype="passive"/>
+      <node ref="R162" pin="2" pintype="passive"/>
+      <node ref="R163" pin="1" pintype="passive"/>
+    </net>
+    <net code="21" name="BUZZ_OUT" class="Default">
+      <node ref="D123" pin="2" pinfunction="A_2" pintype="passive"/>
+      <node ref="LS120" pin="2" pinfunction="-_2" pintype="passive"/>
+      <node ref="Q123" pin="3" pinfunction="D_3" pintype="passive"/>
+    </net>
+    <net code="22" name="CAM_5V" class="Default">
       <node ref="C75" pin="1" pintype="passive"/>
       <node ref="C76" pin="1" pintype="passive"/>
       <node ref="C77" pin="1" pintype="passive"/>
@@ -5020,40 +7204,40 @@
       <node ref="TP72" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U13" pin="1" pinfunction="IN_1" pintype="power_in"/>
     </net>
-    <net code="14" name="CAM_BST" class="Default">
+    <net code="23" name="CAM_BST" class="Default">
       <node ref="C74" pin="2" pintype="passive"/>
       <node ref="U8" pin="6" pinfunction="BST_6" pintype="passive"/>
     </net>
-    <net code="15" name="CAM_DVDT" class="Default">
+    <net code="24" name="CAM_DVDT" class="Default">
       <node ref="C70" pin="1" pintype="passive"/>
       <node ref="U7" pin="1" pinfunction="dVdt_1" pintype="passive"/>
     </net>
-    <net code="16" name="CAM_EN" class="Default">
+    <net code="25" name="CAM_EN" class="Default">
       <node ref="R74" pin="2" pintype="passive"/>
       <node ref="R75" pin="1" pintype="passive"/>
       <node ref="U7" pin="2" pinfunction="EN/UVLO_2" pintype="input"/>
     </net>
-    <net code="17" name="CAM_FAULT_N" class="Default">
+    <net code="26" name="CAM_FAULT_N" class="Default">
       <node ref="R76" pin="2" pintype="passive"/>
       <node ref="R77" pin="1" pintype="passive"/>
       <node ref="U1" pin="85" pinfunction="PD4_85" pintype="bidirectional"/>
     </net>
-    <net code="18" name="CAM_FB" class="Default">
+    <net code="27" name="CAM_FB" class="Default">
       <node ref="C77" pin="2" pintype="passive"/>
       <node ref="R71" pin="2" pintype="passive"/>
       <node ref="R72" pin="1" pintype="passive"/>
       <node ref="U8" pin="1" pinfunction="FB_1" pintype="input"/>
     </net>
-    <net code="19" name="CAM_FLT_RAW" class="Default">
+    <net code="28" name="CAM_FLT_RAW" class="Default">
       <node ref="R77" pin="2" pintype="passive"/>
       <node ref="U7" pin="6" pinfunction="FLT_N_6" pintype="open_collector"/>
     </net>
-    <net code="20" name="CAM_ILIM" class="Default">
+    <net code="29" name="CAM_ILIM" class="Default">
       <node ref="R70" pin="1" pintype="passive"/>
       <node ref="TP73" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U7" pin="7" pinfunction="ILM_7" pintype="passive"/>
     </net>
-    <net code="21" name="CAM_INPUT_LIMITED" class="Default">
+    <net code="30" name="CAM_INPUT_LIMITED" class="Default">
       <node ref="C72" pin="1" pintype="passive"/>
       <node ref="C73" pin="1" pintype="passive"/>
       <node ref="TP71" pin="1" pinfunction="1_1" pintype="passive"/>
@@ -5061,7 +7245,7 @@
       <node ref="U8" pin="2" pinfunction="EN_2" pintype="input"/>
       <node ref="U8" pin="3" pinfunction="IN_3" pintype="power_in"/>
     </net>
-    <net code="22" name="CAM_IO_3V3" class="Default">
+    <net code="31" name="CAM_IO_3V3" class="Default">
       <node ref="C92" pin="1" pintype="passive"/>
       <node ref="C93" pin="1" pintype="passive"/>
       <node ref="R103" pin="1" pintype="passive"/>
@@ -5069,62 +7253,75 @@
       <node ref="U12" pin="7" pinfunction="VCCB_CAMERA_7" pintype="power_in"/>
       <node ref="U13" pin="5" pinfunction="OUT3.3V_5" pintype="power_out"/>
     </net>
-    <net code="23" name="CAM_MCU_RX" class="Default">
+    <net code="32" name="CAM_MCU_RX" class="Default">
       <node ref="U1" pin="47" pinfunction="PB11_47" pintype="bidirectional"/>
       <node ref="U12" pin="4" pinfunction="A2Y_RX_OUTPUT_4" pintype="tri_state"/>
     </net>
-    <net code="24" name="CAM_MCU_TX" class="Default">
+    <net code="33" name="CAM_MCU_TX" class="Default">
       <node ref="U1" pin="46" pinfunction="PB10_46" pintype="bidirectional"/>
       <node ref="U12" pin="5" pinfunction="A1_TX_INPUT_5" pintype="input"/>
     </net>
-    <net code="25" name="CAM_PWR_EN" class="Default">
+    <net code="34" name="CAM_PWR_EN" class="Default">
       <node ref="R74" pin="1" pintype="passive"/>
       <node ref="U1" pin="84" pinfunction="PD3_84" pintype="bidirectional"/>
     </net>
-    <net code="26" name="CAM_RX_BUFFER" class="Default">
+    <net code="35" name="CAM_RX_BUFFER" class="Default">
       <node ref="R100" pin="2" pintype="passive"/>
       <node ref="U12" pin="1" pinfunction="B2_FROM_CAMERA_1" pintype="input"/>
     </net>
-    <net code="27" name="CAM_RX_WIRE" class="Default">
+    <net code="36" name="CAM_RX_WIRE" class="Default">
       <node ref="J9" pin="3" pinfunction="RX_FROM_CAMERA_TX_3" pintype="passive"/>
       <node ref="R100" pin="1" pintype="passive"/>
       <node ref="TP75" pin="1" pinfunction="1_1" pintype="passive"/>
     </net>
-    <net code="28" name="CAM_SW" class="Default">
+    <net code="37" name="CAM_SW" class="Default">
       <node ref="C74" pin="1" pintype="passive"/>
       <node ref="L3" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U8" pin="5" pinfunction="SW_5" pintype="output"/>
     </net>
-    <net code="29" name="CAM_TX_BUFFER" class="Default">
+    <net code="38" name="CAM_TX_BUFFER" class="Default">
       <node ref="R101" pin="1" pintype="passive"/>
       <node ref="U12" pin="8" pinfunction="B1Y_TO_CAMERA_8" pintype="tri_state"/>
     </net>
-    <net code="30" name="CAM_TX_WIRE" class="Default">
+    <net code="39" name="CAM_TX_WIRE" class="Default">
       <node ref="J9" pin="4" pinfunction="TX_TO_CAMERA_RX_4" pintype="passive"/>
       <node ref="R101" pin="2" pintype="passive"/>
       <node ref="TP76" pin="1" pinfunction="1_1" pintype="passive"/>
     </net>
-    <net code="31" name="CAM_UART_OE" class="Default">
+    <net code="40" name="CAM_UART_OE" class="Default">
       <node ref="R102" pin="1" pintype="passive"/>
       <node ref="TP91" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="7" pinfunction="PC13_7" pintype="bidirectional"/>
       <node ref="U12" pin="6" pinfunction="OE_6" pintype="input"/>
     </net>
-    <net code="32" name="CC1" class="Default">
+    <net code="41" name="CC1" class="Default">
       <node ref="J3" pin="A5" pinfunction="CC1_A5" pintype="passive"/>
       <node ref="R7" pin="1" pintype="passive"/>
     </net>
-    <net code="33" name="CC2" class="Default">
+    <net code="42" name="CC2" class="Default">
       <node ref="J3" pin="B5" pinfunction="CC2_B5" pintype="passive"/>
       <node ref="R8" pin="1" pintype="passive"/>
     </net>
-    <net code="34" name="GND" class="Default">
+    <net code="43" name="GND" class="Default">
       <node ref="C10" pin="2" pintype="passive"/>
       <node ref="C11" pin="2" pintype="passive"/>
+      <node ref="C121" pin="2" pintype="passive"/>
+      <node ref="C122" pin="2" pintype="passive"/>
+      <node ref="C126" pin="2" pintype="passive"/>
+      <node ref="C127" pin="2" pintype="passive"/>
+      <node ref="C128" pin="2" pintype="passive"/>
+      <node ref="C129" pin="2" pintype="passive"/>
       <node ref="C13" pin="2" pintype="passive"/>
+      <node ref="C138" pin="2" pintype="passive"/>
+      <node ref="C139" pin="2" pintype="passive"/>
       <node ref="C14" pin="2" pintype="passive"/>
+      <node ref="C140" pin="2" pintype="passive"/>
+      <node ref="C141" pin="2" pintype="passive"/>
       <node ref="C15" pin="2" pintype="passive"/>
+      <node ref="C150" pin="2" pintype="passive"/>
+      <node ref="C151" pin="2" pintype="passive"/>
       <node ref="C16" pin="2" pintype="passive"/>
+      <node ref="C160" pin="2" pintype="passive"/>
       <node ref="C17" pin="2" pintype="passive"/>
       <node ref="C18" pin="2" pintype="passive"/>
       <node ref="C19" pin="2" pintype="passive"/>
@@ -5164,10 +7361,17 @@
       <node ref="C91" pin="2" pintype="passive"/>
       <node ref="C92" pin="2" pintype="passive"/>
       <node ref="C93" pin="2" pintype="passive"/>
+      <node ref="D121" pin="2" pinfunction="GND_2" pintype="passive"/>
+      <node ref="D122" pin="1" pinfunction="A1_1" pintype="passive"/>
       <node ref="D4" pin="2" pinfunction="GND_2" pintype="passive"/>
       <node ref="D8" pin="2" pinfunction="A2_2" pintype="passive"/>
       <node ref="D9" pin="2" pinfunction="A_2" pintype="passive"/>
       <node ref="J1" pin="2" pinfunction="GND_2" pintype="passive"/>
+      <node ref="J122" pin="12" pinfunction="12_12" pintype="passive"/>
+      <node ref="J122" pin="3" pinfunction="3_3" pintype="passive"/>
+      <node ref="J122" pin="6" pinfunction="6_6" pintype="passive"/>
+      <node ref="J122" pin="9" pinfunction="9_9" pintype="passive"/>
+      <node ref="J123" pin="2" pinfunction="2_2" pintype="passive"/>
       <node ref="J2" pin="1" pinfunction="Pin_1_1" pintype="passive"/>
       <node ref="J3" pin="1" pinfunction="SHELL_1_1" pintype="passive"/>
       <node ref="J3" pin="2" pinfunction="SHELL_2_2" pintype="passive"/>
@@ -5178,9 +7382,32 @@
       <node ref="J9" pin="2" pinfunction="GND_2" pintype="passive"/>
       <node ref="LED1" pin="1" pinfunction="K_1" pintype="passive"/>
       <node ref="LED2" pin="2" pinfunction="K_2" pintype="passive"/>
+      <node ref="Q122" pin="2" pinfunction="S_2" pintype="passive"/>
+      <node ref="Q123" pin="2" pinfunction="S_2" pintype="passive"/>
+      <node ref="Q124" pin="1" pinfunction="S_1" pintype="passive"/>
+      <node ref="Q124" pin="2" pinfunction="S_2" pintype="passive"/>
+      <node ref="Q124" pin="3" pinfunction="S_3" pintype="passive"/>
+      <node ref="Q125" pin="1" pinfunction="S_1" pintype="passive"/>
+      <node ref="Q125" pin="2" pinfunction="S_2" pintype="passive"/>
+      <node ref="Q125" pin="3" pinfunction="S_3" pintype="passive"/>
       <node ref="R102" pin="2" pintype="passive"/>
       <node ref="R103" pin="2" pintype="passive"/>
       <node ref="R110" pin="2" pintype="passive"/>
+      <node ref="R123" pin="2" pintype="passive"/>
+      <node ref="R125" pin="2" pintype="passive"/>
+      <node ref="R127" pin="2" pintype="passive"/>
+      <node ref="R128" pin="2" pintype="passive"/>
+      <node ref="R130" pin="2" pintype="passive"/>
+      <node ref="R133" pin="2" pintype="passive"/>
+      <node ref="R139" pin="2" pintype="passive"/>
+      <node ref="R140" pin="2" pintype="passive"/>
+      <node ref="R142" pin="2" pintype="passive"/>
+      <node ref="R145" pin="2" pintype="passive"/>
+      <node ref="R154" pin="2" pintype="passive"/>
+      <node ref="R155" pin="2" pintype="passive"/>
+      <node ref="R156" pin="2" pintype="passive"/>
+      <node ref="R157" pin="2" pintype="passive"/>
+      <node ref="R163" pin="2" pintype="passive"/>
       <node ref="R5" pin="2" pintype="passive"/>
       <node ref="R61" pin="2" pintype="passive"/>
       <node ref="R63" pin="2" pintype="passive"/>
@@ -5198,6 +7425,7 @@
       <node ref="R86" pin="2" pintype="passive"/>
       <node ref="R88" pin="2" pintype="passive"/>
       <node ref="R92" pin="2" pintype="passive"/>
+      <node ref="TP124" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="TP74" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="TP88" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="10" pinfunction="VSS_10" pintype="power_in"/>
@@ -5240,107 +7468,211 @@
       <node ref="Y1" pin="2" pinfunction="G_2" pintype="passive"/>
       <node ref="Y1" pin="4" pinfunction="G_4" pintype="passive"/>
     </net>
-    <net code="35" name="GPS_RX" class="Default">
+    <net code="44" name="GPS_RX" class="Default">
       <node ref="U1" pin="64" pinfunction="PC7_64" pintype="bidirectional"/>
       <node ref="U6" pin="13" pinfunction="TXD_13" pintype="output"/>
     </net>
-    <net code="36" name="GPS_TX" class="Default">
+    <net code="45" name="GPS_TX" class="Default">
       <node ref="U1" pin="63" pinfunction="PC6_63" pintype="bidirectional"/>
       <node ref="U6" pin="14" pinfunction="RXD_14" pintype="input"/>
     </net>
-    <net code="37" name="HSE_IN" class="Default">
+    <net code="46" name="HSE_IN" class="Default">
       <node ref="C25" pin="1" pintype="passive"/>
       <node ref="U1" pin="12" pinfunction="PH0_12" pintype="bidirectional"/>
       <node ref="Y1" pin="1" pinfunction="1_1" pintype="passive"/>
     </net>
-    <net code="38" name="HSE_OUT" class="Default">
+    <net code="47" name="HSE_OUT" class="Default">
       <node ref="C26" pin="1" pintype="passive"/>
       <node ref="U1" pin="13" pinfunction="PH1_13" pintype="bidirectional"/>
       <node ref="Y1" pin="3" pinfunction="3_3" pintype="passive"/>
     </net>
-    <net code="39" name="I2C1_SCL" class="Default">
+    <net code="48" name="I2C1_SCL" class="Default">
       <node ref="R12" pin="1" pintype="passive"/>
       <node ref="U1" pin="95" pinfunction="PB8_95" pintype="bidirectional"/>
       <node ref="U5" pin="8" pinfunction="SCLK_8" pintype="input"/>
     </net>
-    <net code="40" name="I2C1_SDA" class="Default">
+    <net code="49" name="I2C1_SDA" class="Default">
       <node ref="R13" pin="1" pintype="passive"/>
       <node ref="U1" pin="96" pinfunction="PB9_96" pintype="bidirectional"/>
       <node ref="U5" pin="7" pinfunction="SDI/SDA_7" pintype="bidirectional"/>
     </net>
-    <net code="41" name="IMU_CS" class="Default">
+    <net code="50" name="IMU_CS" class="Default">
       <node ref="R11" pin="1" pintype="passive"/>
       <node ref="U1" pin="93" pinfunction="PB7_93" pintype="bidirectional"/>
       <node ref="U4" pin="12" pinfunction="AP_CS_12" pintype="input"/>
     </net>
-    <net code="42" name="IMU_INT1" class="Default">
+    <net code="51" name="IMU_INT1" class="Default">
       <node ref="U1" pin="40" pinfunction="PE10_40" pintype="bidirectional"/>
       <node ref="U4" pin="4" pinfunction="INT1_4" pintype="output"/>
     </net>
-    <net code="43" name="LED_RED" class="Default">
+    <net code="52" name="LED_RED" class="Default">
       <node ref="R32" pin="1" pintype="passive"/>
-      <node ref="U1" pin="2" pinfunction="PE3_2" pintype="bidirectional"/>
+      <node ref="U1" pin="38" pinfunction="PE8_38" pintype="bidirectional"/>
     </net>
-    <net code="44" name="LED_RED_A" class="Default">
+    <net code="53" name="LED_RED_A" class="Default">
       <node ref="LED1" pin="2" pinfunction="A_2" pintype="passive"/>
       <node ref="R32" pin="2" pintype="passive"/>
     </net>
-    <net code="45" name="LED_YEL" class="Default">
+    <net code="54" name="LED_YEL" class="Default">
       <node ref="R33" pin="1" pintype="passive"/>
       <node ref="U1" pin="37" pinfunction="PE7_37" pintype="bidirectional"/>
     </net>
-    <net code="46" name="LED_YEL_A" class="Default">
+    <net code="55" name="LED_YEL_A" class="Default">
       <node ref="LED2" pin="1" pinfunction="A_1" pintype="passive"/>
       <node ref="R33" pin="2" pintype="passive"/>
     </net>
-    <net code="47" name="LOGIC_ILIM" class="Default">
+    <net code="56" name="LOGIC_ILIM" class="Default">
       <node ref="R86" pin="1" pintype="passive"/>
       <node ref="U11" pin="10" pinfunction="ILIM_10" pintype="passive"/>
     </net>
-    <net code="48" name="LOGIC_SOURCE_ST" class="Default">
+    <net code="57" name="LOGIC_SOURCE_ST" class="Default">
       <node ref="R91" pin="2" pintype="passive"/>
       <node ref="TP87" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="82" pinfunction="PD1_82" pintype="bidirectional"/>
       <node ref="U11" pin="9" pinfunction="ST_9" pintype="open_collector"/>
     </net>
-    <net code="49" name="LOGIC_SS" class="Default">
+    <net code="58" name="LOGIC_SS" class="Default">
       <node ref="C85" pin="1" pintype="passive"/>
       <node ref="U11" pin="11" pinfunction="SS_11" pintype="passive"/>
     </net>
-    <net code="50" name="NRST" class="Default">
+    <net code="59" name="NRST" class="Default">
       <node ref="C24" pin="1" pintype="passive"/>
       <node ref="J2" pin="4" pinfunction="Pin_4_4" pintype="passive"/>
       <node ref="U1" pin="14" pinfunction="NRST_14" pintype="input"/>
     </net>
-    <net code="51" name="QSPI_CLK" class="Default">
+    <net code="60" name="PULLPIN" class="Default">
+      <node ref="C160" pin="1" pintype="passive"/>
+      <node ref="D122" pin="3" pinfunction="K1A2_3" pintype="passive"/>
+      <node ref="R160" pin="2" pintype="passive"/>
+      <node ref="R161" pin="2" pintype="passive"/>
+      <node ref="U1" pin="8" pinfunction="PC14_8" pintype="bidirectional"/>
+    </net>
+    <net code="61" name="PULLPIN_EXT" class="Default">
+      <node ref="J123" pin="1" pinfunction="1_1" pintype="passive"/>
+      <node ref="R160" pin="1" pintype="passive"/>
+    </net>
+    <net code="62" name="PYRO1_BUS" class="Default">
+      <node ref="J120" pin="3" pinfunction="3_3" pintype="passive"/>
+      <node ref="J121" pin="2" pinfunction="2_2" pintype="passive"/>
+      <node ref="R132" pin="1" pintype="passive"/>
+    </net>
+    <net code="63" name="PYRO1_COLD" class="Default">
+      <node ref="D120" pin="1" pinfunction="K1_1" pintype="passive"/>
+      <node ref="R131" pin="2" pintype="passive"/>
+    </net>
+    <net code="64" name="PYRO1_CONT" class="Default">
+      <node ref="C127" pin="1" pintype="passive"/>
+      <node ref="R129" pin="2" pintype="passive"/>
+      <node ref="R130" pin="1" pintype="passive"/>
+      <node ref="U1" pin="15" pinfunction="PC0_15" pintype="bidirectional"/>
+    </net>
+    <net code="65" name="PYRO1_GATE" class="Default">
+      <node ref="C126" pin="1" pintype="passive"/>
+      <node ref="Q124" pin="4" pinfunction="G_4" pintype="passive"/>
+      <node ref="R126" pin="2" pintype="passive"/>
+      <node ref="R128" pin="1" pintype="passive"/>
+      <node ref="TP122" pin="1" pinfunction="1_1" pintype="passive"/>
+    </net>
+    <net code="66" name="PYRO1_GATE_N" class="Default">
+      <node ref="R126" pin="1" pintype="passive"/>
+      <node ref="R127" pin="1" pintype="passive"/>
+      <node ref="U1" pin="3" pinfunction="PE4_3" pintype="bidirectional"/>
+    </net>
+    <net code="67" name="PYRO1_OUT" class="Default">
+      <node ref="C128" pin="1" pintype="passive"/>
+      <node ref="J121" pin="1" pinfunction="1_1" pintype="passive"/>
+      <node ref="Q124" pin="5" pinfunction="D_5" pintype="passive"/>
+      <node ref="R129" pin="1" pintype="passive"/>
+      <node ref="R131" pin="1" pintype="passive"/>
+    </net>
+    <net code="68" name="PYRO2_BUS" class="Default">
+      <node ref="J120" pin="2" pinfunction="2_2" pintype="passive"/>
+      <node ref="J121" pin="3" pinfunction="3_3" pintype="passive"/>
+      <node ref="R144" pin="1" pintype="passive"/>
+    </net>
+    <net code="69" name="PYRO2_COLD" class="Default">
+      <node ref="D120" pin="2" pinfunction="K2_2" pintype="passive"/>
+      <node ref="R143" pin="2" pintype="passive"/>
+    </net>
+    <net code="70" name="PYRO2_CONT" class="Default">
+      <node ref="C139" pin="1" pintype="passive"/>
+      <node ref="R141" pin="2" pintype="passive"/>
+      <node ref="R142" pin="1" pintype="passive"/>
+      <node ref="U1" pin="16" pinfunction="PC1_16" pintype="bidirectional"/>
+    </net>
+    <net code="71" name="PYRO2_GATE" class="Default">
+      <node ref="C138" pin="1" pintype="passive"/>
+      <node ref="Q125" pin="4" pinfunction="G_4" pintype="passive"/>
+      <node ref="R138" pin="2" pintype="passive"/>
+      <node ref="R140" pin="1" pintype="passive"/>
+      <node ref="TP123" pin="1" pinfunction="1_1" pintype="passive"/>
+    </net>
+    <net code="72" name="PYRO2_GATE_N" class="Default">
+      <node ref="R138" pin="1" pintype="passive"/>
+      <node ref="R139" pin="1" pintype="passive"/>
+      <node ref="U1" pin="4" pinfunction="PE5_4" pintype="bidirectional"/>
+    </net>
+    <net code="73" name="PYRO2_OUT" class="Default">
+      <node ref="C140" pin="1" pintype="passive"/>
+      <node ref="J121" pin="4" pinfunction="4_4" pintype="passive"/>
+      <node ref="Q125" pin="5" pinfunction="D_5" pintype="passive"/>
+      <node ref="R141" pin="1" pintype="passive"/>
+      <node ref="R143" pin="1" pintype="passive"/>
+    </net>
+    <net code="74" name="QSPI_CLK" class="Default">
       <node ref="U1" pin="36" pinfunction="PB2_36" pintype="bidirectional"/>
       <node ref="U3" pin="6" pinfunction="CLK_6" pintype="input"/>
     </net>
-    <net code="52" name="QSPI_IO0" class="Default">
+    <net code="75" name="QSPI_IO0" class="Default">
       <node ref="U1" pin="58" pinfunction="PD11_58" pintype="bidirectional"/>
       <node ref="U3" pin="5" pinfunction="DI/IO_{0}_5" pintype="bidirectional"/>
     </net>
-    <net code="53" name="QSPI_IO1" class="Default">
+    <net code="76" name="QSPI_IO1" class="Default">
       <node ref="U1" pin="59" pinfunction="PD12_59" pintype="bidirectional"/>
       <node ref="U3" pin="2" pinfunction="DO/IO_{1}_2" pintype="bidirectional"/>
     </net>
-    <net code="54" name="QSPI_IO2" class="Default">
+    <net code="77" name="QSPI_IO2" class="Default">
       <node ref="U1" pin="1" pinfunction="PE2_1" pintype="bidirectional"/>
       <node ref="U3" pin="3" pinfunction="~{WP}/IO_{2}_3" pintype="bidirectional"/>
     </net>
-    <net code="55" name="QSPI_IO3" class="Default">
+    <net code="78" name="QSPI_IO3" class="Default">
       <node ref="U1" pin="60" pinfunction="PD13_60" pintype="bidirectional"/>
       <node ref="U3" pin="7" pinfunction="~{HOLD}/~{RESET}/IO_{3}_7" pintype="bidirectional"/>
     </net>
-    <net code="56" name="QSPI_NCS" class="Default">
+    <net code="79" name="QSPI_NCS" class="Default">
       <node ref="R10" pin="1" pintype="passive"/>
       <node ref="U1" pin="92" pinfunction="PB6_92" pintype="bidirectional"/>
       <node ref="U3" pin="1" pinfunction="~{CS}_1" pintype="input"/>
     </net>
-    <net code="57" name="RAW_PROTECTED" class="Default">
+    <net code="80" name="RAW_ACT" class="Default">
+      <node ref="C121" pin="1" pintype="passive"/>
+      <node ref="C150" pin="1" pintype="passive"/>
+      <node ref="C151" pin="1" pintype="passive"/>
+      <node ref="J120" pin="1" pinfunction="1_1" pintype="passive"/>
+      <node ref="J120" pin="4" pinfunction="4_4" pintype="passive"/>
+      <node ref="J122" pin="11" pinfunction="11_11" pintype="passive"/>
+      <node ref="J122" pin="2" pinfunction="2_2" pintype="passive"/>
+      <node ref="J122" pin="5" pinfunction="5_5" pintype="passive"/>
+      <node ref="J122" pin="8" pinfunction="8_8" pintype="passive"/>
+      <node ref="Q121" pin="5" pinfunction="D_5" pintype="passive"/>
+      <node ref="Q121" pin="6" pinfunction="D_6" pintype="passive"/>
+      <node ref="Q121" pin="7" pinfunction="D_7" pintype="passive"/>
+      <node ref="Q121" pin="8" pinfunction="D_8" pintype="passive"/>
+      <node ref="Q121" pin="9" pinfunction="D_9" pintype="passive"/>
+      <node ref="R124" pin="1" pintype="passive"/>
+      <node ref="TP120" pin="1" pinfunction="1_1" pintype="passive"/>
+    </net>
+    <net code="81" name="RAW_ACT_SENSE" class="Default">
+      <node ref="C122" pin="1" pintype="passive"/>
+      <node ref="R124" pin="2" pintype="passive"/>
+      <node ref="R125" pin="1" pintype="passive"/>
+      <node ref="U1" pin="34" pinfunction="PB0_34" pintype="bidirectional"/>
+    </net>
+    <net code="82" name="RAW_PROTECTED" class="Default">
       <node ref="C71" pin="1" pintype="passive"/>
       <node ref="C82" pin="1" pintype="passive"/>
       <node ref="D9" pin="1" pinfunction="K_1" pintype="passive"/>
+      <node ref="R122" pin="1" pintype="passive"/>
       <node ref="R92" pin="1" pintype="passive"/>
       <node ref="TP70" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="TP81" pin="1" pinfunction="1_1" pintype="passive"/>
@@ -5349,73 +7681,113 @@
       <node ref="U7" pin="4" pinfunction="IN_B_4" pintype="power_in"/>
       <node ref="U9" pin="6" pinfunction="OUT_6" pintype="power_out"/>
     </net>
-    <net code="58" name="SPI1_MISO" class="Default">
+    <net code="83" name="SERVO1_MCU" class="Default">
+      <node ref="D121" pin="1" pinfunction="IO1_1" pintype="passive"/>
+      <node ref="R150" pin="1" pintype="passive"/>
+      <node ref="R154" pin="1" pintype="passive"/>
+      <node ref="U1" pin="22" pinfunction="PA0_22" pintype="bidirectional"/>
+    </net>
+    <net code="84" name="SERVO1_OUT" class="Default">
+      <node ref="J122" pin="1" pinfunction="1_1" pintype="passive"/>
+      <node ref="R150" pin="2" pintype="passive"/>
+    </net>
+    <net code="85" name="SERVO2_MCU" class="Default">
+      <node ref="D121" pin="3" pinfunction="IO2_3" pintype="passive"/>
+      <node ref="R151" pin="1" pintype="passive"/>
+      <node ref="R155" pin="1" pintype="passive"/>
+      <node ref="U1" pin="23" pinfunction="PA1_23" pintype="bidirectional"/>
+    </net>
+    <net code="86" name="SERVO2_OUT" class="Default">
+      <node ref="J122" pin="4" pinfunction="4_4" pintype="passive"/>
+      <node ref="R151" pin="2" pintype="passive"/>
+    </net>
+    <net code="87" name="SERVO3_MCU" class="Default">
+      <node ref="D121" pin="4" pinfunction="IO3_4" pintype="passive"/>
+      <node ref="R152" pin="1" pintype="passive"/>
+      <node ref="R156" pin="1" pintype="passive"/>
+      <node ref="U1" pin="24" pinfunction="PA2_24" pintype="bidirectional"/>
+    </net>
+    <net code="88" name="SERVO3_OUT" class="Default">
+      <node ref="J122" pin="7" pinfunction="7_7" pintype="passive"/>
+      <node ref="R152" pin="2" pintype="passive"/>
+    </net>
+    <net code="89" name="SERVO4_MCU" class="Default">
+      <node ref="D121" pin="6" pinfunction="IO4_6" pintype="passive"/>
+      <node ref="R153" pin="1" pintype="passive"/>
+      <node ref="R157" pin="1" pintype="passive"/>
+      <node ref="U1" pin="25" pinfunction="PA3_25" pintype="bidirectional"/>
+    </net>
+    <net code="90" name="SERVO4_OUT" class="Default">
+      <node ref="J122" pin="10" pinfunction="10_10" pintype="passive"/>
+      <node ref="R153" pin="2" pintype="passive"/>
+    </net>
+    <net code="91" name="SPI1_MISO" class="Default">
       <node ref="U1" pin="90" pinfunction="PB4_90" pintype="bidirectional"/>
       <node ref="U4" pin="1" pinfunction="AP_SDO_1" pintype="output"/>
     </net>
-    <net code="59" name="SPI1_MOSI" class="Default">
+    <net code="92" name="SPI1_MOSI" class="Default">
       <node ref="U1" pin="91" pinfunction="PB5_91" pintype="bidirectional"/>
       <node ref="U4" pin="14" pinfunction="AP_SDI_14" pintype="input"/>
     </net>
-    <net code="60" name="SPI1_SCK" class="Default">
+    <net code="93" name="SPI1_SCK" class="Default">
       <node ref="U1" pin="89" pinfunction="PB3_89" pintype="bidirectional"/>
       <node ref="U4" pin="13" pinfunction="AP_SCLK_13" pintype="input"/>
     </net>
-    <net code="61" name="SWCLK" class="Default">
+    <net code="94" name="SWCLK" class="Default">
       <node ref="J2" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
       <node ref="U1" pin="76" pinfunction="PA14_76" pintype="bidirectional"/>
     </net>
-    <net code="62" name="SWDIO" class="Default">
+    <net code="95" name="SWDIO" class="Default">
       <node ref="J2" pin="3" pinfunction="Pin_3_3" pintype="passive"/>
       <node ref="U1" pin="72" pinfunction="PA13_72" pintype="bidirectional"/>
     </net>
-    <net code="63" name="SW_NODE" class="Default">
+    <net code="96" name="SW_NODE" class="Default">
       <node ref="C5" pin="1" pintype="passive"/>
       <node ref="L1" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U2" pin="5" pinfunction="SW_5" pintype="output"/>
     </net>
-    <net code="64" name="USB_DM" class="Default">
+    <net code="97" name="USB_DM" class="Default">
       <node ref="D4" pin="1" pinfunction="I/O1_1" pintype="passive"/>
       <node ref="D4" pin="6" pinfunction="I/O1_6" pintype="passive"/>
       <node ref="J3" pin="A7" pinfunction="D-_A7" pintype="passive"/>
       <node ref="J3" pin="B7" pinfunction="D-_B7" pintype="passive"/>
       <node ref="U1" pin="70" pinfunction="PA11_70" pintype="bidirectional"/>
     </net>
-    <net code="65" name="USB_DP" class="Default">
+    <net code="98" name="USB_DP" class="Default">
       <node ref="D4" pin="3" pinfunction="I/O2_3" pintype="passive"/>
       <node ref="D4" pin="4" pinfunction="I/O2_4" pintype="passive"/>
       <node ref="J3" pin="A6" pinfunction="D+_A6" pintype="passive"/>
       <node ref="J3" pin="B6" pinfunction="D+_B6" pintype="passive"/>
       <node ref="U1" pin="71" pinfunction="PA12_71" pintype="bidirectional"/>
     </net>
-    <net code="66" name="USB_FAULT_N" class="Default">
+    <net code="99" name="USB_FAULT_N" class="Default">
       <node ref="R90" pin="2" pintype="passive"/>
       <node ref="TP86" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="87" pinfunction="PD6_87" pintype="bidirectional"/>
       <node ref="U10" pin="4" pinfunction="FAULT_N_4" pintype="open_collector"/>
     </net>
-    <net code="67" name="USB_ILIM" class="Default">
+    <net code="100" name="USB_ILIM" class="Default">
       <node ref="R85" pin="1" pintype="passive"/>
       <node ref="U10" pin="5" pinfunction="ILIM_5" pintype="passive"/>
     </net>
-    <net code="68" name="USB_LIMITED" class="Default">
+    <net code="101" name="USB_LIMITED" class="Default">
       <node ref="C86" pin="1" pintype="passive"/>
       <node ref="R87" pin="1" pintype="passive"/>
       <node ref="TP82" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U10" pin="6" pinfunction="OUT_6" pintype="power_out"/>
       <node ref="U11" pin="7" pinfunction="IN1_USB_7" pintype="power_in"/>
     </net>
-    <net code="69" name="USB_OVLO" class="Default">
+    <net code="102" name="USB_OVLO" class="Default">
       <node ref="R87" pin="2" pintype="passive"/>
       <node ref="R88" pin="1" pintype="passive"/>
       <node ref="U11" pin="5" pinfunction="OV1_5" pintype="input"/>
     </net>
-    <net code="70" name="V3V3_SENSE" class="Default">
+    <net code="103" name="V3V3_SENSE" class="Default">
       <node ref="R62" pin="2" pintype="passive"/>
       <node ref="R63" pin="1" pintype="passive"/>
       <node ref="U1" pin="18" pinfunction="PC3_C_18" pintype="bidirectional"/>
     </net>
-    <net code="71" name="VBUS" class="Default">
+    <net code="104" name="VBUS" class="Default">
       <node ref="C28" pin="1" pintype="passive"/>
       <node ref="C83" pin="1" pintype="passive"/>
       <node ref="D4" pin="5" pinfunction="VBUS_5" pintype="passive"/>
@@ -5425,21 +7797,21 @@
       <node ref="U10" pin="1" pinfunction="IN_1" pintype="power_in"/>
       <node ref="U10" pin="3" pinfunction="EN_3" pintype="input"/>
     </net>
-    <net code="72" name="VBUS_SENSE" class="Default">
+    <net code="105" name="VBUS_SENSE" class="Default">
       <node ref="R110" pin="1" pintype="passive"/>
       <node ref="R9" pin="2" pintype="passive"/>
       <node ref="TP92" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="62" pinfunction="PD15_62" pintype="bidirectional"/>
     </net>
-    <net code="73" name="VCAP1" class="Default">
+    <net code="106" name="VCAP1" class="Default">
       <node ref="C19" pin="1" pintype="passive"/>
       <node ref="U1" pin="48" pinfunction="VCAP_48" pintype="power_out"/>
     </net>
-    <net code="74" name="VCAP2" class="Default">
+    <net code="107" name="VCAP2" class="Default">
       <node ref="C20" pin="1" pintype="passive"/>
       <node ref="U1" pin="73" pinfunction="VCAP_73" pintype="power_out"/>
     </net>
-    <net code="75" name="VLOGIC" class="Default">
+    <net code="108" name="VLOGIC" class="Default">
       <node ref="C6" pin="1" pintype="passive"/>
       <node ref="C7" pin="1" pintype="passive"/>
       <node ref="C84" pin="1" pintype="passive"/>
@@ -5450,196 +7822,163 @@
       <node ref="U2" pin="2" pinfunction="EN_2" pintype="input"/>
       <node ref="U2" pin="3" pinfunction="IN_3" pintype="power_in"/>
     </net>
-    <net code="76" name="VLOGIC_SENSE" class="Default">
+    <net code="109" name="VLOGIC_SENSE" class="Default">
       <node ref="C60" pin="1" pintype="passive"/>
       <node ref="R60" pin="2" pintype="passive"/>
       <node ref="R61" pin="1" pintype="passive"/>
       <node ref="U1" pin="17" pinfunction="PC2_C_17" pintype="bidirectional"/>
     </net>
-    <net code="77" name="unconnected-(J3-SBU1-PadA8)" class="Default">
+    <net code="110" name="unconnected-(J3-SBU1-PadA8)" class="Default">
       <node ref="J3" pin="A8" pinfunction="SBU1_A8" pintype="passive+no_connect"/>
     </net>
-    <net code="78" name="unconnected-(J3-SBU2-PadB8)" class="Default">
+    <net code="111" name="unconnected-(J3-SBU2-PadB8)" class="Default">
       <node ref="J3" pin="B8" pinfunction="SBU2_B8" pintype="passive+no_connect"/>
     </net>
-    <net code="79" name="unconnected-(U1-PA0-Pad22)" class="Default">
-      <node ref="U1" pin="22" pinfunction="PA0_22" pintype="bidirectional+no_connect"/>
+    <net code="112" name="unconnected-(LS120-DUMMY-Pad3)" class="Default">
+      <node ref="LS120" pin="3" pinfunction="DUMMY_3" pintype="passive+no_connect"/>
     </net>
-    <net code="80" name="unconnected-(U1-PA1-Pad23)" class="Default">
-      <node ref="U1" pin="23" pinfunction="PA1_23" pintype="bidirectional+no_connect"/>
+    <net code="113" name="unconnected-(LS120-DUMMY-Pad4)" class="Default">
+      <node ref="LS120" pin="4" pinfunction="DUMMY_4" pintype="passive+no_connect"/>
     </net>
-    <net code="81" name="unconnected-(U1-PA2-Pad24)" class="Default">
-      <node ref="U1" pin="24" pinfunction="PA2_24" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="82" name="unconnected-(U1-PA3-Pad25)" class="Default">
-      <node ref="U1" pin="25" pinfunction="PA3_25" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="83" name="unconnected-(U1-PA4-Pad28)" class="Default">
+    <net code="114" name="unconnected-(U1-PA4-Pad28)" class="Default">
       <node ref="U1" pin="28" pinfunction="PA4_28" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="84" name="unconnected-(U1-PA5-Pad29)" class="Default">
-      <node ref="U1" pin="29" pinfunction="PA5_29" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="85" name="unconnected-(U1-PA6-Pad30)" class="Default">
+    <net code="115" name="unconnected-(U1-PA6-Pad30)" class="Default">
       <node ref="U1" pin="30" pinfunction="PA6_30" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="86" name="unconnected-(U1-PA7-Pad31)" class="Default">
+    <net code="116" name="unconnected-(U1-PA7-Pad31)" class="Default">
       <node ref="U1" pin="31" pinfunction="PA7_31" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="87" name="unconnected-(U1-PA8-Pad67)" class="Default">
+    <net code="117" name="unconnected-(U1-PA8-Pad67)" class="Default">
       <node ref="U1" pin="67" pinfunction="PA8_67" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="88" name="unconnected-(U1-PA9-Pad68)" class="Default">
+    <net code="118" name="unconnected-(U1-PA9-Pad68)" class="Default">
       <node ref="U1" pin="68" pinfunction="PA9_68" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="89" name="unconnected-(U1-PA10-Pad69)" class="Default">
+    <net code="119" name="unconnected-(U1-PA10-Pad69)" class="Default">
       <node ref="U1" pin="69" pinfunction="PA10_69" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="90" name="unconnected-(U1-PA15-Pad77)" class="Default">
+    <net code="120" name="unconnected-(U1-PA15-Pad77)" class="Default">
       <node ref="U1" pin="77" pinfunction="PA15_77" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="91" name="unconnected-(U1-PB0-Pad34)" class="Default">
-      <node ref="U1" pin="34" pinfunction="PB0_34" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="92" name="unconnected-(U1-PB1-Pad35)" class="Default">
+    <net code="121" name="unconnected-(U1-PB1-Pad35)" class="Default">
       <node ref="U1" pin="35" pinfunction="PB1_35" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="93" name="unconnected-(U1-PB12-Pad51)" class="Default">
+    <net code="122" name="unconnected-(U1-PB12-Pad51)" class="Default">
       <node ref="U1" pin="51" pinfunction="PB12_51" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="94" name="unconnected-(U1-PB13-Pad52)" class="Default">
+    <net code="123" name="unconnected-(U1-PB13-Pad52)" class="Default">
       <node ref="U1" pin="52" pinfunction="PB13_52" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="95" name="unconnected-(U1-PB14-Pad53)" class="Default">
+    <net code="124" name="unconnected-(U1-PB14-Pad53)" class="Default">
       <node ref="U1" pin="53" pinfunction="PB14_53" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="96" name="unconnected-(U1-PB15-Pad54)" class="Default">
+    <net code="125" name="unconnected-(U1-PB15-Pad54)" class="Default">
       <node ref="U1" pin="54" pinfunction="PB15_54" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="97" name="unconnected-(U1-PC0-Pad15)" class="Default">
-      <node ref="U1" pin="15" pinfunction="PC0_15" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="98" name="unconnected-(U1-PC1-Pad16)" class="Default">
-      <node ref="U1" pin="16" pinfunction="PC1_16" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="99" name="unconnected-(U1-PC4-Pad32)" class="Default">
-      <node ref="U1" pin="32" pinfunction="PC4_32" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="100" name="unconnected-(U1-PC5-Pad33)" class="Default">
-      <node ref="U1" pin="33" pinfunction="PC5_33" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="101" name="unconnected-(U1-PC8-Pad65)" class="Default">
+    <net code="126" name="unconnected-(U1-PC8-Pad65)" class="Default">
       <node ref="U1" pin="65" pinfunction="PC8_65" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="102" name="unconnected-(U1-PC9-Pad66)" class="Default">
+    <net code="127" name="unconnected-(U1-PC9-Pad66)" class="Default">
       <node ref="U1" pin="66" pinfunction="PC9_66" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="103" name="unconnected-(U1-PC10-Pad78)" class="Default">
+    <net code="128" name="unconnected-(U1-PC10-Pad78)" class="Default">
       <node ref="U1" pin="78" pinfunction="PC10_78" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="104" name="unconnected-(U1-PC11-Pad79)" class="Default">
+    <net code="129" name="unconnected-(U1-PC11-Pad79)" class="Default">
       <node ref="U1" pin="79" pinfunction="PC11_79" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="105" name="unconnected-(U1-PC12-Pad80)" class="Default">
+    <net code="130" name="unconnected-(U1-PC12-Pad80)" class="Default">
       <node ref="U1" pin="80" pinfunction="PC12_80" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="106" name="unconnected-(U1-PC14-Pad8)" class="Default">
-      <node ref="U1" pin="8" pinfunction="PC14_8" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="107" name="unconnected-(U1-PC15-Pad9)" class="Default">
+    <net code="131" name="unconnected-(U1-PC15-Pad9)" class="Default">
       <node ref="U1" pin="9" pinfunction="PC15_9" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="108" name="unconnected-(U1-PD2-Pad83)" class="Default">
+    <net code="132" name="unconnected-(U1-PD2-Pad83)" class="Default">
       <node ref="U1" pin="83" pinfunction="PD2_83" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="109" name="unconnected-(U1-PD5-Pad86)" class="Default">
+    <net code="133" name="unconnected-(U1-PD5-Pad86)" class="Default">
       <node ref="U1" pin="86" pinfunction="PD5_86" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="110" name="unconnected-(U1-PD7-Pad88)" class="Default">
+    <net code="134" name="unconnected-(U1-PD7-Pad88)" class="Default">
       <node ref="U1" pin="88" pinfunction="PD7_88" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="111" name="unconnected-(U1-PD8-Pad55)" class="Default">
+    <net code="135" name="unconnected-(U1-PD8-Pad55)" class="Default">
       <node ref="U1" pin="55" pinfunction="PD8_55" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="112" name="unconnected-(U1-PD9-Pad56)" class="Default">
+    <net code="136" name="unconnected-(U1-PD9-Pad56)" class="Default">
       <node ref="U1" pin="56" pinfunction="PD9_56" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="113" name="unconnected-(U1-PD10-Pad57)" class="Default">
+    <net code="137" name="unconnected-(U1-PD10-Pad57)" class="Default">
       <node ref="U1" pin="57" pinfunction="PD10_57" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="114" name="unconnected-(U1-PD14-Pad61)" class="Default">
+    <net code="138" name="unconnected-(U1-PD14-Pad61)" class="Default">
       <node ref="U1" pin="61" pinfunction="PD14_61" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="115" name="unconnected-(U1-PE0-Pad97)" class="Default">
+    <net code="139" name="unconnected-(U1-PE0-Pad97)" class="Default">
       <node ref="U1" pin="97" pinfunction="PE0_97" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="116" name="unconnected-(U1-PE1-Pad98)" class="Default">
+    <net code="140" name="unconnected-(U1-PE1-Pad98)" class="Default">
       <node ref="U1" pin="98" pinfunction="PE1_98" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="117" name="unconnected-(U1-PE4-Pad3)" class="Default">
-      <node ref="U1" pin="3" pinfunction="PE4_3" pintype="bidirectional+no_connect"/>
+    <net code="141" name="unconnected-(U1-PE3-Pad2)" class="Default">
+      <node ref="U1" pin="2" pinfunction="PE3_2" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="118" name="unconnected-(U1-PE5-Pad4)" class="Default">
-      <node ref="U1" pin="4" pinfunction="PE5_4" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="119" name="unconnected-(U1-PE6-Pad5)" class="Default">
+    <net code="142" name="unconnected-(U1-PE6-Pad5)" class="Default">
       <node ref="U1" pin="5" pinfunction="PE6_5" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="120" name="unconnected-(U1-PE8-Pad38)" class="Default">
-      <node ref="U1" pin="38" pinfunction="PE8_38" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="121" name="unconnected-(U1-PE9-Pad39)" class="Default">
+    <net code="143" name="unconnected-(U1-PE9-Pad39)" class="Default">
       <node ref="U1" pin="39" pinfunction="PE9_39" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="122" name="unconnected-(U1-PE11-Pad41)" class="Default">
+    <net code="144" name="unconnected-(U1-PE11-Pad41)" class="Default">
       <node ref="U1" pin="41" pinfunction="PE11_41" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="123" name="unconnected-(U1-PE12-Pad42)" class="Default">
+    <net code="145" name="unconnected-(U1-PE12-Pad42)" class="Default">
       <node ref="U1" pin="42" pinfunction="PE12_42" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="124" name="unconnected-(U1-PE13-Pad43)" class="Default">
+    <net code="146" name="unconnected-(U1-PE13-Pad43)" class="Default">
       <node ref="U1" pin="43" pinfunction="PE13_43" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="125" name="unconnected-(U1-PE14-Pad44)" class="Default">
+    <net code="147" name="unconnected-(U1-PE14-Pad44)" class="Default">
       <node ref="U1" pin="44" pinfunction="PE14_44" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="126" name="unconnected-(U1-PE15-Pad45)" class="Default">
+    <net code="148" name="unconnected-(U1-PE15-Pad45)" class="Default">
       <node ref="U1" pin="45" pinfunction="PE15_45" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="127" name="unconnected-(U4-INT2/FSYNC/CLKIN-Pad9)" class="Default">
+    <net code="149" name="unconnected-(U4-INT2/FSYNC/CLKIN-Pad9)" class="Default">
       <node ref="U4" pin="9" pinfunction="INT2/FSYNC/CLKIN_9" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="128" name="unconnected-(U6-EXTINT-Pad19)" class="Default">
+    <net code="150" name="unconnected-(U6-EXTINT-Pad19)" class="Default">
       <node ref="U6" pin="19" pinfunction="EXTINT_19" pintype="input+no_connect"/>
     </net>
-    <net code="129" name="unconnected-(U6-RESET_N-Pad18)" class="Default">
+    <net code="151" name="unconnected-(U6-RESET_N-Pad18)" class="Default">
       <node ref="U6" pin="18" pinfunction="RESET_N_18" pintype="input+no_connect"/>
     </net>
-    <net code="130" name="unconnected-(U6-SAFEBOOT_N-Pad8)" class="Default">
+    <net code="152" name="unconnected-(U6-SAFEBOOT_N-Pad8)" class="Default">
       <node ref="U6" pin="8" pinfunction="SAFEBOOT_N_8" pintype="input+no_connect"/>
     </net>
-    <net code="131" name="unconnected-(U6-SCL-Pad12)" class="Default">
+    <net code="153" name="unconnected-(U6-SCL-Pad12)" class="Default">
       <node ref="U6" pin="12" pinfunction="SCL_12" pintype="input+no_connect"/>
     </net>
-    <net code="132" name="unconnected-(U6-SDA-Pad9)" class="Default">
+    <net code="154" name="unconnected-(U6-SDA-Pad9)" class="Default">
       <node ref="U6" pin="9" pinfunction="SDA_9" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="133" name="unconnected-(U6-TIMEPULSE-Pad7)" class="Default">
+    <net code="155" name="unconnected-(U6-TIMEPULSE-Pad7)" class="Default">
       <node ref="U6" pin="7" pinfunction="TIMEPULSE_7" pintype="output+no_connect"/>
     </net>
-    <net code="134" name="unconnected-(U6-V_BCKP-Pad3)" class="Default">
+    <net code="156" name="unconnected-(U6-V_BCKP-Pad3)" class="Default">
       <node ref="U6" pin="3" pinfunction="V_BCKP_3" pintype="input+no_connect"/>
     </net>
-    <net code="135" name="unconnected-(U9-AUXOFF-Pad3)" class="Default">
+    <net code="157" name="unconnected-(U9-AUXOFF-Pad3)" class="Default">
       <node ref="U9" pin="3" pinfunction="AUXOFF_3" pintype="open_collector+no_connect"/>
     </net>
-    <net code="136" name="unconnected-(U9-ITIMER-Pad10)" class="Default">
+    <net code="158" name="unconnected-(U9-ITIMER-Pad10)" class="Default">
       <node ref="U9" pin="10" pinfunction="ITIMER_10" pintype="passive+no_connect"/>
     </net>
-    <net code="137" name="unconnected-(U13-EN_LEAVE_OPEN-Pad3)" class="Default">
+    <net code="159" name="unconnected-(U13-EN_LEAVE_OPEN-Pad3)" class="Default">
       <node ref="U13" pin="3" pinfunction="EN_LEAVE_OPEN_3" pintype="input+no_connect"/>
     </net>
-    <net code="138" name="unconnected-(U13-NC-Pad4)" class="Default">
+    <net code="160" name="unconnected-(U13-NC-Pad4)" class="Default">
       <node ref="U13" pin="4" pinfunction="NC_4" pintype="no_connect"/>
     </net>
   </nets>

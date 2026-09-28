@@ -2887,6 +2887,106 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 0cd0d592-d060-506f-b3db-ffa00d324d19))
+	(sheet
+		(at 20.32 256.54)
+		(size 83.82 10.16)
+		(stroke
+			(width .254)
+			(type default))
+		(fill
+			(color 0 0 0 0))
+		(uuid 6133d301-6422-5dca-9dda-573ff465fb31)
+		(property "Sheetname" "11 | Actuator power switch"
+			(at 20.32 255.27 0)
+			(effects
+				(font
+					(size 1.05 1.05))
+				(justify left)))
+		(property "Sheetfile" "actuator_power.kicad_sch"
+			(at 20.32 269.24 0)
+			(effects
+				(font
+					(size 1.05 1.05))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
+					(page "11")))))
+	(sheet
+		(at 111.76 256.54)
+		(size 83.82 10.16)
+		(stroke
+			(width .254)
+			(type default))
+		(fill
+			(color 0 0 0 0))
+		(uuid a44998d3-a410-5959-9243-41a16cadc930)
+		(property "Sheetname" "12 | Pyro channels, arming and continuity"
+			(at 111.76 255.27 0)
+			(effects
+				(font
+					(size 1.05 1.05))
+				(justify left)))
+		(property "Sheetfile" "pyro.kicad_sch"
+			(at 111.76 269.24 0)
+			(effects
+				(font
+					(size 1.05 1.05))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
+					(page "12")))))
+	(sheet
+		(at 203.2 256.54)
+		(size 83.82 10.16)
+		(stroke
+			(width .254)
+			(type default))
+		(fill
+			(color 0 0 0 0))
+		(uuid dee26ed0-15d7-53d0-b75e-1223265de7e9)
+		(property "Sheetname" "13 | Servo outputs"
+			(at 203.2 255.27 0)
+			(effects
+				(font
+					(size 1.05 1.05))
+				(justify left)))
+		(property "Sheetfile" "servos.kicad_sch"
+			(at 203.2 269.24 0)
+			(effects
+				(font
+					(size 1.05 1.05))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
+					(page "13")))))
+	(sheet
+		(at 294.64 256.54)
+		(size 83.82 10.16)
+		(stroke
+			(width .254)
+			(type default))
+		(fill
+			(color 0 0 0 0))
+		(uuid 5ee931eb-d962-5c64-b0fd-46233c13323f)
+		(property "Sheetname" "14 | Launch pull-pin and buzzer"
+			(at 294.64 255.27 0)
+			(effects
+				(font
+					(size 1.05 1.05))
+				(justify left)))
+		(property "Sheetfile" "pullpin_buzzer.kicad_sch"
+			(at 294.64 269.24 0)
+			(effects
+				(font
+					(size 1.05 1.05))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
+					(page "14")))))
 	(sheet_instances
 		(path "/"
 			(page "1"))))

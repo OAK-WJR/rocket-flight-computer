@@ -3,3 +3,9 @@ Sources: https://gitlab.com/kicad/libraries/kicad-packages3D
 KiCad library license: https://www.kicad.org/libraries/license/
 Renderer rotation convention: https://docs.kicad.org/doxygen/render__3d__opengl_8cpp_source.html
 These models illustrate package geometry; do not use as proof of a specific supplier part.
+
+Added for M3-ASSY-R2 (2026-09-25), same source (KiCad 10.0.6 installed library):
+- PinHeader_1x02_P2.54mm_Vertical.step  -> J123 pull-pin header (M3_PULLPIN_1x2)
+- DFN-8-1EP_3x3mm_P0.65mm_EP1.55x2.4mm.step -> Q124/Q125 AON7524 envelope only.
+  The AON7524 body is 3.0 x 3.0 x 0.8 mm nominal (AOS PO-00047 rev I); this generic
+  3.0 x 3.0 x 0.9 mm DFN model is a height/footprint envelope, not the AOS lead frame.
