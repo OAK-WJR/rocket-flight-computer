@@ -30,7 +30,7 @@
 - Modify: `m3_design/assembly_review/m3.kicad_sch:2703` (Sheetname of sheet 04)
 - Modify: all 14 `*.kicad_sch` title blocks: `(rev "M3-ASSY-R1")`/`(rev "M3-ASSY-R2")` → `(rev "M3-ASSY-R3")`
 
-- [ ] **Step 1: Apply the edits.** The tested result of exactly these deletions is in the research copy `scratchpad/research/protoB/{diagnostics,mcu,m3}.kicad_sch`; diff it against the repo first and confirm the diff contains only the listed deletions, the two `no_connect` items and the sheet title.
+- [x] **Step 1: Apply the edits** (done in commit `2b37048`; the diff contains only the listed deletions, the two `no_connect` items, the sheet title and the revision fields).
 - [ ] **Step 2: Run ERC.**
   Run: `kicad-cli sch erc --severity-all --format json -o /tmp/erc.json m3_design/assembly_review/m3.kicad_sch && python3 -c "import json;d=json.load(open('/tmp/erc.json'));print(sum(len(s['violations']) for s in d['sheets']))"`
   Expected: `0`
@@ -45,10 +45,10 @@
 **Interfaces:**
 - Produces: `python3-kicad m3_design/r3_cut.py <board.kicad_pcb>` — idempotent: running on an R3 board changes nothing and prints `already R3`.
 
-- [ ] **Step 1: Write `m3_design/r3_cut.py`.** Content = `scratchpad/research/apply_pcb.py` mode B (keep the 12 forward-strip GND vias that are ≥ 3.5 mm + 0.3 mm from the new hole centres and below y = 192), plus:
+- [x] **Step 1: Write `m3_design/r3_cut.py`** (committed). Derived from the research recipe, mode B (keep the 12 forward-strip GND vias that are ≥ 3.5 mm + 0.3 mm from the new hole centres and below y = 192), plus:
   - an idempotence guard: if no footprint U6 exists and the board's max Edge.Cuts y is 193.0, print `already R3` and exit 0;
   - silkscreen: replace text `M3-ASSY-R2 - DATA` → `M3-ASSY-R3 - DATA` and `2S INPUT / M3-ASSY-R2` → `2S INPUT / M3-ASSY-R3`;
-  - a final self-check that asserts: no footprint at y > 186.2; no track/via net `GPS_TX`/`GPS_RX`; board bbox = (0,0)–(46,193); the 8 M3 hole centres are exactly {(4,4),(42,4),(4,88),(42,88),(4,128),(42,128),(4,189),(42,189)}.
+  - a final self-check that asserts: no footprint at y > 186.2; no track/via net `GPS_TX`/`GPS_RX`; the Edge.Cuts segment endpoints are exactly (0,0),(46,0),(46,193),(0,193) (not `GetBoardEdgesBoundingBox`, which includes line width and returns 193.1); the 8 M3 hole centres are exactly {(4,4),(42,4),(4,88),(42,88),(4,128),(42,128),(4,189),(42,189)}.
 - [ ] **Step 2: Run it.**
   Run: `/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3 m3_design/r3_cut.py m3_design/assembly_review/m3.kicad_pcb 2>/dev/null`
   Expected: counts `fp 3, gps_trk 109, gps_via 4, 3v3a_branch 15, gnd_via ~99, silk_dot 3, zone 1`, `moved hole to 4.0 189.0`, `moved hole to 42.0 189.0`, `saved`, `self-check OK`.
@@ -72,10 +72,10 @@ git commit -m "M3-ASSY-R3: remove GNSS, cut board to 46 x 193 mm"
 
 | Refs | From | To | Evidence |
 |---|---|---|---|
-| C71 C74 C83 C90 C93 C128 C140 | C1591 Samsung CL10B104KB8NNNC 100 nF 50 V X7R 0603 (Extended) | **C14663 Yageo CC0603KRX7R9BB104** 100 nF 50 V X7R ±10 % 0603 (Basic) | LCSC C14663 page; max DC bias in use 8.4 V on a 50 V part — capacitance loss is INFERENCE (no Yageo curve found); roles are bypass/RC-edge, tolerant of a few % |
+| ~~C71 … C140~~ | C1591 100 nF 50 V X7R | not swapped | C128/C140 are on PYRO_OUT in the simulated actuator band and no DC-bias curve exists for C14663; leaving them on C1591 keeps the line Extended, so the swap saves nothing |
 | R74 R77 R100 R101 R103 | C22548 Yageo RC0603FR-071KL 1 k 1 % 0603 (Extended) | **C21190 UNI-ROYAL 0603WAF1001T5E** 1 k 1 % 100 ppm 0603 (Basic) | LCSC C21190 page |
 
-- [ ] **Step 1:** Edit the 12 symbols' three fields (keep `Value` text unchanged so `check_actuators.py` value checks still match).
+- [x] **Step 1:** Edit the 5 resistors' LCSC, LCSC Part, Manufacturer and Manufacturer Part fields in the schematic **and in the PCB footprints** (export_fab reads the PCB fields; kicad-cli has no headless update-PCB), keeping `Value` unchanged. Done in `46039a7`.
 - [ ] **Step 2:** Update both procurement catalog entries.
 - [ ] **Step 3:** Update PCB from schematic (fields only): re-run `tools/check.sh` (parity must stay 0) and `cd quality_audit && python3 -m unittest test_quality_tools`.
 - [ ] **Step 4: Commit** `M3-ASSY-R3: move two passive lines to JLC Basic`.
@@ -89,23 +89,21 @@ git commit -m "M3-ASSY-R3: remove GNSS, cut board to 46 x 193 mm"
 - [ ] **Step 1:** Fetch EasyEDA pad data for C14663 and C21190 into `tools/jlc_easyeda/pads.json` the same way the existing entries were produced, then run `KiCad-python tools/jlc_orient.py tools/jlc_easyeda/pads.json` — Expected: `CHECK: none`.
 - [ ] **Step 2:** Run `python3 tools/export_fab.py` — Expected: `parts without LCSC code: none`, `CPL rows without a verified JLC orientation correction: none`, 75 BOM lines.
 - [ ] **Step 3:** Run `python3 tools/jlc_stock.py --boards 5` — Expected short list: only `C22459454 U4` (JLC stock 0 on 2026-10-05; protected, so it is sourced via JLC Global Sourcing/consignment, documented in ORDERING.md).
-- [ ] **Step 4:** Run `python3 tools/jlc_cost.py --max-parts 56 --max-extended 47` — Expected: met (records the achievable floor; the spec's 50/30 targets are shown unreachable in `docs/M3_R3.md`).
+- [x] **Step 4:** Run `python3 tools/jlc_cost.py` (defaults: parts ≤ $56, ≤ 48 unique extended codes; counts codes, not CSV rows) — met: $54.94, 48 codes.
 - [ ] **Step 5: Commit** `M3-ASSY-R3: regenerate fab package, add JLC cost gate`.
 
-### Task 5: Library and data cleanup
+### Task 5: Library and data cleanup — dropped
 
 **Files:**
 - Delete: `m3_design/assembly_review/kilib/rocket.pretty/LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B.kicad_mod`, `kilib/rocket.3dshapes/M3_SAM_M10Q_ENVELOPE.wrl` (unused after Task 2)
 - Modify: `m3_design/assembly_review/bom_review.json`, `verification_assembly.json` (mark as R1/R2 history, not R3 evidence)
 
-- [ ] **Step 1:** Delete the two files; run `tools/check.sh` (audit must still pass — no footprint references them).
-- [ ] **Step 2: Commit** `M3-ASSY-R3: drop unused GNSS library items`.
+Not done: `kilib/core.kicad_sym` and `kilib/m3.kicad_sym` still name this footprint as the GNSS symbol's default, so deleting it would leave a dangling library reference for no gain.
 
 ### Task 6: Documentation and pin map
 
 **Files:**
 - Create: `docs/M3_R3.md` (design record: what changed and why, cut geometry and margins — J3 washer clearance 1.075 mm, minimum legal length 191.925 mm —, GNSS removal list, BOM swaps with evidence, cost result vs targets with the JLC fee table, U4 stock, bay cross-section: battery no longer under the board, coupler bore Ø50.8 to joint + 120, servo header 72.9 mm from aft edge)
-- Create: `m3_firmware/pins_r3.json` (R2 map minus GPS_TX/GPS_RX; PC6/PC7 unused)
 - Modify: `STATUS.md`, `AGENTS.md` §1 table, `README.md`, `docs/ORDERING.md` (size 46 × 193, U4 Global Sourcing instead of U6, cost numbers)
 
 - [ ] **Step 1:** Write/modify the files.

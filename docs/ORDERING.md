@@ -1,6 +1,6 @@
-# Ordering M3-ASSY-R2 prototypes (JLCPCB)
+# Ordering M3-ASSY-R3 prototypes (JLCPCB)
 
-**This is a bench-prototype order, not a flight release.** The first boards are for power-up, dummy-load fire tests and servo tests. R2 firmware does not exist yet, and v0.8.1 must not run on R2. Open items are listed in `docs/R2_VERIFICATION.md` §4–5.
+**This is a bench-prototype order, not a flight release.** The first boards are for power-up, dummy-load fire tests and servo tests. R3 bench firmware does not exist yet, and v0.8.1 must not run on R2 or R3. Open items are listed in `docs/R2_VERIFICATION.md` §4–5 and `docs/M3_R3.md` §5–6. Expected cost: about $100–110 per board all-in for 5 boards (`docs/M3_R3.md` §4).
 
 ## 1. Regenerate and check
 
@@ -8,7 +8,8 @@
 bash tools/check.sh                         # DRC / unconnected / parity / ERC = 0, audit OK
 python3 m3_design/check_actuators.py        # safety contract
 python3 tools/export_fab.py                 # Gerber zip, BOM, CPL (orientation-corrected)
-python3 tools/jlc_stock.py --boards 5       # JLC stock right now; only U6 should be short
+python3 tools/jlc_stock.py --boards 5       # JLC stock right now; on 2026-10-05 only U4 is short
+python3 tools/jlc_cost.py --boards 5        # parts cost and unique extended codes (R3 floor: $56 / 48)
 ```
 
 `export_fab.py` must report both of these:
@@ -27,7 +28,7 @@ All three files are in `m3_design/assembly_review/fab/`:
 | Option | Value | Why |
 |---|---|---|
 | Layers | 4 | F.Cu / In1 GND / In2 3V3 / B.Cu |
-| Size | 46 × 238 mm | from the board outline |
+| Size | 46 × 193 mm | from the board outline (M3-ASSY-R3) |
 | Thickness | 1.6 mm | board setup |
 | Outer copper | 1 oz | `ROCKET_FC_FROZEN_DESIGN.md` §1 |
 | **Inner copper** | **1 oz (not the 0.5 oz default)** | same; the inner planes carry return current |
@@ -44,11 +45,11 @@ All three files are in `m3_design/assembly_review/fab/`:
   - 8 parts would otherwise have been placed rotated: U7, U8, U10, U11, U12, U13, D121 and LED2. J3 also gets a 0.1 mm position correction.
   - Still confirm in JLC's placement preview. **Check these first:** D9, D120, D122, D123, LED1, LED2, C84 and C121 (polarity); U1–U13 and Q120–Q125 (pin 1); J3 (USB-C position).
 
-**Full PCBA.** JLC can fit every part. The one extra step is U6:
+**Full PCBA.** JLC can fit every part. The one extra step is U4, which JLC had out of stock on 2026-10-05:
 
 | Part | What to do |
 |---|---|
-| U6 SAM-M10Q-00B | JLC stock is 0. In the JLC account, add it through **Parts Manager → Global Sourcing** before ordering the PCBA; DigiKey had about 2,600–2,900 in stock on 2026-09-27 (findchips). Alternatively, consign it (ship it to JLC). Either way JLC places it with the rest |
+| U4 ICM-45686 (C22459454) | JLC stock 0 on 2026-10-05 (1,023 on 2026-09-28). It is protected (no substitute keeps ±32 g). Re-run `jlc_stock.py`; if still short, add it through **Parts Manager → Global Sourcing** or consign it. Authorized distributors showed 0 on 2026-10-05; broker stock (e.g. Win Source) is unverified for authenticity |
 | J1, J9, J120, J121 (DB128V-5.08-4P), J122 (3 × 4), J2 (1 × 6 PZ254V-11-06P), J123 (1 × 2 PZ254V-11-02P) | Through-hole, all in JLC stock: JLC THT assembly |
 
 ## 5. Parts changed for availability (2026-09-27)

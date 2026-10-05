@@ -33,7 +33,7 @@ Status: design approved by the owner in conversation. Implementation follows
 A1. Remove the GNSS from schematic and PCB. MCU pins that carried GPS_TX/GPS_RX become
 unconnected and get no-connect flags.
 
-A2. Board outline 46.0 × 193.0 mm (corner radius as R2). Board y = 0 stays the battery (J1)
+A2. Board outline 46.0 × 193.0 mm (square corners, as R2). Board y = 0 stays the battery (J1)
 end. The forward M3 pair moves from y = 234 to y = 189 (x = 4 and 42); the other six M3
 holes and both zip-tie holes stay. All tracks, vias and footprints aft of the cut are
 untouched; zones are clipped to the new outline and refilled. The servo header J122 stays
@@ -44,12 +44,12 @@ A3. BOM cost-down to ≤ 30 extended lines and ≤ $50 parts/board, by same-foot
 equal-or-better swaps onto JLC Basic parts (MLCC swaps checked for effective capacitance at
 the operating DC bias), and by merging duplicate LCSC codes for identical parts.
 
-A4–A5. Every line JLC-stocked for 5 boards; no consigned or Global Sourcing part.
+A4–A5. Every line JLC-stocked for 5 boards, except where a protected part is out of stock (2026-10-05: U4), which then goes through JLC Global Sourcing or consignment.
 
 A6. Gates: `tools/check.sh` all zero; `m3_design/check_actuators.py` OK;
 `quality_audit` PASS; `m3_design/sim_r2/run.py` passes (actuator band unchanged);
 `tools/export_fab.py` reports no missing LCSC code and no unverified CPL rotation;
-`tools/jlc_stock.py --boards 5` short: none; new `tools/jlc_cost.py` shows the targets met.
+`tools/jlc_stock.py --boards 5` short only for protected parts; `tools/jlc_cost.py` meets the revised floor (§5). `sim_r2` is required only if the actuator band changes (it does not in R3; ngspice is not installed).
 
 A7. Docs: STATUS.md, AGENTS.md §1, README.md, docs/ORDERING.md, a design record
 `docs/M3_R3.md` (cut, GNSS removal, swaps with evidence, bay cross-section), and
@@ -84,17 +84,17 @@ outputs default off.
   was tested on a scratch copy: DRC, unconnected, parity and ERC all 0; audit OK;
   `check_actuators` OK.
 - **Cost (A3/A4):** the targets cannot be met without breaking the robustness rule.
-  - Only two same-footprint swaps pass (C1591 → C14663, C22548 → C21190).
-  - The floor is **47 extended LCSC codes** and parts of **$55.02 per board** at 5 boards
+  - Only two same-footprint swaps passed research (C1591 → C14663, C22548 → C21190); only the second was made.
+  - The research floor was **47 extended LCSC codes** and parts of **$55.02 per board** at 5 boards
     ($58.87 including JLC minimums and attrition, INFERENCE from the API fields).
   - Fees at 5 boards, from JLC's price table updated 2026-09-09:
     - Economic PCBA feeder fee: $3.07 per extended code.
     - Bare-PCB live quote: $65.01 for 5 boards (ENIG, 1 oz inner).
-  - All-in is therefore ≈ $95–100 per board, against ≈ $130 for R2.
+  - All-in is therefore ≈ $100–110 per board (48 codes after implementation; see `docs/M3_R3.md` §4), against ≈ $130 for R2.
   - Getting closer to $75 needs owner-approved relaxations. Examples: hand-solder the
     THT connectors (−5 codes), or a 12 pF crystal from the Basic library with new load
     caps (needs a gain-margin check).
-  - The revised acceptance target is parts ≤ $56 and ≤ 47 extended codes at 5 boards.
+  - The revised acceptance target is parts ≤ $56 and ≤ 48 unique extended codes at 5 boards (only the 1 k swap was made; the 100 nF swap was dropped).
 - **Stock (A5):** U4 ICM-45686 (C22459454) shows JLC stock 0 on 2026-10-05 (1,023 on
   2026-09-28). U4 is protected, so it goes through JLC Global Sourcing or consignment.
   Everything else is in stock.

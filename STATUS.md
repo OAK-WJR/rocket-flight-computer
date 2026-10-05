@@ -2,9 +2,35 @@
 
 > Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included; only the current M3-ASSY-R1 is. They are mentioned below only as the evolution record.
 
-Last updated 2026-09-25. Governing requirements: M1/M2 merged into one board, easy to diagnose, at most three PCB iterations; "10× redundancy" means independent protection layers, not a blanket 10× component derating. **M3-ASSY-R2 is the first candidate that contains every hardware function in the requirements; it is a CAD design with a manufacturing package, not a measured or flown board.**
+Last updated 2026-10-05. Governing requirements: M1/M2 merged into one board, easy to diagnose, at most three PCB iterations; "10× redundancy" means independent protection layers, not a blanket 10× component derating. **M3-ASSY-R2 was the first candidate with every hardware function in the requirements; M3-ASSY-R3 is the current one (GNSS dropped by owner decision). Both are CAD designs with a manufacturing package, not measured or flown boards.**
 
-## Current candidate: M3-ASSY-R2 (actuator merge)
+## Current candidate: M3-ASSY-R3 (GNSS removed, 46 × 193 mm, cost-down)
+
+Design record: [docs/M3_R3.md](docs/M3_R3.md). R3 is R2 with the GNSS (U6, C33, C34, GPS nets, its 3V3A branch) removed and the board cut from 238 to **193 mm** so it fits the main-section electronics bay. The forward M3 pair moved to y = 189. **No remaining track, via or footprint moved** (checked against R2 by UUID and geometry). **205 footprint positions / 180 fitted parts / 25 test pads**, 14 schematic sheets. The 1 k 1 % resistors moved to a JLC Basic part.
+
+Verification, stated separately:
+- **CAD checks (done)**:
+  - `tools/check.sh`: DRC 0, unconnected 0, schematic parity 0, ERC 0; audit OK.
+  - `m3_design/check_actuators.py`: OK.
+  - `quality_audit` unit tests: 12/12.
+  - `tools/export_fab.py`: 75 lines, 180 placed, nothing missing.
+  - Pre-fab pin-mux audit against DS12110 Rev 11: no wrong assignment (`docs/M3_R3.md` §6).
+- **Cost and stock (2026-10-05)**:
+  - Parts: $54.94 per board at 5 boards, 48 unique extended codes; all-in about $100–110 per board.
+  - The $75 target is not reachable without giving up robustness (`docs/M3_R3.md` §4).
+  - **U4 ICM-45686 is out of stock at JLC**; it needs Global Sourcing or consignment.
+- **Simulation**: not re-run (ngspice not installed). The actuator band is unchanged.
+- **Firmware**: none for R3 yet (plan in `docs/superpowers/plans/`).
+- **Physical tests**: none.
+
+Open owner decisions:
+- PB0 4.0 V FT_a limit (R125 → 3.3 k option).
+- PE4/PE5 trace-pin risk, accepted procedurally.
+- `PYRO*_GATE_N` naming.
+- Cost relaxations.
+- U4 sourcing.
+
+## Previous candidate: M3-ASSY-R2 (actuator merge)
 
 Design record: [docs/M3_ACTUATOR_MERGE.md](docs/M3_ACTUATOR_MERGE.md). One 46 × **238** mm four-layer board: R1 plus a 52 mm actuator band inserted between the battery/logic-power block and the camera block. **208 footprint positions / 183 fitted parts / 25 test pads**, 14 schematic sheets.
 

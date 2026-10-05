@@ -10,7 +10,7 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-05-m3-assy-r3-design.md` (part B)
 
-**Depends on:** the hardware plan (`2026-10-05-m3-assy-r3-hardware.md`) Tasks 1–2 (R3 board file and netlist exist and pass `tools/check.sh`).
+**Depends on:** the hardware plan completed (Tasks 1–6), because the BOM field edits change the board SHA-256 that the binding pins. Also decide P2 (R125 4.7 k → 3.3 k) and P4 (`PYRO*_GATE_N` rename) first: either changes the hash and the scaling constants below.
 
 ## Global Constraints
 
@@ -26,6 +26,7 @@
 
 **Files:** Create `m3_firmware/research/r3_inputs.json` (URL + SHA-256 of every reference the R3 build hashes); gitignored `m3_firmware/toolchain/`.
 
+- [ ] Restore every reference PDF the build hashes (IMU, flash, power-status parts, DS12110) from vendor URLs into the gitignored paths and record URL + SHA-256 in `research/r3_inputs.json`; a revised vendor PDF gets a new recorded hash, never a forced old one.
 - [ ] Download `https://developer.arm.com/-/media/Files/downloads/gnu/15.2.rel1/binrel/arm-gnu-toolchain-15.2.rel1-darwin-arm64-arm-none-eabi.tar.xz` (141,961,944 bytes) with curl, verify SHA-256 `1938a84b7105c192e3fb4fa5e893ba25f425f7ddab40515ae608cd40f68669a8`, unpack into `m3_firmware/toolchain/`.
 - [ ] Run `m3_firmware/toolchain/arm-gnu-toolchain-15.2.rel1-darwin-arm64-arm-none-eabi/bin/arm-none-eabi-gcc --version` — Expected `15.2.1 20251203`.
 - [ ] Regenerate `research/usb/tinyusb_manifest.json` from `vendor/tinyusb` (version 0.21.0 from `tusb_option.h`), reviewed.
@@ -34,6 +35,8 @@
 ### Task 2: R3 board binding (B1)
 
 **Files:** Create `m3_design/gate_r3.py` (writes `m3_design/assembly_review/verification_r3.json`), `m3_firmware/r3_binding.py`, `m3_firmware/pins_r3.json`, `m3_firmware/protocol_r3.json`; Modify `m3_firmware/build.py` (add `--board r3`); Test `m3_firmware/test_r3_binding.py`.
+
+**Note:** `pins_r3.json` is defined only here: `pins_status.json` minus PC6/PC7 and `PE3:LED_RED`, plus the `pins_r2.json` additions, plus PB10/PB11, PC13, PA11/PA12, PD15, PD0/PD1/PD4/PD6 and **PE10 = IMU_INT1**; PE3/PE6 go in a separate no-net list checked with `startswith('unconnected-')`.
 
 **Interfaces:** `make_binding() -> dict` with keys `profile='M3-ASSY-R3'`, `board_sha256`, `gnss_fitted=False`, `gnss_dnp=True`, `probes`, `binding_note`.
 
@@ -74,26 +77,28 @@ Thresholds (ratiometric codes; INFERENCE midpoints of the §E bands, each band �
 #define ST_ERR_CODE          397u   /* 20 mV    */
 ```
 
-- [ ] Tests load `m3_design/sim_r2/results.json` (pin its SHA-256), and for every `E.*` row assert the classifier returns the row's state at min and max; boundary codes ±`ST_ERR_CODE` give `ST_INCONCLUSIVE`; `raw_act_live == 0` with RAW_ACT_SENSE code > 300 mV equivalent gives `ST_NOT_PLUG_OUT` (rail-off ambiguity, b5-safety research §3).
+- [ ] Tests load `m3_design/sim_r2/results.json` (pin its SHA-256), and for every `E.*` row assert the classifier returns the row's state at min and max; boundary codes ±`ST_ERR_CODE` give `ST_INCONCLUSIVE`; `raw_act_live == 0` with RAW_ACT_SENSE code > 300 mV equivalent gives `ST_NOT_PLUG_OUT` unless RAW_ACT_SENSE reads < 50 mV equivalent (a plugged channel with the rail off back-feeds RAW_ACT to ~215–324 mV, INFERENCE from a DC model; a 300 mV rule would certify a plugged-in channel as plug-out); also require ARM ≈ CONT within ±20 mV and treat CONT > 200 mV as a fault.
 - [ ] Implement; PASS; commit.
 
 ### Task 6: v0.9 record, protocol and USB (B2)
 
 **Files:** Modify `src/main.c`, `src/storage.h` (decouple 1024-byte kind 3 from `M3_GNSS` via `M3_FULL_RECORD`), `src/usb_descriptors.c` (bcdDevice 0x0009, "v0.9"), `protocol_r3.json` (words 184..254 = R3 block: ADC1 status/errors, six raw codes, RAW_ACT and CAM_5V mV, B3 verdicts, GPIO/LCKR readbacks, pull-pin history, `actuation=0`); remove GNSS from the R3 build (`gnss*.c` not compiled when `--board r3`).
 - [ ] `_Static_assert`s on word offsets; host tests: v9 frame decodes; R3 words 0..183 identical to v8 layout; build symbol policy forbids `TIM5`, `TIM8`, `actuate_`, `pyro_` symbols in v0.9.
-- [ ] Build: `python3 m3_firmware/build.py --board r3 --storage inspect` and `--storage record` — Expected: image + manifest under `build_r3_inspect/`, `build_r3_record/`. Commit.
+- [ ] Keep `M3_FULL_RECORD` implied by `-DM3_GNSS` so v7/v8 journals and `GNSSJournalTests` are unchanged.
+- [ ] Configure PE10 (IMU_INT1) with the internal pull-down (no pull on the net).
+- [ ] Build: `python3 m3_firmware/build.py --board r3 --imu-samples --storage inspect` and `--storage record` — Expected: image + manifest under `build_r3_inspect/`, `build_r3_record/`. Commit.
 
 ### Task 7: Host diagnostics rebind (B4)
 
-**Files:** Modify `diagnostics/mailbox.py` (v9 + `M3-ASSY-R3` profile), `storage.py` (version 9), `engine.py` (`gnss_fitted` False path), `triage_rules.py` (drop U6/C33/C34 group for R3), `triage_map.py` (regenerate test-point map from the R3 PCB; add TP120, TP121, TP85); Tests: new `diagnostics/test_r3.py`.
+**Files:** Modify `diagnostics/mailbox.py` (v9 + `M3-ASSY-R3` profile), `storage.py` (version 9), `engine.py` (`gnss_fitted` False path), `triage_rules.py` (drop U6/C33/C34 group for R3), `triage_map.py` (regenerate the test-point map from the R3 PCB; TP85 already exists — add TP120, TP121, TP122, TP123, TP124 because the population check is exact set equality; TP124 is the ground for TP120–TP123), `triage.py`, `triage_report.py`, `engine.py:227-228`, `acquisition.py` (ADC1 words), `transport.py`, `board_binding.json`, `verify_triage.py`; Tests: new `diagnostics/test_r3.py`.
 - [ ] Tests: v9 frame + R3 manifest accepted; v9 frame + R1/R2 manifest rejected; v8 frame + R3 manifest rejected; nonzero GNSS-era words in v9 rejected; v2–v8 manifests still decode; triage of a failed RAW_ACT reading points to TP120.
 - [ ] `python -m unittest discover -s diagnostics -t . -p 'test_*.py'` — all pass. Commit.
 
 ### Task 8: B5 bench actuation image
 
-**Files:** Create `src/bench_act.c/.h` (pure gating state machine), `src/bench_act_stm32.c` (TIM5 servo PWM 333 Hz, TIM8_CH1N buzzer 2.7 kHz, pyro pulse terminated by highest-priority TIM6 compare ISR writing `GPIOE->BSRR`, 25 ms abort, 30 ms backstop), `src/usb_wire_bench.c` (own wire version, arm/confirm/abort/servo/buzz opcodes); `build.py --board r3 --image bench-act`; Tests `test_bench_act.py`, `tests/bench_act_harness.c`; Doc `m3_firmware/BENCH_ACTUATION.md`.
+**Files:** Create `src/bench_act.c/.h` (pure gating state machine), `src/bench_act_stm32.c` (TIM5 servo PWM 333 Hz, TIM8_CH1N buzzer 2.7 kHz, pyro pulse ended by the TIM6 update event in one-pulse mode (TIM6 is a basic timer with no compare channel) at the highest NVIC priority writing `GPIOE->BSRR`, a TIM2 25 ms hard abort (TIM2 never gets an output channel) and a 30 ms backstop), plus a host client `bench_actuation/` (separate from `diagnostics/`, which promises no actuation) that runs arm → confirm and captures CONT/ARM/RAW during the pulse, `src/usb_wire_bench.c` (own wire version, arm/confirm/abort/servo/buzz opcodes); `build.py --board r3 --image bench-act`; Tests `test_bench_act.py`, `tests/bench_act_harness.c`; Doc `m3_firmware/BENCH_ACTUATION.md`.
 
-**Interfaces:** `ba_state ba_step(ba_state s, const ba_inputs *in, ba_event ev, uint32_t now_ms, ba_outputs *out);` refusals: ARM plug not sensed on the requested channel's bus, continuity outside good band, RAW_ACT < 6.6 V, VDDA outside 3.0–3.6 V, gate pull-down test failed, debugger attached, LCKR not locked, other channel not idle, servos not quiet ≥ 200 ms, confirm nonce mismatch or > 5 s after arm. Any USB disconnect/DTR drop/timeout → SAFE. Reset → SAFE (no persistence). One pulse per arm.
+**Interfaces:** `ba_state ba_step(ba_state s, const ba_inputs *in, ba_event ev, uint32_t now_ms, ba_outputs *out);` refusals: ARM plug not sensed on the requested channel's bus, continuity outside good band, RAW_ACT < 6.6 V, VDDA outside 3.0–3.6 V, gate pull-down test failed, debugger attached, LCKR not locked, other channel not idle, servos not quiet ≥ 200 ms, confirm nonce mismatch or > 5 s after arm. RAW_ACT above ~8.6 V; no B3 plug-out pass this power cycle before the plug was sensed; channel already fired this session; F-14 hazard latch (ARM > 0.4 V before arming → continuous tone, refuse everything). Any USB disconnect/DTR drop/heartbeat loss/timeout → SAFE. Reset → SAFE (no persistence). One pulse per arm. Open owner rulings before any dummy-load fire: single-channel bench ARM plug, confirm window (5 s vs 10 s), stall-hold limits, servo-quiet method, IWDG period, and the F-14/F-6/`pyro_may_fire` exemption written into the FMEA.
 
 - [ ] Tests: each refusal alone blocks; nonce replay/timeout; pulse ends at 20 ms (19–21 ms accepted), wraparound; seeded fuzz invariants (≤ 1 gate high; gate high ⇒ FIRING and all refusals clear; servos idle while firing); harness asserts TIM1/TIM15 never clocked and the termination IRQ has priority 0.
 - [ ] v0.9 image symbol check still clean; B5 image contains `ba_step`. Commit.
