@@ -1,22 +1,22 @@
 {
- "checked_utc": "2026-09-28T18:07:51Z",
+ "checked_utc": "2026-10-05T23:36:48Z",
  "source": "jlcpcb.com selectSmtComponentList (stockCount)",
  "boards": 5,
  "lines": [
   {
    "lcsc": "C1525",
-   "refs": "C5,C13,C14,C15,C16,C17,C18,C21,C24,C29,C30,C31,C32,C33,C160",
-   "qty_per_board": 15,
-   "jlc_stock": 23782366,
+   "refs": "C5,C13,C14,C15,C16,C17,C18,C21,C24,C29,C30,C31,C32,C160",
+   "qty_per_board": 14,
+   "jlc_stock": 22022449,
    "library": "base",
    "model": "CL05B104KO5NNNC",
    "assembly": "SMT"
   },
   {
    "lcsc": "C45783",
-   "refs": "C6,C7,C8,C9,C10,C11,C34,C150,C151",
-   "qty_per_board": 9,
-   "jlc_stock": 4149397,
+   "refs": "C6,C7,C8,C9,C10,C11,C150,C151",
+   "qty_per_board": 8,
+   "jlc_stock": 3958591,
    "library": "base",
    "model": "CL21A226MAQNNNE",
    "assembly": "SMT"
@@ -25,7 +25,7 @@
    "lcsc": "C23630",
    "refs": "C19,C20,C120",
    "qty_per_board": 3,
-   "jlc_stock": 2687813,
+   "jlc_stock": 2572775,
    "library": "base",
    "model": "CL10A225KO8NNNC",
    "assembly": "SMT"
@@ -34,7 +34,7 @@
    "lcsc": "C15849",
    "refs": "C22",
    "qty_per_board": 1,
-   "jlc_stock": 6610444,
+   "jlc_stock": 7135523,
    "library": "base",
    "model": "CL10A105KB8NNNC",
    "assembly": "SMT"
@@ -43,7 +43,7 @@
    "lcsc": "C19666",
    "refs": "C23,C28",
    "qty_per_board": 2,
-   "jlc_stock": 2650779,
+   "jlc_stock": 2483796,
    "library": "base",
    "model": "CL10A475KO8NNNC",
    "assembly": "SMT"
@@ -52,7 +52,7 @@
    "lcsc": "C32949",
    "refs": "C25,C26",
    "qty_per_board": 2,
-   "jlc_stock": 1256724,
+   "jlc_stock": 1162045,
    "library": "base",
    "model": "CL05C100JB5NNNC",
    "assembly": "SMT"
@@ -61,7 +61,7 @@
    "lcsc": "C57112",
    "refs": "C60,C94,C122,C127,C129,C139,C141",
    "qty_per_board": 7,
-   "jlc_stock": 6989704,
+   "jlc_stock": 6659105,
    "library": "base",
    "model": "0603B103K500NT",
    "assembly": "SMT"
@@ -70,7 +70,7 @@
    "lcsc": "C85980",
    "refs": "C70,C81",
    "qty_per_board": 2,
-   "jlc_stock": 96382,
+   "jlc_stock": 90403,
    "library": "expand",
    "model": "GRM1885C1H472JA01D",
    "assembly": "SMT"
@@ -79,7 +79,7 @@
    "lcsc": "C1591",
    "refs": "C71,C74,C83,C90,C93,C128,C140",
    "qty_per_board": 7,
-   "jlc_stock": 3174084,
+   "jlc_stock": 1490943,
    "library": "expand",
    "model": "CL10B104KB8NNNC",
    "assembly": "SMT"
@@ -88,7 +88,7 @@
    "lcsc": "C21397",
    "refs": "C72,C73,C75,C76,C82,C92",
    "qty_per_board": 6,
-   "jlc_stock": 75681,
+   "jlc_stock": 75313,
    "library": "expand",
    "model": "GRM32ER71E226KE15L",
    "assembly": "SMT"
@@ -97,7 +97,7 @@
    "lcsc": "C1671",
    "refs": "C77",
    "qty_per_board": 1,
-   "jlc_stock": 756221,
+   "jlc_stock": 647872,
    "library": "base",
    "model": "CL10C470JB8NNNC",
    "assembly": "SMT"
@@ -106,7 +106,7 @@
    "lcsc": "C1848",
    "refs": "C80,C91",
    "qty_per_board": 2,
-   "jlc_stock": 562921,
+   "jlc_stock": 504981,
    "library": "base",
    "model": "CL31B105KBHNNNE",
    "assembly": "SMT"
@@ -115,7 +115,7 @@
    "lcsc": "C178373",
    "refs": "C84",
    "qty_per_board": 1,
-   "jlc_stock": 261,
+   "jlc_stock": 241,
    "library": "expand",
    "model": "35SVPK330M",
    "assembly": "SMT"
@@ -124,7 +124,7 @@
    "lcsc": "C1623",
    "refs": "C85",
    "qty_per_board": 1,
-   "jlc_stock": 975350,
+   "jlc_stock": 922474,
    "library": "base",
    "model": "CL10B474KA8NNNC",
    "assembly": "SMT"
@@ -133,7 +133,7 @@
    "lcsc": "C29936",
    "refs": "C86",
    "qty_per_board": 1,
-   "jlc_stock": 1042188,
+   "jlc_stock": 267848,
    "library": "expand",
    "model": "CL10B105KA8NNNC",
    "assembly": "SMT"
@@ -142,7 +142,7 @@
    "lcsc": "C46550466",
    "refs": "C121",
    "qty_per_board": 1,
-   "jlc_stock": 130038,
+   "jlc_stock": 128467,
    "library": "expand",
    "model": "MA25V470M8x10",
    "assembly": "SMT"
@@ -151,7 +151,7 @@
    "lcsc": "C21120",
    "refs": "C126,C138",
    "qty_per_board": 2,
-   "jlc_stock": 742221,
+   "jlc_stock": 691775,
    "library": "base",
    "model": "CL10B224KA8NNNC",
    "assembly": "SMT"
@@ -160,7 +160,7 @@
    "lcsc": "C7519",
    "refs": "D4",
    "qty_per_board": 1,
-   "jlc_stock": 43929,
+   "jlc_stock": 44343,
    "library": "expand",
    "model": "USBLC6-2SC6",
    "assembly": "SMT"
@@ -169,7 +169,7 @@
    "lcsc": "C135111",
    "refs": "D8",
    "qty_per_board": 1,
-   "jlc_stock": 30080,
+   "jlc_stock": 30060,
    "library": "expand",
    "model": "SMBJ9.0CA-13-F",
    "assembly": "SMT"
@@ -178,7 +178,7 @@
    "lcsc": "C85098",
    "refs": "D9",
    "qty_per_board": 1,
-   "jlc_stock": 189926,
+   "jlc_stock": 183272,
    "library": "expand",
    "model": "B340A-13-F",
    "assembly": "SMT"
@@ -187,7 +187,7 @@
    "lcsc": "C8591",
    "refs": "D120",
    "qty_per_board": 1,
-   "jlc_stock": 5042,
+   "jlc_stock": 4906,
    "library": "expand",
    "model": "BAT54A",
    "assembly": "SMT"
@@ -196,7 +196,7 @@
    "lcsc": "C13612",
    "refs": "D121",
    "qty_per_board": 1,
-   "jlc_stock": 52901,
+   "jlc_stock": 45904,
    "library": "expand",
    "model": "SRV05-4.TCT",
    "assembly": "SMT"
@@ -205,7 +205,7 @@
    "lcsc": "C47546",
    "refs": "D122",
    "qty_per_board": 1,
-   "jlc_stock": 283108,
+   "jlc_stock": 279917,
    "library": "expand",
    "model": "BAT54S,215",
    "assembly": "SMT"
@@ -214,7 +214,7 @@
    "lcsc": "C191023",
    "refs": "D123",
    "qty_per_board": 1,
-   "jlc_stock": 5037082,
+   "jlc_stock": 4844886,
    "library": "base",
    "model": "1N5819WS",
    "assembly": "SMT"
@@ -223,7 +223,7 @@
    "lcsc": "C2915641",
    "refs": "J1",
    "qty_per_board": 1,
-   "jlc_stock": 83333,
+   "jlc_stock": 82426,
    "library": "expand",
    "model": "DB128V-5.08-4P-GN-S",
    "assembly": "THT (JLC THT assembly)"
@@ -232,7 +232,7 @@
    "lcsc": "C492405",
    "refs": "J2",
    "qty_per_board": 1,
-   "jlc_stock": 104309,
+   "jlc_stock": 101224,
    "library": "expand",
    "model": "PZ254V-11-06P",
    "assembly": "THT (JLC THT assembly)"
@@ -241,7 +241,7 @@
    "lcsc": "C165948",
    "refs": "J3",
    "qty_per_board": 1,
-   "jlc_stock": 446155,
+   "jlc_stock": 420364,
    "library": "expand",
    "model": "TYPE-C-31-M-12",
    "assembly": "SMT"
@@ -250,7 +250,7 @@
    "lcsc": "C2915641",
    "refs": "J9",
    "qty_per_board": 1,
-   "jlc_stock": 83333,
+   "jlc_stock": 82426,
    "library": "expand",
    "model": "DB128V-5.08-4P-GN-S",
    "assembly": "THT (JLC THT assembly)"
@@ -259,7 +259,7 @@
    "lcsc": "C2915641",
    "refs": "J120",
    "qty_per_board": 1,
-   "jlc_stock": 83333,
+   "jlc_stock": 82426,
    "library": "expand",
    "model": "DB128V-5.08-4P-GN-S",
    "assembly": "THT (JLC THT assembly)"
@@ -268,7 +268,7 @@
    "lcsc": "C2915641",
    "refs": "J121",
    "qty_per_board": 1,
-   "jlc_stock": 83333,
+   "jlc_stock": 82426,
    "library": "expand",
    "model": "DB128V-5.08-4P-GN-S",
    "assembly": "THT (JLC THT assembly)"
@@ -277,7 +277,7 @@
    "lcsc": "C32713291",
    "refs": "J122",
    "qty_per_board": 1,
-   "jlc_stock": 28174,
+   "jlc_stock": 28019,
    "library": "expand",
    "model": "HX PZ2.54-3x4P ZZ",
    "assembly": "THT (JLC THT assembly)"
@@ -286,7 +286,7 @@
    "lcsc": "C492401",
    "refs": "J123",
    "qty_per_board": 1,
-   "jlc_stock": 1296407,
+   "jlc_stock": 1251131,
    "library": "expand",
    "model": "PZ254V-11-02P",
    "assembly": "THT (JLC THT assembly)"
@@ -295,7 +295,7 @@
    "lcsc": "C57269",
    "refs": "L1,L2",
    "qty_per_board": 2,
-   "jlc_stock": 37420,
+   "jlc_stock": 34739,
    "library": "expand",
    "model": "SWPA4030S4R7MT",
    "assembly": "SMT"
@@ -304,7 +304,7 @@
    "lcsc": "C1329837",
    "refs": "L3",
    "qty_per_board": 1,
-   "jlc_stock": 1659,
+   "jlc_stock": 1648,
    "library": "expand",
    "model": "SRP5030T-6R8M",
    "assembly": "SMT"
@@ -313,7 +313,7 @@
    "lcsc": "C84256",
    "refs": "LED1",
    "qty_per_board": 1,
-   "jlc_stock": 5163260,
+   "jlc_stock": 4787721,
    "library": "base",
    "model": "NCD0805R1",
    "assembly": "SMT"
@@ -322,7 +322,7 @@
    "lcsc": "C2296",
    "refs": "LED2",
    "qty_per_board": 1,
-   "jlc_stock": 412021,
+   "jlc_stock": 379784,
    "library": "base",
    "model": "KT-0805Y",
    "assembly": "SMT"
@@ -331,7 +331,7 @@
    "lcsc": "C94599",
    "refs": "LS120",
    "qty_per_board": 1,
-   "jlc_stock": 79491,
+   "jlc_stock": 75640,
    "library": "expand",
    "model": "MLT-8530",
    "assembly": "SMT"
@@ -340,7 +340,7 @@
    "lcsc": "C2760089",
    "refs": "Q120,Q121",
    "qty_per_board": 2,
-   "jlc_stock": 1682,
+   "jlc_stock": 1651,
    "library": "expand",
    "model": "AON6403",
    "assembly": "SMT"
@@ -349,7 +349,7 @@
    "lcsc": "C20917",
    "refs": "Q122,Q123",
    "qty_per_board": 2,
-   "jlc_stock": 1034061,
+   "jlc_stock": 953971,
    "library": "base",
    "model": "AO3400A",
    "assembly": "SMT"
@@ -358,7 +358,7 @@
    "lcsc": "C431195",
    "refs": "Q124,Q125",
    "qty_per_board": 2,
-   "jlc_stock": 8155,
+   "jlc_stock": 7884,
    "library": "expand",
    "model": "AON7524",
    "assembly": "SMT"
@@ -367,7 +367,7 @@
    "lcsc": "C25744",
    "refs": "R5,R10,R11,R61,R62,R63,R64,R104,R121,R124,R128,R129,R131,R132,R140,R141,R143,R144,R154,R155,R156,R157,R161,R163",
    "qty_per_board": 24,
-   "jlc_stock": 22917919,
+   "jlc_stock": 21518592,
    "library": "base",
    "model": "0402WGF1002TCE",
    "assembly": "SMT"
@@ -376,7 +376,7 @@
    "lcsc": "C25905",
    "refs": "R7,R8",
    "qty_per_board": 2,
-   "jlc_stock": 6449162,
+   "jlc_stock": 5930570,
    "library": "base",
    "model": "0402WGF5101TCE",
    "assembly": "SMT"
@@ -385,7 +385,7 @@
    "lcsc": "C25915",
    "refs": "R9",
    "qty_per_board": 1,
-   "jlc_stock": 165834,
+   "jlc_stock": 160920,
    "library": "expand",
    "model": "0402WGF6201TCE",
    "assembly": "SMT"
@@ -394,7 +394,7 @@
    "lcsc": "C25900",
    "refs": "R12,R13,R125",
    "qty_per_board": 3,
-   "jlc_stock": 15890588,
+   "jlc_stock": 15394875,
    "library": "base",
    "model": "0402WGF4701TCE",
    "assembly": "SMT"
@@ -403,7 +403,7 @@
    "lcsc": "C17557",
    "refs": "R32,R33,R126,R138,R162",
    "qty_per_board": 5,
-   "jlc_stock": 935207,
+   "jlc_stock": 883678,
    "library": "base",
    "model": "0805W8F2200T5E",
    "assembly": "SMT"
@@ -412,7 +412,7 @@
    "lcsc": "C25741",
    "refs": "R60,R120,R122,R123",
    "qty_per_board": 4,
-   "jlc_stock": 9414697,
+   "jlc_stock": 8204802,
    "library": "base",
    "model": "0402WGF1003TCE",
    "assembly": "SMT"
@@ -430,7 +430,7 @@
    "lcsc": "C861162",
    "refs": "R71",
    "qty_per_board": 1,
-   "jlc_stock": 4645,
+   "jlc_stock": 4525,
    "library": "expand",
    "model": "RT0603BRD07172KL",
    "assembly": "SMT"
@@ -439,25 +439,25 @@
    "lcsc": "C861313",
    "refs": "R72",
    "qty_per_board": 1,
-   "jlc_stock": 2894,
+   "jlc_stock": 2814,
    "library": "expand",
    "model": "RT0603BRD0730K9L",
    "assembly": "SMT"
   },
   {
-   "lcsc": "C22548",
+   "lcsc": "C21190",
    "refs": "R74,R77,R100,R101,R103",
    "qty_per_board": 5,
-   "jlc_stock": 11392184,
-   "library": "expand",
-   "model": "RC0603FR-071KL",
+   "jlc_stock": 21303346,
+   "library": "base",
+   "model": "0603WAF1001T5E",
    "assembly": "SMT"
   },
   {
    "lcsc": "C95204",
    "refs": "R75,R76,R78,R88,R89,R90,R91,R92,R102,R110",
    "qty_per_board": 10,
-   "jlc_stock": 1931880,
+   "jlc_stock": 2056962,
    "library": "expand",
    "model": "RT0603BRD0710KL",
    "assembly": "SMT"
@@ -466,7 +466,7 @@
    "lcsc": "C326730",
    "refs": "R80",
    "qty_per_board": 1,
-   "jlc_stock": 43575,
+   "jlc_stock": 42108,
    "library": "expand",
    "model": "RT0603BRD071ML",
    "assembly": "SMT"
@@ -475,7 +475,7 @@
    "lcsc": "C705755",
    "refs": "R81",
    "qty_per_board": 1,
-   "jlc_stock": 7244,
+   "jlc_stock": 7164,
    "library": "expand",
    "model": "RT0603BRD07280KL",
    "assembly": "SMT"
@@ -484,7 +484,7 @@
    "lcsc": "C4241878",
    "refs": "R82",
    "qty_per_board": 1,
-   "jlc_stock": 2891,
+   "jlc_stock": 2508,
    "library": "expand",
    "model": "MCT0603MD2004BP500",
    "assembly": "SMT"
@@ -493,7 +493,7 @@
    "lcsc": "C705762",
    "refs": "R83",
    "qty_per_board": 1,
-   "jlc_stock": 132184,
+   "jlc_stock": 130500,
    "library": "expand",
    "model": "RT0603BRD07300KL",
    "assembly": "SMT"
@@ -502,7 +502,7 @@
    "lcsc": "C705743",
    "refs": "R84",
    "qty_per_board": 1,
-   "jlc_stock": 14844,
+   "jlc_stock": 14750,
    "library": "expand",
    "model": "RT0603BRD071K65L",
    "assembly": "SMT"
@@ -511,7 +511,7 @@
    "lcsc": "C137691",
    "refs": "R85",
    "qty_per_board": 1,
-   "jlc_stock": 28920,
+   "jlc_stock": 27940,
    "library": "expand",
    "model": "RC0603FR-0766K5L",
    "assembly": "SMT"
@@ -520,7 +520,7 @@
    "lcsc": "C861568",
    "refs": "R86",
    "qty_per_board": 1,
-   "jlc_stock": 11966,
+   "jlc_stock": 11651,
    "library": "expand",
    "model": "RT0603BRD0780K6L",
    "assembly": "SMT"
@@ -529,7 +529,7 @@
    "lcsc": "C861410",
    "refs": "R87",
    "qty_per_board": 1,
-   "jlc_stock": 5521,
+   "jlc_stock": 5361,
    "library": "expand",
    "model": "RT0603BRD0744K2L",
    "assembly": "SMT"
@@ -538,7 +538,7 @@
    "lcsc": "C11702",
    "refs": "R105,R127,R130,R133,R139,R142,R145,R160",
    "qty_per_board": 8,
-   "jlc_stock": 8243444,
+   "jlc_stock": 7052291,
    "library": "base",
    "model": "0402WGF1001TCE",
    "assembly": "SMT"
@@ -547,7 +547,7 @@
    "lcsc": "C3013496",
    "refs": "R134,R135",
    "qty_per_board": 2,
-   "jlc_stock": 4164,
+   "jlc_stock": 4136,
    "library": "expand",
    "model": "CRM2512-FX-2R00ELF",
    "assembly": "SMT"
@@ -556,7 +556,7 @@
    "lcsc": "C17513",
    "refs": "R150,R151,R152,R153",
    "qty_per_board": 4,
-   "jlc_stock": 31479121,
+   "jlc_stock": 31004617,
    "library": "base",
    "model": "0805W8F1001T5E",
    "assembly": "SMT"
@@ -565,7 +565,7 @@
    "lcsc": "C5271084",
    "refs": "U1",
    "qty_per_board": 1,
-   "jlc_stock": 859,
+   "jlc_stock": 824,
    "library": "expand",
    "model": "STM32H743VIT6TR",
    "assembly": "SMT"
@@ -574,7 +574,7 @@
    "lcsc": "C780769",
    "refs": "U2",
    "qty_per_board": 1,
-   "jlc_stock": 19951,
+   "jlc_stock": 15071,
    "library": "expand",
    "model": "AP63203WU-7",
    "assembly": "SMT"
@@ -583,7 +583,7 @@
    "lcsc": "C97521",
    "refs": "U3",
    "qty_per_board": 1,
-   "jlc_stock": 56860,
+   "jlc_stock": 58135,
    "library": "base",
    "model": "W25Q128JVSIQ",
    "assembly": "SMT"
@@ -592,7 +592,7 @@
    "lcsc": "C22459454",
    "refs": "U4",
    "qty_per_board": 1,
-   "jlc_stock": 1023,
+   "jlc_stock": 0,
    "library": "expand",
    "model": "ICM-45686",
    "assembly": "SMT"
@@ -601,25 +601,16 @@
    "lcsc": "C15639",
    "refs": "U5",
    "qty_per_board": 1,
-   "jlc_stock": 1730,
+   "jlc_stock": 1666,
    "library": "expand",
    "model": "MS561101BA03-50",
    "assembly": "SMT"
   },
   {
-   "lcsc": "C5443880",
-   "refs": "U6",
-   "qty_per_board": 1,
-   "jlc_stock": 0,
-   "library": "expand",
-   "model": "SAM-M10Q-00B",
-   "assembly": "Consign or JLC Global Sourcing: SAM-M10Q-00B from DigiKey (JLC stock 0 on 2026-09-27)"
-  },
-  {
    "lcsc": "C1849463",
    "refs": "U7",
    "qty_per_board": 1,
-   "jlc_stock": 4755,
+   "jlc_stock": 4745,
    "library": "expand",
    "model": "TPS259570DSGR",
    "assembly": "SMT"
@@ -628,7 +619,7 @@
    "lcsc": "C2158012",
    "refs": "U8",
    "qty_per_board": 1,
-   "jlc_stock": 11227,
+   "jlc_stock": 206,
    "library": "expand",
    "model": "AP63300WU-7",
    "assembly": "SMT"
@@ -637,7 +628,7 @@
    "lcsc": "C3662793",
    "refs": "U9",
    "qty_per_board": 1,
-   "jlc_stock": 2809,
+   "jlc_stock": 2726,
    "library": "expand",
    "model": "TPS259470LRPWR",
    "assembly": "SMT"
@@ -646,7 +637,7 @@
    "lcsc": "C55266",
    "refs": "U10",
    "qty_per_board": 1,
-   "jlc_stock": 59254,
+   "jlc_stock": 57857,
    "library": "expand",
    "model": "TPS2553DBVR",
    "assembly": "SMT"
@@ -655,7 +646,7 @@
    "lcsc": "C485916",
    "refs": "U11",
    "qty_per_board": 1,
-   "jlc_stock": 35452,
+   "jlc_stock": 32082,
    "library": "expand",
    "model": "TPS2121RUXR",
    "assembly": "SMT"
@@ -664,7 +655,7 @@
    "lcsc": "C5186957",
    "refs": "U12",
    "qty_per_board": 1,
-   "jlc_stock": 17006,
+   "jlc_stock": 20480,
    "library": "expand",
    "model": "TXU0202DCUR",
    "assembly": "SMT"
@@ -673,7 +664,7 @@
    "lcsc": "C89347",
    "refs": "U13",
    "qty_per_board": 1,
-   "jlc_stock": 24228,
+   "jlc_stock": 32607,
    "library": "expand",
    "model": "TPS70933DBVR",
    "assembly": "SMT"
@@ -682,7 +673,7 @@
    "lcsc": "C1985619",
    "refs": "Y1",
    "qty_per_board": 1,
-   "jlc_stock": 6128,
+   "jlc_stock": 5828,
    "library": "expand",
    "model": "NX3225GA-25.000M-STD-CRG-2",
    "assembly": "SMT"

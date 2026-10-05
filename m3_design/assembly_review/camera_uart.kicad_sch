@@ -822,7 +822,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 91.44 193.04 0)
 			(hide yes)
 			(effects
@@ -834,19 +834,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
 					(reference "R100")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 91.44 193.04 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 91.44 193.04 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 91.44 193.04 0)
 			(hide yes)
 			(effects
@@ -918,7 +918,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 172.72 193.04 0)
 			(hide yes)
 			(effects
@@ -930,19 +930,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
 					(reference "R101")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 172.72 193.04 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 172.72 193.04 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 172.72 193.04 0)
 			(hide yes)
 			(effects
@@ -1110,7 +1110,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 147.32 137.16 0)
 			(hide yes)
 			(effects
@@ -1122,19 +1122,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
 					(reference "R103")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 147.32 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 147.32 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 147.32 137.16 0)
 			(hide yes)
 			(effects

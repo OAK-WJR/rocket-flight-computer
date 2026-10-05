@@ -2,7 +2,7 @@
 <export version="E">
   <design>
     <source>/Users/trasomi/dev/rocket/rocket-pcb/rocket-flight-computer/m3_design/assembly_review/m3.kicad_sch</source>
-    <date>2026-10-05T16:34:00</date>
+    <date>2026-10-05T16:38:46</date>
     <tool>Eeschema 10.0.6</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -2292,19 +2292,19 @@
       <value>1k 1%</value>
       <footprint>rocket:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC">C22548</field>
-        <field name="Manufacturer">Yageo</field>
-        <field name="Manufacturer Part">RC0603FR-071KL</field>
-        <field name="LCSC Part">C22548</field>
+        <field name="LCSC">C21190</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0603WAF1001T5E</field>
+        <field name="LCSC Part">C21190</field>
         <field name="Footprint">rocket:R_0603_1608Metric</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C22548"/>
-      <property name="Manufacturer" value="Yageo"/>
-      <property name="Manufacturer Part" value="RC0603FR-071KL"/>
-      <property name="LCSC Part" value="C22548"/>
+      <property name="LCSC" value="C21190"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0603WAF1001T5E"/>
+      <property name="LCSC Part" value="C21190"/>
       <property name="Sheetname" value="05 | Camera branch protection and regulator"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -2388,19 +2388,19 @@
       <value>1k 1%</value>
       <footprint>rocket:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC">C22548</field>
-        <field name="Manufacturer">Yageo</field>
-        <field name="Manufacturer Part">RC0603FR-071KL</field>
-        <field name="LCSC Part">C22548</field>
+        <field name="LCSC">C21190</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0603WAF1001T5E</field>
+        <field name="LCSC Part">C21190</field>
         <field name="Footprint">rocket:R_0603_1608Metric</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C22548"/>
-      <property name="Manufacturer" value="Yageo"/>
-      <property name="Manufacturer Part" value="RC0603FR-071KL"/>
-      <property name="LCSC Part" value="C22548"/>
+      <property name="LCSC" value="C21190"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0603WAF1001T5E"/>
+      <property name="LCSC Part" value="C21190"/>
       <property name="Sheetname" value="05 | Camera branch protection and regulator"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -3938,19 +3938,19 @@
       <value>1k 1%</value>
       <footprint>rocket:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC">C22548</field>
-        <field name="Manufacturer">Yageo</field>
-        <field name="Manufacturer Part">RC0603FR-071KL</field>
-        <field name="LCSC Part">C22548</field>
+        <field name="LCSC">C21190</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0603WAF1001T5E</field>
+        <field name="LCSC Part">C21190</field>
         <field name="Footprint">rocket:R_0603_1608Metric</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C22548"/>
-      <property name="Manufacturer" value="Yageo"/>
-      <property name="Manufacturer Part" value="RC0603FR-071KL"/>
-      <property name="LCSC Part" value="C22548"/>
+      <property name="LCSC" value="C21190"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0603WAF1001T5E"/>
+      <property name="LCSC Part" value="C21190"/>
       <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
       <property name="Sheetfile" value="camera_uart.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -3970,19 +3970,19 @@
       <value>1k 1%</value>
       <footprint>rocket:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC">C22548</field>
-        <field name="Manufacturer">Yageo</field>
-        <field name="Manufacturer Part">RC0603FR-071KL</field>
-        <field name="LCSC Part">C22548</field>
+        <field name="LCSC">C21190</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0603WAF1001T5E</field>
+        <field name="LCSC Part">C21190</field>
         <field name="Footprint">rocket:R_0603_1608Metric</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C22548"/>
-      <property name="Manufacturer" value="Yageo"/>
-      <property name="Manufacturer Part" value="RC0603FR-071KL"/>
-      <property name="LCSC Part" value="C22548"/>
+      <property name="LCSC" value="C21190"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0603WAF1001T5E"/>
+      <property name="LCSC Part" value="C21190"/>
       <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
       <property name="Sheetfile" value="camera_uart.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4034,19 +4034,19 @@
       <value>1k 1%</value>
       <footprint>rocket:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC">C22548</field>
-        <field name="Manufacturer">Yageo</field>
-        <field name="Manufacturer Part">RC0603FR-071KL</field>
-        <field name="LCSC Part">C22548</field>
+        <field name="LCSC">C21190</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0603WAF1001T5E</field>
+        <field name="LCSC Part">C21190</field>
         <field name="Footprint">rocket:R_0603_1608Metric</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C22548"/>
-      <property name="Manufacturer" value="Yageo"/>
-      <property name="Manufacturer Part" value="RC0603FR-071KL"/>
-      <property name="LCSC Part" value="C22548"/>
+      <property name="LCSC" value="C21190"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0603WAF1001T5E"/>
+      <property name="LCSC Part" value="C21190"/>
       <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
       <property name="Sheetfile" value="camera_uart.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>

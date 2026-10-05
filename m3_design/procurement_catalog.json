@@ -155,12 +155,12 @@
         "R74",
         "R77"
       ],
-      "manufacturer": "Yageo",
-      "mpn": "RC0603FR-071KL",
-      "lcsc": "C22548",
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0603WAF1001T5E",
+      "lcsc": "C21190",
       "value": "1k 1%",
-      "source": "rc0603_1k.pdf",
-      "supplier_url": "https://www.lcsc.com/product-detail/C22548.html",
+      "source": "0603waf1001t5e.pdf",
+      "supplier_url": "https://www.lcsc.com/product-detail/C21190.html",
       "facts": {
         "ohm": 1000,
         "tolerance_pct": 1,
@@ -173,7 +173,8 @@
         ],
         "package": "0603"
       },
-      "stock_snapshot": null
+      "stock_snapshot": null,
+      "datasheet_url": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010130_UNI-ROYAL-Uniroyal-Elec-0603WAF1001T5E_C21190.pdf"
     },
     {
       "refs": [

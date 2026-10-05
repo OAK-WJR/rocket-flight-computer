@@ -41,7 +41,7 @@ def main():
                           library=it.get('componentLibraryType'), model=it.get('componentModelEn'), assembly=r['Assembly']))
         if stock is None or stock < need:
             short.append(f"{r['LCSC Part #']} {r['Designator']} stock {stock} < {need} ({r['Assembly']})")
-    json.dump(dict(checked_utc=datetime.datetime.utcnow().isoformat(timespec='seconds') + 'Z',
+    json.dump(dict(checked_utc=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
                    source='jlcpcb.com selectSmtComponentList (stockCount)', boards=a.boards, lines=lines),
               open(FAB / 'stock_check.json', 'w'), indent=1)
     print(f'{len(lines)} BOM lines checked for {a.boards} boards;',

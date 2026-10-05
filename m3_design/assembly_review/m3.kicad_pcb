@@ -870,7 +870,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -882,7 +882,7 @@
 				)
 			)
 		)
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -894,7 +894,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -906,7 +906,7 @@
 				)
 			)
 		)
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -23970,7 +23970,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -23982,7 +23982,7 @@
 				)
 			)
 		)
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -23994,7 +23994,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -24006,7 +24006,7 @@
 				)
 			)
 		)
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -25170,7 +25170,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -25182,7 +25182,7 @@
 				)
 			)
 		)
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -25194,7 +25194,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -25206,7 +25206,7 @@
 				)
 			)
 		)
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -27628,7 +27628,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -27640,7 +27640,7 @@
 				)
 			)
 		)
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -27652,7 +27652,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -27664,7 +27664,7 @@
 				)
 			)
 		)
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -30799,7 +30799,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -30811,7 +30811,7 @@
 				)
 			)
 		)
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -30823,7 +30823,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)
@@ -30835,7 +30835,7 @@
 				)
 			)
 		)
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)

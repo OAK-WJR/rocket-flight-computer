@@ -354,6 +354,23 @@
    "pads_matched": 2,
    "status": "OK"
   },
+  "C21190|R_0603_1608Metric": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "via": "same footprint as C137691 (EasyEDA has no entry for C21190)"
+  },
   "C21397|M3_GRM32_1210": {
    "footprint": "M3_GRM32_1210",
    "easyeda": "C1210",
@@ -400,22 +417,6 @@
    "pads_ours": 14,
    "pads_easyeda": 14,
    "pads_matched": 14,
-   "status": "OK"
-  },
-  "C22548|R_0603_1608Metric": {
-   "footprint": "R_0603_1608Metric",
-   "easyeda": "R0603",
-   "easyeda_proxy": null,
-   "theta": 0,
-   "offset": [
-    0.0,
-    0.0
-   ],
-   "residual_mm": 0.072,
-   "next_best_mm": 1.117,
-   "pads_ours": 2,
-   "pads_easyeda": 2,
-   "pads_matched": 2,
    "status": "OK"
   },
   "C2296|M3_KT0805Y_A1": {
@@ -832,22 +833,6 @@
    "pads_ours": 100,
    "pads_easyeda": 100,
    "pads_matched": 100,
-   "status": "OK"
-  },
-  "C5443880|LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B": {
-   "footprint": "LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B",
-   "easyeda": "LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B",
-   "easyeda_proxy": null,
-   "theta": 0,
-   "offset": [
-    -0.0001,
-    0.0
-   ],
-   "residual_mm": 0.0,
-   "next_best_mm": 10.77,
-   "pads_ours": 20,
-   "pads_easyeda": 20,
-   "pads_matched": 20,
    "status": "OK"
   },
   "C55266|M3_TPS2553_DBV": {
