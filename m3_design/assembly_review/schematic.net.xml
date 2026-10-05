@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="E">
   <design>
-    <source>m3_design/assembly_review/m3.kicad_sch</source>
-    <date>2026-09-28T11:06:41</date>
+    <source>/Users/trasomi/dev/rocket/rocket-pcb/rocket-flight-computer/m3_design/assembly_review/m3.kicad_sch</source>
+    <date>2026-10-05T16:34:00</date>
     <tool>Eeschema 10.0.6</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>01 | USB input and regulated supplies</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R1</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-07</date>
         <source>m3.kicad_sch</source>
         <comment number="1" value=""/>
@@ -26,7 +26,7 @@
       <title_block>
         <title>02 | MCU, clock and debug</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R1</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-07</date>
         <source>mcu.kicad_sch</source>
         <comment number="1" value=""/>
@@ -44,7 +44,7 @@
       <title_block>
         <title>03 | Memory and sensors</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R1</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-07</date>
         <source>sensors.kicad_sch</source>
         <comment number="1" value=""/>
@@ -58,11 +58,11 @@
         <comment number="9" value=""/>
       </title_block>
     </sheet>
-    <sheet number="4" name="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/">
+    <sheet number="4" name="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/">
       <title_block>
-        <title>04 | Voltage diagnosis, indicators and GNSS receiver</title>
+        <title>04 | Voltage diagnosis and indicators</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R1</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-07</date>
         <source>diagnostics.kicad_sch</source>
         <comment number="1" value=""/>
@@ -80,7 +80,7 @@
       <title_block>
         <title>05 | Camera branch protection and regulator</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R1</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-07</date>
         <source>camera_power.kicad_sch</source>
         <comment number="1" value=""/>
@@ -98,7 +98,7 @@
       <title_block>
         <title>06 | Camera terminal and characterization</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R1</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-07</date>
         <source>camera_connector.kicad_sch</source>
         <comment number="1" value=""/>
@@ -116,7 +116,7 @@
       <title_block>
         <title>07 | Battery input, contact and protection</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R1</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-07</date>
         <source>battery_entry.kicad_sch</source>
         <comment number="1" value=""/>
@@ -134,7 +134,7 @@
       <title_block>
         <title>08 | USB limit, source mux and hold-up</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R1</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-07</date>
         <source>logic_power_path.kicad_sch</source>
         <comment number="1" value=""/>
@@ -152,7 +152,7 @@
       <title_block>
         <title>09 | Camera UART, separate supply domains</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R1</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-07</date>
         <source>camera_uart.kicad_sch</source>
         <comment number="1" value=""/>
@@ -170,7 +170,7 @@
       <title_block>
         <title>10 | USB cable presence, ordinary GPIO sensing</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R1</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-07</date>
         <source>usb_sense.kicad_sch</source>
         <comment number="1" value=""/>
@@ -188,7 +188,7 @@
       <title_block>
         <title>11 | Actuator power switch</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
-        <rev>M3-ASSY-R2</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-25</date>
         <source>actuator_power.kicad_sch</source>
         <comment number="1" value=""/>
@@ -206,7 +206,7 @@
       <title_block>
         <title>12 | Pyro channels, arming and continuity</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
-        <rev>M3-ASSY-R2</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-25</date>
         <source>pyro.kicad_sch</source>
         <comment number="1" value=""/>
@@ -224,7 +224,7 @@
       <title_block>
         <title>13 | Servo outputs</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
-        <rev>M3-ASSY-R2</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-25</date>
         <source>servos.kicad_sch</source>
         <comment number="1" value=""/>
@@ -242,7 +242,7 @@
       <title_block>
         <title>14 | Launch pull-pin and buzzer</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
-        <rev>M3-ASSY-R2</rev>
+        <rev>M3-ASSY-R3</rev>
         <date>2026-09-25</date>
         <source>pullpin_buzzer.kicad_sch</source>
         <comment number="1" value=""/>
@@ -1582,58 +1582,6 @@
         </unit>
       </units>
     </comp>
-    <comp ref="C33">
-      <value>100nF</value>
-      <footprint>rocket:C0402</footprint>
-      <fields>
-        <field name="LCSC">C1525</field>
-        <field name="Footprint">rocket:C0402</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C1525"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
-      <property name="Sheetfile" value="diagnostics.kicad_sch"/>
-      <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
-      <tstamps>6eecd755-0873-58fe-bcf9-27473656bb95</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="C34">
-      <value>22uF</value>
-      <footprint>rocket:C0805</footprint>
-      <fields>
-        <field name="LCSC">C45783</field>
-        <field name="Footprint">rocket:C0805</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C45783"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
-      <property name="Sheetfile" value="diagnostics.kicad_sch"/>
-      <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
-      <tstamps>ddbec8bb-5a8e-5cb0-b945-30619c3a26a8</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
     <comp ref="C60">
       <value>10nF</value>
       <footprint>rocket:C0603</footprint>
@@ -1645,11 +1593,11 @@
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C57112"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
       <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>533915e8-8d31-5122-affd-69c68098feff</tstamps>
       <units>
         <unit name="A">
@@ -1671,11 +1619,11 @@
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C57112"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
       <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>abbb728f-027c-4f33-a6df-473ec7bb25a2</tstamps>
       <units>
         <unit name="A">
@@ -1702,11 +1650,11 @@
       <property name="LCSC" value="C84256"/>
       <property name="Manufacturer" value="NATIONSTAR"/>
       <property name="Manufacturer Part" value="NCD0805R1"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="LED diode"/>
       <property name="ki_fp_filters" value="M3_NCD0805R1_K1"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>5a40b9a6-052d-59b9-b391-df65518c7075</tstamps>
       <units>
         <unit name="A">
@@ -1733,11 +1681,11 @@
       <property name="LCSC" value="C2296"/>
       <property name="Manufacturer" value="Hubei KENTO Elec"/>
       <property name="Manufacturer Part" value="KT-0805Y"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="LED diode"/>
       <property name="ki_fp_filters" value="M3_KT0805Y_A1"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>40d74a01-5cbe-50bd-b3f7-1b54d5067357</tstamps>
       <units>
         <unit name="A">
@@ -1759,11 +1707,11 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C17557"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
       <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>2b173018-d330-5390-886a-65dcd16aacfe</tstamps>
       <units>
         <unit name="A">
@@ -1785,11 +1733,11 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C17557"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
       <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>4f85ed56-c801-574d-a8aa-7dcc680a9f57</tstamps>
       <units>
         <unit name="A">
@@ -1811,11 +1759,11 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25741"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
       <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>d3bb7198-7971-5809-a555-f9f221c1c5ef</tstamps>
       <units>
         <unit name="A">
@@ -1837,11 +1785,11 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
       <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>7949c93e-13bb-5739-8458-46ddb4e8bf73</tstamps>
       <units>
         <unit name="A">
@@ -1863,11 +1811,11 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
       <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>301a63f1-5123-5b40-9794-0496a3f625fe</tstamps>
       <units>
         <unit name="A">
@@ -1889,11 +1837,11 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
       <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>c4ebfabe-2027-556e-a987-0c1ce7d7aa05</tstamps>
       <units>
         <unit name="A">
@@ -1915,11 +1863,11 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
       <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>d8a04bdf-aca6-4a73-87bc-15701ea47ab8</tstamps>
       <units>
         <unit name="A">
@@ -1941,63 +1889,17 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C11702"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
+      <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
       <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
+      <sheetpath names="/04 | Voltage diagnosis and indicators/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
       <tstamps>72c11e1b-ecc4-4b5e-9bf6-5ba5f05c7888</tstamps>
       <units>
         <unit name="A">
           <pins>
             <pin num="1"/>
             <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="U6">
-      <value>SAM-M10Q-00B</value>
-      <footprint>rocket:LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B</footprint>
-      <datasheet>https://content.u-blox.com/sites/default/files/documents/SAM-M10Q_DataSheet_UBX-22013293.pdf</datasheet>
-      <fields>
-        <field name="LCSC">C5443880</field>
-        <field name="JLC_Assembly">Consign or JLC Global Sourcing: SAM-M10Q-00B from DigiKey (JLC stock 0 on 2026-09-27)</field>
-        <field name="Footprint">rocket:LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B</field>
-        <field name="Datasheet">https://content.u-blox.com/sites/default/files/documents/SAM-M10Q_DataSheet_UBX-22013293.pdf</field>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="GNSS" description=""/>
-      <property name="LCSC" value="C5443880"/>
-      <property name="JLC_Assembly" value="Consign or JLC Global Sourcing: SAM-M10Q-00B from DigiKey (JLC stock 0 on 2026-09-27)"/>
-      <property name="Sheetname" value="04 | Voltage diagnosis, indicators and GNSS receiver"/>
-      <property name="Sheetfile" value="diagnostics.kicad_sch"/>
-      <property name="ki_fp_filters" value="LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B"/>
-      <sheetpath names="/04 | Voltage diagnosis, indicators and GNSS receiver/" tstamps="/0e505cf1-213a-5be0-ba23-0f8cc47b8f19/"/>
-      <tstamps>62f50117-14c1-514d-90ca-8bc9074898ac</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
-            <pin num="3"/>
-            <pin num="4"/>
-            <pin num="5"/>
-            <pin num="6"/>
-            <pin num="7"/>
-            <pin num="8"/>
-            <pin num="9"/>
-            <pin num="10"/>
-            <pin num="11"/>
-            <pin num="12"/>
-            <pin num="13"/>
-            <pin num="14"/>
-            <pin num="15"/>
-            <pin num="16"/>
-            <pin num="17"/>
-            <pin num="18"/>
-            <pin num="19"/>
-            <pin num="20"/>
           </pins>
         </unit>
       </units>
@@ -6668,40 +6570,6 @@
         <pin num="8" name="VCC" type="power_in"/>
       </pins>
     </libpart>
-    <libpart lib="M3" part="GNSS">
-      <footprints>
-        <fp>LCC-20_L15.5-W15.5-P1.90_SAM-M10Q-00B</fp>
-      </footprints>
-      <fields>
-        <field name="Reference"/>
-        <field name="Value"/>
-        <field name="Footprint"/>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <pins>
-        <pin num="1" name="GND" type="power_in"/>
-        <pin num="2" name="V_IO" type="power_in"/>
-        <pin num="3" name="V_BCKP" type="input"/>
-        <pin num="4" name="GND" type="power_in"/>
-        <pin num="5" name="GND" type="power_in"/>
-        <pin num="6" name="GND" type="power_in"/>
-        <pin num="7" name="TIMEPULSE" type="output"/>
-        <pin num="8" name="SAFEBOOT_N" type="input"/>
-        <pin num="9" name="SDA" type="bidirectional"/>
-        <pin num="10" name="GND" type="power_in"/>
-        <pin num="11" name="GND" type="power_in"/>
-        <pin num="12" name="SCL" type="input"/>
-        <pin num="13" name="TXD" type="output"/>
-        <pin num="14" name="RXD" type="input"/>
-        <pin num="15" name="GND" type="power_in"/>
-        <pin num="16" name="GND" type="power_in"/>
-        <pin num="17" name="VCC" type="power_in"/>
-        <pin num="18" name="RESET_N" type="input"/>
-        <pin num="19" name="EXTINT" type="input"/>
-        <pin num="20" name="GND" type="power_in"/>
-      </pins>
-    </libpart>
     <libpart lib="M3" part="Header">
       <description>Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
       <footprints>
@@ -7229,8 +7097,6 @@
       <node ref="C30" pin="1" pintype="passive"/>
       <node ref="C31" pin="1" pintype="passive"/>
       <node ref="C32" pin="1" pintype="passive"/>
-      <node ref="C33" pin="1" pintype="passive"/>
-      <node ref="C34" pin="1" pintype="passive"/>
       <node ref="L2" pin="2" pinfunction="2_2" pintype="passive"/>
       <node ref="U1" pin="20" pinfunction="VREF+_20" pintype="input"/>
       <node ref="U1" pin="21" pinfunction="VDDA_21" pintype="power_in"/>
@@ -7238,8 +7104,6 @@
       <node ref="U4" pin="8" pinfunction="VDD_8" pintype="power_in"/>
       <node ref="U5" pin="1" pinfunction="VDD_1" pintype="power_in"/>
       <node ref="U5" pin="2" pinfunction="PS_2" pintype="input"/>
-      <node ref="U6" pin="17" pinfunction="VCC_17" pintype="power_in"/>
-      <node ref="U6" pin="2" pinfunction="V_IO_2" pintype="power_in"/>
     </net>
     <net code="3" name="ACT_DRV" class="Default">
       <node ref="Q122" pin="3" pinfunction="D_3" pintype="passive"/>
@@ -7503,8 +7367,6 @@
       <node ref="C30" pin="2" pintype="passive"/>
       <node ref="C31" pin="2" pintype="passive"/>
       <node ref="C32" pin="2" pintype="passive"/>
-      <node ref="C33" pin="2" pintype="passive"/>
-      <node ref="C34" pin="2" pintype="passive"/>
       <node ref="C6" pin="2" pintype="passive"/>
       <node ref="C60" pin="2" pintype="passive"/>
       <node ref="C7" pin="2" pintype="passive"/>
@@ -7620,15 +7482,6 @@
       <node ref="U5" pin="3" pinfunction="GND_3" pintype="power_in"/>
       <node ref="U5" pin="4" pinfunction="CSB_4" pintype="input"/>
       <node ref="U5" pin="5" pinfunction="CSB_5" pintype="input"/>
-      <node ref="U6" pin="1" pinfunction="GND_1" pintype="power_in"/>
-      <node ref="U6" pin="10" pinfunction="GND_10" pintype="power_in"/>
-      <node ref="U6" pin="11" pinfunction="GND_11" pintype="power_in"/>
-      <node ref="U6" pin="15" pinfunction="GND_15" pintype="power_in"/>
-      <node ref="U6" pin="16" pinfunction="GND_16" pintype="power_in"/>
-      <node ref="U6" pin="20" pinfunction="GND_20" pintype="power_in"/>
-      <node ref="U6" pin="4" pinfunction="GND_4" pintype="power_in"/>
-      <node ref="U6" pin="5" pinfunction="GND_5" pintype="power_in"/>
-      <node ref="U6" pin="6" pinfunction="GND_6" pintype="power_in"/>
       <node ref="U7" pin="8" pinfunction="GND_8" pintype="power_in"/>
       <node ref="U7" pin="9" pinfunction="EP/GND_9" pintype="power_in"/>
       <node ref="U8" pin="4" pinfunction="GND_4" pintype="power_in"/>
@@ -7636,191 +7489,183 @@
       <node ref="Y1" pin="2" pinfunction="G_2" pintype="passive"/>
       <node ref="Y1" pin="4" pinfunction="G_4" pintype="passive"/>
     </net>
-    <net code="45" name="GPS_RX" class="Default">
-      <node ref="U1" pin="64" pinfunction="PC7_64" pintype="bidirectional"/>
-      <node ref="U6" pin="13" pinfunction="TXD_13" pintype="output"/>
-    </net>
-    <net code="46" name="GPS_TX" class="Default">
-      <node ref="U1" pin="63" pinfunction="PC6_63" pintype="bidirectional"/>
-      <node ref="U6" pin="14" pinfunction="RXD_14" pintype="input"/>
-    </net>
-    <net code="47" name="HSE_IN" class="Default">
+    <net code="45" name="HSE_IN" class="Default">
       <node ref="C25" pin="1" pintype="passive"/>
       <node ref="U1" pin="12" pinfunction="PH0_12" pintype="bidirectional"/>
       <node ref="Y1" pin="1" pinfunction="1_1" pintype="passive"/>
     </net>
-    <net code="48" name="HSE_OUT" class="Default">
+    <net code="46" name="HSE_OUT" class="Default">
       <node ref="C26" pin="1" pintype="passive"/>
       <node ref="U1" pin="13" pinfunction="PH1_13" pintype="bidirectional"/>
       <node ref="Y1" pin="3" pinfunction="3_3" pintype="passive"/>
     </net>
-    <net code="49" name="I2C1_SCL" class="Default">
+    <net code="47" name="I2C1_SCL" class="Default">
       <node ref="R12" pin="1" pintype="passive"/>
       <node ref="U1" pin="95" pinfunction="PB8_95" pintype="bidirectional"/>
       <node ref="U5" pin="8" pinfunction="SCLK_8" pintype="input"/>
     </net>
-    <net code="50" name="I2C1_SDA" class="Default">
+    <net code="48" name="I2C1_SDA" class="Default">
       <node ref="R13" pin="1" pintype="passive"/>
       <node ref="U1" pin="96" pinfunction="PB9_96" pintype="bidirectional"/>
       <node ref="U5" pin="7" pinfunction="SDI/SDA_7" pintype="bidirectional"/>
     </net>
-    <net code="51" name="IMU_CS" class="Default">
+    <net code="49" name="IMU_CS" class="Default">
       <node ref="R11" pin="1" pintype="passive"/>
       <node ref="U1" pin="93" pinfunction="PB7_93" pintype="bidirectional"/>
       <node ref="U4" pin="12" pinfunction="AP_CS_12" pintype="input"/>
     </net>
-    <net code="52" name="IMU_INT1" class="Default">
+    <net code="50" name="IMU_INT1" class="Default">
       <node ref="U1" pin="40" pinfunction="PE10_40" pintype="bidirectional"/>
       <node ref="U4" pin="4" pinfunction="INT1_4" pintype="output"/>
     </net>
-    <net code="53" name="LED_RED" class="Default">
+    <net code="51" name="LED_RED" class="Default">
       <node ref="R32" pin="1" pintype="passive"/>
       <node ref="U1" pin="38" pinfunction="PE8_38" pintype="bidirectional"/>
     </net>
-    <net code="54" name="LED_RED_A" class="Default">
+    <net code="52" name="LED_RED_A" class="Default">
       <node ref="LED1" pin="2" pinfunction="A_2" pintype="passive"/>
       <node ref="R32" pin="2" pintype="passive"/>
     </net>
-    <net code="55" name="LED_YEL" class="Default">
+    <net code="53" name="LED_YEL" class="Default">
       <node ref="R33" pin="1" pintype="passive"/>
       <node ref="U1" pin="37" pinfunction="PE7_37" pintype="bidirectional"/>
     </net>
-    <net code="56" name="LED_YEL_A" class="Default">
+    <net code="54" name="LED_YEL_A" class="Default">
       <node ref="LED2" pin="1" pinfunction="A_1" pintype="passive"/>
       <node ref="R33" pin="2" pintype="passive"/>
     </net>
-    <net code="57" name="LOGIC_ILIM" class="Default">
+    <net code="55" name="LOGIC_ILIM" class="Default">
       <node ref="R86" pin="1" pintype="passive"/>
       <node ref="U11" pin="10" pinfunction="ILIM_10" pintype="passive"/>
     </net>
-    <net code="58" name="LOGIC_SOURCE_ST" class="Default">
+    <net code="56" name="LOGIC_SOURCE_ST" class="Default">
       <node ref="R91" pin="2" pintype="passive"/>
       <node ref="TP87" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="82" pinfunction="PD1_82" pintype="bidirectional"/>
       <node ref="U11" pin="9" pinfunction="ST_9" pintype="open_collector"/>
     </net>
-    <net code="59" name="LOGIC_SS" class="Default">
+    <net code="57" name="LOGIC_SS" class="Default">
       <node ref="C85" pin="1" pintype="passive"/>
       <node ref="U11" pin="11" pinfunction="SS_11" pintype="passive"/>
     </net>
-    <net code="60" name="NRST" class="Default">
+    <net code="58" name="NRST" class="Default">
       <node ref="C24" pin="1" pintype="passive"/>
       <node ref="J2" pin="4" pinfunction="Pin_4_4" pintype="passive"/>
       <node ref="U1" pin="14" pinfunction="NRST_14" pintype="input"/>
     </net>
-    <net code="61" name="PULLPIN" class="Default">
+    <net code="59" name="PULLPIN" class="Default">
       <node ref="C160" pin="1" pintype="passive"/>
       <node ref="D122" pin="3" pinfunction="K1A2_3" pintype="passive"/>
       <node ref="R160" pin="2" pintype="passive"/>
       <node ref="R161" pin="2" pintype="passive"/>
       <node ref="U1" pin="8" pinfunction="PC14_8" pintype="bidirectional"/>
     </net>
-    <net code="62" name="PULLPIN_EXT" class="Default">
+    <net code="60" name="PULLPIN_EXT" class="Default">
       <node ref="J123" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="R160" pin="1" pintype="passive"/>
     </net>
-    <net code="63" name="PYRO1_BUS" class="Default">
+    <net code="61" name="PYRO1_BUS" class="Default">
       <node ref="J120" pin="3" pinfunction="3_3" pintype="passive"/>
       <node ref="R132" pin="1" pintype="passive"/>
       <node ref="R134" pin="2" pintype="passive"/>
     </net>
-    <net code="64" name="PYRO1_COLD" class="Default">
+    <net code="62" name="PYRO1_COLD" class="Default">
       <node ref="D120" pin="1" pinfunction="K1_1" pintype="passive"/>
       <node ref="R131" pin="2" pintype="passive"/>
     </net>
-    <net code="65" name="PYRO1_CONT" class="Default">
+    <net code="63" name="PYRO1_CONT" class="Default">
       <node ref="C127" pin="1" pintype="passive"/>
       <node ref="R129" pin="2" pintype="passive"/>
       <node ref="R130" pin="1" pintype="passive"/>
       <node ref="U1" pin="15" pinfunction="PC0_15" pintype="bidirectional"/>
     </net>
-    <net code="66" name="PYRO1_GATE" class="Default">
+    <net code="64" name="PYRO1_GATE" class="Default">
       <node ref="C126" pin="1" pintype="passive"/>
       <node ref="Q124" pin="4" pinfunction="G_4" pintype="passive"/>
       <node ref="R126" pin="2" pintype="passive"/>
       <node ref="R128" pin="1" pintype="passive"/>
       <node ref="TP122" pin="1" pinfunction="1_1" pintype="passive"/>
     </net>
-    <net code="67" name="PYRO1_GATE_N" class="Default">
+    <net code="65" name="PYRO1_GATE_N" class="Default">
       <node ref="R126" pin="1" pintype="passive"/>
       <node ref="R127" pin="1" pintype="passive"/>
       <node ref="U1" pin="3" pinfunction="PE4_3" pintype="bidirectional"/>
     </net>
-    <net code="68" name="PYRO1_IGN" class="Default">
+    <net code="66" name="PYRO1_IGN" class="Default">
       <node ref="J121" pin="2" pinfunction="2_2" pintype="passive"/>
       <node ref="R134" pin="1" pintype="passive"/>
     </net>
-    <net code="69" name="PYRO1_OUT" class="Default">
+    <net code="67" name="PYRO1_OUT" class="Default">
       <node ref="C128" pin="1" pintype="passive"/>
       <node ref="J121" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="Q124" pin="5" pinfunction="D_5" pintype="passive"/>
       <node ref="R129" pin="1" pintype="passive"/>
       <node ref="R131" pin="1" pintype="passive"/>
     </net>
-    <net code="70" name="PYRO2_BUS" class="Default">
+    <net code="68" name="PYRO2_BUS" class="Default">
       <node ref="J120" pin="2" pinfunction="2_2" pintype="passive"/>
       <node ref="R135" pin="2" pintype="passive"/>
       <node ref="R144" pin="1" pintype="passive"/>
     </net>
-    <net code="71" name="PYRO2_COLD" class="Default">
+    <net code="69" name="PYRO2_COLD" class="Default">
       <node ref="D120" pin="2" pinfunction="K2_2" pintype="passive"/>
       <node ref="R143" pin="2" pintype="passive"/>
     </net>
-    <net code="72" name="PYRO2_CONT" class="Default">
+    <net code="70" name="PYRO2_CONT" class="Default">
       <node ref="C139" pin="1" pintype="passive"/>
       <node ref="R141" pin="2" pintype="passive"/>
       <node ref="R142" pin="1" pintype="passive"/>
       <node ref="U1" pin="16" pinfunction="PC1_16" pintype="bidirectional"/>
     </net>
-    <net code="73" name="PYRO2_GATE" class="Default">
+    <net code="71" name="PYRO2_GATE" class="Default">
       <node ref="C138" pin="1" pintype="passive"/>
       <node ref="Q125" pin="4" pinfunction="G_4" pintype="passive"/>
       <node ref="R138" pin="2" pintype="passive"/>
       <node ref="R140" pin="1" pintype="passive"/>
       <node ref="TP123" pin="1" pinfunction="1_1" pintype="passive"/>
     </net>
-    <net code="74" name="PYRO2_GATE_N" class="Default">
+    <net code="72" name="PYRO2_GATE_N" class="Default">
       <node ref="R138" pin="1" pintype="passive"/>
       <node ref="R139" pin="1" pintype="passive"/>
       <node ref="U1" pin="4" pinfunction="PE5_4" pintype="bidirectional"/>
     </net>
-    <net code="75" name="PYRO2_IGN" class="Default">
+    <net code="73" name="PYRO2_IGN" class="Default">
       <node ref="J121" pin="3" pinfunction="3_3" pintype="passive"/>
       <node ref="R135" pin="1" pintype="passive"/>
     </net>
-    <net code="76" name="PYRO2_OUT" class="Default">
+    <net code="74" name="PYRO2_OUT" class="Default">
       <node ref="C140" pin="1" pintype="passive"/>
       <node ref="J121" pin="4" pinfunction="4_4" pintype="passive"/>
       <node ref="Q125" pin="5" pinfunction="D_5" pintype="passive"/>
       <node ref="R141" pin="1" pintype="passive"/>
       <node ref="R143" pin="1" pintype="passive"/>
     </net>
-    <net code="77" name="QSPI_CLK" class="Default">
+    <net code="75" name="QSPI_CLK" class="Default">
       <node ref="U1" pin="36" pinfunction="PB2_36" pintype="bidirectional"/>
       <node ref="U3" pin="6" pinfunction="CLK_6" pintype="input"/>
     </net>
-    <net code="78" name="QSPI_IO0" class="Default">
+    <net code="76" name="QSPI_IO0" class="Default">
       <node ref="U1" pin="58" pinfunction="PD11_58" pintype="bidirectional"/>
       <node ref="U3" pin="5" pinfunction="DI/IO_{0}_5" pintype="bidirectional"/>
     </net>
-    <net code="79" name="QSPI_IO1" class="Default">
+    <net code="77" name="QSPI_IO1" class="Default">
       <node ref="U1" pin="59" pinfunction="PD12_59" pintype="bidirectional"/>
       <node ref="U3" pin="2" pinfunction="DO/IO_{1}_2" pintype="bidirectional"/>
     </net>
-    <net code="80" name="QSPI_IO2" class="Default">
+    <net code="78" name="QSPI_IO2" class="Default">
       <node ref="U1" pin="1" pinfunction="PE2_1" pintype="bidirectional"/>
       <node ref="U3" pin="3" pinfunction="~{WP}/IO_{2}_3" pintype="bidirectional"/>
     </net>
-    <net code="81" name="QSPI_IO3" class="Default">
+    <net code="79" name="QSPI_IO3" class="Default">
       <node ref="U1" pin="60" pinfunction="PD13_60" pintype="bidirectional"/>
       <node ref="U3" pin="7" pinfunction="~{HOLD}/~{RESET}/IO_{3}_7" pintype="bidirectional"/>
     </net>
-    <net code="82" name="QSPI_NCS" class="Default">
+    <net code="80" name="QSPI_NCS" class="Default">
       <node ref="R10" pin="1" pintype="passive"/>
       <node ref="U1" pin="92" pinfunction="PB6_92" pintype="bidirectional"/>
       <node ref="U3" pin="1" pinfunction="~{CS}_1" pintype="input"/>
     </net>
-    <net code="83" name="RAW_ACT" class="Default">
+    <net code="81" name="RAW_ACT" class="Default">
       <node ref="C121" pin="1" pintype="passive"/>
       <node ref="C150" pin="1" pintype="passive"/>
       <node ref="C151" pin="1" pintype="passive"/>
@@ -7838,13 +7683,13 @@
       <node ref="R124" pin="1" pintype="passive"/>
       <node ref="TP120" pin="1" pinfunction="1_1" pintype="passive"/>
     </net>
-    <net code="84" name="RAW_ACT_SENSE" class="Default">
+    <net code="82" name="RAW_ACT_SENSE" class="Default">
       <node ref="C122" pin="1" pintype="passive"/>
       <node ref="R124" pin="2" pintype="passive"/>
       <node ref="R125" pin="1" pintype="passive"/>
       <node ref="U1" pin="34" pinfunction="PB0_34" pintype="bidirectional"/>
     </net>
-    <net code="85" name="RAW_PROTECTED" class="Default">
+    <net code="83" name="RAW_PROTECTED" class="Default">
       <node ref="C71" pin="1" pintype="passive"/>
       <node ref="C82" pin="1" pintype="passive"/>
       <node ref="D9" pin="1" pinfunction="K_1" pintype="passive"/>
@@ -7857,113 +7702,113 @@
       <node ref="U7" pin="4" pinfunction="IN_B_4" pintype="power_in"/>
       <node ref="U9" pin="6" pinfunction="OUT_6" pintype="power_out"/>
     </net>
-    <net code="86" name="SERVO1_MCU" class="Default">
+    <net code="84" name="SERVO1_MCU" class="Default">
       <node ref="D121" pin="1" pinfunction="IO1_1" pintype="passive"/>
       <node ref="R150" pin="1" pintype="passive"/>
       <node ref="R154" pin="1" pintype="passive"/>
       <node ref="U1" pin="22" pinfunction="PA0_22" pintype="bidirectional"/>
     </net>
-    <net code="87" name="SERVO1_OUT" class="Default">
+    <net code="85" name="SERVO1_OUT" class="Default">
       <node ref="J122" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="R150" pin="2" pintype="passive"/>
     </net>
-    <net code="88" name="SERVO2_MCU" class="Default">
+    <net code="86" name="SERVO2_MCU" class="Default">
       <node ref="D121" pin="3" pinfunction="IO2_3" pintype="passive"/>
       <node ref="R151" pin="1" pintype="passive"/>
       <node ref="R155" pin="1" pintype="passive"/>
       <node ref="U1" pin="23" pinfunction="PA1_23" pintype="bidirectional"/>
     </net>
-    <net code="89" name="SERVO2_OUT" class="Default">
+    <net code="87" name="SERVO2_OUT" class="Default">
       <node ref="J122" pin="4" pinfunction="4_4" pintype="passive"/>
       <node ref="R151" pin="2" pintype="passive"/>
     </net>
-    <net code="90" name="SERVO3_MCU" class="Default">
+    <net code="88" name="SERVO3_MCU" class="Default">
       <node ref="D121" pin="4" pinfunction="IO3_4" pintype="passive"/>
       <node ref="R152" pin="1" pintype="passive"/>
       <node ref="R156" pin="1" pintype="passive"/>
       <node ref="U1" pin="24" pinfunction="PA2_24" pintype="bidirectional"/>
     </net>
-    <net code="91" name="SERVO3_OUT" class="Default">
+    <net code="89" name="SERVO3_OUT" class="Default">
       <node ref="J122" pin="7" pinfunction="7_7" pintype="passive"/>
       <node ref="R152" pin="2" pintype="passive"/>
     </net>
-    <net code="92" name="SERVO4_MCU" class="Default">
+    <net code="90" name="SERVO4_MCU" class="Default">
       <node ref="D121" pin="6" pinfunction="IO4_6" pintype="passive"/>
       <node ref="R153" pin="1" pintype="passive"/>
       <node ref="R157" pin="1" pintype="passive"/>
       <node ref="U1" pin="25" pinfunction="PA3_25" pintype="bidirectional"/>
     </net>
-    <net code="93" name="SERVO4_OUT" class="Default">
+    <net code="91" name="SERVO4_OUT" class="Default">
       <node ref="J122" pin="10" pinfunction="10_10" pintype="passive"/>
       <node ref="R153" pin="2" pintype="passive"/>
     </net>
-    <net code="94" name="SPI1_MISO" class="Default">
+    <net code="92" name="SPI1_MISO" class="Default">
       <node ref="U1" pin="90" pinfunction="PB4_90" pintype="bidirectional"/>
       <node ref="U4" pin="1" pinfunction="AP_SDO_1" pintype="output"/>
     </net>
-    <net code="95" name="SPI1_MOSI" class="Default">
+    <net code="93" name="SPI1_MOSI" class="Default">
       <node ref="U1" pin="91" pinfunction="PB5_91" pintype="bidirectional"/>
       <node ref="U4" pin="14" pinfunction="AP_SDI_14" pintype="input"/>
     </net>
-    <net code="96" name="SPI1_SCK" class="Default">
+    <net code="94" name="SPI1_SCK" class="Default">
       <node ref="U1" pin="89" pinfunction="PB3_89" pintype="bidirectional"/>
       <node ref="U4" pin="13" pinfunction="AP_SCLK_13" pintype="input"/>
     </net>
-    <net code="97" name="SWCLK" class="Default">
+    <net code="95" name="SWCLK" class="Default">
       <node ref="J2" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
       <node ref="U1" pin="76" pinfunction="PA14_76" pintype="bidirectional"/>
     </net>
-    <net code="98" name="SWDIO" class="Default">
+    <net code="96" name="SWDIO" class="Default">
       <node ref="J2" pin="3" pinfunction="Pin_3_3" pintype="passive"/>
       <node ref="U1" pin="72" pinfunction="PA13_72" pintype="bidirectional"/>
     </net>
-    <net code="99" name="SW_NODE" class="Default">
+    <net code="97" name="SW_NODE" class="Default">
       <node ref="C5" pin="1" pintype="passive"/>
       <node ref="L1" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U2" pin="5" pinfunction="SW_5" pintype="output"/>
     </net>
-    <net code="100" name="USB_DM" class="Default">
+    <net code="98" name="USB_DM" class="Default">
       <node ref="D4" pin="1" pinfunction="I/O1_1" pintype="passive"/>
       <node ref="D4" pin="6" pinfunction="I/O1_6" pintype="passive"/>
       <node ref="J3" pin="A7" pinfunction="D-_A7" pintype="passive"/>
       <node ref="J3" pin="B7" pinfunction="D-_B7" pintype="passive"/>
       <node ref="U1" pin="70" pinfunction="PA11_70" pintype="bidirectional"/>
     </net>
-    <net code="101" name="USB_DP" class="Default">
+    <net code="99" name="USB_DP" class="Default">
       <node ref="D4" pin="3" pinfunction="I/O2_3" pintype="passive"/>
       <node ref="D4" pin="4" pinfunction="I/O2_4" pintype="passive"/>
       <node ref="J3" pin="A6" pinfunction="D+_A6" pintype="passive"/>
       <node ref="J3" pin="B6" pinfunction="D+_B6" pintype="passive"/>
       <node ref="U1" pin="71" pinfunction="PA12_71" pintype="bidirectional"/>
     </net>
-    <net code="102" name="USB_FAULT_N" class="Default">
+    <net code="100" name="USB_FAULT_N" class="Default">
       <node ref="R90" pin="2" pintype="passive"/>
       <node ref="TP86" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="87" pinfunction="PD6_87" pintype="bidirectional"/>
       <node ref="U10" pin="4" pinfunction="FAULT_N_4" pintype="open_collector"/>
     </net>
-    <net code="103" name="USB_ILIM" class="Default">
+    <net code="101" name="USB_ILIM" class="Default">
       <node ref="R85" pin="1" pintype="passive"/>
       <node ref="U10" pin="5" pinfunction="ILIM_5" pintype="passive"/>
     </net>
-    <net code="104" name="USB_LIMITED" class="Default">
+    <net code="102" name="USB_LIMITED" class="Default">
       <node ref="C86" pin="1" pintype="passive"/>
       <node ref="R87" pin="1" pintype="passive"/>
       <node ref="TP82" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U10" pin="6" pinfunction="OUT_6" pintype="power_out"/>
       <node ref="U11" pin="7" pinfunction="IN1_USB_7" pintype="power_in"/>
     </net>
-    <net code="105" name="USB_OVLO" class="Default">
+    <net code="103" name="USB_OVLO" class="Default">
       <node ref="R87" pin="2" pintype="passive"/>
       <node ref="R88" pin="1" pintype="passive"/>
       <node ref="U11" pin="5" pinfunction="OV1_5" pintype="input"/>
     </net>
-    <net code="106" name="V3V3_SENSE" class="Default">
+    <net code="104" name="V3V3_SENSE" class="Default">
       <node ref="R62" pin="2" pintype="passive"/>
       <node ref="R63" pin="1" pintype="passive"/>
       <node ref="U1" pin="18" pinfunction="PC3_C_18" pintype="bidirectional"/>
     </net>
-    <net code="107" name="VBUS" class="Default">
+    <net code="105" name="VBUS" class="Default">
       <node ref="C28" pin="1" pintype="passive"/>
       <node ref="C83" pin="1" pintype="passive"/>
       <node ref="D4" pin="5" pinfunction="VBUS_5" pintype="passive"/>
@@ -7973,21 +7818,21 @@
       <node ref="U10" pin="1" pinfunction="IN_1" pintype="power_in"/>
       <node ref="U10" pin="3" pinfunction="EN_3" pintype="input"/>
     </net>
-    <net code="108" name="VBUS_SENSE" class="Default">
+    <net code="106" name="VBUS_SENSE" class="Default">
       <node ref="R110" pin="1" pintype="passive"/>
       <node ref="R9" pin="2" pintype="passive"/>
       <node ref="TP92" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="62" pinfunction="PD15_62" pintype="bidirectional"/>
     </net>
-    <net code="109" name="VCAP1" class="Default">
+    <net code="107" name="VCAP1" class="Default">
       <node ref="C19" pin="1" pintype="passive"/>
       <node ref="U1" pin="48" pinfunction="VCAP_48" pintype="power_out"/>
     </net>
-    <net code="110" name="VCAP2" class="Default">
+    <net code="108" name="VCAP2" class="Default">
       <node ref="C20" pin="1" pintype="passive"/>
       <node ref="U1" pin="73" pinfunction="VCAP_73" pintype="power_out"/>
     </net>
-    <net code="111" name="VLOGIC" class="Default">
+    <net code="109" name="VLOGIC" class="Default">
       <node ref="C6" pin="1" pintype="passive"/>
       <node ref="C7" pin="1" pintype="passive"/>
       <node ref="C84" pin="1" pintype="passive"/>
@@ -7998,56 +7843,62 @@
       <node ref="U2" pin="2" pinfunction="EN_2" pintype="input"/>
       <node ref="U2" pin="3" pinfunction="IN_3" pintype="power_in"/>
     </net>
-    <net code="112" name="VLOGIC_SENSE" class="Default">
+    <net code="110" name="VLOGIC_SENSE" class="Default">
       <node ref="C60" pin="1" pintype="passive"/>
       <node ref="R60" pin="2" pintype="passive"/>
       <node ref="R61" pin="1" pintype="passive"/>
       <node ref="U1" pin="17" pinfunction="PC2_C_17" pintype="bidirectional"/>
     </net>
-    <net code="113" name="unconnected-(J3-SBU1-PadA8)" class="Default">
+    <net code="111" name="unconnected-(J3-SBU1-PadA8)" class="Default">
       <node ref="J3" pin="A8" pinfunction="SBU1_A8" pintype="passive+no_connect"/>
     </net>
-    <net code="114" name="unconnected-(J3-SBU2-PadB8)" class="Default">
+    <net code="112" name="unconnected-(J3-SBU2-PadB8)" class="Default">
       <node ref="J3" pin="B8" pinfunction="SBU2_B8" pintype="passive+no_connect"/>
     </net>
-    <net code="115" name="unconnected-(LS120-DUMMY-Pad3)" class="Default">
+    <net code="113" name="unconnected-(LS120-DUMMY-Pad3)" class="Default">
       <node ref="LS120" pin="3" pinfunction="DUMMY_3" pintype="passive+no_connect"/>
     </net>
-    <net code="116" name="unconnected-(LS120-DUMMY-Pad4)" class="Default">
+    <net code="114" name="unconnected-(LS120-DUMMY-Pad4)" class="Default">
       <node ref="LS120" pin="4" pinfunction="DUMMY_4" pintype="passive+no_connect"/>
     </net>
-    <net code="117" name="unconnected-(U1-PA4-Pad28)" class="Default">
+    <net code="115" name="unconnected-(U1-PA4-Pad28)" class="Default">
       <node ref="U1" pin="28" pinfunction="PA4_28" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="118" name="unconnected-(U1-PA6-Pad30)" class="Default">
+    <net code="116" name="unconnected-(U1-PA6-Pad30)" class="Default">
       <node ref="U1" pin="30" pinfunction="PA6_30" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="119" name="unconnected-(U1-PA7-Pad31)" class="Default">
+    <net code="117" name="unconnected-(U1-PA7-Pad31)" class="Default">
       <node ref="U1" pin="31" pinfunction="PA7_31" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="120" name="unconnected-(U1-PA8-Pad67)" class="Default">
+    <net code="118" name="unconnected-(U1-PA8-Pad67)" class="Default">
       <node ref="U1" pin="67" pinfunction="PA8_67" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="121" name="unconnected-(U1-PA9-Pad68)" class="Default">
+    <net code="119" name="unconnected-(U1-PA9-Pad68)" class="Default">
       <node ref="U1" pin="68" pinfunction="PA9_68" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="122" name="unconnected-(U1-PA10-Pad69)" class="Default">
+    <net code="120" name="unconnected-(U1-PA10-Pad69)" class="Default">
       <node ref="U1" pin="69" pinfunction="PA10_69" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="123" name="unconnected-(U1-PA15-Pad77)" class="Default">
+    <net code="121" name="unconnected-(U1-PA15-Pad77)" class="Default">
       <node ref="U1" pin="77" pinfunction="PA15_77" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="124" name="unconnected-(U1-PB12-Pad51)" class="Default">
+    <net code="122" name="unconnected-(U1-PB12-Pad51)" class="Default">
       <node ref="U1" pin="51" pinfunction="PB12_51" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="125" name="unconnected-(U1-PB13-Pad52)" class="Default">
+    <net code="123" name="unconnected-(U1-PB13-Pad52)" class="Default">
       <node ref="U1" pin="52" pinfunction="PB13_52" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="126" name="unconnected-(U1-PB14-Pad53)" class="Default">
+    <net code="124" name="unconnected-(U1-PB14-Pad53)" class="Default">
       <node ref="U1" pin="53" pinfunction="PB14_53" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="127" name="unconnected-(U1-PB15-Pad54)" class="Default">
+    <net code="125" name="unconnected-(U1-PB15-Pad54)" class="Default">
       <node ref="U1" pin="54" pinfunction="PB15_54" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="126" name="unconnected-(U1-PC6-Pad63)" class="Default">
+      <node ref="U1" pin="63" pinfunction="PC6_63" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="127" name="unconnected-(U1-PC7-Pad64)" class="Default">
+      <node ref="U1" pin="64" pinfunction="PC7_64" pintype="bidirectional+no_connect"/>
     </net>
     <net code="128" name="unconnected-(U1-PC8-Pad65)" class="Default">
       <node ref="U1" pin="65" pinfunction="PC8_65" pintype="bidirectional+no_connect"/>
@@ -8121,37 +7972,16 @@
     <net code="151" name="unconnected-(U4-INT2/FSYNC/CLKIN-Pad9)" class="Default">
       <node ref="U4" pin="9" pinfunction="INT2/FSYNC/CLKIN_9" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="152" name="unconnected-(U6-EXTINT-Pad19)" class="Default">
-      <node ref="U6" pin="19" pinfunction="EXTINT_19" pintype="input+no_connect"/>
-    </net>
-    <net code="153" name="unconnected-(U6-RESET_N-Pad18)" class="Default">
-      <node ref="U6" pin="18" pinfunction="RESET_N_18" pintype="input+no_connect"/>
-    </net>
-    <net code="154" name="unconnected-(U6-SAFEBOOT_N-Pad8)" class="Default">
-      <node ref="U6" pin="8" pinfunction="SAFEBOOT_N_8" pintype="input+no_connect"/>
-    </net>
-    <net code="155" name="unconnected-(U6-SCL-Pad12)" class="Default">
-      <node ref="U6" pin="12" pinfunction="SCL_12" pintype="input+no_connect"/>
-    </net>
-    <net code="156" name="unconnected-(U6-SDA-Pad9)" class="Default">
-      <node ref="U6" pin="9" pinfunction="SDA_9" pintype="bidirectional+no_connect"/>
-    </net>
-    <net code="157" name="unconnected-(U6-TIMEPULSE-Pad7)" class="Default">
-      <node ref="U6" pin="7" pinfunction="TIMEPULSE_7" pintype="output+no_connect"/>
-    </net>
-    <net code="158" name="unconnected-(U6-V_BCKP-Pad3)" class="Default">
-      <node ref="U6" pin="3" pinfunction="V_BCKP_3" pintype="input+no_connect"/>
-    </net>
-    <net code="159" name="unconnected-(U9-AUXOFF-Pad3)" class="Default">
+    <net code="152" name="unconnected-(U9-AUXOFF-Pad3)" class="Default">
       <node ref="U9" pin="3" pinfunction="AUXOFF_3" pintype="open_collector+no_connect"/>
     </net>
-    <net code="160" name="unconnected-(U9-ITIMER-Pad10)" class="Default">
+    <net code="153" name="unconnected-(U9-ITIMER-Pad10)" class="Default">
       <node ref="U9" pin="10" pinfunction="ITIMER_10" pintype="passive+no_connect"/>
     </net>
-    <net code="161" name="unconnected-(U13-EN_LEAVE_OPEN-Pad3)" class="Default">
+    <net code="154" name="unconnected-(U13-EN_LEAVE_OPEN-Pad3)" class="Default">
       <node ref="U13" pin="3" pinfunction="EN_LEAVE_OPEN_3" pintype="input+no_connect"/>
     </net>
-    <net code="162" name="unconnected-(U13-NC-Pad4)" class="Default">
+    <net code="155" name="unconnected-(U13-NC-Pad4)" class="Default">
       <node ref="U13" pin="4" pinfunction="NC_4" pintype="no_connect"/>
     </net>
   </nets>

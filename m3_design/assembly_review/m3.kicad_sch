@@ -6,7 +6,7 @@
 	(title_block
 		(title "01 | USB input and regulated supplies")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R1")
+		(rev "M3-ASSY-R3")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:Buck"
@@ -2700,7 +2700,7 @@
 		(fill
 			(color 0 0 0 0))
 		(uuid 0e505cf1-213a-5be0-ba23-0f8cc47b8f19)
-		(property "Sheetname" "04 | Voltage diagnosis, indicators and GNSS receiver"
+		(property "Sheetname" "04 | Voltage diagnosis and indicators"
 			(at 203.2 229.86999999999998 0)
 			(effects
 				(font
