@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Manufacturing package for the M3 board: Gerbers + drill (zipped), JLCPCB-style BOM and CPL.
+"""Manufacturing package for the M3 board: Gerbers + drill (zipped), JLCPCB-style BOM and CPL, and an assembly drawing.
 
 usage: tools/export_fab.py [board.kicad_pcb] [--out DIR]
 Needs kicad-cli (KICAD_CLI env var or on PATH / default macOS location).
@@ -76,6 +76,13 @@ def main():
         with zipfile.ZipFile(zpath, 'w', zipfile.ZIP_DEFLATED) as z:
             for f in sorted(g.iterdir()):
                 z.write(f, f.name)
+    # assembly drawing (validation pass 13): the fab layers carry every designator, including those hidden on the
+    # silkscreen (docs/M3_R4.md section 2); the bottom side is mirrored, as seen from below
+    apaths = [out / f'{stem}_assembly_top.pdf', out / f'{stem}_assembly_bottom.pdf']
+    # (pass 14: values left out and the board scaled to the sheet, so the frame and title block clear it)
+    common = ['pcb', 'export', 'pdf', '--mode-single', '--include-border-title', '--exclude-value', '--scale', '0']
+    run(*common, '--layers', 'F.Fab,Edge.Cuts', '-o', str(apaths[0]), str(board))
+    run(*common, '--mirror', '--layers', 'B.Fab,Edge.Cuts', '-o', str(apaths[1]), str(board))
     rows = [r for r in footprints(board) if r['ref'] and not r['ref'].startswith('#')]
     # BOM: one line per (value, footprint, LCSC); board-only items excluded. DNP parts (validation pass 5: U5, whose
     # 250 C soldering limit is below JLC Economic's 255 +/- 5 C reflow) are fitted by the owner after delivery: they go
@@ -121,7 +128,7 @@ def main():
             w.writerow([r['ref'], f"{x:.4f}mm", f"{-y:.4f}mm",
                         'Top' if r['layer'] == 'F.Cu' else 'Bottom', f"{rot % 360:.0f}"])
     missing = sorted({r['ref'] for r in rows if not r['no_bom'] and not r['lcsc']}, key=natural)
-    print('wrote', zpath.name, f'{stem}_bom_jlc.csv', f'{stem}_cpl_jlc.csv', 'to', out)
+    print('wrote', zpath.name, f'{stem}_bom_jlc.csv', f'{stem}_cpl_jlc.csv', *(a_.name for a_ in apaths), 'to', out)
     print('BOM lines', len(groups), '| placed parts', sum(1 for r in rows if not r['no_bom'] and not r['dnp']),
           '| parts without LCSC code:', ', '.join(missing) or 'none')
     print('owner-fitted (not in JLC BOM/CPL):', ', '.join(f"{','.join(v)} ({k[2]})" for k, v in owner.items()) or 'none')

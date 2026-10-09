@@ -50,7 +50,12 @@ PYRO_RULES = {'Pyro A: RAW_ACT to pyro control': (0.5, ('RAW_ACT',) + GATES + SE
               'Pyro E: RAW_ACT to bus and igniter (ARM break)': (1.0, ('RAW_ACT',) + POWER[:4]),
               'Pyro F: bus, igniter and drain to other live nets': (0.5, POWER),
               'Pyro G: gate nets in the pyro block': (0.3, GATES + ('PYRO_BLOCK',)),
-              'Pyro A2: RAW_ACT to RAW_ACT_SENSE': (0.3, ('RAW_ACT', 'RAW_ACT_SENSE'))}
+              'Pyro A2: RAW_ACT to RAW_ACT_SENSE': (0.3, ('RAW_ACT', 'RAW_ACT_SENSE')),
+              # pass 13: exposed live and midpoint pads 1.0 mm from sense and gate pads (one solder bridge); pass 14 adds
+              # the actuator switch's gate nets
+              'Pyro H: live pads to sense and gate pads (solder bridge)':
+                  (1.0, POWER + ('RAW_ACT', 'ARM1_SENSE', 'ARM2_SENSE', 'PYRO1_CONT', 'PYRO2_CONT', 'RAW_ACT_SENSE')
+                   + GATES + ('ACT_GATE', 'ACT_DRV') + MIDS + ('RAW_ACT_SENSE_MID',))}
 # pass 6: each pyro rule's full text is pinned (a narrowing condition such as A.Layer == 'In1.Cu' passed every other
 # test); after a deliberate, reviewed rule change, update the hash printed by the failure message
 PYRO_RULE_SHA = {
@@ -62,11 +67,12 @@ PYRO_RULE_SHA = {
     'Pyro F: bus, igniter and drain to other live nets': '662bb80c58b98c64',
     'Pyro G: gate nets in the pyro block': 'b89279cb5a4a75c5',
     'Pyro A2: RAW_ACT to RAW_ACT_SENSE': 'c7771c0291e02e3d',
+    'Pyro H: live pads to sense and gate pads (solder bridge)': '3b600317d60620cf',
 }
 # pass 7: the whole m3.kicad_dru is pinned too. KiCad applies the last matching rule, so a later or duplicate rule (or an
 # unconditional low clearance) overrode the pinned blocks, and a syntax error makes kicad-cli drop every custom rule
 # silently. After a deliberate, reviewed edit of the file, update this hash from the failure message.
-DRU_SHA = 'fa4c8b11ca224555'
+DRU_SHA = 'a9168365e4247cb7'
 # safety-relevant parts pinned by LCSC code (value text alone let a BAT54C, an AO3400A or a plain 1206 resistor pass)
 PINNED = {'R134': 'C3013496', 'R135': 'C3013496', 'Q124': 'C431195', 'Q125': 'C431195', 'D120': 'C8591',
           'C126': 'C21120', 'C138': 'C21120', 'R126': 'C17557', 'R138': 'C17557', 'R127': 'C11702', 'R139': 'C11702',

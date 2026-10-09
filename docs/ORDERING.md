@@ -16,7 +16,7 @@ python3 tools/jlc_cost.py --boards 5        # parts + Standard PCBA feeder fees 
 - `parts without LCSC code: none`
 - `CPL rows without a verified JLC orientation correction: none`
 
-`jlc_stock.py` must report `short: none`; a line listed as thin has less than twice the order in stock, so order promptly or reserve it in **Parts Manager**. Stock changes daily. On 2026-10-09 nothing was short or thin: $55.33 parts per board, 81 unique codes (47 Extended), $80.12 per board with Standard PCBA's $1.53 feeder fee per code; Standard's fixed fees are $50.19 per order (setup, stencil, fixture), and JLC may add a $14.93 handling fee. Economic would be $84.19 per board plus $9.71 per order, but cannot be used (section 4).
+`jlc_stock.py` must report `short: none`; a line listed as thin has less than twice the order in stock, so order promptly or reserve it in **Parts Manager**. Stock changes daily. On 2026-10-09 nothing was short or thin: $55.22 parts per board, 81 unique codes (47 Extended), $80.00 per board with Standard PCBA's $1.53 feeder fee per code; Standard's fixed fees are $50.19 per order (setup, stencil, fixture), and JLC may add a $14.93 handling fee. Economic would be $84.19 per board plus $9.71 per order, but cannot be used (section 4).
 
 ## 2. Files to upload
 

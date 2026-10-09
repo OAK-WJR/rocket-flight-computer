@@ -1806,7 +1806,7 @@ SPLIT_BOTTOM_NEW = {  # pass 12, parallel half of each 1k bottom: (sheet, centre
 def z_split_bottoms(b):
     """Pass 12 (reviewer F2), same change as r4_sch.z_split_pyro/z_split_raw: each 1k bottom (R130, R142, R133, R145, R125)
     becomes two 2k in parallel (C4109), so one open part leaves the node at <= 1.38 V instead of letting it rise to the
-    drain, bus or RAW_ACT. The partners sit beside their 1k leg (R178, R180, R181, R182), except PYRO2's (R179), which has
+    drain, bus or RAW_ACT. The partners sit beside the first 2k (R178, R180, R181, R182; pass 13 moves R178 under R129), except PYRO2's (R179), which has
     no room in the pyro block and sits on the same node mid-board beside R169. PYRO1: R178's GND pad takes the place of
     the stitching via (20.3, 69.55), which moves to (20.5, 69.08) between the two GND pads (clear of PYRO1_COLD's and
     PYRO1_GATE_N's B.Cu runs and the In2 PYRO1_CONT run; hole >= 0.15 mm from both pad openings). ARM1: the node now
@@ -1836,19 +1836,117 @@ def z_split_bottoms(b):
         assert close(pad_xy(b, ref, '1'), p1), (ref, pad_xy(b, ref, '1'))
 
 
-def place_ref_clear(b, ref, sides=('F', 'B'), rmax=6.0, margin=0.15):
+# --- final CAD iteration: the pass-13 findings (docs/M3_R4.md section 1o) ---------------------------------------
+
+STACK_V = {  # the four ARM halves as two single-channel columns of vertical 0402s: (centre, rotation)
+    'R144': ((28.83, 56.10), 270), 'R176': ((28.83, 57.85), 270),     # channel 2: bus 2 / mid, mid / sense 2
+    'R175': ((29.83, 58.15), 90), 'R132': ((29.83, 59.90), 90),       # channel 1: sense 1 / mid, mid / bus 1
+}
+
+
+def z_bridge_gaps(b):
+    """Pass-13 review (AH1): one solder bridge between pads of different parts closer than 1.0 mm still bypassed a
+    divider top (bus, drain or RAW_ACT straight onto a sense node). Every exposed bus, igniter, drain and RAW_ACT pad
+    now keeps 1.0 mm from every sense and gate pad, and every divider-midpoint pad 1.0 mm from every gate pad; DRC rule H
+    enforces both. ARM stack: two single-channel columns between the bus bars (channel 2 at x 28.83, channel 1 at
+    x 29.83; pass 13 proved this layout on a copy), each column's bus pad at its own bar, so the stack's bus pads are
+    >= 1.55 mm from its sense pads (pass 12's rows faced at 0.94 mm) and R134/R135's >= 1.18 mm. The columns face each other 0.46 mm apart (0.40 before): a
+    bridge there goes through one 5.1 k half, about 1.7 V at 8.4 V; they cannot sit 1 mm apart, as R134/R135's bus pads
+    and J120/J124's courtyards leave a 2.9 mm wide gap. C129 moves 0.5 mm down, off R134's bus pad
+    (0.65 mm). PYRO1: the cold pull-up R131 moves beside R173 with its drain pad on the drain branch (it sat 0.72 mm
+    from R129's CONT pad), so ARM2's via steps down to (16.35, 71.45); R178 moves under R129 (0.81 mm from C150's
+    RAW_ACT pad) and C127 0.1 mm up (0.98 mm). PYRO2: R143 moves beside R174 (0.82 mm from R141's CONT pad), 1.5 mm
+    clear of C120's ACT_GATE pad, and its COLD run loses the 0.05 mm tilt it had since R3. Pass 12's GND stub now meets a segment end, not a segment middle."""
+    if fp_of(b, 'R144').GetOrientationDegrees() in (270.0, -90.0):
+        return
+    F, B = pcbnew.F_Cu, pcbnew.B_Cu
+    # ARM stack: old rows, stubs and sense tracks out, the two columns in
+    remove_segs(b, 'PYRO2_BUS', [((28.87, 56.06), (28.87, 55.2))], F)
+    remove_segs(b, 'PYRO1_BUS', [((29.73, 59.96), (29.73, 60.8))], F)
+    remove_segs(b, 'ARM2_SENSE_MID', [((29.73, 56.06), (29.73, 57.54))], F)
+    remove_segs(b, 'ARM1_SENSE_MID', [((28.87, 58.48), (28.87, 59.96))], F)
+    remove_segs(b, 'ARM2_SENSE', [((28.87, 57.54), (28.06, 57.54)), ((28.06, 57.54), (28.025, 57.575))], F)
+    remove_segs(b, 'ARM1_SENSE', [((29.73, 58.48), (31.08, 58.48)), ((31.08, 58.48), (31.45, 58.85))], F)
+    for ref, (xy, rot) in STACK_V.items():
+        f = fp_of(b, ref)
+        f.SetOrientationDegrees(rot)
+        f.SetPosition(P(*xy))
+    for ref, p1, p2 in (('R144', (28.83, 55.67), (28.83, 56.53)), ('R176', (28.83, 57.42), (28.83, 58.28)),
+                        ('R175', (29.83, 58.58), (29.83, 57.72)), ('R132', (29.83, 60.33), (29.83, 59.47))):
+        assert close(pad_xy(b, ref, '1'), p1) and close(pad_xy(b, ref, '2'), p2), (ref, pad_xy(b, ref, '1'), pad_xy(b, ref, '2'))
+    track(b, 'PYRO2_BUS', F, [(28.83, 55.67), (28.83, 55.2)], 0.4)
+    track(b, 'ARM2_SENSE_MID', F, [(28.83, 56.53), (28.83, 57.42)], 0.2)
+    track(b, 'ARM2_SENSE', F, [(28.83, 58.28), (28.305, 58.28), (28.025, 58.0), (28.025, 57.575)], 0.2)
+    track(b, 'PYRO1_BUS', F, [(29.83, 60.33), (29.83, 60.8)], 0.4)
+    track(b, 'ARM1_SENSE_MID', F, [(29.83, 59.47), (29.83, 58.58)], 0.2)
+    track(b, 'ARM1_SENSE', F, [(29.83, 57.72), (30.32, 57.72), (31.45, 58.85)], 0.2)
+    # C129 0.5 mm down; its node track runs straight in from R133
+    remove_segs(b, 'ARM1_SENSE', [((28.72, 64.0), (27.7, 64.0)), ((27.7, 64.0), (27.2, 63.5)), ((27.2, 63.5), (26.8, 63.5))], F)
+    fp_of(b, 'C129').SetPosition(P(26.8, 64.7))
+    assert close(pad_xy(b, 'C129', '1'), (26.8, 64.0)), pad_xy(b, 'C129', '1')
+    track(b, 'ARM1_SENSE', F, [(28.72, 64.0), (26.8, 64.0)], 0.2)
+    # PYRO1: R131 beside R173 on the drain branch; its COLD run passes ARM2's lowered via to the COLD via
+    remove_segs(b, 'PYRO1_OUT', [((15.42, 69.85), (17.27, 69.85))], F)
+    set_seg(b, 'PYRO1_OUT', (15.42, 66.4), (15.42, 69.85), (15.42, 66.4), (15.42, 70.3), F)
+    remove_segs(b, 'PYRO1_COLD', [((18.13, 69.7), (18.13, 70.4)), ((18.13, 70.4), (17.3, 70.4)),
+                                  ((17.3, 70.4), (17.15, 70.55)), ((17.15, 70.55), (17.15, 72.65))], F)
+    fp_of(b, 'R131').SetPosition(P(15.85, 70.3))
+    assert close(pad_xy(b, 'R131', '1'), (15.42, 70.3)), pad_xy(b, 'R131', '1')
+    track(b, 'PYRO1_COLD', F, [(16.28, 70.3), (16.75, 70.3), (17.15, 70.7), (17.15, 72.65)], 0.2)
+    via_at(b, 'ARM2_SENSE', (16.35, 70.75)).SetPosition(P(16.35, 71.45))
+    set_seg(b, 'ARM2_SENSE', (16.35, 73.35), (16.35, 70.75), (16.35, 73.35), (16.35, 71.45), F)
+    set_seg(b, 'ARM2_SENSE', (16.35, 69.25), (16.35, 70.75), (16.35, 69.25), (16.35, 71.45), B)
+    # R178 under R129 (CONT straight down from R129.2); its GND runs to R130's, the via stub meeting a segment end
+    remove_segs(b, 'PYRO1_CONT', [((19.17, 68.5), (19.17, 69.65))], F)
+    remove_segs(b, 'GND', [((20.03, 68.5), (20.03, 69.65))], F)
+    fp_of(b, 'R178').SetPosition(P(18.56, 69.65))
+    assert close(pad_xy(b, 'R178', '1'), (18.13, 69.65)), pad_xy(b, 'R178', '1')
+    track(b, 'PYRO1_CONT', F, [(18.13, 68.5), (18.13, 69.65)], 0.2)
+    track(b, 'GND', F, [(20.03, 68.5), (20.03, 69.08), (20.03, 69.65), (18.99, 69.65)], 0.25)
+    # C127 0.1 mm up
+    fp_of(b, 'C127').SetPosition(P(22.1, 69.2))
+    set_seg(b, 'PYRO1_CONT', (21.4, 69.3), (21.4, 68.598), (21.4, 69.2), (21.4, 68.598), F)
+    # PYRO2: R143 beside R174, on a stub from the drain branch; its drain pad keeps 1.5 mm from C120's ACT_GATE pad
+    # (pass 14: a bridge there pulls the actuator switch's gate down through the drain divider, so RAW_ACT comes on
+    # with the power switch open)
+    remove_segs(b, 'PYRO2_OUT', [((17.27, 46.1), (15.42, 46.1))], F)
+    set_seg(b, 'PYRO2_OUT', (15.42, 46.1), (15.42, 49.6), (15.42, 45.85), (15.42, 49.6), F)
+    remove_segs(b, 'PYRO2_COLD', [((18.13, 46.1), (24.45, 46.05))], F)
+    fp_of(b, 'R143').SetPosition(P(16.75, 45.85))
+    assert close(pad_xy(b, 'R143', '1'), (16.32, 45.85)), pad_xy(b, 'R143', '1')
+    track(b, 'PYRO2_OUT', F, [(15.42, 45.85), (16.32, 45.85)], 0.3)
+    track(b, 'PYRO2_COLD', F, [(17.18, 45.85), (17.7, 45.85), (17.9, 46.05), (24.45, 46.05)], 0.2)
+    moved = [p_.GetBoundingBox() for r in list(STACK_V) + ['C129', 'R131', 'R178', 'C127', 'R143'] for p_ in fp_of(b, r).Pads()]
+    for f in b.GetFootprints():          # a designator the moved parts now cover goes under its own part
+        if f.Reference().IsVisible() and any(f.Reference().GetBoundingBox().Intersects(p_) for p_ in moved):
+            auto_ref(b, f.GetReference(), 'B')
+
+
+def _box_gap(a, c):
+    """Edge-to-edge distance in mm between two BOX2I (0 when they touch or overlap)."""
+    dx = max(mm(c.GetX()) - mm(a.GetRight()), mm(a.GetX()) - mm(c.GetRight()), 0.0)
+    dy = max(mm(c.GetY()) - mm(a.GetBottom()), mm(a.GetY()) - mm(c.GetBottom()), 0.0)
+    return (dx * dx + dy * dy) ** 0.5
+
+
+def place_ref_clear(b, ref, sides=('F', 'B'), rmax=6.0, margin=0.15, cap=1.5):
     """Pass 12 (reviewer F4): like auto_ref, but the text also keeps clear of every via, of other parts' courtyards on the
-    top side, and sits nearer its own part's pads than any other part's (by `margin`); returns the side used or None."""
+    top side, and sits nearer its own part's pads than any other part's (by `margin`); returns the side used or None.
+    Pass 14 (F4): nearness is measured from the text's box to pad edges, not centre to centre, the text may sit at most
+    `cap` mm from its own pads, and the pads that count are those on the part's own side and on the label's side."""
     f = fp_of(b, ref)
-    own = [p_.GetPosition() for p_ in f.Pads()]
-    others = [(g.GetReference(), p_.GetPosition()) for g in b.GetFootprints() if g.GetReference() != ref for p_ in g.Pads()]
+    own = [p_.GetBoundingBox() for p_ in f.Pads()]
+    part_cu = pcbnew.B_Cu if f.IsFlipped() else pcbnew.F_Cu
     vias = [v.GetBoundingBox() for v in b.GetTracks() if v.GetClass() == 'PCB_VIA']
     board = b.GetBoardEdgesBoundingBox()
     board.Inflate(-MM(0.3))
     cx, cy = mm(f.GetPosition().x), mm(f.GetPosition().y)
-    near = lambda pts, x, y: min(((mm(q.x) - x) ** 2 + (mm(q.y) - y) ** 2) ** 0.5 for q in pts)   # noqa: E731
     for side in sides:
         layer = pcbnew.F_SilkS if side == 'F' else pcbnew.B_SilkS
+        label_cu = pcbnew.F_Cu if side == 'F' else pcbnew.B_Cu
+        others = [p_.GetBoundingBox() for g in b.GetFootprints() if g.GetReference() != ref for p_ in g.Pads()
+                  if (p_.IsOnLayer(part_cu) or p_.IsOnLayer(label_cu))
+                  and abs(mm(p_.GetPosition().x) - cx) < rmax + 8 and abs(mm(p_.GetPosition().y) - cy) < rmax + 8]
         obs = _silk_obstacles(b, layer, ref) + vias
         if side == 'F':
             obs += [g.GetCourtyard(pcbnew.F_CrtYd).BBox() for g in b.GetFootprints()
@@ -1859,14 +1957,17 @@ def place_ref_clear(b, ref, sides=('F', 'B'), rmax=6.0, margin=0.15):
             for k in range(n):
                 a = 6.283 * k / n
                 x, y = cx + r * math.cos(a), cy + r * math.sin(a)
-                local = [q for _, q in others if abs(mm(q.x) - x) < 6 and abs(mm(q.y) - y) < 6]
-                if local and near(own, x, y) + margin > near(local, x, y):
-                    continue                     # nearer (or as near) another part: ambiguous
                 for ang in (0, 90):
                     place_ref(b, ref, x, y, ang, side=side)
                     bb = f.Reference().GetBoundingBox()
                     if not board.Contains(bb):
                         continue
+                    d_own = min(_box_gap(bb, o) for o in own)
+                    if d_own > cap:
+                        continue
+                    near_o = [_box_gap(bb, o) for o in others if abs(mm(o.Centre().x) - x) < 6 and abs(mm(o.Centre().y) - y) < 6]
+                    if near_o and d_own + margin > min(near_o):
+                        continue                 # nearer (or as near) another part: ambiguous
                     bb.Inflate(MM(0.2))
                     if not any(bb.Intersects(o) for o in obs):
                         return side
@@ -1874,25 +1975,73 @@ def place_ref_clear(b, ref, sides=('F', 'B'), rmax=6.0, margin=0.15):
     return None
 
 
-STACK = ('R144', 'R176', 'R175', 'R132')          # the four stacked ARM halves, top to bottom
 PYRO_LABELS = ['R177', 'R182', 'R125', 'R124', 'C120', 'R173', 'R174', 'R129', 'R131', 'R141', 'R142', 'R143', 'R130', 'R178',
-               'R133', 'R180', 'R145', 'R181', 'R179', 'R169', 'R168']
+               'R133', 'R180', 'R145', 'R181', 'R179', 'R169', 'R168',
+               # pass 13 (AH2): the ARM columns and the neighbours the pass-12 rule had not covered
+               'R144', 'R176', 'R175', 'R132', 'R127', 'C127', 'C129', 'C138', 'C150', 'TP122', 'TP123']
 UNLABELLED = []                                 # filled by z_pyro_labels, listed in docs/M3_R4.md section 2
 
 
 def z_pyro_labels(b):
-    """Pass 12 (reviewer F4): the designators around the split dividers. A label nearer another part than its own misleads
-    more than no label, so any designator with no unambiguous spot (clear of vias and pads, nearer its own part) is hidden
-    and listed (F.Fab still carries it). The four stacked ARM halves (rows 0.94-1.48 mm apart, between the bus bars) have
-    no such spot at the board's 1.0 mm minimum text height: hidden, in row order R144, R176, R175, R132."""
-    for ref in STACK:
-        fp_of(b, ref).Reference().SetVisible(False)
-    UNLABELLED[:] = list(STACK)
+    """Pass 12 (reviewer F4), extended in pass 13 (AH2): the designators around the dividers. A label nearer another part
+    than its own misleads more than no label, so any designator with no unambiguous spot (clear of vias and pads, nearer
+    its own part) is hidden and listed (F.Fab still carries it). A bottom-side part's label stays on the bottom side."""
+    UNLABELLED[:] = []
     for ref in PYRO_LABELS:
-        if place_ref_clear(b, ref) is None:
-            fp_of(b, ref).Reference().SetVisible(False)
+        f = fp_of(b, ref)
+        f.Reference().SetVisible(True)
+        if place_ref_clear(b, ref, sides=('B',) if f.IsFlipped() else ('F', 'B')) is None:
+            f.Reference().SetVisible(False)
             UNLABELLED.append(ref)
     print('  designators hidden (no unambiguous spot):', UNLABELLED)
+
+
+def _fab_ref(f):
+    fab = pcbnew.B_Fab if f.IsFlipped() else pcbnew.F_Fab
+    for g in f.GraphicalItems():
+        if isinstance(g, pcbnew.PCB_TEXT) and g.GetText() == '${REFERENCE}' and g.GetLayer() == fab:
+            return g
+    return None
+
+
+def z_fab_refs(b):
+    """Pass 14 (F1): the assembly drawing (tools/export_fab.py) is plotted from the fab layers, so every footprint carries
+    a ${REFERENCE} text there. Where the library footprint has none (connectors, test pads, ICs and some capacitors) one is
+    added at the centre of the courtyard; where fab designators overlap they shrink to 0.4 mm, then 0.3 mm, so the
+    designators hidden on the silkscreen can be read on the drawing."""
+    added = []
+    for f in b.GetFootprints():
+        if _fab_ref(f) is not None:
+            continue
+        cy = f.GetCourtyard(pcbnew.B_CrtYd if f.IsFlipped() else pcbnew.F_CrtYd)
+        c = cy.BBox().Centre() if cy.OutlineCount() else f.GetPosition()
+        tx = pcbnew.PCB_TEXT(f)
+        tx.SetText('${REFERENCE}')
+        tx.SetLayer(pcbnew.B_Fab if f.IsFlipped() else pcbnew.F_Fab)
+        tx.SetMirrored(f.IsFlipped())
+        tx.SetTextSize(pcbnew.VECTOR2I(MM(0.8), MM(0.8)))
+        tx.SetTextThickness(MM(0.12))
+        tx.SetPosition(pcbnew.VECTOR2I(c.x, c.y))
+        f.Add(tx)
+        added.append(f.GetReference())
+
+    def overlaps():
+        bx = [(f.GetReference(), f.IsFlipped(), _fab_ref(f).GetBoundingBox()) for f in b.GetFootprints()]
+        hit = set()
+        for i, (r1, s1, b1) in enumerate(bx):
+            for r2, s2, b2 in bx[i + 1:]:
+                if s1 == s2 and b1.Intersects(b2):
+                    hit.update((r1, r2))
+        return hit
+    for size in (0.4, 0.3):
+        hit = overlaps()
+        for f in b.GetFootprints():
+            tx = _fab_ref(f)
+            if f.GetReference() in hit and mm(tx.GetTextHeight()) > size:
+                tx.SetTextSize(pcbnew.VECTOR2I(MM(size), MM(size)))
+                tx.SetTextThickness(MM(size * 0.15))
+    left = sorted(overlaps())
+    print(f'  fab designators added: {len(added)}; still overlapping at 0.3 mm: {left}')
 
 
 def w_order_mark(b):
@@ -2002,7 +2151,7 @@ STEPS = [a1_enable_ride_through, a2_ovlo_release, b4_b5_tie_hole_and_tp122, b1_u
          v_tp123_bottom, v_mask_dams, v_camera_via, w_input_damper, w_part_values, w_ms5611_scl, w_route_hygiene,
          x_r166_land, x_input_bleed, x_tooling_holes, y_gate_clear_of_j9, y_drop_tp124, y_bat_sense_side, y_u5_fields,
          z_sense_series, z_j2_no_boot0, z_silk_tidy, v_j123_jst, v_silk, v_refs, z_split_tops, z_split_bottoms,
-         z_pyro_labels, w_order_mark, rev_r4]
+         z_bridge_gaps, z_pyro_labels, z_fab_refs, w_order_mark, rev_r4]
 
 
 def main():
