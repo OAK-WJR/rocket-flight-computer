@@ -6,7 +6,7 @@
 	(title_block
 		(title "02 | MCU, clock and debug")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R3")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -1713,7 +1713,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 				(at 0 0 0)
 				(effects
 					(font
@@ -2624,7 +2624,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Value" "SWD+DFU 1x6"
+		(property "Value" "SWD 1x6"
 			(at 330.2 54.61000000000001 0)
 			(effects
 				(font
@@ -2750,22 +2750,8 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 86b79b79-9dd1-5ef9-854d-d463fe4074c9))
-	(wire
-		(pts
-			(xy 325.12 71.12)
-			(xy 320.04 71.12))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4d42d3fe-7ff9-5373-ba0e-26f305b6b275))
-	(global_label "BOOT0"
-		(shape passive)
-		(at 320.04 71.12 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid c713e769-54c1-5844-9061-0c0193ac7cce))
+
+
 	(symbol
 		(lib_id "M3:R")
 		(at 279.4 104.14 0)
@@ -4055,7 +4041,7 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 151007e7-61fb-5273-97c9-19b0f5e85759))
-	(text "J2: 1 GND | 2 SWCLK | 3 SWDIO | 4 NRST | 5 3V3 | 6 BOOT0"
+	(text "J2: 1 GND | 2 SWCLK | 3 SWDIO | 4 NRST | 5 3V3 | 6 n/c (R4: BOOT0 stays on R5 at the MCU; DFU through SWD or a firmware jump to the system bootloader)"
 		(at 185.42 223.52 0)
 		(effects
 			(font
@@ -4109,7 +4095,7 @@
 			(width 0)
 			(type default))
 		(uuid 7baaa541-30b9-5b15-9271-3e1e07cb9ad6))
-	(global_label "PYRO1_CONT"
+	(global_label "PYRO1_CONT_MCU"
 		(shape passive)
 		(at 127 80.01 0)
 		(effects
@@ -4125,7 +4111,7 @@
 			(width 0)
 			(type default))
 		(uuid 00059037-c35d-5011-b3c7-215b1c8ae055))
-	(global_label "PYRO2_CONT"
+	(global_label "PYRO2_CONT_MCU"
 		(shape passive)
 		(at 127 82.55 0)
 		(effects
@@ -4205,7 +4191,7 @@
 			(width 0)
 			(type default))
 		(uuid c80abdba-fa8e-589e-81d2-8c124c0a2791))
-	(global_label "ARM2_SENSE"
+	(global_label "ARM2_SENSE_MCU"
 		(shape passive)
 		(at 127 105.41 0)
 		(effects
@@ -4221,7 +4207,7 @@
 			(width 0)
 			(type default))
 		(uuid aac83a04-2b68-5d67-b417-0cbaf9d6a397))
-	(global_label "ARM1_SENSE"
+	(global_label "ARM1_SENSE_MCU"
 		(shape passive)
 		(at 127 107.95 0)
 		(effects
@@ -4253,7 +4239,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 6baa08a9-f799-4d2d-956c-7e75a840098f))
-	(global_label "RAW_ACT_SENSE"
+	(global_label "RAW_ACT_SENSE_MCU"
 		(shape passive)
 		(at 127 110.49 0)
 		(effects
@@ -4319,6 +4305,406 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid fce0d5f6-5ce5-5c42-a8ea-4dde4bdae02d))
+	(symbol
+		(lib_id "M3:R")
+		(at 180.34 86.36 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d2393408-3e84-53f9-8b20-4a9f7a5c4a12)
+		(property "Reference" "R168"
+			(at 182.88 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "4.7k"
+			(at 182.88 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 180.34 86.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 180.34 86.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25900"
+			(at 180.34 86.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
+					(reference "R168")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 180.34 82.55)
+			(xy 172.72 82.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1539cbb2-5336-5a5f-b1d5-66f7f176101b))
+	(global_label "PYRO1_CONT"
+		(shape passive)
+		(at 172.72 82.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7926de3c-2b0b-5e80-bee9-7af7175aca82))
+	(wire
+		(pts
+			(xy 180.34 90.17)
+			(xy 172.72 90.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8b07d43b-5c67-5f4d-b25e-27f0801ff293))
+	(global_label "PYRO1_CONT_MCU"
+		(shape passive)
+		(at 172.72 90.17 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4997ea18-85bc-5140-99ff-1f0e66918286))
+	(symbol
+		(lib_id "M3:R")
+		(at 180.34 101.6 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e06a7900-85af-57ec-8979-c945d44701e9)
+		(property "Reference" "R169"
+			(at 182.88 100.33 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "4.7k"
+			(at 182.88 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 180.34 101.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 180.34 101.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25900"
+			(at 180.34 101.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
+					(reference "R169")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 180.34 97.79)
+			(xy 172.72 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e897c919-b287-5c3c-bf70-2f2505e09b4f))
+	(global_label "PYRO2_CONT"
+		(shape passive)
+		(at 172.72 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9406bd47-8024-58f2-850f-33ab0c40f383))
+	(wire
+		(pts
+			(xy 180.34 105.41)
+			(xy 172.72 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f0f7cbbb-23d1-5c29-9f11-3fab10b8a23b))
+	(global_label "PYRO2_CONT_MCU"
+		(shape passive)
+		(at 172.72 105.41 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 12419a99-ee2a-599e-ac78-3176b2b2b1ab))
+	(symbol
+		(lib_id "M3:R")
+		(at 180.34 116.84 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6abd98de-ad20-54df-992b-a3aa511af64b)
+		(property "Reference" "R170"
+			(at 182.88 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "4.7k"
+			(at 182.88 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 180.34 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 180.34 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25900"
+			(at 180.34 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
+					(reference "R170")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 180.34 113.03)
+			(xy 172.72 113.03))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9d9e3fec-b831-53ce-8f7d-e1ef8837b29f))
+	(global_label "ARM1_SENSE"
+		(shape passive)
+		(at 172.72 113.03 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7dd57451-b228-517d-803c-69019d527e8e))
+	(wire
+		(pts
+			(xy 180.34 120.65)
+			(xy 172.72 120.65))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b44f7f9f-e147-54d9-a77d-fa4f1388e723))
+	(global_label "ARM1_SENSE_MCU"
+		(shape passive)
+		(at 172.72 120.65 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 883659da-2c58-56fa-a776-34323bc04a61))
+	(symbol
+		(lib_id "M3:R")
+		(at 180.34 132.08 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 46c813f0-f6db-5a0b-8585-7c07f1452a89)
+		(property "Reference" "R171"
+			(at 182.88 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "4.7k"
+			(at 182.88 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 180.34 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 180.34 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25900"
+			(at 180.34 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
+					(reference "R171")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 180.34 128.27)
+			(xy 172.72 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ac210206-7dcb-5ebb-bc0f-a49450d7c51f))
+	(global_label "ARM2_SENSE"
+		(shape passive)
+		(at 172.72 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 460f5d59-a7aa-5046-bcc9-07288b960f7e))
+	(wire
+		(pts
+			(xy 180.34 135.89)
+			(xy 172.72 135.89))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5ba7063b-87db-53b6-92a5-aeb65444d515))
+	(global_label "ARM2_SENSE_MCU"
+		(shape passive)
+		(at 172.72 135.89 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid dce4ddae-75c1-5aa9-a72f-be7272294db5))
+	(symbol
+		(lib_id "M3:R")
+		(at 180.34 147.32 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 52ef0b20-17f9-53e3-b141-fed45086397c)
+		(property "Reference" "R172"
+			(at 182.88 146.05 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "4.7k"
+			(at 182.88 148.59 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 180.34 147.32 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 180.34 147.32 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25900"
+			(at 180.34 147.32 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
+					(reference "R172")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 180.34 143.51)
+			(xy 172.72 143.51))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6ffc3ac3-aa47-5fb1-a67e-4f5d7f7e1f5a))
+	(global_label "RAW_ACT_SENSE"
+		(shape passive)
+		(at 172.72 143.51 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f807ccaf-50e3-5b36-bd84-8bbe7997c5dd))
+	(wire
+		(pts
+			(xy 180.34 151.13)
+			(xy 172.72 151.13))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid dbbb8d28-f2a6-52b0-bd44-fc315c2246f7))
+	(global_label "RAW_ACT_SENSE_MCU"
+		(shape passive)
+		(at 172.72 151.13 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5da93bc9-60f8-52d1-b800-68a3b4eedeb1))
+	(text "R168-R172 (R4): 4.7k between each sense divider and its ADC pin: PYRO1/2_CONT -> PC0/PC1, ARM1/2_SENSE -> PC5/PC4, RAW_ACT_SENSE -> PB0.\nThe dividers (2 x 5.1k in series over 2 x 2k in parallel, passes 11-12) keep each node <= 1.4 V (3.3 V at the 19.9 V clamp) with any one part shorted or open;\nthese 4.7k limit the current only if two faults coincide (about 1 mA, Inference). ADC source 5.6 kohm (Table 184: 10-bit limit 5.65 kohm): long sample time."
+		(at 20.32 251.46 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f923f711-3b64-5bf1-9b4b-95d1b9a73fdc))
+	(no_connect
+		(at 325.12 71.12)
+		(uuid 1475f077-d452-5c1d-a6d7-8b4d89a9e270))
 	(sheet_instances
 		(path "/"
 			(page "2")))

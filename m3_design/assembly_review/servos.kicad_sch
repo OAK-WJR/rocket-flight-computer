@@ -6,7 +6,7 @@
 	(title_block
 		(title "13 | Servo outputs")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R3")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
 			(symbol "M3:C"
@@ -382,7 +382,7 @@
 						(font
 							(size 1.27 1.27))))))
 		(embedded_fonts no)
-		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 			(at 0 0 0)
 			(effects
 				(font
@@ -1690,7 +1690,7 @@
 				(size 2.54 2.54))
 			(justify left))
 		(uuid 0108ab5e-3506-5f47-8387-c039d56afe2f))
-	(text "J122 column-major: 1/4/7/10 = SIGNAL 1-4, 2/5/8/11 = RAW_ACT (+), 3/6/9/12 = GND. HV servos only, stall <= 3 A per pin."
+	(text "J122 column-major: 1/4/7/10 = SIGNAL 1-4, 2/5/8/11 = RAW_ACT (+), 3/6/9/12 = GND. HV servos only: stall <= 1.92 A each, <= 7.7 A for all four (REQUIREMENTS F4); the header contact is rated 3 A (maker, no datasheet)."
 		(at 20.32 245 0)
 		(effects
 			(font

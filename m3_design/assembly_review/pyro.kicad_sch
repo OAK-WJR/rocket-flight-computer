@@ -6,9 +6,76 @@
 	(title_block
 		(title "12 | Pyro channels, arming and continuity")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R3")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
+		(symbol "M3:Conn_1x2"
+		(pin_names
+			(offset 0.508))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "J"
+			(at 0 5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "Conn_1x2"
+			(at 0 -5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "2-position connector"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "Conn_1x2_0_1"
+			(rectangle
+				(start -2.54 2.54)
+				(end 2.54 -2.54)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "Conn_1x2_1_1"
+			(pin passive line
+				(at -7.62 1.27 0)
+				(length 5.08)
+				(name "1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -1.27 0)
+				(length 5.08)
+				(name "2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
 		(symbol "M3:BAT54A"
 		(pin_names
 			(offset 0.508))
@@ -472,7 +539,7 @@
 						(font
 							(size 1.27 1.27))))))
 		(embedded_fonts no)
-		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 			(at 0 0 0)
 			(effects
 				(font
@@ -992,7 +1059,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k"
+		(property "Value" "5.1k"
 			(at 336.55 59.69 0)
 			(effects
 				(font
@@ -1010,7 +1077,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
+		(property "LCSC" "C25905"
 			(at 332.74 50.8 0)
 			(hide yes)
 			(effects
@@ -1029,7 +1096,7 @@
 			(width 0)
 			(type default))
 		(uuid 76fcd644-4f30-5978-912f-46c4cfb70d83))
-	(global_label "PYRO1_OUT"
+	(global_label "PYRO1_CONT_MID"
 		(shape passive)
 		(at 332.74 41.91 90)
 		(effects
@@ -1067,7 +1134,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1k"
+		(property "Value" "2k"
 			(at 394.97 59.69 0)
 			(effects
 				(font
@@ -1085,7 +1152,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C11702"
+		(property "LCSC" "C4109"
 			(at 391.16 50.8 0)
 			(hide yes)
 			(effects
@@ -1235,19 +1302,19 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C1591"
+		(property "LCSC" "C161115"
 			(at 40.64 114.3 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
+		(property "Manufacturer" "Murata"
 			(at 40.64 114.3 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10B104KB8NNNC"
+		(property "Manufacturer Part" "GCJ188R71H104KA12D"
 			(at 40.64 114.3 0)
 			(hide yes)
 			(effects
@@ -1379,7 +1446,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k"
+		(property "Value" "5.1k"
 			(at 161.29 123.19 0)
 			(effects
 				(font
@@ -1397,7 +1464,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
+		(property "LCSC" "C25905"
 			(at 157.48 114.3 0)
 			(hide yes)
 			(effects
@@ -1614,7 +1681,7 @@
 			(width 0)
 			(type default))
 		(uuid c979d8b4-4018-5ce1-914b-aae8d3b74a3b))
-	(global_label "ARM1_SENSE"
+	(global_label "ARM1_SENSE_MID"
 		(shape passive)
 		(at 157.48 123.19 270)
 		(effects
@@ -1636,7 +1703,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1k"
+		(property "Value" "2k"
 			(at 219.71 123.19 0)
 			(effects
 				(font
@@ -1654,7 +1721,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C11702"
+		(property "LCSC" "C4109"
 			(at 215.9 114.3 0)
 			(hide yes)
 			(effects
@@ -2260,7 +2327,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k"
+		(property "Value" "5.1k"
 			(at 219.71 186.69 0)
 			(effects
 				(font
@@ -2278,7 +2345,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
+		(property "LCSC" "C25905"
 			(at 215.9 177.8 0)
 			(hide yes)
 			(effects
@@ -2297,7 +2364,7 @@
 			(width 0)
 			(type default))
 		(uuid 0d09eb3a-b33b-5295-91d8-2fbc71d73828))
-	(global_label "PYRO2_OUT"
+	(global_label "PYRO2_CONT_MID"
 		(shape passive)
 		(at 215.9 168.91 90)
 		(effects
@@ -2335,7 +2402,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1k"
+		(property "Value" "2k"
 			(at 278.13 186.69 0)
 			(effects
 				(font
@@ -2353,7 +2420,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C11702"
+		(property "LCSC" "C4109"
 			(at 274.32 177.8 0)
 			(hide yes)
 			(effects
@@ -2503,19 +2570,19 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C1591"
+		(property "LCSC" "C161115"
 			(at 391.16 177.8 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
+		(property "Manufacturer" "Murata"
 			(at 391.16 177.8 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10B104KB8NNNC"
+		(property "Manufacturer Part" "GCJ188R71H104KA12D"
 			(at 391.16 177.8 0)
 			(hide yes)
 			(effects
@@ -2647,7 +2714,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k"
+		(property "Value" "5.1k"
 			(at 44.45 250.19 0)
 			(effects
 				(font
@@ -2665,7 +2732,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
+		(property "LCSC" "C25905"
 			(at 40.64 241.3 0)
 			(hide yes)
 			(effects
@@ -2700,7 +2767,7 @@
 			(width 0)
 			(type default))
 		(uuid 1c2e8688-d83a-56b4-888a-50ffd5d350a1))
-	(global_label "ARM2_SENSE"
+	(global_label "ARM2_SENSE_MID"
 		(shape passive)
 		(at 40.64 250.19 270)
 		(effects
@@ -2722,7 +2789,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1k"
+		(property "Value" "2k"
 			(at 102.87 250.19 0)
 			(effects
 				(font
@@ -2740,7 +2807,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C11702"
+		(property "LCSC" "C4109"
 			(at 99.06 241.3 0)
 			(hide yes)
 			(effects
@@ -3021,47 +3088,138 @@
 			(justify right))
 		(uuid dd8f1cfc-be93-5758-8847-08fae97e90ae))
 	(symbol
-		(lib_id "M3:Conn_1x4")
-		(at 332.74 241.3 0)
+		(lib_id "M3:Conn_1x2")
+		(at 332.74 238.76 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid d4c8231c-fe2b-56db-aac3-03cf4a1970fe)
 		(property "Reference" "J120"
-			(at 336.55 232.41 0)
+			(at 336.55 237.49 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "ARM: RAW / BUS2 / BUS1 / RAW"
-			(at 336.55 250.19 0)
+		(property "Value" "ARM CH2: RAW / BUS2"
+			(at 336.55 240.03 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_DB128V_4P"
-			(at 332.74 241.3 0)
+		(property "Footprint" "rocket:M3_DB128L_2P_BK"
+			(at 332.74 238.76 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
+					(size 1.27 1.27))
+				(justify left)))
 		(property "Datasheet" ""
-			(at 332.74 241.3 0)
+			(at 332.74 238.76 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C2915641"
-			(at 332.74 241.3 0)
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C430601"
+			(at 332.74 238.76 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C430601"
+			(at 332.74 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "DORABO"
+			(at 332.74 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "DB128L-5.08-2P-BK-S"
+			(at 332.74 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
 					(reference "J120")
+					(unit 1)))))
+	(symbol
+		(lib_id "M3:Conn_1x2")
+		(at 332.74 243.84 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 95b456b5-50db-589e-8cfd-7a65eeed8aa5)
+		(property "Reference" "J124"
+			(at 336.55 242.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "ARM CH1: BUS1 / RAW"
+			(at 336.55 245.11 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_DB128L_2P_BK"
+			(at 332.74 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 332.74 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C430601"
+			(at 332.74 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C430601"
+			(at 332.74 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "DORABO"
+			(at 332.74 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "DB128L-5.08-2P-BK-S"
+			(at 332.74 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "J124")
 					(unit 1)))))
 	(wire
 		(pts
@@ -3128,47 +3286,138 @@
 			(justify right))
 		(uuid 4f454ff5-5edc-5db3-891a-2e8530b065fa))
 	(symbol
-		(lib_id "M3:Conn_1x4")
-		(at 391.16 241.3 0)
+		(lib_id "M3:Conn_1x2")
+		(at 391.16 238.76 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 312be4d5-4e6a-5856-bf8a-17dc1102db31)
 		(property "Reference" "J121"
-			(at 394.97 232.41 0)
+			(at 394.97 237.49 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "E1- / E1+ / E2+ / E2-"
-			(at 394.97 250.19 0)
+		(property "Value" "IGNITER 1: E1- / E1+"
+			(at 394.97 240.03 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_DB128V_4P"
-			(at 391.16 241.3 0)
+		(property "Footprint" "rocket:M3_DB128L_2P"
+			(at 391.16 238.76 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
+					(size 1.27 1.27))
+				(justify left)))
 		(property "Datasheet" ""
-			(at 391.16 241.3 0)
+			(at 391.16 238.76 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C2915641"
-			(at 391.16 241.3 0)
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C430603"
+			(at 391.16 238.76 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C430603"
+			(at 391.16 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "DORABO"
+			(at 391.16 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "DB128L-5.08-2P-OG-S"
+			(at 391.16 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
 					(reference "J121")
+					(unit 1)))))
+	(symbol
+		(lib_id "M3:Conn_1x2")
+		(at 391.16 243.84 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 60dda150-3327-5fc7-843c-01307391e71d)
+		(property "Reference" "J125"
+			(at 394.97 242.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "IGNITER 2: E2+ / E2-"
+			(at 394.97 245.11 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_DB128L_2P"
+			(at 391.16 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 391.16 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C430603"
+			(at 391.16 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C430603"
+			(at 391.16 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "DORABO"
+			(at 391.16 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "DB128L-5.08-2P-OG-S"
+			(at 391.16 243.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "J125")
 					(unit 1)))))
 	(wire
 		(pts
@@ -3234,65 +3483,9 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid c4af4b73-488d-5c90-8bef-5af6c3c54175))
-	(symbol
-		(lib_id "M3:TestPoint")
-		(at 449.58 241.3 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid 261b5473-cb7e-5ef3-9e10-2279eed4c5a2)
-		(property "Reference" "TP124"
-			(at 453.39 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "GND"
-			(at 453.39 250.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 449.58 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 449.58 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 449.58 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "TP124")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 449.58 241.3)
-			(xy 449.58 246.38))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 5fe7208d-3237-5baa-bcd3-410ac51c5af5))
-	(global_label "GND"
-		(shape passive)
-		(at 449.58 246.38 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 438877b1-d726-5812-9e39-ec9c965d2528))
+
+
+
 	(text "12 | Pyro channels, arming and continuity"
 		(at 20.32 20.32 0)
 		(effects
@@ -3300,7 +3493,7 @@
 				(size 2.54 2.54))
 			(justify left))
 		(uuid 727abb5b-7667-5982-897d-07d2f9c504cb))
-	(text "Two independent channels (FMEA H-5). ARM plug = 4-wire, 2-fuse link: J120.4->F1 5A FAST->J120.3 (BUS1), J120.1->F2 5A FAST->J120.2 (BUS2)."
+	(text "Two independent channels (FMEA H-5). ARM links: J124.2 (RAW) -> F1 5A FAST -> J124.1 (BUS1); J120.1 (RAW) -> F2 5A FAST -> J120.2 (BUS2). R4: DB128L 2P pairs, ARM terminals black, igniter terminals orange."
 		(at 20.32 330 0)
 		(effects
 			(font
@@ -3314,7 +3507,7 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 20f879dc-af7e-5240-9108-073154f04d2c))
-	(text "Igniter 1 across J121.1-2, igniter 2 across J121.3-4. Both terminal pin orders are reversal-symmetric."
+	(text "Igniter 1 across J121.1-2, igniter 2 across J125.1-2. Each pin order is reversal-symmetric within its channel."
 		(at 20.32 345.24 0)
 		(effects
 			(font
@@ -3335,20 +3528,651 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 23b571db-5945-56d5-ae80-b3030e357aad))
-	(text "CONT = 10k/1k from drain (open detector only, CIRCUIT_REVIEW 2.9). ARMn_SENSE = 10k/1k from each fused bus."
+	(text "CONT = (2 x 5.1k)/(2 x 2k parallel) from each drain (open detector only, CIRCUIT_REVIEW 2.9). ARMn_SENSE = the same from each fused bus."
 		(at 20.32 368.1 0)
 		(effects
 			(font
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 3e1e8e8a-3b08-5551-a4fd-878c6260a1f4))
-	(text "D120 + 47k: cold pull-up of both drains (FMEA H-1) for plug-out FET-short detection. In flight: log only, never veto (F-10)."
+	(text "D120 + R131/R143 (10k): cold pull-up of both drains (FMEA H-1) for plug-out FET-short detection. In flight: log only, never veto (F-10)."
 		(at 20.32 375.72 0)
 		(effects
 			(font
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 8de6969f-e2ce-515d-881e-a9dec42e2b6b))
+	(symbol
+		(lib_id "M3:R")
+		(at 66.04 205.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 5d7dda8f-0559-5482-9e8a-f8cbfc14dcbd)
+		(property "Reference" "R173"
+			(at 68.58 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "5.1k"
+			(at 68.58 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 66.04 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 66.04 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 66.04 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R173")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 66.04 201.93)
+			(xy 58.42 201.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bcfbfabd-4504-58c1-972d-fb8c4b4c5f64))
+	(global_label "PYRO1_OUT"
+		(shape passive)
+		(at 58.42 201.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1a8c52da-d797-561a-9e8d-65a122847f0f))
+	(wire
+		(pts
+			(xy 66.04 209.55)
+			(xy 58.42 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 00154e46-f91a-55b5-b7b3-a0ce369e716c))
+	(global_label "PYRO1_CONT_MID"
+		(shape passive)
+		(at 58.42 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4f72cd0f-e27b-5c57-b069-a574ac78b695))
+	(symbol
+		(lib_id "M3:R")
+		(at 101.6 205.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 68e54dd5-2455-5bec-9b01-8c8d78e924fe)
+		(property "Reference" "R174"
+			(at 104.14 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "5.1k"
+			(at 104.14 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 101.6 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 101.6 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 101.6 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R174")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 101.6 201.93)
+			(xy 93.98 201.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e425626e-2622-5076-a37c-1d1a7c43760e))
+	(global_label "PYRO2_OUT"
+		(shape passive)
+		(at 93.98 201.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2ff107c7-e240-5caa-8ae4-0494820887e0))
+	(wire
+		(pts
+			(xy 101.6 209.55)
+			(xy 93.98 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid dc336bc0-caa6-5ed9-a191-0b944a6d033d))
+	(global_label "PYRO2_CONT_MID"
+		(shape passive)
+		(at 93.98 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f7bbd0cd-90da-56bb-9bcc-e9f995c668c5))
+	(symbol
+		(lib_id "M3:R")
+		(at 137.16 205.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid eb816301-8a70-5846-a40f-ad5b33d3725d)
+		(property "Reference" "R175"
+			(at 139.7 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "5.1k"
+			(at 139.7 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 137.16 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 137.16 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 137.16 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R175")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 137.16 201.93)
+			(xy 129.54 201.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a024030d-51e2-5961-a7b2-ec8b9f3ca4ee))
+	(global_label "ARM1_SENSE_MID"
+		(shape passive)
+		(at 129.54 201.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 701d13db-3b23-5ef4-8a71-0fb34e08ece7))
+	(wire
+		(pts
+			(xy 137.16 209.55)
+			(xy 129.54 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1603bc90-79aa-5c40-80cf-9478abe66690))
+	(global_label "ARM1_SENSE"
+		(shape passive)
+		(at 129.54 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 855b3524-ecf1-5718-9345-5af7ea1cafdc))
+	(symbol
+		(lib_id "M3:R")
+		(at 172.72 205.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 16895650-d021-5337-a04f-85ff3e63ac1c)
+		(property "Reference" "R176"
+			(at 175.26 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "5.1k"
+			(at 175.26 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 172.72 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 172.72 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 172.72 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R176")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 172.72 201.93)
+			(xy 165.1 201.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ceb8d7c6-4840-51c7-bfa0-a791bf43a9bc))
+	(global_label "ARM2_SENSE_MID"
+		(shape passive)
+		(at 165.1 201.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 40487136-7d79-5c00-b96d-918a21b3b089))
+	(wire
+		(pts
+			(xy 172.72 209.55)
+			(xy 165.1 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d2ae48fe-aaaa-53df-8c53-983589f463e5))
+	(global_label "ARM2_SENSE"
+		(shape passive)
+		(at 165.1 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a9e3dfbe-9b28-5ba6-b14f-5949b9f95908))
+	(symbol
+		(lib_id "M3:R")
+		(at 208.28 205.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 739a73f8-4542-5bd9-a9c7-eaa58e80cf4f)
+		(property "Reference" "R178"
+			(at 210.82 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 210.82 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 208.28 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 208.28 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 208.28 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R178")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 208.28 201.93)
+			(xy 200.66 201.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a2fa121c-e337-5900-b708-a865ede928bc))
+	(global_label "PYRO1_CONT"
+		(shape passive)
+		(at 200.66 201.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9c8dfd09-e266-5d05-8a3b-7e80bcdd0155))
+	(wire
+		(pts
+			(xy 208.28 209.55)
+			(xy 200.66 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4dbf338d-1859-5bad-86f2-07942d483a82))
+	(global_label "GND"
+		(shape passive)
+		(at 200.66 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 13e1e42b-1344-5122-828e-01586d062be4))
+	(symbol
+		(lib_id "M3:R")
+		(at 243.84 205.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 3f2461d1-62dc-5baa-81fb-3b15a13bf3d3)
+		(property "Reference" "R179"
+			(at 246.38 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 246.38 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 243.84 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 243.84 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 243.84 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R179")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 243.84 201.93)
+			(xy 236.22 201.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6a7f98a3-67fa-52fa-af79-ee9d8b24b5c3))
+	(global_label "PYRO2_CONT"
+		(shape passive)
+		(at 236.22 201.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid aa1868c3-00ea-575b-a3d0-4a58fd94a221))
+	(wire
+		(pts
+			(xy 243.84 209.55)
+			(xy 236.22 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5d4a75aa-c530-5e9f-8f46-b05156ab8efe))
+	(global_label "GND"
+		(shape passive)
+		(at 236.22 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8e8b0a0e-d4e6-5332-8df3-e1ed773a4c13))
+	(symbol
+		(lib_id "M3:R")
+		(at 279.4 205.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 44a0b234-41d3-5992-bed6-89e7ada525af)
+		(property "Reference" "R180"
+			(at 281.94 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 281.94 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 279.4 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 279.4 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 279.4 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R180")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 279.4 201.93)
+			(xy 271.78 201.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 99805726-ec1a-54b8-90f6-95d044e3ee2c))
+	(global_label "ARM1_SENSE"
+		(shape passive)
+		(at 271.78 201.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4d9f43c7-4536-51fa-97a8-35ce038c4580))
+	(wire
+		(pts
+			(xy 279.4 209.55)
+			(xy 271.78 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d6c7b8cc-2791-5aa5-8c7b-93f445b04ef2))
+	(global_label "GND"
+		(shape passive)
+		(at 271.78 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cad1fd0f-32e5-55c5-9713-379cbf5c8a42))
+	(symbol
+		(lib_id "M3:R")
+		(at 314.96 205.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f7c50c29-928a-5517-9273-59ec2e801a5c)
+		(property "Reference" "R181"
+			(at 317.5 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 317.5 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 314.96 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 314.96 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 314.96 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R181")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 314.96 201.93)
+			(xy 307.34 201.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 69900ea2-42c3-5558-a4cf-e0257f03f6df))
+	(global_label "ARM2_SENSE"
+		(shape passive)
+		(at 307.34 201.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5c5a2285-1fa1-59b7-805a-bccbf7f678f4))
+	(wire
+		(pts
+			(xy 314.96 209.55)
+			(xy 307.34 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid fc13bfd7-c8ac-5349-9e4f-344115717f5e))
+	(global_label "GND"
+		(shape passive)
+		(at 307.34 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4263a127-804d-5409-b7f4-5c8ff9eeb743))
+	(text "Pass 11: each divider top is 2 x 5.1k in series (R173 + R129, R174 + R141 from the drains; R132 + R175, R144 + R176 from the buses); pass 12: each bottom is 2 x 2k in parallel (R130 + R178, R142 + R179, R133 + R180, R145 + R181).\nRatio 1/11.2. One shorted or open 0402 leaves its ADC node <= 1.4 V (<= 3.3 V at the 19.9 V clamp) and the igniter <= 1.4 mA; R168-R171 (4.7k at the MCU pins) stay as the second layer."
+		(at 40.64 220.98 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 07ff3717-477b-507b-8f00-2d85e4985875))
 	(sheet_instances
 		(path "/"
 			(page "12"))))

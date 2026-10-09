@@ -1,5 +1,7 @@
 # M3-ASSY-R3 design validation (KiCad)
 
+**Follow-up:** every finding below is answered in M3-ASSY-R4 ([M3_R4.md](M3_R4.md) §1–2), which also records a first-principles validation pass against [REQUIREMENTS.md](REQUIREMENTS.md).
+
 **Scope:** the KiCad design only. That covers rule checks, the schematic, component ratings against the makers' datasheets, layout, manufacturability and fit.
 
 **Not covered:** firmware, vehicle-level choices and anything physical. Nothing in the project was edited.

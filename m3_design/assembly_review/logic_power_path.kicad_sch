@@ -6,7 +6,7 @@
 	(title_block
 		(title "08 | USB limit, source mux and hold-up")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R3")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -481,7 +481,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1070,7 +1070,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1591"
+		(property "LCSC" "C14663"
 			(at 43.18 127 0)
 			(hide yes)
 			(effects
@@ -1082,19 +1082,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
 					(reference "C83")
 					(unit 1))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
+		(property "Manufacturer" "YAGEO"
 			(at 43.18 127 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10B104KB8NNNC"
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
 			(at 43.18 127 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C1591"
+		(property "LCSC Part" "C14663"
 			(at 43.18 127 0)
 			(hide yes)
 			(effects
@@ -1621,7 +1621,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "44.2k 0.1%"
+		(property "Value" "47k 1%"
 			(at 210.82 181.60999999999999 0)
 			(effects
 				(font
@@ -1641,7 +1641,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C861410"
+		(property "LCSC" "C25819"
 			(at 208.28 180.34 0)
 			(hide yes)
 			(effects
@@ -1653,19 +1653,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
 					(reference "R87")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 208.28 180.34 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD0744K2L"
+		(property "Manufacturer Part" "0603WAF4702T5E"
 			(at 208.28 180.34 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C861410"
+		(property "LCSC Part" "C25819"
 			(at 208.28 180.34 0)
 			(hide yes)
 			(effects
@@ -1717,7 +1717,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "10k 1%"
 			(at 261.62 181.60999999999999 0)
 			(effects
 				(font
@@ -1737,7 +1737,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C25804"
 			(at 259.08 180.34 0)
 			(hide yes)
 			(effects
@@ -1749,19 +1749,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
 					(reference "R88")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 259.08 180.34 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0603WAF1002T5E"
 			(at 259.08 180.34 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C95204"
+		(property "LCSC Part" "C25804"
 			(at 259.08 180.34 0)
 			(hide yes)
 			(effects
@@ -1813,7 +1813,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "10k 1%"
 			(at 152.4 128.27 0)
 			(effects
 				(font
@@ -1833,7 +1833,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C25804"
 			(at 149.86 127 0)
 			(hide yes)
 			(effects
@@ -1845,19 +1845,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
 					(reference "R90")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 149.86 127 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0603WAF1002T5E"
 			(at 149.86 127 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C95204"
+		(property "LCSC Part" "C25804"
 			(at 149.86 127 0)
 			(hide yes)
 			(effects
@@ -1909,7 +1909,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "10k 1%"
 			(at 312.42 181.60999999999999 0)
 			(effects
 				(font
@@ -1929,7 +1929,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C25804"
 			(at 309.88 180.34 0)
 			(hide yes)
 			(effects
@@ -1941,19 +1941,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
 					(reference "R91")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 309.88 180.34 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0603WAF1002T5E"
 			(at 309.88 180.34 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C95204"
+		(property "LCSC Part" "C25804"
 			(at 309.88 180.34 0)
 			(hide yes)
 			(effects

@@ -27,6 +27,12 @@ ONLY = {'M3_AON7524_DFN3x3A': ['1', '2', '3', '4']}
 # both origins are the package centre (EasyEDA pins at +-1.5 mm; ours: drain fingers centred at -1.5, source lands
 # pulled in to +1.4 per AOS PO-00047), so the one-row fit's 0.1 mm is land shape, not an origin shift
 OFFSET = {'M3_AON7524_DFN3x3A': (0.0, 0.0)}
+# Body correction for parts whose pin row is symmetric but whose body is not, so pad matching cannot see a
+# 180 deg turn. DORABO DB128V (C2915641): EasyEDA's footprint puts the wire entry on its +y side (body
+# -5.00/+5.20 mm, 3D model turned 180 deg; the DORABO drawing agrees: pin row 5.00 mm from the BACK face).
+# Our footprints put the entry on local -y, toward the board edge. +180 makes JLC fit J1/J9 entry-out;
+# JLC's pin 1 then lands on our pin 4, which a screw terminal does not care about.
+BODY = {'C2915641': 180}
 
 
 def rot(v, deg):
@@ -65,7 +71,8 @@ for f in b.GetFootprints():
     if key in done: continue
     ours = {}
     for p in f.Pads():
-        if not p.GetNumber(): continue
+        # paste-only apertures (no number) and copper-only tabs under the mask (no opening) carry no lead
+        if not p.GetNumber() or not (p.IsOnLayer(pcbnew.F_Mask) or p.IsOnLayer(pcbnew.B_Mask)): continue
         r = p.GetFPRelativePosition(); ours.setdefault(p.GetNumber(), []).append((mm(r.x), mm(r.y)))
     ez = ez_pads(EZ[lcsc])
     common = sorted(set(ours) & set(ez))
@@ -95,6 +102,10 @@ for f in b.GetFootprints():
     full = len(common) == len(ours) == len(ez) or (fpname in ONLY and len(common) == len(ONLY[fpname]))
     # two-pad parts: the lands may differ a lot (e.g. a vendor land pulled inward), the axis cannot
     ok = full and ((worst <= TOL and second - worst >= MARGIN) or (len(common) == 2 and worst <= 0.6 and second - worst >= 2.0))
+    if lcsc in BODY:
+        assert abs(t[0]) < 1e-6 and abs(t[1]) < 1e-6, (lcsc, t)    # centred symmetric row: offset unaffected
+        rec['theta'] = (th + BODY[lcsc]) % 360
+        rec['body_correction_deg'] = BODY[lcsc]
     rec['status'] = 'OK' if ok else 'CHECK'
     if not ok: problems.append(f'{lcsc}|{fpname}')
     result[f'{lcsc}|{fpname}'] = rec; done[key] = 1

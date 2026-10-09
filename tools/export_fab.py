@@ -41,7 +41,8 @@ def footprints(board):
                          rot=float(at[3].atom) if len(at) > 3 else 0.0,
                          layer=fp.children('layer')[0].items[1].atom,
                          smd='smd' in attrs, tht='through_hole' in attrs,
-                         no_bom='exclude_from_bom' in attrs, no_pos='exclude_from_pos_files' in attrs))
+                         no_bom='exclude_from_bom' in attrs, no_pos='exclude_from_pos_files' in attrs,
+                         dnp='dnp' in attrs))
     return rows
 
 
@@ -65,28 +66,41 @@ def main():
     stem = board.stem
     with tempfile.TemporaryDirectory() as tmp:
         g = Path(tmp) / 'gerber'; g.mkdir()
-        run('pcb', 'export', 'gerbers', '--no-protel-ext', '--layers',
+        # --subtract-soldermask: silkscreen never prints into a pad opening (several EasyEDA outlines cross pads)
+        run('pcb', 'export', 'gerbers', '--no-protel-ext', '--subtract-soldermask', '--layers',
             'F.Cu,In1.Cu,In2.Cu,B.Cu,F.Paste,B.Paste,F.Silkscreen,B.Silkscreen,F.Mask,B.Mask,Edge.Cuts',
             '-o', str(g) + '/', str(board))
-        run('pcb', 'export', 'drill', '--format', 'excellon', '--excellon-separate-th',
-            '--generate-map', '--map-format', 'gerberx2', '-o', str(g) + '/', str(board))
+        # no drill map: JLC's viewer shows map Gerbers as unknown layers (validation pass 2, DFM)
+        run('pcb', 'export', 'drill', '--format', 'excellon', '--excellon-separate-th', '-o', str(g) + '/', str(board))
         zpath = out / f'{stem}_gerber.zip'
         with zipfile.ZipFile(zpath, 'w', zipfile.ZIP_DEFLATED) as z:
             for f in sorted(g.iterdir()):
                 z.write(f, f.name)
     rows = [r for r in footprints(board) if r['ref'] and not r['ref'].startswith('#')]
-    # BOM: one line per (value, footprint, LCSC); DNP / board-only items excluded
-    groups = defaultdict(list)
-    for r in rows:
-        if r['no_bom']: continue
-        groups[(r['value'], r['fp'], r['lcsc'], r['mpn'])].append(r['ref'])
-    with open(out / f'{stem}_bom_jlc.csv', 'w', newline='') as f:
-        w = csv.writer(f); w.writerow(['Comment', 'Designator', 'Footprint', 'LCSC Part #', 'Manufacturer Part', 'Qty', 'Assembly'])
-        for (val, fp, lcsc, mpn), refs in sorted(groups.items(), key=lambda kv: natural(sorted(kv[1], key=natural)[0])):
-            refs = sorted(refs, key=natural)
-            tht = any(r['tht'] for r in rows if r['ref'] in refs)
-            note = next((r['jlc_asm'] for r in rows if r['ref'] in refs and r['jlc_asm']), '')
-            w.writerow([val, ','.join(refs), fp, lcsc, mpn, len(refs), note or ('THT (JLC THT assembly)' if tht else 'SMT')])
+    # BOM: one line per (value, footprint, LCSC); board-only items excluded. DNP parts (validation pass 5: U5, whose
+    # 250 C soldering limit is below JLC Economic's 255 +/- 5 C reflow) are fitted by the owner after delivery: they go
+    # to a separate owner BOM, not to JLC's BOM or CPL.
+    def write_bom(path, keep, assembly):
+        groups = defaultdict(list)
+        for r in rows:
+            if r['no_bom'] or not keep(r): continue
+            groups[(r['value'], r['fp'], r['lcsc'], r['mpn'])].append(r['ref'])
+        if not groups:
+            path.unlink(missing_ok=True)
+            return groups
+        with open(path, 'w', newline='') as f:
+            w = csv.writer(f); w.writerow(['Comment', 'Designator', 'Footprint', 'LCSC Part #', 'Manufacturer Part', 'Qty', 'Assembly'])
+            for (val, fp, lcsc, mpn), refs in sorted(groups.items(), key=lambda kv: natural(sorted(kv[1], key=natural)[0])):
+                refs = sorted(refs, key=natural)
+                w.writerow([val, ','.join(refs), fp, lcsc, mpn, len(refs), assembly(refs)])
+        return groups
+
+    def jlc_assembly(refs):
+        tht = any(r['tht'] for r in rows if r['ref'] in refs)
+        note = next((r['jlc_asm'] for r in rows if r['ref'] in refs and r['jlc_asm']), '')
+        return note or ('THT (JLC THT assembly)' if tht else 'SMT')
+    groups = write_bom(out / f'{stem}_bom_jlc.csv', lambda r: not r['dnp'], jlc_assembly)
+    owner = write_bom(out / f'{stem}_bom_owner.csv', lambda r: r['dnp'], lambda refs: 'owner, after JLC assembly (docs/ORDERING.md)')
     corr_file = ROOT / 'tools/jlc_corrections.json'
     corr = json.load(open(corr_file))['parts'] if corr_file.exists() else {}
     uncorrected = []
@@ -94,7 +108,7 @@ def main():
         w = csv.writer(f); w.writerow(['Designator', 'Mid X', 'Mid Y', 'Layer', 'Rotation'])
         for r in sorted(rows, key=lambda r: natural(r['ref'])):
             # SMD and through-hole parts: JLC's THT assembly also places from the CPL
-            if r['no_bom'] or r['no_pos'] or not (r['smd'] or r['tht']): continue
+            if r['no_bom'] or r['no_pos'] or r['dnp'] or not (r['smd'] or r['tht']): continue
             x, y, rot = r['x'], r['y'], r['rot']
             c = corr.get(f"{r['lcsc']}|{r['fp']}")
             if c and c['status'] == 'OK':
@@ -108,8 +122,9 @@ def main():
                         'Top' if r['layer'] == 'F.Cu' else 'Bottom', f"{rot % 360:.0f}"])
     missing = sorted({r['ref'] for r in rows if not r['no_bom'] and not r['lcsc']}, key=natural)
     print('wrote', zpath.name, f'{stem}_bom_jlc.csv', f'{stem}_cpl_jlc.csv', 'to', out)
-    print('BOM lines', len(groups), '| placed parts', sum(1 for r in rows if not r['no_bom']),
+    print('BOM lines', len(groups), '| placed parts', sum(1 for r in rows if not r['no_bom'] and not r['dnp']),
           '| parts without LCSC code:', ', '.join(missing) or 'none')
+    print('owner-fitted (not in JLC BOM/CPL):', ', '.join(f"{','.join(v)} ({k[2]})" for k, v in owner.items()) or 'none')
     print('CPL rows without a verified JLC orientation correction:', ', '.join(sorted(uncorrected, key=natural)) or 'none')
 
 

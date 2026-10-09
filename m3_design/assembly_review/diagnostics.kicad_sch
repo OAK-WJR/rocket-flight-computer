@@ -6,7 +6,7 @@
 	(title_block
 		(title "04 | Voltage diagnosis and indicators")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R3")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -503,7 +503,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1469,7 +1469,7 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid df9168b9-92cf-4df0-9678-30c01a143634))
-	(text "CAM_5V_SENSE = CAM_5V x 1k/11k -> PB1 (pin 35, ADC12_INP5, TT_u 4.0 V max).\n5.25 V reads 0.477 V; even 15.4 V (TVS clamp, failed regulator) reads 1.40 V.\nLets the USB self-test verify the camera regulator (U8) without a meter."
+	(text "CAM_5V_SENSE = CAM_5V x 1k/11k -> PB1 (pin 35, ADC12_INP5, TT_u 4.0 V max).\n5.25 V reads 0.477 V; even 19.9 V (TVS clamp, failed regulator) reads 1.81 V.\nLets the USB self-test verify the camera regulator (U8) without a meter."
 		(exclude_from_sim no)
 		(at 96.52 217.17 0)
 		(effects

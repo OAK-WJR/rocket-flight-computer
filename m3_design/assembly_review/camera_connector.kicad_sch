@@ -6,7 +6,7 @@
 	(title_block
 		(title "06 | Camera terminal and characterization")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R3")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:CameraTerminal"

@@ -6,7 +6,7 @@
 	(title_block
 		(title "03 | Memory and sensors")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R3")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:Barometer"
@@ -352,7 +352,7 @@
 				(pin output line
 					(at -29.21 7.62 0)
 					(length 5.08)
-					(name "AP_SDO"
+					(name "SDO"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -363,7 +363,7 @@
 				(pin passive line
 					(at -29.21 5.08 0)
 					(length 5.08)
-					(name "RESV_2"
+					(name "SDx"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -374,7 +374,7 @@
 				(pin passive line
 					(at -29.21 2.54 0)
 					(length 5.08)
-					(name "RESV_3"
+					(name "SCx"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -415,10 +415,10 @@
 						(effects
 							(font
 								(size 1.05 1.05)))))
-				(pin passive line
+				(pin power_in line
 					(at -29.21 -7.620000000000001 0)
 					(length 5.08)
-					(name "RESV_7"
+					(name "GND"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -440,7 +440,7 @@
 				(pin bidirectional line
 					(at 29.21 5.08 180)
 					(length 5.08)
-					(name "INT2/FSYNC/CLKIN"
+					(name "INT2"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -451,7 +451,7 @@
 				(pin passive line
 					(at 29.21 2.54 180)
 					(length 5.08)
-					(name "RESV_10"
+					(name "OCS_aux"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -462,7 +462,7 @@
 				(pin passive line
 					(at 29.21 0.0 180)
 					(length 5.08)
-					(name "RESV_11"
+					(name "SDO_aux"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -473,7 +473,7 @@
 				(pin input line
 					(at 29.21 -2.539999999999999 180)
 					(length 5.08)
-					(name "AP_CS"
+					(name "CS"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -484,7 +484,7 @@
 				(pin input line
 					(at 29.21 -5.08 180)
 					(length 5.08)
-					(name "AP_SCLK"
+					(name "SCL/SPC"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -495,7 +495,7 @@
 				(pin input line
 					(at 29.21 -7.620000000000001 180)
 					(length 5.08)
-					(name "AP_SDI"
+					(name "SDA/SDI"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -598,7 +598,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 				(at 0 0 0)
 				(effects
 					(font
@@ -796,7 +796,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Value" "ICM-45686"
+		(property "Value" "LSM6DSV320X"
 			(at 200.66 67.31 0)
 			(effects
 				(font
@@ -813,7 +813,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C22459454"
+		(property "LCSC" "C26633007"
 			(at 200.66 78.74 0)
 			(hide yes)
 			(effects
@@ -955,38 +955,10 @@
 	(no_connect
 		(at 229.87 73.66)
 		(uuid 552200fb-0693-526e-a637-1c018f8a248b))
-	(wire
-		(pts
-			(xy 229.87 76.2)
-			(xy 234.95000000000002 76.2))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 89e87e1f-fdbd-50a4-a1b8-6b259234a0be))
-	(global_label "GND"
-		(shape passive)
-		(at 234.95000000000002 76.2 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 59a8bd77-27c8-58b1-9b79-746877094ebe))
-	(wire
-		(pts
-			(xy 229.87 78.74)
-			(xy 234.95000000000002 78.74))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid e9acb869-dcfe-529c-a30e-07d280a01915))
-	(global_label "GND"
-		(shape passive)
-		(at 234.95000000000002 78.74 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 9c5d5f64-d189-50a7-88fd-a9bda6c791dd))
+
+
+
+
 	(wire
 		(pts
 			(xy 229.87 81.28)
@@ -1071,6 +1043,20 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "TE Connectivity"
+			(at 327.66 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "MS561101BA03-50"
+			(at 327.66 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
@@ -1906,14 +1892,14 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 8b3f0ada-8ca9-51de-940b-4d8ce8e1b11e))
-	(text "U4: single-interface 4-wire SPI. Keep INT2 open; unused auxiliary pads grounded."
+	(text "U4: 4-wire SPI. INT2 open; OCS_aux/SDO_aux (pins 10/11) open, held by their internal pull-ups (DS14623 table 25)."
 		(at 20.32 205.74 0)
 		(effects
 			(font
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 16f75807-9d0d-57b6-8d5f-fad27b2c7ea2))
-	(text "Firmware must disable the default pulls on tied auxiliary pads (DS-000577 section 4.1)."
+	(text "Firmware: keep OIS_PU_DIS = 0 (pins 10/11 rely on the internal pull-ups); WHO_AM_I 0x73."
 		(at 20.32 213.36 0)
 		(effects
 			(font
@@ -1934,6 +1920,19 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 91e6e846-075b-5fd3-96bf-9d88c6b8acfe))
+	(no_connect
+		(at 229.87 76.2)
+		(uuid 13d44a29-b988-5e17-9496-4066e6c219c6))
+	(no_connect
+		(at 229.87 78.74)
+		(uuid 42686110-d5db-51ee-9fed-78c79759ab23))
+	(text "U4 = ST LSM6DSV320X (R4): +/-16 g low-g + +/-32..320 g high-g accel, +/-4000 dps gyro, SPI <= 10 MHz. Pins 10/11 open per DS14623 table 2."
+		(at 20.32 260.35 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 9c18e7d8-18e7-555d-af5a-405a6b16d840))
 	(sheet_instances
 		(path "/"
 			(page "3"))))

@@ -6,7 +6,7 @@
 	(title_block
 		(title "01 | USB input and regulated supplies")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R3")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:Buck"
@@ -502,7 +502,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1423,26 +1423,26 @@
 			(justify right))
 		(uuid f82e3e7d-16fb-5ba2-b48e-910452d7e0e1))
 	(symbol
-		(lib_id "M3:L")
+		(lib_id "M3:R")
 		(at 261.62 198.12 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 72f75a38-9179-5d4e-a4c6-3d7c866f31f3)
-		(property "Reference" "L2"
+		(property "Reference" "R164"
 			(at 264.16 196.85 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "4.7uH"
+		(property "Value" "2.2R 1%"
 			(at 264.16 199.39 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:IND-SMD_L4.0-W4.0"
+		(property "Footprint" "rocket:R_0603_1608Metric"
 			(at 261.62 198.12 0)
 			(hide yes)
 			(effects
@@ -1456,7 +1456,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C57269"
+		(property "LCSC" "C22939"
 			(at 261.62 198.12 0)
 			(hide yes)
 			(effects
@@ -1466,7 +1466,7 @@
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
-					(reference "L2")
+					(reference "R164")
 					(unit 1)))))
 	(wire
 		(pts
