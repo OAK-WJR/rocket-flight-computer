@@ -16,7 +16,7 @@ What changed (details and reasons in M3_R5 §1):
 
 Verification, stated separately:
 - **CAD checks (done)**: `tools/check.sh`: DRC 0 (pyro spacing rules included), unconnected 0, schematic parity 0, ERC 0; audit OK; no silkscreen outside the outline. `m3_design/check_actuators.py`: OK. `tools/fit_check.py`: OK (worst margin 0.11 mm, C84 on the top; deepest bottom part L1 at 4.62 mm, bottom margin ≥ 2.34 mm). `tools/export_fab.py`: 84 lines, 205 placed, nothing missing; `tools/jlc_orient.py --verify-cpl`: 84 top and 112 bottom rows rebuilt, the four residuals over 0.35 mm are R4's (Q124/Q125, R134/R135).
-- **Independent evaluation (CAD, datasheets):** two passes of six independent reviews (pyro, power, signal integrity, DFM, fit, silkscreen) against REQUIREMENTS.md. Pass 1: no Critical, nine Majors, fixed or recorded (M3_R5 §1b). Pass 2, on the re-routed board: no Critical, three Majors, all fixed: a via in J9.3's through-hole pad, the IMU's roll sign in the record (it is +gyro_Y), and bottom-side designators beside other parts (M3_R5 §1c). The pyro block is R4's to the micrometre (41 footprints, the same .kicad_dru, the same solder-bridge spacings); its DRC rules were shown live on the new copper.
+- **Independent evaluation (CAD, datasheets):** two passes of six independent reviews (pyro, power, signal integrity, DFM, fit, silkscreen) against REQUIREMENTS.md. Pass 1: no Critical, nine Majors, fixed or recorded (M3_R5 §1b). Pass 2, on the re-routed board: no Critical, three Majors, all fixed: a via in J9.3's through-hole pad, the IMU's roll sign in the record (it is +gyro_Y), and bottom-side designators beside other parts (M3_R5 §1c). Pass 3 (one reviewer) confirmed the three fixes and found no new Critical or Major. The pyro block is R4's to the micrometre (41 footprints, the same .kicad_dru, the same solder-bridge spacings); its DRC rules were shown live on the new copper.
 - **Calculation:** servo feed DC solve (Q121 → J122, 0.05 mm grid) 4.54 mΩ, 35.0 mV and 0.27 W at 7.7 A, all of it on the In2 RAW_ACT strip at mid-path (R4: 5.05 mΩ, 0.30 W); the reverse hot-plug model is R4's (same circuit).
 - **Cost and stock (2026-10-12)**: Standard PCBA: $55.14 parts + 81 codes × $1.53 feeder fee / 5 = $79.93 per board (target ≤ $84.41); 47 unique extended codes (target ≤ 48). **Two-sided fixed fees $83.96 per order** (setup, stencil, fixture; one side: $50.19; JLC may add a $14.93 handling fee). No shortage; U4 is thin (5 in stock for 5 boards).
 - **Simulation**: none (the circuit is R4's).
@@ -41,6 +41,7 @@ Minor findings recorded for the next revision (not reworked; M3_R5 §1b–1c):
 - `tools/jlc_orient.py --verify-cpl` exits 1 on Q124/Q125 and R134/R135 (the generator's pad filter and 2-pad rule
   are not applied in verify; the rotations are right).
 - J2's 3D model is offset 13 mm in y (fit unaffected; matters for a STEP export to the sled CAD).
+- R81's designator sits 0.44 mm from R83.1 (in R81's row, above R83); J1's designator is nearer C89 than J1.
 - IMU_INT1 vias at (20.85, 32.55) and (27.45, 41.75) have their nearest GND via 1.8 and 1.5 mm away.
 
 ## Previous candidate: M3-ASSY-R4 (R3 validation fixes, new IMU, thirteen evaluation passes)
