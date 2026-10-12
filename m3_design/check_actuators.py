@@ -72,7 +72,7 @@ PYRO_RULE_SHA = {
 # pass 7: the whole m3.kicad_dru is pinned too. KiCad applies the last matching rule, so a later or duplicate rule (or an
 # unconditional low clearance) overrode the pinned blocks, and a syntax error makes kicad-cli drop every custom rule
 # silently. After a deliberate, reviewed edit of the file, update this hash from the failure message.
-DRU_SHA = '8252a79002df3691'
+DRU_SHA = 'f7d13674b713afc5'
 # safety-relevant parts pinned by LCSC code (value text alone let a BAT54C, an AO3400A or a plain 1206 resistor pass)
 PINNED = {'R134': 'C3013496', 'R135': 'C3013496', 'Q124': 'C431195', 'Q125': 'C431195', 'D120': 'C8591',
           'C126': 'C21120', 'C138': 'C21120', 'R126': 'C17557', 'R138': 'C17557', 'R127': 'C11702', 'R139': 'C11702',

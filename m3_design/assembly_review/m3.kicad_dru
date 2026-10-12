@@ -54,11 +54,11 @@
   (constraint clearance (min 1.0mm)))
 
 # R5 pass 4 (tombstoning): r5_post.pour_relief puts the GND pads of two-pad 0402/0603 parts on thermal spokes; these
-# set their size (other GND SMD pads stay solid in the pours, which use solid SMD connection).
+# set their size, with minimums (an opt alone filled with no gap; pass 6). Other GND SMD pads stay solid.
 (rule "Small GND pad thermal relief"
   (condition "A.Type == 'Pad' && A.NetName == 'GND' && A.Pad_Type == 'SMD'")
-  (constraint thermal_relief_gap (opt 0.25mm))
-  (constraint thermal_spoke_width (opt 0.3mm)))
+  (constraint thermal_relief_gap (min 0.25mm) (opt 0.25mm))
+  (constraint thermal_spoke_width (min 0.3mm) (opt 0.3mm)))
 
 # R5 pass 4: the RAW_ACT through-hole pins (hand-soldered) keep 0.3 mm from the GND pours, not the outer pours'
 # 0.15 mm; a bridge there shorts the servo feed to GND. GND only, so this rule (the last) never lowers a pyro rule.

@@ -654,7 +654,8 @@ def designators(b, silks, rmax=5.0, cap=1.5, big_cap=3.0, margin=0.15):
 
 # --- pours -------------------------------------------------------------------------------------
 
-RELIEF_KEEP_FULL = set()          # small GND pads whose spokes DRC finds starved stay fully connected (filled below)
+# small GND pads that would be left on one spoke or starved (pass 6: the pour reaches them from one side) stay solid
+RELIEF_KEEP_FULL = {('R128', '2'), ('C25', '2'), ('C128', '2'), ('R142', '2'), ('C22', '2'), ('R105', '2')}
 
 
 def pour_relief(b):
