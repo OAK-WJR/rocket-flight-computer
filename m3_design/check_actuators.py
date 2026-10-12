@@ -283,7 +283,8 @@ def check(text, dru=None):
             sha = hashlib.sha256(blk.encode()).hexdigest()[:16]
             req(sha == PYRO_RULE_SHA.get(name), f'rule "{name}" text changed (sha {sha}): review it, then update PYRO_RULE_SHA')
     # 15b (pass 5): rule G only works inside the PYRO_BLOCK rule area, so the area must exist on all four copper
-    # layers, cover x 12-42, y 42-72.4, and restrict nothing (renaming or deleting it made rule G check nothing)
+    # layers, cover the block, and restrict nothing (renaming or deleting it made rule G check nothing). R5: the
+    # block turned 180 deg and moved 24 mm forward; the area covers it whole, x 4-42, y 66-96.4 (R4: x 12-42, y 42-72.4)
     areas = [z for z in read(text).children('zone') if z.children('name') and z.children('name')[0].items[1].atom == 'PYRO_BLOCK']
     ok = False
     for z in areas:
@@ -292,11 +293,11 @@ def check(text, dru=None):
                for xy in pp.children('xy')]
         keep = [a.atom for k in z.children('keepout') for n in k.items[1:] if hasattr(n, 'children') for a in n.items[1:2]]
         # pass 6: exactly the rectangle (a notch in a polygon with the same bounding box passed)
-        rect = sorted(pts) == sorted([(12.0, 42.0), (42.0, 42.0), (42.0, 72.4), (12.0, 72.4)])
+        rect = sorted(pts) == sorted([(4.0, 66.0), (42.0, 66.0), (42.0, 96.4), (4.0, 96.4)])
         if {'F.Cu', 'In1.Cu', 'In2.Cu', 'B.Cu'} <= layers and rect and len(z.children('polygon')) == 1 and keep \
                 and all(a == 'allowed' for a in keep):
             ok = True
-    req(len(areas) == 1 and ok, 'one PYRO_BLOCK rule area on F.Cu/In1/In2/B.Cu covering x 12-42, y 42-72.4, restricting nothing')
+    req(len(areas) == 1 and ok, 'one PYRO_BLOCK rule area on F.Cu/In1/In2/B.Cu covering x 4-42, y 66-96.4, restricting nothing')
     # 16 (pass 3, actuators F3 / system m7): pinned parts (protection values, pyro parts, terminals)
     for ref, code in PINNED.items():
         req(part.get(ref) == code, f'{ref} must be LCSC {code} (is {part.get(ref)})')

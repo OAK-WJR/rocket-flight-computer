@@ -8,6 +8,16 @@ centres (pads matched by number), so that
 puts JLC's footprint exactly on our copper.
 
 usage: tools/jlc_orient.py EASYEDA_PADS.json [board.kicad_pcb]  -> writes tools/jlc_corrections.json
+       tools/jlc_orient.py EASYEDA_PADS.json [board.kicad_pcb] --verify-cpl fab/m3_cpl_jlc.csv
+(the second form rebuilds every placed part's pads from the CPL row and JLC's footprint and compares them with our pads)
+
+Bottom side (R5): KiCad keeps a flipped footprint's pads mirrored in local y (and its orientation turned 180 deg), so
+the match uses the un-mirrored pads; theta and t are then properties of the footprint, the same for either side.
+JLC's bottom-side rotation is read as seen from below with the board turned over left to right, positive
+counter-clockwise (Inference: KiBot's JLCPCB preset, rot_footprint mirror_bottom, checked by its authors against
+JLC in November 2023; JLC's help pages do not define it). Then for a bottom part
+    CPL rotation = 180 - our rotation - theta,  CPL position = our position - R(180 - CPL rotation) . (tx, -ty)
+(tools/export_fab.py). Confirm the bottom side in JLC's placement preview before ordering.
 EASYEDA_PADS.json: {"C20917": {"title": ..., "head": [x, y], "pads": ["PAD~RECT~x~y~w~h~layer~net~num~...", ...]}}
 (fetched from https://easyeda.com/api/products/<code>/components). Runs under KiCad's python (pcbnew).
 """
@@ -17,8 +27,12 @@ from pathlib import Path
 import pcbnew
 
 ROOT = Path(__file__).resolve().parent.parent
-EZ = json.load(open(sys.argv[1]))
-BOARD = sys.argv[2] if len(sys.argv) > 2 else str(ROOT / 'm3_design/assembly_review/m3.kicad_pcb')
+ARGV = [a for a in sys.argv[1:]]
+VERIFY = ARGV[ARGV.index('--verify-cpl') + 1] if '--verify-cpl' in ARGV else None
+if VERIFY:
+    del ARGV[ARGV.index('--verify-cpl'):ARGV.index('--verify-cpl') + 2]
+EZ = json.load(open(ARGV[0]))
+BOARD = ARGV[1] if len(ARGV) > 1 else str(ROOT / 'm3_design/assembly_review/m3.kicad_pcb')
 MIL10 = 0.254
 TOL = 0.35    # mm, max pad-centre residual (land sizes differ between libraries, centres move a little)
 MARGIN = 0.4  # mm, the next-best rotation must be worse by at least this much (orientation is unambiguous)
@@ -61,6 +75,42 @@ for f in b.GetFootprints():
         assert abs(want[0] - got[0]) < 1e-3 and abs(want[1] - got[1]) < 1e-3, (f.GetReference(), want, got)
         break
 
+if VERIFY:
+    import csv
+    worst_all, bad, n_top, n_bot, skipped = 0.0, [], 0, 0, []
+    fps = {f.GetReference(): f for f in b.GetFootprints()}
+    for row in csv.DictReader(open(VERIFY)):
+        f = fps[row['Designator']]
+        lcsc = f.GetField('LCSC').GetText() if f.HasField('LCSC') else ''
+        if lcsc not in EZ or 'pads' not in EZ[lcsc] or lcsc in BODY:
+            skipped.append(row['Designator'])        # no EasyEDA pads, or a symmetric row turned for its body
+            continue
+        ez = ez_pads(EZ[lcsc])
+        cx, cy = float(row['Mid X'][:-2]), -float(row['Mid Y'][:-2])
+        r_ = float(row['Rotation'])
+        bottom = row['Layer'] == 'Bottom'
+        worst = 0.0
+        for p in f.Pads():
+            n = p.GetNumber()
+            if not n or n not in ez or not (p.IsOnLayer(pcbnew.F_Mask) or p.IsOnLayer(pcbnew.B_Mask)):
+                continue
+            ab = (mm(p.GetPosition().x), mm(p.GetPosition().y))
+            preds = []
+            for e in ez[n]:
+                # JLC's footprint at the CPL row: top, turned r; bottom, seen from below (board turned left to
+                # right), turned r there, i.e. mirrored in x and turned -r on the top view
+                q = rot((-e[0], e[1]), -r_) if bottom else rot(e, r_)
+                preds.append((cx + q[0], cy + q[1]))
+            worst = max(worst, min(math.hypot(ab[0] - q[0], ab[1] - q[1]) for q in preds))
+        n_bot += bottom
+        n_top += not bottom
+        worst_all = max(worst_all, worst)
+        if worst > TOL:
+            bad.append((row['Designator'], round(worst, 3)))
+    print(f'CPL check: {n_top} top and {n_bot} bottom rows rebuilt from JLC footprints; worst pad residual '
+          f'{worst_all:.3f} mm; over {TOL} mm: {bad or "none"}; not checkable: {len(skipped)} ({" ".join(skipped)})')
+    sys.exit(1 if bad else 0)
+
 result, problems = {}, []
 done = {}
 for f in b.GetFootprints():
@@ -73,7 +123,9 @@ for f in b.GetFootprints():
     for p in f.Pads():
         # paste-only apertures (no number) and copper-only tabs under the mask (no opening) carry no lead
         if not p.GetNumber() or not (p.IsOnLayer(pcbnew.F_Mask) or p.IsOnLayer(pcbnew.B_Mask)): continue
-        r = p.GetFPRelativePosition(); ours.setdefault(p.GetNumber(), []).append((mm(r.x), mm(r.y)))
+        r = p.GetFPRelativePosition()
+        # a flipped footprint keeps its pads mirrored in local y: un-mirror to the library footprint
+        ours.setdefault(p.GetNumber(), []).append((mm(r.x), -mm(r.y) if f.IsFlipped() else mm(r.y)))
     ez = ez_pads(EZ[lcsc])
     common = sorted(set(ours) & set(ez))
     if fpname in ONLY: common = [n for n in common if n in ONLY[fpname]]

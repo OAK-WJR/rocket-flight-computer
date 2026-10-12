@@ -9,8 +9,10 @@ target is missed. REQUIREMENTS M3: R4 must not cost more than R3 per board at 5 
 owner pays for parts: placed-quantity part prices plus JLC's per-part feeder fee for the tier ordered
 (jlcpcb.com/help/article/pcb-assembly-price, updated 2026-09-09): Standard PCBA $1.53 per unique LCSC code, Basic or
 Extended; Economic PCBA $3.07 per unique Extended code. The order uses Standard (validation pass 6: Economic's
-255 +/- 5 C reflow is above four parts' 250 C limits); Standard's larger fixed fees (setup, stencil and fixture,
-$50.19 per order, plus a $14.93 handling fee JLC may add) are reported, not gated.
+255 +/- 5 C reflow is above four parts' 250 C limits); Standard's larger fixed fees are reported, not gated: setup
+and stencil are charged per assembled side (setup $25.56 / $51.12 and stencil $8.21 / $16.42 single / double side;
+fetched 2026-10-10), the fixture $16.42 either way, plus a $14.93 handling fee JLC may add. The side count comes from
+the CPL's Layer column (R5 places parts on both sides; Economic PCBA is single-sided only).
 R3: $54.94 + 48 x $3.07 / 5 = $84.41 per board. Also <= 48 unique extended codes. JLC's minimum purchase
 per line (minPurchaseNum) is priced and reported as the order price; attrition extras are not modelled.
 PCB and shipping fees are the same for R3 and R4 and are left out; setup, stencil and fixture fees are reported
@@ -55,6 +57,7 @@ def main():
     ap.add_argument('--max-extended', type=int, default=48, help='unique extended (non-Basic) LCSC codes')
     a = ap.parse_args()
     rows = list(csv.DictReader(open(FAB / 'm3_bom_jlc.csv')))
+    sides = len({r['Layer'] for r in csv.DictReader(open(FAB / 'm3_cpl_jlc.csv'))})
     # owner-fitted parts (fab/m3_bom_owner.csv, validation pass 5): bought by the owner, so they count in the parts
     # cost, but JLC does not load them, so they carry no extended-part fee
     own = FAB / 'm3_bom_owner.csv'
@@ -83,10 +86,14 @@ def main():
     extended = sorted({l['lcsc'] for l in lines if l['library'] != 'base' and not l['owner_fitted']})
     charged = extended if a.tier == 'economic' else sorted({l['lcsc'] for l in lines if not l['owner_fitted']})
     total = parts + len(charged) * fee / a.boards
-    # setup + stencil; Standard also charges a fixture fee ($16.42 up to 29 boards) and may add a $14.93 handling fee
-    fixed = {'standard': 25.56 + 8.21 + 16.42, 'economic': 8.18 + 1.53}
+    # setup + stencil per assembled side; Standard also charges a fixture fee ($16.42 up to 29 boards, either side
+    # count) and may add a $14.93 handling fee. Economic assembles one side only.
+    fixed = {'standard': (25.56 + 8.21) * sides + 16.42, 'economic': 8.18 + 1.53}
+    if a.tier == 'economic' and sides > 1:
+        print('Economic PCBA assembles one side only; this board has parts on both sides')
     json.dump(dict(checked_utc=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'), boards=a.boards,
-                   tier=a.tier, fee_usd_per_code=fee, charged_codes=len(charged), fixed_fees_usd_per_order=round(fixed[a.tier], 2),
+                   tier=a.tier, sides=sides, fee_usd_per_code=fee, charged_codes=len(charged),
+                   fixed_fees_usd_per_order=round(fixed[a.tier], 2),
                    handling_fee_may_apply_usd=14.93 if a.tier == 'standard' else 0.0,
                    parts_usd_per_board=round(parts, 2), feeder_fee_usd_per_order=round(len(charged) * fee, 2),
                    total_usd_per_board=round(total, 2), order_usd_per_board_with_min_purchase=round(order, 2),
@@ -94,9 +101,10 @@ def main():
               open(FAB / 'cost_check.json', 'w'), indent=1)
     print(f'{len(lines)} BOM lines at {a.boards} boards, {a.tier} PCBA: parts ${parts:.2f}/board + {len(charged)} codes x ${fee:.2f} / '
           f'{a.boards} = ${total:.2f}/board (target <= ${a.max_total:.2f}); unique extended codes {len(extended)} (target <= {a.max_extended})')
-    print(f'  fixed fees per order ({a.tier}): ${fixed[a.tier]:.2f} (setup, stencil' +
+    print(f'  fixed fees per order ({a.tier}, {sides}-sided): ${fixed[a.tier]:.2f} (setup, stencil' +
           (', fixture; JLC may add a $14.93 handling fee' if a.tier == 'standard' else '') +
-          f'); Economic would be ${fixed["economic"]:.2f}. Not in the target: PCB, edge rails, joints and shipping')
+          ('); Economic assembles one side only' if sides > 1 else f'); Economic would be ${fixed["economic"]:.2f}') +
+          f'; one side: ${25.56 + 8.21 + 16.42:.2f}. Not in the target: PCB, edge rails, joints and shipping')
     print(f'  with JLC minimum purchases: ${order:.2f}/board ordered (attrition extras not modelled)')
     for l in lines:
         if l['owner_fitted']:

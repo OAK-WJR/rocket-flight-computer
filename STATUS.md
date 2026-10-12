@@ -1,10 +1,31 @@
 # M3 requirements and implementation status
 
-> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. The repository holds the current M3-ASSY-R4 KiCad project (generated from the R3 files in git), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. The older candidates are mentioned below only as the evolution record.
+> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. The repository holds the current M3-ASSY-R5 KiCad project (generated from the R4 board in git; R4 itself was generated from the R3 files), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. The older candidates are mentioned below only as the evolution record.
 
-Last updated 2026-10-09. Governing requirements: M1/M2 merged into one board, easy to diagnose, at most three PCB iterations; "10× redundancy" means independent protection layers, not a blanket 10× component derating. **M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); M3-ASSY-R4 is the current one. All are CAD designs with a manufacturing package, not measured or flown boards.**
+Last updated 2026-10-10. Governing requirements: M1/M2 merged into one board, easy to diagnose, at most three PCB iterations; "10× redundancy" means independent protection layers, not a blanket 10× component derating. **M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; M3-ASSY-R5 (R4's circuit on a two-sided 46 × 100 mm board) is the current one. All are CAD designs with a manufacturing package, not measured or flown boards.**
 
-## Current candidate: M3-ASSY-R4 (R3 validation fixes, new IMU, thirteen evaluation passes)
+## Current candidate: M3-ASSY-R5 (two-sided re-layout, 46 × 100 mm)
+
+Design record: [docs/M3_R5.md](docs/M3_R5.md); requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md); ordering: [docs/ORDERING.md](docs/ORDERING.md). R5 is R4's schematic and BOM, unchanged, on a new board: generated from the R4 board by `m3_design/r5_build.sh` (`r5_pcb.py`, `r5_routes.py`, `r5_maze.py`, `r5_route.py` with the Freerouting session in git, `r5_finish.py`, `r5_post.py`). **232 footprint positions / 205 fitted parts / 24 test pads / 3 tooling holes**, as R4.
+
+What changed (details and reasons in M3_R5 §1):
+- **Board:** 46 × 100 mm (R4: 46 × 193 mm), parts on both sides: top 89 (80 SMD, 9 through-hole) and 2 test pads; bottom 116 SMD parts and 22 test pads. Four M3 holes at the corners; two Ø3.2 tie holes for J122's plug tie.
+- **Floorplan:** power entry at the aft edge, the MCU behind it, USB-C, the servo header and SWD in the middle, the pyro block (R4's, moved as one rigid group) at the forward end; the IMU and barometer on the bottom (the IMU's X and Z axes flip; roll is still −gyro_Y).
+- **Routing:** critical nets scripted on a grid router (0/45/90°); the rest by Freerouting v2.4.1, then the grid router for what it leaves.
+- **Requirements changed:** P1 (length and position in the bay), P2 (sled: four corner standoffs, plate clear of the bottom parts), F4 (DC solve), M3 (two-sided fixed fees).
+
+Verification, stated separately:
+- **CAD checks (done)**: {CHECKS}
+- **Independent evaluation (CAD, datasheets):** {REVIEWS}
+- **Calculation:** {CALC}
+- **Cost and stock ({DATE})**: {COST}
+- **Simulation**: none (the circuit is R4's).
+- **Firmware**: none for R5; the board binding in `m3_firmware/build.py` must be redone (M3_R5 §3: IMU axes).
+- **Physical tests**: none. The sled fit is not physically verified.
+
+Open owner decisions: as R4 (below), plus the sled design (REQUIREMENTS P2).
+
+## Previous candidate: M3-ASSY-R4 (R3 validation fixes, new IMU, thirteen evaluation passes)
 
 Design record: [docs/M3_R4.md](docs/M3_R4.md); requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md); R3 findings: [docs/R3_VALIDATION.md](docs/R3_VALIDATION.md); ordering: [docs/ORDERING.md](docs/ORDERING.md). R4 is generated from the R3 files by `m3_design/r4_build.sh` (`r4_lib.py`, `r4_sch.py`, `r4_pcb.py`). **232 footprint positions / 205 fitted parts / 24 test pads / 3 tooling holes**, 14 schematic sheets.
 
@@ -108,12 +129,12 @@ Firmware history: v0.2 bench acquisition (ADC3 voltages, MS5611, HSE / IMU / fla
 
 ## Requirement status
 
-> Historical table (R1–R2 era), kept for its evidence trail. The current requirements and their verification are in [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) and the R4 record above; where a row below still says GNSS, 46 × 186 mm or an LC filter, R3/R4 superseded it.
+> Historical table (R1–R2 era), kept for its evidence trail. The current requirements and their verification are in [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) and the R5 and R4 records above; where a row below still says GNSS, 46 × 186 mm or an LC filter, R3/R4 superseded it.
 
 | Requirement | Current evidence / implementation | Still needed for the complete M3 |
 |---|---|---|
 | Merge the two boards into one | M3-ASSY-R1 is a single-board candidate for power + core + camera supply/UART + USB + GNSS; 10 schematic sheets consistent with the PCB | Other interfaces not all merged; this does not equal all functions of the old two boards |
-| Fits the bay (Ø54.6 mm bore, Ø50.8 mm inside the coupler), installable / maintainable | R3/R4: 46 × 193 mm, top face on the bore axis (REQUIREMENTS P1/P2). Historical: core baseline 46 × 96 mm; candidate provisionally 46 × 186 mm; height envelope for the 14.5 mm terminals / 12.8 mm C84 capacitor | All connectors, plugs, harnesses, fasteners, sled, clearances and a physical coupon; final length not frozen |
+| Fits the bay (Ø54.6 mm bore, Ø50.8 mm inside the coupler), installable / maintainable | R5: 46 × 100 mm with parts on both sides, top face on the bore axis (REQUIREMENTS P1/P2; R3/R4: 46 × 193 mm). Historical: core baseline 46 × 96 mm; candidate provisionally 46 × 186 mm; height envelope for the 14.5 mm terminals / 12.8 mm C84 capacitor | All connectors, plugs, harnesses, fasteners, sled, clearances and a physical coupon; final length not frozen |
 | 2S supply, switch, reverse protection, logic hold-up | PWR-R3 added U9 battery protection, U10 USB current limit, U11 source selection and 330 µF hold-up; contacts are low-current enables | Start-up / switchover / back-feed / thermal / USB current and coordination with external protection must be measured; the 100 µs typical switchover time is not a maximum |
 | Stable sensor supply | Core has the AP63203, L2 and sensor supply | Start-up, input capacitance / USB load, LC damping, tolerance / bias and measurements |
 | STM32H743, USB, SWD, crystal | CORE schematic/PCB reconciled, DRC/ERC zero | Real power-up, clocks, buses, and running without a probe |

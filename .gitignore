@@ -28,3 +28,7 @@ m3_design/sim_r2/out/
 .history/
 **/.history/
 *.lck
+
+# r5_pcb.py debug copy of a failed build step
+*_failed.kicad_pcb
+*_failed.kicad_pro
