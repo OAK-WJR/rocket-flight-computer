@@ -52,3 +52,16 @@
 (rule "Pyro H: live pads to sense and gate pads (solder bridge)"
   (condition "A.Type == 'Pad' && B.Type == 'Pad' && (((A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO2_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO2_IGN' || A.NetName == 'PYRO1_OUT' || A.NetName == 'PYRO2_OUT' || A.NetName == 'RAW_ACT') && (B.NetName == 'ARM1_SENSE' || B.NetName == 'ARM2_SENSE' || B.NetName == 'PYRO1_CONT' || B.NetName == 'PYRO2_CONT' || B.NetName == 'RAW_ACT_SENSE' || B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO2_GATE' || B.NetName == 'PYRO1_GATE_N' || B.NetName == 'PYRO2_GATE_N' || B.NetName == 'ACT_GATE' || B.NetName == 'ACT_DRV')) || ((A.NetName == 'PYRO1_CONT_MID' || A.NetName == 'PYRO2_CONT_MID' || A.NetName == 'ARM1_SENSE_MID' || A.NetName == 'ARM2_SENSE_MID' || A.NetName == 'RAW_ACT_SENSE_MID') && (B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO2_GATE' || B.NetName == 'PYRO1_GATE_N' || B.NetName == 'PYRO2_GATE_N' || B.NetName == 'ACT_GATE' || B.NetName == 'ACT_DRV'))) && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')) && !(A.memberOfFootprint('Q125') && B.memberOfFootprint('Q125')) && !(A.memberOfFootprint('Q120') && B.memberOfFootprint('Q120')) && !(A.memberOfFootprint('Q121') && B.memberOfFootprint('Q121')) && !(A.memberOfFootprint('Q122') && B.memberOfFootprint('Q122'))")
   (constraint clearance (min 1.0mm)))
+
+# R5 pass 4 (tombstoning): r5_post.pour_relief puts the GND pads of two-pad 0402/0603 parts on thermal spokes; these
+# set their size (other GND SMD pads stay solid in the pours, which use solid SMD connection).
+(rule "Small GND pad thermal relief"
+  (condition "A.Type == 'Pad' && A.NetName == 'GND' && A.Pad_Type == 'SMD'")
+  (constraint thermal_relief_gap (opt 0.25mm))
+  (constraint thermal_spoke_width (opt 0.3mm)))
+
+# R5 pass 4: the RAW_ACT through-hole pins (hand-soldered) keep 0.3 mm from the GND pours, not the outer pours'
+# 0.15 mm; a bridge there shorts the servo feed to GND. GND only, so this rule (the last) never lowers a pyro rule.
+(rule "RAW_ACT pins to pours"
+  (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole' && A.NetName == 'RAW_ACT' && B.Type == 'Zone' && B.NetName == 'GND'")
+  (constraint clearance (min 0.3mm)))

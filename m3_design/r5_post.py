@@ -654,6 +654,31 @@ def designators(b, silks, rmax=5.0, cap=1.5, big_cap=3.0, margin=0.15):
 
 # --- pours -------------------------------------------------------------------------------------
 
+RELIEF_KEEP_FULL = set()          # small GND pads whose spokes DRC finds starved stay fully connected (filled below)
+
+
+def pour_relief(b):
+    """Pass 4 robustness items, on the pours only (no copper moves):
+    - the RAW_ACT through-hole pins (J120.1, J124.2, J122.2/5/8/11) keep 0.3 mm from other nets' pours, not the outer
+      GND pours' 0.15 mm (m3.kicad_dru; tracks and vias keep the board rules): a bridge there, at the hand-soldered joints, shorts the servo feed to GND (R4 had 0.25 mm);
+    - the GND pads of two-pad 0402/0603 parts join the outer GND pours through thermal spokes (0.25 mm gap, 0.3 mm
+      spokes, m3.kicad_dru), not solidly: a pad buried in a stitched pour heats slower than its trace-fed partner and tombstones."""
+    raw = sum(1 for f in b.GetFootprints() for q in f.Pads()   # (the clearance itself: m3.kicad_dru, pours only)
+              if q.GetAttribute() == pcbnew.PAD_ATTRIB_PTH and q.GetNetname() == 'RAW_ACT')
+    small = 0
+    for f in b.GetFootprints():
+        pads = list(f.Pads())
+        if len(pads) != 2 or any(q.GetAttribute() != pcbnew.PAD_ATTRIB_SMD for q in pads):
+            continue
+        if max(mm(q.GetSize(q.GetLayer()).x) for q in pads) > 1.0 or max(mm(q.GetSize(q.GetLayer()).y) for q in pads) > 1.0:
+            continue                                     # 0402 and 0603 only
+        for q in pads:
+            if q.GetNetname() == 'GND' and (f.GetReference(), q.GetNumber()) not in RELIEF_KEEP_FULL:
+                q.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_THERMAL)   # gap and spokes: m3.kicad_dru
+                small += 1
+    print(f'  pour relief: {raw} RAW_ACT pins at 0.3 mm, {small} small GND pads on spokes')
+
+
 def usb_reference(b):
     """The In2 3V3 fill grows north (left of the In2 sense lanes) under USB D+/D- on B.Cu between J3, D4 and U1, so
     those traces have a plane beneath them (done after routing: the fill only takes what the routes leave)."""
@@ -938,6 +963,7 @@ def main():
     order_mark(b, silks)
     designators(b, silks)
     fab_refs(b)
+    pour_relief(b)
     tb = b.GetTitleBlock()
     tb.SetTitle('M3 flight computer')
     tb.SetRevision(REV)
