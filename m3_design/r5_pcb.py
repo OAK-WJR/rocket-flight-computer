@@ -7,7 +7,7 @@ KiCad python on macOS: /Applications/KiCad/KiCad.app/Contents/Frameworks/Python.
 Run on the R4 board (m3_design/r5_build.sh restores it from git first). The schematic and BOM are
 unchanged; this is a placement and routing redesign. Steps:
   1. strip all R4 copper, zones, outline, holes and board-level silkscreen (footprints stay);
-  2. new 46 x L outline, four M3 mounting holes, J122's two tie holes, tooling holes;
+  2. new 46 x L outline, five M3 mounting holes (corners and mid-span), J122's two tie holes, tooling holes;
   3. place every footprint from the PLACE table (side F or B); the R4 pyro block (terminals, FETs,
      gate networks, sense dividers) is moved as one rigid group with its own copper, so the spacing
      work of R4 passes 2-14 carries over unchanged (pyro rules A-H still run on the whole board);
