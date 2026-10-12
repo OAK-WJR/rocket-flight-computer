@@ -609,11 +609,31 @@ def u9_escapes(b):
     to a via. U9 sits turned 90 deg in the band: IN leaves west into the In2 BAT_IN strip, OUT east toward D9."""
     u5, u6 = pad(b, 'U9', '5'), pad(b, 'U9', '6')
     in_end, out_end = (u5[0] - 1.9, u5[1]), (u6[0] + 1.9, u6[1])
+    # 0.5 mm clear of the pin field (TI: power path sized for twice the load) and two vias each: one 0.3 mm via
+    # had carried the whole logic and camera supply
     route(b, 'BAT_IN', F, [u5, in_end], 0.3)
     route(b, 'RAW_PROTECTED', F, [u6, out_end], 0.3)
-    U9_ESC['vin'] = tie(b, 'BAT_IN', in_end, (in_end[0], in_end[1] - 0.7), F, w=0.3)   # into the In2 strip
+    route(b, 'BAT_IN', F, [(u5[0] - 1.4, u5[1]), in_end], 0.5)               # wider clear of the pin field
+    route(b, 'RAW_PROTECTED', F, [(u6[0] + 1.4, u6[1]), out_end], 0.5)       # (EN, DVDT pins within 1.2 mm)
+    U9_ESC['vin'] = tie(b, 'BAT_IN', in_end, (in_end[0], in_end[1] - 0.7), F, w=0.5)   # into the In2 strip
     U9_ESC['in_end'], U9_ESC['out_end'] = in_end, out_end
-    U9_ESC['vout'] = tie(b, 'RAW_PROTECTED', out_end, (out_end[0] + 0.9, out_end[1] - 1.6), F, w=0.4)
+    U9_ESC['vout'] = tie(b, 'RAW_PROTECTED', out_end, (out_end[0] + 0.9, out_end[1] - 1.6), F, w=0.5)
+
+
+
+def u9_second_vias(b):
+    """A second via for U9's IN and OUT once its control network and the power paths are drawn (before them it took
+    their way): one 0.3 mm via had carried the whole logic and camera supply."""
+    for net, end, offs in (('BAT_IN', U9_ESC['in_end'], ((0.0, -1.5), (0.0, 1.4), (-0.8, -1.2))),
+                           ('RAW_PROTECTED', U9_ESC['out_end'], ((0.9, 1.0), (1.6, 0.0), (0.9, -2.6)))):
+        for dx, dy in offs:
+            try:
+                tie(b, net, end, (end[0] + dx, end[1] + dy), F, w=0.5)
+                break
+            except RuntimeError:
+                continue
+        else:
+            print(f'  U9 {net}: no room for a second via')
 
 
 def u9_network(b):
@@ -677,6 +697,21 @@ def usb_limited(b):
         multi(b, 'USB_LIMITED', pad(b, 'U10', '6'), pad(b, 'U11', '7'), 0.4, (B, IN2), margin=6, via_cost=20.0)
     except RuntimeError:
         multi(b, 'USB_LIMITED', pad(b, 'U10', '6'), pad(b, 'U11', '7'), 0.4, (B, IN2, F), margin=9, via_cost=20.0)
+
+
+def raw_act_stitch(b):
+    """More vias where the servo feed changes layer, Q121's B.Cu drain pour to the In2 strip (five had carried
+    1.5-1.65 A each), wherever one fits."""
+    n = 0
+    pts = [(x, y) for y in (26.9, 28.1, 29.3, 30.5) for x in (1.2, 2.4, 3.6, 4.8, 6.0)]
+    for q in pts:
+        try:
+            v = via_spot(b, 'RAW_ACT', q, q, r=0.3)
+        except RuntimeError:
+            continue
+        via(b, 'RAW_ACT', v)
+        n += 1
+    print(f'  RAW_ACT stitching vias: {n}')
 
 
 def raw_act_link(b):
@@ -863,6 +898,18 @@ def _gnd_via_near(b, p, own):
     return False
 
 
+def reset_cap_gnd(b):
+    """C24 (the reset capacitor, B.Cu, under U1's left-hand pin row) GND pad: its own via 0.8 mm north, a 0.5 mm via
+    (0.3 mm drill, the board's minimum) in the 0.53 mm left between the USB_LIMITED trunk on B.Cu and VLOGIC_SENSE on
+    In2. In the routed board the pad was boxed in by the reset line and that trunk; a track straight across to the GND
+    via at (31.5, 29.1) boxed in the reset pad instead (the via leaves the reset line its way out to the north-east).
+    Drawn before the long links."""
+    x, y = pad(b, 'C24', '2')
+    v = (round(x + 0.34, 2), round(y - 0.78, 2))
+    route(b, 'GND', B, [(round(x + 0.1, 2), round(y - 0.08, 2)), (v[0], round(y - 0.32, 2)), v], 0.25)
+    via(b, 'GND', v, d=0.5)
+
+
 def gnd_pin_vias(b, parts=None, own_via=True):
     """Each GND pad of GND_PIN_PARTS whose own copper does not reach the In1 plane yet: its own via beside it (stub
     0.25 mm), or, with no room for one (or own_via False), a short track to a GND via or through-hole GND pin within 4 mm.
@@ -909,6 +956,46 @@ def gnd_pin_vias(b, parts=None, own_via=True):
     print(f'  GND pin vias: {done}; none for {failed or "none"}')
 
 
+# The crystal's neighbourhood on In2 (ST AN2867: no other signal under the crystal on the adjacent layer): the long
+# links, the autorouter and the finisher keep out of it, so the 3V3 fill lies whole under Y1 (drawn before them, the
+# arm-sense lane still runs there; on B.Cu QSPI_IO2 still passes between Y1's pads, M3_R5 section 2); r5_post.py
+# deletes the area (the crystal's own copper lies inside it)
+XTAL_KEEPOUTS = (('KEEP_XTAL_IN2', pcbnew.In2_Cu, (22.4, 33.4, 28.2, 39.4)),)   # In2 under Y1, C25, C26, HSE
+
+
+def baro_keepout(b):
+    """After the long links: the gap between the MS5611's pad rows kept clear for the autorouter and the finisher (TE:
+    no tracks between the pads). I2C1_SDA's scripted link enters pad 7 through it (from outside the rows it found no
+    way into the barometer's corner); deleted by r5_post.py like the crystal's."""
+    f = b.FindFootprintByReference('U5')
+    cx, cy = mm(f.GetPosition().x), mm(f.GetPosition().y)
+    _keep_area(b, 'KEEP_BARO_GAP', pcbnew.B_Cu if f.IsFlipped() else pcbnew.F_Cu, (cx - 2.4, cy - 0.45, cx + 2.4, cy + 0.45))
+
+
+def crystal_keepouts(b):
+    for name, layer, box in XTAL_KEEPOUTS:
+        _keep_area(b, name, layer, box)
+
+
+def _keep_area(b, name, layer, box):
+    """A no-tracks, no-vias rule area on one layer, named KEEP_* (r5_post.py deletes them)."""
+    x0, y0, x1, y1 = box
+    z = pcbnew.ZONE(b)
+    z.SetIsRuleArea(True)
+    z.SetZoneName(name)
+    z.SetLayer(layer)
+    z.SetDoNotAllowTracks(True)
+    z.SetDoNotAllowVias(True)
+    z.SetDoNotAllowZoneFills(False)
+    z.SetDoNotAllowPads(False)
+    z.SetDoNotAllowFootprints(False)
+    ol = z.Outline()
+    ol.NewOutline()
+    for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)):
+            ol.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+    b.Add(z)
+
+
 def sense_mcu_links(b):
     """The pyro sense nets' MCU sides (pyro copper is hand-routed, AGENTS.md): each ADC series resistor's other pad
     (bottom, beside U1) to its MCU pin (top). Drawn after U1's supply pins have their decoupling vias
@@ -935,7 +1022,7 @@ def sense_mcu_links(b):
 # the finisher then took it 80 mm round through the pyro block, or left it open), and SWDIO drawn before the I2C pair
 # took I2C1_SDA's only way out of U1
 LONG_LINKS = [('SWCLK', ('U1', '76'), ('J2', '2')),
-              ('I2C1_SCL', ('U1', '95'), ('R12', '1')), ('I2C1_SDA', ('U1', '96'), ('R13', '1')),
+              ('I2C1_SCL', ('U1', '95'), ('R12', '1')), ('I2C1_SDA', ('U1', '96'), ('U5', '7')),
               ('SWDIO', ('U1', '72'), ('J2', '3')),
               ('SERVO1_MCU', ('U1', '22'), ('D121', '1')), ('SERVO2_MCU', ('U1', '23'), ('D121', '3')),
               ('SERVO3_MCU', ('U1', '24'), ('D121', '4')), ('SERVO4_MCU', ('U1', '25'), ('D121', '6')),

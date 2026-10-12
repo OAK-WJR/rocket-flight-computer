@@ -179,7 +179,7 @@ PLACE_B = [
     ('U12', 41.8, 33.0, 90), ('U13', 41.5, 13.5, 0),          # camera UART buffer and its LDO, by J9
     # camera 5 V buck, one stack in the right strip: eFuse, input capacitors at U8's VIN/GND end, U8, bootstrap
     # capacitor beside SW/BST, inductor, output capacitors (AP63300 datasheet layout order)
-    ('U7', 38.2, 69.0, -90),                                   # camera eFuse beside the buck's input capacitor
+    ('U7', 38.2, 68.65, -90),   # (1.5 mm from J121.1's pad: 0.35 mm further north than first placed)                                   # camera eFuse beside the buck's input capacitor
     ('C73', 41.8, 69.4, 0), ('C72', 41.8, 72.8, 0), ('U8', 41.8, 76.4, 0),
     ('C74', 44.7, 76.6, 270), ('L3', 41.8, 82.1, 270), ('C75', 41.8, 87.5, 0), ('C76', 41.8, 90.9, 0),
     ('D4', 11.0, 56.0, 0), ('R7', 13.7, 56.05, 0), ('R8', 9.6, 61.0, 0),   # USB ESD, CC pull-downs
@@ -702,6 +702,13 @@ def zones(b):
             if f.IsFlipped() == (side == 'B'):
                 x0, y0, x1, y1 = _box(f)
                 rule_area(b, f'{nm}_{side}', (layer,), rect(x0 + 0.25, y0 + 0.25, x1 - 0.25, y1 - 0.25), vias=True, fill=True)
+    # no tracks between the MS5611's pads (TE "Recommended pad layout": do not route tracks between pads): the gap
+    # between its two pad rows
+    for r, nm, (dx0, dy0, dx1, dy1) in ():
+        f = fp_of(b, r)
+        cx, cy = mm(f.GetPosition().x), mm(f.GetPosition().y)
+        rule_area(b, f'{nm}_{"B" if f.IsFlipped() else "F"}', (pcbnew.B_Cu if f.IsFlipped() else pcbnew.F_Cu,),
+                  rect(cx + dx0, cy + dy0, cx + dx1, cy + dy1), tracks=True, vias=True, fill=True)
     edge = rect(0.3, 0.3, W - 0.3, L - 0.3)
     add_zone(b, 'GND', (pcbnew.In1_Cu,), edge, 1, 'GND_In1')
     # the outer GND pours keep the board's 0.15 mm clearance and fill down to 0.15 mm, so they reach between the dense
@@ -816,6 +823,7 @@ def build(b):
     r5_routes.u9_escapes(b)
     r5_routes.u9_network(b)
     r5_routes.raw_act_link(b)
+    r5_routes.raw_act_stitch(b)
     r5_routes.power_main(b)
     r5_routes.usb_limited(b)
     r5_routes.sensor_links(b)
@@ -828,9 +836,13 @@ def build(b):
     r5_routes.feed_3v3(b)
     r5_routes.power(b)
     r5_routes.power2(b)
+    r5_routes.u9_second_vias(b)
     r5_routes.gnd_pin_vias(b)
     r5_routes.gnd_pin_vias(b, r5_routes.GND_PIN_TRACK, own_via=False)
+    r5_routes.reset_cap_gnd(b)
+    r5_routes.crystal_keepouts(b)
     r5_routes.long_links(b)
+    r5_routes.baro_keepout(b)
     r5_routes.gnd_pin_vias(b, r5_routes.GND_PIN_LAST)
     r5_routes.return_vias(b)
     drop_single_layer_vias(b)

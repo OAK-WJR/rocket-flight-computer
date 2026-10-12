@@ -36,12 +36,12 @@ All three files are in `m3_design/assembly_review/fab/`:
 | Outer copper | 1 oz | `ROCKET_FC_FROZEN_DESIGN.md` §1 |
 | **Inner copper** | **1 oz (not the 0.5 oz default)** | the In2 RAW_ACT and BAT_IN pours carry servo and battery current. On 2026-10-09 the live quote kept Economic PCBA with 1 oz inner copper selected (tried on JLC's demo board, where it added about $17) |
 | Min track / space | 0.15 / 0.15 mm | board rules (JLC's multilayer minimum: 0.09 / 0.09 mm) |
-| Min via | 0.3 mm drill / 0.6 mm pad | board rules |
+| Min via | 0.3 mm drill / 0.5 mm pad (seven vias; the rest 0.6 mm) | board rules (0.1 mm annular ring) |
 | **Surface finish** | **ENIG (required)** | 0.5 mm LQFP100, LGA-14 at 0.5 mm pitch, U11's 0.2 mm lands; HASL leaves them uneven (REQUIREMENTS M1) |
 | **Solder mask** | **Green** | the cheapest colour; with this stack-up (4 layers, ENIG, 1 oz inner) the Economic tier also accepted only green on the 2026-10-09 quote (JLC's demo board) |
-| Via covering | **Plugged** | the order page's 4-layer default: "Tented" is greyed out ("upgraded to Via Plugged for free"). Vias sit beside fine-pitch pads and the design assumes mask over every via; the vias inside test-pad openings (TP70, TP120, TP122, TP123) cannot be ink-plugged and stay open |
-| Delivery format | **Single PCB, edge rails added by JLCPCB** | Standard PCBA needs rails (or a panel) on a board narrower than 70 mm. Ask for tab-routed rails (mouse bites), not V-cut (J3 overhangs the left edge by 0.45 mm), with tabs only at Gerber Y −68…−87 on the X = 0 edge (the edge with J3, J120 and J124) and Y −35…−46 on the X = 46 edge (J9, J121/J125 and J2); Y = 0 is the battery-terminal end with J1, and KiCad's y is −Y. That keeps every tab at least 5 mm from the edge MLCCs (C83, C91–C93, C72–C77), R166 (a 2512 resistor 0.47 mm from the left edge), C84, LED2 and the tooling holes, and clear of J3 and J2. Choose **Confirm Production file** and check the rail and tab layout before fabrication. Remove the rails by nibbling the tabs with a cutter, never by snapping, and file the stubs flush (the sled rails grip the long edges) |
-| Order-number mark | **Specify a location** | the bottom silkscreen carries the `JLCJLCJLCJLC` placeholder at (23, 122) mm, clear of every label, pad and via |
+| Via covering | **Plugged** | the order page's 4-layer default: "Tented" is greyed out ("upgraded to Via Plugged for free"). Vias sit beside fine-pitch pads and the design assumes mask over every via; the vias inside test-pad openings (TP122, TP123) cannot be ink-plugged and stay open |
+| Delivery format | **Single PCB, edge rails added by JLCPCB** | Standard PCBA needs rails (or a panel) on a board narrower than 70 mm. Ask for tab-routed rails (mouse bites), not V-cut (J3 overhangs the left edge by 0.45 mm), with tabs only at Gerber Y −69.6…−85 on the X = 0 edge (the edge with J3, J120 and J124; 5 mm clear of tooling holes TH2 and TH3) and Y −35…−46 on the X = 46 edge (J9, J121/J125 and J2); Y = 0 is the battery-terminal end with J1, and KiCad's y is −Y. That keeps every tab at least 5 mm from the edge MLCCs (C83, C91–C93, C72–C77), R166 (a 2512 resistor 0.47 mm from the left edge), C84, LED2 and the tooling holes, and clear of J3 and J2. Choose **Confirm Production file** and check the rail and tab layout before fabrication. Remove the rails by nibbling the tabs with a cutter, never by snapping, and file the stubs flush (the sled rails grip the long edges) |
+| Order-number mark | **Specify a location** | the bottom silkscreen carries the `JLCJLCJLCJLC` placeholder at (23, 68.25) mm (KiCad; Gerber Y −68.25), clear of every label, pad and via |
 | Impedance control | not needed | USB FS only |
 
 ## 4. Assembly (PCBA)
@@ -51,10 +51,10 @@ All three files are in `m3_design/assembly_review/fab/`:
 - **Quantity:** JLC assembles at least 2 boards; stock was checked for 5.
 - **Edge rails and fiducials: added by JLCPCB** (Standard requires them); the rails carry JLC's own tooling holes. TH1 (44.8, 9.2), TH2 (1.4, 64.6) and TH3 (1.4, 90.0) mm, 1.152 mm NPTH with 0.148 mm mask expansion per JLC's tooling-hole article (https://jlcpcb.com/help/article/how-to-add-tooling-holes-for-pcb-assembly-order), stay on the board for an Economic order; Standard does not need them.
 - **Order remarks** (the notes field on the order):
-  - Hand-finish the four J3 (USB-C) shell legs so solder fills the slots, and check hole fill on the full-connection through-hole pins: J1.1, J120.1, J124.2, J122.2/5/8/11, J122.12, J2.1 and J3 leg 4. Pin-in-paste alone fills an estimated 12–15 % of J3's slots.
+  - Hand-finish the four J3 (USB-C) shell legs so solder fills the slots, and check hole fill on the full-connection through-hole pins: J122.3/6/9/12, J123.2, J2.1, J3 legs 1 and 4, and J9.2. Pin-in-paste alone fills an estimated 12–15 % of J3's slots.
   - A 0.10 mm stencil is preferred: U11's 0.2 × 0.6 mm apertures release marginally at 0.12 mm (area ratio 0.63), and TI's U9/U11 stencil examples assume 0.10 mm.
   - No PCBA cleaning or washing at any stage, including after through-hole soldering (please confirm in writing): U5 (MS5611) has an open pressure port, and TE asks for no-clean paste without cleaning ("Cleaning might damage the sensor!").
-  - Edge rails: tab-routed (mouse bites), no V-cut; tabs only at Gerber Y −68…−87 on the X = 0 edge (the edge with J3, J120 and J124) and Y −35…−46 on the X = 46 edge (J9, J121/J125 and J2); Y = 0 is the battery-terminal end with J1, and KiCad's y is −Y. That keeps every tab at least 5 mm from the edge MLCCs (C83, C91–C93, C72–C77), R166 (a 2512 resistor 0.47 mm from the left edge), C84, LED2 and the tooling holes, and clear of J3 and J2.
+  - Edge rails: tab-routed (mouse bites), no V-cut; tabs only at Gerber Y −69.6…−85 on the X = 0 edge (the edge with J3, J120 and J124; 5 mm clear of tooling holes TH2 and TH3) and Y −35…−46 on the X = 46 edge (J9, J121/J125 and J2); Y = 0 is the battery-terminal end with J1, and KiCad's y is −Y. That keeps every tab at least 5 mm from the edge MLCCs (C83, C91–C93, C72–C77), R166 (a 2512 resistor 0.47 mm from the left edge), C84, LED2 and the tooling holes, and clear of J3 and J2.
   - Use the supplied paste layer exactly; no aperture optimisation (JLC re-cuts apertures by default unless told: its stencil opening standard, updated 2025-04-24). The apertures follow the makers' stencil guidance (U4, U7, U9, U11, Q120/Q121, J3 pin-in-paste).
   - Vias that cannot be ink-plugged (within 0.35 mm of a pad): tent them; never open the mask over a via.
   - All six screw terminals have their wire entries facing the nearest board edge (arrows on the silkscreen under each body). EasyEDA's outline for the orange C430603 is drawn mirrored against its own 3D model; follow the model and our arrows.
@@ -68,7 +68,7 @@ All three files are in `m3_design/assembly_review/fab/`:
     - Pin 1: U1–U5, U7–U13 (there is no U6), Q120–Q125, D4, D121 (placed at 270°), J123 (the PH latch faces inboard).
     - J3: the USB-C receptacle overhangs the board edge by about 0.45–0.5 mm, as HRO's layout intends.
 - **Expected DFM queries** (confirm them as deliberate):
-  - Vias inside test pads: TP70, TP120 (two vias), TP122 and TP123. They are test pads with no paste and no part.
+  - Vias inside test pads: TP122 and TP123. They are test pads with no paste and no part.
   - J3's locating holes are 0.20 mm from the nearest copper, JLC's NPTH minimum, per HRO's recommended layout.
   - U11's eight 0.2 × 0.6 mm lands are below JLC's listed 0.25 mm minimum pad. They are TI's RUX0012A land, on ENIG.
   - The four M3 holes and the two tie holes are circles on the board outline, so JLC mills them (±0.2 mm) instead of drilling them; the tooling holes are in the NPTH drill file.

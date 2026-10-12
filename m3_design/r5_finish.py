@@ -779,11 +779,7 @@ def force_all(b, st):
 # (the vias in it cleared either way); the route passes the waypoints
 # (x, y, layer) in order. Kept only if fewer connections are open afterwards (the rounds redraw what the clearing
 # opened).
-LATE = [
-    # VLOGIC_SENSE (U1.17) and V3V3_SENSE (U1.18) leave neighbouring pins; forced across, either cut the other. A via
-    # 0.25 mm off the pad row's line clears V3V3_SENSE's F.Cu lane; NRST's In2 copper round it is redrawn by the rounds
-    ('VLOGIC_SENSE', ('U1', '17'), (32.50, 24.80), [(30.6, 33.0, 31.2, 34.5, IN2)], [(30.75, 33.75, IN2)]),
-]
+LATE = []
 
 
 def _spec(b, s):

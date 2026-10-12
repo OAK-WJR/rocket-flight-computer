@@ -365,15 +365,15 @@ def legends(b, silks):
     def put(text, near, box, angles=(0, 90), sides=('F', 'B')):
         placed.append((text, label(b, silks, text, near, box, angles, sides)))
 
-    # battery terminal J1 (wire entries aft): pin names forward of the body, the input notes on the bottom
+    # battery terminal J1 (wire entries aft): pin names forward of the body on the top only (F8; on the bottom the
+    # parts under pin 2 left GND no spot, and a row without it read wrong), the input notes on the bottom
     for num, text in (('1', 'BAT+'), ('2', 'GND')):
         x, y = pad(b, 'J1', num)
-        put(text, (x, 11.7), (x - 4.0, 11.1, x + 4.0, 18.5), angles=(0, 90), sides=('F',))
-        put(text, (x, 8.6), (x - 4.0, 6.6, x + 4.0, 13.0), angles=(0, 90), sides=('B',))
+        # within half the 5.08 mm pitch of its own pin (a wider search put GND under the switch pin)
+        put(text, (x, 11.7), (x - 1.6, 11.1, x + 1.6, 18.5), angles=(90, 0), sides=('F',))
     x3, _ = pad(b, 'J1', '3')
     x4, _ = pad(b, 'J1', '4')
     put('SW', ((x3 + x4) / 2, 11.7), (x3 - 1.0, 11.1, x4 + 1.0, 15.5), angles=(0, 90), sides=('F',))
-    put('SW', ((x3 + x4) / 2, 8.6), (x3 - 1.0, 6.6, x4 + 1.0, 11.0), angles=(0,), sides=('B',))
     put('2S INPUT / ' + REV, (23.0, 1.4), (2.0, 0.4, 44.0, 12.0), angles=(0,), sides=('B', 'F'))
     put('15A FUSE IN BATTERY LEAD', (23.0, 2.9), (2.0, 0.4, 44.0, 14.0), angles=(0,), sides=('B', 'F'))
     # camera terminal J9 (right edge, entries to the wall): pin names in the edge strip
@@ -477,8 +477,9 @@ def _gap(a, c):
 def designators(b, silks, rmax=5.0, cap=1.5, big_cap=3.0, margin=0.15):
     """R4 place_ref_clear for every part: the text keeps GAP from pads, vias, holes and other silkscreen and stays
     off every package body, sits at most `cap` mm from its own pads (`big_cap` for parts over 5 mm) and nearer
-    them (by `margin`) than any other part's pads. A part tries its own side first, then the other side over its
-    own position (AGENTS: crowded designators go to the other side under their part). The most constrained
+    them (by `margin`) than any other part's pads. A top part tries the top first, then the bottom with the text
+    centred within its own pads' extent (AGENTS: crowded designators go to the bottom side under their part); a
+    bottom part's designator stays on the bottom (on the top it read as a top part's). The most constrained
     parts are placed first."""
     HIDDEN[:] = []
     pads = [(f.GetReference(), p, bx(p)) for f in b.GetFootprints() for p in f.Pads()]
@@ -492,7 +493,7 @@ def designators(b, silks, rmax=5.0, cap=1.5, big_cap=3.0, margin=0.15):
         ext = max(max(r[2] for r in own) - min(r[0] for r in own), max(r[3] for r in own) - min(r[1] for r in own))
         c_ = big_cap if ext >= 5.0 else cap
         out = []
-        for side in (('B', 'F') if f.IsFlipped() else ('F', 'B')):
+        for side in (('B',) if f.IsFlipped() else ('F', 'B')):   # a bottom part's designator stays on the bottom
             s = silks[side]
             part_cu = pcbnew.B_Cu if f.IsFlipped() else pcbnew.F_Cu
             label_cu = pcbnew.F_Cu if side == 'F' else pcbnew.B_Cu
@@ -519,6 +520,10 @@ def designators(b, silks, rmax=5.0, cap=1.5, big_cap=3.0, margin=0.15):
                         d_own = min(_gap(r, o) for o in own)
                         if d_own > c_ or not s.free(r):
                             continue
+                        if side == 'B' and not f.IsFlipped() and not (
+                                min(o[0] for o in own) <= x <= max(o[2] for o in own) and
+                                min(o[1] for o in own) <= y <= max(o[3] for o in own)):
+                            continue                       # on the other side only under the part itself
                         near = [_gap(r, o) for o in others if abs((o[0] + o[2]) / 2 - x) < 7 and abs((o[1] + o[3]) / 2 - y) < 7]
                         if near and d_own + margin > min(near):
                             continue                       # as near another part's pads: ambiguous
@@ -577,6 +582,19 @@ def stitch(b, pitch=3.0):
     fills = {lay: [z.GetFilledPolysList(lay) for z in b.Zones() if not z.GetIsRuleArea() and z.GetNetname() == 'GND'
                    and z.IsOnLayer(lay)] for lay in (pcbnew.F_Cu, pcbnew.B_Cu)}
     ends = _gnd_track_ends(b)
+    pth = [(p.GetBoundingBox(), mm(max(p.GetDrillSize().x, p.GetDrillSize().y)) / 2, mm(p.GetPosition().x),
+            mm(p.GetPosition().y)) for f in b.GetFootprints() for p in f.Pads()
+           if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)]
+
+    def clear_of_pth(v):
+        """Outside every through-hole pad's copper (0.15 mm) and 0.45 mm hole to hole (JLC; via_spot allows a GND via
+        on a GND through-hole pad, which would sit in its solder opening)."""
+        for bb, hr, hx, hy in pth:
+            dd = math.hypot(max(mm(bb.GetX()) - v[0], 0, v[0] - mm(bb.GetRight())),
+                            max(mm(bb.GetY()) - v[1], 0, v[1] - mm(bb.GetBottom())))
+            if dd < 0.3 + 0.15 or math.hypot(v[0] - hx, v[1] - hy) < hr + 0.15 + 0.45:
+                return False
+        return True
     n = 0
     y = 4.5                                            # the aft and forward 2.6 mm strips carry the input and
     while y < L - 2.6:                                 # arming legends
@@ -587,7 +605,8 @@ def stitch(b, pitch=3.0):
             if inside and not (r5_maze.BLOCK[0] <= x <= r5_maze.BLOCK[2] and r5_maze.BLOCK[1] <= y <= r5_maze.BLOCK[3]):
                 try:
                     v = r5_maze.via_spot(b, 'GND', (x, y), (x, y), r=0.5)
-                    if all(ps.Contains(P(*v)) for lay in fills for ps in fills[lay][:1]) and not _near_end(v, ends):
+                    if all(ps.Contains(P(*v)) for lay in fills for ps in fills[lay][:1]) and not _near_end(v, ends) \
+                            and clear_of_pth(v):
                         via = pcbnew.PCB_VIA(b)
                         via.SetPosition(P(*v))
                         via.SetWidth(MM(0.6))
@@ -805,6 +824,9 @@ def main():
     r5_maze.MARGIN = 0.02                              # as r5_finish: 0.02 mm over each clearance rule (DRC checks)
     pcbnew.KIID.SeedGenerator(5104)                    # repeatable UUIDs (r5_pcb.main)
     b = pcbnew.LoadBoard(PCB)
+    for z in list(b.Zones()):                          # routing-only keep-outs (r5_routes._keep_area)
+        if z.GetIsRuleArea() and z.GetZoneName().startswith('KEEP_'):
+            b.Delete(z)
     for d in list(b.GetDrawings()):                    # idempotent: the board-level silkscreen is ours
         if d.GetLayer() in (pcbnew.F_SilkS, pcbnew.B_SilkS):
             b.Delete(d)

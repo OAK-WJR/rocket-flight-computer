@@ -26,8 +26,8 @@
 # the router's copper), export with --warm (the router's own copper stays movable, the scripted and finisher copper
 # fixed) to m3_design/r5_autoroute_warm.dsn, route it to r5_autoroute_warm.ses with the same flags, and run this
 # script again.
-# The session in git was exported without --seed (the DSN's own order); r5_finish.json is a recorded run with one
-# hand-finish entry (r5_finish.LATE) on top.
+# The session in git was exported with --seed=81; r5_finish.json is a recorded run of the finisher's search
+# (r5_finish.py --shake) on it, with no hand-finish entries.
 set -euo pipefail
 R4=fa68b38
 cd "$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
