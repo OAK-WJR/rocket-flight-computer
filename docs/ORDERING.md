@@ -16,7 +16,7 @@ python3 tools/jlc_cost.py --boards 5        # parts + Standard PCBA feeder fees 
 - `parts without LCSC code: none`
 - `CPL rows without a verified JLC orientation correction: none`
 
-`jlc_stock.py` must report `short: none`; a line listed as thin has less than twice the order in stock, so order promptly or reserve it in **Parts Manager**. Stock changes daily. On 2026-10-09 nothing was short or thin: $55.22 parts per board, 81 unique codes (47 Extended), $80.00 per board with Standard PCBA's $1.53 feeder fee per code; Standard's fixed fees are $50.19 per order (setup, stencil, fixture), and JLC may add a $14.93 handling fee. Economic would be $84.19 per board plus $9.71 per order, but cannot be used (section 4).
+`jlc_stock.py` must report `short: none`; a line listed as thin has less than twice the order in stock, so order promptly or reserve it in **Parts Manager**. Stock changes daily. On 2026-10-12 nothing was short; U4 was thin (5 in stock for 5 boards): $55.14 parts per board, 81 unique codes (47 Extended), $79.93 per board with Standard PCBA's $1.53 feeder fee per code; Standard's fixed fees for two-sided assembly are $83.96 per order (setup, stencils, fixtures; one side would be $50.19), and JLC may add a $14.93 handling fee. Economic would be $84.19 per board plus $9.71 per order, but cannot be used (section 4).
 
 ## 2. Files to upload
 
@@ -56,7 +56,7 @@ All three files are in `m3_design/assembly_review/fab/`:
   - No PCBA cleaning or washing at any stage, including after through-hole soldering (please confirm in writing): U5 (MS5611) has an open pressure port, and TE asks for no-clean paste without cleaning ("Cleaning might damage the sensor!").
   - Edge rails: tab-routed (mouse bites), no V-cut; tabs only at Gerber Y −69.6…−85 on the X = 0 edge (the edge with J3, J120 and J124; 5 mm clear of tooling holes TH2 and TH3) and Y −35…−46 on the X = 46 edge (J9, J121/J125 and J2); Y = 0 is the battery-terminal end with J1, and KiCad's y is −Y. That keeps every tab at least 5 mm from the edge MLCCs (C83, C91–C93, C72–C77), R166 (a 2512 resistor 0.47 mm from the left edge), C84, LED2 and the tooling holes, and clear of J3 and J2.
   - Use the supplied paste layer exactly; no aperture optimisation (JLC re-cuts apertures by default unless told: its stencil opening standard, updated 2025-04-24). The apertures follow the makers' stencil guidance (U4, U7, U9, U11, Q120/Q121, J3 pin-in-paste).
-  - Vias that cannot be ink-plugged (within 0.35 mm of a pad): tent them; never open the mask over a via.
+  - Vias that cannot be ink-plugged (within 0.35 mm of a pad, e.g. the 3V3 via at (18.24, 89.95) beside TP123): tent them; never open the mask over a via.
   - All six screw terminals have their wire entries facing the nearest board edge (arrows on the silkscreen under each body). EasyEDA's outline for the orange C430603 is drawn mirrored against its own 3D model; follow the model and our arrows.
 - **Choose "confirm parts placement"**, and check JLC's preview before paying.
 - **Orientation:** the CPL is corrected per LCSC code. `tools/jlc_orient.py` matches every footprint pad by pad against the LCSC/EasyEDA footprint (`tools/jlc_easyeda/pads.json` → `tools/jlc_corrections.json`).
@@ -65,7 +65,7 @@ All three files are in `m3_design/assembly_review/fab/`:
     - **Every terminal's wire entry faces the nearest board edge:** J1 toward the aft edge; J120 and J124 toward the left edge; J9, J121 and J125 toward the right edge. Arrows under each body on the silkscreen show the entry side.
     - **Terminal colours:** J120 and J124 (ARM) black; J121 and J125 (igniters) orange; J1 and J9 green.
     - Polarity: D9, D120, D122, D123, LED1, LED2, C84, C121.
-    - Pin 1: U1–U5, U7–U13 (there is no U6), Q120–Q125, D4, D121 (placed at 270°), J123 (the PH latch faces inboard).
+    - Pin 1: U1–U5, U7–U13 (there is no U6), Q120–Q125, D4, D121 (bottom side), J123 (the PH latch faces inboard).
     - J3: the USB-C receptacle overhangs the board edge by about 0.45–0.5 mm, as HRO's layout intends.
 - **Expected DFM queries** (confirm them as deliberate):
   - Vias inside test pads: TP122 and TP123. They are test pads with no paste and no part.

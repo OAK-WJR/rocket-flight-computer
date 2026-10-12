@@ -156,6 +156,35 @@ def track_cleanup(b):
     print(f'  track clean-up: {len(dead)} zero-length/duplicate, {merged} collinear merges, {len(covered)} covered')
 
 
+def pth_vias(b):
+    """No via on a through-hole pad's copper or under 0.45 mm hole to hole from its hole (pass 2, D1: the router left a
+    CAM_RX_WIRE via inside J9.3's pad, its hole in the pad's solder opening; DRC passes it, same net). Such a via is
+    redundant (the pad reaches every layer): it goes, with the tracks that then lie wholly on the pad, as long as every
+    other track that ended at it still ends on the pad's copper (a via beside the pad, whose tracks lead elsewhere, is
+    reported and kept)."""
+    pths = [p for f in b.GetFootprints() for p in f.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH]
+    removed, bad = 0, []
+    for v in [t for t in b.GetTracks() if t.GetClass() == 'PCB_VIA']:
+        vp = v.GetPosition()
+        for p in pths:
+            hr = mm(max(p.GetDrillSize().x, p.GetDrillSize().y)) / 2
+            near = mm((vp - p.GetPosition()).EuclideanNorm()) < hr + mm(v.GetDrillValue()) / 2 + 0.45
+            if p.GetNetname() != v.GetNetname() or not (near or p.HitTest(vp)):
+                continue                                 # (another net's hole: DRC's hole clearance)
+            at = [t for t in b.GetTracks() if t.GetClass() == 'PCB_TRACK' and vp in (t.GetStart(), t.GetEnd())]
+            on_pad = lambda t: all(p.HitTest(q) for q in (t.GetStart(), t.GetEnd()))  # noqa: E731
+            if not all(p.HitTest(vp) or on_pad(t) for t in at):
+                bad.append((v.GetNetname(), round(mm(vp.x), 2), round(mm(vp.y), 2), p.GetParentFootprint().GetReference()))
+                break
+            for t in at:
+                if on_pad(t):
+                    b.Delete(t)
+            b.Delete(v)
+            removed += 1
+            break
+    print(f'  vias on through-hole pads removed: {removed}; kept beside one (own tracks elsewhere): {bad or "none"}')
+
+
 def acute_corners(b):
     """AGENTS.md: no acute angles. At a free joint (two segments of one net meeting outside any pad or via) where the
     path turns by more than 90 degrees: a spike (the shorter segment lying back along the longer one) is trimmed off;
@@ -478,7 +507,8 @@ def designators(b, silks, rmax=5.0, cap=1.5, big_cap=3.0, margin=0.15):
     """R4 place_ref_clear for every part: the text keeps GAP from pads, vias, holes and other silkscreen and stays
     off every package body, sits at most `cap` mm from its own pads (`big_cap` for parts over 5 mm) and nearer
     them (by `margin`) than any other part's pads. A top part tries the top first, then the bottom with the text
-    centred within its own pads' extent (AGENTS: crowded designators go to the bottom side under their part); a
+    centred within its own pads' extent and 1.2 mm (ink) clear of every bottom part's pads (AGENTS: crowded designators go
+    to the bottom side under their part, never next to another part); a
     bottom part's designator stays on the bottom (on the top it read as a top part's). The most constrained
     parts are placed first."""
     HIDDEN[:] = []
@@ -499,6 +529,10 @@ def designators(b, silks, rmax=5.0, cap=1.5, big_cap=3.0, margin=0.15):
             label_cu = pcbnew.F_Cu if side == 'F' else pcbnew.B_Cu
             others = [r for who, p, r in pads if who != ref and (p.IsOnLayer(part_cu) or p.IsOnLayer(label_cu))
                       and abs((r[0] + r[2]) / 2 - cx) < rmax + 8 and abs((r[1] + r[3]) / 2 - cy) < rmax + 8]
+            under = side == 'B' and not f.IsFlipped()      # a top part's designator under it, on the bottom
+            bottom_pads = [r for who, p, r in pads if who != ref and p.IsOnLayer(pcbnew.B_Cu)
+                           and abs((r[0] + r[2]) / 2 - cx) < rmax + 8 and abs((r[1] + r[3]) / 2 - cy) < rmax + 8] \
+                if under else []
             t.SetLayer(s.layer)
             t.SetMirrored(side == 'B')
             boxes = {}
@@ -524,6 +558,8 @@ def designators(b, silks, rmax=5.0, cap=1.5, big_cap=3.0, margin=0.15):
                                 min(o[0] for o in own) <= x <= max(o[2] for o in own) and
                                 min(o[1] for o in own) <= y <= max(o[3] for o in own)):
                             continue                       # on the other side only under the part itself
+                        if under and any(_gap(r, o) < 1.2 for o in bottom_pads):
+                            continue                       # pass 2: not beside a bottom part (it read as its label)
                         near = [_gap(r, o) for o in others if abs((o[0] + o[2]) / 2 - x) < 7 and abs((o[1] + o[3]) / 2 - y) < 7]
                         if near and d_own + margin > min(near):
                             continue                       # as near another part's pads: ambiguous
@@ -831,6 +867,7 @@ def main():
         if d.GetLayer() in (pcbnew.F_SilkS, pcbnew.B_SilkS):
             b.Delete(d)
     track_cleanup(b)
+    pth_vias(b)
     acute_corners(b)
     usb_reference(b)
     stitch(b)

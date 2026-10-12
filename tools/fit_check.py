@@ -103,9 +103,10 @@ def model_box(f, prj):
     ox, oy = mm(f.GetPosition().x), mm(f.GetPosition().y)
     out = []
     for x, y, z in pts:
-        if f.IsFlipped():                            # bottom: mirrored, hangs below the bottom face
-            x, z = -x, -z - BOARD_T
-        y = -y                                       # model +y is board -y
+        if f.IsFlipped():                            # bottom: KiCad mirrors the part in board y (180° about the
+            z = -z - BOARD_T                         # board's x axis), so model +y is board +y; it hangs below
+        else:                                        # the bottom face
+            y = -y                                   # top: model +y is board -y
         bx = x * math.cos(a) + y * math.sin(a)
         by = -x * math.sin(a) + y * math.cos(a)
         out.append((ox + bx, oy + by, z))
