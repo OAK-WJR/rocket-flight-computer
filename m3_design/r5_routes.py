@@ -977,6 +977,18 @@ def crystal_keepouts(b):
         _keep_area(b, name, layer, box)
 
 
+def gate_pad_keepouts(b, gap=1.0):
+    """The bare gate test pads TP122/TP123 (bottom, no mask, probed armed in the leakage gate, ORDERING section 5):
+    B.Cu `gap` mm round each kept clear of other tracks and vias for the long links, the autorouter and the finisher
+    (pass 2: 3V3 and servo copper had come to 0.34-0.56 mm; R4 kept 1.08 mm or more). The pads' own gate copper,
+    drawn before, lies inside; r5_post.py deletes the areas."""
+    for ref in ('TP122', 'TP123'):
+        q = b.FindFootprintByReference(ref).FindPadByNumber('1')
+        x, y = mm(q.GetPosition().x), mm(q.GetPosition().y)
+        hx, hy = mm(q.GetSize().x) / 2 + gap, mm(q.GetSize().y) / 2 + gap
+        _keep_area(b, f'KEEP_{ref}', pcbnew.B_Cu, (x - hx, y - hy, x + hx, y + hy))
+
+
 def _keep_area(b, name, layer, box):
     """A no-tracks, no-vias rule area on one layer, named KEEP_* (r5_post.py deletes them)."""
     x0, y0, x1, y1 = box

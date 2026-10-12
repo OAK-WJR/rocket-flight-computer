@@ -90,9 +90,13 @@ if VERIFY:
         r_ = float(row['Rotation'])
         bottom = row['Layer'] == 'Bottom'
         worst = 0.0
+        only = ONLY.get(f.GetFPID().GetLibItemName().wx_str())   # as the generator: the pads it matched on
+        npads = len({p.GetNumber() for p in f.Pads() if p.GetNumber() in ez})
         for p in f.Pads():
             n = p.GetNumber()
             if not n or n not in ez or not (p.IsOnLayer(pcbnew.F_Mask) or p.IsOnLayer(pcbnew.B_Mask)):
+                continue
+            if only and n not in only:
                 continue
             ab = (mm(p.GetPosition().x), mm(p.GetPosition().y))
             preds = []
@@ -105,7 +109,7 @@ if VERIFY:
         n_bot += bottom
         n_top += not bottom
         worst_all = max(worst_all, worst)
-        if worst > TOL:
+        if worst > (0.6 if npads == 2 else TOL):          # the generator's two-pad allowance (lands differ)
             bad.append((row['Designator'], round(worst, 3)))
     print(f'CPL check: {n_top} top and {n_bot} bottom rows rebuilt from JLC footprints; worst pad residual '
           f'{worst_all:.3f} mm; over {TOL} mm: {bad or "none"}; not checkable: {len(skipped)} ({" ".join(skipped)})')

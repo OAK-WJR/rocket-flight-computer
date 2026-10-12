@@ -379,12 +379,16 @@
             43780.5 -3386.76  43666.3 -3162.71  43518.5 -2959.28  43340.7 -2781.47
             43137.3 -2633.67  42913.2 -2519.51  42674.1 -2441.8  42425.7 -2402.47
             42174.3 -2402.47  41925.9 -2441.8))
+    (keepout "" (polygon B.Cu 0  18700 -72650  22200 -72650  22200 -76150  18700 -76150
+            18700 -72650))
     (via_keepout "" (polygon B.Cu 0  33755 -52905  38845 -52905  38845 -57095  33755 -57095
             33755 -52905))
-    (keepout "" (polygon B.Cu 0  33900 -54550  38700 -54550  38700 -55450  33900 -55450
-            33900 -54550))
+    (keepout "" (polygon B.Cu 0  17800 -87350  21300 -87350  21300 -90850  17800 -90850
+            17800 -87350))
     (via_keepout "" (polygon B.Cu 0  34355 -58905  37645 -58905  37645 -61695  34355 -61695
             34355 -58905))
+    (keepout "" (polygon B.Cu 0  33900 -54550  38700 -54550  38700 -55450  33900 -55450
+            33900 -54550))
     (keepout "" (polygon In2.Cu 0  22400 -33400  28200 -33400  28200 -39400  22400 -39400
             22400 -33400))
     (keepout "" (polygon F.Cu 0  24374.6 -53920  24429.1 -53974.5  24447.3 -54025.7  24466.6 -54147.7
@@ -977,78 +981,102 @@
     )
   )
   (placement
-    (component rocket:C0805
-      (place C8 28600 -15600 back 270 (PN 22uF))
-      (place C10 40100 -28400 back 270 (PN 22uF))
+    (component rocket:M3_DB128L_2P_BK
+      (place J124 10000 -75320 front 90 (PN "ARM CH1: BUS1 / RAW"))
+      (place J120 10000 -85480 front 90 (PN "ARM CH2: RAW / BUS2"))
     )
-    (component rocket:C_0603_1608Metric::5
-      (place C71 35700 -66900 back 270 (PN "100nF 50V X7R 10%"))
+    (component "rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL::1"
+      (place Q121 4000 -27300 back 180 (PN AON6403))
     )
-    (component rocket:M3_TPS2121_RUX
-      (place U11 29200 -10200 back 180 (PN TPS2121RUXR))
+    (component rocket:M3_DB128V_4P
+      (place J9 36250 -30700 front -90 (PN "CAM 5V / GND / RX / TX"))
     )
-    (component rocket:C_0603_1608Metric::2
-      (place C77 43700 -80600 front 0 (PN "47pF 50V C0G 5%"))
+    (component rocket:R2512
+      (place R135 22400 -82050 front 180 (PN "2R 1% 2W pulse"))
+      (place R134 22400 -77800 front 180 (PN "2R 1% 2W pulse"))
     )
-    (component "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR::1"
-      (place D122 32500 -11600 front 90 (PN BAT54S))
+    (component rocket:C_1206_3216Metric::1
+      (place C89 5900 -11600 front -90 (PN "22uF 25V X5R 10%"))
     )
-    (component rocket:C0603::5
-      (place C23 32299.999 -37000 back 90 (PN 4.7uF))
+    (component "rocket:LGA-14_L3.0-W2.5-P0.50-TL"
+      (place U4 36000 -60300 back 180 (PN LSM6DSV320X))
+    )
+    (component rocket:M3_NCD0805R1_K1
+      (place LED1 38300 -8800 front 90 (PN RED))
+    )
+    (component rocket:C0603::4
+      (place C22 32299.999 -30600 back 270 (PN 1uF))
+      (place C28 6800 -57600 back 270 (PN 4.7uF))
+      (place C60 35100 -12900 back 270 (PN 10nF))
+    )
+    (component rocket:C_0603_1608Metric
+      (place C81 12600 -19150 front 90 (PN "4.7nF 50V C0G 5%"))
+      (place C70 32400 -68500 back 90 (PN "4.7nF 50V C0G 5%"))
+      (place C74 44700 -76600 back 90 (PN "100nF 50V X7R 10%"))
     )
     (component rocket:C0603
       (place C139 24000 -91000 front 180 (PN 10nF))
       (place C127 23900 -69200 front 180 (PN 10nF))
       (place C87 7250 -21700 front 180 (PN 2.2uF))
     )
-    (component rocket:C0402::5
-      (place C26 22600 -34880 back 270 (PN 10pF))
-      (place C24 29400 -29500 back 270 (PN 100nF))
-      (place C21 29400 -31600 back 270 (PN 100nF))
+    (component rocket:R_0603_1608Metric::2
+      (place R87 26800 -20100 front 0 (PN "47k 1%"))
+      (place R71 43700 -75900 front 0 (PN "172k 0.1%"))
+      (place R72 43700 -74000 front 0 (PN "30.9k 0.1%"))
     )
-    (component rocket:M3_TPS709_DBV
-      (place U13 41500 -13500 back 180 (PN TPS70933DBVR))
+    (component rocket:C_0603_1608Metric::2
+      (place C77 43700 -80600 front 0 (PN "47pF 50V C0G 5%"))
     )
-    (component "rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL::1"
-      (place Q121 4000 -27300 back 180 (PN AON6403))
+    (component rocket:C0402::3
+      (place C13 29400 -39400 back 90 (PN 100nF))
+      (place C14 29400 -36900 back 90 (PN 100nF))
+      (place C17 14500 -42300 back 90 (PN 100nF))
     )
-    (component rocket:R0402::5
-      (place R168 32600 -34900 back 0 (PN 4.7k))
-      (place R13 32200 -57300 back 0 (PN 4.7k))
-      (place R5 24400 -45600 back 0 (PN 10k))
-      (place R123 10650 -32100 back 0 (PN 100k))
-      (place R104 32600 -12800 back 0 (PN 10k))
+    (component rocket:C_1206_3216Metric::2
+      (place C80 9150 -34100 back 0 (PN "10uF 50V X5R 10%"))
     )
-    (component rocket:R0402::6
-      (place R156 32200 -82300 back 90 (PN 10k))
-      (place R122 11750 -26600 back 90 (PN 100k))
-      (place R157 26100 -83500 back 90 (PN 10k))
-      (place R11 36500 -63200 back 90 (PN 10k))
-      (place R154 29800 -77600 back 90 (PN 10k))
+    (component rocket:R0402::7
+      (place R62 33700 -41200 back 270 (PN 10k))
+      (place R9 14500 -54100 back 270 (PN 1k))
+      (place R163 11600 -61400 back 270 (PN 10k))
+      (place R12 32700 -55600 back 270 (PN 4.7k))
+      (place R61 33500 -14500 back 270 (PN 10k))
+      (place R105 32200 -11100 back 270 (PN 1k))
+      (place R169 32000 -33299.999 back 270 (PN 4.7k))
+      (place R170 24400 -28000 back 270 (PN 4.7k))
     )
-    (component rocket:C0402::6
-      (place C18 27400 -43000 back 0 (PN 100nF))
-      (place C32 32299.999 -53900 back 0 (PN 100nF))
-      (place C5 17500 -17650 back 0 (PN 100nF))
+    (component rocket:C0805::2
+      (place C150 15000 -69000 back 180 (PN 22uF))
+      (place C151 15000 -66700 back 180 (PN 22uF))
+      (place C6 19200 -11400 back 180 (PN 22uF))
     )
-    (component rocket:R0805::2
-      (place R151 15500 -71300 back 0 (PN "1k 0805"))
-      (place R150 25200 -77200 back 0 (PN "1k 0805"))
-      (place R152 31200 -80100 back 0 (PN "1k 0805"))
+    (component rocket:C0603::1
+      (place C138 23400 -88600 front 90 (PN "220nF 25V X7R"))
+      (place C126 23400 -73400 front 90 (PN "220nF 25V X7R"))
+      (place C129 19200 -73700 front 90 (PN 10nF))
     )
-    (component rocket:C_1206_3216Metric
-      (place C95 7100 -16600 front 90 (PN "22uF 25V X5R 10%"))
-      (place C91 43300 -18000 back 90 (PN "1uF 50V X7R 10%"))
-      (place C96 8300 -38000 back 90 (PN "10uF 50V X5R 10%"))
+    (component rocket:R0402
+      (place R141 28300 -91000 front 180 (PN 5.1k))
+      (place R131 30150 -68100 front 180 (PN 10k))
+      (place R133 16850 -74400 front 180 (PN 2k))
+      (place R180 16850 -75550 front 180 (PN 2k))
+      (place R130 26400 -69900 front 180 (PN 2k))
+      (place R125 12800 -92100 front 180 (PN 2k))
+      (place R161 34600 -8800 front 180 (PN 10k))
+      (place R145 16850 -86400 front 180 (PN 2k))
+      (place R129 28300 -69900 front 180 (PN 5.1k))
+      (place R178 27440 -68750 front 180 (PN 2k))
+      (place R174 30150 -91450 front 180 (PN 5.1k))
+      (place R143 29250 -92550 front 180 (PN 10k))
+      (place R181 16850 -85400 front 180 (PN 2k))
+      (place R173 30150 -69350 front 180 (PN 5.1k))
+      (place R182 12800 -91100 front 180 (PN 2k))
+      (place R142 26400 -91000 front 180 (PN 2k))
     )
-    (component "rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54"
-      (place J122 23000 -57700 front 90 (PN "SERVO 3x4"))
-    )
-    (component "rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL"
-      (place Q120 4000 -13000 back 0 (PN AON6403))
-    )
-    (component rocket:M3_DB128V_4P
-      (place J9 36250 -30700 front -90 (PN "CAM 5V / GND / RX / TX"))
+    (component rocket:M3_ToolingHole_JLC
+      (place TH1 44800 -9200 front 0 (PN "JLC tooling hole"))
+      (place TH2 1400 -64599.999 front 0 (PN "JLC tooling hole"))
+      (place TH3 1400 -90000 front 0 (PN "JLC tooling hole"))
     )
     (component rocket:C0402::4
       (place C25 27120 -39100 back 180 (PN 10pF))
@@ -1057,21 +1085,52 @@
       (place C15 27800 -27900 back 180 (PN 100nF))
       (place C30 39100 -60800 back 180 (PN 100nF))
     )
+    (component "rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54"
+      (place J122 23000 -57700 front 90 (PN "SERVO 3x4"))
+    )
     (component "rocket:CAP-SMD_BD8.0-L8.3-W8.3-LS9.0-FD_H10.5"
       (place C121 32600 -57400 front 0 (PN "470uF 25V"))
     )
-    (component "rocket:LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL"
-      (place U1 21850 -35500 front 90 (PN STM32H743VIT6))
+    (component "rocket:BUZ-SMD_4P-L8.5-W8.5-P8.50-BR"
+      (place LS120 14100 -58000 front 0 (PN "MLT-8530"))
     )
-    (component rocket:C0402::2
-      (place C29 22900 -12200 front 0 (PN 100nF))
+    (component rocket:R0805
+      (place R126 21600 -73400 front -90 (PN 220R))
+      (place R138 21600 -88300 front -90 (PN 220R))
+    )
+    (component rocket:M3_TestPad_1.5
+      (place TP89 10400 -16600 front 0 (PN BAT_ILIM))
+      (place TP84 2400 -21900 front 0 (PN BAT_ENABLE))
+    )
+    (component rocket:R0402::1
+      (place R175 16170 -80250 front -90 (PN 5.1k))
+      (place R160 32900 -8600 front -90 (PN 1k))
+      (place R177 11400 -92100 front -90 (PN 5.1k))
+      (place R132 16170 -78500 front -90 (PN 5.1k))
     )
     (component "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR::3"
       (place Q123 10600 -64200 back 180 (PN AO3400A))
     )
-    (component rocket:R2512
-      (place R135 22400 -82050 front 180 (PN "2R 1% 2W pulse"))
-      (place R134 22400 -77800 front 180 (PN "2R 1% 2W pulse"))
+    (component rocket:R0805::3
+      (place R162 5300 -67099.999 back 180 (PN 220R))
+    )
+    (component "rocket:USB-C_SMD-TYPE-C-31-M-12_1"
+      (place J3 4600 -57300 front -90 (PN "USB-C 2.0"))
+    )
+    (component rocket:C0603::5
+      (place C23 32299.999 -37000 back 90 (PN 4.7uF))
+    )
+    (component rocket:M3_R2512_UR
+      (place R166 2400 -14000 front 90 (PN "0.33R 1% 2512"))
+    )
+    (component rocket:M3_AP63200_TSOT26
+      (place U8 41800 -76400 back 180 (PN "AP63301WU-7"))
+    )
+    (component rocket:M3_GRM32_1210::2
+      (place C92 41200 -9700 back 0 (PN "22uF 25V X7R 10%"))
+    )    (component rocket:R0805::1
+      (place R32 37600 -11700 front 0 (PN 220R))
+      (place R33 41700 -11400 front 0 (PN 220R))
     )
     (component rocket:R0402::2
       (place R165 5350 -20300 front 90 (PN "470k 1%"))
@@ -1082,8 +1141,16 @@
       (place R176 17170 -80550 front 90 (PN 5.1k))
       (place R127 21900 -70400 front 90 (PN 1k))
     )
-    (component rocket:C_1206_3216Metric::2
-      (place C80 9150 -34100 back 0 (PN "10uF 50V X5R 10%"))
+    (component rocket:C_1206_3216Metric
+      (place C95 7100 -16600 front 90 (PN "22uF 25V X5R 10%"))
+      (place C91 43300 -18000 back 90 (PN "1uF 50V X7R 10%"))
+      (place C96 8300 -38000 back 90 (PN "10uF 50V X5R 10%"))
+    )
+    (component rocket:M3_TXU0202_DCU
+      (place U12 41800 -33000 back 270 (PN TXU0202DCUR))
+    )
+    (component "rocket:SOD-323_L1.8-W1.3-LS2.5-RD"
+      (place D123 5300 -69200 back 180 (PN 1N5819WS))
     )
     (component rocket:R_0603_1608Metric::3
       (place R74 36700 -67800 front 90 (PN "1k 1%"))
@@ -1094,104 +1161,99 @@
       (place R110 16100 -54700 back 90 (PN "1k 1%"))
       (place R103 37800 -10600 back 90 (PN "1k 1%"))
     )
-    (component "rocket:SENSORS-SMD_MS5611-01BA03"
-      (place U5 36300 -55000 back 180 (PN MS561101BA03))
-    )
-    (component "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR::2"
-      (place Q122 10150 -29600 back 90 (PN AO3400A))
-    )
-    (component rocket:C0603::4
-      (place C22 32299.999 -30600 back 270 (PN 1uF))
-      (place C28 6800 -57600 back 270 (PN 4.7uF))
-      (place C60 35100 -12900 back 270 (PN 10nF))
+    (component "rocket:TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL"
+      (place U2 18000 -15000 back 180 (PN "AP63203WU-7"))
     )
     (component rocket:M3_GRM32_1210
       (place C82 14950 -22350 front 0 (PN "22uF 25V X7R 10%"))
-    )
-    (component rocket:M3_JST_PH_B2B_2P
-      (place J123 34500 -3800 front 0 (PN "PULL-PIN PH 1x2"))
-    )
-    (component "rocket:SOD-323_L1.8-W1.3-LS2.5-RD"
-      (place D123 5300 -69200 back 180 (PN 1N5819WS))
-    )
-    (component rocket:C_0603_1608Metric
-      (place C81 12600 -19150 front 90 (PN "4.7nF 50V C0G 5%"))
-      (place C70 32400 -68500 back 90 (PN "4.7nF 50V C0G 5%"))
-      (place C74 44700 -76600 back 90 (PN "100nF 50V X7R 10%"))
-    )
-    (component rocket:M3_TestPad_1.5
-      (place TP89 10400 -16600 front 0 (PN BAT_ILIM))
-      (place TP84 2400 -21900 front 0 (PN BAT_ENABLE))
     )
     (component rocket:C0805::1
       (place C7 20800 -15000 back 90 (PN 22uF))
       (place C11 40100 -37600 back 90 (PN 22uF))
     )
-    (component rocket:C_0603_1608Metric::4
-      (place C90 40200 -19300 back 180 (PN "100nF 50V X7R 10%"))
-      (place C86 20000 -42800 back 180 (PN "1uF 25V X7R 10%"))
-      (place C93 43000 -29600 back 180 (PN "100nF 50V X7R 10%"))
+    (component "rocket:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL"
+      (place D121 32000 -64400 back 180 (PN "SRV05-4"))
+      (place D4 11000 -56000 back 180 (PN "USBLC6-2SC6"))
     )
-    (component rocket:M3_GRM32_1210::2
-      (place C92 41200 -9700 back 0 (PN "22uF 25V X7R 10%"))
-    )    (component rocket:C0402
+    (component rocket:C0402::6
+      (place C18 27400 -43000 back 0 (PN 100nF))
+      (place C32 32299.999 -53900 back 0 (PN 100nF))
+      (place C5 17500 -17650 back 0 (PN 100nF))
+    )
+    (component rocket:C0402
       (place C88 9150 -20850 front 90 (PN "100nF 50V"))
     )
-    (component rocket:M3_TPS25947_RPW
-      (place U9 11200 -22600 front 90 (PN TPS259470LRPWR))
+    (component rocket:R_0603_1608Metric::4
+      (place R85 7000 -65000 back 0 (PN "66.5k 1%"))
     )
-    (component rocket:C0805::2
-      (place C150 15000 -69000 back 180 (PN 22uF))
-      (place C151 15000 -66700 back 180 (PN 22uF))
-      (place C6 19200 -11400 back 180 (PN 22uF))
+    (component rocket:C0402::2
+      (place C29 22900 -12200 front 0 (PN 100nF))
     )
-    (component rocket:M3_SRP5030TA
-      (place L3 41800 -82100 back 90 (PN 6.8uH))
+    (component rocket:R0402::6
+      (place R156 32200 -82300 back 90 (PN 10k))
+      (place R122 11750 -26600 back 90 (PN 100k))
+      (place R157 26100 -83500 back 90 (PN 10k))
+      (place R11 36500 -63200 back 90 (PN 10k))
+      (place R154 29800 -77600 back 90 (PN 10k))
+    )
+    (component rocket:C0603::3
+      (place C94 34400 -10400 back 180 (PN 10nF))
+      (place C19 18900 -27900 back 180 (PN 2.2uF))
+      (place C120 8150 -16000 back 180 (PN 2.2uF))
+      (place C20 16700 -42800 back 180 (PN 2.2uF))
+    )
+    (component rocket:M3_TPS2553_DBV
+      (place U10 15000 -62600 back 180 (PN TPS2553DBVR))
+    )
+    (component rocket:C0805
+      (place C8 28600 -15600 back 270 (PN 22uF))
+      (place C10 40100 -28400 back 270 (PN 22uF))
+    )
+    (component rocket:C0402::5
+      (place C26 22600 -34880 back 270 (PN 10pF))
+      (place C24 29400 -29500 back 270 (PN 100nF))
+      (place C21 29400 -31600 back 270 (PN 100nF))
+    )
+    (component rocket:R_0603_1608Metric::5
+      (place R80 16800 -9200 back 180 (PN "470k 1%"))
+      (place R102 43000 -27700 back 180 (PN "10k 1%"))
+      (place R91 29900 -20600 back 180 (PN "10k 1%"))
+      (place R100 43000 -36400 back 180 (PN "1k 1%"))
+      (place R90 16300 -52000 back 180 (PN "10k 1%"))
+    )
+    (component rocket:D_SMA
+      (place D9 16000 -13200 front 0 (PN "B340A-13-F"))
+    )
+    (component rocket:R0402::5
+      (place R168 32600 -34900 back 0 (PN 4.7k))
+      (place R13 32200 -57300 back 0 (PN 4.7k))
+      (place R5 24400 -45600 back 0 (PN 10k))
+      (place R123 10650 -32100 back 0 (PN 100k))
+      (place R104 32600 -12800 back 0 (PN 10k))
+    )
+    (component "rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL"
+      (place Q120 4000 -13000 back 0 (PN AON6403))
+    )
+    (component rocket:C_0603_1608Metric::5
+      (place C71 35700 -66900 back 270 (PN "100nF 50V X7R 10%"))
+    )
+    (component rocket:M3_DB128L_2P
+      (place J121 36000 -75320 front -90 (PN "IGNITER 1: E1- / E1+"))
+      (place J125 36000 -85480 front -90 (PN "IGNITER 2: E2+ / E2-"))
+    )
+    (component rocket:M3_KT0805Y_A1
+      (place LED2 41300 -8500 front 0 (PN YEL))
+    )
+    (component rocket:C0603::2
+      (place C122 14750 -95100 front -90 (PN 10nF))
+      (place C141 17100 -88400 front -90 (PN 10nF))
+    )
+    (component rocket:M3_TPS2595_DSG
+      (place U7 38200 -68650 back 90 (PN TPS259570DSGR))
     )
     (component rocket:C_0603_1608Metric::3
       (place C85 28200 -18700 back 0 (PN "470nF 25V X7R 10%"))
       (place C83 2300 -58300 back 0 (PN "100nF 50V X7R 10%"))
-    )
-    (component rocket:R_0603_1608Metric
-      (place R83 5350 -25250 front 180 (PN "280k 0.1%"))
-      (place R75 34000 -67700 front 180 (PN "10k 1%"))
-      (place R82 8630 -25250 front 180 (PN "2M 0.1%"))
-      (place R81 7600 -23300 front 180 (PN "300k 1%"))
-      (place R89 12800 -25100 front 180 (PN "10k 1%"))
-    )
-    (component rocket:M3_ToolingHole_JLC
-      (place TH1 44800 -9200 front 0 (PN "JLC tooling hole"))
-      (place TH2 1400 -64599.999 front 0 (PN "JLC tooling hole"))
-      (place TH3 1400 -90000 front 0 (PN "JLC tooling hole"))
-    )
-    (component rocket:R0805
-      (place R126 21600 -73400 front -90 (PN 220R))
-      (place R138 21600 -88300 front -90 (PN 220R))
-    )
-    (component "rocket:TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL"
-      (place U2 18000 -15000 back 180 (PN "AP63203WU-7"))
-    )
-    (component rocket:R0402::4
-      (place R7 13700 -56050 back 180 (PN 5.1k))
-      (place R64 39200 -58200 back 180 (PN 10k))
-      (place R155 18600 -71000 back 180 (PN 10k))
-      (place R171 24800 -30400 back 180 (PN 4.7k))
-      (place R172 22600 -30400 back 180 (PN 4.7k))
-      (place R63 35400 -41600 back 180 (PN 10k))
-      (place R121 9750 -27100 back 180 (PN 10k))
-      (place R8 9600 -61000 back 180 (PN 5.1k))
-      (place R120 6650 -17300 back 180 (PN 100k))
-      (place R179 27690 -92400 back 180 (PN 2k))
-      (place R60 32100 -19000 back 180 (PN 100k))
-    )
-    (component rocket:R0402::3
-      (place R124 12800 -93400 front 0 (PN 5.1k))
-      (place R10 27400 -21700 front 0 (PN 10k))
-    )
-    (component rocket:R_0603_1608Metric::2
-      (place R87 26800 -20100 front 0 (PN "47k 1%"))
-      (place R71 43700 -75900 front 0 (PN "172k 0.1%"))
-      (place R72 43700 -74000 front 0 (PN "30.9k 0.1%"))
     )
     (component rocket:M3_TestPad_1.5::1
       (place TP91 42500 -38600 back 180 (PN CAM_UART_OE))
@@ -1217,96 +1279,14 @@
       (place TP121 7500 -19400 back 180 (PN ACT_GATE))
       (place TP120 6100 -72700 back 180 (PN RAW_ACT))
     )
-    (component "rocket:IND-SMD_L4.0-W4.0"
-      (place L1 24500 -15000 back 180 (PN 4.7uH))
-    )
-    (component rocket:C0402::1
-      (place C160 34900 -10500 front -90 (PN 100nF))
-    )
-    (component rocket:C_0603_1608Metric::1
-      (place C140 28000 -84950 front 180 (PN "100nF 50V X7R 10%"))
-      (place C128 28000 -75850 front 180 (PN "100nF 50V X7R 10%"))
-    )
-    (component rocket:M3_AP63200_TSOT26
-      (place U8 41800 -76400 back 180 (PN "AP63301WU-7"))
-    )
-    (component rocket:R_0603_1608Metric::5
-      (place R80 16800 -9200 back 180 (PN "470k 1%"))
-      (place R102 43000 -27700 back 180 (PN "10k 1%"))
-      (place R91 29900 -20600 back 180 (PN "10k 1%"))
-      (place R100 43000 -36400 back 180 (PN "1k 1%"))
-      (place R90 16300 -52000 back 180 (PN "10k 1%"))
-    )
-    (component rocket:R_0603_1608Metric::4
-      (place R85 7000 -65000 back 0 (PN "66.5k 1%"))
-    )
-    (component rocket:M3_TPS2595_DSG
-      (place U7 38200 -68650 back 90 (PN TPS259570DSGR))
-    )
-    (component rocket:C_1206_3216Metric::1
-      (place C89 5900 -11600 front -90 (PN "22uF 25V X5R 10%"))
-    )
-    (component rocket:R0402
-      (place R141 28300 -91000 front 180 (PN 5.1k))
-      (place R131 30150 -68100 front 180 (PN 10k))
-      (place R133 16850 -74400 front 180 (PN 2k))
-      (place R180 16850 -75550 front 180 (PN 2k))
-      (place R130 26400 -69900 front 180 (PN 2k))
-      (place R125 12800 -92100 front 180 (PN 2k))
-      (place R161 34600 -8800 front 180 (PN 10k))
-      (place R145 16850 -86400 front 180 (PN 2k))
-      (place R129 28300 -69900 front 180 (PN 5.1k))
-      (place R178 27440 -68750 front 180 (PN 2k))
-      (place R174 30150 -91450 front 180 (PN 5.1k))
-      (place R143 29250 -92550 front 180 (PN 10k))
-      (place R181 16850 -85400 front 180 (PN 2k))
-      (place R173 30150 -69350 front 180 (PN 5.1k))
-      (place R182 12800 -91100 front 180 (PN 2k))
-      (place R142 26400 -91000 front 180 (PN 2k))
-    )
-    (component rocket:R0805::3
-      (place R162 5300 -67099.999 back 180 (PN 220R))
-    )
-    (component "rocket:USB-C_SMD-TYPE-C-31-M-12_1"
-      (place J3 4600 -57300 front -90 (PN "USB-C 2.0"))
-    )
-    (component rocket:C0603::1
-      (place C138 23400 -88600 front 90 (PN "220nF 25V X7R"))
-      (place C126 23400 -73400 front 90 (PN "220nF 25V X7R"))
-      (place C129 19200 -73700 front 90 (PN 10nF))
-    )
-    (component rocket:M3_TPS2553_DBV
-      (place U10 15000 -62600 back 180 (PN TPS2553DBVR))
-    )
-    (component "rocket:BUZ-SMD_4P-L8.5-W8.5-P8.50-BR"
-      (place LS120 14100 -58000 front 0 (PN "MLT-8530"))
+    (component rocket:M3_TPS709_DBV
+      (place U13 41500 -13500 back 180 (PN TPS70933DBVR))
     )
     (component rocket:D_SMB
       (place D8 11900 -13200 back 270 (PN SMBJ12CA))
     )
-    (component rocket:C0805::3
-      (place C9 23100 -18600 back 0 (PN 22uF))
-    )
-    (component rocket:M3_OSCON_F12
-      (place C84 7500 -33299.999 front 90 (PN "330uF 35V"))
-    )
-    (component rocket:M3_AON7524_DFN3x3A
-      (place Q125 27400 -88000 front -90 (PN AON7524))
-      (place Q124 27400 -72800.001 front -90 (PN AON7524))
-    )
-    (component rocket:M3_NCD0805R1_K1
-      (place LED1 38300 -8800 front 90 (PN RED))
-    )
-    (component "rocket:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL"
-      (place D121 32000 -64400 back 180 (PN "SRV05-4"))
-      (place D4 11000 -56000 back 180 (PN "USBLC6-2SC6"))
-    )
-    (component "rocket:HDR-TH_6P-P2.54-V-M-1x6"
-      (place J2 43700 -58650 front 90 (PN "SWD 1x6"))
-    )
-    (component rocket:M3_DB128L_2P_BK
-      (place J124 10000 -75320 front 90 (PN "ARM CH1: BUS1 / RAW"))
-      (place J120 10000 -85480 front 90 (PN "ARM CH2: RAW / BUS2"))
+    (component "rocket:SENSORS-SMD_MS5611-01BA03"
+      (place U5 36300 -55000 back 180 (PN MS561101BA03))
     )
     (component rocket:R_0603_1608Metric::1
       (place R84 10650 -19300 front -90 (PN "1.65k 0.1%"))
@@ -1317,22 +1297,30 @@
       (place R92 14400 -21500 back 270 (PN "10k 1%"))
       (place R164 32299.999 -27300 back 270 (PN "2.2R 1%"))
     )
-    (component rocket:M3_DB128L_2P
-      (place J121 36000 -75320 front -90 (PN "IGNITER 1: E1- / E1+"))
-      (place J125 36000 -85480 front -90 (PN "IGNITER 2: E2+ / E2-"))
+    (component rocket:C0402::1
+      (place C160 34900 -10500 front -90 (PN 100nF))
     )
-    (component rocket:C0603::2
-      (place C122 14750 -95100 front -90 (PN 10nF))
-      (place C141 17100 -88400 front -90 (PN 10nF))
+    (component "rocket:IND-SMD_L4.0-W4.0"
+      (place L1 24500 -15000 back 180 (PN 4.7uH))
     )
-    (component "rocket:SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL"
-      (place U3 24600 -16000 front 90 (PN W25Q128JVSIQ))
+    (component rocket:M3_TPS2121_RUX
+      (place U11 29200 -10200 back 180 (PN TPS2121RUXR))
     )
-    (component rocket:M3_R2512_UR
-      (place R166 2400 -14000 front 90 (PN "0.33R 1% 2512"))
+    (component rocket:M3_DB128V_4P_Entry
+      (place J1 19500 -5500 front 0 (PN "BAT+ / GND / SW / SW"))
     )
-    (component rocket:D_SMA
-      (place D9 16000 -13200 front 0 (PN "B340A-13-F"))
+    (component rocket:C_0603_1608Metric::1
+      (place C140 28000 -84950 front 180 (PN "100nF 50V X7R 10%"))
+      (place C128 28000 -75850 front 180 (PN "100nF 50V X7R 10%"))
+    )
+    (component rocket:M3_TPS25947_RPW
+      (place U9 11200 -22600 front 90 (PN TPS259470LRPWR))
+    )
+    (component rocket:M3_GRM32_1210::1
+      (place C75 41800 -87500 back 180 (PN "22uF 25V X7R 10%"))
+      (place C73 41800 -69400 back 180 (PN "22uF 25V X7R 10%"))
+      (place C76 41800 -90900 back 180 (PN "22uF 25V X7R 10%"))
+      (place C72 41800 -72800 back 180 (PN "22uF 25V X7R 10%"))
     )
     (component "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
       (place D120 20000 -91900 front -90 (PN BAT54A))
@@ -1340,57 +1328,73 @@
     (component rocket:R0805::4
       (place R153 26100 -80400 back 270 (PN "1k 0805"))
     )
-    (component rocket:C0603::3
-      (place C94 34400 -10400 back 180 (PN 10nF))
-      (place C19 18900 -27900 back 180 (PN 2.2uF))
-      (place C120 8150 -16000 back 180 (PN 2.2uF))
-      (place C20 16700 -42800 back 180 (PN 2.2uF))
+    (component "rocket:LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL"
+      (place U1 21850 -35500 front 90 (PN STM32H743VIT6))
     )
-    (component rocket:R0805::1
-      (place R32 37600 -11700 front 0 (PN 220R))
-      (place R33 41700 -11400 front 0 (PN 220R))
+    (component rocket:M3_OSCON_F12
+      (place C84 7500 -33299.999 front 90 (PN "330uF 35V"))
     )
-    (component rocket:M3_KT0805Y_A1
-      (place LED2 41300 -8500 front 0 (PN YEL))
+    (component "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR::2"
+      (place Q122 10150 -29600 back 90 (PN AO3400A))
     )
-    (component rocket:R0402::1
-      (place R175 16170 -80250 front -90 (PN 5.1k))
-      (place R160 32900 -8600 front -90 (PN 1k))
-      (place R177 11400 -92100 front -90 (PN 5.1k))
-      (place R132 16170 -78500 front -90 (PN 5.1k))
+    (component rocket:R0402::4
+      (place R7 13700 -56050 back 180 (PN 5.1k))
+      (place R64 39200 -58200 back 180 (PN 10k))
+      (place R155 18600 -71000 back 180 (PN 10k))
+      (place R171 24800 -30400 back 180 (PN 4.7k))
+      (place R172 22600 -30400 back 180 (PN 4.7k))
+      (place R63 35400 -41600 back 180 (PN 10k))
+      (place R121 9750 -27100 back 180 (PN 10k))
+      (place R8 9600 -61000 back 180 (PN 5.1k))
+      (place R120 6650 -17300 back 180 (PN 100k))
+      (place R179 27690 -92400 back 180 (PN 2k))
+      (place R60 32100 -19000 back 180 (PN 100k))
     )
-    (component rocket:M3_TXU0202_DCU
-      (place U12 41800 -33000 back 270 (PN TXU0202DCUR))
+    (component "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR::1"
+      (place D122 32500 -11600 front 90 (PN BAT54S))
     )
-    (component rocket:C0402::3
-      (place C13 29400 -39400 back 90 (PN 100nF))
-      (place C14 29400 -36900 back 90 (PN 100nF))
-      (place C17 14500 -42300 back 90 (PN 100nF))
+    (component rocket:M3_SRP5030TA
+      (place L3 41800 -82100 back 90 (PN 6.8uH))
     )
-    (component rocket:R0402::7
-      (place R62 33700 -41200 back 270 (PN 10k))
-      (place R9 14500 -54100 back 270 (PN 1k))
-      (place R163 11600 -61400 back 270 (PN 10k))
-      (place R12 32700 -55600 back 270 (PN 4.7k))
-      (place R61 33500 -14500 back 270 (PN 10k))
-      (place R105 32200 -11100 back 270 (PN 1k))
-      (place R169 32000 -33299.999 back 270 (PN 4.7k))
-      (place R170 24400 -28000 back 270 (PN 4.7k))
+    (component "rocket:SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL"
+      (place U3 24600 -16000 front 90 (PN W25Q128JVSIQ))
+    )
+    (component rocket:R0805::2
+      (place R151 15500 -71300 back 0 (PN "1k 0805"))
+      (place R150 25200 -77200 back 0 (PN "1k 0805"))
+      (place R152 31200 -80100 back 0 (PN "1k 0805"))
+    )
+    (component rocket:R_0603_1608Metric
+      (place R83 5350 -25250 front 180 (PN "280k 0.1%"))
+      (place R75 34000 -67700 front 180 (PN "10k 1%"))
+      (place R82 8630 -25250 front 180 (PN "2M 0.1%"))
+      (place R81 7600 -23300 front 180 (PN "300k 1%"))
+      (place R89 12800 -25100 front 180 (PN "10k 1%"))
+    )
+    (component rocket:C0805::3
+      (place C9 23100 -18600 back 0 (PN 22uF))
+    )
+    (component rocket:R0402::3
+      (place R124 12800 -93400 front 0 (PN 5.1k))
+      (place R10 27400 -21700 front 0 (PN 10k))
+    )
+    (component rocket:M3_JST_PH_B2B_2P
+      (place J123 34500 -3800 front 0 (PN "PULL-PIN PH 1x2"))
+    )
+    (component "rocket:HDR-TH_6P-P2.54-V-M-1x6"
+      (place J2 43700 -58650 front 90 (PN "SWD 1x6"))
     )
     (component "rocket:CRYSTAL-SMD_4P-L3.2-W2.5-BL"
       (place Y1 25600 -35750 back 0 (PN "25MHz CL8pF"))
     )
-    (component rocket:M3_DB128V_4P_Entry
-      (place J1 19500 -5500 front 0 (PN "BAT+ / GND / SW / SW"))
+    (component rocket:M3_AON7524_DFN3x3A
+      (place Q125 27400 -88000 front -90 (PN AON7524))
+      (place Q124 27400 -72800.001 front -90 (PN AON7524))
     )
-    (component "rocket:LGA-14_L3.0-W2.5-P0.50-TL"
-      (place U4 36000 -60300 back 180 (PN LSM6DSV320X))
-    )
-    (component rocket:M3_GRM32_1210::1
-      (place C75 41800 -87500 back 180 (PN "22uF 25V X7R 10%"))
-      (place C73 41800 -69400 back 180 (PN "22uF 25V X7R 10%"))
-      (place C76 41800 -90900 back 180 (PN "22uF 25V X7R 10%"))
-      (place C72 41800 -72800 back 180 (PN "22uF 25V X7R 10%"))
+    (component rocket:C_0603_1608Metric::4
+      (place C90 40200 -19300 back 180 (PN "100nF 50V X7R 10%"))
+      (place C86 20000 -42800 back 180 (PN "1uF 25V X7R 10%"))
+      (place C93 43000 -29600 back 180 (PN "100nF 50V X7R 10%"))
     )
 
   )
@@ -3597,83 +3601,121 @@
     )
   )
   (network
-    (net ARM1_SENSE
-      (pins R175-2 R133-1 R180-1 C129-1 R170-1)
+    (net "unconnected-(U4-OCS_aux-Pad10)"
+      (pins U4-10)
     )
-    (net RAW_ACT_SENSE_MID
-      (pins R177-2 R124-1)
+    (net CC2
+      (pins J3-B5 R8-1)
     )
-    (net SWDIO
-      (pins U1-72 J2-3)
+    (net PYRO2_CONT_MID
+      (pins R141-1 R174-2)
     )
-    (net USB_ILIM
-      (pins R85-1 U10-5)
+    (net CAM_5V
+      (pins C77-1 R71-1 J9-1 C91-1 TP72-1 C75-1 R78-1 C76-1 U13-1 R104-1 L3-2)
     )
-    (net "unconnected-(U4-SDO_aux-Pad11)"
-      (pins U4-11)
+    (net CAM_RX_BUFFER
+      (pins U12-1 R100-2)
     )
-    (net BUZZ_G
-      (pins R162-2 R163-1 Q123-1)
+    (net PYRO1_CONT
+      (pins R130-1 C127-1 R129-2 R178-1 R168-1)
     )
-    (net PYRO1_OUT
-      (pins R131-1 Q124-5 J121-1 C128-1 R173-1)
+    (net BAT_IN
+      (pins U9-5 R82-1 C88-1 C95-1 C89-1 J1-1 Q120-5 Q120-6 Q120-7 Q120-8 Q120-9 R80-1
+        TP80-1 C96-1 R167-1 C80-1 D8-1)
     )
-    (net SERVO1_MCU
-      (pins U1-22 D121-1 R150-1 R154-1)
+    (net SPI1_SCK
+      (pins U1-89 U4-13)
     )
-    (net "unconnected-(U1-PA15-Pad77)"
-      (pins U1-77)
+    (net SERVO2_OUT
+      (pins J122-4 R151-2)
     )
-    (net "unconnected-(U1-PB13-Pad52)"
-      (pins U1-52)
+    (net ACT_DRV
+      (pins Q122-3 R121-2)
     )
-    (net LED_YEL
-      (pins U1-37 R33-1)
+    (net "unconnected-(U1-PC10-Pad78)"
+      (pins U1-78)
     )
-    (net "unconnected-(U1-PA7-Pad31)"
-      (pins U1-31)
+    (net "unconnected-(U1-PE3-Pad2)"
+      (pins U1-2)
     )
-    (net "unconnected-(U1-PD5-Pad86)"
-      (pins U1-86)
+    (net ARM2_SENSE
+      (pins R145-1 C141-1 R176-2 R181-1 R171-1)
     )
-    (net CAM_PWR_EN
-      (pins U1-84 R74-1)
+    (net VLOGIC_SENSE
+      (pins U1-17 C60-1 R61-1 R60-2)
     )
-    (net "unconnected-(U1-PE1-Pad98)"
-      (pins U1-98)
-    )
-    (net "unconnected-(U1-PE14-Pad44)"
-      (pins U1-44)
-    )
-    (net I2C1_SCL
-      (pins U1-95 U5-8 U5-8@1 R12-1)
-    )
-    (net QSPI_IO2
-      (pins U1-1 U3-3)
-    )
-    (net ARM2_SENSE_MID
-      (pins R144-2 R176-1)
-    )
-    (net SPI1_MOSI
-      (pins U1-91 U4-14)
-    )
-    (net SW_NODE
-      (pins L1-1 U2-5 C5-1)
+    (net SERVO2_MCU
+      (pins U1-23 R155-1 R151-1 D121-3)
     )
     (net "unconnected-(U9-AUXOFF-Pad3)"
       (pins U9-3)
     )
-    (net CAM_INPUT_LIMITED
-      (pins C73-1 C72-1 U7-5 TP71-1 U8-2 U8-3)
+    (net 3V3A
+      (pins U1-20 U1-21 U4-5 U4-8 C22-1 C10-1 C11-1 U5-1 U5-1@1 U5-2 U5-2@1 C31-1
+        C32-1 C21-1 R164-2 C30-1)
+    )
+    (net PYRO2_GATE_N
+      (pins R139-1 U1-4 R138-1)
+    )
+    (net PYRO2_GATE
+      (pins R140-1 C138-1 Q125-4 R138-2 TP123-1)
+    )
+    (net BAT_SW_SOURCE
+      (pins J1-3 R80-2)
+    )
+    (net ARM2_SENSE_MCU
+      (pins U1-32 R171-2)
+    )
+    (net PYRO2_IGN
+      (pins R135-1 J125-1)
+    )
+    (net SERVO1_MCU
+      (pins U1-22 D121-1 R150-1 R154-1)
+    )
+    (net "unconnected-(U1-PA8-Pad67)"
+      (pins U1-67)
+    )
+    (net "unconnected-(U1-PE14-Pad44)"
+      (pins U1-44)
+    )
+    (net PYRO2_BUS
+      (pins R135-2 R144-1 J120-2)
+    )
+    (net PYRO1_COLD
+      (pins D120-1 R131-2)
+    )
+    (net "unconnected-(U1-PD5-Pad86)"
+      (pins U1-86)
+    )
+    (net BUZZ_G
+      (pins R162-2 R163-1 Q123-1)
     )
     (net CAM_FLT_RAW
       (pins R77-2 U7-6)
     )
-    (net BST
-      (pins U2-6 C5-2)
+    (net PYRO2_CONT
+      (pins R141-2 C139-1 R142-1 R169-1 R179-1)
     )
-    (net SERVO3_MCU
-      (pins U1-24 D121-4 R156-1 R152-1)
+    (net "unconnected-(U1-PD7-Pad88)"
+      (pins U1-88)
+    )
+    (net PYRO2_COLD
+      (pins D120-2 R143-2)
+    )
+    (net QSPI_NCS
+      (pins U1-92 R10-1 U3-1)
+    )
+    (net "unconnected-(U1-PD10-Pad57)"
+      (pins U1-57)
+    )
+    (net PYRO1_IGN
+      (pins J121-2 R134-1)
+    )
+    (net CAM_DVDT
+      (pins C70-1 U7-1)
+    )
+    (net CAM_EN
+      (pins R75-1 R74-2 U7-2)
     )
     (net 3V3
       (pins D120-3 D122-2 R161-1 U1-6 U1-11 U1-27 U1-50 U1-75 U1-100 C29-1 J2-5 LS120-1
@@ -3681,104 +3723,8 @@
         C16-1 R62-1 R91-1 C17-1 D123-1 R90-1 C18-1 R12-2 R11-2 R164-1 C15-1 C23-1
         C9-1)
     )
-    (net PYRO2_COLD
-      (pins D120-2 R143-2)
-    )
-    (net "unconnected-(U1-PE12-Pad42)"
-      (pins U1-42)
-    )
-    (net CAM_SW
-      (pins L3-1 C74-1 U8-5)
-    )
-    (net "unconnected-(U4-INT2-Pad9)"
-      (pins U4-9)
-    )
-    (net "unconnected-(U1-PA9-Pad68)"
-      (pins U1-68)
-    )
-    (net "unconnected-(U1-PE13-Pad43)"
-      (pins U1-43)
-    )
-    (net "unconnected-(U1-PB14-Pad53)"
-      (pins U1-53)
-    )
-    (net "unconnected-(LS120-DUMMY-Pad3)"
-      (pins LS120-3)
-    )
-    (net CAM_TX_WIRE
-      (pins J9-4 R101-2 TP76-1)
-    )
-    (net LED_RED
-      (pins R32-1 U1-38)
-    )
-    (net PYRO2_CONT_MID
-      (pins R141-1 R174-2)
-    )
-    (net SERVO4_OUT
-      (pins J122-10 R153-2)
-    )
-    (net "unconnected-(U1-PC11-Pad79)"
-      (pins U1-79)
-    )
-    (net QSPI_IO1
-      (pins U1-59 U3-2)
-    )
-    (net "unconnected-(U1-PC8-Pad65)"
-      (pins U1-65)
-    )
-    (net CAM_5V_SENSE
-      (pins U1-35 C94-1 R104-2 R105-1)
-    )
-    (net "unconnected-(U13-NC-Pad4)"
-      (pins U13-4)
-    )
-    (net CAM_FB
-      (pins C77-2 R71-2 R72-1 U8-1)
-    )
-    (net PYRO1_GATE
-      (pins R126-2 R128-1 Q124-4 C126-1 TP122-1)
-    )
-    (net SPI1_SCK
-      (pins U1-89 U4-13)
-    )
-    (net CAM_UART_OE
-      (pins U1-7 TP91-1 U12-6 R102-1)
-    )
-    (net BUZZ_OUT
-      (pins LS120-2 D123-2 Q123-3)
-    )
-    (net SERVO2_MCU
-      (pins U1-23 R155-1 R151-1 D121-3)
-    )
-    (net PYRO1_CONT_MID
-      (pins R129-1 R173-2)
-    )
-    (net CAM_FAULT_N
-      (pins U1-85 R77-1 R76-2)
-    )
-    (net IMU_CS
-      (pins U1-93 U4-12 R11-1)
-    )
-    (net LED_RED_A
-      (pins R32-2 LED1-2)
-    )
-    (net CAM_MCU_TX
-      (pins U1-46 U12-5)
-    )
-    (net RAW_PROTECTED
-      (pins U9-6 C82-1 D9-1 TP81-1 U7-3 U7-4 R122-1 R92-1 U11-2 TP70-1 C71-1)
-    )
-    (net CC1
-      (pins J3-A5 R7-1)
-    )
-    (net QSPI_IO0
-      (pins U1-58 U3-5)
-    )
-    (net "unconnected-(U1-PD8-Pad55)"
-      (pins U1-55)
-    )
-    (net PYRO1_CONT
-      (pins R130-1 C127-1 R129-2 R178-1 R168-1)
+    (net USB_OVLO
+      (pins R87-2 R88-1 U11-5)
     )
     (net GND
       (pins R83-2 R75-2 R140-2 C81-2 R133-2 R180-2 D122-1 R130-2 R139-2 R125-2 U9-8
@@ -3796,299 +3742,35 @@
         R105-2 U11-3 U11-4 U11-6 U11-12 C20-2 C15-2 C30-2 C23-2 TP88-1 R154-2 D8-2
         C9-2 U8-4 Q123-2 C93-2 R179-2 C6-2 C71-2 C92-2)
     )
-    (net PYRO1_COLD
-      (pins D120-1 R131-2)
-    )
-    (net RAW_ACT_SENSE
-      (pins R125-1 C122-1 R124-2 R182-1 R172-1)
-    )
-    (net QSPI_NCS
-      (pins U1-92 R10-1 U3-1)
-    )
-    (net "unconnected-(U1-PC12-Pad80)"
-      (pins U1-80)
-    )
-    (net "unconnected-(U1-PC7-Pad64)"
-      (pins U1-64)
-    )
-    (net USB_OVLO
-      (pins R87-2 R88-1 U11-5)
-    )
-    (net PYRO2_CONT_MCU
-      (pins U1-16 R169-2)
-    )
-    (net "unconnected-(U9-ITIMER-Pad10)"
-      (pins U9-10 U9-10@1)
-    )
-    (net PYRO1_CONT_MCU
-      (pins U1-15 R168-2)
-    )
-    (net "unconnected-(U1-PE0-Pad97)"
-      (pins U1-97)
-    )
-    (net BAT_SW_SOURCE
-      (pins J1-3 R80-2)
-    )
-    (net USB_FAULT_N
-      (pins U1-87 TP86-1 R90-2 U10-4)
-    )
-    (net "unconnected-(U1-PB12-Pad51)"
-      (pins U1-51)
-    )
-    (net "unconnected-(U4-OCS_aux-Pad10)"
-      (pins U4-10)
-    )
-    (net CAM_EN
-      (pins R75-1 R74-2 U7-2)
-    )
-    (net BARO_SDO
-      (pins R64-1 U5-6 U5-6@1)
-    )
-    (net BAT_IN
-      (pins U9-5 R82-1 C88-1 C95-1 C89-1 J1-1 Q120-5 Q120-6 Q120-7 Q120-8 Q120-9 R80-1
-        TP80-1 C96-1 R167-1 C80-1 D8-1)
-    )
-    (net CAM_IO_3V3
-      (pins U12-7 TP90-1 U13-5 R103-1 C93-1 C92-1)
-    )
-    (net SERVO1_OUT
-      (pins J122-1 R150-2)
-    )
-    (net SWCLK
-      (pins U1-76 J2-2)
-    )
-    (net ACT_EN
-      (pins Q122-1 R123-1 R122-2)
-    )
-    (net PYRO2_GATE_N
-      (pins R139-1 U1-4 R138-1)
-    )
-    (net USB_DP
-      (pins U1-71 J3-A6 J3-B6 D4-3 D4-4)
-    )
-    (net PYRO1_BUS
-      (pins J124-1 R132-1 R134-2)
-    )
-    (net ARM1_SENSE_MID
-      (pins R175-1 R132-2)
-    )
-    (net I2C1_SDA
-      (pins U1-96 R13-1 U5-7 U5-7@1)
-    )
-    (net PULLPIN_EXT
-      (pins R160-1 J123-1)
-    )
-    (net "unconnected-(U1-PC6-Pad63)"
-      (pins U1-63)
-    )
-    (net "unconnected-(U1-PE3-Pad2)"
-      (pins U1-2)
-    )
-    (net CAM_5V
-      (pins C77-1 R71-1 J9-1 C91-1 TP72-1 C75-1 R78-1 C76-1 U13-1 R104-1 L3-2)
-    )
-    (net CAM_RX_WIRE
-      (pins J9-3 TP75-1 R100-1)
-    )
-    (net "unconnected-(U1-PC9-Pad66)"
-      (pins U1-66)
-    )
-    (net "unconnected-(U1-PA6-Pad30)"
-      (pins U1-30)
-    )
-    (net BAT_ILIM
-      (pins U9-9 TP89-1 R84-1)
-    )
-    (net SERVO4_MCU
-      (pins U1-25 D121-6 R153-1 R157-1)
-    )
-    (net ACT_GATE
-      (pins Q120-4 C120-2 R121-1 R120-2 Q121-4 TP121-1)
-    )
-    (net ARM2_SENSE
-      (pins R145-1 C141-1 R176-2 R181-1 R171-1)
-    )
-    (net LOGIC_ILIM
-      (pins R86-1 U11-10)
-    )
-    (net "unconnected-(U1-PD10-Pad57)"
-      (pins U1-57)
-    )
-    (net RAW_ACT
-      (pins J124-2 R177-1 J122-2 J122-5 J122-8 J122-11 C121-1 J120-1 C150-1 C151-1
-        Q121-5 Q121-6 Q121-7 Q121-8 Q121-9 TP120-1)
-    )
-    (net VBUS
-      (pins J3-A4B9 J3-B4A9 C83-1 C28-1 D4-5 R9-1 U10-1 U10-3)
-    )
-    (net PYRO1_GATE_N
-      (pins R126-1 U1-3 R127-1)
-    )
-    (net CAM_RX_BUFFER
-      (pins U12-1 R100-2)
-    )
-    (net "unconnected-(U1-PD14-Pad61)"
-      (pins U1-61)
-    )
-    (net CAM_MCU_RX
-      (pins U1-47 U12-4)
-    )
-    (net "unconnected-(U1-PE11-Pad41)"
-      (pins U1-41)
-    )
-    (net USB_LIMITED
-      (pins R87-1 TP82-1 U10-6 C86-1 U11-7)
-    )
-    (net BAT_FAULT_N
-      (pins U9-4 U9-4@1 U1-81 R89-2 TP85-1)
-    )
-    (net VLOGIC_SENSE
-      (pins U1-17 C60-1 R61-1 R60-2)
-    )
-    (net "unconnected-(U13-EN_LEAVE_OPEN-Pad3)"
-      (pins U13-3)
-    )
-    (net QSPI_IO3
-      (pins U1-60 U3-7)
-    )
-    (net BAT_OVLO
-      (pins R83-1 U9-2 R82-2)
-    )
-    (net PYRO2_GATE
-      (pins R140-1 C138-1 Q125-4 R138-2 TP123-1)
-    )
-    (net BUZZ_DRV
-      (pins U1-29 R162-1)
-    )
-    (net PYRO2_BUS
-      (pins R135-2 R144-1 J120-2)
-    )
-    (net CC2
-      (pins J3-B5 R8-1)
-    )
-    (net BAT_DAMP
-      (pins C95-2 C89-2 R166-1)
-    )
-    (net "unconnected-(U1-PD7-Pad88)"
-      (pins U1-88)
-    )
-    (net "unconnected-(J2-Pin_6-Pad6)"
-      (pins J2-6)
-    )
-    (net 3V3A
-      (pins U1-20 U1-21 U4-5 U4-8 C22-1 C10-1 C11-1 U5-1 U5-1@1 U5-2 U5-2@1 C31-1
-        C32-1 C21-1 R164-2 C30-1)
-    )
-    (net "unconnected-(U1-PE6-Pad5)"
-      (pins U1-5)
-    )
-    (net BAT_SW_RETURN
-      (pins R165-1 J1-4)
-    )
-    (net "unconnected-(J3-SBU1-PadA8)"
-      (pins J3-A8)
-    )
-    (net VCAP2
-      (pins U1-73 C20-1)
-    )
-    (net NRST
-      (pins U1-14 J2-4 C24-1)
-    )
-    (net USB_DM
-      (pins U1-70 J3-A7 J3-B7 D4-1 D4-6)
-    )
-    (net ACT_DRV
-      (pins Q122-3 R121-2)
-    )
-    (net ARM1_SENSE_MCU
-      (pins U1-33 R170-2)
-    )
-    (net ARM2_SENSE_MCU
-      (pins U1-32 R171-2)
-    )
-    (net VLOGIC
-      (pins C84-1 U2-2 U2-3 C7-1 TP83-1 U11-1 U11-8 C6-1 R60-1)
-    )
-    (net "unconnected-(U1-PA10-Pad69)"
-      (pins U1-69)
-    )
-    (net "unconnected-(U1-PD9-Pad56)"
-      (pins U1-56)
-    )
-    (net LOGIC_SOURCE_ST
-      (pins U1-82 R91-2 TP87-1 U11-9)
-    )
-    (net RAW_ACT_SENSE_MCU
-      (pins U1-34 R172-2)
-    )
-    (net BAT_DVDT
-      (pins C81-1 U9-7 U9-7@1)
-    )
-    (net HSE_OUT
-      (pins U1-13 Y1-3 C26-1)
-    )
-    (net BOOT0
-      (pins U1-94 R5-1)
-    )
-    (net "unconnected-(U1-PC15-Pad9)"
-      (pins U1-9)
-    )
-    (net "unconnected-(U1-PA4-Pad28)"
-      (pins U1-28)
-    )
-    (net CAM_ILIM
-      (pins R70-1 TP73-1 U7-7)
-    )
-    (net "unconnected-(U1-PB15-Pad54)"
-      (pins U1-54)
-    )
-    (net BAT_ENABLE
-      (pins R165-2 U9-1 U9-1@1 TP84-1 R81-1 C87-1)
-    )
-    (net IMU_INT1
-      (pins U1-40 U4-4)
-    )
-    (net QSPI_CLK
-      (pins U1-36 U3-6)
-    )
-    (net PULLPIN
-      (pins D122-3 R160-2 R161-2 C160-1 U1-8)
-    )
-    (net HSE_IN
-      (pins U1-12 C25-1 Y1-1)
-    )
-    (net CAM_DVDT
-      (pins C70-1 U7-1)
-    )
-    (net SERVO3_OUT
-      (pins J122-7 R152-2)
-    )
-    (net PYRO2_IGN
-      (pins R135-1 J125-1)
-    )
-    (net CAM_TX_BUFFER
-      (pins R101-1 U12-8)
-    )
-    (net LED_YEL_A
-      (pins LED2-1 R33-2)
+    (net CAM_5V_SENSE
+      (pins U1-35 C94-1 R104-2 R105-1)
     )
     (net LOGIC_SS
       (pins C85-1 U11-11)
     )
-    (net PYRO1_IGN
-      (pins J121-2 R134-1)
+    (net USB_DP
+      (pins U1-71 J3-A6 J3-B6 D4-3 D4-4)
     )
-    (net SPI1_MISO
-      (pins U1-90 U4-1)
+    (net VBUS_SENSE
+      (pins U1-62 R9-2 TP92-1 R110-1)
     )
-    (net "unconnected-(U1-PE9-Pad39)"
-      (pins U1-39)
+    (net "unconnected-(U1-PC9-Pad66)"
+      (pins U1-66)
     )
-    (net "unconnected-(U1-PD2-Pad83)"
-      (pins U1-83)
+    (net IMU_CS
+      (pins U1-93 U4-12 R11-1)
     )
-    (net "unconnected-(U1-PE15-Pad45)"
-      (pins U1-45)
+    (net SPI1_MOSI
+      (pins U1-91 U4-14)
+    )
+    (net CAM_FB
+      (pins C77-2 R71-2 R72-1 U8-1)
+    )
+    (net SERVO3_OUT
+      (pins J122-7 R152-2)
+    )
+    (net BAT_DAMP
+      (pins C95-2 C89-2 R166-1)
     )
     (net CAM_BST
       (pins C74-2 U8-6)
@@ -4160,38 +3842,360 @@
         (width 200)
         (clearance 170)
       )
-    )    (net VBUS_SENSE
-      (pins U1-62 R9-2 TP92-1 R110-1)
+    )    (net SW_NODE
+      (pins L1-1 U2-5 C5-1)
     )
-    (net "unconnected-(LS120-DUMMY-Pad4)"
-      (pins LS120-4)
+    (net "unconnected-(U1-PD9-Pad56)"
+      (pins U1-56)
     )
-    (net "unconnected-(U1-PC10-Pad78)"
-      (pins U1-78)
+    (net BAT_ILIM
+      (pins U9-9 TP89-1 R84-1)
     )
-    (net SERVO2_OUT
-      (pins J122-4 R151-2)
+    (net CAM_MCU_RX
+      (pins U1-47 U12-4)
     )
-    (net PYRO2_OUT
-      (pins C140-1 Q125-5 R174-1 J125-2 R143-1)
+    (net PYRO1_BUS
+      (pins J124-1 R132-1 R134-2)
     )
-    (net PYRO2_CONT
-      (pins R141-2 C139-1 R142-1 R169-1 R179-1)
+    (net "unconnected-(U1-PB14-Pad53)"
+      (pins U1-53)
     )
-    (net "unconnected-(J3-SBU2-PadB8)"
-      (pins J3-B8)
+    (net USB_DM
+      (pins U1-70 J3-A7 J3-B7 D4-1 D4-6)
     )
-    (net ACT_FET_S
-      (pins Q120-1 Q120-2 Q120-3 C120-1 R120-1 Q121-1 Q121-2 Q121-3)
+    (net "unconnected-(U1-PB13-Pad52)"
+      (pins U1-52)
+    )
+    (net VLOGIC
+      (pins C84-1 U2-2 U2-3 C7-1 TP83-1 U11-1 U11-8 C6-1 R60-1)
+    )
+    (net HSE_IN
+      (pins U1-12 C25-1 Y1-1)
+    )
+    (net CAM_FAULT_N
+      (pins U1-85 R77-1 R76-2)
+    )
+    (net BAT_SW_RETURN
+      (pins R165-1 J1-4)
+    )
+    (net "unconnected-(U1-PA7-Pad31)"
+      (pins U1-31)
+    )
+    (net LED_RED
+      (pins R32-1 U1-38)
+    )
+    (net BOOT0
+      (pins U1-94 R5-1)
+    )
+    (net BAT_DVDT
+      (pins C81-1 U9-7 U9-7@1)
+    )
+    (net USB_ILIM
+      (pins R85-1 U10-5)
+    )
+    (net "unconnected-(U13-NC-Pad4)"
+      (pins U13-4)
+    )
+    (net BAT_ENABLE
+      (pins R165-2 U9-1 U9-1@1 TP84-1 R81-1 C87-1)
+    )
+    (net BARO_SDO
+      (pins R64-1 U5-6 U5-6@1)
+    )
+    (net SERVO1_OUT
+      (pins J122-1 R150-2)
+    )
+    (net PULLPIN_EXT
+      (pins R160-1 J123-1)
+    )
+    (net SPI1_MISO
+      (pins U1-90 U4-1)
+    )
+    (net CAM_TX_WIRE
+      (pins J9-4 R101-2 TP76-1)
+    )
+    (net CAM_RX_WIRE
+      (pins J9-3 TP75-1 R100-1)
+    )
+    (net "unconnected-(U1-PA9-Pad68)"
+      (pins U1-68)
+    )
+    (net QSPI_IO3
+      (pins U1-60 U3-7)
+    )
+    (net "unconnected-(U1-PD8-Pad55)"
+      (pins U1-55)
+    )
+    (net "unconnected-(U1-PA15-Pad77)"
+      (pins U1-77)
+    )
+    (net "unconnected-(U1-PC8-Pad65)"
+      (pins U1-65)
+    )
+    (net CAM_MCU_TX
+      (pins U1-46 U12-5)
+    )
+    (net USB_FAULT_N
+      (pins U1-87 TP86-1 R90-2 U10-4)
+    )
+    (net SERVO4_OUT
+      (pins J122-10 R153-2)
+    )
+    (net ACT_EN
+      (pins Q122-1 R123-1 R122-2)
+    )
+    (net RAW_ACT_SENSE_MID
+      (pins R177-2 R124-1)
+    )
+    (net "unconnected-(U1-PE13-Pad43)"
+      (pins U1-43)
+    )
+    (net "unconnected-(U1-PC6-Pad63)"
+      (pins U1-63)
+    )
+    (net "unconnected-(U1-PC15-Pad9)"
+      (pins U1-9)
+    )
+    (net "unconnected-(U1-PA6-Pad30)"
+      (pins U1-30)
+    )
+    (net NRST
+      (pins U1-14 J2-4 C24-1)
+    )
+    (net VBUS
+      (pins J3-A4B9 J3-B4A9 C83-1 C28-1 D4-5 R9-1 U10-1 U10-3)
+    )
+    (net "unconnected-(U4-SDO_aux-Pad11)"
+      (pins U4-11)
+    )
+    (net ARM1_SENSE_MID
+      (pins R175-1 R132-2)
+    )
+    (net "unconnected-(U1-PB15-Pad54)"
+      (pins U1-54)
     )
     (net VCAP1
       (pins U1-48 C19-1)
     )
-    (net "unconnected-(U1-PA8-Pad67)"
-      (pins U1-67)
+    (net PYRO2_OUT
+      (pins C140-1 Q125-5 R174-1 J125-2 R143-1)
+    )
+    (net "unconnected-(U1-PE1-Pad98)"
+      (pins U1-98)
+    )
+    (net PYRO1_GATE_N
+      (pins R126-1 U1-3 R127-1)
+    )
+    (net "unconnected-(U1-PE9-Pad39)"
+      (pins U1-39)
+    )
+    (net RAW_ACT
+      (pins J124-2 R177-1 J122-2 J122-5 J122-8 J122-11 C121-1 J120-1 C150-1 C151-1
+        Q121-5 Q121-6 Q121-7 Q121-8 Q121-9 TP120-1)
+    )
+    (net QSPI_CLK
+      (pins U1-36 U3-6)
+    )
+    (net SWCLK
+      (pins U1-76 J2-2)
+    )
+    (net "unconnected-(LS120-DUMMY-Pad4)"
+      (pins LS120-4)
+    )
+    (net "unconnected-(U1-PD14-Pad61)"
+      (pins U1-61)
+    )
+    (net "unconnected-(U1-PE11-Pad41)"
+      (pins U1-41)
+    )
+    (net PYRO1_GATE
+      (pins R126-2 R128-1 Q124-4 C126-1 TP122-1)
+    )
+    (net "unconnected-(U1-PD2-Pad83)"
+      (pins U1-83)
+    )
+    (net PYRO1_OUT
+      (pins R131-1 Q124-5 J121-1 C128-1 R173-1)
+    )
+    (net VCAP2
+      (pins U1-73 C20-1)
+    )
+    (net BAT_OVLO
+      (pins R83-1 U9-2 R82-2)
+    )
+    (net LOGIC_ILIM
+      (pins R86-1 U11-10)
+    )
+    (net BST
+      (pins U2-6 C5-2)
+    )
+    (net "unconnected-(U1-PA10-Pad69)"
+      (pins U1-69)
+    )
+    (net "unconnected-(U1-PC11-Pad79)"
+      (pins U1-79)
     )
     (net V3V3_SENSE
       (pins U1-18 R62-2 R63-1)
+    )
+    (net "unconnected-(U1-PB12-Pad51)"
+      (pins U1-51)
+    )
+    (net "unconnected-(U1-PC7-Pad64)"
+      (pins U1-64)
+    )
+    (net "unconnected-(U13-EN_LEAVE_OPEN-Pad3)"
+      (pins U13-3)
+    )
+    (net QSPI_IO1
+      (pins U1-59 U3-2)
+    )
+    (net ARM1_SENSE_MCU
+      (pins U1-33 R170-2)
+    )
+    (net ACT_GATE
+      (pins Q120-4 C120-2 R121-1 R120-2 Q121-4 TP121-1)
+    )
+    (net RAW_PROTECTED
+      (pins U9-6 C82-1 D9-1 TP81-1 U7-3 U7-4 R122-1 R92-1 U11-2 TP70-1 C71-1)
+    )
+    (net BUZZ_DRV
+      (pins U1-29 R162-1)
+    )
+    (net LED_RED_A
+      (pins R32-2 LED1-2)
+    )
+    (net "unconnected-(U1-PA4-Pad28)"
+      (pins U1-28)
+    )
+    (net ACT_FET_S
+      (pins Q120-1 Q120-2 Q120-3 C120-1 R120-1 Q121-1 Q121-2 Q121-3)
+    )
+    (net BUZZ_OUT
+      (pins LS120-2 D123-2 Q123-3)
+    )
+    (net CC1
+      (pins J3-A5 R7-1)
+    )
+    (net USB_LIMITED
+      (pins R87-1 TP82-1 U10-6 C86-1 U11-7)
+    )
+    (net "unconnected-(J3-SBU1-PadA8)"
+      (pins J3-A8)
+    )
+    (net CAM_SW
+      (pins L3-1 C74-1 U8-5)
+    )
+    (net LED_YEL_A
+      (pins LED2-1 R33-2)
+    )
+    (net PYRO1_CONT_MID
+      (pins R129-1 R173-2)
+    )
+    (net RAW_ACT_SENSE
+      (pins R125-1 C122-1 R124-2 R182-1 R172-1)
+    )
+    (net "unconnected-(U1-PE15-Pad45)"
+      (pins U1-45)
+    )
+    (net "unconnected-(U1-PE6-Pad5)"
+      (pins U1-5)
+    )
+    (net CAM_TX_BUFFER
+      (pins R101-1 U12-8)
+    )
+    (net QSPI_IO2
+      (pins U1-1 U3-3)
+    )
+    (net "unconnected-(U1-PE0-Pad97)"
+      (pins U1-97)
+    )
+    (net LOGIC_SOURCE_ST
+      (pins U1-82 R91-2 TP87-1 U11-9)
+    )
+    (net HSE_OUT
+      (pins U1-13 Y1-3 C26-1)
+    )
+    (net CAM_ILIM
+      (pins R70-1 TP73-1 U7-7)
+    )
+    (net PYRO2_CONT_MCU
+      (pins U1-16 R169-2)
+    )
+    (net LED_YEL
+      (pins U1-37 R33-1)
+    )
+    (net IMU_INT1
+      (pins U1-40 U4-4)
+    )
+    (net CAM_INPUT_LIMITED
+      (pins C73-1 C72-1 U7-5 TP71-1 U8-2 U8-3)
+    )
+    (net "unconnected-(J2-Pin_6-Pad6)"
+      (pins J2-6)
+    )
+    (net QSPI_IO0
+      (pins U1-58 U3-5)
+    )
+    (net CAM_PWR_EN
+      (pins U1-84 R74-1)
+    )
+    (net I2C1_SDA
+      (pins U1-96 R13-1 U5-7 U5-7@1)
+    )
+    (net "unconnected-(J3-SBU2-PadB8)"
+      (pins J3-B8)
+    )
+    (net "unconnected-(U1-PE12-Pad42)"
+      (pins U1-42)
+    )
+    (net CAM_IO_3V3
+      (pins U12-7 TP90-1 U13-5 R103-1 C93-1 C92-1)
+    )
+    (net RAW_ACT_SENSE_MCU
+      (pins U1-34 R172-2)
+    )
+    (net "unconnected-(U1-PC12-Pad80)"
+      (pins U1-80)
+    )
+    (net ARM1_SENSE
+      (pins R175-2 R133-1 R180-1 C129-1 R170-1)
+    )
+    (net "unconnected-(U4-INT2-Pad9)"
+      (pins U4-9)
+    )
+    (net "unconnected-(U9-ITIMER-Pad10)"
+      (pins U9-10 U9-10@1)
+    )
+    (net PYRO1_CONT_MCU
+      (pins U1-15 R168-2)
+    )
+    (net SERVO4_MCU
+      (pins U1-25 D121-6 R153-1 R157-1)
+    )
+    (net BAT_FAULT_N
+      (pins U9-4 U9-4@1 U1-81 R89-2 TP85-1)
+    )
+    (net PULLPIN
+      (pins D122-3 R160-2 R161-2 C160-1 U1-8)
+    )
+    (net I2C1_SCL
+      (pins U1-95 U5-8 U5-8@1 R12-1)
+    )
+    (net ARM2_SENSE_MID
+      (pins R144-2 R176-1)
+    )
+    (net "unconnected-(LS120-DUMMY-Pad3)"
+      (pins LS120-3)
+    )
+    (net CAM_UART_OE
+      (pins U1-7 TP91-1 U12-6 R102-1)
+    )
+    (net SWDIO
+      (pins U1-72 J2-3)
+    )
+    (net SERVO3_MCU
+      (pins U1-24 D121-4 R156-1 R152-1)
     )
 
   )
@@ -4319,9 +4323,9 @@
     (wire (path B.Cu 250  41300 -68250  41300 -68650)(net GND)(type protect))
     (wire (path B.Cu 250  43550 -34750  44650 -35850)(net GND)(type protect))
     (wire (path B.Cu 250  28950 -9050  28750 -8850)(net GND)(type protect))
-    (wire (path B.Cu 250  23970 -45600  23970 -45800)(net GND)(type protect))
     (wire (path B.Cu 250  43500 -74850  45200 -74850)(net GND)(type protect))
     (wire (path B.Cu 250  28450 -9050  28450 -7850)(net GND)(type protect))
+    (wire (path B.Cu 250  23970 -45800  24570 -46400)(net GND)(type protect))
     (wire (path B.Cu 250  36930 -53900  36930 -52500)(net GND)(type protect))
     (wire (path B.Cu 800  17000 -5550  16960 -5510)(net GND)(type protect))
     (wire (path B.Cu 250  28750 -8850  28750 -7450)(net GND)(type protect))
@@ -4332,11 +4336,11 @@
     (wire (path B.Cu 500  20800 -16000  20600 -16200)(net GND)(type protect))
     (wire (path B.Cu 250  38180 -52800  37780 -52400)(net GND)(type protect))
     (wire (path B.Cu 250  31300 -62150  31000 -62150)(net GND)(type protect))
+    (wire (path B.Cu 250  24570 -46400  24970 -46400)(net GND)(type protect))
     (wire (path B.Cu 250  42250 -33750  42850 -33750)(net GND)(type protect))
-    (wire (path B.Cu 250  23970 -45800  24570 -46400)(net GND)(type protect))
     (wire (path B.Cu 500  19600 -17200  19500 -17200)(net GND)(type protect))
     (wire (path B.Cu 250  34790 -60550  35190 -60550)(net GND)(type protect))
-    (wire (path B.Cu 250  24570 -46400  24970 -46400)(net GND)(type protect))
+    (wire (path B.Cu 250  23970 -45600  23970 -45800)(net GND)(type protect))
     (wire (path B.Cu 250  38900 -68650  39700 -67850)(net GND)(type protect))
     (wire (path B.Cu 250  32300 -29900  31500 -29100)(net GND)(type protect))
     (wire (path B.Cu 250  42050 -34550  42050 -33950)(net GND)(type protect))
@@ -4503,10 +4507,11 @@
     (wire (path B.Cu 400  39400 -17525  39400 -17425)(net CAM_5V)(type protect))
     (wire (path B.Cu 300  32400 -87325  33800 -85925)(net CAM_5V)(type protect))
     (wire (path B.Cu 800  40300 -87500  39500 -86700)(net CAM_5V)(type protect))
-    (wire (path F.Cu 150  33400 -38500  34800 -39900  40000 -39900)(net CAM_UART_OE)(type protect))
-    (wire (path F.Cu 200  29400 -38500  31100 -38500)(net CAM_UART_OE)(type protect))
-    (wire (path F.Cu 150  40000 -39900  41300 -38600)(net CAM_UART_OE)(type protect))
     (wire (path F.Cu 150  29400 -38500  33400 -38500)(net CAM_UART_OE)(type protect))
+    (wire (path F.Cu 200  29400 -38500  31100 -38500)(net CAM_UART_OE)(type protect))
+    (wire (path F.Cu 150  33400 -38500  34800 -39900)(net CAM_UART_OE)(type protect))
+    (wire (path F.Cu 150  40000 -39900  41300 -38600)(net CAM_UART_OE)(type protect))
+    (wire (path F.Cu 150  34800 -39900  40000 -39900)(net CAM_UART_OE)(type protect))
     (wire (path B.Cu 150  41300 -38600  42500 -38600)(net CAM_UART_OE)(type protect))
     (wire (path B.Cu 400  7420 -16000  7450 -16000)(net ACT_FET_S)(type protect))
     (wire (path B.Cu 400  6220 -17300  6220 -17000  7220 -16000  7420 -16000)(net ACT_FET_S)(type protect))
@@ -4679,23 +4684,24 @@
     (wire (path B.Cu 400  36800 -66575  36800 -65975)(net RAW_PROTECTED)(type protect))
     (wire (path B.Cu 400  39000 -65500  39000 -67700)(net RAW_PROTECTED)(type protect))
     (wire (path B.Cu 600  14500 -9000  15300 -8200)(net RAW_PROTECTED)(type protect))
-    (wire (path F.Cu 150  14250 -16230  17550 -16230)(net BAT_SW_RETURN)(type protect))
-    (wire (path F.Cu 150  19650 -13030  27150 -5530)(net BAT_SW_RETURN)(type protect))
-    (wire (path F.Cu 150  3850 -25830  4450 -26430)(net BAT_SW_RETURN)(type protect))
-    (wire (path F.Cu 150  17550 -16230  19650 -14130)(net BAT_SW_RETURN)(type protect))
-    (wire (path F.Cu 150  3850 -22230  3850 -25830)(net BAT_SW_RETURN)(type protect))
-    (wire (path F.Cu 150  27150 -5530  27120 -5500)(net BAT_SW_RETURN)(type protect))
-    (wire (path F.Cu 150  9850 -27730  12250 -27730)(net BAT_SW_RETURN)(type protect))
     (wire (path F.Cu 150  8550 -26430  9850 -27730)(net BAT_SW_RETURN)(type protect))
-    (wire (path F.Cu 150  19650 -14130  19650 -13030)(net BAT_SW_RETURN)(type protect))
+    (wire (path F.Cu 150  17550 -16230  19650 -14130)(net BAT_SW_RETURN)(type protect))
+    (wire (path F.Cu 150  19650 -13030  27150 -5530)(net BAT_SW_RETURN)(type protect))
     (wire (path F.Cu 150  5350 -20730  3850 -22230)(net BAT_SW_RETURN)(type protect))
+    (wire (path F.Cu 150  9850 -27730  12250 -27730)(net BAT_SW_RETURN)(type protect))
+    (wire (path F.Cu 150  27150 -5530  27120 -5500)(net BAT_SW_RETURN)(type protect))
+    (wire (path F.Cu 150  19650 -14130  19650 -13030)(net BAT_SW_RETURN)(type protect))
     (wire (path F.Cu 150  4450 -26430  8550 -26430)(net BAT_SW_RETURN)(type protect))
-    (wire (path B.Cu 150  13650 -27130  16350 -24430  16350 -19330)(net BAT_SW_RETURN)(type protect))
-    (wire (path In2.Cu 150  14250 -17230  14250 -16230)(net BAT_SW_RETURN)(type protect))
-    (wire (path In2.Cu 150  12250 -27730  12250 -27230)(net BAT_SW_RETURN)(type protect))
-    (wire (path In2.Cu 150  12350 -27130  13650 -27130)(net BAT_SW_RETURN)(type protect))
-    (wire (path In2.Cu 150  12250 -27230  12350 -27130)(net BAT_SW_RETURN)(type protect))
+    (wire (path F.Cu 150  3850 -25830  4450 -26430)(net BAT_SW_RETURN)(type protect))
+    (wire (path F.Cu 150  14250 -16230  17550 -16230)(net BAT_SW_RETURN)(type protect))
+    (wire (path F.Cu 150  3850 -22230  3850 -25830)(net BAT_SW_RETURN)(type protect))
+    (wire (path B.Cu 150  16350 -24430  16350 -19330)(net BAT_SW_RETURN)(type protect))
+    (wire (path B.Cu 150  13650 -27130  16350 -24430)(net BAT_SW_RETURN)(type protect))
     (wire (path In2.Cu 150  16350 -19330  14250 -17230)(net BAT_SW_RETURN)(type protect))
+    (wire (path In2.Cu 150  12250 -27230  12350 -27130)(net BAT_SW_RETURN)(type protect))
+    (wire (path In2.Cu 150  12250 -27730  12250 -27230)(net BAT_SW_RETURN)(type protect))
+    (wire (path In2.Cu 150  14250 -17230  14250 -16230)(net BAT_SW_RETURN)(type protect))
+    (wire (path In2.Cu 150  12350 -27130  13650 -27130)(net BAT_SW_RETURN)(type protect))
     (wire (path F.Cu 200  10500 -23500  8600 -23500)(net BAT_ENABLE)(type protect))
     (wire (path F.Cu 250  8450 -22200  8450 -23300)(net BAT_ENABLE)(type protect))
     (wire (path F.Cu 250  5350 -19870  6150 -19870)(net BAT_ENABLE)(type protect))
@@ -4750,46 +4756,46 @@
     (wire (path B.Cu 200  38730 -58225  38755 -58200  38770 -58200)(net BARO_SDO)(type protect))
     (wire (path B.Cu 200  38330 -58225  38730 -58225)(net BARO_SDO)(type protect))
     (wire (path B.Cu 200  36930 -56825  38330 -58225)(net BARO_SDO)(type protect))
+    (wire (path F.Cu 150  25850 -41350  24950 -40450)(net I2C1_SDA)(type protect))
+    (wire (path F.Cu 150  28550 -49550  33450 -54450)(net I2C1_SDA)(type protect))
     (wire (path F.Cu 150  18450 -47450  18450 -52650)(net I2C1_SDA)(type protect))
     (wire (path F.Cu 150  21550 -44350  18450 -47450)(net I2C1_SDA)(type protect))
     (wire (path F.Cu 150  25850 -43050  25850 -41350)(net I2C1_SDA)(type protect))
-    (wire (path F.Cu 150  28550 -49550  33450 -54450)(net I2C1_SDA)(type protect))
-    (wire (path F.Cu 150  25850 -41350  24950 -40450)(net I2C1_SDA)(type protect))
+    (wire (path B.Cu 150  34850 -55250  35650 -56050)(net I2C1_SDA)(type protect))
     (wire (path B.Cu 150  35650 -56850  35670 -56830)(net I2C1_SDA)(type protect))
-    (wire (path B.Cu 150  35650 -56050  35650 -56850)(net I2C1_SDA)(type protect))
-    (wire (path B.Cu 200  32730 -57400  35030 -57400)(net I2C1_SDA)(type protect))
-    (wire (path B.Cu 150  35670 -56830  35670 -56825)(net I2C1_SDA)(type protect))
     (wire (path B.Cu 150  34250 -55250  34850 -55250)(net I2C1_SDA)(type protect))
+    (wire (path B.Cu 200  32730 -57400  35030 -57400)(net I2C1_SDA)(type protect))
+    (wire (path B.Cu 150  35650 -56050  35650 -56850)(net I2C1_SDA)(type protect))
     (wire (path B.Cu 200  35030 -57400  35630 -56800)(net I2C1_SDA)(type protect))
     (wire (path B.Cu 200  32630 -57300  32730 -57400)(net I2C1_SDA)(type protect))
-    (wire (path B.Cu 150  33450 -54450  34250 -55250)(net I2C1_SDA)(type protect))
+    (wire (path B.Cu 150  35670 -56830  35670 -56825)(net I2C1_SDA)(type protect))
     (wire (path B.Cu 200  35630 -56800  35655 -56825  35670 -56825)(net I2C1_SDA)(type protect))
-    (wire (path B.Cu 150  34850 -55250  35650 -56050)(net I2C1_SDA)(type protect))
+    (wire (path B.Cu 150  33450 -54450  34250 -55250)(net I2C1_SDA)(type protect))
     (wire (path In2.Cu 150  24950 -40950  21550 -44350)(net I2C1_SDA)(type protect))
-    (wire (path In2.Cu 150  19550 -54950  26450 -54950)(net I2C1_SDA)(type protect))
-    (wire (path In2.Cu 150  28550 -52850  28550 -49550)(net I2C1_SDA)(type protect))
-    (wire (path In2.Cu 150  26450 -54950  28550 -52850)(net I2C1_SDA)(type protect))
-    (wire (path In2.Cu 150  18450 -53850  19550 -54950)(net I2C1_SDA)(type protect))
     (wire (path In2.Cu 150  18450 -52650  18450 -53850)(net I2C1_SDA)(type protect))
     (wire (path In2.Cu 150  24950 -40450  24950 -40950)(net I2C1_SDA)(type protect))
-    (wire (path F.Cu 150  29400 -30500  28600 -30500  28000 -31100)(net SERVO2_MCU)(type protect))
-    (wire (path F.Cu 150  27800 -60400  33400 -66000)(net SERVO2_MCU)(type protect))
-    (wire (path F.Cu 150  27400 -60400  27800 -60400)(net SERVO2_MCU)(type protect))
-    (wire (path F.Cu 150  28000 -31100  28000 -31700)(net SERVO2_MCU)(type protect))
+    (wire (path In2.Cu 150  19550 -54950  26450 -54950  28550 -52850)(net I2C1_SDA)(type protect))
+    (wire (path In2.Cu 150  18450 -53850  19550 -54950)(net I2C1_SDA)(type protect))
+    (wire (path In2.Cu 150  28550 -52850  28550 -49550)(net I2C1_SDA)(type protect))
     (wire (path F.Cu 150  33400 -66000  33700 -66000)(net SERVO2_MCU)(type protect))
-    (wire (path B.Cu 150  28100 -40600  27800 -40600)(net SERVO2_MCU)(type protect))
-    (wire (path B.Cu 150  33700 -64000  33000 -63300)(net SERVO2_MCU)(type protect))
-    (wire (path B.Cu 150  24400 -51300  24400 -59800)(net SERVO2_MCU)(type protect))
-    (wire (path B.Cu 150  33700 -66000  33700 -64000)(net SERVO2_MCU)(type protect))
-    (wire (path B.Cu 150  27800 -40600  25700 -42700)(net SERVO2_MCU)(type protect))
-    (wire (path B.Cu 150  33000 -63300  32950 -63250)(net SERVO2_MCU)(type protect))
-    (wire (path B.Cu 150  25700 -42700  25700 -48800)(net SERVO2_MCU)(type protect))
-    (wire (path B.Cu 150  24400 -59800  25000 -60400  27400 -60400)(net SERVO2_MCU)(type protect))
+    (wire (path F.Cu 150  27800 -60400  33400 -66000)(net SERVO2_MCU)(type protect))
+    (wire (path F.Cu 150  28600 -30500  28000 -31100  28000 -31700)(net SERVO2_MCU)(type protect))
+    (wire (path F.Cu 150  29400 -30500  28600 -30500)(net SERVO2_MCU)(type protect))
+    (wire (path F.Cu 150  27400 -60400  27800 -60400)(net SERVO2_MCU)(type protect))
     (wire (path B.Cu 150  25700 -48800  26300 -49400)(net SERVO2_MCU)(type protect))
-    (wire (path In2.Cu 150  28500 -40200  28100 -40600)(net SERVO2_MCU)(type protect))
-    (wire (path In2.Cu 150  28000 -31700  28500 -32200)(net SERVO2_MCU)(type protect))
-    (wire (path In2.Cu 150  26300 -49400  24400 -51300)(net SERVO2_MCU)(type protect))
+    (wire (path B.Cu 150  33700 -64000  33000 -63300)(net SERVO2_MCU)(type protect))
+    (wire (path B.Cu 150  33700 -66000  33700 -64000)(net SERVO2_MCU)(type protect))
+    (wire (path B.Cu 150  25700 -42700  25700 -48800)(net SERVO2_MCU)(type protect))
+    (wire (path B.Cu 150  28100 -40600  27800 -40600)(net SERVO2_MCU)(type protect))
+    (wire (path B.Cu 150  25000 -60400  27400 -60400)(net SERVO2_MCU)(type protect))
+    (wire (path B.Cu 150  24400 -51300  24400 -59800)(net SERVO2_MCU)(type protect))
+    (wire (path B.Cu 150  27800 -40600  25700 -42700)(net SERVO2_MCU)(type protect))
+    (wire (path B.Cu 150  24400 -59800  25000 -60400)(net SERVO2_MCU)(type protect))
+    (wire (path B.Cu 150  33000 -63300  32950 -63250)(net SERVO2_MCU)(type protect))
     (wire (path In2.Cu 150  28500 -32200  28500 -40200)(net SERVO2_MCU)(type protect))
+    (wire (path In2.Cu 150  28000 -31700  28500 -32200)(net SERVO2_MCU)(type protect))
+    (wire (path In2.Cu 150  28500 -40200  28100 -40600)(net SERVO2_MCU)(type protect))
+    (wire (path In2.Cu 150  26300 -49400  24400 -51300)(net SERVO2_MCU)(type protect))
     (wire (path F.Cu 200  28550 -54450  28550 -56250)(net SPI1_MISO)(type protect))
     (wire (path F.Cu 200  22850 -43050  22850 -48750  28550 -54450)(net SPI1_MISO)(type protect))
     (wire (path B.Cu 200  28550 -56250  33550 -61250)(net SPI1_MISO)(type protect))
@@ -4895,28 +4901,27 @@
     (wire (path B.Cu 200  42550 -34550  43850 -35850)(net CAM_RX_BUFFER)(type protect))
     (wire (path B.Cu 200  43850 -36450  43825 -36425)(net CAM_RX_BUFFER)(type protect))
     (wire (path B.Cu 200  43850 -35850  43850 -36450)(net CAM_RX_BUFFER)(type protect))
-    (wire (path F.Cu 150  17350 -27150  19950 -24550)(net CAM_MCU_RX)(type protect))
+    (wire (path F.Cu 150  17350 -27150  19950 -24550  21150 -24550)(net CAM_MCU_RX)(type protect))
     (wire (path F.Cu 150  17350 -27950  17350 -27150)(net CAM_MCU_RX)(type protect))
-    (wire (path F.Cu 150  19950 -24550  21150 -24550)(net CAM_MCU_RX)(type protect))
-    (wire (path B.Cu 150  37950 -30750  41050 -33850)(net CAM_MCU_RX)(type protect))
-    (wire (path B.Cu 150  31150 -24850  35950 -24850  37050 -25950)(net CAM_MCU_RX)(type protect))
-    (wire (path B.Cu 150  41050 -33850  41050 -34550)(net CAM_MCU_RX)(type protect))
-    (wire (path In2.Cu 150  21150 -24550  22750 -24550)(net CAM_MCU_RX)(type protect))
-    (wire (path In2.Cu 150  37950 -26850  37950 -30750)(net CAM_MCU_RX)(type protect))
-    (wire (path In2.Cu 150  26150 -23650  27350 -24850  31150 -24850)(net CAM_MCU_RX)(type protect))
+    (wire (path B.Cu 150  37950 -30750  41050 -33850  41050 -34550)(net CAM_MCU_RX)(type protect))
+    (wire (path B.Cu 150  35950 -24850  37050 -25950)(net CAM_MCU_RX)(type protect))
+    (wire (path B.Cu 150  31150 -24850  35950 -24850)(net CAM_MCU_RX)(type protect))
     (wire (path In2.Cu 150  37050 -25950  37950 -26850)(net CAM_MCU_RX)(type protect))
-    (wire (path In2.Cu 150  22750 -24550  23650 -23650  26150 -23650)(net CAM_MCU_RX)(type protect))
-    (wire (path F.Cu 150  18750 -26250  20750 -26250)(net CAM_MCU_TX)(type protect))
-    (wire (path F.Cu 150  30750 -23650  33650 -26550)(net CAM_MCU_TX)(type protect))
-    (wire (path F.Cu 150  17850 -27150  18750 -26250)(net CAM_MCU_TX)(type protect))
+    (wire (path In2.Cu 150  26150 -23650  27350 -24850  31150 -24850)(net CAM_MCU_RX)(type protect))
+    (wire (path In2.Cu 150  22750 -24550  23650 -23650)(net CAM_MCU_RX)(type protect))
+    (wire (path In2.Cu 150  37950 -26850  37950 -30750)(net CAM_MCU_RX)(type protect))
+    (wire (path In2.Cu 150  23650 -23650  26150 -23650)(net CAM_MCU_RX)(type protect))
+    (wire (path In2.Cu 150  21150 -24550  22750 -24550)(net CAM_MCU_RX)(type protect))
     (wire (path F.Cu 150  17850 -27950  17850 -27150)(net CAM_MCU_TX)(type protect))
     (wire (path F.Cu 150  41050 -29950  41050 -30550)(net CAM_MCU_TX)(type protect))
-    (wire (path F.Cu 150  37650 -26550  41050 -29950)(net CAM_MCU_TX)(type protect))
     (wire (path F.Cu 150  33650 -26550  37650 -26550)(net CAM_MCU_TX)(type protect))
+    (wire (path F.Cu 150  30750 -23650  33650 -26550)(net CAM_MCU_TX)(type protect))
+    (wire (path F.Cu 150  37650 -26550  41050 -29950)(net CAM_MCU_TX)(type protect))
+    (wire (path F.Cu 150  18750 -26250  20750 -26250)(net CAM_MCU_TX)(type protect))
+    (wire (path F.Cu 150  17850 -27150  18750 -26250)(net CAM_MCU_TX)(type protect))
     (wire (path B.Cu 150  41050 -30550  41050 -31450)(net CAM_MCU_TX)(type protect))
     (wire (path B.Cu 150  20750 -26250  23950 -23050)(net CAM_MCU_TX)(type protect))
-    (wire (path In2.Cu 150  30150 -23050  30750 -23650)(net CAM_MCU_TX)(type protect))
-    (wire (path In2.Cu 150  23950 -23050  30150 -23050)(net CAM_MCU_TX)(type protect))
+    (wire (path In2.Cu 150  23950 -23050  30150 -23050  30750 -23650)(net CAM_MCU_TX)(type protect))
     (wire (path B.Cu 250  42800 -14475  42800 -14450)(net CAM_IO_3V3)(type protect))
     (wire (path B.Cu 250  41900 -13600  42800 -14500)(net CAM_IO_3V3)(type protect))
     (wire (path B.Cu 250  41900 -13575  42800 -14475)(net CAM_IO_3V3)(type protect))
@@ -4974,62 +4979,64 @@
     (wire (path B.Cu 200  25230 -30370  25230 -30400)(net ARM2_SENSE_MCU)(type protect))
     (wire (path B.Cu 200  25250 -30350  25230 -30370)(net ARM2_SENSE_MCU)(type protect))
     (wire (path B.Cu 200  24350 -29350  25250 -30250  25250 -30350)(net ARM2_SENSE_MCU)(type protect))
-    (wire (path F.Cu 150  29400 -31000  31400 -31000  32400 -30000  32400 -29000)(net SERVO1_MCU)(type protect))
-    (wire (path F.Cu 150  34600 -40700  31200 -44100  28500 -44100)(net SERVO1_MCU)(type protect))
-    (wire (path B.Cu 150  26900 -53700  26900 -59100  31000 -63200  31100 -63200)(net SERVO1_MCU)(type protect))
-    (wire (path B.Cu 150  28500 -44100  28500 -48800)(net SERVO1_MCU)(type protect))
-    (wire (path B.Cu 150  31100 -63200  31050 -63250)(net SERVO1_MCU)(type protect))
+    (wire (path F.Cu 150  31400 -31000  32400 -30000)(net SERVO1_MCU)(type protect))
+    (wire (path F.Cu 150  34600 -40700  31200 -44100)(net SERVO1_MCU)(type protect))
+    (wire (path F.Cu 150  29400 -31000  31400 -31000)(net SERVO1_MCU)(type protect))
+    (wire (path F.Cu 150  31200 -44100  28500 -44100)(net SERVO1_MCU)(type protect))
+    (wire (path F.Cu 150  32400 -30000  32400 -29000)(net SERVO1_MCU)(type protect))
     (wire (path B.Cu 150  28500 -48800  27100 -50200)(net SERVO1_MCU)(type protect))
-    (wire (path In2.Cu 150  27100 -53500  26900 -53700)(net SERVO1_MCU)(type protect))
-    (wire (path In2.Cu 150  32400 -29000  34400 -29000)(net SERVO1_MCU)(type protect))
-    (wire (path In2.Cu 150  34600 -29200  34600 -40700)(net SERVO1_MCU)(type protect))
-    (wire (path In2.Cu 150  27100 -50200  27100 -53500)(net SERVO1_MCU)(type protect))
-    (wire (path In2.Cu 150  34400 -29000  34600 -29200)(net SERVO1_MCU)(type protect))
+    (wire (path B.Cu 150  28500 -44100  28500 -48800)(net SERVO1_MCU)(type protect))
+    (wire (path B.Cu 150  26900 -53700  26900 -59100)(net SERVO1_MCU)(type protect))
+    (wire (path B.Cu 150  31100 -63200  31050 -63250)(net SERVO1_MCU)(type protect))
+    (wire (path B.Cu 150  31000 -63200  31100 -63200)(net SERVO1_MCU)(type protect))
+    (wire (path B.Cu 150  26900 -59100  31000 -63200)(net SERVO1_MCU)(type protect))
+    (wire (path In2.Cu 150  27100 -50200  27100 -53500  26900 -53700)(net SERVO1_MCU)(type protect))
+    (wire (path In2.Cu 150  32400 -29000  34400 -29000  34600 -29200  34600 -40700)(net SERVO1_MCU)(type protect))
     (wire (path F.Cu 150  29400 -30000  31300 -30000)(net SERVO3_MCU)(type protect))
     (wire (path B.Cu 200  32950 -66550  33050 -66650)(net SERVO3_MCU)(type protect))
-    (wire (path B.Cu 150  34700 -33100  34700 -40000)(net SERVO3_MCU)(type protect))
-    (wire (path B.Cu 200  32950 -65550  32950 -66550)(net SERVO3_MCU)(type protect))
     (wire (path B.Cu 150  33000 -65500  32950 -65550)(net SERVO3_MCU)(type protect))
+    (wire (path B.Cu 200  32950 -65550  32950 -66550)(net SERVO3_MCU)(type protect))
     (wire (path B.Cu 150  33000 -66100  33000 -65500)(net SERVO3_MCU)(type protect))
-    (wire (path B.Cu 150  33800 -32200  34700 -33100)(net SERVO3_MCU)(type protect))
+    (wire (path B.Cu 150  33500 -66600  33000 -66100)(net SERVO3_MCU)(type protect))
+    (wire (path B.Cu 150  34700 -33100  34700 -40000)(net SERVO3_MCU)(type protect))
     (wire (path B.Cu 150  33900 -66600  33500 -66600)(net SERVO3_MCU)(type protect))
     (wire (path B.Cu 150  35700 -63700  35700 -64800)(net SERVO3_MCU)(type protect))
-    (wire (path B.Cu 150  34700 -40000  35400 -40700)(net SERVO3_MCU)(type protect))
-    (wire (path B.Cu 150  33500 -66600  33000 -66100)(net SERVO3_MCU)(type protect))
+    (wire (path B.Cu 150  33800 -32200  34700 -33100)(net SERVO3_MCU)(type protect))
     (wire (path B.Cu 150  35700 -64800  33900 -66600)(net SERVO3_MCU)(type protect))
-    (wire (path In2.Cu 150  35200 -62800  35200 -63200)(net SERVO3_MCU)(type protect))
-    (wire (path In2.Cu 150  31300 -30000  31600 -30000)(net SERVO3_MCU)(type protect))
-    (wire (path In2.Cu 150  35100 -62700  35200 -62800)(net SERVO3_MCU)(type protect))
-    (wire (path In2.Cu 150  35200 -63200  35700 -63700)(net SERVO3_MCU)(type protect))
-    (wire (path In2.Cu 150  35400 -40700  35400 -52500)(net SERVO3_MCU)(type protect))
-    (wire (path In2.Cu 150  31600 -30000  33800 -32200)(net SERVO3_MCU)(type protect))
-    (wire (path In2.Cu 150  34900 -53000  34900 -62400)(net SERVO3_MCU)(type protect))
+    (wire (path B.Cu 150  34700 -40000  35400 -40700)(net SERVO3_MCU)(type protect))
     (wire (path In2.Cu 150  35100 -62600  35100 -62700)(net SERVO3_MCU)(type protect))
-    (wire (path In2.Cu 150  35400 -52500  34900 -53000)(net SERVO3_MCU)(type protect))
+    (wire (path In2.Cu 150  31600 -30000  33800 -32200)(net SERVO3_MCU)(type protect))
     (wire (path In2.Cu 150  34900 -62400  35100 -62600)(net SERVO3_MCU)(type protect))
-    (wire (path F.Cu 150  27900 -30200  27900 -30300)(net SERVO4_MCU)(type protect))
+    (wire (path In2.Cu 150  35100 -62700  35200 -62800)(net SERVO3_MCU)(type protect))
+    (wire (path In2.Cu 150  31300 -30000  31600 -30000)(net SERVO3_MCU)(type protect))
+    (wire (path In2.Cu 150  35200 -62800  35200 -63200)(net SERVO3_MCU)(type protect))
+    (wire (path In2.Cu 150  35400 -40700  35400 -52500)(net SERVO3_MCU)(type protect))
+    (wire (path In2.Cu 150  34900 -53000  34900 -62400)(net SERVO3_MCU)(type protect))
+    (wire (path In2.Cu 150  35200 -63200  35700 -63700)(net SERVO3_MCU)(type protect))
+    (wire (path In2.Cu 150  35400 -52500  34900 -53000)(net SERVO3_MCU)(type protect))
+    (wire (path F.Cu 150  29400 -29500  28600 -29500)(net SERVO4_MCU)(type protect))
     (wire (path F.Cu 150  22300 -30300  21500 -31100)(net SERVO4_MCU)(type protect))
-    (wire (path F.Cu 150  26500 -30300  22300 -30300)(net SERVO4_MCU)(type protect))
-    (wire (path F.Cu 150  19200 -47600  19200 -58300)(net SERVO4_MCU)(type protect))
+    (wire (path F.Cu 150  27900 -30200  27900 -30300)(net SERVO4_MCU)(type protect))
     (wire (path F.Cu 150  18800 -44600  18800 -46300)(net SERVO4_MCU)(type protect))
     (wire (path F.Cu 150  19200 -58300  18500 -59000)(net SERVO4_MCU)(type protect))
-    (wire (path F.Cu 150  29400 -29500  28600 -29500  27900 -30200)(net SERVO4_MCU)(type protect))
-    (wire (path B.Cu 150  17900 -34700  17900 -42100)(net SERVO4_MCU)(type protect))
-    (wire (path B.Cu 150  18800 -46300  18800 -47200)(net SERVO4_MCU)(type protect))
-    (wire (path B.Cu 150  28700 -62700  31000 -65000)(net SERVO4_MCU)(type protect))
-    (wire (path B.Cu 150  18500 -44300  18800 -44600)(net SERVO4_MCU)(type protect))
-    (wire (path B.Cu 150  18800 -47200  19200 -47600)(net SERVO4_MCU)(type protect))
-    (wire (path B.Cu 150  31000 -65500  31050 -65550)(net SERVO4_MCU)(type protect))
-    (wire (path B.Cu 150  18500 -42700  18500 -44300)(net SERVO4_MCU)(type protect))
-    (wire (path B.Cu 150  21500 -31100  17900 -34700)(net SERVO4_MCU)(type protect))
-    (wire (path B.Cu 200  31050 -65550  31050 -64650)(net SERVO4_MCU)(type protect))
+    (wire (path F.Cu 150  26500 -30300  22300 -30300)(net SERVO4_MCU)(type protect))
+    (wire (path F.Cu 150  19200 -47600  19200 -58300)(net SERVO4_MCU)(type protect))
+    (wire (path F.Cu 150  28600 -29500  27900 -30200)(net SERVO4_MCU)(type protect))
     (wire (path B.Cu 150  27900 -30300  26500 -30300)(net SERVO4_MCU)(type protect))
+    (wire (path B.Cu 150  18500 -44300  18800 -44600)(net SERVO4_MCU)(type protect))
+    (wire (path B.Cu 150  18800 -46300  18800 -47200)(net SERVO4_MCU)(type protect))
     (wire (path B.Cu 150  17900 -42100  18500 -42700)(net SERVO4_MCU)(type protect))
-    (wire (path B.Cu 200  31050 -64650  30950 -64550)(net SERVO4_MCU)(type protect))
+    (wire (path B.Cu 150  28700 -62700  31000 -65000)(net SERVO4_MCU)(type protect))
+    (wire (path B.Cu 150  18500 -42700  18500 -44300)(net SERVO4_MCU)(type protect))
+    (wire (path B.Cu 150  18800 -47200  19200 -47600)(net SERVO4_MCU)(type protect))
+    (wire (path B.Cu 150  17900 -34700  17900 -42100)(net SERVO4_MCU)(type protect))
+    (wire (path B.Cu 200  31050 -65550  31050 -64650)(net SERVO4_MCU)(type protect))
+    (wire (path B.Cu 150  31000 -65500  31050 -65550)(net SERVO4_MCU)(type protect))
     (wire (path B.Cu 150  31000 -65000  31000 -65500)(net SERVO4_MCU)(type protect))
-    (wire (path In2.Cu 150  19900 -60400  26400 -60400)(net SERVO4_MCU)(type protect))
+    (wire (path B.Cu 150  21500 -31100  17900 -34700)(net SERVO4_MCU)(type protect))
+    (wire (path B.Cu 200  31050 -64650  30950 -64550)(net SERVO4_MCU)(type protect))
+    (wire (path In2.Cu 150  19900 -60400  26400 -60400  28700 -62700)(net SERVO4_MCU)(type protect))
     (wire (path In2.Cu 150  18500 -59000  19900 -60400)(net SERVO4_MCU)(type protect))
-    (wire (path In2.Cu 150  26400 -60400  28700 -62700)(net SERVO4_MCU)(type protect))
     (wire (path F.Cu 200  29400 -39980  29400 -40000)(net PYRO2_GATE_N)(type protect))
     (wire (path F.Cu 200  21350 -86050  20280 -84980)(net PYRO2_GATE_N)(type protect))
     (wire (path F.Cu 200  21600 -87300  20050 -86050)(net PYRO2_GATE_N)(type protect))
@@ -5200,22 +5207,22 @@
     (wire (path B.Cu 200  30600 -8375  29800 -8375)(net USB_OVLO)(type protect))
     (wire (path B.Cu 200  29475 -9050  29450 -9050)(net USB_OVLO)(type protect))
     (wire (path B.Cu 200  29500 -8675  29500 -9075)(net USB_OVLO)(type protect))
-    (wire (path F.Cu 150  36650 -9450  36650 -11750)(net LED_RED)(type protect))
-    (wire (path F.Cu 150  34750 -7550  36650 -9450)(net LED_RED)(type protect))
+    (wire (path F.Cu 150  30650 -7550  34750 -7550)(net LED_RED)(type protect))
+    (wire (path F.Cu 150  29750 -8450  30650 -7550)(net LED_RED)(type protect))
     (wire (path F.Cu 200  21850 -26650  21550 -26350)(net LED_RED)(type protect))
+    (wire (path F.Cu 150  34750 -7550  36650 -9450)(net LED_RED)(type protect))
+    (wire (path F.Cu 150  23750 -21950  23650 -21850)(net LED_RED)(type protect))
+    (wire (path F.Cu 200  21550 -26350  21550 -26250)(net LED_RED)(type protect))
+    (wire (path F.Cu 150  27550 -8450  29750 -8450)(net LED_RED)(type protect))
+    (wire (path F.Cu 150  21750 -27850  21750 -23950)(net LED_RED)(type protect))
+    (wire (path F.Cu 150  27150 -10350  27150 -8850)(net LED_RED)(type protect))
     (wire (path F.Cu 150  36650 -11750  36600 -11700)(net LED_RED)(type protect))
     (wire (path F.Cu 150  23650 -21850  23650 -13850)(net LED_RED)(type protect))
+    (wire (path F.Cu 200  21850 -27950  21850 -26650)(net LED_RED)(type protect))
+    (wire (path F.Cu 150  36650 -9450  36650 -11750)(net LED_RED)(type protect))
+    (wire (path F.Cu 150  27150 -8850  27550 -8450)(net LED_RED)(type protect))
     (wire (path F.Cu 150  21850 -27950  21750 -27850)(net LED_RED)(type protect))
     (wire (path F.Cu 150  23650 -13850  27150 -10350)(net LED_RED)(type protect))
-    (wire (path F.Cu 200  21550 -26350  21550 -26250)(net LED_RED)(type protect))
-    (wire (path F.Cu 150  30650 -7550  34750 -7550)(net LED_RED)(type protect))
-    (wire (path F.Cu 150  23750 -21950  23650 -21850)(net LED_RED)(type protect))
-    (wire (path F.Cu 150  27550 -8450  29750 -8450)(net LED_RED)(type protect))
-    (wire (path F.Cu 150  27150 -10350  27150 -8850)(net LED_RED)(type protect))
-    (wire (path F.Cu 200  21850 -27950  21850 -26650)(net LED_RED)(type protect))
-    (wire (path F.Cu 150  21750 -27850  21750 -23950)(net LED_RED)(type protect))
-    (wire (path F.Cu 150  29750 -8450  30650 -7550)(net LED_RED)(type protect))
-    (wire (path F.Cu 150  27150 -8850  27550 -8450)(net LED_RED)(type protect))
     (wire (path B.Cu 150  21750 -23950  23750 -21950)(net LED_RED)(type protect))
     (wire (path F.Cu 200  28100 -41500  26500 -39900)(net QSPI_IO2)(type protect))
     (wire (path F.Cu 200  28100 -15400  28130 -15370)(net QSPI_IO2)(type protect))
@@ -5242,36 +5249,31 @@
     (wire (path B.Cu 200  32000 -32900  32000 -32870)(net PYRO2_CONT_MCU)(type protect))
     (wire (path B.Cu 200  33200 -32900  32000 -32900)(net PYRO2_CONT_MCU)(type protect))
     (wire (path F.Cu 150  29400 -33500  30700 -33500)(net VLOGIC_SENSE)(type protect))
-    (wire (path B.Cu 150  32500 -22700  32500 -19000)(net VLOGIC_SENSE)(type protect))
-    (wire (path B.Cu 150  31000 -25500  30600 -25100)(net VLOGIC_SENSE)(type protect))
     (wire (path B.Cu 150  32500 -19000  32530 -19000)(net VLOGIC_SENSE)(type protect))
-    (wire (path B.Cu 150  30600 -24600  32500 -22700)(net VLOGIC_SENSE)(type protect))
+    (wire (path B.Cu 150  30600 -25100  30600 -24600  32500 -22700  32500 -19000)(net VLOGIC_SENSE)(type protect))
+    (wire (path B.Cu 150  31000 -25500  30600 -25100)(net VLOGIC_SENSE)(type protect))
     (wire (path B.Cu 150  31800 -25500  31000 -25500)(net VLOGIC_SENSE)(type protect))
-    (wire (path B.Cu 150  30600 -25100  30600 -24600)(net VLOGIC_SENSE)(type protect))
-    (wire (path In2.Cu 150  30200 -33500  29200 -32500)(net VLOGIC_SENSE)(type protect))
     (wire (path In2.Cu 150  29200 -28100  31800 -25500)(net VLOGIC_SENSE)(type protect))
-    (wire (path In2.Cu 150  29200 -32500  29200 -28100)(net VLOGIC_SENSE)(type protect))
+    (wire (path In2.Cu 150  30200 -33500  29200 -32500)(net VLOGIC_SENSE)(type protect))
     (wire (path In2.Cu 150  30700 -33500  30200 -33500)(net VLOGIC_SENSE)(type protect))
+    (wire (path In2.Cu 150  29200 -32500  29200 -28100)(net VLOGIC_SENSE)(type protect))
     (wire (path F.Cu 150  18450 -37150  18450 -41750)(net BUZZ_DRV)(type protect))
-    (wire (path F.Cu 150  20250 -35350  18450 -37150)(net BUZZ_DRV)(type protect))
+    (wire (path F.Cu 150  23650 -34150  21450 -34150)(net BUZZ_DRV)(type protect))
     (wire (path F.Cu 200  26350 -27950  26350 -26250)(net BUZZ_DRV)(type protect))
     (wire (path F.Cu 150  26350 -27950  26350 -29050)(net BUZZ_DRV)(type protect))
-    (wire (path F.Cu 150  26650 -31150  23650 -34150)(net BUZZ_DRV)(type protect))
-    (wire (path F.Cu 150  26350 -29050  26850 -29550)(net BUZZ_DRV)(type protect))
     (wire (path F.Cu 150  16950 -44350  9450 -51850)(net BUZZ_DRV)(type protect))
-    (wire (path F.Cu 150  23650 -34150  21450 -34150)(net BUZZ_DRV)(type protect))
-    (wire (path B.Cu 150  4250 -61850  4250 -67050)(net BUZZ_DRV)(type protect))
+    (wire (path F.Cu 150  26650 -31150  23650 -34150)(net BUZZ_DRV)(type protect))
+    (wire (path F.Cu 150  20250 -35350  18450 -37150)(net BUZZ_DRV)(type protect))
+    (wire (path F.Cu 150  26350 -29050  26850 -29550)(net BUZZ_DRV)(type protect))
     (wire (path B.Cu 150  2350 -54850  2350 -59950)(net BUZZ_DRV)(type protect))
-    (wire (path B.Cu 150  5350 -51850  2350 -54850)(net BUZZ_DRV)(type protect))
-    (wire (path B.Cu 150  2350 -59950  4250 -61850)(net BUZZ_DRV)(type protect))
+    (wire (path B.Cu 150  9450 -51850  5350 -51850  2350 -54850)(net BUZZ_DRV)(type protect))
     (wire (path B.Cu 150  4250 -67050  4300 -67100)(net BUZZ_DRV)(type protect))
-    (wire (path B.Cu 150  9450 -51850  5350 -51850)(net BUZZ_DRV)(type protect))
-    (wire (path In2.Cu 150  16950 -43250  16950 -44350)(net BUZZ_DRV)(type protect))
-    (wire (path In2.Cu 150  26850 -29550  27050 -29750)(net BUZZ_DRV)(type protect))
-    (wire (path In2.Cu 150  27050 -30750  26650 -31150)(net BUZZ_DRV)(type protect))
+    (wire (path B.Cu 150  2350 -59950  4250 -61850  4250 -67050)(net BUZZ_DRV)(type protect))
     (wire (path In2.Cu 150  21450 -34150  20250 -35350)(net BUZZ_DRV)(type protect))
+    (wire (path In2.Cu 150  26850 -29550  27050 -29750  27050 -30750)(net BUZZ_DRV)(type protect))
     (wire (path In2.Cu 150  18450 -41750  16950 -43250)(net BUZZ_DRV)(type protect))
-    (wire (path In2.Cu 150  27050 -29750  27050 -30750)(net BUZZ_DRV)(type protect))
+    (wire (path In2.Cu 150  27050 -30750  26650 -31150)(net BUZZ_DRV)(type protect))
+    (wire (path In2.Cu 150  16950 -43250  16950 -44350)(net BUZZ_DRV)(type protect))
     (wire (path F.Cu 200  24350 -27950  24350 -26650)(net ARM1_SENSE_MCU)(type protect))
     (wire (path B.Cu 200  24350 -27550  24370 -27570  24400 -27570)(net ARM1_SENSE_MCU)(type protect))
     (wire (path B.Cu 200  24350 -26650  24350 -27550)(net ARM1_SENSE_MCU)(type protect))
@@ -5282,15 +5284,16 @@
     (wire (path F.Cu 200  22850 -26650  23150 -26350)(net QSPI_CLK)(type protect))
     (wire (path F.Cu 200  23150 -16850  21650 -15350  21050 -15350)(net QSPI_CLK)(type protect))
     (wire (path F.Cu 200  22850 -27950  22850 -26650)(net QSPI_CLK)(type protect))
-    (wire (path F.Cu 150  25850 -24250  28250 -24250)(net LED_YEL)(type protect))
+    (wire (path F.Cu 150  29950 -23650  40750 -12850)(net LED_YEL)(type protect))
     (wire (path F.Cu 150  40750 -11450  40700 -11400)(net LED_YEL)(type protect))
-    (wire (path F.Cu 150  22350 -27950  22350 -25450)(net LED_YEL)(type protect))
-    (wire (path F.Cu 150  29950 -23650  40750 -12850  40750 -11450)(net LED_YEL)(type protect))
+    (wire (path F.Cu 150  25850 -24250  28250 -24250)(net LED_YEL)(type protect))
     (wire (path F.Cu 200  22350 -27950  22350 -26250)(net LED_YEL)(type protect))
-    (wire (path B.Cu 150  22350 -25450  23550 -24250  23950 -24250)(net LED_YEL)(type protect))
+    (wire (path F.Cu 150  40750 -12850  40750 -11450)(net LED_YEL)(type protect))
+    (wire (path F.Cu 150  22350 -27950  22350 -25450)(net LED_YEL)(type protect))
+    (wire (path B.Cu 150  23550 -24250  23950 -24250)(net LED_YEL)(type protect))
+    (wire (path B.Cu 150  22350 -25450  23550 -24250)(net LED_YEL)(type protect))
+    (wire (path In2.Cu 150  28250 -24250  28850 -23650  29950 -23650)(net LED_YEL)(type protect))
     (wire (path In2.Cu 150  23950 -24250  25850 -24250)(net LED_YEL)(type protect))
-    (wire (path In2.Cu 150  28850 -23650  29950 -23650)(net LED_YEL)(type protect))
-    (wire (path In2.Cu 150  28250 -24250  28850 -23650)(net LED_YEL)(type protect))
     (wire (path F.Cu 200  20400 -14100  21100 -14100)(net QSPI_IO0)(type protect))
     (wire (path F.Cu 200  14000 -23900  15600 -22300)(net QSPI_IO0)(type protect))
     (wire (path F.Cu 200  13500 -23900  14000 -23900)(net QSPI_IO0)(type protect))
@@ -5333,19 +5336,22 @@
     (wire (path B.Cu 200  9600 -59050  11950 -59050)(net USB_DP)(type protect))
     (wire (path B.Cu 200  11950 -57150  11950 -54850)(net USB_DP)(type protect))
     (wire (path B.Cu 200  11950 -40450  12500 -39900)(net USB_DP)(type protect))
-    (wire (path F.Cu 150  15500 -40000  16800 -41300)(net SWDIO)(type protect))
-    (wire (path F.Cu 150  33300 -65400  40500 -65400)(net SWDIO)(type protect))
-    (wire (path F.Cu 150  28900 -61000  33300 -65400)(net SWDIO)(type protect))
-    (wire (path F.Cu 150  14300 -40000  15500 -40000)(net SWDIO)(type protect))
     (wire (path F.Cu 150  28900 -60300  28900 -61000)(net SWDIO)(type protect))
-    (wire (path F.Cu 150  40500 -65400  41100 -64800)(net SWDIO)(type protect))
+    (wire (path F.Cu 150  14300 -40000  15500 -40000  16800 -41300)(net SWDIO)(type protect))
+    (wire (path F.Cu 150  33300 -65400  40500 -65400  41100 -64800)(net SWDIO)(type protect))
+    (wire (path F.Cu 150  28900 -61000  33300 -65400)(net SWDIO)(type protect))
+    (wire (path B.Cu 150  43700 -59900  43700 -59920)(net SWDIO)(type protect))
     (wire (path B.Cu 150  15300 -44700  17900 -47300)(net SWDIO)(type protect))
+    (wire (path B.Cu 150  15900 -41200  15300 -41800)(net SWDIO)(type protect))
+    (wire (path B.Cu 150  16700 -41200  15900 -41200)(net SWDIO)(type protect))
     (wire (path B.Cu 150  16800 -41300  16700 -41200)(net SWDIO)(type protect))
-    (wire (path B.Cu 150  15300 -41800  15300 -44700)(net SWDIO)(type protect))
-    (wire (path B.Cu 150  16700 -41200  15900 -41200  15300 -41800)(net SWDIO)(type protect))
-    (wire (path B.Cu 150  41100 -64800  41100 -62500  43700 -59900  43700 -59920)(net SWDIO)(type protect))
     (wire (path B.Cu 150  17900 -47300  17900 -56100)(net SWDIO)(type protect))
-    (wire (path In2.Cu 150  17900 -56100  19700 -57900  26500 -57900  28900 -60300)(net SWDIO)(type protect))
+    (wire (path B.Cu 150  41100 -64800  41100 -62500)(net SWDIO)(type protect))
+    (wire (path B.Cu 150  15300 -41800  15300 -44700)(net SWDIO)(type protect))
+    (wire (path B.Cu 150  41100 -62500  43700 -59900)(net SWDIO)(type protect))
+    (wire (path In2.Cu 150  26500 -57900  28900 -60300)(net SWDIO)(type protect))
+    (wire (path In2.Cu 150  19700 -57900  26500 -57900)(net SWDIO)(type protect))
+    (wire (path In2.Cu 150  17900 -56100  19700 -57900)(net SWDIO)(type protect))
     (wire (path F.Cu 250  11400 -40600  11300 -40500)(net VCAP2)(type protect))
     (wire (path F.Cu 300  13400 -44400  10600 -41600)(net VCAP2)(type protect))
     (wire (path F.Cu 250  12600 -40600  11400 -40600)(net VCAP2)(type protect))
@@ -5354,26 +5360,26 @@
     (wire (path F.Cu 300  11100 -40500  11300 -40500)(net VCAP2)(type protect))
     (wire (path F.Cu 250  14300 -40500  12700 -40500  12600 -40600)(net VCAP2)(type protect))
     (wire (path B.Cu 250  16000 -42800  16000 -44400)(net VCAP2)(type protect))
-    (wire (path F.Cu 150  28850 -58750  29750 -58750)(net SWCLK)(type protect))
+    (wire (path F.Cu 150  41850 -64250  43650 -62450)(net SWCLK)(type protect))
     (wire (path F.Cu 150  43660 -62460  43700 -62460)(net SWCLK)(type protect))
+    (wire (path F.Cu 150  20050 -46650  21550 -48150)(net SWCLK)(type protect))
+    (wire (path F.Cu 150  28850 -58750  29750 -58750)(net SWCLK)(type protect))
+    (wire (path F.Cu 150  34050 -63050  34050 -63250)(net SWCLK)(type protect))
+    (wire (path F.Cu 150  29750 -58750  34050 -63050)(net SWCLK)(type protect))
+    (wire (path F.Cu 150  43650 -62450  43660 -62460)(net SWCLK)(type protect))
+    (wire (path F.Cu 150  35050 -64250  41850 -64250)(net SWCLK)(type protect))
+    (wire (path F.Cu 150  15850 -42050  16150 -41750)(net SWCLK)(type protect))
+    (wire (path F.Cu 150  34050 -63250  35050 -64250)(net SWCLK)(type protect))
     (wire (path F.Cu 150  21550 -48150  21650 -48150)(net SWCLK)(type protect))
     (wire (path F.Cu 150  15850 -43050  15850 -42050)(net SWCLK)(type protect))
-    (wire (path F.Cu 150  34050 -63050  34050 -63250)(net SWCLK)(type protect))
-    (wire (path F.Cu 150  15850 -42050  16150 -41750)(net SWCLK)(type protect))
-    (wire (path F.Cu 150  29750 -58750  34050 -63050)(net SWCLK)(type protect))
-    (wire (path F.Cu 150  35050 -64250  41850 -64250)(net SWCLK)(type protect))
-    (wire (path F.Cu 150  34050 -63250  35050 -64250)(net SWCLK)(type protect))
-    (wire (path F.Cu 150  43650 -62450  43660 -62460)(net SWCLK)(type protect))
-    (wire (path F.Cu 150  20050 -46650  21550 -48150)(net SWCLK)(type protect))
-    (wire (path F.Cu 150  41850 -64250  43650 -62450)(net SWCLK)(type protect))
-    (wire (path B.Cu 150  21650 -48150  21950 -48450)(net SWCLK)(type protect))
+    (wire (path B.Cu 150  27450 -53450  27450 -57350)(net SWCLK)(type protect))
     (wire (path B.Cu 150  16750 -43350  20050 -46650)(net SWCLK)(type protect))
+    (wire (path B.Cu 150  16150 -41750  16750 -42350)(net SWCLK)(type protect))
+    (wire (path B.Cu 150  27450 -57350  28850 -58750)(net SWCLK)(type protect))
     (wire (path B.Cu 150  16750 -42350  16750 -43350)(net SWCLK)(type protect))
     (wire (path B.Cu 150  21950 -48450  22450 -48450)(net SWCLK)(type protect))
-    (wire (path B.Cu 150  16150 -41750  16750 -42350)(net SWCLK)(type protect))
-    (wire (path B.Cu 150  27450 -53450  27450 -57350)(net SWCLK)(type protect))
+    (wire (path B.Cu 150  21650 -48150  21950 -48450)(net SWCLK)(type protect))
     (wire (path B.Cu 150  22450 -48450  27450 -53450)(net SWCLK)(type protect))
-    (wire (path B.Cu 150  27450 -57350  28850 -58750)(net SWCLK)(type protect))
     (wire (path B.Cu 200  29950 -11350  29950 -12550)(net LOGIC_SOURCE_ST)(type protect))
     (wire (path B.Cu 200  30725 -20600  30725 -22000)(net LOGIC_SOURCE_ST)(type protect))
     (wire (path F.Cu 200  26870 -21600  26870 -19200  28170 -17900)(net QSPI_NCS)(type protect))
@@ -5388,11 +5394,11 @@
     (wire (path B.Cu 200  20150 -29350  24550 -24950  24550 -24650  26750 -22450)(net QSPI_NCS)(type protect))
     (wire (path B.Cu 200  19850 -29350  20150 -29350)(net QSPI_NCS)(type protect))
     (wire (path F.Cu 200  24850 -43050  24850 -44650  25050 -44850)(net BOOT0)(type protect))
-    (wire (path F.Cu 150  25650 -44650  25650 -49550)(net I2C1_SCL)(type protect))
-    (wire (path F.Cu 150  25350 -43050  25350 -44350)(net I2C1_SCL)(type protect))
     (wire (path F.Cu 150  32150 -56050  33450 -56050)(net I2C1_SCL)(type protect))
-    (wire (path F.Cu 150  25350 -44350  25650 -44650)(net I2C1_SCL)(type protect))
     (wire (path F.Cu 150  25650 -49550  32150 -56050)(net I2C1_SCL)(type protect))
+    (wire (path F.Cu 150  25350 -43050  25350 -44350)(net I2C1_SCL)(type protect))
+    (wire (path F.Cu 150  25650 -44650  25650 -49550)(net I2C1_SCL)(type protect))
+    (wire (path F.Cu 150  25350 -44350  25650 -44650)(net I2C1_SCL)(type protect))
     (wire (path B.Cu 150  32750 -56050  32730 -56030)(net I2C1_SCL)(type protect))
     (wire (path B.Cu 150  33450 -56050  32750 -56050)(net I2C1_SCL)(type protect))
     (wire (path B.Cu 150  32730 -56030  32700 -56030)(net I2C1_SCL)(type protect))
@@ -5460,8 +5466,9 @@
     (via "Via[0-3]_600:300_um"  13700 -60800 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  37880 -51075 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  24550 -71275 (net GND)(type fix))
-    (via "Via[0-3]_600:300_um"  11700 -39800 (net GND)(type protect))
-    (via "Via[0-3]_600:300_um"  26450 -24850 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  34300 -64360 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  24970 -46400 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  11750 -59700 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  27650 -11850 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  11000 -35550 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  28150 -26250 (net GND)(type protect))
@@ -5475,18 +5482,19 @@
     (via "Via[0-3]_600:300_um"  19500 -17200 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  24550 -90050 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  28130 -13300 (net GND)(type protect))
-    (via "Via[0-3]_600:300_um"  25800 -25500 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  26450 -24850 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  31000 -62150 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  13700 -43020 (net GND)(type protect))
-    (via "Via[0-3]_600:300_um"  21900 -37100 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  16700 -31600 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  24550 -86475 (net GND)(type fix))
     (via "Via[0-3]_600:300_um"  41550 -37350 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  28450 -7850 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  16830 -56350 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  11700 -39800 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  25450 -71275 (net GND)(type fix))
     (via "Via[0-3]_600:300_um"  37730 -52375 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  31500 -35500 (net GND)(type protect))
-    (via "Via[0-3]_600:300_um"  21700 -22200 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  25800 -25500 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  25450 -86475 (net GND)(type fix))
     (via "Via[0-3]_600:300_um"  38700 -13500 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  16350 -25550 (net GND)(type protect))
@@ -5494,27 +5502,25 @@
     (via "Via[0-3]_600:300_um"  37380 -51700 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  25500 -69320 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  29050 -7150 (net GND)(type protect))
-    (via "Via[0-3]_600:300_um"  24970 -46400 (net GND)(type protect))
-    (via "Via[0-3]_600:300_um"  16700 -31600 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  28900 -42200 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  25370 -89900 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  31500 -29100 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  24500 -37900 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  27900 -37300 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  5975 -22600 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  11300 -41300 (net GND)(type protect))
-    (via "Via[0-3]_600:300_um"  19750 -45250 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  11725 -17500 (net GND)(type protect))
-    (via "Via[0-3]_600:300_um"  28900 -42200 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  19050 -29350 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  26700 -33600 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  23920 -12800 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  32400 -74925 (net GND)(type protect))
     (via "Via[0-3]_500:300_um"  29740 -28300 (net GND)(type protect))
-    (via "Via[0-3]_600:300_um"  11750 -59700 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  21900 -37100 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  8350 -20730 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  13700 -95800 (net GND)(type fix))
-    (via "Via[0-3]_600:300_um"  19050 -29350 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  19750 -45250 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  45200 -74850 (net GND)(type protect))
-    (via "Via[0-3]_600:300_um"  34300 -64360 (net GND)(type protect))
+    (via "Via[0-3]_600:300_um"  21700 -22200 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  26280 -44400 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  36850 -69600 (net GND)(type protect))
     (via "Via[0-3]_600:300_um"  28720 -66500 (net PYRO1_COLD)(type protect))
@@ -5583,8 +5589,8 @@
     (via "Via[0-3]_600:300_um"  37950 -34900 (net RAW_PROTECTED)(type protect))
     (via "Via[0-3]_600:300_um"  12250 -27730 (net BAT_SW_RETURN)(type protect))
     (via "Via[0-3]_600:300_um"  16350 -19330 (net BAT_SW_RETURN)(type protect))
-    (via "Via[0-3]_600:300_um"  13650 -27130 (net BAT_SW_RETURN)(type protect))
     (via "Via[0-3]_600:300_um"  14250 -16230 (net BAT_SW_RETURN)(type protect))
+    (via "Via[0-3]_600:300_um"  13650 -27130 (net BAT_SW_RETURN)(type protect))
     (via "Via[0-3]_600:300_um"  19550 -89100 (net PYRO2_GATE)(type protect))
     (via "Via[0-3]_600:300_um"  31270 -9000 (net VLOGIC)(type protect))
     (via "Via[0-3]_600:300_um"  9700 -39050 (net VLOGIC)(type protect))
@@ -5596,14 +5602,14 @@
     (via "Via[0-3]_600:300_um"  24950 -40450 (net I2C1_SDA)(type protect))
     (via "Via[0-3]_600:300_um"  18450 -52650 (net I2C1_SDA)(type protect))
     (via "Via[0-3]_600:300_um"  33450 -54450 (net I2C1_SDA)(type protect))
-    (via "Via[0-3]_600:300_um"  28550 -49550 (net I2C1_SDA)(type protect))
     (via "Via[0-3]_600:300_um"  21550 -44350 (net I2C1_SDA)(type protect))
-    (via "Via[0-3]_600:300_um"  27400 -60400 (net SERVO2_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  28000 -31700 (net SERVO2_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  33700 -66000 (net SERVO2_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  24400 -51300 (net SERVO2_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  28550 -49550 (net I2C1_SDA)(type protect))
     (via "Via[0-3]_600:300_um"  26300 -49400 (net SERVO2_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  33700 -66000 (net SERVO2_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  27400 -60400 (net SERVO2_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  24400 -51300 (net SERVO2_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  28100 -40600 (net SERVO2_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  28000 -31700 (net SERVO2_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  28550 -56250 (net SPI1_MISO)(type protect))
     (via "Via[0-3]_600:300_um"  25250 -39550 (net IMU_INT1)(type protect))
     (via "Via[0-3]_600:300_um"  27450 -41750 (net IMU_INT1)(type protect))
@@ -5619,37 +5625,37 @@
     (via "Via[0-3]_600:300_um"  23000 -70330 (net PYRO1_GATE_N)(type protect))
     (via "Via[0-3]_600:300_um"  31900 -41230 (net PYRO1_GATE_N)(type protect))
     (via "Via[0-3]_600:300_um"  20450 -74400 (net PYRO1_GATE)(type protect))
+    (via "Via[0-3]_600:300_um"  37950 -30750 (net CAM_MCU_RX)(type protect))
+    (via "Via[0-3]_600:300_um"  37050 -25950 (net CAM_MCU_RX)(type protect))
     (via "Via[0-3]_600:300_um"  21150 -24550 (net CAM_MCU_RX)(type protect))
     (via "Via[0-3]_600:300_um"  31150 -24850 (net CAM_MCU_RX)(type protect))
-    (via "Via[0-3]_600:300_um"  37050 -25950 (net CAM_MCU_RX)(type protect))
-    (via "Via[0-3]_600:300_um"  37950 -30750 (net CAM_MCU_RX)(type protect))
-    (via "Via[0-3]_600:300_um"  23950 -23050 (net CAM_MCU_TX)(type protect))
-    (via "Via[0-3]_600:300_um"  20750 -26250 (net CAM_MCU_TX)(type protect))
     (via "Via[0-3]_600:300_um"  41050 -30550 (net CAM_MCU_TX)(type protect))
+    (via "Via[0-3]_600:300_um"  23950 -23050 (net CAM_MCU_TX)(type protect))
     (via "Via[0-3]_600:300_um"  30750 -23650 (net CAM_MCU_TX)(type protect))
+    (via "Via[0-3]_600:300_um"  20750 -26250 (net CAM_MCU_TX)(type protect))
     (via "Via[0-3]_600:300_um"  17975 -80825 (net ARM2_SENSE)(type protect))
     (via "Via[0-3]_600:300_um"  18049.8 -86393.8 (net ARM2_SENSE)(type protect))
     (via "Via[0-3]_600:300_um"  25275 -31325 (net ARM2_SENSE)(type protect))
     (via "Via[0-3]_600:300_um"  24350 -29350 (net ARM2_SENSE_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  27100 -50200 (net SERVO1_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  28500 -44100 (net SERVO1_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  34600 -40700 (net SERVO1_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  32400 -29000 (net SERVO1_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  26900 -53700 (net SERVO1_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  28500 -44100 (net SERVO1_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  33050 -66650 (net SERVO3_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  35400 -40700 (net SERVO3_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  33800 -32200 (net SERVO3_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  35700 -63700 (net SERVO3_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  31300 -30000 (net SERVO3_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  19200 -47600 (net SERVO4_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  28700 -62700 (net SERVO4_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  21500 -31100 (net SERVO4_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  18800 -46300 (net SERVO4_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  30950 -64550 (net SERVO4_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  26500 -30300 (net SERVO4_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  18500 -59000 (net SERVO4_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  27900 -30300 (net SERVO4_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  33800 -32200 (net SERVO3_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  35400 -40700 (net SERVO3_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  35700 -63700 (net SERVO3_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  18800 -44600 (net SERVO4_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  19200 -47600 (net SERVO4_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  27900 -30300 (net SERVO4_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  21500 -31100 (net SERVO4_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  18500 -59000 (net SERVO4_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  28700 -62700 (net SERVO4_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  30950 -64550 (net SERVO4_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  18800 -46300 (net SERVO4_MCU)(type protect))
+    (via "Via[0-3]_600:300_um"  26500 -30300 (net SERVO4_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  19400 -84980 (net PYRO2_GATE_N)(type protect))
     (via "Via[0-3]_600:300_um"  31900 -39280 (net PYRO2_GATE_N)(type protect))
     (via "Via[0-3]_600:300_um"  16850 -26250 (net VCAP1)(type protect))
@@ -5694,24 +5700,24 @@
     (via "Via[0-3]_600:300_um"  26500 -39900 (net QSPI_IO2)(type protect))
     (via "Via[0-3]_600:300_um"  23200 -35900 (net HSE_OUT)(type protect))
     (via "Via[0-3]_600:300_um"  33200 -32900 (net PYRO2_CONT_MCU)(type protect))
-    (via "Via[0-3]_600:300_um"  31800 -25500 (net VLOGIC_SENSE)(type protect))
     (via "Via[0-3]_600:300_um"  30700 -33500 (net VLOGIC_SENSE)(type protect))
-    (via "Via[0-3]_600:300_um"  18450 -41750 (net BUZZ_DRV)(type protect))
-    (via "Via[0-3]_600:300_um"  16950 -44350 (net BUZZ_DRV)(type protect))
-    (via "Via[0-3]_600:300_um"  26650 -31150 (net BUZZ_DRV)(type protect))
-    (via "Via[0-3]_600:300_um"  26350 -26250 (net BUZZ_DRV)(type protect))
-    (via "Via[0-3]_600:300_um"  20250 -35350 (net BUZZ_DRV)(type protect))
-    (via "Via[0-3]_600:300_um"  9450 -51850 (net BUZZ_DRV)(type protect))
+    (via "Via[0-3]_600:300_um"  31800 -25500 (net VLOGIC_SENSE)(type protect))
     (via "Via[0-3]_600:300_um"  21450 -34150 (net BUZZ_DRV)(type protect))
+    (via "Via[0-3]_600:300_um"  20250 -35350 (net BUZZ_DRV)(type protect))
+    (via "Via[0-3]_600:300_um"  26350 -26250 (net BUZZ_DRV)(type protect))
+    (via "Via[0-3]_600:300_um"  9450 -51850 (net BUZZ_DRV)(type protect))
+    (via "Via[0-3]_600:300_um"  26650 -31150 (net BUZZ_DRV)(type protect))
+    (via "Via[0-3]_600:300_um"  18450 -41750 (net BUZZ_DRV)(type protect))
     (via "Via[0-3]_600:300_um"  26850 -29550 (net BUZZ_DRV)(type protect))
+    (via "Via[0-3]_600:300_um"  16950 -44350 (net BUZZ_DRV)(type protect))
     (via "Via[0-3]_600:300_um"  24350 -26650 (net ARM1_SENSE_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  23050 -29650 (net RAW_ACT_SENSE_MCU)(type protect))
     (via "Via[0-3]_600:300_um"  22350 -26250 (net LED_YEL)(type protect))
-    (via "Via[0-3]_600:300_um"  29950 -23650 (net LED_YEL)(type protect))
-    (via "Via[0-3]_600:300_um"  23950 -24250 (net LED_YEL)(type protect))
+    (via "Via[0-3]_600:300_um"  28250 -24250 (net LED_YEL)(type protect))
     (via "Via[0-3]_600:300_um"  25850 -24250 (net LED_YEL)(type protect))
     (via "Via[0-3]_600:300_um"  22350 -25450 (net LED_YEL)(type protect))
-    (via "Via[0-3]_600:300_um"  28250 -24250 (net LED_YEL)(type protect))
+    (via "Via[0-3]_600:300_um"  23950 -24250 (net LED_YEL)(type protect))
+    (via "Via[0-3]_600:300_um"  29950 -23650 (net LED_YEL)(type protect))
     (via "Via[0-3]_600:300_um"  25200 -24900 (net QSPI_IO1)(type protect))
     (via "Via[0-3]_600:300_um"  13000 -33500 (net QSPI_IO1)(type protect))
     (via "Via[0-3]_600:300_um"  17500 -31700 (net QSPI_IO3)(type protect))
@@ -5721,15 +5727,15 @@
     (via "Via[0-3]_600:300_um"  8900 -56750 (net USB_DP)(type protect))
     (via "Via[0-3]_600:300_um"  8900 -58350 (net USB_DP)(type protect))
     (via "Via[0-3]_600:300_um"  12500 -39900 (net USB_DP)(type protect))
+    (via "Via[0-3]_600:300_um"  16800 -41300 (net SWDIO)(type protect))
     (via "Via[0-3]_600:300_um"  28900 -60300 (net SWDIO)(type protect))
     (via "Via[0-3]_600:300_um"  17900 -56100 (net SWDIO)(type protect))
     (via "Via[0-3]_600:300_um"  41100 -64800 (net SWDIO)(type protect))
-    (via "Via[0-3]_600:300_um"  16800 -41300 (net SWDIO)(type protect))
     (via "Via[0-3]_600:300_um"  16000 -44400 (net VCAP2)(type protect))
     (via "Via[0-3]_600:300_um"  20050 -46650 (net SWCLK)(type protect))
-    (via "Via[0-3]_600:300_um"  28850 -58750 (net SWCLK)(type protect))
-    (via "Via[0-3]_600:300_um"  16150 -41750 (net SWCLK)(type protect))
     (via "Via[0-3]_600:300_um"  21650 -48150 (net SWCLK)(type protect))
+    (via "Via[0-3]_600:300_um"  16150 -41750 (net SWCLK)(type protect))
+    (via "Via[0-3]_600:300_um"  28850 -58750 (net SWCLK)(type protect))
     (via "Via[0-3]_600:300_um"  30725 -22000 (net LOGIC_SOURCE_ST)(type protect))
     (via "Via[0-3]_600:300_um"  29950 -12550 (net LOGIC_SOURCE_ST)(type protect))
     (via "Via[0-3]_600:300_um"  19850 -29350 (net QSPI_NCS)(type protect))

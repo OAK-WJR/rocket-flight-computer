@@ -806,11 +806,21 @@ def escape_bands(b, depth=1.2):
                         (pcbnew.In2_Cu, (x0 - depth, y0, x0, y1), 'x', 'U1')]
 
 
+def fix_models(b):
+    """J2's pin-header model (R4's) was turned -90 degrees about its pin 1, so it ran from pin 1 away from the other
+    pins (pass 2: a STEP export put it 13 mm off its pads); +90 lays it along them."""
+    ms = fp_of(b, 'J2').Models()
+    for i in range(len(ms)):                       # by index: iterating yields copies
+        if 'PinHeader_1x06' in ms[i].m_Filename:
+            ms[i].m_Rotation.z = 90.0
+
+
 def build(b):
     keep = strip(b)
     outline(b)
     move_pyro_block(b, keep)
     place_manual(b)
+    fix_models(b)
     prune_stubs(b)
     zones(b)
     escape_bands(b)
@@ -841,6 +851,7 @@ def build(b):
     r5_routes.gnd_pin_vias(b, r5_routes.GND_PIN_TRACK, own_via=False)
     r5_routes.reset_cap_gnd(b)
     r5_routes.crystal_keepouts(b)
+    r5_routes.gate_pad_keepouts(b)
     r5_routes.long_links(b)
     r5_routes.baro_keepout(b)
     r5_routes.gnd_pin_vias(b, r5_routes.GND_PIN_LAST)

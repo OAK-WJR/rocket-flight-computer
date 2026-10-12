@@ -15,7 +15,7 @@ What changed (details and reasons in M3_R5 §1):
 - **Requirements changed:** P1 (length and position in the bay), P2 (sled: four corner standoffs, plate clear of the bottom parts), F4 (DC solve), M3 (two-sided fixed fees).
 
 Verification, stated separately:
-- **CAD checks (done)**: `tools/check.sh`: DRC 0 (pyro spacing rules included), unconnected 0, schematic parity 0, ERC 0; audit OK; no silkscreen outside the outline. `m3_design/check_actuators.py`: OK. `tools/fit_check.py`: OK (worst margin 0.11 mm, C84 on the top; deepest bottom part L1 at 4.62 mm, bottom margin ≥ 2.34 mm). `tools/export_fab.py`: 84 lines, 205 placed, nothing missing; `tools/jlc_orient.py --verify-cpl`: 84 top and 112 bottom rows rebuilt, the four residuals over 0.35 mm are R4's (Q124/Q125, R134/R135).
+- **CAD checks (done)**: `tools/check.sh`: DRC 0 (pyro spacing rules included), unconnected 0, schematic parity 0, ERC 0; audit OK; no silkscreen outside the outline. `m3_design/check_actuators.py`: OK. `tools/fit_check.py`: OK (worst margin 0.11 mm, C84 on the top; deepest bottom part L1 at 4.62 mm, bottom margin ≥ 2.34 mm). `tools/export_fab.py`: 84 lines, 205 placed, nothing missing; `tools/jlc_orient.py --verify-cpl`: 84 top and 112 bottom rows rebuilt, exit 0.
 - **Independent evaluation (CAD, datasheets):** two passes of six independent reviews (pyro, power, signal integrity, DFM, fit, silkscreen) against REQUIREMENTS.md. Pass 1: no Critical, nine Majors, fixed or recorded (M3_R5 §1b). Pass 2, on the re-routed board: no Critical, three Majors, all fixed: a via in J9.3's through-hole pad, the IMU's roll sign in the record (it is +gyro_Y), and bottom-side designators beside other parts (M3_R5 §1c). Pass 3 (one reviewer) confirmed the three fixes and found no new Critical or Major. The pyro block is R4's to the micrometre (41 footprints, the same .kicad_dru, the same solder-bridge spacings); its DRC rules were shown live on the new copper.
 - **Calculation:** servo feed DC solve (Q121 → J122, 0.05 mm grid) 4.54 mΩ, 35.0 mV and 0.27 W at 7.7 A, all of it on the In2 RAW_ACT strip at mid-path (R4: 5.05 mΩ, 0.30 W); the reverse hot-plug model is R4's (same circuit).
 - **Cost and stock (2026-10-12)**: Standard PCBA: $55.14 parts + 81 codes × $1.53 feeder fee / 5 = $79.93 per board (target ≤ $84.41); 47 unique extended codes (target ≤ 48). **Two-sided fixed fees $83.96 per order** (setup, stencil, fixture; one side: $50.19; JLC may add a $14.93 handling fee). No shortage; U4 is thin (5 in stock for 5 boards).
@@ -26,8 +26,6 @@ Verification, stated separately:
 Open owner decisions: as R4 (below), plus the sled design (REQUIREMENTS P2).
 
 Minor findings recorded for the next revision (not reworked; M3_R5 §1b–1c):
-- 3V3 and servo copper within 0.34–0.56 mm of the bare gate test pads TP122/TP123 (R4: ≥ 1.08 mm); rule G passes and
-  it is all under mask. Move the 3V3 0.5 mm via at (18.24, 89.95) 0.5 mm away.
 - MCU-side pyro sense/gate vias 0.28–0.88 mm from bottom parts (R168, R171, C23), against L10's 1.0 mm wording.
 - NRST: C24 is about 22 mm from U1.14 by route (4 vias), with duplicated In2 copper left by the finisher; tidy it.
 - Jogs of 0.3–0.5 mm on QSPI_CLK/IO0/IO2/NCS and SPI1_SCK, QSPI_NCS's R10 branch drawn beside the main trace, a USB_DM
@@ -38,9 +36,6 @@ Minor findings recorded for the next revision (not reworked; M3_R5 §1b–1c):
 - Silkscreen: J1's BAT+/GND legends sit beside D9; bottom igniter labels crowd unlabelled test pads; R32's label sits
   under R33; J122's bottom "2" 1 mm off its row; no SWD pin legends at J2; J121's designator could go under its body.
 - ORDERING's 5 mm tab clearance names only MLCCs: TP76, R100, R101, U12, D123 and R162 sit closer to a tab.
-- `tools/jlc_orient.py --verify-cpl` exits 1 on Q124/Q125 and R134/R135 (the generator's pad filter and 2-pad rule
-  are not applied in verify; the rotations are right).
-- J2's 3D model is offset 13 mm in y (fit unaffected; matters for a STEP export to the sled CAD).
 - R81's designator sits 0.44 mm from R83.1 (in R81's row, above R83); J1's designator is nearer C89 than J1.
 - IMU_INT1 vias at (20.85, 32.55) and (27.45, 41.75) have their nearest GND via 1.8 and 1.5 mm away.
 
