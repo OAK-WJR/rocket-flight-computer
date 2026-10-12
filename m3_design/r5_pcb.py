@@ -32,7 +32,8 @@ mm, MM = pcbnew.ToMM, pcbnew.FromMM
 W, L = 46.0, 100.0                # board outline (mm); y = 0 is the aft (battery) edge
 PYRO_C = (23.0, 57.2)             # the R4 pyro block (y 42.0-72.4) turns 180° about its centre ...
 PYRO_DY = 24.0                    # ... and moves 24 mm forward: y 66.0-96.4
-HOLES = [(4.0, 4.0), (42.3, 4.0), (4.0, 96.4), (42.0, 96.4)]   # M3, Ø3.2
+HOLES = [(4.0, 4.0), (42.3, 4.0), (4.0, 96.4), (42.0, 96.4),   # M3, Ø3.2
+         (4.0, 46.0)]                    # mid-span (pass 4: corner-only support put the first mode near 140 Hz)
 # J122's plug-retention tie (MARGIN_PRESCRIPTION P1-13, REQUIREMENTS P3): Ø3.2 holes beyond the header's aft end and
 # its forward end, the forward one right of the RAW_ACT column (on the axis it would cut the servo feed); the tie runs
 # from one to the other diagonally over all four plugs (x 22.3-26.3 across them) and closes under the board

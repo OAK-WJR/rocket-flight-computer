@@ -9,15 +9,15 @@ Last updated 2026-10-12. Governing requirements: M1/M2 merged into one board, ea
 Design record: [docs/M3_R5.md](docs/M3_R5.md); requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md); ordering: [docs/ORDERING.md](docs/ORDERING.md). R5 is R4's schematic and BOM, unchanged, on a new board: generated from the R4 board by `m3_design/r5_build.sh` (`r5_pcb.py`, `r5_routes.py`, `r5_maze.py`, `r5_route.py` with the Freerouting session in git, `r5_finish.py`, `r5_post.py`). **232 footprint positions / 205 fitted parts / 24 test pads / 3 tooling holes**, as R4.
 
 What changed (details and reasons in M3_R5 §1):
-- **Board:** 46 × 100 mm (R4: 46 × 193 mm), parts on both sides: top 89 (80 SMD, 9 through-hole) and 2 test pads; bottom 116 SMD parts and 22 test pads. Four M3 holes at the corners; two Ø3.2 tie holes for J122's plug tie.
+- **Board:** 46 × 100 mm (R4: 46 × 193 mm), parts on both sides: top 89 (80 SMD, 9 through-hole) and 2 test pads; bottom 116 SMD parts and 22 test pads. Five M3 holes (the corners and mid-span at (4, 46)); two Ø3.2 tie holes for J122's plug tie.
 - **Floorplan:** power entry at the aft edge, the MCU behind it, USB-C, the servo header and SWD in the middle, the pyro block (R4's, moved as one rigid group) at the forward end; the IMU and barometer on the bottom (the IMU's Y and Z axes flip: roll is +gyro_Y, the opposite sign to R4).
 - **Routing:** critical nets scripted on a grid router (0/45/90°); the rest by Freerouting v2.4.1, then the grid router for what it leaves.
-- **Requirements changed:** P1 (length and position in the bay), P2 (sled: four corner standoffs, plate clear of the bottom parts), F4 (DC solve), M3 (two-sided fixed fees).
+- **Requirements changed:** P1 (length and position in the bay), P2 (sled: five standoffs, the corners and mid-span, plate clear of the bottom parts), F4 (DC solve), M3 (two-sided fixed fees).
 
 Verification, stated separately:
 - **CAD checks (done)**: `tools/check.sh`: DRC 0 (pyro spacing rules included), unconnected 0, schematic parity 0, ERC 0; audit OK; no silkscreen outside the outline. `m3_design/check_actuators.py`: OK. `tools/fit_check.py`: OK (worst margin 0.11 mm, C84 on the top; deepest bottom part L1 at 4.62 mm, bottom margin ≥ 2.34 mm). `tools/export_fab.py`: 84 lines, 205 placed, nothing missing; `tools/jlc_orient.py --verify-cpl`: 84 top and 112 bottom rows rebuilt, exit 0.
-- **Independent evaluation (CAD, datasheets):** two passes of six independent reviews (pyro, power, signal integrity, DFM, fit, silkscreen) against REQUIREMENTS.md. Pass 1: no Critical, nine Majors, fixed or recorded (M3_R5 §1b). Pass 2, on the re-routed board: no Critical, three Majors, all fixed: a via in J9.3's through-hole pad, the IMU's roll sign in the record (it is +gyro_Y), and bottom-side designators beside other parts (M3_R5 §1c). Pass 3 (one reviewer) confirmed the three fixes and found no new Critical or Major. The pyro block is R4's to the micrometre (41 footprints, the same .kicad_dru, the same solder-bridge spacings); its DRC rules were shown live on the new copper.
-- **Calculation:** servo feed DC solve (Q121 → J122, 0.05 mm grid) 4.54 mΩ, 35.0 mV and 0.27 W at 7.7 A, all of it on the In2 RAW_ACT strip at mid-path (R4: 5.05 mΩ, 0.30 W); the reverse hot-plug model is R4's (same circuit).
+- **Independent evaluation (CAD, datasheets):** two passes of six independent reviews (pyro, power, signal integrity, DFM, fit, silkscreen) against REQUIREMENTS.md. Pass 1: no Critical, nine Majors, fixed or recorded (M3_R5 §1b). Pass 2, on the re-routed board: no Critical, three Majors, all fixed: a via in J9.3's through-hole pad, the IMU's roll sign in the record (it is +gyro_Y), and bottom-side designators beside other parts (M3_R5 §1c). Pass 3 (one reviewer) confirmed the three fixes and found no new Critical or Major. A robustness round then kept live copper 1 mm from the bare gate test pads and re-routed (M3_R5 §1d); pass 4 (six reviewers from first principles, on robustness) found no Critical and two Majors, fixed: an overlap-only PULLPIN joint and corner-only mounting (a fifth, mid-span hole) (M3_R5 §1e). The pyro block is R4's to the micrometre (41 footprints, the same .kicad_dru, the same solder-bridge spacings); its DRC rules were shown live on the new copper.
+- **Calculation:** servo feed DC solve (Q121 → J122, 0.05 mm grid) 4.82 mΩ, 37.1 mV and 0.29 W at 7.7 A, all of it on the In2 RAW_ACT strip at mid-path (R4: 5.05 mΩ, 0.30 W); the reverse hot-plug model is R4's (same circuit).
 - **Cost and stock (2026-10-12)**: Standard PCBA: $55.14 parts + 81 codes × $1.53 feeder fee / 5 = $79.93 per board (target ≤ $84.41); 47 unique extended codes (target ≤ 48). **Two-sided fixed fees $83.96 per order** (setup, stencil, fixture; one side: $50.19; JLC may add a $14.93 handling fee). No shortage; U4 is thin (5 in stock for 5 boards).
 - **Simulation**: none (the circuit is R4's).
 - **Firmware**: none for R5; the board binding in `m3_firmware/build.py` must be redone (M3_R5 §3: IMU axes).
@@ -27,16 +27,26 @@ Open owner decisions: as R4 (below), plus the sled design (REQUIREMENTS P2).
 
 Minor findings recorded for the next revision (not reworked; M3_R5 §1b–1c):
 - MCU-side pyro sense/gate vias 0.28–0.88 mm from bottom parts (R168, R171, C23), against L10's 1.0 mm wording.
-- NRST: C24 is about 22 mm from U1.14 by route (4 vias), with duplicated In2 copper left by the finisher; tidy it.
 - Jogs of 0.3–0.5 mm on QSPI_CLK/IO0/IO2/NCS and SPI1_SCK, QSPI_NCS's R10 branch drawn beside the main trace, a USB_DM
   hairpin at its via.
-- C150/C151 (RAW_ACT bulk, bottom) have their nearest GND vias 6–8 mm away; the camera supply trunk is 0.4 mm for
-  45 mm (about +10 °C at 1.24 A).
+- C150/C151 (RAW_ACT bulk, bottom) have their nearest GND vias 6–8 mm away; the camera supply trunk (RAW_PROTECTED) is
+  0.4 mm for about 78 mm (about +10 °C at 1.24 A); U9 OUT and the camera feed change layer on single vias.
 - The RAW_ACT In2 strip has two necks at J3's shell slots (2.75 mm), not one; covered by the bring-up stall test.
 - Silkscreen: J1's BAT+/GND legends sit beside D9; bottom igniter labels crowd unlabelled test pads; R32's label sits
-  under R33; J122's bottom "2" 1 mm off its row; no SWD pin legends at J2; J121's designator could go under its body.
+  under R33; J122's bottom "2" 1 mm off its row; no SWD pin legends at J2; TP122's label is nearer R76 (top) than TP122; J1's "SW" legend and the U1/U3/J3
+  designators sit under package bodies (their footprints have no F.Fab outline); some hidden designators could be
+  placed by a second pass; the bottom-face instructions (fuses, ARM plug) face the sled.
 - ORDERING's 5 mm tab clearance names only MLCCs: TP76, R100, R101, U12, D123 and R162 sit closer to a tab.
 - R81's designator sits 0.44 mm from R83.1 (in R81's row, above R83); J1's designator is nearer C89 than J1.
+- Servo cable-side nets (SERVO*_OUT, before the 1 kΩ) run 72–81 mm unclamped through the pyro block; put the series
+  resistors or a clamp back at J122.
+- Decoupling farther from its pins than R4: C29 5.9 mm from U3 VCC, U12's VCCA 9.4 mm, U10 and U11 11–35 mm; C121
+  (470 µF) on one 0.5 mm track to J122.8; C80/C96 11.5–15.4 mm from U9's input.
+- GND pour 0.15 mm from the RAW_ACT through-hole pins (R4: 0.25 mm); give them a 0.3 mm local clearance.
+- 84 small passives have one pad in a GND pour without thermal relief (tombstoning risk; 43 are 0402).
+- The second reflow of two-sided assembly is not yet checked against U5, C84 and LS120's cycle limits; the edge-rail
+  tab windows could move clear of TP76/R100/R101 and add corner support; BAT_IN on the bottom within the washer
+  radius at hole (4, 4) (nylon hardware required); 1210s C76/C92 about 4 mm from corner standoffs.
 - IMU_INT1 vias at (20.85, 32.55) and (27.45, 41.75) have their nearest GND via 1.8 and 1.5 mm away.
 
 ## Previous candidate: M3-ASSY-R4 (R3 validation fixes, new IMU, thirteen evaluation passes)

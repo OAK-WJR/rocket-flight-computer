@@ -74,6 +74,62 @@ def _in_block(t):
     return max(ax, cx) + hw >= x0 and min(ax, cx) - hw <= x1 and max(ay, cy) + hw >= y0 and min(ay, cy) - hw <= y1
 
 
+def close_joints(b):
+    """Two ends of one net's tracks on one layer that nearly meet (closer than the wider track) but are not the same
+    point, with neither end on a pad, a via or another track's body, join only where their round ends overlap: pass 4
+    found a PULLPIN joint 0.06 mm wide, which can etch open. Each such gap gets a bridging segment when it runs at
+    0/45/90 degrees (and is reported otherwise)."""
+    tracks = [t for t in b.GetTracks() if t.GetClass() == 'PCB_TRACK']
+    vias = [v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA']
+    pads = [q for f in b.GetFootprints() for q in f.Pads()]
+
+    def seg_dist(x, y, t):
+        s, e = t.GetStart(), t.GetEnd()
+        vx, vy = e.x - s.x, e.y - s.y
+        ll = vx * vx + vy * vy
+        u = 0 if ll == 0 else max(0.0, min(1.0, ((x - s.x) * vx + (y - s.y) * vy) / ll))
+        return math.hypot(s.x + u * vx - x, s.y + u * vy - y)
+
+    def covered(x, y, net, lay):
+        pt = pcbnew.VECTOR2I(x, y)
+        if any(v.GetNetname() == net and (v.GetPosition() - pt).EuclideanNorm() <= v.GetWidth(lay) / 2 for v in vias):
+            return True
+        if any(q.GetNetname() == net and q.IsOnLayer(lay) and q.HitTest(pt) for q in pads):
+            return True
+        return any(t.GetNetname() == net and t.GetLayer() == lay and pt not in (t.GetStart(), t.GetEnd())
+                   and seg_dist(x, y, t) <= t.GetWidth() / 2 for t in tracks)
+    ends = {}
+    for t in tracks:
+        for q in (t.GetStart(), t.GetEnd()):
+            ends.setdefault((t.GetNetname(), t.GetLayer()), {})
+            w = ends[(t.GetNetname(), t.GetLayer())]
+            w[(q.x, q.y)] = max(t.GetWidth(), w.get((q.x, q.y), 0))
+    done, odd = 0, []
+    for (net, lay), width in ends.items():
+        uniq = sorted(width)
+        for i, (ax, ay) in enumerate(uniq):
+            for bx_, by_ in uniq[i + 1:]:
+                if bx_ - ax > MM(0.5):
+                    break
+                dx, dy = bx_ - ax, by_ - ay
+                if not 0 < math.hypot(dx, dy) < max(width[(ax, ay)], width[(bx_, by_)]):
+                    continue
+                if covered(ax, ay, net, lay) or covered(bx_, by_, net, lay):
+                    continue
+                if not (dx == 0 or dy == 0 or abs(abs(dx) - abs(dy)) <= 2):
+                    odd.append((net, round(mm(ax), 3), round(mm(ay), 3)))
+                    continue
+                s = pcbnew.PCB_TRACK(b)
+                s.SetStart(pcbnew.VECTOR2I(ax, ay))
+                s.SetEnd(pcbnew.VECTOR2I(bx_, by_))
+                s.SetWidth(min(width[(ax, ay)], width[(bx_, by_)]))
+                s.SetLayer(lay)
+                s.SetNet(b.FindNet(net))
+                b.Add(s)
+                done += 1
+    print(f'  overlap-only joints bridged: {done}; off-angle, left: {odd or "none"}')
+
+
 def track_cleanup(b):
     tracks = [t for t in b.GetTracks() if t.GetClass() == 'PCB_TRACK']
     dead, seen = [], set()
@@ -866,6 +922,7 @@ def main():
     for d in list(b.GetDrawings()):                    # idempotent: the board-level silkscreen is ours
         if d.GetLayer() in (pcbnew.F_SilkS, pcbnew.B_SilkS):
             b.Delete(d)
+    close_joints(b)
     track_cleanup(b)
     pth_vias(b)
     acute_corners(b)
