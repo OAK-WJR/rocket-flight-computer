@@ -670,6 +670,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "Texas Instruments"
+			(at 83.82 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "TPS259570DSGR"
+			(at 83.82 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"

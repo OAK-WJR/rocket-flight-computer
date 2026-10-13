@@ -1,9 +1,14 @@
 import json
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch as mock_patch
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
+from fill_part_metadata import fill, identity_preserved, plan
+from audit_artifacts import audit
 
 from normalize_metadata import normalize, part_table, table_drift
 from sexpr import patch, properties, protected_digest, read
@@ -152,6 +157,140 @@ class QualityTools(unittest.TestCase):
                 result=verify(board,Path('fake-cli'),self.root/('erc_%d.json'%i))
             self.assertFalse(result['ok']);self.assertTrue(any('ERC' in s for s in result['issues']))
         with self.assertRaises(ValueError):erc_findings({'sheets':[]})
+
+class PartIdentityTools(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.catalog = {'C11702': {'Manufacturer': 'UNI-ROYAL(Uniroyal Elec)',
+                                  'Manufacturer Part': '0402WGF1001TCE'}}
+        self.board = '''(kicad_pcb (uuid "board-uuid")
+ (net 1 "SIGNAL") (segment (start 1 2) (end 3 4) (width 0.2) (net 1) (uuid "track-uuid"))
+ (footprint "R0402" (uuid "footprint-uuid") (at 10 20 270) (layer "B.Cu") (attr smd)
+  (property "Reference" "R9") (property "Value" "1k")
+  (property "LCSC" "C11702" (at 0 0 270) (layer "B.Fab") (hide yes)
+    (uuid "acdeeeee-1234-4567-8901-111111111111")
+    (effects (font (size 1 1)) (justify mirror)))
+  (property "Manufacturer" "" (at 0 0 270) (layer "B.SilkS") (hide yes)
+    (uuid "bcdeeeee-1234-4567-8901-111111111111"))
+  (pad "1" smd rect (at 0 0) (size 1 1) (net 1 "SIGNAL"))))'''
+        self.schematic = '''(kicad_sch (uuid "sheet-uuid")
+ (lib_symbols (symbol "Device:R" (property "Manufacturer" "library-untouched")))
+ (symbol (lib_id "Device:R") (at 50 50 90) (uuid "symbol-uuid")
+  (property "Reference" "R9") (property "Value" "1k")
+  (property "LCSC" "C11702" (at 50 50 90) (hide yes)
+    (effects (font (size 1 1)) (justify left)))
+  (pin "1" (uuid "pin-uuid"))))'''
+
+    def test_fill_preserves_copper_uuid_side_existing_fields_and_is_idempotent(self):
+        output, changes = fill(self.board, self.catalog)
+        self.assertEqual(len(changes), 2)
+        self.assertTrue(identity_preserved(self.board, output, changes))
+        old = properties(read(self.board).children('footprint')[0])
+        new = properties(read(output).children('footprint')[0])
+        self.assertEqual(old['Manufacturer'].children('uuid')[0].value(),
+                         new['Manufacturer'].children('uuid')[0].value())
+        self.assertNotEqual(new['LCSC'].children('uuid')[0].value(),
+                            new['Manufacturer Part'].children('uuid')[0].value())
+        for key in ('at', 'layer', 'effects', 'hide'):
+            self.assertEqual(new['LCSC'].children(key)[0].value(),
+                             new['Manufacturer Part'].children(key)[0].value())
+        again, changes2 = fill(output, self.catalog)
+        self.assertEqual(again, output)
+        self.assertEqual(changes2, [])
+        for before, after in [('width 0.2', 'width 0.1'), ('"SIGNAL"', '"OTHER"'),
+                              ('"track-uuid"', '"changed-uuid"'), ('at 10 20', 'at 11 20'),
+                              ('"bcdeeeee-1234-4567-8901-111111111111"', '"changed"')]:
+            self.assertFalse(identity_preserved(self.board, output.replace(before, after), changes))
+
+    def test_only_fitted_parts_require_and_receive_identities(self):
+        board = self.root / 'm3.kicad_pcb'
+        for attr, expected in [('smd', True), ('through_hole', True), ('smd dnp', False),
+                               ('smd exclude_from_bom', False), ('', False)]:
+            source = self.board.replace('(attr smd)', '(attr ' + attr + ')')
+            board.write_text(source)
+            result = audit(board)
+            self.assertEqual(bool(result['missing_required_part_fields']), expected)
+            repaired, changes = fill(source, self.catalog)
+            self.assertEqual(bool(changes), expected)
+            board.write_text(repaired)
+            self.assertEqual(audit(board)['missing_required_part_fields'], [])
+        board.write_text(self.board.replace('"LCSC" "C11702"', '"LCSC" ""'))
+        self.assertIn('LCSC', audit(board)['missing_required_part_fields'][0]['fields'])
+
+    def test_schematic_library_and_unfitted_symbols_remain_unchanged(self):
+        result, changes = fill(self.schematic, self.catalog, {'R9'})
+        self.assertEqual(len(changes), 2)
+        self.assertTrue(identity_preserved(self.schematic, result, changes))
+        self.assertIn('"library-untouched"', result)
+        self.assertEqual(fill(self.schematic, self.catalog, set()), (self.schematic, []))
+        self.assertEqual(fill(result, self.catalog, {'R9'}), (result, []))
+        with self.assertRaises(ValueError):
+            fill(self.schematic, self.catalog)
+
+    def test_unknown_code_conflicting_existing_identity_and_visible_template_fail(self):
+        for source in [self.board.replace('C11702', 'C999'),
+                       self.board.replace('"Manufacturer" ""', '"Manufacturer" "Wrong"'),
+                       self.board.replace('(hide yes)', '(hide no)')]:
+            with self.assertRaises(ValueError):
+                fill(source, self.catalog)
+        complete, _ = fill(self.board, self.catalog)
+        complete = complete.replace('UNI-ROYAL(Uniroyal Elec)', 'existing-name')
+        self.assertEqual(fill(complete, self.catalog), (complete, []))
+
+    def test_visible_existing_blank_identity_fails_with_hidden_lcsc(self):
+        for field in ('Manufacturer', 'Manufacturer Part'):
+            for hidden in ('(hide no)', ''):
+                source = self.board.replace('"Manufacturer" ""', '"' + field + '" ""')
+                node = read(source).children('footprint')[0]
+                target = properties(node)[field]
+                source = patch(source, [(target.start, target.end,
+                                        source[target.start:target.end].replace('(hide yes)', hidden))])
+                self.assertEqual(properties(read(source).children('footprint')[0])[
+                    'LCSC'].children('hide')[0].items[1].atom, 'yes')
+                with self.assertRaisesRegex(ValueError, 'Expected hidden identity target'):
+                    fill(source, self.catalog)
+                symbol = read(self.schematic).children('symbol')[0]
+                source = patch(self.schematic, [(symbol.end - 1, symbol.end - 1,
+                                                '(property "' + field + '" "" ' + hidden + ')')])
+                with self.assertRaisesRegex(ValueError, 'Expected hidden identity target'):
+                    fill(source, self.catalog, {'R9'})
+
+    def test_plan_requires_matching_schematic_and_cli_dry_run_is_nonmutating(self):
+        board = self.root / 'm3.kicad_pcb'
+        schematic = self.root / 'child.kicad_sch'
+        board.write_text(self.board)
+        schematic.write_text(self.schematic)
+        planned = plan(self.root, self.catalog)
+        self.assertEqual(sum(len(c) for _, _, _, c in planned), 4)
+        catalog = self.root / 'catalog.json'
+        catalog.write_text(json.dumps({'parts': self.catalog, 'source': 'verified test fixture',
+                                       'reviewed_date': '2026-10-12'}))
+        tool = Path(__file__).resolve().parents[1] / 'tools/fill_part_metadata.py'
+        command = [sys.executable, str(tool), '--project', str(self.root), '--catalog', str(catalog)]
+        result = subprocess.run(command, capture_output=True, text=True, check=True)
+        self.assertIn('dry-run: 4 identity fields', result.stdout)
+        self.assertEqual(board.read_text(), self.board)
+        self.assertEqual(schematic.read_text(), self.schematic)
+        subprocess.run(command + ['--write'], capture_output=True, text=True, check=True)
+        self.assertEqual(sum(len(c) for _, _, _, c in plan(self.root, self.catalog)), 0)
+        schematic.write_text(self.schematic.replace('C11702', 'C999'))
+        with self.assertRaises(ValueError):
+            plan(self.root, self.catalog)
+        schematic.unlink()
+        with self.assertRaises(ValueError):
+            plan(self.root, self.catalog)
+
+    def test_required_identity_gate_fails_with_clean_drc_and_erc(self):
+        board = self.root / 'm3.kicad_pcb'
+        board.write_text(self.board)
+        board.with_suffix('.kicad_sch').write_text(self.schematic)
+        helper = QualityTools()
+        with mock_patch('verify_board.subprocess.run', side_effect=helper.fake_tool(helper.clean_report())):
+            result = verify(board, Path('fake-cli'), self.root / 'evidence.json')
+        self.assertFalse(result['ok'])
+        self.assertEqual(result['issues'], ['Missing required fitted-part identity fields'])
 
 
 if __name__ == '__main__':

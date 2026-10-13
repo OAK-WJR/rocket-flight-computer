@@ -77,20 +77,72 @@ for f in b.GetFootprints():
 
 if VERIFY:
     import csv
+    from collections import Counter
     worst_all, bad, n_top, n_bot, skipped = 0.0, [], 0, 0, []
     fps = {f.GetReference(): f for f in b.GetFootprints()}
-    for row in csv.DictReader(open(VERIFY)):
+    excluded = pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES | pcbnew.FP_DNP
+    expected = {ref for ref, f in fps.items() if ref and not ref.startswith('#')
+                and f.GetAttributes() & (pcbnew.FP_SMD | pcbnew.FP_THROUGH_HOLE)
+                and not f.GetAttributes() & excluded}
+    with open(VERIFY, newline='') as source:
+        reader = csv.DictReader(source)
+        if len(reader.fieldnames or []) != 5 or set(reader.fieldnames or []) != {'Designator', 'Mid X', 'Mid Y', 'Layer', 'Rotation'}:
+            sys.exit('CPL check: invalid column headers')
+        rows = list(reader)
+    counts = Counter(row['Designator'] for row in rows)
+    missing = sorted(expected - counts.keys())
+    extra = sorted(counts.keys() - expected)
+    duplicates = sorted(ref for ref, count in counts.items() if count != 1)
+    if missing or extra or duplicates:
+        sys.exit(f'CPL check: missing {missing}; unexpected {extra}; duplicate {duplicates}')
+    corrections = json.loads((ROOT / 'tools/jlc_corrections.json').read_text())['parts']
+    for row in rows:
         f = fps[row['Designator']]
         lcsc = f.GetField('LCSC').GetText() if f.HasField('LCSC') else ''
+        ref = f.GetReference()
+        try:
+            if not row['Mid X'].endswith('mm') or not row['Mid Y'].endswith('mm'):
+                raise ValueError('coordinates must be in mm')
+            cx, cy = float(row['Mid X'][:-2]), -float(row['Mid Y'][:-2])
+            r_ = float(row['Rotation'])
+            if not all(math.isfinite(v) for v in (cx, cy, r_)):
+                raise ValueError('non-finite placement')
+            if row['Layer'] != ('Bottom' if f.IsFlipped() else 'Top'):
+                raise ValueError('wrong assembly side')
+            key = f"{lcsc}|{f.GetFPID().GetLibItemName().wx_str()}"
+            correction = corrections.get(key)
+            if not correction or correction['status'] != 'OK':
+                raise ValueError('no reviewed orientation correction')
+            theta = correction['theta']
+            tx, ty = correction['offset']
+            angle = f.GetOrientationDegrees()
+            if f.IsFlipped():
+                angle = 180 - angle - theta
+                dx, dy = rot((tx, -ty), 180 - angle)
+            else:
+                angle -= theta
+                dx, dy = rot((tx, ty), angle)
+            position = f.GetPosition()
+            if math.hypot(cx - (mm(position.x) - dx), cy - (mm(position.y) - dy)) > 0.00015:
+                raise ValueError('position differs from board and reviewed correction')
+            if abs((r_ - angle + 180) % 360 - 180) > 0.01:
+                raise ValueError('rotation differs from board and reviewed correction')
+        except (ValueError, TypeError, KeyError) as error:
+            bad.append((ref, str(error)))
+            continue
         if lcsc not in EZ or 'pads' not in EZ[lcsc] or lcsc in BODY:
-            skipped.append(row['Designator'])        # no EasyEDA pads, or a symmetric row turned for its body
+            skipped.append(ref)        # inventory, side and corrected placement checked above; no independent pad match
             continue
         ez = ez_pads(EZ[lcsc])
-        cx, cy = float(row['Mid X'][:-2]), -float(row['Mid Y'][:-2])
-        r_ = float(row['Rotation'])
         bottom = row['Layer'] == 'Bottom'
         worst = 0.0
         only = ONLY.get(f.GetFPID().GetLibItemName().wx_str())   # as the generator: the pads it matched on
+        visible = {p.GetNumber() for p in f.Pads() if p.GetNumber()
+                   and (p.IsOnLayer(pcbnew.F_Mask) or p.IsOnLayer(pcbnew.B_Mask))}
+        wanted = set(only) if only else visible
+        if not wanted or not wanted <= visible or not wanted <= ez.keys() or (not only and wanted != ez.keys()):
+            bad.append((ref, 'incomplete independent pad coverage'))
+            continue
         npads = len({p.GetNumber() for p in f.Pads() if p.GetNumber() in ez})
         for p in f.Pads():
             n = p.GetNumber()
@@ -112,7 +164,8 @@ if VERIFY:
         if worst > (0.6 if npads == 2 else TOL):          # the generator's two-pad allowance (lands differ)
             bad.append((row['Designator'], round(worst, 3)))
     print(f'CPL check: {n_top} top and {n_bot} bottom rows rebuilt from JLC footprints; worst pad residual '
-          f'{worst_all:.3f} mm; over {TOL} mm: {bad or "none"}; not checkable: {len(skipped)} ({" ".join(skipped)})')
+          f'{worst_all:.3f} mm; errors: {bad or "none"}; '
+          f'placement-only checks: {len(skipped)} ({" ".join(skipped)}); expected rows: {len(expected)}')
     sys.exit(1 if bad else 0)
 
 result, problems = {}, []

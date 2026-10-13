@@ -1762,6 +1762,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "STMicroelectronics"
+			(at 91.44 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "STM32H743VIT6TR"
+			(at 91.44 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -2793,6 +2805,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 279.4 104.14 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 279.4 104.14 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -2861,6 +2887,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C1985619"
+			(at 254 63.5 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "NDK"
+			(at 254 63.5 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "NX3225GA-25.000M-STD-CRG-2"
 			(at 254 63.5 0)
 			(hide yes)
 			(effects
@@ -2976,6 +3014,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 208.28 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
+			(at 208.28 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -3048,6 +3100,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C1525"
+			(at 238.76 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 238.76 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
 			(at 238.76 139.7 0)
 			(hide yes)
 			(effects
@@ -3132,6 +3198,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 269.24 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
+			(at 269.24 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -3204,6 +3284,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C1525"
+			(at 299.72 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 299.72 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
 			(at 299.72 139.7 0)
 			(hide yes)
 			(effects
@@ -3288,6 +3382,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 330.2 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
+			(at 330.2 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -3360,6 +3468,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C1525"
+			(at 360.68 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 360.68 139.7 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
 			(at 360.68 139.7 0)
 			(hide yes)
 			(effects
@@ -3444,6 +3566,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 208.28 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL10A225KO8NNNC"
+			(at 208.28 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -3516,6 +3652,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C23630"
+			(at 254 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 254 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL10A225KO8NNNC"
 			(at 254 180.34 0)
 			(hide yes)
 			(effects
@@ -3600,6 +3750,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 299.72 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
+			(at 299.72 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -3672,6 +3836,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C15849"
+			(at 330.2 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 330.2 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL10A105KB8NNNC"
 			(at 330.2 180.34 0)
 			(hide yes)
 			(effects
@@ -3756,6 +3934,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 360.68 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL10A475KO8NNNC"
+			(at 360.68 180.34 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -3828,6 +4020,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C1525"
+			(at 330.2 104.14 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 330.2 104.14 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
 			(at 330.2 104.14 0)
 			(hide yes)
 			(effects
@@ -3912,6 +4118,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 218.44 104.14 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05C100JB5NNNC"
+			(at 218.44 104.14 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -3984,6 +4204,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C32949"
+			(at 248.92 104.14 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 248.92 104.14 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05C100JB5NNNC"
 			(at 248.92 104.14 0)
 			(hide yes)
 			(effects
@@ -4346,6 +4580,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 180.34 86.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF4701TCE"
+			(at 180.34 86.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -4418,6 +4666,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25900"
+			(at 180.34 101.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 180.34 101.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF4701TCE"
 			(at 180.34 101.6 0)
 			(hide yes)
 			(effects
@@ -4502,6 +4764,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 180.34 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF4701TCE"
+			(at 180.34 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -4580,6 +4856,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 180.34 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF4701TCE"
+			(at 180.34 132.08 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8"
@@ -4652,6 +4942,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25900"
+			(at 180.34 147.32 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 180.34 147.32 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF4701TCE"
 			(at 180.34 147.32 0)
 			(hide yes)
 			(effects

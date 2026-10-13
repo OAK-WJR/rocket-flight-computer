@@ -819,6 +819,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "STMicroelectronics"
+			(at 200.66 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "LSM6DSV320XTR"
+			(at 200.66 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
@@ -1231,6 +1243,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 88.9 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
+			(at 88.9 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
@@ -1303,6 +1329,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C1525"
+			(at 208.28 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 208.28 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
 			(at 208.28 124.46 0)
 			(hide yes)
 			(effects
@@ -1387,6 +1427,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 241.3 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
+			(at 241.3 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
@@ -1459,6 +1513,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C1525"
+			(at 307.34 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 307.34 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
 			(at 307.34 162.56 0)
 			(hide yes)
 			(effects
@@ -1543,6 +1611,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 43.18 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 43.18 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
@@ -1615,6 +1697,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25744"
+			(at 175.26 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 175.26 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1002TCE"
 			(at 175.26 124.46 0)
 			(hide yes)
 			(effects
@@ -1699,6 +1795,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 307.34 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF4701TCE"
+			(at 307.34 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
@@ -1777,6 +1887,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 353.06 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF4701TCE"
+			(at 353.06 124.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
@@ -1849,6 +1973,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25744"
+			(at 353.06 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 353.06 162.56 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1002TCE"
 			(at 353.06 162.56 0)
 			(hide yes)
 			(effects

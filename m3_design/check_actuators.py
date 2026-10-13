@@ -195,7 +195,8 @@ def check(text, dru=None):
         # cold pull-up: R131/R143 from the drain to the COLD node, which only D120 feeds
         cold, rc = f'PYRO{ch}_COLD', ('R131', 'R143')[ch - 1]
         req(members.get(cold) == {f'{rc}.2', f'D120.{ch}'}, f'{cold} must be only {rc}.2 and D120.{ch}')
-        # drain capacitor: soft-termination MLCC (a flex crack opens it instead of shorting the FET), >= 25 V
+        # Soft terminations reduce flex-crack risk; they do not guarantee fail-open behavior.
+        # A drain-capacitor short bypasses the FET (docs/R5_VALIDATION.md, R5-V06).
         cd = ('C128', 'C140')[ch - 1]
         req(part.get(cd) == 'C161115' and volts(val.get(cd)) >= 25, f'{cd} must be the >= 25 V soft-termination C161115')
         # 6c (pass 5): every capacitor of the channel returns to GND (a drain capacitor on 3V3 or RAW_ACT passed)

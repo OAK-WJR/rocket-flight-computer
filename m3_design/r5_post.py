@@ -351,7 +351,9 @@ class Silk:
     vias, holes and silkscreen 0.15 mm (JLC clips ink nearer an opening), the package bodies of parts on this
     side (their fab outline: ink under a body is hidden after assembly)."""
 
-    def __init__(self, b, side):
+    def __init__(self, b, side, strict_bodies=False):
+        # Legacy default preserves the recorded R5 build; final placement checks
+        # opt in so a pin-1 dot cannot suppress the courtyard body fallback.
         self.side = side
         self.layer = pcbnew.F_SilkS if side == 'F' else pcbnew.B_SilkS
         cu = pcbnew.F_Cu if side == 'F' else pcbnew.B_Cu
@@ -368,6 +370,8 @@ class Silk:
                 body = None
                 for g in f.GraphicalItems():
                     if g.GetLayer() == fab and g.GetClass() == 'PCB_SHAPE':
+                        if strict_bodies and g.GetShape() == pcbnew.SHAPE_T_CIRCLE and mm(g.GetRadius()) <= 0.3:
+                            continue  # Tiny pin-1 markers are not package bodies.
                         r = bx(g)
                         body = r if body is None else (min(body[0], r[0]), min(body[1], r[1]),
                                                        max(body[2], r[2]), max(body[3], r[3]))

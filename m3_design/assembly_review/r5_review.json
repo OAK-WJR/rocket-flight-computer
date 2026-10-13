@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "reviewed_utc": "2026-10-13T06:45:09.862014+00:00",
+  "baseline_github_branch": "m3-assy-r5",
+  "baseline_github_commit": "2054863083d19c4c45693096b69f467a6d2d2706",
+  "pcb_sha256": "6fc208d613dc2c1a6e9381ec3e1a5888c223ea6246336ae8320421272ca93a43",
+  "cad_checks": {
+    "drc_violations": 0,
+    "unconnected": 0,
+    "schematic_parity": 0,
+    "erc": 0,
+    "metadata_model_audit": "PASS",
+    "silk_outline": "PASS",
+    "actuator_contract": "PASS",
+    "modeled_fit": "PASS",
+    "metadata_repeat_fields_changed": 0
+  },
+  "tests": {
+    "replay": 13,
+    "fab_validation": 17,
+    "quality_tools": 19
+  },
+  "fabrication": {
+    "bom_groups": 84,
+    "placements": 209,
+    "top": 93,
+    "bottom": 116,
+    "supplier_pad_reconstructed": 200,
+    "placement_only": 9,
+    "native_reexport_members_matched": 14,
+    "timestamp_fields_ignored": true,
+    "manifest_inputs": 150,
+    "manifest_outputs": 5
+  },
+  "independent_scopes": [
+    "electrical and actuator safety",
+    "local bypass circuits and placement",
+    "QSPI and crystal separation",
+    "MEMS internal routing and actual duplicate-land connectivity",
+    "U4 copper, mask, paste and outward leadouts",
+    "input and servo-header spacing",
+    "route fragments",
+    "silkscreen labels",
+    "guarded repair replay and adversarial tests",
+    "fabrication output fidelity",
+    "tab span clearance"
+  ],
+  "visual_review": {
+    "method": "KiCad native CLI render and PDF raster inspection",
+    "native_gui": "unavailable: CUA_REPL_ENABLED_SURFACES not configured",
+    "files_sha256": {
+      "top.png": "4a14307aa0031175be18c64aff40687d8288efe07f9e43a7c59c3e2f3a689e8f",
+      "bottom.png": "a8a2b646d7a2f2a136e3396d46fff7c3bba85e6749014b67efa0268479df39d7",
+      "fab/m3_assembly_top.pdf": "b6a83a574073c3f1695ebdddc4ecf84cd7f4ee58ae15972476f61bfaf764b223",
+      "fab/m3_assembly_bottom.pdf": "5397b045afa166cd0b0a0d1b7041f22a3bf707fb7f4b9a8693adbde65c9da010"
+    }
+  },
+  "reviewed_sources_sha256": {
+    "m3_design/r5_repair.py": "17130c563f50e156b74e8e87bac9ad8d878aeb1e1400f2a65a64a95ebcb63e3b",
+    "m3_design/r5_repair.json": "c1eb0967ed81108c5ffebfdf91c8c1175311450b9cc20a300772c317dfde91fc",
+    "m3_design/r5_scoped_patch.py": "ddd7d2633222744cf5349155e6ab548c1c3fff1851879b026e94c1ede0b1f175",
+    "tools/test_r5_repair.py": "886978a3e004da26e517f196c9bf7675641a99a45e6d6083a612e3e95f25f0f7"
+  },
+  "physical_tests_performed": false,
+  "r5_firmware_binding_available": false,
+  "limits": "docs/R5_VALIDATION.md and docs/ORDERING.md; no flight qualification or production panel approval"
+}

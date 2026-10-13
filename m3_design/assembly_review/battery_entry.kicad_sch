@@ -776,6 +776,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "DORABO"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "DB128V-5.08-4P-GN-S"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
@@ -876,6 +888,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C3662793"
+			(at 223.52 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Texas Instruments"
+			(at 223.52 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "TPS259470LRPWR"
 			(at 223.52 76.2 0)
 			(hide yes)
 			(effects
@@ -2594,6 +2618,20 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL10A225KO8NNNC"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(property "LCSC Part" "C23630"
 			(at 340.36 121.92 0)
 			(hide yes)
@@ -2680,6 +2718,20 @@
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C307331"
+			(at 391.16 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 391.16 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KB54PNC"
 			(at 391.16 121.92 0)
 			(hide yes)
 			(effects

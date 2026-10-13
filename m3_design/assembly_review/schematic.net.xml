@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="E">
   <design>
-    <source>m3.kicad_sch</source>
-    <date></date>
+    <source>m3_design/assembly_review/m3.kicad_sch</source>
+    <date>2026-10-12T23:45:10</date>
     <tool>Eeschema 10.0.6</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>01 | USB input and regulated supplies</title>
         <company>Single-board M3 candidate; full system incomplete</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-07</date>
         <source>m3.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -27,7 +27,7 @@
         <title>02 | MCU, clock and debug</title>
         <company>Single-board M3 candidate; full system incomplete</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-07</date>
         <source>mcu.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -45,7 +45,7 @@
         <title>03 | Memory and sensors</title>
         <company>Single-board M3 candidate; full system incomplete</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-07</date>
         <source>sensors.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -63,7 +63,7 @@
         <title>04 | Voltage diagnosis and indicators</title>
         <company>Single-board M3 candidate; full system incomplete</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-07</date>
         <source>diagnostics.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -81,7 +81,7 @@
         <title>05 | Camera branch protection and regulator</title>
         <company>Single-board M3 candidate; full system incomplete</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-07</date>
         <source>camera_power.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -99,7 +99,7 @@
         <title>06 | Camera terminal and characterization</title>
         <company>Single-board M3 candidate; full system incomplete</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-07</date>
         <source>camera_connector.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -117,7 +117,7 @@
         <title>07 | Battery input, contact and protection</title>
         <company>Single-board M3 candidate; full system incomplete</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-07</date>
         <source>battery_entry.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -134,8 +134,8 @@
       <title_block>
         <title>08 | USB limit, source mux and hold-up</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <rev>M3-ASSY-R5</rev>
+        <date>2026-10-12</date>
         <source>logic_power_path.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -152,8 +152,8 @@
       <title_block>
         <title>09 | Camera UART, separate supply domains</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <rev>M3-ASSY-R5</rev>
+        <date>2026-10-12</date>
         <source>camera_uart.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -171,7 +171,7 @@
         <title>10 | USB cable presence, ordinary GPIO sensing</title>
         <company>Single-board M3 candidate; full system incomplete</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-07</date>
         <source>usb_sense.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -189,7 +189,7 @@
         <title>11 | Actuator power switch</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-25</date>
         <source>actuator_power.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -207,7 +207,7 @@
         <title>12 | Pyro channels, arming and continuity</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-25</date>
         <source>pyro.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -225,7 +225,7 @@
         <title>13 | Servo outputs</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-25</date>
         <source>servos.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -243,7 +243,7 @@
         <title>14 | Launch pull-pin and buzzer</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
         <rev>M3-ASSY-R4</rev>
-        <date></date>
+        <date>2026-09-25</date>
         <source>pullpin_buzzer.kicad_sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
@@ -263,12 +263,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -289,12 +293,16 @@
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL21A226MAQNNNE</field>
         <field name="Footprint">rocket:C0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C45783"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL21A226MAQNNNE"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -315,12 +323,16 @@
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL21A226MAQNNNE</field>
         <field name="Footprint">rocket:C0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C45783"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL21A226MAQNNNE"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -341,12 +353,16 @@
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL21A226MAQNNNE</field>
         <field name="Footprint">rocket:C0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C45783"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL21A226MAQNNNE"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -367,12 +383,16 @@
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL21A226MAQNNNE</field>
         <field name="Footprint">rocket:C0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C45783"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL21A226MAQNNNE"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -393,12 +413,16 @@
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL21A226MAQNNNE</field>
         <field name="Footprint">rocket:C0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C45783"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL21A226MAQNNNE"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -419,12 +443,16 @@
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL21A226MAQNNNE</field>
         <field name="Footprint">rocket:C0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C45783"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL21A226MAQNNNE"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -445,12 +473,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C19666</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10A475KO8NNNC</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C19666"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10A475KO8NNNC"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -471,12 +503,16 @@
       <footprint>rocket:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL</footprint>
       <fields>
         <field name="LCSC">C7519</field>
+        <field name="Manufacturer">STMicroelectronics</field>
+        <field name="Manufacturer Part">USBLC6-2SC6</field>
         <field name="Footprint">rocket:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="USB_ESD" description=""/>
       <property name="LCSC" value="C7519"/>
+      <property name="Manufacturer" value="STMicroelectronics"/>
+      <property name="Manufacturer Part" value="USBLC6-2SC6"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_fp_filters" value="SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL"/>
@@ -500,12 +536,16 @@
       <footprint>rocket:USB-C_SMD-TYPE-C-31-M-12_1</footprint>
       <fields>
         <field name="LCSC">C165948</field>
+        <field name="Manufacturer">Korean Hroparts Elec</field>
+        <field name="Manufacturer Part">TYPE-C-31-M-12</field>
         <field name="Footprint">rocket:USB-C_SMD-TYPE-C-31-M-12_1</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="USB_C_HRO" description=""/>
       <property name="LCSC" value="C165948"/>
+      <property name="Manufacturer" value="Korean Hroparts Elec"/>
+      <property name="Manufacturer Part" value="TYPE-C-31-M-12"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_fp_filters" value="USB-C_SMD-TYPE-C-31-M-12_1"/>
@@ -539,12 +579,16 @@
       <footprint>rocket:IND-SMD_L4.0-W4.0</footprint>
       <fields>
         <field name="LCSC">C57269</field>
+        <field name="Manufacturer">Sunlord</field>
+        <field name="Manufacturer Part">SWPA4030S4R7MT</field>
         <field name="Footprint">rocket:IND-SMD_L4.0-W4.0</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="L" description="Inductor"/>
       <property name="LCSC" value="C57269"/>
+      <property name="Manufacturer" value="Sunlord"/>
+      <property name="Manufacturer Part" value="SWPA4030S4R7MT"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="inductor choke coil reactor magnetic"/>
@@ -565,12 +609,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -591,12 +639,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -617,12 +669,16 @@
       <footprint>rocket:R_0603_1608Metric</footprint>
       <fields>
         <field name="LCSC">C22939</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0603WAF220KT5E</field>
         <field name="Footprint">rocket:R_0603_1608Metric</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C22939"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0603WAF220KT5E"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -643,12 +699,16 @@
       <footprint>rocket:TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL</footprint>
       <fields>
         <field name="LCSC">C780769</field>
+        <field name="Manufacturer">Diodes Incorporated</field>
+        <field name="Manufacturer Part">AP63203WU-7</field>
         <field name="Footprint">rocket:TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="Buck" description=""/>
       <property name="LCSC" value="C780769"/>
+      <property name="Manufacturer" value="Diodes Incorporated"/>
+      <property name="Manufacturer Part" value="AP63203WU-7"/>
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_fp_filters" value="TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL"/>
@@ -672,12 +732,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -698,12 +762,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -724,12 +792,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -750,12 +822,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -776,12 +852,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -802,12 +882,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -828,12 +912,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C23630</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10A225KO8NNNC</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C23630"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10A225KO8NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -854,12 +942,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C23630</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10A225KO8NNNC</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C23630"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10A225KO8NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -880,12 +972,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -906,12 +1002,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C15849</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10A105KB8NNNC</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C15849"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10A105KB8NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -932,12 +1032,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C19666</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10A475KO8NNNC</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C19666"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10A475KO8NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -958,12 +1062,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -984,12 +1092,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C32949</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05C100JB5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C32949"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05C100JB5NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -1010,12 +1122,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C32949</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05C100JB5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C32949"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05C100JB5NNNC"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -1072,12 +1188,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1098,12 +1218,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25900</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF4701TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25900"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF4701TCE"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1124,12 +1248,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25900</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF4701TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25900"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF4701TCE"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1150,12 +1278,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25900</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF4701TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25900"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF4701TCE"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1176,12 +1308,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25900</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF4701TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25900"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF4701TCE"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1202,12 +1338,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25900</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF4701TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25900"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF4701TCE"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1228,12 +1368,16 @@
       <footprint>rocket:LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL</footprint>
       <fields>
         <field name="LCSC">C5271084</field>
+        <field name="Manufacturer">STMicroelectronics</field>
+        <field name="Manufacturer Part">STM32H743VIT6TR</field>
         <field name="Footprint">rocket:LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="MCU" description=""/>
       <property name="LCSC" value="C5271084"/>
+      <property name="Manufacturer" value="STMicroelectronics"/>
+      <property name="Manufacturer Part" value="STM32H743VIT6TR"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_fp_filters" value="LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL"/>
@@ -1351,12 +1495,16 @@
       <footprint>rocket:CRYSTAL-SMD_4P-L3.2-W2.5-BL</footprint>
       <fields>
         <field name="LCSC">C1985619</field>
+        <field name="Manufacturer">NDK</field>
+        <field name="Manufacturer Part">NX3225GA-25.000M-STD-CRG-2</field>
         <field name="Footprint">rocket:CRYSTAL-SMD_4P-L3.2-W2.5-BL</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="Crystal" description="Four pin crystal, GND on pins 2 and 4"/>
       <property name="LCSC" value="C1985619"/>
+      <property name="Manufacturer" value="NDK"/>
+      <property name="Manufacturer Part" value="NX3225GA-25.000M-STD-CRG-2"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="quartz ceramic resonator oscillator"/>
@@ -1379,12 +1527,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="03 | Memory and sensors"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -1405,12 +1557,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="03 | Memory and sensors"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -1431,12 +1587,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="03 | Memory and sensors"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -1457,12 +1617,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="03 | Memory and sensors"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -1483,12 +1647,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="03 | Memory and sensors"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1509,12 +1677,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="03 | Memory and sensors"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1535,12 +1707,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25900</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF4701TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25900"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF4701TCE"/>
       <property name="Sheetname" value="03 | Memory and sensors"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1561,12 +1737,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25900</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF4701TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25900"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF4701TCE"/>
       <property name="Sheetname" value="03 | Memory and sensors"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1587,12 +1767,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="03 | Memory and sensors"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1649,12 +1833,16 @@
       <footprint>rocket:LGA-14_L3.0-W2.5-P0.50-TL</footprint>
       <fields>
         <field name="LCSC">C26633007</field>
+        <field name="Manufacturer">STMicroelectronics</field>
+        <field name="Manufacturer Part">LSM6DSV320XTR</field>
         <field name="Footprint">rocket:LGA-14_L3.0-W2.5-P0.50-TL</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="IMU_SPI" description=""/>
       <property name="LCSC" value="C26633007"/>
+      <property name="Manufacturer" value="STMicroelectronics"/>
+      <property name="Manufacturer Part" value="LSM6DSV320XTR"/>
       <property name="Sheetname" value="03 | Memory and sensors"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_fp_filters" value="LGA-14_L3.0-W2.5-P0.50-TL"/>
@@ -1721,12 +1909,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>
+        <field name="Manufacturer">FH (Guangdong Fenghua Advanced Tech)</field>
+        <field name="Manufacturer Part">0603B103K500NT</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C57112"/>
+      <property name="Manufacturer" value="FH (Guangdong Fenghua Advanced Tech)"/>
+      <property name="Manufacturer Part" value="0603B103K500NT"/>
       <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -1747,12 +1939,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>
+        <field name="Manufacturer">FH (Guangdong Fenghua Advanced Tech)</field>
+        <field name="Manufacturer Part">0603B103K500NT</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C57112"/>
+      <property name="Manufacturer" value="FH (Guangdong Fenghua Advanced Tech)"/>
+      <property name="Manufacturer Part" value="0603B103K500NT"/>
       <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -1835,12 +2031,16 @@
       <footprint>rocket:R0805</footprint>
       <fields>
         <field name="LCSC">C17557</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0805W8F2200T5E</field>
         <field name="Footprint">rocket:R0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C17557"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0805W8F2200T5E"/>
       <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1861,12 +2061,16 @@
       <footprint>rocket:R0805</footprint>
       <fields>
         <field name="LCSC">C17557</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0805W8F2200T5E</field>
         <field name="Footprint">rocket:R0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C17557"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0805W8F2200T5E"/>
       <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1887,12 +2091,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25741</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1003TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25741"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1003TCE"/>
       <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1913,12 +2121,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1939,12 +2151,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1965,12 +2181,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1991,12 +2211,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -2017,12 +2241,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C11702</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C11702"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1001TCE"/>
       <property name="Sheetname" value="04 | Voltage diagnosis and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -2665,12 +2893,16 @@
       <footprint>rocket:M3_TPS2595_DSG</footprint>
       <fields>
         <field name="LCSC">C1849463</field>
+        <field name="Manufacturer">Texas Instruments</field>
+        <field name="Manufacturer Part">TPS259570DSGR</field>
         <field name="Footprint">rocket:M3_TPS2595_DSG</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="CameraEFuse" description=""/>
       <property name="LCSC" value="C1849463"/>
+      <property name="Manufacturer" value="Texas Instruments"/>
+      <property name="Manufacturer Part" value="TPS259570DSGR"/>
       <property name="Sheetname" value="05 | Camera branch protection and regulator"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_fp_filters" value="M3_TPS2595_DSG"/>
@@ -2730,12 +2962,16 @@
       <footprint>rocket:M3_DB128V_4P</footprint>
       <fields>
         <field name="LCSC">C2915641</field>
+        <field name="Manufacturer">DORABO</field>
+        <field name="Manufacturer Part">DB128V-5.08-4P-GN-S</field>
         <field name="Footprint">rocket:M3_DB128V_4P</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="CameraTerminal" description=""/>
       <property name="LCSC" value="C2915641"/>
+      <property name="Manufacturer" value="DORABO"/>
+      <property name="Manufacturer Part" value="DB128V-5.08-4P-GN-S"/>
       <property name="Sheetname" value="06 | Camera terminal and characterization"/>
       <property name="Sheetfile" value="camera_connector.kicad_sch"/>
       <property name="ki_fp_filters" value="M3_DB128V_4P"/>
@@ -2957,6 +3193,8 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C23630</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10A225KO8NNNC</field>
         <field name="LCSC Part">C23630</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
@@ -2964,6 +3202,8 @@
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C23630"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10A225KO8NNNC"/>
       <property name="LCSC Part" value="C23630"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
@@ -2985,12 +3225,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C307331</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KB54PNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C307331"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KB54PNC"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -3171,12 +3415,16 @@
       <footprint>rocket:M3_DB128V_4P_Entry</footprint>
       <fields>
         <field name="LCSC">C2915641</field>
+        <field name="Manufacturer">DORABO</field>
+        <field name="Manufacturer Part">DB128V-5.08-4P-GN-S</field>
         <field name="Footprint">rocket:M3_DB128V_4P_Entry</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="BatteryTerminal" description=""/>
       <property name="LCSC" value="C2915641"/>
+      <property name="Manufacturer" value="DORABO"/>
+      <property name="Manufacturer Part" value="DB128V-5.08-4P-GN-S"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_fp_filters" value="M3_DB128V_4P_Entry"/>
@@ -3674,12 +3922,16 @@
       <footprint>rocket:M3_TPS25947_RPW</footprint>
       <fields>
         <field name="LCSC">C3662793</field>
+        <field name="Manufacturer">Texas Instruments</field>
+        <field name="Manufacturer Part">TPS259470LRPWR</field>
         <field name="Footprint">rocket:M3_TPS25947_RPW</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="BatteryEFuse" description=""/>
       <property name="LCSC" value="C3662793"/>
+      <property name="Manufacturer" value="Texas Instruments"/>
+      <property name="Manufacturer Part" value="TPS259470LRPWR"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_fp_filters" value="M3_TPS25947_RPW"/>
@@ -3821,6 +4073,102 @@
       <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
       <sheetpath names="/08 | USB limit, source mux and hold-up/" tstamps="/98c21473-b271-5039-bfe5-b3672097f1da/"/>
       <tstamps>5da58c05-7707-5bb4-8ccc-42652bdc9763</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C97">
+      <value>1uF 25V X7R 10%</value>
+      <footprint>rocket:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="LCSC">C29936</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10B105KA8NNNC</field>
+        <field name="LCSC Part">C29936</field>
+        <field name="Footprint">rocket:C_0603_1608Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C29936"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10B105KA8NNNC"/>
+      <property name="LCSC Part" value="C29936"/>
+      <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
+      <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/08 | USB limit, source mux and hold-up/" tstamps="/98c21473-b271-5039-bfe5-b3672097f1da/"/>
+      <tstamps>461ab2ba-e89b-5795-b4a0-be8976693f94</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C98">
+      <value>1uF 25V X7R 10%</value>
+      <footprint>rocket:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="LCSC">C29936</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10B105KA8NNNC</field>
+        <field name="LCSC Part">C29936</field>
+        <field name="Footprint">rocket:C_0603_1608Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C29936"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10B105KA8NNNC"/>
+      <property name="LCSC Part" value="C29936"/>
+      <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
+      <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/08 | USB limit, source mux and hold-up/" tstamps="/98c21473-b271-5039-bfe5-b3672097f1da/"/>
+      <tstamps>7d2115cd-a796-5211-a722-0ac7d32268c0</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C99">
+      <value>100nF 50V</value>
+      <footprint>rocket:C0402</footprint>
+      <fields>
+        <field name="LCSC">C307331</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KB54PNC</field>
+        <field name="LCSC Part">C307331</field>
+        <field name="Footprint">rocket:C0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C307331"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KB54PNC"/>
+      <property name="LCSC Part" value="C307331"/>
+      <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
+      <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/08 | USB limit, source mux and hold-up/" tstamps="/98c21473-b271-5039-bfe5-b3672097f1da/"/>
+      <tstamps>dcaa7234-1ca8-58d8-bd97-84b5f3a6d5bb</tstamps>
       <units>
         <unit name="A">
           <pins>
@@ -4131,12 +4479,16 @@
       <footprint>rocket:M3_TPS2553_DBV</footprint>
       <fields>
         <field name="LCSC">C55266</field>
+        <field name="Manufacturer">Texas Instruments</field>
+        <field name="Manufacturer Part">TPS2553DBVR</field>
         <field name="Footprint">rocket:M3_TPS2553_DBV</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="USBCurrentLimit" description=""/>
       <property name="LCSC" value="C55266"/>
+      <property name="Manufacturer" value="Texas Instruments"/>
+      <property name="Manufacturer Part" value="TPS2553DBVR"/>
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_fp_filters" value="M3_TPS2553_DBV"/>
@@ -4160,12 +4512,16 @@
       <footprint>rocket:M3_TPS2121_RUX</footprint>
       <fields>
         <field name="LCSC">C485916</field>
+        <field name="Manufacturer">Texas Instruments</field>
+        <field name="Manufacturer Part">TPS2121RUXR</field>
         <field name="Footprint">rocket:M3_TPS2121_RUX</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="LogicMux" description=""/>
       <property name="LCSC" value="C485916"/>
+      <property name="Manufacturer" value="Texas Instruments"/>
+      <property name="Manufacturer Part" value="TPS2121RUXR"/>
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_fp_filters" value="M3_TPS2121_RUX"/>
@@ -4309,6 +4665,36 @@
       <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
       <sheetpath names="/09 | Camera UART, separate supply domains/" tstamps="/3918f78b-b8e6-50fb-8165-8fdc93a836ab/"/>
       <tstamps>9254786f-22fa-5658-b5e7-c07b1f7454e3</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C100">
+      <value>100nF</value>
+      <footprint>rocket:C0402</footprint>
+      <fields>
+        <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
+        <field name="Footprint">rocket:C0402</field>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
+      <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
+      <property name="Sheetfile" value="camera_uart.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
+      <sheetpath names="/09 | Camera UART, separate supply domains/" tstamps="/3918f78b-b8e6-50fb-8165-8fdc93a836ab/"/>
+      <tstamps>249d5a9f-361a-514d-8cf3-b0eba0219859</tstamps>
       <units>
         <unit name="A">
           <pins>
@@ -4574,8 +4960,8 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C11702</field>
-        <field name="Manufacturer"/>
-        <field name="Manufacturer Part"/>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1001TCE</field>
         <field name="LCSC Part">C11702</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
@@ -4583,8 +4969,8 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C11702"/>
-      <property name="Manufacturer" value=""/>
-      <property name="Manufacturer Part" value=""/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1001TCE"/>
       <property name="LCSC Part" value="C11702"/>
       <property name="Sheetname" value="10 | USB cable presence, ordinary GPIO sensing"/>
       <property name="Sheetfile" value="usb_sense.kicad_sch"/>
@@ -4664,12 +5050,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C23630</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10A225KO8NNNC</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C23630"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10A225KO8NNNC"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -4720,12 +5110,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>
+        <field name="Manufacturer">FH (Guangdong Fenghua Advanced Tech)</field>
+        <field name="Manufacturer Part">0603B103K500NT</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C57112"/>
+      <property name="Manufacturer" value="FH (Guangdong Fenghua Advanced Tech)"/>
+      <property name="Manufacturer Part" value="0603B103K500NT"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -4845,12 +5239,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25741</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1003TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25741"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1003TCE"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4871,12 +5269,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4897,12 +5299,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25741</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1003TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25741"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1003TCE"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4923,12 +5329,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25741</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1003TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25741"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1003TCE"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4949,12 +5359,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4975,12 +5389,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C4109</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF2001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C4109"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF2001TCE"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5001,12 +5419,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5027,12 +5449,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C4109</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF2001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C4109"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF2001TCE"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5135,12 +5561,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>
+        <field name="Manufacturer">FH (Guangdong Fenghua Advanced Tech)</field>
+        <field name="Manufacturer Part">0603B103K500NT</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C57112"/>
+      <property name="Manufacturer" value="FH (Guangdong Fenghua Advanced Tech)"/>
+      <property name="Manufacturer Part" value="0603B103K500NT"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -5191,12 +5621,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>
+        <field name="Manufacturer">FH (Guangdong Fenghua Advanced Tech)</field>
+        <field name="Manufacturer Part">0603B103K500NT</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C57112"/>
+      <property name="Manufacturer" value="FH (Guangdong Fenghua Advanced Tech)"/>
+      <property name="Manufacturer Part" value="0603B103K500NT"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -5247,12 +5681,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>
+        <field name="Manufacturer">FH (Guangdong Fenghua Advanced Tech)</field>
+        <field name="Manufacturer Part">0603B103K500NT</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C57112"/>
+      <property name="Manufacturer" value="FH (Guangdong Fenghua Advanced Tech)"/>
+      <property name="Manufacturer Part" value="0603B103K500NT"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -5303,12 +5741,16 @@
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>
+        <field name="Manufacturer">FH (Guangdong Fenghua Advanced Tech)</field>
+        <field name="Manufacturer Part">0603B103K500NT</field>
         <field name="Footprint">rocket:C0603</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C57112"/>
+      <property name="Manufacturer" value="FH (Guangdong Fenghua Advanced Tech)"/>
+      <property name="Manufacturer Part" value="0603B103K500NT"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -5540,12 +5982,16 @@
       <footprint>rocket:R0805</footprint>
       <fields>
         <field name="LCSC">C17557</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0805W8F2200T5E</field>
         <field name="Footprint">rocket:R0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C17557"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0805W8F2200T5E"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5566,12 +6012,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C11702</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C11702"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1001TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5592,12 +6042,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5618,12 +6072,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5644,12 +6102,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C4109</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF2001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C4109"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF2001TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5670,12 +6132,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5696,12 +6162,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5722,12 +6192,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C4109</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF2001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C4109"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF2001TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5808,12 +6282,16 @@
       <footprint>rocket:R0805</footprint>
       <fields>
         <field name="LCSC">C17557</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0805W8F2200T5E</field>
         <field name="Footprint">rocket:R0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C17557"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0805W8F2200T5E"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5834,12 +6312,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C11702</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C11702"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1001TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5860,12 +6342,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5886,12 +6372,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5912,12 +6402,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C4109</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF2001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C4109"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF2001TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5938,12 +6432,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5964,12 +6462,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -5990,12 +6492,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C4109</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF2001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C4109"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF2001TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6016,12 +6522,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6042,12 +6552,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6068,12 +6582,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6094,12 +6612,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25905</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25905"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6120,12 +6642,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C4109</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF2001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C4109"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF2001TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6146,12 +6672,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C4109</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF2001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C4109"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF2001TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6172,12 +6702,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C4109</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF2001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C4109"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF2001TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6198,12 +6732,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C4109</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF2001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C4109"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF2001TCE"/>
       <property name="Sheetname" value="12 | Pyro channels, arming and continuity"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6276,12 +6814,16 @@
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL21A226MAQNNNE</field>
         <field name="Footprint">rocket:C0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C45783"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL21A226MAQNNNE"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -6302,12 +6844,16 @@
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL21A226MAQNNNE</field>
         <field name="Footprint">rocket:C0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C45783"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL21A226MAQNNNE"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -6360,12 +6906,16 @@
       <footprint>rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54</footprint>
       <fields>
         <field name="LCSC">C32713291</field>
+        <field name="Manufacturer">hanxia</field>
+        <field name="Manufacturer Part">HX PZ2.54-3x4P ZZ</field>
         <field name="Footprint">rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="Conn_3x4" description="3x4 pin header, column-major (1/2/3 = one column)"/>
       <property name="LCSC" value="C32713291"/>
+      <property name="Manufacturer" value="hanxia"/>
+      <property name="Manufacturer Part" value="HX PZ2.54-3x4P ZZ"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <sheetpath names="/13 | Servo outputs/" tstamps="/dee26ed0-15d7-53d0-b75e-1223265de7e9/"/>
@@ -6514,12 +7064,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6540,12 +7094,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6566,12 +7124,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6592,12 +7154,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6618,12 +7184,16 @@
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C1525</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL05B104KO5NNNC</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
       <property name="LCSC" value="C1525"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL05B104KO5NNNC"/>
       <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -6790,12 +7360,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C11702</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1001TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C11702"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1001TCE"/>
       <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6816,12 +7390,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6842,12 +7420,16 @@
       <footprint>rocket:R0805</footprint>
       <fields>
         <field name="LCSC">C17557</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0805W8F2200T5E</field>
         <field name="Footprint">rocket:R0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C17557"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0805W8F2200T5E"/>
       <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6868,12 +7450,16 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -7721,6 +8307,7 @@
   </libraries>
   <nets>
     <net code="1" name="3V3" class="Default">
+      <node ref="C100" pin="1" pintype="passive"/>
       <node ref="C13" pin="1" pintype="passive"/>
       <node ref="C14" pin="1" pintype="passive"/>
       <node ref="C15" pin="1" pintype="passive"/>
@@ -8037,6 +8624,7 @@
     </net>
     <net code="50" name="GND" class="Default">
       <node ref="C10" pin="2" pintype="passive"/>
+      <node ref="C100" pin="2" pintype="passive"/>
       <node ref="C11" pin="2" pintype="passive"/>
       <node ref="C121" pin="2" pintype="passive"/>
       <node ref="C122" pin="2" pintype="passive"/>
@@ -8096,6 +8684,9 @@
       <node ref="C93" pin="2" pintype="passive"/>
       <node ref="C94" pin="2" pintype="passive"/>
       <node ref="C96" pin="2" pintype="passive"/>
+      <node ref="C97" pin="2" pintype="passive"/>
+      <node ref="C98" pin="2" pintype="passive"/>
+      <node ref="C99" pin="2" pintype="passive"/>
       <node ref="D121" pin="2" pinfunction="GND_2" pintype="passive"/>
       <node ref="D122" pin="1" pinfunction="A1_1" pintype="passive"/>
       <node ref="D4" pin="2" pinfunction="GND_2" pintype="passive"/>
@@ -8429,6 +9020,7 @@
     <net code="95" name="RAW_PROTECTED" class="Default">
       <node ref="C71" pin="1" pintype="passive"/>
       <node ref="C82" pin="1" pintype="passive"/>
+      <node ref="C97" pin="1" pintype="passive"/>
       <node ref="D9" pin="1" pinfunction="K_1" pintype="passive"/>
       <node ref="R122" pin="1" pintype="passive"/>
       <node ref="R92" pin="1" pintype="passive"/>
@@ -8530,6 +9122,7 @@
     </net>
     <net code="114" name="USB_LIMITED" class="Default">
       <node ref="C86" pin="1" pintype="passive"/>
+      <node ref="C98" pin="1" pintype="passive"/>
       <node ref="R87" pin="1" pintype="passive"/>
       <node ref="TP82" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U10" pin="6" pinfunction="OUT_6" pintype="power_out"/>
@@ -8573,6 +9166,7 @@
       <node ref="C6" pin="1" pintype="passive"/>
       <node ref="C7" pin="1" pintype="passive"/>
       <node ref="C84" pin="1" pintype="passive"/>
+      <node ref="C99" pin="1" pintype="passive"/>
       <node ref="R60" pin="1" pintype="passive"/>
       <node ref="TP83" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U11" pin="1" pinfunction="OUT_A_1" pintype="power_out"/>

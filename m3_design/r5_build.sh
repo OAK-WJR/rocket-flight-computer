@@ -8,8 +8,8 @@
 # (placement, zones, scripted critical copper), applies the Freerouting session in git (r5_route.py import;
 # no Java needed), applies the finisher's recorded result in git (r5_finish.py --replay=m3_design/r5_finish.json;
 # without that file it runs the search, r5_finish.py --shake, and records it), runs r5_post.py (clean-up, silkscreen,
-# refill), then the board gate, the actuator safety
-# contract and the envelope check. The schematic is R4's, unchanged. It overwrites
+# refill), replays the reviewed bypass, routing, sensor-land and spacing repairs, fills maker metadata, then runs the board gate,
+# actuator safety contract and envelope check. The schematic adds C97–C100 to R4's circuit. It overwrites
 # m3_design/assembly_review/m3.kicad_pcb, so commit or stash your own changes first. The fab package is not
 # rebuilt: run tools/jlc_orient.py, tools/export_fab.py, tools/jlc_stock.py and tools/jlc_cost.py afterwards.
 #
@@ -48,6 +48,7 @@ else
   "$KICAD_PY" -I m3_design/r5_finish.py --shake --record=m3_design/r5_finish.json
 fi
 "$KICAD_PY" -I m3_design/r5_post.py
+python3 m3_design/r5_repair.py                    # metadata sync, guarded replay, refill and validation
 tools/check.sh
 python3 m3_design/check_actuators.py
 "$KICAD_PY" -I tools/fit_check.py
