@@ -7,3 +7,61 @@
 (rule "HRO M-12 internal SMD lands to locating holes"
   (condition "A.memberOfFootprint('J3') && B.memberOfFootprint('J3') && ((A.Pad_Type == 'NPTH, mechanical' && B.Pad_Type == 'SMD') || (B.Pad_Type == 'NPTH, mechanical' && A.Pad_Type == 'SMD'))")
   (constraint hole_clearance (min 0.20mm)))
+
+# Pyro safety spacing (validation pass 2; docs/M3_R4.md section 1c). Measured against every track, via
+# and pad on every layer, not only zone fills. RAW_ACT is live whenever the board is on; bus, igniter and
+# drain copper is live once armed. A bridge to a gate net fires a channel, a bridge to a sense net puts
+# up to 19.9 V on an MCU ADC pin. The FETs' own gate/drain pads and the dividers' own two pads are exempt.
+# Pass 3: D covers all GND copper, E guards the ARM break, F the bus/igniter/drain against every other
+# live net (cross-channel included), G the gate nets inside the PYRO_BLOCK rule area. No two of rules
+# A-G and A2 cover the same pair of nets; rule H (pass 13) overlaps A-C, F, G and A2 for pads only and, last and
+# stricter, governs them.
+# Pass 11: each divider top is two 5.1k in series; the midpoints (*_MID) take rule C's 0.3 mm like the sense nets (a
+# bridge to one equals shorting one half, which the split tolerates), and no part has both RAW_ACT and RAW_ACT_SENSE pads.
+# Pass 12: rule F leaves the gate nets to rule B (F comes later, so it used to shadow B), and rule A names the midpoints.
+(rule "Pyro A: RAW_ACT to pyro control"
+  (condition "A.NetName == 'RAW_ACT' && (B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO2_GATE' || B.NetName == 'PYRO1_GATE_N' || B.NetName == 'PYRO2_GATE_N' || B.NetName == 'ARM1_SENSE' || B.NetName == 'ARM2_SENSE' || B.NetName == 'PYRO1_CONT' || B.NetName == 'PYRO2_CONT' || B.NetName == 'PYRO1_COLD' || B.NetName == 'PYRO2_COLD' || B.NetName == 'PYRO1_CONT_MID' || B.NetName == 'PYRO2_CONT_MID' || B.NetName == 'ARM1_SENSE_MID' || B.NetName == 'ARM2_SENSE_MID')")
+  (constraint clearance (min 0.5mm)))
+(rule "Pyro B: bus, igniter and drain to gate"
+  (condition "(A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO2_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO2_IGN' || A.NetName == 'PYRO1_OUT' || A.NetName == 'PYRO2_OUT') && (B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO2_GATE' || B.NetName == 'PYRO1_GATE_N' || B.NetName == 'PYRO2_GATE_N') && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')) && !(A.memberOfFootprint('Q125') && B.memberOfFootprint('Q125'))")
+  (constraint clearance (min 0.5mm)))
+(rule "Pyro C: bus, igniter and drain to sense"
+  (condition "(A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO2_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO2_IGN' || A.NetName == 'PYRO1_OUT' || A.NetName == 'PYRO2_OUT') && (B.NetName == 'ARM1_SENSE' || B.NetName == 'ARM2_SENSE' || B.NetName == 'PYRO1_CONT' || B.NetName == 'PYRO2_CONT' || B.NetName == 'PYRO1_COLD' || B.NetName == 'PYRO2_COLD' || B.NetName == 'PYRO1_CONT_MID' || B.NetName == 'PYRO2_CONT_MID' || B.NetName == 'ARM1_SENSE_MID' || B.NetName == 'ARM2_SENSE_MID') && !(A.memberOfFootprint('R173') && B.memberOfFootprint('R173')) && !(A.memberOfFootprint('R131') && B.memberOfFootprint('R131')) && !(A.memberOfFootprint('R132') && B.memberOfFootprint('R132')) && !(A.memberOfFootprint('R174') && B.memberOfFootprint('R174')) && !(A.memberOfFootprint('R143') && B.memberOfFootprint('R143')) && !(A.memberOfFootprint('R144') && B.memberOfFootprint('R144'))")
+  (constraint clearance (min 0.3mm)))
+(rule "Pyro D: GND to bus, igniter and drain"
+  (condition "A.NetName == 'GND' && (B.NetName == 'PYRO1_BUS' || B.NetName == 'PYRO2_BUS' || B.NetName == 'PYRO1_IGN' || B.NetName == 'PYRO2_IGN' || B.NetName == 'PYRO1_OUT' || B.NetName == 'PYRO2_OUT') && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')) && !(A.memberOfFootprint('Q125') && B.memberOfFootprint('Q125')) && !(A.memberOfFootprint('C128') && B.memberOfFootprint('C128')) && !(A.memberOfFootprint('C140') && B.memberOfFootprint('C140'))")
+  (constraint clearance (min 0.5mm)))
+(rule "Pyro E: RAW_ACT to bus and igniter (ARM break)"
+  (condition "A.NetName == 'RAW_ACT' && (B.NetName == 'PYRO1_BUS' || B.NetName == 'PYRO2_BUS' || B.NetName == 'PYRO1_IGN' || B.NetName == 'PYRO2_IGN')")
+  (constraint clearance (min 1.0mm)))
+(rule "Pyro F: bus, igniter and drain to other live nets"
+  (condition "(A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO2_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO2_IGN' || A.NetName == 'PYRO1_OUT' || A.NetName == 'PYRO2_OUT') && B.NetName != '' && B.NetName != 'GND' && B.NetName != 'ARM1_SENSE' && B.NetName != 'ARM2_SENSE' && B.NetName != 'PYRO1_CONT' && B.NetName != 'PYRO2_CONT' && B.NetName != 'PYRO1_COLD' && B.NetName != 'PYRO2_COLD' && B.NetName != 'PYRO1_CONT_MID' && B.NetName != 'PYRO2_CONT_MID' && B.NetName != 'ARM1_SENSE_MID' && B.NetName != 'ARM2_SENSE_MID' && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO2_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'PYRO2_GATE_N' && !((A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO1_OUT') && (B.NetName == 'PYRO1_BUS' || B.NetName == 'PYRO1_IGN' || B.NetName == 'PYRO1_OUT')) && !((A.NetName == 'PYRO2_BUS' || A.NetName == 'PYRO2_IGN' || A.NetName == 'PYRO2_OUT') && (B.NetName == 'PYRO2_BUS' || B.NetName == 'PYRO2_IGN' || B.NetName == 'PYRO2_OUT')) && !((A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO2_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO2_IGN') && B.NetName == 'RAW_ACT') && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')) && !(A.memberOfFootprint('Q125') && B.memberOfFootprint('Q125'))")
+  (constraint clearance (min 0.5mm)))
+(rule "Pyro G: gate nets in the pyro block"
+  (condition "(A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO2_GATE' || A.NetName == 'PYRO1_GATE_N' || A.NetName == 'PYRO2_GATE_N') && A.intersectsArea('PYRO_BLOCK') && B.NetName != '' && B.NetName != 'GND' && B.NetName != 'RAW_ACT' && B.NetName != 'PYRO1_BUS' && B.NetName != 'PYRO2_BUS' && B.NetName != 'PYRO1_IGN' && B.NetName != 'PYRO2_IGN' && B.NetName != 'PYRO1_OUT' && B.NetName != 'PYRO2_OUT' && !((A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO1_GATE_N') && (B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO1_GATE_N')) && !((A.NetName == 'PYRO2_GATE' || A.NetName == 'PYRO2_GATE_N') && (B.NetName == 'PYRO2_GATE' || B.NetName == 'PYRO2_GATE_N')) && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')) && !(A.memberOfFootprint('Q125') && B.memberOfFootprint('Q125'))")
+  (constraint clearance (min 0.3mm)))
+(rule "Pyro A2: RAW_ACT to RAW_ACT_SENSE"
+  (condition "A.NetName == 'RAW_ACT' && B.NetName == 'RAW_ACT_SENSE'")
+  (constraint clearance (min 0.3mm)))
+# Pass 13 (final CAD iteration): rule H comes last, so for pad pairs it takes precedence over the rules above. Every
+# exposed bus, igniter, drain and RAW_ACT pad keeps 1.0 mm from every sense and gate pad, and every divider-midpoint pad
+# from every gate pad: one solder bridge there put live copper on a sense node (past its divider) or on a gate. Pass 14:
+# the actuator switch's gate nets count as gates (a bridge pulling ACT_GATE down powers RAW_ACT with the power switch
+# open). Each FET's own pads are exempt. Tracks, vias and zones keep rules A-G and A2. 3V3 next to a gate is not covered
+# here: the plug-out cold test shows it (docs/M3_R4.md section 2).
+(rule "Pyro H: live pads to sense and gate pads (solder bridge)"
+  (condition "A.Type == 'Pad' && B.Type == 'Pad' && (((A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO2_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO2_IGN' || A.NetName == 'PYRO1_OUT' || A.NetName == 'PYRO2_OUT' || A.NetName == 'RAW_ACT') && (B.NetName == 'ARM1_SENSE' || B.NetName == 'ARM2_SENSE' || B.NetName == 'PYRO1_CONT' || B.NetName == 'PYRO2_CONT' || B.NetName == 'RAW_ACT_SENSE' || B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO2_GATE' || B.NetName == 'PYRO1_GATE_N' || B.NetName == 'PYRO2_GATE_N' || B.NetName == 'ACT_GATE' || B.NetName == 'ACT_DRV')) || ((A.NetName == 'PYRO1_CONT_MID' || A.NetName == 'PYRO2_CONT_MID' || A.NetName == 'ARM1_SENSE_MID' || A.NetName == 'ARM2_SENSE_MID' || A.NetName == 'RAW_ACT_SENSE_MID') && (B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO2_GATE' || B.NetName == 'PYRO1_GATE_N' || B.NetName == 'PYRO2_GATE_N' || B.NetName == 'ACT_GATE' || B.NetName == 'ACT_DRV'))) && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')) && !(A.memberOfFootprint('Q125') && B.memberOfFootprint('Q125')) && !(A.memberOfFootprint('Q120') && B.memberOfFootprint('Q120')) && !(A.memberOfFootprint('Q121') && B.memberOfFootprint('Q121')) && !(A.memberOfFootprint('Q122') && B.memberOfFootprint('Q122'))")
+  (constraint clearance (min 1.0mm)))
+
+# R5 pass 4 (tombstoning): r5_post.pour_relief puts the GND pads of two-pad 0402/0603 parts on thermal spokes; these
+# set their size, with minimums (an opt alone filled with no gap; pass 6). Other GND SMD pads stay solid.
+(rule "Small GND pad thermal relief"
+  (condition "A.Type == 'Pad' && A.NetName == 'GND' && A.Pad_Type == 'SMD'")
+  (constraint thermal_relief_gap (min 0.25mm) (opt 0.25mm))
+  (constraint thermal_spoke_width (min 0.3mm) (opt 0.3mm)))
+
+# R5 pass 4: the RAW_ACT through-hole pins (hand-soldered) keep 0.3 mm from the GND pours, not the outer pours'
+# 0.15 mm; a bridge there shorts the servo feed to GND. GND only, so this rule (the last) never lowers a pyro rule.
+(rule "RAW_ACT pins to pours"
+  (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole' && A.NetName == 'RAW_ACT' && B.Type == 'Zone' && B.NetName == 'GND'")
+  (constraint clearance (min 0.3mm)))

@@ -6,7 +6,7 @@
 	(title_block
 		(title "11 | Actuator power switch")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R2")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
 			(symbol "M3:C"
@@ -550,7 +550,7 @@
 						(font
 							(size 1.27 1.27))))))
 		(embedded_fonts no)
-		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 			(at 0 0 0)
 			(effects
 				(font
@@ -885,6 +885,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1003TCE"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
@@ -960,6 +972,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL10A225KO8NNNC"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
@@ -1030,6 +1054,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C25744"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
 			(at 274.32 50.8 0)
 			(hide yes)
 			(effects
@@ -1213,6 +1249,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1003TCE"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
@@ -1283,6 +1331,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C25741"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1003TCE"
 			(at 99.06 114.3 0)
 			(hide yes)
 			(effects
@@ -1426,7 +1486,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k"
+		(property "Value" "5.1k"
 			(at 219.71 123.19 0)
 			(effects
 				(font
@@ -1444,7 +1504,19 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
+		(property "LCSC" "C25905"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF5101TCE"
 			(at 215.9 114.3 0)
 			(hide yes)
 			(effects
@@ -1463,7 +1535,7 @@
 			(width 0)
 			(type default))
 		(uuid fee5245d-5acc-548f-9488-ca6962d6cc80))
-	(global_label "RAW_ACT"
+	(global_label "RAW_ACT_SENSE_MID"
 		(shape passive)
 		(at 215.9 105.41 90)
 		(effects
@@ -1501,7 +1573,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "4.7k"
+		(property "Value" "2k"
 			(at 278.13 123.19 0)
 			(effects
 				(font
@@ -1519,7 +1591,19 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C25900"
+		(property "LCSC" "C4109"
+			(at 274.32 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 274.32 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF2001TCE"
 			(at 274.32 114.3 0)
 			(hide yes)
 			(effects
@@ -1595,6 +1679,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C57112"
+			(at 332.74 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "FH (Guangdong Fenghua Advanced Tech)"
+			(at 332.74 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0603B103K500NT"
 			(at 332.74 114.3 0)
 			(hide yes)
 			(effects
@@ -1797,13 +1893,197 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 8c0445c0-a410-543c-84c4-63eb9f386e59))
-	(text "R124/R125 10k/4.7k -> PB0: RAW_ACT sense AND bleed (tau ~7 s with C121). Mandatory external 15 A ATO fuse in battery lead."
+	(text "R177 + R124 (2 x 5.1k) over R125 + R182 (2 x 2k parallel) -> R172 4.7k -> PB0 (RAW_ACT / 11.2: 0.75 V at 8.4 V, 1.78 V at the 19.9 V TVS clamp; one shorted or open part leaves PB0 <= 3.3 V): RAW_ACT sense AND bleed (tau ~5 s with C121). Mandatory external 15 A ATO fuse in battery lead."
 		(at 20.32 283.1 0)
 		(effects
 			(font
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 130b79de-6842-5793-9be4-01e5cf6f9de4))
+	(symbol
+		(lib_id "M3:R")
+		(at 254 83.82 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 1c737c28-5639-54f4-b8fd-58b31ffa3b94)
+		(property "Reference" "R177"
+			(at 256.54 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "5.1k"
+			(at 256.54 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 254 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 254 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 254 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 254 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF5101TCE"
+			(at 254 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
+					(reference "R177")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 254 80.01)
+			(xy 246.38 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9f591f2d-c76c-5f1f-a3e9-ec264666e395))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 246.38 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3df90a93-8f7c-5df3-b9c5-450629a8872a))
+	(wire
+		(pts
+			(xy 254 87.63)
+			(xy 246.38 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 109378c0-0a7e-5ae0-bc1f-320911fd70af))
+	(global_label "RAW_ACT_SENSE_MID"
+		(shape passive)
+		(at 246.38 87.63 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f5c079c7-e9e8-5ffa-9b50-e0895beb0bd9))
+	(symbol
+		(lib_id "M3:R")
+		(at 279.4 83.82 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4ec8c63c-44e8-5212-be9c-acfa685bc0fa)
+		(property "Reference" "R182"
+			(at 281.94 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 281.94 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 279.4 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 279.4 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 279.4 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 279.4 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF2001TCE"
+			(at 279.4 83.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
+					(reference "R182")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 279.4 80.01)
+			(xy 271.78 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid fd394098-c364-513c-807e-66718c5a2714))
+	(global_label "RAW_ACT_SENSE"
+		(shape passive)
+		(at 271.78 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a83a74e2-32a0-5dd1-b81b-bf25434858df))
+	(wire
+		(pts
+			(xy 279.4 87.63)
+			(xy 271.78 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 788831fa-80ea-5216-857f-670cd9067995))
+	(global_label "GND"
+		(shape passive)
+		(at 271.78 87.63 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3fb1bdef-3aa0-5933-bd41-cc99424ec4da))
 	(sheet_instances
 		(path "/"
 			(page "11"))))

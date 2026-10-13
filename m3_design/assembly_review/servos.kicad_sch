@@ -6,7 +6,7 @@
 	(title_block
 		(title "13 | Servo outputs")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R2")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
 			(symbol "M3:C"
@@ -382,7 +382,7 @@
 						(font
 							(size 1.27 1.27))))))
 		(embedded_fonts no)
-		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 			(at 0 0 0)
 			(effects
 				(font
@@ -532,6 +532,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C32713291"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "hanxia"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "HX PZ2.54-3x4P ZZ"
 			(at 40.64 50.8 0)
 			(hide yes)
 			(effects
@@ -859,6 +871,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
@@ -1016,6 +1040,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C25744"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
 			(at 274.32 50.8 0)
 			(hide yes)
 			(effects
@@ -1183,6 +1219,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
@@ -1340,6 +1388,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C25744"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
 			(at 157.48 114.3 0)
 			(hide yes)
 			(effects
@@ -1571,6 +1631,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 274.32 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL21A226MAQNNNE"
+			(at 274.32 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
@@ -1646,6 +1718,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 332.74 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL21A226MAQNNNE"
+			(at 332.74 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
@@ -1690,7 +1774,7 @@
 				(size 2.54 2.54))
 			(justify left))
 		(uuid 0108ab5e-3506-5f47-8387-c039d56afe2f))
-	(text "J122 column-major: 1/4/7/10 = SIGNAL 1-4, 2/5/8/11 = RAW_ACT (+), 3/6/9/12 = GND. HV servos only, stall <= 3 A per pin."
+	(text "J122 column-major: 1/4/7/10 = SIGNAL 1-4, 2/5/8/11 = RAW_ACT (+), 3/6/9/12 = GND. HV servos only: stall <= 1.92 A each, <= 7.7 A for all four (REQUIREMENTS F4); the header contact is rated 3 A (maker, no datasheet)."
 		(at 20.32 245 0)
 		(effects
 			(font

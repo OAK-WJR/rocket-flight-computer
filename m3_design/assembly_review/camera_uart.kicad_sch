@@ -5,8 +5,8 @@
 	(paper "A3")
 	(title_block
 		(title "09 | Camera UART, separate supply domains")
-		(date "2026-09-07")
-		(rev "M3-ASSY-R1")
+		(date "2026-10-12")
+		(rev "M3-ASSY-R5")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -390,7 +390,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 				(at 0 0 0)
 				(effects
 					(font
@@ -822,7 +822,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 91.44 193.04 0)
 			(hide yes)
 			(effects
@@ -834,19 +834,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
 					(reference "R100")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 91.44 193.04 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 91.44 193.04 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 91.44 193.04 0)
 			(hide yes)
 			(effects
@@ -918,7 +918,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 172.72 193.04 0)
 			(hide yes)
 			(effects
@@ -930,19 +930,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
 					(reference "R101")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 172.72 193.04 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 172.72 193.04 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 172.72 193.04 0)
 			(hide yes)
 			(effects
@@ -994,7 +994,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "10k 1%"
 			(at 332.74 138.42999999999998 0)
 			(effects
 				(font
@@ -1014,7 +1014,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C25804"
 			(at 330.2 137.16 0)
 			(hide yes)
 			(effects
@@ -1026,19 +1026,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
 					(reference "R102")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 330.2 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0603WAF1002T5E"
 			(at 330.2 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C95204"
+		(property "LCSC Part" "C25804"
 			(at 330.2 137.16 0)
 			(hide yes)
 			(effects
@@ -1110,7 +1110,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 147.32 137.16 0)
 			(hide yes)
 			(effects
@@ -1122,19 +1122,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
 					(reference "R103")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 147.32 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 147.32 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 147.32 137.16 0)
 			(hide yes)
 			(effects
@@ -1206,7 +1206,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1591"
+		(property "LCSC" "C14663"
 			(at 213.36 137.16 0)
 			(hide yes)
 			(effects
@@ -1218,19 +1218,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
 					(reference "C90")
 					(unit 1))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
+		(property "Manufacturer" "YAGEO"
 			(at 213.36 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10B104KB8NNNC"
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
 			(at 213.36 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C1591"
+		(property "LCSC Part" "C14663"
 			(at 213.36 137.16 0)
 			(hide yes)
 			(effects
@@ -1494,7 +1494,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1591"
+		(property "LCSC" "C14663"
 			(at 269.24 137.16 0)
 			(hide yes)
 			(effects
@@ -1506,19 +1506,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
 					(reference "C93")
 					(unit 1))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
+		(property "Manufacturer" "YAGEO"
 			(at 269.24 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10B104KB8NNNC"
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
 			(at 269.24 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C1591"
+		(property "LCSC Part" "C14663"
 			(at 269.24 137.16 0)
 			(hide yes)
 			(effects
@@ -1721,4 +1721,69 @@
 		(uuid 415e371b-131c-5d32-8310-b12dc26f0763))
 	(sheet_instances
 		(path "/"
-			(page "9"))))
+			(page "9")))
+	(symbol
+		(lib_id "M3:C")
+		(at 81.2800 165.1000 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 249d5a9f-361a-514d-8cf3-b0eba0219859)
+		(property "Reference" "C100"
+			(at 83.8200 163.8300 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF"
+			(at 83.8200 166.3700 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0402"
+			(at 81.2800 165.1000 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 81.2800 165.1000 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C1525"
+			(at 81.2800 165.1000 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 81.2800 165.1000 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
+			(at 81.2800 165.1000 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "C100")
+					(unit 1)))))
+	(wire (pts (xy 81.28 161.2900) (xy 73.6600 161.2900)) (stroke (width 0) (type default)) (uuid 0de9b63d-9043-5c78-87a8-1a595561815c))
+	(global_label "3V3" (shape passive) (at 73.6600 161.2900 0) (effects (font (size 1.05 1.05)) (justify right)) (uuid 0083527c-3e29-5205-8197-cdca7426d7d0))
+	(wire (pts (xy 81.28 168.9100) (xy 73.6600 168.9100)) (stroke (width 0) (type default)) (uuid 338fb996-e524-513f-bd29-77b10f82e019))
+	(global_label "GND" (shape passive) (at 73.6600 168.9100 0) (effects (font (size 1.05 1.05)) (justify right)) (uuid 82f3339e-0891-5f4f-a1cb-2d7675e6a9b3))
+)

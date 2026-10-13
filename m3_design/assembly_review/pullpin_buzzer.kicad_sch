@@ -6,7 +6,7 @@
 	(title_block
 		(title "14 | Launch pull-pin and buzzer")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R2")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
 		(symbol "M3:BAT54S"
@@ -584,7 +584,7 @@
 						(font
 							(size 1.27 1.27))))))
 		(embedded_fonts no)
-		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 			(at 0 0 0)
 			(effects
 				(font
@@ -604,13 +604,13 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "PULL-PIN 1x2"
+		(property "Value" "PULL-PIN PH 1x2"
 			(at 44.45 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_PULLPIN_1x2"
+		(property "Footprint" "rocket:M3_JST_PH_B2B_2P"
 			(at 40.64 50.8 0)
 			(hide yes)
 			(effects
@@ -622,25 +622,25 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C492401"
+		(property "LCSC" "C131337"
 			(at 40.64 50.8 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C492401"
+		(property "LCSC Part" "C131337"
 			(at 40.64 50.8 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer" "XFCN"
+		(property "Manufacturer" "JST"
 			(at 40.64 50.8 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "PZ254V-11-02P"
+		(property "Manufacturer Part" "B2B-PH-K-S(LF)(SN)"
 			(at 40.64 50.8 0)
 			(hide yes)
 			(effects
@@ -721,6 +721,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1001TCE"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
@@ -796,6 +808,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
@@ -866,6 +890,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C1525"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "CL05B104KO5NNNC"
 			(at 215.9 50.8 0)
 			(hide yes)
 			(effects
@@ -1332,6 +1368,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0805W8F2200T5E"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
@@ -1407,6 +1455,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
@@ -1472,13 +1532,20 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid bd454544-a8f7-52a8-92ea-81cbb5cbd667))
-	(text "BUZZ_DRV = PA5 (pin 29), moved off PE6 (P1-10). 2.7 kHz 50 % duty, software toggle or TIM8_CH1N (AF3, inference). Never TIM2."
+	(text "BUZZ_DRV = PA5 (pin 29), moved off PE6 (P1-10). 2.7 kHz 50 % duty, software toggle or TIM8_CH1N (AF3, verified, M3_R3 6). Never TIM2."
 		(at 20.32 267.86 0)
 		(effects
 			(font
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 9b6eda0c-dc2d-529d-acd1-9acd1c5f825e))
+	(text "J123 = JST PH B2B-PH-K-S (R4): ~6 mm high, latching; pin 1 = PULLPIN_EXT, pin 2 = GND. The 2.54 mm PZ254 plug and its wire bend did not fit the bore 19 mm off axis."
+		(at 20.32 275.48 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 0a6a0f85-a230-5dd5-89f3-5963d980197d))
 	(sheet_instances
 		(path "/"
 			(page "14"))))

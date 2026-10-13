@@ -1,10 +1,104 @@
 # M3 requirements and implementation status
 
-> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included; only the current M3-ASSY-R1 is. They are mentioned below only as the evolution record.
+> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. The repository holds the current M3-ASSY-R5 KiCad project (generated from the R4 board in git; R4 itself was generated from the R3 files), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. The older candidates are mentioned below only as the evolution record.
 
-Last updated 2026-09-25. Governing requirements: M1/M2 merged into one board, easy to diagnose, at most three PCB iterations; "10× redundancy" means independent protection layers, not a blanket 10× component derating. **M3-ASSY-R2 is the first candidate that contains every hardware function in the requirements; it is a CAD design with a manufacturing package, not a measured or flown board.**
+Last updated 2026-10-12. Governing requirements: M1/M2 merged into one board, easy to diagnose, at most three PCB iterations; "10× redundancy" means independent protection layers, not a blanket 10× component derating. **M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; M3-ASSY-R5 (R4's circuit on a two-sided 46 × 100 mm board) is the current one. All are CAD designs with a manufacturing package, not measured or flown boards.**
 
-## Current candidate: M3-ASSY-R2 (actuator merge)
+## Current candidate: M3-ASSY-R5 (two-sided re-layout, 46 × 100 mm)
+
+**Fourth implementation pass complete (2026-10-12):** [R5_VALIDATION.md](docs/R5_VALIDATION.md) records the independent findings, repairs and remaining qualifications. The final native board is SHA-256 `6fc208d613dc2c1a6e9381ec3e1a5888c223ea6246336ae8320421272ca93a43`. Local bypassing, crystal-area QSPI routing, MEMS routing/lands, assembly spacing, five annotation objects and nine route fragments are repaired and independently reviewed. Fresh DRC, unconnected, schematic-parity and ERC counts are all zero; the actuator contract, modeled fit, metadata/model and silkscreen checks pass. The fabrication package is regenerated and independently checked against this board. **These are CAD and manufacturing-file results, not physical robustness or flight qualification.** Earlier “no open Critical or Major” statements below describe their historical review scope.
+
+Design record: [docs/M3_R5.md](docs/M3_R5.md); requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md); ordering: [docs/ORDERING.md](docs/ORDERING.md). R5 uses R4's circuit on a new board, with four additional local bypass capacitors from the reopened review: generated from the R4 board by `m3_design/r5_build.sh` (`r5_pcb.py`, `r5_routes.py`, `r5_maze.py`, `r5_route.py` with the Freerouting session in git, `r5_finish.py`, `r5_post.py`, then `r5_repair.py` and the verified metadata fill). **236 footprint positions / 209 fitted parts / 24 test pads / 3 tooling holes**.
+
+What changed (details and reasons in M3_R5 §1):
+- **Board:** 46 × 100 mm (R4: 46 × 193 mm), parts on both sides: top 93 (84 SMD, 9 through-hole) and 2 test pads; bottom 116 SMD parts and 22 test pads. Five M3 holes (the corners and mid-span at (4, 46)); two Ø3.2 tie holes for J122's plug tie.
+- **Floorplan:** power entry at the aft edge, the MCU behind it, USB-C, the servo header and SWD in the middle, the pyro block (R4's, moved as one rigid group) at the forward end; the IMU and barometer on the bottom (the IMU's Y and Z axes flip: roll is +gyro_Y, the opposite sign to R4).
+- **Routing:** critical nets scripted on a grid router (0/45/90°); the rest by Freerouting v2.4.1, then the grid router for what it leaves.
+- **Requirements changed:** P1 (length and position in the bay), P2 (sled: five standoffs, the corners and mid-span, plate clear of the bottom parts), F4 (DC solve), M3 (two-sided fixed fees).
+
+Verification, stated separately:
+- **CAD checks (done)**: `tools/check.sh`: DRC 0 (pyro spacing rules included), unconnected 0, schematic parity 0, ERC 0; audit OK; no silkscreen outside the outline. `m3_design/check_actuators.py`: OK. `tools/fit_check.py`: OK (worst margin 0.11 mm, C84 on the top; deepest bottom part L1 at 4.62 mm, bottom margin ≥ 2.34 mm). `tools/export_fab.py`: 84 BOM lines, 209 placed, nothing missing; 200 supplier-pad reconstructions plus nine placement-only checks pass. Independent fabrication review verifies 150 source inputs and five outputs; all 14 archive members match a native re-export ignoring timestamps. Replay, manufacturing and quality suites pass 13, 17 and 19 tests respectively; repeated metadata fill changes zero fields.
+- **Historical evaluation before the reopened review (CAD, datasheets):** two passes of six independent reviews (pyro, power, signal integrity, DFM, fit, silkscreen) against REQUIREMENTS.md. Pass 1: no Critical, nine Majors, fixed or recorded (M3_R5 §1b). Pass 2, on the re-routed board: no Critical, three Majors, all fixed: a via in J9.3's through-hole pad, the IMU's roll sign in the record (it is +gyro_Y), and bottom-side designators beside other parts (M3_R5 §1c). Pass 3 (one reviewer) confirmed the three fixes and found no new Critical or Major. A robustness round then kept live copper 1 mm from the bare gate test pads and re-routed (M3_R5 §1d); pass 4 (six reviewers from first principles, on robustness) found no Critical and two Majors, fixed: an overlap-only PULLPIN joint and corner-only mounting (a fifth, mid-span hole) (M3_R5 §1e). Pass 5 (two reviewers) confirmed both fixes; no open Critical or Major. Robustness round 2 (M3_R5 §1f): 0.3 mm GND-pour clearance at the RAW_ACT pins, thermal spokes on 77 small GND pads (pass 6 found the first version filled with no gap; fixed, and pass 7 confirmed it with no open Critical or Major), a fixed reflow order; the bring-up gate before flight is listed in M3_R5 §5. The pyro block is R4's to the micrometre (41 footprints, the same .kicad_dru, the same solder-bridge spacings); its DRC rules were shown live on the new copper.
+- **Calculation:** servo feed DC solve (Q121 → J122, 0.05 mm grid) 4.82 mΩ, 37.1 mV and 0.29 W at 7.7 A, all of it on the In2 RAW_ACT strip at mid-path (R4: 5.05 mΩ, 0.30 W); the reverse hot-plug model is R4's (same circuit).
+- **Cost and stock (2026-10-12)**: Standard PCBA: $55.26 parts (rounded) plus 81 codes × $1.53 feeder fee / 5 gives $80.05 per board from unrounded prices (target ≤ $84.41); 47 unique extended codes (target ≤ 48). **Two-sided fixed fees $83.96 per order** (setup, stencil, fixture; one side: $50.19; JLC may add a $14.93 handling fee). No shortage; U4 is thin (5 in stock for 5 boards).
+- **Simulation**: no new SPICE run; the local bypass additions were checked in CAD and against manufacturer guidance.
+- **Firmware**: none for R5; the board binding in `m3_firmware/build.py` must be redone (M3_R5 §3: IMU axes).
+- **Physical tests**: none. The sled fit is not physically verified.
+
+Open owner decisions: as R4 (below), plus the sled design (REQUIREMENTS P2).
+
+Remaining qualifications and engineering exceptions (current geometry; see R5_VALIDATION.md and M3_R5 §2):
+
+- **Flash supply and timing:** C29 (100 nF) is 5.872 mm from U3 VCC; C9 bulk is 3.11 mm away. This is an unqualified supply-noise/timing compromise. The previous “slow or current-limited” justification does not apply to the flash. Check supply droop and read/write integrity at the intended clock under buck, servo and camera load.
+- **Power return and temperature:** C150/C151's nearest GND vias are 4.333/3.094 mm away; C121's is 1.179 mm. The camera's 78.33 mm × 0.4 mm supply trunk is about 0.096 Ω (0.12 V drop, 0.15 W at 1.24 A), with temperature unmeasured. U9 and camera-feed single vias, both RAW_ACT necks at J3 and the servo-feed column still require load/thermal and transient qualification.
+- **Return paths and harness noise:** IMU_INT1's two transitions have GND vias 1.812/1.518 mm away; other inherited return-path exceptions and long cable-side servo traces remain subject to EMC, sensor-noise and armed dummy-load tests. Low repetition rate does not establish immunity to fast edges or harness transients.
+- **Pyro and mechanical exceptions:** MCU-side pyro vias near bottom parts are tented, not exposed solder-bridge sites; they remain an exception to L10's 1 mm engineering placement target. Mandatory pyro/J2 coating, retention and armed dummy-load gates remain. Use nylon hardware at all five supports and a non-conductive sled clear of bottom parts, pin tails and the J122 tie. Physical sled/harness fit, vibration/shock and thermal tests are unperformed.
+- **Panelization:** ORDERING now specifies exact 5 mm tab windows in KiCad coordinates at X = 0, Y = 45–50, 71–76 and 78.5–83.5 mm, and X = 46, Y = 43.75–48.75 mm. Independent geometry review passes against all 236 pad/courtyard envelopes. The production panel must reproduce these positions, keep mouse-bite hole edges at least 0.50 mm from all-layer copper and place Ø0.60 mm perforation centers at least 0.30 mm outside the finished board in sacrificial tabs; on-edge centers are not allowed. Supplier rail/support review remains required.
+- **Assembly and firmware:** preserve sensor paste/mask apertures and the required reflow sequence; confirm MS5611's two reflows. R5 firmware binding, IMU-axis checks, supply/USB/reverse-hot-plug tests and all REQUIREMENTS/ORDERING physical gates remain open.
+
+The final annotation pass fixes J1's reference and switch-pair label, hides obscured U1/U3/J3 references and leaves 83 references represented on the fabrication layers/assembly drawing. Earlier defect claims for R32, R81, TP122 and J1 BAT+/GND were not supported by final geometry. Eight redundant route segments were removed and one trimmed; the USB_DM fold is needed for its layer change and was not shown to be a stub. SERVO4's hand-solder clearance is repaired to 0.3125 mm at all four RAW_ACT pads.
+
+## Previous candidate: M3-ASSY-R4 (R3 validation fixes, new IMU, thirteen evaluation passes)
+
+Design record: [docs/M3_R4.md](docs/M3_R4.md); requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md); R3 findings: [docs/R3_VALIDATION.md](docs/R3_VALIDATION.md); ordering: [docs/ORDERING.md](docs/ORDERING.md). R4 is generated from the R3 files by `m3_design/r4_build.sh` (`r4_lib.py`, `r4_sch.py`, `r4_pcb.py`). **232 footprint positions / 205 fitted parts / 24 test pads / 3 tooling holes**, 14 schematic sheets.
+
+What changed (details and reasons in M3_R4 §1–1m):
+- **IMU:** U4 is the ST LSM6DSV320X (adds a ±32–320 g channel; flight 2 reaches ~37 g).
+- **Input protection:** D8 SMBJ12CA (a wrong 3S pack no longer destroys it); 470 kΩ on each side of the external contact; UVLO lowered to 4.45–4.61 V; C87 switch-bounce ride-through; OVLO release above a full pack; 2 × 10 µF at the input plus an RC damper (2 × 22 µF + 0.33 Ω) and a 10 kΩ input bleed, so a reverse hot-plug stays inside U9's input limits even soon after an unplug (modelled with measured DC-bias curves); USB OV trip raised to 5.66–6.37 V.
+- **Pyro safety:** black ARM and orange igniter 2-position terminals with top labels; TP122/TP123 on the bottom; nine pyro spacing rules in DRC (RAW_ACT ≥ 1.0 mm from the buses and ≥ 0.5 mm from every pyro control net; bus/igniter/drain ≥ 0.5 mm from gates, other live nets and GND, ≥ 0.3 mm from sense nets; gate nets ≥ 0.3 mm from other live nets inside the pyro block; exposed live pads ≥ 1.0 mm from sense and gate pads, against one solder bridge); soft-termination drain capacitors; every sense divider's top split into two 5.1 kΩ in series (pass 11) and its bottom into two 2 kΩ in parallel (pass 12), so one shorted or open resistor leaves its MCU pin at ≤ 1.4 V and an igniter at ≤ 1.4 mA, plus a 4.7 kΩ series resistor at each ADC pin (R168–R172, passes 9–10) as a second layer; mandatory local coating of the pyro block and J2.
+- **Servo feed:** one continuous In2 RAW_ACT pour under the F.Cu ring (47 stitching vias).
+- **Debug header:** J2.6 unconnected; BOOT0 ends at its pull-down (pass 9: the run under J2's base passed 0.18–0.19 mm from 3V3 and NRST).
+- **Sensors:** full-body copper/via keep-outs under the IMU and MS5611; direct decoupling; RC (not LC) 3V3A filter; MS5611 paste on TE's land size.
+- **Fit and assembly:** JST PH pull-pin header; JLC placement corrections incl. the DB128V terminals' 180° body correction; USB-C legs pin-in-paste plus hand finishing; AON6403 windowpane paste; R166 on UNI-ROYAL's land; printable silkscreen marks kept inside the outline (gate check); order-number placeholder; JLC tooling holes; ENIG stackup in the job file; ORDERING pins green mask, plugged vias, single-board delivery, the paste layer as supplied and no washing; the order is Standard PCBA (240 ± 5 °C reflow, tab-routed edge rails) because U5, LS120 and C84 allow only a 250 °C peak, below Economic's 255 ± 5 °C.
+- **Stock and cost:** U8 → AP63301WU-7 (the AP63300 had 5 in stock); Basic parts for the 100 nF and 10 k lines that carried minimum-purchase or 0.1 % premiums.
+
+Verification, stated separately:
+- **CAD checks (done)**:
+  - `tools/check.sh`: DRC 0 (including the pyro spacing rules), unconnected 0, schematic parity 0, ERC 0; audit OK; no silkscreen outside the outline.
+  - `m3_design/check_actuators.py`: OK; it pins the safety parts by LCSC code and checks every spacing rule's content; 78 seeded faults each make it or DRC fail (passes 9–12 added the load-switch nets, the sense series resistors and the split dividers; the final iteration rule H).
+  - `tools/export_fab.py`: 84 lines, 205 placed, nothing missing, every placement rotation verified; an assembly drawing from the fab layers (every designator, hidden ones included).
+- **Independent evaluation (CAD, datasheets):** pass 1 by six reviewers, passes 2 and 3 by five each, pass 4 by two focused reviewers (input protection; DFM, assembly and fit), pass 5 by five reviewers from first principles, pass 6 by two focused reviewers, passes 7 and 8 by one each, pass 9 by five reviewers from first principles, pass 10 by one focused reviewer, against REQUIREMENTS.md. Pass 10 found no Critical or Major issue; it added R172 on PB0 (for the arming option where the board powers up armed), corrected what the record claimed about the pins in a resistor-short fault, and tidied four designators (M3_R4 §1k). Pass 11 then closed the one gap pass 10 had kept: every sense divider's top is now two resistors in series, so no single shorted resistor drives an MCU pin past its ratings (M3_R4 §1l). Pass 12 (one focused reviewer) found no Critical or Major issue; its fixes make the divider bottoms two parallel resistors (so an open is tolerated too), widen the ARM stack's facing bus/sense pad gaps to 0.94 mm, un-shadow pyro rule B, and hide twelve designators that had no unambiguous spot (M3_R4 §1m). Pass 13 (one focused reviewer) found no Critical or Major issue; it measured four more single-solder-bridge paths past a divider (0.65–0.82 mm), seven neighbouring designators that missed the label rule, and document nits (M3_R4 §1n). A final CAD iteration fixed them: the ARM stack became two vertical columns, five parts moved, and DRC rule H now keeps every exposed live pad 1.0 mm from every sense and gate pad (M3_R4 §1o). Pass 14 (one focused reviewer) found no Critical or Major issue in that iteration; its findings were fixed in it: R143 moved clear of the actuator switch's gate pad and rule H covers that gate, the label rule measures to pad edges, the assembly drawing shows every designator, and the record no longer claims rule H covers 3V3 next to a gate (the cold test shows that case). Pass 9's Major (a single shorted 0402 divider resistor put armed drain or bus copper on an MCU analog pin, with the igniter in the drain-side path) is fixed on the board with R168–R171, and BOOT0 no longer runs to J2; its other findings are procedure, checker and document fixes (M3_R4 §1j). Pass 8 found no board or tool defect; its bench-procedure findings (safe probing of the armed pyro gates) are fixed in ORDERING §5 (M3_R4 §1i). Pass 7's Major (a pyro bench gate that a healthy board could not pass) is fixed in ORDERING §5 (M3_R4 §1h). Pass 6's Majors (owner-fitting the barometer against TE's no-hand-soldering rule, now Standard PCBA instead; no armed-not-firing gate; the remote-plug fuse location; F6's claim about FMEA F-1) are fixed (M3_R4 §1g). Pass 5's Majors (JLC's reflow above two parts' limits; the control window and the watchdog rule contradicting the project and the FMEA; a TIM15 instruction in the record that could fire a channel) are fixed (M3_R4 §1f). Pass 4's Major (a reversed pack plugged in while the input still held charge) is fixed with the input bleed; pass 3's board Major (reverse hot-plug margin) is fixed; its other two Majors are the open owner decisions below. Pass 1's Majors (3S TVS, J1/J9 entry direction) and pass 2's (ARM/igniter terminals interchangeable; coating made optional against the margin prescription; post-brownout behaviour unspecified; U8 stock) are fixed or recorded; the Minor findings are fixed or recorded as deviations (M3_R4 §1b–1f, §2).
+- **Calculation:** servo feed DC solve 5.05 mΩ / 0.30 W at 7.7 A; reverse hot-plug harness model with Samsung's measured DC-bias curves (0.1–2 µH, ≥ 0.03 Ω): U9 IN ≥ −14.6 V and ≤ 9.2 V/µs at every corner from the ≤ 2.0 V the bleed leaves within 0.73 s of an unplug with the switch open, about 1.3 s with it closed (pass 9; hence the 2 s rule) (≥ −13.0 V from an empty input up to 1 µH).
+- **Cost and stock (2026-10-09)**: Standard PCBA: $55.22 parts + 81 codes × $1.53 feeder fee / 5 = $80.00 per board (R3: $84.41 at Economic's fees); Standard's fixed fees $50.19 per order (setup, stencil, fixture; JLC may add a $14.93 handling fee; Economic: $9.71); no shortages, no line under twice its order.
+- **Simulation**: no SPICE (ngspice not installed).
+- **Firmware**: none for R4; the board binding in `m3_firmware/build.py` must be redone (firmware consequences: M3_R4 §3).
+- **Physical tests**: none.
+
+Open owner decisions:
+- ARM link physical form and reachability (FMEA H-6, V-18): how the links go in on the pad (REQUIREMENTS F8). The link fuses cannot sit at the terminals inside the coupler (ORDERING §7).
+- Flight 2's servos: stall current within F4's 1.92 A per servo, and hinge moments above M1.2 (the CFD sweep stops there).
+- External switch part.
+- Servo-fault containment (recorded as an accepted risk; per-servo inline fuses recommended for flight 2).
+- The control window's exact start and stop points (a flight parameter; the board supports any window, and F7 requires the servos at neutral ≥ 200 ms before any fire). Tab-to-neutral within 50 ms of a hang is allocated to firmware in REQUIREMENTS F6 (IWDG ≤ 32 ms fed only by the 100 Hz safety task, bounded roll-interrupt run time, neutral first after reset; about 48 ms with NRST release); the board supports it as built.
+- The camera model (it must not back-feed its 5 V input).
+
+## Previous candidate: M3-ASSY-R3 (GNSS removed, 46 × 193 mm, cost-down)
+
+Design record: [docs/M3_R3.md](docs/M3_R3.md). R3 is R2 with the GNSS (U6, C33, C34, GPS nets, its 3V3A branch) removed and the board cut from 238 to **193 mm** so it fits the main-section electronics bay. The forward M3 pair moved to y = 189. **No remaining track, via or footprint moved** (checked against R2 by UUID and geometry). **205 footprint positions / 180 fitted parts / 25 test pads**, 14 schematic sheets. The 1 k 1 % resistors moved to a JLC Basic part.
+
+Verification, stated separately:
+- **CAD checks (done)**:
+  - `tools/check.sh`: DRC 0, unconnected 0, schematic parity 0, ERC 0; audit OK.
+  - `m3_design/check_actuators.py`: OK.
+  - `quality_audit` unit tests: 12/12.
+  - `tools/export_fab.py`: 75 lines, 180 placed, nothing missing.
+  - Pre-fab pin-mux audit against DS12110 Rev 11: no wrong assignment (`docs/M3_R3.md` §6).
+- **Cost and stock (2026-10-05)**:
+  - Parts: $54.94 per board at 5 boards, 48 unique extended codes; all-in about $100–110 per board.
+  - The $75 target is not reachable without giving up robustness (`docs/M3_R3.md` §4).
+  - **U4 ICM-45686 is out of stock at JLC**; it needs Global Sourcing or consignment.
+- **Simulation**: not re-run (ngspice not installed). The actuator band is unchanged.
+- **Firmware**: none for R3 yet (plan in `docs/superpowers/plans/`).
+- **Physical tests**: none.
+
+Open owner decisions:
+- PB0 4.0 V FT_a limit (R125 → 3.3 k option).
+- PE4/PE5 trace-pin risk, accepted procedurally.
+- `PYRO*_GATE_N` naming.
+- Cost relaxations.
+- U4 sourcing.
+
+## Previous candidate: M3-ASSY-R2 (actuator merge)
 
 Design record: [docs/M3_ACTUATOR_MERGE.md](docs/M3_ACTUATOR_MERGE.md). One 46 × **238** mm four-layer board: R1 plus a 52 mm actuator band inserted between the battery/logic-power block and the camera block. **208 footprint positions / 183 fitted parts / 25 test pads**, 14 schematic sheets.
 
@@ -48,10 +142,12 @@ Firmware history: v0.2 bench acquisition (ADC3 voltages, MS5611, HSE / IMU / fla
 
 ## Requirement status
 
+> Historical table (R1–R2 era), kept for its evidence trail. The current requirements and their verification are in [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) and the R5 and R4 records above; where a row below still says GNSS, 46 × 186 mm or an LC filter, R3/R4 superseded it.
+
 | Requirement | Current evidence / implementation | Still needed for the complete M3 |
 |---|---|---|
 | Merge the two boards into one | M3-ASSY-R1 is a single-board candidate for power + core + camera supply/UART + USB + GNSS; 10 schematic sheets consistent with the PCB | Other interfaces not all merged; this does not equal all functions of the old two boards |
-| Fits a 54.66 mm ID, installable / maintainable | Core baseline 46 × 96 mm; candidate provisionally 46 × 186 mm; height envelope for the 14.5 mm terminals / 12.8 mm C84 capacitor | All connectors, plugs, harnesses, fasteners, sled, clearances and a physical coupon; final length not frozen |
+| Fits the bay (Ø54.6 mm bore, Ø50.8 mm inside the coupler), installable / maintainable | R5: 46 × 100 mm with parts on both sides, top face on the bore axis (REQUIREMENTS P1/P2; R3/R4: 46 × 193 mm). Historical: core baseline 46 × 96 mm; candidate provisionally 46 × 186 mm; height envelope for the 14.5 mm terminals / 12.8 mm C84 capacitor | All connectors, plugs, harnesses, fasteners, sled, clearances and a physical coupon; final length not frozen |
 | 2S supply, switch, reverse protection, logic hold-up | PWR-R3 added U9 battery protection, U10 USB current limit, U11 source selection and 330 µF hold-up; contacts are low-current enables | Start-up / switchover / back-feed / thermal / USB current and coordination with external protection must be measured; the 100 µs typical switchover time is not a maximum |
 | Stable sensor supply | Core has the AP63203, L2 and sensor supply | Start-up, input capacitance / USB load, LC damping, tolerance / bias and measurements |
 | STM32H743, USB, SWD, crystal | CORE schematic/PCB reconciled, DRC/ERC zero | Real power-up, clocks, buses, and running without a probe |

@@ -6,7 +6,7 @@
 	(title_block
 		(title "06 | Camera terminal and characterization")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R1")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:CameraTerminal"
@@ -197,6 +197,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C2915641"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "DORABO"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "DB128V-5.08-4P-GN-S"
 			(at 76.2 88.9 0)
 			(hide yes)
 			(effects

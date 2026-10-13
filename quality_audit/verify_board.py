@@ -68,6 +68,8 @@ def verify(board, cli, evidence, builder=None, timeout=60):
     try:
         metadata = audit(board)
         result['metadata'] = metadata
+        if metadata['missing_required_part_fields']:
+            issues.append('Missing required fitted-part identity fields')
         if metadata['conflicting_part_fields']:
             issues.append('Conflicting distributor part fields')
         if any(m['exists'] is not True for m in metadata['models']):

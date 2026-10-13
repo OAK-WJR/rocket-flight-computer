@@ -1,0 +1,123 @@
+{
+  "parts": {
+    "C11702": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF1001TCE"
+    },
+    "C1525": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL05B104KO5NNNC"
+    },
+    "C15849": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL10A105KB8NNNC"
+    },
+    "C165948": {
+      "Manufacturer": "Korean Hroparts Elec",
+      "Manufacturer Part": "TYPE-C-31-M-12"
+    },
+    "C17557": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0805W8F2200T5E"
+    },
+    "C1849463": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part": "TPS259570DSGR"
+    },
+    "C19666": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL10A475KO8NNNC"
+    },
+    "C1985619": {
+      "Manufacturer": "NDK",
+      "Manufacturer Part": "NX3225GA-25.000M-STD-CRG-2"
+    },
+    "C22939": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0603WAF220KT5E"
+    },
+    "C23630": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL10A225KO8NNNC"
+    },
+    "C25741": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF1003TCE"
+    },
+    "C25744": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF1002TCE"
+    },
+    "C25900": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF4701TCE"
+    },
+    "C25905": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF5101TCE"
+    },
+    "C26633007": {
+      "Manufacturer": "STMicroelectronics",
+      "Manufacturer Part": "LSM6DSV320XTR"
+    },
+    "C2915641": {
+      "Manufacturer": "DORABO",
+      "Manufacturer Part": "DB128V-5.08-4P-GN-S"
+    },
+    "C307331": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL05B104KB54PNC"
+    },
+    "C32713291": {
+      "Manufacturer": "hanxia",
+      "Manufacturer Part": "HX PZ2.54-3x4P ZZ"
+    },
+    "C32949": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL05C100JB5NNNC"
+    },
+    "C3662793": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part": "TPS259470LRPWR"
+    },
+    "C4109": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF2001TCE"
+    },
+    "C45783": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL21A226MAQNNNE"
+    },
+    "C485916": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part": "TPS2121RUXR"
+    },
+    "C5271084": {
+      "Manufacturer": "STMicroelectronics",
+      "Manufacturer Part": "STM32H743VIT6TR"
+    },
+    "C55266": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part": "TPS2553DBVR"
+    },
+    "C57112": {
+      "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
+      "Manufacturer Part": "0603B103K500NT"
+    },
+    "C57269": {
+      "Manufacturer": "Sunlord",
+      "Manufacturer Part": "SWPA4030S4R7MT"
+    },
+    "C7519": {
+      "Manufacturer": "STMicroelectronics",
+      "Manufacturer Part": "USBLC6-2SC6"
+    },
+    "C780769": {
+      "Manufacturer": "Diodes Incorporated",
+      "Manufacturer Part": "AP63203WU-7"
+    }
+  },
+  "reviewed_date": "2026-10-12",
+  "scope": "Identity fields verified against the JLC component lookup for existing LCSC codes; no component substitutions.",
+  "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+}

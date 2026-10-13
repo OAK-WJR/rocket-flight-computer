@@ -6,7 +6,7 @@
 	(title_block
 		(title "05 | Camera branch protection and regulator")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R1")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -536,7 +536,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 				(at 0 0 0)
 				(effects
 					(font
@@ -665,6 +665,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C1849463"
+			(at 83.82 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Texas Instruments"
+			(at 83.82 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "TPS259570DSGR"
 			(at 83.82 76.2 0)
 			(hide yes)
 			(effects
@@ -832,7 +844,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Value" "AP63300WU-7"
+		(property "Value" "AP63301WU-7"
 			(at 276.86 69.85 0)
 			(effects
 				(font
@@ -849,12 +861,26 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C2158012"
+		(property "LCSC" "C2158003"
 			(at 276.86 76.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "Diodes Incorporated"
+			(at 276.86 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "AP63301WU-7"
+			(at 276.86 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
@@ -1182,7 +1208,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1591"
+		(property "LCSC" "C14663"
 			(at 48.26 170.18 0)
 			(hide yes)
 			(effects
@@ -1194,19 +1220,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
 					(reference "C71")
 					(unit 1))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
+		(property "Manufacturer" "YAGEO"
 			(at 48.26 170.18 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10B104KB8NNNC"
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
 			(at 48.26 170.18 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C1591"
+		(property "LCSC Part" "C14663"
 			(at 48.26 170.18 0)
 			(hide yes)
 			(effects
@@ -1470,7 +1496,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1591"
+		(property "LCSC" "C14663"
 			(at 325.12 121.92 0)
 			(hide yes)
 			(effects
@@ -1482,19 +1508,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
 					(reference "C74")
 					(unit 1))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
+		(property "Manufacturer" "YAGEO"
 			(at 325.12 121.92 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10B104KB8NNNC"
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
 			(at 325.12 121.92 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C1591"
+		(property "LCSC Part" "C14663"
 			(at 325.12 121.92 0)
 			(hide yes)
 			(effects
@@ -2142,7 +2168,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 53.34 213.36 0)
 			(hide yes)
 			(effects
@@ -2154,19 +2180,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
 					(reference "R74")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 53.34 213.36 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 53.34 213.36 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 53.34 213.36 0)
 			(hide yes)
 			(effects
@@ -2218,7 +2244,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "10k 1%"
 			(at 106.68 214.63 0)
 			(effects
 				(font
@@ -2238,7 +2264,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C25804"
 			(at 104.14 213.36 0)
 			(hide yes)
 			(effects
@@ -2250,19 +2276,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
 					(reference "R75")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 104.14 213.36 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0603WAF1002T5E"
 			(at 104.14 213.36 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C95204"
+		(property "LCSC Part" "C25804"
 			(at 104.14 213.36 0)
 			(hide yes)
 			(effects
@@ -2314,7 +2340,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "10k 1%"
 			(at 55.88 255.26999999999998 0)
 			(effects
 				(font
@@ -2334,7 +2360,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C25804"
 			(at 53.34 254 0)
 			(hide yes)
 			(effects
@@ -2346,19 +2372,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
 					(reference "R76")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 53.34 254 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0603WAF1002T5E"
 			(at 53.34 254 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C95204"
+		(property "LCSC Part" "C25804"
 			(at 53.34 254 0)
 			(hide yes)
 			(effects
@@ -2430,7 +2456,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C22548"
+		(property "LCSC" "C21190"
 			(at 104.14 254 0)
 			(hide yes)
 			(effects
@@ -2442,19 +2468,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
 					(reference "R77")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 104.14 254 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RC0603FR-071KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 104.14 254 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C22548"
+		(property "LCSC Part" "C21190"
 			(at 104.14 254 0)
 			(hide yes)
 			(effects
@@ -2506,7 +2532,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "10k 1%"
 			(at 381.0 209.54999999999998 0)
 			(effects
 				(font
@@ -2526,7 +2552,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C25804"
 			(at 378.46 208.28 0)
 			(hide yes)
 			(effects
@@ -2538,19 +2564,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
 					(reference "R78")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 378.46 208.28 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0603WAF1002T5E"
 			(at 378.46 208.28 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C95204"
+		(property "LCSC Part" "C25804"
 			(at 378.46 208.28 0)
 			(hide yes)
 			(effects

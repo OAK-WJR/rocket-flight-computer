@@ -6,7 +6,7 @@
 	(title_block
 		(title "10 | USB cable presence, ordinary GPIO sensing")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R1")
+		(rev "M3-ASSY-R4")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:R"
@@ -98,7 +98,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 				(at 0 0 0)
 				(effects
 					(font
@@ -210,7 +210,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "6.2k 1%"
+		(property "Value" "1k"
 			(at 81.28 85.09 0)
 			(effects
 				(font
@@ -230,7 +230,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C25915"
+		(property "LCSC" "C11702"
 			(at 78.74 83.82 0)
 			(hide yes)
 			(effects
@@ -242,19 +242,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/7323b515-8986-5814-85b5-9e04db992507"
 					(reference "R9")
 					(unit 1))))
-		(property "Manufacturer" "UNI-ROYAL"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 78.74 83.82 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0402WGF6201TCE"
+		(property "Manufacturer Part" "0402WGF1001TCE"
 			(at 78.74 83.82 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C25915"
+		(property "LCSC Part" "C11702"
 			(at 78.74 83.82 0)
 			(hide yes)
 			(effects
@@ -306,7 +306,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "1k 1%"
 			(at 165.1 85.09 0)
 			(effects
 				(font
@@ -326,7 +326,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C21190"
 			(at 162.56 83.82 0)
 			(hide yes)
 			(effects
@@ -338,19 +338,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/7323b515-8986-5814-85b5-9e04db992507"
 					(reference "R110")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 162.56 83.82 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0603WAF1001T5E"
 			(at 162.56 83.82 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C95204"
+		(property "LCSC Part" "C21190"
 			(at 162.56 83.82 0)
 			(hide yes)
 			(effects
@@ -452,7 +452,7 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 3c2f066c-5afe-5892-b82e-b7d3bdb87f81))
-	(text "R9=6.2k 1%, R110=10k 0.1%; TP92 measures their junction. No internal pull-up/down."
+	(text "R9 = R110 = 1k (R4): PD15 <= 1.01 V when D4 back-feeds VBUS with the D+ pull-up on, 2.18 V at VBUS 4.40 V. TP92 measures their junction. No internal pull-up/down."
 		(at 20.32 147.32 0)
 		(effects
 			(font

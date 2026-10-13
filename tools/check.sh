@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Board gate: DRC (all severities + schematic parity), ERC, metadata/model audit.
+# Board gate: DRC (all severities + schematic parity), ERC, metadata/model audit, silkscreen inside the outline.
 # Usage: tools/check.sh [path/to/board.kicad_pcb]      exit 0 = every check clean
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -20,4 +20,5 @@ sys.exit(1 if (v or u or p or erc) else 0)
 PY
 (cd "$ROOT/quality_audit" && python3 verify_board.py "$BOARD" --cli "$CLI" --output "$OUT/audit.json" >/dev/null) \
   && echo "metadata / 3D model audit: OK" || { echo "metadata / 3D model audit FAILED: see $OUT/audit.json"; exit 1; }
+python3 "$ROOT/tools/silk_check.py" "$BOARD" --cli "$CLI"     # DRC skips silkscreen wholly outside the outline
 echo "reports: $OUT"
