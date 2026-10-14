@@ -1,0 +1,33 @@
+{
+  "first": {
+    "applied": true,
+    "added": [
+      "71db3216-d253-5401-bb89-733f8c5a85b4",
+      "485a7318-7cc4-5949-ba52-2ba68581f3b0",
+      "3156a913-ffb2-530f-9b51-8d9c2cd701e4",
+      "d514a3a4-27c8-52b4-a40b-74949fc9c3fe",
+      "e8e003dc-4c7a-5ab8-9d6f-f86c17d27baf"
+    ],
+    "zones_require_refill": true,
+    "native_drc_required": true,
+    "position_mm": [
+      38.9,
+      38.9
+    ],
+    "orientation_degrees": 45,
+    "references_for_final_silk": [
+      "R204",
+      "R200",
+      "C179"
+    ]
+  },
+  "second": {
+    "applied": false,
+    "added": [],
+    "zones_require_refill": false,
+    "native_drc_required": true,
+    "skipped": "already applied"
+  },
+  "idempotent_reload": true,
+  "atomic_changed_route_rejection": true
+}

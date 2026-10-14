@@ -55,6 +55,7 @@ mm, MM = pcbnew.ToMM, pcbnew.FromMM
 F, B, IN2 = pcbnew.F_Cu, pcbnew.B_Cu, pcbnew.In2_Cu
 CLI = shutil.which('kicad-cli') or '/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli'
 ROUNDS = 16
+UUID_SEED = 5103
 r5_maze.MARGIN = 0.02     # the last connections keep 0.02 mm over each rule, as the autorouter does (DRC checks)
 
 
@@ -74,7 +75,7 @@ def drc(path):
     for u in d['unconnected_items']:
         its = u['items']
         desc = [it['description'] for it in its]
-        if len(its) == 2 and not any(x.startswith('Zone') for x in desc):
+        if len(its) == 2 and '[' in desc[0] and not any(x.startswith('Zone') for x in desc):
             net = desc[0].split('[', 1)[1].split(']', 1)[0]
             pairs.append((net, *((it['uuid'], (it['pos']['x'], it['pos']['y'])) for it in its)))
         else:
@@ -380,7 +381,7 @@ def prune(b):
             for t in dead:
                 b.Delete(t)
             n += len(dead)
-        pcbnew.SaveBoard(PCB, b)
+        pcbnew.SaveBoard(PCB, b, True)
         _, _, dangling = drc(PCB)
         idx = _index(b)
         dead = [idx[u] for u in dangling if u in idx and not idx[u].IsLocked()]
@@ -498,7 +499,7 @@ def rounds(b, st, limit=ROUNDS):
     """Rounds of DRC and routing (see the module docstring) until nothing is open or nothing changes."""
     last = None
     for rnd in range(1, limit + 1):
-        pcbnew.SaveBoard(PCB, b)
+        pcbnew.SaveBoard(PCB, b, True)
         pairs, other, dangling = drc(PCB)
         idx = _index(b)
         if any(u in idx and not idx[u].IsLocked() for u in dangling):
@@ -646,7 +647,7 @@ def shake(b, st, tries=5):
     crossings, which must pay off at once)."""
     n = 0
     while n < tries:
-        pcbnew.SaveBoard(PCB, b)
+        pcbnew.SaveBoard(PCB, b, True)
         pairs, _, _ = drc(PCB)
         if not pairs:
             return
@@ -658,7 +659,7 @@ def shake(b, st, tries=5):
                 break
             n += 1
             if k:                                    # the board was put back: its items are new, look again
-                pcbnew.SaveBoard(PCB, b)
+                pcbnew.SaveBoard(PCB, b, True)
                 pairs, _, _ = drc(PCB)
                 pairs.sort(key=_pair_key)
                 if k >= len(pairs):
@@ -743,7 +744,7 @@ def force_all(b, st):
     across the router's copper whatever that opens, locked, and the rounds run again; what the crossings leave open
     is the second session's work."""
     for _ in range(2):
-        pcbnew.SaveBoard(PCB, b)
+        pcbnew.SaveBoard(PCB, b, True)
         pairs, _, _ = drc(PCB)
         if not pairs:
             return
@@ -986,7 +987,7 @@ def _drop_unused(b):
     connections (DRC's view of a track ending in a pour is not the same on every run). Returns (open pairs, other open
     items, count removed)."""
     pcbnew.ZONE_FILLER(b).Fill(b.Zones())
-    pcbnew.SaveBoard(PCB, b)
+    pcbnew.SaveBoard(PCB, b, True)
     left, other, dangling = drc(PCB)
     base = n_open(b)
     unused = 0
@@ -1005,10 +1006,10 @@ def _drop_unused(b):
             break
         unused += removed
         pcbnew.ZONE_FILLER(b).Fill(b.Zones())
-        pcbnew.SaveBoard(PCB, b)
+        pcbnew.SaveBoard(PCB, b, True)
         left, other, dangling = drc(PCB)
     pcbnew.ZONE_FILLER(b).Fill(b.Zones())
-    pcbnew.SaveBoard(PCB, b)
+    pcbnew.SaveBoard(PCB, b, True)
     return left, other, unused
 
 
@@ -1071,13 +1072,14 @@ def _replay(b, path):
 
 
 def main():
-    pcbnew.KIID.SeedGenerator(5103)   # repeatable UUIDs, so kicad-cli lists the open connections in the same
+    if UUID_SEED is not None:
+        pcbnew.KIID.SeedGenerator(UUID_SEED)  # deterministic for a clean R5 build only
     b = pcbnew.LoadBoard(PCB)          # order every run (r5_pcb.main)
     replay = next((x.split('=', 1)[1] for x in sys.argv if x.startswith('--replay=')), None)
     if replay:
         _replay(b, replay)
         pcbnew.ZONE_FILLER(b).Fill(b.Zones())
-        pcbnew.SaveBoard(PCB, b)
+        pcbnew.SaveBoard(PCB, b, True)
         left, other, _ = drc(PCB)
         print(f'finished (replayed): still open: {len(left)} connections, {len(other)} other')
         for o in left + other:
@@ -1109,8 +1111,8 @@ def main():
     early = _drop_unused(b)[2] if LATE else 0         # the hand finish works on the board as it will end up
     snap = next((x.split('=', 1)[1] for x in sys.argv if x.startswith('--snapshot=')), None)
     if snap:                                         # the board before the hand finish (to work out LATE entries)
-        pcbnew.SaveBoard(snap, b)
-        pcbnew.SaveBoard(PCB, b)
+        pcbnew.SaveBoard(snap, b, True)
+        pcbnew.SaveBoard(PCB, b, True)
     if LATE:
         late(b, st)
         islands(b)

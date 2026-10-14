@@ -1,0 +1,72 @@
+{
+  "source": "/private/var/folders/wj/j67ly6dj2zngrq4ljy4q6z2r0000gn/T/r6-c100-composed-1dw39a00/m3.kicad_pcb",
+  "source_sha256": "647b7e2d4e2b3f3d19d79b7faed2f4422d01cd7f8b6bf09dd811398b60148ae1",
+  "rounds": [
+    {
+      "round": 0,
+      "joints": {
+        "detected": 0,
+        "pruned": [],
+        "fixed": [],
+        "skipped": [],
+        "unresolved": [],
+        "track_endpoints_checked": 6302,
+        "dangling_cleanup_required": false,
+        "native_drc_required": true
+      },
+      "dangling_removed": 38,
+      "opens": 0,
+      "other": []
+    },
+    {
+      "round": 1,
+      "joints": {
+        "detected": 1,
+        "pruned": [],
+        "fixed": [
+          {
+            "net": "RADIO_TX_MCU",
+            "layer": "F.Cu",
+            "target": "PCB_TRACK 7ecbf903-7c4d-4186-b63e-c205e6d14b28",
+            "width_mm": 0.15,
+            "path_mm": [
+              [
+                37.45,
+                32.3185
+              ],
+              [
+                37.4548,
+                32.3137
+              ]
+            ]
+          }
+        ],
+        "skipped": [],
+        "unresolved": [],
+        "track_endpoints_checked": 6250,
+        "dangling_cleanup_required": false,
+        "native_drc_required": true
+      },
+      "dangling_removed": 0,
+      "opens": 0,
+      "other": []
+    },
+    {
+      "round": 2,
+      "joints": {
+        "detected": 0,
+        "pruned": [],
+        "fixed": [],
+        "skipped": [],
+        "unresolved": [],
+        "track_endpoints_checked": 6250,
+        "dangling_cleanup_required": false,
+        "native_drc_required": true
+      },
+      "dangling_removed": 0,
+      "opens": 0,
+      "other": []
+    }
+  ],
+  "output_sha256": "184a87e84e67576341244c82517de3e9f55f5c1c22995dfad83631d48c856680"
+}

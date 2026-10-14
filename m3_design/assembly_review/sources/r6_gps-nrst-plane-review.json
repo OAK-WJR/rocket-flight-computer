@@ -1,0 +1,300 @@
+{
+  "scope": "Independent GPS / NRST In1 return-plane slice review",
+  "result": "PASS: no Critical or Major finding in this slice",
+  "boards": [
+    {
+      "path": "/private/tmp/r6-port-helper-73txq9mj/m3.kicad_pcb",
+      "sha256": "c7669c5896dc139a8b4dc3edb308541620d87aa7edaee1b60dd3f4cff5222868"
+    },
+    {
+      "path": "/private/tmp/r6-port-helper-73txq9mj/after.kicad_pcb",
+      "sha256": "96790d186db79743bd57c33d546b00bcce04093255fd9427da317319a9daff0c"
+    }
+  ],
+  "new_nrst_in1_segments": [
+    {
+      "start": [
+        38.5,
+        48.715
+      ],
+      "end": [
+        38.5,
+        49.2
+      ],
+      "width_mm": 0.15,
+      "length_mm": 0.48499999999999943
+    },
+    {
+      "start": [
+        36.835,
+        47.05
+      ],
+      "end": [
+        38.5,
+        48.715
+      ],
+      "width_mm": 0.15,
+      "length_mm": 2.354665581351207
+    },
+    {
+      "start": [
+        36.435,
+        47.05
+      ],
+      "end": [
+        36.835,
+        47.05
+      ],
+      "width_mm": 0.15,
+      "length_mm": 0.3999999999999986
+    }
+  ],
+  "total_in1_length_mm": 3.239665581351205,
+  "plane_before_after": [
+    [
+      {
+        "polygons": 1,
+        "clearance_mm": 0.25,
+        "minimum_width_mm": 0.2
+      }
+    ],
+    [
+      {
+        "polygons": 1,
+        "clearance_mm": 0.25,
+        "minimum_width_mm": 0.2
+      }
+    ]
+  ],
+  "critical_F_edge_distance_from_new_slot_boundary_mm": {
+    "QSPI_IO2": 7.555772205745507,
+    "HSE_IN": 12.674378802065387,
+    "HSE_OUT": 13.098820650984692,
+    "QSPI_CLK": 23.013477446284767,
+    "QSPI_IO0": 25.79256519969007,
+    "QSPI_IO1": 24.411419327270185,
+    "QSPI_IO3": 23.950330254172968,
+    "USB_DM": 23.128359102259704,
+    "USB_DP": 22.962191473111943,
+    "SPI1_SCK": 13.660000000000002,
+    "SPI1_MISO": 10.388566710387472,
+    "SPI1_MOSI": 9.651271631908305,
+    "QSPI_NCS": 12.780386211694077
+  },
+  "F_tracks_within_1mm": [
+    {
+      "distance_from_slot_boundary_mm": -0.425,
+      "net": "GND",
+      "uuid": "978271cc-11d6-5b28-bacc-2b1059a2d795",
+      "segment": [
+        [
+          37.275,
+          47.075
+        ],
+        [
+          37.275,
+          48.0
+        ]
+      ]
+    },
+    {
+      "distance_from_slot_boundary_mm": -0.4,
+      "net": "NRST",
+      "uuid": "7b950c11-13bd-58f9-8304-dddb0adadd93",
+      "segment": [
+        [
+          38.5,
+          49.2
+        ],
+        [
+          39.785,
+          49.2
+        ]
+      ]
+    },
+    {
+      "distance_from_slot_boundary_mm": -0.13155068580758766,
+      "net": "GND",
+      "uuid": "98428a7c-a7c7-55dd-a744-424748bf8299",
+      "segment": [
+        [
+          37.25,
+          47.05
+        ],
+        [
+          37.275,
+          47.075
+        ]
+      ]
+    },
+    {
+      "distance_from_slot_boundary_mm": -0.13155068580758333,
+      "net": "GND",
+      "uuid": "cbbd3161-ba4d-52a4-93c0-e3845f00650a",
+      "segment": [
+        [
+          36.5,
+          46.3
+        ],
+        [
+          37.25,
+          47.05
+        ]
+      ]
+    },
+    {
+      "distance_from_slot_boundary_mm": 0.32500000000000007,
+      "net": "GND",
+      "uuid": "0ac253fc-697b-5476-8fb6-215b1358603a",
+      "segment": [
+        [
+          36.5,
+          45.65
+        ],
+        [
+          36.5,
+          46.3
+        ]
+      ]
+    },
+    {
+      "distance_from_slot_boundary_mm": 0.3790195408332174,
+      "net": "PYRO1_CONT",
+      "uuid": "b5f62622-fdfc-42c8-b26b-e7fdc4ec2719",
+      "segment": [
+        [
+          38.52,
+          50.3217
+        ],
+        [
+          37.22,
+          49.0217
+        ]
+      ]
+    },
+    {
+      "distance_from_slot_boundary_mm": 0.39323703897385054,
+      "net": "RADIO_AUX_MCU",
+      "uuid": "099b3730-7843-4ab1-aa2c-5df34665eda5",
+      "segment": [
+        [
+          35.55,
+          46.45
+        ],
+        [
+          35.75,
+          46.65
+        ]
+      ]
+    },
+    {
+      "distance_from_slot_boundary_mm": 0.6692170032318054,
+      "net": "RADIO_AUX_MCU",
+      "uuid": "d7f58747-3867-43c1-b0d1-c5d1a0bd4afa",
+      "segment": [
+        [
+          35.55,
+          45.65
+        ],
+        [
+          35.55,
+          46.45
+        ]
+      ]
+    },
+    {
+      "distance_from_slot_boundary_mm": 0.7218782866247093,
+      "net": "PYRO1_CONT",
+      "uuid": "8b23c443-5e4a-4b76-85ba-50789fdfb879",
+      "segment": [
+        [
+          38.52,
+          54.1217
+        ],
+        [
+          38.52,
+          50.3217
+        ]
+      ]
+    },
+    {
+      "distance_from_slot_boundary_mm": 0.7360016863394447,
+      "net": "3V3",
+      "uuid": "f36b820f-b806-459c-acb1-ce300705ad82",
+      "segment": [
+        [
+          35.725,
+          48.0
+        ],
+        [
+          35.225,
+          48.0
+        ]
+      ]
+    },
+    {
+      "distance_from_slot_boundary_mm": 0.7756806539192556,
+      "net": "GPS_RXD",
+      "uuid": "16af70e5-7199-5c81-9606-cd063cdebd83",
+      "segment": [
+        [
+          39.575,
+          47.8
+        ],
+        [
+          39.6,
+          48.3
+        ]
+      ]
+    },
+    {
+      "distance_from_slot_boundary_mm": 0.8849999999999967,
+      "net": "NRST",
+      "uuid": "e6e6e98a-978a-5a32-b98a-58a0555c7468",
+      "segment": [
+        [
+          39.785,
+          49.2
+        ],
+        [
+          45.335,
+          54.75
+        ]
+      ]
+    }
+  ],
+  "end_via_to_pyro_cont_antipad_gap_analytical_mm": 0.24235865377998,
+  "sampled_fill_neck_mm": 0.233,
+  "pad_partition_changes": {
+    "GPS_RXD": [
+      2,
+      1
+    ]
+  },
+  "pad_partition_regressions": [],
+  "native_reports": [
+    {
+      "path": "/private/tmp/r6-port-helper-73txq9mj/before-drc.json",
+      "sha256": "977b658899abc62641d5595eb83825d8d2af3688318916d103103cc05bd6f91a",
+      "violations": {
+        "via_dangling": 11,
+        "track_dangling": 5
+      },
+      "opens": 20,
+      "parity": 0
+    },
+    {
+      "path": "/private/tmp/r6-port-helper-73txq9mj/after-drc.json",
+      "sha256": "830fa31fcfa8118aec09d1cfcfdcefdc81c58510d95f54ee930fc76f031405fb",
+      "violations": {
+        "via_dangling": 11,
+        "track_dangling": 5
+      },
+      "opens": 19,
+      "parity": 0
+    }
+  ],
+  "method": "Read both native boards; direct segment-to-segment projection distances subtract both copper half widths and 0.25 mm In1 zone clearance; inspect saved filled polygon topology and rendered plane; compare native pad connectivity partitions.",
+  "assessment": "No critical F signal crosses the new slot; local crossings are ground conductors and NRST itself. Main GND plane remains one polygon with broad paths around the short slot. The local antipad neck is above the 0.2 mm plane minimum and is not a global return bottleneck.",
+  "limits": "Geometric CAD validation; not an SI/EMC measurement or first-article test."
+}

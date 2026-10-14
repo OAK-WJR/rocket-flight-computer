@@ -1,0 +1,1153 @@
+{
+  "schema": 1,
+  "reviewed_at_utc": "2026-10-14T01:58:43.846072+00:00",
+  "reviewer": "independent finish_joint_validation agent",
+  "scope": "Final non-routing objective audit, followed by the bounded camera translator VCCA bypass repair. Separate routing reviewer evaluated return planes.",
+  "authority": "User technical objectives in this conversation; no Markdown context read; no git actions; actual CAD not mutated by this reviewer.",
+  "binding": {
+    "board": "/private/tmp/r6-final-cleanup-o_2gq19w/m3.kicad_pcb",
+    "pcb_sha256": "184a87e84e67576341244c82517de3e9f55f5c1c22995dfad83631d48c856680",
+    "netlist_sha256": "37d98e81c5f3752244eea48aee4076526b072685e9ee219364af5d62bbddf7ed",
+    "decoupling_packet_sha256": "5b0dbb34c60ffd3df2bf508763a9f4dd5d3c0a4c40a37bced452a2ab0d7832ff",
+    "footprints": 250,
+    "prior_reviewed_pcb_sha256": "647b7e2d4e2b3f3d19d79b7faed2f4422d01cd7f8b6bf09dd811398b60148ae1",
+    "kicad_pro_sha256": "3730b060a94ebbd8f5f5ad179927549cb0cda8f475801e0e85b4c559fecaa7bf",
+    "kicad_dru_sha256": "4bad569e6424ef9e7243f7c1827eb5b2ad66f0fd60bd6c8de82456f351c9924f"
+  },
+  "verdict": {
+    "critical": 0,
+    "major": 0,
+    "minor": 1,
+    "cad_objectives": "PASS after C100 repair, subject to recorded length target deviation",
+    "release_status": "Not a manufacturing release approval. Non-routing objectives verified on final cleaned candidate. Full check.sh, DC solve, fresh procurement and regenerated fabrication package remain separate parent integration gates."
+  },
+  "findings": [
+    {
+      "id": "OBJ-DEC-01",
+      "original_severity": "Major",
+      "status": "resolved and independently reviewed",
+      "problem": "C100 originally sat on F.Cu at (38,27), 8.530147 mm from B.Cu U12.3; no local VCCA bypass existed for the TXU0202 camera UART translator. C29-only validation did not catch it.",
+      "fix": "C100 100nF moved to B.Cu (42,35.9), R100 1k moved to B.Cu (43,38.65). Short direct supply/ground copper added; bounded GPS_RX_MCU via and 3V3 corner adjusted; cost codes, values, nets and all other footprints unchanged.",
+      "evidence": {
+        "supply_pad_center_distance_mm": 1.3503332921912294,
+        "full_supply_centerline_mm": 1.3624264068711927,
+        "gate_supply_route_to_cap_copper_mm": 1.3200000000000003,
+        "ground_centerline_mm": 1.5032590180780505,
+        "native_hard_errors": 0,
+        "native_opens": 0,
+        "native_parity": 0,
+        "independent_critical_reference_samples": 104241,
+        "independent_reference_losses": 0
+      },
+      "prevention": "check_r6.camera_bypass checks both U12 supply capacitors, rail/value/locality, direct supply copper and C100 local ground return. Four focused regression tests added."
+    },
+    {
+      "id": "OBJ-SIZE-01",
+      "severity": "Minor",
+      "status": "target deviation retained",
+      "evidence": "Outline is 46 x 100 mm. Width and 110 mm hard maximum pass; the requested 80\u201390 mm length target is not met."
+    }
+  ],
+  "objectives": {
+    "remove_pyro_channel_2": {
+      "status": "PASS",
+      "absent_refs": [
+        "J120",
+        "J125",
+        "Q125",
+        "R135",
+        "R138",
+        "R139",
+        "R140",
+        "R141",
+        "R142",
+        "R143",
+        "R144",
+        "R145",
+        "R169",
+        "R171",
+        "R174",
+        "R176",
+        "R179",
+        "R181",
+        "C138",
+        "C139",
+        "C140",
+        "C141",
+        "TP123"
+      ],
+      "obsolete_net_prefixes_absent": [
+        "PYRO2",
+        "ARM2"
+      ],
+      "actuator_sentinel_pins_preserved": [
+        "U1.2",
+        "U1.4",
+        "U1.5",
+        "U1.16",
+        "U1.32"
+      ]
+    },
+    "camera_connector": {
+      "status": "PASS",
+      "ref": "J9",
+      "part": "JST BM04B-GHS-TBT, C161692",
+      "pitch_mm": 1.25,
+      "pins": {
+        "1": "CAM_5V",
+        "2": "GND",
+        "3": "CAM_RX_WIRE; from camera TX",
+        "4": "CAM_TX_WIRE; to camera RX"
+      },
+      "legend": "1 5V, 2 GND, 3 TX, 4 RX; peripheral perspective",
+      "uart_series": "R100/R101 1k retained"
+    },
+    "debug_connector": {
+      "status": "PASS",
+      "ref": "J2",
+      "part": "Tag-Connect TC2030-IDC-NL",
+      "pins": {
+        "1": "3V3 VTref",
+        "2": "SWDIO",
+        "3": "NRST",
+        "4": "SWCLK",
+        "5": "GND",
+        "6": "NC"
+      },
+      "contacts": "Six CONN contacts with open mask, no paste, 0.508 mm foreign copper clearance and dedicated 0.92 mm radius fill-only guards; central locating-pin keepout retained."
+    },
+    "buzzer": {
+      "status": "PASS CAD; fresh stock checked by final procurement gate",
+      "ref": "LS120",
+      "part": "MLT-5020, C94598",
+      "body_nominal_mm": [
+        5.0,
+        5.0,
+        2.0
+      ],
+      "fit_model_mm": [
+        5.3,
+        5.3,
+        2.5
+      ],
+      "pins": {
+        "1": "3V3 positive",
+        "2": "BUZZ_OUT negative",
+        "3": "isolated mechanical"
+      },
+      "electrical": "3.3 V magnetic drive via Q123 with D123 flyback; 2\u20134 Vo-p part, recommended 4 kHz / 50% duty. Acoustic performance requires bench confirmation."
+    },
+    "radio": {
+      "status": "PASS",
+      "module": "EBYTE E22-900T22D",
+      "connector": "J130 JST BM07B-SRSS-TB, C160393; SH 1.0 mm 7 pin",
+      "pins": {
+        "1": "M0",
+        "2": "M1",
+        "3": "module RXD",
+        "4": "module TXD",
+        "5": "AUX",
+        "6": "TLM_5V",
+        "7": "GND"
+      },
+      "mcu": {
+        "M0": "PC8 / U1.65",
+        "M1": "PC9 / U1.66",
+        "USART6_TX": "PC6 / U1.63",
+        "USART6_RX": "PC7 / U1.64",
+        "AUX": "PA8 / U1.67"
+      }
+    },
+    "gps": {
+      "status": "PASS",
+      "module": "HGLRC M100 Mini",
+      "connector": "J131 JST BM04B-SRSS-TB, C160390; SH 1.0 mm 4 pin",
+      "pins": {
+        "1": "TLM_5V",
+        "2": "GND",
+        "3": "module TXD",
+        "4": "module RXD"
+      },
+      "mcu": {
+        "USART1_TX": "PA9 / U1.68",
+        "USART1_RX": "PA10 / U1.69"
+      }
+    },
+    "series_and_esd": {
+      "status": "PASS",
+      "series": "R196\u2013R202 all 1k; radio mode/AUX signals also series limited",
+      "protection": "D130/D131 SRV05-4.TCT C13612; protected UART/mode/AUX signals clamped to 3V3/GND, same family as existing ports; unused D131 IO6 grounded",
+      "qualification": "CAD protection topology checked; no system ESD compliance result implied."
+    },
+    "port_supply": {
+      "status": "PASS CAD and static calculations; dynamic bench qualification pending",
+      "buck": "U14 AP63301WU-7 C2158003, 6.8 uH L4; dedicated port rail",
+      "output_limit": "U15 TPS2553DBVR; R194 66.5k 1%; calculated limit351\u2013449mA",
+      "input_limit": "U16 TPS259570; R195 4.42k 0.5%; calculated limit458\u2013523mA",
+      "voltage": "4.8 V nominal (R190 || R206 = 150k over R19130k); calculated DC range4.674\u20134.930V respects GPS5V maximum",
+      "enable": "PB12/U1.51 via R1921k to TLM_EN; R19310k pulldown disables U14 and U16 while MCU is in reset",
+      "fault": "PA7/U1.31 with R20510k pullup; wired-OR open-drain U15/U16 fault outputs",
+      "reset_detail": "U15 EN follows its input rail; reset isolation is provided upstream by the buck/input switch. Existing output capacitance need not discharge instantaneously to 0 V.",
+      "budget_assumption": "At6V input,4.93V*449mA/85% =434mA, below458mA minimum input limit.85% is a design assumption, not a measured result."
+    },
+    "layout": {
+      "status": "PASS hard geometry with length target deviation",
+      "outline_mm": [
+        46,
+        100
+      ],
+      "max_length_mm": 110,
+      "port_centers_mm": {
+        "J9": [
+          42.7,
+          24
+        ],
+        "J130": [
+          42.7,
+          34.5
+        ],
+        "J131": [
+          42.7,
+          44.5
+        ]
+      },
+      "edge_block": "All three at right edge, center20.5mm span; pin legends checked",
+      "battery_pyro_group": "J1(23,92.4), J121(36,75.32), J124(10,75.32); retained channel1 internal spacing checked against R5 contract"
+    },
+    "mounts": {
+      "status": "PASS",
+      "holes": [
+        [
+          4.0,
+          4.0
+        ],
+        [
+          4.0,
+          46.0
+        ],
+        [
+          4.0,
+          96.4
+        ],
+        [
+          42.0,
+          96.4
+        ],
+        [
+          42.3,
+          4.0
+        ]
+      ],
+      "top_hardware_clearance_radius_mm": 3.8,
+      "bottom_standoff_clearance_radius_mm": 3.5,
+      "nearest_top": [
+        3.800001,
+        "LED2.2 exposed top pad",
+        [
+          42.3,
+          4.0
+        ]
+      ],
+      "nearest_bottom": [
+        4.150000000000006,
+        "C76",
+        [
+          42.0,
+          96.4
+        ]
+      ],
+      "interpretation": "Top clearance supports7mm OD washer plus0.3mm radial margin. Masked tracks/zones do not count as exposed hardware interference."
+    },
+    "keepouts_and_manufacturability": {
+      "status": "PASS",
+      "bare_test_pad_keepout_mm": 1.0,
+      "raw_act_pth_keepout_mm": 0.3,
+      "no_vias_on_through_hole_pads": true,
+      "overlap_only_joints": "check_r6 passed; endpoint junctions required",
+      "thermal": {
+        "small_ground_pads_checked": 89,
+        "gap_min_mm": 0.25,
+        "spoke_min_mm": 0.3,
+        "minimum_spokes": 2,
+        "issues": []
+      },
+      "minimum_geometry": {
+        "track_width_mm": 0.15,
+        "via_diameter_mm": 0.5,
+        "via_drill_mm": 0.3,
+        "annular_radius_mm": 0.1,
+        "tracks": 3125,
+        "vias": 583
+      }
+    },
+    "decoupling": {
+      "status": "PASS repaired scope; no broad dynamic power-integrity claim",
+      "flash_C29": {
+        "power_pin": "U3.8",
+        "pad_distance_mm": 1.878643127366133,
+        "direct_route_mm": 1.6900000000000013
+      },
+      "camera_U12": {
+        "C100": {
+          "supply_pin": "U12.3",
+          "pad_distance_mm": 1.3503332921912294,
+          "direct_copper_route_mm": 1.3200000000000003,
+          "direct_ground_return_mm": 1.5032590180780505
+        },
+        "C93": {
+          "supply_pin": "U12.7",
+          "pad_distance_mm": 1.8582585934148115,
+          "direct_copper_route_mm": 2.3000000000000007
+        }
+      },
+      "additional_screen": "26 IC power pins screened for nearest appropriate bypass. U12 VCCA was the only >3.731 mm outlier and has been repaired."
+    },
+    "bom_footprint_pin_consistency": {
+      "status": "PASS",
+      "schematic_pin_mismatches": [],
+      "value_footprint_metadata_mismatches": [],
+      "note": "This does not replace fresh procurement stock/price checks or final CPL export review."
+    },
+    "cost_and_fab": {
+      "status": "PENDING final regenerated package and current procurement",
+      "limit_usd_per_board": 84.41,
+      "extended_code_max": 48,
+      "cost_metric": "Components plus applicable feeder fees per board; excludes fixed assembly, fabrication and shipping. Minimum purchase excess is separate.",
+      "stale_evidence_rejected": "Existing2026-10-13T06:38:12Z cost_check.json prices an earlier BOM/buzzer; not used for this candidate. check_procurement requires current CAD-bound manifest and default tier fees for release."
+    },
+    "documentation": {
+      "status": "PENDING parent update/verification",
+      "required_files": [
+        "M3_R6.md",
+        "STATUS.md",
+        "REQUIREMENTS.md"
+      ],
+      "reviewer_read_markdown": false
+    }
+  },
+  "firmware_boundary": {
+    "verified": "42 narrow IMU/firmware/power-status host tests passed. PE1 IMU status is plain GPIO input/no pull; PE3 remains output-low actuator sentinel; existing SPI polling retained.",
+    "current_mapping": {
+      "GPS_RXD": [],
+      "GPS_RX_MCU": [
+        {
+          "ref": "U1",
+          "pin": "69",
+          "pinfunction": "PA10_69",
+          "pintype": "bidirectional"
+        }
+      ],
+      "GPS_TXD": [],
+      "GPS_TX_MCU": [
+        {
+          "ref": "U1",
+          "pin": "68",
+          "pinfunction": "PA9_68",
+          "pintype": "bidirectional"
+        }
+      ],
+      "IMU_INT1": [
+        {
+          "ref": "U1",
+          "pin": "98",
+          "pinfunction": "PE1_98",
+          "pintype": "bidirectional"
+        }
+      ],
+      "RADIO_AUX": [],
+      "RADIO_AUX_MCU": [
+        {
+          "ref": "U1",
+          "pin": "67",
+          "pinfunction": "PA8_67",
+          "pintype": "bidirectional"
+        }
+      ],
+      "RADIO_M0": [],
+      "RADIO_M0_MCU": [
+        {
+          "ref": "U1",
+          "pin": "65",
+          "pinfunction": "PC8_65",
+          "pintype": "bidirectional"
+        }
+      ],
+      "RADIO_M1": [],
+      "RADIO_M1_MCU": [
+        {
+          "ref": "U1",
+          "pin": "66",
+          "pinfunction": "PC9_66",
+          "pintype": "bidirectional"
+        }
+      ],
+      "RADIO_RXD": [],
+      "RADIO_RX_MCU": [
+        {
+          "ref": "U1",
+          "pin": "64",
+          "pinfunction": "PC7_64",
+          "pintype": "bidirectional"
+        }
+      ],
+      "RADIO_TXD": [],
+      "RADIO_TX_MCU": [
+        {
+          "ref": "U1",
+          "pin": "63",
+          "pinfunction": "PC6_63",
+          "pintype": "bidirectional"
+        }
+      ],
+      "TLM_5V": [],
+      "TLM_5V_REG": [],
+      "TLM_BST": [],
+      "TLM_DVDT": [],
+      "TLM_EN": [],
+      "TLM_FAULT_N": [
+        {
+          "ref": "U1",
+          "pin": "31",
+          "pinfunction": "PA7_31",
+          "pintype": "bidirectional"
+        }
+      ],
+      "TLM_FB": [],
+      "TLM_ILIM": [],
+      "TLM_INPUT_ILIM": [],
+      "TLM_INPUT_LIMITED": [],
+      "TLM_PWR_EN": [
+        {
+          "ref": "U1",
+          "pin": "51",
+          "pinfunction": "PB12_51",
+          "pintype": "bidirectional"
+        }
+      ],
+      "TLM_SW": []
+    },
+    "restriction": "EXTI1 remains PD1 power status. Never configure PE1 as EXTI1 for IMU under this mapping. Broader firmware qualification is outside this CAD release audit."
+  },
+  "verification": {
+    "contract_issues": [],
+    "pin_legend_issues": [],
+    "fit_ok": true,
+    "regression_tests": "tools/test_r6_check.py:17passed",
+    "replay_tests": {
+      "base_sha256": "2041de7b205e02711d80c5bc75ec6678830f44ca844a56eab2c775fd331f73c8",
+      "checks": [
+        "exact delta; all unowned copper and footprints unchanged; unique UUIDs",
+        "in-memory idempotence",
+        "save/reload idempotence; project settings unchanged",
+        "changed original copper rejected atomically",
+        "missing generated copper rejected atomically",
+        "changed generated width rejected atomically",
+        "changed generated via span rejected atomically",
+        "partial footprint move rejected atomically",
+        "changed anchor rejected atomically"
+      ],
+      "passed": 9,
+      "temporary_replay_board": "/var/folders/wj/j67ly6dj2zngrq4ljy4q6z2r0000gn/T/r6-decoupling-replay-2h2spdfa/m3.kicad_pcb",
+      "project_sha256_before": "3730b060a94ebbd8f5f5ad179927549cb0cda8f475801e0e85b4c559fecaa7bf",
+      "project_sha256_after": "3730b060a94ebbd8f5f5ad179927549cb0cda8f475801e0e85b4c559fecaa7bf"
+    },
+    "independent_c100_review": {
+      "reviewer": "routing_progress",
+      "critical": 0,
+      "major": 0,
+      "reference_samples": 104241,
+      "reference_losses": 0,
+      "old_pad_group_splits": 0,
+      "old_aux_return_repair_changed": false
+    },
+    "precleanup_native_report": "/private/tmp/r6-c100-composed-drc.json",
+    "precleanup_native_result": {
+      "hard": 0,
+      "unconnected": 0,
+      "parity": 0,
+      "baseline_via_dangling": 7,
+      "baseline_track_dangling": 6
+    },
+    "final_cleanup_delta": {
+      "before_sha256": "647b7e2d4e2b3f3d19d79b7faed2f4422d01cd7f8b6bf09dd811398b60148ae1",
+      "after_sha256": "184a87e84e67576341244c82517de3e9f55f5c1c22995dfad83631d48c856680",
+      "all_250_footprints_and_pad_geometry_unchanged": true,
+      "nonsilk_geometry_models_rules_zone_boundaries_unchanged": true,
+      "project_and_dru_unchanged": true,
+      "old_pad_group_splits": [],
+      "removed_copper": [
+        {
+          "uuid": "031bc0c7-f778-43f9-87a3-01b2e8965bd9",
+          "type": "PCB_VIA",
+          "net": "CAM_MCU_TX",
+          "locked": true,
+          "width_nm": 600000,
+          "position_nm": [
+            16950000,
+            20550000
+          ],
+          "drill_nm": 300000,
+          "via_type": 4,
+          "top_layer": "F.Cu",
+          "bottom_layer": "B.Cu"
+        },
+        {
+          "uuid": "1d7c38e6-af8b-4f73-949f-5d429b513603",
+          "type": "PCB_TRACK",
+          "net": "SERVO3_MCU",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            35200000,
+            64200000
+          ],
+          "end_nm": [
+            35200000,
+            65300000
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "uuid": "2167e6fd-2abb-4cea-a383-a67e6850bafd",
+          "type": "PCB_VIA",
+          "net": "RADIO_M1_MCU",
+          "locked": true,
+          "width_nm": 600000,
+          "position_nm": [
+            12600000,
+            37200000
+          ],
+          "drill_nm": 300000,
+          "via_type": 4,
+          "top_layer": "F.Cu",
+          "bottom_layer": "B.Cu"
+        },
+        {
+          "uuid": "2907e210-67ca-4429-a056-ae1e40006006",
+          "type": "PCB_TRACK",
+          "net": "CAM_5V_SENSE",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            20550000,
+            26850000
+          ],
+          "end_nm": [
+            21350000,
+            26850000
+          ],
+          "layer": "In2.Cu"
+        },
+        {
+          "uuid": "35dfb1db-27c8-425a-bc24-06ca97f063c3",
+          "type": "PCB_VIA",
+          "net": "3V3",
+          "locked": true,
+          "width_nm": 600000,
+          "position_nm": [
+            21780000,
+            11800000
+          ],
+          "drill_nm": 300000,
+          "via_type": 4,
+          "top_layer": "F.Cu",
+          "bottom_layer": "B.Cu"
+        },
+        {
+          "uuid": "36c58be0-8106-4247-a25d-2a8e32970b10",
+          "type": "PCB_VIA",
+          "net": "RADIO_RX_MCU",
+          "locked": true,
+          "width_nm": 600000,
+          "position_nm": [
+            17500000,
+            34900000
+          ],
+          "drill_nm": 300000,
+          "via_type": 4,
+          "top_layer": "F.Cu",
+          "bottom_layer": "B.Cu"
+        },
+        {
+          "uuid": "37d6b8e6-b13d-4ee5-89ae-150d48eb522e",
+          "type": "PCB_VIA",
+          "net": "PULLPIN",
+          "locked": true,
+          "width_nm": 600000,
+          "position_nm": [
+            31400000,
+            37700000
+          ],
+          "drill_nm": 300000,
+          "via_type": 4,
+          "top_layer": "F.Cu",
+          "bottom_layer": "B.Cu"
+        },
+        {
+          "uuid": "3bb7159c-720c-4ece-99ea-07978c690acc",
+          "type": "PCB_VIA",
+          "net": "SERVO2_OUT",
+          "locked": true,
+          "width_nm": 600000,
+          "position_nm": [
+            17413200,
+            79300000
+          ],
+          "drill_nm": 300000,
+          "via_type": 4,
+          "top_layer": "F.Cu",
+          "bottom_layer": "B.Cu"
+        },
+        {
+          "uuid": "3cc7af2b-04ad-4bbc-a18f-eef180469e64",
+          "type": "PCB_TRACK",
+          "net": "RADIO_TX_MCU",
+          "locked": false,
+          "width_nm": 150000,
+          "start_nm": [
+            25970800,
+            31351000
+          ],
+          "end_nm": [
+            25656900,
+            31351000
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "uuid": "448f8abc-b504-467a-a9dc-6699e56b0c2c",
+          "type": "PCB_TRACK",
+          "net": "CAM_5V_SENSE",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            22650000,
+            28150000
+          ],
+          "end_nm": [
+            22650000,
+            28950000
+          ],
+          "layer": "In2.Cu"
+        },
+        {
+          "uuid": "49ad1523-2bc7-497b-804b-8f0c1e27fa43",
+          "type": "PCB_TRACK",
+          "net": "CAM_5V_SENSE",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            22350000,
+            29250000
+          ],
+          "end_nm": [
+            22650000,
+            28950000
+          ],
+          "layer": "In2.Cu"
+        },
+        {
+          "uuid": "5e5b4bea-669b-42f5-9b19-a92294fef759",
+          "type": "PCB_TRACK",
+          "net": "RADIO_TX_MCU",
+          "locked": false,
+          "width_nm": 150000,
+          "start_nm": [
+            25656900,
+            31351000
+          ],
+          "end_nm": [
+            24715600,
+            32292300
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "uuid": "6184c300-7ba7-4995-9be7-d7070046ceda",
+          "type": "PCB_TRACK",
+          "net": "SERVO3_MCU",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            33900000,
+            66599999
+          ],
+          "end_nm": [
+            35200000,
+            65300000
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "uuid": "6427433a-4d9b-49db-b408-1ab1cca4507d",
+          "type": "PCB_VIA",
+          "net": "GPS_TX_MCU",
+          "locked": true,
+          "width_nm": 600000,
+          "position_nm": [
+            12600000,
+            38400000
+          ],
+          "drill_nm": 300000,
+          "via_type": 4,
+          "top_layer": "F.Cu",
+          "bottom_layer": "B.Cu"
+        },
+        {
+          "uuid": "74ba2a04-a5b2-4575-8d68-80cf3b75fb5c",
+          "type": "PCB_TRACK",
+          "net": "CAM_5V_SENSE",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            22550000,
+            29050000
+          ],
+          "end_nm": [
+            23050000,
+            29050000
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "uuid": "758f276e-3949-43d9-850a-2548eb7cd520",
+          "type": "PCB_TRACK",
+          "net": "SERVO2_OUT",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            17413200,
+            81100000
+          ],
+          "end_nm": [
+            23313200,
+            87000000
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "uuid": "79a2a33e-21b1-4caf-a410-9844066cfcb3",
+          "type": "PCB_VIA",
+          "net": "CAM_5V_SENSE",
+          "locked": true,
+          "width_nm": 600000,
+          "position_nm": [
+            22350000,
+            29250000
+          ],
+          "drill_nm": 300000,
+          "via_type": 4,
+          "top_layer": "F.Cu",
+          "bottom_layer": "B.Cu"
+        },
+        {
+          "uuid": "7efb25f6-5d6a-4e69-a30b-07b4f3de9f0b",
+          "type": "PCB_TRACK",
+          "net": "SERVO2_OUT",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            17413200,
+            79300000
+          ],
+          "end_nm": [
+            17413200,
+            81100000
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "uuid": "802eb81d-4e30-45c7-abe4-789ff8209451",
+          "type": "PCB_TRACK",
+          "net": "RADIO_TX_MCU",
+          "locked": false,
+          "width_nm": 150000,
+          "start_nm": [
+            35939200,
+            30807700
+          ],
+          "end_nm": [
+            35000900,
+            30807700
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "uuid": "8a944b2b-41cf-40af-a1d9-ce0fe3446e14",
+          "type": "PCB_TRACK",
+          "net": "SERVO2_OUT",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            24313200,
+            90600000
+          ],
+          "end_nm": [
+            26313200,
+            90600000
+          ],
+          "layer": "In2.Cu"
+        },
+        {
+          "uuid": "8b4efd1d-9af5-4d35-aa74-22dc930d7a27",
+          "type": "PCB_VIA",
+          "net": "CAM_MCU_TX",
+          "locked": true,
+          "width_nm": 600000,
+          "position_nm": [
+            19950000,
+            23550000
+          ],
+          "drill_nm": 300000,
+          "via_type": 4,
+          "top_layer": "F.Cu",
+          "bottom_layer": "B.Cu"
+        },
+        {
+          "uuid": "94fe54ca-3d66-41e8-abde-84d292ecc43a",
+          "type": "PCB_TRACK",
+          "net": "CAM_5V_SENSE",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            21350000,
+            26850000
+          ],
+          "end_nm": [
+            22650000,
+            28150000
+          ],
+          "layer": "In2.Cu"
+        },
+        {
+          "uuid": "956f2878-6df8-4537-bdf4-1765bf9dc71d",
+          "type": "PCB_TRACK",
+          "net": "RADIO_TX_MCU",
+          "locked": false,
+          "width_nm": 150000,
+          "start_nm": [
+            24715600,
+            32292300
+          ],
+          "end_nm": [
+            24715600,
+            33024500
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "uuid": "9d5789d2-7895-464d-ac22-b9c2a03a593a",
+          "type": "PCB_TRACK",
+          "net": "SERVO3_MCU",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            33900000,
+            66600000
+          ],
+          "end_nm": [
+            33500000,
+            66600000
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "uuid": "a6808b86-e941-4960-a96d-22101bef8605",
+          "type": "PCB_TRACK",
+          "net": "SERVO2_OUT",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            17413200,
+            79300000
+          ],
+          "end_nm": [
+            18013200,
+            78700000
+          ],
+          "layer": "In2.Cu"
+        },
+        {
+          "uuid": "ab14f016-3970-4837-a869-0a0f95766680",
+          "type": "PCB_TRACK",
+          "net": "RADIO_TX_MCU",
+          "locked": false,
+          "width_nm": 150000,
+          "start_nm": [
+            37450000,
+            32318500
+          ],
+          "end_nm": [
+            35939200,
+            30807700
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "uuid": "b057316b-298d-481b-9c2c-d36bf2602ee0",
+          "type": "PCB_TRACK",
+          "net": "SERVO3_MCU",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            33500000,
+            66600000
+          ],
+          "end_nm": [
+            33000000,
+            66100000
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "uuid": "b7df7de2-1e2e-4420-8c92-b547537cb4b5",
+          "type": "PCB_TRACK",
+          "net": "SERVO3_MCU",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            33000000,
+            66099999
+          ],
+          "end_nm": [
+            33500000,
+            66599999
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "uuid": "bcf5ebc2-6550-49b3-9501-93ed5fdb57fe",
+          "type": "PCB_TRACK",
+          "net": "SERVO3_MCU",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            33500000,
+            66599999
+          ],
+          "end_nm": [
+            33900000,
+            66599999
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "uuid": "c40644b2-4cf8-4ac5-bffb-4f8568bd78ab",
+          "type": "PCB_VIA",
+          "net": "RADIO_AUX_MCU",
+          "locked": true,
+          "width_nm": 600000,
+          "position_nm": [
+            12100000,
+            37800000
+          ],
+          "drill_nm": 300000,
+          "via_type": 4,
+          "top_layer": "F.Cu",
+          "bottom_layer": "B.Cu"
+        },
+        {
+          "uuid": "c65bb959-6f69-418f-b3af-bee49a8b9ec9",
+          "type": "PCB_VIA",
+          "net": "SERVO2_OUT",
+          "locked": true,
+          "width_nm": 600000,
+          "position_nm": [
+            23313200,
+            87000000
+          ],
+          "drill_nm": 300000,
+          "via_type": 4,
+          "top_layer": "F.Cu",
+          "bottom_layer": "B.Cu"
+        },
+        {
+          "uuid": "cf1fcc5c-0035-468c-9ef6-e1869e8bbd90",
+          "type": "PCB_TRACK",
+          "net": "SERVO2_OUT",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            23313200,
+            87000000
+          ],
+          "end_nm": [
+            23313200,
+            89600000
+          ],
+          "layer": "In2.Cu"
+        },
+        {
+          "uuid": "d2fd26cf-c549-477a-a937-4a267de4669e",
+          "type": "PCB_TRACK",
+          "net": "SERVO2_OUT",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            23313200,
+            89600000
+          ],
+          "end_nm": [
+            24313200,
+            90600000
+          ],
+          "layer": "In2.Cu"
+        },
+        {
+          "uuid": "da4a3330-40d9-494d-bc5e-efe7b3b7dce1",
+          "type": "PCB_TRACK",
+          "net": "CAM_PWR_EN",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            35245300,
+            70150600
+          ],
+          "end_nm": [
+            36745300,
+            68650600
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "uuid": "dca37ab2-eec7-400f-a7f0-fc96ca829452",
+          "type": "PCB_TRACK",
+          "net": "RADIO_TX_MCU",
+          "locked": false,
+          "width_nm": 150000,
+          "start_nm": [
+            35000900,
+            30807700
+          ],
+          "end_nm": [
+            31803600,
+            27610400
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "uuid": "dd21536a-637b-4edc-b499-8d9bd6c0a564",
+          "type": "PCB_TRACK",
+          "net": "CAM_MCU_TX",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            16950000,
+            20550000
+          ],
+          "end_nm": [
+            19950000,
+            23550000
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "uuid": "ded959c1-9b9d-44d1-b8e0-1f3191bed910",
+          "type": "PCB_TRACK",
+          "net": "CAM_5V_SENSE",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            22350000,
+            29250000
+          ],
+          "end_nm": [
+            22550000,
+            29050000
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "uuid": "dffff0b5-4c8e-4a09-babd-c2ac4a699137",
+          "type": "PCB_TRACK",
+          "net": "SERVO3_MCU",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            35200000,
+            64200000
+          ],
+          "end_nm": [
+            35700000,
+            63700000
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "added_copper": [
+        {
+          "uuid": "dd428945-ff91-5018-8afc-80ce9ed04925",
+          "type": "PCB_TRACK",
+          "net": "RADIO_TX_MCU",
+          "locked": true,
+          "width_nm": 150000,
+          "start_nm": [
+            37450000,
+            32318500
+          ],
+          "end_nm": [
+            37454800,
+            32313700
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "changed_retained_copper": [],
+      "removed_net_counts": {
+        "CAM_MCU_TX": 3,
+        "SERVO3_MCU": 7,
+        "RADIO_M1_MCU": 1,
+        "CAM_5V_SENSE": 7,
+        "3V3": 1,
+        "RADIO_RX_MCU": 1,
+        "PULLPIN": 1,
+        "SERVO2_OUT": 8,
+        "RADIO_TX_MCU": 6,
+        "GPS_TX_MCU": 1,
+        "RADIO_AUX_MCU": 1,
+        "CAM_PWR_EN": 1
+      },
+      "decision": "PASS permitted cleanup/silk only;38 dangling items removed, one6.788um centerline joint repair added, no retained copper changed, all250 footprints/pads/models/zone boundaries/project/rules preserved; old pad groups remain connected.",
+      "evidence_path": "/private/tmp/r6-final-cleanup-objective-delta.json"
+    },
+    "final_cleaned_nonrouting_checks": {
+      "contract_issues": [],
+      "pin_legends": [],
+      "thermal_issues": [],
+      "through_hole_vias": [],
+      "fit_ok": true,
+      "schematic_pin_mismatches": [],
+      "component_metadata_mismatches": [],
+      "C100_C93_bypass": {
+        "C100": {
+          "supply_pin": "U12.3",
+          "pad_distance_mm": 1.3503332921912294,
+          "direct_copper_route_mm": 1.3200000000000003,
+          "direct_ground_return_mm": 1.5032590180780505
+        },
+        "C93": {
+          "supply_pin": "U12.7",
+          "pad_distance_mm": 1.8582585934148115,
+          "direct_copper_route_mm": 2.3000000000000007
+        }
+      }
+    }
+  },
+  "primary_sources": [
+    "https://www.ti.com/lit/ds/symlink/txu0202.pdf",
+    "https://www.diodes.com/datasheet/download/AP63300_AP63301.pdf",
+    "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+    "https://www.ti.com/lit/ds/symlink/tps2595.pdf",
+    "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+    "https://www.tag-connect.com/wp-content/uploads/bsk-pdf-manager/ARM20-CTX_19.pdf",
+    "https://www.hglrc.com/products/hglrc-m100_mini-gps",
+    "sources/mlt5020.pdf"
+  ],
+  "physical_qualification_limits": [
+    "GPS maximum current is not published; verify combined port startup/current and RF transmit load on bench.",
+    "Verify custom harness cavity order against numbered board pins; stock module cable interchangeability is not established.",
+    "Measure reset/off behavior, supply tolerance/transients, thermal behavior and ESD robustness on hardware.",
+    "HGLRC states4G acceleration/500m/s navigation limits; behavior outside module limits is not qualified by CAD checks.",
+    "No physical flight, pyro firing, or assembly qualification was performed."
+  ]
+}

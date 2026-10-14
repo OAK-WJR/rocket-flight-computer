@@ -1,0 +1,74 @@
+{
+  "description": "Close final D131.6 GND island with 0.25 mm F trace and 0.5/0.3 mm through via at (35.01,44.2). Adds three objects only; no existing copper or component changed. Preserves GPS/NRST In1 bridge. Closest nominal copper clearances: 0.165 mm to 3V3 F horizontal and PYRO1_CONT In2; board minimum 0.15 mm.",
+  "base_sha256": "6409bd2df132feecc9bfeb938997b7b8e29b4833b29a238c938374fefaec8d33",
+  "candidate_sha256": "29abf98443f5c8d98ad01c3809262772d9b6924f10586c70513580d4ec56f7e5",
+  "removed_tracks_guard": [],
+  "added_tracks": [
+    {
+      "uuid": "1e93600c-5246-49fe-a7fd-c5e76c9f9f8e",
+      "type": "PCB_TRACK",
+      "net": "GND",
+      "locked": false,
+      "layer": "F.Cu",
+      "start": [
+        35.55,
+        43.35
+      ],
+      "end": [
+        35.55,
+        43.66
+      ],
+      "width_mm": 0.25
+    },
+    {
+      "uuid": "d297d1c3-2fe1-4ecc-8a95-2b2906660fc9",
+      "type": "PCB_VIA",
+      "net": "GND",
+      "locked": false,
+      "position": [
+        35.01,
+        44.2
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "d7341b77-5c80-4e6a-a382-f47ff7a68fa3",
+      "type": "PCB_TRACK",
+      "net": "GND",
+      "locked": false,
+      "layer": "F.Cu",
+      "start": [
+        35.55,
+        43.66
+      ],
+      "end": [
+        35.01,
+        44.2
+      ],
+      "width_mm": 0.25
+    }
+  ],
+  "pad_changes": [],
+  "validation": {
+    "native_candidate": "/private/tmp/r6-d131-ground-mlbmtjkx/drc.json",
+    "hard_drc": 0,
+    "via_dangling": 11,
+    "track_dangling": 5,
+    "unconnected_before": 16,
+    "unconnected_after": 15,
+    "new_check_r6_issues": [],
+    "existing_tracks_edited": [],
+    "pad_group_regressions": [],
+    "pad_group_changes": {
+      "GND": [
+        2,
+        1
+      ]
+    }
+  }
+}

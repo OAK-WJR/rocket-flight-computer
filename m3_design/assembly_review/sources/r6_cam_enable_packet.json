@@ -1,0 +1,200 @@
+{
+  "description": "CAM_EN connection completed with TP70 bare-pad 1 mm clearance retained",
+  "base_sha256": "2a061ea60f0d940505fefd5afaa99cb5adc3cbb5b6d5ca760593c8957396dd2a",
+  "candidate_sha256": "d27cbb5709d07fc4f62cc427e5b02dfdc339a64831330658773beb7eceef8762",
+  "removed_tracks_guard": [
+    {
+      "uuid": "5f625419-85d4-49f7-8631-1c0bf7eaf820",
+      "type": "PCB_TRACK",
+      "net": "CAM_EN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        36.675,
+        66.974999
+      ],
+      "end": [
+        36.7,
+        66.974999
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "95aa1a8b-f0d7-4c07-98f2-91de82ec3033",
+      "type": "PCB_TRACK",
+      "net": "CAM_EN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        36.65,
+        67.0
+      ],
+      "end": [
+        36.675,
+        66.974999
+      ],
+      "width_mm": 0.15
+    }
+  ],
+  "added_tracks": [
+    {
+      "uuid": "6108fe7e-916f-4feb-a3dc-434c21e8293c",
+      "type": "PCB_TRACK",
+      "net": "CAM_EN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        37.9067,
+        67.16
+      ],
+      "end": [
+        37.1974,
+        67.16
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "a69fcf51-fb3a-4ce8-a443-655829158324",
+      "type": "PCB_TRACK",
+      "net": "CAM_EN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        37.95,
+        67.2033
+      ],
+      "end": [
+        37.9067,
+        67.16
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "b2cc6ac6-6ade-4746-95a6-226aa23bcc4d",
+      "type": "PCB_TRACK",
+      "net": "CAM_EN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        37.1974,
+        67.16
+      ],
+      "end": [
+        36.4333,
+        67.9241
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "d9e71926-61d4-4b0f-b2c2-53116a07ea36",
+      "type": "PCB_TRACK",
+      "net": "CAM_EN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        37.95,
+        67.7
+      ],
+      "end": [
+        37.95,
+        67.2033
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "fe43e03d-8aad-4a2f-b05c-3919933664bc",
+      "type": "PCB_TRACK",
+      "net": "CAM_EN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        36.4333,
+        67.9241
+      ],
+      "end": [
+        36.4333,
+        68.2167
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "30090cfb-5627-4ea3-a453-17890952d894",
+      "type": "PCB_TRACK",
+      "net": "CAM_EN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        36.4333,
+        68.2167
+      ],
+      "end": [
+        36.05,
+        68.6
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "013da3fa-4859-41b7-bd98-4ac706adeb0e",
+      "type": "PCB_TRACK",
+      "net": "CAM_EN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        36.675,
+        66.975
+      ],
+      "end": [
+        36.7,
+        66.975
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "acd5bb94-6e7a-4ba3-89f8-eafc4d6c5887",
+      "type": "PCB_TRACK",
+      "net": "CAM_EN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        36.65,
+        67.0
+      ],
+      "end": [
+        36.675,
+        66.975
+      ],
+      "width_mm": 0.15
+    }
+  ],
+  "pad_changes": [],
+  "footprint_changes": [
+    {
+      "reference": "TP70",
+      "before": {
+        "position": [
+          38.5,
+          65.5
+        ],
+        "orientation": 0.0,
+        "layer": "B.Cu"
+      },
+      "after": {
+        "position": [
+          38.5,
+          65.2
+        ],
+        "orientation": 0.0,
+        "layer": "B.Cu"
+      }
+    }
+  ],
+  "validation": {
+    "passed": true,
+    "hard_drc": 0,
+    "unconnected_before": 23,
+    "unconnected_after": 22,
+    "new_non_dangling_violations": [],
+    "split_pad_groups": [],
+    "native_candidate": "/private/tmp/r6-cam-finish-8mbkgzli/after.json"
+  }
+}

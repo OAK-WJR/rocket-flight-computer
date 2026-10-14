@@ -6,7 +6,7 @@
 	(title_block
 		(title "14 | Launch pull-pin and buzzer")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R4")
+		(rev "M3-ASSY-R6")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
 		(symbol "M3:BAT54S"
@@ -87,95 +87,85 @@
 						(font
 							(size 1.05 1.05))))))
 		(embedded_fonts no))
-		(symbol "M3:Buzzer_4pad"
-		(pin_names
-			(offset 0.508))
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(property "Reference" "LS"
-			(at 0 7.62 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "Buzzer_4pad"
-			(at 0 -7.62 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" ""
-			(at 0 0 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Description" "SMD magnetic buzzer, 1 = +lead, 2 = -lead, 3/4 = dummy pads"
-			(at 0 0 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(symbol "Buzzer_4pad_0_1"
-			(rectangle
-				(start -5.08 5.08)
-				(end 5.08 -5.08)
-				(stroke
-					(width 0.254)
-					(type default))
-				(fill
-					(type background))))
-		(symbol "Buzzer_4pad_1_1"
-			(pin passive line
-				(at -10.16 2.54 0)
-				(length 5.08)
-				(name "+"
-					(effects
-						(font
-							(size 1.05 1.05))))
-				(number "1"
-					(effects
-						(font
-							(size 1.05 1.05)))))
-			(pin passive line
-				(at -10.16 -2.54 0)
-				(length 5.08)
-				(name "-"
-					(effects
-						(font
-							(size 1.05 1.05))))
-				(number "2"
-					(effects
-						(font
-							(size 1.05 1.05)))))
-			(pin passive line
-				(at 10.16 2.54 180)
-				(length 5.08)
-				(name "DUMMY"
-					(effects
-						(font
-							(size 1.05 1.05))))
-				(number "3"
-					(effects
-						(font
-							(size 1.05 1.05)))))
-			(pin passive line
-				(at 10.16 -2.54 180)
-				(length 5.08)
-				(name "DUMMY"
-					(effects
-						(font
-							(size 1.05 1.05))))
-				(number "4"
-					(effects
-						(font
-							(size 1.05 1.05))))))
-		(embedded_fonts no))
+		(symbol "M3:Buzzer_3pad"
+			(pin_names
+				(offset 0.508))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "LS"
+				(at 0 7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "Buzzer_3pad"
+				(at 0 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "SMD magnetic buzzer, 1 = +lead, 2 = -lead, 3 = isolated mechanical tab"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "Buzzer_3pad_0_1"
+				(rectangle
+					(start -5.08 5.08)
+					(end 5.08 -5.08)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "Buzzer_3pad_1_1"
+				(pin passive line
+					(at -10.16 2.54 0)
+					(length 5.08)
+					(name "+"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -10.16 -2.54 0)
+					(length 5.08)
+					(name "-"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 10.16 2.54 180)
+					(length 5.08)
+					(name "DUMMY"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+	)
+			(embedded_fonts no))
 			(symbol "M3:C"
 		(pin_numbers
 			(hide yes))
@@ -871,7 +861,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100nF"
+		(property "Value" "100nF 50V X7R 10%"
 			(at 219.71 59.69 0)
 			(effects
 				(font
@@ -889,7 +879,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 215.9 50.8 0)
 			(hide yes)
 			(effects
@@ -901,7 +891,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL05B104KO5NNNC"
+		(property "Manufacturer Part" "CL05B104KB54PNC"
 			(at 215.9 50.8 0)
 			(hide yes)
 			(effects
@@ -911,7 +901,14 @@
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
 					(reference "C160")
-					(unit 1)))))
+					(unit 1))))		(property "LCSC Part" "C307331"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+)
 	(wire
 		(pts
 			(xy 215.9 46.99)
@@ -1048,7 +1045,7 @@
 			(justify right))
 		(uuid 5f9d4da7-8a68-5bc8-b10b-72383d913e48))
 	(symbol
-		(lib_id "M3:Buzzer_4pad")
+		(lib_id "M3:Buzzer_3pad")
 		(at 332.74 50.8 0)
 		(unit 1)
 		(in_bom yes)
@@ -1061,25 +1058,25 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "MLT-8530"
+		(property "Value" "MLT-5020"
 			(at 336.55 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:BUZ-SMD_4P-L8.5-W8.5-P8.50-BR"
+		(property "Footprint" "rocket:M3_MLT5020_3pad"
 			(at 332.74 50.8 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Datasheet" ""
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf"
 			(at 332.74 50.8 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C94599"
+		(property "LCSC" "C94598"
 			(at 332.74 50.8 0)
 			(hide yes)
 			(effects
@@ -1091,7 +1088,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "MLT-8530"
+		(property "Manufacturer Part" "MLT-5020"
 			(at 332.74 50.8 0)
 			(hide yes)
 			(effects
@@ -1101,7 +1098,14 @@
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
 					(reference "LS120")
-					(unit 1)))))
+					(unit 1))))		(property "LCSC Part" "C94598"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+)
 	(wire
 		(pts
 			(xy 322.58 48.26)
@@ -1137,9 +1141,6 @@
 	(no_connect
 		(at 342.9 48.26)
 		(uuid 8671c8f0-23ed-5403-886f-aa2c06397b43))
-	(no_connect
-		(at 342.9 53.34)
-		(uuid 00e1e502-4ccf-5943-b109-83f5a6aebecc))
 	(symbol
 		(lib_id "M3:D_Schottky_KA")
 		(at 40.64 114.3 0)
@@ -1525,14 +1526,14 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid dde5b69a-71e6-57c0-9829-2913f7e3935e))
-	(text "LS120 MLT-8530: pad 1 = + lead, pad 2 = - lead, pads 3/4 = dummy (Huaneng spec 5.2). Closes CIRCUIT_REVIEW 3.4."
+	(text "LS120 MLT-5020: pad 1 = +, pad 2 = -, pad 3 = isolated mechanical tab. Huaneng 2021-05-27 drawing; body 5.0 +/-0.3 mm, height 2.0 +/-0.2 mm."
 		(at 20.32 260.24 0)
 		(effects
 			(font
 				(size 1.27 1.27))
 			(justify left))
 		(uuid bd454544-a8f7-52a8-92ea-81cbb5cbd667))
-	(text "BUZZ_DRV = PA5 (pin 29), moved off PE6 (P1-10). 2.7 kHz 50 % duty, software toggle or TIM8_CH1N (AF3, verified, M3_R3 6). Never TIM2."
+	(text "BUZZ_DRV = PA5 (pin 29). MLT-5020: 4 kHz, 50% duty; software toggle or TIM8_CH1N (AF3). Never leave the coil driven with DC."
 		(at 20.32 267.86 0)
 		(effects
 			(font

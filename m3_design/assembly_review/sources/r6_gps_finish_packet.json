@@ -1,0 +1,1151 @@
+{
+  "schema": 1,
+  "geometry_units": "nanometres",
+  "description": "Independently reviewed GPS_TX_MCU closure; all prior copper and pads preserved. Caller refills and validates integrated CAD.",
+  "base_sha256": "d361bd4bdf10d1562d1da38d2ff52562f72fe0075854b6675126352093ed4174",
+  "reviewed_candidate_sha256": "398debd17c46d1767e04a2e254f519042a4451738a97f04a29cbb77e3e581938",
+  "source_candidate": "/private/tmp/r6-gps-fixed-current-zy58tp02/m3.kicad_pcb",
+  "removed_tracks_guard": [],
+  "pad_changes": [],
+  "added_tracks": [
+    {
+      "uuid": "063f60ad-3829-4752-be52-59a35b0f9477",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        32250000,
+        82650000
+      ],
+      "end_nm": [
+        21100000,
+        82650000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "0c23cc1d-235f-4f83-bfb5-3fd20ac2400e",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        11250000,
+        44700000
+      ],
+      "end_nm": [
+        11250000,
+        43100000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "0f94b5e8-c1d8-4621-8594-de8ae5c68233",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        11250000,
+        48150000
+      ],
+      "end_nm": [
+        10950000,
+        47850000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "1652632a-3784-4eb5-9819-c3a516776ab0",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        44650000,
+        73050000
+      ],
+      "end_nm": [
+        44650000,
+        78250000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "1771c46f-57b6-4f8e-a79c-83dbc5e43c26",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        10950000,
+        42800000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "1d8204af-0b16-4f68-9d6d-fbc23573a09f",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        14750000,
+        75500000
+      ],
+      "end_nm": [
+        14450000,
+        75500000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "228bb9b6-5d75-4719-9630-a7ba4937dbe0",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        14700000,
+        73600000
+      ],
+      "end_nm": [
+        15750000,
+        72550000
+      ],
+      "layer": "In1.Cu"
+    },
+    {
+      "uuid": "23f1ecfa-f4f8-4260-a072-483499e29ce9",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        44650000,
+        67850000
+      ],
+      "end_nm": [
+        44650000,
+        73050000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "262c7827-dcdf-481d-957f-ea762acb7193",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        10150000,
+        40150000
+      ],
+      "end_nm": [
+        10150000,
+        39800000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "2afe93f6-0c3b-4074-9aca-035af2bd4fdf",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        44650000,
+        67850000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "2b51225e-a320-4b23-9f0c-e9247b701f40",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        11050000,
+        51000000
+      ],
+      "end_nm": [
+        11050000,
+        50150000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "2ff8e573-0029-4b97-bd97-b500c579842d",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        18550000,
+        60950000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "31d13c69-6ae0-4b3e-9509-b0c1078b5ce8",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        39500000,
+        48900000
+      ],
+      "end_nm": [
+        40200000,
+        48900000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "335e8e80-6dac-46a8-8d90-9f7abfc0de41",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        21100000,
+        82650000
+      ],
+      "end_nm": [
+        20200000,
+        81750000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "3430fe32-7103-487a-bbfd-b952881e461f",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        11500000,
+        37950000
+      ],
+      "end_nm": [
+        12100000,
+        38550000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "3602b77e-bebb-494f-8363-f9753936118d",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        18400000,
+        60800000
+      ],
+      "end_nm": [
+        18400000,
+        59600000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "368f5d34-6fa4-48b2-9a01-e1b96d063a48",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        44650000,
+        73050000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "36bb53c3-e2e5-4636-bc64-46a028f28a4e",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        14050000,
+        75100000
+      ],
+      "end_nm": [
+        14050000,
+        74250000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "37a8ac92-1727-4646-a05d-770f04e21bba",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        43150000,
+        51850000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "38331497-dafb-4d90-84ba-e85db0415c35",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        11050000,
+        50150000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "3f57572c-8fcd-4e46-b24e-5ceefcfc3065",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        18350000,
+        54550000
+      ],
+      "end_nm": [
+        14800000,
+        51000000
+      ],
+      "layer": "In1.Cu"
+    },
+    {
+      "uuid": "3fab5dc0-fd5d-495e-b7e7-b37f1fe8d6e0",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        44650000,
+        59750000
+      ],
+      "end_nm": [
+        44650000,
+        67850000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "410efd16-8090-4851-8bfa-ea319d868cc2",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        41000000,
+        81900000
+      ],
+      "end_nm": [
+        33000000,
+        81900000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "41910e44-f415-48ce-9031-be6700fdc254",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        37450000,
+        45650000
+      ],
+      "end_nm": [
+        38100000,
+        46300000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "43316aca-88df-48cc-9c15-0985681dbd70",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        19950000,
+        81750000
+      ],
+      "end_nm": [
+        18600000,
+        80400000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "4448f7f8-cde4-4f04-bd8b-75113af0faf6",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        10950000,
+        42500000
+      ],
+      "end_nm": [
+        10200000,
+        41750000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "488e0bc8-3b98-45ff-838f-6464ed5dbe2c",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        10950000,
+        42800000
+      ],
+      "end_nm": [
+        10950000,
+        42500000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "4aad1381-221e-4d82-8d30-b9a07306057d",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        14050000,
+        74250000
+      ],
+      "end_nm": [
+        14700000,
+        73600000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "4c40a74b-29d9-4b87-88fc-324ecda6509d",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        15750000,
+        72550000
+      ],
+      "end_nm": [
+        15750000,
+        63750000
+      ],
+      "layer": "In1.Cu"
+    },
+    {
+      "uuid": "52123bbc-c3cd-4fb7-b78f-9f5f7c270b4e",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        41000000,
+        81900000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "533fe528-097e-4763-80af-2df12660524c",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        11000000,
+        37950000
+      ],
+      "end_nm": [
+        11500000,
+        37950000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "5fd576e3-60eb-4221-af8d-6397b5135cec",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        18400000,
+        59600000
+      ],
+      "end_nm": [
+        18150000,
+        59350000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "6608d815-8c97-40a2-b14b-601a4c85e86b",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        18600000,
+        80400000
+      ],
+      "end_nm": [
+        18600000,
+        79350000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "6acbb725-f85b-4646-becf-bc767ebeb885",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        11250000,
+        43100000
+      ],
+      "end_nm": [
+        10950000,
+        42800000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "6ae269c6-6024-4c20-a79d-b28c8a04c00f",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        12450000,
+        38550000
+      ],
+      "end_nm": [
+        12600000,
+        38400000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "6c3dafc9-3f75-4c0e-ae1b-caff9957b120",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        10200000,
+        40200000
+      ],
+      "end_nm": [
+        10150000,
+        40150000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "6dcc930c-8668-40c1-8070-b4c74114b7bc",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        38100000,
+        47500000
+      ],
+      "end_nm": [
+        39500000,
+        48900000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "6e5fe3e5-f012-4a4b-b3ff-4b92a4ac4a54",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        38100000,
+        46300000
+      ],
+      "end_nm": [
+        38100000,
+        47500000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "78d2faa3-b9c1-4fc8-8dc5-d45b86eebd6f",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        10200000,
+        41750000
+      ],
+      "end_nm": [
+        10200000,
+        40200000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "7f28c537-c9ae-4a2c-b69a-605cbadc02a4",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        18600000,
+        80400000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "7f34a289-82dd-4121-a913-1f17d6e9471c",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        33000000,
+        81900000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "8163a8c6-7753-4bef-9ec2-a7f5ba1c0db0",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        18550000,
+        60950000
+      ],
+      "end_nm": [
+        18400000,
+        60800000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "8d384310-1e5b-425f-b19e-688a0a5a30d7",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        10950000,
+        45000000
+      ],
+      "end_nm": [
+        11250000,
+        44700000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "8fa718bf-6a93-4ba9-92fc-770517df17d5",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        18400000,
+        59600000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "918d56cc-f6b3-4bc7-b6ff-5beb72441dbf",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        40200000,
+        48900000
+      ],
+      "end_nm": [
+        43150000,
+        51850000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "9197bbe0-94c2-4ec2-9840-ef9cb103215d",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        14800000,
+        51000000
+      ],
+      "end_nm": [
+        11050000,
+        51000000
+      ],
+      "layer": "In1.Cu"
+    },
+    {
+      "uuid": "93043c9c-45ad-4ffc-9217-e01ce515746f",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        43150000,
+        58250000
+      ],
+      "end_nm": [
+        44650000,
+        59750000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "93a69ae4-314e-4235-8d0d-5ae549554141",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        12100000,
+        38550000
+      ],
+      "end_nm": [
+        12450000,
+        38550000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "980fc1ab-0f7c-47cb-9118-5cfdf44fef3c",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        18350000,
+        54550000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "a2a4a85a-959c-41c5-84b7-a154af3f1bd1",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        44650000,
+        78250000
+      ],
+      "end_nm": [
+        41000000,
+        81900000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "af1dec72-ee54-4d86-a4fa-f9ed6e369eb0",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        10150000,
+        39800000
+      ],
+      "end_nm": [
+        10650000,
+        39300000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "b21554d4-b3ea-4a84-8ca2-054e8ecc4a0f",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        11250000,
+        49950000
+      ],
+      "end_nm": [
+        11250000,
+        48150000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "b2786429-dfdc-4b3f-88c1-de2a6ff2050a",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        43150000,
+        51850000
+      ],
+      "end_nm": [
+        43150000,
+        58250000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "b58712e6-7198-4fed-b1f1-a6aa3a0bf6c4",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        20200000,
+        81750000
+      ],
+      "end_nm": [
+        19950000,
+        81750000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "c5fcd32e-9c2a-47e2-9b84-1899e3c8e4c1",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        14450000,
+        75500000
+      ],
+      "end_nm": [
+        14050000,
+        75100000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "cdbba1cf-ee1b-47db-bed9-dd4add8d2732",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        33000000,
+        81900000
+      ],
+      "end_nm": [
+        32250000,
+        82650000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "cedaaf45-66aa-48ea-b8aa-9c0d4ccacde3",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        14700000,
+        73600000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "d0599606-2b1f-435c-b9ef-f59f454d7262",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        18150000,
+        59350000
+      ],
+      "end_nm": [
+        18150000,
+        54750000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "d65b55a6-e69e-4257-9f4e-be5f0744ee57",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        11050000,
+        50150000
+      ],
+      "end_nm": [
+        11250000,
+        49950000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "d8ebe1ec-878a-4103-858e-61fa69e45c13",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 500000,
+      "position_nm": [
+        11050000,
+        51000000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    },
+    {
+      "uuid": "dee91fc3-f57d-4d27-aab4-bed681a09739",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        18600000,
+        79350000
+      ],
+      "end_nm": [
+        14750000,
+        75500000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "e2795170-712b-4e16-a5c6-18c889960f90",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        10950000,
+        47850000
+      ],
+      "end_nm": [
+        10950000,
+        45000000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "e2d391c4-1dc5-4e93-b4bb-123f96c4e475",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        10650000,
+        38300000
+      ],
+      "end_nm": [
+        11000000,
+        37950000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "e614904b-6628-4bec-a939-a33425247ba8",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        10650000,
+        39300000
+      ],
+      "end_nm": [
+        10650000,
+        38300000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "e6f31ea9-522f-4216-9985-1629a1403fc5",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        18150000,
+        54750000
+      ],
+      "end_nm": [
+        18350000,
+        54550000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "fb655c42-08a1-451e-b027-24e79651e908",
+      "type": "PCB_TRACK",
+      "net": "GPS_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        15750000,
+        63750000
+      ],
+      "end_nm": [
+        18550000,
+        60950000
+      ],
+      "layer": "In1.Cu"
+    }
+  ],
+  "anchors": [
+    {
+      "uuid": "6427433a-4d9b-49db-b408-1ab1cca4507d",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        12600000,
+        38400000
+      ],
+      "drill_nm": 300000,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu",
+      "via_type": 4
+    }
+  ],
+  "pads": [
+    {
+      "ref": "U1",
+      "number": "68",
+      "net": "GPS_TX_MCU",
+      "position_nm": [
+        14300000,
+        38000000
+      ],
+      "layers": "00000000_00000000_00000000_00002003"
+    },
+    {
+      "ref": "R201",
+      "number": "1",
+      "net": "GPS_TX_MCU",
+      "position_nm": [
+        38770000,
+        43500000
+      ],
+      "layers": "00000000_00000000_00000000_00002003"
+    },
+    {
+      "ref": "D131",
+      "number": "3",
+      "net": "GPS_TX_MCU",
+      "position_nm": [
+        37450000,
+        45650000
+      ],
+      "layers": "00000000_00000000_00000000_00002003"
+    }
+  ],
+  "old_copper_unchanged": true,
+  "old_copper_sha256": "4ba22abbfe517cbbef54b6ce207e2e422537d3b3eb4a4bd51aaa5d8563b9ee14",
+  "native_review": {
+    "opens_before": 3,
+    "opens_after": 2,
+    "hard_errors": 0,
+    "old_pad_splits": []
+  },
+  "independent_review": {
+    "critical": 0,
+    "major": 0,
+    "minor": "Reduced parallel In1 ground return; existing front-layer bypass unchanged."
+  },
+  "replay_validation": {
+    "base_sha256": "d361bd4bdf10d1562d1da38d2ff52562f72fe0075854b6675126352093ed4174",
+    "replay_sha256": "87684d48f7de7bb7fa5e1c5cc0e2d698a545dfb48bf5efc4988546ee481e43d2",
+    "reviewed_candidate_sha256": "398debd17c46d1767e04a2e254f519042a4451738a97f04a29cbb77e3e581938",
+    "first": {
+      "applied": true,
+      "added": 66,
+      "removed": 0,
+      "zones_require_refill": true,
+      "native_drc_required": true
+    },
+    "old_copper_unchanged": true,
+    "pads_unchanged": true,
+    "exact_reviewed_copper_including_UUIDs": true,
+    "old_pad_splits": [],
+    "idempotent_reload": true,
+    "project_sha256": "3730b060a94ebbd8f5f5ad179927549cb0cda8f475801e0e85b4c559fecaa7bf",
+    "project_unchanged": true,
+    "atomic_rejections": [
+      "partial route",
+      "changed track",
+      "changed via layer/type",
+      "changed anchor",
+      "changed pad net"
+    ],
+    "native_drc": {
+      "opens": 2,
+      "hard": 0,
+      "dangling": 14,
+      "report": "/private/tmp/r6-gps-helper-proof-td720w5e/drc.json"
+    },
+    "saved_board_difference": "Reviewed tracks, vias, UUIDs, locks and pads match exactly. Refilled board differs only in one filled-polygon hunk: collinear vertices and nanometre rounding."
+  },
+  "helper_sha256": "3f1b1013495e79188d7b7432a2f904531286738def8a14058d247ee36f15de86"
+}

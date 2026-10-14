@@ -1,0 +1,753 @@
+{
+  "description": "BAT_SW_RETURN completed through full-board routing corridor with .5/.3 vias; all prior pad groups preserved",
+  "base_sha256": "54828764f1de3a157051bb2287021a752a442b7ea677ffa2236068e1ae367eed",
+  "candidate_sha256": "673bbc608fbca9301a65f2f62a9d1445c0d23ddaf9d33acd424480b1b684e5fe",
+  "removed_tracks_guard": [],
+  "added_tracks": [
+    {
+      "uuid": "bc810aa2-1d63-470e-a33c-4fc5ea4110d2",
+      "type": "PCB_VIA",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "position": [
+        41.3,
+        72.425
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "72a6c9cb-1ee0-4246-ba2c-09959ab90c40",
+      "type": "PCB_VIA",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "position": [
+        44.4,
+        26.525
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "8ad1e0ec-145a-4423-80df-2d490cfefc00",
+      "type": "PCB_VIA",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "position": [
+        44.3,
+        24.625
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "5071a29e-f1e1-4869-97ae-659739e05782",
+      "type": "PCB_VIA",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "position": [
+        41.3,
+        9.225
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "215a2e97-4b22-424d-8fca-0fe7bd4f7411",
+      "type": "PCB_VIA",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "position": [
+        27.6,
+        7.025
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "75a305b3-d070-4535-b624-973246b5a2f0",
+      "type": "PCB_VIA",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "position": [
+        20.5,
+        9.025
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "0926c1b5-5d97-4b01-9a81-50c7102373bd",
+      "type": "PCB_VIA",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "position": [
+        15.0,
+        19.525
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "0d403865-1aa3-48c5-9e3a-bb33ac7052bf",
+      "type": "PCB_VIA",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "position": [
+        16.3,
+        19.525
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "f1e1094c-71f0-43a8-8d36-729d9dee72ce",
+      "type": "PCB_VIA",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "position": [
+        11.9,
+        26.125
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "6e73ae56-c570-44b8-b3ef-ab1fa9d7dba5",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        15.38,
+        92.405
+      ],
+      "end": [
+        15.38,
+        92.4
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "d72418ba-f03a-49da-844d-8fe12907154c",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        15.4,
+        92.425
+      ],
+      "end": [
+        15.38,
+        92.405
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "7fcba1d1-6e57-4c82-b140-b99019bef25c",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        18.5,
+        89.325
+      ],
+      "end": [
+        15.4,
+        92.425
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "0145a4b2-e312-41a5-8a26-62f9e7410c42",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        28.3,
+        89.325
+      ],
+      "end": [
+        18.5,
+        89.325
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "5ce24829-cdd6-4b38-aefc-3a0eff900d4f",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        38.5,
+        79.125
+      ],
+      "end": [
+        28.3,
+        89.325
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "4302f4e6-0339-4960-8555-62770f38708e",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        38.5,
+        75.225
+      ],
+      "end": [
+        38.5,
+        79.125
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "79aa3ea9-e1bb-4e0e-adab-9e469383bb0e",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        41.3,
+        72.425
+      ],
+      "end": [
+        38.5,
+        75.225
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "7416cb13-2ed9-41b0-83cf-0d879ce5998e",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        45.3,
+        68.425
+      ],
+      "end": [
+        41.3,
+        72.425
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "7a2add5f-bdd6-418d-808a-b60c58fee5d9",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        45.3,
+        27.425
+      ],
+      "end": [
+        45.3,
+        68.425
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "36ca8d24-4d51-402d-8cd1-90b88dea10dc",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        44.4,
+        26.525
+      ],
+      "end": [
+        45.3,
+        27.425
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "5e581caa-9308-49ec-9a23-d88fbe7001c4",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        44.3,
+        26.425
+      ],
+      "end": [
+        44.4,
+        26.525
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "62150556-82cc-4cd4-aeb7-b127a427b83b",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        44.3,
+        24.625
+      ],
+      "end": [
+        44.3,
+        26.425
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "134d573e-6a1b-4050-b63e-53f16c165a50",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        44.3,
+        12.225
+      ],
+      "end": [
+        44.3,
+        24.625
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "275385d7-4e70-42d5-b2a9-c3e65e680f34",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        41.3,
+        9.225
+      ],
+      "end": [
+        44.3,
+        12.225
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "0609aea7-2747-493a-b39d-d9fc70b85bcb",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        38.0,
+        5.925
+      ],
+      "end": [
+        41.3,
+        9.225
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "6f81891c-9976-4e7f-9dc2-70b554b5cf6e",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        33.8,
+        5.925
+      ],
+      "end": [
+        38.0,
+        5.925
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "14d1c7a8-da7b-434a-b2b0-555455779a99",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        31.8,
+        3.925
+      ],
+      "end": [
+        33.8,
+        5.925
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "68ba12f6-404e-4b55-8981-cbe02375bc8f",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        30.7,
+        3.925
+      ],
+      "end": [
+        31.8,
+        3.925
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "747287e2-6e22-4dbf-83a9-9810577fbf2e",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        27.6,
+        7.025
+      ],
+      "end": [
+        30.7,
+        3.925
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "b22154a0-bb2c-4650-8ac5-f3cfac7797c6",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        26.6,
+        8.025
+      ],
+      "end": [
+        27.6,
+        7.025
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "d5126d09-434f-44a7-b2ca-4fd0a5d60726",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        21.5,
+        8.025
+      ],
+      "end": [
+        26.6,
+        8.025
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "99ab06e0-9771-4ed0-a659-cec0ac037a95",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        20.5,
+        9.025
+      ],
+      "end": [
+        21.5,
+        8.025
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "4b0fc28c-ba8c-4b77-9968-9c579675ccd4",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        20.5,
+        10.425
+      ],
+      "end": [
+        20.5,
+        9.025
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "2221d73f-f83b-41de-ab8f-352ef49bae70",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        19.7,
+        11.225
+      ],
+      "end": [
+        20.5,
+        10.425
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "7a60aa11-e792-4ed4-ba61-58f74988bf1d",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        19.7,
+        14.025
+      ],
+      "end": [
+        19.7,
+        11.225
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "861a4215-7cf8-4069-b2ac-40b48aa18510",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        15.0,
+        18.725
+      ],
+      "end": [
+        19.7,
+        14.025
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "77d0d6eb-0186-47f5-bc86-1c097ef8cc73",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        15.0,
+        19.525
+      ],
+      "end": [
+        15.0,
+        18.725
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "bada6f8c-fd6b-4d7c-8ab9-641dab5e9419",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        16.3,
+        19.525
+      ],
+      "end": [
+        15.0,
+        19.525
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "de0c303d-1c34-4faf-8508-38043202df7b",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        16.3,
+        21.725
+      ],
+      "end": [
+        16.3,
+        19.525
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "534a9164-e55e-4aa5-8b93-2587846cada1",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        11.9,
+        26.125
+      ],
+      "end": [
+        16.3,
+        21.725
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "a9b745af-b3d6-4bf3-8574-22248a4e7059",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        11.2,
+        26.825
+      ],
+      "end": [
+        11.9,
+        26.125
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "5df50639-cc13-4cb2-b60b-1ca2dc536ae8",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        9.7,
+        26.825
+      ],
+      "end": [
+        11.2,
+        26.825
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "c9cc36ae-2fba-4b16-b65d-1666212135e5",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        8.9,
+        26.025
+      ],
+      "end": [
+        9.7,
+        26.825
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "5ab2a5d0-a8bf-478b-ba4e-4eb7509a5755",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        4.0,
+        26.025
+      ],
+      "end": [
+        8.9,
+        26.025
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "7bcd5434-b621-4fbe-893f-d5b4a9f7bfef",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        3.8,
+        25.825
+      ],
+      "end": [
+        4.0,
+        26.025
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "e346a27c-36fa-4aa8-8187-21d2de504af6",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        3.8,
+        21.625
+      ],
+      "end": [
+        3.8,
+        25.825
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "1309e3c0-08c5-446c-8d13-d63c2e6bd444",
+      "type": "PCB_TRACK",
+      "net": "BAT_SW_RETURN",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        3.3,
+        21.125
+      ],
+      "end": [
+        3.8,
+        21.625
+      ],
+      "width_mm": 0.15
+    }
+  ],
+  "pad_changes": [],
+  "validation": {
+    "native_candidate": "/private/tmp/r6-fullboard-finish-th0hl_ay/candidate-11.json",
+    "hard_drc": 0,
+    "unconnected_before": 13,
+    "unconnected_after": 12,
+    "new_non_dangling_violations": [],
+    "split_pad_groups": []
+  }
+}

@@ -1,0 +1,6 @@
+./src/common/stdpbase.cpp(59): assert ""traits"" failed in Get(): create wxApp before calling this
+BAT_IN: J1:1 -> Q120:5,6,7,8,9, grid 0.1 mm, 140369 free cells, CG 4082 iterations, residual 9.7e-11
+  R = 4.13 mOhm; at 7.7 A: drop 31.8 mV, copper loss 0.245 W
+  F.Cu   carries    0 % at mid-path; peak 0.00 A/mm at (9.35, 22.15)
+  In2.Cu carries  100 % at mid-path; peak 6.22 A/mm at (10.45, 89.65)
+  B.Cu   carries    0 % at mid-path; peak 4.19 A/mm at (6.65, 72.95)

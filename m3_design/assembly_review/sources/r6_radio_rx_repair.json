@@ -1,0 +1,33 @@
+{
+  "first": {
+    "applied": [
+      "radio_rx"
+    ],
+    "skipped": [],
+    "removed": [],
+    "added": [
+      "f46e6fa5-715a-5848-a8bd-50a01e1afab2",
+      "eb2874e7-be5c-59e0-b595-cdf2cd22f5be",
+      "cd9f1d80-9961-5d95-9342-c6aa2f369079",
+      "4ca04e99-cc30-5b6f-8527-c40ad8317380",
+      "3e12a5c1-4094-5c5f-a6e2-2974d53b962c",
+      "7fab4532-b34d-50f6-bbab-c5842ca44256",
+      "ee7417e7-6985-5524-b088-6c9ecb93d461",
+      "cee95687-b549-518a-83b5-92ae2ddfb698"
+    ],
+    "zones_require_refill": true,
+    "native_drc_required": true
+  },
+  "second": {
+    "applied": [],
+    "skipped": [
+      "radio_rx: already applied"
+    ],
+    "removed": [],
+    "added": [],
+    "zones_require_refill": false,
+    "native_drc_required": true
+  },
+  "idempotent_reload": true,
+  "atomic_changed_route_rejection": true
+}

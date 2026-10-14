@@ -1,5 +1,27 @@
 # Rocket Flight Computer v1 — Redundancy Architecture and Fault-Tolerance Ruling (REDUNDANCY-1, 2026-09-03)
 
+## R6 applicability (owner decision, 2026-10-13)
+
+The original analysis below is retained as history. For current hardware and
+firmware binding, [REQUIREMENTS.md](REQUIREMENTS.md) and [M3_R6.md](M3_R6.md)
+supersede all dual-channel pin, connector and deployment sequencing assumptions.
+R6 has only CH1 (J124 ARM, J121 IGNITER 1); recovery backup is a completely
+electrically isolated Featherweight Blue Jay with its own power and deployment
+circuit. There is no shared pyro bus, ground, supply, UART or firing command.
+
+| Historical reference | R6 disposition |
+|---|---|
+| I-1, I-2, I-4, I-9; H-1/H-2 | Retain CH1's cold test, separated/reset-safe gate, complete ARM break, split sense dividers, ADC series protection, spacing rules and coating. Removing CH2 does not mitigate a CH1 FET, drain-capacitor or contamination fault |
+| I-3, V-5, V-16; H-5 | Cross-channel faults and two on-board fuses no longer apply. One external 5 A fuse remains in CH1's ARM link. A CH1 failure can disable primary recovery; the isolated Blue Jay supplies independent backup |
+| V-17/V-18; H-6 | J124 and its actual pin legends replace the old J4/J120 forms. Physical pad access and harness retention still require qualification; the ARM plug remains last in, first out |
+| Sections 2/5 (firmware) | Bind only one gate, one arm sense and one continuity input. Remove CH2 pin assignments, fired flags and all second-channel scheduling. Single deployment replaces the historical drogue/main sequence; post-reset live-evidence restrictions and ground refusals remain. In-flight sense readings never veto recovery. REQUIREMENTS F6's watchdog/neutral timing supersedes the historical ~400 ms recommendation |
+| I-11, V-19 | R6 adds external radio/GPS ports. Uplink cannot arm/fire. Separate limited power, signal series resistors and ESD are required, but transmit/harness immunity and fail-safe recovery still need dummy-load tests |
+| V-20; sections 6.1/6.2 | The smaller buzzer must be verified for the specified drive and audible pad indication; silence remains a fault. Retain close-range proof of life and measure audibility in the assembled bay |
+
+No R6 firmware is implemented by this redesign. Old firmware and its board binding
+must not be used on R6. Independent reviews must assess the actual remaining CH1
+and new harness/power circuits, not infer safety from removed hardware.
+
 > This document revises all of the firmware constraints in `ROCKET_FC_FROZEN_DESIGN.md` §7, and proposes schematic changes to §2.3 / §3.9 / §5.2 that must be implemented before fab. Geometry follows `GEOMETRY_REV_G.md`.
 > **Severity order (the document's only weighting)**: ① inadvertent firing on the ground / during handling (personal injury) > ② no deployment (ballistic, total loss, range incident) > ③ deployment at the wrong time (high-speed deployment, shredded recovery) > ④ loss of roll control (mission failure, rocket usually recoverable) > ⑤ loss of log/telemetry.
 > **First principle throughout**: any change that trades a ⑤ or ④ risk for a ② or ① risk is rejected, however "safe" it looks.

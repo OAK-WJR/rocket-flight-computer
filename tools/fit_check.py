@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Envelope check (REQUIREMENTS P2): every part's 3D model, and the assumed mated envelopes, inside the bore.
+"""CAD envelope and five-support check (REQUIREMENTS P2); physical harness fit remains unmeasured.
 
 usage: <KiCad python3> tools/fit_check.py [board.kicad_pcb] [--radius 24.9] [--axis-x 23.0] [--tol 0.3]
        exit 0 = every margin >= 0
@@ -11,14 +11,18 @@ z = -1.6 (the board's bottom face). The margin of a box is the usable radius min
 to its farthest corner, after moving the board by the sled tolerance (--tol, both axes, worst direction).
 The default radius 24.9 mm is the Ø50.8 mm coupler bore less the 0.5 mm wall allowance; R5 checks the whole
 board against it, so the result holds wherever the board sits in the bay.
+M3 supports require 3.5 mm bottom standoff clearance and 3.8 mm top body/exposed-pad clearance
+(a 7 mm OD washer plus 0.3 mm radial assembly margin). Masked routing is not a top hardware obstacle.
 
-Mated envelopes (assumptions, not models; see docs/M3_R5.md): J122 with four servo plugs and their wire bend
-(±4.0 mm about the header centre in x, 23.5 mm above the board, as in the R4 fit calculation), J123 with its
-PH plug and wire (±3.0 mm, 9.5 mm). Wire entries of the screw terminals face the walls or the aft end; the side-facing
-ones' bend room is reported separately (from the entry face to the Ø50.8 mm wall at 5 mm height, sled tolerance
-both ways).
+Mated envelopes use footprint-local x/y (KiCad top-view y down), with positive z away from the component
+side. Rotation and bottom-side mirroring apply to every envelope. Existing J122/J123 wire allocations
+are assumptions from R5, not measurements. New connector allocations must be reviewed against the
+maker's mating drawing and the actual harness. The check does not model insertion tools, wire stiffness,
+the camera shroud, sled structure, vibration, or a fitted Tag-Connect probe.
 """
 import argparse
+import hashlib
+import json
 import math
 import re
 import sys
@@ -28,8 +32,37 @@ import pcbnew
 
 mm = pcbnew.ToMM
 BOARD_T = 1.6
-MATED = {'J122': (4.0, 23.5), 'J123': (3.0, 9.5)}
-SIDE_ENTRY = ('J9', 'J120', 'J121', 'J124', 'J125')   # screw terminals whose wire entries face a long edge (the wall)
+MATED = {
+    'M3_GH_BM04B_GHS_TBT': {
+        'refs': ('J9',), 'box': (-4.125, -2.5, 4.125, 1.75, 0.0, 10.3),
+        'basis': 'JST eGH.pdf pages 2–3: 8.25 x 4.25 mm header, 7.3 mm mated height; '
+                 '3 mm additional straight-wire allocation, physical bend unverified',
+        'source': 'https://www.jst-mfg.com/product/pdf/eng/eGH.pdf'},
+    'M3_SH_BM07B_SRSS_TB': {
+        'refs': ('J130',), 'box': (-4.5, -1.9, 4.5, 1.0, 0.0, 9.3),
+        'basis': 'JST eSH.pdf pages 1–3: 9 x 2.9 mm header, 6.3 mm mated height; '
+                 '3 mm additional straight-wire allocation, physical bend unverified',
+        'source': 'https://www.jst-mfg.com/product/pdf/eng/eSH.pdf'},
+    'M3_SH_BM04B_SRSS_TB': {
+        'refs': ('J131',), 'box': (-3.0, -1.9, 3.0, 1.0, 0.0, 9.3),
+        'basis': 'JST eSH.pdf pages 1–3: 6 x 2.9 mm header, 6.3 mm mated height; '
+                 '3 mm additional straight-wire allocation, physical bend unverified',
+        'source': 'https://www.jst-mfg.com/product/pdf/eng/eSH.pdf'},
+    'HDR-TH_12P-P2.54-V-M-R3-C4-S2.54': {
+        'refs': ('J122',), 'box': (-5.08, -4.0, 5.08, 4.0, 0.0, 23.5),
+        'basis': 'R5 engineering allocation: four servo plugs and their wire bend; physical fit unverified'},
+    'M3_JST_PH_B2B_2P': {
+        'refs': ('J123',), 'box': (-3.0, -1.75, 3.0, 2.85, 0.0, 9.5),
+        'basis': 'R5 engineering allocation: JST PH plug and wire; physical fit unverified'},
+}
+REQUIRED_MATED = {'M3_GH_BM04B_GHS_TBT', 'M3_SH_BM07B_SRSS_TB', 'M3_SH_BM04B_SRSS_TB'}
+# These are bare board features, not an escape hatch for missing fitted-part geometry.
+BOARD_FEATURES = {'M3_TestPad_1.5': r'TP\d+', 'M3_ToolingHole_JLC': r'TH[123]',
+                  'M3_TC2030_IDC_NL': r'J2'}
+RETENTION_HOLES = ((21.5, 50.6), (27.0, 64.6))   # J122 tie; all other Ø3.2 Edge.Cuts circles are M3 supports
+STANDOFF_RADIUS = 3.5
+TOP_HARDWARE_RADIUS = 3.5 + 0.3   # 7 mm OD washer plus radial assembly margin
+SIDE_ENTRY = ('J9', 'J120', 'J121', 'J124', 'J125')
 BORE_R, WIRE_Z = 25.4, 5.0                             # the coupler bore's wall; wire height above the top face
 
 
@@ -85,10 +118,12 @@ def model_box(f, prj):
         if not m.m_Show:
             continue
         p = Path(m.m_Filename.replace('${KIPRJMOD}', str(prj)))
-        if not p.exists():
+        if not p.is_absolute():
+            p = prj / p
+        if not p.is_file():
             continue
-        raw = wrl_points(p) if p.suffix.lower() == '.wrl' else step_points(p)
-        if not raw:
+        raw = wrl_points(p) if p.suffix.lower() == '.wrl' else step_points(p) if p.suffix.lower() in ('.step', '.stp') else []
+        if not raw or not all(math.isfinite(value) for point in raw for value in point):
             continue
         xs, ys, zs = zip(*raw)                       # STEP files carry construction points: box of all of them
         corners = [(x, y, z) for x in (min(xs), max(xs)) for y in (min(ys), max(ys)) for z in (min(zs), max(zs))]
@@ -99,19 +134,219 @@ def model_box(f, prj):
             pts.append(q)
     if not pts:
         return None
+    return footprint_points_box(f, [(x, -y, z) for x, y, z in pts])
+
+
+def footprint_points_box(f, points):
+    """Transform local KiCad top-view geometry into the board frame, including bottom mirroring."""
     a = math.radians(f.GetOrientationDegrees())
     ox, oy = mm(f.GetPosition().x), mm(f.GetPosition().y)
     out = []
-    for x, y, z in pts:
-        if f.IsFlipped():                            # bottom: KiCad mirrors the part in board y (180° about the
-            z = -z - BOARD_T                         # board's x axis), so model +y is board +y; it hangs below
-        else:                                        # the bottom face
-            y = -y                                   # top: model +y is board -y
+    for x, y, z in points:
+        if f.IsFlipped():
+            y, z = -y, -z - BOARD_T
         bx = x * math.cos(a) + y * math.sin(a)
         by = -x * math.sin(a) + y * math.cos(a)
         out.append((ox + bx, oy + by, z))
     xs, ys, zs = zip(*out)
     return min(xs), min(ys), max(xs), max(ys), min(zs), max(zs)
+
+
+def footprint_box(f, box):
+    x0, y0, x1, y1, z0, z1 = box
+    return footprint_points_box(f, [(x, y, z) for x in (x0, x1) for y in (y0, y1) for z in (z0, z1)])
+
+
+def fp_name(f):
+    return str(f.GetFPID().GetLibItemName())
+
+
+def board_feature(f):
+    pattern = BOARD_FEATURES.get(fp_name(f))
+    return bool(pattern and re.fullmatch(pattern, f.GetReference())
+                and f.GetAttributes() & pcbnew.FP_EXCLUDE_FROM_BOM)
+
+
+def point_box_distance(point, box):
+    x, y = point
+    return math.hypot(max(box[0] - x, 0, x - box[2]), max(box[1] - y, 0, y - box[3]))
+
+
+def box_overlap(a, b):
+    return all(min(a[high], b[high]) - max(a[low], b[low]) > 1e-4
+               for low, high in ((0, 2), (1, 3), (4, 5)))
+
+
+def support_check(holes, outline, bottom_boxes, retention=RETENTION_HOLES):
+    """Inspect actual Ø3.2 cutouts, excluding only the two declared retention holes."""
+    issues, supports = [], list(holes)
+    for tie in retention:
+        matches = [hole for hole in supports if math.dist(hole, tie) < 0.02]
+        if len(matches) != 1:
+            issues.append(f'retention hole {tie}: expected one Ø3.2 cutout, found {len(matches)}')
+        else:
+            supports.remove(matches[0])
+    if len(supports) != 5:
+        issues.append(f'expected five M3 supports, found {len(supports)}')
+    x0, y0, x1, y1 = outline
+    corners = []
+    for x, y in ((x0, y0), (x1, y0), (x0, y1), (x1, y1)):
+        near = [hole for hole in supports if abs(hole[0] - x) <= 6 and abs(hole[1] - y) <= 6]
+        if len(near) != 1:
+            issues.append(f'corner ({x:g}, {y:g}) needs one M3 support within 6 mm on both axes')
+        corners.extend(near)
+    middle = [hole for hole in supports if hole not in corners]
+    if len(middle) != 1 or not y0 + (y1 - y0) / 3 <= middle[0][1] <= y0 + 2 * (y1 - y0) / 3:
+        issues.append('one M3 support must lie in the middle third of board length')
+    nearest = None
+    for hole in supports:
+        for ref, box in bottom_boxes:
+            distance = point_box_distance(hole, box)
+            if nearest is None or distance < nearest[0]:
+                nearest = (distance, ref, hole)
+            if distance < STANDOFF_RADIUS - 1e-4:
+                issues.append(f'{ref} bottom/pin envelope {distance:.3f} mm from support {hole}; need >=3.5 mm')
+    return supports, nearest, issues
+
+
+def mounting_pad(pad, hole):
+    """Only an explicit M3 mounting land concentric with a support is exempt."""
+    footprint = pad.GetParentFootprint()
+    drill = pad.GetDrillSize()
+    return (bool(re.fullmatch(r'MountingHole_3\.2mm_M3(?:_Pad(?:_TopOnly|_Via)?)?', fp_name(footprint)))
+            and pad.GetAttribute() == pcbnew.PAD_ATTRIB_PTH
+            and abs(mm(drill.x) - 3.2) < .01 and abs(mm(drill.y) - 3.2) < .01
+            and math.dist(hole, (mm(pad.GetPosition().x), mm(pad.GetPosition().y))) < .02)
+
+
+def copper_distance(pad, point):
+    """Native collision distance; SHAPE.Distance omits rounded-pad stroke width."""
+    shape = pad.GetEffectiveShape(pcbnew.F_Cu)
+    if shape.Collide(point, 0):
+        return 0.0
+    box = shape.BBox()
+    dx = max(abs(point.x - box.GetX()), abs(point.x - box.GetRight()))
+    dy = max(abs(point.y - box.GetY()), abs(point.y - box.GetBottom()))
+    low, high = 0, math.ceil(math.hypot(dx, dy)) + 1
+    while high - low > 1:
+        middle = (low + high) // 2
+        if shape.Collide(point, middle):
+            high = middle
+        else:
+            low = middle
+    return mm(high)
+
+
+def top_support_check(supports, bodies, pads):
+    """Top washers must clear bodies and exposed pads; masked routing is excluded."""
+    issues, nearest = [], None
+    for hole in supports:
+        point = pcbnew.VECTOR2I(pcbnew.FromMM(hole[0]), pcbnew.FromMM(hole[1]))
+        measured = [(ref + ' top body', point_box_distance(hole, box)) for ref, box in bodies]
+        measured.extend((ref + ' exposed top pad', copper_distance(pad, point))
+                        for ref, pad in pads if not mounting_pad(pad, hole))
+        for ref, distance in measured:
+            if nearest is None or distance < nearest[0]:
+                nearest = (distance, ref, hole)
+            if distance < TOP_HARDWARE_RADIUS - 1e-4:
+                issues.append(f'{ref} {distance:.3f} mm from support {hole}; need >=3.8 mm '
+                              '(7 mm OD washer + 0.3 mm radial margin)')
+    return nearest, issues
+
+
+def board_geometry(b):
+    holes, points = [], []
+    for drawing in b.GetDrawings():
+        if drawing.GetLayer() != pcbnew.Edge_Cuts:
+            continue
+        if drawing.GetShape() == pcbnew.SHAPE_T_CIRCLE:
+            if abs(mm(drawing.GetRadius()) - 1.6) < 0.01:
+                center = drawing.GetCenter()
+                holes.append((mm(center.x), mm(center.y)))
+        else:
+            points.extend((mm(p.x), mm(p.y)) for p in (drawing.GetStart(), drawing.GetEnd()))
+    if not points:
+        raise ValueError('no board outline')
+    xs, ys = zip(*points)
+    return holes, (min(xs), min(ys), max(xs), max(ys))
+
+
+def input_hashes(board):
+    paths = [board]
+    for suffix in ('*.wrl', '*.step', '*.stp'):
+        paths.extend((board.parent / 'kilib').rglob(suffix))
+    return {str(path.relative_to(board.parent)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sorted(paths)}
+
+
+def pad_box(p):
+    bounds = p.GetBoundingBox()
+    return mm(bounds.GetX()), mm(bounds.GetY()), mm(bounds.GetRight()), mm(bounds.GetBottom()), -BOARD_T, 0.0
+
+
+def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3):
+    rows, bodies, mating, bottom, issues, excluded = [], [], [], [], [], []
+    top_bodies, top_pads = [], []
+    if not all(math.isfinite(value) for value in (radius, axis_x, tol)) or radius <= 0 or tol < 0:
+        raise ValueError('finite positive bore radius, finite axis and nonnegative sled tolerance required')
+    if abs(mm(b.GetDesignSettings().GetBoardThickness()) - BOARD_T) > 0.01:
+        issues.append('board thickness differs from the 1.6 mm envelope transform')
+    for f in b.GetFootprints():
+        ref, side = f.GetReference(), 'B' if f.IsFlipped() else 'F'
+        # Bare test/debug lands and DNP footprints still leave exposed copper.
+        top_pads.extend((ref + '.' + p.GetNumber(), p) for p in f.Pads()
+                        if p.GetAttribute() != pcbnew.PAD_ATTRIB_NPTH
+                        and p.IsOnLayer(pcbnew.F_Cu) and p.IsOnLayer(pcbnew.F_Mask)
+                        and not p.IsTented(pcbnew.F_Cu))
+        if board_feature(f) or f.GetAttributes() & pcbnew.FP_DNP:
+            excluded.append(ref)
+            continue
+        box = model_box(f, prj)
+        if box is None:
+            issues.append(f'{ref}: no readable model (only explicit bare board features/DNP are excluded)')
+            continue
+        rows.append((margin(box, radius, axis_x, tol), ref, side, box))
+        bodies.append((ref, box))
+        if f.IsFlipped():
+            bottom.append((ref, box))
+            bottom.extend((ref + '.' + p.GetNumber(), pad_box(p)) for p in f.Pads() if p.IsOnLayer(pcbnew.B_Cu))
+        else:
+            top_bodies.append((ref, box))
+            bottom.extend((ref + '.' + p.GetNumber() + ' pin', pad_box(p)) for p in f.Pads()
+                          if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH)
+        spec = MATED.get(fp_name(f))
+        if spec:
+            if ref not in spec['refs']:
+                issues.append(f'{ref}: mated envelope is not reviewed for this reference')
+                continue
+            mb = footprint_box(f, spec['box'])
+            rows.append((margin(mb, radius, axis_x, tol), ref + ' mated', side, mb))
+            mating.append((ref, mb))
+        elif fp_name(f) in REQUIRED_MATED or (ref in ('J9', 'J122', 'J123', 'J130', 'J131')
+                                             and not fp_name(f).startswith('M3_DB128')):
+            issues.append(f'{ref}: mated housing/wire envelope has not been reviewed')
+    for index, (ref, box) in enumerate(mating):
+        for other, body in bodies:
+            if other != ref and box_overlap(box, body):
+                issues.append(f'{ref} mated envelope intersects {other} model box')
+        for other, other_box in mating[index + 1:]:
+            if box_overlap(box, other_box):
+                issues.append(f'{ref} and {other} mated envelopes intersect')
+    holes, outline = board_geometry(b)
+    width, length = outline[2] - outline[0], outline[3] - outline[1]
+    if abs(width - 46.0) > 0.01:
+        issues.append(f'board width {width:g} mm; R6 requires 46 mm')
+    if length > 110.01:
+        issues.append(f'board length {length:g} mm exceeds R6 110 mm maximum')
+    supports, nearest, support_issues = support_check(holes, outline, bottom)
+    issues.extend(support_issues)
+    nearest_top, top_issues = top_support_check(supports, top_bodies, top_pads)
+    issues.extend(top_issues)
+    issues.extend(f'{ref}: outside bore by {-mgn:.3f} mm' for mgn, ref, _, _ in rows if mgn < 0)
+    return dict(rows=sorted(rows), issues=issues, supports=supports, nearest_support=nearest,
+                nearest_top_support=nearest_top, top_hardware_radius_mm=TOP_HARDWARE_RADIUS,
+                outline=outline, width_mm=width, length_mm=length,
+                target_length_met=80 <= length <= 90, excluded=sorted(excluded), ok=not issues)
 
 
 def margin(box, radius, axis_x, tol):
@@ -127,23 +362,17 @@ def main():
     ap.add_argument('--radius', type=float, default=24.9)
     ap.add_argument('--axis-x', type=float, default=23.0)
     ap.add_argument('--tol', type=float, default=0.3)
+    ap.add_argument('--report', type=Path, help='write CAD fit evidence, bound to this board and checker')
     a = ap.parse_args()
+    board_path = Path(a.board).resolve()
+    before = input_hashes(board_path)
     b = pcbnew.LoadBoard(a.board)
     prj = Path(a.board).resolve().parent
-    rows, missing = [], []
-    for f in b.GetFootprints():
-        box = model_box(f, prj)
-        if box is None:
-            if len(f.Models()):
-                missing.append(f.GetReference())
-            continue
-        rows.append((margin(box, a.radius, a.axis_x, a.tol), f.GetReference(), 'B' if f.IsFlipped() else 'F', box))
-        if f.GetReference() in MATED:
-            hw, h = MATED[f.GetReference()]
-            cx = mm(f.GetPosition().x)
-            mb = (cx - hw, box[1], cx + hw, box[3], 0.0, h)
-            rows.append((margin(mb, a.radius, a.axis_x, a.tol), f.GetReference() + ' mated', 'F', mb))
-    rows.sort()
+    report = check_board(b, prj, a.radius, a.axis_x, a.tol)
+    if before != input_hashes(board_path):
+        report['issues'].append('board or model inputs changed during fit check')
+        report['ok'] = False
+    rows = report['rows']
     print(f'radius {a.radius} mm, axis x {a.axis_x} mm, sled tolerance {a.tol} mm; top face on the axis')
     for mgn, ref, side, box in rows[:15]:
         print(f'  {ref:12s} {side}  margin {mgn:6.2f} mm   x {box[0]:6.2f}..{box[2]:6.2f}  z {box[4]:6.2f}..{box[5]:6.2f}')
@@ -151,19 +380,33 @@ def main():
     if bot:
         print(f'  deepest bottom part: {min(bot, key=lambda r: r[3][4])[1]} '
               f'(z {min(r[3][4] for r in bot):.2f} mm), worst bottom margin {bot[0][0]:.2f} mm ({bot[0][1]})')
-    if missing:
-        print('  no readable model:', ' '.join(sorted(missing)))
+    print('  five-support geometry:', report['supports'])
+    print(f"  board: {report['width_mm']:g} x {report['length_mm']:g} mm; "
+          f"80–90 mm length target {'met' if report['target_length_met'] else 'not met'}; 110 mm maximum")
+    if report['nearest_support']:
+        distance, ref, hole = report['nearest_support']
+        print(f'  nearest bottom/pin envelope: {ref}, {distance:.3f} mm from support {hole} (minimum 3.5 mm)')
+    if report['nearest_top_support']:
+        distance, ref, hole = report['nearest_top_support']
+        print(f'  nearest top hardware clearance: {ref}, {distance:.3f} mm from support {hole} (minimum 3.8 mm)')
     walls = []                                       # wire bend room: the entry face (the model box's side nearest
     for mgn, ref, side, box in rows:                 # its long edge) to the wall at WIRE_Z, sled tolerance both ways
-        if ref in SIDE_ENTRY:
+        if ref in SIDE_ENTRY and fp_name(b.FindFootprintByReference(ref)).startswith('M3_DB128'):
             face = box[0] if abs(box[0] - a.axis_x) > abs(box[2] - a.axis_x) else box[2]
             room = math.sqrt(BORE_R ** 2 - WIRE_Z ** 2) - abs(face - a.axis_x)
             walls.append(f'{ref} {room - a.tol:.1f}-{room + a.tol:.1f}')
     if walls:
         print(f'  wire entry to the bore wall at {WIRE_Z} mm height: ' + ', '.join(sorted(walls)))
-    bad = [r for r in rows if r[0] < 0]
-    print('fit check:', 'OK' if not bad and not missing else f'{len(bad)} part(s) outside, {len(missing)} without a model')
-    return 1 if bad or missing else 0
+    for issue in report['issues']:
+        print('  FAIL', issue)
+    print('fit check:', 'OK (CAD envelopes only)' if report['ok'] else f"FAIL ({len(report['issues'])} findings)")
+    if a.report:
+        report.update(board_sha256=before[board_path.name], inputs_sha256=before,
+                      checker_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                      radius_mm=a.radius, axis_x_mm=a.axis_x, tolerance_mm=a.tol,
+                      mated_envelopes=MATED, physical_fit_verified=False)
+        a.report.write_text(json.dumps(report, indent=2) + '\n')
+    return 0 if report['ok'] else 1
 
 
 if __name__ == '__main__':

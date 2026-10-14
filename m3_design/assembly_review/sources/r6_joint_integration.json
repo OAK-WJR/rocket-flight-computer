@@ -1,0 +1,232 @@
+{
+  "detected": 13,
+  "pruned": [
+    {
+      "net": "3V3",
+      "layer": "F.Cu",
+      "uuid": "8edc1566-062d-4a63-b61a-95dfe70a0bbe",
+      "target": "PCB_VIA 35dfb1db-27c8-425a-bc24-06ca97f063c3",
+      "path_mm": [
+        [
+          22.08,
+          11.8
+        ],
+        [
+          21.78,
+          11.8
+        ]
+      ],
+      "reason": "Short branch anchored to only one same-net conductor"
+    },
+    {
+      "net": "CAM_MCU_TX",
+      "layer": "In2.Cu",
+      "uuid": "0f0f6ba4-a0e2-4a6b-9b1d-961a33e9aff0",
+      "target": "PCB_VIA 031bc0c7-f778-43f9-87a3-01b2e8965bd9",
+      "path_mm": [
+        [
+          16.649999,
+          20.55
+        ],
+        [
+          16.95,
+          20.55
+        ]
+      ],
+      "reason": "Short branch anchored to only one same-net conductor"
+    },
+    {
+      "net": "PULLPIN",
+      "layer": "B.Cu",
+      "uuid": "f8195545-0f1e-450a-b1f1-8ed7e7cd392e",
+      "target": "PCB_VIA 37d6b8e6-b13d-4ee5-89ae-150d48eb522e",
+      "path_mm": [
+        [
+          31.4,
+          37.7
+        ],
+        [
+          31.4,
+          38.0
+        ]
+      ],
+      "reason": "Short branch anchored to only one same-net conductor"
+    }
+  ],
+  "fixed": [
+    {
+      "net": "3V3A",
+      "layer": "B.Cu",
+      "target": "PCB_TRACK 15369d0d-ad9f-44c4-8c92-6cecb8cd5da4",
+      "width_mm": 0.25,
+      "path_mm": [
+        [
+          38.2632,
+          30.1393
+        ],
+        [
+          38.2632,
+          30.1
+        ]
+      ]
+    },
+    {
+      "net": "ACT_FET_S",
+      "layer": "B.Cu",
+      "target": "zone ACT_FET_S_B",
+      "width_mm": 0.4,
+      "path_mm": [
+        [
+          6.45,
+          77.0
+        ],
+        [
+          6.45,
+          76.7
+        ]
+      ]
+    },
+    {
+      "net": "CAM_5V",
+      "layer": "B.Cu",
+      "target": "PCB_TRACK 5b387c76-c5da-44f7-985e-09121d0b5632",
+      "width_mm": 0.2,
+      "path_mm": [
+        [
+          35.53,
+          15.5
+        ],
+        [
+          35.53,
+          15.45
+        ]
+      ]
+    },
+    {
+      "net": "CAM_INPUT_LIMITED",
+      "layer": "B.Cu",
+      "target": "PCB_TRACK 975bad83-dd6d-41f3-96e4-cc3ef4679753",
+      "width_mm": 0.2,
+      "path_mm": [
+        [
+          34.3,
+          75.5
+        ],
+        [
+          34.4,
+          75.6
+        ]
+      ]
+    },
+    {
+      "net": "GND",
+      "layer": "B.Cu",
+      "target": "zone GND_B",
+      "width_mm": 0.2,
+      "path_mm": [
+        [
+          8.2755,
+          35.0617
+        ],
+        [
+          8.4255,
+          35.2117
+        ]
+      ]
+    },
+    {
+      "net": "IMU_CS",
+      "layer": "F.Cu",
+      "target": "PCB_TRACK 9a2e9b5e-9430-41c9-a132-a0ee117d9ed4",
+      "width_mm": 0.2,
+      "path_mm": [
+        [
+          37.35,
+          61.75
+        ],
+        [
+          37.2,
+          61.75
+        ]
+      ]
+    },
+    {
+      "net": "PYRO1_BUS",
+      "layer": "F.Cu",
+      "target": "PCB_TRACK 9e00706a-1681-4d6a-8242-7fcd1902801c",
+      "width_mm": 0.4,
+      "path_mm": [
+        [
+          16.17,
+          77.6
+        ],
+        [
+          16.17,
+          77.36
+        ]
+      ]
+    },
+    {
+      "net": "PYRO1_COLD",
+      "layer": "B.Cu",
+      "target": "PCB_TRACK 8659e485-06f4-4d6b-88b8-4381f10ef3c2",
+      "width_mm": 0.15,
+      "path_mm": [
+        [
+          18.92,
+          94.3
+        ],
+        [
+          18.935,
+          94.285
+        ]
+      ]
+    },
+    {
+      "net": "SERVO4_MCU",
+      "layer": "B.Cu",
+      "target": "D121.6",
+      "width_mm": 0.15,
+      "path_mm": [
+        [
+          31.0,
+          65.0
+        ],
+        [
+          31.05,
+          65.05
+        ],
+        [
+          31.05,
+          65.55
+        ]
+      ]
+    },
+    {
+      "net": "USB_LIMITED",
+      "layer": "B.Cu",
+      "target": "PCB_TRACK f2843fb1-feb5-445a-8c6b-ea78157ec08d",
+      "width_mm": 0.3,
+      "path_mm": [
+        [
+          28.725,
+          39.0
+        ],
+        [
+          28.7,
+          39.0
+        ]
+      ]
+    }
+  ],
+  "skipped": [],
+  "unresolved": [],
+  "track_endpoints_checked": 5744,
+  "dangling_cleanup_required": true,
+  "native_drc_required": true,
+  "source_sha256": "88098ff62cad76acce81fa955578ed7c355b4ce2f0ee210bad33cace688db7e5",
+  "candidate": "/private/tmp/r6-joints-current-8r4dy8jn/m3.kicad_pcb",
+  "opens": 7,
+  "hard": 0,
+  "split_pad_groups": []
+}

@@ -6,7 +6,7 @@
 	(title_block
 		(title "05 | Camera branch protection and regulator")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R4")
+		(rev "M3-ASSY-R6")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"

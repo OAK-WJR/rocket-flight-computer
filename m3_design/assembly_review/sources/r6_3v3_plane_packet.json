@@ -1,0 +1,733 @@
+{
+  "description": "Reconnect isolated 3V3 plane by replacing long TP92 VBUS_SENSE ADC detour with short B/F/B connection. No power/data/pyro track or zone outline changed. Added via at (8,47.9) creates a BAT_IN antipad above the high-current actuator path; final DC check required.",
+  "base_sha256": "2a061ea60f0d940505fefd5afaa99cb5adc3cbb5b6d5ca760593c8957396dd2a",
+  "candidate_sha256": "d17d582c3ba97cb5585904fa0e326dfc91a2ae8b6c5f5a0ed63ec42f9828babe",
+  "removed_tracks_guard": [
+    {
+      "uuid": "1451ec45-bb53-4400-a928-f87a0706135d",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        13.09,
+        52.083
+      ],
+      "end": [
+        13.39,
+        51.783
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "163bcca1-ab71-49af-ad19-1c00695005eb",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        16.59,
+        47.583
+      ],
+      "end": [
+        15.29,
+        46.283
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "20806bf3-8b33-4d1d-9d33-42081bf84cb0",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        10.59,
+        38.083
+      ],
+      "end": [
+        12.09,
+        36.583
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "2310f957-a3c6-4d64-b827-81e05c12da87",
+      "type": "PCB_VIA",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "position": [
+        13.39,
+        51.783
+      ],
+      "diameter_mm": 0.6,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "2fd1e2d1-ed0d-4353-b067-245f335b6338",
+      "type": "PCB_VIA",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "position": [
+        15.29,
+        46.083
+      ],
+      "diameter_mm": 0.6,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "4196006b-ce32-420e-a319-62956f981d98",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        12.09,
+        36.583
+      ],
+      "end": [
+        12.09,
+        31.683
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "4d215e9f-f330-4725-8a73-56f278fcbf2e",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        14.49,
+        46.083
+      ],
+      "end": [
+        10.09,
+        41.683
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "520c90d5-6911-4f4b-98af-a1d869d18954",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        1.89,
+        40.783
+      ],
+      "end": [
+        7.99,
+        46.883
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "52cc5fc0-5c59-44bf-9865-95714c081822",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        10.09,
+        39.583
+      ],
+      "end": [
+        10.59,
+        39.083
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "569c0f42-7dea-4a9c-86f2-23ccb57e21d8",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        8.0,
+        49.992999
+      ],
+      "end": [
+        8.0,
+        50.0
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "583eab62-9c8c-4ae5-943f-5530064c4896",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        16.39,
+        49.883
+      ],
+      "end": [
+        16.59,
+        49.683
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "59c905f5-3681-44f4-90c3-12612c95fb94",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        12.09,
+        31.683
+      ],
+      "end": [
+        10.59,
+        30.183
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "6261a6cd-94e2-445f-89f1-cbffe16b0bbe",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        13.09,
+        53.183
+      ],
+      "end": [
+        13.09,
+        52.083
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "66cf7f1a-aa64-4fb0-b6fe-387169e76b12",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        14.99,
+        52.783
+      ],
+      "end": [
+        15.99,
+        52.783
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "6b9cbe0e-04db-4858-873f-5c1cd030a17a",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        16.39,
+        52.383
+      ],
+      "end": [
+        16.39,
+        49.883
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "7a433476-f54a-423a-ad92-800e3613890c",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        1.89,
+        35.183
+      ],
+      "end": [
+        1.89,
+        40.783
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "86edb3a3-eba8-46c2-9a59-f22699ebbdf7",
+      "type": "PCB_VIA",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "position": [
+        10.59,
+        30.183
+      ],
+      "diameter_mm": 0.6,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "90db539b-9bcd-48ee-a594-a9769975310f",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        7.99,
+        49.983
+      ],
+      "end": [
+        8.0,
+        49.992999
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "946cc396-3979-418c-a0c2-e1c9b3163a8c",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        7.99,
+        46.883
+      ],
+      "end": [
+        7.99,
+        49.983
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "9a53863d-a6b4-4e6e-bffc-6fa859ac8c06",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        10.59,
+        30.183
+      ],
+      "end": [
+        6.89,
+        30.183
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "a26a6dc0-ab64-45d9-910a-3ff76fe4d110",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        13.99,
+        51.783
+      ],
+      "end": [
+        14.99,
+        52.783
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "aae7914e-cf1e-4055-a00b-8314320dec84",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "In2.Cu",
+      "start": [
+        13.39,
+        53.483
+      ],
+      "end": [
+        13.09,
+        53.183
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "ad4d8743-ed8a-4430-a30f-d362af4f7626",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        13.39,
+        51.783
+      ],
+      "end": [
+        13.99,
+        51.783
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "b808b148-f2ff-475d-8c2e-ae66f2b1f4c2",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        16.59,
+        49.683
+      ],
+      "end": [
+        16.59,
+        47.583
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "c57f1f61-d899-4727-a43d-f4f622c0ed85",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        10.09,
+        41.683
+      ],
+      "end": [
+        10.09,
+        39.583
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "c64bc10b-41cc-42ca-bc66-3e305f41f17e",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        6.89,
+        30.183
+      ],
+      "end": [
+        1.89,
+        35.183
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "c7eb38df-30f4-48ed-806d-f872727fe0bb",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        15.99,
+        52.783
+      ],
+      "end": [
+        16.39,
+        52.383
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "db980467-a106-45cb-bedb-2ba2555c40b8",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        15.29,
+        46.083
+      ],
+      "end": [
+        14.49,
+        46.083
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "dea4527d-68a4-486d-84cb-0d1c0823a5d3",
+      "type": "PCB_VIA",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "position": [
+        12.09,
+        36.583
+      ],
+      "diameter_mm": 0.6,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "e96dfdde-3f59-4c79-a6b9-17bfb47f1829",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        10.59,
+        39.083
+      ],
+      "end": [
+        10.59,
+        38.083
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "efd7dbf4-1e9f-45c3-8fd2-e06049e18869",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        15.29,
+        46.283
+      ],
+      "end": [
+        15.29,
+        46.083
+      ],
+      "width_mm": 0.15
+    }
+  ],
+  "added_tracks": [
+    {
+      "uuid": "065c1505-dc17-436a-861a-641a0d41dffe",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "layer": "B.Cu",
+      "start": [
+        16.6,
+        47.6
+      ],
+      "end": [
+        16.6,
+        51.3
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "1213f77a-d48a-41a4-88a1-84b4ab120767",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "layer": "B.Cu",
+      "start": [
+        16.6,
+        51.3
+      ],
+      "end": [
+        16.2,
+        51.7
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "15fe711c-b17f-4e71-a57a-630aaeb144af",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "layer": "B.Cu",
+      "start": [
+        15.183,
+        53.517
+      ],
+      "end": [
+        13.424,
+        53.517
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "25a0a9e1-bfe2-4194-8ea2-bc39de1255a7",
+      "type": "PCB_VIA",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "position": [
+        15.2,
+        46.2
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "26f8c561-e22c-4d1f-b7b5-18c124c959b8",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "layer": "F.Cu",
+      "start": [
+        8.0,
+        47.9
+      ],
+      "end": [
+        10.9,
+        45.0
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "3c8b2515-584c-4343-9435-7348054346d4",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "layer": "B.Cu",
+      "start": [
+        16.2,
+        51.7
+      ],
+      "end": [
+        16.2,
+        52.5
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "3fa625f7-3554-4318-ae0c-a8b56135087d",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "layer": "B.Cu",
+      "start": [
+        15.2,
+        46.2
+      ],
+      "end": [
+        16.6,
+        47.6
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "8c9bdc3b-7dbf-477f-9277-47c39bad9ac9",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "layer": "B.Cu",
+      "start": [
+        13.424,
+        53.517
+      ],
+      "end": [
+        13.39,
+        53.483
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "975bf2bc-3a9e-4b1c-92c7-6831275ba085",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "layer": "F.Cu",
+      "start": [
+        14.0,
+        45.0
+      ],
+      "end": [
+        15.2,
+        46.2
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "a0f4224a-d556-4cf6-a1ef-9a75ae223c36",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "layer": "B.Cu",
+      "start": [
+        8.0,
+        50.0
+      ],
+      "end": [
+        8.0,
+        47.9
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "b3c3399e-c0ea-48bd-bd5a-a817b9be7049",
+      "type": "PCB_VIA",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "position": [
+        8.0,
+        47.9
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "dd778e64-2f7f-46d7-9ff1-e9e15aae7c3f",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "layer": "B.Cu",
+      "start": [
+        16.2,
+        52.5
+      ],
+      "end": [
+        15.183,
+        53.517
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "e7c64ae7-9ce6-4b69-be05-9c4dd1ab37d9",
+      "type": "PCB_TRACK",
+      "net": "VBUS_SENSE",
+      "locked": false,
+      "layer": "F.Cu",
+      "start": [
+        10.9,
+        45.0
+      ],
+      "end": [
+        14.0,
+        45.0
+      ],
+      "width_mm": 0.15
+    }
+  ],
+  "pad_changes": [],
+  "validation": {
+    "native_candidate": "/private/tmp/r6-vbus-plane-n72zf5b6/drc.json",
+    "hard_drc": 0,
+    "via_dangling": 11,
+    "track_dangling": 5,
+    "unconnected_before": 23,
+    "unconnected_after": 22,
+    "new_check_r6_issues": [],
+    "existing_tracks_edited": [],
+    "pad_group_regressions": [],
+    "pad_group_changes": {
+      "3V3": [
+        2,
+        1
+      ]
+    },
+    "removed_length_mm": 60.54094758192927,
+    "added_length_mm": 21.28919847205539
+  }
+}

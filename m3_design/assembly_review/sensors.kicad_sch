@@ -6,7 +6,7 @@
 	(title_block
 		(title "03 | Memory and sensors")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R4")
+		(rev "M3-ASSY-R6")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:Barometer"
@@ -967,10 +967,6 @@
 	(no_connect
 		(at 229.87 73.66)
 		(uuid 552200fb-0693-526e-a637-1c018f8a248b))
-
-
-
-
 	(wire
 		(pts
 			(xy 229.87 81.28)
@@ -1216,7 +1212,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100nF"
+		(property "Value" "100nF 50V X7R 10%"
 			(at 91.44000000000001 125.73 0)
 			(effects
 				(font
@@ -1236,7 +1232,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 88.9 124.46 0)
 			(hide yes)
 			(effects
@@ -1250,7 +1246,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "CL05B104KO5NNNC"
+		(property "Manufacturer Part" "CL05B104KB54PNC"
 			(at 88.9 124.46 0)
 			(hide yes)
 			(effects
@@ -1261,7 +1257,14 @@
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
 					(reference "C29")
-					(unit 1)))))
+					(unit 1))))		(property "LCSC Part" "C307331"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+)
 	(wire
 		(pts
 			(xy 88.9 120.65)
@@ -1308,7 +1311,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100nF"
+		(property "Value" "100nF 50V X7R 10%"
 			(at 210.82 125.73 0)
 			(effects
 				(font
@@ -1328,7 +1331,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 208.28 124.46 0)
 			(hide yes)
 			(effects
@@ -1342,7 +1345,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "CL05B104KO5NNNC"
+		(property "Manufacturer Part" "CL05B104KB54PNC"
 			(at 208.28 124.46 0)
 			(hide yes)
 			(effects
@@ -1353,7 +1356,14 @@
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
 					(reference "C30")
-					(unit 1)))))
+					(unit 1))))		(property "LCSC Part" "C307331"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+)
 	(wire
 		(pts
 			(xy 208.28 120.65)
@@ -1400,7 +1410,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100nF"
+		(property "Value" "100nF 50V X7R 10%"
 			(at 243.84 125.73 0)
 			(effects
 				(font
@@ -1420,7 +1430,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 241.3 124.46 0)
 			(hide yes)
 			(effects
@@ -1434,7 +1444,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "CL05B104KO5NNNC"
+		(property "Manufacturer Part" "CL05B104KB54PNC"
 			(at 241.3 124.46 0)
 			(hide yes)
 			(effects
@@ -1445,7 +1455,14 @@
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
 					(reference "C31")
-					(unit 1)))))
+					(unit 1))))		(property "LCSC Part" "C307331"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+)
 	(wire
 		(pts
 			(xy 241.3 120.65)
@@ -1492,7 +1509,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100nF"
+		(property "Value" "100nF 50V X7R 10%"
 			(at 309.88 163.82999999999998 0)
 			(effects
 				(font
@@ -1512,7 +1529,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 307.34 162.56 0)
 			(hide yes)
 			(effects
@@ -1526,7 +1543,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "CL05B104KO5NNNC"
+		(property "Manufacturer Part" "CL05B104KB54PNC"
 			(at 307.34 162.56 0)
 			(hide yes)
 			(effects
@@ -1537,7 +1554,14 @@
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
 					(reference "C32")
-					(unit 1)))))
+					(unit 1))))		(property "LCSC Part" "C307331"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+)
 	(wire
 		(pts
 			(xy 307.34 158.75)

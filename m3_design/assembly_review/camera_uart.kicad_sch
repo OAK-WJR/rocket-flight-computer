@@ -6,7 +6,7 @@
 	(title_block
 		(title "09 | Camera UART, separate supply domains")
 		(date "2026-10-12")
-		(rev "M3-ASSY-R5")
+		(rev "M3-ASSY-R6")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -1736,7 +1736,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100nF"
+		(property "Value" "100nF 50V X7R 10%"
 			(at 83.8200 166.3700 0)
 			(effects
 				(font
@@ -1756,7 +1756,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 81.2800 165.1000 0)
 			(hide yes)
 			(effects
@@ -1770,7 +1770,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "CL05B104KO5NNNC"
+		(property "Manufacturer Part" "CL05B104KB54PNC"
 			(at 81.2800 165.1000 0)
 			(hide yes)
 			(effects
@@ -1781,7 +1781,14 @@
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
 					(reference "C100")
-					(unit 1)))))
+					(unit 1))))		(property "LCSC Part" "C307331"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+)
 	(wire (pts (xy 81.28 161.2900) (xy 73.6600 161.2900)) (stroke (width 0) (type default)) (uuid 0de9b63d-9043-5c78-87a8-1a595561815c))
 	(global_label "3V3" (shape passive) (at 73.6600 161.2900 0) (effects (font (size 1.05 1.05)) (justify right)) (uuid 0083527c-3e29-5205-8197-cdca7426d7d0))
 	(wire (pts (xy 81.28 168.9100) (xy 73.6600 168.9100)) (stroke (width 0) (type default)) (uuid 338fb996-e524-513f-bd29-77b10f82e019))

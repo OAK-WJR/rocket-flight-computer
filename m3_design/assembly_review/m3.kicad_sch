@@ -6,7 +6,7 @@
 	(title_block
 		(title "01 | USB input and regulated supplies")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R4")
+		(rev "M3-ASSY-R6")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:Buck"
@@ -1762,7 +1762,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100nF"
+		(property "Value" "100nF 50V X7R 10%"
 			(at 251.45999999999998 115.57000000000001 0)
 			(effects
 				(font
@@ -1782,7 +1782,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 248.92 114.3 0)
 			(hide yes)
 			(effects
@@ -1796,7 +1796,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "CL05B104KO5NNNC"
+		(property "Manufacturer Part" "CL05B104KB54PNC"
 			(at 248.92 114.3 0)
 			(hide yes)
 			(effects
@@ -1807,7 +1807,14 @@
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
 					(reference "C5")
-					(unit 1)))))
+					(unit 1))))		(property "LCSC Part" "C307331"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+)
 	(wire
 		(pts
 			(xy 248.92 110.49)
@@ -2845,6 +2852,65 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 1c2dba87-f936-5a28-9e54-722deb2b8edb))
+	(symbol
+		(lib_id "M3:PWR_FLAG")
+		(at 355.6 218.44 0)
+		(unit 1)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid 8aa66f1e-7e2c-58ec-80fc-fb3c74b92e37)
+		(property "Reference" "#FLG07"
+			(at 355.6 210.82 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "PWR_FLAG"
+			(at 355.6 214.63 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 355.6 218.44 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 355.6 218.44 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 355.6 218.44 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
+					(reference "#FLG07")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 355.6 218.44)
+			(xy 347.98 218.44))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ebc0df02-f13b-5397-8389-646901641013))
+	(global_label "TLM_5V_REG"
+		(shape passive)
+		(at 347.98 218.44 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ec61ab25-ef84-5827-9eb0-6ab66a90e813))
 	(sheet
 		(at 20.32 231.14)
 		(size 83.82 10.16)
@@ -3191,6 +3257,31 @@
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
 					(page "14")))))
+	(sheet
+		(at 294.64 231.14)
+		(size 83.82 10.16)
+		(stroke
+			(width .254)
+			(type default))
+		(fill
+			(color 0 0 0 0))
+		(uuid 05a85211-bc24-59d4-a8a4-ff7347ee84fc)
+		(property "Sheetname" "15 | Telemetry radio and GPS port"
+			(at 294.64 229.87 0)
+			(effects
+				(font
+					(size 1.05 1.05))
+				(justify left)))
+		(property "Sheetfile" "telemetry.kicad_sch"
+			(at 294.64 243.84 0)
+			(effects
+				(font
+					(size 1.05 1.05))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
+					(page "15")))))
 	(sheet_instances
 		(path "/"
 			(page "1"))))

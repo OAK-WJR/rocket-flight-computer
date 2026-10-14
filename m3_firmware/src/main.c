@@ -140,6 +140,7 @@ static void setup_gpio(void) {
     configure((Pin){GPIOD, GPIO_PIN_3}, GPIO_MODE_OUTPUT_PP, 0); /* camera stays disabled */
 #endif
     configure((Pin){GPIOE, GPIO_PIN_3}, GPIO_MODE_OUTPUT_PP, 0);
+    configure((Pin){GPIOE, GPIO_PIN_1}, GPIO_MODE_INPUT, 0); /* IMU status; SPI polling, EXTI1 stays PD1 */
     configure((Pin){GPIOE, GPIO_PIN_7}, GPIO_MODE_OUTPUT_PP, 0);
     configure(imu_cs, GPIO_MODE_OUTPUT_PP, 1);
     configure(flash_cs, GPIO_MODE_OUTPUT_PP, 1);

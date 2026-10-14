@@ -1,0 +1,65 @@
+{
+  "scope": "BAT_IN effect of VBUS_SENSE shortening and added upper-branch via antipad",
+  "result": "PASS at reported solver resolution; no modeled actuator-feed degradation",
+  "boards": [
+    {
+      "path": "/private/tmp/r6-vbus-plane-n72zf5b6/baseline.kicad_pcb",
+      "sha256": "2a061ea60f0d940505fefd5afaa99cb5adc3cbb5b6d5ca760593c8957396dd2a"
+    },
+    {
+      "path": "/private/tmp/r6-vbus-plane-n72zf5b6/m3.kicad_pcb",
+      "sha256": "d17d582c3ba97cb5585904fa0e326dfc91a2ae8b6c5f5a0ed63ec42f9828babe"
+    }
+  ],
+  "command_arguments": "--net BAT_IN --source J1:1 --sink Q120:5,6,7,8,9 --amps 7.7 --grid 0.1",
+  "before_after": [
+    {
+      "resistance_milliohm": 4.13,
+      "voltage_drop_millivolt": 31.8,
+      "copper_loss_watt": 0.245,
+      "peak_In2_amp_per_mm": 6.22,
+      "peak_In2_position_mm": [
+        10.45,
+        89.65
+      ],
+      "peak_B_amp_per_mm": 4.19,
+      "peak_B_position_mm": [
+        6.65,
+        72.95
+      ],
+      "solver_residual": 9.7e-11,
+      "iterations": 4082,
+      "free_cells": 140369
+    },
+    {
+      "resistance_milliohm": 4.13,
+      "voltage_drop_millivolt": 31.8,
+      "copper_loss_watt": 0.245,
+      "peak_In2_amp_per_mm": 6.22,
+      "peak_In2_position_mm": [
+        10.45,
+        89.65
+      ],
+      "peak_B_amp_per_mm": 4.19,
+      "peak_B_position_mm": [
+        6.65,
+        72.95
+      ],
+      "solver_residual": 9.7e-11,
+      "iterations": 4083,
+      "free_cells": 140273
+    }
+  ],
+  "reported_resistance_resolution_milliohm": 0.01,
+  "raw_logs": [
+    {
+      "path": "/private/tmp/r6-vbus-plane-n72zf5b6/dc-baseline.txt",
+      "sha256": "a502f770b27314b93e7f55545ac84eb2aebd1962ca99b4260e061831135ad162"
+    },
+    {
+      "path": "/private/tmp/r6-vbus-plane-n72zf5b6/dc-candidate.txt",
+      "sha256": "12e8981378b10b7af2208ac01d3aacc248b7ac3e22ecf86133356327b0e8975c"
+    }
+  ],
+  "limits": "20 C resistivity, 35 um copper, assumed 20 um via plating. Excludes connector/FET contact resistance and temperature rise. Final frozen board still requires the full acceptance checks."
+}

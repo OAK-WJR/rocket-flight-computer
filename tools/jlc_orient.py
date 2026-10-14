@@ -47,6 +47,24 @@ OFFSET = {'M3_AON7524_DFN3x3A': (0.0, 0.0)}
 # Our footprints put the entry on local -y, toward the board edge. +180 makes JLC fit J1/J9 entry-out;
 # JLC's pin 1 then lands on our pin 4, which a screw terminal does not care about.
 BODY = {'C2915641': 180}
+# JST mechanical solder tabs have no KiCad electrical number; supplier libraries
+# number them. Match these tabs as well as signals to verify the connector body.
+MECHANICAL = {'M3_SH_BM04B_SRSS_TB': ('0', '0'),
+              'M3_SH_BM07B_SRSS_TB': ('9', '8'),
+              'M3_GH_BM04B_GHS_TBT': ('5', '6')}
+# MLT-5020 maker drawing (sources/mlt5020.pdf p4): 1.5 x0.8 mm
+# terminations, general +/-0.3 mm tolerance. Our 2.3 x1.7 mm lands at
+# x=+/-1.85 cover toe/heel and tolerance; EasyEDA's narrower lands are at
+# +/-2.30. Body origins and pin polarity agree; retain the 0.45 mm land
+# centre difference explicitly rather than moving the component body.
+PAD_TOLERANCE = {'M3_MLT5020_3pad': 0.451}
+
+
+def placement_pad_number(pad, footprint):
+    number = pad.GetNumber()
+    if not number and footprint in MECHANICAL:
+        number = MECHANICAL[footprint][pad.GetFPRelativePosition().x > 0]
+    return number
 
 
 def rot(v, deg):
@@ -137,15 +155,16 @@ if VERIFY:
         bottom = row['Layer'] == 'Bottom'
         worst = 0.0
         only = ONLY.get(f.GetFPID().GetLibItemName().wx_str())   # as the generator: the pads it matched on
-        visible = {p.GetNumber() for p in f.Pads() if p.GetNumber()
+        fpname = f.GetFPID().GetLibItemName().wx_str()
+        visible = {placement_pad_number(p, fpname) for p in f.Pads() if placement_pad_number(p, fpname)
                    and (p.IsOnLayer(pcbnew.F_Mask) or p.IsOnLayer(pcbnew.B_Mask))}
         wanted = set(only) if only else visible
         if not wanted or not wanted <= visible or not wanted <= ez.keys() or (not only and wanted != ez.keys()):
             bad.append((ref, 'incomplete independent pad coverage'))
             continue
-        npads = len({p.GetNumber() for p in f.Pads() if p.GetNumber() in ez})
+        npads = len({placement_pad_number(p, fpname) for p in f.Pads() if placement_pad_number(p, fpname) in ez})
         for p in f.Pads():
-            n = p.GetNumber()
+            n = placement_pad_number(p, fpname)
             if not n or n not in ez or not (p.IsOnLayer(pcbnew.F_Mask) or p.IsOnLayer(pcbnew.B_Mask)):
                 continue
             if only and n not in only:
@@ -161,7 +180,8 @@ if VERIFY:
         n_bot += bottom
         n_top += not bottom
         worst_all = max(worst_all, worst)
-        if worst > (0.6 if npads == 2 else TOL):          # the generator's two-pad allowance (lands differ)
+        tolerance = PAD_TOLERANCE.get(fpname, 0.6 if npads == 2 else TOL)
+        if worst > tolerance + 1e-4:  # supplier coordinate rounding: <=0.1 um
             bad.append((row['Designator'], round(worst, 3)))
     print(f'CPL check: {n_top} top and {n_bot} bottom rows rebuilt from JLC footprints; worst pad residual '
           f'{worst_all:.3f} mm; errors: {bad or "none"}; '
@@ -179,10 +199,11 @@ for f in b.GetFootprints():
     ours = {}
     for p in f.Pads():
         # paste-only apertures (no number) and copper-only tabs under the mask (no opening) carry no lead
-        if not p.GetNumber() or not (p.IsOnLayer(pcbnew.F_Mask) or p.IsOnLayer(pcbnew.B_Mask)): continue
+        number = placement_pad_number(p, fpname)
+        if not number or not (p.IsOnLayer(pcbnew.F_Mask) or p.IsOnLayer(pcbnew.B_Mask)): continue
         r = p.GetFPRelativePosition()
         # a flipped footprint keeps its pads mirrored in local y: un-mirror to the library footprint
-        ours.setdefault(p.GetNumber(), []).append((mm(r.x), -mm(r.y) if f.IsFlipped() else mm(r.y)))
+        ours.setdefault(number, []).append((mm(r.x), -mm(r.y) if f.IsFlipped() else mm(r.y)))
     ez = ez_pads(EZ[lcsc])
     common = sorted(set(ours) & set(ez))
     if fpname in ONLY: common = [n for n in common if n in ONLY[fpname]]
@@ -210,7 +231,11 @@ for f in b.GetFootprints():
                residual_mm=round(worst, 3), next_best_mm=round(second, 3), pads_ours=len(ours), pads_easyeda=len(ez), pads_matched=len(common))
     full = len(common) == len(ours) == len(ez) or (fpname in ONLY and len(common) == len(ONLY[fpname]))
     # two-pad parts: the lands may differ a lot (e.g. a vendor land pulled inward), the axis cannot
-    ok = full and ((worst <= TOL and second - worst >= MARGIN) or (len(common) == 2 and worst <= 0.6 and second - worst >= 2.0))
+    tolerance = PAD_TOLERANCE.get(fpname, TOL)
+    ok = full and ((worst <= tolerance + 1e-4 and second - worst >= MARGIN) or (len(common) == 2 and worst <= 0.6 and second - worst >= 2.0))
+    if fpname in PAD_TOLERANCE:
+        rec['land_center_tolerance_mm'] = tolerance
+        rec['land_pattern_source'] = 'sources/mlt5020.pdf p4; maker-derived enlarged lands, unchanged body centre'
     if lcsc in BODY:
         assert abs(t[0]) < 1e-6 and abs(t[1]) < 1e-6, (lcsc, t)    # centred symmetric row: offset unaffected
         rec['theta'] = (th + BODY[lcsc]) % 360
@@ -226,9 +251,11 @@ for f in b.GetFootprints():
         if donor:
             result[f'{lcsc}|{fpname}'] = dict(result[donor], via=f'same footprint as {donor.split("|")[0]} (EasyEDA has no entry for {lcsc})')
 out = ROOT / 'tools/jlc_corrections.json'
-json.dump(dict(source='easyeda.com/api/products/<LCSC>/components, matched by pad number', tolerance_mm=TOL,
+json.dump(dict(source='JLCEDA/EasyEDA Official Library; public product-to-component mapping; matched by pad number and reviewed mechanical tab identities',
+               source_urls=['https://lceda.cn/', 'https://easyeda.com/'], tolerance_mm=TOL,
                parts=dict(sorted(result.items()))), open(out, 'w'), indent=1)
 for k, v in sorted(result.items(), key=lambda kv: (kv[1]['status'], kv[0])):
     print(k.split('|')[0].ljust(11), v['status'].ljust(5), f"theta {v['theta']:>3}", f"off {v['offset'][0]:+.3f},{v['offset'][1]:+.3f}",
           f"res {v['residual_mm']:.3f}/{v.get('next_best_mm', 0):.2f}", f"pads {v['pads_ours']}/{v['pads_easyeda']}/{v['pads_matched']}", v['footprint'], '|', v['easyeda'])
 print('CHECK:', problems or 'none')
+sys.exit(1 if problems else 0)

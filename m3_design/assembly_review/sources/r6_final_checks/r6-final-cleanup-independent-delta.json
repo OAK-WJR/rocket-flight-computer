@@ -1,0 +1,31 @@
+{
+  "critical_reference": {
+    "0": {
+      "samples": 64476,
+      "new_lost_samples": 0,
+      "loss": []
+    },
+    "2": {
+      "samples": 39765,
+      "new_lost_samples": 0,
+      "loss": []
+    }
+  },
+  "old_pad_group_splits": [],
+  "ground_pad_groups": [
+    180
+  ],
+  "3V3_pad_groups": [
+    44
+  ],
+  "TLM_PWR_EN_pads": [
+    [
+      "U1.51",
+      "R192.1"
+    ]
+  ],
+  "In1_ground_polygons": 1,
+  "added_items": 1,
+  "removed_items": 38,
+  "changed_retained_items": []
+}

@@ -6,7 +6,7 @@
 	(title_block
 		(title "06 | Camera terminal and characterization")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R4")
+		(rev "M3-ASSY-R6")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:CameraTerminal"
@@ -68,7 +68,7 @@
 						(effects
 							(font
 								(size 1.05 1.05))))))
-			(property "ki_fp_filters" "M3_DB128V_4P"
+			(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT"
 				(at 0 0 0)
 				(effects
 					(font
@@ -179,12 +179,12 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Value" "CAM 5V / GND / RX / TX"
+		(property "Value" "CAMERA 5V/GND/RX/TX"
 			(at 76.2 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_DB128V_4P"
+		(property "Footprint" "rocket:M3_GH_BM04B_GHS_TBT"
 			(at 76.2 88.9 0)
 			(hide yes)
 			(effects
@@ -196,19 +196,19 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C2915641"
+		(property "LCSC" "C161692"
 			(at 76.2 88.9 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer" "DORABO"
+		(property "Manufacturer" "JST"
 			(at 76.2 88.9 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "DB128V-5.08-4P-GN-S"
+		(property "Manufacturer Part" "BM04B-GHS-TBT(LF)(SN)"
 			(at 76.2 88.9 0)
 			(hide yes)
 			(effects
@@ -218,7 +218,14 @@
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
 					(reference "J9")
-					(unit 1)))))
+					(unit 1))))		(property "LCSC Part" "C161692"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+)
 	(wire
 		(pts
 			(xy 48.26 85.09)

@@ -6,7 +6,7 @@
 	(title_block
 		(title "07 | Battery input, contact and protection")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R4")
+		(rev "M3-ASSY-R6")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:BatteryEFuse"
@@ -1912,7 +1912,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1.65k 0.1%"
+		(property "Value" "750R 0.1%"
 			(at 241.29999999999998 123.19000000000001 0)
 			(effects
 				(font
@@ -1932,7 +1932,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C705743"
+		(property "LCSC" "C861551"
 			(at 238.76 121.92 0)
 			(hide yes)
 			(effects
@@ -1950,13 +1950,13 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD071K65L"
+		(property "Manufacturer Part" "RT0603BRD07750RL"
 			(at 238.76 121.92 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C705743"
+		(property "LCSC Part" "C861551"
 			(at 238.76 121.92 0)
 			(hide yes)
 			(effects
@@ -2802,7 +2802,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:R0402"
+		(property "Footprint" "rocket:R_0603_1608Metric"
 			(at 370.84 121.92 0)
 			(hide yes)
 			(effects
@@ -2816,21 +2816,21 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C25790"
+		(property "LCSC" "C23178"
 			(at 370.84 121.92 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC Part" "C25790"
+		(property "LCSC Part" "C23178"
 			(at 370.84 121.92 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "0402WGF4703TCE"
+		(property "Manufacturer Part" "0603WAF4703T5E"
 			(at 370.84 121.92 0)
 			(hide yes)
 			(effects

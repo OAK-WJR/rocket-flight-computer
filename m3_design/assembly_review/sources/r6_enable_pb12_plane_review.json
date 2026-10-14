@@ -1,0 +1,19 @@
+{
+  "critical": {
+    "F.Cu": {
+      "samples": 64476,
+      "new_lost_samples": []
+    },
+    "B.Cu": {
+      "samples": 39765,
+      "new_lost_samples": []
+    }
+  },
+  "all_front_reference_loss_mm": {},
+  "gnd_pad_groups": [
+    180
+  ],
+  "In1_GND_polygon_counts": [
+    1
+  ]
+}

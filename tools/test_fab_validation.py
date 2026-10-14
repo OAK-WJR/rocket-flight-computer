@@ -98,6 +98,17 @@ class PlacementValidation(unittest.TestCase):
         self.pad_data['C5271084']['pads'] = changed
         self.assertIn('incomplete independent pad coverage', self.verify())
 
+    def test_connector_mechanical_tabs_are_independently_checked(self):
+        self.pad_data = json.loads((ROOT / 'tools/jlc_easyeda/pads.json').read_text())
+        changed = []
+        for pad in self.pad_data['C160393']['pads']:
+            fields = pad.split('~')
+            if fields[8] in ('8', '9'):
+                fields[2] = str(float(fields[2]) + 10)  # 2.54 mm shifted retention tabs
+            changed.append('~'.join(fields))
+        self.pad_data['C160393']['pads'] = changed
+        self.assertIn('J130', self.verify())
+
 
 class ExportPreflight(unittest.TestCase):
     def test_unverified_part_stops_before_outputs(self):

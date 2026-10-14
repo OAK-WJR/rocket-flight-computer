@@ -1,5 +1,19 @@
 # M3 requirements and implementation status
 
+**R6 work stopped incomplete (2026-10-13):** branch `m3-assy-r6` remains at R5
+`580d358`, with uncommitted partial changes. The schematic and board are not
+synchronized; the full R6 gate and independent review loop have not passed.
+No R6 manufacturing package, cost, or flight readiness is validated. Do not
+fabricate or fly this working state. All implementation agents are stopped.
+
+**R6 redesign scope:** branch `m3-assy-r6` starts at R5 `580d358`. The owner
+selected one primary recovery channel with isolated Blue Jay backup, GH camera and
+SH radio/GPS ports, smaller buzzer/debug connector, and an 80–90 mm length target
+(110 mm maximum). [M3_R6.md](docs/M3_R6.md) records decisions and
+[R6_VALIDATION.md](docs/R6_VALIDATION.md) records validation. The R5 status below
+is historical baseline evidence, not acceptance of the changing R6 CAD. Do not
+order the inherited fabrication package as R6.
+
 > Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. The repository holds the current M3-ASSY-R5 KiCad project (generated from the R4 board in git; R4 itself was generated from the R3 files), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. The older candidates are mentioned below only as the evolution record.
 
 Last updated 2026-10-12. Governing requirements: M1/M2 merged into one board, easy to diagnose, at most three PCB iterations; "10× redundancy" means independent protection layers, not a blanket 10× component derating. **M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; M3-ASSY-R5 (R4's circuit on a two-sided 46 × 100 mm board) is the current one. All are CAD designs with a manufacturing package, not measured or flown boards.**
@@ -173,3 +187,79 @@ Items from the original requirements (ADXL375, microSD, LoRa, board width / copp
 **R2 additions**: five 22 µF capacitors changed to the real Murata 1210 package, C82 moved 0.5 mm; 10 references (precision resistors, inductors, etc.) bound to specific part numbers, with maker and supplier evidence kept in the package. Exact bias capacitance and total cost are still open.
 
 **R3 additions**: 28 more references given part numbers; corrected C70's minimum capacitance, C70/C81 unified as 4.7 nF C0G; D9 set to B340A-13-F. Added wrong-value / wrong-part-number / wrong-wiring negative tests and resistor TCR corner estimates. No selection has real-board dynamic, cold, assembly or stock verification yet.
+
+
+## R6 update — 2026-10-13
+
+R6 native schematic and PCB implementation is in progress. Module choices: EBYTE E22-900T22D radio and HGLRC M100 Mini GPS. Pyro 2 removal, compact connectors/buzzer, dedicated reset-disabled port supply and edge-port placement are implemented. Schematic/PCB parity has reached zero. Independent review drove corrections to actuator power distribution and buck feedback layout.
+
+Release gate remains pending: finish signal routing, eliminate all native DRC/unconnected findings and overlap-only joints, repeat independent review, regenerate fab/BOM/CPL and final cost evidence. Do not treat old fabrication artifacts as the completed R6 release. Current size is 46 × 100 mm; preliminary estimate $84.14/board and 48 extended codes. Retained IMU stock is unavailable. See the appended R6 implementation section in docs/M3_R6.md for pin contracts and qualification limits.
+
+
+## R6 validation checkpoint — 2026-10-13 continuation
+
+The current PCB remains a work in progress, not released for fabrication. Six connections remain open: GPS_TX_MCU, TLM_FAULT_N, SWCLK, RADIO_M1_MCU, IMU_INT1 and RADIO_AUX_MCU. The existing fab package predates this checkpoint and must be regenerated after final validation.
+
+All 13 overlap-only joint findings were repaired (10 centerline bridges, 3 redundant stubs removed), preserving connected pad groups and existing reference coverage. The long IMU In1 routing experiment was rejected for a Major ground-return detour near the oscillator and MCU decoupling. Its helper now rejects normal application. SWCLK candidates also remain unapproved pending VCAP2/reference-island repair.
+
+This checkpoint supersedes earlier port-enable pin assignments: TLM_PWR_EN is now PB12 / U1.51 through R192 1 kohm; PE1 / U1.98 is NC. TLM_FAULT_N remains PE0 / U1.97. The external R193 10 kohm pulldown keeps the supply disabled during reset. Firmware must use PB12 as the enable output and preload it low before configuring output mode. PB12 is a non-debug GPIO with analog reset state (ST DS12110 Rev 11, section 3.8 and Table 9: https://www.st.com/resource/en/datasheet/stm32h743vi.pdf). All radio/GPS UART and mode pin assignments remain as specified.
+
+The synchronized PB12 schematic/PCB passed native ERC and schematic parity with zero findings, the actuator contract, and 13 R6 geometry regression tests. The routing change introduces no In1 signal tracks, no additional existing front-trace reference losses, and zero losses over 104241 critical reference samples. Numbered connector legends were regenerated, including J9 3:TX / 4:RX from the peripheral perspective; all 40 required labels fit. R6 CAD contract, silkscreen bounds and fit checks pass. Native connectivity still reports six opens and dangling copper; tools/check.sh is not yet zero.
+
+Board size is 46 x 100 mm: below the 110 mm maximum, outside the 80–90 mm target. Procurement remains on hold for the previously identified unavailable U4; prior cost estimates require final BOM/fab revalidation. Final independent review could not resume because the review agents reported exhausted workspace credits. No final Critical/Major clearance or hardware qualification is claimed.
+
+Evidence: m3_design/assembly_review/sources/r6_validation_iterations.json, r6_joint_integration.json, r6_enable_pb12_packet.json, r6_enable_pb12_migration.json, r6_silk_integration.json, r6_current_contract.json and r6_current_fit.json.
+
+Update: the existing independent review agents resumed successfully after the credit error. Their renewed reviews are pending. Full tools/check.sh checkpoint reports 6 opens, 10 dangling vias and 5 dangling tracks; ERC and parity remain zero.
+
+
+### 2026-10-13 SWCLK validation iteration
+
+The reviewed SWCLK crossover is now integrated (PCB SHA256 3c2525af6720fb123a95393b0885d20c43defba78d9c2f1fee6bf054149777a9). Native candidate DRC reports five remaining unconnected items and zero hard violations. Independent review finds zero Critical or Major issues for this change. Its short back-layer crossover restores the original 5.697 mm transverse MCU ground path; reviewed HSE and C17/C20 ground returns remain unchanged. All 104,241 critical reference samples are preserved. One Minor finding remains for reduced direct reference under the USB fault monitor and an auxiliary stitching-path detour. R128 pad 2 uses a 22.5 degree thermal angle with existing gap, spoke width and minimum-spoke rules retained. The replay helper reproduces all added copper and is idempotent. Fault-input and IMU remapping candidates are still under review and are not part of this checkpoint. Full zero-error acceptance and regenerated fabrication release remain pending.
+
+
+### R6 routing and pin assignment checkpoint — 2026-10-13
+
+The reviewed PA7 port-fault route and radio M1 route are integrated. Port enable remains PB12 with the hardware reset-off pulldown. IMU INT1 moves from PE10 to PE1 as a plain polled input; PD1 retains EXTI1. PE3/PE6 and all channel-1 guard pins remain no-net sentinels, with PE3 driven low by the bench firmware. The schematic/netlist pin-map delta is exactly U1.40 and U1.98. Native ERC and schematic parity are zero; actuator and R6 contracts pass. The PE1 firmware change passes 42 host tests; no ARM binary was built because an ARM compiler is unavailable.
+
+The current PCB has two remaining unrouted signals (GPS TX and radio AUX), 13 dangling-copper warnings and no other native DRC errors. Independent reviews found no Critical/Major defects in the adopted routes; minor auxiliary ground-return detours remain recorded. The board is 46 × 100 mm: within the 110 mm maximum but outside the preferred 80–90 mm length. This is an intermediate checkpoint, not fabrication release.
+
+The legacy GNSS bench driver still assigns GPS to USART6. R6 hardware assigns GPS to USART1 PA9/PA10 and radio to USART6 PC6/PC7; firmware bring-up must migrate the GNSS driver and keep port outputs high impedance while port power is off. The existing bench firmware is not an R6 flight-firmware release.
+
+
+### Fully routed R6 checkpoint — 2026-10-13
+
+GPS TX and radio AUX are now connected. The saved PCB has zero unrouted connections, 13 existing dangling-copper warnings, and no other native DRC errors. The final AUX review found zero Critical/Major issues after restoring two MCU ground returns: a 1.273 mm, 0.25 mm wide In2 ground bridge between existing vias, and a local AUX/GPS-RX layer change that preserves the baseline ground passage. All 104,241 sampled critical-signal reference points remain supported. Minor auxiliary return detours are recorded in the independent review archive.
+
+Fabrication release remains held for the newly identified U12 camera UART translator bypass issue: C100 is too far from VCCA and is being moved close to its supply pin. Final dangling-copper cleanup, combined review, all required checks and fabrication regeneration will follow that fix. The prior temporary candidate passed the complete automated gate but was rejected by the independent ground-return and decoupling reviews; it was not adopted.
+
+
+## Final R6 CAD validation — 2026-10-13 PDT
+
+This is the authoritative closeout checkpoint. PCB SHA-256: `184a87e84e67576341244c82517de3e9f55f5c1c22995dfad83631d48c856680`.
+
+The requested R6 CAD changes are implemented and fully routed: channel 2 removed; J9 is GH4; LS120 is the smaller MLT-5020 (C94598); J2 is TC2030; radio and GPS use USART6 and USART1 respectively with 1 kΩ series resistance and ESD protection; AP63301/TPS2553 port power is reset-off. The port rail is 4.8 V nominal to respect the HGLRC M100 Mini 5 V maximum. PB12 enables power and PA7 reads fault. IMU status moved to PE1 as a polled input only; PD1 keeps EXTI1 and the pyro-adjacent PE3 sentinel remains output-low.
+
+The final review/implementation loop closed the remote camera-translator VCCA bypass, ground-return barriers and incomplete connections. C100 is now beside U12 on B.Cu, with a 1.362 mm supply centerline and 1.503 mm direct ground centerline. Final cleanup removed 38 dangling copper items, repaired one overlap-only joint, and regenerated 40 required legends. No retained component geometry or clearance rules changed during cleanup.
+
+`tools/check.sh` passed: DRC 0, unconnected 0, schematic parity 0, ERC 0; metadata/models, silkscreen, R6 contract, `check_actuators.py` and `fit_check.py` all passed. Independent routing review 27 and the objective review found Critical 0 / Major 0. All 104,241 critical-reference samples were preserved, with no old pad-group splits. Existing minor return-path tradeoffs remain in the review archive. Regression evidence: 18 fabrication, 15 procurement, 17 R6 geometry and 42 narrow firmware host tests passed.
+
+Board size is **46 × 100 mm**: the 110 mm maximum passes, but the 80–90 mm target is not met. Five supports, including the mid-span support, pass the CAD envelope check. J9's mated envelope has only 0.03 mm residual margin after the modeled tolerance; confirm the real harness and airframe fit.
+
+Fabrication outputs are regenerated in `m3_design/assembly_review/fab/`, with a matching source/output manifest. Gerber ZIP: 11 layers, PTH/NPTH drills and job file. All 222 CPL rows pass; 214 use independent supplier pad matching and 8 use placement-only validation. Top/bottom native renders and assembly PDFs were inspected.
+
+The five-board Standard-PCBA cost check is **$84.14/board, 48 extended codes**. This is components plus feeder fees, not an all-in delivered-board price. Fixed two-sided assembly fees are $83.96/order; possible handling is $14.93/order; PCB fabrication, rails, joints and shipping are excluded. Supplier snapshot: 2026-10-13T19:17:09.804712+00:00. The smaller buzzer has stock 91,636. **Procurement remains on hold: U4 LSM6DSV320XTR / C26633007 has stock 0 for 5 required.** `check_procurement.py --cost-only` passes; the full procurement gate correctly fails on stock.
+
+Power-copper calculations at 7.7 A, 35 µm copper, 20 µm via plating and 20 °C converged:
+
+| Path | Resistance | Drop | Copper loss |
+|---|---:|---:|---:|
+| RAW_ACT | 3.96 mΩ | 30.5 mV | 0.235 W |
+| BAT_IN | 3.91 mΩ | 30.1 mV | 0.232 W |
+| ACT_FET_S | 1.36 mΩ | 10.5 mV | 0.081 W |
+
+These calculations exclude component/contact resistance and do not establish thermal or flight qualification. GPS maximum current is unpublished; bench validation still covers combined radio/GPS startup and transmit load, supply overshoot, reset/off behavior, harness fit and ESD. Existing GNSS firmware still uses USART6 PC6/PC7 and must migrate to USART1 PA9/PA10 for R6; broader flight firmware was not qualified.
+
+Pinouts (RX/TX at the module): J9 = 1:5V, 2:GND, 3:TX, 4:RX. J130 = 1:M0/PC8, 2:M1/PC9, 3:RX←PC6, 4:TX→PC7, 5:AUX/PA8, 6:port power, 7:GND. J131 = 1:port power, 2:GND, 3:TX→PA10, 4:RX←PA9. J2 TC2030 = 1:3V3 VTref, 2:SWDIO, 3:NRST, 4:SWCLK, 5:GND, 6:NC.
+
+Evidence: `m3_design/assembly_review/sources/r6_final_validation.json`, `r6_final_checks/`, `r6_final_dc.json`, `r6_final_objectives_review.json` and `r6-independent-routing-reference-review-20261013.json`. CAD validation is complete; manufacturing procurement and physical qualification are not complete.

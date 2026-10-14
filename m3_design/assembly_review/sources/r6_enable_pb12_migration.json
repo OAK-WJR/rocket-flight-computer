@@ -1,0 +1,21 @@
+{
+  "migration_idempotent": true,
+  "pin_net_changes": [
+    [
+      [
+        "U1",
+        "51"
+      ],
+      "unconnected-(U1-PB12-Pad51)",
+      "TLM_PWR_EN"
+    ],
+    [
+      [
+        "U1",
+        "98"
+      ],
+      "TLM_PWR_EN",
+      "unconnected-(U1-PE1-Pad98)"
+    ]
+  ]
+}

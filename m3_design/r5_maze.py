@@ -12,6 +12,7 @@ caller decides layers, vias and endpoints; this only draws the copper between th
 """
 import heapq
 import math
+import re
 from collections import deque
 
 import pcbnew
@@ -34,6 +35,11 @@ BLOCK = (4.0, 66.0, 42.0, 96.4)                  # the PYRO_BLOCK rule area (rul
 # only a net's own pins of footprint `ref` may be left, straight along `axis`, so no scripted route runs along a
 # fine-pitch pin row and boxes in the pins the autorouter has still to take out.
 BANDS = []
+
+
+def zones(board):
+    """Board and footprint rule areas both constrain copper placement."""
+    return list(board.Zones()) + [zone for fp in board.GetFootprints() for zone in fp.Zones()]
 
 
 def rule_clearance(a, c, in_block=True):
@@ -121,19 +127,34 @@ class Grid:
                 pb = p.GetBoundingBox()
                 x0, y0, x1, y1 = mm(pb.GetX()), mm(pb.GetY()), mm(pb.GetRight()), mm(pb.GetBottom())
                 k = rule_clearance(net, p.GetNetname(), inb(x0, y0, x1, y1)) + hw
+                k = max(k, mm(p.GetLocalClearance() or 0) + MARGIN + hw)
+                if (re.fullmatch(r'TP\d+', f.GetReference()) and
+                        ((layer == pcbnew.F_Cu and p.IsOnLayer(pcbnew.F_Mask)) or
+                         (layer == pcbnew.B_Cu and p.IsOnLayer(pcbnew.B_Mask)))):
+                    k = max(k, 1.0 + MARGIN + hw)
+                if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH and p.GetNetname() == 'RAW_ACT':
+                    k = max(k, 0.3 + MARGIN + hw)
+                if (f.GetReference() == 'J2' and p.GetNumber() in ('1', '2', '3', '4', '5', '6')
+                        and p.GetAttribute() != pcbnew.PAD_ATTRIB_NPTH):
+                    k = max(k, 0.508 + MARGIN + hw)
                 if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH:  # a bare hole: m3.kicad_dru's 0.25 mm to copper
                     k = max(k, 0.25 + MARGIN + hw)
                 mark(x0 - k, y0 - k, x1 + k, y1 + k,
                      lambda x, y: math.hypot(max(x0 - x, 0, x - x1), max(y0 - y, 0, y - y1)) < k)
         own = [p.GetPosition() for f in b.GetFootprints() for p in f.Pads()
                if net and p.GetNetname() == net and p.IsOnLayer(layer)]
-        for z in b.Zones():
+        for z in zones(b):
             if z.GetIsRuleArea():
                 if z.IsOnLayer(layer) and z.GetDoNotAllowTracks():
                     o = z.Outline()
                     zb = z.GetBoundingBox()
-                    mark(mm(zb.GetX()), mm(zb.GetY()), mm(zb.GetRight()), mm(zb.GetBottom()),
-                         lambda x, y: o.Contains(pcbnew.VECTOR2I(MM(x), MM(y))))
+                    # Every segment point is within half a diagonal grid step of
+                    # an endpoint; include that distance to cover copper between cells.
+                    k = hw + MARGIN + G / math.sqrt(2)
+                    mark(mm(zb.GetX()) - k, mm(zb.GetY()) - k,
+                         mm(zb.GetRight()) + k, mm(zb.GetBottom()) + k,
+                         lambda x, y: o.Contains(pcbnew.VECTOR2I(MM(x), MM(y))) or
+                         o.SquaredDistance(pcbnew.VECTOR2I(MM(x), MM(y))) < MM(k) ** 2)
                 continue
             if not z.IsOnLayer(layer) or z.GetNetname() in (net, 'GND', *PLANES_AFTER):
                 continue                                     # the GND and 3V3/3V3A pours fill round the routes
@@ -163,7 +184,12 @@ class Grid:
                         self.blk[j * self.nx + i] = 1
         eb = b.GetBoardEdgesBoundingBox()
         ex0, ey0, ex1, ey1 = mm(eb.GetX()), mm(eb.GetY()), mm(eb.GetRight()), mm(eb.GetBottom())
-        m = 0.5 + hw
+        # KiCad's edge bounding box includes drawing stroke width; milling
+        # follows the centerline. Do not spend that extra width as clearance.
+        edge_items = list(b.GetDrawings()) + [d for f in b.GetFootprints() for d in f.GraphicalItems()]
+        edge_stroke = max((mm(d.GetWidth()) for d in edge_items
+                           if d.GetLayer() == pcbnew.Edge_Cuts and d.GetClass() == 'PCB_SHAPE'), default=0)
+        m = 0.5 + hw + edge_stroke / 2
         mark(self.x0, self.y0, self.x0 + self.nx * G, self.y0 + self.ny * G,
              lambda x, y: x < ex0 + m or x > ex1 - m or y < ey0 + m or y > ey1 - m)
         for d in b.GetDrawings():
@@ -286,7 +312,7 @@ def via_spot(b, net, near, anchor, d=0.6, drill=0.3, r=2.5, exclude=()):
     holes = [(mm(q.GetPosition().x), mm(q.GetPosition().y), mm(max(q.GetDrillSize().x, q.GetDrillSize().y)) / 2)
              for f in b.GetFootprints() for q in f.Pads()
              if q.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)]
-    novia = [z.Outline() for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]
+    novia = [z.Outline() for z in zones(b) if z.GetIsRuleArea() and z.GetDoNotAllowVias()]
     for _, i, j in cands:
         if all(not g.blk[j * g.nx + i] for g in grids):
             x, y = g0.xy(i, j)
@@ -307,7 +333,8 @@ def via_spot(b, net, near, anchor, d=0.6, drill=0.3, r=2.5, exclude=()):
                     dd = math.hypot(max(mm(pb.GetX()) - x, 0, x - mm(pb.GetRight())),
                                     max(mm(pb.GetY()) - y, 0, y - mm(pb.GetBottom())))
                     if p.GetNetname() == net and net:
-                        if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and dd < d / 2 + 0.15:
+                        if p.GetAttribute() in (pcbnew.PAD_ATTRIB_SMD, pcbnew.PAD_ATTRIB_PTH,
+                                                pcbnew.PAD_ATTRIB_CONN) and dd < d / 2 + 0.15:
                             ok = False                # no via in, or touching, its own SMD pad (solder wicking)
                             break
                         continue
@@ -347,7 +374,7 @@ def _via_blocked(b, net, box, origin, d=0.6, drill=0.3, skip=None):
     for v in b.GetTracks():
         if v.GetClass() == 'PCB_VIA' and not (skip and v.m_Uuid.AsString() in skip):
             mark(mm(v.GetPosition().x), mm(v.GetPosition().y), d + 0.15)       # hole to hole, same net too
-    for z in b.Zones():
+    for z in zones(b):
         if z.GetIsRuleArea() and z.GetDoNotAllowVias():                       # keep-outs (MEMS bodies)
             o, zb = z.Outline(), z.GetBoundingBox()
             zx0, zy0, zx1, zy1 = mm(zb.GetX()), mm(zb.GetY()), mm(zb.GetRight()), mm(zb.GetBottom())
@@ -363,8 +390,8 @@ def _via_blocked(b, net, box, origin, d=0.6, drill=0.3, skip=None):
             if rect[2] < box[0] - 2 or rect[0] > box[2] + 2 or rect[3] < box[1] - 2 or rect[1] > box[3] + 2:
                 continue
             if p.GetNetname() == net and net:
-                if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD:
-                    mark(0, 0, d / 2 + 0.15, rect)          # no via in or touching its own SMD pad
+                if p.GetAttribute() in (pcbnew.PAD_ATTRIB_SMD, pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_CONN):
+                    mark(0, 0, d / 2 + 0.15, rect)          # no via in or touching a solder pad
             else:
                 mark(0, 0, drill / 2 + 0.3, rect)           # hole to other nets' copper
     return g0, blk

@@ -139,6 +139,49 @@ class QualityTools(unittest.TestCase):
         self.assertFalse(result['ok'])
         self.assertTrue((self.root / 'missing.json').is_file())
 
+    def test_native_refill_failure_cannot_accept_saved_copper(self):
+        board = self.fixture_board()
+        calls = []
+        def run(args, **kwargs):
+            calls.append(args)
+            if '--version' in args:
+                return subprocess.CompletedProcess(args, 0, 'test-version', '')
+            return subprocess.CompletedProcess(args, 1, '', 'fill failed')
+        with mock_patch('verify_board.subprocess.run', side_effect=run):
+            result = verify(board, Path('fake-cli'), self.root / 'refill_failed.json',
+                            refill_python=Path('fake-python'))
+        self.assertFalse(result['ok'])
+        self.assertTrue(result['inputs_unchanged'])
+        self.assertFalse(any('drc' in args for args in calls))
+        self.assertTrue(any('zone fill failed' in issue for issue in result['issues']))
+
+    def test_native_refill_drc_checks_fresh_snapshot_and_preserves_source(self):
+        board = self.fixture_board()
+        board.with_suffix('.kicad_dru').write_text('(version 1)')
+        (self.root / 'child.kicad_sch').write_text('child sheet')
+        report = self.clean_report()
+        report['unconnected_items'] = [{'type': 'unconnected_items'}]
+        cli = self.fake_tool(report)
+        def run(args, **kwargs):
+            if 'fake-python' == args[0]:
+                snapshot = Path(args[-1])
+                self.assertNotEqual(snapshot, board)
+                self.assertTrue(snapshot.with_suffix('.kicad_dru').is_file())
+                self.assertTrue((snapshot.parent / 'child.kicad_sch').is_file())
+                snapshot.write_text(snapshot.read_text() + '\n; freshly filled\n')
+                return subprocess.CompletedProcess(args, 0, 'Native zone fill complete\n', '')
+            if 'drc' in args:
+                self.assertIn('freshly filled', Path(args[-1]).read_text())
+                self.assertNotIn('--refill-zones', args)
+            return cli(args, **kwargs)
+        with mock_patch('verify_board.subprocess.run', side_effect=run):
+            result = verify(board, Path('fake-cli'), self.root / 'refilled.json',
+                            refill_python=Path('fake-python'))
+        self.assertFalse(result['ok'])
+        self.assertTrue(result['inputs_unchanged'])
+        self.assertEqual(result['counts']['unconnected_items'], 1)
+        self.assertNotIn('freshly filled', board.read_text())
+
     def test_hierarchical_sheet_and_symbol_edit_invalidate_evidence(self):
         board=self.fixture_board();child=self.root/'child.kicad_sch'
         child.write_text('original child');symbol=self.root/'kilib/local.kicad_sym';symbol.write_text('original symbol')

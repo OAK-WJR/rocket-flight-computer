@@ -3253,7 +3253,7 @@
 						(font
 							(size 1.27 1.27))))))
 		(embedded_fonts no)
-		(property "ki_fp_filters" "HDR-TH_6P-P2.54-V-M-1x6"
+		(property "ki_fp_filters" "M3_TC2030_IDC_NL"
 			(at 0 0 0)
 			(effects
 				(font
@@ -3611,7 +3611,7 @@
 					(effects
 						(font
 							(size 1.05 1.05))))))
-		(property "ki_fp_filters" "M3_DB128V_4P"
+		(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT"
 			(at 0 0 0)
 			(effects
 				(font
@@ -5643,5 +5643,206 @@
 					(effects
 						(font
 							(size 1.05 1.05))))))
+		(embedded_fonts no))
+	(symbol "Conn_1x7"
+		(pin_names
+			(offset 0.508))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "J"
+			(at 0 11.43 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "Conn_1x7"
+			(at 0 -11.43 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "7-position connector"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "Conn_1x7_0_1"
+			(rectangle
+				(start -2.54 8.89)
+				(end 2.54 -8.89)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "Conn_1x7_1_1"
+			(pin passive line
+				(at -7.62 7.62 0)
+				(length 5.08)
+				(name "1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 5.08 0)
+				(length 5.08)
+				(name "2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 2.54 0)
+				(length 5.08)
+				(name "3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 0 0)
+				(length 5.08)
+				(name "4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -2.54 0)
+				(length 5.08)
+				(name "5"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -5.08 0)
+				(length 5.08)
+				(name "6"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -7.62 0)
+				(length 5.08)
+				(name "7"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "7"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+	(symbol "Buzzer_3pad"
+		(pin_names
+			(offset 0.508))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "LS"
+			(at 0 7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "Buzzer_3pad"
+			(at 0 -7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "SMD magnetic buzzer, 1 = +lead, 2 = -lead, 3 = isolated mechanical tab"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "Buzzer_3pad_0_1"
+			(rectangle
+				(start -5.08 5.08)
+				(end 5.08 -5.08)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "Buzzer_3pad_1_1"
+			(pin passive line
+				(at -10.16 2.54 0)
+				(length 5.08)
+				(name "+"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -10.16 -2.54 0)
+				(length 5.08)
+				(name "-"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 10.16 2.54 180)
+				(length 5.08)
+				(name "DUMMY"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+)
 		(embedded_fonts no))
 )

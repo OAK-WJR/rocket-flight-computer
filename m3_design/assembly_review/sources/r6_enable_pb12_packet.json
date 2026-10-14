@@ -1,0 +1,381 @@
+{
+  "source_sha256": "814357ada2f8572d27bebe69af76689f1ea47a617e22d018832374f1572ad796",
+  "opens": 6,
+  "hard": 0,
+  "removed": [
+    {
+      "uuid": "b90ca21d-ea42-42bb-ba01-db7c02a03873",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        26.85,
+        43.05
+      ],
+      "end": [
+        26.85,
+        42.25
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "e316d24c-c0de-4bc9-b40b-a7612d191ee5",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        26.85,
+        42.25
+      ],
+      "end": [
+        27.3,
+        41.8
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "e2375ee0-4684-4c6c-8fbc-8ea018606f38",
+      "net": "TLM_PWR_EN",
+      "kind": "via",
+      "at": [
+        27.3,
+        41.8
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    }
+  ],
+  "added": [
+    {
+      "uuid": "807a7e5d-1733-4612-b92b-d8badd333d2f",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        17.02,
+        19.8
+      ],
+      "end": [
+        17.52,
+        20.3
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "8251965d-304e-40f2-8c51-56210fd7ee26",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        14.32,
+        29.5
+      ],
+      "end": [
+        14.3,
+        29.5
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "a084864e-deef-4ca2-ab21-1703977ca54a",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        13.62,
+        27.5
+      ],
+      "end": [
+        13.62,
+        29.0
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "b4d5aeac-d9f3-47b0-8be1-f5099928ec91",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        14.12,
+        29.5
+      ],
+      "end": [
+        14.32,
+        29.5
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "bce4b5b9-58a5-4e9d-8cf8-c3214f567ca9",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        17.52,
+        20.3
+      ],
+      "end": [
+        17.52,
+        23.65
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "ca5b228f-e2fa-44b6-8a8e-a90ccb3993ce",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        13.62,
+        29.0
+      ],
+      "end": [
+        14.12,
+        29.5
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "f0d2cc07-efc3-410a-87cc-caa5bae78ff0",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        16.92,
+        19.8
+      ],
+      "end": [
+        17.02,
+        19.8
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "08bfad70-1049-44e4-97da-0985d78fc58f",
+      "net": "TLM_PWR_EN",
+      "kind": "via",
+      "at": [
+        16.92,
+        19.8
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    },
+    {
+      "uuid": "7d2fe939-0956-4744-add8-2b9b9a701522",
+      "net": "TLM_PWR_EN",
+      "kind": "via",
+      "at": [
+        13.62,
+        27.5
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    },
+    {
+      "uuid": "a232a50e-0f7b-493d-9af6-eee11679f02c",
+      "net": "TLM_PWR_EN",
+      "kind": "via",
+      "at": [
+        17.52,
+        23.65
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    },
+    {
+      "uuid": "a7453863-9fe0-4856-bcec-0c2d69070431",
+      "net": "TLM_PWR_EN",
+      "kind": "via",
+      "at": [
+        14.42,
+        17.25
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    },
+    {
+      "uuid": "1ace6847-9653-4e78-9418-987d4eb3e512",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        7.97,
+        2.75
+      ],
+      "end": [
+        7.97,
+        18.25
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "37982843-cf78-4372-8787-cb590c18b07e",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        12.12,
+        19.0
+      ],
+      "end": [
+        13.87,
+        17.25
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "451753ac-2eab-4eda-a75c-366748cb0046",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        8.62,
+        2.1
+      ],
+      "end": [
+        7.97,
+        2.75
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "58e022b1-443c-444c-af2d-a70f98726833",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        13.87,
+        17.25
+      ],
+      "end": [
+        14.42,
+        17.25
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "77ee7f40-61fb-4967-979f-2c1902187c63",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        17.52,
+        23.65
+      ],
+      "end": [
+        17.47,
+        23.65
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "b99eb844-4cf7-4f6e-884c-3d74199ffd61",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        8.72,
+        19.0
+      ],
+      "end": [
+        12.12,
+        19.0
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "d9499b4a-ddbb-45f6-9e22-6e34700d5dd9",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        7.97,
+        18.25
+      ],
+      "end": [
+        8.72,
+        19.0
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "dfe34dfd-9685-4256-bda5-c83336c4c847",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        8.97,
+        2.1
+      ],
+      "end": [
+        8.62,
+        2.1
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "f3f7b3d5-27eb-47cf-8a38-2e1ba0cdfdc9",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        17.47,
+        23.65
+      ],
+      "end": [
+        13.62,
+        27.5
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "3a851c47-30cc-45cd-b603-7b679df02611",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 6,
+      "start": [
+        14.77,
+        17.25
+      ],
+      "end": [
+        16.92,
+        19.4
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "4dd159b0-37bd-4499-8c35-de83a03b2976",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 6,
+      "start": [
+        14.42,
+        17.25
+      ],
+      "end": [
+        14.77,
+        17.25
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "7fbb90b1-4435-4340-8918-a532c8e4632e",
+      "net": "TLM_PWR_EN",
+      "kind": "track",
+      "layer": 6,
+      "start": [
+        16.92,
+        19.4
+      ],
+      "end": [
+        16.92,
+        19.8
+      ],
+      "width": 0.15
+    }
+  ],
+  "candidate": "/private/tmp/r6-enable-pb12-0w31_rsh/m3.kicad_pcb",
+  "pin_change": "TLM_PWR_EN U1.98 PE1 to U1.51 PB12; PE1 NC"
+}

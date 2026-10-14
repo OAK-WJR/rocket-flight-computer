@@ -213,8 +213,9 @@ def export(board, out, no_in2=False, seed=None, warm=False):
     print(f'  {_hole_keepouts(b)} hole keep-outs (0.5 mm edge clearance)')
     assert pcbnew.ExportSpecctraDSN(b, out), 'DSN export failed'
     t = Path(out).read_text()
-    if not warm:                                      # warm start: the router's own (unlocked) wires stay movable
-        t = t.replace('(type route)', '(type protect)')
+    # Freerouting treats KiCad's "route" token as USER_FIXED. Only "normal" leaves
+    # unlocked copper movable during a warm start; existing protected items stay fixed.
+    t = t.replace('(type route)', '(type normal)' if warm else '(type protect)')
     # signals at SIGNAL_W: the structure rule and the default class, the only width rules before _classes adds
     # the power and pyro classes at POWER_W
     t, k = re.subn(r'(\(rule\s*\(width )[\d.]+(\))', rf'\g<1>{SIGNAL_W * 1000:.0f}\g<2>', t)
@@ -323,7 +324,7 @@ def import_ses(board, ses):
     locked = _relock(b, vias, segs)
     b.BuildConnectivity()
     pcbnew.ZONE_FILLER(b).Fill(b.Zones())
-    pcbnew.SaveBoard(board, b)
+    pcbnew.SaveBoard(board, b, True)
     print(f'imported {ses}: {before} -> {len(b.GetTracks())} tracks and vias ({locked} scripted, locked)')
 
 

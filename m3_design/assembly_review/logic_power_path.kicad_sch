@@ -6,7 +6,7 @@
 	(title_block
 		(title "08 | USB limit, source mux and hold-up")
 		(date "2026-10-12")
-		(rev "M3-ASSY-R5")
+		(rev "M3-ASSY-R6")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -2370,7 +2370,6 @@
 	(global_label "RAW_PROTECTED" (shape passive) (at 73.6600 148.5900 0) (effects (font (size 1.05 1.05)) (justify right)) (uuid a3178ff4-2660-5d69-ac61-b8d1ba4e1ae4))
 	(wire (pts (xy 81.28 156.2100) (xy 73.6600 156.2100)) (stroke (width 0) (type default)) (uuid f0c042bc-52a9-53e0-88b4-d9c4530bd35c))
 	(global_label "GND" (shape passive) (at 73.6600 156.2100 0) (effects (font (size 1.05 1.05)) (justify right)) (uuid 03e7b656-b465-5072-b0df-1001b6380c7d))
-
 	(symbol
 		(lib_id "M3:C")
 		(at 152.4000 152.4000 0)
@@ -2439,7 +2438,6 @@
 	(global_label "USB_LIMITED" (shape passive) (at 144.7800 148.5900 0) (effects (font (size 1.05 1.05)) (justify right)) (uuid 1639a764-bd84-5ea1-8117-85cd2e4452f9))
 	(wire (pts (xy 152.4 156.2100) (xy 144.7800 156.2100)) (stroke (width 0) (type default)) (uuid 0feda4ec-ad3f-58e1-9735-f4e4f8e1b4f0))
 	(global_label "GND" (shape passive) (at 144.7800 156.2100 0) (effects (font (size 1.05 1.05)) (justify right)) (uuid ab23a571-e946-5bd3-876e-1a37d4c240d2))
-
 	(symbol
 		(lib_id "M3:C")
 		(at 223.5200 152.4000 0)
@@ -2500,8 +2498,6 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
 					(reference "C99")
 					(unit 1))))
-		
-		
 		(property "LCSC Part" "C307331"
 			(at 223.5200 152.4000 0)
 			(hide yes)
