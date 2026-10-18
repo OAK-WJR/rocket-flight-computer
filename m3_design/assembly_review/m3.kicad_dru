@@ -8,6 +8,39 @@
   (condition "A.memberOfFootprint('J3') && B.memberOfFootprint('J3') && ((A.Pad_Type == 'NPTH, mechanical' && B.Pad_Type == 'SMD') || (B.Pad_Type == 'NPTH, mechanical' && A.Pad_Type == 'SMD'))")
   (constraint hole_clearance (min 0.20mm)))
 
+# R7 RF strip (REQUIREMENTS F10; sources/r7_review/pass1_layout.md sections 4-5). These come before the pyro rules,
+# so none of them can override a pyro rule, and none names a pyro, arming or actuator net.
+# 50 ohm grounded coplanar waveguide for the ordered JLC041611-7628 stackup: F.Cu over In1 GND, W 0.30 mm,
+# gap 0.25 mm (JLC impedance engine: 50.2 ohm). The four RF nets keep exactly that width and that gap to GND.
+(rule "R7 RF50 line width"
+  (condition "A.Type == 'Track' && (A.NetName == 'GNSS_RF_ANT' || A.NetName == 'GNSS_RF_IN' || A.NetName == 'RADIO_RF_ANT' || A.NetName == 'RADIO_RF')")
+  (constraint track_width (min 0.30mm) (opt 0.30mm) (max 0.30mm)))
+(rule "R7 RF50 coplanar gap"
+  (condition "(A.NetName == 'GNSS_RF_ANT' || A.NetName == 'GNSS_RF_IN' || A.NetName == 'RADIO_RF_ANT' || A.NetName == 'RADIO_RF') && B.NetName == 'GND'")
+  (constraint clearance (min 0.25mm)))
+# SMA centre pads: GND 0.30 mm away (with In1 cut out under the pad, JLC engine 51.7 ohm).
+(rule "R7 SMA launch gap"
+  (condition "A.Type == 'Pad' && (A.memberOfFootprint('J30') || A.memberOfFootprint('J31')) && A.NetName != 'GND' && B.NetName == 'GND'")
+  (constraint clearance (min 0.30mm)))
+# The edge-launch SMA pads start 0.2 mm inside the routed aft edge (Kinghelm land; JLC capability: copper
+# >= 0.2 mm from a routed edge). Only J30/J31's own pads get the reduced edge clearance.
+(rule "R7 SMA pads to the aft edge"
+  (condition "A.Type == 'Pad' && (A.memberOfFootprint('J30') || A.memberOfFootprint('J31'))")
+  (constraint edge_clearance (min 0.2mm)))
+# u-blox MAX-F10S integration manual 4.4: no signal under the module on the top two layers.
+(rule "R7 U30 keep-out F.Cu"
+  (layer "F.Cu")
+  (condition "A.intersectsArea('U30_KEEPOUT') && A.NetName != 'GND'")
+  (constraint disallow track via))
+(rule "R7 U30 keep-out In1"
+  (layer "In1.Cu")
+  (condition "A.intersectsArea('U30_KEEPOUT') && A.NetName != 'GND'")
+  (constraint disallow track via))
+# EBYTE E22-900MM22S manual 4.1: no wiring under the module on any layer.
+(rule "R7 U31 keep-out"
+  (condition "A.intersectsArea('U31_KEEPOUT') && A.NetName != 'GND'")
+  (constraint disallow track via))
+
 # Pyro safety spacing (R6 single CH1; inherited from docs/M3_R4.md section 1c). Measured against every track, via
 # and pad on every layer, not only zone fills. RAW_ACT is live whenever the board is on; bus, igniter and
 # drain copper is live once armed. A bridge to a gate net fires a channel, a bridge to a sense net puts

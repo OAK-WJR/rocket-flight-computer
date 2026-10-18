@@ -1,21 +1,80 @@
 {
-  "reviewed_date": "2026-10-13",
-  "scope": "Current R6 schematic designators, exact JLC identities, stock and pricing. Prior manufacturer qualification notes are retained only for the same supplier code; live inventory is not a reservation.",
+  "reviewed_date": "2026-10-15",
+  "scope": "Current R7 schematic designators, exact JLC identities, stock and pricing. Prior manufacturer qualification notes are retained only for the same supplier code; live inventory is not a reservation.",
   "selections": [
     {
       "refs": [
+        "Q32"
+      ],
+      "manufacturer": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+      "mpn": "S8550(RANGE:120-200)",
+      "lcsc": "C105432",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C105432",
+      "value": "S8550",
+      "footprint": "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+      "supplier_attributes": {
+        "Operating Temperature": "-55\u2103~+150\u2103",
+        "Transition frequency(fT)": "150MHz",
+        "Collector - Emitter Voltage VCEO": "25V",
+        "Number": "1 PNP",
+        "DC Current Gain": "120",
+        "Current - Collector(Ic)": "500mA",
+        "Vce Saturation(VCE(sat))": "600mV",
+        "Emitter-Base Voltage(Vebo)": "5V",
+        "Pd - Power Dissipation": "300mW",
+        "type": "PNP",
+        "Current - Collector Cutoff": "100nA"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:53:25.158364+00:00",
+        "quantity": 217855,
+        "library": "base",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 499,
+            "productPrice": 0.0167
+          },
+          {
+            "startNumber": 500,
+            "endNumber": 2999,
+            "productPrice": 0.0134
+          },
+          {
+            "startNumber": 3000,
+            "endNumber": 5999,
+            "productPrice": 0.0112
+          },
+          {
+            "startNumber": 6000,
+            "endNumber": 23999,
+            "productPrice": 0.0101
+          },
+          {
+            "startNumber": 24000,
+            "endNumber": 50999,
+            "productPrice": 0.0091
+          },
+          {
+            "startNumber": 51000,
+            "endNumber": -1,
+            "productPrice": 0.0086
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/e048f602aee74d95b954be40ef1dcefb.pdf?productCode=C105432",
+      "qualification": "JSCJ S8550 PNP SOT-23, hFE 120-200 (L rank), VCEO -25 V, VEBO -5 V, IC -0.5 A, 0.3 W (DS D, Oct 2014). Pins 1 B, 2 E, 3 C. SOT-23 suggested pad layout 0.6 x 0.8 mm, 1.9 pitch, 2.02 row spacing fits rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR (JLC/EasyEDA uses a 1.6 mm-body land; residual 0.235 mm). Q32 current limiter: VEB(on) about 0.54-0.56 V at 0.07-0.15 mA, 25 C, read from the IC-VBE curve (Inference)."
+    },
+    {
+      "refs": [
+        "R9",
         "R105",
         "R127",
         "R160",
-        "R192",
-        "R196",
-        "R197",
-        "R198",
-        "R199",
-        "R200",
-        "R201",
-        "R202",
-        "R9"
+        "R307"
       ],
       "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
       "mpn": "0402WGF1001TCE",
@@ -33,8 +92,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 7845746,
+        "checked_utc": "2026-10-15T21:53:26.019901+00:00",
+        "quantity": 14390891,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -92,8 +151,8 @@
         "Temperature Coefficient": "X5R"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 600478,
+        "checked_utc": "2026-10-15T21:53:26.693153+00:00",
+        "quantity": 539061,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -101,17 +160,17 @@
           {
             "startNumber": 1,
             "endNumber": 199,
-            "productPrice": 0.1284
+            "productPrice": 0.1236
           },
           {
             "startNumber": 200,
             "endNumber": 599,
-            "productPrice": 0.1013
+            "productPrice": 0.099
           },
           {
             "startNumber": 600,
             "endNumber": 1999,
-            "productPrice": 0.0873
+            "productPrice": 0.0865
           },
           {
             "startNumber": 2000,
@@ -121,12 +180,12 @@
           {
             "startNumber": 10000,
             "endNumber": 19999,
-            "productPrice": 0.0718
+            "productPrice": 0.0723
           },
           {
             "startNumber": 20000,
             "endNumber": -1,
-            "productPrice": 0.0692
+            "productPrice": 0.0698
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -166,8 +225,8 @@
         "Number of PINs Per Row": "2"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 351238,
+        "checked_utc": "2026-10-15T21:53:27.353450+00:00",
+        "quantity": 342379,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -195,7 +254,7 @@
           {
             "startNumber": 10000,
             "endNumber": 19999,
-            "productPrice": 0.0213
+            "productPrice": 0.0212
           },
           {
             "startNumber": 20000,
@@ -209,8 +268,7 @@
     },
     {
       "refs": [
-        "L3",
-        "L4"
+        "L3"
       ],
       "manufacturer": "BOURNS",
       "mpn": "SRP5030T-6R8M",
@@ -218,8 +276,8 @@
       "source": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
       "supplier_url": "https://jlcpcb.com/partdetail/x/C1329837",
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 1640,
+        "checked_utc": "2026-10-15T21:53:28.010204+00:00",
+        "quantity": 1679,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -227,32 +285,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 1.4304
+            "productPrice": 1.4299
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 1.1792
+            "productPrice": 1.1789
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 1.0406
+            "productPrice": 1.0403
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.884
+            "productPrice": 0.8838
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.7731
+            "productPrice": 0.7729
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.7421
+            "productPrice": 0.7419
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -288,8 +346,8 @@
         "Temperature Coefficient": "X5R"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 2152217,
+        "checked_utc": "2026-10-15T21:53:28.665594+00:00",
+        "quantity": 2344843,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -297,32 +355,32 @@
           {
             "startNumber": 1,
             "endNumber": 99,
-            "productPrice": 0.1586
+            "productPrice": 0.272
           },
           {
             "startNumber": 100,
             "endNumber": 299,
-            "productPrice": 0.1238
+            "productPrice": 0.2159
           },
           {
             "startNumber": 300,
             "endNumber": 1999,
-            "productPrice": 0.1069
+            "productPrice": 0.1884
           },
           {
             "startNumber": 2000,
             "endNumber": 3999,
-            "productPrice": 0.0917
+            "productPrice": 0.1639
           },
           {
             "startNumber": 4000,
             "endNumber": 9999,
-            "productPrice": 0.0875
+            "productPrice": 0.1572
           },
           {
             "startNumber": 10000,
             "endNumber": -1,
-            "productPrice": 0.085
+            "productPrice": 0.1531
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -331,9 +389,7 @@
     },
     {
       "refs": [
-        "D121",
-        "D130",
-        "D131"
+        "D121"
       ],
       "manufacturer": "SEMTECH",
       "mpn": "SRV05-4.TCT",
@@ -341,8 +397,8 @@
       "source": "https://www.onsemi.com/download/data-sheet/pdf/srv05-4-d.pdf",
       "supplier_url": "https://jlcpcb.com/partdetail/x/C13612",
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 70081,
+        "checked_utc": "2026-10-15T21:53:29.331596+00:00",
+        "quantity": 69522,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -350,7 +406,7 @@
           {
             "startNumber": 1,
             "endNumber": 49,
-            "productPrice": 0.1627
+            "productPrice": 0.1626
           },
           {
             "startNumber": 50,
@@ -360,7 +416,7 @@
           {
             "startNumber": 150,
             "endNumber": 499,
-            "productPrice": 0.1154
+            "productPrice": 0.1153
           },
           {
             "startNumber": 500,
@@ -375,7 +431,7 @@
           {
             "startNumber": 6000,
             "endNumber": -1,
-            "productPrice": 0.0849
+            "productPrice": 0.0848
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -401,7 +457,6 @@
     },
     {
       "refs": [
-        "R194",
         "R85"
       ],
       "manufacturer": "YAGEO",
@@ -422,8 +477,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 27340,
+        "checked_utc": "2026-10-15T21:53:29.975095+00:00",
+        "quantity": 25595,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -476,11 +531,6 @@
     },
     {
       "refs": [
-        "C173",
-        "C175",
-        "C177",
-        "C179",
-        "C180",
         "C71",
         "C74",
         "C83",
@@ -500,8 +550,8 @@
         "Temperature Coefficient": "X7R"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 53315657,
+        "checked_utc": "2026-10-15T21:53:30.636291+00:00",
+        "quantity": 50378955,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -509,37 +559,164 @@
           {
             "startNumber": 1,
             "endNumber": 499,
-            "productPrice": 0.014
+            "productPrice": 0.0163
           },
           {
             "startNumber": 500,
             "endNumber": 1499,
-            "productPrice": 0.0106
+            "productPrice": 0.0129
           },
           {
             "startNumber": 1500,
             "endNumber": 3999,
-            "productPrice": 0.0091
+            "productPrice": 0.0113
           },
           {
             "startNumber": 4000,
             "endNumber": 23999,
-            "productPrice": 0.0076
+            "productPrice": 0.0102
           },
           {
             "startNumber": 24000,
             "endNumber": 47999,
-            "productPrice": 0.0071
+            "productPrice": 0.0097
           },
           {
             "startNumber": 48000,
             "endNumber": -1,
-            "productPrice": 0.0068
+            "productPrice": 0.0094
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
       },
       "datasheet_url": "https://www.lcsc.com/datasheet/lcsc_datasheet_2211101700_YAGEO-CC0603KRX7R9BB104_C14663.pdf"
+    },
+    {
+      "refs": [
+        "Q30"
+      ],
+      "manufacturer": "Alpha & Omega Semicon",
+      "mpn": "AO3401A",
+      "lcsc": "C15127",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C15127",
+      "value": "AO3401A",
+      "footprint": "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+      "supplier_attributes": {
+        "Operating Temperature": "-",
+        "Input Capacitance(Ciss)": "645pF",
+        "Type": "-",
+        "Gate Threshold Voltage (Vgs(th))": "900mV",
+        "Number": "1 P-Channel",
+        "Gate Charge(Qg)": "14nC@10V",
+        "Reverse Transfer Capacitance (Crss@Vds)": "55pF",
+        "Current - Continuous Drain(Id)": "4A",
+        "Drain to Source Voltage": "30V",
+        "Output Capacitance(Coss)": "80pF",
+        "Pd - Power Dissipation": "-",
+        "RDS(on)": "47m\u03a9@10V\u300160m\u03a9@4.5V\u300185m\u03a9@2.5V"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:53:31.281067+00:00",
+        "quantity": 578731,
+        "library": "base",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 49,
+            "productPrice": 0.102
+          },
+          {
+            "startNumber": 50,
+            "endNumber": 149,
+            "productPrice": 0.0824
+          },
+          {
+            "startNumber": 150,
+            "endNumber": 499,
+            "productPrice": 0.0723
+          },
+          {
+            "startNumber": 500,
+            "endNumber": 2999,
+            "productPrice": 0.064
+          },
+          {
+            "startNumber": 3000,
+            "endNumber": 5999,
+            "productPrice": 0.061
+          },
+          {
+            "startNumber": 6000,
+            "endNumber": -1,
+            "productPrice": 0.0591
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://www.aosmd.com/res/datasheets/AO3401A.pdf",
+      "qualification": "AOS AO3401A P-MOSFET SOT-23 (DS Rev 3.1 Dec 2023): -30 V, VGS(th) -0.5/-0.9/-1.3 V, RDS(on) <= 85 mOhm at -2.5 V, RthJA 125 C/W max steady. Pins 1 G, 2 S, 3 D. Q30 antenna-bias switch; a shorted antenna dissipates <= about 0.12 W in it (docs/M3_R7.md)."
+    },
+    {
+      "refs": [
+        "C302",
+        "C312"
+      ],
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL05B103KB5NNNC",
+      "lcsc": "C15195",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C15195",
+      "value": "10nF 50V X7R 10%",
+      "footprint": "rocket:C0402",
+      "supplier_attributes": {
+        "Voltage Rating": "50V",
+        "Tolerance": "\u00b110%",
+        "Capacitance": "10nF",
+        "Temperature Coefficient": "X7R"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:53:31.990286+00:00",
+        "quantity": 6347490,
+        "library": "base",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 999,
+            "productPrice": 0.0041
+          },
+          {
+            "startNumber": 1000,
+            "endNumber": 2999,
+            "productPrice": 0.0031
+          },
+          {
+            "startNumber": 3000,
+            "endNumber": 9999,
+            "productPrice": 0.0027
+          },
+          {
+            "startNumber": 10000,
+            "endNumber": 49999,
+            "productPrice": 0.0024
+          },
+          {
+            "startNumber": 50000,
+            "endNumber": 99999,
+            "productPrice": 0.0023
+          },
+          {
+            "startNumber": 100000,
+            "endNumber": -1,
+            "productPrice": 0.0022
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/02336ea48ea44ca18c72517dd3cb7b47.pdf?productCode=C15195",
+      "qualification": "C302 bias-feed filter (u-blox C14 10 nF X7R) and C312 radio supply bypass (EBYTE C2)."
     },
     {
       "refs": [
@@ -565,8 +742,8 @@
         "Interface": "I2C\u3001SPI"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 3372,
+        "checked_utc": "2026-10-15T21:53:32.647010+00:00",
+        "quantity": 2837,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -574,32 +751,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 6.7262
+            "productPrice": 6.724
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 5.9368
+            "productPrice": 5.9349
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 5.454
+            "productPrice": 5.4523
           },
           {
             "startNumber": 100,
             "endNumber": 101,
-            "productPrice": 5.0512
+            "productPrice": 5.0495
           },
           {
             "startNumber": 102,
             "endNumber": 103,
-            "productPrice": 5.0512
+            "productPrice": 5.0495
           },
           {
             "startNumber": 104,
             "endNumber": -1,
-            "productPrice": 5.0512
+            "productPrice": 5.0495
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -623,8 +800,8 @@
         "Temperature Coefficient": "X5R"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 10310570,
+        "checked_utc": "2026-10-15T21:53:33.308130+00:00",
+        "quantity": 9800210,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -632,185 +809,37 @@
           {
             "startNumber": 1,
             "endNumber": 499,
-            "productPrice": 0.0158
+            "productPrice": 0.0141
           },
           {
             "startNumber": 500,
             "endNumber": 1499,
-            "productPrice": 0.0123
+            "productPrice": 0.011
           },
           {
             "startNumber": 1500,
             "endNumber": 3999,
-            "productPrice": 0.0108
+            "productPrice": 0.0096
           },
           {
             "startNumber": 4000,
             "endNumber": 23999,
-            "productPrice": 0.0096
+            "productPrice": 0.0086
           },
           {
             "startNumber": 24000,
             "endNumber": 47999,
-            "productPrice": 0.0092
+            "productPrice": 0.0082
           },
           {
             "startNumber": 48000,
             "endNumber": -1,
-            "productPrice": 0.0088
+            "productPrice": 0.0079
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
       },
       "datasheet_url": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL10A105KB8NNNC_C15849.pdf"
-    },
-    {
-      "refs": [
-        "J131"
-      ],
-      "manufacturer": "JST",
-      "mpn": "BM04B-SRSS-TB(LF)(SN)",
-      "lcsc": "C160390",
-      "supplier_url": "https://jlcpcb.com/partdetail/x/C160390",
-      "value": "GPS 5V/GND/TX/RX",
-      "footprint": "rocket:M3_SH_BM04B_SRSS_TB",
-      "supplier_attributes": {
-        "Operating Temperature": "-25\u2103~+85\u2103",
-        "Number of Rows": "1",
-        "Voltage Rating": "50V",
-        "Color": "White",
-        "Current Rating": "1A",
-        "Pins Structure": "1x4P",
-        "Row Spacing": "-",
-        "Mounting Type": "Surface Mount,Vertical",
-        "Flame Retardant Rating": "UL94V-0",
-        "Y-Width of Bottom Edge on Board": "3.6mm",
-        "X-Length of Bottom Edge on Board (Spacing Line)": "6mm",
-        "Reference Series": "SR",
-        "Contact Plating": "Tin",
-        "Number of Pins": "4P",
-        "Pitch": "1mm",
-        "Contact Material": "Copper alloy",
-        "Supplementary Features": "Auxiliary Solder Pin",
-        "Z-Height of the Board": "4.25mm",
-        "Plastic Material": "PA",
-        "Number of PINs Per Row": "4"
-      },
-      "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 31399,
-        "library": "expand",
-        "minimum": 1,
-        "currency": "USD",
-        "unit_price_tiers": [
-          {
-            "startNumber": 1,
-            "endNumber": 49,
-            "productPrice": 0.2538
-          },
-          {
-            "startNumber": 50,
-            "endNumber": 149,
-            "productPrice": 0.2033
-          },
-          {
-            "startNumber": 150,
-            "endNumber": 1499,
-            "productPrice": 0.1785
-          },
-          {
-            "startNumber": 1500,
-            "endNumber": 2999,
-            "productPrice": 0.1565
-          },
-          {
-            "startNumber": 3000,
-            "endNumber": 4499,
-            "productPrice": 0.1504
-          },
-          {
-            "startNumber": 4500,
-            "endNumber": -1,
-            "productPrice": 0.1468
-          }
-        ],
-        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
-      },
-      "datasheet_url": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_JST-BM04B-SRSS-TB-LF-SN_C160390.pdf"
-    },
-    {
-      "refs": [
-        "J130"
-      ],
-      "manufacturer": "JST",
-      "mpn": "BM07B-SRSS-TB(LF)(SN)",
-      "lcsc": "C160393",
-      "supplier_url": "https://jlcpcb.com/partdetail/x/C160393",
-      "value": "RADIO M0/M1/RXD/TXD/AUX/VCC/GND",
-      "footprint": "rocket:M3_SH_BM07B_SRSS_TB",
-      "supplier_attributes": {
-        "Operating Temperature": "-25\u2103~+85\u2103",
-        "Number of Rows": "1",
-        "Voltage Rating": "50V",
-        "Color": "White",
-        "Current Rating": "1A",
-        "Pins Structure": "1x7P",
-        "Row Spacing": "-",
-        "Mounting Type": "Surface Mount,Vertical",
-        "Flame Retardant Rating": "UL94V-0",
-        "Y-Width of Bottom Edge on Board": "3.6mm",
-        "X-Length of Bottom Edge on Board (Spacing Line)": "9mm",
-        "Reference Series": "SH",
-        "Contact Plating": "Tin",
-        "Number of Pins": "7P",
-        "Pitch": "1mm",
-        "Contact Material": "Copper alloy",
-        "Supplementary Features": "Auxiliary Solder Pin",
-        "Z-Height of the Board": "4.25mm",
-        "Plastic Material": "PA",
-        "Number of PINs Per Row": "7"
-      },
-      "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 28681,
-        "library": "expand",
-        "minimum": 1,
-        "currency": "USD",
-        "unit_price_tiers": [
-          {
-            "startNumber": 1,
-            "endNumber": 49,
-            "productPrice": 0.3726
-          },
-          {
-            "startNumber": 50,
-            "endNumber": 149,
-            "productPrice": 0.3005
-          },
-          {
-            "startNumber": 150,
-            "endNumber": 1499,
-            "productPrice": 0.2697
-          },
-          {
-            "startNumber": 1500,
-            "endNumber": 2999,
-            "productPrice": 0.2312
-          },
-          {
-            "startNumber": 3000,
-            "endNumber": 4499,
-            "productPrice": 0.2139
-          },
-          {
-            "startNumber": 4500,
-            "endNumber": -1,
-            "productPrice": 0.2036
-          }
-        ],
-        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
-      },
-      "datasheet_url": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_JST-BM07B-SRSS-TB-LF-SN_C160393.pdf"
     },
     {
       "refs": [
@@ -829,8 +858,8 @@
         "Temperature Coefficient": "X7R"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 63587,
+        "checked_utc": "2026-10-15T21:53:33.966580+00:00",
+        "quantity": 70633,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -903,8 +932,8 @@
         "Number of PINs Per Row": "4"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 7971,
+        "checked_utc": "2026-10-15T21:53:34.622244+00:00",
+        "quantity": 1188,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -912,17 +941,17 @@
           {
             "startNumber": 1,
             "endNumber": 49,
-            "productPrice": 0.3936
+            "productPrice": 0.3935
           },
           {
             "startNumber": 50,
             "endNumber": 149,
-            "productPrice": 0.3411
+            "productPrice": 0.341
           },
           {
             "startNumber": 150,
             "endNumber": 499,
-            "productPrice": 0.3155
+            "productPrice": 0.3154
           },
           {
             "startNumber": 500,
@@ -932,12 +961,12 @@
           {
             "startNumber": 2500,
             "endNumber": 4999,
-            "productPrice": 0.2865
+            "productPrice": 0.2864
           },
           {
             "startNumber": 5000,
             "endNumber": -1,
-            "productPrice": 0.2825
+            "productPrice": 0.2824
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -971,8 +1000,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 836122,
+        "checked_utc": "2026-10-15T21:53:35.283936+00:00",
+        "quantity": 810516,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -1043,8 +1072,8 @@
         "Protocol Standard": "-"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 398095,
+        "checked_utc": "2026-10-15T21:53:36.006486+00:00",
+        "quantity": 379943,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -1052,12 +1081,12 @@
           {
             "startNumber": 1,
             "endNumber": 49,
-            "productPrice": 0.1863
+            "productPrice": 0.1862
           },
           {
             "startNumber": 50,
             "endNumber": 149,
-            "productPrice": 0.1472
+            "productPrice": 0.1471
           },
           {
             "startNumber": 150,
@@ -1067,17 +1096,17 @@
           {
             "startNumber": 1000,
             "endNumber": 1999,
-            "productPrice": 0.1038
+            "productPrice": 0.1037
           },
           {
             "startNumber": 2000,
             "endNumber": 4999,
-            "productPrice": 0.0991
+            "productPrice": 0.099
           },
           {
             "startNumber": 5000,
             "endNumber": -1,
-            "productPrice": 0.0963
+            "productPrice": 0.0962
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -1086,7 +1115,6 @@
     },
     {
       "refs": [
-        "C174",
         "C77"
       ],
       "manufacturer": "Samsung Electro-Mechanics",
@@ -1112,8 +1140,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 519616,
+        "checked_utc": "2026-10-15T21:53:36.670936+00:00",
+        "quantity": 502579,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -1163,6 +1191,69 @@
     },
     {
       "refs": [
+        "R304",
+        "R316"
+      ],
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0402WGF0000TCE",
+      "lcsc": "C17168",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C17168",
+      "value": "0R",
+      "footprint": "rocket:R0402",
+      "supplier_attributes": {
+        "Resistance": "0\u03a9",
+        "Operating Temperature": "-55\u2103~+155\u2103",
+        "Power(Watts)": "62.5mW",
+        "Type": "Thick Film Resistor",
+        "Voltage-Supply(Max)": "50V",
+        "Tolerance": "\u00b11%",
+        "Temperature Coefficient": "\u00b1800ppm/\u2103"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:53:37.375178+00:00",
+        "quantity": 9266084,
+        "library": "base",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 999,
+            "productPrice": 0.0012
+          },
+          {
+            "startNumber": 1000,
+            "endNumber": 2999,
+            "productPrice": 0.0009
+          },
+          {
+            "startNumber": 3000,
+            "endNumber": 9999,
+            "productPrice": 0.0008
+          },
+          {
+            "startNumber": 10000,
+            "endNumber": 49999,
+            "productPrice": 0.0007
+          },
+          {
+            "startNumber": 50000,
+            "endNumber": 50199,
+            "productPrice": 0.0006
+          },
+          {
+            "startNumber": 50200,
+            "endNumber": -1,
+            "productPrice": 0.0006
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C17168",
+      "qualification": "R304 / R316 pi-network series links (fitted); C303/C305/C313/C314 are DNP shunt placeholders with no part number."
+    },
+    {
+      "refs": [
         "R150",
         "R151",
         "R152",
@@ -1174,8 +1265,8 @@
       "source": "https://www.lcsc.com/product-detail/C17513.html",
       "supplier_url": "https://jlcpcb.com/partdetail/x/C17513",
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 44920556,
+        "checked_utc": "2026-10-15T21:53:38.021287+00:00",
+        "quantity": 44557714,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -1229,10 +1320,10 @@
     },
     {
       "refs": [
-        "R126",
-        "R162",
         "R32",
-        "R33"
+        "R33",
+        "R126",
+        "R162"
       ],
       "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
       "mpn": "0805W8F2200T5E",
@@ -1250,8 +1341,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 789638,
+        "checked_utc": "2026-10-15T21:53:38.676074+00:00",
+        "quantity": 764383,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -1301,8 +1392,8 @@
       "source": "SVPK series catalog (size code F12)",
       "supplier_url": "https://jlcpcb.com/partdetail/x/C178373",
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 212,
+        "checked_utc": "2026-10-15T21:53:39.334615+00:00",
+        "quantity": 1772,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -1310,32 +1401,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 1.7224
+            "productPrice": 1.7218
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 1.3994
+            "productPrice": 1.399
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 1.2233
+            "productPrice": 1.2229
           },
           {
             "startNumber": 100,
             "endNumber": 399,
-            "productPrice": 1.0227
+            "productPrice": 1.0223
           },
           {
             "startNumber": 400,
             "endNumber": 799,
-            "productPrice": 0.9346
+            "productPrice": 0.9343
           },
           {
             "startNumber": 800,
             "endNumber": -1,
-            "productPrice": 0.8938
+            "productPrice": 0.8935
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -1386,8 +1477,8 @@
         "package": "1206"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 443752,
+        "checked_utc": "2026-10-15T21:53:40.030016+00:00",
+        "quantity": 423530,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -1395,32 +1486,32 @@
           {
             "startNumber": 1,
             "endNumber": 99,
-            "productPrice": 0.049
+            "productPrice": 0.0682
           },
           {
             "startNumber": 100,
             "endNumber": 299,
-            "productPrice": 0.0387
+            "productPrice": 0.0579
           },
           {
             "startNumber": 300,
             "endNumber": 1999,
-            "productPrice": 0.0333
+            "productPrice": 0.0526
           },
           {
             "startNumber": 2000,
             "endNumber": 3999,
-            "productPrice": 0.0291
+            "productPrice": 0.0483
           },
           {
             "startNumber": 4000,
             "endNumber": 9999,
-            "productPrice": 0.0275
+            "productPrice": 0.0467
           },
           {
             "startNumber": 10000,
             "endNumber": -1,
-            "productPrice": 0.0265
+            "productPrice": 0.0457
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -1436,7 +1527,6 @@
     },
     {
       "refs": [
-        "U16",
         "U7"
       ],
       "manufacturer": "Texas Instruments",
@@ -1459,8 +1549,8 @@
         "Operating temperature": "-40\u2103~+125\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 4697,
+        "checked_utc": "2026-10-15T21:53:40.688725+00:00",
+        "quantity": 4657,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -1468,32 +1558,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 0.809
+            "productPrice": 0.8087
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 0.6688
+            "productPrice": 0.6685
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 0.5986
+            "productPrice": 0.5984
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.5301
+            "productPrice": 0.5299
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.4877
+            "productPrice": 0.4876
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.4665
+            "productPrice": 0.4664
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -1510,8 +1600,8 @@
       "source": "https://www.lcsc.com/product-detail/C191023.html",
       "supplier_url": "https://jlcpcb.com/partdetail/x/C191023",
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 4382655,
+        "checked_utc": "2026-10-15T21:53:41.337684+00:00",
+        "quantity": 4314122,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -1580,8 +1670,8 @@
         "Temperature Coefficient": "X5R"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 3205534,
+        "checked_utc": "2026-10-15T21:53:42.043240+00:00",
+        "quantity": 3653429,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -1589,37 +1679,96 @@
           {
             "startNumber": 1,
             "endNumber": 99,
-            "productPrice": 0.0296
+            "productPrice": 0.0203
           },
           {
             "startNumber": 100,
             "endNumber": 299,
-            "productPrice": 0.0213
+            "productPrice": 0.0158
           },
           {
             "startNumber": 300,
             "endNumber": 999,
-            "productPrice": 0.0175
+            "productPrice": 0.0138
           },
           {
             "startNumber": 1000,
             "endNumber": 3999,
-            "productPrice": 0.0146
+            "productPrice": 0.0122
           },
           {
             "startNumber": 4000,
             "endNumber": 7999,
-            "productPrice": 0.0135
+            "productPrice": 0.0116
           },
           {
             "startNumber": 8000,
             "endNumber": -1,
-            "productPrice": 0.0128
+            "productPrice": 0.0113
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
       },
       "datasheet_url": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL10A475KO8NNNC_C19666.pdf"
+    },
+    {
+      "refs": [
+        "C300"
+      ],
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL10A106KP8NNNC",
+      "lcsc": "C19702",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C19702",
+      "value": "10uF 10V X5R 10%",
+      "footprint": "rocket:C0603",
+      "supplier_attributes": {
+        "Voltage Rating": "10V",
+        "Tolerance": "\u00b110%",
+        "Capacitance": "10uF",
+        "Temperature Coefficient": "X5R"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:53:42.710882+00:00",
+        "quantity": 10732412,
+        "library": "base",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 199,
+            "productPrice": 0.0284
+          },
+          {
+            "startNumber": 200,
+            "endNumber": 599,
+            "productPrice": 0.0211
+          },
+          {
+            "startNumber": 600,
+            "endNumber": 3999,
+            "productPrice": 0.0178
+          },
+          {
+            "startNumber": 4000,
+            "endNumber": 7999,
+            "productPrice": 0.0154
+          },
+          {
+            "startNumber": 8000,
+            "endNumber": 19999,
+            "productPrice": 0.0144
+          },
+          {
+            "startNumber": 20000,
+            "endNumber": -1,
+            "productPrice": 0.0137
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/02336ea48ea44ca18c72517dd3cb7b47.pdf?productCode=C19702",
+      "qualification": "C300 GNSS local bulk (pass1_electrical 6.1; u-blox gives no value)."
     },
     {
       "refs": [
@@ -1640,8 +1789,8 @@
         "Frequency": "25MHz"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 5562,
+        "checked_utc": "2026-10-15T21:53:43.353242+00:00",
+        "quantity": 5492,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -1649,12 +1798,12 @@
           {
             "startNumber": 1,
             "endNumber": 49,
-            "productPrice": 0.3892
+            "productPrice": 0.3891
           },
           {
             "startNumber": 50,
             "endNumber": 149,
-            "productPrice": 0.309
+            "productPrice": 0.3089
           },
           {
             "startNumber": 150,
@@ -1664,7 +1813,7 @@
           {
             "startNumber": 500,
             "endNumber": 2999,
-            "productPrice": 0.2315
+            "productPrice": 0.2314
           },
           {
             "startNumber": 3000,
@@ -1683,6 +1832,7 @@
     },
     {
       "refs": [
+        "Q31",
         "Q122",
         "Q123"
       ],
@@ -1709,8 +1859,8 @@
         "Pd - Power Dissipation": "1.4W"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 796522,
+        "checked_utc": "2026-10-15T21:53:44.017583+00:00",
+        "quantity": 751291,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -1733,17 +1883,17 @@
           {
             "startNumber": 500,
             "endNumber": 2999,
-            "productPrice": 0.0557
+            "productPrice": 0.0556
           },
           {
             "startNumber": 3000,
             "endNumber": 5999,
-            "productPrice": 0.0531
+            "productPrice": 0.053
           },
           {
             "startNumber": 6000,
             "endNumber": -1,
-            "productPrice": 0.0513
+            "productPrice": 0.0512
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -1760,8 +1910,8 @@
       "source": "https://www.lcsc.com/product-detail/C21120.html",
       "supplier_url": "https://jlcpcb.com/partdetail/x/C21120",
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 874425,
+        "checked_utc": "2026-10-15T21:53:44.666608+00:00",
+        "quantity": 1209581,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -1769,32 +1919,32 @@
           {
             "startNumber": 1,
             "endNumber": 499,
-            "productPrice": 0.0089
+            "productPrice": 0.0086
           },
           {
             "startNumber": 500,
             "endNumber": 1499,
-            "productPrice": 0.0069
+            "productPrice": 0.0067
           },
           {
             "startNumber": 1500,
             "endNumber": 3999,
-            "productPrice": 0.0061
+            "productPrice": 0.0059
           },
           {
             "startNumber": 4000,
             "endNumber": 23999,
-            "productPrice": 0.0047
+            "productPrice": 0.0046
           },
           {
             "startNumber": 24000,
             "endNumber": 47999,
-            "productPrice": 0.0045
+            "productPrice": 0.0043
           },
           {
             "startNumber": 48000,
             "endNumber": -1,
-            "productPrice": 0.0043
+            "productPrice": 0.0042
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -1812,12 +1962,12 @@
     },
     {
       "refs": [
+        "R74",
+        "R77",
         "R100",
         "R101",
         "R103",
-        "R110",
-        "R74",
-        "R77"
+        "R110"
       ],
       "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
       "mpn": "0603WAF1001T5E",
@@ -1838,8 +1988,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 25550425,
+        "checked_utc": "2026-10-15T21:53:45.409764+00:00",
+        "quantity": 24116843,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -1891,9 +2041,6 @@
     },
     {
       "refs": [
-        "C170",
-        "C171",
-        "C172",
         "C72",
         "C73",
         "C75",
@@ -1922,8 +2069,8 @@
         ]
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 57140,
+        "checked_utc": "2026-10-15T21:53:46.086962+00:00",
+        "quantity": 80212,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -1931,32 +2078,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 0.46
+            "productPrice": 0.4484
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 0.3703
+            "productPrice": 0.3587
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 0.3262
+            "productPrice": 0.3147
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.2871
+            "productPrice": 0.2756
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.2773
+            "productPrice": 0.2658
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.2447
+            "productPrice": 0.2332
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -1972,7 +2119,6 @@
     },
     {
       "refs": [
-        "U14",
         "U8"
       ],
       "manufacturer": "Diodes Incorporated",
@@ -1997,8 +2143,8 @@
         "Number of Outputs": "1"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 12199,
+        "checked_utc": "2026-10-15T21:53:46.752053+00:00",
+        "quantity": 11802,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -2006,37 +2152,99 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 0.9672
+            "productPrice": 0.9669
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 0.8074
+            "productPrice": 0.8071
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 0.7291
+            "productPrice": 0.7289
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.6492
+            "productPrice": 0.649
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.5807
+            "productPrice": 0.5805
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.5562
+            "productPrice": 0.556
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
       },
       "datasheet_url": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2210280930_Diodes-Incorporated-AP63301WU-7_C2158003.pdf"
+    },
+    {
+      "refs": [
+        "R300"
+      ],
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0603WAF150JT5E",
+      "lcsc": "C22810",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C22810",
+      "value": "15R 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "supplier_attributes": {
+        "Resistance": "15\u03a9",
+        "Operating Temperature": "-55\u2103~+155\u2103",
+        "Power(Watts)": "100mW",
+        "Type": "Thick Film Resistor",
+        "Voltage-Supply(Max)": "75V",
+        "Tolerance": "\u00b11%",
+        "Temperature Coefficient": "\u00b1100ppm/\u2103"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:53:47.441516+00:00",
+        "quantity": 266204,
+        "library": "expand",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 999,
+            "productPrice": 0.0015
+          },
+          {
+            "startNumber": 1000,
+            "endNumber": 4999,
+            "productPrice": 0.0012
+          },
+          {
+            "startNumber": 5000,
+            "endNumber": 9999,
+            "productPrice": 0.001
+          },
+          {
+            "startNumber": 10000,
+            "endNumber": 49999,
+            "productPrice": 0.0009
+          },
+          {
+            "startNumber": 50000,
+            "endNumber": 50199,
+            "productPrice": 0.0008
+          },
+          {
+            "startNumber": 50200,
+            "endNumber": -1,
+            "productPrice": 0.0008
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C22810",
+      "qualification": "R300 antenna-bias current sense, 15 ohm 1 % 100 mW: keeps a shorted antenna at <= about 46 mA cold (REQUIREMENTS F10 <= 50 mA; docs/M3_R7.md). JLC has no basic-library 15 ohm (checked 2026-10-15: basic resistors near it are 10, 20 and 22 ohm), so this is one extended code. Short-circuit dissipation about 32 mW."
     },
     {
       "refs": [
@@ -2058,8 +2266,8 @@
         "Temperature Coefficient": "\u00b1400ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 174017,
+        "checked_utc": "2026-10-15T21:53:48.109337+00:00",
+        "quantity": 163590,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -2126,8 +2334,8 @@
         "Voltage - Forward(Vf)": "1.8V~2.4V"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 291086,
+        "checked_utc": "2026-10-15T21:53:48.764166+00:00",
+        "quantity": 790098,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -2169,69 +2377,6 @@
     },
     {
       "refs": [
-        "R191"
-      ],
-      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
-      "mpn": "0603WAF3002T5E",
-      "lcsc": "C22984",
-      "supplier_url": "https://jlcpcb.com/partdetail/x/C22984",
-      "value": "30k 1%",
-      "footprint": "rocket:R_0603_1608Metric",
-      "supplier_attributes": {
-        "Resistance": "30k\u03a9",
-        "Operating Temperature": "-55\u2103~+155\u2103",
-        "Power(Watts)": "100mW",
-        "Type": "Thick Film Resistor",
-        "Voltage-Supply(Max)": "75V",
-        "Tolerance": "\u00b11%",
-        "Temperature Coefficient": "\u00b1100ppm/\u2103"
-      },
-      "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 1706821,
-        "library": "base",
-        "minimum": 1,
-        "currency": "USD",
-        "unit_price_tiers": [
-          {
-            "startNumber": 1,
-            "endNumber": 999,
-            "productPrice": 0.005
-          },
-          {
-            "startNumber": 1000,
-            "endNumber": 4999,
-            "productPrice": 0.0039
-          },
-          {
-            "startNumber": 5000,
-            "endNumber": 9999,
-            "productPrice": 0.0033
-          },
-          {
-            "startNumber": 10000,
-            "endNumber": 49999,
-            "productPrice": 0.0029
-          },
-          {
-            "startNumber": 50000,
-            "endNumber": 99999,
-            "productPrice": 0.0026
-          },
-          {
-            "startNumber": 100000,
-            "endNumber": -1,
-            "productPrice": 0.0024
-          }
-        ],
-        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
-      },
-      "datasheet_url": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010116_UNI-ROYAL-Uniroyal-Elec-0603WAF3002T5E_C22984.pdf"
-    },
-    {
-      "refs": [
-        "R190",
-        "R206",
         "R81"
       ],
       "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
@@ -2250,8 +2395,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 615498,
+        "checked_utc": "2026-10-15T21:53:49.436457+00:00",
+        "quantity": 593127,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -2259,32 +2404,32 @@
           {
             "startNumber": 1,
             "endNumber": 999,
-            "productPrice": 0.0054
+            "productPrice": 0.0042
           },
           {
             "startNumber": 1000,
             "endNumber": 4999,
-            "productPrice": 0.0044
+            "productPrice": 0.0033
           },
           {
             "startNumber": 5000,
             "endNumber": 9999,
-            "productPrice": 0.0038
+            "productPrice": 0.0028
           },
           {
             "startNumber": 10000,
             "endNumber": 49999,
-            "productPrice": 0.003
+            "productPrice": 0.0022
           },
           {
             "startNumber": 50000,
-            "endNumber": 99999,
-            "productPrice": 0.0027
+            "endNumber": 50199,
+            "productPrice": 0.0019
           },
           {
-            "startNumber": 100000,
+            "startNumber": 50200,
             "endNumber": -1,
-            "productPrice": 0.0026
+            "productPrice": 0.0019
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -2293,8 +2438,8 @@
     },
     {
       "refs": [
-        "R165",
-        "R80"
+        "R80",
+        "R165"
       ],
       "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
       "mpn": "0603WAF4703T5E",
@@ -2312,8 +2457,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 1372862,
+        "checked_utc": "2026-10-15T21:53:50.090062+00:00",
+        "quantity": 1309045,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -2356,10 +2501,10 @@
     },
     {
       "refs": [
-        "C120",
         "C19",
         "C20",
-        "C87"
+        "C87",
+        "C120"
       ],
       "manufacturer": "Samsung Electro-Mechanics",
       "mpn": "CL10A225KO8NNNC",
@@ -2374,8 +2519,8 @@
         "Temperature Coefficient": "X5R"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 3599894,
+        "checked_utc": "2026-10-15T21:53:50.737680+00:00",
+        "quantity": 3529937,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -2383,37 +2528,164 @@
           {
             "startNumber": 1,
             "endNumber": 499,
-            "productPrice": 0.0182
+            "productPrice": 0.0133
           },
           {
             "startNumber": 500,
             "endNumber": 1499,
-            "productPrice": 0.0133
+            "productPrice": 0.0104
           },
           {
             "startNumber": 1500,
             "endNumber": 3999,
-            "productPrice": 0.0111
+            "productPrice": 0.0091
           },
           {
             "startNumber": 4000,
             "endNumber": 23999,
-            "productPrice": 0.0095
+            "productPrice": 0.0081
           },
           {
             "startNumber": 24000,
             "endNumber": 47999,
-            "productPrice": 0.0089
+            "productPrice": 0.0077
           },
           {
             "startNumber": 48000,
             "endNumber": -1,
-            "productPrice": 0.0085
+            "productPrice": 0.0075
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
       },
       "datasheet_url": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL10A225KO8NNNC_C23630.pdf"
+    },
+    {
+      "refs": [
+        "R305",
+        "R306"
+      ],
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0402WGF2200TCE",
+      "lcsc": "C25091",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C25091",
+      "value": "220R",
+      "footprint": "rocket:R0402",
+      "supplier_attributes": {
+        "Resistance": "220\u03a9",
+        "Operating Temperature": "-55\u2103~+155\u2103",
+        "Power(Watts)": "62.5mW",
+        "Type": "Thick Film Resistor",
+        "Voltage-Supply(Max)": "50V",
+        "Tolerance": "\u00b11%",
+        "Temperature Coefficient": "\u00b1100ppm/\u2103"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:53:51.393135+00:00",
+        "quantity": 1296635,
+        "library": "base",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 999,
+            "productPrice": 0.0035
+          },
+          {
+            "startNumber": 1000,
+            "endNumber": 2999,
+            "productPrice": 0.0026
+          },
+          {
+            "startNumber": 3000,
+            "endNumber": 9999,
+            "productPrice": 0.0022
+          },
+          {
+            "startNumber": 10000,
+            "endNumber": 49999,
+            "productPrice": 0.002
+          },
+          {
+            "startNumber": 50000,
+            "endNumber": 50199,
+            "productPrice": 0.0017
+          },
+          {
+            "startNumber": 50200,
+            "endNumber": -1,
+            "productPrice": 0.0017
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25091",
+      "qualification": "R305 / R306 GNSS UART series resistors (u-blox IM App. A.1 IO isolation)."
+    },
+    {
+      "refs": [
+        "R313",
+        "R314",
+        "R315"
+      ],
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0402WGF330JTCE",
+      "lcsc": "C25105",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C25105",
+      "value": "33R",
+      "footprint": "rocket:R0402",
+      "supplier_attributes": {
+        "Resistance": "33\u03a9",
+        "Operating Temperature": "-55\u2103~+155\u2103",
+        "Power(Watts)": "62.5mW",
+        "Type": "Thick Film Resistor",
+        "Voltage-Supply(Max)": "50V",
+        "Tolerance": "\u00b11%",
+        "Temperature Coefficient": "\u00b1100ppm/\u2103"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:53:52.056564+00:00",
+        "quantity": 1423687,
+        "library": "base",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 999,
+            "productPrice": 0.0012
+          },
+          {
+            "startNumber": 1000,
+            "endNumber": 2999,
+            "productPrice": 0.0009
+          },
+          {
+            "startNumber": 3000,
+            "endNumber": 9999,
+            "productPrice": 0.0008
+          },
+          {
+            "startNumber": 10000,
+            "endNumber": 49999,
+            "productPrice": 0.0007
+          },
+          {
+            "startNumber": 50000,
+            "endNumber": 50199,
+            "productPrice": 0.0006
+          },
+          {
+            "startNumber": 50200,
+            "endNumber": -1,
+            "productPrice": 0.0006
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25105",
+      "qualification": "R313-R315 SPI2 series resistors near the RF strip (33 ohm for SPI timing; Inference). JLC stock 1.4 M on 2026-10-15 (LCSC showed 0)."
     },
     {
       "refs": [
@@ -2435,8 +2707,8 @@
         "Temperature Coefficient": "\u00b1800ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 53940,
+        "checked_utc": "2026-10-15T21:53:52.691345+00:00",
+        "quantity": 48874,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -2478,10 +2750,14 @@
     },
     {
       "refs": [
+        "R60",
         "R120",
         "R122",
         "R123",
-        "R60"
+        "R301",
+        "R303",
+        "R310",
+        "R312"
       ],
       "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
       "mpn": "0402WGF1003TCE",
@@ -2499,8 +2775,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 10205853,
+        "checked_utc": "2026-10-15T21:53:53.339026+00:00",
+        "quantity": 9728112,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -2508,7 +2784,7 @@
           {
             "startNumber": 1,
             "endNumber": 999,
-            "productPrice": 0.0015
+            "productPrice": 0.0016
           },
           {
             "startNumber": 1000,
@@ -2542,9 +2818,14 @@
     },
     {
       "refs": [
+        "R5",
         "R10",
-        "R104",
         "R11",
+        "R61",
+        "R62",
+        "R63",
+        "R64",
+        "R104",
         "R121",
         "R128",
         "R131",
@@ -2554,15 +2835,7 @@
         "R157",
         "R161",
         "R163",
-        "R193",
-        "R203",
-        "R204",
-        "R205",
-        "R5",
-        "R61",
-        "R62",
-        "R63",
-        "R64"
+        "R302"
       ],
       "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
       "mpn": "0402WGF1002TCE",
@@ -2580,8 +2853,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 22442744,
+        "checked_utc": "2026-10-15T21:53:54.034928+00:00",
+        "quantity": 21996227,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -2589,32 +2862,32 @@
           {
             "startNumber": 1,
             "endNumber": 999,
-            "productPrice": 0.0033
+            "productPrice": 0.0016
           },
           {
             "startNumber": 1000,
             "endNumber": 2999,
-            "productPrice": 0.0026
+            "productPrice": 0.0013
           },
           {
             "startNumber": 3000,
             "endNumber": 9999,
-            "productPrice": 0.0022
+            "productPrice": 0.0011
           },
           {
             "startNumber": 10000,
             "endNumber": 49999,
-            "productPrice": 0.002
+            "productPrice": 0.001
           },
           {
             "startNumber": 50000,
             "endNumber": 50199,
-            "productPrice": 0.0017
+            "productPrice": 0.0008
           },
           {
             "startNumber": 50200,
             "endNumber": -1,
-            "productPrice": 0.0017
+            "productPrice": 0.0008
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -2623,8 +2896,6 @@
     },
     {
       "refs": [
-        "R102",
-        "R167",
         "R75",
         "R76",
         "R78",
@@ -2632,7 +2903,9 @@
         "R89",
         "R90",
         "R91",
-        "R92"
+        "R92",
+        "R102",
+        "R167"
       ],
       "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
       "mpn": "0603WAF1002T5E",
@@ -2650,8 +2923,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 31983099,
+        "checked_utc": "2026-10-15T21:53:54.700624+00:00",
+        "quantity": 32293903,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -2711,8 +2984,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 2092067,
+        "checked_utc": "2026-10-15T21:53:55.371860+00:00",
+        "quantity": 1964505,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -2776,8 +3049,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 16623918,
+        "checked_utc": "2026-10-15T21:53:56.030498+00:00",
+        "quantity": 16120495,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -2819,14 +3092,14 @@
     },
     {
       "refs": [
+        "R7",
+        "R8",
         "R124",
         "R129",
         "R132",
         "R173",
         "R175",
-        "R177",
-        "R7",
-        "R8"
+        "R177"
       ],
       "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
       "mpn": "0402WGF5101TCE",
@@ -2844,8 +3117,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 5487205,
+        "checked_utc": "2026-10-15T21:53:56.650887+00:00",
+        "quantity": 5299131,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -2910,7 +3183,7 @@
         "Interface": "SPI\u3001I2C"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
+        "checked_utc": "2026-10-15T21:53:57.316587+00:00",
         "quantity": 0,
         "library": "expand",
         "minimum": 1,
@@ -2919,32 +3192,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 11.2049
+            "productPrice": 11.2012
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 9.662
+            "productPrice": 9.6588
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 8.7209
+            "productPrice": 8.718
           },
           {
             "startNumber": 100,
             "endNumber": 101,
-            "productPrice": 7.9331
+            "productPrice": 7.9305
           },
           {
             "startNumber": 102,
             "endNumber": 103,
-            "productPrice": 7.9331
+            "productPrice": 7.9305
           },
           {
             "startNumber": 104,
             "endNumber": -1,
-            "productPrice": 7.9331
+            "productPrice": 7.9305
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -2975,8 +3248,8 @@
         "RDS(on)": "3.1m\u03a9@10V"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 1532,
+        "checked_utc": "2026-10-15T21:53:57.985546+00:00",
+        "quantity": 1521,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -2984,32 +3257,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 0.9004
+            "productPrice": 0.9001
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 0.7258
+            "productPrice": 0.7256
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 0.6394
+            "productPrice": 0.6392
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.553
+            "productPrice": 0.5528
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.5024
+            "productPrice": 0.5022
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.4747
+            "productPrice": 0.4745
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -3043,8 +3316,8 @@
         "Number of PINs Per Row": "4"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 79594,
+        "checked_utc": "2026-10-15T21:53:58.639894+00:00",
+        "quantity": 78175,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -3052,27 +3325,27 @@
           {
             "startNumber": 1,
             "endNumber": 49,
-            "productPrice": 0.4195
+            "productPrice": 0.4194
           },
           {
             "startNumber": 50,
             "endNumber": 149,
-            "productPrice": 0.3378
+            "productPrice": 0.3377
           },
           {
             "startNumber": 150,
             "endNumber": 499,
-            "productPrice": 0.2979
+            "productPrice": 0.2978
           },
           {
             "startNumber": 500,
             "endNumber": 2499,
-            "productPrice": 0.2134
+            "productPrice": 0.2133
           },
           {
             "startNumber": 2500,
             "endNumber": 4999,
-            "productPrice": 0.2036
+            "productPrice": 0.2035
           },
           {
             "startNumber": 5000,
@@ -3086,7 +3359,6 @@
     },
     {
       "refs": [
-        "C176",
         "C86",
         "C97",
         "C98"
@@ -3114,8 +3386,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 227048,
+        "checked_utc": "2026-10-15T21:53:59.293152+00:00",
+        "quantity": 207999,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -3123,32 +3395,32 @@
           {
             "startNumber": 1,
             "endNumber": 99,
-            "productPrice": 0.019
+            "productPrice": 0.0204
           },
           {
             "startNumber": 100,
             "endNumber": 299,
-            "productPrice": 0.0149
+            "productPrice": 0.0161
           },
           {
             "startNumber": 300,
             "endNumber": 999,
-            "productPrice": 0.0131
+            "productPrice": 0.0141
           },
           {
             "startNumber": 1000,
             "endNumber": 3999,
-            "productPrice": 0.0117
+            "productPrice": 0.0127
           },
           {
             "startNumber": 4000,
             "endNumber": 7999,
-            "productPrice": 0.0094
+            "productPrice": 0.0102
           },
           {
             "startNumber": 8000,
             "endNumber": -1,
-            "productPrice": 0.0091
+            "productPrice": 0.0098
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -3161,6 +3433,62 @@
         "Temperature Coefficient": "X7R"
       },
       "datasheet_url": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL10B105KA8NNNC_C29936.pdf"
+    },
+    {
+      "refs": [
+        "U30"
+      ],
+      "manufacturer": "U-BLOX",
+      "mpn": "MAX-F10S-00B",
+      "lcsc": "C30005563",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C30005563",
+      "value": "MAX-F10S-00B",
+      "footprint": "rocket:M3_MAX_F10S_LCC18",
+      "supplier_attributes": {},
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:53:59.952600+00:00",
+        "quantity": 18,
+        "library": "expand",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 9,
+            "productPrice": 19.7692
+          },
+          {
+            "startNumber": 10,
+            "endNumber": 11,
+            "productPrice": 19.2947
+          },
+          {
+            "startNumber": 12,
+            "endNumber": 13,
+            "productPrice": 19.2947
+          },
+          {
+            "startNumber": 14,
+            "endNumber": 15,
+            "productPrice": 19.2947
+          },
+          {
+            "startNumber": 16,
+            "endNumber": 17,
+            "productPrice": 19.2947
+          },
+          {
+            "startNumber": 18,
+            "endNumber": -1,
+            "productPrice": 19.2947
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://content.u-blox.com/sites/default/files/documents/MAX-F10S_DataSheet_UBXDOC-963802114-12732.pdf",
+      "source": "https://content.u-blox.com/sites/default/files/documents/MAX-F10S_IntegrationManual_UBXDOC-963802114-12892.pdf",
+      "alternate_supplier_url": "https://jlcpcb.com/partdetail/x/C4153167",
+      "qualification": "u-blox MAX-F10S L1/L5 GNSS, LCC-18 9.7 x 10.1 x 2.5 mm (DS R03 Table 21; 10.7 x 9.8 x 2.7 max with the de-paneling tab), MSL 4 (Table 22). VCC 1.76-3.6 V, V_IO 2.7 V-VCC with VIO_SEL open, V_IO ramp 25 us/V-35 ms/V (Table 12), VCC_RF = VCC - 0.1 V typical, ICC_RF <= 50 mA operating / 200 mA absolute (Tables 12-13), RF_IN <= 0 dBm absolute. Pinout Table 10; land IM R01 Fig. 25-26 (rocket:M3_MAX_F10S_LCC18). JLC stock 18, ATP 9 on 2026-10-15: thin, reserve at order. Alternate on the same pads and circuit: MAX-M10S-00B C4153167 (pins and outline identical, M10S DS UBX-20035208 Tables 10/21; fit L30 = 27 nH LQG15HS27NJ02D C12669 for L1 only)."
     },
     {
       "refs": [
@@ -3181,8 +3509,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 4125,
+        "checked_utc": "2026-10-15T21:54:00.613883+00:00",
+        "quantity": 2895,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -3190,32 +3518,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 0.504
+            "productPrice": 0.5544
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 0.3899
+            "productPrice": 0.4403
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 0.3409
+            "productPrice": 0.3914
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.2806
+            "productPrice": 0.331
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.2545
+            "productPrice": 0.3033
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.2382
+            "productPrice": 0.287
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -3224,12 +3552,11 @@
     },
     {
       "refs": [
-        "C100",
+        "C5",
         "C13",
         "C14",
         "C15",
         "C16",
-        "C160",
         "C17",
         "C18",
         "C21",
@@ -3238,9 +3565,12 @@
         "C30",
         "C31",
         "C32",
-        "C5",
         "C88",
-        "C99"
+        "C99",
+        "C100",
+        "C160",
+        "C301",
+        "C311"
       ],
       "manufacturer": "Samsung Electro-Mechanics",
       "mpn": "CL05B104KB54PNC",
@@ -3255,8 +3585,8 @@
         "Temperature Coefficient": "X7R"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 15040838,
+        "checked_utc": "2026-10-15T21:54:01.278490+00:00",
+        "quantity": 25004682,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -3264,32 +3594,32 @@
           {
             "startNumber": 1,
             "endNumber": 999,
-            "productPrice": 0.0091
+            "productPrice": 0.0099
           },
           {
             "startNumber": 1000,
             "endNumber": 2999,
-            "productPrice": 0.007
+            "productPrice": 0.0076
           },
           {
             "startNumber": 3000,
             "endNumber": 9999,
-            "productPrice": 0.0061
+            "productPrice": 0.0066
           },
           {
             "startNumber": 10000,
             "endNumber": 49999,
-            "productPrice": 0.0054
+            "productPrice": 0.0058
           },
           {
             "startNumber": 50000,
             "endNumber": 99999,
-            "productPrice": 0.0051
+            "productPrice": 0.0055
           },
           {
             "startNumber": 100000,
             "endNumber": -1,
-            "productPrice": 0.0049
+            "productPrice": 0.0053
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -3326,8 +3656,8 @@
         "Circluar Pins/Square Pins": "Square pin"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 27863,
+        "checked_utc": "2026-10-15T21:54:01.940153+00:00",
+        "quantity": 27862,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -3335,12 +3665,12 @@
           {
             "startNumber": 1,
             "endNumber": 49,
-            "productPrice": 0.1873
+            "productPrice": 0.1872
           },
           {
             "startNumber": 50,
             "endNumber": 149,
-            "productPrice": 0.1488
+            "productPrice": 0.1487
           },
           {
             "startNumber": 150,
@@ -3350,7 +3680,7 @@
           {
             "startNumber": 500,
             "endNumber": 2499,
-            "productPrice": 0.1118
+            "productPrice": 0.1117
           },
           {
             "startNumber": 2500,
@@ -3360,7 +3690,7 @@
           {
             "startNumber": 5000,
             "endNumber": -1,
-            "productPrice": 0.0973
+            "productPrice": 0.0972
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -3385,8 +3715,8 @@
         "Temperature Coefficient": "C0G"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 2256930,
+        "checked_utc": "2026-10-15T21:54:02.620772+00:00",
+        "quantity": 2216184,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -3454,8 +3784,8 @@
         "Operating temperature": "-40\u2103~+125\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 513,
+        "checked_utc": "2026-10-15T21:54:03.270590+00:00",
+        "quantity": 323,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -3463,32 +3793,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 1.4467
+            "productPrice": 1.4463
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 1.1956
+            "productPrice": 1.1952
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 1.0586
+            "productPrice": 1.0582
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.902
+            "productPrice": 0.9017
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.8335
+            "productPrice": 0.8332
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.8025
+            "productPrice": 0.8022
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -3502,7 +3832,8 @@
         "R133",
         "R178",
         "R180",
-        "R182"
+        "R182",
+        "R311"
       ],
       "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
       "mpn": "0402WGF2001TCE",
@@ -3520,8 +3851,8 @@
         "Temperature Coefficient": "\u00b1100ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 7941607,
+        "checked_utc": "2026-10-15T21:54:03.915661+00:00",
+        "quantity": 7745544,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -3584,8 +3915,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 2432,
+        "checked_utc": "2026-10-15T21:54:04.579918+00:00",
+        "quantity": 2294,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -3598,7 +3929,7 @@
           {
             "startNumber": 50,
             "endNumber": 149,
-            "productPrice": 0.08
+            "productPrice": 0.0799
           },
           {
             "startNumber": 150,
@@ -3664,8 +3995,8 @@
         "Number of PINs Per Row": "2"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 24851,
+        "checked_utc": "2026-10-15T21:54:05.215985+00:00",
+        "quantity": 24404,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -3673,27 +4004,27 @@
           {
             "startNumber": 1,
             "endNumber": 49,
-            "productPrice": 0.2054
+            "productPrice": 0.2053
           },
           {
             "startNumber": 50,
             "endNumber": 149,
-            "productPrice": 0.1643
+            "productPrice": 0.1642
           },
           {
             "startNumber": 150,
             "endNumber": 499,
-            "productPrice": 0.1467
+            "productPrice": 0.1466
           },
           {
             "startNumber": 500,
             "endNumber": 2499,
-            "productPrice": 0.1066
+            "productPrice": 0.1065
           },
           {
             "startNumber": 2500,
             "endNumber": 4999,
-            "productPrice": 0.0968
+            "productPrice": 0.0967
           },
           {
             "startNumber": 5000,
@@ -3716,8 +4047,8 @@
       "source": "https://www.aosmd.com/res/datasheets/AON7524.pdf",
       "supplier_url": "https://jlcpcb.com/partdetail/x/C431195",
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 17598,
+        "checked_utc": "2026-10-15T21:54:05.864510+00:00",
+        "quantity": 17570,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -3725,32 +4056,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 0.3833
+            "productPrice": 0.3832
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 0.3002
+            "productPrice": 0.3001
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 0.2659
+            "productPrice": 0.2658
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.2219
+            "productPrice": 0.2218
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.2023
+            "productPrice": 0.2022
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.1909
+            "productPrice": 0.1908
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -3778,14 +4109,15 @@
     },
     {
       "refs": [
+        "C6",
+        "C7",
+        "C8",
+        "C9",
         "C10",
         "C11",
         "C150",
         "C151",
-        "C6",
-        "C7",
-        "C8",
-        "C9"
+        "C310"
       ],
       "manufacturer": "Samsung Electro-Mechanics",
       "mpn": "CL21A226MAQNNNE",
@@ -3800,8 +4132,8 @@
         "Temperature Coefficient": "X5R"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 3483538,
+        "checked_utc": "2026-10-15T21:54:06.509845+00:00",
+        "quantity": 3885857,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -3809,32 +4141,32 @@
           {
             "startNumber": 1,
             "endNumber": 199,
-            "productPrice": 0.2372
+            "productPrice": 0.1924
           },
           {
             "startNumber": 200,
             "endNumber": 599,
-            "productPrice": 0.1806
+            "productPrice": 0.1512
           },
           {
             "startNumber": 600,
             "endNumber": 1999,
-            "productPrice": 0.153
+            "productPrice": 0.131
           },
           {
             "startNumber": 2000,
             "endNumber": 9999,
-            "productPrice": 0.1284
+            "productPrice": 0.1129
           },
           {
             "startNumber": 10000,
             "endNumber": 19999,
-            "productPrice": 0.1216
+            "productPrice": 0.108
           },
           {
             "startNumber": 20000,
             "endNumber": -1,
-            "productPrice": 0.1175
+            "productPrice": 0.1051
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -3851,8 +4183,8 @@
       "source": "https://www.lcsc.com/product-detail/C46550466.html",
       "supplier_url": "https://jlcpcb.com/partdetail/x/C46550466",
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 123948,
+        "checked_utc": "2026-10-15T21:54:07.170020+00:00",
+        "quantity": 123825,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -3860,12 +4192,12 @@
           {
             "startNumber": 1,
             "endNumber": 49,
-            "productPrice": 0.2801
+            "productPrice": 0.28
           },
           {
             "startNumber": 50,
             "endNumber": 149,
-            "productPrice": 0.223
+            "productPrice": 0.2229
           },
           {
             "startNumber": 150,
@@ -3875,7 +4207,7 @@
           {
             "startNumber": 500,
             "endNumber": 2499,
-            "productPrice": 0.1578
+            "productPrice": 0.1577
           },
           {
             "startNumber": 2500,
@@ -3885,7 +4217,7 @@
           {
             "startNumber": 5000,
             "endNumber": -1,
-            "productPrice": 0.1361
+            "productPrice": 0.136
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -3917,8 +4249,8 @@
       "source": "https://datasheet.lcsc.com/lcsc/1811141220_Nexperia-BAT54S-215_C47546.pdf",
       "supplier_url": "https://jlcpcb.com/partdetail/x/C47546",
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 201938,
+        "checked_utc": "2026-10-15T21:54:07.819145+00:00",
+        "quantity": 172125,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -3926,32 +4258,32 @@
           {
             "startNumber": 1,
             "endNumber": 199,
-            "productPrice": 0.031
+            "productPrice": 0.0287
           },
           {
             "startNumber": 200,
             "endNumber": 599,
-            "productPrice": 0.0234
+            "productPrice": 0.0219
           },
           {
             "startNumber": 600,
             "endNumber": 2999,
-            "productPrice": 0.0199
+            "productPrice": 0.0188
           },
           {
             "startNumber": 3000,
             "endNumber": 8999,
-            "productPrice": 0.0173
+            "productPrice": 0.0165
           },
           {
             "startNumber": 9000,
             "endNumber": 20999,
-            "productPrice": 0.0164
+            "productPrice": 0.0156
           },
           {
             "startNumber": 21000,
             "endNumber": -1,
-            "productPrice": 0.0157
+            "productPrice": 0.015
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -3989,8 +4321,8 @@
         "RDS(on)": "56m\u03a9"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 29116,
+        "checked_utc": "2026-10-15T21:54:08.477248+00:00",
+        "quantity": 28449,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -3998,32 +4330,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 0.9949
+            "productPrice": 0.9147
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 0.8677
+            "productPrice": 0.799
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 0.7487
+            "productPrice": 0.6881
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.659
+            "productPrice": 0.6066
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.6231
+            "productPrice": 0.5723
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.6051
+            "productPrice": 0.556
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -4058,8 +4390,8 @@
         "Interface": "SPI\u3001JTAG\u3001UART"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 18900,
+        "checked_utc": "2026-10-15T21:54:09.116658+00:00",
+        "quantity": 18062,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -4067,32 +4399,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 0.8579
+            "productPrice": 0.8577
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 0.7356
+            "productPrice": 0.7354
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 0.6492
+            "productPrice": 0.649
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.579
+            "productPrice": 0.5789
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.5562
+            "productPrice": 0.556
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.5432
+            "productPrice": 0.543
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -4125,8 +4457,8 @@
         "Oscillator Type": "Built-in+External"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 133,
+        "checked_utc": "2026-10-15T21:54:09.762509+00:00",
+        "quantity": 1490,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -4134,32 +4466,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 11.9633
+            "productPrice": 12.53
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 11.3843
+            "productPrice": 10.73
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 10.3829
+            "productPrice": 9.6343
           },
           {
             "startNumber": 100,
             "endNumber": 101,
-            "productPrice": 9.5087
+            "productPrice": 8.7148
           },
           {
             "startNumber": 102,
             "endNumber": 103,
-            "productPrice": 9.5087
+            "productPrice": 8.7148
           },
           {
             "startNumber": 104,
             "endNumber": -1,
-            "productPrice": 9.5087
+            "productPrice": 8.7148
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -4167,8 +4499,206 @@
     },
     {
       "refs": [
-        "U10",
-        "U15"
+        "J30",
+        "J31"
+      ],
+      "manufacturer": "Shenzhen Kinghelm Elec",
+      "mpn": "KH-SMA-KE8-G",
+      "lcsc": "C530661",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C530661",
+      "value": "GNSS ANT SMA",
+      "footprint": "rocket:M3_SMA_KH_KE8_EDGE",
+      "supplier_attributes": {
+        "Interface Diameter": "-",
+        "Number of Ports": "1",
+        "Interface Length/Height": "8mm",
+        "Operating Temperature Range": "-",
+        "Connector Type": "Board Side",
+        "Style": "Offset Pin",
+        "Frequency": "-",
+        "Impedance": "-",
+        "Interface": "Inner hole",
+        "RF Series": "SMA"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:54:10.423265+00:00",
+        "quantity": 959,
+        "library": "expand",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 9,
+            "productPrice": 0.4582
+          },
+          {
+            "startNumber": 10,
+            "endNumber": 29,
+            "productPrice": 0.3587
+          },
+          {
+            "startNumber": 30,
+            "endNumber": 199,
+            "productPrice": 0.3164
+          },
+          {
+            "startNumber": 200,
+            "endNumber": 399,
+            "productPrice": 0.2609
+          },
+          {
+            "startNumber": 400,
+            "endNumber": 999,
+            "productPrice": 0.2365
+          },
+          {
+            "startNumber": 1000,
+            "endNumber": -1,
+            "productPrice": 0.2234
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/35ad22a9bea57e53d493009a20c931ef.pdf?productCode=C530661",
+      "alternate_supplier_url": "https://jlcpcb.com/partdetail/x/C496550",
+      "qualification": "Kinghelm KH-SMA-KE8-G 50 ohm edge-launch SMA jack (drawing 2019-08-10): DC-6 GHz, VSWR <= 1.35, 1.7 mm board slot, legs 0.9 mm square at +/-2.55 mm, 9.5 mm beyond the board edge, -40..+85 C, wave-solder resistance 240-250 C 5 s. JLC: Wave Soldering class (hand-fitted after reflow). Land rocket:M3_SMA_KH_KE8_EDGE, no paste. Second source on the same land: BAT WIRELESS BWSMA-KE-P001 C496550 (same 6.5/4.2/6/2.8/1.7/4/13.5 mm drawing; no maker soldering rating; its EasyEDA pad numbering swaps legs 1 and 2, so ordering it needs a reviewed placement correction)."
+    },
+    {
+      "refs": [
+        "U31"
+      ],
+      "manufacturer": "Chengdu Ebyte Elec Tech",
+      "mpn": "E22-900MM22S",
+      "lcsc": "C5333985",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C5333985",
+      "value": "E22-900MM22S",
+      "footprint": "rocket:M3_E22_900MM22S",
+      "supplier_attributes": {
+        "Antenna Type": "Stamp Hole Antenna\u3001IPEX interface",
+        "Sensitivity": "-147dBm",
+        "Output Power": "22.3dBm",
+        "Modulation System": "LoRa",
+        "Voltage - Supply": "1.8V~3.7V",
+        "Frequency": "915MHz",
+        "Features": "Continuous frequency coverage",
+        "Communication Distance": "7km",
+        "Interface Type": "SPI",
+        "Receive  Current": "6.8mA",
+        "Send  Current": "119mA"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:54:11.071631+00:00",
+        "quantity": 462,
+        "library": "expand",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 9,
+            "productPrice": 6.512
+          },
+          {
+            "startNumber": 10,
+            "endNumber": 29,
+            "productPrice": 5.6267
+          },
+          {
+            "startNumber": 30,
+            "endNumber": 99,
+            "productPrice": 4.8588
+          },
+          {
+            "startNumber": 100,
+            "endNumber": 101,
+            "productPrice": 4.4071
+          },
+          {
+            "startNumber": 102,
+            "endNumber": 103,
+            "productPrice": 4.4071
+          },
+          {
+            "startNumber": 104,
+            "endNumber": -1,
+            "productPrice": 4.4071
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2212192008_Chengdu-Ebyte-Elec-Tech-E22-900MM22S_C5333985.pdf",
+      "qualification": "EBYTE E22-900MM22S (SX1262, 850-930 MHz, +22.3 dBm max), 10.0 x 10.0 x 2.5 mm, 20 stamp holes at 1.27 mm (manual v1.3 ch. 3). VCC 1.8-3.7 V, 3.7 V absolute, >= 3.3 V for rated power; passive 32 MHz crystal (no TCXO); RF switch driven by TXEN (= DIO2 here) and RXEN. No maker land: rocket:M3_E22_900MM22S derived from the drawing, identical to the JLC/EasyEDA land. Reflow peak 230-250 C (manual ch. 7). The E22-900M22S (C411293, 20 x 14 mm) is a layout alternate only."
+    },
+    {
+      "refs": [
+        "D30",
+        "D31"
+      ],
+      "manufacturer": "Infineon Technologies",
+      "mpn": "ESD103-B1-02EL E6327",
+      "lcsc": "C535146",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C535146",
+      "value": "ESD103-B1-02EL",
+      "footprint": "rocket:M3_TSLP_2_20",
+      "supplier_attributes": {
+        "Operating Temperature": "-55\u2103~+125\u2103",
+        "Type": "ESD",
+        "Junction Capacitance": "0.09pF",
+        "Number of Channels": "1",
+        "level of protection": "IEC 61000-4-2",
+        "Clamping Voltage": "48V",
+        "Polarity": "Bidirectional",
+        "Reverse Stand-Off Voltage (Vrwm)": "15V",
+        "Reverse Leakage Current (Ir)": "50nA"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:54:11.720295+00:00",
+        "quantity": 221,
+        "library": "expand",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 49,
+            "productPrice": 0.2291
+          },
+          {
+            "startNumber": 50,
+            "endNumber": 149,
+            "productPrice": 0.1799
+          },
+          {
+            "startNumber": 150,
+            "endNumber": 499,
+            "productPrice": 0.1587
+          },
+          {
+            "startNumber": 500,
+            "endNumber": 2499,
+            "productPrice": 0.1264
+          },
+          {
+            "startNumber": 2500,
+            "endNumber": 4999,
+            "productPrice": 0.1147
+          },
+          {
+            "startNumber": 5000,
+            "endNumber": -1,
+            "productPrice": 0.1077
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146",
+      "source": "https://cdn.components.ru/media/PDF/8100385.pdf",
+      "qualification": "Infineon ESD103-B1-02EL, bidirectional, VWM +/-15 V, Vtr 21 V typ, CL 0.09 pF at 1 GHz, Vcl 20 V at 1 A TLP, TSLP-2-20 1.0 x 0.6 x 0.31 mm (DS v2.0 2022-03-15 Tables 2-6, Fig. 9; footprint from DS rev 1.3 2014-06-12 Fig. 14). Used at both antenna jacks (D30, D31): the +/-15 V working voltage clears the 3.2 V GNSS bias and the +22 dBm radio peaks (about 4.1 V into 50 ohm, 7.5 V at 10:1 VSWR)."
+    },
+    {
+      "refs": [
+        "U10"
       ],
       "manufacturer": "Texas Instruments",
       "mpn": "TPS2553DBVR",
@@ -4187,8 +4717,8 @@
         "Control Input Logic": "Active High"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 54814,
+        "checked_utc": "2026-10-15T21:54:12.374893+00:00",
+        "quantity": 54186,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -4196,32 +4726,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 0.5399
+            "productPrice": 0.5397
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 0.4469
+            "productPrice": 0.4468
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 0.3801
+            "productPrice": 0.3799
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.3262
+            "productPrice": 0.3261
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.3099
+            "productPrice": 0.3098
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.2985
+            "productPrice": 0.2984
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -4230,11 +4760,11 @@
     },
     {
       "refs": [
+        "C60",
+        "C94",
         "C122",
         "C127",
-        "C129",
-        "C60",
-        "C94"
+        "C129"
       ],
       "manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
       "mpn": "0603B103K500NT",
@@ -4249,8 +4779,8 @@
         "Temperature Coefficient": "X7R"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 6247020,
+        "checked_utc": "2026-10-15T21:54:13.037550+00:00",
+        "quantity": 5947769,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -4258,7 +4788,7 @@
           {
             "startNumber": 1,
             "endNumber": 499,
-            "productPrice": 0.0101
+            "productPrice": 0.0102
           },
           {
             "startNumber": 500,
@@ -4268,7 +4798,7 @@
           {
             "startNumber": 1500,
             "endNumber": 3999,
-            "productPrice": 0.007
+            "productPrice": 0.0071
           },
           {
             "startNumber": 4000,
@@ -4309,8 +4839,8 @@
         "DC Resistance(DCR)": "78m\u03a9"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 27112,
+        "checked_utc": "2026-10-15T21:54:13.680088+00:00",
+        "quantity": 23943,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -4323,7 +4853,7 @@
           {
             "startNumber": 100,
             "endNumber": 299,
-            "productPrice": 0.0513
+            "productPrice": 0.0512
           },
           {
             "startNumber": 300,
@@ -4372,8 +4902,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 6784,
+        "checked_utc": "2026-10-15T21:54:14.347998+00:00",
+        "quantity": 6721,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -4386,7 +4916,7 @@
           {
             "startNumber": 200,
             "endNumber": 599,
-            "productPrice": 0.0482
+            "productPrice": 0.0481
           },
           {
             "startNumber": 600,
@@ -4426,67 +4956,6 @@
     },
     {
       "refs": [
-        "R195"
-      ],
-      "manufacturer": "YAGEO",
-      "mpn": "RT0603DRD074K42L",
-      "lcsc": "C728617",
-      "supplier_url": "https://jlcpcb.com/partdetail/x/C728617",
-      "value": "4.42k 0.5%",
-      "footprint": "rocket:R_0603_1608Metric",
-      "supplier_attributes": {
-        "Resistance": "4.42k\u03a9",
-        "Operating Temperature": "-55\u2103~+155\u2103",
-        "Power(Watts)": "100mW",
-        "Type": "Thin Film Resistor",
-        "Voltage-Supply(Max)": "75V",
-        "Tolerance": "\u00b10.5%",
-        "Temperature Coefficient": "\u00b125ppm/\u2103"
-      },
-      "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 4637,
-        "library": "expand",
-        "minimum": 1,
-        "currency": "USD",
-        "unit_price_tiers": [
-          {
-            "startNumber": 1,
-            "endNumber": 499,
-            "productPrice": 0.0153
-          },
-          {
-            "startNumber": 500,
-            "endNumber": 1499,
-            "productPrice": 0.0124
-          },
-          {
-            "startNumber": 1500,
-            "endNumber": 4999,
-            "productPrice": 0.0108
-          },
-          {
-            "startNumber": 5000,
-            "endNumber": 24999,
-            "productPrice": 0.0099
-          },
-          {
-            "startNumber": 25000,
-            "endNumber": 49999,
-            "productPrice": 0.009
-          },
-          {
-            "startNumber": 50000,
-            "endNumber": -1,
-            "productPrice": 0.0086
-          }
-        ],
-        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
-      },
-      "datasheet_url": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_YAGEO-RT0603DRD074K42L_C728617.pdf"
-    },
-    {
-      "refs": [
         "D4"
       ],
       "manufacturer": "STMicroelectronics",
@@ -4509,8 +4978,8 @@
         "Reverse Leakage Current (Ir)": "150nA"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 41431,
+        "checked_utc": "2026-10-15T21:54:15.052455+00:00",
+        "quantity": 48119,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -4576,8 +5045,8 @@
         "Number of Outputs": "1"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 8048,
+        "checked_utc": "2026-10-15T21:54:15.719977+00:00",
+        "quantity": 4181,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -4585,32 +5054,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 1.1825
+            "productPrice": 1.1821
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 1.0569
+            "productPrice": 1.0566
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 0.9362
+            "productPrice": 0.9359
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.8482
+            "productPrice": 0.8479
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.778
+            "productPrice": 0.7778
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.7601
+            "productPrice": 0.7598
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -4642,8 +5111,8 @@
         "Reverse Leakage Current (Ir)": "1uA"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 23600,
+        "checked_utc": "2026-10-15T21:54:16.355314+00:00",
+        "quantity": 22305,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -4651,7 +5120,7 @@
           {
             "startNumber": 1,
             "endNumber": 49,
-            "productPrice": 0.1242
+            "productPrice": 0.1241
           },
           {
             "startNumber": 50,
@@ -4666,7 +5135,7 @@
           {
             "startNumber": 500,
             "endNumber": 2999,
-            "productPrice": 0.0717
+            "productPrice": 0.0716
           },
           {
             "startNumber": 3000,
@@ -4676,7 +5145,7 @@
           {
             "startNumber": 6000,
             "endNumber": -1,
-            "productPrice": 0.065
+            "productPrice": 0.0649
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -4714,8 +5183,8 @@
         "Voltage - Forward(Vf)": "1.6V~2.6V"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 4135751,
+        "checked_utc": "2026-10-15T21:54:17.000428+00:00",
+        "quantity": 3971921,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -4777,8 +5246,8 @@
         ]
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 5473,
+        "checked_utc": "2026-10-15T21:54:17.650024+00:00",
+        "quantity": 28458,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -4786,32 +5255,32 @@
           {
             "startNumber": 1,
             "endNumber": 99,
-            "productPrice": 0.0811
+            "productPrice": 0.0832
           },
           {
             "startNumber": 100,
             "endNumber": 299,
-            "productPrice": 0.0648
+            "productPrice": 0.0674
           },
           {
             "startNumber": 300,
             "endNumber": 999,
-            "productPrice": 0.0563
+            "productPrice": 0.0594
           },
           {
             "startNumber": 1000,
             "endNumber": 4999,
-            "productPrice": 0.0495
+            "productPrice": 0.0527
           },
           {
             "startNumber": 5000,
             "endNumber": 9999,
-            "productPrice": 0.047
+            "productPrice": 0.0503
           },
           {
             "startNumber": 10000,
             "endNumber": -1,
-            "productPrice": 0.0454
+            "productPrice": 0.0488
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -4839,8 +5308,8 @@
       "source": "https://www.vishay.com/docs/86410/bat54_bat54a_bat54c_bat54s.pdf",
       "supplier_url": "https://jlcpcb.com/partdetail/x/C8591",
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 55046,
+        "checked_utc": "2026-10-15T21:54:18.295387+00:00",
+        "quantity": 54507,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -4848,7 +5317,7 @@
           {
             "startNumber": 1,
             "endNumber": 199,
-            "productPrice": 0.0244
+            "productPrice": 0.0243
           },
           {
             "startNumber": 200,
@@ -4892,7 +5361,6 @@
     },
     {
       "refs": [
-        "C178",
         "C70",
         "C81"
       ],
@@ -4923,8 +5391,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 77631,
+        "checked_utc": "2026-10-15T21:54:18.984296+00:00",
+        "quantity": 76248,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -4932,7 +5400,7 @@
           {
             "startNumber": 1,
             "endNumber": 499,
-            "productPrice": 0.0213
+            "productPrice": 0.0212
           },
           {
             "startNumber": 500,
@@ -4947,7 +5415,7 @@
           {
             "startNumber": 4000,
             "endNumber": 23999,
-            "productPrice": 0.0137
+            "productPrice": 0.0136
           },
           {
             "startNumber": 24000,
@@ -4994,8 +5462,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 4465,
+        "checked_utc": "2026-10-15T21:54:19.637610+00:00",
+        "quantity": 4425,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -5003,7 +5471,7 @@
           {
             "startNumber": 1,
             "endNumber": 199,
-            "productPrice": 0.0544
+            "productPrice": 0.0543
           },
           {
             "startNumber": 200,
@@ -5064,8 +5532,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 81,
+        "checked_utc": "2026-10-15T21:54:20.318378+00:00",
+        "quantity": 5081,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -5073,32 +5541,32 @@
           {
             "startNumber": 1,
             "endNumber": 199,
-            "productPrice": 0.0353
+            "productPrice": 0.0374
           },
           {
             "startNumber": 200,
             "endNumber": 599,
-            "productPrice": 0.0301
+            "productPrice": 0.0309
           },
           {
             "startNumber": 600,
             "endNumber": 4999,
-            "productPrice": 0.0273
+            "productPrice": 0.0271
           },
           {
             "startNumber": 5000,
             "endNumber": 9999,
-            "productPrice": 0.0255
+            "productPrice": 0.025
           },
           {
             "startNumber": 10000,
             "endNumber": 19999,
-            "productPrice": 0.024
+            "productPrice": 0.023
           },
           {
             "startNumber": 20000,
             "endNumber": -1,
-            "productPrice": 0.0232
+            "productPrice": 0.0221
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -5133,8 +5601,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 2706,
+        "checked_utc": "2026-10-15T21:54:20.989477+00:00",
+        "quantity": 2666,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -5142,7 +5610,7 @@
           {
             "startNumber": 1,
             "endNumber": 199,
-            "productPrice": 0.0438
+            "productPrice": 0.0437
           },
           {
             "startNumber": 200,
@@ -5157,7 +5625,7 @@
           {
             "startNumber": 5000,
             "endNumber": 9999,
-            "productPrice": 0.0319
+            "productPrice": 0.0318
           },
           {
             "startNumber": 10000,
@@ -5205,8 +5673,8 @@
         "Temperature Coefficient": "\u00b125ppm/\u2103"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 2885,
+        "checked_utc": "2026-10-15T21:54:21.648571+00:00",
+        "quantity": 2661,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -5268,8 +5736,8 @@
         "package": "0603"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 11125,
+        "checked_utc": "2026-10-15T21:54:22.299653+00:00",
+        "quantity": 5945,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -5277,7 +5745,7 @@
           {
             "startNumber": 1,
             "endNumber": 199,
-            "productPrice": 0.0412
+            "productPrice": 0.0411
           },
           {
             "startNumber": 200,
@@ -5297,7 +5765,7 @@
           {
             "startNumber": 10000,
             "endNumber": 19999,
-            "productPrice": 0.0244
+            "productPrice": 0.0243
           },
           {
             "startNumber": 20000,
@@ -5320,6 +5788,68 @@
         "Temperature Coefficient": "\u00b125ppm/\u2103"
       },
       "datasheet_url": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2210190000_YAGEO-RT0603BRD0780K6L_C861568.pdf"
+    },
+    {
+      "refs": [
+        "FB30",
+        "FB31"
+      ],
+      "manufacturer": "Murata Electronics",
+      "mpn": "BLM18KG221SN1D",
+      "lcsc": "C88980",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C88980",
+      "value": "BLM18KG221SN1D",
+      "footprint": "rocket:M3_BLM18K_0603",
+      "supplier_attributes": {
+        "Operating Temperature": "-55\u2103~+125\u2103",
+        "Impedance @ Frequency": "220\u03a9@100MHz",
+        "Tolerance": "\u00b125%",
+        "Current Rating": "2.2A",
+        "Number of Circuits": "1",
+        "DC Resistance(DCR)": "50m\u03a9"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:54:22.963408+00:00",
+        "quantity": 62476,
+        "library": "expand",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 199,
+            "productPrice": 0.0371
+          },
+          {
+            "startNumber": 200,
+            "endNumber": 599,
+            "productPrice": 0.0317
+          },
+          {
+            "startNumber": 600,
+            "endNumber": 3999,
+            "productPrice": 0.0287
+          },
+          {
+            "startNumber": 4000,
+            "endNumber": 7999,
+            "productPrice": 0.027
+          },
+          {
+            "startNumber": 8000,
+            "endNumber": 19999,
+            "productPrice": 0.0255
+          },
+          {
+            "startNumber": 20000,
+            "endNumber": -1,
+            "productPrice": 0.0247
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/2d503a4b167da9bb5d0eb4a3fa711314.pdf?productCode=C88980",
+      "qualification": "Murata BLM18KG221SN1D: 220 ohm +/-25 % at 100 MHz, 2.2 A rated (derated above 85 C), DCR <= 0.050 ohm initial / 0.060 after test, 1.6 x 0.8 x 0.8 mm (spec JENF243A-0003). Land per sec. 10-1 BLM18K reflow (rocket:M3_BLM18K_0603). Meets the MAX-F10S <= 0.2 ohm VCC series limit (IM sec. 4.1.1)."
     },
     {
       "refs": [
@@ -5346,8 +5876,8 @@
         "Number of Outputs": "1"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 48766,
+        "checked_utc": "2026-10-15T21:54:23.622562+00:00",
+        "quantity": 45368,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -5355,17 +5885,17 @@
           {
             "startNumber": 1,
             "endNumber": 49,
-            "productPrice": 0.3375
+            "productPrice": 0.3374
           },
           {
             "startNumber": 50,
             "endNumber": 149,
-            "productPrice": 0.2594
+            "productPrice": 0.2593
           },
           {
             "startNumber": 150,
             "endNumber": 499,
-            "productPrice": 0.2212
+            "productPrice": 0.2211
           },
           {
             "startNumber": 500,
@@ -5415,8 +5945,8 @@
         "Current Consumption": "100mA"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 91636,
+        "checked_utc": "2026-10-15T21:54:24.289520+00:00",
+        "quantity": 89296,
         "library": "expand",
         "minimum": 1,
         "currency": "USD",
@@ -5424,32 +5954,32 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 0.4404
+            "productPrice": 0.4403
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 0.3442
+            "productPrice": 0.3441
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 0.2969
+            "productPrice": 0.2968
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 0.2545
+            "productPrice": 0.2544
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 0.2056
+            "productPrice": 0.2055
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 0.1974
+            "productPrice": 0.1973
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
@@ -5483,8 +6013,8 @@
         "Program / Erase Cycles": "100,000 cycles"
       },
       "stock_snapshot": {
-        "checked_utc": "2026-10-13T19:17:09.804712+00:00",
-        "quantity": 43831,
+        "checked_utc": "2026-10-15T21:54:24.952273+00:00",
+        "quantity": 66921,
         "library": "base",
         "minimum": 1,
         "currency": "USD",
@@ -5492,37 +6022,99 @@
           {
             "startNumber": 1,
             "endNumber": 9,
-            "productPrice": 2.5607
+            "productPrice": 2.5598
           },
           {
             "startNumber": 10,
             "endNumber": 29,
-            "productPrice": 2.2247
+            "productPrice": 2.224
           },
           {
             "startNumber": 30,
             "endNumber": 99,
-            "productPrice": 1.9882
+            "productPrice": 1.9876
           },
           {
             "startNumber": 100,
             "endNumber": 499,
-            "productPrice": 1.7713
+            "productPrice": 1.7707
           },
           {
             "startNumber": 500,
             "endNumber": 999,
-            "productPrice": 1.6718
+            "productPrice": 1.6713
           },
           {
             "startNumber": 1000,
             "endNumber": -1,
-            "productPrice": 1.631
+            "productPrice": 1.6305
           }
         ],
         "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
       },
       "datasheet_url": "https://www.lcsc.com/datasheet/lcsc_datasheet_1811142111_Winbond-Elec-W25Q128JVSIQ_C97521.pdf"
+    },
+    {
+      "refs": [
+        "L30"
+      ],
+      "manufacturer": "Murata Electronics",
+      "mpn": "LQG15HS47NJ02D",
+      "lcsc": "C97998",
+      "supplier_url": "https://jlcpcb.com/partdetail/x/C97998",
+      "value": "47nH 5% 300mA",
+      "footprint": "rocket:M3_LQG15_0402",
+      "supplier_attributes": {
+        "Inductance": "47nH",
+        "Current - Saturation (Isat)": "-",
+        "Q @ Frequency": "8@100MHz",
+        "Frequency - Self Resonant": "1GHz",
+        "Tolerance": "\u00b15%",
+        "Current Rating": "300mA",
+        "DC Resistance(DCR)": "720m\u03a9"
+      },
+      "stock_snapshot": {
+        "checked_utc": "2026-10-15T21:54:25.613415+00:00",
+        "quantity": 24540,
+        "library": "expand",
+        "minimum": 1,
+        "currency": "USD",
+        "unit_price_tiers": [
+          {
+            "startNumber": 1,
+            "endNumber": 499,
+            "productPrice": 0.0245
+          },
+          {
+            "startNumber": 500,
+            "endNumber": 1499,
+            "productPrice": 0.0206
+          },
+          {
+            "startNumber": 1500,
+            "endNumber": 9999,
+            "productPrice": 0.0185
+          },
+          {
+            "startNumber": 10000,
+            "endNumber": 19999,
+            "productPrice": 0.0138
+          },
+          {
+            "startNumber": 20000,
+            "endNumber": 49999,
+            "productPrice": 0.0127
+          },
+          {
+            "startNumber": 50000,
+            "endNumber": -1,
+            "productPrice": 0.0121
+          }
+        ],
+        "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/4fdc9bb2296ffef8346418b98de47ce9.pdf?productCode=C97998",
+      "qualification": "Murata LQG15HS47NJ02D: 47 nH +/-5 %, SRF >= 1000 MHz, DCR <= 0.72 ohm, 300 mA, 1.0 x 0.5 x 0.5 mm (spec JELF243B-0010). u-blox L4 bias inductor for L1 + L5 (MAX-F10S IM Table 42). Land per sec. 11.1 (rocket:M3_LQG15_0402)."
     }
   ]
 }

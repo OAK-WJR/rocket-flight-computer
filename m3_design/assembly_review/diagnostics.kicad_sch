@@ -6,7 +6,7 @@
 	(title_block
 		(title "04 | Voltage diagnosis and indicators")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R6")
+		(rev "M3-ASSY-R7")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -110,7 +110,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+			(property "ki_fp_filters" "C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
 				(at 0 0 0)
 				(effects
 					(font

@@ -8,6 +8,9 @@ from pathlib import Path
 from fab_manifest import verify_manifest
 from jlc_stock import FAB, input_hashes
 
+# REQUIREMENTS M3 (R7, owner 2026-10-15): R3's $84.41 plus the $42.00 on-board radio/GPS allowance, 52 extended codes
+MAX_TOTAL, MAX_EXTENDED = 126.41, 52
+
 
 def verify(folder, cost_only=False, now=None, board=None):
     folder = Path(folder)
@@ -30,10 +33,10 @@ def verify(folder, cost_only=False, now=None, board=None):
             raise ValueError(f'{name}: procurement target is not met')
         if is_cost:
             cost = report
-            if (report.get('targets') != {'max_total': 84.41, 'max_extended': 48}
-                    or report.get('errors') or report['total_usd_per_board'] > 84.41
-                    or len(report['extended_codes']) > 48):
-                raise ValueError(f'{name}: required $84.41 / 48-code targets were changed or missed')
+            if (report.get('targets') != {'max_total': MAX_TOTAL, 'max_extended': MAX_EXTENDED}
+                    or report.get('errors') or report['total_usd_per_board'] > MAX_TOTAL
+                    or len(report['extended_codes']) > MAX_EXTENDED):
+                raise ValueError(f'{name}: required ${MAX_TOTAL:.2f} / {MAX_EXTENDED}-code targets were changed or missed')
             default_fee = {'standard': 1.53, 'economic': 3.07}.get(report.get('tier'))
             if not cost_only and (default_fee is None or report.get('fee_usd_per_code') != default_fee):
                 raise ValueError(f'{name}: unknown assembly tier or nonstandard feeder fee; '
@@ -65,4 +68,4 @@ if __name__ == '__main__':
     print(f"Components + feeder fees ({cost['boards']} boards, {cost['tier']}): "
           f"${cost['total_usd_per_board']:.2f}/board; "
           f"ordered components with minimum purchases: ${cost['order_usd_per_board_with_min_purchase']:.2f}/board. "
-          'The $84.41 target excludes fixed assembly fees, PCB fabrication and shipping.')
+          f'The ${MAX_TOTAL:.2f} target excludes fixed assembly fees, PCB fabrication and shipping.')

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Safety contract for R6 single-channel actuators and telemetry, read from the saved PCB (pad nets), not the schematic.
+"""Safety contract for the single-channel actuators (R6, kept in R7), read from the saved PCB (pad nets), not the schematic.
+
+R7 removed the R6 telemetry port (J130/J131, U14-U16 and their parts), so its rules and pinned codes are gone; the
+radio and GNSS now on the board are checked by tools/check_r7.py.
 
 usage: python3 m3_design/check_actuators.py [board.kicad_pcb]      exit 0 = every rule holds
 
@@ -72,7 +75,7 @@ PYRO_RULE_SHA = {
 # pass 7: the whole m3.kicad_dru is pinned too. KiCad applies the last matching rule, so a later or duplicate rule (or an
 # unconditional low clearance) overrode the pinned blocks, and a syntax error makes kicad-cli drop every custom rule
 # silently. After a deliberate, reviewed edit of the file, update this hash from the failure message.
-DRU_SHA = '4bad569e6424ef9e'
+DRU_SHA = '1674d58be79ae428'   # R7: the RF-strip rules added before the pyro rules (reviewed; pyro blocks unchanged)
 # safety-relevant parts pinned by LCSC code (value text alone let a BAT54C, an AO3400A or a plain 1206 resistor pass)
 PINNED = {'R134': 'C3013496',
  'Q124': 'C431195',
@@ -133,15 +136,7 @@ PINNED = {'R134': 'C3013496',
  'R156': 'C25744',
  'R157': 'C25744',
  'R122': 'C25741',
- 'R123': 'C25741',
- 'J130': 'C160393',
- 'J131': 'C160390',
- 'U14': 'C2158003',
- 'U15': 'C55266',
- 'U16': 'C1849463',
- 'R195': 'C728617',
- 'D130': 'C13612',
- 'D131': 'C13612'}
+ 'R123': 'C25741'}
 # pass 9 (actuators F3): the load switch's nets, pinned exactly; a GND short on ACT_GATE or ACT_DRV left Q120/Q121 on with
 # the power switch open (the pyro bus straight from the battery) and passed every other rule
 ACT_NETS = {'ACT_GATE': {'C120.2', 'Q120.4', 'Q121.4', 'R120.2', 'R121.1', 'TP121.1'},
@@ -361,7 +356,8 @@ def check(text, dru=None):
             req(sha == PYRO_RULE_SHA.get(name), f'rule "{name}" text changed (sha {sha}): review it, then update PYRO_RULE_SHA')
     # 15b (pass 5): rule G only works inside the PYRO_BLOCK rule area, so the area must exist on all four copper
     # layers, cover the block, and restrict nothing (renaming or deleting it made rule G check nothing). R5: the
-    # block turned 180 deg and moved 24 mm forward; the area covers it whole, x 4-42, y 66-96.4 (R4: x 12-42, y 42-72.4)
+    # block turned 180 deg and moved 24 mm forward; the area covers it whole. R7 moved the whole board 18 mm forward
+    # (the RF strip at the aft end): x 4-42, y 84-114.4 (R5/R6: y 66-96.4; R4: x 12-42, y 42-72.4)
     areas = [z for z in read(text).children('zone') if z.children('name') and z.children('name')[0].items[1].atom == 'PYRO_BLOCK']
     ok = False
     for z in areas:
@@ -370,62 +366,20 @@ def check(text, dru=None):
                for xy in pp.children('xy')]
         keep = [a.atom for k in z.children('keepout') for n in k.items[1:] if hasattr(n, 'children') for a in n.items[1:2]]
         # pass 6: exactly the rectangle (a notch in a polygon with the same bounding box passed)
-        rect = sorted(pts) == sorted([(4.0, 66.0), (42.0, 66.0), (42.0, 96.4), (4.0, 96.4)])
+        rect = sorted(pts) == sorted([(4.0, 84.0), (42.0, 84.0), (42.0, 114.4), (4.0, 114.4)])
         if {'F.Cu', 'In1.Cu', 'In2.Cu', 'B.Cu'} <= layers and rect and len(z.children('polygon')) == 1 and keep \
                 and all(a == 'allowed' for a in keep):
             ok = True
-    req(len(areas) == 1 and ok, 'one PYRO_BLOCK rule area on F.Cu/In1/In2/B.Cu covering x 4-42, y 66-96.4, restricting nothing')
-    # R6 telemetry: hardware current limits at both branch input and harness output.
-    req(members.get('TLM_INPUT_LIMITED') == {'U16.5', 'U14.3', 'C170.1'},
-        'U16 must be the only power source for U14 and its input capacitor')
-    req(pin.get('U16.3') == pin.get('U16.4') == 'RAW_PROTECTED', 'U16 input from RAW_PROTECTED')
-    req(members.get('TLM_EN') == {'R192.2', 'R193.1', 'U14.2', 'U16.2'}
-        and pin.get('R193.2') == 'GND' and val.get('R193') == '10k', 'U14/U16 shared enable must default off')
-    req(members.get('TLM_PWR_EN') == {'U1.51', 'R192.1'} and val.get('R192') == '1k',
-        'PB12 must enable telemetry through R192 1k')
+    req(len(areas) == 1 and ok, 'one PYRO_BLOCK rule area on F.Cu/In1/In2/B.Cu covering x 4-42, y 84-114.4, restricting nothing')
+    # IMU status on polled PE1; PE10 and PE0 stay no-connect (R6, kept)
     req(members.get('IMU_INT1') == {'U1.98', 'U4.4'}
         and pin.get('U1.40', '').startswith('unconnected-'),
         'IMU status must use polled PE1; PE10 must remain NC')
-    req(members.get('TLM_FAULT_N') == {'U1.31', 'U15.4', 'U16.6', 'R205.2'}
-        and pin.get('U1.97', '').startswith('unconnected-')
-        and pin.get('R205.1') == '3V3' and val.get('R205') == '10k', 'PA7 wired fault requires external 10k pull-up; PE0 must remain NC')
-    req(members.get('TLM_INPUT_ILIM') == {'U16.7', 'R195.1'} and pin.get('R195.2') == 'GND'
-        and val.get('R195') == '4.42k 0.5%', 'U16 input current limit requires R195 4.42k 0.5%')
-    req(members.get('TLM_ILIM') == {'U15.5', 'R194.1'} and pin.get('R194.2') == 'GND'
-        and val.get('R194') == '66.5k 1%' and part.get('R194') == 'C137691', 'U15 harness limit requires R194 66.5k 1% (351-449 mA)')
+    req(pin.get('U1.97', '').startswith('unconnected-'), 'PE0 must remain NC')
     req(val.get('R84') == '750R 0.1%' and pin.get('R84.1') == 'BAT_ILIM' and pin.get('R84.2') == 'GND',
         'U9 R84 must be 750R 0.1%; revised copper and fault qualification are mandatory')
-    req(pin.get('U15.1') == pin.get('U15.3') == 'TLM_5V_REG' and pin.get('U15.6') == 'TLM_5V',
-        'U15 must limit the regulated harness rail, enabled from its input')
-    req(val.get('R190') == val.get('R206') == '300k 1%' and val.get('R191') == '30k 1%'
-        and part.get('R190') == part.get('R206') == 'C23024'
-        and pin.get('R190.1') == pin.get('R206.1') == 'TLM_5V_REG'
-        and pin.get('R190.2') == pin.get('R206.2') == pin.get('R191.1') == 'TLM_FB'
-        and pin.get('R191.2') == 'GND', 'telemetry buck must use the 4.8 V nominal divider (GPS maximum 5 V)')
-    radio = ('RADIO_M0', 'RADIO_M1', 'RADIO_RXD', 'RADIO_TXD', 'RADIO_AUX', 'TLM_5V', 'GND')
-    gps = ('TLM_5V', 'GND', 'GPS_TXD', 'GPS_RXD')  # owner contract; direct lead remains a release gate
-    req(tuple(pin.get(f'J130.{i}') for i in range(1, 8)) == radio, 'J130 E22 module signal order')
-    req(tuple(pin.get(f'J131.{i}') for i in range(1, 5)) == gps, 'J131 provisional owner pin contract')
     req(tuple(pin.get(f'J9.{i}') for i in range(1, 5)) == ('CAM_5V', 'GND', 'CAM_RX_WIRE', 'CAM_TX_WIRE'),
         'J9 must retain all four camera nets')
-    signals = (
-        ('R196', 'RADIO_M0_MCU', 'RADIO_M0', '65', 'D130.1'),
-        ('R197', 'RADIO_M1_MCU', 'RADIO_M1', '66', 'D130.3'),
-        ('R198', 'RADIO_TX_MCU', 'RADIO_RXD', '63', 'D130.4'),
-        ('R199', 'RADIO_RX_MCU', 'RADIO_TXD', '64', 'D130.6'),
-        ('R200', 'RADIO_AUX_MCU', 'RADIO_AUX', '67', 'D131.1'),
-        ('R201', 'GPS_TX_MCU', 'GPS_RXD', '68', 'D131.3'),
-        ('R202', 'GPS_RX_MCU', 'GPS_TXD', '69', 'D131.4'))
-    for r, internal, external, u1, clamp in signals:
-        req(val.get(r) == '1k' and pin.get(r + '.1') == internal and pin.get(r + '.2') == external
-            and pin.get('U1.' + u1) == internal and pin.get(clamp) == internal,
-            f'{r}: UART/GPIO needs 1k series and MCU-side clamp')
-        req(len(members.get(external, ())) == 2, f'{external}: only connector and series resistor')
-    for r, net in (('R203', 'RADIO_M0_MCU'), ('R204', 'RADIO_M1_MCU')):
-        req(val.get(r) == '10k' and pin.get(r + '.1') == net and pin.get(r + '.2') == 'GND',
-            f'{r}: radio mode pin must not float in reset')
-    for d in ('D130', 'D131'):
-        req(pin.get(d + '.2') == 'GND' and pin.get(d + '.5') == '3V3', f'{d} clamp supply rails')
     req(tuple(pin.get(f'J2.{i}') for i in range(1, 6)) == ('3V3', 'SWDIO', 'NRST', 'SWCLK', 'GND'),
         'J2 must match Tag-Connect ARM20-CTX SWD mapping')
     req(pin.get('J2.6') is None or pin.get('J2.6', '').startswith('unconnected-'), 'J2.6 SWO is NC; no BOOT0 harness')

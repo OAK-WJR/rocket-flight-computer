@@ -16,7 +16,8 @@ M3 supports require 3.5 mm bottom standoff clearance and 3.8 mm top body/exposed
 
 Mated envelopes use footprint-local x/y (KiCad top-view y down), with positive z away from the component
 side. Rotation and bottom-side mirroring apply to every envelope. Existing J122/J123 wire allocations
-are assumptions from R5, not measurements. New connector allocations must be reviewed against the
+are assumptions from R5, not measurements. R7's SMA jacks (J30/J31) overhang the aft edge: their bodies and
+mated plugs are checked radially like every other envelope, wherever they sit along the axis. New connector allocations must be reviewed against the
 maker's mating drawing and the actual harness. The check does not model insertion tools, wire stiffness,
 the camera shroud, sled structure, vibration, or a fitted Tag-Connect probe.
 """
@@ -38,16 +39,14 @@ MATED = {
         'basis': 'JST eGH.pdf pages 2–3: 8.25 x 4.25 mm header, 7.3 mm mated height; '
                  '3 mm additional straight-wire allocation, physical bend unverified',
         'source': 'https://www.jst-mfg.com/product/pdf/eng/eGH.pdf'},
-    'M3_SH_BM07B_SRSS_TB': {
-        'refs': ('J130',), 'box': (-4.5, -1.9, 4.5, 1.0, 0.0, 9.3),
-        'basis': 'JST eSH.pdf pages 1–3: 9 x 2.9 mm header, 6.3 mm mated height; '
-                 '3 mm additional straight-wire allocation, physical bend unverified',
-        'source': 'https://www.jst-mfg.com/product/pdf/eng/eSH.pdf'},
-    'M3_SH_BM04B_SRSS_TB': {
-        'refs': ('J131',), 'box': (-3.0, -1.9, 3.0, 1.0, 0.0, 9.3),
-        'basis': 'JST eSH.pdf pages 1–3: 6 x 2.9 mm header, 6.3 mm mated height; '
-                 '3 mm additional straight-wire allocation, physical bend unverified',
-        'source': 'https://www.jst-mfg.com/product/pdf/eng/eSH.pdf'},
+    'M3_SMA_KH_KE8_EDGE': {
+        'refs': ('J30', 'J31'), 'box': (-4.6, -25.5, 4.6, 0.0, -4.1, 5.1),
+        'basis': 'R7 edge-launch SMA jack on the aft edge (local y = 0 on the edge, body toward -y): the jack body '
+                 'reaches 9.5 mm beyond the edge (flange 1.5 + thread 8, Kinghelm KH-SMA-KE8-G drawing) and a straight '
+                 'SMA plug about 16 mm more (5/16 in coupling nut, 9.17 mm across corners; Inference, pass1_layout '
+                 '6.1/6.4), x +-4.6 about the axis, z -4.1..+5.1 about the top face. The coax loop beyond the plug '
+                 'is a separate harness allocation (bay stack, parent VEHICLE.md); physical fit unverified',
+        'source': 'https://www.lcsc.com/product-detail/C530661.html'},
     'HDR-TH_12P-P2.54-V-M-R3-C4-S2.54': {
         'refs': ('J122',), 'box': (-5.08, -4.0, 5.08, 4.0, 0.0, 23.5),
         'basis': 'R5 engineering allocation: four servo plugs and their wire bend; physical fit unverified'},
@@ -55,14 +54,14 @@ MATED = {
         'refs': ('J123',), 'box': (-3.0, -1.75, 3.0, 2.85, 0.0, 9.5),
         'basis': 'R5 engineering allocation: JST PH plug and wire; physical fit unverified'},
 }
-REQUIRED_MATED = {'M3_GH_BM04B_GHS_TBT', 'M3_SH_BM07B_SRSS_TB', 'M3_SH_BM04B_SRSS_TB'}
+REQUIRED_MATED = {'M3_GH_BM04B_GHS_TBT', 'M3_SMA_KH_KE8_EDGE'}
 # These are bare board features, not an escape hatch for missing fitted-part geometry.
 BOARD_FEATURES = {'M3_TestPad_1.5': r'TP\d+', 'M3_ToolingHole_JLC': r'TH[123]',
                   'M3_TC2030_IDC_NL': r'J2'}
-RETENTION_HOLES = ((21.5, 50.6), (27.0, 64.6))   # J122 tie; all other Ø3.2 Edge.Cuts circles are M3 supports
+RETENTION_HOLES = ((21.5, 68.6), (27.0, 82.6))   # J122 tie (R7: +18 mm); all other Ø3.2 circles are M3 supports
 STANDOFF_RADIUS = 3.5
 TOP_HARDWARE_RADIUS = 3.5 + 0.3   # 7 mm OD washer plus radial assembly margin
-SIDE_ENTRY = ('J9', 'J120', 'J121', 'J124', 'J125')
+SIDE_ENTRY = ('J9', 'J121', 'J124')
 BORE_R, WIRE_Z = 25.4, 5.0                             # the coupler bore's wall; wire height above the top face
 
 
@@ -300,6 +299,11 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3):
                         and not p.IsTented(pcbnew.F_Cu))
         if board_feature(f) or f.GetAttributes() & pcbnew.FP_DNP:
             excluded.append(ref)
+            # their exposed bottom lands still meet the standoff hardware (P3-MECHANICAL-04); NPTH tooling holes have none
+            bottom.extend((ref + '.' + p.GetNumber() + ' exposed bottom pad', pad_box(p)) for p in f.Pads()
+                          if p.GetAttribute() != pcbnew.PAD_ATTRIB_NPTH
+                          and p.IsOnLayer(pcbnew.B_Cu) and p.IsOnLayer(pcbnew.B_Mask)
+                          and not p.IsTented(pcbnew.B_Cu))
             continue
         box = model_box(f, prj)
         if box is None:
@@ -322,7 +326,7 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3):
             mb = footprint_box(f, spec['box'])
             rows.append((margin(mb, radius, axis_x, tol), ref + ' mated', side, mb))
             mating.append((ref, mb))
-        elif fp_name(f) in REQUIRED_MATED or (ref in ('J9', 'J122', 'J123', 'J130', 'J131')
+        elif fp_name(f) in REQUIRED_MATED or (ref in ('J9', 'J122', 'J123', 'J30', 'J31')
                                              and not fp_name(f).startswith('M3_DB128')):
             issues.append(f'{ref}: mated housing/wire envelope has not been reviewed')
     for index, (ref, box) in enumerate(mating):
@@ -335,9 +339,10 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3):
     holes, outline = board_geometry(b)
     width, length = outline[2] - outline[0], outline[3] - outline[1]
     if abs(width - 46.0) > 0.01:
-        issues.append(f'board width {width:g} mm; R6 requires 46 mm')
-    if length > 110.01:
-        issues.append(f'board length {length:g} mm exceeds R6 110 mm maximum')
+        issues.append(f'board width {width:g} mm; P1 requires 46 mm')
+    if length > 120.01:
+        issues.append(f'board length {length:g} mm exceeds the P1 120 mm maximum (outline only; the SMA overhang '
+                      'and mated plugs count in the bay stack)')
     supports, nearest, support_issues = support_check(holes, outline, bottom)
     issues.extend(support_issues)
     nearest_top, top_issues = top_support_check(supports, top_bodies, top_pads)
@@ -345,8 +350,7 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3):
     issues.extend(f'{ref}: outside bore by {-mgn:.3f} mm' for mgn, ref, _, _ in rows if mgn < 0)
     return dict(rows=sorted(rows), issues=issues, supports=supports, nearest_support=nearest,
                 nearest_top_support=nearest_top, top_hardware_radius_mm=TOP_HARDWARE_RADIUS,
-                outline=outline, width_mm=width, length_mm=length,
-                target_length_met=80 <= length <= 90, excluded=sorted(excluded), ok=not issues)
+                outline=outline, width_mm=width, length_mm=length, excluded=sorted(excluded), ok=not issues)
 
 
 def margin(box, radius, axis_x, tol):
@@ -381,8 +385,7 @@ def main():
         print(f'  deepest bottom part: {min(bot, key=lambda r: r[3][4])[1]} '
               f'(z {min(r[3][4] for r in bot):.2f} mm), worst bottom margin {bot[0][0]:.2f} mm ({bot[0][1]})')
     print('  five-support geometry:', report['supports'])
-    print(f"  board: {report['width_mm']:g} x {report['length_mm']:g} mm; "
-          f"80–90 mm length target {'met' if report['target_length_met'] else 'not met'}; 110 mm maximum")
+    print(f"  board: {report['width_mm']:g} x {report['length_mm']:g} mm; 120 mm maximum (P1)")
     if report['nearest_support']:
         distance, ref, hole = report['nearest_support']
         print(f'  nearest bottom/pin envelope: {ref}, {distance:.3f} mm from support {hole} (minimum 3.5 mm)')

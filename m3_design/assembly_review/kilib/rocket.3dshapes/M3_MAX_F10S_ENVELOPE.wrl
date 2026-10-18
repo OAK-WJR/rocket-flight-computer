@@ -1,0 +1,5 @@
+#VRML V2.0 utf8
+# MAX-F10S/M10S envelope from u-blox DS Table 21 maxima: 9.8 x 10.7 mm incl. the 0.6 mm tab (modelled
+# on both 9.7 mm edges), 2.7 mm high. NOT a maker model.
+Transform { translation 0.000000 0.000000 0.157480 children [ Shape { appearance Appearance { material Material { diffuseColor .06 .25 .10 } } geometry Box { size 3.858268 4.448819 0.314961 } } ] }
+Transform { translation 0.000000 0.000000 0.531496 children [ Shape { appearance Appearance { material Material { diffuseColor .75 .75 .78 } } geometry Box { size 3.700787 3.858268 1.062992 } } ] }

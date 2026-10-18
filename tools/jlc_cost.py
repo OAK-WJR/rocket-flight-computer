@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Price the generated BOM at JLCPCB and retain the $84.41 / 48-code cost targets.
+"""Price the generated BOM at JLCPCB against the REQUIREMENTS M3 targets: $126.41 per board, 52 extended codes.
 
 usage: python3 tools/jlc_cost.py [--boards N] [--tier standard|economic] [--max-total USD] [--max-extended N]
 Reads m3_design/assembly_review/fab/m3_bom_jlc.csv (run tools/export_fab.py first), queries
@@ -13,7 +13,8 @@ Extended; Economic PCBA $3.07 per unique Extended code. The order uses Standard 
 and stencil are charged per assembled side (setup $25.56 / $51.12 and stencil $8.21 / $16.42 single / double side;
 fetched 2026-10-10), the fixture $16.42 either way, plus a $14.93 handling fee JLC may add. The side count comes from
 the CPL's Layer column (R5 places parts on both sides; Economic PCBA is single-sided only).
-R3: $54.94 + 48 x $3.07 / 5 = $84.41 per board. Also <= 48 unique extended codes. JLC's minimum purchase
+R3: $54.94 + 48 x $3.07 / 5 = $84.41 per board; with the on-board radio and GPS (R7, REQUIREMENTS M3, owner
+2026-10-15) the cap is $84.41 + $42.00 = $126.41 per board and <= 52 unique extended codes. JLC's minimum purchase
 per line (minPurchaseNum) is priced and reported as the order price; attrition extras are not modelled.
 PCB, rails, soldering and shipping charges are outside this component/feeder target;
 setup, stencil and fixture fees are reported (not gated). Prices change daily: re-run before ordering.
@@ -48,7 +49,7 @@ def assembly_sides(path):
     return len(sides)
 
 
-def cost_report(parts, boards, tier, sides, fee=None, max_total=84.41, max_extended=48, fetch=None):
+def cost_report(parts, boards, tier, sides, fee=None, max_total=126.41, max_extended=52, fetch=None):
     if boards <= 0 or sides not in (1, 2):
         raise ValueError('positive board quantity and one or two assembly sides required')
     if tier not in ('standard', 'economic'):
@@ -97,8 +98,9 @@ def main():
     ap.add_argument('--boards', type=int, default=5)
     ap.add_argument('--tier', choices=('standard', 'economic'), default='standard', help='JLC PCBA tier (docs/ORDERING.md)')
     ap.add_argument('--fee', type=float, default=None, help='override the per-code feeder fee, USD')
-    ap.add_argument('--max-total', type=float, default=84.41, help='parts + extended fees per board, USD (REQUIREMENTS M3, R3 value)')
-    ap.add_argument('--max-extended', type=int, default=48, help='unique extended (non-Basic) LCSC codes')
+    ap.add_argument('--max-total', type=float, default=126.41,
+                    help='parts + feeder fees per board, USD (REQUIREMENTS M3: R3 $84.41 + $42.00 RF allowance)')
+    ap.add_argument('--max-extended', type=int, default=52, help='unique extended (non-Basic) LCSC codes (REQUIREMENTS M3)')
     ap.add_argument('--fab', type=Path, default=FAB)
     ap.add_argument('--snapshot', type=Path, help='exact public supplier responses fetched within the last 24 hours')
     a = ap.parse_args()

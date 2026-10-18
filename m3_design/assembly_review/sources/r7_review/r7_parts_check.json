@@ -1,0 +1,376 @@
+{
+ "scope": "R7 lands matched to JLC/EasyEDA footprints by pad number (tools/jlc_orient.py method); expected tools/jlc_corrections.json entries once the parts are on the board",
+ "tolerance_mm": 0.35,
+ "margin_mm": 0.4,
+ "note": "C496550 (BAT WIRELESS, second source) is listed for reference only: its EasyEDA numbering swaps legs 1 and 2 against C530661, so a substitution needs its own reviewed correction",
+ "parts": {
+  "C30005563|M3_MAX_F10S_LCC18": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.05,
+   "next_best_mm": 9.207,
+   "pads_ours": 18,
+   "pads_easyeda": 18,
+   "pads_matched": 18,
+   "status": "OK",
+   "footprint": "M3_MAX_F10S_LCC18",
+   "easyeda": "GPS-SMD_MAX-F10S-00B",
+   "retrieved_utc": "2026-10-15T21:33:34.893546+00:00"
+  },
+  "C4153167|M3_MAX_F10S_LCC18": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.05,
+   "next_best_mm": 9.207,
+   "pads_ours": 18,
+   "pads_easyeda": 18,
+   "pads_matched": 18,
+   "status": "OK",
+   "footprint": "M3_MAX_F10S_LCC18",
+   "easyeda": "SMD-18_L10.1-W9.7-P1.10-TL_SKG09F",
+   "retrieved_utc": "2026-10-15T21:33:36.140371+00:00"
+  },
+  "C5333985|M3_E22_900MM22S": {
+   "theta": 0,
+   "offset": [
+    0.0001,
+    0.0001
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 7.868,
+   "pads_ours": 20,
+   "pads_easyeda": 20,
+   "pads_matched": 20,
+   "status": "OK",
+   "footprint": "M3_E22_900MM22S",
+   "easyeda": "WIRELM-SMD_20P-L10.0-W10.0-P1.27-TL",
+   "retrieved_utc": "2026-10-15T21:33:37.440211+00:00"
+  },
+  "C530661|M3_SMA_KH_KE8_EDGE": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    -2.3
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 3.606,
+   "pads_ours": 5,
+   "pads_easyeda": 5,
+   "pads_matched": 5,
+   "status": "OK",
+   "footprint": "M3_SMA_KH_KE8_EDGE",
+   "easyeda": "CONN-SMD_KH-SMA-KE8-G",
+   "retrieved_utc": "2026-10-15T21:33:40.002446+00:00"
+  },
+  "C496550|M3_SMA_KH_KE8_EDGE": {
+   "theta": 0,
+   "offset": [
+    0.0001,
+    -2.3
+   ],
+   "residual_mm": 3.606,
+   "next_best_mm": 3.606,
+   "pads_ours": 5,
+   "pads_easyeda": 5,
+   "pads_matched": 5,
+   "status": "CHECK",
+   "footprint": "M3_SMA_KH_KE8_EDGE",
+   "easyeda": "SMA-SMD_BWSMA-KE-P001",
+   "retrieved_utc": "2026-10-15T21:33:41.272775+00:00"
+  },
+  "C535146|M3_TSLP_2_20": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.005,
+   "next_best_mm": 0.463,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "M3_TSLP_2_20",
+   "easyeda": "TSLP-2-20_L1.0-W0.6-P0.65-BI",
+   "retrieved_utc": "2026-10-15T21:33:38.736775+00:00"
+  },
+  "C97998|M3_LQG15_0402": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.043,
+   "next_best_mm": 0.625,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "M3_LQG15_0402",
+   "easyeda": "L0402",
+   "retrieved_utc": "2026-10-15T21:33:44.994657+00:00"
+  },
+  "C88980|M3_BLM18K_0603": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.05,
+   "next_best_mm": 0.955,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "M3_BLM18K_0603",
+   "easyeda": "L0603",
+   "retrieved_utc": "2026-10-15T21:33:44.072063+00:00"
+  },
+  "C15127|SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR": {
+   "theta": 0,
+   "offset": [
+    -0.0,
+    -0.0
+   ],
+   "residual_mm": 0.15,
+   "next_best_mm": 2.101,
+   "pads_ours": 3,
+   "pads_easyeda": 3,
+   "pads_matched": 3,
+   "status": "OK",
+   "footprint": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+   "easyeda": "SOT-23_L2.9-W1.3-P1.90-LS2.4-BR",
+   "retrieved_utc": "2026-10-15T21:33:42.531946+00:00"
+  },
+  "C105432|SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR": {
+   "theta": 0,
+   "offset": [
+    -0.0,
+    0.0
+   ],
+   "residual_mm": 0.235,
+   "next_best_mm": 2.186,
+   "pads_ours": 3,
+   "pads_easyeda": 3,
+   "pads_matched": 3,
+   "status": "OK",
+   "footprint": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+   "easyeda": "SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR",
+   "retrieved_utc": "2026-10-15T21:33:43.296393+00:00"
+  },
+  "C20917|SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 1.951,
+   "pads_ours": 3,
+   "pads_easyeda": 3,
+   "pads_matched": 3,
+   "status": "OK",
+   "footprint": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+   "easyeda": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+   "retrieved_utc": null
+  },
+  "C19702|C0603": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 0.99,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "C0603",
+   "easyeda": "C0603",
+   "retrieved_utc": "2026-10-15T21:33:45.889219+00:00"
+  },
+  "C22810|R_0603_1608Metric": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "retrieved_utc": "2026-10-15T21:33:46.807999+00:00"
+  },
+  "C15195|C0402": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 0.594,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "C0402",
+   "easyeda": "C0402",
+   "retrieved_utc": "2026-10-15T21:33:47.730176+00:00"
+  },
+  "C307331|C0402": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 0.594,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "C0402",
+   "easyeda": "C0402",
+   "retrieved_utc": null
+  },
+  "C45783|C0805": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 1.414,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "C0805",
+   "easyeda": "C0805",
+   "retrieved_utc": null
+  },
+  "C17168|R0402": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "retrieved_utc": "2026-10-15T21:33:48.494589+00:00"
+  },
+  "C25091|R0402": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "retrieved_utc": "2026-10-15T21:33:49.258335+00:00"
+  },
+  "C25105|R0402": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "retrieved_utc": "2026-10-15T21:33:50.018009+00:00"
+  },
+  "C25741|R0402": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "retrieved_utc": null
+  },
+  "C25744|R0402": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "retrieved_utc": null
+  },
+  "C11702|R0402": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "retrieved_utc": null
+  },
+  "C4109|R0402": {
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK",
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "retrieved_utc": null
+  }
+ }
+}

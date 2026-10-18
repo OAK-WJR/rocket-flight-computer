@@ -5,10 +5,12 @@ usage: <KiCad python3> tools/dc_solve.py [board] [--net RAW_ACT] [--source Q121:
                                          [--amps 7.7] [--grid 0.1] [--png out.svg]
 
 The board must be filled. The net's copper (zone fills, tracks and pads) on each copper layer is cut into
-square cells (--grid); neighbouring cells on a layer conduct with the sheet conductance of the layer's copper
-(1 oz = 35 µm on every layer, M1; resistivity 1.72e-8 Ohm m, copper at 20 °C). Each via of the net joins the
-cells it sits in on the layers where the net has copper, through its barrel (0.3 mm hole, 20 µm plating,
-barrel length from the stack-up below). Through-hole pads join their layers outright. The source pads are held
+square cells (--grid); neighbouring cells on a layer conduct with the sheet conductance of that layer's copper,
+read from the board's own stack-up (the (stackup ...) block of the .kicad_pcb: each copper layer's thickness and the
+dielectrics between them; the ordered JLC041611-7628 stack is 35 µm outer, 30 µm inner copper, M1; resistivity
+1.72e-8 Ohm m, copper at 20 °C). Each via of the net joins the cells it sits in on the layers where the net has
+copper, through its barrel (0.3 mm hole, 20 µm plating; barrel length = the stack-up distance between the two copper
+layers' mid-planes). Through-hole pads join their layers outright. The source pads are held
 at one potential and the sink pads at another; the solve (conjugate gradient, Jacobi preconditioner) gives
 the resistance, then the drop and the copper loss at --amps, the share each layer carries across the half-way
 equipotential, and the highest current per mm of width on each layer (where the copper is the neck).
@@ -26,10 +28,39 @@ import pcbnew
 
 mm, MM = pcbnew.ToMM, pcbnew.FromMM
 RHO = 1.72e-8                        # Ohm m
-T_CU = 35e-6                         # 1 oz, every layer (M1)
 LAYERS = [pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu]
-Z = {pcbnew.F_Cu: 0.0, pcbnew.In1_Cu: 0.245, pcbnew.In2_Cu: 1.345, pcbnew.B_Cu: 1.59}   # mm, JLC04161H-7628
+CU_NAMES = ('F.Cu', 'In1.Cu', 'In2.Cu', 'B.Cu')
 VIA_HOLE, VIA_PLATE = 0.3e-3, 20e-6
+
+
+def stackup(path):
+    """The board's copper stack from its file: {copper layer name: (thickness mm, mid-plane depth mm from the top of
+    F.Cu)}, from the (stackup ...) block (pcbnew's Python API does not expose the stack-up). Every layer of the block
+    with a thickness counts toward the depth except the solder masks (outside the copper). Raises ValueError when the
+    block or a copper thickness is missing: no default stack is assumed."""
+    text = open(path, encoding='utf-8').read()
+    m = re.search(r'\(stackup\b', text)
+    if not m:
+        raise ValueError(f'{path}: no (stackup ...) block; set the board stack-up first')
+    depth, i, out = 0.0, m.end(), {}
+    level, j = 1, m.end()
+    while level and j < len(text):                 # the block's extent: balanced parentheses
+        level += {'(': 1, ')': -1}.get(text[j], 0)
+        j += 1
+    for lm in re.finditer(r'\(layer\s+"([^"]+)"(.*?)\n\t\t\t\)', text[i:j], re.S):
+        name, body = lm.group(1), lm.group(2)
+        t = re.search(r'\(thickness\s+([\d.]+)\)', body)
+        kind = re.search(r'\(type\s+"([^"]+)"\)', body)
+        if not t or (kind and 'Mask' in kind.group(1)):
+            continue
+        th = float(t.group(1))
+        if name in CU_NAMES:
+            out[name] = (th, depth + th / 2)
+        depth += th
+    missing = [n for n in CU_NAMES if n not in out]
+    if missing:
+        raise ValueError(f'{path}: stack-up has no thickness for {missing}')
+    return out
 
 
 def pad_poly(p, lay):
@@ -179,6 +210,9 @@ def main():
     positive(a.amps, 'load current')
     positive(a.grid, 'grid spacing')
     b = pcbnew.LoadBoard(a.board)
+    stack = stackup(a.board)
+    T_CU = {lay: stack[n][0] * 1e-3 for lay, n in zip(LAYERS, CU_NAMES)}        # m
+    Z = {lay: stack[n][1] for lay, n in zip(LAYERS, CU_NAMES)}                  # mm
     h = a.grid
     net = a.net
     # --- copper cells per layer
@@ -244,15 +278,15 @@ def main():
                 node_xy.append((li, k))
     n = len(node_xy)
     nbr = [[] for _ in range(n)]
-    gs = T_CU / RHO                                  # S per square
+    gs = [T_CU[lay] / RHO for lay in LAYERS]         # S per square, per layer
     for (li, k), u in idx.items():
         i, j = k % nx, k // nx
         for di, dj in ((1, 0), (0, 1)):
             if i + di < nx and j + dj < ny:
                 v = idx.get((li, k + di + dj * nx))
                 if v is not None:
-                    nbr[u].append((v, gs))
-                    nbr[v].append((u, gs))
+                    nbr[u].append((v, gs[li]))
+                    nbr[v].append((u, gs[li]))
     area = math.pi * (VIA_HOLE + VIA_PLATE) * VIA_PLATE
 
     def cell(x, y):
@@ -319,6 +353,7 @@ def main():
     scale = positive(a.amps * R, 'voltage drop')        # volts at the source for a.amps
     positive(a.amps ** 2 * R, 'copper loss')
     print(f'{net}: {a.source} -> {a.sink}, grid {h} mm, {m} free cells, CG {iterations} iterations, residual {residual:.2g}')
+    print('  stack-up: ' + ', '.join(f'{n} {stack[n][0] * 1000:.0f} um at {stack[n][1]:.4f} mm' for n in CU_NAMES))
     print(f'  R = {R * 1e3:.2f} mOhm; at {a.amps} A: drop {a.amps * R * 1e3:.1f} mV, copper loss {a.amps ** 2 * R:.3f} W')
     # layer share across the half-way equipotential (current crossing V = 0.5)
     share = [0.0] * 4

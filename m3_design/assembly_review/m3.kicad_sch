@@ -6,7 +6,7 @@
 	(title_block
 		(title "01 | USB input and regulated supplies")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R6")
+		(rev "M3-ASSY-R7")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:Buck"
@@ -197,7 +197,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+			(property "ki_fp_filters" "C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
 				(at 0 0 0)
 				(effects
 					(font
@@ -321,7 +321,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "IND-SMD_L4.0-W4.0 M3_SRP5030TA"
+			(property "ki_fp_filters" "IND-SMD_L4.0-W4.0 M3_SRP5030TA M3_LQG15_0402"
 				(at 0 0 0)
 				(effects
 					(font
@@ -2852,65 +2852,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 1c2dba87-f936-5a28-9e54-722deb2b8edb))
-	(symbol
-		(lib_id "M3:PWR_FLAG")
-		(at 355.6 218.44 0)
-		(unit 1)
-		(in_bom no)
-		(on_board no)
-		(dnp no)
-		(uuid 8aa66f1e-7e2c-58ec-80fc-fb3c74b92e37)
-		(property "Reference" "#FLG07"
-			(at 355.6 210.82 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "PWR_FLAG"
-			(at 355.6 214.63 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" ""
-			(at 355.6 218.44 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 355.6 218.44 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 355.6 218.44 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
-					(reference "#FLG07")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 355.6 218.44)
-			(xy 347.98 218.44))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid ebc0df02-f13b-5397-8389-646901641013))
-	(global_label "TLM_5V_REG"
-		(shape passive)
-		(at 347.98 218.44 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid ec61ab25-ef84-5827-9eb0-6ab66a90e813))
 	(sheet
 		(at 20.32 231.14)
 		(size 83.82 10.16)
@@ -3266,7 +3207,7 @@
 		(fill
 			(color 0 0 0 0))
 		(uuid 05a85211-bc24-59d4-a8a4-ff7347ee84fc)
-		(property "Sheetname" "15 | Telemetry radio and GPS port"
+		(property "Sheetname" "15 | GNSS and telemetry radio (R7)"
 			(at 294.64 229.87 0)
 			(effects
 				(font

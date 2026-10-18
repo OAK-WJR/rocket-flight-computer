@@ -11,6 +11,8 @@ JLC's own footprint lands on our copper. Bottom-side rows use the convention in 
 codes or reviewed placement corrections stop the export; confirm in JLC's placement preview.
 A footprint field "JLC_Assembly" (for example a consignment note) replaces the BOM
 Assembly column for that part.
+DNP parts: one left in the BOM is owner-fitted (owner BOM); one also excluded from the BOM is an unfitted
+placeholder (no BOM, no CPL, no part number needed); a DNP part in the BOM without an LCSC code stops the export.
 """
 import argparse, csv, json, math, os, re, shutil, subprocess, sys, tempfile, zipfile
 from collections import defaultdict
@@ -68,6 +70,12 @@ def main():
     rows = [r for r in footprints(board) if r['ref'] and not r['ref'].startswith('#')]
     corr_file = ROOT / 'tools/jlc_corrections.json'
     corr = json.loads(corr_file.read_text())['parts'] if corr_file.exists() else {}
+    # DNP alone means owner-fitted (below); an unfitted placeholder must say so by leaving the BOM too
+    placeholders = sorted((r['ref'] for r in rows if r['dnp'] and r['no_bom']), key=natural)
+    unclear = sorted((r['ref'] for r in rows if r['dnp'] and not r['no_bom'] and not r['lcsc']), key=natural)
+    if unclear:
+        sys.exit(f'Fab export blocked: DNP parts without a part number {unclear}: an unfitted placeholder must be '
+                 'excluded from the BOM and position files; an owner-fitted part needs its LCSC code')
     missing = sorted({r['ref'] for r in rows if not r['no_bom'] and not r['lcsc']}, key=natural)
     uncorrected = []
     for r in rows:
@@ -102,23 +110,34 @@ def main():
     common = ['pcb', 'export', 'pdf', '--mode-single', '--black-and-white', '--exclude-value', '--scale', '0']
     run(*common, '--layers', 'F.Fab,Edge.Cuts', '-o', str(apaths[0]), str(board))
     run(*common, '--mirror', '--layers', 'B.Fab,Edge.Cuts', '-o', str(apaths[1]), str(board))
-    # BOM: one line per (value, footprint, LCSC); board-only items excluded. DNP parts (validation pass 5: U5, whose
-    # 250 C soldering limit is below JLC Economic's 255 +/- 5 C reflow) are fitted by the owner after delivery: they go
-    # to a separate owner BOM, not to JLC's BOM or CPL.
+    # BOM: one line per LCSC code (or per value, footprint and part number without one); board-only items excluded. A DNP part that stays in the BOM is fitted
+    # by the owner after delivery (mechanism kept from validation pass 5, U5): it goes to a separate owner BOM, not to
+    # JLC's BOM or CPL. A DNP part excluded from the BOM is an unfitted placeholder (R7: the C303/C305/C313/C314
+    # pi-network shunts): it is in no BOM and no CPL, and is only reported.
     def write_bom(path, keep, assembly):
+        # One line per LCSC code (pass 2 DFM-11: JLC matches the BOM by part number, so a code split over two lines,
+        # for example J30/J31 with different comments, is queried or handled twice). Parts without a code group by
+        # (value, footprint, part number). One code on two footprints or two part numbers is a data error.
         groups = defaultdict(list)
         for r in rows:
             if r['no_bom'] or not keep(r): continue
-            groups[(r['value'], r['fp'], r['lcsc'], r['mpn'])].append(r['ref'])
+            groups[('lcsc', r['lcsc']) if r['lcsc'] else ('part', r['value'], r['fp'], r['mpn'])].append(r)
         if not groups:
             path.unlink(missing_ok=True)
             return groups
         with open(path, 'w', newline='') as f:
             w = csv.writer(f); w.writerow(['Comment', 'Designator', 'Footprint', 'LCSC Part #', 'Manufacturer Part', 'Qty', 'Assembly'])
-            for (val, fp, lcsc, mpn), refs in sorted(groups.items(), key=lambda kv: natural(sorted(kv[1], key=natural)[0])):
-                refs = sorted(refs, key=natural)
-                w.writerow([val, ','.join(refs), fp, lcsc, mpn, len(refs), assembly(refs)])
-        return groups
+            for key, members in sorted(groups.items(), key=lambda kv: natural(sorted((r['ref'] for r in kv[1]), key=natural)[0])):
+                members = sorted(members, key=lambda r: natural(r['ref']))
+                refs = [r['ref'] for r in members]
+                fps, mpns = {r['fp'] for r in members}, {r['mpn'] for r in members}
+                if len(fps) > 1 or len(mpns) > 1:
+                    sys.exit(f'Fab export blocked: LCSC {key[1]} on several footprints {sorted(fps)} or part numbers '
+                             f'{sorted(mpns)} ({",".join(refs)})')
+                values = list(dict.fromkeys(r['value'] for r in members))
+                w.writerow(['; '.join(values), ','.join(refs), members[0]['fp'], members[0]['lcsc'], members[0]['mpn'],
+                            len(refs), assembly(refs)])
+        return {k: [r['ref'] for r in v] for k, v in groups.items()}
 
     def jlc_assembly(refs):
         tht = any(r['tht'] for r in rows if r['ref'] in refs)
@@ -153,7 +172,9 @@ def main():
     print('wrote', zpath.name, f'{stem}_bom_jlc.csv', f'{stem}_cpl_jlc.csv', *(a_.name for a_ in apaths), 'to', out)
     print('BOM lines', len(groups), '| placed parts', sum(1 for r in rows if not r['no_bom'] and not r['dnp']),
           '| parts without LCSC code:', ', '.join(missing) or 'none')
-    print('owner-fitted (not in JLC BOM/CPL):', ', '.join(f"{','.join(v)} ({k[2]})" for k, v in owner.items()) or 'none')
+    print('owner-fitted (not in JLC BOM/CPL):',
+          ', '.join(f"{','.join(v)} ({k[1] if k[0] == 'lcsc' else k[3] or k[1]})" for k, v in owner.items()) or 'none')
+    print('not fitted (DNP placeholders, in no BOM or CPL):', ', '.join(placeholders) or 'none')
     print('CPL rows without a verified JLC orientation correction:', ', '.join(sorted(uncorrected, key=natural)) or 'none')
     print('source/output binding:', write_manifest(board, out, before).name)
 

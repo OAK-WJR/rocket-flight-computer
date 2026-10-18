@@ -1,24 +1,189 @@
 # M3 requirements and implementation status
 
-**R6 work stopped incomplete (2026-10-13):** branch `m3-assy-r6` remains at R5
-`580d358`, with uncommitted partial changes. The schematic and board are not
-synchronized; the full R6 gate and independent review loop have not passed.
-No R6 manufacturing package, cost, or flight readiness is validated. Do not
-fabricate or fly this working state. All implementation agents are stopped.
+> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. The repository holds the current M3-ASSY-R7 KiCad project (built from the committed R6 board by `m3_design/r7_build.sh`; R6 came from R5, R5 from R4, R4 from R3), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. The older candidates are mentioned below only as the evolution record.
 
-**R6 redesign scope:** branch `m3-assy-r6` starts at R5 `580d358`. The owner
-selected one primary recovery channel with isolated Blue Jay backup, GH camera and
-SH radio/GPS ports, smaller buzzer/debug connector, and an 80–90 mm length target
-(110 mm maximum). [M3_R6.md](docs/M3_R6.md) records decisions and
-[R6_VALIDATION.md](docs/R6_VALIDATION.md) records validation. The R5 status below
-is historical baseline evidence, not acceptance of the changing R6 CAD. Do not
-order the inherited fabrication package as R6.
+Last updated 2026-10-18. Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; **M3-ASSY-R7 (R6 with the GNSS and radio on the board, 46 × 118 mm) is the current one.** All are CAD designs with a manufacturing package, not measured or flown boards.
 
-> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. The repository holds the current M3-ASSY-R5 KiCad project (generated from the R4 board in git; R4 itself was generated from the R3 files), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. The older candidates are mentioned below only as the evolution record.
+## Current candidate: M3-ASSY-R7 (on-board GNSS and radio, 46 × 118 mm)
 
-Last updated 2026-10-12. Governing requirements: M1/M2 merged into one board, easy to diagnose, at most three PCB iterations; "10× redundancy" means independent protection layers, not a blanket 10× component derating. **M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; M3-ASSY-R5 (R4's circuit on a two-sided 46 × 100 mm board) is the current one. All are CAD designs with a manufacturing package, not measured or flown boards.**
+**CAD and manufacturing files complete after review passes 2–8 and their fixes (2026-10-18); review pass 8 on the final
+board found 0 Critical / 0 Major (10 Minor, recorded in R7_VALIDATION). Not a fabrication or flight release.**
+- Uncommitted on branch `m3-assy-r7` (base R6 `3b215ba`).
+- Board SHA-256 `c872a3d30509cccf5f78b64cde48ef722ee85c7be23c4848b07ce4082a852de3` (fix pass 7), rebuilt byte for
+  byte from the R6 board by `m3_design/r7_build.sh` (twice, by F8): `r7_pcb` → `r7_route` (with `r7_redraw`) → `r7_rework` →
+  `r7_hygiene` → `r7_polish` → `r7_post`. No router session is replayed.
+- Record: [docs/M3_R7.md](docs/M3_R7.md); validation: [docs/R7_VALIDATION.md](docs/R7_VALIDATION.md); ordering:
+  [docs/ORDERING.md](docs/ORDERING.md).
+- **Owner acceptance (2026-10-18):** the R7 deviation list (R7_VALIDATION "R7 deviations for owner acceptance": 45
+  allowlist entries, 29 leftovers, 25 review rows; 10 AGENTS §3 items) is accepted, with the 7.7 A copper rise accepted as
+  estimated, so REQUIREMENTS M2 is met in CAD. **Before ordering:** U4 consigned and JLC's written confirmation of the
+  forward panel rail.
 
-## Current candidate: M3-ASSY-R5 (two-sided re-layout, 46 × 100 mm)
+What changed from R6 (details in M3_R7):
+- **Removed:** the external radio/GPS harness ports J130/J131, their reset-off 4.8 V port supply (U14–U16, L4)
+  and protection (37 references).
+- **Added, in an RF strip at the aft end (y 0–23.5):**
+  - u-blox MAX-F10S GNSS (U30) and EBYTE E22-900MM22S SX1262 LoRa radio (U31), both on the main 3V3 through
+    ferrites;
+  - an edge-launch SMA jack for each on the aft edge (J30, J31; 9.5 mm overhang), with RF ESD;
+  - 0 Ω pi networks with DNP shunts (C303, C305, C313, C314; no paste);
+  - a hardware current limiter on the antenna bias, with a DNP compensation footprint (C304).
+
+  The radio is held in reset by a pull-down whenever the MCU is not driving it.
+- **Board:**
+  - 46 × 118 mm, every R6 item +18 mm in y; supports at (4, 4), (42.3, 4), (4, 64), (4, 114.4), (42, 114.4);
+  - stackup JLC041611-7628; 50 Ω coplanar lines (W 0.30 / gap 0.25 mm) with In1 cut under the SMA pads; GND
+    fence and stitching lattice; zone-fill keep-outs against pour slivers and unstitched fingers, which never take a
+    pad's relief;
+  - U1 re-pinned: radio on SPI2 (PB12–PB15) plus PD8–PD10 and PE15, GNSS on USART6 (PC6/PC7) plus PC8 and PD14.
+- **Routing:** the whole board, inherited R6 copper included, was cleaned in fix passes 2–6 (SWCLK and SWDIO
+  rerouted in pass 3; PYRO1_CONT on a plane-preserving route, CAM_UART_OE and NRST's J2 branch rerouted, 10 nets'
+  debris redrawn and two band staircases removed in pass 4; in pass 5 the last band staircases, QSPI_CLK's tiny jog
+  and the non-critical jogs removed, CAM_TX_WIRE taken off In1 (no signal copper on In1), GND vias at ARM1_SENSE's
+  layer changes, the band-end split crossings removed, the forward edge stitched, and the part-D tidy-ups made; in
+  pass 6 QSPI_IO3's square bump, SW_NODE's jog and short segments, LOGIC_SS's knee, the 3V3 C179 dip, RAW_ACT's B.Cu
+  duplicate and six GND ties removed, BAT_IN_F given two stitching vias, and SERVO4_MCU / CAM_FAULT_N spaced; in pass 7
+  the local bumps on 3V3A, CAM_5V, VLOGIC and both ends of A34's 3V3 run, a redundant 3V3 via joined only by
+  overlap, ACT_EN's layer hop, two duplicate 3V3 plane hops, ARM1_SENSE's pass through R180.1 and CAM_FAULT_N's,
+  I2C1_SDA's and CAM_5V_SENSE's detours removed, the BAT_IN_B lobe fenced off again, the 3V3A hop restored to its
+  0.200 mm drawing and the 7.7 A necks widened without moving a part) and is held by a clean-routing gate
+  (`tools/route_check.py` in `tools/check.sh`; since fix pass 5 it re-measures every allowlisted or recorded reason,
+  since fix pass 6 it gates detours and series layer hops on nets with a pour, and since fix pass 7 local bumps and
+  vias joined only by overlap on critical nets).
+  What the gate enforces and what review checks is in REQUIREMENTS M2.
+- **Requirements:** F10 rewritten for the on-board modules; P1 maximum 120 mm; M2 clean routing over the whole
+  board; M3 cap $126.41 per board and 52 extended codes (owner, 2026-10-15).
+
+Verification, stated separately:
+- **CAD checks (done, final board):** `tools/check.sh` exit 0:
+  - DRC 0, unconnected 0, schematic parity 0, ERC 0;
+  - metadata/3D audit OK; 0 silkscreen points outside the outline;
+  - R7 CAD contract OK (pin contract, reset-state parts, strip net lists, RF-part coverage, RF grounds, DNP paste,
+    via-in-SMD-pad, stitching, launch In2 reference, module ground, strip GND reach, thermal reliefs, legends beside
+    their parts);
+  - routing hygiene 0 failing, 45 allowlisted with measured reasons, 0 stale, 0 out-of-date no-GND reasons, 29
+    non-critical leftovers recorded (0 unrecorded, 0 stale), 0 out-of-date route figures, 0 removable jog /
+    staircase / short-segment / chain-detour exceptions, 1 removable local bump (USB_LIMITED's, allowlisted with its
+    measured reason);
+  - actuator safety contract OK;
+  - fit OK (CAD envelopes only; worst J9 mated 0.03 mm, C84 0.11 mm; supports clear, bare and DNP bottom pads
+    included).
+- **Manufacturing files (done, final board):** `tools/export_fab.py`:
+  - 92 BOM lines (one per LCSC code), 219 placed parts and CPL rows; no part without an LCSC code; BOM and CPL
+    byte-identical to fix pass 6's (CPL unchanged since fix pass 2);
+  - every CPL row has a verified correction (`--verify-cpl`: 211 rebuilt from JLC footprints, 8 placement-only,
+    worst residual 0.491 mm);
+  - DNP placeholders (C303, C304, C305, C313, C314) in no BOM or CPL; no paste on them or on the SMA pads
+    (Gerbers parsed);
+  - manifest OK, bound to `c872a3d3…` (regenerated by F8 and again by the records agent).
+- **Software tests:** test_check_shell 2, test_dc_solve 3, test_fab_validation 23, test_fit_check 23,
+  test_maze_clearances 10, test_procurement 15, test_r6_check 17, test_r7_check 35, test_route_check 50 and
+  quality_audit 21 (under both Pythons) pass (199 tests). `test_r5_repair` fails one subtest that checks literal R5 geometry; it fails
+  on R6 too (M3_R7).
+- **Independent review:**
+  - Pass 1, three reviewers on the R6 baseline: 0 Critical, 16 Major, all dispositioned.
+  - Pass 2, eight reviewers on the step-B board, with three skeptics per Major: 0 Critical, 26 Major (all upheld;
+    7 re-graded to Minor), 51 Minor.
+  - Pass 3, eight reviewers on the fix-pass-2 board: 0 Critical, 3 Major (all upheld; 1 re-graded to Minor),
+    36 Minor.
+  - Pass 4, five reviewers on the fix-pass-3 board: 0 Critical, 2 Major (both upheld; the skeptics' majority
+    re-graded P4-ROUTING_GEOMETRY-01 to Minor), 16 Minor. P4-ROUTING_GEOMETRY-01 (a false "no legal GND via spot"
+    reason on PYRO1_GATE_N) is fixed, with a gated audit of every such reason. **P4-DOCS-01 (M2 not met) is partly
+    fixed:** staircases 4 → 2, critical layer changes without a GND via 11 → 10, non-critical debris 14 → 2, every
+    leftover recorded with a measured reason; the owner's acceptance is open. Every finding is dispositioned in
+    R7_VALIDATION.
+  - Pass 5, four reviewers on the fix-pass-4 board: 0 Critical, 2 Major (both upheld; P5-ROUTING_GEOMETRY-01
+    re-graded to Minor), 15 Minor. P5-ROUTING_GEOMETRY-01 (three untrue allowlist reasons) is fixed by removing the
+    three instances; **P5-DOCS-01 (M2 not met) is partly fixed:** 15 of the 18 part-D items removed, D8 counted and
+    reasoned, the deviation list rewritten with the AGENTS §3 instances marked; the owner's acceptance is open. Every
+    Minor is fixed or recorded.
+  - Pass 6, four reviewers on the fix-pass-5 board: 0 Critical, 2 Major (both upheld; P6-ROUTING_QUALITY-01
+    re-graded to Minor), 11 Minor. P6-ROUTING_QUALITY-01 (QSPI_IO3's inherited square bump) is fixed. **P6-DOCS-01
+    (detours and extra vias on poured nets neither gated nor listed) is fixed in the gate and the records**: the gate
+    now holds them (13 allowlisted, 10 removed), and the records pass measured the chain detours and the short layer
+    hops the gate does not judge (C17, C23–C26), finding five items it judged removable (one, LED_RED, proved not
+    to be); pass 7 found the sweep incomplete (local bumps inside longer runs, a 3V3 via joined only by overlap and an
+    8 mm layer hop: P7-ROUTING-01, P7-DOCS-01). The two misplaced silkscreen legends (P6-DOCS-04(d)) were fixed in
+    fix pass 7.
+  - Pass 7, three reviewers on the fix-pass-6 board: 0 Critical, 2 Major (both upheld), 8 Minor. P7-ROUTING-01
+    (needless local bumps on critical power nets that neither the gate nor the list held) and P7-DOCS-01 (a redundant
+    3V3 via joined only by overlap, unlisted) are fixed in copper, and the gate now tests both classes (`local_bump`,
+    `via_on_track`); every Minor is fixed or recorded, the two far legends included. Of the fix-pass-6 records' five
+    "removable" items four were removed and one (LED_RED) proved not removable. The owner's acceptance is open.
+  - **No review pass on the fix-pass-7 board yet.**
+- **Calculation (CAD copper and datasheets):**
+  - DC solve on the final board with its own stack-up (30 µm inner copper; `tools/dc_solve.py` reads it since fix
+    pass 4): RAW_ACT 3.74, BAT_IN J1 → Q120 3.03, ACT_FET_S 1.19 mΩ at 0.1 mm (3.71 / 3.03 / 1.16 at 0.05 mm; fix
+    pass 6: 3.98 / 4.58 / 1.36); BAT_IN drops 23 mV and dissipates 0.18 W at 7.7 A; BAT_IN J1 → U9.5 13.64, C89 / C95
+    → U9.5 7.05 / 5.60 mΩ; 3V3 L1 → U1.75 15.6 mΩ, L1 → FB31 12.9 mΩ; track-limited paths good to about ±5 % (M3_R7
+    §"DC solve");
+  - IPC-2152 estimate of the 7.7 A copper (F8 on the final board; M3_R7): necks RAW_ACT 3.00 mm (F.Cu), BAT_IN
+    3.82 mm (In2), ACT_FET_S 2.65 mm (B.Cu) (fix pass 6: 2.18 / 3.71 / 2.15); Brooks & Adam's IPC-2152 fits give 38,
+    30 and 44 °C for a long conductor of the neck width at a continuous 7.7 A with no plane, 19, 13 and 37 °C at the
+    median width, about 18–20 °C at the necks with plane credit (Inference); MARGIN P1-9's 10 mm mirrored copper is
+    not met; no requirement sets the limit (owner; F4 bench stall test);
+  - antenna-bias short current 37–48 mA cold, 25–38 mA hot (Inference); 3V3 load 0.69 A worst case against the
+    2 A buck;
+  - RF lines 50.3 Ω by field solve (JLC 50.24 Ω);
+  - plate model f1 221–313 Hz pinned with the sled carrying the SMA plugs (R6 241–341 Hz; Inference inputs;
+    computed on the pass-2 board);
+  - critical-net reference sampling: 603 R6-referenced samples lost (R6: 0), at vias, on R6 paths R7 abandoned and
+    at CAM_MCU_RX's In2 crossing under QSPI_NCS (fix pass 3's PYRO1_CONT losses are gone); 882 candidate-new (21
+    from QSPI_CLK's fix-pass-5 step past RXEN's via antipad); fix passes 6 and 7: 0 lost, 0 new.
+- **Cost and stock (live, 2026-10-18 22:02Z cost, 22:03Z stock):** $105.98 per board, 52 extended codes (limits $126.41 and 52;
+  no code to spare); fixed two-sided fees $83.96 per order. **U4 (LSM6DSV320X) is out of JLC stock:** buy and
+  consign it (ORDERING §1). `check_procurement.py --cost-only` OK; the full gate fails on U4.
+- **Simulation:** none. **Firmware:** none; the R7 board binding is a follow-up (AGENTS §3). **Physical tests:**
+  none.
+
+**Shown in CAD:**
+- connectivity and every DRC rule (pyro spacing, RF line width and gap, module keep-outs, SMA edge clearance);
+- the gated part of M2's clean-routing list (`route_check`: 0 failing), with 45 allowlisted deviations, 29 recorded
+  leftovers and the review items listed in R7_VALIDATION "R7 deviations for owner acceptance" (M2 itself is not met
+  until the owner accepts that list);
+- the pin contract and the reset-state parts (`check_r7`);
+- no RF part pin on a pyro, arming, actuator, RAW_ACT, BAT_IN, BOOT0 or NRST net (`check_r7` at pad level, with
+  every part on a radio or GNSS net covered, plus DRC and parity);
+- the strip's ground copper within 4 mm of a GND via, In2 under the launches, In1/In2 under the modules;
+- RF-part distances from the bucks, MCU and crystal; fit envelopes including the mated SMA plugs; placement
+  corrections; DC copper resistance.
+
+**Needs the bench or the airframe** (ORDERING §5):
+- the antenna-short current and limiter stability (fit C304 if it oscillates);
+- RF match (pi-network tuning, shunt stubs included), J30–J31 isolation and GNSS C/N0 with the radio keyed
+  (≥ 39 dB);
+- pyro-channel immunity to the transmitter; radio NRST held low in reset;
+- 3V3/3V3A disturbance at transmit key-up; the USB-only transmit budget;
+- SMA joints (centre-to-shell check, leg fillets), D30, D31 and C302 seated flat (first-article inspection),
+  counter-held torque and staking; U30 paste at 0.10 mm;
+- the NRST gate after J2 is taped and coated;
+- the tap/modal check on the sled; the thermal-camera servo stall test;
+- coax and camera-shroud fit; every R6 bench gate.
+
+Open items:
+- (Done 2026-10-18: the owner accepted R7_VALIDATION "R7 deviations for owner acceptance".) Optional further
+  rerouting (left removable: C27's two non-critical local bumps, kept by judgement; not examined: C23's 0.74 mm BAT_IN
+  piece; not attempted: the cosmetic C17 / C19 / C21 / C22 tidy-ups); then a review pass on the board that will be
+  ordered.
+- The IPC-2152 rise of the 7.7 A copper (deviation C1): the owner's limit, or ACT_GATE / parts moved or a
+  battery-corner re-layout; the F4 bench stall test either way.
+- Minors not done: wider unstitched GND fingers (C11: 23 under 0.75 mm, 48 under 1.0 mm; fix pass 7 added two and
+  narrowed one, not searched for a via spot) and RF checks in the gate (P4-RF-01, P4-RF-02).
+- The JLC order-number placeholder moved to (22.9, 86.15) on B.SilkS (ORDERING §3).
+- U4 consignment; the stock tools have no consignment path (`pass1_requirements.md` R7P1-18).
+- JLC's written confirmation of the forward panel rail, or of assembly with the forward 50 mm unsupported
+  (ORDERING §3).
+- Board position and coax loop zone against the camera shroud (Onshape measurement); plug and coax choice, with
+  its mating torque. The parent VEHICLE.md stack row and CLAUDE.md E22 wording are done (parent `43af048`); two
+  additions to the row (J1's forward entry, standoffs ≥ 3.5 mm) are proposed to the coordinator.
+- 52 of 52 extended codes: any new code needs one removed.
+- R7 firmware board binding.
+
+## Previous candidate: M3-ASSY-R6 (one recovery channel, external radio/GPS ports, 46 × 100 mm)
+
+Committed as `3b215ba`. Its final CAD validation (DRC/parity/ERC 0, review Critical 0 / Major 0, $84.14 per board and 48 extended codes, U4 short) is recorded in [docs/M3_R6.md](docs/M3_R6.md) §"Final R6 CAD validation" and in the R6 sections at the end of this file, which are its working log; the early "stopped incomplete" notes there were superseded by that final validation. R6 was never ordered. R7 replaces its external ports with the on-board modules.
+
+## Previous candidate: M3-ASSY-R5 (two-sided re-layout, 46 × 100 mm)
 
 **Fourth implementation pass complete (2026-10-12):** [R5_VALIDATION.md](docs/R5_VALIDATION.md) records the independent findings, repairs and remaining qualifications. The final native board is SHA-256 `6fc208d613dc2c1a6e9381ec3e1a5888c223ea6246336ae8320421272ca93a43`. Local bypassing, crystal-area QSPI routing, MEMS routing/lands, assembly spacing, five annotation objects and nine route fragments are repaired and independently reviewed. Fresh DRC, unconnected, schematic-parity and ERC counts are all zero; the actuator contract, modeled fit, metadata/model and silkscreen checks pass. The fabrication package is regenerated and independently checked against this board. **These are CAD and manufacturing-file results, not physical robustness or flight qualification.** Earlier “no open Critical or Major” statements below describe their historical review scope.
 

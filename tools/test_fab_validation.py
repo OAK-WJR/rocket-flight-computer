@@ -1,6 +1,8 @@
 """Manufacturing regressions: missing or corrupt placements must block release."""
+from contextlib import redirect_stdout
 import csv
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
@@ -101,13 +103,14 @@ class PlacementValidation(unittest.TestCase):
     def test_connector_mechanical_tabs_are_independently_checked(self):
         self.pad_data = json.loads((ROOT / 'tools/jlc_easyeda/pads.json').read_text())
         changed = []
-        for pad in self.pad_data['C160393']['pads']:
+        # J9 (GH, C161692): the two unnumbered retention tabs are matched as EasyEDA pads 5 and 6
+        for pad in self.pad_data['C161692']['pads']:
             fields = pad.split('~')
-            if fields[8] in ('8', '9'):
+            if fields[8] in ('5', '6'):
                 fields[2] = str(float(fields[2]) + 10)  # 2.54 mm shifted retention tabs
             changed.append('~'.join(fields))
-        self.pad_data['C160393']['pads'] = changed
-        self.assertIn('J130', self.verify())
+        self.pad_data['C161692']['pads'] = changed
+        self.assertIn('J9', self.verify())
 
 
 class ExportPreflight(unittest.TestCase):
@@ -126,6 +129,76 @@ class ExportPreflight(unittest.TestCase):
                     module.main()
                 run.assert_not_called()
                 self.assertFalse(output.exists())
+
+
+class DnpPlaceholders(unittest.TestCase):
+    """A DNP part left in the BOM is fitted by the owner; one excluded from the BOM is an unfitted placeholder."""
+    ROW = dict(jlc_asm='', fp='C0402', x=10.0, y=10.0, rot=0.0, layer='F.Cu', smd=True, tht=False)
+
+    def export(self, extra):
+        spec = importlib.util.spec_from_file_location('export_fab', ROOT / 'tools/export_fab.py')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        rows = module.footprints(BOARD) + [dict(self.ROW, **row) for row in extra]
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / 'fab'
+            log = io.StringIO()
+            with patch.object(module, 'footprints', return_value=rows), \
+                    patch.object(module, 'run'), \
+                    patch.object(module, 'write_manifest', return_value=output / 'manifest.json'), \
+                    patch.object(sys, 'argv', ['export_fab.py', str(BOARD), '--out', str(output)]), \
+                    redirect_stdout(log):
+                module.main()
+            files = {name: (output / f'm3_{name}.csv').read_text() if (output / f'm3_{name}.csv').exists() else ''
+                     for name in ('bom_jlc', 'bom_owner', 'cpl_jlc')}
+        return files, log.getvalue()
+
+    def test_placeholder_is_in_no_bom_or_placement(self):
+        files, log = self.export([
+            dict(ref='C9001', value='DNP', lcsc='', mpn='', dnp=True, no_bom=True, no_pos=True),
+            dict(ref='C9002', value='100nF', lcsc='C1525', mpn='CL05B104KO5NNNC', dnp=True, no_bom=False,
+                 no_pos=False)])
+        for text in files.values():
+            self.assertNotIn('C9001', text)
+        self.assertIn('C9002', files['bom_owner'])
+        self.assertNotIn('C9002', files['bom_jlc'] + files['cpl_jlc'])
+        self.assertRegex(log, r'not fitted \(DNP placeholders[^\n]*C9001')
+        self.assertRegex(log, r'owner-fitted[^\n]*C9002')
+        self.assertNotRegex(log, r'owner-fitted[^\n]*C9001')
+
+    def test_dnp_without_part_number_must_be_excluded(self):
+        with self.assertRaisesRegex(SystemExit, r"without a part number \['C9003'\].*unfitted placeholder"):
+            self.export([dict(ref='C9003', value='DNP', lcsc='', mpn='', dnp=True, no_bom=False, no_pos=False)])
+
+
+class BomLinesByCode(unittest.TestCase):
+    """Pass 2 DFM-11: the JLC BOM has one line per LCSC code, whatever the comments say."""
+    ROW = DnpPlaceholders.ROW
+    export = DnpPlaceholders.export
+    FIT = dict(dnp=False, no_bom=False, no_pos=True)    # BOM lines only: no placement correction needed
+
+    def bom(self, extra):
+        files, _ = self.export(extra)
+        return list(csv.DictReader(io.StringIO(files['bom_jlc'])))
+
+    def test_one_code_with_two_comments_is_one_line(self):
+        rows = self.bom([dict(self.FIT, ref='C9101', value='100nF X', lcsc='C9999001', mpn='MPN-A'),
+                         dict(self.FIT, ref='C9102', value='100nF Y', lcsc='C9999001', mpn='MPN-A')])
+        line = [r for r in rows if r['LCSC Part #'] == 'C9999001']
+        self.assertEqual(len(line), 1)
+        self.assertEqual(line[0]['Designator'], 'C9101,C9102')
+        self.assertEqual(line[0]['Qty'], '2')
+        self.assertEqual(line[0]['Comment'], '100nF X; 100nF Y')
+
+    def test_every_board_code_is_on_one_line(self):
+        rows = self.bom([])
+        codes = [r['LCSC Part #'] for r in rows if r['LCSC Part #']]
+        self.assertEqual(len(codes), len(set(codes)))
+
+    def test_one_code_on_two_footprints_stops_the_export(self):
+        with self.assertRaisesRegex(SystemExit, r'LCSC C9999002 on several footprints'):
+            self.bom([dict(self.FIT, ref='C9103', value='1uF', lcsc='C9999002', mpn='MPN-B'),
+                      dict(self.FIT, ref='C9104', value='1uF', lcsc='C9999002', mpn='MPN-B', fp='C0603')])
 
 
 class ManifestValidation(unittest.TestCase):

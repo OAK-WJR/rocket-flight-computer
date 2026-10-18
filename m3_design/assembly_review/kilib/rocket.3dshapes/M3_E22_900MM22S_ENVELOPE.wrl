@@ -1,0 +1,5 @@
+#VRML V2.0 utf8
+# E22-900MM22S envelope from the EBYTE manual v1.3 drawing: 10.0 +/-0.2 square, 2.5 +/-0.2 high.
+# NOT a maker model.
+Transform { translation 0.000000 0.000000 0.157480 children [ Shape { appearance Appearance { material Material { diffuseColor .06 .25 .10 } } geometry Box { size 4.015748 4.015748 0.314961 } } ] }
+Transform { translation 0.000000 0.000000 0.531496 children [ Shape { appearance Appearance { material Material { diffuseColor .75 .75 .78 } } geometry Box { size 3.385827 3.385827 1.062992 } } ] }

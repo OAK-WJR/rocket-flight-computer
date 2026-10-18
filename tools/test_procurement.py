@@ -119,7 +119,7 @@ class ProcurementValidation(unittest.TestCase):
         report = json.loads((self.folder / 'cost_check.json').read_text())
         self.assertEqual(set(report['inputs_sha256']),
                          {'m3_bom_jlc.csv', 'm3_bom_owner.csv', 'm3_cpl_jlc.csv'})
-        self.assertEqual(report['targets'], {'max_total': 84.41, 'max_extended': 48})
+        self.assertEqual(report['targets'], {'max_total': 126.41, 'max_extended': 52})
 
     def test_supplier_snapshot_preserves_identity_and_expiry(self):
         now = datetime.datetime(2026, 10, 13, 12, tzinfo=datetime.timezone.utc)
@@ -146,7 +146,7 @@ class ProcurementValidation(unittest.TestCase):
         path = self.folder / 'cost_check.json'
         original = json.loads(path.read_text())
         for change in ({'supplier_checked_utc': '2020-01-01T00:00:00Z'},
-                       {'targets': {'max_total': 100, 'max_extended': 60}}, {'ok': False}):
+                       {'targets': {'max_total': 150, 'max_extended': 60}}, {'ok': False}):
             path.write_text(json.dumps(dict(original, **change)))
             with self.subTest(change=change), self.assertRaises(ValueError):
                 check_procurement.verify(self.folder, cost_only=True)
