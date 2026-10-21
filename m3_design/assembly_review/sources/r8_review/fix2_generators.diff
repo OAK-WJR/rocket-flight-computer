@@ -1,0 +1,616 @@
+--- a/m3_design/assembly_review/sources/r8_design/step7/make_ground.py
++++ b/m3_design/assembly_review/sources/r8_design/step7/make_ground.py
+@@ -23,7 +23,15 @@
+            brings most such points (raster RASTER) within COVER, while it brings at least MIN_GAIN
+   island   every outer (F / B) GND pour island with fewer than two GND vias or plated GND holes gets them, up to four
+            rounds (P7); an island no legal spot reaches is printed (the D4.2 pocket, D63)
++  pad      every GND SMD pad of an IC (a U part with four or more pads, forward of the strip) whose copper reaches a GND
++           via or plated GND hole only beyond PAD_REACH gets the legal spot its own copper reaches soonest, when that
++           spot is within PAD_REACH of copper (fix pass 2, R8P2-PLANES-01, D102: TI SLVSFC9C 8.4.1 asks for the eFuse
++           U9's GND terminal tied to the plane at the IC, and D62's cover step judges Euclidean distance only); a pad
++           no legal spot serves is printed
+ Every via is VIA (0.5 / 0.3 mm, the board's stitching and fence via) and keeps >= SPACING from every GND via.
++
++The through-hole GND pins of r8_ground.RELIEF_PADS are given their thermal relief first, as r8_ground.py does before
++it draws the table (D101), so the model is the board that stage fills.
+ 
+ A legal spot (legal()) is a via centre that, for every copper layer:
+   - lies in an outer GND pour fill (F or B), >= EDGE from the outline, >= 23.55 mm from the aft edge (the strip's GND
+@@ -75,6 +83,8 @@
+ COVER = 3.0                   # mm
+ RASTER = 0.5                  # mm (survey_metrics' stitching raster)
+ MIN_GAIN = 6                  # raster points (1.5 mm2)
++PAD_REACH = 4.0               # mm of copper from an IC GND pad to a GND via or plated GND hole (D102)
++PAD_RASTER = 0.1              # mm, the pad stage's copper-distance raster (R8 pass 2 planes' gndpads method)
+ STEP = 0.05                   # mm, the spot search grid
+ LEFTOVER = 1.0                # mm2: unconnected GND crumbs a trim may leave (dropped by the fill)
+ 
+@@ -670,14 +680,95 @@
+         bb = one.BBox()
+         log(f'  island {name}.Cu ({mm(bb.GetLeft()):.2f}, {mm(bb.GetTop()):.2f})-({mm(bb.GetRight()):.2f}, '
+             f'{mm(bb.GetBottom()):.2f}), {one.Area() / 1e12:.2f} mm2: fewer than two GND vias, no legal spot')
++    # 4. pads: every IC GND pad within PAD_REACH of copper of a GND via where a legal spot allows (D102)
++    new = pad_returns(b, rc, Spots(b), via_row, log)
++    if new:
++        draw_vias(b, new)
++        refill(b)
+     return rows
++
++
++def ic_gnd_pads(b):
++    """[(name, pad, layer)] of the GND SMD pads of the ICs (U parts with >= 4 pads) forward of the strip, sorted."""
++    out = []
++    for f in b.GetFootprints():
++        ref = f.GetReference()
++        if not re.match(r'^U\d+$', ref) or len(f.Pads()) < 4:
++            continue
++        for p in f.Pads():
++            if p.GetNetname() != 'GND' or p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD:
++                continue
++            if mm(p.GetPosition().y) < STRIP_Y:
++                continue
++            out.append((f'{ref}.{p.GetNumber()}', p, F if p.IsOnLayer(F) else B))
++    return sorted(out, key=lambda t: (t[0].split('.')[0], t[0]))
++
++
++def pad_reach(b, rc, pad, lid, extra=(), limit=PAD_REACH):
++    """(copper distance mm from the pad to the nearest GND via / plated GND hole or None beyond limit, the raster, the
++    distance array) over the layer's GND copper (route_check.reach); extra = new via centres not yet drawn."""
++    c = pad.GetPosition()
++    w = limit + 1.5
++    win = (mm(c.x) - w, mm(c.y) - w, mm(c.x) + w, mm(c.y) + w)
++    r = rc.Raster(tuple(v / rc.NM for v in win), PAD_RASTER / rc.NM)
++    cop, stitch = rc.net_copper(b, 'GND', lid)
++    for q in extra:
++        ps = pcbnew.SHAPE_POLY_SET()
++        circle(P(*q), VIA[0] / 2, ps)
++        cop.append(ps)
++        stitch.append(ps)
++    copper = r.fill(cop)
++    src = pcbnew.SHAPE_POLY_SET()
++    pad.TransformShapeToPolygon(src, lid, 0, ERR, pcbnew.ERROR_INSIDE)
++    d = rc.reach(r, copper, r.fill([src]), limit + 1.0)
++    st = r.fill(stitch)
++    best = min((d[k] for k in range(r.nx * r.ny) if st[k] and d[k] >= 0), default=None)
++    return best, r, d
+ 
+ 
++def pad_returns(b, rc, sp, via_row, log=print):
++    """The pad stage (module docstring): a via per IC GND pad beyond PAD_REACH, at the legal spot nearest it through
++    its copper; returns the new via centres (drawn by the caller)."""
++    new = []
++    for name, pad, lid in ic_gnd_pads(b):
++        d0, r, d = pad_reach(b, rc, pad, lid, new)
++        if d0 is not None and d0 <= PAD_REACH:
++            continue
++        c = (mm(pad.GetPosition().x), mm(pad.GetPosition().y))
++        n = int(round(PAD_REACH / STEP))
++        best = None
++        for j in range(-n, n + 1):
++            for i in range(-n, n + 1):
++                q = (r4(c[0] + i * STEP), r4(c[1] + j * STEP))
++                if math.dist(q, c) > PAD_REACH + 1e-9 or not sp.ok(q):
++                    continue
++                ci = int((q[0] / rc.NM - r.x0) // r.step)
++                cj = int((q[1] / rc.NM - r.y0) // r.step)
++                if not (0 <= ci < r.nx and 0 <= cj < r.ny):
++                    continue
++                dq = d[cj * r.nx + ci]
++                if dq < 0 or dq > PAD_REACH:
++                    continue
++                key = (round(dq, 6), q[1], q[0])
++                if best is None or key < best[0]:
++                    best = (key, q)
++        if best is None:
++            log(f'  pad: {name} ({c[0]:.2f}, {c[1]:.2f}) reaches a GND via beyond {PAD_REACH} mm of copper; no legal '
++                f'spot within {PAD_REACH} mm of its copper')
++            continue
++        q = best[1]
++        sp.add(q)
++        new.append(q)
++        via_row(q, f'pad {name}')
++        log(f'  pad: {name} beyond {PAD_REACH} mm of copper -> via {q} ({best[0][0]:.2f} mm of copper)')
++    return new
++
++
+ HEADER = ('# R8 GND stitching copper (m3_design/assembly_review/sources/r8_design/step7/make_ground.py; R8_DECISIONS '
+           'D62 on): drawn by m3_design/r8_ground.py in this order. item via: layer FB, size diameter/drill; '
+           'item track: '
+           'size = width; item trim: a fill keep-out rule area on layer, outline points x,y. basis: fence (D16), stitch '
+-          '(spike d), c24 (spike a), trim NAME, return NET, grid, island F|B, cover\n')
++          '(spike d), c24 (spike a), trim NAME, return NET, grid, island F|B, cover, pad REF.PIN (D102)\n')
+ COLS = ('item', 'net', 'layer', 'size', 'x0', 'y0', 'x1', 'y1', 'basis', 'points')
+ 
+ 
+@@ -735,9 +826,14 @@
+     a = ap.parse_args()
+     sys.path.insert(0, str(ROOT / 'tools'))
+     import route_check as rc  # noqa: E402
++    sys.path.insert(0, str(ROOT / 'm3_design'))
++    import r8_ground  # noqa: E402
+     b = pcbnew.LoadBoard(str(a.board.resolve()))
++    r8_ground.relieve(b, strict=False)         # D101: the board r8_ground.py fills has J123.2 relieved
+     if a.built:
+-        strip_built(b, read())
++        strip_built(b, read())                 # (refills)
++    else:
++        refill(b)                              # the relief's fill, as r8_ground.py fills it
+     rows = generate(b, rc)
+     write(rows, a.out)
+     count = defaultdict(int)
+--- a/m3_design/assembly_review/sources/r8_design/step9/binding_note.py
++++ b/m3_design/assembly_review/sources/r8_design/step9/binding_note.py
+@@ -48,12 +48,15 @@
+     'Unchanged from R7: the pyro gate and sense pins, the servo pins and the sentinels (check_actuators); fire pulses end '
+     'at 20 ms; neutral is the first servo output after any reset (REQUIREMENTS F6, F7).',
+     'Before any jump to the ROM bootloader (the only way in: BOOT0 is tied low by R5 and is not on J2, so AN2606 Table 2 '
+-    'pattern 10 needs BOOT0 = 1 and cannot be selected): put the SX1262 to sleep, drive RADIO_NRST (PE9) low, then return '
+-    'PE9 to analog mode (or reset GPIOE through RCC_AHB4RSTR) so R311 holds NRST low in the bootloader. AN2606 Rev 70 '
+-    'Table 135 configures only the bootloader\'s own interface pins, so PE9 would otherwise keep its last application '
+-    'state (Inference). NSS stays high through R310, so the loader-capture safety of D2 / D5 holds either way; the '
+-    '"radio cannot transmit in the bootloader" property of F10 rests on this step (D6.8; fix pass 1, '
+-    'R8P1-REQUIREMENTS-02).',
++    'pattern 10 needs BOOT0 = 1 and cannot be selected): first drive PE4 (PYRO1_GATE_N) low, or reset GPIOE through '
++    'RCC_AHB4RSTR, which also returns PE4 to analog so R127 holds the gate off; then put the SX1262 to sleep, drive '
++    'RADIO_NRST (PE9) low, then return PE9 to analog mode (or the same GPIOE reset) so R311 holds NRST low in the '
++    'bootloader. AN2606 Rev 70 Table 135 configures only the bootloader\'s own interface pins, so PE4 and PE9 would '
++    'otherwise keep their last application state, and GPIOE_LCKR freezes PE4\'s configuration registers, not its output '
++    'data (RM0433 section 11.4.8): a jump made with PE4 high would hold an armed gate on for as long as the bootloader '
++    'runs, outside the application\'s 20 ms fire limit (Inference). NSS stays high through R310, so the loader-capture '
++    'safety of D2 / D5 holds either way; the "radio cannot transmit in the bootloader" property of F10 rests on this '
++    'step (D6.8; fix pass 1, R8P1-REQUIREMENTS-02; fix pass 2, R8P2-PYRO-03).',
+ ]
+ 
+ 
+--- a/m3_design/assembly_review/sources/r8_design/step9/m2_sweep.py
++++ b/m3_design/assembly_review/sources/r8_design/step9/m2_sweep.py
+@@ -16,6 +16,14 @@
+   adjacency         every pair of different-net tracks, or track and via, or via and via, on one copper layer, whose
+                     edges are closer than 0.2 mm (R7 C15's bar; the board's DRC minimum is 0.15 mm), with rigid R7
+                     copper (r8_power_check.rigid_items) marked
++  adjacency_pad     every pad against every different-net track or via on one copper layer (each copper layer the
++                    pad is flashed on: a through-hole pad's unflashed inner layers are skipped), edges closer than
++                    0.2 mm, one row per (pad, foreign net) at its smallest gap (fix pass 2, R8P2-REQUIREMENTS-01 /
++                    R8P2-ROUTING-03: pass 1's sweep compared tracks and vias only). Each row is classed: 'own_part'
++                    when the foreign net also has a pad on the pad's footprint (a track leaving its own pad beside a
++                    neighbour of the same part, or the part's own via beside its other pad), with the footprint's pad
++                    pitch (smallest pad-centre spacing); 'fine' = own_part on a part of pitch <= FINE_PITCH (the
++                    footprint's geometry, counted, not listed one by one in part C); every other row is listed
+   via_step          a track with both ends inside one same-net via's ring, off its centre (a step inside via copper)
+   poured_hop        a via-to-via track shorter than 4 mm on a net with a pour (a hop under other copper and back)
+   routes            route_check --routes on every net without a pour: copper / octilinear MST ratio and vias against
+@@ -42,12 +50,16 @@
+ sys.path.insert(0, str(ROOT / 'tools'))
+ sys.path.insert(0, str(ROOT / 'm3_design'))
+ import route_check as rc  # noqa: E402
++import check_r8  # noqa: E402
+ import r8_power_check  # noqa: E402
+ 
+ mm, MM = pcbnew.ToMM, pcbnew.FromMM
+ CU = (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu)
+ ADJ = 0.2
+ HOP = 4.0
++FINE_PITCH = 0.65             # mm: a part's pad pitch at or below this is fine pitch (QFN / LGA / QFP / SOT-563 class)
++RIGID_REFS = set(check_r8.STRIP_PARTS) | set(check_r8.CH1_PARTS) | {'J1', 'J122'}   # the rigid R7 parts (D11, D15)
++STRIP_GND_Y = 23.25           # mm: GND vias aft of the fence row (y 23.3) are the rigid strip_gnd group (D15)
+ 
+ 
+ def r3(v):
+@@ -126,6 +138,83 @@
+         key = (r['layer'],) + tuple(r['nets'])
+         pairs.setdefault(key, r)
+     return sorted(pairs.values(), key=lambda r: (r['gap_mm'], r['layer'], r['nets']))
++
++
++def bisect_gap(a, c, M):
++    """Edge gap (nm, to 0.5 um) between two shapes known to collide within M."""
++    lo, hi = 0, M
++    while hi - lo > 500:
++        m = (lo + hi) // 2
++        if a.Collide(c, m):
++            hi = m
++        else:
++            lo = m
++    return hi
++
++
++def pad_pitch(f):
++    """Smallest centre-to-centre spacing (mm) of a footprint's copper pads (inf for one pad)."""
++    cs = [p.GetPosition() for p in f.Pads() if p.GetAttribute() != pcbnew.PAD_ATTRIB_NPTH]
++    best = math.inf
++    for i, a in enumerate(cs):
++        for c in cs[i + 1:]:
++            d = math.hypot(a.x - c.x, a.y - c.y)
++            if d > 0:
++                best = min(best, d)
++    return best if best == math.inf else mm(best)
++
++
++def adjacency_pads(board, its):
++    """Pad against different-net track / via on one copper layer, edges < ADJ (the adjacency_pad category)."""
++    M = MM(ADJ)
++    by = defaultdict(list)
++    for it in its:
++        by[it['lid']].append(it)
++    for group in by.values():
++        group.sort(key=lambda it: it['box'].GetLeft())
++    lefts = {lid: [it['box'].GetLeft() for it in group] for lid, group in by.items()}
++    best = {}
++    for f in board.GetFootprints():
++        ref = f.GetReference()
++        part_nets = {p.GetNetname() for p in f.Pads() if p.GetNetname()}
++        pitch = pad_pitch(f)
++        for p in f.Pads():
++            net = p.GetNetname()
++            if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH or not net:
++                continue
++            for lid in CU:
++                if not p.IsOnLayer(lid) or not p.FlashLayer(lid):
++                    continue
++                shape = p.GetEffectiveShape(lid)
++                pb = p.GetBoundingBox()
++                group = by.get(lid, [])
++                hi_left = pb.GetRight() + M
++                for it in group:
++                    if it['box'].GetLeft() > hi_left:
++                        break
++                    if it['box'].GetRight() + M < pb.GetLeft():
++                        continue
++                    if it['net'] == net or not it['net']:
++                        continue
++                    ib = it['box']
++                    if ib.GetBottom() + M < pb.GetTop() or pb.GetBottom() + M < ib.GetTop():
++                        continue
++                    if not shape.Collide(it['shape'], M - 1):
++                        continue
++                    g = r3(mm(bisect_gap(shape, it['shape'], M)))
++                    own = it['net'] in part_nets
++                    key = (f'{ref}.{p.GetNumber()}', it['net'])
++                    row = dict(gap_mm=g, layer=board.GetLayerName(lid), pad=key[0], pad_net=net, net=it['net'],
++                               item=(it['kind'], it['where']), cls='own_part' if own else 'foreign_part',
++                               pitch_mm=r3(pitch) if pitch != math.inf else None,
++                               fine=own and pitch <= FINE_PITCH + 1e-6,
++                               bare=bool(p.IsOnLayer(pcbnew.F_Mask) if lid == pcbnew.F_Cu else
++                                         p.IsOnLayer(pcbnew.B_Mask) if lid == pcbnew.B_Cu else False),
++                               rigid=[ref in RIGID_REFS, it['rigid'] or (it['net'] == 'GND' and it['kind'] == 'via'
++                                                                         and it['where'][1] < STRIP_GND_Y)])
++                    if key not in best or g < best[key]['gap_mm']:
++                        best[key] = row
++    return sorted(best.values(), key=lambda r: (r['gap_mm'], r['pad'], r['net']))
+ 
+ 
+ def via_steps_and_hops(board, cu):
+@@ -245,7 +334,9 @@
+     cu = rc.Copper(board)
+     out = dict(board_sha256=sha)
+     out['chain_detour'] = chain_detours(board, cu)
+-    out['adjacency'] = adjacency(board, items(board))
++    its = items(board)
++    out['adjacency'] = adjacency(board, its)
++    out['adjacency_pad'] = adjacency_pads(board, its)
+     out['via_step'], out['poured_hop'] = via_steps_and_hops(board, cu)
+     out['routes'] = routes(board)
+     bumps, searched = rc.bump_audit(board, nets=lambda n: rc.net_class(n) not in rc.CRITICAL)
+@@ -255,7 +346,8 @@
+     inst = rc.scan(board)
+     out['short_hop'] = [d for d in inst if d['cat'] in ('short_layer_hop', 'power_via_no_gnd')]
+     print(f'M2 review sweep on {a.board.name} ({sha[:12]}...)')
+-    for key in ('chain_detour', 'adjacency', 'via_step', 'poured_hop', 'routes', 'pad_edge', 'via_fold', 'short_hop'):
++    for key in ('chain_detour', 'adjacency', 'adjacency_pad', 'via_step', 'poured_hop', 'routes', 'pad_edge',
++                'via_fold', 'short_hop'):
+         print(f'{key}: {len(out[key])}')
+         for d in out[key]:
+             print('   ', json.dumps(d, default=str))
+--- a/m3_design/r8_ground.py
++++ b/m3_design/r8_ground.py
+@@ -11,6 +11,12 @@
+ m3_design/assembly_review/sources/r8_design/step7/make_ground.py (its docstring has the legality rules and the
+ order); the gate is r8_ground_check.py.
+ 
++Before the fill it gives the through-hole GND pins of RELIEF_PADS the board's THT thermal relief (fix pass 2,
++R8P2-DFM-01 / R8P2-INTEGRITY-01, D101): J123.2 was kept solid because DRC reported starved_thermal on the step-6 board,
++but on this stage's final GND copper the relief resolves the project's min_resolved_spokes (2 on B.Cu, >= 4 on F.Cu and
++In1), so REQUIREMENTS M2's rule applies. It is set here, where the final copper exists, not in r8_pcb.py (step 4),
++because the step-6 gates run DRC before the stitching vias and fill that give it its spokes.
++
+ The stage runs once (no table item may exist before it), keeps the 12 rigid digests (check_r8 D15: no new GND via aft
+ of y 23.5 but on the fence row), asserts every via it adds stays on GND after the native fill (a via on foreign copper
+ would be re-netted) and that each track ends where the table says. Deterministic (fixed KIID seed): a rebuild
+@@ -34,8 +40,20 @@
+ LAYER = {'F': pcbnew.F_Cu, 'B': pcbnew.B_Cu}
+ KIID_SEED = 8815              # r8_route.py's families use 8806-8814
+ EPS = 1e-6
++RELIEF_PADS = (('J123', '2'),)   # THT GND pins relieved on the final copper (D101); make_ground.py models the same
+ 
+ 
++def relieve(b, strict=True):
++    """Give RELIEF_PADS the zones' THT thermal relief (INHERITED): R7 / step 4 left them FULL (strict: asserted)."""
++    for ref, num in RELIEF_PADS:
++        pads = [p for p in b.FindFootprintByReference(ref).Pads() if p.GetNumber() == num]
++        assert len(pads) == 1 and pads[0].GetNetname() == 'GND', (ref, num)
++        c = pads[0].GetLocalZoneConnection()
++        assert c == pcbnew.ZONE_CONNECTION_FULL or (not strict and c == pcbnew.ZONE_CONNECTION_INHERITED), \
++            (ref, num, 'expected the step-4 FULL connection')
++        pads[0].SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_INHERITED)
++
++
+ def P(x, y):
+     return pcbnew.VECTOR2I(MM(x), MM(y))
+ 
+@@ -141,6 +159,7 @@
+     dup = existing(b, rows)
+     assert not dup, f'{len(dup)} table items already on the board (run r8_ground.py once, on the step-6 board)'
+     pcbnew.KIID.SeedGenerator(KIID_SEED)
++    relieve(b)
+     for z in b.Zones():
+         if not z.GetIsRuleArea():
+             z.UnFill()                     # stale fills would re-net new vias (spike (c) pitfall)
+--- a/m3_design/r8_ground.tsv
++++ b/m3_design/r8_ground.tsv
+@@ -1,4 +1,4 @@
+-# R8 GND stitching copper (m3_design/assembly_review/sources/r8_design/step7/make_ground.py; R8_DECISIONS D62 on): drawn by m3_design/r8_ground.py in this order. item via: layer FB, size diameter/drill; item track: size = width; item trim: a fill keep-out rule area on layer, outline points x,y. basis: fence (D16), stitch (spike d), c24 (spike a), trim NAME, return NET, grid, island F|B, cover
++# R8 GND stitching copper (m3_design/assembly_review/sources/r8_design/step7/make_ground.py; R8_DECISIONS D62 on): drawn by m3_design/r8_ground.py in this order. item via: layer FB, size diameter/drill; item track: size = width; item trim: a fill keep-out rule area on layer, outline points x,y. basis: fence (D16), stitch (spike d), c24 (spike a), trim NAME, return NET, grid, island F|B, cover, pad REF.PIN (D102)
+ item	net	layer	size	x0	y0	x1	y1	basis	points
+ via	GND	FB	0.5/0.3	0.9	23.3			fence	
+ via	GND	FB	0.5/0.3	2.9	23.3			fence	
+@@ -114,8 +114,8 @@
+ via	GND	FB	0.5/0.3	39	87.7			grid	
+ via	GND	FB	0.5/0.3	42.9	87.6			grid	
+ via	GND	FB	0.5/0.3	30.85	91.5			grid	
+-via	GND	FB	0.5/0.3	39	91.3			grid	
+-via	GND	FB	0.5/0.3	43	91.5			grid	
++via	GND	FB	0.5/0.3	38.85	91.3			grid	
++via	GND	FB	0.5/0.3	42.9	91.45			grid	
+ via	GND	FB	0.5/0.3	27	94.9			grid	
+ via	GND	FB	0.5/0.3	31	94.9			grid	
+ via	GND	FB	0.5/0.3	34.25	94.75			grid	
+@@ -197,5 +197,7 @@
+ via	GND	FB	0.5/0.3	28.375	84.625			cover	
+ via	GND	FB	0.5/0.3	8.685	37.9255			island F	
+ via	GND	FB	0.5/0.3	8.1355	27.6766			island F	
++via	GND	FB	0.5/0.3	13.5455	74.2255			island B	
+ via	GND	FB	0.5/0.3	44.9755	45.1955			island B	
+ via	GND	FB	0.5/0.3	42.8255	46.2845			island F	
++via	GND	FB	0.5/0.3	44.65	86.775			pad U9.8	
+--- a/m3_design/r8_pcb.py
++++ b/m3_design/r8_pcb.py
+@@ -178,10 +178,11 @@
+ 
+ # Fix pass 1 (R8P1-DFM-03, D89): R5 made J3's GND legs solid (r5_pcb.py FULL_PADS) because in R5's layout their spokes
+ # were starved (between the board edge, a locating hole and the USB fan-out). R8 moved J3 and the GND fill now reaches
+-# its spokes, so REQUIREMENTS M2's rule applies: they inherit the THT thermal relief. J123.2 stays solid: with the
+-# relief (0.5 mm gap, 45-degree spokes) KiCad's DRC reports starved_thermal on B.Cu, where the PULLPIN lane (x 14.23,
+-# 0.33 mm from the pad) and J123.1 / PULLPIN_EXT leave fewer than min_resolved_spokes 2. J122's GND pins stay solid
+-# (starved on B.Cu, the 7.7 A servo return).
++# its spokes, so REQUIREMENTS M2's rule applies: they inherit the THT thermal relief. J123.2 (the pull-pin's GND) gets
++# its relief in r8_ground.py instead (fix pass 2, D101): on the step-6 board, before step 7's GND vias and fill, DRC
++# reports starved_thermal on B.Cu there, but on the final copper the relief resolves 2 spokes on B.Cu (the project's
++# min_resolved_spokes) and >= 4 on F.Cu and In1. J122's GND pins stay solid: the 7.7 A servo return (and with a relief
++# J122.3 would resolve only 1 spoke on F.Cu); they are also in the rigid j122_tie digest.
+ THERMAL_PADS = (('J3', '1'), ('J3', '4'))
+ 
+ 
+--- a/m3_design/r8_place.tsv
++++ b/m3_design/r8_place.tsv
+@@ -145,7 +145,7 @@
+ R82	40.425	88.9	180	B	D36
+ R83	38.1	86.8	180	B	D36
+ C87	43.65	94.1	0	F	D36
+-R81	41.245	91	0	B	D36
++R81	39.6	91.275	90	B	D36 D100
+ TP80	43.4	94.6	0	B	D36
+ TP84	42.9	96.5	0	F	D36
+ R84	43.8	86.9	90	B	D36
+--- a/m3_design/r8_power.py
++++ b/m3_design/r8_power.py
+@@ -68,7 +68,12 @@
+                     (0.5, 108.0)]
+ # spike (c)'s J122 finger, its forward edge at y 86.2: >= 0.5 mm (rule A) in plan view from C127's pads (CH1 block)
+ IN2_RAW_ACT_J122 = [(20.2, 70.5), (24.6, 70.5), (24.6, 86.2), (20.2, 86.2)]
+-IN2_BAT_IN = [(12.4, 100.3), (45.5, 100.3), (45.5, 117.5), (12.4, 117.5)]
++# Fix pass 2 (R8P2-POWER-02, D97): the BAT_IN island ends where the outer BAT_IN pours do (x 33.5, y 112.6). Its old
++# east and forward parts (x 33.5-45.5, y 112.6-117.5, about 220 mm2) carried no current (every BAT_IN via lies at
++# x <= 26.2 and J1.1 is the only BAT_IN hole), yet put unfused battery copper 0.5 mm from the east and forward edges,
++# 0.2 mm above B.Cu GND, under the right forward panel tab and round the M3 hole (42, 114.4); In2 GND takes it back.
++# J1.1's In2 annulus stays whole (its pad edge 1.6 mm inside x 33.5, 0.9 mm inside y 112.6)
++IN2_BAT_IN = [(12.4, 100.3), (33.5, 100.3), (33.5, 112.6), (12.4, 112.6)]
+ Y1_IN2_KEEPOUT = [(18.9, 46.3), (26.8, 46.3), (26.8, 50.95), (18.9, 50.95)]     # R5 V1, spike (a): no plane under Y1
+ 
+ 
+@@ -266,7 +271,7 @@
+ # ======================================================================================================================
+ TRUNK_X = 45.2               # F.Cu down the east edge (0.5 mm: 45.45 <= 45.5, the copper-to-edge clearance)
+ V_U9 = (41.75, 83.7)         # U9.6's via to the trunk (D36)
+-V_IN1 = (35.25, 60.5)        # the logic mux U11's IN1 via, north of U11.2 (D42)
++V_IN1 = (35.25, 60.5)        # the logic mux U11's IN1 via, north of U11.2 (D42); 0.5 mm ring (SMALL_VIA, fix pass 2)
+ V_U7 = (42.15, 25.6)         # the trunk's drop to the camera eFuse U7 (D37), aft of C73
+ RAW_PROTECTED_TRACKS = [
+     ('F', 0.5, [(TRUNK_X, 83.7), (TRUNK_X, 62.6), (TRUNK_X, 51.5), (43.5, 49.8), (42.15, 49.8), (42.15, 25.6)]),
+@@ -291,8 +296,11 @@
+ def raw_protected(d):
+     for layer, w, pts in RAW_PROTECTED_TRACKS:
+         d.track('RAW_PROTECTED', layer, w, pts)
+-    for xy in (V_U9, V_IN1, V_U7):
++    for xy in (V_U9, V_U7):
+         d.via('RAW_PROTECTED', *xy)
++    # fix pass 2 (R8P2-ROUTING-01, D98): the board's 0.5 / 0.3 mm via (same drill and barrel, so the same current
++    # capacity) opens the 0.150 mm gap to the VLOGIC column x 35.95 (U11's pin pitch) to 0.20 mm
++    d.via('RAW_PROTECTED', *V_IN1, SMALL_VIA)
+     d.track('GND', 'B', 0.5, [(43.51, 76.0), (43.51, 74.2)])     # D9.2 (anode) to its GND via
+     d.via('GND', 43.51, 74.2)
+ 
+@@ -458,9 +466,13 @@
+     ('CAM_5V', 'F', 0.6, [V_CAM_5V, (40.75, 42.325)]),
+     ('CAM_5V', 'F', 0.25, [(40.3, 33.9), (40.3, 35.5), (40.3, 40.95), V_CAM_5V]),
+ ]
+-CAMERA_GND = [   # pad -> via (B.Cu unless F)
+-    ('B', (43.41, 36.45), (43.41, 37.6)), ('B', (43.41, 28.85), (43.41, 27.8)), ('B', (41.4, 46.07), (41.4, 47.8)),
+-    ('B', (35.29, 39.16), (34.4, 38.27)), ('B', (34.675, 45.2), (33.9, 45.2)),     # C76.2 north-west of the radio lanes
++# pad -> via (B.Cu unless F), via size. Fix pass 2 (R8P2-ROUTING-01, D98): C75.2's and C76.2's GND vias are the
++# board's 0.5 / 0.3 mm via (same drill and barrel): their 0.150 mm gaps to CAM_5V and CAM_MCU_TX open to 0.20 mm
++CAMERA_GND = [
++    ('B', (43.41, 36.45), (43.41, 37.6), VIA), ('B', (43.41, 28.85), (43.41, 27.8), VIA),
++    ('B', (41.4, 46.07), (41.4, 47.8), SMALL_VIA),
++    ('B', (35.29, 39.16), (34.4, 38.27), VIA),
++    ('B', (34.675, 45.2), (33.9, 45.2), SMALL_VIA),                    # C76.2 north-west of the radio lanes
+ ]
+ 
+ 
+@@ -469,11 +481,11 @@
+         d.track(net, layer, w, pts)
+     d.via('CAM_FB', *V_CAM_FB)
+     d.via('CAM_5V', *V_CAM_5V)
+-    for layer, pad, via in CAMERA_GND:
++    for layer, pad, via, size in CAMERA_GND:
+         d.track('GND', layer, 0.4, [pad, via])
+-        d.via('GND', *via)
++        d.via('GND', *via, size)
+     d.track('GND', 'F', 0.3, [(40.325, 32.3), (41.15, 32.3), (41.45, 32.6)])    # R72.2 (top)
+-    d.via('GND', 41.45, 32.6)
++    d.via('GND', 41.45, 32.6, SMALL_VIA)        # 0.5 mm (fix pass 2, D98): 0.20 mm from the RAW_PROTECTED trunk
+ 
+ 
+ SECTIONS = [in2, band, raw_protected, logic, camera]
+--- a/m3_design/r8_route_status.py
++++ b/m3_design/r8_route_status.py
+@@ -18,7 +18,8 @@
+     LOGIC_SOURCE_ST west of R102 (D55) and diagonally clear of TP76 to a via, then B.Cu to U11.9, TP87 and R91.
+   - BAT_ENABLE (D36, spike (c)'s lane): R165 through its via (D30), forward on F.Cu x 16.6 under Q122, east on the top
+     strip between the CH1 block and RAW_PROTECTED to x 42.9, aft through TP84 and C87, a via, and the B.Cu spine
+-    x 40.42 between R82's pads through R81 to U9.1. The lane runs on y 98.45, not spike (c)'s 99.25 beside
++    x 40.42 between R82's pads to U9.1, with R81 (EN to GND) west of it on a stub (fix pass 2, D100: R81 used to
++    straddle the BAT_IN feed x 41.25 with its pad 1 on the spine). The lane runs on y 98.45, not spike (c)'s 99.25 beside
+     RAW_PROTECTED: with both lanes, Q122's GND pocket (Q122.2, R123.2; Q120's drain under it on B.Cu) had no way to
+     GND. The 1.3 mm strip between the lanes now carries the pocket's pour east to a GND via (D58).
+ """
+@@ -79,7 +80,10 @@
+     ('BAT_ENABLE', 'B', W, [(16.6, 105.275), V_BE1]),                                 # R165.2 (D30's via)
+     # (the 45-degree step clears R175.2, ARM1_SENSE, at the lane's west end)
+     ('BAT_ENABLE', 'F', W, [V_BE1, (16.6, 99.25), (17.4, Y_BE), (42.9, Y_BE), (42.9, 93.5), V_BE2]),  # TP84, C87.1
+-    ('BAT_ENABLE', 'B', W, [V_BE2, (40.42, 86.2)]),                                   # R81.1 -> U9.1
++    # the spine x 40.42 to U9.1; R81 (EN to GND) stands west of it since fix pass 2 (R8P2-ROUTING-02, D100), its pad 1
++    # on a stub: the 0.5 mm BAT_IN feed (x 41.25) no longer runs between R81's pads
++    ('BAT_ENABLE', 'B', W, [V_BE2, (40.42, 92.1), (40.42, 86.2)]),                     # U9.1
++    ('BAT_ENABLE', 'B', W, [(40.42, 92.1), (39.6, 92.1)]),                            # R81.1
+ ]
+ SIGNAL_VIAS = [('BUZZ_DRV', V_BD), ('PULLPIN', V_PP), ('BUZZ_OUT', V_BO), ('V3V3_SENSE', V_V3),
+                ('BAT_FAULT_N', V_BF), ('LOGIC_SOURCE_ST', V_LG)]
+@@ -105,7 +109,7 @@
+         ('U9', '4', 'BAT_FAULT_N', (40.6, 84.8)), ('U11', '9', 'LOGIC_SOURCE_ST', (36.75, 57.85)),
+         ('TP87', '1', 'LOGIC_SOURCE_ST', (42.0, 58.5)), ('R91', '2', 'LOGIC_SOURCE_ST', (44.3, 57.975)),
+         ('R165', '2', 'BAT_ENABLE', (16.6, 105.275)), ('TP84', '1', 'BAT_ENABLE', (42.9, 96.5)),
+-        ('C87', '1', 'BAT_ENABLE', (42.95, 94.1)), ('R81', '1', 'BAT_ENABLE', (40.42, 91.0)),
++        ('C87', '1', 'BAT_ENABLE', (42.95, 94.1)), ('R81', '1', 'BAT_ENABLE', (39.6, 92.1)),
+         ('U9', '1', 'BAT_ENABLE', (40.6, 86.2))]
+ 
+ 
+--- a/m3_design/r8_route_usb_swd.py
++++ b/m3_design/r8_route_usb_swd.py
+@@ -14,6 +14,12 @@
+     the spine by one diagonal. 0.3 mm (U10 limits at 0.45 A). Fix pass 1 (R8P1-POWER-03, D88): U10's 100 nF input
+     bypass C83 sits beside U10.1 / U10.2 (TPS2553 SLVS841F 12.1), its VBUS pad on the run into U10.1 (the spine's tee
+     at y 36.775) and its GND pad on U10.2's return to the D4.2 / U10.2 via; it was at its seed spot 17.5 mm away.
++    C83's 1.55 mm pad pitch against U10's 0.95 mm leaves C83.2's centre 0.175 mm aft of U10.2's row. Fix pass 2
++    (R8P2-ROUTING-04, D99): U10.2's GND runs straight west on its row into C83.2 (ending 0.175 mm off the pad's centre)
++    and the link to the via leaves from C83.2's centre on its axis, so no micro-segment is left (fix pass 1 drew a
++    0.247 mm 45-degree jog inside the pad from one to the other). C83 cannot move
++    0.175 mm forward instead: its courtyard would come within 1.5 mm of J3.1's slot (R5 L10, r8_legalise) and any
++    shift east overlaps U10's courtyard; U10 cannot move 0.175 mm aft: U10.3 would land on V_D's via.
+   - U10's east pins sit in a pocket that step 5's USB_LIMITED fences: FAULT and ILIM leave under U10's body (B.Cu,
+     between its pad columns): FAULT on x 12.4 north through R90 (pull-up) to its test pad TP86 (moved north beside R90,
+     D52) and a via to pin 87, which leaves U1 between the LED pins; ILIM on x 12.85 to R85 (turned, D52).
+@@ -84,7 +90,8 @@
+     ('3V3', 'F', W, [(1.615, 41.48), (0.8, 40.665)]),                                         # J2.1
+     ('GND', 'F', W, [(1.615, 44.02), (0.8, 44.02)]),                                          # J2.5
+     ('GND', 'F', W, [(9.85, 33.8), (9.0, 33.8)]),                                             # D4.2
+-    ('GND', 'B', W, [(11.1, 35.4), (9.725, 35.4), (9.55, 35.225), (9.55, 34.35), (9.0, 33.8)]),   # U10.2, C83.2
++    ('GND', 'B', W, [(11.1, 35.4), (9.55, 35.4)]),                                           # U10.2 -> C83.2 (D99)
++    ('GND', 'B', W, [(9.55, 35.225), (9.55, 34.35), (9.0, 33.8)]),                           # C83.2 -> the D4.2 via
+     ('GND', 'B', W, [(11.475, 38.3), (10.6, 38.3)]),                                          # R85.2
+ ]
+ VIAS = [('VBUS', V_A, VIA_PWR), ('VBUS', V_B, VIA_PWR), ('VBUS', V_D, VIA_PWR),
+--- a/tools/check_r8.py
++++ b/tools/check_r8.py
+@@ -31,10 +31,14 @@
+   check_actuators   m3_design/check_actuators.py is byte-for-byte R7's (D14)
+ Fix pass 1 (R8_DECISIONS D85, D87, D92):
+   battery_pyro      BAT_IN and ACT_FET_S copper (both battery-live whatever the power switch does) >= 1.0 mm, on the
+-                    same copper layer, from PYRO1_BUS / PYRO1_IGN copper: m3.kicad_dru rule E's margin, which names
+-                    RAW_ACT only (D85; R8P1-PYRO-01)
+-  via_paste         no via ring overlaps a solder-paste aperture and no via hole lies within 0.1 mm of one (paste-only
+-                    pads included): R7's r7_route.ViaCheck rule, which no R8 generator held (D87; R8P1-DFM-01)
++                    same copper layer, from PYRO1_BUS / PYRO1_IGN / PYRO1_OUT copper (bus, igniter and drain):
++                    m3.kicad_dru rule E's margin, which names RAW_ACT and the bus and igniter only (D85; R8P1-PYRO-01).
++                    The drain since fix pass 2 (R8P2-PYRO-01): battery copper on PYRO1_OUT drives the igniter through
++                    the fitted link into RAW_ACT's load with the power switch open, without Q124
++  via_paste         no via ring overlaps a solder-paste aperture (0 mm) and no via hole lies within 0.1 mm of one
++                    (paste-only pads included). Looser than R7's r7_route.ViaCheck and step7/make_ground.py, which keep
++                    the whole ring 0.1 mm clear of the aperture: on the fix-pass-1 board 14 vias had a ring within
++                    0.1 mm of an aperture against R7's 5 (D87; R8P1-DFM-01, R8P2-INTEGRITY-02)
+   terminal_legends  every terminal pin legend (TERMINAL_PINS) exists once and its nearest connector pin (any pad of a
+                     J part, measured from the legend's box) is its own pin (D92; R8P1-REQUIREMENTS-03)
+ """
+@@ -103,9 +107,10 @@
+ GATE_SERVO = 0.5                 # mm
+ INNER = (pcbnew.In1_Cu, pcbnew.In2_Cu)
+ BATTERY_LIVE = ('BAT_IN', 'ACT_FET_S')   # D85: unswitched battery (ACT_FET_S through Q120's body diode)
+-ARM_SIDE = ('PYRO1_BUS', 'PYRO1_IGN')    # rule E's bus and igniter
++ARM_SIDE = ('PYRO1_BUS', 'PYRO1_IGN', 'PYRO1_OUT')   # bus, igniter and drain (D85; the drain since R8P2-PYRO-01)
+ BATTERY_PYRO = 1.0               # mm, rule E's RAW_ACT figure
+-VIA_PASTE_HOLE = 0.1             # mm: via hole to a paste aperture (r7_route.ViaCheck; step7/make_ground.py)
++VIA_PASTE_HOLE = 0.1             # mm: via hole to a paste aperture; the ring only off it (0 mm), looser than
++                                 # r7_route.ViaCheck / step7/make_ground.py's 0.1 mm ring clearance (D87)
+ TERMINAL_PINS = (('J124', (('1', 'BUS1'), ('2', 'RAW'))),
+                  ('J121', (('1', 'E1-'), ('2', 'E1+'))),
+                  ('J1', (('1', 'BAT+'), ('2', 'GND'), ('3', 'SW'), ('4', 'SW'))),
+@@ -675,7 +680,7 @@
+ 
+ # --- D85: battery-live copper beside the ARM bus and the igniter ----------------------------------------------------
+ def battery_pyro(board, limit=BATTERY_PYRO):
+-    """BAT_IN / ACT_FET_S copper >= limit from PYRO1_BUS / PYRO1_IGN copper on the same layer (D85)."""
++    """BAT_IN / ACT_FET_S copper >= limit from PYRO1_BUS / PYRO1_IGN / PYRO1_OUT copper on the same layer (D85)."""
+     issues, worst = [], None
+     live = net_items(board, lambda n: n in ARM_SIDE)
+     for label, net, lay, shape, _ in net_items(board, lambda n: n in BATTERY_LIVE):
+@@ -713,7 +718,8 @@
+ 
+ 
+ def via_paste(board, hole_gap=VIA_PASTE_HOLE):
+-    """No via ring overlaps a paste aperture on its side and no via hole lies within hole_gap of one (D87)."""
++    """No via ring overlaps a paste aperture on its side (0 mm) and no via hole lies within hole_gap of one (D87); the
++    ring clause is looser than r7_route.ViaCheck's 0.1 mm (R8P2-INTEGRITY-02)."""
+     issues, nearest, checked = [], None, 0
+     vias = [t for t in board.GetTracks() if t.GetClass() == 'PCB_VIA']
+     for name, cu, poly in paste_polys(board):
+--- a/tools/route_check.py
++++ b/tools/route_check.py
+@@ -240,7 +240,7 @@
+      'D51: as GNSS_LNA_EN: U30\'s VCC_RF pad 14 (F.Cu only, aft pad row) feeds R300 / Q32 on B.Cu under the module; '
+      'U30_KEEPOUT bars the via under the module and the 1.1 mm pad pitch leaves no spot beside the pad, so the via sits '
+      'beyond the pad\'s outer end and its T-shaped paste extension, at R7\'s (10.41, 8.3) (D87; rigid GND partner '
+-     '(9.025, 8.325) 1.39 mm away) and the copper goes 1.9 mm out and back: 6.20 mm against a 2.61 mm octile MST (2.37 '
++     '(10.37, 7.08) 1.22 mm away) and the copper goes 1.9 mm out and back: 6.20 mm against a 2.61 mm octile MST (2.37 '
+      'x, +3.59 mm; R7 6.2 mm), R300.1 the Kelvin node of Q32\'s sense (M3_R7 limiter). The via spot is the nearest one '
+      'clear of the paste; D10 cannot apply (B.Cu open, pads never count)'),
+ ]
+--- a/tools/test_r8_check.py
++++ b/tools/test_r8_check.py
+@@ -254,7 +254,7 @@
+         self.assertIn('J1.1', '\n'.join(gate.inner_power_pyro(self.board)[0]))
+ 
+     # --- D85 battery-live copper beside the ARM bus and igniter (fix pass 1) ---------------------------------------------
+-    def test_battery_live_copper_keeps_1_mm_from_the_bus_and_igniter(self):
++    def test_battery_live_copper_keeps_1_mm_from_the_bus_igniter_and_drain(self):
+         self.track((0, 0), (10, 0), 'PYRO1_BUS', width=1.0)                   # F.Cu bus
+         t = self.track((0, 1.1), (10, 1.1), 'ACT_FET_S', width=0.2)           # 0.5 mm edge to edge, rule F's minimum
+         self.assertIn('ACT_FET_S track', '\n'.join(gate.battery_pyro(self.board)[0]))
+@@ -265,6 +265,9 @@
+         self.zone('BAT_IN', pcbnew.B_Cu, (20, -5, 30, 5))                     # a BAT_IN pour beside an igniter pad
+         j = self.fp('J121'); self.pad(j, 2, 31.0, 0, 'PYRO1_IGN', size=(1.0, 1.0), pth=True)
+         self.assertIn('BAT_IN zone', '\n'.join(gate.battery_pyro(self.board)[0]))
++        self.zone('BAT_IN', pcbnew.B_Cu, (40, -5, 50, 5))                     # R8P2-PYRO-01: a BAT_IN pour beside the
++        self.pad(j, 1, 51.0, 0, 'PYRO1_OUT', size=(1.0, 1.0), pth=True)       # drain pad, 0.5 mm: fires
++        self.assertIn('from PYRO1_OUT J121.1', '\n'.join(gate.battery_pyro(self.board)[0]))
+ 
+     # --- D87 vias against paste apertures (fix pass 1) -------------------------------------------------------------------
+     def paste_pad(self, f, num, x, y, size=(0.8, 1.4), copper=True):

@@ -2,7 +2,11 @@
 """DC resistance of one net's copper between two sets of pads (REQUIREMENTS F4: the servo feed at 7.7 A).
 
 usage: <KiCad python3> tools/dc_solve.py [board] [--net RAW_ACT] [--source Q121:5,6,7,8,9] [--sink J122:2,5,8,11]
-                                         [--amps 7.7] [--grid 0.1] [--png out.svg]
+                                         [--amps 7.7] [--grid 0.1] [--png out.svg] [--necks [--max-rise C]]
+                                         [--window X0,Y0,X1,Y1] [--via-currents N]
+
+The first output line names the board file and its SHA-256, so a recorded solve is bound to the copper it solved
+(REQUIREMENTS F4; fix pass 1, R8P1-INTEGRITY-02).
 
 The board must be filled. The net's copper (zone fills, tracks and pads) on each copper layer is cut into
 square cells (--grid); neighbouring cells on a layer conduct with the sheet conductance of that layer's copper,
@@ -10,16 +14,28 @@ read from the board's own stack-up (the (stackup ...) block of the .kicad_pcb: e
 dielectrics between them; the ordered JLC041611-7628 stack is 35 µm outer, 30 µm inner copper, M1; resistivity
 1.72e-8 Ohm m, copper at 20 °C). Each via of the net joins the cells it sits in on the layers where the net has
 copper, through its barrel (0.3 mm hole, 20 µm plating; barrel length = the stack-up distance between the two copper
-layers' mid-planes). Through-hole pads join their layers outright. The source pads are held
+layers' mid-planes). Only vias join layers: a through-hole pad that is not a terminal is rasterised on each layer but
+not linked across them (pessimistic; terminal pads are held at their potential on every layer). The source pads are held
 at one potential and the sink pads at another; the solve (conjugate gradient, Jacobi preconditioner) gives
 the resistance, then the drop and the copper loss at --amps, the share each layer carries across the half-way
 equipotential, and the highest current per mm of width on each layer (where the copper is the neck).
 Assumptions, not measurements: plating thickness, room-temperature resistivity, no pad-to-component
 resistance (the FET's and the connector's own resistance are not included).
+--necks (R8 step 1; the R8 survey's dc_neck.py, the fix-pass-7 equipotential-cut analysis, now here) also cuts the
+solved potential at 377 equipotentials between 3 and 97 % of the drop (marching squares on each layer) and reports
+the narrowest cut, the neck: its length on the layer that carries most of the current, scaled by the whole current
+over that layer's share (an equivalent single-layer width), where it is, and its IPC-2152 rise at --amps (ipc2152.py:
+no plane credit, an upper bound). --max-rise fails the run when that rise exceeds it (R8_DECISIONS D12: 20 C for
+RAW_ACT and BAT_IN, 30 C for ACT_FET_S; tools/run_dc.sh passes them).
+--window (fix pass 1, R8P1-POWER-01) keeps only the net's copper inside the box (board mm): a large net such as GND is
+solved over the region its current crosses (the servo return, J122's GND pins to J1.2: tools/run_dc.sh), the copper
+outside it treated as absent (an upper bound on R). --via-currents N prints the N largest via barrel currents at --amps
+(each via link's g x dV), the per-via figure MARGIN_PRESCRIPTION P1-9 asks for.
 The grid must be no larger than half the narrowest track on the net. Disconnected sampled terminals,
 invalid numerical quantities or an unconverged solve return nonzero; refine the grid to check accuracy.
 """
 import argparse
+import hashlib
 import math
 import re
 import sys
@@ -206,9 +222,20 @@ def main():
     ap.add_argument('--amps', type=float, default=7.7)
     ap.add_argument('--grid', type=float, default=0.1)
     ap.add_argument('--png', default=None, help='SVG map of current density (A/mm), all layers')
+    ap.add_argument('--necks', action='store_true', help='equipotential-cut neck analysis with its IPC-2152 rise')
+    ap.add_argument('--max-rise', type=float, default=None, help='with --necks: fail when the neck rises more (C)')
+    ap.add_argument('--window', default=None, help='X0,Y0,X1,Y1 (mm): solve only the copper inside this box')
+    ap.add_argument('--via-currents', type=int, default=0, help='print the N largest via barrel currents at --amps')
     a = ap.parse_args()
     positive(a.amps, 'load current')
     positive(a.grid, 'grid spacing')
+    with open(a.board, 'rb') as fh:
+        print(f'board {a.board} sha256 {hashlib.sha256(fh.read()).hexdigest()}')
+    win = None
+    if a.window:
+        win = tuple(float(v) for v in a.window.split(','))
+        if len(win) != 4 or not (win[0] < win[2] and win[1] < win[3]):
+            raise ValueError(f'invalid --window {a.window!r}; expected X0,Y0,X1,Y1 with X0 < X1, Y0 < Y1')
     b = pcbnew.LoadBoard(a.board)
     stack = stackup(a.board)
     T_CU = {lay: stack[n][0] * 1e-3 for lay, n in zip(LAYERS, CU_NAMES)}        # m
@@ -231,6 +258,10 @@ def main():
     if not ext:
         raise ValueError(f'net {net!r} has no copper')
     bx = (min(e[0] for e in ext), min(e[1] for e in ext), max(e[2] for e in ext), max(e[3] for e in ext))
+    if win:
+        bx = (max(bx[0], win[0]), max(bx[1], win[1]), min(bx[2], win[2]), min(bx[3], win[3]))
+        positive(bx[2] - bx[0], 'window width on the net')
+        positive(bx[3] - bx[1], 'window height on the net')
     x0, y0 = bx[0] - h, bx[1] - h
     nx, ny = int((bx[2] - bx[0]) / h) + 3, int((bx[3] - bx[1]) / h) + 3
     cu = {}
@@ -268,6 +299,15 @@ def main():
                     if pp.Contains(pcbnew.VECTOR2I(MM(x0 + (i + 0.5) * h), MM(y0 + (j + 0.5) * h))):
                         g[j * nx + i] = 1
         cu[lay] = g
+    if win:                                       # cells whose centre lies outside the window carry no copper
+        for lay in LAYERS:
+            g = cu[lay]
+            for j in range(ny):
+                y = y0 + (j + 0.5) * h
+                for i in range(nx):
+                    x = x0 + (i + 0.5) * h
+                    if g[j * nx + i] and not (win[0] <= x <= win[2] and win[1] <= y <= win[3]):
+                        g[j * nx + i] = 0
     # --- nodes
     idx, node_xy = {}, []
     for li, lay in enumerate(LAYERS):
@@ -292,13 +332,18 @@ def main():
     def cell(x, y):
         return int((x - x0) / h) + int((y - y0) / h) * nx
 
+    via_links = []                                # (via position, upper node, lower node, conductance)
     for v in vias:
-        k = cell(mm(v.GetPosition().x), mm(v.GetPosition().y))
+        vx, vy = mm(v.GetPosition().x), mm(v.GetPosition().y)
+        if not (x0 <= vx < x0 + nx * h and y0 <= vy < y0 + ny * h):
+            continue                              # outside the (windowed) grid
+        k = cell(vx, vy)
         on = [(li, idx[(li, k)]) for li in range(4) if (li, k) in idx]
         for (la, ua), (lb, ub) in zip(on, on[1:]):
             gv = area / (RHO * abs(Z[LAYERS[lb]] - Z[LAYERS[la]]) * 1e-3)
             nbr[ua].append((ub, gv))
             nbr[ub].append((ua, gv))
+            via_links.append(((round(vx, 3), round(vy, 3)), ua, ub, gv, f'{CU_NAMES[la]}-{CU_NAMES[lb]}'))
     # --- boundary: every cell of the source pads (all their layers) at 1 V, sink pads at 0 V
     fixed = {}
     for group, val in terminals:
@@ -379,8 +424,32 @@ def main():
             continue
         print(f'  {pcbnew.LayerName(lay):6s} carries {100 * share[li] / tot:4.0f} % at mid-path; '
               f'peak {jmax[li][0]:.2f} A/mm at {jmax[li][1]}')
+    if a.via_currents:
+        per_via = {}
+        for p, ua, ub, gv, span in via_links:
+            if ua in V and ub in V:
+                cur = abs(gv * (V[ua] - V[ub]) * scale)
+                if cur > per_via.get(p, (0.0, ''))[0]:
+                    per_via[p] = (cur, span)
+        top = sorted(((c, p, s) for p, (c, s) in per_via.items()), reverse=True)
+        print(f'  vias: {len(per_via)} carry current; largest barrel currents at {a.amps} A: '
+              + ', '.join(f'{c:.2f} A at {p} ({s})' for c, p, s in top[:a.via_currents]))
+        print(f'  vias over 0.5 A: {sum(1 for c, _, _ in top if c > 0.5)}; over 1.0 A: {sum(1 for c, _, _ in top if c > 1.0)}')
     if a.png:
         _svg(a.png, V, node_xy, nbr, nx, ny, x0, y0, h, scale)
+    if a.necks:
+        neck = cuts(V, node_xy, nbr, nx, ny, x0, y0, h, scale, a.amps, idx)
+        sys.path.insert(0, __import__('os').path.dirname(__import__('os').path.abspath(__file__)))
+        import ipc2152                                          # noqa: E402 (beside this file; run with -I)
+        dt = ipc2152.ipc_dt(neck[0], neck[2], a.amps)
+        w20 = ipc2152.ipc_width(20.0, neck[2], a.amps)
+        print(f'  IPC-2152 (no plane credit): neck {neck[0]:.2f} mm on {neck[2]} rises {dt:.1f} C at {a.amps} A; '
+              f'20 C needs {w20:.2f} mm there')
+        if a.max_rise is not None:
+            if dt > a.max_rise:
+                print(f'  NECK FAIL: {dt:.1f} C exceeds {a.max_rise:g} C (R8_DECISIONS D12)')
+                return 1
+            print(f'  neck OK: {dt:.1f} C <= {a.max_rise:g} C (R8_DECISIONS D12)')
     return 0
 
 
@@ -408,6 +477,75 @@ def _svg(path, V, node_xy, nbr, nx, ny, x0, y0, h, scale):
         out.append(f'<text x="{li * (W + 10) + 4}" y="14" font-size="14">{nm} (peak {top:.1f} A/mm red)</text>')
     out.append('</svg>')
     open(path, 'w').write('\n'.join(out))
+
+
+def cuts(V, node_xy, nbr, nx, ny, x0, y0, h, scale, amps, idx, nlev=377):
+    """Equipotential cuts (marching squares per layer) between 3 and 97 % of the drop: at each level the copper cut
+    length on each layer and the current crossing it; the equivalent width = the main layer's length scaled by the
+    whole current over that layer's share. Prints the neck (narrowest cut), where, and the median cut."""
+    import statistics
+    names = ('F.Cu', 'In1.Cu', 'In2.Cu', 'B.Cu')
+    val = {}
+    for u, v in V.items():
+        val[node_xy[u]] = v
+    levels = [0.03 + 0.94 * k / (nlev - 1) for k in range(nlev)]
+    res = []
+    # current crossing per layer per level: edges whose ends straddle the level
+    edges = []
+    for u in V:
+        li, k = node_xy[u]
+        for v, g in nbr[u]:
+            if v <= u or v not in V or node_xy[v][0] != li:
+                continue
+            edges.append((li, V[u], V[v], abs(g * (V[u] - V[v]) * scale)))
+    squares = []
+    for (li, k), v00 in val.items():
+        i, j = k % nx, k // nx
+        if i + 1 >= nx or j + 1 >= ny:
+            continue
+        v10 = val.get((li, k + 1)); v01 = val.get((li, k + nx)); v11 = val.get((li, k + nx + 1))
+        if v10 is None or v01 is None or v11 is None:
+            continue
+        squares.append((li, i, j, v00, v10, v11, v01))
+    for t in levels:
+        L = [0.0] * 4
+        I = [0.0] * 4
+        mid = [[] for _ in range(4)]
+        for li, a, b, c in edges:
+            if (a - t) * (b - t) < 0:
+                I[li] += c
+        for li, i, j, a, b, c, d in squares:
+            # corners (0,0)=a (1,0)=b (1,1)=c (0,1)=d
+            pts = []
+            for (p, q, P0, P1) in ((a, b, (0, 0), (1, 0)), (b, c, (1, 0), (1, 1)), (c, d, (1, 1), (0, 1)), (d, a, (0, 1), (0, 0))):
+                if (p - t) * (q - t) < 0:
+                    f = (t - p) / (q - p)
+                    pts.append((P0[0] + f * (P1[0] - P0[0]), P0[1] + f * (P1[1] - P0[1])))
+            if len(pts) == 2:
+                L[li] += h * math.dist(pts[0], pts[1])
+                mid[li].append((x0 + (i + 1) * h, y0 + (j + 1) * h))
+            elif len(pts) == 4:
+                L[li] += h * (math.dist(pts[0], pts[1]) + math.dist(pts[2], pts[3]))
+        tot = sum(I) or 1.0
+        main = max(range(4), key=lambda q: I[q])
+        W = L[main] * tot / I[main] if I[main] else 0.0
+        box = None
+        if mid[main]:
+            xs = [p[0] for p in mid[main]]; ys = [p[1] for p in mid[main]]
+            box = (round(min(xs), 2), round(max(xs), 2), round(min(ys), 2), round(max(ys), 2))
+        res.append((W, t, names[main], round(100 * I[main] / tot), box, [round(x, 2) for x in L]))
+    tiny = [r for r in res if sum(r[5]) < 1.0]          # a contour round a via field next to a terminal, not a section
+    if tiny:
+        print(f'  cuts: {len(tiny)} levels with < 1 mm of cut on every layer together (via-field contours by a terminal, '
+              f'not counted): {[(round(r[0], 2), round(r[1], 3), r[4]) for r in sorted(tiny)[:3]]}')
+    res = [r for r in res if sum(r[5]) >= 1.0]
+    ws = sorted(r[0] for r in res)
+    neck = min(res)
+    print(f'  cuts: neck {neck[0]:.2f} mm at level {neck[1]:.3f} on {neck[2]} ({neck[3]} % of the current), cut box {neck[4]}, '
+          f'per-layer length {neck[5]}')
+    print(f'  cuts: median {statistics.median(ws):.2f} mm; below 1.1x neck: {sum(1 for w in ws if w < 1.1 * neck[0])} of {len(ws)} levels; '
+          f'5 narrowest: {[(round(r[0], 2), round(r[1], 3), r[4]) for r in sorted(res)[:5]]}')
+    return neck
 
 
 if __name__ == '__main__':

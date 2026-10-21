@@ -1,0 +1,1197 @@
+{
+ "profile": "r8",
+ "detour_baseline": [
+  {
+   "net": "ARM1_SENSE",
+   "len_mm": 65.45,
+   "mst_mm": 56.34,
+   "ratio": 1.16,
+   "keepout_mst_mm": 56.34,
+   "keepout_ratio": 1.16,
+   "crossing": [
+    "Edge.Cuts hole"
+   ]
+  },
+  {
+   "net": "PYRO1_CONT",
+   "len_mm": 51.98,
+   "mst_mm": 37.9,
+   "ratio": 1.37,
+   "keepout_mst_mm": 37.9,
+   "keepout_ratio": 1.37,
+   "crossing": [
+    "Edge.Cuts hole"
+   ]
+  },
+  {
+   "net": "RADIO_BUSY",
+   "len_mm": 32.01,
+   "mst_mm": 26.86,
+   "ratio": 1.19,
+   "keepout_mst_mm": 26.93,
+   "keepout_ratio": 1.19,
+   "crossing": [
+    "U31 body + track keep-out on every layer"
+   ]
+  },
+  {
+   "net": "RADIO_NRST",
+   "len_mm": 41.04,
+   "mst_mm": 34.45,
+   "ratio": 1.19,
+   "keepout_mst_mm": 34.53,
+   "keepout_ratio": 1.19,
+   "crossing": [
+    "U31 body + track keep-out on every layer"
+   ]
+  },
+  {
+   "net": "RADIO_NSS",
+   "len_mm": 32.21,
+   "mst_mm": 28.24,
+   "ratio": 1.14,
+   "keepout_mst_mm": 28.24,
+   "keepout_ratio": 1.14,
+   "crossing": [
+    "U31 body + track keep-out on every layer"
+   ]
+  },
+  {
+   "net": "RADIO_RXEN",
+   "len_mm": 40.02,
+   "mst_mm": 30.87,
+   "ratio": 1.3,
+   "keepout_mst_mm": 33.07,
+   "keepout_ratio": 1.21,
+   "crossing": [
+    "U31 body + track keep-out on every layer"
+   ]
+  },
+  {
+   "net": "RADIO_SCK",
+   "len_mm": 13.19,
+   "mst_mm": 12.61,
+   "ratio": 1.05,
+   "keepout_mst_mm": 12.68,
+   "keepout_ratio": 1.04,
+   "crossing": [
+    "U31 body + track keep-out on every layer"
+   ]
+  },
+  {
+   "net": "RADIO_TXEN",
+   "len_mm": 25.17,
+   "mst_mm": 10.95,
+   "ratio": 2.3,
+   "keepout_mst_mm": 20.11,
+   "keepout_ratio": 1.25,
+   "crossing": [
+    "U31 body + track keep-out on every layer"
+   ]
+  },
+  {
+   "net": "RAW_PROTECTED",
+   "len_mm": 151.9,
+   "mst_mm": 98.1,
+   "ratio": 1.55,
+   "keepout_mst_mm": 98.1,
+   "keepout_ratio": 1.55,
+   "crossing": [
+    "Edge.Cuts hole"
+   ]
+  }
+ ],
+ "instances": [
+  {
+   "cat": "pad_end_offcentre",
+   "net": "3V3",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 34.95,
+   "y": 42.8,
+   "pad": "C100.1",
+   "off_mm": 0.17
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GND",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 35.45,
+   "y": 42.8,
+   "pad": "C100.2",
+   "off_mm": 0.17
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GND",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 18.9274,
+   "y": 90.7274,
+   "pad": "C129.2",
+   "off_mm": 0.3855
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GND",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 10.6,
+   "y": 35.4,
+   "pad": "U10.2",
+   "off_mm": 0.5
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GND",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 10.6,
+   "y": 35.4,
+   "pad": "U10.2",
+   "off_mm": 0.5
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "3V3_RADIO",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 36.35,
+   "y": 19.6,
+   "pad": "C310.1",
+   "off_mm": 0.43
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "3V3_RADIO",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 36.35,
+   "y": 19.6,
+   "pad": "C310.1",
+   "off_mm": 0.43
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "RADIO_SCK",
+   "cls": "spi",
+   "layer": "F.Cu",
+   "x": 24.5,
+   "y": 16.54,
+   "pad": "U31.15",
+   "off_mm": 0.41
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "RADIO_SCK",
+   "cls": "spi",
+   "layer": "F.Cu",
+   "x": 24.5,
+   "y": 16.54,
+   "pad": "U31.15",
+   "off_mm": 0.41
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "SERVO2_MCU",
+   "cls": "actuator",
+   "layer": "B.Cu",
+   "x": 33.45,
+   "y": 76.97,
+   "pad": "D121.3",
+   "off_mm": 0.12
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_GATE_N",
+   "cls": "pyro",
+   "layer": "F.Cu",
+   "x": 21.9,
+   "y": 90.4,
+   "pad": "R126.1",
+   "off_mm": 0.3
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_GATE",
+   "cls": "pyro",
+   "layer": "F.Cu",
+   "x": 23.4,
+   "y": 91.85,
+   "pad": "C126.1",
+   "off_mm": 0.25
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_GATE",
+   "cls": "pyro",
+   "layer": "F.Cu",
+   "x": 22.1,
+   "y": 92.4,
+   "pad": "R126.2",
+   "off_mm": 0.5
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_GATE",
+   "cls": "pyro",
+   "layer": "F.Cu",
+   "x": 23.4,
+   "y": 91.85,
+   "pad": "C126.1",
+   "off_mm": 0.25
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "CAM_RX_WIRE",
+   "cls": "other",
+   "layer": "F.Cu",
+   "x": 37.5,
+   "y": 40.3,
+   "pad": "TP75.1",
+   "off_mm": 0.15
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_CONT",
+   "cls": "pyro",
+   "layer": "F.Cu",
+   "x": 27.87,
+   "y": 88.08,
+   "pad": "R129.2",
+   "off_mm": 0.18
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "SERVO3_MCU",
+   "cls": "actuator",
+   "layer": "B.Cu",
+   "x": 33.45,
+   "y": 74.43,
+   "pad": "D121.4",
+   "off_mm": 0.12
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "NRST",
+   "cls": "other",
+   "layer": "F.Cu",
+   "x": 1.6,
+   "y": 42.75,
+   "pad": "J2.3",
+   "off_mm": 0.115
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "3V3_GNSS",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 12.61,
+   "y": 21.75,
+   "pad": "C301.1",
+   "off_mm": 0.1838
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "3V3_GNSS",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 12.61,
+   "y": 21.75,
+   "pad": "C301.1",
+   "off_mm": 0.1838
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_SAFEBOOT_N",
+   "cls": "rfif",
+   "layer": "F.Cu",
+   "x": 2.6,
+   "y": 10.2,
+   "pad": "TP30.1",
+   "off_mm": 0.8485
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_SAFEBOOT_N",
+   "cls": "rfif",
+   "layer": "F.Cu",
+   "x": 2.6,
+   "y": 10.2,
+   "pad": "TP30.1",
+   "off_mm": 0.8485
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PULLPIN",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 14.23,
+   "y": 80.0,
+   "pad": "D122.3",
+   "off_mm": 0.43
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "VLOGIC_SENSE",
+   "cls": "other",
+   "layer": "F.Cu",
+   "x": 24.43,
+   "y": 56.75,
+   "pad": "C60.1",
+   "off_mm": 0.23
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "BAT_FAULT_N",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 36.0,
+   "y": 83.6,
+   "pad": "TP85.1",
+   "off_mm": 0.8485
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "BAT_FAULT_N",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 36.0,
+   "y": 83.6,
+   "pad": "TP85.1",
+   "off_mm": 0.8485
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "VBUS_SENSE",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 11.825,
+   "y": 30.6,
+   "pad": "R110.1",
+   "off_mm": 0.25
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "VBUS_SENSE",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 11.825,
+   "y": 30.6,
+   "pad": "R110.1",
+   "off_mm": 0.25
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "USB_DM",
+   "cls": "usb",
+   "layer": "F.Cu",
+   "x": 12.6,
+   "y": 32.85,
+   "pad": "D4.6",
+   "off_mm": 0.45
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "USB_DM",
+   "cls": "usb",
+   "layer": "F.Cu",
+   "x": 12.6,
+   "y": 32.85,
+   "pad": "D4.6",
+   "off_mm": 0.45
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "BAT_ENABLE",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 40.42,
+   "y": 86.2,
+   "pad": "U9.1",
+   "off_mm": 0.18
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "CAM_5V",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 44.17,
+   "y": 49.6,
+   "pad": "C91.1",
+   "off_mm": 0.375
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_CONT_MID",
+   "cls": "pyro",
+   "layer": "F.Cu",
+   "x": 28.95,
+   "y": 87.8,
+   "pad": "R129.1",
+   "off_mm": 0.2417
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_LNA_EN",
+   "cls": "rfif",
+   "layer": "B.Cu",
+   "x": 12.03,
+   "y": 12.18,
+   "pad": "R303.1",
+   "off_mm": 0.22
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_LNA_EN",
+   "cls": "rfif",
+   "layer": "B.Cu",
+   "x": 12.03,
+   "y": 12.18,
+   "pad": "R303.1",
+   "off_mm": 0.22
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_VCC_RF",
+   "cls": "rfif",
+   "layer": "B.Cu",
+   "x": 9.575,
+   "y": 12.25,
+   "pad": "Q32.2",
+   "off_mm": 0.125
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "USB_ILIM",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 12.85,
+   "y": 38.025,
+   "pad": "R85.1",
+   "off_mm": 0.3889
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "USB_ILIM",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 12.85,
+   "y": 38.025,
+   "pad": "R85.1",
+   "off_mm": 0.3889
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "CAM_DVDT",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 33.05,
+   "y": 29.9,
+   "pad": "U7.1",
+   "off_mm": 0.15
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "BAT_DVDT",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 42.4,
+   "y": 84.675,
+   "pad": "U9.7",
+   "off_mm": 0.125
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_ANT_SRC",
+   "cls": "rfif",
+   "layer": "B.Cu",
+   "x": 7.925,
+   "y": 12.25,
+   "pad": "Q32.1",
+   "off_mm": 0.125
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "CAM_ILIM",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 30.575,
+   "y": 34.9,
+   "pad": "TP73.1",
+   "off_mm": 0.475
+  },
+  {
+   "cat": "passes_through_pad",
+   "net": "GND",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 26.0,
+   "y": 91.125,
+   "pad": "Q124.2"
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "GND",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 11.1,
+   "y": 35.4,
+   "pad": "U10.2",
+   "len_mm": 0.5
+  },
+  {
+   "cat": "passes_through_pad",
+   "net": "PYRO1_OUT",
+   "cls": "pyro",
+   "layer": "F.Cu",
+   "x": 30.58,
+   "y": 90.0,
+   "pad": "R173.1"
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "3V3_RADIO",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 36.35,
+   "y": 19.6,
+   "pad": "C310.1",
+   "len_mm": 0.43
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "RADIO_SCK",
+   "cls": "spi",
+   "layer": "F.Cu",
+   "x": 24.5,
+   "y": 16.54,
+   "pad": "U31.15",
+   "len_mm": 0.41
+  },
+  {
+   "cat": "passes_through_pad",
+   "net": "GNSS_RF_ANT",
+   "cls": "rf",
+   "layer": "F.Cu",
+   "x": 12.85,
+   "y": 2.3,
+   "pad": "L30.2"
+  },
+  {
+   "cat": "passes_through_pad",
+   "net": "GNSS_RF_ANT",
+   "cls": "rf",
+   "layer": "F.Cu",
+   "x": 12.85,
+   "y": 2.3,
+   "pad": "D30.1"
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "GNSS_SAFEBOOT_N",
+   "cls": "rfif",
+   "layer": "F.Cu",
+   "x": 2.6,
+   "y": 10.2,
+   "pad": "TP30.1",
+   "len_mm": 0.849
+  },
+  {
+   "cat": "passes_through_pad",
+   "net": "CAM_FAULT_N",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 32.35,
+   "y": 36.975,
+   "pad": "R76.2"
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "VBUS_SENSE",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 11.825,
+   "y": 30.6,
+   "pad": "R110.1",
+   "len_mm": 0.25
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "USB_DM",
+   "cls": "usb",
+   "layer": "F.Cu",
+   "x": 12.15,
+   "y": 32.85,
+   "pad": "D4.6",
+   "len_mm": 0.45
+  },
+  {
+   "cat": "passes_through_pad",
+   "net": "BAT_ENABLE",
+   "cls": "other",
+   "layer": "F.Cu",
+   "x": 42.9,
+   "y": 98.45,
+   "pad": "TP84.1"
+  },
+  {
+   "cat": "passes_through_pad",
+   "net": "BAT_ENABLE",
+   "cls": "other",
+   "layer": "F.Cu",
+   "x": 42.9,
+   "y": 98.45,
+   "pad": "C87.1"
+  },
+  {
+   "cat": "passes_through_pad",
+   "net": "BAT_ENABLE",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 40.42,
+   "y": 93.5,
+   "pad": "R81.1"
+  },
+  {
+   "cat": "passes_through_pad",
+   "net": "RADIO_RF_ANT",
+   "cls": "rf",
+   "layer": "F.Cu",
+   "x": 31.54,
+   "y": 2.3,
+   "pad": "D31.1"
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "GNSS_LNA_EN",
+   "cls": "rfif",
+   "layer": "B.Cu",
+   "x": 12.03,
+   "y": 12.18,
+   "pad": "R303.1",
+   "len_mm": 0.22
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "USB_ILIM",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 12.85,
+   "y": 38.025,
+   "pad": "R85.1",
+   "len_mm": 0.389
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "3V3",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 36.75,
+   "y": 70.4,
+   "at": "T",
+   "widths": [
+    0.2,
+    0.6
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "GND",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 24.55,
+   "y": 89.275,
+   "at": "via",
+   "widths": [
+    0.2,
+    0.45
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "PYRO1_OUT",
+   "cls": "pyro",
+   "layer": "F.Cu",
+   "x": 30.58,
+   "y": 90.0,
+   "at": "T",
+   "widths": [
+    0.2,
+    0.3
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "PYRO1_BUS",
+   "cls": "pyro",
+   "layer": "F.Cu",
+   "x": 16.17,
+   "y": 95.36,
+   "at": "T",
+   "widths": [
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "3V3A",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 24.025,
+   "y": 59.6,
+   "at": "T",
+   "widths": [
+    0.25,
+    0.3
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "VBUS",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 7.95,
+   "y": 29.2,
+   "at": "T",
+   "widths": [
+    0.25,
+    0.3
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "BAT_IN",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 41.25,
+   "y": 94.6,
+   "at": "T",
+   "widths": [
+    0.3,
+    0.5
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "CAM_5V",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 40.75,
+   "y": 41.4,
+   "at": "via",
+   "widths": [
+    0.25,
+    0.6
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "RAW_PROTECTED",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 45.2,
+   "y": 62.6,
+   "at": "T",
+   "widths": [
+    0.4,
+    0.5
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "RAW_PROTECTED",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 45.2,
+   "y": 83.7,
+   "at": "T",
+   "widths": [
+    0.25,
+    0.5
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "RAW_PROTECTED",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 42.475,
+   "y": 83.7,
+   "at": "T",
+   "widths": [
+    0.3,
+    0.5
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "RAW_PROTECTED",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 41.75,
+   "y": 83.7,
+   "at": "via",
+   "widths": [
+    0.3,
+    0.5
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "RAW_PROTECTED",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 35.25,
+   "y": 60.5,
+   "at": "via",
+   "widths": [
+    0.3,
+    0.4
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "CAM_INPUT_LIMITED",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 35.0,
+   "y": 31.65,
+   "at": "free",
+   "widths": [
+    0.25,
+    0.5
+   ]
+  },
+  {
+   "cat": "width_change_junction",
+   "net": "USB_LIMITED",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 19.4,
+   "y": 37.25,
+   "at": "T",
+   "widths": [
+    0.3,
+    0.4
+   ]
+  },
+  {
+   "cat": "u_turn",
+   "net": "RADIO_NRST",
+   "cls": "rfif",
+   "layer": "F.Cu",
+   "x": 30.55,
+   "y": 44.5,
+   "path_mm": 38.849
+  },
+  {
+   "cat": "short_layer_hop",
+   "net": "CAM_MCU_RX",
+   "cls": "other",
+   "layer": "B.Cu",
+   "x": 31.85,
+   "y": 45.5,
+   "hop_mm": 2.671
+  },
+  {
+   "cat": "u_turn",
+   "net": "PYRO1_CONT",
+   "cls": "pyro",
+   "layer": "F.Cu",
+   "x": 26.83,
+   "y": 87.9,
+   "path_mm": 3.61
+  },
+  {
+   "cat": "extra_bends",
+   "net": "GNSS_TP_MCU",
+   "cls": "rfif",
+   "layer": "F.Cu",
+   "x": 23.5,
+   "y": 37.45,
+   "end": [
+    18.8,
+    27.0
+   ],
+   "seglens": [
+    1.55,
+    5.798,
+    4.2,
+    0.849
+   ]
+  },
+  {
+   "cat": "u_turn",
+   "net": "RADIO_TXEN",
+   "cls": "rfif",
+   "layer": "B.Cu",
+   "x": 28.59,
+   "y": 7.8,
+   "path_mm": 22.719
+  },
+  {
+   "cat": "u_turn",
+   "net": "SWDIO",
+   "cls": "other",
+   "layer": "F.Cu",
+   "x": 18.5,
+   "y": 37.45,
+   "path_mm": 20.081
+  },
+  {
+   "cat": "u_turn",
+   "net": "3V3A",
+   "cls": "power",
+   "layer": "B.Cu",
+   "x": 11.21,
+   "y": 53.05,
+   "path_mm": 4.6
+  },
+  {
+   "cat": "extra_bends",
+   "net": "GNSS_RESET_N",
+   "cls": "rfif",
+   "layer": "F.Cu",
+   "x": 24.0,
+   "y": 37.45,
+   "end": [
+    19.4,
+    26.4
+   ],
+   "seglens": [
+    1.8,
+    5.657,
+    4.65,
+    0.849
+   ]
+  },
+  {
+   "cat": "extra_bends",
+   "net": "GNSS_TXD_MCU",
+   "cls": "rfif",
+   "layer": "F.Cu",
+   "x": 22.5,
+   "y": 37.45,
+   "end": [
+    17.6,
+    28.2
+   ],
+   "seglens": [
+    1.05,
+    6.081,
+    3.3,
+    0.849
+   ]
+  },
+  {
+   "cat": "u_turn",
+   "net": "USB_DM",
+   "cls": "usb",
+   "layer": "F.Cu",
+   "x": 6.88,
+   "y": 32.85,
+   "path_mm": 3.36
+  },
+  {
+   "cat": "u_turn",
+   "net": "SPI1_SCK",
+   "cls": "spi",
+   "layer": "F.Cu",
+   "x": 15.45,
+   "y": 45.5,
+   "path_mm": 16.385
+  },
+  {
+   "cat": "extra_bends",
+   "net": "RAW_PROTECTED",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 18.2,
+   "y": 103.79,
+   "end": [
+    45.2,
+    83.7
+   ],
+   "seglens": [
+    2.1,
+    4.04,
+    24.9,
+    16.05
+   ]
+  },
+  {
+   "cat": "short_layer_hop",
+   "net": "USB_LIMITED",
+   "cls": "power",
+   "layer": "F.Cu",
+   "x": 29.95,
+   "y": 54.0,
+   "hop_mm": 1.838
+  },
+  {
+   "cat": "power_via_no_gnd",
+   "net": "3V3",
+   "cls": "power",
+   "layer": "via",
+   "x": 29.25,
+   "y": 39.0,
+   "gnd_mm": 2.4,
+   "into_pad": false
+  },
+  {
+   "cat": "critical_via_no_gnd",
+   "net": "PYRO1_GATE",
+   "cls": "pyro",
+   "layer": "via",
+   "x": 20.45,
+   "y": 92.4,
+   "gnd_mm": 2.717,
+   "into_pad": true
+  },
+  {
+   "cat": "power_via_no_gnd",
+   "net": "CAM_IO_3V3",
+   "cls": "power",
+   "layer": "via",
+   "x": 35.45,
+   "y": 48.5,
+   "gnd_mm": 2.428,
+   "into_pad": false
+  },
+  {
+   "cat": "power_via_no_gnd",
+   "net": "3V3A",
+   "cls": "power",
+   "layer": "via",
+   "x": 26.5,
+   "y": 54.4,
+   "gnd_mm": 2.458,
+   "into_pad": false
+  },
+  {
+   "cat": "power_via_no_gnd",
+   "net": "VBUS",
+   "cls": "power",
+   "layer": "via",
+   "x": 11.1,
+   "y": 33.8,
+   "gnd_mm": 1.5,
+   "into_pad": false
+  },
+  {
+   "cat": "power_via_no_gnd",
+   "net": "CAM_5V",
+   "cls": "power",
+   "layer": "via",
+   "x": 40.75,
+   "y": 41.4,
+   "gnd_mm": 2.935,
+   "into_pad": false
+  },
+  {
+   "cat": "power_via_no_gnd",
+   "net": "VLOGIC",
+   "cls": "power",
+   "layer": "via",
+   "x": 35.5,
+   "y": 66.6,
+   "gnd_mm": 3.285,
+   "into_pad": false
+  },
+  {
+   "cat": "detour",
+   "net": "GNSS_LNA_EN",
+   "cls": "rfif",
+   "layer": "net",
+   "x": 13.0,
+   "y": 13.3,
+   "pads": 3,
+   "first": "Q31.1",
+   "len_mm": 6.45,
+   "mst_mm": 3.72,
+   "ratio": 1.73,
+   "vias": 1,
+   "need": 1
+  },
+  {
+   "cat": "detour",
+   "net": "GNSS_VCC_RF",
+   "cls": "rfif",
+   "layer": "net",
+   "x": 9.7,
+   "y": 12.25,
+   "pads": 3,
+   "first": "Q32.2",
+   "len_mm": 5.0,
+   "mst_mm": 2.61,
+   "ratio": 1.91,
+   "vias": 1,
+   "need": 1
+  }
+ ],
+ "failures": [],
+ "allowed": [
+  {
+   "cat": "critical_via_no_gnd",
+   "net": "PYRO1_GATE",
+   "cls": "pyro",
+   "layer": "via",
+   "x": 20.45,
+   "y": 92.4,
+   "gnd_mm": 2.717,
+   "into_pad": true,
+   "reason": "A8 (R8_DECISIONS D9; REQUIREMENTS M2 named exception, inherited from R7 with the rigid CH1 block): the via sits in TP122's 1.5 mm bare test pad (B.Cu), the gate drive's test point; a GND via within 1.5 mm of its centre would come within 0.45 mm of the pad edge, against the 1.0 mm a bare test pad keeps from foreign copper (check_r7 / check_r8 foreign_clearances; GndFit 1.02 mm), so nognd_audit finds no spot (re-run on every check). The layer change carries no through current: TP122 is a terminal (probe point) and the gate is driven on F.Cu. Curing it moves the via inside the R4-tuned, coated block: a new spacing and leakage qualification (priority 1) for a priority-2 gain (D9). Nearest GND via on R7: 2.93 mm",
+   "measured": null
+  },
+  {
+   "cat": "detour",
+   "net": "GNSS_LNA_EN",
+   "cls": "rfif",
+   "layer": "net",
+   "x": 13.0,
+   "y": 13.3,
+   "pads": 3,
+   "first": "Q31.1",
+   "len_mm": 6.45,
+   "mst_mm": 3.72,
+   "ratio": 1.73,
+   "vias": 1,
+   "need": 1,
+   "reason": "D51: U30's LNA_EN pad 13 is F.Cu only, on the module's aft pad row (y 9.3-11.1, 1.1 mm pitch, 0.3 mm gaps), and R303 / Q31 sit on B.Cu under the module (rigid strip parts, D15); U30_KEEPOUT (m3.kicad_dru: F.Cu and In1 closed to non-GND tracks and vias from y 11.25; u-blox MAX-F10S integration manual 4.4) bars the layer change under the module and the pad row leaves no via spot beside the pad, so the via sits beyond the pad's outer end at (11.51, 8.9) (0.15 mm off the pad, 0.56 mm from pads 12 / 14; its rigid GND partner (12.61, 8.3) 1.25 mm away) and the copper goes 1.3 mm out and back: 6.45 mm against a 3.72 mm octile MST (1.73 x, +2.73 mm; R7 7.45 mm). The best possible via spot (pad end + 0.15 mm) gives the same 1.3 mm leg; via-in-pad is not used (JLC Standard leaves vias unfilled: solder would wick from the LGA pad). D10's keep-out-aware baseline cannot apply: B.Cu is open to tracks, and the binding obstacle is the pad row (pads never count, D10)",
+   "measured": {
+    "len_mm": 6.45,
+    "vias": 1
+   }
+  },
+  {
+   "cat": "detour",
+   "net": "GNSS_VCC_RF",
+   "cls": "rfif",
+   "layer": "net",
+   "x": 9.7,
+   "y": 12.25,
+   "pads": 3,
+   "first": "Q32.2",
+   "len_mm": 5.0,
+   "mst_mm": 2.61,
+   "ratio": 1.91,
+   "vias": 1,
+   "need": 1,
+   "reason": "D51: as GNSS_LNA_EN: U30's VCC_RF pad 14 (F.Cu only, aft pad row) feeds R300 / Q32 on B.Cu under the module; U30_KEEPOUT bars the via under the module and the 1.1 mm pad pitch leaves no spot beside the pad, so the via sits beyond the pad's outer end at (10.41, 8.9) (rigid GND partner (9.025, 8.325) 1.50 mm away) and the copper goes 1.3 mm out and back: 5.00 mm against a 2.61 mm octile MST (1.91 x, +2.39 mm; R7 6.2 mm), R300.1 the Kelvin node of Q32's sense (M3_R7 limiter). The via spot is the nearest legal one; D10 cannot apply (B.Cu open, pads never count)",
+   "measured": {
+    "len_mm": 5.0,
+    "vias": 1
+   }
+  }
+ ],
+ "stale": [],
+ "nognd_audit": [],
+ "leftovers": [],
+ "leftovers_missing": [],
+ "leftovers_stale": [],
+ "measured_check": [],
+ "alt_audit": []
+}

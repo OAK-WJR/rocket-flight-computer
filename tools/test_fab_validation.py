@@ -1,4 +1,8 @@
-"""Manufacturing regressions: missing or corrupt placements must block release."""
+"""Manufacturing regressions: missing or corrupt placements must block release.
+
+Some tests (test_current_package) judge the fab package in m3_design/assembly_review/fab/ against the current board,
+so after any copper or placement change run the fab step (m3_design/r8_fab.sh) before this suite (R8P3-INTEGRITY-02).
+"""
 from contextlib import redirect_stdout
 import csv
 import importlib.util

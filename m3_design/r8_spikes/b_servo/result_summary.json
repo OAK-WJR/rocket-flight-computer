@@ -1,0 +1,672 @@
+{
+ "board_sha256_prefix": {},
+ "default_in2_gnd_rows_3v3_tongue_at_d121": {
+  "gate": {
+   "rigid": true,
+   "drc_spike": true,
+   "drc_spike_unconnected": true,
+   "route_check_spike": true,
+   "plane_reach": true,
+   "d19": true,
+   "d20": true,
+   "tie_channel": true,
+   "check_actuators": true
+  },
+  "ok": true,
+  "rigid_groups": {
+   "outline": "9558fcd7d3bc9b97",
+   "m3_holes": "00605c61132c1574",
+   "j122_tie": "4ecfed731f5c5bc1",
+   "j1": "63a58164251c7035",
+   "pyro_block_area": "0571313b8489059d",
+   "ch1_parts": "23bcce687f97f89b",
+   "ch1_copper": "9412831952118349",
+   "strip_parts": "c71c1250c4f732ae",
+   "strip_rf_copper": "7a2598349ad81c5f",
+   "strip_gnd": "bfcbe417a3b45e12",
+   "strip_rule_areas": "d105af8bf59da746",
+   "strip_gcpw": "8b46f56919611ca6"
+  },
+  "drc": {
+   "totals_whole_scratch_board": {
+    "violations": 252,
+    "unconnected": 321
+   },
+   "spike": 0,
+   "spike_unconnected": 0,
+   "spike_silk_designators": 15,
+   "unrouted_ratsnest_touching_spike_parts": 8
+  },
+  "route_check": {
+   "gated_on_spike": [],
+   "info_on_spike": [
+    [
+     "pad_end_offcentre",
+     "SERVO2_MCU",
+     33.45,
+     76.97,
+     0.12
+    ],
+    [
+     "pad_end_offcentre",
+     "SERVO3_MCU",
+     33.45,
+     74.43,
+     0.12
+    ]
+   ],
+   "board_failing_elsewhere": 21
+  },
+  "plane_reach": {
+   "D121.2": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "D121.5": [
+    "SPIKE_3V3_In2",
+    "SPIKE_3V3_In2_servo_tongue"
+   ],
+   "R154.2": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "R155.2": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "R156.2": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "R157.2": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "via 3V3 (34.4, 73.2)": [
+    "SPIKE_3V3_In2",
+    "SPIKE_3V3_In2_servo_tongue"
+   ],
+   "via GND (31.4, 75.7)": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "via GND (31.4, 73.16)": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "via GND (34.4, 78.2)": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "via GND (31.4, 78.24)": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ]
+  },
+  "tie_channel_courtyard_to_centreline_mm": {
+   "D121": 7.051,
+   "R150": 2.198,
+   "R151": 3.127,
+   "R152": 4.056,
+   "R153": 4.985
+  },
+  "d19_nearest": null,
+  "check_actuators": {
+   "rc": 0,
+   "out": [
+    "actuator safety contract: OK"
+   ]
+  }
+ },
+ "routes": {
+  "SERVO1_MCU": {
+   "pads": 4,
+   "len_mm": 38.084,
+   "octile_mst_mm": 33.603,
+   "ratio": 1.133,
+   "vias": 1,
+   "vias_needed": 1,
+   "by_layer": {
+    "B.Cu": 6.317,
+    "F.Cu": 31.767
+   },
+   "segments": 8,
+   "bends": 4
+  },
+  "SERVO1_OUT": {
+   "pads": 2,
+   "len_mm": 3.86,
+   "octile_mst_mm": 3.86,
+   "ratio": 1.0,
+   "vias": 0,
+   "vias_needed": 0,
+   "by_layer": {
+    "B.Cu": 3.86
+   },
+   "segments": 1,
+   "bends": 0
+  },
+  "SERVO2_MCU": {
+   "pads": 4,
+   "len_mm": 30.777,
+   "octile_mst_mm": 28.514,
+   "ratio": 1.079,
+   "vias": 1,
+   "vias_needed": 1,
+   "by_layer": {
+    "B.Cu": 2.05,
+    "F.Cu": 28.727
+   },
+   "segments": 6,
+   "bends": 2
+  },
+  "SERVO2_OUT": {
+   "pads": 2,
+   "len_mm": 3.86,
+   "octile_mst_mm": 3.86,
+   "ratio": 1.0,
+   "vias": 0,
+   "vias_needed": 0,
+   "by_layer": {
+    "B.Cu": 3.86
+   },
+   "segments": 1,
+   "bends": 0
+  },
+  "SERVO3_MCU": {
+   "pads": 4,
+   "len_mm": 27.737,
+   "octile_mst_mm": 25.767,
+   "ratio": 1.076,
+   "vias": 1,
+   "vias_needed": 1,
+   "by_layer": {
+    "B.Cu": 2.05,
+    "F.Cu": 25.687
+   },
+   "segments": 6,
+   "bends": 2
+  },
+  "SERVO3_OUT": {
+   "pads": 2,
+   "len_mm": 3.86,
+   "octile_mst_mm": 3.86,
+   "ratio": 1.0,
+   "vias": 0,
+   "vias_needed": 0,
+   "by_layer": {
+    "B.Cu": 3.86
+   },
+   "segments": 1,
+   "bends": 0
+  },
+  "SERVO4_MCU": {
+   "pads": 4,
+   "len_mm": 28.964,
+   "octile_mst_mm": 25.972,
+   "ratio": 1.115,
+   "vias": 1,
+   "vias_needed": 1,
+   "by_layer": {
+    "B.Cu": 6.317,
+    "F.Cu": 22.647
+   },
+   "segments": 8,
+   "bends": 4
+  },
+  "SERVO4_OUT": {
+   "pads": 2,
+   "len_mm": 3.86,
+   "octile_mst_mm": 3.86,
+   "ratio": 1.0,
+   "vias": 0,
+   "vias_needed": 0,
+   "by_layer": {
+    "B.Cu": 3.86
+   },
+   "segments": 1,
+   "bends": 0
+  }
+ },
+ "clearances": {
+  "to_other_nets": {
+   "SERVO2_MCU": [
+    0.282,
+    "R151.1 to GND via (31.4, 75.7) on B.Cu"
+   ],
+   "SERVO3_MCU": [
+    0.282,
+    "R152.1 to GND via (31.4, 75.7) on B.Cu"
+   ],
+   "SERVO1_MCU": [
+    0.2,
+    "U1.22 to 3V3A U1.21 on F.Cu"
+   ],
+   "SERVO4_MCU": [
+    0.282,
+    "R153.1 to GND via (31.4, 73.16) on B.Cu"
+   ],
+   "SERVO1_OUT": [
+    0.94,
+    "J122.1 to RAW_ACT J122.2 on F.Cu"
+   ],
+   "SERVO2_OUT": [
+    0.94,
+    "J122.4 to RAW_ACT J122.5 on F.Cu"
+   ],
+   "SERVO3_OUT": [
+    0.94,
+    "J122.7 to RAW_ACT J122.8 on F.Cu"
+   ],
+   "SERVO4_OUT": [
+    0.94,
+    "J122.10 to RAW_ACT J122.11 on F.Cu"
+   ]
+  },
+  "between_servo_nets": [
+   0.2,
+   "SERVO1_MCU U1.22 to SERVO2_MCU U1.23 on F.Cu"
+  ]
+ },
+ "variant_in2_full_3v3_tongue": {
+  "gate": {
+   "rigid": true,
+   "drc_spike": true,
+   "drc_spike_unconnected": true,
+   "route_check_spike": true,
+   "plane_reach": true,
+   "d19": true,
+   "d20": true,
+   "tie_channel": true,
+   "check_actuators": true
+  },
+  "ok": true,
+  "rigid_groups": {
+   "outline": "9558fcd7d3bc9b97",
+   "m3_holes": "00605c61132c1574",
+   "j122_tie": "4ecfed731f5c5bc1",
+   "j1": "63a58164251c7035",
+   "pyro_block_area": "0571313b8489059d",
+   "ch1_parts": "23bcce687f97f89b",
+   "ch1_copper": "9412831952118349",
+   "strip_parts": "c71c1250c4f732ae",
+   "strip_rf_copper": "7a2598349ad81c5f",
+   "strip_gnd": "bfcbe417a3b45e12",
+   "strip_rule_areas": "d105af8bf59da746",
+   "strip_gcpw": "8b46f56919611ca6"
+  },
+  "drc": {
+   "totals_whole_scratch_board": {
+    "violations": 252,
+    "unconnected": 321
+   },
+   "spike": 0,
+   "spike_unconnected": 0,
+   "spike_silk_designators": 15,
+   "unrouted_ratsnest_touching_spike_parts": 8
+  },
+  "route_check": {
+   "gated_on_spike": [],
+   "info_on_spike": [
+    [
+     "pad_end_offcentre",
+     "SERVO2_MCU",
+     33.45,
+     76.97,
+     0.12
+    ],
+    [
+     "pad_end_offcentre",
+     "SERVO3_MCU",
+     33.45,
+     74.43,
+     0.12
+    ]
+   ],
+   "board_failing_elsewhere": 21
+  },
+  "plane_reach": {
+   "D121.2": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "D121.5": [
+    "SPIKE_3V3_In2",
+    "SPIKE_3V3_In2_servo_tongue"
+   ],
+   "R154.2": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "R155.2": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "R156.2": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "R157.2": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "via 3V3 (34.4, 73.2)": [
+    "SPIKE_3V3_In2",
+    "SPIKE_3V3_In2_servo_tongue"
+   ],
+   "via GND (31.4, 75.7)": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "via GND (31.4, 73.16)": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "via GND (34.4, 78.2)": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ],
+   "via GND (31.4, 78.24)": [
+    "GND_B",
+    "GND_F",
+    "GND_In1",
+    "SPIKE_GND_In2",
+    "SPIKE_GND_In2_strip"
+   ]
+  },
+  "tie_channel_courtyard_to_centreline_mm": {
+   "D121": 7.051,
+   "R150": 2.198,
+   "R151": 3.127,
+   "R152": 4.056,
+   "R153": 4.985
+  },
+  "d19_nearest": null,
+  "check_actuators": {
+   "rc": 0,
+   "out": [
+    "actuator safety contract: OK"
+   ]
+  }
+ },
+ "parts": {
+  "D121": {
+   "pos": [
+    34.4,
+    75.7
+   ],
+   "rot": 180.0,
+   "side": "B",
+   "courtyard": [
+    32.65,
+    73.72,
+    36.16,
+    77.69
+   ]
+  },
+  "R150": {
+   "pos": [
+    30.4,
+    79.51
+   ],
+   "rot": 180.0,
+   "side": "B",
+   "courtyard": [
+    28.54,
+    78.53,
+    32.27,
+    80.5
+   ]
+  },
+  "R151": {
+   "pos": [
+    30.4,
+    76.97
+   ],
+   "rot": 180.0,
+   "side": "B",
+   "courtyard": [
+    28.54,
+    75.98,
+    32.27,
+    77.95
+   ]
+  },
+  "R152": {
+   "pos": [
+    30.4,
+    74.43
+   ],
+   "rot": 180.0,
+   "side": "B",
+   "courtyard": [
+    28.54,
+    73.44,
+    32.27,
+    75.42
+   ]
+  },
+  "R153": {
+   "pos": [
+    30.4,
+    71.89
+   ],
+   "rot": 180.0,
+   "side": "B",
+   "courtyard": [
+    28.54,
+    70.91,
+    32.27,
+    72.88
+   ]
+  },
+  "R154": {
+   "pos": [
+    30.4,
+    79.94
+   ],
+   "rot": -90.0,
+   "side": "F",
+   "courtyard": [
+    29.93,
+    79.03,
+    30.86,
+    80.86
+   ]
+  },
+  "R155": {
+   "pos": [
+    30.4,
+    77.4
+   ],
+   "rot": -90.0,
+   "side": "F",
+   "courtyard": [
+    29.93,
+    76.48,
+    30.86,
+    78.31
+   ]
+  },
+  "R156": {
+   "pos": [
+    30.4,
+    74.86
+   ],
+   "rot": -90.0,
+   "side": "F",
+   "courtyard": [
+    29.93,
+    73.94,
+    30.86,
+    75.78
+   ]
+  },
+  "R157": {
+   "pos": [
+    30.4,
+    72.32
+   ],
+   "rot": -90.0,
+   "side": "F",
+   "courtyard": [
+    29.93,
+    71.41,
+    30.86,
+    73.23
+   ]
+  },
+  "R177": {
+   "pos": [
+    37.4,
+    73.4
+   ],
+   "rot": -90.0,
+   "side": "B",
+   "courtyard": [
+    36.94,
+    72.48,
+    37.87,
+    74.31
+   ]
+  },
+  "R124": {
+   "pos": [
+    37.4,
+    75.4
+   ],
+   "rot": -90.0,
+   "side": "B",
+   "courtyard": [
+    36.94,
+    74.48,
+    37.87,
+    76.31
+   ]
+  },
+  "R125": {
+   "pos": [
+    39.6,
+    75.4
+   ],
+   "rot": 0.0,
+   "side": "B",
+   "courtyard": [
+    38.69,
+    74.94,
+    40.52,
+    75.86
+   ]
+  },
+  "R182": {
+   "pos": [
+    39.6,
+    76.6
+   ],
+   "rot": 0.0,
+   "side": "B",
+   "courtyard": [
+    38.69,
+    76.14,
+    40.52,
+    77.06
+   ]
+  },
+  "C122": {
+   "pos": [
+    39.8,
+    78.0
+   ],
+   "rot": 0.0,
+   "side": "B",
+   "courtyard": [
+    38.41,
+    77.25,
+    41.2,
+    78.75
+   ]
+  },
+  "servo_copper_extent": {
+   "F.Cu": [
+    27.4,
+    52.45,
+    32.7,
+    79.61
+   ],
+   "via": [
+    32.3,
+    71.59,
+    32.9,
+    79.81
+   ],
+   "B.Cu": [
+    25.44,
+    71.79,
+    35.45,
+    79.61
+   ]
+  }
+ },
+ "in2_reference_under_bcu_servo_mm": {
+  "default": {
+   "GND": 13.73,
+   "3V3": 9.73,
+   "antipad/gap": 8.71
+  },
+  "full_tongue": {
+   "3V3": 23.47,
+   "antipad/gap": 8.71
+  }
+ }
+}

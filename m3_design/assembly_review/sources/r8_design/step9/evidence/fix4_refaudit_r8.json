@@ -1,0 +1,695 @@
+{
+ "board_sha256": "cc044ea0922ff826df19af9d9726d92c096ab2b127025b55d123d8772e5fb4a7",
+ "nets": [
+  "USB_DP",
+  "USB_DM",
+  "HSE_IN",
+  "HSE_OUT",
+  "QSPI_CLK",
+  "QSPI_NCS",
+  "QSPI_IO0",
+  "QSPI_IO1",
+  "QSPI_IO2",
+  "QSPI_IO3",
+  "SPI1_SCK",
+  "SPI1_MOSI",
+  "SPI1_MISO",
+  "IMU_CS"
+ ],
+ "samples": 46845,
+ "unreferenced": 5186,
+ "unreferenced_share": 0.1107,
+ "share_without_own_via": 0.034,
+ "by_cause": {
+  "own_via": 3592,
+  "keepout": 1368,
+  "other_via": 226
+ },
+ "by_net_layer": {
+  "HSE_IN B.Cu": {
+   "samples": 915,
+   "unreferenced": 915
+  },
+  "HSE_IN F.Cu": {
+   "samples": 504,
+   "unreferenced": 151
+  },
+  "HSE_OUT B.Cu": {
+   "samples": 498,
+   "unreferenced": 498
+  },
+  "HSE_OUT F.Cu": {
+   "samples": 1734,
+   "unreferenced": 154
+  },
+  "IMU_CS B.Cu": {
+   "samples": 273,
+   "unreferenced": 151
+  },
+  "IMU_CS F.Cu": {
+   "samples": 3381,
+   "unreferenced": 151
+  },
+  "QSPI_CLK B.Cu": {
+   "samples": 492,
+   "unreferenced": 151
+  },
+  "QSPI_CLK F.Cu": {
+   "samples": 1881,
+   "unreferenced": 199
+  },
+  "QSPI_IO0 B.Cu": {
+   "samples": 228,
+   "unreferenced": 151
+  },
+  "QSPI_IO0 F.Cu": {
+   "samples": 1020,
+   "unreferenced": 151
+  },
+  "QSPI_IO1 B.Cu": {
+   "samples": 2337,
+   "unreferenced": 151
+  },
+  "QSPI_IO1 F.Cu": {
+   "samples": 588,
+   "unreferenced": 151
+  },
+  "QSPI_IO2 B.Cu": {
+   "samples": 477,
+   "unreferenced": 151
+  },
+  "QSPI_IO2 F.Cu": {
+   "samples": 3219,
+   "unreferenced": 164
+  },
+  "QSPI_IO3 B.Cu": {
+   "samples": 492,
+   "unreferenced": 151
+  },
+  "QSPI_IO3 F.Cu": {
+   "samples": 2457,
+   "unreferenced": 151
+  },
+  "QSPI_NCS B.Cu": {
+   "samples": 723,
+   "unreferenced": 305
+  },
+  "QSPI_NCS F.Cu": {
+   "samples": 1041,
+   "unreferenced": 151
+  },
+  "SPI1_MISO B.Cu": {
+   "samples": 366,
+   "unreferenced": 151
+  },
+  "SPI1_MISO F.Cu": {
+   "samples": 3942,
+   "unreferenced": 154
+  },
+  "SPI1_MOSI B.Cu": {
+   "samples": 273,
+   "unreferenced": 151
+  },
+  "SPI1_MOSI F.Cu": {
+   "samples": 3645,
+   "unreferenced": 151
+  },
+  "SPI1_SCK B.Cu": {
+   "samples": 483,
+   "unreferenced": 297
+  },
+  "SPI1_SCK F.Cu": {
+   "samples": 4935,
+   "unreferenced": 188
+  },
+  "USB_DM F.Cu": {
+   "samples": 5718,
+   "unreferenced": 47
+  },
+  "USB_DP F.Cu": {
+   "samples": 5223,
+   "unreferenced": 0
+  }
+ },
+ "entries": [
+  {
+   "samples": 870,
+   "centre_samples": 290,
+   "runs": 6,
+   "tracks": 2,
+   "box": [
+    20.37,
+    49.6,
+    22.1,
+    50.95
+   ],
+   "net": "HSE_IN",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "keepout",
+   "item": "Y1_In2_keepout",
+   "centre_mm": 2.9
+  },
+  {
+   "samples": 498,
+   "centre_samples": 166,
+   "runs": 6,
+   "tracks": 2,
+   "box": [
+    23.7,
+    47.4,
+    25.33,
+    47.6
+   ],
+   "net": "HSE_OUT",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "keepout",
+   "item": "Y1_In2_keepout",
+   "centre_mm": 1.66
+  },
+  {
+   "samples": 305,
+   "centre_samples": 103,
+   "runs": 6,
+   "tracks": 2,
+   "box": [
+    17.0,
+    45.0,
+    18.0,
+    45.2
+   ],
+   "net": "QSPI_NCS",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "own_via",
+   "item": "QSPI_NCS via (17.50, 45.10)",
+   "centre_mm": 1.03
+  },
+  {
+   "samples": 210,
+   "centre_samples": 70,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    9.9,
+    55.66,
+    10.1,
+    56.35
+   ],
+   "net": "SPI1_SCK",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "own_via",
+   "item": "SPI1_SCK via (10.00, 56.35)",
+   "centre_mm": 0.7
+  },
+  {
+   "samples": 154,
+   "centre_samples": 52,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    24.27,
+    47.43,
+    24.76,
+    47.92
+   ],
+   "net": "HSE_OUT",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "HSE_OUT via (24.69, 47.50)",
+   "centre_mm": 0.52
+  },
+  {
+   "samples": 154,
+   "centre_samples": 52,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    27.75,
+    42.47,
+    28.25,
+    42.67
+   ],
+   "net": "QSPI_CLK",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "QSPI_CLK via (27.75, 42.57)",
+   "centre_mm": 0.52
+  },
+  {
+   "samples": 154,
+   "centre_samples": 52,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    8.69,
+    55.25,
+    8.89,
+    55.75
+   ],
+   "net": "SPI1_MISO",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "SPI1_MISO via (8.79, 55.75)",
+   "centre_mm": 0.52
+  },
+  {
+   "samples": 154,
+   "centre_samples": 52,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    9.5,
+    56.25,
+    10.0,
+    56.45
+   ],
+   "net": "SPI1_SCK",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "SPI1_SCK via (10.00, 56.35)",
+   "centre_mm": 0.52
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    21.93,
+    51.03,
+    22.42,
+    51.52
+   ],
+   "net": "HSE_IN",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "HSE_IN via (22.00, 51.10)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    10.5,
+    55.55,
+    11.0,
+    55.75
+   ],
+   "net": "IMU_CS",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "IMU_CS via (10.50, 55.65)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    10.4,
+    55.15,
+    10.6,
+    55.65
+   ],
+   "net": "IMU_CS",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "own_via",
+   "item": "IMU_CS via (10.50, 55.65)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    27.25,
+    42.47,
+    27.75,
+    42.67
+   ],
+   "net": "QSPI_CLK",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "own_via",
+   "item": "QSPI_CLK via (27.75, 42.57)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    26.03,
+    40.05,
+    26.23,
+    40.55
+   ],
+   "net": "QSPI_IO0",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "QSPI_IO0 via (26.13, 40.55)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    26.03,
+    40.55,
+    26.23,
+    41.05
+   ],
+   "net": "QSPI_IO0",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "own_via",
+   "item": "QSPI_IO0 via (26.13, 40.55)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    24.9,
+    38.9,
+    25.1,
+    39.4
+   ],
+   "net": "QSPI_IO1",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "QSPI_IO1 via (25.00, 39.40)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    24.58,
+    39.33,
+    25.07,
+    39.82
+   ],
+   "net": "QSPI_IO1",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "own_via",
+   "item": "QSPI_IO1 via (25.00, 39.40)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    17.43,
+    42.5,
+    17.92,
+    42.99
+   ],
+   "net": "QSPI_IO2",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "QSPI_IO2 via (17.50, 42.57)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    17.5,
+    42.47,
+    18.0,
+    42.67
+   ],
+   "net": "QSPI_IO2",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "own_via",
+   "item": "QSPI_IO2 via (17.50, 42.57)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    27.34,
+    43.42,
+    27.82,
+    43.9
+   ],
+   "net": "QSPI_IO3",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "QSPI_IO3 via (27.75, 43.83)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    27.25,
+    43.73,
+    27.75,
+    43.93
+   ],
+   "net": "QSPI_IO3",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "own_via",
+   "item": "QSPI_IO3 via (27.75, 43.83)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    17.4,
+    45.1,
+    17.6,
+    45.6
+   ],
+   "net": "QSPI_NCS",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "QSPI_NCS via (17.50, 45.10)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    8.69,
+    55.25,
+    8.89,
+    55.75
+   ],
+   "net": "SPI1_MISO",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "own_via",
+   "item": "SPI1_MISO via (8.79, 55.75)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    9.4,
+    55.15,
+    9.6,
+    55.65
+   ],
+   "net": "SPI1_MOSI",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "own_via",
+   "item": "SPI1_MOSI via (9.50, 55.65)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 151,
+   "centre_samples": 51,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    9.4,
+    55.15,
+    9.6,
+    55.65
+   ],
+   "net": "SPI1_MOSI",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "own_via",
+   "item": "SPI1_MOSI via (9.50, 55.65)",
+   "centre_mm": 0.51
+  },
+  {
+   "samples": 56,
+   "centre_samples": 25,
+   "runs": 2,
+   "tracks": 1,
+   "box": [
+    9.9,
+    55.35,
+    10.0,
+    55.65
+   ],
+   "net": "SPI1_SCK",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "other_via",
+   "item": "SPI1_MOSI via (9.50, 55.65)",
+   "centre_mm": 0.25
+  },
+  {
+   "samples": 47,
+   "centre_samples": 0,
+   "runs": 1,
+   "tracks": 1,
+   "box": [
+    16.37,
+    35.54,
+    16.83,
+    35.54
+   ],
+   "net": "USB_DM",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "other_via",
+   "item": "VBUS_SENSE via (16.60, 35.10)",
+   "centre_mm": 0.0
+  },
+  {
+   "samples": 45,
+   "centre_samples": 15,
+   "runs": 3,
+   "tracks": 1,
+   "box": [
+    21.9,
+    50.96,
+    22.1,
+    51.1
+   ],
+   "net": "HSE_IN",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "own_via",
+   "item": "HSE_IN via (22.00, 51.10)",
+   "centre_mm": 0.15
+  },
+  {
+   "samples": 45,
+   "centre_samples": 0,
+   "runs": 1,
+   "tracks": 1,
+   "box": [
+    29.2,
+    44.88,
+    29.2,
+    45.32
+   ],
+   "net": "QSPI_CLK",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "other_via",
+   "item": "3V3 via (28.75, 45.10)",
+   "centre_mm": 0.0
+  },
+  {
+   "samples": 34,
+   "centre_samples": 0,
+   "runs": 2,
+   "tracks": 2,
+   "box": [
+    8.3,
+    55.65,
+    8.85,
+    56.25
+   ],
+   "net": "SPI1_SCK",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "other_via",
+   "item": "SPI1_MISO via (8.79, 55.75)",
+   "centre_mm": 0.0
+  },
+  {
+   "samples": 31,
+   "centre_samples": 0,
+   "runs": 1,
+   "tracks": 1,
+   "box": [
+    10.1,
+    55.35,
+    10.1,
+    55.65
+   ],
+   "net": "SPI1_SCK",
+   "layer": "B.Cu",
+   "ref_layer": "In2.Cu",
+   "cause": "other_via",
+   "item": "IMU_CS via (10.50, 55.65)",
+   "centre_mm": 0.0
+  },
+  {
+   "samples": 13,
+   "centre_samples": 0,
+   "runs": 1,
+   "tracks": 1,
+   "box": [
+    18.0,
+    45.04,
+    18.0,
+    45.16
+   ],
+   "net": "QSPI_IO2",
+   "layer": "F.Cu",
+   "ref_layer": "In1.Cu",
+   "cause": "other_via",
+   "item": "QSPI_NCS via (17.50, 45.10)",
+   "centre_mm": 0.0
+  }
+ ],
+ "board": "<board folder>/m3.kicad_pcb"
+}

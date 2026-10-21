@@ -1,0 +1,378 @@
+{
+ "scorecard": {
+  "S1_signal_track_mm": 3354.7,
+  "S2_total_track_mm": 4428.3,
+  "S3_signal_vias": 218,
+  "S4_signal_layer_change_vias": 217,
+  "S5_power_vias_non_gnd": 114,
+  "S6_detour_weighted": 1.396,
+  "S7_detour_excess_mm": 1080.8,
+  "S8_nets_ratio_over_1_6": 23,
+  "S9_nets_ratio_over_2": 12,
+  "S10_bends_per_10mm_signal": 1.932,
+  "S11_bends_per_two_pad_signal_route": 5.05,
+  "S12_critical_layer_changes": 73,
+  "S13_critical_layer_changes_no_gnd_via": 8,
+  "S14_critical_weighted_ratio": 1.314,
+  "S15_in2_signal_track_mm": 901.0,
+  "S16_in1_track_mm": 0,
+  "S17_route_mst_total_mm": 2727.3,
+  "S18_track_segments": 1724,
+  "P1_in1_gnd_coverage": 0.8796,
+  "P2_in1_gnd_islands": 1,
+  "P3_in1_large_voids": 18,
+  "P3b_in1_slots": 16,
+  "P4_in2_regions": 8,
+  "P5_in2_nets": 5,
+  "P6_in2_perimeter_mm": 1580.9,
+  "P7_outer_gnd_islands_le1_via": 32,
+  "P8_gnd_stitch_per_cm2": 7.22,
+  "P9_gnd_dist_p95_mm": 6.12,
+  "P10_gnd_dist_max_mm": 13.78,
+  "P11_outer_gnd_pour_dist_p95_mm": 5.09,
+  "R1_ref_r6_unreferenced_mm": 60.3,
+  "R2_ref_r6_referenced_share": 0.7302,
+  "R3_ref_ext_unreferenced_mm": 115.9,
+  "R4_ref_ext_crossings": 116,
+  "Q1_top_utilisation": 0.422,
+  "Q2_bottom_utilisation": 0.163,
+  "Q3_grid_util_max": 0.967,
+  "S10b_signal_bends_total": 648,
+  "C1_route_gated_category_instances": 74,
+  "C2_route_info_instances": 252,
+  "C3_route_allowlisted": 45,
+  "C4_route_leftovers": 29,
+  "C5_route_failures": 0,
+  "C6_agents3_rule_instances": 9,
+  "R5_cref_r6_samples": 95979,
+  "R6_cref_r6_unreferenced": 26789,
+  "R6b_cref_r6_unreferenced_share": 0.2791,
+  "R7_cref_ext_samples": 220968,
+  "R8_cref_ext_unreferenced": 52285,
+  "D_raw_mohm": 3.71,
+  "D_raw_neck_mm": 3.0,
+  "D_raw_neck_dT_C": 38.3,
+  "D_bat_mohm": 3.03,
+  "D_bat_neck_mm": 3.82,
+  "D_bat_neck_dT_C": 30.2,
+  "D_fet_mohm": 1.16,
+  "D_fet_neck_mm": 2.65,
+  "D_fet_neck_dT_C": 44.2,
+  "D_min_neck_fraction_of_20C_width": 0.502
+ },
+ "route": {
+  "instances": 326,
+  "gated_category": 74,
+  "info": 252,
+  "failures": 0,
+  "allowlisted": 45,
+  "leftovers": 29,
+  "leftovers_missing": 0,
+  "stale": 0,
+  "agents3_rule_instances": 9,
+  "by_category": {
+   "chain_detour": 9,
+   "critical_via_no_gnd": 9,
+   "detour": 21,
+   "extra_bends": 35,
+   "extra_vias": 27,
+   "local_bump": 1,
+   "pad_end_offcentre": 94,
+   "passes_through_pad": 8,
+   "pour_net_hop": 5,
+   "power_via_no_gnd": 34,
+   "segment_inside_pad": 4,
+   "short_layer_hop": 18,
+   "tiny_jog": 2,
+   "u_turn": 22,
+   "via_on_track_in_fill": 6,
+   "width_change_junction": 31
+  }
+ },
+ "dc": {
+  "raw": {
+   "mohm": 3.71,
+   "neck_mm": 3.0,
+   "neck_layer": "F.Cu",
+   "neck_share": 100,
+   "neck_dT": 38.3,
+   "w20": 5.28,
+   "median_mm": 5.64,
+   "neck_box": "21.55, 24.45, 80.57, 81.02",
+   "fail": true
+  },
+  "bat": {
+   "mohm": 3.03,
+   "neck_mm": 3.82,
+   "neck_layer": "In2.Cu",
+   "neck_share": 100,
+   "neck_dT": 30.2,
+   "w20": 5.56,
+   "median_mm": 7.98,
+   "neck_box": "7.25, 13.45, 96.62, 99.38",
+   "fail": true
+  },
+  "fet": {
+   "mohm": 1.16,
+   "neck_mm": 2.65,
+   "neck_layer": "B.Cu",
+   "neck_share": 100,
+   "neck_dT": 44.2,
+   "w20": 5.28,
+   "median_mm": 3.07,
+   "neck_box": "2.75, 5.3, 94.55, 95.0",
+   "fail": true
+  }
+ },
+ "gate": null,
+ "targets": [
+  {
+   "key": "C1_route_gated_category_instances",
+   "value": 74,
+   "op": "<=",
+   "target": 1,
+   "met": false,
+   "note": "hard gate: 0 but A8"
+  },
+  {
+   "key": "C2_route_info_instances",
+   "value": 252,
+   "op": "<=",
+   "target": 80,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "C3_route_allowlisted",
+   "value": 45,
+   "op": "<=",
+   "target": 1,
+   "met": false,
+   "note": "hard gate: A8 only"
+  },
+  {
+   "key": "C4_route_leftovers",
+   "value": 29,
+   "op": "==",
+   "target": 0,
+   "met": false,
+   "note": "hard gate"
+  },
+  {
+   "key": "C5_route_failures",
+   "value": 0,
+   "op": "==",
+   "target": 0,
+   "met": true,
+   "note": "hard gate"
+  },
+  {
+   "key": "C6_agents3_rule_instances",
+   "value": 9,
+   "op": "<=",
+   "target": 1,
+   "met": false,
+   "note": "hard gate: A8 only"
+  },
+  {
+   "key": "S1_signal_track_mm",
+   "value": 3354.7,
+   "op": "<=",
+   "target": 2300,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "S4_signal_layer_change_vias",
+   "value": 217,
+   "op": "<=",
+   "target": 75,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "S6_detour_weighted",
+   "value": 1.396,
+   "op": "<=",
+   "target": 1.18,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "S7_detour_excess_mm",
+   "value": 1080.8,
+   "op": "<=",
+   "target": 350,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "S8_nets_ratio_over_1_6",
+   "value": 23,
+   "op": "==",
+   "target": 0,
+   "met": false,
+   "note": "except keep-out-forced nets"
+  },
+  {
+   "key": "S9_nets_ratio_over_2",
+   "value": 12,
+   "op": "==",
+   "target": 0,
+   "met": false,
+   "note": "except keep-out-forced nets"
+  },
+  {
+   "key": "S10b_signal_bends_total",
+   "value": 648,
+   "op": "<=",
+   "target": 400,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "S12_critical_layer_changes",
+   "value": 73,
+   "op": "<=",
+   "target": 32,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "S15_in2_signal_track_mm",
+   "value": 901.0,
+   "op": "==",
+   "target": 0,
+   "met": false,
+   "note": "hard gate (check_r8 D20)"
+  },
+  {
+   "key": "S16_in1_track_mm",
+   "value": 0,
+   "op": "==",
+   "target": 0,
+   "met": true,
+   "note": "hard gate (check_r8 D20)"
+  },
+  {
+   "key": "S17_route_mst_total_mm",
+   "value": 2727.3,
+   "op": "<=",
+   "target": 1850,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "P1_in1_gnd_coverage",
+   "value": 0.8796,
+   "op": ">=",
+   "target": 0.9,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "P3b_in1_slots",
+   "value": 16,
+   "op": "<=",
+   "target": 4,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "P4_in2_regions",
+   "value": 8,
+   "op": "<=",
+   "target": 5,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "P6_in2_perimeter_mm",
+   "value": 1580.9,
+   "op": "<=",
+   "target": 900,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "P7_outer_gnd_islands_le1_via",
+   "value": 32,
+   "op": "==",
+   "target": 0,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "P9_gnd_dist_p95_mm",
+   "value": 6.12,
+   "op": "<=",
+   "target": 3.5,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "P10_gnd_dist_max_mm",
+   "value": 13.78,
+   "op": "<=",
+   "target": 7,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "R1_ref_r6_unreferenced_mm",
+   "value": 60.3,
+   "op": "<=",
+   "target": 5,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "R3_ref_ext_unreferenced_mm",
+   "value": 115.9,
+   "op": "<=",
+   "target": 15,
+   "met": false,
+   "note": ""
+  },
+  {
+   "key": "R6b_cref_r6_unreferenced_share",
+   "value": 0.2791,
+   "op": "<=",
+   "target": 0.08,
+   "met": false,
+   "note": "critical_reference"
+  },
+  {
+   "key": "D_raw_neck_dT_C",
+   "value": 38.3,
+   "op": "<=",
+   "target": 20,
+   "met": false,
+   "note": "D12: >= 5.3 mm outer / 5.6 mm inner"
+  },
+  {
+   "key": "D_bat_neck_dT_C",
+   "value": 30.2,
+   "op": "<=",
+   "target": 20,
+   "met": false,
+   "note": "D12: >= 5.3 mm outer / 5.6 mm inner"
+  },
+  {
+   "key": "D_fet_neck_dT_C",
+   "value": 44.2,
+   "op": "<=",
+   "target": 30,
+   "met": false,
+   "note": "D12: >= 3.71 mm on B.Cu"
+  },
+  {
+   "key": "index_vs_baseline",
+   "value": null,
+   "op": "<=",
+   "target": 35,
+   "met": null,
+   "note": "simplicity index"
+  }
+ ]
+}

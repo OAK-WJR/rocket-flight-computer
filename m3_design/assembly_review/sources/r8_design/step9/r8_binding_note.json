@@ -1,0 +1,734 @@
+{
+ "profile": "M3-ASSY-R8",
+ "status": "record only: no binding generated (the R1 binding chain cannot run here)",
+ "board_sha256": "cc044ea0922ff826df19af9d9726d92c096ab2b127025b55d123d8772e5fb4a7",
+ "netlist_sha256": "0cc1ed692fb99dd2312af0b8bd4aa6cad01c3a32920ee4c70716ec9e52e7c496",
+ "pin_table_sha256": "bd4687a8037990f972e26f3c9cb216a7e7288c49264c8f29e5714e62b8d314b4",
+ "u1_pins": {
+  "1": {
+   "port": "PE2",
+   "net": "QSPI_IO2",
+   "mode": "AF9 QUADSPI_BK1_IO2"
+  },
+  "2": {
+   "port": "PE3",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "3": {
+   "port": "PE4",
+   "net": "PYRO1_GATE_N",
+   "mode": "GPIO out"
+  },
+  "4": {
+   "port": "PE5",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "5": {
+   "port": "PE6",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "6": {
+   "port": "VBAT",
+   "net": "3V3",
+   "mode": "VBAT"
+  },
+  "7": {
+   "port": "PC13",
+   "net": "BUZZ_DRV",
+   "mode": "GPIO out"
+  },
+  "8": {
+   "port": "PC14",
+   "net": "PULLPIN",
+   "mode": "GPIO in"
+  },
+  "9": {
+   "port": "PC15",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "10": {
+   "port": "VSS",
+   "net": "GND",
+   "mode": "VSS"
+  },
+  "11": {
+   "port": "VDD",
+   "net": "3V3",
+   "mode": "VDD"
+  },
+  "12": {
+   "port": "PH0",
+   "net": "HSE_IN",
+   "mode": "HSE"
+  },
+  "13": {
+   "port": "PH1",
+   "net": "HSE_OUT",
+   "mode": "HSE"
+  },
+  "14": {
+   "port": "NRST",
+   "net": "NRST",
+   "mode": "NRST"
+  },
+  "15": {
+   "port": "PC0",
+   "net": "PYRO1_CONT_MCU",
+   "mode": "ADC"
+  },
+  "16": {
+   "port": "PC1",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "17": {
+   "port": "PC2_C",
+   "net": "VLOGIC_SENSE",
+   "mode": "ADC"
+  },
+  "18": {
+   "port": "PC3_C",
+   "net": "V3V3_SENSE",
+   "mode": "ADC"
+  },
+  "19": {
+   "port": "VSSA",
+   "net": "GND",
+   "mode": "VSSA"
+  },
+  "20": {
+   "port": "VREF+",
+   "net": "3V3A",
+   "mode": "VREF+"
+  },
+  "21": {
+   "port": "VDDA",
+   "net": "3V3A",
+   "mode": "VDDA"
+  },
+  "22": {
+   "port": "PA0",
+   "net": "SERVO1_MCU",
+   "mode": "AF2 TIM5_CH1"
+  },
+  "23": {
+   "port": "PA1",
+   "net": "SERVO2_MCU",
+   "mode": "AF2 TIM5_CH2"
+  },
+  "24": {
+   "port": "PA2",
+   "net": "SERVO3_MCU",
+   "mode": "AF2 TIM5_CH3"
+  },
+  "25": {
+   "port": "PA3",
+   "net": "SERVO4_MCU",
+   "mode": "AF2 TIM5_CH4"
+  },
+  "26": {
+   "port": "VSS",
+   "net": "GND",
+   "mode": "VSS"
+  },
+  "27": {
+   "port": "VDD",
+   "net": "3V3",
+   "mode": "VDD"
+  },
+  "28": {
+   "port": "PA4",
+   "net": "BAT_FAULT_N",
+   "mode": "GPIO in"
+  },
+  "29": {
+   "port": "PA5",
+   "net": "LOGIC_SOURCE_ST",
+   "mode": "GPIO in"
+  },
+  "30": {
+   "port": "PA6",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "31": {
+   "port": "PA7",
+   "net": "CAM_UART_OE",
+   "mode": "GPIO out"
+  },
+  "32": {
+   "port": "PC4",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "33": {
+   "port": "PC5",
+   "net": "ARM1_SENSE_MCU",
+   "mode": "ADC"
+  },
+  "34": {
+   "port": "PB0",
+   "net": "RAW_ACT_SENSE_MCU",
+   "mode": "ADC"
+  },
+  "35": {
+   "port": "PB1",
+   "net": "CAM_5V_SENSE",
+   "mode": "ADC"
+  },
+  "36": {
+   "port": "PB2",
+   "net": "QSPI_CLK",
+   "mode": "AF9 QUADSPI_CLK"
+  },
+  "37": {
+   "port": "PE7",
+   "net": "CAM_MCU_RX",
+   "mode": "AF7 UART7_RX"
+  },
+  "38": {
+   "port": "PE8",
+   "net": "CAM_MCU_TX",
+   "mode": "AF7 UART7_TX"
+  },
+  "39": {
+   "port": "PE9",
+   "net": "RADIO_NRST",
+   "mode": "GPIO out (push-pull)"
+  },
+  "40": {
+   "port": "PE10",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "41": {
+   "port": "PE11",
+   "net": "CAM_FAULT_N",
+   "mode": "GPIO in"
+  },
+  "42": {
+   "port": "PE12",
+   "net": "CAM_PWR_EN",
+   "mode": "GPIO out"
+  },
+  "43": {
+   "port": "PE13",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "44": {
+   "port": "PE14",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "45": {
+   "port": "PE15",
+   "net": "RADIO_DIO1",
+   "mode": "GPIO in, EXTI15"
+  },
+  "46": {
+   "port": "PB10",
+   "net": "RADIO_SCK_MCU",
+   "mode": "AF5 SPI2_SCK"
+  },
+  "47": {
+   "port": "PB11",
+   "net": "RADIO_NSS",
+   "mode": "GPIO out (software NSS)"
+  },
+  "48": {
+   "port": "VCAP",
+   "net": "VCAP1",
+   "mode": "VCAP"
+  },
+  "49": {
+   "port": "VSS",
+   "net": "GND",
+   "mode": "VSS"
+  },
+  "50": {
+   "port": "VDD",
+   "net": "3V3",
+   "mode": "VDD"
+  },
+  "51": {
+   "port": "PB12",
+   "net": "NC",
+   "mode": "NC (firmware: analog)"
+  },
+  "52": {
+   "port": "PB13",
+   "net": "NC",
+   "mode": "NC (firmware: analog)"
+  },
+  "53": {
+   "port": "PB14",
+   "net": "RADIO_MOSI_MCU",
+   "mode": "AF5 SPI2_MISO pin, MOSI function with SPI_CFG2.IOSWP=1"
+  },
+  "54": {
+   "port": "PB15",
+   "net": "RADIO_MISO_MCU",
+   "mode": "AF5 SPI2_MOSI pin, MISO function with SPI_CFG2.IOSWP=1"
+  },
+  "55": {
+   "port": "PD8",
+   "net": "RADIO_BUSY",
+   "mode": "GPIO in (polled)"
+  },
+  "56": {
+   "port": "PD9",
+   "net": "RADIO_RXEN",
+   "mode": "GPIO out"
+  },
+  "57": {
+   "port": "PD10",
+   "net": "NC",
+   "mode": "NC (firmware: analog)"
+  },
+  "58": {
+   "port": "PD11",
+   "net": "QSPI_IO0",
+   "mode": "AF9 QUADSPI_BK1_IO0"
+  },
+  "59": {
+   "port": "PD12",
+   "net": "QSPI_IO1",
+   "mode": "AF9 QUADSPI_BK1_IO1"
+  },
+  "60": {
+   "port": "PD13",
+   "net": "QSPI_IO3",
+   "mode": "AF9 QUADSPI_BK1_IO3"
+  },
+  "61": {
+   "port": "PD14",
+   "net": "GNSS_RESET_N",
+   "mode": "GPIO out, open drain"
+  },
+  "62": {
+   "port": "PD15",
+   "net": "GNSS_TP_MCU",
+   "mode": "AF2 TIM4_CH4 input capture"
+  },
+  "63": {
+   "port": "PC6",
+   "net": "GNSS_RXD_MCU",
+   "mode": "AF7 USART6_TX"
+  },
+  "64": {
+   "port": "PC7",
+   "net": "GNSS_TXD_MCU",
+   "mode": "AF7 USART6_RX"
+  },
+  "65": {
+   "port": "PC8",
+   "net": "VBUS_SENSE",
+   "mode": "GPIO in"
+  },
+  "66": {
+   "port": "PC9",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "67": {
+   "port": "PA8",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "68": {
+   "port": "PA9",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "69": {
+   "port": "PA10",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "70": {
+   "port": "PA11",
+   "net": "USB_DM",
+   "mode": "AF10 OTG_FS_DM"
+  },
+  "71": {
+   "port": "PA12",
+   "net": "USB_DP",
+   "mode": "AF10 OTG_FS_DP"
+  },
+  "72": {
+   "port": "PA13",
+   "net": "SWDIO",
+   "mode": "AF0 SWDIO"
+  },
+  "73": {
+   "port": "VCAP",
+   "net": "VCAP2",
+   "mode": "VCAP"
+  },
+  "74": {
+   "port": "VSS",
+   "net": "GND",
+   "mode": "VSS"
+  },
+  "75": {
+   "port": "VDD",
+   "net": "3V3",
+   "mode": "VDD"
+  },
+  "76": {
+   "port": "PA14",
+   "net": "SWCLK",
+   "mode": "AF0 SWCLK"
+  },
+  "77": {
+   "port": "PA15",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "78": {
+   "port": "PC10",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "79": {
+   "port": "PC11",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "80": {
+   "port": "PC12",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "81": {
+   "port": "PD0",
+   "net": "NC",
+   "mode": "NC (firmware: analog)"
+  },
+  "82": {
+   "port": "PD1",
+   "net": "NC",
+   "mode": "NC (firmware: analog)"
+  },
+  "83": {
+   "port": "PD2",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "84": {
+   "port": "PD3",
+   "net": "NC",
+   "mode": "NC (firmware: analog)"
+  },
+  "85": {
+   "port": "PD4",
+   "net": "NC",
+   "mode": "NC (firmware: analog)"
+  },
+  "86": {
+   "port": "PD5",
+   "net": "LED_RED",
+   "mode": "GPIO out"
+  },
+  "87": {
+   "port": "PD6",
+   "net": "USB_FAULT_N",
+   "mode": "GPIO in"
+  },
+  "88": {
+   "port": "PD7",
+   "net": "LED_YEL",
+   "mode": "GPIO out"
+  },
+  "89": {
+   "port": "PB3",
+   "net": "SPI1_SCK",
+   "mode": "AF5 SPI1_SCK"
+  },
+  "90": {
+   "port": "PB4",
+   "net": "SPI1_MISO",
+   "mode": "AF5 SPI1_MISO"
+  },
+  "91": {
+   "port": "PB5",
+   "net": "SPI1_MOSI",
+   "mode": "AF5 SPI1_MOSI"
+  },
+  "92": {
+   "port": "PB6",
+   "net": "QSPI_NCS",
+   "mode": "AF10 QUADSPI_BK1_NCS"
+  },
+  "93": {
+   "port": "PB7",
+   "net": "IMU_CS",
+   "mode": "GPIO out"
+  },
+  "94": {
+   "port": "BOOT0",
+   "net": "BOOT0",
+   "mode": "BOOT0"
+  },
+  "95": {
+   "port": "PB8",
+   "net": "I2C1_SCL",
+   "mode": "AF4 I2C1_SCL"
+  },
+  "96": {
+   "port": "PB9",
+   "net": "I2C1_SDA",
+   "mode": "AF4 I2C1_SDA"
+  },
+  "97": {
+   "port": "PE0",
+   "net": "NC",
+   "mode": "NC (firmware: analog or driven low for sentinels)"
+  },
+  "98": {
+   "port": "PE1",
+   "net": "IMU_INT1",
+   "mode": "GPIO in (polled)"
+  },
+  "99": {
+   "port": "VSS",
+   "net": "GND",
+   "mode": "VSS"
+  },
+  "100": {
+   "port": "VDD",
+   "net": "3V3",
+   "mode": "VDD"
+  }
+ },
+ "changed_from_r7": {
+  "7": {
+   "port": "PC13",
+   "r7": "CAM_UART_OE",
+   "r8": "BUZZ_DRV",
+   "mode": "GPIO out",
+   "exti": "-"
+  },
+  "28": {
+   "port": "PA4",
+   "r7": "NC",
+   "r8": "BAT_FAULT_N",
+   "mode": "GPIO in",
+   "exti": "EXTI4"
+  },
+  "29": {
+   "port": "PA5",
+   "r7": "BUZZ_DRV",
+   "r8": "LOGIC_SOURCE_ST",
+   "mode": "GPIO in",
+   "exti": "EXTI5"
+  },
+  "31": {
+   "port": "PA7",
+   "r7": "NC",
+   "r8": "CAM_UART_OE",
+   "mode": "GPIO out",
+   "exti": "-"
+  },
+  "37": {
+   "port": "PE7",
+   "r7": "LED_YEL",
+   "r8": "CAM_MCU_RX",
+   "mode": "AF7 UART7_RX",
+   "exti": "-"
+  },
+  "38": {
+   "port": "PE8",
+   "r7": "LED_RED",
+   "r8": "CAM_MCU_TX",
+   "mode": "AF7 UART7_TX",
+   "exti": "-"
+  },
+  "39": {
+   "port": "PE9",
+   "r7": "NC",
+   "r8": "RADIO_NRST",
+   "mode": "GPIO out (push-pull)",
+   "exti": "-"
+  },
+  "41": {
+   "port": "PE11",
+   "r7": "NC",
+   "r8": "CAM_FAULT_N",
+   "mode": "GPIO in",
+   "exti": "EXTI11"
+  },
+  "42": {
+   "port": "PE12",
+   "r7": "NC",
+   "r8": "CAM_PWR_EN",
+   "mode": "GPIO out",
+   "exti": "-"
+  },
+  "45": {
+   "port": "PE15",
+   "r7": "RADIO_RXEN",
+   "r8": "RADIO_DIO1",
+   "mode": "GPIO in, EXTI15",
+   "exti": "EXTI15"
+  },
+  "46": {
+   "port": "PB10",
+   "r7": "CAM_MCU_TX",
+   "r8": "RADIO_SCK_MCU",
+   "mode": "AF5 SPI2_SCK",
+   "exti": "-"
+  },
+  "47": {
+   "port": "PB11",
+   "r7": "CAM_MCU_RX",
+   "r8": "RADIO_NSS",
+   "mode": "GPIO out (software NSS)",
+   "exti": "-"
+  },
+  "51": {
+   "port": "PB12",
+   "r7": "RADIO_NSS",
+   "r8": "NC",
+   "mode": "NC (firmware: analog)",
+   "exti": "-"
+  },
+  "52": {
+   "port": "PB13",
+   "r7": "RADIO_SCK_MCU",
+   "r8": "NC",
+   "mode": "NC (firmware: analog)",
+   "exti": "-"
+  },
+  "53": {
+   "port": "PB14",
+   "r7": "RADIO_MISO_MCU",
+   "r8": "RADIO_MOSI_MCU",
+   "mode": "AF5 SPI2_MISO pin, MOSI function with SPI_CFG2.IOSWP=1",
+   "exti": "-"
+  },
+  "54": {
+   "port": "PB15",
+   "r7": "RADIO_MOSI_MCU",
+   "r8": "RADIO_MISO_MCU",
+   "mode": "AF5 SPI2_MOSI pin, MISO function with SPI_CFG2.IOSWP=1",
+   "exti": "-"
+  },
+  "56": {
+   "port": "PD9",
+   "r7": "RADIO_NRST",
+   "r8": "RADIO_RXEN",
+   "mode": "GPIO out",
+   "exti": "-"
+  },
+  "57": {
+   "port": "PD10",
+   "r7": "RADIO_DIO1",
+   "r8": "NC",
+   "mode": "NC (firmware: analog)",
+   "exti": "-"
+  },
+  "61": {
+   "port": "PD14",
+   "r7": "GNSS_TP_MCU",
+   "r8": "GNSS_RESET_N",
+   "mode": "GPIO out, open drain",
+   "exti": "-"
+  },
+  "62": {
+   "port": "PD15",
+   "r7": "VBUS_SENSE",
+   "r8": "GNSS_TP_MCU",
+   "mode": "AF2 TIM4_CH4 input capture",
+   "exti": "- (capture, never EXTI15)"
+  },
+  "65": {
+   "port": "PC8",
+   "r7": "GNSS_RESET_N",
+   "r8": "VBUS_SENSE",
+   "mode": "GPIO in",
+   "exti": "EXTI8 (BUSY PD8 polled)"
+  },
+  "81": {
+   "port": "PD0",
+   "r7": "BAT_FAULT_N",
+   "r8": "NC",
+   "mode": "NC (firmware: analog)",
+   "exti": "-"
+  },
+  "82": {
+   "port": "PD1",
+   "r7": "LOGIC_SOURCE_ST",
+   "r8": "NC",
+   "mode": "NC (firmware: analog)",
+   "exti": "-"
+  },
+  "84": {
+   "port": "PD3",
+   "r7": "CAM_PWR_EN",
+   "r8": "NC",
+   "mode": "NC (firmware: analog)",
+   "exti": "-"
+  },
+  "85": {
+   "port": "PD4",
+   "r7": "CAM_FAULT_N",
+   "r8": "NC",
+   "mode": "NC (firmware: analog)",
+   "exti": "-"
+  },
+  "86": {
+   "port": "PD5",
+   "r7": "NC",
+   "r8": "LED_RED",
+   "mode": "GPIO out",
+   "exti": "-"
+  },
+  "88": {
+   "port": "PD7",
+   "r7": "NC",
+   "r8": "LED_YEL",
+   "mode": "GPIO out",
+   "exti": "-"
+  }
+ },
+ "constraints": [
+  "SPI2 (radio): set SPI_CFG2.IOSWP = 1 while SPE = 0, before PB14 / PB15 take AF5, and never assert NSS before that; NSS (PB11) is a software GPIO with R310 (100 k) to 3V3 (D2, D4, D6.1; RM0433 Rev 9 section 50.11.4).",
+  "Radio start order: NSS high, RXEN (PD9) low, then release NRST (PE9 high) and wait for BUSY (PD8) low; call SetDio2AsRfSwitchCtrl, keep RXEN low while transmitting, RampTime >= 200 us, <= +14 dBm on USB power (pass1_electrical section 5.4; M3_R7 pin contract; D6.2).",
+  "BUSY (PD8) is polled: EXTI line 8 belongs to VBUS_SENSE (PC8) (D6; RM0433 section 12.3).",
+  "EXTI: 4 BAT_FAULT_N (PA4), 5 LOGIC_SOURCE_ST (PA5), 6 USB_FAULT_N (PD6), 8 VBUS_SENSE (PC8), 11 CAM_FAULT_N (PE11), 14 PULLPIN (PC14), 15 RADIO_DIO1 (PE15); the EXTI9_5 and EXTI15_10 handlers check each pending bit (D6).",
+  "GNSS TIMEPULSE (PD15) is read by TIM4_CH4 input capture (AF2), never EXTI15 (DIO1's line); GNSS RESET_N is PD14, open drain (D2, D6).",
+  "Camera UART is UART7: TX PE8, RX PE7 (AF7), no flow control; never AF7 on PE9 (UART7_RTS/DE) or PE10 (CTS); PE10 stays NC; keep CAM_UART_OE (PA7) low until the camera is powered and UART7 is set up (D2, D6.3, D6.7).",
+  "Lock PE4 (GPIOE_LCKR) before any other GPIOE set-up; SPI4 is never enabled; PE11 / PE12 are GPIO only (D6.4).",
+  "BUZZ_DRV is PC13: drive the buzzer (MLT-5020, 4.0 +- 0.2 kHz, Huaneng datasheet item 5) by GPIO toggling (a timer interrupt, or timer-triggered DMA to BSRR), never a DC level on the coil, never RTC_OUT / ALARM / CALIB / TAMP / TS on PC13; the pin is limited to 2 MHz (D27; DS12110 Rev 11 Table 53 note 2).",
+  "PA4 / PA5 / PA7 are GPIO with internal pulls off (external pulls exist) and are not ADC inputs (D6.6).",
+  "Pins the ROM bootloader drives carry only the D5 allow-list (PA2 SERVO3_MCU, PB10 RADIO_SCK_MCU, PB14 RADIO_MOSI_MCU, PA11 / PA12 USB, PB6 QSPI_NCS, PB9 I2C1_SDA) and LEDs; PA6, PA8, PA9, PA10, PC9, PC11 and PE13 are NC (D5).",
+  "Unchanged from R7: the pyro gate and sense pins, the servo pins and the sentinels (check_actuators); fire pulses end at 20 ms; neutral is the first servo output after any reset (REQUIREMENTS F6, F7).",
+  "Before any jump to the ROM bootloader (the only way in: BOOT0 is tied low by R5 and is not on J2, so AN2606 Table 2 pattern 10 needs BOOT0 = 1 and cannot be selected), in this order: (1) drive PE4 (PYRO1_GATE_N) low (GPIOE_LCKR freezes PE4's configuration registers, not its output data, RM0433 section 11.4.8); (2) put the SX1262 to sleep (the radio is still out of reset, so BUSY can go low) and drive RADIO_NRST (PE9) low; (3) last, reset GPIOE through RCC_AHB4RSTR, which clears the lock and returns PE4 and PE9 to analog, so R127 holds the gate off and R311 holds NRST low in the bootloader (without that reset, keep PE4 driven low and return PE9 to analog mode). Never reset GPIOE before step 2: it returns PE9 to analog, R311 asserts NRST, the SX1262 holds BUSY high in reset, and a driver that waits for BUSY low before SetSleep hangs, so the jump is never made (fail-safe, but the order matters; fix pass 3, R8P3-RF-01). AN2606 Rev 70 Table 135 configures only the bootloader's own interface pins, so PE4 and PE9 would otherwise keep their last application state: a jump made with PE4 high would hold an armed gate on for as long as the bootloader runs, outside the application's 20 ms fire limit (Inference). NSS stays high through R310, so the loader-capture safety of D2 / D5 holds either way; the \"radio cannot transmit in the bootloader\" property of F10 and the gate held off there rest on this step (D6.8; fix pass 1, R8P1-REQUIREMENTS-02; fix pass 2, R8P2-PYRO-03; bench: ORDERING section 5, the bootloader repeat of the radio-reset step)."
+ ],
+ "imu": {
+  "part": "U4 LSM6DSV320X",
+  "face": "B",
+  "rotation": 0.0,
+  "at_mm": [
+   10.0,
+   53.8
+  ],
+  "pad1_offset_mm": [
+   -1.21,
+   0.75
+  ],
+  "axes": "+X_imu = +x_board, +Y_imu = +y_board (forward), +Z_imu out of the bottom face (M3_R5 section 3; unchanged: bottom face, rotation 0, pad 1 at (-1.21, +0.75) mm as in R5 and R7)",
+  "roll": "+gyro_Y (right-handed about +y_board as M3_R5 section 3); thrust reads +a_Y",
+  "lever_arm_mm": {
+   "x": -13.0,
+   "z": "about -2.06 (model-box centre, bottom face)",
+   "note": "R7 +13.0 / -2.06: the centripetal term on a_X changes sign (R8: +omega^2 x 13.0 mm toward +x_board, 1.38 g at 1850 deg/s)"
+  }
+ }
+}

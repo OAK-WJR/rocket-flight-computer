@@ -1,0 +1,23 @@
+ref	x	y	rot	side
+# spike (d) placement overrides on top of the seed (partial/b0_place_final.tsv); every row is a proposal for r8_place.tsv
+# RF interface resistors at the MCU end: >= 5 mm from U1 courtyard, nearer U1 than the module (SERIES / D4), on the bus lanes
+R306	18.80	29.60	90	F
+R315	22.60	29.50	90	F
+R310	24.10	29.50	-90	F
+R313	25.10	29.50	90	F
+# strip small parts nudged clear of the fence row (D16): R305 0.13 mm aft, C300 0.08 mm aft; R312 under the RXEN lane
+R305	7.11	22.32	-90	F
+C300	10.88	22.54	180	F
+R312	25.80	7.15	90	F
+# F10 (D17): the camera eFuse output test pad TP71 (restricted) moved >= 5 mm from FB31 / C310 / U31, to a spot clear
+# of every bottom courtyard, 1.0 mm from other pads (TP rule) and 5 mm from every RF courtyard (search, RESULT.md). The
+# nearer legal spot (30.8, 40.8) is left free: it lies in the B.Cu corridor under U1 that CAM_FAULT_N / CAM_PWR_EN need.
+# Step 4 re-places the camera supply block and gives TP71 its final home.
+TP71	33.60	50.00	0	B
+# status cluster (D3 primary: LEDs on the west edge, top, LED_RED aft of LED_YEL), with the SWD pad J2 moved to the
+# west edge to make room (the seed's J2 at (9.5, 42.6) sits across both LED lanes)
+J2	2.35	42.75	-90	F
+R32	11.10	41.80	180	F
+LED1	6.60	41.80	0	F
+R33	11.30	44.00	180	F
+LED2	6.60	44.00	180	F

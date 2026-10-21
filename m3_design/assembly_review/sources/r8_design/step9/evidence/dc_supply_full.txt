@@ -1,0 +1,140 @@
+BAT_IN: C89:1 -> U9:5, grid 0.1 mm, 82474 free cells, CG 2314 iterations, residual 9.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 17.83 mOhm; at 1.0 A: drop 17.8 mV, copper loss 0.018 W
+  F.Cu   carries    0 % at mid-path; peak 0.51 A/mm at (24.85, 105.45)
+  In2.Cu carries    0 % at mid-path; peak 0.11 A/mm at (26.05, 106.95)
+  B.Cu   carries  100 % at mid-path; peak 3.42 A/mm at (41.15, 87.25)
+BAT_IN: C95:1 -> U9:5, grid 0.1 mm, 82474 free cells, CG 2333 iterations, residual 9.8e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 17.89 mOhm; at 1.0 A: drop 17.9 mV, copper loss 0.018 W
+  F.Cu   carries    0 % at mid-path; peak 0.65 A/mm at (26.15, 105.45)
+  In2.Cu carries    0 % at mid-path; peak 0.10 A/mm at (21.25, 100.95)
+  B.Cu   carries  100 % at mid-path; peak 3.42 A/mm at (41.15, 87.25)
+BAT_IN: J1:1 -> D8:1, grid 0.1 mm, 80145 free cells, CG 2053 iterations, residual 1e-10
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 0.30 mOhm; at 1.0 A: drop 0.3 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.06 A/mm at (27.75, 108.55)
+  In2.Cu carries    0 % at mid-path; peak 0.11 A/mm at (26.15, 105.55)
+  B.Cu   carries  100 % at mid-path; peak 0.30 A/mm at (31.85, 109.05)
+BAT_IN: J1:1 -> U9:5, grid 0.1 mm, 80640 free cells, CG 1969 iterations, residual 9.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 17.26 mOhm; at 1.0 A: drop 17.3 mV, copper loss 0.017 W
+  F.Cu   carries    0 % at mid-path; peak 0.05 A/mm at (27.75, 108.55)
+  In2.Cu carries    0 % at mid-path; peak 0.10 A/mm at (26.15, 105.55)
+  B.Cu   carries  100 % at mid-path; peak 3.42 A/mm at (41.15, 87.25)
+CAM_5V: L3:2 -> J9:1, grid 0.1 mm, 2297 free cells, CG 620 iterations, residual 7.6e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 2.72 mOhm; at 1.0 A: drop 2.7 mV, copper loss 0.003 W
+  F.Cu   carries    0 % at mid-path; peak 3.47 A/mm at (40.73, 41.38)
+  B.Cu   carries    0 % at mid-path; peak 3.19 A/mm at (40.73, 41.38)
+CAM_5V: U13:1 -> R104:1, grid 0.1 mm, 2751 free cells, CG 683 iterations, residual 9.6e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 16.12 mOhm; at 0.01 A: drop 0.2 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.00 A/mm at (40.33, 37.97)
+  B.Cu   carries  100 % at mid-path; peak 0.05 A/mm at (40.73, 47.77)
+RAW_ACT: Q121:5,6,7,8,9 -> J124:2, grid 0.1 mm, 111385 free cells, CG 2065 iterations, residual 9.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 0.44 mOhm; at 7.7 A: drop 3.4 mV, copper loss 0.026 W
+  F.Cu   carries   36 % at mid-path; peak 1.54 A/mm at (7.35, 93.1)
+  In2.Cu carries   24 % at mid-path; peak 1.02 A/mm at (5.45, 99.7)
+  B.Cu   carries   40 % at mid-path; peak 2.08 A/mm at (5.45, 99.8)
+RAW_ACT: Q121:5,6,7,8,9 -> R177:1, grid 0.1 mm, 112927 free cells, CG 2236 iterations, residual 9.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 8.89 mOhm; at 0.001 A: drop 0.0 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.00 A/mm at (15.75, 88.0)
+  In2.Cu carries    0 % at mid-path; peak 0.00 A/mm at (23.45, 81.4)
+  B.Cu   carries  100 % at mid-path; peak 0.00 A/mm at (24.15, 70.8)
+RAW_PROTECTED: U9:6 -> TP81:1, grid 0.1 mm, 6938 free cells, CG 2143 iterations, residual 9.7e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 9.77 mOhm; at 1.0 A: drop 9.8 mV, copper loss 0.010 W
+  F.Cu   carries    0 % at mid-path; peak 0.00 A/mm at (42.28, 47.5)
+  B.Cu   carries  100 % at mid-path; peak 3.53 A/mm at (41.68, 83.8)
+RAW_PROTECTED: U9:6 -> U11:2, grid 0.1 mm, 7119 free cells, CG 2161 iterations, residual 9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 47.29 mOhm; at 0.5 A: drop 23.6 mV, copper loss 0.012 W
+  F.Cu   carries  100 % at mid-path; peak 2.09 A/mm at (35.38, 62.5)
+  B.Cu   carries    0 % at mid-path; peak 2.13 A/mm at (41.78, 83.7)
+RAW_PROTECTED: U9:6 -> U7:3,4, grid 0.1 mm, 7143 free cells, CG 2156 iterations, residual 8e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 76.34 mOhm; at 1.0 A: drop 76.3 mV, copper loss 0.076 W
+  F.Cu   carries  100 % at mid-path; peak 3.69 A/mm at (42.18, 25.6)
+  B.Cu   carries    0 % at mid-path; peak 4.26 A/mm at (41.78, 83.7)
+USB_LIMITED: U10:6 -> U11:7, grid 0.1 mm, 2349 free cells, CG 775 iterations, residual 9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 52.61 mOhm; at 0.5 A: drop 26.3 mV, copper loss 0.013 W
+  F.Cu   carries    0 % at mid-path; peak 1.89 A/mm at (29.9, 54.0)
+  B.Cu   carries  100 % at mid-path; peak 2.20 A/mm at (31.2, 55.3)
+3V3: L1:2 -> C100:1, grid 0.1 mm, 155510 free cells, CG 3555 iterations, residual 1e-10
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 18.36 mOhm; at 0.1 A: drop 1.8 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 1.00 A/mm at (33.95, 43.1)
+  In2.Cu carries    0 % at mid-path; peak 0.28 A/mm at (34.35, 69.6)
+  B.Cu   carries  100 % at mid-path; peak 0.33 A/mm at (34.35, 69.7)
+3V3: L1:2 -> C9:1, grid 0.1 mm, 155339 free cells, CG 3598 iterations, residual 9.8e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 1.95 mOhm; at 0.1 A: drop 0.2 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.00 A/mm at (10.05, 71.2)
+  In2.Cu carries    0 % at mid-path; peak 0.00 A/mm at (8.55, 30.9)
+  B.Cu   carries  100 % at mid-path; peak 0.19 A/mm at (44.55, 62.6)
+3V3: L1:2 -> FB30:1, grid 0.1 mm, 155493 free cells, CG 3540 iterations, residual 9.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 16.74 mOhm; at 0.1 A: drop 1.7 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.46 A/mm at (12.25, 24.4)
+  In2.Cu carries    0 % at mid-path; peak 0.28 A/mm at (34.35, 69.6)
+  B.Cu   carries  100 % at mid-path; peak 0.33 A/mm at (34.35, 69.7)
+3V3: L1:2 -> FB31:1, grid 0.1 mm, 155493 free cells, CG 3559 iterations, residual 9.8e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 18.02 mOhm; at 0.1 A: drop 1.8 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.40 A/mm at (35.05, 24.3)
+  In2.Cu carries    0 % at mid-path; peak 0.29 A/mm at (34.95, 24.4)
+  B.Cu   carries  100 % at mid-path; peak 0.33 A/mm at (34.35, 69.7)
+3V3: L1:2 -> R164:1, grid 0.1 mm, 155465 free cells, CG 3478 iterations, residual 9.8e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 13.57 mOhm; at 0.1 A: drop 1.4 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.00 A/mm at (10.05, 71.2)
+  In2.Cu carries    0 % at mid-path; peak 0.28 A/mm at (34.35, 69.6)
+  B.Cu   carries  100 % at mid-path; peak 0.47 A/mm at (22.35, 59.7)
+3V3: L1:2 -> U1:100, grid 0.1 mm, 155490 free cells, CG 3545 iterations, residual 9.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 16.20 mOhm; at 0.1 A: drop 1.6 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.63 A/mm at (14.15, 51.0)
+  In2.Cu carries    0 % at mid-path; peak 0.28 A/mm at (34.35, 69.6)
+  B.Cu   carries  100 % at mid-path; peak 0.33 A/mm at (34.35, 69.7)
+3V3: L1:2 -> U1:27, grid 0.1 mm, 155490 free cells, CG 3527 iterations, residual 9.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 15.29 mOhm; at 0.1 A: drop 1.5 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.63 A/mm at (29.25, 50.5)
+  In2.Cu carries    0 % at mid-path; peak 0.28 A/mm at (34.35, 69.6)
+  B.Cu   carries  100 % at mid-path; peak 0.33 A/mm at (34.35, 69.7)
+3V3: L1:2 -> U1:75, grid 0.1 mm, 155489 free cells, CG 3509 iterations, residual 9.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 16.17 mOhm; at 0.1 A: drop 1.6 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.63 A/mm at (17.05, 38.7)
+  In2.Cu carries    0 % at mid-path; peak 0.28 A/mm at (34.35, 69.6)
+  B.Cu   carries  100 % at mid-path; peak 0.33 A/mm at (34.35, 69.7)
+3V3: L1:2 -> U3:8, grid 0.1 mm, 155390 free cells, CG 3549 iterations, residual 9.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 18.85 mOhm; at 0.1 A: drop 1.9 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.00 A/mm at (10.05, 71.2)
+  In2.Cu carries    0 % at mid-path; peak 0.28 A/mm at (34.35, 69.6)
+  B.Cu   carries  100 % at mid-path; peak 1.00 A/mm at (28.65, 45.1)
+3V3A: U4:5 -> C31:1, grid 0.1 mm, 2065 free cells, CG 813 iterations, residual 7.1e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 12.65 mOhm; at 0.01 A: drop 0.1 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.00 A/mm at (26.48, 52.05)
+  B.Cu   carries  100 % at mid-path; peak 0.06 A/mm at (9.58, 51.55)
+3V3A: U4:8 -> C31:1, grid 0.1 mm, 2062 free cells, CG 814 iterations, residual 8.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 1.92 mOhm; at 0.01 A: drop 0.0 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.00 A/mm at (15.18, 62.35)
+  B.Cu   carries  100 % at mid-path; peak 0.04 A/mm at (12.38, 53.15)
+VLOGIC: U11:1 -> C99:1, grid 0.1 mm, 2427 free cells, CG 642 iterations, residual 9.3e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 1.91 mOhm; at 0.5 A: drop 1.0 mV, copper loss 0.000 W
+  F.Cu   carries    0 % at mid-path; peak 0.00 A/mm at (36.1, 69.18)
+  B.Cu   carries  100 % at mid-path; peak 1.45 A/mm at (36.2, 60.68)
+VLOGIC: C84:1 -> U2:2,3, grid 0.1 mm, 1539 free cells, CG 530 iterations, residual 8.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 3.01 mOhm; at 0.5 A: drop 1.5 mV, copper loss 0.001 W
+  F.Cu   carries    0 % at mid-path; peak 1.72 A/mm at (35.5, 66.58)
+  B.Cu   carries    0 % at mid-path; peak 1.97 A/mm at (35.5, 66.58)

@@ -6,7 +6,7 @@
 	(title_block
 		(title "09 | Camera UART, separate supply domains")
 		(date "2026-10-12")
-		(rev "M3-ASSY-R7")
+		(rev "M3-ASSY-R8")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -1670,7 +1670,7 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 5055f561-cefb-55e6-a83f-11b078a580e3))
-	(text "PB10/pin46 USART3_TX and PB11/pin47 USART3_RX use AF7. PC13/pin7 controls OE as GPIO."
+	(text "R8: PE8/pin38 UART7_TX and PE7/pin37 UART7_RX use AF7, no flow control (never AF7 on PE9 or PE10); off the ROM loader's USART3. PA7/pin31 controls OE as GPIO."
 		(at 20.32 231.14 0)
 		(effects
 			(font

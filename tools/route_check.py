@@ -2,8 +2,12 @@
 """Routing hygiene gate: the clean-routing rules of AGENTS.md §3 and the owner's acceptance list, on every track and
 via of the board (the review pass-2 geometry scan, sources/r7_review/pass2_routing_geometry.md §2, made a gate).
 
-usage: <KiCad python3> -I tools/route_check.py [board.kicad_pcb] [--report out.json] [--list]
+usage: <KiCad python3> -I tools/route_check.py [board.kicad_pcb] [--report out.json] [--list] [--profile r8|r7]
 exit 0 = no failing instance and no stale allowlist entry (see GATE below)
+
+Profiles: r8 (default, M3-ASSY-R8): ALLOWLIST holds A8 (R8_DECISIONS D9) and the antenna-bias limiter's two
+keep-out-forced detours (D51), LEFTOVERS is empty, and the detour test uses the keep-out-aware baseline (D10, below). r7: the R7 record's lists (route_lists_r7.py) and
+the plain baseline; on board c872a3d3... it reproduces the owner-accepted R7 verdict.
 
 Copper is grouped per (layer, net). Track end points within 1 µm form a node. A node is "plain" when exactly two
 track ends meet there and it holds no pad, via or T (another track's body); a chain is a run of segments through
@@ -67,7 +71,11 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
                           points: duplicate copper); one instance per independent loop
     detour                a net without a pour whose track copper is longer than DETOUR_MAX (1.6) x the octilinear
                           minimum spanning tree of its pad centres and more than DETOUR_SLACK (2 mm) longer than it
-                          (for a two-pad net: the copper path against the octilinear pad-to-pad distance)
+                          (for a two-pad net: the copper path against the octilinear pad-to-pad distance); profile r8
+                          (R8_DECISIONS D10): an MST edge that crosses a hard keep-out (closed to tracks on every
+                          copper layer, a module body in MODULE_BODIES, a non-plated or Edge.Cuts hole, the outline)
+                          counts as the shortest octilinear path round it (keepout_mst); each net so judged is
+                          printed with both ratios ("detour baseline (D10)", report key detour_baseline)
     extra_vias            such a net with more layer-changing vias (tracks on two or more layers) than it needs plus
                           VIA_SLACK (2: one crossing, under other copper and back): it needs none when all its pads
                           share a copper layer, one otherwise
@@ -106,7 +114,7 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
                           bridge, that no via stitches)
     pad_pour_cut          a pad joined to a same-net pour (its zone connection, its own or the zone's, is thermal or
                           solid), inside that pour's outline on that layer, that the fill touches when the board is
-                          refilled without its pour-trim keep-outs (rule areas R7_POUR_TRIM_n) but not as saved: a
+                          refilled without its pour-trim keep-outs (rule areas R7_POUR_TRIM_n, R8_POUR_TRIM_*) but not as saved: a
                           trim took the pad's last pour contact (its spokes)
   information only (counted, never gated):
     power_via_no_gnd      a via carrying a power rail's tracks on >= 2 layers with no GND via centre within 1.5 mm
@@ -197,301 +205,77 @@ INFO = ('width_change_junction', 'pad_end_offcentre', 'segment_inside_pad', 'pas
 REMOVABLE = ('local_bump',)      # fix pass 7: from the redraw search (bump_audit), gated on critical nets
 
 # Justified exceptions: (category, net, layer ('via' for via categories, 'net' for detour / extra_vias), (x, y) mm,
-# reason). An entry matches an instance of that category and net within 0.02 mm of (x, y). Every entry needs a measured
-# reason, and an entry that no longer matches fails the gate (a critical_via_no_gnd entry also fails when nognd_audit
-# finds a legal GND via spot for it). M3-ASSY-R7 (sources/r7_review/fix3_F4_handoff.md, fix4_F5_handoff.md):
-# "raster search" = scratch A* over F/B/In2 at 0.05 mm with the net's copper removed, every clearance of the board
-# (m3.kicad_dru incl. the pyro rules, bare test pads 1.0 mm, Tag-Connect 0.508 mm), the power pours kept whole and the
-# crystal kept clear; it does not know the RF strip's fence openings, its GND-only In2 or the module keep-outs.
-_BAND = ('radio band fan-in step out of the via rows: the band vias sit in two columns (x 9.4 / 10.0) on 0.5 mm rows '
-         'and the F.Cu lanes run at 0.4 mm pitch (fixed by RADIO_DIO1\'s lane at y 27.2 and BAT_SW_RETURN 0.175 mm south of '
-         'RADIO_NSS\'s lane), so a lane leaves its via 0.2 mm (BUSY: row 28.2, lane 28.0) or 0.3 mm (MISO_MCU: row 28.7, lane '
-         '28.4) off its row: a 45 deg step of 0.2 / 0.3 mm offset is a tiny jog at any length (the class is offset < 0.25 '
-         'mm or a middle < 0.5 mm: 0.3 mm gives 0.424 mm). The step cannot sit before the 10.0 column (a 9.4-column lane '
-         'on its new row passes the 10.0-column vias 0.075 mm apart; BUSY at y 28.0 at x 10.0 overlaps RADIO_NRST\'s via '
-         '(10.0, 27.7) by 0.025 mm), nor be avoided without re-spacing the via columns or rows (the U1-side columns, '
-         'RADIO_DIO1 and BAT_SW_RETURN with them: a re-layout of the interface band). With every lane on its via row, the '
-         'binding obstacles are D9.1 / D9.2\'s pads (top edge y 30.3: RADIO_NSS\'s lane at y 30.2 would pass them at '
-         '0.025 mm) and the GND via (19.71, 30.51), which that lane would overlap (pass 6, P6-ROUTING_GEOMETRY-03(e)). '
-         'alt_audit re-measures it on every run. '
-         'Fix pass 5 removed the two band staircases (east chamfers lengthened to 1.004 mm; RG-11)')
-_NOGND = ('no legal GND via spot within 1.5 mm on the final board: nognd_audit (below, gated) runs '
-          'm3_design/r7_hygiene.gnd_spots there on every check (GndFit: r7_route.ViaCheck with board rules +0.02 mm '
-          'and no via within 0.15 mm of a GND solder pad, bare test pads 1.02 mm, Tag-Connect 0.528 mm, Pyro D 0.52 mm, '
-          'the 7.7 A corridors; 0.6 and 0.5 mm vias; 0.025 mm grid) and finds none; sliding the signal via along its '
-          'tracks\' axis by up to 0.6 mm opens none either (fix pass 4, fx4/snip/slide.py)')
-_IFACE = ('R7 interface topology (M3_R7 "Interface": west escape to the left-edge B.Cu corridor over In2 GND, the F.Cu '
-          'band forward of the strip, lanes between the modules; the strip admits signals only through its fence '
-          'openings and holds no In2 signal copper, F10 / check_r7)')
-_LIMITER = ('antenna-bias limiter on B.Cu under U30 (M3_R7 "Limiter"): U30.13 / U30.14 are F.Cu pads on the module\'s '
-            'aft row and only GND may cross F.Cu / In1 under the module (U30 keep-out, u-blox IM 4.4), so the net leaves '
-            '1.9 mm aft to a via outside the module and runs back under it on B.Cu')
-_POUR6 = ('fix pass 6 (P6-DOCS-01), a net with a pour: ')
+# reason[, measured dict]). An entry matches an instance of that category and net within 0.02 mm of (x, y). Every entry
+# needs a measured reason, and an entry that no longer matches fails the gate (a critical_via_no_gnd entry also fails
+# when nognd_audit finds a legal GND via spot for it).
+# M3-ASSY-R8 (r8_plan.md section 2; R8_DECISIONS D9, D10, D51): the allowlist and the leftover list start empty. The
+# owner-accepted inherent item that still applies is A8, TP122's in-pad gate via inside the rigid, unmoved CH1 block
+# (D9); the limiter's two keep-out- and pad-row-forced detours (D51, D11's fallback) are for owner acceptance. RADIO_TXEN's loop round U31, R7's other inherent item, is judged on the keep-out-aware detour baseline (D10)
+# and needs no entry. The R7 lists are in route_lists_r7.py (profile r7).
 ALLOWLIST = [
-    ('tiny_jog', 'RADIO_BUSY', 'F.Cu', (9.4, 28.2), _BAND + ' (0.283 mm step)'),
-    ('tiny_jog', 'RADIO_MISO_MCU', 'F.Cu', (10.0, 28.7), _BAND + ' (0.424 mm step)'),
-    ('critical_via_no_gnd', 'RADIO_RXEN', 'via', (23.8, 39.45), _NOGND + '; nearest GND via 2.23 mm'),
-    ('critical_via_no_gnd', 'RADIO_NRST', 'via', (9.3, 50.0), _NOGND + ' (left-edge corridor); nearest 3.18 mm'),
-    ('critical_via_no_gnd', 'RADIO_BUSY', 'via', (9.4, 28.2), _NOGND + ' (band via columns); nearest 1.65 mm'),
-    ('critical_via_no_gnd', 'RADIO_BUSY', 'via', (10.0, 49.5), _NOGND + ' (left-edge corridor); nearest 2.60 mm'),
-    ('critical_via_no_gnd', 'RADIO_MOSI', 'via', (9.4, 29.2), _NOGND + ' (band via columns); nearest 1.65 mm'),
-    ('critical_via_no_gnd', 'RADIO_DIO1', 'via', (10.0, 50.5), _NOGND + ' (left-edge corridor); nearest 3.57 mm'),
-    ('critical_via_no_gnd', 'RADIO_MISO_MCU', 'via', (10.0, 28.7), _NOGND + ' (band via columns); nearest 2.11 mm'),
-    ('critical_via_no_gnd', 'RADIO_MOSI_MCU', 'via', (9.4, 48.5), _NOGND + ' (left-edge corridor); nearest 1.71 mm'),
     ('critical_via_no_gnd', 'PYRO1_GATE', 'via', (20.45, 92.4),
-     'the via sits in TP122\'s 1.5 mm bare test pad (B.Cu), the gate drive\'s test point: a GND via within 1.5 mm of its '
-     'centre would come within 0.45 mm of the pad edge, against the 1.0 mm a bare test pad keeps from foreign copper '
-     '(check_r7; GndFit 1.02 mm), so nognd_audit finds no spot (fix pass 5: the layer change into a pad is now counted). '
-     'The layer change carries no through current: TP122 is a terminal (probe point), the gate is driven on F.Cu; '
-     'nearest GND via 2.93 mm'),
-    ('detour', 'GNSS_RESET_N', 'net', (14.3, 54.5),
-     _IFACE + ': 59.3 mm / 2 vias; the raster search finds 39.3 mm only with a 28.7 mm In2 run through the 3V3 plane '
-     'and an F.Cu run crossing the strip fence at x 14.8, outside its openings'),
-    ('detour', 'RADIO_DIO1', 'net', (14.3, 50.5),
-     _IFACE + ': 69.1 mm / 4 vias; the raster search finds 48.0 mm / 2 vias only with a 39.8 mm In2 run ending inside '
-     'the strip (In2 carries only GND there)'),
-    ('extra_vias', 'RADIO_DIO1', 'net', (14.3, 50.5), _IFACE + ': 4 vias, as its detour entry'),
-    ('detour', 'RADIO_NRST', 'net', (37.0, 14.0),
-     _IFACE + ' (and R311 beside U31): 85.4 mm / 4 vias; the raster search U1.56 -> U31.3 finds 51.3 mm only with a '
-     '32.1 mm In2 run into the strip'),
-    ('extra_vias', 'RADIO_NRST', 'net', (37.0, 14.0), _IFACE + ': 4 vias, as its detour entry'),
-    ('extra_vias', 'RADIO_NSS', 'net', (24.2, 20.39),
-     _IFACE + ': 58.4 mm / 4 vias; the raster search U1.51 -> U31.14 finds 3 vias only with a 25.2 mm In2 run ending '
-     'inside the strip'),
-    ('extra_vias', 'RADIO_RXEN', 'net', (25.6, 7.43),
-     'fix-pass-2 RXEN route (F.Cu lane x 20.6 between the modules, R312 at U31): 51.9 mm / 4 vias; the raster search '
-     'U1.45 -> U31.10 finds 2 vias only with an 18.2 mm In2 run straight under the 3V3 buck (U2, C7, L1: x 19.6-20.7, '
-     'y 27-44) through the 3V3 plane'),
-    ('detour', 'RADIO_TXEN', 'net', (31.13, 18.95),
-     'U31.19 -> U31.9 are on opposite sides of the module and only GND may cross its pad field on any layer (EBYTE '
-     'manual 4.1; U31_KEEPOUT, B.Cu and In2 under the whole body), so TXEN runs round the module\'s west side on B.Cu '
-     '(M3_R7 exceptions): 25.2 mm / 2 vias; the raster search\'s 12.2 mm path crosses the keep-out'),
-    ('detour', 'GNSS_LNA_EN', 'net', (13.0, 13.3), _LIMITER + ': 7.45 mm for a 3.72 mm pad tree'),
-    ('detour', 'GNSS_VCC_RF', 'net', (9.7, 12.25), _LIMITER + ': 6.2 mm for a 2.61 mm pad tree'),
-    ('extra_vias', 'PYRO1_CONT', 'net', (24.6, 87.2),
-     'net copper 53.33 mm (the rerouted chain R168.1 -> R129.2 47.53 mm): fix pass 4 plane-preserving route '
-     '(r7_polish.pyro1_cont; fix pass 5 drew its F.Cu run S/SE/S): R168.1 on B.Cu at U1, the divider on F.Cu in the pyro '
-     'block, SWCLK/SWDIO and the IMU between; the raster search with every power pour on every layer kept whole '
-     '(3V3/3V3A included), 1.0 mm to PYRO1_GATE_N and every pyro rule finds no route with fewer than 6 vias (fx4/rt/pc8, '
-     'via cost 15); the 4-via route of fix pass 3 cut the In2 3V3 island under U1/U4 (P4-REGRESSION-01); each layer '
-     'change has a GND via within 1.5 mm'),
-    ('extra_vias', 'ARM1_SENSE', 'net', (19.2, 92.4),
-     '63.7 mm / 4 vias: R170.1 on B.Cu at U1, the divider (R133, R180, R175, C129) on F.Cu in the pyro block; the raster '
-     'search R170.1 -> R133.1 (every pyro rule) finds no route with fewer than 4 vias (51.8 mm / 4)'),
-    ('extra_vias', 'QSPI_IO2', 'net', (29.4, 59.5),
-     '33.3 mm / 3 vias: U1.1 (U1\'s right column) to U3.3 (the QSPI flash north of U1) crosses U1\'s right-side escapes '
-     'and the QSPI fan; the raster search finds 31.9 mm / 3 vias at best'),
-    ('detour', 'VCAP1', 'net', (18.2, 45.9),
-     '6.71 mm / 2 vias for 1.37 mm: C19.1 sits on B.Cu under U1 between its escape vias; the raster search finds '
-     'nothing shorter than 5.81 mm / 2 vias (inherited R6; a shorter loop needs C19 moved)'),
-    ('detour', 'VCAP2', 'net', (16.0, 60.8),
-     '12.67 mm / 1 via for 3.0 mm: U1.73 escapes west and C20.1 sits on B.Cu under U1\'s SW corner; the direct via '
-     'spots collide with C17, 3V3, USB_DP\'s via, the SWD lines and TP85 (pass-3 fitprobe) and the raster search '
-     'finds the same west loop at 10.75 mm / 1 via (inherited R6; needs C20 moved next to U1.73, '
-     'P3-ROUTING_QUALITY-05)'),
-    ('detour', 'VBUS', 'net', (6.8, 76.3),
-     '8 pads: J3\'s two VBUS contact groups (F.Cu, 4.8 mm apart) and C83 on F.Cu, C28, D4, R9 and U10 on B.Cu: a '
-     '42.5 mm tree joining both contacts through C28 and the ESD clamp D4 (USB-C input, inherited R6)'),
-    ('extra_vias', 'VBUS', 'net', (6.8, 76.3), 'as its detour entry: 6 vias for F/B pads that interleave'),
-    ('extra_vias', 'RAW_PROTECTED', 'net', (35.7, 85.675),
-     '12 pads, 3 on F.Cu (U9.6, C82.1, D9.1) and 9 on B.Cu from y 27 to y 104 (U11, C97, R92, TP70, TP81, U7, C71, '
-     'R122): a distribution tree whose F and B pads interleave, 7 vias for 143.5 mm (inherited R6 topology)'),
-    # fix pass 6 (P6-DOCS-01): poured nets' chain detours and series layer hops, each with its run's measured length
-    # (measured_check) and, for a chain detour, alt_audit's gated search for a 1-3 segment redraw (none clean)
-    ('chain_detour', '3V3', 'B.Cu', (36.94, 52.65),
-     _POUR6 + 'C7 (U12 / C100): 3V3 from the via (36.94, 52.65) round the south end of C11 (B.Cu, 39.4-40.8, '
-     '53.9-57.3: C11.1 3V3A, C11.2 GND) and back up into C100.1, 14.37 mm for 5.16 (fix pass 7: 16.32, the two local '
-     'bumps at its ends redrawn, P7-ROUTING-01): the north side is closed by 3V3A\'s B.Cu run x 40.1 (y 51.9-54.6), '
-     'which ends in C11.1, so both octilinear two-segment routes cross it; a run between C11\'s two pads (0.65 mm gap) '
-     'is not taken (bump_audit strict); the local-bump search finds no other shorter window (inherited R6; a shorter '
-     'feed needs C100 or C11 moved, or C100.1 its own via into 3V3_In2)', dict(path_mm=14.368)),
-    ('chain_detour', 'GND', 'F.Cu', (14.3, 59.0),
-     _POUR6 + 'U1.74 (VSS) to its GND via (11.3, 59.3), 6.62 mm for 3.12, round 3V3\'s F.Cu run (12.6-14.3, y 59.5) and '
-     'via (12.6, 59.5), which both two-segment routes cross (inherited R6)', dict(path_mm=6.621)),
-    ('chain_detour', 'GND', 'F.Cu', (16.35, 45.95),
-     _POUR6 + 'U1.49 (VSS) to the GND via (16.35, 43.55) 2.4 mm straight above it: the straight run passes the 3V3 via '
-     '(15.85, 44.25) at 0.075 mm (rule 0.15), so the run goes round it (6.56 mm; inherited R6)', dict(path_mm=6.556)),
-    ('chain_detour', 'GND', 'F.Cu', (27.65, 29.85),
-     _POUR6 + 'GND via (27.65, 29.85) to C99.2, 2.31 mm for 1.78: both two-segment routes cross VLOGIC\'s F.Cu diagonal '
-     '(27.905, 29.25)-(28.505, 29.85); the clean three-segment redraws are longer (2.53 mm)', dict(path_mm=2.308)),
-    ('chain_detour', 'GND', 'B.Cu', (13.7, 80.6),
-     _POUR6 + 'U10.2 to Q123.2, 6.08 mm for 3.42: the two-segment routes cross U10.1 (VBUS) and RAW_ACT\'s via '
-     '(12.6, 81.27) (inherited R6)', dict(path_mm=6.084)),
-    ('chain_detour', 'GND', 'B.Cu', (32.3, 55.7),
-     _POUR6 + 'C23.2 to the GND via (31.5, 53.5), 4.01 mm for 2.53: the two-segment routes cross 3V3\'s B.Cu run to '
-     'C23.1 (31.1-32.1, y 54.5); the clean three-segment redraws are longer (4.05 mm)', dict(path_mm=4.014)),
-    ('chain_detour', 'RAW_ACT', 'F.Cu', (10.4, 64.67),
-     _POUR6 + 'RAW_ACT_SENSE tap (a divider feed, uA) from R177.1 round R182 / R125 to its via (13.7, 65.37), 5.60 mm '
-     'for 3.59: the direct routes cross GND\'s F.Cu (11.37, 64.1-65.1) between R177 and R182, and a via beside R177.1 '
-     'collides with VBUS_SENSE\'s F.Cu diagonal (8.0, 65.9)-(10.9, 63.0) and USB_DM / USB_DP\'s B.Cu at x 10.05 '
-     '(probed, fix pass 6)', dict(path_mm=5.604)),
-    ('chain_detour', 'RAW_ACT', 'F.Cu', (12.6, 81.27),
-     _POUR6 + 'the same tap\'s end from its In2 / F.Cu via (12.6, 81.27) into R6_RAW_ACT_F, 7.11 mm for 5.12: VBUS\'s '
-     'F.Cu run (10.8, 79.95)-(10.8, 81.525)-(11.325, 82.05)-(13.225, 82.05) and C83.1 box the via in (the 0.5 mm2 fill '
-     'fragment round it joins nothing), so the run goes round VBUS\'s via (10.8, 79.95) to the fill west of it; the '
-     'direct routes cross that VBUS copper (inherited R6)', dict(path_mm=7.108)),
-    ('pour_net_hop', '3V3', 'via', (41.0, 77.92),
-     _POUR6 + '3V3 into J2.1 (Tag-Connect; its via-in-pad is M2\'s named exception): on F.Cu the feed crosses SWDIO\'s '
-     'diagonal (33.43, 69.65)-(41.7, 77.92) into J2 and J2\'s 0.508 mm contact rule, so it runs on B.Cu under J2\'s pad '
-     'field between the via (41.0, 77.92) and J2.1\'s via (44.035, 77.92)', dict(path_mm=11.186, vias=2)),
-    ('pour_net_hop', '3V3', 'via', (12.5, 89.2),
-     _POUR6 + '3V3 In2 feed (7.9, 84.6) -> (21.9, 96.125): In2 between x 12.5 and 16.3 holds the BAT_IN In2 fill '
-     '(x < 14) and CAM_FAULT_N\'s and SERVO4_MCU\'s In2 runs (x 14.64-16.0), which an In2 run cannot cross; the 3.8 mm '
-     'F.Cu hop passes over them', dict(path_mm=22.974, vias=2)),
-    ('pour_net_hop', '3V3', 'via', (35.1, 45.025),
-     _POUR6 + '3V3 from B.Cu (33.8, 43.725) to the F.Cu T (36.5, 51.65) through an In2 run in a 3V3_In2 void: on B.Cu '
-     'the run crosses 3V3A\'s B.Cu (36.9-39.4, y 48.1), on F.Cu RAW_PROTECTED\'s diagonal (36.15, 47.9)-(38.05, 49.8)',
-     dict(path_mm=12.316, vias=2)),
-    ('pour_net_hop', 'RAW_ACT', 'via', (13.1, 75.97),
-     _POUR6 + 'RAW_ACT_SENSE tap R177.1 (F.Cu) -> R6_RAW_ACT_F (F.Cu) through B.Cu and In2 (a divider feed, uA): F.Cu '
-     'is closed by LS120.1, D123.1 and 3V3\'s F.Cu runs (x 11-13.4, y 76.5-80.2), B.Cu by the BAT_IN_B pour from '
-     'y 80.9 and Q123 / U10 / R163 (inherited R6)', dict(path_mm=22.291, vias=2)),
-    ('pour_net_hop', 'CAM_5V', 'via', (41.3, 32.425),
-     _POUR6 + 'U13.1 -> C91.1, both B.Cu: the B.Cu route crosses CAM_IO_3V3\'s B.Cu diagonal (42.8, 32.45)-(40.75, 34.5) '
-     'and U13.5 (probed); the 2.4 mm F.Cu hop passes over it (inherited R6)', dict(path_mm=4.614, vias=2)),
-    ('extra_vias', 'VLOGIC', 'net', (18.2, 29.4),
-     '10 pads, 2 on F.Cu (C84.1 at x 7.5, C99.1 at U11) and 8 on B.Cu (U2, C7, C6, TP83, U11, R60): 5 vias for '
-     '66.37 mm (inherited R6 tree; C84, the bulk capacitor, sits 10 mm west of U2; fix pass 5 ended two runs at the U2.2 '
-     '/ U2.3 pad centres, +0.1 mm; fix pass 7 took the 0.6 mm F.Cu peak round D122.2 out, P7-ROUTING-01)'),
-    ('local_bump', 'USB_LIMITED', 'B.Cu', (33.1, 26.15),
-     'fix pass 7: C98.1 (U11\'s input bulk capacitor, B.Cu) to the U11.7 node (30.8, 27.85) leaves the pad\'s top edge NW, '
-     'W, SW round BAT_SW_RETURN\'s via (31.9, 26.325) and comes back S (4.35 mm; inherited R6). The shorter redraws bump_audit '
-     'finds (S, SW past the GND via (32.2, 27.033), W into the node: 3.4 mm) cut the B.Cu GND copper that is R105.2\'s '
-     'only path to that via: R105.2 (GND) leaves the net\'s pad group (r7_polish pad-group check, fix pass 7); between '
-     'that GND via and the BAT_SW_RETURN via there is 0.216 mm, too little for the 0.25 mm run'),
-    ('chain_detour', '3V3A', 'B.Cu', (35.5, 76.54),
-     'fix pass 7 (P7-ROUTING-04 / P7-REGRESSION-02), a net with a pour: the hop from U4.5\'s (VDDIO) via (35.5, 76.54) to '
-     'the U4.8 / C31 / C30 node\'s via (37.4, 76.52), 2.505 mm for 1.908: the GND via (36.5, 76.54), U4.6 / U4.7\'s '
-     'return via, sits on the straight line 1.0 / 0.9 mm from the two, and the IMU\'s GND ties fill the south side, so '
-     'the hop goes round it to the north (NE, E, SE); its gap to that via (0.200 mm) is set by the SE diagonal into the '
-     'east via\'s centre, whose line the via positions fix. A drawing short enough to pass the chain test (E leg '
-     '0.12 mm lower, fix pass 6) only cut that gap to 0.169 mm. Both vias also join the one 3V3A_In2 island: the hop is '
-     'kept as U4.5\'s short path to the 100 nF capacitors at U4.8 (Inference: via-island-via adds about 1 nH)',
-     dict(path_mm=2.505)),
+     'A8 (R8_DECISIONS D9; REQUIREMENTS M2 named exception, inherited from R7 with the rigid CH1 block): the via sits in '
+     'TP122\'s 1.5 mm bare test pad (B.Cu), the gate drive\'s test point; a GND via within 1.5 mm of its centre would '
+     'come within 0.45 mm of the pad edge, against the 1.0 mm a bare test pad keeps from foreign copper (check_r7 / '
+     'check_r8 foreign_clearances; GndFit 1.02 mm), so nognd_audit finds no spot (re-run on every check). The layer '
+     'change carries no through current: TP122 is a terminal (probe point) and the gate is driven on F.Cu. Curing it '
+     'moves the via inside the R4-tuned, coated block: a new spacing and leakage qualification (priority 1) for a '
+     'priority-2 gain (D9). Nearest GND via on R7: 2.93 mm'),
+    # R8_DECISIONS D51 (D11's agreed fallback, improved): the antenna-bias limiter's DC copper is redrawn; two keep-out-
+    # and pad-row-forced detours remain, for owner acceptance with TXEN's and A8's class. Fix pass 1 (D87, R8P1-DFM-01):
+    # the vias are back at R7's y 8.3, clear of the module's T-shaped paste extensions (y 8.70-10.10), which the step-6
+    # spot y 8.9 printed paste over; the figures below are re-measured for that geometry (R7's 7.45 / 6.2 mm).
+    ('detour', 'GNSS_LNA_EN', 'net', (13.0, 13.3),
+     'D51: U30\'s LNA_EN pad 13 is F.Cu only, on the module\'s aft pad row (y 9.3-11.1, 1.1 mm pitch, 0.3 mm gaps), and '
+     'R303 / Q31 sit on B.Cu under the module (rigid strip parts, D15); U30_KEEPOUT (m3.kicad_dru: F.Cu and In1 closed '
+     'to non-GND tracks and vias from y 11.25; u-blox MAX-F10S integration manual 4.4) bars the layer change under the '
+     'module and the pad row leaves no via spot beside the pad, so the via sits beyond the pad\'s outer end; the module\'s '
+     'T-shaped paste extension (a paste-only pad, y 8.70-10.10) covers the first 0.6 mm past the pad, so the via sits at '
+     'R7\'s (11.51, 8.3), its ring 0.15 mm clear of the aperture (D87; at y 8.9 the hole lay inside it; its rigid GND '
+     'partner (12.61, 8.3) 1.10 mm away) and the copper goes 1.9 mm out and back: 7.65 mm against a 3.72 mm octile MST '
+     '(2.06 x, +3.93 mm; R7 7.45 mm). Via-in-pad is not used (JLC Standard leaves vias unfilled: solder would wick from '
+     'the LGA pad). D10\'s keep-out-aware baseline cannot apply: B.Cu is open to tracks, and the binding obstacle is the '
+     'pad row and its paste (pads never count, D10)'),
+    ('detour', 'GNSS_VCC_RF', 'net', (9.7, 12.25),
+     'D51: as GNSS_LNA_EN: U30\'s VCC_RF pad 14 (F.Cu only, aft pad row) feeds R300 / Q32 on B.Cu under the module; '
+     'U30_KEEPOUT bars the via under the module and the 1.1 mm pad pitch leaves no spot beside the pad, so the via sits '
+     'beyond the pad\'s outer end and its T-shaped paste extension, at R7\'s (10.41, 8.3) (D87; rigid GND partner '
+     '(10.37, 7.08) 1.22 mm away) and the copper goes 1.9 mm out and back: 6.20 mm against a 2.61 mm octile MST (2.37 '
+     'x, +3.59 mm; R7 6.2 mm), R300.1 the Kelvin node of Q32\'s sense (M3_R7 limiter). The via spot is the nearest one '
+     'clear of the paste; D10 cannot apply (B.Cu open, pads never count)'),
 ]
-
-
-# Non-critical leftovers (counted, not gated; REQUIREMENTS M2 review items, P4-DOCS-01): (category, net, layer, (x, y),
-# measured reason). Every non-critical instance of a LEFTOVER_CATS (hygiene) category must have an entry, and an
-# entry that matches nothing fails, as for the allowlist (leftover_check). Filled from the fix-pass-4 searches
-# (sources/r7_review/fix4_F5_handoff.md).
 LEFTOVER_CATS = HYGIENE            # every hygiene category (fix pass 5; was detour / extra_vias / tiny_jog / short_segment)
-_S = ('raster search on the fix-pass-4 board (scratch fx4/det/r3, r4, r5: F/B/In2 at 0.05 mm (r5: 0.1 mm over the '
-      'whole board), the net\'s copper removed, every board clearance incl. the pyro rules, a multi-pad net searched edge '
-      'by edge over the octilinear MST of its pads and summed). The search blocks every power pour on every layer, a '
-      'stricter rule than the board follows (most of these nets run partly through a void of a 3V3 / 3V3A / BAT_IN '
-      'pour on In2, P5-DOCS-01(d)), so "no route" or "the best found" holds under that rule only, not for every route '
-      'the board would take')
-LEFTOVERS = [
-    ('detour', 'BAT_FAULT_N', 'net', (11.975, 43.1),
-     '39.97 mm / 4 vias for a 22.47 mm pad tree (R89.2 / U9.4 on F.Cu, TP85 on B.Cu, U1.81 on F.Cu; inherited R6); ' + _S +
-     ': 31.4 mm / 2 vias, but only with a forced 0.125 mm jog (B.Cu between VLOGIC at x 11.9 and QSPI_IO0\'s via '
-     '(12.9, 44.4): the corridor needs x <= 12.365 by the via and x >= 12.385 by VLOGIC) and a via hairpin under U1.81 '
-     '(TP87\'s 1.0 mm bare-pad keep-out and C20 leave no via spot on the pin\'s line): kept'),
-    ('extra_vias', 'BAT_FAULT_N', 'net', (11.975, 43.1), 'as its detour entry: 4 vias; the search\'s 2-via route needs '
-     'the forced jog and the hairpin'),
-    ('detour', 'BAT_SW_RETURN', 'net', (15.38, 110.4),
-     '160.34 mm / 5 vias for 76.28 mm (J1.4, the external switch return, to R165.1 at (3.3, 39.1): up the east edge, '
-     'across the forward end and down the west side; inherited R6); ' + _S + ' (det/r5): 177.7 mm / 7 vias, longer; the '
-     'direct west side is closed by the 7.7 A BAT_IN / RAW_ACT pours'),
-    ('extra_vias', 'BAT_SW_RETURN', 'net', (15.38, 110.4), 'as its detour entry: the search\'s best has 7 vias'),
-    ('extra_vias', 'BAT_SW_SOURCE', 'net', (20.46, 110.4),
-     '129.2 mm / 7 vias (J1.3, the external switch source, to R80.2 at (17.1, 24.5), up the east edge; inherited R6); '
-     + _S + ' (det/r5): 124.9 mm / 6 vias, with six F/B hops along the strip\'s forward edge (y 23.9-25.1): one via less '
-     'for as many layer hops, not simpler'),
-    ('detour', 'BUZZ_OUT', 'net', (14.87, 79.8),
-     '22.55 mm / 1 via for an 8.76 mm pad tree (D123, LS120 on F.Cu, Q123 on B.Cu); ' + _S + ': 21.7 mm / 1 via, the '
-     'present route'),
-    ('detour', 'CAM_EN', 'net', (36.7, 84.975),
-     '6.95 mm / 1 via for 3.73 mm (R74.2 / R75.1 on F.Cu, U7.2 on B.Cu); its B.Cu leg threads C71.1 / U7.1 (fix pass 5: '
-     'W, S, SW instead of the 0.293 mm step, +0.18 mm); ' + _S + ': 7.45 mm / 1 via, longer'),
-    ('detour', 'CAM_FAULT_N', 'net', (20.8, 96.175),
-     '92.46 mm / 5 vias for 53.69 mm (R76.2 and R77.1 by the camera eFuse, U1.85; across the pyro block and under the IMU '
-     'area; inherited R6; fix pass 5 straightened its In2 run: its tiny step and its staircase went; fix pass 6 moved its '
-     'In2 run back to x 14.64 through its via down to y 91.85, one 0.78 mm step onto x 15.19, so SERVO4_MCU\'s run is '
-     '0.67-0.71 mm away again, -0.55 mm; fix pass 7 took its In2 bump between the vias (16.04, 67.46) and (19.82, 62.35) '
-     'out, -2.61 mm); ' + _S +
-     ' (fix-pass-4 copper): 78.9 mm but 7 vias'),
-    ('extra_vias', 'CAM_FAULT_N', 'net', (20.8, 96.175), 'as its detour entry: the shorter search route has 7 vias'),
-    ('extra_vias', 'CAM_MCU_RX', 'net', (17.35, 45.95),
-     '32.81 mm / 6 vias; its F.Cu hop (25.85-28.25, y 42.35) between two In2 runs passes over a 3V3_In2 fill bridge (fix '
-     'pass 5, measured: on In2 the same run clears every track but cuts that fill); ' + _S + ': 32.1 mm / 5 vias, by four '
-     'In2 / F.Cu alternations along y 42.3 under the QSPI flash (In2 runs 4.6 and 2.9 mm, 0.05-0.1 mm grid jogs): one '
-     'via less for two more In2 hops, not simpler'),
-    ('detour', 'CAM_MCU_TX', 'net', (17.85, 45.95),
-     '65.87 mm / 5 vias; ' + _S + ': 66.0 mm / 5 vias, the present route (fix pass 3: the 50.8 mm / 3-via candidate cuts '
-     'the In2 3V3 plane at the buck output, L1.2 -> U1.75 14.25 -> 29.66 mOhm)'),
-    ('extra_vias', 'CAM_MCU_TX', 'net', (17.85, 45.95), 'as its detour entry: the search\'s best also has 5 vias'),
-    ('detour', 'CAM_PWR_EN', 'net', (36.7, 86.625),
-     '81.9 mm / 8 vias (R74.1 by the camera eFuse to U1.84; no F/B-only route exists, fix pass 3); ' + _S + ': 59.1 mm / 8 '
-     'vias, hopping F / In2 / B / F / B / F / B / In2 / F through the pyro block and under U1 (det/r3/CAM_PWR_EN_0): '
-     'shorter, as many vias and more layer hops; the corridor trade-off with the SWD lines is P3-REQUIREMENTS-01 '
-     'option (b), for the owner'),
-    ('extra_vias', 'CAM_PWR_EN', 'net', (36.7, 86.625), 'as its detour entry: the search\'s best also has 8 vias'),
-    ('extra_vias', 'CAM_UART_OE', 'net', (42.175, 45.7),
-     'rerouted in fix pass 4 (r7_polish.reroutes): 44.1 mm / 6 vias -> 30.68 mm / 4 vias; ' + _S + ': 33.1 mm / 5 vias. '
-     'R102.1, U12.6 and TP91 are on B.Cu, U1.7 on F.Cu, and the run must cross SWCLK\'s F.Cu diagonal (a 2.7 mm In2 hop)'),
-    ('extra_vias', 'LED_YEL', 'net', (40.7, 29.4),
-     '36.26 mm / 3 vias (R33.1 to U1.37, both F.Cu, across the U1-side radio lanes); ' + _S + ': 36.0 mm / 3 vias, the '
-     'present route'),
-    ('extra_vias', 'LOGIC_SOURCE_ST', 'net', (30.725, 38.6),
-     '58.31 mm / 11 vias (U11.9 / R91.2 and TP87 on B.Cu, U1.82 on F.Cu; inherited R6; fix pass 5 took the step across '
-     'its via (30.725, 37.5) out); its F.Cu hop (16.42-18.78, y 48.2) between two In2 runs passes over a 3V3_In2 fill '
-     'bridge (measured: on In2 it clears every track but cuts that fill); ' + _S + ': 55.5 mm / 10 vias with 21 mm of '
-     'In2 in four runs: one via less, not simpler'),
-    ('extra_vias', 'NRST', 'net', (29.4, 47.92),
-     'J2 branch rerouted in fix pass 4 (r7_polish.reroutes; off In1): 54.33 mm / 6 vias -> 46.11 mm / 4 vias; ' + _S +
-     ': 45.4 mm / 5 vias. C24.1 is on B.Cu, U1.14 and J2.3 on F.Cu, and the J2 branch crosses SWCLK and the SPI1 area'),
-    ('detour', 'RAW_ACT_SENSE', 'net', (13.75, 67.4),
-     '38.93 mm / 2 vias for a 24.05 mm pad tree (C122, R124, R125, R182 by the servo feed, R172 at U1); ' + _S + ': '
-     '41.4 mm / 2 vias, longer'),
-    ('extra_vias', 'SERVO1_MCU', 'net', (31.05, 81.25),
-     '65.32 mm / 5 vias (D121 / R154 / R150 on B.Cu, U1.22 on F.Cu); ' + _S + ': 62.2 mm / 4 vias, with 14.6 mm of In2 in '
-     'two runs under U1\'s SE corner and the SPI1 area: one via less for two In2 runs, not simpler'),
-    ('extra_vias', 'SERVO2_MCU', 'net', (32.95, 81.25),
-     '76.72 mm / 9 vias (D121, R155, R151 by the servo header on B.Cu, U1.23 on F.Cu; inherited R6). Measured blockers '
-     '(fix pass 5, and pass-5 review): its F.Cu hairpin between vias (28.1, 58.6) and (30.1, 60.8) hops C13.2\'s B.Cu GND '
-     'tie (x 29.4, y 57.82-59.7): the straight B.Cu run at y 58.6 collides with it, and GndFit finds no legal GND via spot '
-     'within 1 mm of C13.2 north of that row to shorten the tie; its In2 hop (26.3, 67.4) -> (24.4, 69.3) crosses '
-     'SPI1_SCK\'s B.Cu diagonal; ' + _S + ': the header legs 21.4 mm / 2 vias and 1.8 mm, and no route from D121.3 into '
-     'U1.23 under that rule'),
-    ('detour', 'SERVO2_OUT', 'net', (25.54, 76.97),
-     '34.94 mm / 1 via for 16.9 mm (J122.4 to R151.2; inherited R6; fix pass 7 redrew its In2 run below the pyro block, '
-     'S, E, NE -> SE, E, NE, -2.13 mm, the pass-7 review\'s redraw); bump_audit --bumps-all finds no shorter clean '
-     'redraw of any window of it; ' + _S + ': 31.4 mm / 1 via only with 0.15 and 0.55 mm jogs on B.Cu in the pyro block '
-     '(det/r3/SERVO2_OUT_0); with every segment >= 0.6 mm it needs 3 vias (32.3 mm, rt/s2o_a)'),
-    ('detour', 'SERVO4_MCU', 'net', (31.05, 83.55),
-     '96.38 mm / 3 vias for 56.3 mm (D121.6, R153, R157 by the servo header, U1.25; fix pass 5 straightened its In2 run '
-     'down x 15.505, the 0.36 mm step gone; fix pass 6: one 0.71 mm SE step onto x 16.005 below the 3V3 via '
-     '(16.3, 90.525), 0.67 mm from CAM_FAULT_N, same length); ' + _S + ' (fix-pass-4 copper): 97.8 mm / 11 vias'),
-    ('detour', 'SERVO4_OUT', 'net', (25.54, 71.89),
-     '46.92 mm / 3 vias for 25.74 mm (J122.10 to R153.2); ' + _S + ': 52.4 mm / 6 vias'),
-    ('extra_vias', 'SERVO4_OUT', 'net', (25.54, 71.89), 'as its detour entry: the search\'s best has 6 vias'),
-    ('detour', 'SWCLK', 'net', (42.365, 76.65),
-     'fix-pass-3 route, 62.7 mm / 4 vias, F/B only, out of U1\'s SW corner (SWD is idle in flight); ' + _S + ': 61.0 mm / '
-     '4 vias in the same corridor'),
-    ('extra_vias', 'SWCLK', 'net', (42.365, 76.65), 'as its detour entry: the search\'s best also has 4 vias'),
-    ('extra_vias', 'SWDIO', 'net', (42.365, 77.92),
-     'fix-pass-3 route, 53.72 mm / 4 vias; ' + _S + ': 54.0 mm / 4 vias, the present route'),
-    ('extra_vias', 'VBUS_SENSE', 'net', (16.1, 71.875),
-     '43.13 mm / 4 vias (R110, R9, TP92 on B.Cu, U1.62 on F.Cu); ' + _S + ': 47.2 mm / 6 vias'),
-]
+LEFTOVERS = []                     # R8: every non-critical hygiene instance fails until it is removed (r8_plan section 2)
 
 # Measured route figures (len_mm, vias: route_check --routes on the final board) of every net with a detour or
 # extra_vias entry in ALLOWLIST or LEFTOVERS: the entries' search results and reasons describe these routes, and the
-# gate fails when the board's route differs (measured_check).
-ROUTE_FIGURES = {
-    'ARM1_SENSE': (63.73, 4), 'BAT_FAULT_N': (39.97, 4), 'BAT_SW_RETURN': (160.34, 5), 'BAT_SW_SOURCE': (129.2, 7),
-    'BUZZ_OUT': (22.55, 1), 'CAM_EN': (6.95, 1), 'CAM_FAULT_N': (92.46, 5),
-    'CAM_MCU_RX': (32.81, 6), 'CAM_MCU_TX': (65.87, 5), 'CAM_PWR_EN': (81.9, 8), 'CAM_UART_OE': (30.68, 4),
-    'GNSS_LNA_EN': (7.45, 1), 'GNSS_RESET_N': (59.34, 2), 'GNSS_VCC_RF': (6.2, 1), 'LED_YEL': (36.26, 3),
-    'LOGIC_SOURCE_ST': (58.31, 11), 'NRST': (46.11, 4), 'PYRO1_CONT': (53.33, 6), 'QSPI_IO2': (33.26, 3),
-    'RADIO_DIO1': (69.09, 4), 'RADIO_NRST': (85.44, 4), 'RADIO_NSS': (58.4, 4), 'RADIO_RXEN': (51.88, 4),
-    'RADIO_TXEN': (25.17, 2), 'RAW_ACT_SENSE': (38.93, 2), 'RAW_PROTECTED': (143.53, 7), 'SERVO1_MCU': (65.32, 5),
-    'SERVO2_MCU': (76.72, 9), 'SERVO2_OUT': (34.94, 1), 'SERVO4_MCU': (96.38, 3), 'SERVO4_OUT': (46.92, 3),
-    'SWCLK': (62.7, 4), 'SWDIO': (53.72, 4), 'VBUS': (42.49, 6), 'VBUS_SENSE': (43.13, 4), 'VCAP1': (6.71, 2),
-    'VCAP2': (12.67, 1), 'VLOGIC': (66.37, 5),
-}
+# gate fails when the board's route differs (measured_check). R8: none.
+ROUTE_FIGURES = {'GNSS_LNA_EN': (7.65, 1), 'GNSS_VCC_RF': (6.2, 1)}         # D51, D87 (vias at R7's y 8.3)
+
+# Profiles: r8 (default) = the lists above and the keep-out-aware detour baseline (D10); r7 = the R7 record's lists
+# (route_lists_r7.py) and the plain baseline, which reproduces the owner-accepted R7 verdict on board c872a3d3...
+PROFILES = ('r8', 'r7')
+PROFILE = 'r8'
+KEEPOUT_BASELINE = True
+_R8_LISTS = (ALLOWLIST, LEFTOVERS, ROUTE_FIGURES)
+
+
+def set_profile(name):
+    """Select the exception lists and detour baseline of one board revision (module globals; main() calls it)."""
+    global ALLOWLIST, LEFTOVERS, ROUTE_FIGURES, KEEPOUT_BASELINE, PROFILE
+    if name == 'r7':
+        here = str(Path(__file__).resolve().parent)
+        if here not in sys.path:
+            sys.path.insert(0, here)
+        import route_lists_r7 as r7_lists                   # noqa: E402 (the R7 record's lists, imported on demand)
+        ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = r7_lists.ALLOWLIST, r7_lists.LEFTOVERS, r7_lists.ROUTE_FIGURES
+        KEEPOUT_BASELINE = False
+    elif name == 'r8':
+        ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = _R8_LISTS
+        KEEPOUT_BASELINE = True
+    else:
+        raise ValueError(f'unknown profile {name!r}; one of {PROFILES}')
+    PROFILE = name
 
 
 def net_class(name):
@@ -1027,6 +811,256 @@ def net_route(nc):
                 need=0 if common else 1, at=pts[0]['pos'] if pts else (0, 0), first=pts[0]['name'] if pts else '')
 
 
+# --- keep-out-aware detour baseline (R8_DECISIONS D10) -----------------------------------------------------------------
+# M2's detour test compares a net's copper with the octilinear MST of its pad centres. Where a straight MST edge runs
+# through a hard keep-out, no legal copper can take it, so that edge counts as the shortest octilinear path round the
+# keep-out (the MST is then taken over those distances). Hard keep-outs: an area closed to tracks on every copper layer
+# (rule areas with the track keep-out flag, plus the named m3.kicad_dru keep-outs for non-GND nets, intersected over
+# the layers), the body of each module in MODULE_BODIES for non-GND nets (F10: nothing but GND crosses U31's pad field),
+# every non-plated hole and Edge.Cuts hole, and the board outline. Parts, pads, other nets' copper and keep-outs that
+# leave a layer open are never obstacles, so congestion detours still fail.
+MODULE_BODIES = {'U31': (10.0, 10.0)}   # E22-900MM22S body, mm, centred on the footprint (EBYTE manual; check_r7.U31_BODY)
+KO_EPS = 0.002                   # mm: visibility nodes sit this far outside an obstacle's corners
+KO_HOLE_SIDES = 16               # holes as circumscribed polygons (the path stays outside the true hole)
+SQ2M1 = math.sqrt(2) - 1
+
+
+def _octile_mm(a, b):
+    dx, dy = abs(a[0] - b[0]), abs(a[1] - b[1])
+    return max(dx, dy) + SQ2M1 * min(dx, dy)
+
+
+def _poly_mm(chain):
+    return [(mm(chain.CPoint(i).x), mm(chain.CPoint(i).y)) for i in range(chain.PointCount())]
+
+
+def _circle_poly(c, r):
+    k = r / math.cos(math.pi / KO_HOLE_SIDES)
+    return [(c[0] + k * math.cos(2 * math.pi * (i + 0.5) / KO_HOLE_SIDES),
+             c[1] + k * math.sin(2 * math.pi * (i + 0.5) / KO_HOLE_SIDES)) for i in range(KO_HOLE_SIDES)]
+
+
+def keepout_obstacles(board):
+    """{'obstacles': [(label, polygon mm)], 'outline': [polygon mm]} for the D10 baseline of a non-GND net."""
+    layers = list(board.GetEnabledLayers().CuStack())
+    closed = None
+    for lid in layers:
+        c = pcbnew.SHAPE_POLY_SET()
+        for z in board.Zones():
+            if z.GetIsRuleArea() and z.IsOnLayer(lid) and (z.GetDoNotAllowTracks() or z.GetZoneName() in NAMED_KEEPOUTS):
+                c.BooleanAdd(z.Outline())
+        if closed is None:
+            closed = c
+        else:
+            closed.BooleanIntersection(c)
+    obs = []
+    if closed is not None:
+        for i in range(closed.OutlineCount()):
+            obs.append(('track keep-out on every layer', _poly_mm(closed.Outline(i))))
+    for ref, (w, h) in MODULE_BODIES.items():
+        f = board.FindFootprintByReference(ref)
+        if f:
+            x, y = mm(f.GetPosition().x), mm(f.GetPosition().y)
+            obs.append((f'{ref} body', [(x - w / 2, y - h / 2), (x + w / 2, y - h / 2), (x + w / 2, y + h / 2),
+                                        (x - w / 2, y + h / 2)]))
+    for f in board.GetFootprints():
+        for pd in f.Pads():
+            if pd.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH:
+                r = mm(max(pd.GetDrillSize().x, pd.GetDrillSize().y)) / 2
+                obs.append((f'{f.GetReference()} NPTH', _circle_poly((mm(pd.GetPosition().x), mm(pd.GetPosition().y)), r)))
+    outline = []
+    for d in board.GetDrawings():
+        if d.GetLayer() != pcbnew.Edge_Cuts:
+            continue
+        if d.GetShape() == pcbnew.SHAPE_T_CIRCLE:
+            obs.append(('Edge.Cuts hole', _circle_poly((mm(d.GetCenter().x), mm(d.GetCenter().y)), mm(d.GetRadius()))))
+    ol = pcbnew.SHAPE_POLY_SET()
+    if board.GetBoardPolygonOutlines(ol, False) and ol.OutlineCount():
+        outline = _poly_mm(ol.Outline(0))
+    # merge touching obstacles (e.g. U31's body and its pad-ring keep-out) so corners between them are not passable
+    merged = pcbnew.SHAPE_POLY_SET()
+    labels = []
+    for lab, poly in obs:
+        one = pcbnew.SHAPE_POLY_SET()
+        one.NewOutline()
+        for x, y in poly:
+            one.Append(int(round(x / NM)), int(round(y / NM)))
+        merged.BooleanAdd(one)
+        labels.append((lab, poly))
+    out = []
+    for i in range(merged.OutlineCount()):
+        poly = _poly_mm(merged.Outline(i))
+        names = sorted({lab for lab, q in labels if any(_inside(v, poly) or _on_boundary(v, poly) for v in q)})
+        out.append((' + '.join(names) or 'keep-out', poly))
+    return dict(obstacles=out, outline=outline)
+
+
+def _area2(poly):
+    return sum(poly[i - 1][0] * poly[i][1] - poly[i][0] * poly[i - 1][1] for i in range(len(poly)))
+
+
+def _inside(p, poly):
+    x, y = p
+    inside = False
+    for i in range(len(poly)):
+        (x1, y1), (x2, y2) = poly[i - 1], poly[i]
+        if (y1 > y) != (y2 > y) and x < x1 + (y - y1) * (x2 - x1) / (y2 - y1):
+            inside = not inside
+    return inside
+
+
+def _seg_dist(p, a, b):
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    t = 0.0 if dx == dy == 0 else max(0.0, min(1.0, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy)))
+    q = (a[0] + t * dx, a[1] + t * dy)
+    return math.hypot(p[0] - q[0], p[1] - q[1]), q
+
+
+def _on_boundary(p, poly, tol=1e-6):
+    return any(_seg_dist(p, poly[i - 1], poly[i])[0] <= tol for i in range(len(poly)))
+
+
+def _cross(o, a, b):
+    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
+
+def _proper(a, b, c, d, tol=1e-9):
+    d1, d2, d3, d4 = _cross(c, d, a), _cross(c, d, b), _cross(a, b, c), _cross(a, b, d)
+    return ((d1 > tol and d2 < -tol) or (d1 < -tol and d2 > tol)) and ((d3 > tol and d4 < -tol) or (d3 < -tol and d4 > tol))
+
+
+def _blocked(a, b, poly):
+    """The open segment a-b passes through the polygon's interior."""
+    n = len(poly)
+    if any(_proper(a, b, poly[i - 1], poly[i]) for i in range(n)):
+        return True
+    return any(_inside((a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])), poly) for t in (0.25, 0.5, 0.75))
+
+
+def _exit(p, poly):
+    """A point inside the polygon moved just outside its nearest boundary point: (new point, octilinear cost)."""
+    best = None
+    for i in range(len(poly)):
+        d, q = _seg_dist(p, poly[i - 1], poly[i])
+        if best is None or d < best[0]:
+            best = (d, q, poly[i - 1], poly[i])
+    d, q, a, b = best
+    ex, ey = b[0] - a[0], b[1] - a[1]
+    L = math.hypot(ex, ey) or 1.0
+    sgn = 1 if _area2(poly) > 0 else -1           # outward normal of a counter-clockwise edge is (ey, -ex)
+    nx, ny = sgn * ey / L, -sgn * ex / L
+    out = (q[0] + nx * KO_EPS, q[1] + ny * KO_EPS)
+    return out, _octile_mm(p, q)
+
+
+def _nodes(poly):
+    sgn = 1 if _area2(poly) > 0 else -1
+    out = []
+    n = len(poly)
+    for i in range(n):
+        a, v, b = poly[i - 1], poly[i], poly[(i + 1) % n]
+        acc = [0.0, 0.0]
+        for (p, q) in ((a, v), (v, b)):
+            ex, ey = q[0] - p[0], q[1] - p[1]
+            L = math.hypot(ex, ey) or 1.0
+            acc[0] += sgn * ey / L
+            acc[1] += -sgn * ex / L
+        L = math.hypot(*acc) or 1.0
+        out.append((v[0] + acc[0] / L * KO_EPS * 1.5, v[1] + acc[1] / L * KO_EPS * 1.5))
+    return out
+
+
+def keepout_distance(a, b, ko):
+    """Octilinear length of the shortest path from a to b (mm) that avoids every hard keep-out, and the keep-outs the
+    straight edge crossed; (octile, []) when the straight edge is clear."""
+    obs = ko['obstacles']
+    cost = 0.0
+    for p_ in (a, b):
+        for lab, poly in obs:
+            if _inside(p_, poly):
+                q, c = _exit(p_, poly)
+                cost += c
+                if p_ is a:
+                    a = q
+                else:
+                    b = q
+                break
+    outline = ko['outline']
+    hit = [(lab, poly) for lab, poly in obs if _blocked(a, b, poly)]
+    if not hit:
+        return _octile_mm(a, b) + cost, []
+    use = list(hit)
+    while True:
+        nodes = [a, b] + [v for _, poly in use for v in _nodes(poly)]
+
+        def clear(p, q):
+            if any(_blocked(p, q, poly) for _, poly in use):
+                return False
+            return not outline or not any(_proper(p, q, outline[i - 1], outline[i]) for i in range(len(outline)))
+        dist_ = {0: 0.0}
+        heap = [(0.0, 0)]
+        done = set()
+        prev = {}
+        while heap:
+            d, u = heapq.heappop(heap)
+            if u in done:
+                continue
+            done.add(u)
+            if u == 1:
+                break
+            for v in range(len(nodes)):
+                if v in done or v == u:
+                    continue
+                nd = d + _octile_mm(nodes[u], nodes[v])
+                if nd < dist_.get(v, float('inf')) - 1e-12 and clear(nodes[u], nodes[v]):
+                    dist_[v] = nd
+                    prev[v] = u
+                    heapq.heappush(heap, (nd, v))
+        if 1 not in dist_:
+            return None, [lab for lab, _ in hit]
+        path, k = [1], 1
+        while k != 0:
+            k = prev[k]
+            path.append(k)
+        more = [(lab, poly) for lab, poly in obs if (lab, poly) not in use and
+                any(_blocked(nodes[path[i]], nodes[path[i + 1]], poly) for i in range(len(path) - 1))]
+        if not more:
+            return dist_[1] + cost, sorted({lab for lab, _ in hit})
+        use += more
+
+
+def keepout_mst(nc, ko):
+    """The D10 baseline of a net without a pour: the octilinear MST of its pad centres over keep-out-aware edge lengths.
+    None when no straight edge between two of its pads crosses a hard keep-out (the plain baseline holds)."""
+    pts = []
+    for p in sorted(nc.pads, key=lambda q: q['key']):
+        if not any(dist(p['pos'], q['pos']) < 0.1 / NM for q in pts):
+            pts.append(p)
+    xy_ = [(mm(p['pos'][0]), mm(p['pos'][1])) for p in pts]
+    n = len(xy_)
+    w, crossed = {}, set()
+    for i in range(n):
+        for j in range(i + 1, n):
+            d, hit = keepout_distance(xy_[i], xy_[j], ko)
+            if hit:
+                crossed.update(hit)
+                w[i, j] = float('inf') if d is None else d
+            else:
+                w[i, j] = _octile_mm(xy_[i], xy_[j])
+    if not crossed:
+        return None
+    done, best, total = [False] * n, [float('inf')] * n, 0.0
+    best[0] = 0.0
+    for _ in range(n):
+        u = min((i for i in range(n) if not done[i]), key=lambda i: best[i])
+        done[u] = True
+        total += best[u]
+        for v in range(n):
+            if not done[v]:
+                best[v] = min(best[v], w[min(u, v), max(u, v)])
+    return total, sorted(crossed)
+
+
 # --- pour fills: slivers, fingers, through-copper distance to GND stitching ------------------------------------------
 
 def _edges(ps):
@@ -1273,14 +1307,15 @@ def pad_connection(pad, zone):
 
 TRIM_PREFIX = 'R7_POUR_TRIM_'     # the generated pour-trim keep-outs (m3_design/r7_polish.pour_trim); the board's design
                                   # fill keep-outs (IMU/BARO bodies, Tag-Connect contacts, SMA launches) are intended
+TRIM_PREFIXES = (TRIM_PREFIX, 'R8_POUR_TRIM_')   # R8: r8_power.py's and r8_ground.py's trims (R8_DECISIONS D65)
 
 
 def is_trim(z):
-    return z.GetIsRuleArea() and z.GetDoNotAllowZoneFills() and z.GetZoneName().startswith(TRIM_PREFIX)
+    return z.GetIsRuleArea() and z.GetDoNotAllowZoneFills() and z.GetZoneName().startswith(TRIM_PREFIXES)
 
 
 def fill_keepouts(board):
-    """{layer: [outline]} of the pour-trim keep-out rule areas (TRIM_PREFIX)."""
+    """{layer: [outline]} of the pour-trim keep-out rule areas (TRIM_PREFIXES)."""
     out = defaultdict(list)
     for z in board.Zones():
         if is_trim(z):
@@ -1327,7 +1362,7 @@ def pad_contacts(board, pads=None):
 
 def unkept_copy(board):
     """A copy of the saved board (reloaded from its file, with the .kicad_pro / .kicad_dru beside it, so the fills use the
-    board's own rules) with its pour-trim keep-outs (TRIM_PREFIX) switched off, refilled natively; None when the board
+    board's own rules) with its pour-trim keep-outs (TRIM_PREFIXES) switched off, refilled natively; None when the board
     has no file."""
     import shutil
     import tempfile
@@ -1532,9 +1567,12 @@ def topology(board, cu):
     return ends, nodes, plain, chains
 
 
-def scan(board):
-    """Every instance of every category on the board, as dicts (cat, net, cls, layer, x, y and details)."""
+def scan(board, baseline_log=None):
+    """Every instance of every category on the board, as dicts (cat, net, cls, layer, x, y and details). With the R8
+    profile (KEEPOUT_BASELINE) every net whose detour test uses the keep-out-aware baseline (D10) is appended to
+    baseline_log (a list) with both ratios."""
     cu = Copper(board)
+    ko = None
     inst = []
     poured = {n for (n, _) in cu.zones}
 
@@ -2008,7 +2046,20 @@ def scan(board):
             continue
         kw = dict(pads=r['pads'], first=r['first'], len_mm=round(r['len'], 2), mst_mm=round(r['mst'], 2),
                   ratio=round(r['len'] / r['mst'], 2) if r['mst'] > 0 else None, vias=r['vias'], need=r['need'])
-        if r['len'] > DETOUR_MAX * r['mst'] and r['len'] - r['mst'] > DETOUR_SLACK:
+        base = r['mst']
+        if KEEPOUT_BASELINE:                        # R8 D10: keep-out-aware baseline where an MST edge is impassable
+            if ko is None:
+                ko = keepout_obstacles(board)
+            km = keepout_mst(nc, ko)
+            if km is not None:
+                base = km[0]
+                row = dict(net=net, len_mm=round(r['len'], 2), mst_mm=round(r['mst'], 2), ratio=kw['ratio'],
+                           keepout_mst_mm=round(base, 2), keepout_ratio=round(r['len'] / base, 2) if base else None,
+                           crossing=km[1])
+                kw.update(keepout_mst_mm=row['keepout_mst_mm'], keepout_ratio=row['keepout_ratio'])
+                if baseline_log is not None:
+                    baseline_log.append(row)
+        if r['len'] > DETOUR_MAX * base and r['len'] - base > DETOUR_SLACK:
             add('detour', net, 'net', r['at'], **kw)
         if r['vias'] > r['need'] + VIA_SLACK:
             add('extra_vias', net, 'net', r['at'], **kw)
@@ -2718,7 +2769,10 @@ def main():
                     'pour: copper length, octilinear distance, ratio, vias')
     ap.add_argument('--bumps-all', action='store_true', help='also search the non-critical nets for removable local '
                     'bumps (information, local_bump_review; slow)')
+    ap.add_argument('--profile', choices=PROFILES, default='r8', help='exception lists and detour baseline: r8 (default; '
+                    'R8_DECISIONS D9 / D10) or r7 (the R7 record, route_lists_r7.py, plain baseline)')
     args = ap.parse_args()
+    set_profile(args.profile)
     board = pcbnew.LoadBoard(str(args.board))
     if args.routes:
         for net, nc in sorted(collect(board).items()):
@@ -2727,7 +2781,8 @@ def main():
                 if r['pads'] >= 2:
                     print(f"route {net:22s} {r['pads']:2d} pads {r['len']:8.2f} mm  octile MST {r['mst']:7.2f}  ratio "
                           f"{r['len'] / r['mst'] if r['mst'] else 0:5.2f}  vias {r['vias']:2d} (needs {r['need']})")
-    inst = scan(board)
+    baseline_log = []
+    inst = scan(board, baseline_log)
     bumps, searched = bump_audit(board)              # fix pass 7: removable local bumps on the critical nets (gated)
     inst += bumps
     if args.bumps_all:
@@ -2735,7 +2790,11 @@ def main():
         inst += [dict(d, cat='local_bump_review') for d in more]
         searched += n_more
     failures, allowed, stale = evaluate(inst)
-    print('routing hygiene: instances per category (per layer, per net class)')
+    print(f'routing hygiene: profile {PROFILE}; instances per category (per layer, per net class)')
+    for row in baseline_log:                         # R8 D10: every net judged on the keep-out-aware baseline
+        print(f"detour baseline (D10): {row['net']} copper {row['len_mm']} mm; plain MST {row['mst_mm']} mm (ratio "
+              f"{row['ratio']}), keep-out-aware {row['keepout_mst_mm']} mm (ratio {row['keepout_ratio']}); crosses "
+              f"{', '.join(row['crossing'])}")
     for row in summary(inst):
         print(row)
     if args.list:
@@ -2770,7 +2829,8 @@ def main():
           f'short-segment / chain-detour exceptions, {len(bumps)} removable local bumps on critical nets '
           f'({searched} bump windows searched):', 'FAIL' if bad else 'OK')
     if args.report:
-        args.report.write_text(json.dumps(dict(instances=inst, failures=failures, allowed=allowed,
+        args.report.write_text(json.dumps(dict(profile=PROFILE, detour_baseline=baseline_log,
+                                               instances=inst, failures=failures, allowed=allowed,
                                                stale=[list(e) for e in stale],
                                                nognd_audit=[dict(d, spot=list(sp), via=dia, dist=dd)
                                                             for d, (sp, dia, dd) in audit],

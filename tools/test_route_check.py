@@ -1,4 +1,5 @@
 """Synthetic regressions for the routing hygiene gate (tools/route_check.py): every category on a small board."""
+import math
 from pathlib import Path
 import sys
 import unittest
@@ -354,12 +355,13 @@ class RouteCheck(unittest.TestCase):
         self.fill()
         z.SetZoneName('BODY_KEEPOUT')                                    # a design keep-out is intended
         self.assertFalse([d for d in rc.scan(self.saved()) if d['cat'] == 'pad_pour_cut'])
-        z.SetZoneName(rc.TRIM_PREFIX + '1')
-        b = self.saved()
-        cuts = [d for d in rc.scan(b) if d['cat'] == 'pad_pour_cut']
-        self.assertEqual([d['pad'] for d in cuts], ['A2.1'])
-        failures, _, _ = rc.evaluate(rc.scan(b), allowlist=[])
-        self.assertTrue([d for d in failures if d['cat'] == 'pad_pour_cut'])
+        for name in (rc.TRIM_PREFIX + '1', 'R8_POUR_TRIM_G1'):          # R7's generated trims and R8's (D65)
+            z.SetZoneName(name)
+            b = self.saved()
+            cuts = [d for d in rc.scan(b) if d['cat'] == 'pad_pour_cut']
+            self.assertEqual([d['pad'] for d in cuts], ['A2.1'], name)
+            failures, _, _ = rc.evaluate(rc.scan(b), allowlist=[])
+            self.assertTrue([d for d in failures if d['cat'] == 'pad_pour_cut'], name)
 
     def test_an_allowlisted_no_gnd_layer_change_with_a_legal_spot_is_reported(self):
         d = dict(cat='critical_via_no_gnd', net='QSPI_CLK', layer='via', x=5.0, y=5.0)
@@ -754,6 +756,121 @@ class RouteCheck(unittest.TestCase):
         self.assertEqual(stale, [])
         failures, allowed, stale = rc.evaluate(inst, allowlist=[entry, ('off_angle', 'SIGNAL', 'F.Cu', (1, 1), 't')])
         self.assertEqual(len(stale), 1)
+
+    # --- R8: profiles and the keep-out-aware detour baseline (R8_DECISIONS D10) ---------------------------------------
+    def module_with_two_pads(self, net='RADIO_TXEN'):
+        """A 10 x 10 mm module body U31 at (20, 20) and two pads of `net` on opposite sides, 0.05 mm inside the body
+        (as the E22's castellated pads 9 and 19 are)."""
+        if not self.board.FindNet(net):
+            self.board.Add(pcbnew.NETINFO_ITEM(self.board, net))
+        f = pcbnew.FOOTPRINT(self.board); f.SetReference('U31'); self.board.Add(f); f.SetPosition(self.P(20, 20))
+        for num, (x, y) in (('9', (18, 15.05)), ('19', (22, 24.95))):
+            p = pcbnew.PAD(f); p.SetNumber(num); p.SetShape(pcbnew.PAD_SHAPE_RECT)
+            p.SetAttribute(pcbnew.PAD_ATTRIB_SMD); p.SetSize(self.P(0.9, 1.5))
+            layers = pcbnew.LSET(); layers.AddLayer(pcbnew.F_Cu); p.SetLayerSet(layers)
+            p.SetNet(self.board.FindNet(net)); f.Add(p); p.SetPosition(self.P(x, y))
+
+    def detours(self, log=None):
+        return [d for d in rc.scan(self.board, log) if d['cat'] == 'detour']
+
+    def test_profiles_select_the_lists_and_the_baseline(self):
+        try:
+            rc.set_profile('r7')
+            self.assertEqual((len(rc.ALLOWLIST), len(rc.LEFTOVERS), rc.KEEPOUT_BASELINE), (45, 29, False))
+            self.assertIn('RADIO_TXEN', rc.ROUTE_FIGURES)
+        finally:
+            rc.set_profile('r8')
+        # A8 (D9) and the limiter's two keep-out-forced detours (D51, D11's fallback), nothing else
+        self.assertEqual([e[:2] for e in rc.ALLOWLIST], [('critical_via_no_gnd', 'PYRO1_GATE'),
+                                                         ('detour', 'GNSS_LNA_EN'), ('detour', 'GNSS_VCC_RF')])
+        self.assertEqual((rc.LEFTOVERS, sorted(rc.ROUTE_FIGURES), rc.KEEPOUT_BASELINE),
+                         ([], ['GNSS_LNA_EN', 'GNSS_VCC_RF'], True))
+        with self.assertRaises(ValueError):
+            rc.set_profile('r6')
+
+    def test_a_loop_round_a_module_body_is_judged_on_the_keepout_aware_baseline(self):
+        # RADIO_TXEN's case: pins on opposite sides of U31, nothing but GND may cross its body, so the copper goes round
+        self.module_with_two_pads()
+        self.chain([(18, 15.05), (18, 14.75), (14.75, 14.75), (14.75, 25.25), (22, 25.25), (22, 24.95)], 'RADIO_TXEN')
+        try:
+            rc.set_profile('r7')                     # plain baseline: 21.3 mm against 11.6 mm is a detour
+            self.assertEqual([d['net'] for d in self.detours()], ['RADIO_TXEN'])
+        finally:
+            rc.set_profile('r8')
+        log = []
+        self.assertEqual(self.detours(log), [])      # keep-out-aware: about 20.1 mm round the body, ratio 1.06
+        row = log[0]
+        self.assertEqual(row['net'], 'RADIO_TXEN')
+        self.assertAlmostEqual(row['keepout_mst_mm'], 0.05 + 3 + 10 + 7 + 0.05, delta=0.02)
+        self.assertGreater(row['ratio'], 1.6)
+        self.assertLess(row['keepout_ratio'], 1.2)
+        self.assertIn('U31 body', ' '.join(row['crossing']))
+
+    def test_a_detour_beside_the_keepout_still_fails(self):
+        # the same pins, but the copper wanders 10 mm further out than the way round the body needs
+        self.module_with_two_pads()
+        self.chain([(18, 15.05), (18, 14.75), (4.75, 14.75), (4.75, 25.25), (22, 25.25), (22, 24.95)], 'RADIO_TXEN')
+        log = []
+        found = self.detours(log)
+        self.assertEqual([d['net'] for d in found], ['RADIO_TXEN'])
+        self.assertGreater(found[0]['len_mm'], 1.6 * found[0]['keepout_mst_mm'])
+        self.assertEqual(log[0]['net'], 'RADIO_TXEN')            # listed with both ratios
+
+    def keepout(self, layers, tracks=True, box=(3, -3, 7, 3)):
+        z = pcbnew.ZONE(self.board); z.SetIsRuleArea(True)
+        ls = pcbnew.LSET(); [ls.AddLayer(lid) for lid in layers]; z.SetLayerSet(ls)
+        z.SetDoNotAllowTracks(tracks); z.SetDoNotAllowVias(False); z.SetDoNotAllowZoneFills(False)
+        z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
+        o = z.Outline(); o.NewOutline()
+        x0, y0, x1, y1 = box
+        for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)):
+            o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        self.board.Add(z)
+        return z
+
+    def test_only_a_keepout_closed_on_every_layer_refines_the_baseline(self):
+        self.two_pads('SIGNAL')                                   # pads at (0, 0) and (10, 0)
+        self.chain([(0, 0), (0, 4), (10, 4), (10, 0)], 'SIGNAL')  # 18 mm round a box across the straight line
+        self.keepout([pcbnew.F_Cu])                               # soft: B.Cu and the inner layers stay open
+        log = []
+        self.assertEqual([d['net'] for d in self.detours(log)], ['SIGNAL'])
+        self.assertEqual(log, [])
+        self.setUp()
+        self.two_pads('SIGNAL')
+        self.chain([(0, 0), (0, 4), (10, 4), (10, 0)], 'SIGNAL')
+        self.keepout(rc.CU4)                                       # closed to tracks on every copper layer
+        log = []
+        self.assertEqual(self.detours(log), [])
+        self.assertAlmostEqual(log[0]['keepout_mst_mm'], 2 * 3 * math.sqrt(2) + 4, delta=0.02)   # 45 deg round a corner
+        self.assertEqual(log[0]['crossing'], ['track keep-out on every layer'])
+
+    def test_parts_and_other_nets_copper_are_never_obstacles(self):
+        self.two_pads('SIGNAL')
+        self.pad('X1', 5, 0, 'GND', size=(3, 3))                  # a big foreign pad on the straight line
+        self.track((5, -3), (5, 3), 'GND', width=2)               # and foreign copper
+        self.chain([(0, 0), (0, 4), (10, 4), (10, 0)], 'SIGNAL')
+        log = []
+        self.assertEqual([d['net'] for d in self.detours(log)], ['SIGNAL'])
+        self.assertEqual(log, [])
+
+    def test_an_npth_hole_is_a_hard_keepout(self):
+        self.two_pads('SIGNAL')
+        f = pcbnew.FOOTPRINT(self.board); f.SetReference('H1'); self.board.Add(f)
+        h = pcbnew.PAD(f); h.SetAttribute(pcbnew.PAD_ATTRIB_NPTH); h.SetShape(pcbnew.PAD_SHAPE_CIRCLE)
+        h.SetSize(self.P(3.2, 3.2)); h.SetDrillSize(self.P(3.2, 3.2)); f.Add(h); h.SetPosition(self.P(5, 0))
+        self.chain([(0, 0), (0, 2.5), (10, 2.5), (10, 0)], 'SIGNAL')    # 15 mm: 1.5 x the plain 10 mm
+        log = []
+        rc.scan(self.board, log)
+        self.assertEqual(log[0]['net'], 'SIGNAL')
+        self.assertGreater(log[0]['keepout_mst_mm'], 10.0)
+        self.assertIn('H1 NPTH', log[0]['crossing'])
+
+    def test_every_r7_list_entry_still_has_a_reason(self):
+        import route_lists_r7 as old
+        for e in old.ALLOWLIST + old.LEFTOVERS:
+            self.assertGreater(len(e[4]), 20, e[:4])
+            if e[0] in rc.MEASURED_CATS:
+                self.assertIn(e[1], old.ROUTE_FIGURES, e[:4])
 
     def test_every_allowlist_entry_has_a_reason(self):
         for e in rc.ALLOWLIST:

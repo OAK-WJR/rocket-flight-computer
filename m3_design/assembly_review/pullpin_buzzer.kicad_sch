@@ -6,7 +6,7 @@
 	(title_block
 		(title "14 | Launch pull-pin and buzzer")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R7")
+		(rev "M3-ASSY-R8")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
 		(symbol "M3:BAT54S"
@@ -1533,7 +1533,7 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid bd454544-a8f7-52a8-92ea-81cbb5cbd667))
-	(text "BUZZ_DRV = PA5 (pin 29). MLT-5020: 4 kHz, 50% duty; software toggle or TIM8_CH1N (AF3). Never leave the coil driven with DC."
+	(text "BUZZ_DRV = PC13 (pin 7, R8). MLT-5020: 4 kHz, 50% duty; software toggle only (PC13 has no timer AF; backup-domain pin, <= 2 MHz, no RTC output on it). Never leave the coil driven with DC."
 		(at 20.32 267.86 0)
 		(effects
 			(font

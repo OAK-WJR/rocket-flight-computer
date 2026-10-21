@@ -6,7 +6,7 @@
 	(title_block
 		(title "10 | USB cable presence, ordinary GPIO sensing")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R7")
+		(rev "M3-ASSY-R8")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:R"
@@ -445,14 +445,14 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 518f5ef6-36fa-508f-af1b-eb0af9f3ca44))
-	(text "PD15 / U1 pin62 is a regular FT_h GPIO input. PA9 remains NC. D+/D- are unchanged."
+	(text "PC8 / U1 pin65 (R8) is a regular FT_h GPIO input (EXTI8). PA9 remains NC. D+/D- are unchanged."
 		(at 20.32 137.16 0)
 		(effects
 			(font
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 3c2f066c-5afe-5892-b82e-b7d3bdb87f81))
-	(text "R9 = R110 = 1k (R4): PD15 <= 1.01 V when D4 back-feeds VBUS with the D+ pull-up on, 2.18 V at VBUS 4.40 V. TP92 measures their junction. No internal pull-up/down."
+	(text "R9 = R110 = 1k (R4): PC8 <= 1.01 V when D4 back-feeds VBUS with the D+ pull-up on, 2.18 V at VBUS 4.40 V. TP92 measures their junction. No internal pull-up/down."
 		(at 20.32 147.32 0)
 		(effects
 			(font
@@ -466,7 +466,7 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 471557a9-6037-5b25-a820-f4c46731d0c0))
-	(text "Use software attach/detach from PD15. Do NOT enable native PA9 VBUS sensing (VBDEN)."
+	(text "Use software attach/detach from PC8. Do NOT enable native PA9 VBUS sensing (VBDEN)."
 		(at 20.32 167.64 0)
 		(effects
 			(font

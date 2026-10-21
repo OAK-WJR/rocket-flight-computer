@@ -6,7 +6,7 @@
 	(title_block
 		(title "15 | GNSS and telemetry radio (R7)")
 		(date "2026-10-15")
-		(rev "M3-ASSY-R7")
+		(rev "M3-ASSY-R8")
 		(company "Single-board M3 candidate; on-board GNSS and radio, not bench-verified"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -1643,21 +1643,21 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 305290e4-81e3-5359-a137-f13376eec927))
-	(text "GNSS on USART6: PC6 TX -> R306 220R -> RXD; TXD -> R305 220R -> PC7 RX. PC8 drives RESET_N open-drain (no pull, no capacitor). TIMEPULSE -> R307 1k -> PD14, never pulled down (SAFEBOOT_N shares it)."
+	(text "GNSS on USART6: PC6 TX -> R306 220R -> RXD; TXD -> R305 220R -> PC7 RX. PD14 drives RESET_N open-drain (no pull, no capacitor). TIMEPULSE -> R307 1k -> PD15 (TIM4_CH4 capture), never pulled down (SAFEBOOT_N shares it). R8 pins."
 		(at 20.32 20.32 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 87982715-93cc-5284-ae7b-4910f3781084))
-	(text "Radio on SPI2: PB12 NSS (R310 100k to 3V3_RADIO), PB13 SCK / PB15 MOSI / PB14 MISO through R313 / R315 / R314 33R. PD8 BUSY, PD9 NRST (R311 2.0k to GND), PD10 DIO1 (EXTI10), PE15 RXEN (R312 100k to GND), TXEN = DIO2."
+	(text "Radio on SPI2 (R8): PB11 NSS, software (R310 100k to 3V3, at the MCU end), PB10 SCK / PB14 MOSI / PB15 MISO through R313 / R315 / R314 33R; PB14/PB15 swap by SPI_CFG2.IOSWP = 1, set while SPE = 0 before AF5. PD8 BUSY (polled), PE9 NRST (R311 2.0k to GND), PE15 DIO1 (EXTI15), PD9 RXEN (R312 100k to GND), TXEN = DIO2."
 		(at 20.32 25.4 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 807616b3-c39f-5d58-875a-abd85f195e42))
-	(text "MCU in reset or ROM bootloader: R311 holds the radio in reset (it cannot transmit), NSS high, RXEN low, TXEN low (DIO2 pulled down in reset); the GNSS keeps tracking. PA7, PC9, PA8, PA9, PA10 NC; pyro sentinels unchanged."
+	(text "MCU in reset or ROM bootloader: R311 holds the radio in reset (it cannot transmit), NSS high (the loader never selects USART3 on PB10/PB11; PB10 and PB14 drive only the held radio's inputs), RXEN low, TXEN low (DIO2 pulled down in reset); the GNSS keeps tracking. PA6, PA8, PA9, PA10, PC9, PC11, PE13 NC; pyro sentinels unchanged."
 		(at 20.32 30.48 0)
 		(effects
 			(font
@@ -4785,7 +4785,7 @@
 			(width 0)
 			(type default))
 		(uuid 94a29aa8-95ed-5355-ab26-7d5ecb774143))
-	(global_label "3V3_RADIO"
+	(global_label "3V3"
 		(shape passive)
 		(at 289.56 245.11 0)
 		(effects

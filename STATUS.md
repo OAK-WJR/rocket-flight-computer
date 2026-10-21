@@ -1,19 +1,167 @@
 # M3 requirements and implementation status
 
-> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. The repository holds the current M3-ASSY-R7 KiCad project (built from the committed R6 board by `m3_design/r7_build.sh`; R6 came from R5, R5 from R4, R4 from R3), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. The older candidates are mentioned below only as the evolution record.
+> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. On this branch (`m3-assy-r8`) the repository holds the M3-ASSY-R8 KiCad project, built from the committed, owner-accepted R7 board (commit 431025d) by `m3_design/r8_build.sh` (R7 came from R6 by `m3_design/r7_build.sh`, R6 from R5, R5 from R4, R4 from R3), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. R7's project stays on branch `m3-assy-r7` (431025d). The older candidates are mentioned below only as the evolution record.
 
-Last updated 2026-10-18. Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; **M3-ASSY-R7 (R6 with the GNSS and radio on the board, 46 × 118 mm) is the current one.** All are CAD designs with a manufacturing package, not measured or flown boards.
+Last updated 2026-10-20. Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; **M3-ASSY-R8 (R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block) is the current candidate, and R7 is the accepted, orderable fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
 
-## Current candidate: M3-ASSY-R7 (on-board GNSS and radio, 46 × 118 mm)
+## Current candidate: M3-ASSY-R8 (R7 re-placed and re-routed, 46 × 118 mm)
+
+**CAD and manufacturing files complete after build steps 0–9 of `r8_plan.md` (2026-10-19), review pass 1 (2026-10-19:
+0 Critical, 1 Major, 38 Minor, on `429b6db4…`), fix pass 1 (2026-10-19), review pass 2 (2026-10-19: 0 Critical, 0 Major,
+31 Minor, on `6600ef94…`), fix pass 2 (2026-10-20), review pass 3 (2026-10-20: 0 Critical, 0 Major, 26 Minor, on
+`990c8040…`), fix pass 3 (2026-10-20), review pass 4 (2026-10-20: 0 Critical, 0 Major, 16 Minor, on `c84f00b8…`), its
+records pass (2026-10-20, no copper change) and fix pass 4 (2026-10-20: pass 4's two copper Minors, D110 / D111, and four
+record items), review pass 5 (2026-10-20: three reviewers, build integrity, planes and routing, on `cc044ea0…`:
+0 Critical, 0 Major, 3 Minor) and its records pass (2026-10-20, no copper change). Passes 2–5 found no Critical or Major;
+the other five review dimensions were not re-run on `cc044ea0…` (a further re-check is the owner's call); the owner accepted the R8 deviation list on 2026-10-20 (REQUIREMENTS M2 met in CAD, C10 vibration
+item and agent decisions included); still open: U4 consigned, JLC's tab acceptance and a cost and stock run within 24 h. Not a fabrication or flight release.
+R7 (below) stays the owner-accepted, orderable fallback.**
+- Uncommitted on branch `m3-assy-r8` (base R7 `431025d`).
+- Board SHA-256 `cc044ea0922ff826df19af9d9726d92c096ab2b127025b55d123d8772e5fb4a7` (fix pass 4; review pass 1 reviewed the
+  step-9 board `429b6db4…`, review pass 2 fix pass 1's `6600ef94…`, review pass 3 fix pass 2's `990c8040…`, review pass 4
+  fix pass 3's `c84f00b8…`; this board's copper differs from `c84f00b8…` by exactly the pass-4 routing reviewer's trialled
+  `rec4`; review pass 5 re-checked this board), rebuilt byte for byte from R7 by `m3_design/r8_build.sh` (schematic → placement →
+  power → nine signal families → ground → the 7.7 A neck limits → silkscreen, each with its gate, then `tools/check.sh`;
+  two consecutive builds identical); netlist `0cc1ed69…`; fab package `m3_design/r8_fab.sh`.
+- Generator state uncommitted (no commit on `m3-assy-r8`): commit or tag it (`git add -A`) and record the commit beside
+  `cc044ea0…` here and in R8_VALIDATION (owner action; R8P3-INTEGRITY-04, R8P4-INTEGRITY-01, R8P5-INTEGRITY-01: the
+  state pass 4 reviewed survives only in the coordinator's scratchpad backup, and `cc044ea0…`, the one pass 5 reviewed,
+  only in this worktree); the hashes fix passes 2, 3 and 4 started from are in
+  `sources/r8_review/fix2_baseline_sha256.txt`, `fix3_baseline_sha256.txt` and `fix4_baseline_sha256.txt`, with each
+  pass's code diff (`fix2_generators.diff`, `fix3_generators.diff`, `fix4_generators.diff`).
+- Record: [docs/M3_R8.md](docs/M3_R8.md); validation and the deviation list: [docs/R8_VALIDATION.md](docs/R8_VALIDATION.md);
+  ordering: [docs/ORDERING.md](docs/ORDERING.md) (now R8's); decisions D1–D111 (fix pass 1: D85–D96; fix pass 2: D97–D105; fix pass 3: D106–D109; fix pass 4: D110–D111):
+  `m3_design/assembly_review/sources/r8_design/R8_DECISIONS.md`.
+
+What changed from R7 (details in M3_R8):
+- **Kept rigid and hash-asserted** (12 digest groups, `tools/check_r8.py`): the outline, the five M3 holes, J122 and its tie
+  holes, J1, the CH1 pyro block with its copper and PYRO_BLOCK area, and the RF strip's parts, RF lines and GND copper.
+  `check_actuators` is byte-identical.
+- **Re-placed:** 193 parts (58 changed side): U1 at rotation 0 with the flash and crystal under it; every block beside the
+  U1 face it talks to; the input protection at J1; the actuator FETs face to face beside J1; TH1–TH3 removed.
+- **Pins:** 27 U1 pins (radio SPI2 on PB10 / PB11 / PB14 / PB15 with IOSWP, RXEN PD9, DIO1 PE15, NRST PE9; GNSS RESET_N
+  PD14, TIMEPULSE PD15; camera UART on UART7 PE8 / PE7) and R310 on 3V3; every pin cited in `pin_table.tsv`. The pyro,
+  servo and sentinel pins are unchanged. BOM identical to R7's.
+- **Copper:** all new, from tables: 1500 mm of signal track (R7 3355 mm), 55 signal layer-change vias (R7 217), no signal on
+  In1 / In2 but the rigid block's 3.4 mm link, a GND via by every critical layer change but A8; 7.7 A necks 5.94 / 6.99 / 4.97 mm
+  (R7 3.00 / 3.82 / 2.65 mm).
+- **Fix pass 1** (R8_DECISIONS D85–D96): battery-live ACT_FET_S and RAW_ACT pours pulled ≥ 1.0 mm from J124.1 and the
+  gate pad R127.1; HSE_OUT's fold-back removed; the GNSS limiter vias and the VLOGIC hold-up via clear of paste
+  apertures; U10's bypass C83 beside U10; J3's GND legs thermally relieved; pour trim G7 in the radio bus; four
+  signal-to-signal gaps opened and three chain detours redrawn; J1's pin legends over their own pins; the left forward
+  panel tab off the battery band; new gates (`check_r8` battery_pyro, via_paste, terminal_legends; the DC neck limits in
+  the build); the M2 review sweep as a script and a completed deviation list.
+- **Fix pass 2** (R8_DECISIONS D97–D105): the In2 BAT_IN island cut back to the outer BAT_IN pours (no battery copper at
+  the right panel tab or the M3 hole (42, 114.4)); four close vias at the board's 0.5 mm size; R81 moved off the battery
+  feed; C83.2's GND link without its jog; J123.2 thermally relieved on the final copper; a GND via at the logic eFuse's
+  GND terminal (U9.8, 14.1 → 2.5 mm of copper) from a new step-7 rule; `check_r8.battery_pyro` also guards the drain;
+  the M2 sweep measures pad-to-copper gaps; the stall test rewritten; the bootloader binding puts the pyro gate (PE4) low.
+- **Fix pass 3** (R8_DECISIONS D106–D109): USB_LIMITED's 5 V trunk and R172 moved 0.05 mm (CAM_PWR_EN 0.150 → 0.200 mm,
+  R172's pads, one on PB0's pin side, 0.180 → 0.230 mm); CAM_PWR_EN's lower leg redrawn with one 45° run (1.98 mm
+  shorter); R165's BAT_ENABLE via drawn as the 0.5 mm signal via (0.180 → 0.23 mm from Q120's bare BAT_IN drain pad); the
+  M2 sweep also searches at DRC's threshold; the actuator-gate-to-GND item closed without copper (the pour, not the via,
+  is the nearest GND, as on R7); records: the bootloader-jump order (PE4 low, radio asleep, GPIOE reset last), new bench
+  steps in ORDERING §5 (the pyro gate in the bootloader, the camera supply's load step, IMU signs, the L5 spur, the stall
+  test read clear of J122), F9's pad-edge figures, single-via points, and record slips.
+- **Records pass after review pass 4** (no copper, schematic, placement or build-output change; no D-number): ORDERING §5's
+  bootloader pyro-gate check moved into the pyro-gate list (repeated after any firmware change) with a check that the
+  board is still in the bootloader; the coexistence step gains UBX-MON-SPAN spectra of both GNSS bands, a radio-asleep
+  condition and a reference receiver (the radio crystal's 32 MHz × 37 = 1184 MHz harmonic named); the stall test states
+  that its forward window bounds the neck loosely and gives J122 a ≤ 30 K pass line; `step9/requalify.py` gains pyro rule
+  G (0.300 mm, the one rule at zero margin); the pull-pin no longer called a launch detect; stale figures and the review
+  status made consistent across README, ORDERING, STATUS, AGENTS and R8_VALIDATION.
+- **Fix pass 4** (R8_DECISIONS D110–D111; the pass-4 routing reviewer's trialled `rec4`, nothing else in the copper): the
+  radio trio RXEN / BUSY / MISO centred in its strip-fence opening (its below-fence lanes 0.1 mm west, step 0.5 mm) with
+  two fence vias and the MISO–MOSI stitch via 0.05 mm west, so MISO and MOSI are 0.200 mm from both GND vias (were
+  0.150 mm; C12 #5 / #6 gone); R87.1's branch drawn as one T drop off the USB_LIMITED trunk (1.86 mm shorter, the acute
+  branch and doubled run gone; C21 gone); records: ORDERING §5's camera-supply distances per part, the thermal-relief rule
+  as built (twelve 0805 / 1206 GND pads on spokes), R70's fix-pass-3 designator move, `r8_build.sh`'s trim count. No part,
+  designator or silkscreen item moved; BOM and CPL unchanged.
+- **Records pass after review pass 5** (no copper, schematic, placement or build-output change; no D-number): the
+  scorecard intro and fix pass 4's handoff now say that of the P, R and D rows only R7's extended sample count moved
+  (+24, R8P5-PLANES-01); fix pass 4's notes name the In2 3V3 antipad that moved with the stitch via, area unchanged
+  (R8P5-INTEGRITY-02); the review status updated in R8_VALIDATION, M3_R8, README and ORDERING (AGENTS.md not edited:
+  its §1 row still calls the board unreviewed).
+
+Verification, stated separately:
+- **CAD checks (done, final board `cc044ea0…`, fix pass 4, both builds and standalone):** `tools/check.sh` exit 0: DRC 0 at every severity, unconnected 0,
+  schematic parity 0, ERC 0; metadata / 3D audit OK; silkscreen inside the outline; R8 CAD contract (`check_r8`) OK;
+  routing hygiene 0 failing, 3 allowlisted (A8 and D51's two limiter detours), 0 leftovers; actuator safety contract OK;
+  fit OK (CAD envelopes; every category ≥ R7's: J9 mated 0.03 mm, C84 1.37 mm).
+- **Manufacturing files (done, fix pass 4):** 92 BOM lines (R7's byte for byte), 219 CPL rows (`ef90bfa1…`, unchanged by
+  fix pass 4; only R172's row changed in fix pass 3), every row with a verified
+  correction (85 top + 126 bottom rebuilt from JLC's footprints, worst residual 0.491 mm); paste check OK; manifest bound to
+  `cc044ea0…`.
+- **Software tests:** 272 tests in 17 suites (KiCad Python; fix pass 1 added three seeded-defect tests, fix pass 2 a drain
+  case to the battery-live one) and quality_audit 21 (both Pythons) pass, run after the fab step (fix pass 4's log:
+  `step9/evidence/fix4_tests.txt`).
+- **Independent review:** pass 1 (eight reviewers, 2026-10-19, `429b6db4…`): 0 Critical, 1 Major (the deviation list
+  left out whole M2 review categories), 38 Minor; every finding fixed or dispositioned in fix pass 1 (R8_VALIDATION
+  "Review pass 1"). Pass 2 (eight reviewers, 2026-10-19, `6600ef94…`): 0 Critical, 0 Major, 31 Minor; every finding fixed
+  or dispositioned in fix pass 2 (R8_VALIDATION "Review pass 2"). Pass 3 (eight reviewers, 2026-10-20, `990c8040…`):
+  0 Critical, 0 Major, 26 Minor; every finding fixed or dispositioned in fix pass 3 (R8_VALIDATION "Review pass 3").
+  Pass 4 (eight reviewers, 2026-10-20, fix pass 3's board `c84f00b8…`): 0 Critical, 0 Major, 16 Minor; nine fixed in its
+  records pass (procedure, records, `requalify.py`), the two copper Minors and the four record items left open applied in
+  fix pass 4, the commit left to the owner (R8_VALIDATION "Review pass 4"). Pass 5 (three reviewers: build integrity,
+  planes and return paths, routing; 2026-10-20, fix pass 4's board `cc044ea0…`): 0 Critical, 0 Major, 3 Minor; the two
+  record items fixed in its records pass, the commit left to the owner (R8_VALIDATION "Review pass 5"). The other five
+  dimensions (pyro, requirements, RF, power, DFM) were not re-run on `cc044ea0…` (a further re-check is the owner's call).
+- **Calculation (CAD copper and datasheets; step 9 on the final board):**
+  - 7.7 A DC at 0.05 mm on `cc044ea0…` (equal to fix passes 2 and 3's, line for line): RAW_ACT 1.45, BAT_IN 0.45, ACT_FET_S 0.18 mΩ; IPC-2152 neck rises 17.5 / 14.5 / 21.4 °C
+    (no plane credit, Inference), within D12's 20 / 20 / 30 °C (R7: 38 / 30 / 44 °C, accepted as estimated); largest via
+    barrel currents 0.86 A (RAW_ACT) and 0.65 A (BAT_IN); the servo GND return 0.69 mΩ (5.3 mV and 0.041 W at 7.7 A);
+  - critical-net reference (`tools/reference_audit.py`, absolute): 11.07 % of samples unreferenced, every one at a via
+    antipad or under the crystal's deliberate In2 keep-out; none over another net's fill, a split or a void (R7 27.9 %);
+  - pyro block: rigid, spacing margins and bare-copper leakage distances re-measured (R8 = R7 inside the block; 7 non-pyro
+    nets within 3 mm of armed copper against R7's 23; battery-live copper ≥ 1.0 mm from the ARM side since fix pass 1);
+  - RF: strip rigid (50.3 Ω field solve, launch, stitching carry over); nearest RF part to a restricted part 5.94 mm
+    (R306–U1), logic buck ≥ 43 mm from both modules;
+  - plate model f1 209–490 Hz with the sled carrying the SMA plugs, 6–8 % below R7 (C84 on the mode-1 antinode; Inference
+    inputs);
+  - reverse hot-plug: the protection parts at J1 (3.9–10.6 mm, J1.1's centre to each part's nearest pad centre; 1.9–7.8 mm
+    pad edge to pad edge) restore the R4 model's premise; U9's 27 mm feed adds ≤ 0.002 V and 0.8 %
+    slew at U9 IN (Inference);
+  - IMU axis map unchanged; the lever arm's sign flips (U4 13 mm west of the axis).
+- **Cost and stock (live, 2026-10-19 23:51Z, step 8):** $106.00 per board, 52 extended codes (limits $126.41 and 52); U4
+  out of JLC stock, to be consigned (ORDERING §1). The BOM is unchanged by fix passes 1–4; the reports' CPL binding is
+  stale (C83's, R81's and R172's rows; fix pass 4 changed none) until the next `FAB_NET=1` run, due within 24 h of
+  ordering.
+- **Simulation:** none (the hot-plug and plate scripts are calculations). **Firmware:** none; a binding note records what
+  the R8 binding must carry (`sources/r8_design/step9/r8_binding_note.json`). **Physical tests:** none.
+
+**Needs the bench or the airframe** (ORDERING §5): every R7 item below, plus, for R8: the reverse hot-plug scoped at U9 IN
+(now 27 mm from the input node), the camera buck's remote sense at J9.1 under a load step (D41), the IMU signs with the
+new lever-arm sign, the tap check against 209–490 Hz, the 7.7 A thermal-camera stall test (ORDERING §5: steady state,
+the RAW_ACT neck against D12 read at least 3 mm from J122's pads, a loose bound there, with the whole neck recorded, J122
+at ≤ 30 K rise, the FETs against MARGIN R1, D105), the board turning off with the ARM link in, the GNSS C/N0 per band (L1
+and L5: the HSE's 63rd and 47th harmonics, the radio crystal's 37th) with the camera supply on, plus UBX-MON-SPAN spectra,
+a radio-asleep condition and a reference receiver, the radio held in reset in the ROM bootloader, and the pyro gate there
+(D6.8; ORDERING §5's pyro-gate list: TP122, the bootloader confirmed with USB unplugged, the static gate; repeated after any
+firmware change).
+
+Open items:
+- The owner's dated acceptance of R8_VALIDATION "R8 deviations for owner acceptance" (3 allowlist entries, 0 leftovers,
+  20 review rows, 91 information instances, and the agent decisions it names), or more work first. Fix pass 4 applied
+  review pass 4's two removable copper Minors (C12 #5 / #6 and C21 are gone); review pass 5 re-checked `cc044ea0…` in
+  three dimensions and changed no list entry; a re-check in the other five is the owner's call.
+- Commit or tag `m3-assy-r8` at this state and record the commit beside `cc044ea0…` here and in R8_VALIDATION (owner
+  action, R8P5-INTEGRITY-01).
+- Vibration (R8_VALIDATION C10): f1 6–8 % below R7's; moving C84 toward a support recovers about 17 Hz (owner or review).
+- Before ordering R8: U4 consigned; JLC's acceptance of five long-edge tabs without a forward rail (D35, Inference); a cost
+  and stock run within 24 h.
+- R8 firmware board binding; 52 of 52 extended codes (any new code needs one removed).
+
+## Previous candidate (owner-accepted, orderable fallback): M3-ASSY-R7 (on-board GNSS and radio, 46 × 118 mm)
 
 **CAD and manufacturing files complete after review passes 2–8 and their fixes (2026-10-18); review pass 8 on the final
 board found 0 Critical / 0 Major (10 Minor, recorded in R7_VALIDATION). Not a fabrication or flight release.**
-- Uncommitted on branch `m3-assy-r7` (base R6 `3b215ba`).
+- Committed as `431025d` on branch `m3-assy-r7` (base R6 `3b215ba`); its project and ORDERING live there (this branch's
+  `docs/ORDERING.md` is R8's).
 - Board SHA-256 `c872a3d30509cccf5f78b64cde48ef722ee85c7be23c4848b07ce4082a852de3` (fix pass 7), rebuilt byte for
   byte from the R6 board by `m3_design/r7_build.sh` (twice, by F8): `r7_pcb` → `r7_route` (with `r7_redraw`) → `r7_rework` →
   `r7_hygiene` → `r7_polish` → `r7_post`. No router session is replayed.
 - Record: [docs/M3_R7.md](docs/M3_R7.md); validation: [docs/R7_VALIDATION.md](docs/R7_VALIDATION.md); ordering:
-  [docs/ORDERING.md](docs/ORDERING.md).
+  `docs/ORDERING.md` on branch `m3-assy-r7` (431025d).
 - **Owner acceptance (2026-10-18):** the R7 deviation list (R7_VALIDATION "R7 deviations for owner acceptance": 45
   allowlist entries, 29 leftovers, 25 review rows; 10 AGENTS §3 items) is accepted, with the 7.7 A copper rise accepted as
   estimated, so REQUIREMENTS M2 is met in CAD. **Before ordering:** U4 consigned and JLC's written confirmation of the
@@ -110,7 +258,9 @@ Verification, stated separately:
     3V3 via joined only by overlap, unlisted) are fixed in copper, and the gate now tests both classes (`local_bump`,
     `via_on_track`); every Minor is fixed or recorded, the two far legends included. Of the fix-pass-6 records' five
     "removable" items four were removed and one (LED_RED) proved not removable. The owner's acceptance is open.
-  - **No review pass on the fix-pass-7 board yet.**
+  - Pass 8, three reviewers on the fix-pass-7 board `c872a3d3…`: 0 Critical, 0 Major, 10 Minor (recorded, not reworked;
+    R7_VALIDATION "Review pass 8"). This met the review-loop stopping rule; the owner accepted the deviation list on
+    2026-10-18.
 - **Calculation (CAD copper and datasheets):**
   - DC solve on the final board with its own stack-up (30 µm inner copper; `tools/dc_solve.py` reads it since fix
     pass 4): RAW_ACT 3.74, BAT_IN J1 → Q120 3.03, ACT_FET_S 1.19 mΩ at 0.1 mm (3.71 / 3.03 / 1.16 at 0.05 mm; fix
@@ -161,10 +311,10 @@ Verification, stated separately:
 - coax and camera-shroud fit; every R6 bench gate.
 
 Open items:
-- (Done 2026-10-18: the owner accepted R7_VALIDATION "R7 deviations for owner acceptance".) Optional further
-  rerouting (left removable: C27's two non-critical local bumps, kept by judgement; not examined: C23's 0.74 mm BAT_IN
-  piece; not attempted: the cosmetic C17 / C19 / C21 / C22 tidy-ups); then a review pass on the board that will be
-  ordered.
+- (Done 2026-10-18: the owner accepted R7_VALIDATION "R7 deviations for owner acceptance"; review pass 8 on
+  `c872a3d3…`, the board that would be ordered, found 0 Critical / 0 Major.) Optional further rerouting (left removable:
+  C27's two non-critical local bumps, kept by judgement; not examined: C23's 0.74 mm BAT_IN piece; not attempted: the
+  cosmetic C17 / C19 / C21 / C22 tidy-ups).
 - The IPC-2152 rise of the 7.7 A copper (deviation C1): the owner's limit, or ACT_GATE / parts moved or a
   battery-corner re-layout; the F4 bench stall test either way.
 - Minors not done: wider unstitched GND fingers (C11: 23 under 0.75 mm, 48 under 1.0 mm; fix pass 7 added two and

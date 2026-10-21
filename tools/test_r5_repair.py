@@ -1,10 +1,12 @@
 """Guarded CAD replay: corrupted or partial geometry must never be overwritten."""
 import json
 from pathlib import Path
+import subprocess
 import sys
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
+R5_COMMIT = '580d358'           # the validated R5 board (M3-ASSY-R5), which carries every recorded scoped repair
 sys.path.insert(0, str(ROOT / 'm3_design'))
 from r5_scoped_patch import apply_delta
 
@@ -90,8 +92,11 @@ class ScopedReplayTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             apply_delta(board(old.replace('"SW"', '"BAT"'), self.unrelated), data)
 
-    def test_current_native_project_has_all_recorded_scoped_repairs(self):
-        text = (ROOT / 'm3_design/assembly_review/m3.kicad_pcb').read_text()
+    def test_r5_native_project_has_all_recorded_scoped_repairs(self):
+        # The scoped repairs are R5 geometry (m3_design/r5_repair.json): R6 moved every object +18 mm, so no later board
+        # can carry them (docs/M3_R7.md "Tests": retarget to the R5 commit). The check reads the R5 board from git.
+        text = subprocess.run(['git', '-C', str(ROOT), 'show', f'{R5_COMMIT}:m3_design/assembly_review/m3.kicad_pcb'],
+                              capture_output=True, text=True, check=True).stdout
         data = json.loads((ROOT / 'm3_design/r5_repair.json').read_text())
         for name, delta in data['scoped_repairs'].items():
             with self.subTest(stage=name):

@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-# Board gate: DRC/parity, ERC, metadata/models, silkscreen, R7 CAD contract, clean routing, actuator contract and fit.
+# Board gate: DRC/parity, ERC, metadata/models, silkscreen, R8 CAD contract, clean routing, actuator contract and fit.
+# R8 (M3-ASSY-R8): tools/check_r8.py and route_check profile r8. The R7 record is checked with tools/check_r7.py and
+# route_check.py --profile r7 (both still pass on R7 board c872a3d3...).
 # Usage: tools/check.sh [path/to/board.kicad_pcb]      exit 0 = every check clean
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BOARD="${1:-$ROOT/m3_design/assembly_review/m3.kicad_pcb}"
+BOARD="$(cd "$(dirname "$BOARD")" && pwd)/$(basename "$BOARD")"   # absolute: the audit step runs in quality_audit/
 CLI="${KICAD_CLI:-$(command -v kicad-cli || true)}"
 if [[ -z "$CLI" ]]; then
   for candidate in /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli /Applications/KiCad.app/Contents/MacOS/kicad-cli; do
@@ -36,8 +39,8 @@ PY
 (cd "$ROOT/quality_audit" && python3 verify_board.py "$BOARD" --cli "$CLI" --output "$OUT/audit.json" >/dev/null) \
   && echo "metadata / 3D model audit: OK" || { echo "metadata / 3D model audit FAILED: see $OUT/audit.json"; exit 1; }
 python3 "$ROOT/tools/silk_check.py" "$BOARD" --cli "$CLI"     # DRC skips silkscreen wholly outside the outline
-"$KICAD_PY" -I "$ROOT/tools/check_r7.py" "$BOARD" --report "$OUT/r7.json"
-"$KICAD_PY" -I "$ROOT/tools/route_check.py" "$BOARD" --report "$OUT/route.json" \
+"$KICAD_PY" -I "$ROOT/tools/check_r8.py" "$BOARD" --report "$OUT/r8.json"
+"$KICAD_PY" -I "$ROOT/tools/route_check.py" "$BOARD" --profile r8 --report "$OUT/route.json" \
   | { grep -E '^(FAIL|routing hygiene: [0-9])' || true; }       # clean routing (AGENTS.md §3); full list in route.json
 python3 "$ROOT/m3_design/check_actuators.py" "$BOARD"
 "$KICAD_PY" -I "$ROOT/tools/fit_check.py" "$BOARD" --report "$OUT/fit.json"

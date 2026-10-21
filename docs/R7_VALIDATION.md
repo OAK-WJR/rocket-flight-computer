@@ -888,7 +888,7 @@ under that rule only, not for every route the board itself would allow; whether 
 merely slots it was measured only where a row says so. The search knows nothing of the RF strip's fence openings, its
 GND-only In2 or the module keep-outs.
 
-**Owner acceptance: none recorded.**
+**Owner acceptance:** recorded 2026-10-18 for `c872a3d3…` (see the owner summary above).
 
 ### A. `route_check` allowlist (45 entries, gated rules on critical nets)
 
