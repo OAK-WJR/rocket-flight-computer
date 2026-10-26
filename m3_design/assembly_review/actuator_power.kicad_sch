@@ -6,7 +6,7 @@
 	(title_block
 		(title "11 | Actuator power switch")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R8")
+		(rev "M3-ASSY-R9")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
 			(symbol "M3:C"

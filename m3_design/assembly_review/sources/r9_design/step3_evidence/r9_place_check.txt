@@ -1,0 +1,15 @@
+legaliser  OK
+drc        OK
+fit        OK
+plate      OK
+f9         OK
+f10        OK
+j1         OK
+tabs       OK
+pyro_pads  OK
+mst        OK
+contract   OK
+actuators  OK
+areas      OK
+mst 1468.0 mm; f1 252.1 Hz; tabs {'west': [(0.5, 7.25), (12.0, 26.75), (55.75, 101.5)], 'east': [(0.5, 27.0), (95.5, 101.5)]}
+R9 placement gate: OK

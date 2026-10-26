@@ -473,11 +473,18 @@ class R8Contract(unittest.TestCase):
 
     # --- D14 ---------------------------------------------------------------------------------------------------------
     def test_check_actuators_must_stay_r7s(self):
-        self.assertEqual(gate.actuators_unchanged()[0], [])
+        # R9 (R9_DECISIONS D-S1-02) re-pins the working copy's check_actuators.py in check_r9; R8's contract still
+        # pins R8's own copy, read here from the R8 commit, so the D14 hash test keeps its meaning
+        import subprocess
+        r8 = subprocess.run(['git', '-C', str(Path(__file__).resolve().parents[1]), 'show',
+                             '9c8179b:m3_design/check_actuators.py'], capture_output=True, check=True).stdout
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / 'check_actuators.py'
-            p.write_text(gate.CHECK_ACTUATORS.read_text() + '\n# edited\n')
+            p.write_bytes(r8)
+            self.assertEqual(gate.actuators_unchanged(p)[0], [])
+            p.write_bytes(r8 + b'\n# edited\n')
             self.assertTrue(gate.actuators_unchanged(p)[0])
+        self.assertTrue(gate.actuators_unchanged()[0])                       # the R9 working copy is not R8's
 
 
 if __name__ == '__main__':

@@ -1,0 +1,265 @@
+# M3-ASSY-R9 placement table (build step 3): m3_design/r9_pcb.py places the board from it, m3_design/r9_build.sh runs it.
+# Basis: sources/r9_design/r9_plan.md section 4 step 3, R9_OWNER_DECISIONS.md, R9_DECISIONS.md D-S3-*. Generated once by
+# the step-3 design pass and frozen; edit by hand with the reason in 'basis', then rebuild (r9_pcb.py refuses any
+# legaliser violation; --propose OUT.tsv lists legal spots) and run the step gate (r9_place_check.py).
+# mm, origin at the aft-west corner: +x east, +y forward (the SMA jacks on the aft edge y = 0, J1 at the forward edge);
+# rot in degrees as KiCad; side F (top) or B (bottom). '@' rows: @OUTLINE (W, L); five @M3 supports and J122's two @TIE
+# holes, each a 3.2 mm Edge.Cuts circle at (x, y). Every part exactly once.
+ref	x	y	rot	side	basis
+@OUTLINE	46	102	0	F	P1; 102 mm by the kill path (owner decision 1)
+@M3	4	4	0	F	P2 corner
+@M3	42	4	0	F	P2 corner
+@M3	4	98	0	F	P2 corner
+@M3	42	98	0	F	P2 corner
+@M3	42	59.5	0	F	P2 mid-span east, owner decision 5 (98 mm 55.5, moved with the forward block)
+@TIE	15.6	62	0	F	M-3 (J122); 0.4 mm west: D120's 3V3 lane passes J122's west end (D-S5-05)
+@TIE	30.8	59	0	F	M-3 (J122); 0.9 mm east: the ARM1_SENSE lane passes J122's east end (D-S5-01)
+C5	37.2	73.4	90	B	3V3 buck bootstrap cap BST-SW (D-S6-06)
+C6	42.75	71.75	-90	B	3V3 buck input cap at VIN / GND (D-S6-06)
+C7	43.3	75.8	-90	B	3V3 buck input bulk on the VLOGIC column (D-S6-06)
+C8	41	80.28	0	B	3V3 buck output cap at L1.2 (D-S6-06)
+C9	41	82.24	0	B	3V3 buck output cap at L1.2 (D-S6-06)
+C10	12.5	55.6	0	B	3V3A bulk
+C11	12.5	53.6	0	B	3V3A bulk
+C13	9.85	51.6	-90	B	legaliser proposal: nearest legal spot to its region-plan position
+C14	16.4	53.6	0	B	pin 11 3V3
+C15	24.2	48.9	90	B	R8 spike-a block under U1, translated with U1
+C16	23.1	38.12	-180	B	R8 spike-a block under U1, translated with U1
+C17	12	39.4	-90	B	R8 spike-a block under U1, translated with U1
+C18	13.3	50.65	-180	B	R8 spike-a block under U1, translated with U1
+C19	23.35	39.95	-90	B	VCAP1, 0.25 mm aft: BUZZ_DRV's interior exit E41.44 passes north of its GND pad, status (D-S7-14)
+C20	14.8	38.8	0	B	R8 spike-a block under U1, translated with U1
+C21	23.1	50.75	0	B	pins 20/21 3V3A, under U1 beside the inward 3V3A via: the forward face is the servo lanes (D-S7-10)
+C22	22.0	48.8	90	B	3V3A 1u, under U1 below the inward 3V3A via (D-S7-10)
+C23	22.8	36.8	180	B	3V3 bulk, off the west face (its via sat in USB_FAULT_N's interior lane), strapped to C16.1, usb_swd (D-S7-11)
+C24	20.75	50.6	0	B	R8 spike-a block under U1, translated with U1
+C25	14.95	49.2	-180	B	R8 spike-a block under U1, translated with U1
+C26	20.75	47	0	B	R8 spike-a block under U1, translated with U1
+C28	13.05	28.4	0	B	legaliser proposal: nearest legal spot to its region-plan position
+C29	23	45.02	-90	B	R8 spike-a block under U1, translated with U1
+C30	12.05	50.23	270	B	U4 3V3A (pad 5): on the 3V3A U crossbar north of U4, GND pad in line with C18.2 (D-S7-10)
+C31	9.7	48.57	270	B	U4 3V3A (pad 8): on the 3V3A line y 48.15 west of pad 8, GND pad on the U5 / C31 GND line (D-S7-10)
+C32	2.0	48.15	180	B	U5 3V3A: west end of the 3V3A line y 48.15 beside U5.1 (D-S7-10)
+C60	29.2	46.25	-90	B	VLOGIC sense filter at the ADC end, status (D-S7-14)
+C70	30.88	33.9	-180	B	R8 camera block arrangement, moved with the forward block
+C71	35.5	31.4	-90	B	R8 camera block arrangement, moved with the forward block
+C72	43.41	38.95	-90	B	R8 camera block arrangement, moved with the forward block
+C73	43.41	34.35	90	B	R8 camera block arrangement, moved with the forward block
+C74	36.1	40.83	90	B	R8 camera block arrangement, moved with the forward block
+C75	40	50.07	0	B	R8 camera block arrangement, moved with the forward block
+C76	35.29	44.66	90	B	R8 camera block arrangement, moved with the forward block
+C77	39.5	39.5	-180	F	R8 camera block arrangement, moved with the forward block
+C80	19	99.7	-180	B	input cap at J1
+C81	39.6	86.75	90	B	U9 DVDT cap on U9.7's line, lowered so that U9.8's GND via fits between the DVDT and ILIM lanes (Q122's courtyard bounds it west), power_ctl (D-S7-16)
+C82	40.9	70.9	90	F	RAW_PROTECTED bulk, top, at the trunk's aft end (D-S6-05)
+C83	10.2	28.4	0	B	legaliser proposal: nearest legal spot to its region-plan position
+C84	37	80.5	-90	F	hold-up turned: VLOGIC pad aft by its via, GND pad forward (D-S6-06)
+C85	42.9	67.725	0	B	U11 SS east, 45-degree link from U11.11 clear of U11.12 (D-S6-06), power_ctl links (D-S7-17)
+C86	16.725	32.4	0	B	U10's output cap on the USB_LIMITED trunk at U10.6 (C86.1 at the trunk's turn north), power_ctl (D-S7-16)
+C87	39.5	92.4	0	F	U9 EN cap, top, west of D9 (D-S6-01)
+C88	38.2	90.23	90	B	U9 IN cap on the IN bar's line (D-S6-01)
+C89	32.25	91.7	-90	F	damper cap turned: BAT_IN pad toward Q120's drain (D-S6-02)
+C90	3.5	26.0	0	B	camera UART 3V3 bulk (100 nF on the In2 3V3 plane): its R8 / step-3 spot is the pin-28..31 box exit band that power_ctl's three lanes and two pull-ups fill; free bottom space over the plane, power_ctl (D-S7-16)
+C91	42.15	53.3	0	B	U13 input cap beside its IN pin, outside the (42, 59.5) support's M-5 disk, camera (D-S7-13)
+C92	35.45	57.72	-90	B	CAM_IO_3V3 bulk at U13's output, bottom, west of the M-5 disk, camera (D-S7-13)
+C93	34.675	51.875	90	B	U12.7 bypass at its via, camera (D-S7-13)
+C94	32.3	45.4	0	B	CAM_5V_SENSE filter, camera (D-S7-13)
+C95	32.25	96.6	90	F	damper at J1.1 (F9)
+C96	24	99.7	-180	B	input cap at J1
+C97	39.3	66.4	90	F	U11 IN1 cap, top, over U11's IN1 via (D-S6-06); 0.7 mm east, straight under the via, so that U11.6's GND via fits south of the pin, power_ctl (D-S7-16)
+C98	39.275	64.2	180	B	U11 USB input cap beside U11.7 / U11.6 (TI SLVSEA3F section 11): C98.1 1.9 mm of track from U11.7, C98.2 under U11.6; legaliser-checked, 4.48 mm from the mid support (R9P1-POWER-01, D-F1-05)
+C99	40.5	68.9	0	B	VLOGIC out cap between U11 and U2 (D-S6-06)
+C100	35.2	46.8	0	F	R8 camera block arrangement, moved with the forward block
+C120	27.6	85.5	90	B	ACT gate-source cap west of Q121.4, off the ACT_FET_S bridge (D-S6-04)
+C121	33.4	66.6	90	F	RAW_ACT bulk on the spine, east of J122; turned 90 degrees (RAW pad forward): its pads clear the ARM1_SENSE lane, its body keeps the M-5 support floor (D-S5-01)
+C122	30.77	53.2	0	B	RAW sense filter: SENSE pad on the column x 30.07, the run to R172 leaves here (D-S7-08)
+C126	6.9	60.53	90	F	gate row: GATE pad on y 61.23 (D-S5-03)
+C127	10.8	60.53	90	F	CONT row on y 61.23, 1.68 mm from R128.1 (no fires-class bridge < 1.5 mm, D-S5-03)
+C128	6	63.825	90	F	OUT pad on the drain land's west tab line: C128 taps the drain directly (D-S5-04)
+C129	23.4	78.7	0	F	arm divider; ARM node filter on R175.2's 45-degree line, its GND pad 0.37 mm off the ARM lane (D-S5-04)
+C150	30.2	74.6	90	B	RAW_ACT 22u
+C151	32.6	74.6	90	B	RAW_ACT 22u
+C160	26.58	35.6	180	B	pull-pin filter on the PULLPIN column, status (D-S7-14)
+C300	11.8	21.21	-180	F	GNSS row: 3V3_GNSS 10u, 2.56 mm from U30.7 (R-12 3.02)
+C301	14.03	20.93	-180	F	GNSS row: 3V3_GNSS 100n in front of U30.8, 2.13 mm (R-12 2.18)
+C302	11.32	6.18	180	F	step 4 (D-S4-01): R7's GNSS chain in J30's frame, the line on J30's axis, R304's jog onto U30.11
+C303	14.53	5.76	90	F	step 4 (D-S4-02): pi's first shunt at the bias-tap node east of the line, GND end aft (limiter vias west, stitching east)
+C304	9.6	13.97	-90	B	step 4 (D-S4-03): limiter on B.Cu under U30, entered at the pad nearest its via: DNP compensation off the gate trunk
+C305	15.81	7.13	0	F	step 4 (D-S4-01): R7's GNSS chain in J30's frame, the line on J30's axis, R304's jog onto U30.11
+C310	38.53	19.6	0	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+C311	37.95	16.54	0	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+C312	37.95	17.5	0	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+C313	30.93	7.6	180	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+C314	34.51	7.6	0	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+D4	9.95	34.1	-90	F	USB ESD between J3 and U1; 0.05 mm aft so its DP pins sit on J3's DP lane, usb_swd (D-S7-11)
+D8	25	89.2	-180	B	input TVS at J1.1 (>= 1.5 mm from J1 pins)
+D9	41.6	89.6	-180	F	RAW_PROTECTED clamp, top, on the trunk at U9's vias (D-S6-05)
+D30	13.265	5.2	180	F	step 4 (D-S4-01): R7's GNSS chain in J30's frame, the line on J30's axis, R304's jog onto U30.11; turned 180 (D-S4-02): GND pad west
+D31	32.615	5.2	0	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+D120	17.9	70.08	-180	F	IGN-bar bay; COLD pad on R131.2's 45-degree line, 3V3 pad >= 3 mm from armed copper (D-S5-04)
+D121	23.0	55.35	90	B	servo clamp turned 90 between the inner lane vias: S1 NW, S2 SW, S3 SE, S4 NE so the B.Cu links are planar; courtyard >= 1.5 mm from J122 pins (D-S7-09)
+D122	28	42.5	0	B	pull-pin clamp
+D123	30.25	27.6	0	B	buzzer flyback under LS120 between its pads, status (D-S7-14); 0.45 east / 0.35 forward of D-S7-14's spot so its pin-1 mark and outline clear Q123's (footprint silk, D-S9-01)
+FB30	16.01	21.06	-180	F	GNSS row: ferrite, 3V3_GNSS pad onto C301.1; RESET lane passes aft of it
+FB31	35.15	20.95	0	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper); step 3: turned forward of U31 inside y_f
+J1	20	94.4	-180	F	plan: entry +y, BAT+ east end
+J2	2.35	43.3	-90	F	SWD pad above J3, west edge (coat region with the block)
+J3	4.6	34.3	-90	F	west edge, USB pads >= 5 mm from strip RF parts
+J9	42.7	48.2	-90	F	R8 camera block arrangement, moved with the forward block
+J30	13.59	0	0	F	step 4 (D-S4-01): GNSS jack 0.86 mm west of U30.11 (R7's chain, R304 jogs onto the module pin)
+J31	32.29	0	0	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+J121	10.1	73.27	90	F	plan: IGN, entry -x, IGN pin forward; 0.10 mm courtyard gap to J124
+J122	23	62	-180	F	plan: turned, SIG row aft, mirrored numbering (SERVO1 west)
+J123	40	29.6	0	F	pull-pin connector, aft-east
+J124	10.1	83.5	90	F	plan: ARM, entry -x, RAW pin forward
+L1	40	76.6	-90	B	3V3 buck inductor on SW, DS41326 Figure 25 (D-S6-06)
+L3	39.95	44.82	-90	B	R8 camera block arrangement, moved with the forward block
+L30	13.127	6.18	0	F	step 4 (D-S4-01): R7's GNSS chain in J30's frame, the line on J30's axis, R304's jog onto U30.11
+LED1	6.05	45.1	0	F	status LED, LED_YEL_A between its pads, status (D-S7-14)
+LED2	6.85	47	0	F	status LED, south of the I2C lanes, status (D-S7-14)
+LS120	29	25.5	0	F	buzzer, south-centre (its west spot is crossed by imu_baro's I2C), status (D-S7-14)
+Q30	11.3	10.15	-90	B	step 4 (D-S4-03): limiter on B.Cu under U30, entered at the pad nearest its via: drain straight forward of V3
+Q31	14.53	10.1	90	B	step 4 (D-S4-03): limiter on B.Cu under U30, entered at the pad nearest its via: gate from R303.1; 0.15 east so its outline clears Q30's (footprint silk, D-S9-01)
+Q32	8.05	9.9	90	B	step 4 (D-S4-03): limiter on B.Cu under U30, entered at the pad nearest its via: E from V1, B on R300.2; 0.1 west so its outline clears Q30's (footprint silk, D-S9-01)
+Q120	34	91.5	0	B	plan: drains on J1.1 level
+Q121	32.73	82.2	-180	B	plan: face to face
+Q122	37.35	84.5	90	B	ACT gate driver column east of the FET pair, beside Q120.4 (D-S6-04)
+Q123	29.6	25	180	B	buzzer driver under LS120, status (D-S7-14)
+Q124	10.1	64.6	-180	F	drain under J121.1 (OUT bar straight)
+R5	8.0	46.67	90	B	BOOT0 pull-down beside the BOOT0 west via (D-S7-10)
+R7	9	32.4	90	B	CC1 pull-down beside the CC1 via, usb_swd (D-S7-11)
+R8	9	36	90	B	CC2 pull-down
+R9	9.95	32.4	90	B	VBUS_SENSE divider top on the VBUS tree beside J3, usb_swd (D-S7-11)
+R10	15.0	46.19	0	B	QSPI_NCS pull-up between U4, U3, Y1 and C30-old: on the B.Cu line U3.1 - NCS via - R10.1; its old spot is the SPI vias (D-S7-10)
+R11	9.2	45.25	90	B	IMU_CS pull-up west of U1's pins 89-90 (B.Cu), its CS pad on a branch off the CS run (detour slack), 3V3 via west; clear of C23 / R163 / R5 and the status / USB escapes (D-S7-10)
+R12	2.0	50.87	90	B	I2C pull-up (SCL) beside the SCL via west of U5 (D-S7-10)
+R13	4.97	54.05	270	B	I2C pull-up (SDA) beside the SDA via north of U5 (D-S7-10)
+R32	6.9	41.15	180	F	LED_RED series, west of U1 clear of the SWD lanes, status (D-S7-14)
+R33	6.9	43.1	180	F	LED_YEL series, west of U1 clear of the SWD lanes, status (D-S7-14)
+R60	30.4	46	90	B	VLOGIC divider top at VLOGIC_SENSE's E46.4 exit, status (D-S7-14)
+R61	28	45.98	-90	B	VLOGIC divider bottom on the sense lane, status (D-S7-14)
+R62	15.85	54.5	180	B	V3V3 divider top, nearer U1.18 (R60's old spot), turned so its SENSE pad heads the lane, status (D-S7-14)
+R63	15.85	55.38	0	B	V3V3 divider bottom under R62 (R61's old spot), status (D-S7-14)
+R64	6.23	53.78	270	B	BARO_SDO pull-down straight north of U5.6 (D-S7-10)
+R70	31.6	36.9	180	B	CAM_ILIM set resistor beside U7.7, camera (D-S7-13)
+R71	39.5	37.9	-180	F	R8 camera block arrangement, moved with the forward block
+R72	39.5	36.3	0	F	R8 camera block arrangement, moved with the forward block
+R74	31.6	31.5	0	B	R8 camera block arrangement, moved with the forward block
+R75	31.6	29.9	-180	B	R8 camera block arrangement, moved with the forward block
+R76	33.6	40.55	-180	B	R8 camera block arrangement, moved with the forward block
+R77	34.05	37.75	90	B	R8 camera block arrangement, moved with the forward block
+R78	35.5	49.2	-180	B	R8 camera block arrangement, moved with the forward block
+R80	18.285	90.2	-180	B	switch leg under J1.3, BAT_IN pad toward the BAT_IN tap (D-S6-02)
+R81	43.7	89.3	90	B	U9 EN pull-down east of U9 (D-S6-01)
+R82	39.7	92.9	0	B	U9 OVLO divider north of U9 (D-S6-01)
+R83	42.76	92.9	0	B	U9 OVLO divider north of U9 (D-S6-01)
+R84	41.1	86.6	90	B	U9 ILIM south of U9, R84.1 below the RAW_PROTECTED column via so BAT_ILIM passes east of it, power_ctl (D-S7-16)
+R85	15.6	30.175	90	B	USB ILIM on U10.5's line (straight link), clear of the USB_LIMITED trunk at U10.6, power_ctl (D-S7-16)
+R86	42.9	66.25	0	B	U11 ILIM east on U11.10's line (straight link) (D-S6-06), power_ctl links (D-S7-17)
+R87	37	65.425	-90	B	U11 USB OVLO divider west (D-S6-06)
+R88	37	68.5	-90	B	U11 USB OVLO divider west (D-S6-06)
+R89	30.575	49.125	0	B	BAT_FAULT_N pull-up below its lane in the pin-28..31 box exit band, its 3V3 via east of the ARM1_SENSE lane, power_ctl (D-S7-16)
+R90	14.3	34.8	180	B	USB_FAULT_N pull-up beside its B.Cu lane, usb_swd (D-S7-11); 0.3 mm west for the USB_LIMITED trunk, power_ctl (D-S7-16)
+R91	29.225	51.125	0	B	LOGIC_SOURCE_ST pull-up above its lane in the pin-28..31 box exit band, power_ctl (D-S7-16)
+R92	43.1	86.25	90	B	RAW_PROTECTED bleed on U9's output column (D-S6-05)
+R100	37.5	47.175	-90	F	R8 camera block arrangement, moved with the forward block
+R101	37.5	51.925	-90	F	R8 camera block arrangement, moved with the forward block
+R102	34.95	53.6	-90	F	CAM_UART_OE pull-down
+R103	35.1	60.5	0	F	CAM_IO_3V3 bleed on F.Cu beside TP90, camera (D-S7-13)
+R104	32.8	46.55	180	B	CAM_5V_SENSE divider top beside C76.1 (CAM_5V), camera (D-S7-13)
+R105	31.94	47.55	180	B	CAM_5V_SENSE divider bottom, camera (D-S7-13); turned with R105.1 kept on the sense node, its GND pad west in open GND (D-S8-13: at x 33.23 the pad was boxed by R104.1, the OE lane and R105.1, a starved thermal relief)
+R110	19.8	34.4	0	B	VBUS sense
+R120	29.35	86.47	90	B	ACT gate-source resistor beside C120, off the bridge (D-S6-04)
+R121	37.35	87.55	90	B	ACT gate driver column: ACT_DRV over Q122.3, ACT_GATE at the hop via (D-S6-04)
+R122	36.83	82	-180	B	ACT gate driver column: ACT_EN pull-up (D-S6-04)
+R123	36.4	80.56	90	B	ACT gate driver column: ACT_EN pull-down (D-S6-04)
+R124	29.64	56.6	0	B	RAW sense top 2: MID straight across under the ARM lane (B.Cu), MID pad >= 1.0 mm from R177.1 (P-5), >= 2.0 mm from the tie line (D-S7-08)
+R125	30.5	55.5	0	B	RAW sense bottom: SENSE pad on the column x 30.07 (D-S7-08)
+R126	5	60.23	-90	F	gate row: GATE pad on y 61.23 with C126.1 / R128.1 (D-S5-03)
+R127	5	57.2	90	F	prototype
+R128	8.4	60.8	90	F	prototype gate / CONT row
+R129	13.2	65.1	90	F	CONT divider column x 13.2: MID north, CONT south (D-S5-04)
+R130	12.2	60.8	90	F	CONT row; the CONT exit between C127.2 and R130.2 (D-S5-03)
+R131	14.9	67.66	0	F	cold pull-up on the OUT branch: OUT west, COLD east toward D120; its OUT pad >= 3 mm from D120's 3V3 (D-S5-04)
+R132	21.6	80.96	0	F	arm divider on the BUS bar
+R133	25.4	81.66	0	F	arm divider
+R134	18.1	78.385	-90	F	bridges J121.2 and J124.1 with two straight bars
+R150	19.19	55.9	-90	F	one 1k under each plug column, MCU pad aft
+R151	21.73	55.9	-90	F	one 1k under each plug column, MCU pad aft
+R152	24.27	55.9	-90	F	one 1k under each plug column, MCU pad aft
+R153	26.81	55.9	-90	F	one 1k under each plug column, MCU pad aft
+R154	18.05	53.75	90	B	servo pull-down under via G1 (D-S7-09)
+R155	19.25	53.97	90	B	servo pull-down on the S2 link (D-S7-09)
+R156	26.75	53.97	90	B	servo pull-down on the S3 link (D-S7-09)
+R157	27.95	53.75	90	B	servo pull-down under via G4 (D-S7-09)
+R160	27	30.5	-90	B	pull-pin series on the PULLPIN column x 27.0, status (D-S7-14)
+R161	27.43	33.5	180	B	pull-pin pull-up on the PULLPIN column, status (D-S7-14)
+R162	26.1	26.15	0	B	BUZZ_DRV series at the driver, status (D-S7-14)
+R163	26.6	24.3	90	B	buzzer gate pull-down at the driver, status (D-S7-14)
+R164	12.325	57.4	180	B	3V3 -> 3V3A, turned: R164.2 straight above C10.1 / C11.1 (one 3V3A trunk x 11.5) (D-S7-10)
+R165	13.205	90.2	0	B	switch leg under J1.4 (D-S6-02)
+R166	35.32	94.4	90	F	damper resistor (F9)
+R167	30.5	99.6	0	B	input bleed
+R168	16.6	54.5	0	F	PYRO1_CONT at pin 15 (P-8)
+R170	28.1	47	180	F	ARM1_SENSE at pin 33 (P-8), top, east of U1.33: the ARM1_SENSE path all F.Cu, no via (D-S5-02)
+R172	25.85	46.1	0	B	RAW_ACT_SENSE at pin 34 (P-8) under the east pad ends, .2 (MCU) toward the pin, >= 1.0 mm from the R89 / R91 3V3 pads (P-5); the SENSE run in from the north (D-S7-08)
+R173	13.2	67	90	F	CONT divider column x 13.2: OUT north on the OUT branch (D-S5-04)
+R175	23.4	80.96	0	F	arm divider
+R177	27.88	56.6	0	B	RAW sense top: R177.1 under the In2 RAW_ACT tap via west of the ARM lane (the tie hole edge clearance bars a tap east of it), courtyard <= 1.5 mm rule from J122 (D-S7-08)
+R178	13.2	60.8	90	F	CONT row; CONT pad under R129.2 (one CONT column, D-S5-03)
+R180	25.4	80.26	0	F	arm divider
+R182	30.5	54.6	0	B	RAW sense bottom: SENSE pad on the column x 30.07 (D-S7-08); 0.2 mm forward so the GND pour reaches C122.2 between them (D-S8-14)
+R300	8.775	7.4	180	B	step 4 (D-S4-03): limiter on B.Cu under U30, entered at the pad nearest its via: VCC_RF beside V1
+R301	11.3	12.45	0	B	step 4 (D-S4-03): limiter on B.Cu under U30, entered at the pad nearest its via: between Q30.S and Q30.G
+R302	13.52	13.05	0	B	step 4 (D-S4-03): limiter on B.Cu under U30, entered at the pad nearest its via: gate trunk to Q31.D
+R303	13.2	7.92	0	B	step 4 (D-S4-03): limiter on B.Cu under U30, entered at the pad nearest its via: LNA_EN pull-down beside V2
+R304	14.02	7.13	0	F	step 4 (D-S4-01): R7's GNSS chain in J30's frame, the line on J30's axis, R304's jog onto U30.11
+R305	7.42	20.93	-180	F	GNSS row: TXD series, module pad in front of U30.2
+R306	16.5	29.2	-180	F	MCU end of GNSS RXD on the U1.63 - U30.3 lane (SERIES margin 0.69 mm; R-10 slack >= 0.2)
+R307	9.52	20.93	-180	F	GNSS row: TIMEPULSE series at U30.4; RXD lane between R305 and R307
+R310	22.88	28.8	270	F	MCU end of RADIO_NSS beside its lane, 3V3 pad aft to its via (PULL_END 0.28 mm; D-S7-02)
+R311	37.75	14.43	-90	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+R312	26.55	7.15	90	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+R313	24.465	29.45	-180	F	MCU end of RADIO_SCK, on SCK's lane east of NSS (SERIES 0.25 mm, R-10 6.04 mm; D-S7-02)
+R314	23.75	12.73	180	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+R315	22.0	28.8	90	F	MCU end of RADIO_MOSI, on its lane east of the radio aft bus (SERIES 0.92 mm; D-S7-02)
+R316	32.72	7.6	0	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+TP30	2	9.6	0	F	R8 strip position (R7-congruent)
+TP70	35.8	28.9	0	B	legaliser proposal: nearest legal spot to its region-plan position
+TP71	36.36	35.65	0	B	R8 camera block arrangement, moved with the forward block
+TP72	44.2	47.17	0	B	R8 camera block arrangement, moved with the forward block
+TP73	30.4	39.3	0	B	CAM_ILIM test pad, 1 mm clear of CAM_FAULT_N and R70.2, camera (D-S7-13)
+TP74	44.6	73	0	F	GND (D-S8-11: the GND pads beside the C6 / C7 / C8 GND vias)
+TP75	37.65	44.3	0	F	R8 camera block arrangement, moved with the forward block
+TP76	37.5	55.1	0	F	R8 camera block arrangement, moved with the forward block
+TP80	36	96.8	0	B	BAT_IN test pad on the bottom BAT_IN pour (D-S6-01)
+TP81	44.6	70.4	0	F	RAW_PROTECTED (D-S8-11: a T off the camera branch, south of the GND pads)
+TP82	18.25	36.75	0	B	USB_LIMITED test pad on the trunk under U1's aft row, power_ctl (D-S7-16)
+TP83	44.6	78.2	0	F	VLOGIC, east test-pad column (slot swapped with TP87: its via west of the pad), power_ctl (D-S7-16)
+TP84	35	100.4	0	F	BAT_ENABLE on its F.Cu lane along the forward edge (east of J1's wire entry, >= 5.008 mm from the (42, 98) support): the east column's slot cost a 6.7 mm descent past R81 / R92, power_ctl (D-S7-16)
+TP85	44.6	80.8	0	F	BAT_FAULT_N, east test-pad column (slot swapped with TP89), power_ctl (D-S7-16)
+TP86	13.6	25.9	0	B	USB_FAULT_N test pad south of U10, 1 mm clear of the VBUS copper, usb_swd (D-S7-11)
+TP87	44.6	67.8	0	F	LOGIC_SOURCE_ST, the column's south slot reached from U11.9 (swapped with TP83), power_ctl (D-S7-16)
+TP88	44.7	75.6	0	F	GND (D-S8-11); 0.1 east of the column so its opening clears C84's polarity mark (footprint silk, D-S9-01)
+TP89	44.6	83.4	0	F	BAT_ILIM, east test-pad column (slot swapped with TP85), power_ctl (D-S7-16)
+TP90	33.85	58.65	0	F	CAM_IO_3V3 test pad on F.Cu (one via from C92.1), west of the M-5 disk, camera (D-S7-13); moved (+0.2, +0.3) clear of the divider's GND via (D-S8-12)
+TP91	32.4	54.4	0	F	CAM_UART_OE test pad on F.Cu beside OE's via, camera (D-S7-13)
+TP92	21.6	32	0	B	VBUS_SENSE
+TP120	30.2	78.4	0	F	RAW_ACT
+TP121	24	85.86	0	B	ACT_GATE test pad on the gate bus, outside PYRO_BLOCK (D-S6-04)
+TP122	7.58	63.5	0	B	bottom, one 45-degree B.Cu run from the gate via, its GND partner 1.37 mm (D-S5-06)
+U1	18	44.5	0	F	plan: rot 0, 5 mm west of the axis
+U2	40	71.8	0	B	3V3 buck, Diodes DS41326 Figure 25 (D-S6-06)
+U3	17.6	42.7	90	B	R8 spike-a block under U1, translated with U1
+U4	12	47.4	180	B	IMU: under U1 west pins, >= 5 mm from the coat region; turned 180 for the west-face fan-out (axis map D-S7-06)
+U5	5.6	50.6	0	B	baro under the buzzer, at the I2C pins
+U7	33.8	34.7	-90	B	R8 camera block arrangement, moved with the forward block
+U8	39.95	38.95	-90	B	R8 camera block arrangement, moved with the forward block
+U9	40.3	90.4	90	B	battery eFuse at Q120's drain end, rot 90: IN west off the BAT_IN pour, OUT east (D-S6-01)
+U10	12.6	31	0	B	USB power switch, gap band bottom
+U11	39.65	66.5	90	B	logic mux, rot 90, forward of the mid support (D-S6-06)
+U12	35.2	49.55	-90	F	R8 camera block arrangement, moved with the forward block
+U13	37.6	53.6	180	B	CAM_IO LDO, bottom under U12's north: IN at the CAM_5V source, OUT at U12.7's via, camera (D-S7-13)
+U30	11.15	14.05	90	F	R8 + (0.74, -0.9): row forward of it inside y_f 22.0; U30.18 >= 5.008 mm from the support
+U31	30.61	14	180	F	step 4 (D-S4-02): radio group 0.75 mm east (R-11 GNSS to radio RF copper)
+Y1	17.85	48.1	90	B	R8 spike-a block under U1, translated with U1

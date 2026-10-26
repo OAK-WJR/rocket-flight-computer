@@ -1,0 +1,14 @@
+./src/common/stdpbase.cpp(59): assert ""traits"" failed in Get(): create wxApp before calling this
+board m3_design/assembly_review/m3.kicad_pcb sha256 47fb298d02781702c25a88c19b01872a8733e9f2483fa5ed93355a9021f04a23
+RAW_ACT: Q121:5,6,7,8,9 -> J122:2,5,8,11, grid 0.1 mm, 52877 free cells, CG 1572 iterations, residual 9.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 0.79 mOhm; at 7.7 A: drop 6.1 mV, copper loss 0.047 W
+  F.Cu   carries    7 % at mid-path; peak 1.25 A/mm at (29.85, 65.98)
+  In2.Cu carries   47 % at mid-path; peak 1.98 A/mm at (27.55, 62.28)
+  B.Cu   carries   47 % at mid-path; peak 2.82 A/mm at (28.55, 63.38)
+  vias: 31 carry current; largest barrel currents at 7.7 A: 0.46 A at (32.2, 78.2) (In2.Cu-B.Cu), 0.46 A at (31.0, 78.2) (In2.Cu-B.Cu), 0.45 A at (29.9, 66.0) (F.Cu-In2.Cu), 0.44 A at (33.4, 78.2) (In2.Cu-B.Cu), 0.44 A at (35.5, 80.0) (In2.Cu-B.Cu)
+  vias over 0.5 A: 0; over 1.0 A: 0
+  cuts: neck 7.82 mm at level 0.970 on B.Cu (100 % of the current), cut box (28.7, 35.5, 78.43, 81.03), per-layer length [0.0, 0.0, 0.0, 7.82]
+  cuts: median 14.82 mm; below 1.1x neck: 18 of 377 levels; 5 narrowest: [(7.82, 0.97, (28.7, 35.5, 78.43, 81.03)), (7.89, 0.968, (28.7, 35.5, 78.33, 79.93)), (8.11, 0.965, (28.7, 35.5, 78.33, 79.73)), (8.2, 0.957, (28.7, 35.5, 78.23, 79.63)), (8.32, 0.96, (28.7, 35.5, 78.23, 79.63))]
+  IPC-2152 (no plane credit): neck 7.82 mm on B.Cu rises 12.7 C at 7.7 A; 20 C needs 5.28 mm there
+  neck OK: 12.7 C <= 20 C (R8_DECISIONS D12)

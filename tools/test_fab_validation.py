@@ -1,7 +1,9 @@
 """Manufacturing regressions: missing or corrupt placements must block release.
 
 Some tests (test_current_package) judge the fab package in m3_design/assembly_review/fab/ against the current board,
-so after any copper or placement change run the fab step (m3_design/r8_fab.sh) before this suite (R8P3-INTEGRITY-02).
+so after any copper or placement change run the fab step (m3_design/r9_fab.sh) before this suite (R8P3-INTEGRITY-02).
+R9 step 9 regenerated the package for the R9 board, so the suite judges the worktree's board again (R9_DECISIONS
+D-S9-05; until then it judged R8's committed board through tools/r8_record.py).
 """
 from contextlib import redirect_stdout
 import csv
@@ -21,8 +23,10 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parent.parent
 KICAD_PY = os.environ.get('KICAD_PY',
     '/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3')
-BOARD = ROOT / 'm3_design/assembly_review/m3.kicad_pcb'
-CPL = BOARD.parent / 'fab/m3_cpl_jlc.csv'
+sys.path.insert(0, str(ROOT / 'tools'))
+
+BOARD = ROOT / 'm3_design/assembly_review/m3.kicad_pcb'      # the board the fab package was made from (r9_fab.sh)
+CPL = ROOT / 'm3_design/assembly_review/fab/m3_cpl_jlc.csv'
 
 
 @unittest.skipUnless(Path(KICAD_PY).exists() or shutil.which(KICAD_PY), 'KiCad Python required')

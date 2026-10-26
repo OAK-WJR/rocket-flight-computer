@@ -1,0 +1,32 @@
+# KICAD_CLI=<wrapper> FAB_NET=1 m3_design/r9_fab.sh on the finished board fc3d5b34... (JLC live data 2026-10-24 21:01-21:04Z), then python3 tools/check_procurement.py (full gate)
+CHECK: none
+wrote m3_gerber.zip m3_bom_jlc.csv m3_cpl_jlc.csv m3_assembly_top.pdf m3_assembly_bottom.pdf to <repo>/m3_design/assembly_review/fab
+BOM lines 92 | placed parts 219 | parts without LCSC code: none
+owner-fitted (not in JLC BOM/CPL): none
+not fitted (DNP placeholders, in no BOM or CPL): C303, C304, C305, C313, C314
+CPL rows without a verified JLC orientation correction: none
+source/output binding: m3_fab_manifest.json
+CPL check: 78 top and 133 bottom rows rebuilt from JLC footprints; worst pad residual 0.491 mm; errors: none; placement-only checks: 8 (J1 R72 R74 R77 R100 R101 R103 R110); expected rows: 219
+paste check: OK; F_Paste 335 flashes on 335 pasted pads; B_Paste 372 flashes on 372 pasted pads; 20 dry pads with no flash in them
+Fab manifest: OK; 5 outputs match the current CAD and export inputs
+renders: m3_design/assembly_review/r9_top.png m3_design/assembly_review/r9_bottom.png
+92 unique codes checked for 5 boards; 52 extended / 40 basic
+short: none
+thin (stock < 2 x order): none
+92 unique codes at 5 boards, standard PCBA: parts $81.23/board + 92 codes x $1.53 / 5 = $109.38/board (target <= $126.41); unique extended codes 52 (target <= 52)
+  fixed fees per order (standard, 2-sided): $83.96 (setup, stencil, fixture; JLC may add a $14.93 handling fee); Economic assembles one side only; one side: $50.19. Not in the target: PCB, edge rails, joints and shipping
+  with JLC minimum purchases: $81.23/board ordered (attrition extras not modelled)
+  $ 17.421  C30005563  expand U30
+  $ 12.576  C5271084   expand U1
+  $ 12.375  C26633007  expand U4
+  $  6.536  C5333985   expand U31
+  $  6.482  C15639     expand U5
+  $  2.582  C97521     base   U3
+  $  1.728  C178373    expand C84
+  $  1.721  C45783     base   C10,C11,C150,C151,C310,C6,C7,C8,C9
+cost targets: met
+Procurement evidence: PRELIMINARY cost check OK; BOM/CPL and recent supplier data verified. Current CAD/fab binding and stock were not verified. Not a release pass.
+Components + feeder fees (5 boards, standard): $109.38/board; ordered components with minimum purchases: $81.23/board. The $126.41 target excludes fixed assembly fees, PCB fabrication and shipping.
+## python3 tools/check_procurement.py (full, exit 0)
+Procurement evidence: OK; current CAD/fab outputs, BOM/CPL, recent supplier data and required targets
+Components + feeder fees (5 boards, standard): $109.38/board; ordered components with minimum purchases: $81.23/board. The $126.41 target excludes fixed assembly fees, PCB fabrication and shipping.

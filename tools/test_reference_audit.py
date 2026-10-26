@@ -20,7 +20,10 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import critical_reference as CR  # noqa: E402
 import reference_audit as RA  # noqa: E402
 
-BOARD = ROOT / 'm3_design/assembly_review/m3.kicad_pcb'
+import r8_record  # noqa: E402
+
+# R8's board: the worktree's while it is R8's, else R8's committed project (r8_record; R9 step 3 built the R9 board)
+BOARD = r8_record.board()
 mm, MM = pcbnew.ToMM, pcbnew.FromMM
 
 

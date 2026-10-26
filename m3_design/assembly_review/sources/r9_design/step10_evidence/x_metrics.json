@@ -1,0 +1,227 @@
+{
+ "X1": {
+  "length": 102.0,
+  "width": 46.0,
+  "area": 4635.8,
+  "envelope_length": 111.8,
+  "aft_overhang": 9.79,
+  "fwd_overhang": 0.0,
+  "side_overhang": 1.03
+ },
+ "X2": {
+  "foreign_nets_3mm_same_layer": 0,
+  "foreign_nets_3mm_plan": 0,
+  "unconnected_pads_3mm": 0,
+  "foreign_same_layer": {},
+  "foreign_plan": {},
+  "own_nets_3mm_same_layer": [
+   "ARM1_SENSE",
+   "ARM1_SENSE_MID",
+   "GND",
+   "PYRO1_COLD",
+   "PYRO1_CONT",
+   "PYRO1_CONT_MID",
+   "PYRO1_GATE",
+   "RAW_ACT"
+  ],
+  "nearest_foreign_same_layer": null,
+  "nearest_battery_live_same_layer": null,
+  "ch1_parts": 22,
+  "ch1_bbox": [
+   4.01,
+   56.28,
+   26.32,
+   88.61
+  ],
+  "ch1_bbox_area": 721.0,
+  "ch1_courtyard_fill": 0.458,
+  "through_nets": 7,
+  "through_items": 9,
+  "through": {
+   "3V3A": 1,
+   "ACT_GATE": 2,
+   "SERVO1_MCU": 2,
+   "SERVO1_OUT": 1,
+   "SERVO2_OUT": 1,
+   "SERVO3_OUT": 1,
+   "SERVO4_MCU": 1
+  }
+ },
+ "X3": {
+  "rf_parts": 39,
+  "strip_bbox": [
+   5.16,
+   0.0,
+   36.51,
+   20.5
+  ],
+  "depth_from_aft": 20.5,
+  "area": 642.5,
+  "share": 0.139,
+  "rf_zone_bbox": [
+   0.95,
+   0.0,
+   40.53,
+   29.91
+  ],
+  "rf_zone_depth": 29.91,
+  "rf_zone_area": 1184.0,
+  "non_rf_parts_in_strip": 0,
+  "non_rf_in_strip": [],
+  "rf_track_mm": 17.5,
+  "rfif_track_mm": 291.8
+ },
+ "X4": {
+  "parts": 249,
+  "top": 102,
+  "bottom": 147,
+  "parts_per_cm2": 5.37,
+  "courtyard_sum": 3134.9,
+  "courtyard_per_outline": 0.676,
+  "courtyard_per_outline_outside_rf": 0.64,
+  "distinct_rotations": 4,
+  "off_90": 0,
+  "rotations": {
+   "0.0": 97,
+   "90.0": 60,
+   "180.0": 50,
+   "270.0": 42
+  }
+ },
+ "X5": {
+  "track_widths": 5,
+  "signal_widths": 5,
+  "power_widths": 5,
+  "gnd_widths": 5,
+  "via_geometries": 2,
+  "widths_mm": {
+   "signal": {
+    "0.2": 1210.8,
+    "0.25": 52.7,
+    "0.3": 17.5,
+    "0.4": 4.8,
+    "1.0": 21.1
+   },
+   "power": {
+    "0.2": 83.6,
+    "0.25": 86.5,
+    "0.3": 108.2,
+    "0.4": 117.7,
+    "1.0": 49.4
+   },
+   "gnd": {
+    "0.2": 49.2,
+    "0.25": 3.1,
+    "0.3": 9.9,
+    "0.4": 29.5,
+    "1.0": 9.1
+   }
+  },
+  "via_geometry_counts": {
+   "0.5/0.3": 345,
+   "0.6/0.3": 238
+  }
+ },
+ "X7": {
+  "vias": 583,
+  "gnd_vias": 430,
+  "non_gnd_vias": 153
+ },
+ "X6": {
+  "signal_bends": 260,
+  "signal_bends_per_mm": 0.199,
+  "all_bends": 329,
+  "all_bends_per_mm": 0.1775,
+  "mean_segment_mm": 2.15
+ },
+ "Z4": {
+  "vias": []
+ },
+ "X8": {
+  "copper_zones": 16,
+  "rule_areas": 11,
+  "rule_area_names": [
+   "BARO_body_B",
+   "BARO_no_inter_row_tracks",
+   "IMU_body_B",
+   "IMU_no_internal_tracks",
+   "PYRO_BLOCK",
+   "R9_J30_launch_In1",
+   "R9_J31_launch_In1",
+   "U30_KEEPOUT",
+   "U31_KEEPOUT",
+   "U31_KEEPOUT",
+   "Y1_In2_keepout"
+  ]
+ },
+ "X9": {
+  "rf_sep_nearest_part": [
+   6.04,
+   "R313",
+   "U1"
+  ],
+  "rf_sep_nearest_line": [
+   5.005,
+   "R306",
+   "USB_DM"
+  ],
+  "inner_power_pyro_nearest": [
+   4.953,
+   "RAW_ACT zone R9_RAW_ACT_In2 In2.Cu",
+   "R131.1 (PYRO1_OUT, F.Cu)"
+  ],
+  "battery_pyro_nearest": null
+ },
+ "scorecard": {
+  "X1_board_length_mm": 102.0,
+  "X1b_board_width_mm": 46.0,
+  "X1c_outline_area_mm2": 4635.8,
+  "X1d_envelope_length_mm": 111.8,
+  "X2_pyro_foreign_nets_3mm_same_layer": 0,
+  "X2b_pyro_foreign_nets_3mm_plan": 0,
+  "X2c_pyro_nearest_foreign_mm": null,
+  "X2d_pyro_nearest_battery_live_mm": null,
+  "X2e_ch1_bbox_area_mm2": 721.0,
+  "X2f_ch1_courtyard_fill": 0.458,
+  "X2g_ch1_through_nets": 7,
+  "X3_rf_strip_depth_mm": 20.5,
+  "X3b_rf_strip_area_mm2": 642.5,
+  "X3c_rf_strip_share": 0.139,
+  "X3d_non_rf_parts_in_strip": 0,
+  "X3g_rf_zone_depth_mm": 29.91,
+  "X3h_rf_zone_area_mm2": 1184.0,
+  "X3e_rf_track_mm": 17.5,
+  "X3f_rfif_track_mm": 291.8,
+  "X4_parts": 249,
+  "X4b_parts_per_cm2": 5.37,
+  "X4c_courtyard_per_outline": 0.676,
+  "X4d_courtyard_per_outline_outside_rf": 0.64,
+  "X4e_distinct_rotations": 4,
+  "X4f_parts_off_90": 0,
+  "X5_track_widths": 5,
+  "X5b_signal_track_widths": 5,
+  "X5c_power_track_widths": 5,
+  "X5d_gnd_track_widths": 5,
+  "X5e_via_geometries": 2,
+  "X6_signal_bends_per_mm": 0.199,
+  "X6b_all_bends_per_mm": 0.1775,
+  "X6c_mean_segment_mm": 2.15,
+  "X7_vias_total": 583,
+  "X7b_gnd_vias": 430,
+  "X7c_non_gnd_vias": 153,
+  "X8_copper_zones": 16,
+  "X8b_rule_areas": 11,
+  "X9_rf_sep_nearest_part_mm": 6.04,
+  "X9b_rf_sep_nearest_fast_line_mm": 5.005,
+  "X9c_inner_power_pyro_mm": 4.953,
+  "X9d_battery_pyro_mm": null,
+  "Z4_vias_in_test_pads": 0,
+  "Z2r9_exit_net_track_mm": 66.4
+ },
+ "meta": {
+  "board": "<repo>/m3_design/assembly_review/m3.kicad_pcb",
+  "tools": "<repo>/tools"
+ },
+ "board_sha256": "4f841a0e44ebb1829ad7996dfe6320ed527fce1fdb1e5ff11658e0705b44ac14",
+ "bound_by": "step10/bind_report.py"
+}

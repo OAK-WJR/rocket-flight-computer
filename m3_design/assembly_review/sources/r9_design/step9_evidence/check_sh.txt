@@ -1,0 +1,75 @@
+# tools/check.sh on the finished board fc3d5b34a4bfbaecfbcb44bdf8144c87015fc71be7accf48354f23410e8d0f51 (stage 38 of full build 2; build 1's stage 38 printed the same lines)
+=== [38] tools/check.sh
+DRC violations 0  unconnected 0  schematic parity 0  ERC 0
+metadata / 3D model audit: OK
+silkscreen outside the board outline (46.00 x 102.00 mm): 0 stroke points
+radius 24.9 mm, axis x 23.0 mm, sled tolerance 0.3 mm; top face on the axis
+  J9 mated     F  margin   0.03 mm   x  40.95.. 45.20  z   0.00.. 10.30
+  J122 mated   F  margin   0.50 mm   x  17.92.. 28.08  z   0.00.. 23.50
+  J3           F  margin   0.89 mm   x  -0.45..  7.45  z  -0.85..  3.25
+  J121         F  margin   1.23 mm   x   4.75.. 15.45  z   0.00.. 14.40
+  J124         F  margin   1.23 mm   x   4.75.. 15.45  z   0.00.. 14.40
+  C84          F  margin   1.37 mm   x  31.75.. 42.25  z   0.00.. 12.80
+  J9           F  margin   1.98 mm   x  40.22.. 45.18  z  -0.00..  4.20
+  J123 mated   F  margin   2.36 mm   x  37.00.. 43.00  z   0.00..  9.50
+  C72          B  margin   2.37 mm   x  42.06.. 44.76  z  -4.30.. -1.60
+  C73          B  margin   2.37 mm   x  42.06.. 44.76  z  -4.30.. -1.60
+  C32          B  margin   2.97 mm   x   1.50..  2.50  z  -2.10.. -1.60
+  R12          B  margin   3.23 mm   x   1.75..  2.25  z  -1.96.. -1.60
+  D9           F  margin   3.35 mm   x  39.10.. 44.10  z  -0.00..  2.22
+  R81          B  margin   3.37 mm   x  43.30.. 44.10  z  -2.05.. -1.60
+  C7           B  margin   3.41 mm   x  42.65.. 43.95  z  -2.90.. -1.60
+  deepest bottom part: L1 (z -4.62 mm), worst bottom margin 2.37 mm (C72)
+  five-support geometry: [(4.0, 4.0), (4.0, 98.0), (42.0, 4.0), (42.0, 59.5), (42.0, 98.0)]
+  board: 46 x 102 mm; 120 mm maximum (P1)
+  nearest bottom/pin envelope: R300.2, 4.600 mm from support (4.0, 4.0) (minimum 3.5 mm)
+  nearest top hardware clearance: TP30.1 exposed top pad, 5.008 mm from support (4.0, 4.0) (minimum 3.8 mm)
+  wire entry to the bore wall at 5.0 mm height: J121 6.4-7.0, J124 6.4-7.0
+fit check: OK (CAD envelopes only)
+rule H seeded-fault suite: OK
+LC-1         OK   local clearance overrides
+P-0          OK   pyro spacing rules, geometric
+P-1          OK   PYRO_BLOCK area by content (+ P-1b rule G scope)
+P-2          OK   armed-live copper confined
+P-3          OK   block purity
+P-4          OK   rule H live
+P-5          OK   solder-bridge table
+P-6          OK   bare gate pads
+P-7          OK   gate guard (reset voltage)
+P-8          OK   sense resistors at the MCU end
+P-9          OK   test pads and pyro vias
+P-10         OK   coat region
+P-11         OK   terminal entry
+R-1          OK   strip extent
+R-2          OK   strip layers
+R-3          OK   jacks
+R-4          OK   launch congruent
+R-5          OK   GCPW cross-section
+R-6          OK   RF line length
+R-7          OK   RF stitching and fence
+R-8          OK   module keep-outs
+R-9          OK   chain topology
+R-10         OK   RF separation
+R-11         OK   coexistence geometry
+R-12         OK   RF supply
+R-13         OK   radio to pyro
+M-2          OK   vibration (plate model)
+M-3          OK   J122 tie holes
+M-4          OK   J1
+M-5          OK   fit
+M-6          OK   bottom keep-outs
+M-7          OK   IMU and MEMS
+F9-1         OK   input protection at J1
+T-1          OK   panel-tab windows
+K-contract   OK   contract (pin map, connectors, series, outline)
+K-legends    OK   legends and ids
+K-copper     OK   copper hygiene (vias in pads, joints, thermals, paste)
+K-power-pyro OK   D18 / D85 / D19 (strengthened)
+K-inner      OK   D20 In1 / In2 signal tracks
+K-actuators  OK   check_actuators.py pinned
+R9 CAD contract: OK
+routing hygiene: 0 failing, 0 allowlisted, 0 stale allowlist entries, 0 out-of-date no-GND reasons, 0 leftovers recorded (0 unrecorded, 0 stale), 0 out-of-date route figures, 0 removable jog / staircase / short-segment / chain-detour exceptions, 0 removable local bumps on critical nets (14 bump windows searched): OK
+actuator safety contract: OK
+reports: <tmp>
+=== [38] rc=0 155s
+rc=0

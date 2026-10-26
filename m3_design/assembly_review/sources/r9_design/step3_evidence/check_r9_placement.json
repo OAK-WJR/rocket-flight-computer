@@ -1,0 +1,1385 @@
+{
+ "ok": false,
+ "rules": {
+  "LC-1": {
+   "title": "local clearance overrides",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "overrides": [],
+    "zone_clearances_floor_only": []
+   }
+  },
+  "P-0": {
+   "title": "pyro spacing rules, geometric",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "A": {
+     "minimum": 0.5,
+     "closest": {
+      "mm": 1.267,
+      "a": "R177.1 (RAW_ACT)",
+      "b": "R170.1 (ARM1_SENSE)",
+      "layer": "B.Cu"
+     },
+     "margin": 0.767,
+     "violations": 0
+    },
+    "B": {
+     "minimum": 0.5,
+     "closest": null,
+     "margin": null,
+     "violations": 0
+    },
+    "C": {
+     "minimum": 0.3,
+     "closest": {
+      "mm": 0.909,
+      "a": "R131.1 (PYRO1_OUT)",
+      "b": "R173.2 (PYRO1_CONT_MID)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.609,
+     "violations": 0
+    },
+    "D": {
+     "minimum": 0.5,
+     "closest": null,
+     "margin": null,
+     "violations": 0
+    },
+    "E": {
+     "minimum": 1.0,
+     "closest": null,
+     "margin": null,
+     "violations": 0
+    },
+    "F": {
+     "minimum": 0.5,
+     "closest": null,
+     "margin": null,
+     "violations": 0
+    },
+    "G": {
+     "minimum": 0.3,
+     "closest": null,
+     "margin": null,
+     "violations": 0
+    },
+    "A2": {
+     "minimum": 0.3,
+     "closest": null,
+     "margin": null,
+     "violations": 0
+    },
+    "H": {
+     "minimum": 1.0,
+     "closest": {
+      "mm": 1.225,
+      "a": "Q124.5 (PYRO1_OUT)",
+      "b": "R129.2 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.225,
+     "violations": 0
+    },
+    "H+": {
+     "minimum": 1.2,
+     "closest": {
+      "mm": 1.225,
+      "a": "Q124.5 (PYRO1_OUT)",
+      "b": "R129.2 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.025,
+     "violations": 0
+    },
+    "GS": {
+     "minimum": 1.2,
+     "closest": {
+      "mm": 1.351,
+      "a": "Q124.4 (PYRO1_GATE)",
+      "b": "C127.1 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.151,
+     "violations": 0
+    },
+    "AG": {
+     "minimum": 1.2,
+     "closest": {
+      "mm": 1.362,
+      "a": "Q122.3 (ACT_DRV)",
+      "b": "R123.2 (GND)",
+      "layer": "B.Cu"
+     },
+     "margin": 0.162,
+     "violations": 0
+    }
+   }
+  },
+  "P-1": {
+   "title": "PYRO_BLOCK area by content (+ P-1b rule G scope)",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "area_bbox": [
+     1.2,
+     54.2,
+     28.4,
+     89.8
+    ],
+    "rule_g_scope": true
+   }
+  },
+  "P-2": {
+   "title": "armed-live copper confined",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "items": 19
+   }
+  },
+  "P-3": {
+   "title": "block purity",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "hull_bbox": [
+     3.06,
+     55.34,
+     27.27,
+     89.56
+    ],
+    "hull_area_mm2": 588.0,
+    "foreign_nets": {}
+   }
+  },
+  "P-4": {
+   "title": "rule H live",
+   "ok": false,
+   "issues": [
+    "P-4: the seeded rule-H suite (tools/rule_h_seed.py) was not run on this board (--seed)"
+   ],
+   "evidence": {
+    "rules_after_h": [
+     "Small GND pad thermal relief",
+     "RAW_ACT pins to pours",
+     "Tag-Connect contact to foreign copper",
+     "R9 bare test pads to foreign copper"
+    ],
+    "rule_h_sha16": "2826f2e9f5038349"
+   }
+  },
+  "P-5": {
+   "title": "solder-bridge table",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "pairs": 135,
+    "forbidden": 0,
+    "under_1mm": [
+     "0.395 R125.1 (RAW_ACT_SENSE) -- R182.2 (GND): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.463 R125.2 (GND) -- R182.1 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.539 C90.2 (GND) -- R177.2 (RAW_ACT_SENSE_MID): RAW_ACT_SENSE_MID to GND: reads no continuity / disarmed (ground refusal)",
+     "0.546 R130.1 (PYRO1_CONT) -- R178.2 (GND): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+     "0.546 R130.2 (GND) -- R178.1 (PYRO1_CONT): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+     "0.586 C122.1 (RAW_ACT_SENSE) -- R182.2 (GND): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.640 R180.1 (ARM1_SENSE) -- C129.2 (GND): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.657 C122.2 (GND) -- R182.1 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.762 R126.1 (PYRO1_GATE_N) -- C126.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.773 R126.2 (PYRO1_GATE) -- C126.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.814 R130.1 (PYRO1_CONT) -- C127.2 (GND): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+     "0.814 R130.2 (GND) -- C127.1 (PYRO1_CONT): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+     "0.860 R131.2 (PYRO1_COLD) -- R173.2 (PYRO1_CONT_MID): COLD to its own midpoint (R4 tolerated)",
+     "0.861 R125.1 (RAW_ACT_SENSE) -- R124.1 (RAW_ACT_SENSE_MID): RAW_ACT_SENSE_MID to its own node: one 5.1 k half shorted (R4 pass 11)",
+     "0.861 R125.2 (GND) -- R124.2 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.899 R128.1 (PYRO1_GATE) -- C126.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.899 R128.2 (GND) -- C126.1 (PYRO1_GATE): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.909 R131.1 (PYRO1_OUT) -- R173.2 (PYRO1_CONT_MID): PYRO1_OUT to its own midpoint: one 5.1 k half shorted (R4 tolerated)",
+     "0.909 R131.2 (PYRO1_COLD) -- R173.1 (PYRO1_OUT): drain to its own COLD pad: R131 shorted (R4 tolerated)",
+     "0.909 R133.1 (ARM1_SENSE) -- R180.2 (GND): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.909 R133.2 (GND) -- R180.1 (ARM1_SENSE): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.959 R131.2 (PYRO1_COLD) -- R129.1 (PYRO1_CONT_MID): COLD to its own midpoint (R4 tolerated)"
+    ]
+   }
+  },
+  "P-6": {
+   "title": "bare gate pads",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "nearest": {
+     "TP121.1 (ACT_GATE)": [
+      1.019,
+      "R122.1 (RAW_PROTECTED)"
+     ],
+     "C120.2 (ACT_GATE)": [
+      1.08,
+      "R120.1 (ACT_FET_S)"
+     ],
+     "R121.2 (ACT_DRV)": [
+      1.773,
+      "Q121.9 (RAW_ACT)"
+     ],
+     "Q121.4 (ACT_GATE)": [
+      1.876,
+      "C120.1 (ACT_FET_S)"
+     ],
+     "Q122.3 (ACT_DRV)": [
+      1.898,
+      "R122.1 (RAW_PROTECTED)"
+     ],
+     "R120.2 (ACT_GATE)": [
+      1.928,
+      "C120.1 (ACT_FET_S)"
+     ]
+    }
+   }
+  },
+  "P-7": {
+   "title": "gate guard (reset voltage)",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "reset_voltage_table": [
+     {
+      "net": "PYRO1_CONT",
+      "gate_net": "PYRO1_GATE",
+      "mm": 1.351,
+      "gate": "Q124.4",
+      "other": "C127.1",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.408
+     },
+     {
+      "net": "3V3A",
+      "gate_net": "PYRO1_GATE",
+      "mm": 2.512,
+      "gate": "TP122.1",
+      "other": "C10.1",
+      "layers": [
+       "B.Cu",
+       "B.Cu"
+      ],
+      "v_reset": 3.3
+     },
+     {
+      "net": "3V3",
+      "gate_net": "PYRO1_GATE",
+      "mm": 2.925,
+      "gate": "TP122.1",
+      "other": "R164.1",
+      "layers": [
+       "B.Cu",
+       "B.Cu"
+      ],
+      "v_reset": 3.3
+     }
+    ]
+   }
+  },
+  "P-8": {
+   "title": "sense resistors at the MCU end",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "PYRO1_CONT_MCU": 0,
+    "ARM1_SENSE_MCU": 0,
+    "RAW_ACT_SENSE_MCU": 0
+   }
+  },
+  "P-9": {
+   "title": "test pads and pyro vias",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "tp122_nearest_bottom": [
+     2.219,
+     "C10"
+    ],
+    "guarded_pads": [
+     "TP81.1: 1 mm",
+     "TP80.1: 1 mm",
+     "TP75.1: 1 mm",
+     "J124.2: 0.3 mm",
+     "J2.1: 0.508 mm",
+     "J2.2: 0.508 mm",
+     "J2.3: 0.508 mm",
+     "J2.4: 0.508 mm",
+     "J2.5: 0.508 mm",
+     "J2.6: 0.508 mm",
+     "TP76.1: 1 mm",
+     "TP83.1: 1 mm",
+     "TP89.1: 1 mm",
+     "TP30.1: 1 mm",
+     "TP84.1: 1 mm",
+     "TP87.1: 1 mm",
+     "J122.2: 0.3 mm",
+     "J122.5: 0.3 mm",
+     "J122.8: 0.3 mm",
+     "J122.11: 0.3 mm",
+     "TP85.1: 1 mm",
+     "TP74.1: 1 mm",
+     "TP88.1: 1 mm",
+     "TP120.1: 1 mm",
+     "TP91.1: 1 mm",
+     "TP86.1: 1 mm",
+     "TP72.1: 1 mm",
+     "TP90.1: 1 mm",
+     "TP73.1: 1 mm",
+     "TP92.1: 1 mm",
+     "TP82.1: 1 mm",
+     "TP122.1: 1 mm",
+     "TP71.1: 1 mm",
+     "TP70.1: 1 mm",
+     "TP121.1: 1 mm"
+    ],
+    "pyro_vias": []
+   }
+  },
+  "P-10": {
+   "title": "coat region",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "u4_mm": 5.526
+   }
+  },
+  "P-11": {
+   "title": "terminal entry",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "J121": {
+     "entry": "-x",
+     "wire_room_mm": 6.353
+    },
+    "J124": {
+     "entry": "-x",
+     "wire_room_mm": 6.353
+    }
+   }
+  },
+  "R-1": {
+   "title": "strip extent",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "deepest_strip_courtyard": [
+     21.955,
+     "C300"
+    ]
+   }
+  },
+  "R-2": {
+   "title": "strip layers",
+   "ok": false,
+   "issues": [
+    "R-2: In1: no GND pour spans the RF strip (x 0-46, y 0.5-22.0)",
+    "R-2: In2: no GND pour spans the RF strip (x 0-46, y 0.5-22.0)",
+    "R-2: U30_KEEPOUT: rule area on F.Cu, In1.Cu required (m3.kicad_dru keep-out rules use it)",
+    "R-2: U31_KEEPOUT: rule area on F.Cu, In1.Cu, In2.Cu, B.Cu required (m3.kicad_dru keep-out rules use it)"
+   ],
+   "evidence": {
+    "RADIO_TXEN_B": 0.0
+   }
+  },
+  "R-3": {
+   "title": "jacks",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "J30": {
+     "x": 12.85,
+     "y": 0.0,
+     "rot": 0.0
+    },
+    "J31": {
+     "x": 31.54,
+     "y": 0.0,
+     "rot": 0.0
+    },
+    "spacing_mm": 18.69
+   }
+  },
+  "R-4": {
+   "title": "launch congruent",
+   "ok": false,
+   "issues": [
+    "R-4: J30: exactly one In1-only, no-fill cut-out at x +-0.9, y 0.0-4.6 in the jack frame required (found 0)",
+    "R-4: J30: In2 GND missing under the launch cut-out at 1025 of 1025 samples, e.g. [(11.65, 0.6), (11.75, 0.6), (11.85, 0.6)]",
+    "R-4: J30: no GND via at the qualified spot (-1.45, 1.00) in the jack frame (nearest 99.000 mm)",
+    "R-4: J30: no GND via at the qualified spot (+1.45, 1.00) in the jack frame (nearest 99.000 mm)",
+    "R-4: J30: no GND via at the qualified spot (-1.45, 2.30) in the jack frame (nearest 99.000 mm)",
+    "R-4: J30: no GND via at the qualified spot (+1.45, 2.30) in the jack frame (nearest 99.000 mm)",
+    "R-4: J30: no GND via at the qualified spot (-1.45, 3.60) in the jack frame (nearest 99.000 mm)",
+    "R-4: J30: no GND via at the qualified spot (+1.45, 3.60) in the jack frame (nearest 99.000 mm)",
+    "R-4: J30: no GND via at the qualified spot (-1.25, 4.15) in the jack frame (nearest 99.000 mm)",
+    "R-4: J30: no GND via at the qualified spot (+1.25, 4.15) in the jack frame (nearest 99.000 mm)",
+    "R-4: J31: exactly one In1-only, no-fill cut-out at x +-0.9, y 0.0-4.6 in the jack frame required (found 0)",
+    "R-4: J31: In2 GND missing under the launch cut-out at 1025 of 1025 samples, e.g. [(30.34, 0.6), (30.44, 0.6), (30.54, 0.6)]",
+    "R-4: J31: no GND via at the qualified spot (-1.45, 1.00) in the jack frame (nearest 99.000 mm)",
+    "R-4: J31: no GND via at the qualified spot (+1.45, 1.00) in the jack frame (nearest 99.000 mm)",
+    "R-4: J31: no GND via at the qualified spot (-1.45, 2.30) in the jack frame (nearest 99.000 mm)",
+    "R-4: J31: no GND via at the qualified spot (+1.45, 2.30) in the jack frame (nearest 99.000 mm)",
+    "R-4: J31: no GND via at the qualified spot (-1.45, 3.60) in the jack frame (nearest 99.000 mm)",
+    "R-4: J31: no GND via at the qualified spot (+1.45, 3.60) in the jack frame (nearest 99.000 mm)",
+    "R-4: J31: no GND via at the qualified spot (-1.25, 4.15) in the jack frame (nearest 99.000 mm)",
+    "R-4: J31: no GND via at the qualified spot (+1.25, 4.15) in the jack frame (nearest 99.000 mm)"
+   ],
+   "evidence": {
+    "J30": {
+     "cutouts": 0,
+     "in2_missing": 1025,
+     "via_offsets": [
+      99,
+      99,
+      99,
+      99,
+      99,
+      99,
+      99,
+      99
+     ],
+     "pad_to_gnd_mm": 0.5
+    },
+    "J31": {
+     "cutouts": 0,
+     "in2_missing": 1025,
+     "via_offsets": [
+      99,
+      99,
+      99,
+      99,
+      99,
+      99,
+      99,
+      99
+     ],
+     "pad_to_gnd_mm": 0.5
+    }
+   }
+  },
+  "R-5": {
+   "title": "GCPW cross-section",
+   "ok": false,
+   "issues": [
+    "R-5: In1 GND missing under C303.1 (+0.3 mm): 1.180 mm2",
+    "R-5: In1 GND missing under C305.1 (+0.3 mm): 1.180 mm2",
+    "R-5: In1 GND missing under C313.1 (+0.3 mm): 1.180 mm2",
+    "R-5: In1 GND missing under C314.1 (+0.3 mm): 1.180 mm2",
+    "R-5: In1 GND missing under D30.1 (+0.3 mm): 1.066 mm2",
+    "R-5: In1 GND missing under D31.1 (+0.3 mm): 1.066 mm2",
+    "R-5: In1 GND missing under L30.2 (+0.3 mm): 1.220 mm2",
+    "R-5: In1 GND missing under R304.1 (+0.3 mm): 1.255 mm2",
+    "R-5: In1 GND missing under R304.2 (+0.3 mm): 1.255 mm2",
+    "R-5: In1 GND missing under R316.1 (+0.3 mm): 1.255 mm2",
+    "R-5: In1 GND missing under R316.2 (+0.3 mm): 1.255 mm2",
+    "R-5: In1 GND missing under U30.11 (+0.3 mm): 3.286 mm2",
+    "R-5: In1 GND missing under U31.6 (+0.3 mm): 3.076 mm2"
+   ],
+   "evidence": {
+    "window_samples": {},
+    "line_pad_lengths": {},
+    "gap_range_mm": [
+     9.0,
+     0.0
+    ],
+    "line_gap_range_mm": [
+     9.0,
+     0.0
+    ]
+   }
+  },
+  "R-6": {
+   "title": "RF line length",
+   "ok": false,
+   "issues": [
+    "R-6: GNSS: no RF path from the jack to U30.11",
+    "R-6: RADIO: no RF path from the jack to U31.6"
+   ],
+   "evidence": {}
+  },
+  "R-7": {
+   "title": "RF stitching and fence",
+   "ok": false,
+   "issues": [
+    "R-7: GNSS: no RF path",
+    "R-7: RADIO: no RF path",
+    "R-7: no GND fence vias within 0.3 mm of y_f 22.0",
+    "R-7: F.Cu GND copper at (9.73, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (14.83, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (28.43, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (33.53, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (10.88, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (15.98, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (29.58, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (34.68, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (9.73, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (14.83, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (28.43, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (33.53, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (10.88, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (15.98, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (29.58, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (34.68, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (9.73, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (14.83, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (28.43, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (33.53, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (13.33, 4.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (32.03, 4.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (9.93, 5.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (25.58, 6.48) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (11.13, 6.88) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (15.28, 6.88) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (29.53, 7.38) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (33.98, 7.38) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (30.73, 8.33) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (12.98, 8.43) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (15.23, 8.43) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (31.58, 9.58) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (13.73, 9.73) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (15.78, 9.83) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (36.78, 14.63) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (34.08, 14.83) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (35.48, 15.38) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (37.38, 16.28) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (37.78, 17.73) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (6.43, 17.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (26.88, 18.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (38.68, 18.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (6.98, 19.33) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (27.73, 19.48) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (39.43, 20.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (13.38, 20.68) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: F.Cu GND copper at (10.73, 20.78) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (9.73, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (14.83, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (28.43, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (33.53, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (10.88, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (15.98, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (29.58, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (34.68, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (9.73, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (14.83, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (28.43, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (33.53, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (10.88, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (15.98, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (29.58, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (34.68, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (9.73, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (14.83, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (28.43, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (33.53, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (12.03, 11.08) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (12.53, 14.88) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: B.Cu GND copper at (7.93, 16.68) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+    "R-7: D30.2: no GND via within 0.6 mm of the pad (nearest None)",
+    "R-7: D31.2: no GND via within 0.6 mm of the pad (nearest None)",
+    "R-7: C303.2: no GND via within 0.6 mm of the pad (nearest None)",
+    "R-7: C305.2: no GND via within 0.6 mm of the pad (nearest None)",
+    "R-7: C313.2: no GND via within 0.6 mm of the pad (nearest None)",
+    "R-7: C314.2: no GND via within 0.6 mm of the pad (nearest None)"
+   ],
+   "evidence": {
+    "fence": {
+     "fence_vias": 0
+    },
+    "gnd_reach_F.Cu": 0,
+    "gnd_reach_B.Cu": 0,
+    "rf_ground_via_mm": {
+     "D30.2": null,
+     "D31.2": null,
+     "C303.2": null,
+     "C305.2": null,
+     "C313.2": null,
+     "C314.2": null
+    },
+    "strip_gnd_coverage": {
+     "F.Cu": 0.0,
+     "In1.Cu": 0.0,
+     "In2.Cu": 0.0,
+     "B.Cu": 0.0
+    }
+   }
+  },
+  "R-8": {
+   "title": "module keep-outs",
+   "ok": false,
+   "issues": [
+    "R-8: U30 In1.Cu: GND missing at 1938 of 1938 samples, e.g. [(6.1, 10.35), (6.3, 10.35), (6.5, 10.35)]",
+    "R-8: U30_KEEPOUT leaves 74.740 mm2 of U30's required region uncovered on F.Cu",
+    "R-8: U30_KEEPOUT leaves 74.740 mm2 of U30's required region uncovered on In1.Cu",
+    "R-8: U31 In1.Cu: GND missing at 1681 of 1681 samples, e.g. [(25.81, 9.95), (26.01, 9.95), (26.21, 9.95)]",
+    "R-8: U31 In2.Cu: GND missing at 2601 of 2601 samples, e.g. [(24.86, 9.0), (25.06, 9.0), (25.26, 9.0)]",
+    "R-8: U31_KEEPOUT leaves 100.000 mm2 of U31's required region uncovered on B.Cu",
+    "R-8: U31_KEEPOUT leaves 100.000 mm2 of U31's required region uncovered on In2.Cu",
+    "R-8: U31_KEEPOUT leaves 65.610 mm2 of U31's required region uncovered on F.Cu",
+    "R-8: U31_KEEPOUT leaves 65.610 mm2 of U31's required region uncovered on In1.Cu"
+   ],
+   "evidence": {
+    "U30 F.Cu": {
+     "required": [
+      6.1,
+      10.35,
+      16.2,
+      17.75
+     ],
+     "uncovered_mm2": 74.74
+    },
+    "U30 In1.Cu": {
+     "required": [
+      6.1,
+      10.35,
+      16.2,
+      17.75
+     ],
+     "uncovered_mm2": 74.74
+    },
+    "U31 F.Cu": {
+     "required": [
+      25.81,
+      9.95,
+      33.91,
+      18.05
+     ],
+     "uncovered_mm2": 65.61
+    },
+    "U31 In1.Cu": {
+     "required": [
+      25.81,
+      9.95,
+      33.91,
+      18.05
+     ],
+     "uncovered_mm2": 65.61
+    },
+    "U31 In2.Cu": {
+     "required": [
+      24.86,
+      9.0,
+      34.86,
+      19.0
+     ],
+     "uncovered_mm2": 100.0
+    },
+    "U31 B.Cu": {
+     "required": [
+      24.86,
+      9.0,
+      34.86,
+      19.0
+     ],
+     "uncovered_mm2": 100.0
+    }
+   }
+  },
+  "R-9": {
+   "title": "chain topology",
+   "ok": false,
+   "issues": [
+    "R-9: GNSS: no RF path",
+    "R-9: RADIO: no RF path"
+   ],
+   "evidence": {}
+  },
+  "R-10": {
+   "title": "RF separation",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "nearest_part": [
+     6.24,
+     "R310",
+     "U1"
+    ],
+    "nearest_line": [
+     5.197,
+     "R306",
+     "USB_DM"
+    ]
+   }
+  },
+  "R-11": {
+   "title": "coexistence geometry",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "radio_to_u30_body": {
+     "RADIO_BUSY": [
+      7.96,
+      "U31.11"
+     ],
+     "RADIO_DIO1": [
+      15.75,
+      "U31.20"
+     ],
+     "RADIO_MISO": [
+      6.947,
+      "R314.1"
+     ],
+     "RADIO_MISO_MCU": [
+      6.087,
+      "R314.2"
+     ],
+     "RADIO_MOSI": [
+      7.96,
+      "U31.13"
+     ],
+     "RADIO_MOSI_MCU": [
+      10.901,
+      "R315.1"
+     ],
+     "RADIO_NRST": [
+      17.86,
+      "U31.3"
+     ],
+     "RADIO_NSS": [
+      7.96,
+      "U31.14"
+     ],
+     "RADIO_RXEN": [
+      9.425,
+      "R312.1"
+     ],
+     "RADIO_SCK": [
+      7.96,
+      "U31.15"
+     ],
+     "RADIO_SCK_MCU": [
+      12.374,
+      "R313.1"
+     ],
+     "RADIO_TXEN": [
+      11.94,
+      "U31.9"
+     ]
+    },
+    "module_courtyards_mm": 6.92,
+    "rf_to_rf_mm": 15.45
+   }
+  },
+  "R-12": {
+   "title": "RF supply",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "C311_to_U31": 1.97,
+    "C312_to_U31": 2.191,
+    "C310_to_U31": 3.639,
+    "C301_to_U30": 2.13,
+    "C300_to_U30": 2.556,
+    "gnss_vcc_ohm": {
+     "total": 0.07,
+     "fb30": 0.05,
+     "tracks": 0,
+     "vias": 0,
+     "feed_3v3_allowance": 0.02
+    }
+   }
+  },
+  "R-13": {
+   "title": "radio to pyro",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "nearest": [
+     45.91,
+     "U31",
+     "Q124.5 (PYRO1_OUT)"
+    ],
+    "nearest_other_pyro_copper": [
+     27.0,
+     "U31",
+     "U1.33 (ARM1_SENSE_MCU)"
+    ]
+   }
+  },
+  "M-2": {
+   "title": "vibration (plate model)",
+   "ok": false,
+   "issues": [
+    "M-2: plate model (tools/plate_model.py on this board's fit report, --plate) not run"
+   ],
+   "evidence": {}
+  },
+  "M-3": {
+   "title": "J122 tie holes",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "columns": [
+     -3.81,
+     -1.27,
+     1.27,
+     3.81
+    ],
+    "half_plug": 3.81,
+    "courtyard_u": [
+     -5.075,
+     5.075
+    ],
+    "holes": [
+     [
+      29.9,
+      59.0
+     ],
+     [
+      16.0,
+      62.0
+     ]
+    ],
+    "line_v_at_plugs": [
+     2.333,
+     1.785,
+     1.237,
+     0.688
+    ],
+    "channel_nearest": [
+     2.005,
+     "TP91"
+    ]
+   }
+  },
+  "M-4": {
+   "title": "J1",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "J1_to_J121": 23.33,
+    "J1_to_J124": 14.72,
+    "entry": "+y"
+   }
+  },
+  "M-5": {
+   "title": "fit",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "J9 mated": 0.028,
+    "J3": 0.886,
+    "J121": 1.232,
+    "J124": 1.232,
+    "C84": 1.367,
+    "J122 mated": 0.5,
+    "worst_bottom": 2.3566439942940143,
+    "support_bottom": 4.465002799551194,
+    "support_top": 5.008493
+   }
+  },
+  "M-6": {
+   "title": "bottom keep-outs",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "pyro_vias": 0
+   }
+  },
+  "M-7": {
+   "title": "IMU and MEMS",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "imu_lever_arm_mm": 11.0,
+    "U4": {
+     "body": [
+      10.355,
+      46.005,
+      13.645,
+      48.795
+     ],
+     "interior": [
+      11.078,
+      46.727,
+      12.922,
+      48.072
+     ]
+    },
+    "U5": {
+     "body": [
+      3.055,
+      48.505,
+      8.145,
+      52.695
+     ],
+     "interior": [
+      4.02,
+      50.05,
+      7.18,
+      51.15
+     ]
+    }
+   }
+  },
+  "F9-1": {
+   "title": "input protection at J1",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "D8": 5.22,
+    "C80": 8.9,
+    "C96": 5.72,
+    "C89": 4.79,
+    "C95": 4.69,
+    "R166": 8.38,
+    "R167": 5.59,
+    "U9": 12.8
+   }
+  },
+  "T-1": {
+   "title": "panel-tab windows",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "windows": {
+     "west": [
+      [
+       0.5,
+       7.25
+      ],
+      [
+       12.0,
+       26.75
+      ],
+      [
+       55.75,
+       101.5
+      ]
+     ],
+     "east": [
+      [
+       0.5,
+       27.0
+      ],
+      [
+       95.5,
+       101.5
+      ]
+     ]
+    },
+    "length": 102.0,
+    "in2_under": {
+     "west 0.5-7.25": [],
+     "west 12.0-26.75": [],
+     "west 55.75-101.5": [],
+     "east 0.5-27.0": [],
+     "east 95.5-101.5": []
+    }
+   }
+  },
+  "K-contract": {
+   "title": "contract (pin map, connectors, series, outline)",
+   "ok": false,
+   "issues": [
+    "C29 requires a direct same-layer route <=3 mm to U3.8; found None",
+    "C100: requires local bypass within 3 mm of U12.3 and direct copper <= 3 mm; distance 1.212, route None",
+    "C100: requires direct local GND return <= 3 mm to U12.2; found None",
+    "C93: requires local bypass within 3 mm of U12.7 and direct copper <= 5 mm; distance 2.577, route None"
+   ],
+   "evidence": {
+    "outline_mm": [
+     0.0,
+     0.0,
+     46.0,
+     102.0
+    ],
+    "c29_vcc_pad_distance_mm": 1.870000000000001,
+    "c29_direct_route_mm": null,
+    "camera_bypass": {
+     "C100": {
+      "supply_pin": "U12.3",
+      "pad_distance_mm": 1.211981848048892,
+      "direct_copper_route_mm": null,
+      "direct_ground_return_mm": null
+     },
+     "C93": {
+      "supply_pin": "U12.7",
+      "pad_distance_mm": 2.5769410160110375,
+      "direct_copper_route_mm": null
+     }
+    },
+    "loader_pins": {
+     "PA2": "SERVO3_MCU (D5)",
+     "PA6": "NC",
+     "PA8": "NC",
+     "PA9": "NC",
+     "PA11": "USB_DM (D5)",
+     "PA12": "USB_DP (D5)",
+     "PB6": "QSPI_NCS (D5)",
+     "PB9": "I2C1_SDA (D5)",
+     "PB10": "RADIO_SCK_MCU (D5)",
+     "PB14": "RADIO_MOSI_MCU (D5)",
+     "PC9": "NC",
+     "PC11": "NC",
+     "PE13": "NC"
+    }
+   }
+  },
+  "K-legends": {
+   "title": "legends and ids",
+   "ok": false,
+   "issues": [
+    "J9.1: silkscreen must identify 5V (UART names at module)",
+    "J9.2: silkscreen must identify GND (UART names at module)",
+    "J9.3: silkscreen must identify TX (UART names at module)",
+    "J9.4: silkscreen must identify RX (UART names at module)",
+    "J2.1: silkscreen must identify 3V3 (UART names at module)",
+    "J2.2: silkscreen must identify SWDIO (UART names at module)",
+    "J2.3: silkscreen must identify NRST (UART names at module)",
+    "J2.4: silkscreen must identify SWCLK (UART names at module)",
+    "J2.5: silkscreen must identify GND (UART names at module)",
+    "J2.6: silkscreen must identify NC (UART names at module)",
+    "J30: silkscreen legend \"GNSS\" required beside the jack",
+    "J31: silkscreen legend \"RADIO\" required beside the jack",
+    "J124.1: 0 legends \"1:BUS1\" nearest it, expected one (D92)",
+    "J124.2: 0 legends \"2:RAW\" nearest it, expected one (D92)",
+    "J121.1: 0 legends \"1:E1-\" nearest it, expected one (D92)",
+    "J121.2: 0 legends \"2:E1+\" nearest it, expected one (D92)",
+    "J1.1: 0 legends \"1:BAT+\" nearest it, expected one (D92)",
+    "J1.2: 0 legends \"2:GND\" nearest it, expected one (D92)",
+    "J1.3: 0 legends \"3:SW\" nearest it, expected one (D92)",
+    "J1.4: 0 legends \"4:SW\" nearest it, expected one (D92)",
+    "J123.1: 0 legends \"1:PULL\" nearest it, expected one (D92)",
+    "J123.2: 0 legends \"2:GND\" nearest it, expected one (D92)"
+   ],
+   "evidence": {
+    "terminal_legends": {}
+   }
+  },
+  "K-copper": {
+   "title": "copper hygiene (vias in pads, joints, thermals, paste)",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "smd_pads_checked_for_via_holes": 699,
+    "track_endpoints_checked": 0,
+    "small_ground_pads": 86,
+    "via_paste": {
+     "pairs_checked": 0,
+     "nearest_ring_mm": null
+    }
+   }
+  },
+  "K-power-pyro": {
+   "title": "D18 / D85 / D19 (strengthened)",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "inner_power_pyro": {
+     "nearest": null,
+     "items": 10,
+     "within_5mm": 0
+    },
+    "battery_pyro": {
+     "nearest": null
+    },
+    "gate_servo": {
+     "nearest": null,
+     "under_limit": 0,
+     "layer_pairs": [
+      [
+       "B.Cu",
+       "B.Cu"
+      ],
+      [
+       "B.Cu",
+       "In2.Cu"
+      ],
+      [
+       "F.Cu",
+       "F.Cu"
+      ],
+      [
+       "F.Cu",
+       "In1.Cu"
+      ],
+      [
+       "In1.Cu",
+       "F.Cu"
+      ],
+      [
+       "In1.Cu",
+       "In1.Cu"
+      ],
+      [
+       "In2.Cu",
+       "B.Cu"
+      ],
+      [
+       "In2.Cu",
+       "In2.Cu"
+      ]
+     ]
+    }
+   }
+  },
+  "K-inner": {
+   "title": "D20 In1 / In2 signal tracks",
+   "ok": true,
+   "issues": [],
+   "evidence": {}
+  },
+  "K-actuators": {
+   "title": "check_actuators.py pinned",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "sha256": "0a4269caf2e6929111b2f53ea9dacb829b7d836a1eb80fb43e8951913206140f"
+   }
+  }
+ },
+ "issues": [
+  "P-4: the seeded rule-H suite (tools/rule_h_seed.py) was not run on this board (--seed)",
+  "R-2: In1: no GND pour spans the RF strip (x 0-46, y 0.5-22.0)",
+  "R-2: In2: no GND pour spans the RF strip (x 0-46, y 0.5-22.0)",
+  "R-2: U30_KEEPOUT: rule area on F.Cu, In1.Cu required (m3.kicad_dru keep-out rules use it)",
+  "R-2: U31_KEEPOUT: rule area on F.Cu, In1.Cu, In2.Cu, B.Cu required (m3.kicad_dru keep-out rules use it)",
+  "R-4: J30: exactly one In1-only, no-fill cut-out at x +-0.9, y 0.0-4.6 in the jack frame required (found 0)",
+  "R-4: J30: In2 GND missing under the launch cut-out at 1025 of 1025 samples, e.g. [(11.65, 0.6), (11.75, 0.6), (11.85, 0.6)]",
+  "R-4: J30: no GND via at the qualified spot (-1.45, 1.00) in the jack frame (nearest 99.000 mm)",
+  "R-4: J30: no GND via at the qualified spot (+1.45, 1.00) in the jack frame (nearest 99.000 mm)",
+  "R-4: J30: no GND via at the qualified spot (-1.45, 2.30) in the jack frame (nearest 99.000 mm)",
+  "R-4: J30: no GND via at the qualified spot (+1.45, 2.30) in the jack frame (nearest 99.000 mm)",
+  "R-4: J30: no GND via at the qualified spot (-1.45, 3.60) in the jack frame (nearest 99.000 mm)",
+  "R-4: J30: no GND via at the qualified spot (+1.45, 3.60) in the jack frame (nearest 99.000 mm)",
+  "R-4: J30: no GND via at the qualified spot (-1.25, 4.15) in the jack frame (nearest 99.000 mm)",
+  "R-4: J30: no GND via at the qualified spot (+1.25, 4.15) in the jack frame (nearest 99.000 mm)",
+  "R-4: J31: exactly one In1-only, no-fill cut-out at x +-0.9, y 0.0-4.6 in the jack frame required (found 0)",
+  "R-4: J31: In2 GND missing under the launch cut-out at 1025 of 1025 samples, e.g. [(30.34, 0.6), (30.44, 0.6), (30.54, 0.6)]",
+  "R-4: J31: no GND via at the qualified spot (-1.45, 1.00) in the jack frame (nearest 99.000 mm)",
+  "R-4: J31: no GND via at the qualified spot (+1.45, 1.00) in the jack frame (nearest 99.000 mm)",
+  "R-4: J31: no GND via at the qualified spot (-1.45, 2.30) in the jack frame (nearest 99.000 mm)",
+  "R-4: J31: no GND via at the qualified spot (+1.45, 2.30) in the jack frame (nearest 99.000 mm)",
+  "R-4: J31: no GND via at the qualified spot (-1.45, 3.60) in the jack frame (nearest 99.000 mm)",
+  "R-4: J31: no GND via at the qualified spot (+1.45, 3.60) in the jack frame (nearest 99.000 mm)",
+  "R-4: J31: no GND via at the qualified spot (-1.25, 4.15) in the jack frame (nearest 99.000 mm)",
+  "R-4: J31: no GND via at the qualified spot (+1.25, 4.15) in the jack frame (nearest 99.000 mm)",
+  "R-5: In1 GND missing under C303.1 (+0.3 mm): 1.180 mm2",
+  "R-5: In1 GND missing under C305.1 (+0.3 mm): 1.180 mm2",
+  "R-5: In1 GND missing under C313.1 (+0.3 mm): 1.180 mm2",
+  "R-5: In1 GND missing under C314.1 (+0.3 mm): 1.180 mm2",
+  "R-5: In1 GND missing under D30.1 (+0.3 mm): 1.066 mm2",
+  "R-5: In1 GND missing under D31.1 (+0.3 mm): 1.066 mm2",
+  "R-5: In1 GND missing under L30.2 (+0.3 mm): 1.220 mm2",
+  "R-5: In1 GND missing under R304.1 (+0.3 mm): 1.255 mm2",
+  "R-5: In1 GND missing under R304.2 (+0.3 mm): 1.255 mm2",
+  "R-5: In1 GND missing under R316.1 (+0.3 mm): 1.255 mm2",
+  "R-5: In1 GND missing under R316.2 (+0.3 mm): 1.255 mm2",
+  "R-5: In1 GND missing under U30.11 (+0.3 mm): 3.286 mm2",
+  "R-5: In1 GND missing under U31.6 (+0.3 mm): 3.076 mm2",
+  "R-6: GNSS: no RF path from the jack to U30.11",
+  "R-6: RADIO: no RF path from the jack to U31.6",
+  "R-7: GNSS: no RF path",
+  "R-7: RADIO: no RF path",
+  "R-7: no GND fence vias within 0.3 mm of y_f 22.0",
+  "R-7: F.Cu GND copper at (9.73, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (14.83, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (28.43, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (33.53, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (10.88, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (15.98, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (29.58, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (34.68, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (9.73, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (14.83, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (28.43, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (33.53, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (10.88, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (15.98, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (29.58, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (34.68, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (9.73, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (14.83, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (28.43, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (33.53, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (13.33, 4.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (32.03, 4.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (9.93, 5.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (25.58, 6.48) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (11.13, 6.88) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (15.28, 6.88) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (29.53, 7.38) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (33.98, 7.38) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (30.73, 8.33) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (12.98, 8.43) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (15.23, 8.43) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (31.58, 9.58) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (13.73, 9.73) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (15.78, 9.83) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (36.78, 14.63) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (34.08, 14.83) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (35.48, 15.38) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (37.38, 16.28) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (37.78, 17.73) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (6.43, 17.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (26.88, 18.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (38.68, 18.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (6.98, 19.33) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (27.73, 19.48) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (39.43, 20.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (13.38, 20.68) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: F.Cu GND copper at (10.73, 20.78) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (9.73, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (14.83, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (28.43, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (33.53, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (10.88, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (15.98, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (29.58, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (34.68, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (9.73, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (14.83, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (28.43, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (33.53, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (10.88, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (15.98, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (29.58, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (34.68, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (9.73, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (14.83, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (28.43, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (33.53, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (12.03, 11.08) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (12.53, 14.88) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: B.Cu GND copper at (7.93, 16.68) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)",
+  "R-7: D30.2: no GND via within 0.6 mm of the pad (nearest None)",
+  "R-7: D31.2: no GND via within 0.6 mm of the pad (nearest None)",
+  "R-7: C303.2: no GND via within 0.6 mm of the pad (nearest None)",
+  "R-7: C305.2: no GND via within 0.6 mm of the pad (nearest None)",
+  "R-7: C313.2: no GND via within 0.6 mm of the pad (nearest None)",
+  "R-7: C314.2: no GND via within 0.6 mm of the pad (nearest None)",
+  "R-8: U30 In1.Cu: GND missing at 1938 of 1938 samples, e.g. [(6.1, 10.35), (6.3, 10.35), (6.5, 10.35)]",
+  "R-8: U30_KEEPOUT leaves 74.740 mm2 of U30's required region uncovered on F.Cu",
+  "R-8: U30_KEEPOUT leaves 74.740 mm2 of U30's required region uncovered on In1.Cu",
+  "R-8: U31 In1.Cu: GND missing at 1681 of 1681 samples, e.g. [(25.81, 9.95), (26.01, 9.95), (26.21, 9.95)]",
+  "R-8: U31 In2.Cu: GND missing at 2601 of 2601 samples, e.g. [(24.86, 9.0), (25.06, 9.0), (25.26, 9.0)]",
+  "R-8: U31_KEEPOUT leaves 100.000 mm2 of U31's required region uncovered on B.Cu",
+  "R-8: U31_KEEPOUT leaves 100.000 mm2 of U31's required region uncovered on In2.Cu",
+  "R-8: U31_KEEPOUT leaves 65.610 mm2 of U31's required region uncovered on F.Cu",
+  "R-8: U31_KEEPOUT leaves 65.610 mm2 of U31's required region uncovered on In1.Cu",
+  "R-9: GNSS: no RF path",
+  "R-9: RADIO: no RF path",
+  "M-2: plate model (tools/plate_model.py on this board's fit report, --plate) not run",
+  "K-contract: C29 requires a direct same-layer route <=3 mm to U3.8; found None",
+  "K-contract: C100: requires local bypass within 3 mm of U12.3 and direct copper <= 3 mm; distance 1.212, route None",
+  "K-contract: C100: requires direct local GND return <= 3 mm to U12.2; found None",
+  "K-contract: C93: requires local bypass within 3 mm of U12.7 and direct copper <= 5 mm; distance 2.577, route None",
+  "K-legends: J9.1: silkscreen must identify 5V (UART names at module)",
+  "K-legends: J9.2: silkscreen must identify GND (UART names at module)",
+  "K-legends: J9.3: silkscreen must identify TX (UART names at module)",
+  "K-legends: J9.4: silkscreen must identify RX (UART names at module)",
+  "K-legends: J2.1: silkscreen must identify 3V3 (UART names at module)",
+  "K-legends: J2.2: silkscreen must identify SWDIO (UART names at module)",
+  "K-legends: J2.3: silkscreen must identify NRST (UART names at module)",
+  "K-legends: J2.4: silkscreen must identify SWCLK (UART names at module)",
+  "K-legends: J2.5: silkscreen must identify GND (UART names at module)",
+  "K-legends: J2.6: silkscreen must identify NC (UART names at module)",
+  "K-legends: J30: silkscreen legend \"GNSS\" required beside the jack",
+  "K-legends: J31: silkscreen legend \"RADIO\" required beside the jack",
+  "K-legends: J124.1: 0 legends \"1:BUS1\" nearest it, expected one (D92)",
+  "K-legends: J124.2: 0 legends \"2:RAW\" nearest it, expected one (D92)",
+  "K-legends: J121.1: 0 legends \"1:E1-\" nearest it, expected one (D92)",
+  "K-legends: J121.2: 0 legends \"2:E1+\" nearest it, expected one (D92)",
+  "K-legends: J1.1: 0 legends \"1:BAT+\" nearest it, expected one (D92)",
+  "K-legends: J1.2: 0 legends \"2:GND\" nearest it, expected one (D92)",
+  "K-legends: J1.3: 0 legends \"3:SW\" nearest it, expected one (D92)",
+  "K-legends: J1.4: 0 legends \"4:SW\" nearest it, expected one (D92)",
+  "K-legends: J123.1: 0 legends \"1:PULL\" nearest it, expected one (D92)",
+  "K-legends: J123.2: 0 legends \"2:GND\" nearest it, expected one (D92)"
+ ],
+ "failing": [
+  "P-4",
+  "R-2",
+  "R-4",
+  "R-5",
+  "R-6",
+  "R-7",
+  "R-8",
+  "R-9",
+  "M-2",
+  "K-contract",
+  "K-legends"
+ ],
+ "board_sha256": "349c1477990688040e4f238cae512aa38fdd74f8b1f9d464f85b2d4f02a8eba1",
+ "inputs_sha256": {
+  "kilib/generic.3dshapes/DFN-8-1EP_3x3mm_P0.65mm_EP1.55x2.4mm.step": "113b3987035c6f315a2a5c49dcedc349f8184b3b415289cb0cb67e90e82112b4",
+  "kilib/generic.3dshapes/LQFP-100_14x14mm_P0.5mm.step": "51720097260ffba41c3062f85f67623721102fa535901c47cb555a1f444feeb3",
+  "kilib/generic.3dshapes/PinHeader_1x02_P2.54mm_Vertical.step": "ea4d0799007ebdd3945072bf255d673d2fe87eb05fda85fd8d7993ad9397da41",
+  "kilib/generic.3dshapes/PinHeader_1x06_P2.54mm_Vertical.step": "d6113af109a14a67c50dcefd1cfc7b43b59b59afa85d808b2319e2452da91318",
+  "kilib/generic.3dshapes/R_2512_6332Metric.step": "76b2052a3c120193de7cdc0af99157b6f375e9a4af7721e3e3d012968c877f27",
+  "kilib/rocket.3dshapes/BUZ-SMD_4P-L8.5-W8.5-H3.0.wrl": "c16c41a2915b8f78e2ec8670cb3ad79ff779227374a4890a87361ee14640bcbe",
+  "kilib/rocket.3dshapes/C0402_L1.0-W0.5-H0.5.wrl": "c20fe21cf8899edf2ae6dbf00c69756b1e5f5bc4029d9c1ce67875d905c8a199",
+  "kilib/rocket.3dshapes/C0603_L1.6-W0.8-H0.8.wrl": "125791465c37d0e6cda3b2f45f84e01af226d81a462bfbecb7a4513327e9f22a",
+  "kilib/rocket.3dshapes/C0805_L2.0-W1.3-H1.3.wrl": "31b2ac9a40994188ebd20202214e75f004b604b0068b3dea50d8cf7940cadb1a",
+  "kilib/rocket.3dshapes/CAP-SMD_BD8.0-L8.3-W8.3-LS9.0-FD_H10.5.wrl": "4ba30f0c1480e60481a8bb65b4f3ae0599d27afb0c01ee00e643feb77c340ff2",
+  "kilib/rocket.3dshapes/CONN-TH_12P-P2.00_S12B-PH-K-S-LF-SN.wrl": "979d15112f617a529b9e8b07ed00e998f1f64367231b464569b5c20f7210375e",
+  "kilib/rocket.3dshapes/CONN-TH_4P-P5.08_DIBO_DB128V-5.08.wrl": "df2d079aaf92482feb39a71637fc4f6e69197316b60d808970db28f146397862",
+  "kilib/rocket.3dshapes/CONN-TH_6P-P5.08_DIBO_DB128V-5.08.wrl": "8d525f3287c8079ee32dedb41fd27872fb539a473187c2fdbabf571c92fb8c52",
+  "kilib/rocket.3dshapes/CONN-TH_9P-P2.00_S9B-PH-K-S-LF-SN.wrl": "d826432137c98ee330e7997b2b5e7408ecf38a1a5c2c47a1c09b9539370378cd",
+  "kilib/rocket.3dshapes/CRYSTAL-SMD_4P-L3.2-W2.5-BL.wrl": "44a3909b050bdb95f8ce007f9dbbda4a81ea6842b089ab23bbc1283ff45bd0aa",
+  "kilib/rocket.3dshapes/C_0603_1608Metric.step": "4857b3dc717675bf1fb22edda622ac3b3ae03cf44d81eefaf3fa3ba3a86d84c1",
+  "kilib/rocket.3dshapes/C_1206_3216Metric.step": "11e948c72c90e2b6322436b72745f40ff4e8ba0da64fb2a0df943dfa61e89c1a",
+  "kilib/rocket.3dshapes/D_SMA.step": "1cfddd4e3b1bf22b8fc6ee3258c2aade882ed7b85b528e23b9db42437775a1db",
+  "kilib/rocket.3dshapes/D_SMB.step": "029466277d91e9f5492556be93e46611049e07115c7913880c547afa96058ed4",
+  "kilib/rocket.3dshapes/HDR-M-2.54_1x40.wrl": "33a623109162433c03382de3b3bebb47376e856101315ebc4d468d5789156437",
+  "kilib/rocket.3dshapes/HDR-TH_12P-P2.54-V-M-R3-C4-S2.54.wrl": "932a4724477746d8d2f72cdb5b92b0867c052a4b4d8f0a4949d7a65dd1bf0b7c",
+  "kilib/rocket.3dshapes/HDR-TH_HMT-2.54-1X6PM.wrl": "89a7b833c9eff28ab8c06c245aa125d8d8686d605f99b1b4c6d8337af9352426",
+  "kilib/rocket.3dshapes/IND-SMD_L4.0-W4.0-H1.9.wrl": "3eb732ddf40a2bd47e12878dc62b7264b2131cb38a31dd666e821458278bd0be",
+  "kilib/rocket.3dshapes/LED0805-RD.wrl": "3384c4f297a3342792da0408309e9cc3027058d39452110db6271848dc1ec7cd",
+  "kilib/rocket.3dshapes/LGA-14_L2.5-W3.0-H0.9-P0.50.wrl": "d9a21d9ea8ac294c9eff9872ac778b02b96ff6a3bca7bd786b4a7c708463d794",
+  "kilib/rocket.3dshapes/M3_AP63200_TSOT26.wrl": "8732b490fe05977910e08f74160142badf1d3d3d9ed89a7857f7f88fbed20846",
+  "kilib/rocket.3dshapes/M3_BLM18K_0603.wrl": "90d1842c544e96afb52f260a3de31857966f20429b0ee8f551f0e353c31c0989",
+  "kilib/rocket.3dshapes/M3_DB128L_2P.wrl": "1a49b36bddd6483d464d3741cdbb7c52a4224317680da3cd3c1fb4b5356aed19",
+  "kilib/rocket.3dshapes/M3_DB128L_2P_BK.wrl": "ed3fda3465dfe673901fd97be01ef9787b72ee1142b135de3607b65671f181a3",
+  "kilib/rocket.3dshapes/M3_DB128V_4P.wrl": "db2780499c56a1a53913e08c7e112413bdda82b36d56d06e9902c51fca9b9471",
+  "kilib/rocket.3dshapes/M3_E22_900MM22S_ENVELOPE.wrl": "c6376ec4a928a0c1aaf4cce76aa2b228a9074ffc49c9e86a742e2c57bf7ac8af",
+  "kilib/rocket.3dshapes/M3_GH_BM04B_GHS_TBT.step": "ebc503b4b58cad5873c7cdeb695315baf8bea08dd22aa49873b0104671b78d59",
+  "kilib/rocket.3dshapes/M3_GRM32_1210.wrl": "da5781e5c931576de5a5bd3100122220aaaf47e27bb26848d28e88fff730c9dd",
+  "kilib/rocket.3dshapes/M3_JST_PH_B2B_2P.wrl": "97c329b49a224bfebae4b719ce75f1698a14cda25f101248638326e86db1c792",
+  "kilib/rocket.3dshapes/M3_KT0805Y_A1.wrl": "23f86f2c6c6763550045575f83e9b6a0df5e3795c9b5631217d68ab880f82769",
+  "kilib/rocket.3dshapes/M3_LQG15_0402.wrl": "dce600ef4a0605f7d416ab0bd36703f8d037511c0593c327a9ac6ca356461554",
+  "kilib/rocket.3dshapes/M3_MAX_F10S_ENVELOPE.wrl": "b94c381b5b18bb1a779f13349e78ef779bbedc5005020a9c5dac3a3101b7b5a5",
+  "kilib/rocket.3dshapes/M3_MLT5020_3pad.wrl": "c8412cc0b59804da416b02d13c80bd3c37f86963de80590f7549256011075a8c",
+  "kilib/rocket.3dshapes/M3_NCD0805R1_K1.wrl": "50f35703e0a36e01a0ed2cf5c666e21c8465d8f06cf3ea01dd22a3f16af8017e",
+  "kilib/rocket.3dshapes/M3_OSCON_F12.wrl": "cbdb3b03479700173a82964fb243f60af24166bb4115c8bc17e42526053a6956",
+  "kilib/rocket.3dshapes/M3_SAM_M10Q_ENVELOPE.wrl": "19ed7bea8fc8223b2061f57f6ed971b50864ef82545974ac024a63382dba178a",
+  "kilib/rocket.3dshapes/M3_SH_BM04B_SRSS_TB.step": "8980de73cbad53eb5e794fa02d776853bd9e12958c401f80c4b4c723ec196b98",
+  "kilib/rocket.3dshapes/M3_SH_BM07B_SRSS_TB.step": "7df6eb693edebff163e7f953295508a8dc894e09fba0d898788e96be8c7b0dd8",
+  "kilib/rocket.3dshapes/M3_SMA_KH_KE8_EDGE.wrl": "3d4425f519fbd4c29564724b86f047983a1d7e331e4078de416241c9d5cab99b",
+  "kilib/rocket.3dshapes/M3_SRP5030TA.wrl": "bbcc84b3eb6a2091d954e9d1dd6db4c608dca3cf70d5ca2301d612662c968482",
+  "kilib/rocket.3dshapes/M3_TPS2121_RUX.wrl": "63e7487350c5fb47cccb0cd6c3caee2dfeb9f9cb7a5a7a8f8735d7205b93fcf8",
+  "kilib/rocket.3dshapes/M3_TPS2553_DBV.wrl": "e299e94ac030d1ad035cab4b0ef2935ceada6419c987c22953eb78816592b246",
+  "kilib/rocket.3dshapes/M3_TPS25947_RPW.wrl": "2bc1ca30540707d2a2ac6924e7ef853b17bda42682b9dc6ae65c646e4cd6f492",
+  "kilib/rocket.3dshapes/M3_TPS2595_DSG.wrl": "a932e04772d96c3bd5e049ab20b27b82d6169bd0dd3709d0f13b673308a052f1",
+  "kilib/rocket.3dshapes/M3_TPS709_DBV.wrl": "e299e94ac030d1ad035cab4b0ef2935ceada6419c987c22953eb78816592b246",
+  "kilib/rocket.3dshapes/M3_TSLP_2_20.wrl": "7484cd1fa02ca33bbf927894286fbf25e36a6b2d946c09ebb4eac120955c0f7a",
+  "kilib/rocket.3dshapes/M3_TXU0202_DCU.wrl": "7a1659360b3969da182d1a8b0100b8a5ae1d68c271e4a1afe967d657fd17c408",
+  "kilib/rocket.3dshapes/PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL.wrl": "4b5b1b16ea52173b581a58a1ade12617ec81db16a1eb9bd027ed77794f33b845",
+  "kilib/rocket.3dshapes/R0402_L1.0-W0.5-H0.4.wrl": "ced0a40a718711c2ae16482a4f46a9eb6a0a33ecf9f9d8c2e18c160fa951a420",
+  "kilib/rocket.3dshapes/R0603.wrl": "2a125409502d8eb68f2e196ab1c28b180e0918830445364f93a45d9461b4daad",
+  "kilib/rocket.3dshapes/R0805_L2.0-W1.3-H0.6.wrl": "76145163b8ad77c0f68aa2c4b6ced6a1f5008bab9c42bb2043539f815256d6ab",
+  "kilib/rocket.3dshapes/R_0603_1608Metric.step": "1875571c326d0d9e96f36b4efeb8094068ef7619f0a449c781caf0b49c2e5861",
+  "kilib/rocket.3dshapes/SENSORS-SMD_MS5611-01BA03.wrl": "8d23a16413fff3cb34917c093a1d65cf1c84ae9a0b1339212feab5584ad2755a",
+  "kilib/rocket.3dshapes/SMA_L4.3-W2.6-LS5.2-RD.wrl": "182bdfe16c250365c998a42967078bbe9204d0d7a7092594820fdfbe0465c388",
+  "kilib/rocket.3dshapes/SMB_L4.6-W3.6-LS5.3-BI.wrl": "f5fec39be6b431c2ee10f1369f78a7c396f428fa2773e57778ca8dfd68f3af96",
+  "kilib/rocket.3dshapes/SOD-323_L1.8-W1.3-LS2.5-RD.wrl": "1066ae56f1408eb17040fe2caa43c28629818eb8c242c8687c99d10e2607d75b",
+  "kilib/rocket.3dshapes/SOIC-8_L5.3-W5.3-H1.9-LS7.9-P1.27.wrl": "ca10a7dd660f5c145b727a3f65f6e1fc81503c72ca4442e7a3cd64fd5ff71e40",
+  "kilib/rocket.3dshapes/SOT-23-3P_L2.9-W1.3-H1.0-LS2.4-P0.95.wrl": "6d0af3fdee819c602d1b3906e3031015573ebcb85f3a357833e5def01e2ebe32",
+  "kilib/rocket.3dshapes/SOT-23-6_L2.9-W1.6-H1.5-LS2.8-P0.95.wrl": "7023139da8e0528b1cd05db53344f9f563fe34c447e10fb4db9b06fdddb0aa4b",
+  "kilib/rocket.3dshapes/TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL.wrl": "cea0f96767724d06e8c232affea97d8817d6fcf062d32513f25749da2068d3c9",
+  "kilib/rocket.3dshapes/USB-C_SMD-TYPE-C-31-M-12_1.wrl": "0457a14076c3c2f9d16ed2a995ac1f248173ab9ac1c200f99988a33d97d111b5",
+  "m3.kicad_pcb": "349c1477990688040e4f238cae512aa38fdd74f8b1f9d464f85b2d4f02a8eba1",
+  "m3.kicad_dru": "5aa63b0aeabb43eb57483f1c5237f17cd9a85981a17a07f5b851cabd176151d0",
+  "m3.kicad_pro": "3730b060a94ebbd8f5f5ad179927549cb0cda8f475801e0e85b4c559fecaa7bf",
+  "pin_table.tsv": "bd4687a8037990f972e26f3c9cb216a7e7288c49264c8f29e5714e62b8d314b4"
+ },
+ "checker_sha256": "3422ba5ca0d54c867f53e6edc3fd46654e325553139132b5389cf2ed10b3cec7"
+}

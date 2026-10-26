@@ -1,0 +1,501 @@
+{
+ "legaliser": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "parts": 249
+  }
+ },
+ "drc": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "unconnected": 499,
+   "deferred": {
+    "silk_edge_clearance": 5,
+    "silk_overlap": 78,
+    "silk_over_copper": 128
+   }
+  }
+ },
+ "fit": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "J9 mated": 0.028,
+   "J3": 0.886,
+   "J121": 1.232,
+   "J124": 1.232,
+   "C84": 1.367,
+   "J122 mated": 0.5,
+   "worst_bottom": 2.3566439942940143,
+   "support_bottom": 4.465002799551194,
+   "support_top": 5.008493,
+   "minimum": 0.028
+  }
+ },
+ "plate": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "f1_hz": 252.1,
+   "done_241": true,
+   "supports": [
+    [
+     4.0,
+     4.0
+    ],
+    [
+     4.0,
+     98.0
+    ],
+    [
+     42.0,
+     4.0
+    ],
+    [
+     42.0,
+     59.5
+    ],
+    [
+     42.0,
+     98.0
+    ]
+   ]
+  }
+ },
+ "f9": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "D8": 5.22,
+   "C80": 8.9,
+   "C96": 5.72,
+   "C89": 4.79,
+   "C95": 4.69,
+   "R166": 8.38,
+   "R167": 5.59,
+   "U9": 12.8
+  }
+ },
+ "f10": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "nearest_part": [
+    6.24,
+    "R310",
+    "U1"
+   ],
+   "nearest_line": [
+    5.197,
+    "R306",
+    "USB_DM"
+   ]
+  }
+ },
+ "j1": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "J1_to_J121": 23.33,
+   "J1_to_J124": 14.72,
+   "entry": "+y"
+  }
+ },
+ "tabs": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "windows": {
+    "west": [
+     [
+      0.5,
+      7.25
+     ],
+     [
+      12.0,
+      26.75
+     ],
+     [
+      55.75,
+      101.5
+     ]
+    ],
+    "east": [
+     [
+      0.5,
+      27.0
+     ],
+     [
+      95.5,
+      101.5
+     ]
+    ]
+   },
+   "length": 102.0,
+   "in2_under": {
+    "west 0.5-7.25": [],
+    "west 12.0-26.75": [],
+    "west 55.75-101.5": [],
+    "east 0.5-27.0": [],
+    "east 95.5-101.5": []
+   }
+  }
+ },
+ "pyro_pads": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "margins": {
+    "A": 0.767,
+    "B": null,
+    "C": 0.609,
+    "D": null,
+    "E": null,
+    "F": null,
+    "G": null,
+    "A2": null,
+    "H": 0.225,
+    "H+": 0.025,
+    "GS": 0.151,
+    "AG": 0.162
+   },
+   "bridge_pairs": 135,
+   "p6": {
+    "nearest": {
+     "TP121.1 (ACT_GATE)": [
+      1.019,
+      "R122.1 (RAW_PROTECTED)"
+     ],
+     "C120.2 (ACT_GATE)": [
+      1.08,
+      "R120.1 (ACT_FET_S)"
+     ],
+     "R121.2 (ACT_DRV)": [
+      1.773,
+      "Q121.9 (RAW_ACT)"
+     ],
+     "Q121.4 (ACT_GATE)": [
+      1.876,
+      "C120.1 (ACT_FET_S)"
+     ],
+     "Q122.3 (ACT_DRV)": [
+      1.898,
+      "R122.1 (RAW_PROTECTED)"
+     ],
+     "R120.2 (ACT_GATE)": [
+      1.928,
+      "C120.1 (ACT_FET_S)"
+     ]
+    }
+   }
+  }
+ },
+ "mst": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "total_mm": 1468.0,
+   "nets": 135,
+   "by_family": {
+    "CAM": 152,
+    "IMU": 42,
+    "PYRO": 132,
+    "QSPI": 41,
+    "RF": 377,
+    "SERVO": 44,
+    "USB/SWD": 191,
+    "other": 488
+   }
+  }
+ },
+ "contract": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "LC-1": {
+    "overrides": [],
+    "zone_clearances_floor_only": []
+   },
+   "P-1": {
+    "area_bbox": [
+     1.2,
+     54.2,
+     28.4,
+     89.8
+    ],
+    "rule_g_scope": true
+   },
+   "P-2": {
+    "items": 19
+   },
+   "P-3": {
+    "hull_bbox": [
+     3.06,
+     55.34,
+     27.27,
+     89.56
+    ],
+    "hull_area_mm2": 588.0,
+    "foreign_nets": {}
+   },
+   "P-10": {
+    "u4_mm": 5.526
+   },
+   "P-11": {
+    "J121": {
+     "entry": "-x",
+     "wire_room_mm": 6.353
+    },
+    "J124": {
+     "entry": "-x",
+     "wire_room_mm": 6.353
+    }
+   },
+   "R-1": {
+    "deepest_strip_courtyard": [
+     21.955,
+     "C300"
+    ]
+   },
+   "R-3": {
+    "J30": {
+     "x": 12.85,
+     "y": 0.0,
+     "rot": 0.0
+    },
+    "J31": {
+     "x": 31.54,
+     "y": 0.0,
+     "rot": 0.0
+    },
+    "spacing_mm": 18.69
+   },
+   "R-11": {
+    "radio_to_u30_body": {
+     "RADIO_BUSY": [
+      7.96,
+      "U31.11"
+     ],
+     "RADIO_DIO1": [
+      15.75,
+      "U31.20"
+     ],
+     "RADIO_MISO": [
+      6.947,
+      "R314.1"
+     ],
+     "RADIO_MISO_MCU": [
+      6.087,
+      "R314.2"
+     ],
+     "RADIO_MOSI": [
+      7.96,
+      "U31.13"
+     ],
+     "RADIO_MOSI_MCU": [
+      10.901,
+      "R315.1"
+     ],
+     "RADIO_NRST": [
+      17.86,
+      "U31.3"
+     ],
+     "RADIO_NSS": [
+      7.96,
+      "U31.14"
+     ],
+     "RADIO_RXEN": [
+      9.425,
+      "R312.1"
+     ],
+     "RADIO_SCK": [
+      7.96,
+      "U31.15"
+     ],
+     "RADIO_SCK_MCU": [
+      12.374,
+      "R313.1"
+     ],
+     "RADIO_TXEN": [
+      11.94,
+      "U31.9"
+     ]
+    },
+    "module_courtyards_mm": 6.92,
+    "rf_to_rf_mm": 15.45
+   },
+   "R-12": {
+    "C311_to_U31": 1.97,
+    "C312_to_U31": 2.191,
+    "C310_to_U31": 3.639,
+    "C301_to_U30": 2.13,
+    "C300_to_U30": 2.556,
+    "gnss_vcc_ohm": {
+     "total": 0.07,
+     "fb30": 0.05,
+     "tracks": 0,
+     "vias": 0,
+     "feed_3v3_allowance": 0.02
+    }
+   },
+   "R-13": {
+    "nearest": [
+     45.91,
+     "U31",
+     "Q124.5 (PYRO1_OUT)"
+    ],
+    "nearest_other_pyro_copper": [
+     27.0,
+     "U31",
+     "U1.33 (ARM1_SENSE_MCU)"
+    ]
+   },
+   "M-3": {
+    "columns": [
+     -3.81,
+     -1.27,
+     1.27,
+     3.81
+    ],
+    "half_plug": 3.81,
+    "courtyard_u": [
+     -5.075,
+     5.075
+    ],
+    "holes": [
+     [
+      29.9,
+      59.0
+     ],
+     [
+      16.0,
+      62.0
+     ]
+    ],
+    "line_v_at_plugs": [
+     2.333,
+     1.785,
+     1.237,
+     0.688
+    ],
+    "channel_nearest": [
+     2.005,
+     "TP91"
+    ]
+   },
+   "M-6": {
+    "pyro_vias": 0
+   },
+   "M-7": {
+    "imu_lever_arm_mm": 11.0,
+    "U4": {
+     "body": [
+      10.355,
+      46.005,
+      13.645,
+      48.795
+     ],
+     "interior": [
+      11.078,
+      46.727,
+      12.922,
+      48.072
+     ]
+    },
+    "U5": {
+     "body": [
+      3.055,
+      48.505,
+      8.145,
+      52.695
+     ],
+     "interior": [
+      4.02,
+      50.05,
+      7.18,
+      51.15
+     ]
+    }
+   },
+   "K-contract": {
+    "outline_mm": [
+     0.0,
+     0.0,
+     46.0,
+     102.0
+    ],
+    "c29_vcc_pad_distance_mm": 1.870000000000001,
+    "c29_direct_route_mm": null,
+    "camera_bypass": {
+     "C100": {
+      "supply_pin": "U12.3",
+      "pad_distance_mm": 1.211981848048892,
+      "direct_copper_route_mm": null,
+      "direct_ground_return_mm": null
+     },
+     "C93": {
+      "supply_pin": "U12.7",
+      "pad_distance_mm": 2.5769410160110375,
+      "direct_copper_route_mm": null
+     }
+    },
+    "loader_pins": {
+     "PA2": "SERVO3_MCU (D5)",
+     "PA6": "NC",
+     "PA8": "NC",
+     "PA9": "NC",
+     "PA11": "USB_DM (D5)",
+     "PA12": "USB_DP (D5)",
+     "PB6": "QSPI_NCS (D5)",
+     "PB9": "I2C1_SDA (D5)",
+     "PB10": "RADIO_SCK_MCU (D5)",
+     "PB14": "RADIO_MOSI_MCU (D5)",
+     "PC9": "NC",
+     "PC11": "NC",
+     "PE13": "NC"
+    }
+   },
+   "K-actuators": {
+    "sha256": "0a4269caf2e6929111b2f53ea9dacb829b7d836a1eb80fb43e8951913206140f"
+   }
+  }
+ },
+ "actuators": {
+  "ok": true,
+  "issues": [],
+  "evidence": [
+   "actuator safety contract: OK"
+  ]
+ },
+ "areas": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "IMU_no_internal_tracks": [
+    -0.922,
+    -0.672
+   ],
+   "IMU_body_B": [
+    -1.645,
+    -1.395
+   ],
+   "BARO_body_B": [
+    -2.545,
+    -2.095
+   ],
+   "BARO_no_inter_row_tracks": [
+    -2.545,
+    -0.8
+   ],
+   "Y1_In2_keepout": [
+    -3.95,
+    -2.3
+   ]
+  }
+ },
+ "board": "m3_design/assembly_review/m3.kicad_pcb",
+ "board_sha256": "349c1477990688040e4f238cae512aa38fdd74f8b1f9d464f85b2d4f02a8eba1",
+ "checker_sha256": "e2b4ad68c55b1b6aa1abea0e0df746bea6578f96156ab2ac3403d23ab3ffaeb3"
+}

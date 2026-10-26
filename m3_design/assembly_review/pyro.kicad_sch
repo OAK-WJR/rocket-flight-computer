@@ -6,7 +6,7 @@
 	(title_block
 		(title "12 | Single pyro CH1, arming and continuity")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R8")
+		(rev "M3-ASSY-R9")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
 		(symbol "M3:Conn_1x2"
@@ -2038,7 +2038,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_DB128L_2P_BK"
+		(property "Footprint" "rocket:M3_DB128L_2P_BK_SW"
 			(at 332.74 243.84 0)
 			(hide yes)
 			(effects
@@ -2137,7 +2137,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_DB128L_2P_BK"
+		(property "Footprint" "rocket:M3_DB128L_2P_BK_SW"
 			(at 391.16 238.76 0)
 			(hide yes)
 			(effects
@@ -2237,7 +2237,7 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 20f879dc-af7e-5240-9108-073154f04d2c))
-	(text "Igniter across J121.1 OUT and J121.2 IGN. J124 and J121 pin ordering is retained from the reviewed CH1."
+	(text "Igniter across J121.1 OUT and J121.2 IGN. J124 and J121 pin numbering (the net on each pin) is retained from the reviewed CH1. R9: both on M3_DB128L_2P_BK_SW (the DB128L with pads 1 and 2 swapped: same part C430601, same land), turned so both wires enter from -x (pyro leads west) with pin 2 (RAW / IGN) forward and pin 1 (BUS / OUT) aft."
 		(at 20.32 345.24 0)
 		(effects
 			(font

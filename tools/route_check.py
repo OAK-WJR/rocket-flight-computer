@@ -2,12 +2,14 @@
 """Routing hygiene gate: the clean-routing rules of AGENTS.md §3 and the owner's acceptance list, on every track and
 via of the board (the review pass-2 geometry scan, sources/r7_review/pass2_routing_geometry.md §2, made a gate).
 
-usage: <KiCad python3> -I tools/route_check.py [board.kicad_pcb] [--report out.json] [--list] [--profile r8|r7]
+usage: <KiCad python3> -I tools/route_check.py [board.kicad_pcb] [--report out.json] [--list] [--profile r9|r8|r7]
 exit 0 = no failing instance and no stale allowlist entry (see GATE below)
 
 Profiles: r8 (default, M3-ASSY-R8): ALLOWLIST holds A8 (R8_DECISIONS D9) and the antenna-bias limiter's two
 keep-out-forced detours (D51), LEFTOVERS is empty, and the detour test uses the keep-out-aware baseline (D10, below). r7: the R7 record's lists (route_lists_r7.py) and
-the plain baseline; on board c872a3d3... it reproduces the owner-accepted R7 verdict.
+the plain baseline; on board c872a3d3... it reproduces the owner-accepted R7 verdict. r9 (M3-ASSY-R9, the R9 gate in
+tools/check.sh): ALLOWLIST, LEFTOVERS and ROUTE_FIGURES all empty (r9_plan.md section 2: C1 = C3 = 0), the keep-out-
+aware baseline (D10) kept so that RADIO_TXEN's maker-forced loop round U31 is judged against the legal shortest path.
 
 Copper is grouped per (layer, net). Track end points within 1 µm form a node. A node is "plain" when exactly two
 track ends meet there and it holds no pad, via or T (another track's body); a chain is a run of segments through
@@ -254,7 +256,7 @@ ROUTE_FIGURES = {'GNSS_LNA_EN': (7.65, 1), 'GNSS_VCC_RF': (6.2, 1)}         # D5
 
 # Profiles: r8 (default) = the lists above and the keep-out-aware detour baseline (D10); r7 = the R7 record's lists
 # (route_lists_r7.py) and the plain baseline, which reproduces the owner-accepted R7 verdict on board c872a3d3...
-PROFILES = ('r8', 'r7')
+PROFILES = ('r9', 'r8', 'r7')
 PROFILE = 'r8'
 KEEPOUT_BASELINE = True
 _R8_LISTS = (ALLOWLIST, LEFTOVERS, ROUTE_FIGURES)
@@ -272,6 +274,9 @@ def set_profile(name):
         KEEPOUT_BASELINE = False
     elif name == 'r8':
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = _R8_LISTS
+        KEEPOUT_BASELINE = True
+    elif name == 'r9':                                      # r9_plan.md section 2: no exception of any kind
+        ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = [], [], {}
         KEEPOUT_BASELINE = True
     else:
         raise ValueError(f'unknown profile {name!r}; one of {PROFILES}')
@@ -2770,7 +2775,8 @@ def main():
     ap.add_argument('--bumps-all', action='store_true', help='also search the non-critical nets for removable local '
                     'bumps (information, local_bump_review; slow)')
     ap.add_argument('--profile', choices=PROFILES, default='r8', help='exception lists and detour baseline: r8 (default; '
-                    'R8_DECISIONS D9 / D10) or r7 (the R7 record, route_lists_r7.py, plain baseline)')
+                    'R8_DECISIONS D9 / D10), r9 (empty lists, D10 baseline; the R9 gate) or r7 (the R7 record, '
+                    'route_lists_r7.py, plain baseline)')
     args = ap.parse_args()
     set_profile(args.profile)
     board = pcbnew.LoadBoard(str(args.board))

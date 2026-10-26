@@ -1,0 +1,1128 @@
+{
+ "template": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "segments": 50,
+   "vias": 5,
+   "length_mm": 141.66
+  }
+ },
+ "margins": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "rules": {
+    "A": {
+     "minimum": 0.5,
+     "closest": {
+      "mm": 0.82,
+      "a": "J122.11 (RAW_ACT)",
+      "b": "track (28.53, 75.64) (ARM1_SENSE)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.32
+    },
+    "B": {
+     "minimum": 0.5,
+     "closest": {
+      "mm": 0.82,
+      "a": "Q124.5 (PYRO1_OUT)",
+      "b": "track (9.125, 61.955) (PYRO1_GATE)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.32
+    },
+    "C": {
+     "minimum": 0.3,
+     "closest": {
+      "mm": 0.577,
+      "a": "R132.1 (PYRO1_BUS)",
+      "b": "track (22.13, 80.96) (ARM1_SENSE_MID)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.277
+    },
+    "D": {
+     "minimum": 0.5,
+     "closest": {
+      "mm": 0.77,
+      "a": "track (10.425, 63.05) (GND)",
+      "b": "Q124.5 (PYRO1_OUT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.27
+    },
+    "E": {
+     "minimum": 1.0,
+     "closest": null,
+     "margin": null
+    },
+    "F": {
+     "minimum": 0.5,
+     "closest": null,
+     "margin": null
+    },
+    "G": {
+     "minimum": 0.3,
+     "closest": {
+      "mm": 0.412,
+      "a": "track (13.0, 53.35) (PYRO1_GATE_N)",
+      "b": "U1.2 (unconnected-(U1-PE3-Pad2))",
+      "layer": "F.Cu"
+     },
+     "margin": 0.112
+    },
+    "A2": {
+     "minimum": 0.3,
+     "closest": null,
+     "margin": null
+    },
+    "H": {
+     "minimum": 1.0,
+     "closest": {
+      "mm": 1.225,
+      "a": "Q124.5 (PYRO1_OUT)",
+      "b": "R129.2 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.225
+    },
+    "H+": {
+     "minimum": 1.2,
+     "closest": {
+      "mm": 1.225,
+      "a": "Q124.5 (PYRO1_OUT)",
+      "b": "R129.2 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.025
+    },
+    "GS": {
+     "minimum": 1.2,
+     "closest": {
+      "mm": 1.68,
+      "a": "R128.1 (PYRO1_GATE)",
+      "b": "C127.1 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.48
+    },
+    "AG": {
+     "minimum": 1.2,
+     "closest": {
+      "mm": 1.362,
+      "a": "Q122.3 (ACT_DRV)",
+      "b": "R123.2 (GND)",
+      "layer": "B.Cu"
+     },
+     "margin": 0.162
+    }
+   },
+   "floors": {
+    "A": 0.2,
+    "B": 0.2,
+    "C": 0.2,
+    "D": 0.2,
+    "E": 0.3,
+    "F": 0.2,
+    "G": 0.2,
+    "H": 0.2,
+    "A2": 0.2
+   },
+   "excepted": [
+    {
+     "rule": "G",
+     "mm": 0.412,
+     "a": "track (13.0, 53.35) (PYRO1_GATE_N)",
+     "b": "U1.2 (unconnected-(U1-PE3-Pad2))",
+     "layer": "F.Cu"
+    },
+    {
+     "rule": "G",
+     "mm": 0.412,
+     "a": "track (13.0, 53.35) (PYRO1_GATE_N)",
+     "b": "U1.4 (unconnected-(U1-PE5-Pad4))",
+     "layer": "F.Cu"
+    }
+   ]
+  }
+ },
+ "bridges": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "pairs": 129,
+   "forbidden": 0,
+   "fires_class": [
+    "0.520 Q124.1 (GND) -- Q124.5 (PYRO1_OUT): FIRES when armed: drain to GND bypasses Q124",
+    "0.520 Q124.2 (GND) -- Q124.5 (PYRO1_OUT): FIRES when armed: drain to GND bypasses Q124",
+    "0.520 Q124.3 (GND) -- Q124.5 (PYRO1_OUT): FIRES when armed: drain to GND bypasses Q124",
+    "0.520 Q124.4 (PYRO1_GATE) -- Q124.5 (PYRO1_OUT): FIRES: PYRO1_OUT on the pyro gate (3.30 V in reset)",
+    "0.650 C128.1 (PYRO1_OUT) -- C128.2 (GND): FIRES when armed: drain to GND bypasses Q124",
+    "0.700 U1.1 (QSPI_IO2) -- U1.3 (PYRO1_GATE_N): FIRES: QSPI_IO2 on the pyro gate (3.23 V in reset)",
+    "1.200 U1.3 (PYRO1_GATE_N) -- U1.6 (3V3): FIRES: 3V3 on the pyro gate (3.23 V in reset)"
+   ],
+   "under_1mm": [
+    "0.395 R125.1 (RAW_ACT_SENSE) -- R182.2 (GND): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+    "0.463 R125.2 (GND) -- R182.1 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+    "0.539 C90.2 (GND) -- R177.2 (RAW_ACT_SENSE_MID): RAW_ACT_SENSE_MID to GND: reads no continuity / disarmed (ground refusal)",
+    "0.546 R130.1 (PYRO1_CONT) -- R178.2 (GND): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+    "0.546 R130.2 (GND) -- R178.1 (PYRO1_CONT): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+    "0.586 C122.1 (RAW_ACT_SENSE) -- R182.2 (GND): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+    "0.657 C122.2 (GND) -- R182.1 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+    "0.703 R130.2 (GND) -- C127.1 (PYRO1_CONT): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+    "0.762 R126.1 (PYRO1_GATE_N) -- C126.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+    "0.800 R128.2 (GND) -- C126.1 (PYRO1_GATE): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+    "0.806 R126.2 (PYRO1_GATE) -- C128.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+    "0.861 R125.1 (RAW_ACT_SENSE) -- R124.1 (RAW_ACT_SENSE_MID): RAW_ACT_SENSE_MID to its own node: one 5.1 k half shorted (R4 pass 11)",
+    "0.861 R125.2 (GND) -- R124.2 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+    "0.861 R180.1 (ARM1_SENSE) -- C129.2 (GND): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+    "0.876 R126.2 (PYRO1_GATE) -- C126.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+    "0.896 R131.1 (PYRO1_OUT) -- R173.2 (PYRO1_CONT_MID): PYRO1_OUT to its own midpoint: one 5.1 k half shorted (R4 tolerated)",
+    "0.909 R133.1 (ARM1_SENSE) -- R180.2 (GND): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+    "0.909 R133.2 (GND) -- R180.1 (ARM1_SENSE): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+    "0.987 C128.2 (GND) -- C126.1 (PYRO1_GATE): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+    "0.988 R130.1 (PYRO1_CONT) -- C127.2 (GND): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)"
+   ]
+  }
+ },
+ "rule_h": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "pairs": [
+    "Q124.5 -- R129.2",
+    "R132.1 -- C129.1",
+    "Q121.9 -- R121.2"
+   ],
+   "variants": [
+    "act_gate_dropped",
+    "deleted",
+    "min_lowered",
+    "moved_first",
+    "narrowed",
+    "pad_override",
+    "raw_dropped",
+    "seed"
+   ]
+  }
+ },
+ "gate_n": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "neighbours": {
+    "GND": {
+     "mm": 0.888,
+     "item": "via (13.5, 54.6)",
+     "v_reset": 0.0
+    }
+   },
+   "p7_table": [
+    {
+     "net": "unconnected-(U1-PE3-Pad2)",
+     "gate_net": "PYRO1_GATE_N",
+     "mm": 0.412,
+     "gate": "track (13.0, 53.35)",
+     "other": "U1.2",
+     "layers": [
+      "F.Cu",
+      "F.Cu"
+     ],
+     "v_reset": 0.0
+    },
+    {
+     "net": "unconnected-(U1-PE5-Pad4)",
+     "gate_net": "PYRO1_GATE_N",
+     "mm": 0.412,
+     "gate": "track (13.0, 53.35)",
+     "other": "U1.4",
+     "layers": [
+      "F.Cu",
+      "F.Cu"
+     ],
+     "v_reset": 0.0
+    },
+    {
+     "net": "QSPI_IO2",
+     "gate_net": "PYRO1_GATE_N",
+     "mm": 0.833,
+     "gate": "track (13.0, 53.35)",
+     "other": "U1.1",
+     "layers": [
+      "F.Cu",
+      "F.Cu"
+     ],
+     "v_reset": 3.229
+    },
+    {
+     "net": "unconnected-(U1-PE6-Pad5)",
+     "gate_net": "PYRO1_GATE_N",
+     "mm": 0.833,
+     "gate": "track (13.0, 53.35)",
+     "other": "U1.5",
+     "layers": [
+      "F.Cu",
+      "F.Cu"
+     ],
+     "v_reset": 0.0
+    },
+    {
+     "net": "PYRO1_OUT",
+     "gate_net": "PYRO1_GATE",
+     "mm": 0.95,
+     "gate": "Q124.4",
+     "other": "track (9.0, 64.599999)",
+     "layers": [
+      "F.Cu",
+      "F.Cu"
+     ],
+     "v_reset": 3.3
+    },
+    {
+     "net": "PYRO1_CONT",
+     "gate_net": "PYRO1_GATE",
+     "mm": 1.017,
+     "gate": "via (9.125, 61.955)",
+     "other": "C127.1",
+     "layers": [
+      "F.Cu",
+      "F.Cu"
+     ],
+     "v_reset": 0.408
+    },
+    {
+     "net": "3V3",
+     "gate_net": "PYRO1_GATE_N",
+     "mm": 1.305,
+     "gate": "track (13.0, 53.35)",
+     "other": "U1.6",
+     "layers": [
+      "F.Cu",
+      "F.Cu"
+     ],
+     "v_reset": 3.229
+    },
+    {
+     "net": "BUZZ_DRV",
+     "gate_net": "PYRO1_GATE_N",
+     "mm": 1.791,
+     "gate": "track (13.0, 53.35)",
+     "other": "U1.7",
+     "layers": [
+      "F.Cu",
+      "F.Cu"
+     ],
+     "v_reset": 3.229
+    },
+    {
+     "net": "PULLPIN",
+     "gate_net": "PYRO1_GATE_N",
+     "mm": 2.283,
+     "gate": "track (13.0, 53.35)",
+     "other": "U1.8",
+     "layers": [
+      "F.Cu",
+      "F.Cu"
+     ],
+     "v_reset": 3.229
+    },
+    {
+     "net": "unconnected-(U1-PC15-Pad9)",
+     "gate_net": "PYRO1_GATE_N",
+     "mm": 2.777,
+     "gate": "track (13.0, 53.35)",
+     "other": "U1.9",
+     "layers": [
+      "F.Cu",
+      "F.Cu"
+     ],
+     "v_reset": 0.0
+    },
+    {
+     "net": "PYRO1_CONT",
+     "gate_net": "PYRO1_GATE_N",
+     "mm": 2.855,
+     "gate": "track (8.72, 57.63)",
+     "other": "track (11.59, 59.08)",
+     "layers": [
+      "F.Cu",
+      "F.Cu"
+     ],
+     "v_reset": 0.367
+    }
+   ]
+  }
+ },
+ "sense": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "neighbours": {
+    "PYRO1_CONT / GND": [
+     0.24,
+     "track (11.59, 61.23)",
+     "R130.2"
+    ],
+    "ARM1_SENSE_MCU / unconnected-(U1-PC4-Pad32)": [
+     0.25,
+     "track (25.55, 47.0)",
+     "U1.32"
+    ],
+    "ARM1_SENSE_MCU / RAW_ACT_SENSE_MCU": [
+     0.25,
+     "track (25.55, 47.0)",
+     "U1.34"
+    ],
+    "PYRO1_CONT_MCU / NRST": [
+     0.253,
+     "track (19.0, 53.03)",
+     "U1.14"
+    ],
+    "PYRO1_CONT_MCU / unconnected-(U1-PC1-Pad16)": [
+     0.253,
+     "track (19.0, 53.03)",
+     "U1.16"
+    ],
+    "ARM1_SENSE / GND": [
+     0.289,
+     "track (23.83, 79.83)",
+     "C129.2"
+    ],
+    "PYRO1_CONT_MCU / SERVO1_MCU": [
+     0.469,
+     "track (17.53, 54.5)",
+     "R150.1"
+    ],
+    "ARM1_SENSE_MID / PYRO1_BUS": [
+     0.577,
+     "R132.2",
+     "track (18.1, 80.96)"
+    ],
+    "PYRO1_COLD / PYRO1_OUT": [
+     0.577,
+     "R131.2",
+     "track (13.2, 67.66)"
+    ],
+    "PYRO1_CONT_MID / PYRO1_OUT": [
+     0.577,
+     "track (13.2, 66.47)",
+     "R173.1"
+    ],
+    "PYRO1_CONT_MCU / HSE_OUT": [
+     0.691,
+     "track (17.53, 54.5)",
+     "U1.13"
+    ],
+    "PYRO1_COLD / 3V3": [
+     0.731,
+     "D120.1",
+     "track (18.9, 69.13)"
+    ],
+    "ARM1_SENSE_MCU / CAM_UART_OE": [
+     0.75,
+     "track (25.55, 47.0)",
+     "U1.31"
+    ],
+    "ARM1_SENSE_MCU / CAM_5V_SENSE": [
+     0.75,
+     "track (25.55, 47.0)",
+     "U1.35"
+    ],
+    "PYRO1_CONT_MCU / VLOGIC_SENSE": [
+     0.751,
+     "track (19.0, 53.03)",
+     "U1.17"
+    ],
+    "ARM1_SENSE / SERVO4_OUT": [
+     0.82,
+     "track (28.53, 75.64)",
+     "J122.10"
+    ],
+    "ARM1_SENSE / RAW_ACT": [
+     0.82,
+     "track (28.53, 75.64)",
+     "J122.11"
+    ],
+    "ARM1_SENSE / SERVO4_MCU": [
+     0.932,
+     "track (28.53, 75.64)",
+     "R153.1"
+    ],
+    "PYRO1_CONT / PYRO1_GATE": [
+     1.018,
+     "C127.1",
+     "via (9.125, 61.955)"
+    ],
+    "ARM1_SENSE / CAM_5V": [
+     1.02,
+     "track (28.53, 75.64)",
+     "U13.1"
+    ],
+    "ARM1_SENSE / unconnected-(U13-EN_LEAVE_OPEN-Pad3)": [
+     1.02,
+     "track (28.53, 75.64)",
+     "U13.3"
+    ],
+    "PYRO1_CONT_MCU / HSE_IN": [
+     1.044,
+     "track (17.53, 54.5)",
+     "U1.12"
+    ],
+    "PYRO1_CONT / PYRO1_OUT": [
+     1.225,
+     "R129.2",
+     "Q124.5"
+    ],
+    "ARM1_SENSE_MCU / unconnected-(U1-PA6-Pad30)": [
+     1.25,
+     "track (25.55, 47.0)",
+     "U1.30"
+    ],
+    "ARM1_SENSE_MCU / QSPI_CLK": [
+     1.25,
+     "track (25.55, 47.0)",
+     "U1.36"
+    ],
+    "PYRO1_CONT_MCU / V3V3_SENSE": [
+     1.251,
+     "track (19.0, 53.03)",
+     "U1.18"
+    ],
+    "PYRO1_CONT / unconnected-(U1-PC15-Pad9)": [
+     1.38,
+     "R168.1",
+     "U1.9"
+    ],
+    "PYRO1_CONT_MCU / 3V3": [
+     1.38,
+     "R168.2",
+     "U1.11"
+    ],
+    "PYRO1_CONT_MCU / GND": [
+     1.4,
+     "R168.2",
+     "U1.10"
+    ],
+    "PYRO1_CONT / PULLPIN": [
+     1.428,
+     "R168.1",
+     "U1.8"
+    ],
+    "PYRO1_CONT / 3V3": [
+     1.475,
+     "R168.1",
+     "U1.11"
+    ],
+    "PYRO1_COLD / unconnected-(D120-K2-Pad2)": [
+     1.475,
+     "track (15.43, 67.66)",
+     "D120.2"
+    ]
+   }
+  }
+ },
+ "armed": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "foreign": {},
+   "no_net_pads": {}
+  }
+ },
+ "contract": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "LC-1": {
+    "overrides": [],
+    "zone_clearances_floor_only": [
+     "R9_GND_F_strip 0.15",
+     "R9_GND_B_strip 0.15",
+     "R9_GND_In1_strip 0.25",
+     "R9_GND_In2_strip 0.25"
+    ]
+   },
+   "P-0": {
+    "A": {
+     "minimum": 0.5,
+     "closest": {
+      "mm": 0.82,
+      "a": "J122.11 (RAW_ACT)",
+      "b": "track (28.53, 75.64) (ARM1_SENSE)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.32,
+     "violations": 0
+    },
+    "B": {
+     "minimum": 0.5,
+     "closest": {
+      "mm": 0.82,
+      "a": "Q124.5 (PYRO1_OUT)",
+      "b": "track (9.125, 61.955) (PYRO1_GATE)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.32,
+     "violations": 0
+    },
+    "C": {
+     "minimum": 0.3,
+     "closest": {
+      "mm": 0.577,
+      "a": "R132.1 (PYRO1_BUS)",
+      "b": "track (22.13, 80.96) (ARM1_SENSE_MID)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.277,
+     "violations": 0
+    },
+    "D": {
+     "minimum": 0.5,
+     "closest": {
+      "mm": 0.77,
+      "a": "track (10.425, 63.05) (GND)",
+      "b": "Q124.5 (PYRO1_OUT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.27,
+     "violations": 0
+    },
+    "E": {
+     "minimum": 1.0,
+     "closest": null,
+     "margin": null,
+     "violations": 0
+    },
+    "F": {
+     "minimum": 0.5,
+     "closest": null,
+     "margin": null,
+     "violations": 0
+    },
+    "G": {
+     "minimum": 0.3,
+     "closest": {
+      "mm": 0.412,
+      "a": "track (13.0, 53.35) (PYRO1_GATE_N)",
+      "b": "U1.2 (unconnected-(U1-PE3-Pad2))",
+      "layer": "F.Cu"
+     },
+     "margin": 0.112,
+     "violations": 0
+    },
+    "A2": {
+     "minimum": 0.3,
+     "closest": null,
+     "margin": null,
+     "violations": 0
+    },
+    "H": {
+     "minimum": 1.0,
+     "closest": {
+      "mm": 1.225,
+      "a": "Q124.5 (PYRO1_OUT)",
+      "b": "R129.2 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.225,
+     "violations": 0
+    },
+    "H+": {
+     "minimum": 1.2,
+     "closest": {
+      "mm": 1.225,
+      "a": "Q124.5 (PYRO1_OUT)",
+      "b": "R129.2 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.025,
+     "violations": 0
+    },
+    "GS": {
+     "minimum": 1.2,
+     "closest": {
+      "mm": 1.68,
+      "a": "R128.1 (PYRO1_GATE)",
+      "b": "C127.1 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.48,
+     "violations": 0
+    },
+    "AG": {
+     "minimum": 1.2,
+     "closest": {
+      "mm": 1.362,
+      "a": "Q122.3 (ACT_DRV)",
+      "b": "R123.2 (GND)",
+      "layer": "B.Cu"
+     },
+     "margin": 0.162,
+     "violations": 0
+    }
+   },
+   "P-1": {
+    "area_bbox": [
+     1.2,
+     54.2,
+     28.4,
+     89.8
+    ],
+    "rule_g_scope": true
+   },
+   "P-2": {
+    "items": 27
+   },
+   "P-3": {
+    "hull_bbox": [
+     3.06,
+     55.34,
+     27.27,
+     89.56
+    ],
+    "hull_area_mm2": 586.5,
+    "foreign_nets": {}
+   },
+   "P-4": {
+    "rules_after_h": [
+     "Small GND pad thermal relief",
+     "RAW_ACT pins to pours",
+     "Tag-Connect contact to foreign copper",
+     "R9 bare test pads to foreign copper"
+    ],
+    "rule_h_sha16": "2826f2e9f5038349",
+    "seed_pairs": [
+     "Q124.5 -- R129.2",
+     "R132.1 -- C129.1",
+     "Q121.9 -- R121.2"
+    ]
+   },
+   "P-5": {
+    "pairs": 129,
+    "forbidden": 0,
+    "under_1mm": [
+     "0.395 R125.1 (RAW_ACT_SENSE) -- R182.2 (GND): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.463 R125.2 (GND) -- R182.1 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.539 C90.2 (GND) -- R177.2 (RAW_ACT_SENSE_MID): RAW_ACT_SENSE_MID to GND: reads no continuity / disarmed (ground refusal)",
+     "0.546 R130.1 (PYRO1_CONT) -- R178.2 (GND): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+     "0.546 R130.2 (GND) -- R178.1 (PYRO1_CONT): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+     "0.586 C122.1 (RAW_ACT_SENSE) -- R182.2 (GND): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.657 C122.2 (GND) -- R182.1 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.703 R130.2 (GND) -- C127.1 (PYRO1_CONT): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+     "0.762 R126.1 (PYRO1_GATE_N) -- C126.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.800 R128.2 (GND) -- C126.1 (PYRO1_GATE): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.806 R126.2 (PYRO1_GATE) -- C128.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.861 R125.1 (RAW_ACT_SENSE) -- R124.1 (RAW_ACT_SENSE_MID): RAW_ACT_SENSE_MID to its own node: one 5.1 k half shorted (R4 pass 11)",
+     "0.861 R125.2 (GND) -- R124.2 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.861 R180.1 (ARM1_SENSE) -- C129.2 (GND): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.876 R126.2 (PYRO1_GATE) -- C126.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.896 R131.1 (PYRO1_OUT) -- R173.2 (PYRO1_CONT_MID): PYRO1_OUT to its own midpoint: one 5.1 k half shorted (R4 tolerated)",
+     "0.909 R133.1 (ARM1_SENSE) -- R180.2 (GND): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.909 R133.2 (GND) -- R180.1 (ARM1_SENSE): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.987 C128.2 (GND) -- C126.1 (PYRO1_GATE): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.988 R130.1 (PYRO1_CONT) -- C127.2 (GND): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)"
+    ]
+   },
+   "P-6": {
+    "nearest": {
+     "TP121.1 (ACT_GATE)": [
+      1.019,
+      "R122.1 (RAW_PROTECTED)"
+     ],
+     "C120.2 (ACT_GATE)": [
+      1.08,
+      "R120.1 (ACT_FET_S)"
+     ],
+     "R121.2 (ACT_DRV)": [
+      1.773,
+      "Q121.9 (RAW_ACT)"
+     ],
+     "Q121.4 (ACT_GATE)": [
+      1.876,
+      "C120.1 (ACT_FET_S)"
+     ],
+     "Q122.3 (ACT_DRV)": [
+      1.898,
+      "R122.1 (RAW_PROTECTED)"
+     ],
+     "R120.2 (ACT_GATE)": [
+      1.928,
+      "C120.1 (ACT_FET_S)"
+     ]
+    }
+   },
+   "P-7": {
+    "reset_voltage_table": [
+     {
+      "net": "unconnected-(U1-PE3-Pad2)",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.412,
+      "gate": "track (13.0, 53.35)",
+      "other": "U1.2",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.0
+     },
+     {
+      "net": "unconnected-(U1-PE5-Pad4)",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.412,
+      "gate": "track (13.0, 53.35)",
+      "other": "U1.4",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.0
+     },
+     {
+      "net": "QSPI_IO2",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.833,
+      "gate": "track (13.0, 53.35)",
+      "other": "U1.1",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "unconnected-(U1-PE6-Pad5)",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.833,
+      "gate": "track (13.0, 53.35)",
+      "other": "U1.5",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.0
+     },
+     {
+      "net": "PYRO1_OUT",
+      "gate_net": "PYRO1_GATE",
+      "mm": 0.95,
+      "gate": "Q124.4",
+      "other": "track (9.0, 64.599999)",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 3.3
+     },
+     {
+      "net": "PYRO1_CONT",
+      "gate_net": "PYRO1_GATE",
+      "mm": 1.017,
+      "gate": "via (9.125, 61.955)",
+      "other": "C127.1",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.408
+     },
+     {
+      "net": "3V3",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 1.305,
+      "gate": "track (13.0, 53.35)",
+      "other": "U1.6",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "BUZZ_DRV",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 1.791,
+      "gate": "track (13.0, 53.35)",
+      "other": "U1.7",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "PULLPIN",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 2.283,
+      "gate": "track (13.0, 53.35)",
+      "other": "U1.8",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "unconnected-(U1-PC15-Pad9)",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 2.777,
+      "gate": "track (13.0, 53.35)",
+      "other": "U1.9",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.0
+     },
+     {
+      "net": "PYRO1_CONT",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 2.855,
+      "gate": "track (8.72, 57.63)",
+      "other": "track (11.59, 59.08)",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.367
+     }
+    ]
+   },
+   "P-8": {
+    "PYRO1_CONT_MCU": 2.859,
+    "ARM1_SENSE_MCU": 2.12,
+    "RAW_ACT_SENSE_MCU": 0
+   },
+   "P-9": {
+    "tp122_nearest_bottom": null,
+    "guarded_pads": [
+     "TP81.1: 1 mm",
+     "TP80.1: 1 mm",
+     "TP75.1: 1 mm",
+     "J124.2: 0.3 mm",
+     "J2.1: 0.508 mm",
+     "J2.2: 0.508 mm",
+     "J2.3: 0.508 mm",
+     "J2.4: 0.508 mm",
+     "J2.5: 0.508 mm",
+     "J2.6: 0.508 mm",
+     "TP76.1: 1 mm",
+     "TP83.1: 1 mm",
+     "TP89.1: 1 mm",
+     "TP30.1: 1 mm",
+     "TP84.1: 1 mm",
+     "TP87.1: 1 mm",
+     "J122.2: 0.3 mm",
+     "J122.5: 0.3 mm",
+     "J122.8: 0.3 mm",
+     "J122.11: 0.3 mm",
+     "TP85.1: 1 mm",
+     "TP74.1: 1 mm",
+     "TP88.1: 1 mm",
+     "TP120.1: 1 mm",
+     "TP91.1: 1 mm",
+     "TP86.1: 1 mm",
+     "TP72.1: 1 mm",
+     "TP90.1: 1 mm",
+     "TP73.1: 1 mm",
+     "TP92.1: 1 mm",
+     "TP82.1: 1 mm",
+     "TP122.1: 1 mm",
+     "TP71.1: 1 mm",
+     "TP70.1: 1 mm",
+     "TP121.1: 1 mm"
+    ],
+    "pyro_vias": [
+     [
+      "PYRO1_GATE",
+      [
+       9.125,
+       61.955
+      ],
+      1.391
+     ]
+    ]
+   },
+   "P-10": {
+    "u4_mm": 5.526
+   },
+   "P-11": {
+    "J121": {
+     "entry": "-x",
+     "wire_room_mm": 6.353
+    },
+    "J124": {
+     "entry": "-x",
+     "wire_room_mm": 6.353
+    }
+   },
+   "R-13": {
+    "nearest": [
+     46.13,
+     "U31",
+     "Q124.5 (PYRO1_OUT)"
+    ],
+    "nearest_other_pyro_copper": [
+     26.89,
+     "U31",
+     "R170.1 (ARM1_SENSE)"
+    ]
+   },
+   "M-6": {
+    "pyro_vias": 1
+   },
+   "K-copper": {
+    "smd_pads_checked_for_via_holes": 699,
+    "track_endpoints_checked": 230,
+    "small_ground_pads": 86,
+    "via_paste": {
+     "pairs_checked": 153,
+     "nearest_ring_mm": [
+      0.075,
+      "via (13.5, 54.6) (GND) and C10.2's paste (B)"
+     ]
+    }
+   },
+   "K-power-pyro": {
+    "inner_power_pyro": {
+     "nearest": null,
+     "items": 10,
+     "within_5mm": 0
+    },
+    "battery_pyro": {
+     "nearest": null
+    },
+    "gate_servo": {
+     "nearest": null,
+     "under_limit": 0,
+     "layer_pairs": [
+      [
+       "B.Cu",
+       "B.Cu"
+      ],
+      [
+       "B.Cu",
+       "In2.Cu"
+      ],
+      [
+       "F.Cu",
+       "F.Cu"
+      ],
+      [
+       "F.Cu",
+       "In1.Cu"
+      ],
+      [
+       "In1.Cu",
+       "F.Cu"
+      ],
+      [
+       "In1.Cu",
+       "In1.Cu"
+      ],
+      [
+       "In2.Cu",
+       "B.Cu"
+      ],
+      [
+       "In2.Cu",
+       "In2.Cu"
+      ]
+     ]
+    }
+   },
+   "K-inner": {},
+   "K-actuators": {
+    "sha256": "3f22b273b712418a0a16646d4af28e46ee3c1167a35547650076338c06725240"
+   }
+  }
+ },
+ "actuators": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "findings": 0
+  }
+ },
+ "drc": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "unconnected_total": 454,
+   "unconnected_step": 0,
+   "deferred": {
+    "silk_edge_clearance": 4,
+    "silk_overlap": 88,
+    "silk_over_copper": 132
+   },
+   "pending": [
+    "Via [3V3] on F.Cu - B.Cu at (17.9, 56.3)",
+    "Via [GND] on F.Cu - B.Cu at (10.425, 62.45)",
+    "Via [GND] on F.Cu - B.Cu at (13.5, 54.6)",
+    "Via [GND] on F.Cu - B.Cu at (11.8, 62.45)"
+   ]
+  }
+ },
+ "route": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "instances": 37,
+   "pending": [
+    "dangling_via 3V3 (17.9, 56.3)",
+    "dangling_via GND (10.425, 62.45)",
+    "dangling_via GND (13.5, 54.6)",
+    "dangling_via GND (11.8, 62.45)",
+    "dead_copper 3V3 (17.9, 68.13)",
+    "dead_copper 3V3 (17.9, 56.3)",
+    "dead_copper 3V3 (18.9, 69.13)",
+    "dead_copper 3V3 (17.9, 56.3)",
+    "dead_copper GND (11.8, 62.45)",
+    "dead_copper GND (6.9, 58.8674)",
+    "dead_copper GND (9.2326, 58.8674)",
+    "dead_copper GND (13.5, 54.6)",
+    "dead_copper GND (10.425, 62.45)",
+    "dead_copper GND (13.5, 54.6)",
+    "dead_copper GND (11.8, 62.45)"
+   ],
+   "step_nets": {
+    "pad_end_offcentre": 5,
+    "width_change_junction": 1
+   },
+   "bump_windows": 3
+  }
+ },
+ "board": "m3_design/assembly_review/m3.kicad_pcb",
+ "board_sha256": "a6454f788c5bb7bc20c39b949d5d8a7595671574fda789318b49e2ee337b1828",
+ "figures": {
+  "exit_track_mm": 66.44,
+  "track_mm": {
+   "ARM1_SENSE": 40.0,
+   "ARM1_SENSE_MCU": 2.12,
+   "ARM1_SENSE_MID": 0.84,
+   "PYRO1_BUS": 10.97,
+   "PYRO1_COLD": 2.08,
+   "PYRO1_CONT": 14.47,
+   "PYRO1_CONT_MCU": 2.86,
+   "PYRO1_CONT_MID": 0.94,
+   "PYRO1_GATE": 7.71,
+   "PYRO1_GATE_N": 11.97,
+   "PYRO1_IGN": 8.0,
+   "PYRO1_OUT": 12.35
+  },
+  "fire_bar_mohm": {
+   "PYRO1_OUT": 3.15,
+   "PYRO1_BUS": 4.96,
+   "PYRO1_IGN": 4.96
+  },
+  "block_bbox": [
+   1.2,
+   54.2,
+   28.4,
+   89.8
+  ]
+ },
+ "checker_sha256": "2cae158df2ab790da64ba33ef419193d7754f4b6ccb8d80a49dafbbeb0afb415",
+ "builder_sha256": "8b27d31f1a78da9fd8c73c93261051fe824c7e8f5ca96e6d18f4912a94429445"
+}

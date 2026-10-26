@@ -6,7 +6,7 @@
 	(title_block
 		(title "13 | Servo outputs")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R8")
+		(rev "M3-ASSY-R9")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
 			(symbol "M3:C"
@@ -519,7 +519,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54"
+		(property "Footprint" "rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR"
 			(at 40.64 50.8 0)
 			(hide yes)
 			(effects
@@ -1802,13 +1802,20 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 6c3bd72b-9ef1-5304-b56d-adb5d3fca376))
-	(text "R8 (D7): D121 keeps the pass-5 channel map (pins 1/3/4/6 = SERVO1-4_MCU, 2 GND, 5 3V3); on the board it sits on the bottom side, on the U1-ordered servo lanes ahead of their reversal into J122's row order."
+	(text "R8 (D7), kept in R9: D121 keeps the pass-5 channel map (pins 1/3/4/6 = SERVO1-4_MCU, 2 GND, 5 3V3)."
 		(at 20.32 275.48 0)
 		(effects
 			(font
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 3bfcf573-5380-5829-9349-7e9e8bfe12a8))
+	(text "R9: J122 on HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR (same part and land; plug columns numbered from +x, rows unchanged). At rotation 180 plug 1 (SERVO1) is the west plug: U1.22-25 reach plugs 1-4 in order."
+		(at 20.32 237.38 0)
+		(effects
+			(font
+				(size 1.27 1.27))
+			(justify left))
+		(uuid 0a62a61d-e12d-5a9b-bbaf-5789106faf4b))
 	(sheet_instances
 		(path "/"
 			(page "13"))))

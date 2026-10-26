@@ -1,10 +1,117 @@
 # M3 requirements and implementation status
 
-> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. On this branch (`m3-assy-r8`) the repository holds the M3-ASSY-R8 KiCad project, built from the committed, owner-accepted R7 board (commit 431025d) by `m3_design/r8_build.sh` (R7 came from R6 by `m3_design/r7_build.sh`, R6 from R5, R5 from R4, R4 from R3), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. R7's project stays on branch `m3-assy-r7` (431025d). The older candidates are mentioned below only as the evolution record.
+> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. On this branch (`m3-assy-r9`) the repository holds the M3-ASSY-R9 KiCad project, built from the committed, owner-accepted R8 sources (commit 9c8179b) by `m3_design/r9_build.sh` (R8 came from R7 by `m3_design/r8_build.sh`, R7 from R6 by `m3_design/r7_build.sh`, R6 from R5, R5 from R4, R4 from R3), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. R8's project stays on branch `m3-assy-r8` (9c8179b) and R7's on `m3-assy-r7` (431025d). The older candidates are mentioned below only as the evolution record.
 
-Last updated 2026-10-20. Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; **M3-ASSY-R8 (R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block) is the current candidate, and R7 is the accepted, orderable fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
+Last updated 2026-10-25. Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; R8 is R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block, owner-accepted on 2026-10-20; **M3-ASSY-R9 (R8's circuit laid out again from a clean sheet, 46 × 102 mm) is the current candidate, owner-accepted on 2026-10-25, and R8 is the accepted fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
 
-## Current candidate: M3-ASSY-R8 (R7 re-placed and re-routed, 46 × 118 mm)
+## Current candidate: M3-ASSY-R9 (clean-sheet B-spine layout, 46 × 102 mm, owner-accepted 2026-10-25)
+
+**CAD and manufacturing files complete after build steps 1–10 of `r9_plan.md` (2026-10-20 to 2026-10-25), independent
+review pass 1 (2026-10-25, on step 10's board `fc3d5b34…`) and its fix pass, which made the current board `4f841a0e…`:
+R8's circuit laid out again from a clean sheet, with every safety and RF qualification re-derived on the current board.
+Pass 1 found 0 Critical, 1 Major (confirmed as Minor) and 50 Minor; review pass 2 (on `4f841a0e…`) found 0 Critical,
+0 Major and 32 Minor, so `r9_plan.md` §5's two consecutive clean passes are met and the pass-2 Minors are recorded, not
+reworked (R9_VALIDATION "Review pass 2"). Owner-accepted on 2026-10-25 (REQUIREMENTS M2, "R9 acceptance"): the deviation
+list, including the agent decisions (U4 turned 180° with roll = −gyro_Y, the crystal's local In2 GND plane), with the
+board kept at 102 mm. Not a fabrication or flight release. R8 (below) stays the owner-accepted fallback.**
+- Committed and pushed on branch `m3-assy-r9` (base R8 `9c8179b`) at the accepted state on 2026-10-25; the commit that adds
+  this line holds board `4f841a0e…`.
+- Board SHA-256 `4f841a0e44ebb1829ad7996dfe6320ed527fce1fdb1e5ff11658e0705b44ac14`, rebuilt byte for byte from R8's
+  committed sources by `m3_design/r9_build.sh` (stages 0–38: schematic and footprint variants → placement → RF strip →
+  pyro column → power → ten routing families → ground → silkscreen → `tools/check.sh`, each stage with its gate; two
+  builds identical: the fix pass's stage replay and `r9_build.sh` run whole in a scratch clone); netlist `8b0e04ea…`
+  (unchanged); fab package `m3_design/r9_fab.sh`. Step 10's board was `fc3d5b34…`.
+- Record: [docs/M3_R9.md](docs/M3_R9.md); validation, requalification, review pass 1 and the deviation list:
+  [docs/R9_VALIDATION.md](docs/R9_VALIDATION.md); ordering: [docs/ORDERING.md](docs/ORDERING.md) (now R9's; until R9 is
+  accepted, order R8 from `m3-assy-r8`); plan, owner decisions (2026-10-20) and agent decisions D-S1-01 … D-S10-19 and
+  D-F1-01 … D-F1-11: `m3_design/assembly_review/sources/r9_design/`; review pass 1 and its fix pass:
+  `m3_design/assembly_review/sources/r9_review/`.
+
+What changed from R8 (details in M3_R9):
+- **Clean sheet:** nothing is held rigid by hash; `tools/check_r9.py` judges every block by rules (LC-1, P-0 … P-11,
+  R-1 … R-13, M-2 … M-7, F9-1, T-1, the K-rules); the RF chains and launches are regenerated by template in each jack's
+  and module's frame and shown congruent with R7's; the pyro column is drawn from its pads.
+- **Layout (B-spine):** the RF strip aft (y 0–22.0, owner decision 3); U1 in the middle; the CH1 pyro column on the west
+  edge as a dead end, both terminals' wires entering from −x; all power in the east column with a RAW_ACT spine on F.Cu,
+  In2 and B.Cu; J122 turned. 102 mm long, owner decision 1's last fallback (D-S3-03): the plan's 98 mm and the 100 mm
+  fallback cannot legalise the four MCU-end interface resistors against r9_plan's hard row X9 (≥ 5.94 mm from U1 / U3 /
+  Y1, R8's measured R306–U1 distance) and the SERIES rule; under F10's own 5 mm the kill path holds at 100 mm (an owner
+  option, R9_VALIDATION C1; R9P1-REQUIREMENTS-01).
+- **Stricter pyro rules (owner decision 2):** rule G's P-1b scope, no local clearance override (LC-1; R8 had 29), zone
+  fill margins, the strict pad rules (H + 0.2, gate-to-sense 1.2, actuator gate-to-GND 1.2 mm), battery-live copper
+  ≥ 2.5 mm from armed copper (R8 1.0), inner RAW_ACT / BAT_IN ≥ 2.65 mm (R8 2.5), U1's gate pin ≥ 0.5 mm from any
+  passing net (check_r9 P-7b, review pass 1); J121, J124 and J122 on mirrored-number variants of the same footprints
+  (pads named by role).
+- **IMU turned 180°** on the bottom (D-S7-06): roll = −gyro_Y (R8 +gyro_Y).
+- **Unchanged:** every part, value and LCSC code (the BOM is R8's line for line but the three footprint fields); U1's pin
+  map.
+
+Review pass 1's fix pass (R9_VALIDATION "Review pass 1"; R9_DECISIONS D-F1-01 … D-F1-11), every copper change through
+the generators: QSPI_IO2's escape 0.55 mm from the pyro gate pin U1.3 (was 0.25); R7's three ground vias at the radio
+module's GND pins (0.20 / 0.35 / 0.35 mm of copper to a via, was about 1.1); RADIO_TXEN at the 0.2 mm signal width (five
+track widths); no via in TP120's opening (was two); C98 beside U11's USB input; C121's GND return 1.38 mΩ (was
+11.98 mΩ) through a recorded exception to the 7.7 A corridor rule and the ground aid's new copper stage (the worst outer
+GND copper 9.50 mm of copper from a via, was 28.41; the forward-edge strip 6.04, was 12.45); check_r9 and pyro_probe
+deterministic, R-7 sides named by compass, R-8 over U31's whole body; the records corrected (the length's cause, the
+like-for-like R8 figures, the thin margins, the U9 limit, the single points, the bay stack, the IMU's modal position,
+FMEA's IGN–BUS1 adjacency, ORDERING's order remarks).
+
+Verification, stated separately:
+- **CAD checks (done, `4f841a0e…`):** `tools/check.sh` exit 0 (the fix pass's build replay and its standalone gate run
+  on 2026-10-25, with a GUI session and no shim): DRC 0 at every severity, unconnected 0, parity 0, ERC 0; metadata /
+  3D audit OK; silkscreen inside the outline; fit OK (worst J9 mated 0.028 mm); plate model; seeded rule-H suite OK;
+  check_r9 OK on all 40 rules; route_check r9 0 failing, 0 allowlisted, 0 leftovers; check_actuators OK. Every hard row
+  of r9_plan §2 met; 34 done rows met and 16 missed, each miss with its record (R9_VALIDATION).
+- **Manufacturing files (done, fix pass):** 92 BOM lines, 219 placed parts, CPL verified (78 top and 133 bottom rows
+  rebuilt from JLC's footprints, 8 placement-only), paste check OK, manifest bound to `4f841a0e…`
+  (`sources/r9_design/step10_evidence/fab.txt`).
+- **Software tests:** 478 tests in 26 suites (KiCad Python) and quality_audit 21 (both Pythons) pass on `4f841a0e…`
+  (`sources/r9_design/step10_evidence/tests.txt`); audit_artifacts exit 0.
+- **Independent review:** pass 1 on `fc3d5b34…` (0 Critical, 1 Major confirmed as Minor, 50 Minor; every finding
+  dispositioned in R9_VALIDATION "Review pass 1"); pass 2 not run.
+- **Calculation (the requalification re-run on `4f841a0e…`, R9_VALIDATION "Requalification"):**
+  - 7.7 A DC at 0.05 mm: RAW_ACT 0.80, BAT_IN 0.16, ACT_FET_S 0.26 mΩ; necks 7.89 / 8.15 / 5.18 mm on B.Cu, rising
+    12.6 / 12.1 / 20.4 °C (IPC-2152, no plane credit, Inference), within D12's 20 / 20 / 30 °C and below R8's 17.5 / 14.5 /
+    21.4 °C; largest via barrel currents 0.47 / 0.61 / 0.22 A; the servo GND return 0.32 mΩ (2.4 mV at 7.7 A, an upper bound; R8 0.69 mΩ);
+  - fire loop (F7): 17.7 mΩ of board copper and 32.1 mΩ with the three FETs at their data-sheet maxima, so F7's budget is
+    1.65 A at the 7.4 V floor against 1.5 × 1 A all-fire (met on the final copper; the harness stays a bench item);
+  - supply paths (26, 0.1 mm): every drop under 80 mV at its load (the largest RAW_PROTECTED to U7, 77 mV at 1 A, as R8's
+    76 mV; USB_LIMITED 43 mV at 0.5 A, R8 26 mV);
+  - pyro: rule margins ≥ max(R8, 0.2 mm) but rule G's 0.112 mm at U1.3's pin entry (D-S5-13); U1's gate pin 0.55 mm
+    from the nearest passing net (P-7b); 134 exposed pairs under 1.5 mm, 0 forbidden; no foreign net within 3 mm of
+    armed copper (R8 6 / 7); bare gate copper ≥ 2.354 mm from bare armed copper (R8 1.027 mm);
+  - RF: GCPW 50.16–51.08 Ω at all 79 samples; launches congruent with R7's; return loss (Inference) GNSS ≥ 22.6 dB,
+    radio ≥ 23.6 dB; nearest RF part to a restricted part 6.04 mm; the radio module 46.13 mm from armed copper (owner
+    decision 3);
+  - critical-net reference (absolute): 10.22 % of samples unreferenced (R8 11.07 %), every one inside an own via
+    antipad but one;
+  - plate model f1 256.6 Hz pinned (R8 208.7 Hz); U4 and U5 on mode 1's antinode (0.76 / 0.89 of the peak; R8 0.18);
+  - reverse hot-plug premise: the protection 4.69–8.90 mm and U9 13.22 mm from J1.1; U9 IN within 0.0021 V and × 1.028
+    slew of the input node (Inference);
+  - IMU axis map: roll = −gyro_Y, lever arm x −11.0 mm.
+- **Cost and stock (live, 2026-10-26 00:59Z, the fix pass's `FAB_NET=1 m3_design/r9_fab.sh`):** $109.38 per board, 52
+  extended codes (limits $126.41 and 52); short none, thin none (U4 40 and U30 34 in JLC stock); valid 24 h, so rerun
+  before ordering.
+- **Simulation:** none (the hot-plug, plate and fire-loop scripts are calculations). **Firmware:** none; a binding note
+  records what the R9 binding must carry (`sources/r9_design/step10_evidence/r9_binding_note.json`). **Physical tests:**
+  none.
+
+**Needs the bench or the airframe** (ORDERING §5): every R8 item below, plus, for R9: the IMU sign check (roll =
+−gyro_Y), the keyed-radio pyro-immunity test at the 46 mm radio-to-pyro distance (required before flight, owner
+decision 3), the HSE frequency by MCO with the crystal's local In2 GND plane, the stall test with the FETs and J122 as
+the judged items (on R9 D12's neck limits are a CAD check only: the RAW_ACT and ACT_FET_S necks lie at the FETs, the
+BAT_IN neck under J1), the tap check against 256.6 Hz with the accelerometer at U4 and U4 logged, the reverse hot-plug at
+U9 IN.
+
+Open items:
+- The pass-2 Minors (23 of 32 marked worth fixing, mostly record and procedure items) and the open pass-1 Minors not
+  in the fix brief: recorded, not reworked under `r9_plan.md` §5's stopping rule (R9_VALIDATION "Review pass 1",
+  "Review pass 2"); a later polish pass may take them.
+- Before ordering R9: U4 in JLC stock or consigned; JLC's acceptance of four long-edge tabs on a 102 mm board (Inference,
+  ORDERING §3); a cost and stock run within 24 h (`FAB_NET=1 m3_design/r9_fab.sh`).
+- R9 firmware board binding (the IMU map changes, the pins do not).
+
+## Previous candidate (owner-accepted, orderable fallback): M3-ASSY-R8 (R7 re-placed and re-routed, 46 × 118 mm)
 
 **CAD and manufacturing files complete after build steps 0–9 of `r8_plan.md` (2026-10-19), review pass 1 (2026-10-19:
 0 Critical, 1 Major, 38 Minor, on `429b6db4…`), fix pass 1 (2026-10-19), review pass 2 (2026-10-19: 0 Critical, 0 Major,
@@ -15,16 +122,17 @@ record items), review pass 5 (2026-10-20: three reviewers, build integrity, plan
 0 Critical, 0 Major, 3 Minor) and its records pass (2026-10-20, no copper change). Passes 2–5 found no Critical or Major;
 the other five review dimensions were not re-run on `cc044ea0…` (a further re-check is the owner's call); the owner accepted the R8 deviation list on 2026-10-20 (REQUIREMENTS M2 met in CAD, C10 vibration
 item and agent decisions included); still open: U4 consigned, JLC's tab acceptance and a cost and stock run within 24 h. Not a fabrication or flight release.
-R7 (below) stays the owner-accepted, orderable fallback.**
-- Uncommitted on branch `m3-assy-r8` (base R7 `431025d`).
+R7 (below) was its fallback until then; R8 is now the fallback to R9 (above).**
+- Committed as `9c8179b` on branch `m3-assy-r8` (base R7 `431025d`; board `cc044ea0…`), after the text below was written; its
+  project and ORDERING live there (this branch's `docs/ORDERING.md` is R9's).
 - Board SHA-256 `cc044ea0922ff826df19af9d9726d92c096ab2b127025b55d123d8772e5fb4a7` (fix pass 4; review pass 1 reviewed the
   step-9 board `429b6db4…`, review pass 2 fix pass 1's `6600ef94…`, review pass 3 fix pass 2's `990c8040…`, review pass 4
   fix pass 3's `c84f00b8…`; this board's copper differs from `c84f00b8…` by exactly the pass-4 routing reviewer's trialled
   `rec4`; review pass 5 re-checked this board), rebuilt byte for byte from R7 by `m3_design/r8_build.sh` (schematic → placement →
   power → nine signal families → ground → the 7.7 A neck limits → silkscreen, each with its gate, then `tools/check.sh`;
   two consecutive builds identical); netlist `0cc1ed69…`; fab package `m3_design/r8_fab.sh`.
-- Generator state uncommitted (no commit on `m3-assy-r8`): commit or tag it (`git add -A`) and record the commit beside
-  `cc044ea0…` here and in R8_VALIDATION (owner action; R8P3-INTEGRITY-04, R8P4-INTEGRITY-01, R8P5-INTEGRITY-01: the
+- Generator state: committed since as `9c8179b` (before that commit: commit or tag it (`git add -A`) and record the commit beside
+  `cc044ea0…` here and in R8_VALIDATION, owner action; R8P3-INTEGRITY-04, R8P4-INTEGRITY-01, R8P5-INTEGRITY-01: the
   state pass 4 reviewed survives only in the coordinator's scratchpad backup, and `cc044ea0…`, the one pass 5 reviewed,
   only in this worktree); the hashes fix passes 2, 3 and 4 started from are in
   `sources/r8_review/fix2_baseline_sha256.txt`, `fix3_baseline_sha256.txt` and `fix4_baseline_sha256.txt`, with each
@@ -145,13 +253,13 @@ Open items:
   review pass 4's two removable copper Minors (C12 #5 / #6 and C21 are gone); review pass 5 re-checked `cc044ea0…` in
   three dimensions and changed no list entry; a re-check in the other five is the owner's call.
 - Commit or tag `m3-assy-r8` at this state and record the commit beside `cc044ea0…` here and in R8_VALIDATION (owner
-  action, R8P5-INTEGRITY-01).
+  action, R8P5-INTEGRITY-01): done, `9c8179b`.
 - Vibration (R8_VALIDATION C10): f1 6–8 % below R7's; moving C84 toward a support recovers about 17 Hz (owner or review).
 - Before ordering R8: U4 consigned; JLC's acceptance of five long-edge tabs without a forward rail (D35, Inference); a cost
   and stock run within 24 h.
 - R8 firmware board binding; 52 of 52 extended codes (any new code needs one removed).
 
-## Previous candidate (owner-accepted, orderable fallback): M3-ASSY-R7 (on-board GNSS and radio, 46 × 118 mm)
+## Earlier candidate (owner-accepted 2026-10-18): M3-ASSY-R7 (on-board GNSS and radio, 46 × 118 mm)
 
 **CAD and manufacturing files complete after review passes 2–8 and their fixes (2026-10-18); review pass 8 on the final
 board found 0 Critical / 0 Major (10 Minor, recorded in R7_VALIDATION). Not a fabrication or flight release.**

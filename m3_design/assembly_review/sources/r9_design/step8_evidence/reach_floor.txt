@@ -1,0 +1,4 @@
+legal spots 84079 (grid 0.1 mm, revive False); board points 18544
+floor P9 (p95) 3.78 mm, P10 (max) 7.28 mm at (31.25, 91.75); points beyond 3.5 mm 1104 (p95 <= 3.5 allows 927)
+legal spots 85719 (grid 0.1 mm, revive True); board points 18544
+floor P9 (p95) 3.59 mm, P10 (max) 7.28 mm at (31.25, 91.75); points beyond 3.5 mm 976 (p95 <= 3.5 allows 927)

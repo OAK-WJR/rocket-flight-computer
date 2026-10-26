@@ -10,6 +10,7 @@ These rules restate AGENTS.md §2 and docs/M3_ACTUATOR_MERGE.md in machine-check
 qualify the CAD netlist only: no electrical, thermal or physical behaviour is proven here.
 """
 import hashlib
+import math
 import re
 import sys
 from pathlib import Path
@@ -68,14 +69,16 @@ PYRO_RULE_SHA = {
     'Pyro D: GND to bus, igniter and drain': 'ad70c6cba4079ae0',
     'Pyro E: RAW_ACT to bus and igniter (ARM break)': '8bd3bd35c70a4107',
     'Pyro F: bus, igniter and drain to other live nets': '6149f1b365d67b31',
-    'Pyro G: gate nets in the pyro block': 'df27324c1d4f54a6',
+    'Pyro G: gate nets in the pyro block': '740c8388e07e6197',   # R9 P-1b scope (R9_DECISIONS D-S2-05)
     'Pyro A2: RAW_ACT to RAW_ACT_SENSE': 'c7771c0291e02e3d',
     'Pyro H: live pads to sense and gate pads (solder bridge)': '2826f2e9f5038349',
 }
 # pass 7: the whole m3.kicad_dru is pinned too. KiCad applies the last matching rule, so a later or duplicate rule (or an
 # unconditional low clearance) overrode the pinned blocks, and a syntax error makes kicad-cli drop every custom rule
 # silently. After a deliberate, reviewed edit of the file, update this hash from the failure message.
-DRU_SHA = '1674d58be79ae428'   # R7: the RF-strip rules added before the pyro rules (reviewed; pyro blocks unchanged)
+DRU_SHA = 'ea77b791eaa4026d'   # R9 (m3_design/r9_dru.py, R9_DECISIONS D-S2-05/06, D-S5-12): rule G's P-1b scope, the
+# RAW_ACT pin and test-pad rules that replace R8's pad overrides (LC-1), the zone fill margins of rules A-G / A2 (zones
+# only, after A2, before H); R7's RF-strip rules and pyro rules A-F, A2, H unchanged
 # safety-relevant parts pinned by LCSC code (value text alone let a BAT54C, an AO3400A or a plain 1206 resistor pass)
 PINNED = {'R134': 'C3013496',
  'Q124': 'C431195',
@@ -157,6 +160,175 @@ def rule_block(dru, name):
         if depth == 0:
             return dru[i:j + 1]
     return None
+
+
+# 15b (R9): the block the PYRO_BLOCK area must cover. CH1_PARTS: the channel's parts (tools/check_r8.CH1_PARTS);
+# BLOCK_NETS: the nets whose copper never leaves the block; EXIT_NETS: the lanes to the MCU, covered to EXIT_REACH mm
+# from the CH1 pad they leave; COURTYARD_GROW: the margin round each CH1 courtyard (survey_constraints.md P-1)
+CH1_PARTS = ('J124', 'J121', 'Q124', 'R126', 'R127', 'R128', 'R129', 'R130', 'R131', 'R132', 'R133', 'R134', 'R173',
+             'R175', 'R178', 'R180', 'C126', 'C127', 'C128', 'C129', 'D120', 'TP122')
+BLOCK_NETS = ('PYRO1_GATE', 'PYRO1_BUS', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_COLD', 'PYRO1_CONT_MID', 'ARM1_SENSE_MID')
+EXIT_NETS = ('PYRO1_GATE_N', 'PYRO1_CONT', 'ARM1_SENSE')
+EXIT_REACH, COURTYARD_GROW = 3.0, 1.0
+
+
+def _num(node, key, i=1):
+    c = node.children(key)
+    return float(c[0].items[i].atom) if c else None
+
+
+def _frame(fp):
+    """Footprint frame: board = (X + x cos + y sin, Y - x sin + y cos), KiCad's rotation (y down); the file stores a
+    flipped footprint's children already mirrored, so the same transform holds on both sides."""
+    at = fp.children('at')[0]
+    th = math.radians(float(at.items[3].atom)) if len(at.items) > 3 else 0.0
+    return float(at.items[1].atom), float(at.items[2].atom), math.cos(th), math.sin(th)
+
+
+def _board(fr, x, y):
+    X, Y, c, s = fr
+    return X + x * c + y * s, Y - x * s + y * c
+
+
+def _box(points, grow=0.0):
+    xs, ys = [p[0] for p in points], [p[1] for p in points]
+    return min(xs) - grow, min(ys) - grow, max(xs) + grow, max(ys) + grow
+
+
+def _courtyard_points(fp):
+    fr, pts = _frame(fp), []
+    for kind in ('fp_line', 'fp_rect', 'fp_poly', 'fp_circle', 'fp_arc'):
+        for g in fp.children(kind):
+            lay = g.children('layer')
+            if not lay or lay[0].items[1].atom not in ('F.CrtYd', 'B.CrtYd'):
+                continue
+            local = [(float(xy.items[1].atom), float(xy.items[2].atom)) for pp in g.children('pts') for xy in pp.children('xy')]
+            for key in ('start', 'mid', 'end', 'center'):
+                for n in g.children(key):
+                    local.append((float(n.items[1].atom), float(n.items[2].atom)))
+            if kind in ('fp_circle', 'fp_arc'):           # the whole circle: conservative
+                cen = g.children('center')
+                if cen:
+                    cx, cy = float(cen[0].items[1].atom), float(cen[0].items[2].atom)
+                    r = math.dist((cx, cy), local[-2] if len(local) > 1 else local[0])
+                    local += [(cx - r, cy - r), (cx + r, cy + r), (cx - r, cy + r), (cx + r, cy - r)]
+            pts += [_board(fr, x, y) for x, y in local]
+    return pts
+
+
+def _inside(pt, poly):
+    """Point in polygon (ray casting); points on an edge count as inside."""
+    x, y = pt
+    n, hit = len(poly), False
+    for i in range(n):
+        (x1, y1), (x2, y2) = poly[i], poly[(i + 1) % n]
+        if min(y1, y2) - 1e-9 <= y <= max(y1, y2) + 1e-9 and min(x1, x2) - 1e-9 <= x <= max(x1, x2) + 1e-9:
+            cross = (x2 - x1) * (y - y1) - (y2 - y1) * (x - x1)
+            if abs(cross) <= 1e-9 * max(1.0, math.dist((x1, y1), (x2, y2))):
+                return True
+        if (y1 > y) != (y2 > y) and x < x1 + (y - y1) * (x2 - x1) / (y2 - y1):
+            hit = not hit
+    return hit
+
+
+def _box_inside(b, poly):
+    """True when box b = (x0, y0, x1, y1) lies inside the polygon: its corners inside and no polygon edge entering it."""
+    x0, y0, x1, y1 = b
+    if not all(_inside(p, poly) for p in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))):
+        return False
+    n = len(poly)
+    for i in range(n):
+        (ax, ay), (bx, by) = poly[i], poly[(i + 1) % n]
+        t0, t1, dx, dy = 0.0, 1.0, bx - ax, by - ay      # Liang-Barsky against the open box
+        ok = True
+        for p, q in ((-dx, ax - x0), (dx, x1 - ax), (-dy, ay - y0), (dy, y1 - ay)):
+            if abs(p) < 1e-12:
+                if q <= 1e-9:
+                    ok = False
+                    break
+            else:
+                t = q / p
+                if p < 0:
+                    t0 = max(t0, t)
+                else:
+                    t1 = min(t1, t)
+        if ok and t1 - t0 > 1e-9:
+            mx, my = ax + dx * (t0 + t1) / 2, ay + dy * (t0 + t1) / 2
+            if x0 + 1e-6 < mx < x1 - 1e-6 and y0 + 1e-6 < my < y1 - 1e-6:
+                return False
+    return True
+
+
+def _net_of(node):
+    n = node.children('net')
+    return n[0].items[-1].atom if n else None
+
+
+def block_cover(root, poly):
+    """What the PYRO_BLOCK outline `poly` fails to contain (15b, R9): a list of item labels."""
+    miss = []
+    exit_pads = {n: [] for n in EXIT_NETS}
+    for fp in root.children('footprint'):
+        ref = properties(fp)['Reference'].items[2].atom
+        fr = _frame(fp)
+        if ref in CH1_PARTS:
+            pts = _courtyard_points(fp)
+            if not pts:
+                miss.append(f'{ref} courtyard (none)')
+            elif not _box_inside(_box(pts, COURTYARD_GROW), poly):
+                miss.append(f'{ref} courtyard + {COURTYARD_GROW} mm')
+        for p in fp.children('pad'):
+            net = _net_of(p)
+            pa = p.children('at')[0]
+            c = _board(fr, float(pa.items[1].atom), float(pa.items[2].atom))
+            sz = p.children('size')
+            r = math.hypot(float(sz[0].items[1].atom), float(sz[0].items[2].atom)) / 2 if sz else 0.0
+            if net in BLOCK_NETS and not _box_inside((c[0] - r, c[1] - r, c[0] + r, c[1] + r), poly):
+                miss.append(f'{ref}.{p.items[1].atom} ({net})')
+            if net in EXIT_NETS and ref in CH1_PARTS:
+                exit_pads[net].append((c, r))
+    for t in root.children('segment') + root.children('arc'):
+        net = _net_of(t)
+        if net not in BLOCK_NETS and net not in EXIT_NETS:
+            continue
+        w = (_num(t, 'width') or 0.0) / 2
+        ends = [(float(t.children(k)[0].items[1].atom), float(t.children(k)[0].items[2].atom))
+                for k in ('start', 'mid', 'end') if t.children(k)]
+        a, b = ends[0], ends[-1]
+        pts = []
+        steps = max(1, int(math.dist(a, b) / 0.1))
+        for i in range(steps + 1):
+            pts.append((a[0] + (b[0] - a[0]) * i / steps, a[1] + (b[1] - a[1]) * i / steps))
+        if len(ends) == 3:                               # an arc: its mid point and a margin for the bulge
+            pts.append(ends[1])
+            w += math.dist(a, b) / 2
+        if net in EXIT_NETS:
+            pts = [q for q in pts if any(math.dist(q, c) <= EXIT_REACH + r for c, r in exit_pads[net])]
+        for q in pts:
+            if not _box_inside((q[0] - w, q[1] - w, q[0] + w, q[1] + w), poly):
+                miss.append(f'{net} track at ({q[0]:.2f}, {q[1]:.2f})')
+                break
+    for v in root.children('via'):
+        net = _net_of(v)
+        if net not in BLOCK_NETS and net not in EXIT_NETS:
+            continue
+        at = v.children('at')[0]
+        c = (float(at.items[1].atom), float(at.items[2].atom))
+        r = (_num(v, 'size') or 0.0) / 2
+        if net in EXIT_NETS and not any(math.dist(c, q) <= EXIT_REACH + rr for q, rr in exit_pads[net]):
+            continue
+        if not _box_inside((c[0] - r, c[1] - r, c[0] + r, c[1] + r), poly):
+            miss.append(f'{net} via at ({c[0]:.2f}, {c[1]:.2f})')
+    for z in root.children('zone'):
+        net = z.children('net_name')
+        net = net[0].items[1].atom if net else _net_of(z)
+        if net not in BLOCK_NETS:
+            continue
+        for fp_ in z.children('filled_polygon'):
+            pts = [(float(xy.items[1].atom), float(xy.items[2].atom)) for pp in fp_.children('pts') for xy in pp.children('xy')]
+            if pts and not _box_inside(_box(pts), poly):
+                miss.append(f'{net} fill')
+    return miss
 
 
 def check(text, dru=None):
@@ -355,22 +527,28 @@ def check(text, dru=None):
             sha = hashlib.sha256(blk.encode()).hexdigest()[:16]
             req(sha == PYRO_RULE_SHA.get(name), f'rule "{name}" text changed (sha {sha}): review it, then update PYRO_RULE_SHA')
     # 15b (pass 5): rule G only works inside the PYRO_BLOCK rule area, so the area must exist on all four copper
-    # layers, cover the block, and restrict nothing (renaming or deleting it made rule G check nothing). R5: the
-    # block turned 180 deg and moved 24 mm forward; the area covers it whole. R7 moved the whole board 18 mm forward
-    # (the RF strip at the aft end): x 4-42, y 84-114.4 (R5/R6: y 66-96.4; R4: x 12-42, y 42-72.4)
+    # layers, cover the block, and restrict nothing (renaming or deleting it made rule G check nothing). R5-R8 pinned
+    # the area to one rectangle (R7/R8: x 4-42, y 84-114.4; pass 6: exactly it) because the block itself was rigid.
+    # R9 re-places the block on a shorter board (R9_DECISIONS D-S1-02), so the area is checked by what it must cover,
+    # which a fixed rectangle no longer guarantees once parts move: exactly one area with one outline and no hole, on
+    # F.Cu/In1/In2/B.Cu, restricting nothing (as before), that contains the bounding box of every CH1 part's courtyard
+    # grown by 1.0 mm, of every pad, track, arc, via and fill of the block's internal nets, and of the exit nets'
+    # copper within 3 mm of a CH1 pad of the same net (pass 6's notch fails here too: the notch must hold no block
+    # copper or courtyard). An area larger than that only widens rule G; tools/check_r9.py P-10 bounds it from above.
     areas = [z for z in read(text).children('zone') if z.children('name') and z.children('name')[0].items[1].atom == 'PYRO_BLOCK']
-    ok = False
+    ok, missing = False, []
     for z in areas:
         layers = {a.atom for n in z.children('layers') for a in n.items[1:]}
-        pts = [(float(xy.items[1].atom), float(xy.items[2].atom)) for pl in z.children('polygon') for pp in pl.children('pts')
-               for xy in pp.children('xy')]
+        polys = [[(float(xy.items[1].atom), float(xy.items[2].atom)) for pp in pl.children('pts') for xy in pp.children('xy')]
+                 for pl in z.children('polygon')]
         keep = [a.atom for k in z.children('keepout') for n in k.items[1:] if hasattr(n, 'children') for a in n.items[1:2]]
-        # pass 6: exactly the rectangle (a notch in a polygon with the same bounding box passed)
-        rect = sorted(pts) == sorted([(4.0, 84.0), (42.0, 84.0), (42.0, 114.4), (4.0, 114.4)])
-        if {'F.Cu', 'In1.Cu', 'In2.Cu', 'B.Cu'} <= layers and rect and len(z.children('polygon')) == 1 and keep \
+        if {'F.Cu', 'In1.Cu', 'In2.Cu', 'B.Cu'} <= layers and len(polys) == 1 and len(polys[0]) >= 3 and keep \
                 and all(a == 'allowed' for a in keep):
-            ok = True
-    req(len(areas) == 1 and ok, 'one PYRO_BLOCK rule area on F.Cu/In1/In2/B.Cu covering x 4-42, y 84-114.4, restricting nothing')
+            missing = block_cover(read(text), polys[0])
+            ok = not missing
+    req(len(areas) == 1 and ok, 'one PYRO_BLOCK rule area on F.Cu/In1/In2/B.Cu, one outline, restricting nothing, '
+        'covering the CH1 block (courtyards + 1 mm, internal-net copper, exit copper to 3 mm)'
+        + (f'; not covered: {missing[:4]}' if missing else ''))
     # IMU status on polled PE1; PE10 and PE0 stay no-connect (R6, kept)
     req(members.get('IMU_INT1') == {'U1.98', 'U4.4'}
         and pin.get('U1.40', '').startswith('unconnected-'),

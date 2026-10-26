@@ -1,0 +1,682 @@
+{
+ "frames": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "origins": {
+    "J30": [
+     13.59,
+     0.0
+    ],
+    "J31": [
+     32.29,
+     0.0
+    ],
+    "U30": [
+     11.15,
+     14.05
+    ],
+    "U31": [
+     30.61,
+     14.0
+    ]
+   }
+  }
+ },
+ "r7": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "C302": {
+    "r9": [
+     -2.27,
+     6.18,
+     -180.0,
+     false
+    ],
+    "r7": [
+     -2.27,
+     6.18,
+     -180.0,
+     false
+    ],
+    "deviation": null
+   },
+   "C303": {
+    "r9": [
+     0.94,
+     5.76,
+     90.0,
+     false
+    ],
+    "r7": [
+     -1.36,
+     7.13,
+     -180.0,
+     false
+    ],
+    "deviation": "the pi network's first shunt at the bias-tap node, east of the line, turned 90 degrees with its GND end aft: the west side is free for the limiter vias and the east keeps a stitching spot (D-S4-02)"
+   },
+   "C305": {
+    "r9": [
+     2.22,
+     7.13,
+     0.0,
+     false
+    ],
+    "r7": [
+     2.22,
+     7.13,
+     0.0,
+     false
+    ],
+    "deviation": null
+   },
+   "C313": {
+    "r9": [
+     -1.36,
+     7.6,
+     -180.0,
+     false
+    ],
+    "r7": [
+     -1.36,
+     7.6,
+     -180.0,
+     false
+    ],
+    "deviation": null
+   },
+   "C314": {
+    "r9": [
+     2.22,
+     7.6,
+     0.0,
+     false
+    ],
+    "r7": [
+     2.22,
+     7.6,
+     0.0,
+     false
+    ],
+    "deviation": null
+   },
+   "D30": {
+    "r9": [
+     -0.325,
+     5.2,
+     -180.0,
+     false
+    ],
+    "r7": [
+     0.325,
+     5.2,
+     0.0,
+     false
+    ],
+    "deviation": "turned 180 degrees: its GND pad west of the line, so the east side keeps a stitching spot (D-S4-02)"
+   },
+   "D31": {
+    "r9": [
+     0.325,
+     5.2,
+     0.0,
+     false
+    ],
+    "r7": [
+     0.325,
+     5.2,
+     0.0,
+     false
+    ],
+    "deviation": null
+   },
+   "L30": {
+    "r9": [
+     -0.463,
+     6.18,
+     0.0,
+     false
+    ],
+    "r7": [
+     -0.4625,
+     6.18,
+     0.0,
+     false
+    ],
+    "deviation": null
+   },
+   "R304": {
+    "r9": [
+     0.43,
+     7.13,
+     0.0,
+     false
+    ],
+    "r7": [
+     0.43,
+     7.13,
+     0.0,
+     false
+    ],
+    "deviation": null
+   },
+   "R316": {
+    "r9": [
+     0.43,
+     7.6,
+     0.0,
+     false
+    ],
+    "r7": [
+     0.43,
+     7.6,
+     0.0,
+     false
+    ],
+    "deviation": null
+   }
+  }
+ },
+ "launch": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "J30": {
+    "vias": [
+     [
+      -1.45,
+      1.0,
+      0.6,
+      0.3
+     ],
+     [
+      -1.45,
+      2.3,
+      0.6,
+      0.3
+     ],
+     [
+      -1.45,
+      3.58,
+      0.6,
+      0.3
+     ],
+     [
+      -1.25,
+      4.15,
+      0.6,
+      0.3
+     ],
+     [
+      1.25,
+      4.15,
+      0.6,
+      0.3
+     ],
+     [
+      1.45,
+      1.0,
+      0.6,
+      0.3
+     ],
+     [
+      1.45,
+      2.3,
+      0.6,
+      0.3
+     ],
+     [
+      1.45,
+      3.58,
+      0.6,
+      0.3
+     ]
+    ],
+    "other": [],
+    "gnd_xor_r7_mm2": 0.0008
+   },
+   "J31": {
+    "vias": [
+     [
+      -1.45,
+      1.0,
+      0.6,
+      0.3
+     ],
+     [
+      -1.45,
+      2.3,
+      0.6,
+      0.3
+     ],
+     [
+      -1.45,
+      3.58,
+      0.6,
+      0.3
+     ],
+     [
+      -1.25,
+      4.15,
+      0.6,
+      0.3
+     ],
+     [
+      1.25,
+      4.15,
+      0.6,
+      0.3
+     ],
+     [
+      1.45,
+      1.0,
+      0.6,
+      0.3
+     ],
+     [
+      1.45,
+      2.3,
+      0.6,
+      0.3
+     ],
+     [
+      1.45,
+      3.58,
+      0.6,
+      0.3
+     ]
+    ],
+    "other": [],
+    "gnd_xor_r7_mm2": 0.0008
+   },
+   "J30_vs_J31_mm2": 0.0
+  }
+ },
+ "contract": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "LC-1": {
+    "overrides": [],
+    "zone_clearances_floor_only": [
+     "R9_GND_F_strip 0.15",
+     "R9_GND_B_strip 0.15",
+     "R9_GND_In1_strip 0.25",
+     "R9_GND_In2_strip 0.25"
+    ]
+   },
+   "R-1": {
+    "deepest_strip_courtyard": [
+     21.955,
+     "C300"
+    ]
+   },
+   "R-2": {
+    "RADIO_TXEN_B": 22.719
+   },
+   "R-3": {
+    "J30": {
+     "x": 13.59,
+     "y": 0.0,
+     "rot": 0.0
+    },
+    "J31": {
+     "x": 32.29,
+     "y": 0.0,
+     "rot": 0.0
+    },
+    "spacing_mm": 18.7
+   },
+   "R-4": {
+    "J30": {
+     "cutouts": 1,
+     "in2_missing": 0,
+     "via_offsets": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.02,
+      0.02,
+      0.0,
+      0.0
+     ],
+     "pad_to_gnd_mm": 0.301
+    },
+    "J31": {
+     "cutouts": 1,
+     "in2_missing": 0,
+     "via_offsets": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.02,
+      0.02,
+      0.0,
+      0.0
+     ],
+     "pad_to_gnd_mm": 0.301
+    }
+   },
+   "R-5": {
+    "window_samples": {
+     "GNSS launch": 49,
+     "GNSS L30": 30,
+     "GNSS R304": 32,
+     "GNSS C303": 8,
+     "GNSS module": 24,
+     "GNSS C305": 12,
+     "RADIO launch": 49,
+     "RADIO R316": 30,
+     "RADIO C313": 11,
+     "RADIO module": 28,
+     "RADIO C314": 12
+    },
+    "line_pad_lengths": {
+     "GNSS R304.1": 0.553,
+     "GNSS R304.2": 0.553,
+     "GNSS L30.2": 0.55,
+     "GNSS D30.1": 0.6,
+     "RADIO D31.1": 0.6,
+     "RADIO R316.1": 0.553,
+     "RADIO R316.2": 0.553
+    },
+    "gap_range_mm": [
+     0.26,
+     1.36
+    ],
+    "line_gap_range_mm": [
+     0.26,
+     0.31
+    ]
+   },
+   "R-6": {
+    "GNSS": {
+     "length_mm": 4.85,
+     "bends": 2
+    },
+    "RADIO": {
+     "length_mm": 4.75,
+     "bends": 2
+    }
+   },
+   "R-7": {
+    "GNSS_left_largest_gap_mm": 2.38,
+    "GNSS_right_largest_gap_mm": 1.75,
+    "RADIO_left_largest_gap_mm": 1.7,
+    "RADIO_right_largest_gap_mm": 2.405,
+    "fence": {
+     "fence_vias": 23,
+     "row_y": 22.2,
+     "openings": []
+    },
+    "gnd_reach_F.Cu": 3.1,
+    "gnd_reach_B.Cu": 3.57,
+    "rf_ground_via_mm": {
+     "D30.2": 0.23,
+     "D31.2": 0.16,
+     "C303.2": 0.05,
+     "C305.2": 0.06,
+     "C313.2": 0.16,
+     "C314.2": 0.16
+    },
+    "strip_gnd_coverage": {
+     "F.Cu": 0.825,
+     "In1.Cu": 0.95,
+     "In2.Cu": 0.966,
+     "B.Cu": 0.93
+    }
+   },
+   "R-8": {
+    "U30 F.Cu": {
+     "required": [
+      6.1,
+      10.35,
+      16.2,
+      17.75
+     ],
+     "uncovered_mm2": 0.0
+    },
+    "U30 In1.Cu": {
+     "required": [
+      6.1,
+      10.35,
+      16.2,
+      17.75
+     ],
+     "uncovered_mm2": 0.0
+    },
+    "U31 F.Cu": {
+     "required": [
+      26.56,
+      9.95,
+      34.66,
+      18.05
+     ],
+     "uncovered_mm2": 0.0
+    },
+    "U31 In1.Cu": {
+     "required": [
+      26.56,
+      9.95,
+      34.66,
+      18.05
+     ],
+     "uncovered_mm2": 0.0
+    },
+    "U31 In2.Cu": {
+     "required": [
+      25.61,
+      9.0,
+      35.61,
+      19.0
+     ],
+     "uncovered_mm2": 0.0
+    },
+    "U31 B.Cu": {
+     "required": [
+      25.61,
+      9.0,
+      35.61,
+      19.0
+     ],
+     "uncovered_mm2": 0.0
+    }
+   },
+   "R-9": {
+    "GNSS_esd_from_jack_pad_mm": 0.795,
+    "GNSS_bias_cap_mm": 0.925,
+    "GNSS_C303_stub_mm": 0.94,
+    "GNSS_C305_stub_mm": 0.94,
+    "RADIO_esd_from_jack_pad_mm": 0.795,
+    "RADIO_C313_stub_mm": 0.94,
+    "RADIO_C314_stub_mm": 0.94
+   },
+   "R-10": {
+    "nearest_part": [
+     6.24,
+     "R310",
+     "U1"
+    ],
+    "nearest_line": [
+     5.197,
+     "R306",
+     "USB_DM"
+    ]
+   },
+   "R-11": {
+    "radio_to_u30_body": {
+     "RADIO_BUSY": [
+      8.71,
+      "U31.11"
+     ],
+     "RADIO_DIO1": [
+      16.5,
+      "U31.20"
+     ],
+     "RADIO_MISO": [
+      7.697,
+      "R314.1"
+     ],
+     "RADIO_MISO_MCU": [
+      6.837,
+      "R314.2"
+     ],
+     "RADIO_MOSI": [
+      8.71,
+      "U31.13"
+     ],
+     "RADIO_MOSI_MCU": [
+      10.901,
+      "R315.1"
+     ],
+     "RADIO_NRST": [
+      18.61,
+      "U31.3"
+     ],
+     "RADIO_NSS": [
+      8.71,
+      "U31.14"
+     ],
+     "RADIO_RXEN": [
+      10.168,
+      "R312.1"
+     ],
+     "RADIO_SCK": [
+      8.71,
+      "U31.15"
+     ],
+     "RADIO_SCK_MCU": [
+      12.374,
+      "R313.1"
+     ],
+     "RADIO_TXEN": [
+      8.975,
+      "track (25.25, 8.1)"
+     ]
+    },
+    "module_courtyards_mm": 7.67,
+    "rf_to_rf_mm": 15.46
+   },
+   "R-12": {
+    "C311_to_U31": 1.97,
+    "C312_to_U31": 2.191,
+    "C310_to_U31": 3.639,
+    "C301_to_U30": 2.13,
+    "C300_to_U30": 2.556,
+    "gnss_vcc_ohm": {
+     "total": 0.0884,
+     "fb30": 0.05,
+     "tracks": 0.0184,
+     "vias": 0,
+     "feed_3v3_allowance": 0.02
+    }
+   },
+   "R-13": {
+    "nearest": [
+     46.13,
+     "U31",
+     "Q124.5 (PYRO1_OUT)"
+    ],
+    "nearest_other_pyro_copper": [
+     27.0,
+     "U31",
+     "U1.33 (ARM1_SENSE_MCU)"
+    ]
+   },
+   "K-copper": {
+    "smd_pads_checked_for_via_holes": 699,
+    "track_endpoints_checked": 130,
+    "small_ground_pads": 86,
+    "via_paste": {
+     "pairs_checked": 138,
+     "nearest_ring_mm": [
+      0.095,
+      "via (12.25, 7.4) (GNSS_LNA_EN) and R303.1's paste (B)"
+     ]
+    }
+   }
+  }
+ },
+ "gcpw": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "samples": 79,
+   "by_chain": {
+    "GNSS": 30,
+    "RADIO": 49
+   },
+   "gap_pairs": {
+    "0.26/0.26": 37,
+    "0.26/0.27": 1,
+    "0.27/0.26": 1,
+    "0.27/0.27": 6,
+    "0.27/0.28": 2,
+    "0.28/0.28": 30,
+    "0.31/0.31": 1,
+    "0.32/0.32": 1
+   },
+   "z0_ohm": {
+    "0.26/0.26": 50.16,
+    "0.26/0.27": 50.26,
+    "0.27/0.27": 50.35,
+    "0.27/0.28": 50.43,
+    "0.28/0.28": 50.51,
+    "0.31/0.31": 50.96,
+    "0.32/0.32": 51.08
+   },
+   "z0_range_ohm": [
+    50.16,
+    51.08
+   ],
+   "worst": [
+    51.08,
+    0.32,
+    0.32
+   ]
+  }
+ },
+ "route": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "instances": 13,
+   "by_category": {
+    "pad_end_offcentre": 6,
+    "segment_inside_pad": 3,
+    "passes_through_pad": 2,
+    "width_change_junction": 1,
+    "u_turn": 1
+   },
+   "bump_windows": 3
+  }
+ },
+ "drc": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "unconnected_total": 482,
+   "unconnected_strip": 0,
+   "deferred": {
+    "silk_edge_clearance": 5,
+    "silk_overlap": 86,
+    "silk_over_copper": 131
+   }
+  }
+ },
+ "corridors": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "corridors": 17
+  }
+ },
+ "board": "m3_design/assembly_review/m3.kicad_pcb",
+ "board_sha256": "50a5af6756cc5a1055850847bf29a692a52afd620a058414137c924d36ad4910",
+ "checker_sha256": "932a94627cd16e088cf0c6c7af1b55136f33d6d921cd865d41c0860e16f13ef8",
+ "builder_sha256": "f301fa23ddea1315637eef3d3cb12ed99dffae9ad470bed4723a7df6a7cce052"
+}

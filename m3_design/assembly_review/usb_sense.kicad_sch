@@ -6,7 +6,7 @@
 	(title_block
 		(title "10 | USB cable presence, ordinary GPIO sensing")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R8")
+		(rev "M3-ASSY-R9")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:R"

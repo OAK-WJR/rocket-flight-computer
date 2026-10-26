@@ -1,0 +1,4 @@
+98 mm: U1 at y 40.5; spots {'R306': 0, 'R315': 95, 'R310': 46, 'R313': 38}; no clean arrangement
+100 mm: U1 at y 42.5; spots {'R306': 30, 'R315': 287, 'R310': 206, 'R313': 188}; no clean arrangement
+101 mm: U1 at y 43.5; spots {'R306': 110, 'R315': 433, 'R310': 336, 'R313': 316}; holds, total detour 5.53 mm: R306 (17.7, 28.2) rot 0, R315 (19.5, 27.2) rot 90, R310 (20.5, 27.6) rot 90, R313 (22.1, 28.2) rot 0
+102 mm: U1 at y 44.5; spots {'R306': 242, 'R315': 609, 'R310': 475, 'R313': 475}; holds, total detour 2.62 mm: R306 (16.5, 29.2) rot 0, R315 (20.7, 28.8) rot 90, R310 (21.7, 28.8) rot 90, R313 (23.3, 29.2) rot 0

@@ -9,6 +9,7 @@ one conflicting reservation added to a temporary copy of r8_keepclear.tsv. The l
 the build (r8_pcb.py): the rigid R7 copper; the later steps' copper has its own gates (r8_power_check, r8_route_check).
 """
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -25,7 +26,10 @@ import r8_pcb  # noqa: E402
 import r8_place_check  # noqa: E402
 import r8_power_check  # noqa: E402
 
-BOARD = ROOT / 'm3_design/assembly_review/m3.kicad_pcb'
+import r8_record  # noqa: E402
+
+# R8's board: the worktree's while it is R8's, else R8's committed project (r8_record; R9 step 3 built the R9 board)
+BOARD = r8_record.board()
 RIGID = set(check_r8.STRIP_PARTS) | set(check_r8.CH1_PARTS) | {'J1', 'J122'}
 
 
@@ -110,6 +114,15 @@ class Placement(unittest.TestCase):
 
     def test_reserved_gate_fires_on_a_conflicting_reservation(self):
         with tempfile.TemporaryDirectory() as tmp:
+            # R8's own board and project rules from git: R9 build step 2 rewrote the worktree's m3.kicad_dru, whose rule
+            # G (P-1b scope) also reports R8's GATE_N via 0.22 mm from ARM1_SENSE (a recorded R8 fact,
+            # r9_step1_handoff.md), which this R8 gate test is not about
+            proj = Path(tmp) / 'r8'
+            proj.mkdir()
+            for name in ('m3.kicad_pcb', 'm3.kicad_pro', 'm3.kicad_dru'):
+                (proj / name).write_bytes(subprocess.run(
+                    ['git', '-C', str(ROOT), 'show', f'9c8179b:m3_design/assembly_review/{name}'],
+                    capture_output=True, check=True).stdout)
             kc = Path(tmp) / 'r8_keepclear.tsv'
             shutil.copyfile(L.KEEPCLEAR, kc)
             with open(kc, 'a') as fh:      # a 3V3 lane 0.05 mm beside SERVO1's F.Cu lane (built, step 6)
@@ -117,7 +130,7 @@ class Placement(unittest.TestCase):
             saved = L.KEEPCLEAR
             L.KEEPCLEAR = kc
             try:
-                issues, _ = r8_place_check.reserved(BOARD)
+                issues, _ = r8_place_check.reserved(proj / 'm3.kicad_pcb')
             finally:
                 L.KEEPCLEAR = saved
         self.assertTrue(issues and all('[3V3]' in i and 'SERVO' in i for i in issues), issues)

@@ -41,12 +41,21 @@
   (condition "A.intersectsArea('U31_KEEPOUT') && A.NetName != 'GND'")
   (constraint disallow track via))
 
+# R9 (LC-1): no pad carries a local clearance (KiCad lets one replace every custom rule, pyro rules included, for the
+# pairs it is in). R8's 0.3 mm overrides on J124.2 and J122's RAW pins become this rule for every RAW_ACT
+# through-hole pad (hand-soldered; a bridge shorts the servo and pyro feed). It comes before the pyro rules, so each
+# of them (all >= 0.3 mm) still governs its own pairs; the RF rules above name no RAW_ACT copper.
+(rule "R9 RAW_ACT pins to foreign copper"
+  (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole' && A.NetName == 'RAW_ACT'")
+  (constraint clearance (min 0.3mm)))
+
 # Pyro safety spacing (R6 single CH1; inherited from docs/M3_R4.md section 1c). Measured against every track, via
 # and pad on every layer, not only zone fills. RAW_ACT is live whenever the board is on; bus, igniter and
 # drain copper is live once armed. A bridge to a gate net fires a channel, a bridge to a sense net puts
 # up to 19.9 V on an MCU ADC pin. The FETs' own gate/drain pads and the dividers' own two pads are exempt.
 # Pass 3: D covers all GND copper, E guards the ARM break, F the bus/igniter/drain against every other
-# live net, G the gate nets inside the PYRO_BLOCK rule area. No two of rules
+# live net, G the gate nets inside the PYRO_BLOCK rule area; R9 (P-1b) also everywhere outside U1's
+# courtyard, so only the MCU pin's own escape is left to the board minimum. No two of rules
 # A-G and A2 cover the same pair of nets; rule H (pass 13) overlaps A-C, F, G and A2 for pads only and, last and
 # stricter, governs them.
 # Pass 11: each divider top is two 5.1k in series; the midpoints (*_MID) take rule C's 0.3 mm like the sense nets (a
@@ -71,11 +80,41 @@
   (condition "(A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO1_OUT') && B.NetName != '' && B.NetName != 'GND' && B.NetName != 'ARM1_SENSE' && B.NetName != 'PYRO1_CONT' && B.NetName != 'PYRO1_COLD' && B.NetName != 'PYRO1_CONT_MID' && B.NetName != 'ARM1_SENSE_MID' && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && !((A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO1_OUT') && (B.NetName == 'PYRO1_BUS' || B.NetName == 'PYRO1_IGN' || B.NetName == 'PYRO1_OUT')) && !((A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO1_IGN') && B.NetName == 'RAW_ACT') && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124'))")
   (constraint clearance (min 0.5mm)))
 (rule "Pyro G: gate nets in the pyro block"
-  (condition "(A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO1_GATE_N') && A.intersectsArea('PYRO_BLOCK') && B.NetName != '' && B.NetName != 'GND' && B.NetName != 'RAW_ACT' && B.NetName != 'PYRO1_BUS' && B.NetName != 'PYRO1_IGN' && B.NetName != 'PYRO1_OUT' && !((A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO1_GATE_N') && (B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO1_GATE_N')) && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124'))")
+  (condition "(A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO1_GATE_N') && (A.intersectsArea('PYRO_BLOCK') || !A.intersectsCourtyard('U1')) && B.NetName != '' && B.NetName != 'GND' && B.NetName != 'RAW_ACT' && B.NetName != 'PYRO1_BUS' && B.NetName != 'PYRO1_IGN' && B.NetName != 'PYRO1_OUT' && !((A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO1_GATE_N') && (B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO1_GATE_N')) && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124'))")
   (constraint clearance (min 0.3mm)))
 (rule "Pyro A2: RAW_ACT to RAW_ACT_SENSE"
   (condition "A.NetName == 'RAW_ACT' && B.NetName == 'RAW_ACT_SENSE'")
   (constraint clearance (min 0.3mm)))
+# R9 (build step 5): zone fills keep every pyro rule above plus a margin (r9_plan section 2, Z1: every margin >=
+# max(R8, 0.2 mm); + 0.05 mm for the filler's arc tolerance; E keeps R8's 0.30). A fill stops exactly at the
+# clearance that governs it, so without these a GND, RAW_ACT or power pour would meet its pyro rule with no margin
+# (R8: D 0.001, A 0.001 mm). Each repeats its rule's condition for pairs with a zone and comes after it, so it
+# governs those pairs only; no pad, track or via pair changes, and rule H (pads only) still comes last.
+(rule "R9 fill margin A: RAW_ACT to pyro control"
+  (condition "(A.Type == 'Zone' || B.Type == 'Zone') && (A.NetName == 'RAW_ACT' && (B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO1_GATE_N' || B.NetName == 'ARM1_SENSE' || B.NetName == 'PYRO1_CONT' || B.NetName == 'PYRO1_COLD' || B.NetName == 'PYRO1_CONT_MID' || B.NetName == 'ARM1_SENSE_MID'))")
+  (constraint clearance (min 0.75mm)))
+(rule "R9 fill margin B: bus, igniter and drain to gate"
+  (condition "(A.Type == 'Zone' || B.Type == 'Zone') && ((A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO1_OUT') && (B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO1_GATE_N') && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')))")
+  (constraint clearance (min 0.75mm)))
+(rule "R9 fill margin C: bus, igniter and drain to sense"
+  (condition "(A.Type == 'Zone' || B.Type == 'Zone') && ((A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO1_OUT') && (B.NetName == 'ARM1_SENSE' || B.NetName == 'PYRO1_CONT' || B.NetName == 'PYRO1_COLD' || B.NetName == 'PYRO1_CONT_MID' || B.NetName == 'ARM1_SENSE_MID') && !(A.memberOfFootprint('R173') && B.memberOfFootprint('R173')) && !(A.memberOfFootprint('R131') && B.memberOfFootprint('R131')) && !(A.memberOfFootprint('R132') && B.memberOfFootprint('R132')))")
+  (constraint clearance (min 0.55mm)))
+(rule "R9 fill margin D: GND to bus, igniter and drain"
+  (condition "(A.Type == 'Zone' || B.Type == 'Zone') && (A.NetName == 'GND' && (B.NetName == 'PYRO1_BUS' || B.NetName == 'PYRO1_IGN' || B.NetName == 'PYRO1_OUT') && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')) && !(A.memberOfFootprint('C128') && B.memberOfFootprint('C128')))")
+  (constraint clearance (min 0.75mm)))
+(rule "R9 fill margin E: RAW_ACT to bus and igniter (ARM break)"
+  (condition "(A.Type == 'Zone' || B.Type == 'Zone') && (A.NetName == 'RAW_ACT' && (B.NetName == 'PYRO1_BUS' || B.NetName == 'PYRO1_IGN'))")
+  (constraint clearance (min 1.35mm)))
+(rule "R9 fill margin F: bus, igniter and drain to other live nets"
+  (condition "(A.Type == 'Zone' || B.Type == 'Zone') && ((A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO1_OUT') && B.NetName != '' && B.NetName != 'GND' && B.NetName != 'ARM1_SENSE' && B.NetName != 'PYRO1_CONT' && B.NetName != 'PYRO1_COLD' && B.NetName != 'PYRO1_CONT_MID' && B.NetName != 'ARM1_SENSE_MID' && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && !((A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO1_IGN' || A.NetName == 'PYRO1_OUT') && (B.NetName == 'PYRO1_BUS' || B.NetName == 'PYRO1_IGN' || B.NetName == 'PYRO1_OUT')) && !((A.NetName == 'PYRO1_BUS' || A.NetName == 'PYRO1_IGN') && B.NetName == 'RAW_ACT') && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')))")
+  (constraint clearance (min 0.75mm)))
+(rule "R9 fill margin G: gate nets in the pyro block"
+  (condition "(A.Type == 'Zone' || B.Type == 'Zone') && ((A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO1_GATE_N') && (A.intersectsArea('PYRO_BLOCK') || !A.intersectsCourtyard('U1')) && B.NetName != '' && B.NetName != 'GND' && B.NetName != 'RAW_ACT' && B.NetName != 'PYRO1_BUS' && B.NetName != 'PYRO1_IGN' && B.NetName != 'PYRO1_OUT' && !((A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO1_GATE_N') && (B.NetName == 'PYRO1_GATE' || B.NetName == 'PYRO1_GATE_N')) && !(A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')))")
+  (constraint clearance (min 0.55mm)))
+(rule "R9 fill margin A2: RAW_ACT to RAW_ACT_SENSE"
+  (condition "(A.Type == 'Zone' || B.Type == 'Zone') && (A.NetName == 'RAW_ACT' && B.NetName == 'RAW_ACT_SENSE')")
+  (constraint clearance (min 0.55mm)))
+
 # Pass 13 (final CAD iteration): rule H comes last, so for pad pairs it takes precedence over the rules above. Every
 # exposed bus, igniter, drain and RAW_ACT pad keeps 1.0 mm from every sense and gate pad, and every divider-midpoint pad
 # from every gate pad: one solder bridge there put live copper on a sense node (past its divider) or on a gate. Pass 14:
@@ -104,3 +143,10 @@
 (rule "Tag-Connect contact to foreign copper"
   (condition "A.Type == 'Pad' && A.memberOfFootprint('J2') && !B.memberOfFootprint('J2')")
   (constraint clearance (min 0.508mm)))
+
+# R9 (LC-1): R8's 1.0 mm overrides on the bare test pads become this rule. Bare copper is probed by hand, so every
+# test pad keeps 1.0 mm from all other copper (tools/check_r7 foreign_clearances measures the same). It is last: no
+# rule above asks more than 1.0 mm, so for a test pad it only raises a clearance, never lowers a pyro rule.
+(rule "R9 bare test pads to foreign copper"
+  (condition "A.Type == 'Pad' && A.memberOfFootprint('TP*')")
+  (constraint clearance (min 1.0mm)))

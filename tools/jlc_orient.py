@@ -7,7 +7,7 @@ centres (pads matched by number), so that
     CPL rotation = our rotation - theta,  CPL position = our position - R(CPL rotation) . t
 puts JLC's footprint exactly on our copper.
 
-usage: tools/jlc_orient.py EASYEDA_PADS.json [board.kicad_pcb]  -> writes tools/jlc_corrections.json
+usage: tools/jlc_orient.py EASYEDA_PADS.json [board.kicad_pcb] [--out FILE]  -> writes tools/jlc_corrections.json (or FILE)
        tools/jlc_orient.py EASYEDA_PADS.json [board.kicad_pcb] --verify-cpl fab/m3_cpl_jlc.csv
 (the second form rebuilds every placed part's pads from the CPL row and JLC's footprint and compares them with our pads)
 
@@ -31,6 +31,9 @@ ARGV = [a for a in sys.argv[1:]]
 VERIFY = ARGV[ARGV.index('--verify-cpl') + 1] if '--verify-cpl' in ARGV else None
 if VERIFY:
     del ARGV[ARGV.index('--verify-cpl'):ARGV.index('--verify-cpl') + 2]
+OUT = Path(ARGV[ARGV.index('--out') + 1]) if '--out' in ARGV else ROOT / 'tools/jlc_corrections.json'
+if '--out' in ARGV:
+    del ARGV[ARGV.index('--out'):ARGV.index('--out') + 2]
 EZ = json.load(open(ARGV[0]))
 BOARD = ARGV[1] if len(ARGV) > 1 else str(ROOT / 'm3_design/assembly_review/m3.kicad_pcb')
 MIL10 = 0.254
@@ -56,13 +59,21 @@ MECHANICAL = {'M3_GH_BM04B_GHS_TBT': ('5', '6')}
 # +/-2.30. Body origins and pin polarity agree; retain the 0.45 mm land
 # centre difference explicitly rather than moving the component body.
 PAD_TOLERANCE = {'M3_MLT5020_3pad': 0.451}
+# R9 footprint variants (m3_design/r9_lib.py, R9_DECISIONS D-S2-08): the maker's part on its own land, its pads numbered
+# differently (the base footprint mirrored about local y). JLC places with the maker's (EasyEDA) numbering, so our pad
+# numbers are matched through this map (ours -> maker's, the base pad at the same position); matched by raw number, the
+# DB128L would come out turned 180 deg (its wire entry facing into the board, pads still on pads, so --verify-cpl would
+# pass it) and the header would find no fit. tools/test_r9_sch.py checks the map against the library files.
+PAD_ALIAS = {'M3_DB128L_2P_BK_SW': {'1': '2', '2': '1'},
+             'HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR': {'1': '10', '2': '11', '3': '12', '4': '7', '5': '8', '6': '9',
+                                                      '7': '4', '8': '5', '9': '6', '10': '1', '11': '2', '12': '3'}}
 
 
 def placement_pad_number(pad, footprint):
     number = pad.GetNumber()
     if not number and footprint in MECHANICAL:
         number = MECHANICAL[footprint][pad.GetFPRelativePosition().x > 0]
-    return number
+    return PAD_ALIAS.get(footprint, {}).get(number, number)
 
 
 def rot(v, deg):
@@ -248,7 +259,7 @@ for f in b.GetFootprints():
         donor = next((k for k, v in result.items() if v['footprint'] == fpname and v['status'] == 'OK'), None)
         if donor:
             result[f'{lcsc}|{fpname}'] = dict(result[donor], via=f'same footprint as {donor.split("|")[0]} (EasyEDA has no entry for {lcsc})')
-out = ROOT / 'tools/jlc_corrections.json'
+out = OUT
 json.dump(dict(source='JLCEDA/EasyEDA Official Library; public product-to-component mapping; matched by pad number and reviewed mechanical tab identities',
                source_urls=['https://lceda.cn/', 'https://easyeda.com/'], tolerance_mm=TOL,
                parts=dict(sorted(result.items()))), open(out, 'w'), indent=1)

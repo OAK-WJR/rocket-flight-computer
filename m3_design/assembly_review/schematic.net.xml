@@ -8,7 +8,7 @@
       <title_block>
         <title>01 | USB input and regulated supplies</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>m3.kicad_sch</source>
         <comment number="1" value=""/>
@@ -26,7 +26,7 @@
       <title_block>
         <title>02 | MCU, clock and debug</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>mcu.kicad_sch</source>
         <comment number="1" value=""/>
@@ -44,7 +44,7 @@
       <title_block>
         <title>03 | Memory and sensors</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>sensors.kicad_sch</source>
         <comment number="1" value=""/>
@@ -62,7 +62,7 @@
       <title_block>
         <title>04 | Voltage diagnosis and indicators</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>diagnostics.kicad_sch</source>
         <comment number="1" value=""/>
@@ -80,7 +80,7 @@
       <title_block>
         <title>05 | Camera branch protection and regulator</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>camera_power.kicad_sch</source>
         <comment number="1" value=""/>
@@ -98,7 +98,7 @@
       <title_block>
         <title>06 | Camera terminal and characterization</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>camera_connector.kicad_sch</source>
         <comment number="1" value=""/>
@@ -116,7 +116,7 @@
       <title_block>
         <title>07 | Battery input, contact and protection</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>battery_entry.kicad_sch</source>
         <comment number="1" value=""/>
@@ -134,7 +134,7 @@
       <title_block>
         <title>08 | USB limit, source mux and hold-up</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>logic_power_path.kicad_sch</source>
         <comment number="1" value=""/>
@@ -152,7 +152,7 @@
       <title_block>
         <title>09 | Camera UART, separate supply domains</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>camera_uart.kicad_sch</source>
         <comment number="1" value=""/>
@@ -170,7 +170,7 @@
       <title_block>
         <title>10 | USB cable presence, ordinary GPIO sensing</title>
         <company>Single-board M3 candidate; full system incomplete</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>usb_sense.kicad_sch</source>
         <comment number="1" value=""/>
@@ -188,7 +188,7 @@
       <title_block>
         <title>11 | Actuator power switch</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>actuator_power.kicad_sch</source>
         <comment number="1" value=""/>
@@ -206,7 +206,7 @@
       <title_block>
         <title>12 | Single pyro CH1, arming and continuity</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>pyro.kicad_sch</source>
         <comment number="1" value=""/>
@@ -224,7 +224,7 @@
       <title_block>
         <title>13 | Servo outputs</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>servos.kicad_sch</source>
         <comment number="1" value=""/>
@@ -242,7 +242,7 @@
       <title_block>
         <title>14 | Launch pull-pin and buzzer</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>pullpin_buzzer.kicad_sch</source>
         <comment number="1" value=""/>
@@ -260,7 +260,7 @@
       <title_block>
         <title>15 | GNSS and telemetry radio (R7)</title>
         <company>Single-board M3 candidate; on-board GNSS and radio, not bench-verified</company>
-        <rev>M3-ASSY-R8</rev>
+        <rev>M3-ASSY-R9</rev>
         <date></date>
         <source>telemetry.kicad_sch</source>
         <comment number="1" value=""/>
@@ -5666,13 +5666,13 @@
     </comp>
     <comp ref="J121">
       <value>IGNITER 1: E1- / E1+</value>
-      <footprint>rocket:M3_DB128L_2P_BK</footprint>
+      <footprint>rocket:M3_DB128L_2P_BK_SW</footprint>
       <fields>
         <field name="LCSC">C430601</field>
         <field name="LCSC Part">C430601</field>
         <field name="Manufacturer">DORABO</field>
         <field name="Manufacturer Part">DB128L-5.08-2P-BK-S</field>
-        <field name="Footprint">rocket:M3_DB128L_2P_BK</field>
+        <field name="Footprint">rocket:M3_DB128L_2P_BK_SW</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
@@ -5696,13 +5696,13 @@
     </comp>
     <comp ref="J124">
       <value>ARM CH1: BUS1 / RAW</value>
-      <footprint>rocket:M3_DB128L_2P_BK</footprint>
+      <footprint>rocket:M3_DB128L_2P_BK_SW</footprint>
       <fields>
         <field name="LCSC">C430601</field>
         <field name="LCSC Part">C430601</field>
         <field name="Manufacturer">DORABO</field>
         <field name="Manufacturer Part">DB128L-5.08-2P-BK-S</field>
-        <field name="Footprint">rocket:M3_DB128L_2P_BK</field>
+        <field name="Footprint">rocket:M3_DB128L_2P_BK_SW</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
@@ -6265,12 +6265,12 @@
     </comp>
     <comp ref="J122">
       <value>SERVO 3x4</value>
-      <footprint>rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54</footprint>
+      <footprint>rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR</footprint>
       <fields>
         <field name="LCSC">C32713291</field>
         <field name="Manufacturer">hanxia</field>
         <field name="Manufacturer Part">HX PZ2.54-3x4P ZZ</field>
-        <field name="Footprint">rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54</field>
+        <field name="Footprint">rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>

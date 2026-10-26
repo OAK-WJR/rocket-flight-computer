@@ -1,0 +1,50 @@
+{
+ "rb_mohm": 2.32,
+ "r8_rb_mohm": 17.3,
+ "feed": [
+  {
+   "piece": "B.Cu BAT_IN pour band",
+   "w": 4.0,
+   "h": 1.2955,
+   "length": 11.0,
+   "nH": 2.52
+  },
+  {
+   "piece": "pour finger to C88",
+   "w": 1.0,
+   "h": 0.2355,
+   "length": 1.4,
+   "nH": 0.259
+  },
+  {
+   "piece": "0.3 mm track C88.1 -> U9.5",
+   "w": 0.3,
+   "h": 0.2355,
+   "length": 1.2,
+   "nH": 0.453
+  }
+ ],
+ "feed_estimate_nH": 3.232,
+ "cases": 512,
+ "by_feed_nH": {
+  "3.232": {
+   "extra_negative_V": 0.0021,
+   "slew_ratio": 1.028
+  },
+  "5.0": {
+   "extra_negative_V": 0.0036,
+   "slew_ratio": 1.0372
+  },
+  "15.0": {
+   "extra_negative_V": 0.0184,
+   "slew_ratio": 1.0746
+  },
+  "30.0": {
+   "extra_negative_V": 0.0406,
+   "slew_ratio": 1.1193
+  }
+ },
+ "lowest_a": -14.114,
+ "lowest_b": -14.114,
+ "fastest_b_V_per_us": 7.66
+}

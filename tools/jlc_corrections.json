@@ -888,8 +888,8 @@
    "pads_matched": 2,
    "status": "OK"
   },
-  "C32713291|HDR-TH_12P-P2.54-V-M-R3-C4-S2.54": {
-   "footprint": "HDR-TH_12P-P2.54-V-M-R3-C4-S2.54",
+  "C32713291|HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR": {
+   "footprint": "HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR",
    "easyeda": "HDR-TH_12P-P2.54-V-M-R3-C4-S2.54",
    "easyeda_proxy": null,
    "theta": 0,
@@ -968,8 +968,8 @@
    "pads_matched": 2,
    "status": "OK"
   },
-  "C430601|M3_DB128L_2P_BK": {
-   "footprint": "M3_DB128L_2P_BK",
+  "C430601|M3_DB128L_2P_BK_SW": {
+   "footprint": "M3_DB128L_2P_BK_SW",
    "easyeda": "CONN-TH_2P-P5.08_DB128L-5.08-2P-BK-S",
    "easyeda_proxy": null,
    "theta": 0,

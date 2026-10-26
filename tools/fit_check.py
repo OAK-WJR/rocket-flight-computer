@@ -50,6 +50,11 @@ MATED = {
     'HDR-TH_12P-P2.54-V-M-R3-C4-S2.54': {
         'refs': ('J122',), 'box': (-5.08, -4.0, 5.08, 4.0, 0.0, 23.5),
         'basis': 'R5 engineering allocation: four servo plugs and their wire bend; physical fit unverified'},
+    # R9: the same header with its plug columns numbered from +x (m3_design/r9_lib.py, R9_DECISIONS D-S2-09): the same
+    # body, so the same envelope (it is symmetric about local x = 0)
+    'HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR': {
+        'refs': ('J122',), 'box': (-5.08, -4.0, 5.08, 4.0, 0.0, 23.5),
+        'basis': 'R5 engineering allocation: four servo plugs and their wire bend; physical fit unverified'},
     'M3_JST_PH_B2B_2P': {
         'refs': ('J123',), 'box': (-3.0, -1.75, 3.0, 2.85, 0.0, 9.5),
         'basis': 'R5 engineering allocation: JST PH plug and wire; physical fit unverified'},
@@ -59,6 +64,7 @@ REQUIRED_MATED = {'M3_GH_BM04B_GHS_TBT', 'M3_SMA_KH_KE8_EDGE'}
 BOARD_FEATURES = {'M3_TestPad_1.5': r'TP\d+', 'M3_ToolingHole_JLC': r'TH[123]',
                   'M3_TC2030_IDC_NL': r'J2'}
 RETENTION_HOLES = ((21.5, 68.6), (27.0, 82.6))   # J122 tie (R7: +18 mm); all other Ø3.2 circles are M3 supports
+# R9: check_board derives the tie holes from J122 (retention_holes, R9_DECISIONS D-S1-21); on R7 / R8 they are these
 STANDOFF_RADIUS = 3.5
 TOP_HARDWARE_RADIUS = 3.5 + 0.3   # 7 mm OD washer plus radial assembly margin
 SIDE_ENTRY = ('J9', 'J121', 'J124')
@@ -174,6 +180,65 @@ def point_box_distance(point, box):
 def box_overlap(a, b):
     return all(min(a[high], b[high]) - max(a[low], b[low]) > 1e-4
                for low, high in ((0, 2), (1, 3), (4, 5)))
+
+
+TIE_PAST = (1.0, 4.0)     # mm a tie hole's centre lies past J122's courtyard end, along J122's long axis (R9 M-3)
+TIE_LATERAL = 6.0         # mm: a hole further off J122's long axis is not a tie-hole candidate
+
+
+def retention_holes(b, holes=None, with_info=False):
+    """The two J122 tie holes, derived from J122 instead of R7's coordinates (R9 gate M-3; survey_constraints.md 10):
+    one Ø3.2 hole beyond each end of J122 (centre TIE_PAST mm past the courtyard end along the plug row), with the
+    hole-to-hole line crossing each plug's centre line within the plug's length (its three pins +- half a pitch).
+    Returns the two hole centres (RETENTION_HOLES when J122 is absent, the R7 / R8 constants); with_info also the
+    problems found and the measured geometry."""
+    f = next((g for g in b.GetFootprints() if g.GetReference() == 'J122'), None)
+    if holes is None:
+        holes = board_geometry(b)[0]
+    if f is None:
+        return (list(RETENTION_HOLES), ['J122 missing'], {}) if with_info else list(RETENTION_HOLES)
+    th = math.radians(f.GetOrientationDegrees())
+    c, s = math.cos(th), math.sin(th)
+    ox, oy = mm(f.GetPosition().x), mm(f.GetPosition().y)
+
+    def local(x, y):
+        dx, dy = x - ox, y - oy
+        return dx * c - dy * s, dx * s + dy * c
+    cy = f.GetCourtyard(pcbnew.B_CrtYd if f.IsFlipped() else pcbnew.F_CrtYd)
+    pts = []
+    for i in range(cy.OutlineCount()):
+        ch = cy.Outline(i)
+        pts += [local(mm(ch.CPoint(k).x), mm(ch.CPoint(k).y)) for k in range(ch.PointCount())]
+    pads = [local(mm(p.GetPosition().x), mm(p.GetPosition().y)) for p in f.Pads()]
+    if not pts or not pads:
+        return (list(RETENTION_HOLES), ['J122 courtyard or pads missing'], {}) if with_info else list(RETENTION_HOLES)
+    u0, u1 = min(p[0] for p in pts), max(p[0] for p in pts)
+    cols = sorted({round(p[0], 3) for p in pads})
+    pitch = min(b_ - a for a, b_ in zip(cols, cols[1:])) if len(cols) > 1 else 2.54
+    half_plug = (max(p[1] for p in pads) - min(p[1] for p in pads)) / 2 + pitch / 2
+    ends = {'-': [], '+': []}
+    for h in holes:
+        u, v = local(*h)
+        if abs(v) > TIE_LATERAL:
+            continue
+        if TIE_PAST[0] - 1e-6 <= u0 - u <= TIE_PAST[1] + 1e-6:
+            ends['-'].append((h, (u, v)))
+        elif TIE_PAST[0] - 1e-6 <= u - u1 <= TIE_PAST[1] + 1e-6:
+            ends['+'].append((h, (u, v)))
+    problems = [f'J122 {k} end: expected one tie hole {TIE_PAST[0]}-{TIE_PAST[1]} mm past the courtyard, found '
+                f'{len(v)}' for k, v in ends.items() if len(v) != 1]
+    info = dict(columns=cols, half_plug=round(half_plug, 3), courtyard_u=[round(u0, 3), round(u1, 3)])
+    if problems:
+        return (list(RETENTION_HOLES), problems, info) if with_info else list(RETENTION_HOLES)
+    (ha, (ua, va)), (hb, (ub, vb)) = ends['-'][0], ends['+'][0]
+    cross = []
+    for u in cols:
+        v = va + (u - ua) * (vb - va) / (ub - ua)
+        cross.append(round(v, 3))
+        if abs(v) > half_plug + 1e-6:
+            problems.append(f'J122 tie line crosses the plug at u {u:.2f} at v {v:.2f} (outside +-{half_plug:.2f})')
+    info.update(holes=[list(ha), list(hb)], line_v_at_plugs=cross)
+    return ([ha, hb], problems, info) if with_info else [ha, hb]
 
 
 def support_check(holes, outline, bottom_boxes, retention=RETENTION_HOLES):
@@ -343,7 +408,7 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3):
     if length > 120.01:
         issues.append(f'board length {length:g} mm exceeds the P1 120 mm maximum (outline only; the SMA overhang '
                       'and mated plugs count in the bay stack)')
-    supports, nearest, support_issues = support_check(holes, outline, bottom)
+    supports, nearest, support_issues = support_check(holes, outline, bottom, retention_holes(b, holes))
     issues.extend(support_issues)
     nearest_top, top_issues = top_support_check(supports, top_bodies, top_pads)
     issues.extend(top_issues)
