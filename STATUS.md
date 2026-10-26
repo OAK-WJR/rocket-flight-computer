@@ -68,7 +68,8 @@ Verification, stated separately:
 - **Software tests:** 478 tests in 26 suites (KiCad Python) and quality_audit 21 (both Pythons) pass on `4f841a0e…`
   (`sources/r9_design/step10_evidence/tests.txt`); audit_artifacts exit 0.
 - **Independent review:** pass 1 on `fc3d5b34…` (0 Critical, 1 Major confirmed as Minor, 50 Minor; every finding
-  dispositioned in R9_VALIDATION "Review pass 1"); pass 2 not run.
+  dispositioned in R9_VALIDATION "Review pass 1"); pass 2 on `4f841a0e…` (0 Critical, 0 Major, 32 Minor, recorded in
+  R9_VALIDATION "Review pass 2").
 - **Calculation (the requalification re-run on `4f841a0e…`, R9_VALIDATION "Requalification"):**
   - 7.7 A DC at 0.05 mm: RAW_ACT 0.80, BAT_IN 0.16, ACT_FET_S 0.26 mΩ; necks 7.89 / 8.15 / 5.18 mm on B.Cu, rising
     12.6 / 12.1 / 20.4 °C (IPC-2152, no plane credit, Inference), within D12's 20 / 20 / 30 °C and below R8's 17.5 / 14.5 /
