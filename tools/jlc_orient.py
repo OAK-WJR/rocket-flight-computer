@@ -52,7 +52,7 @@ OFFSET = {'M3_AON7524_DFN3x3A': (0.0, 0.0)}
 BODY = {'C2915641': 180}
 # JST mechanical solder tabs have no KiCad electrical number; supplier libraries
 # number them. Match these tabs as well as signals to verify the connector body.
-MECHANICAL = {'M3_GH_BM04B_GHS_TBT': ('5', '6')}
+MECHANICAL = {'M3_GH_BM04B_GHS_TBT': ('5', '6'), 'M3_GH_BM02B_GHS_TBT': ('3', '4')}   # 2-pin GH: R10 (J123, J400)
 # MLT-5020 maker drawing (sources/mlt5020.pdf p4): 1.5 x0.8 mm
 # terminations, general +/-0.3 mm tolerance. Our 2.3 x1.7 mm lands at
 # x=+/-1.85 cover toe/heel and tolerance; EasyEDA's narrower lands are at
