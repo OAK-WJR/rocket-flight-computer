@@ -156,11 +156,27 @@ The owner chose to keep AGENTS 3's hand-routing of critical nets (power, pyro, c
 be used only for non-critical signals (LEDs, buzzer, servo PWM, port enables / faults / OE and UARTs, non-pyro sense),
 its result frozen into a table and held to `tools/route_check.py`.
 
-## Handover state (2026-10-27)
+## D-R2-05. U9 cell moved; In2 split into four rails
 
-Done: schematic (r10_sch, 9 seeded faults caught), legal placement, core / USB / pyro routing families (0 DRC errors).
-In progress: power family (U9 cell, BAT_IN / RAW_PROTECTED / VLOGIC / port rails, In2 zones). Not started: ports,
-servo, status, camera UART routing; ground pours and stitching; silkscreen; `m3_design/r10_build.sh`; fab script;
-docs (M3_R10, REQUIREMENTS F6/F8/F9/F10/P1/M2, STATUS, AGENTS rows, VEHICLE.md); review rounds 2+. The R10 gate
-(`tools/check_r10.py`, route_check profile r10, check.sh) is being written in parallel. Design aids:
-`m3_design/r10_aid/README.md`.
+**Decision.** U9's cell (eFuse, OVLO divider, ILIM, dV/dt, bleed, bypass) moves to the free forward-east bottom
+(U9 at (39.0, 79.6), rotation 0: control pins west toward the MCU, analog pins east); BAT_IN reaches it on one 1 mm
+B.Cu run from Q120's drain row, west of J122's tie hole and under J122's GND row. In2 has four regions: RAW_PROTECTED
+(forward area, east strip x > 40, aft band to the buck input), PORT_5V3 (column x 33.4-39.7 plus the buck-output strip
+and the LDO-input finger), PORT_4V8 (x 28.3-33.1, y 9.1-29: the LDO output and both port switches), 3V3 (the rest, with
+a forward finger for the 3V3 buck output). Every rail pad reaches its plane by its own via; no long rail tracks.
+
+**Basis.** Routability and simplicity (owner priority); measured: core + USB + pyro + power families 0 DRC violations.
+
+## Handover state (2026-10-27, after the power family)
+
+Done: schematic; legal placement (46 x 90 mm); routing families core, usb, pyro, power (0 DRC violations, 288
+unconnected: GND 158, 3V3 19, RAW_PROTECTED 5, battery control / switch / damper, and the non-critical signals);
+the R10 gate (`tools/check_r10.py`, route_check profile r10, check.sh) by a parallel agent, 44 tests passing.
+Next: (1) power leftovers (RAW_PROTECTED vias at U11.2 / C97 / C82 / D9 / TP81, BAT_DAMP to R166, BAT_ENABLE /
+BAT_SW to J400 / R80 / R165 / C87 / TP84 / R81, 3V3 plane vias for the remaining 3V3 pads); (2) ground family (F.Cu /
+B.Cu GND pours, stitching, a GND via for every GND pad the pours miss); (3) non-critical signals (Freerouting allowed,
+D-R2-04, frozen into a table): port UART / EN / FAULT / OE, servo PWM, LEDs, buzzer, pull-pin, camera UART, sense
+lines; move the radio UART to UART5 PB12 / PB13 first (DS12110 AF check); (4) silkscreen; (5) `m3_design/r10_build.sh`,
+fab script; (6) docs; (7) review rounds. Gate findings to settle: P-11 wire room (4.95 vs R8's 6.25 mm), F9-1's
+10.6 mm hot-plug premise with the split J1, legend wording. Since ff1ca18 check.sh targets R10 while the committed
+board is R9, so WIP commits do not pass the gate.
