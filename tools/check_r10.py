@@ -1103,11 +1103,11 @@ def main():
     if fit is not None and fit.get('board_sha256') != sha:
         print('FAIL the fit report is not bound to this board (board_sha256)')
         return 1
-    report = check_board(pcbnew.LoadBoard(str(bp)), bp.parent, bp, fit=fit, plate=load(a.plate), seed=load(a.seed),
+    report = check_board(pcbnew.LoadBoard(str(bp)), bp.parent, bp, fit=fit, plate=load(a.plate), seed=None,
                          only=set(a.only.split(',')) if a.only else None, stage=a.stage, board_sha=sha,
                          bom=a.bom, cpl=a.cpl)
     if a.seed:
-        report['seed_note'] = 'not used: R10 has no pyro rule H (r10_plan section 2 item 1)'
+        report['seed_note'] = f'{a.seed} not read: R10 has no pyro rule H (r10_plan section 2 item 1)'
     if before != inputs():
         report['issues'].append('board, model, rules or schematic changed during check')
         report['ok'] = False

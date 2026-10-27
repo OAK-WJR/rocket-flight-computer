@@ -18,7 +18,7 @@ def draw(d):
 
     # Fire loop (F.Cu).
     link('PYRO1_IGN', 'F', FIRE, 'J121.2', 'R134.1', ((10.425, 61.025),))
-    link('PYRO1_BUS', 'F', FIRE, 'J124.1', 'R134.2', ((9.075, 66.175),))
+    link('PYRO1_BUS', 'F', FIRE, 'J124.1', 'R134.2', ((9.5, 64.1), (11.575, 66.175)))  # >= 1.5 mm from J124.2 (S-5)
     t('PYRO1_OUT', 'F', FIRE, [d.pad('J121.1'), (10.33, 54.1), (11.33, 55.1)])
     t('PYRO1_OUT', 'F', FIRE, [(11.33, 55.1), d.pad('Q124.5')])
 

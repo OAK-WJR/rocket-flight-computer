@@ -1,142 +1,189 @@
-"""R10 local buck/LDO/logic power loops, explicit pad-checked polylines.
+"""R10 power copper: the inner planes and the hand-routed supply nets (AGENTS 3), explicit pad-referenced polylines.
 
-Placement: sources/r10_design/power_place.tsv. Root owns rail trunks, input
-protection routing and status signals unless explicitly included below. Ground
-vias require the final ground pours; an unfilled intermediate has dangling vias.
+In1 is solid GND. In2 is split by rail (R10_DECISIONS D-R2-03): RAW_PROTECTED wraps the board (the forward area, an east
+strip and an aft band that reaches the 5.3 V buck's input), PORT_5V3 is a column east of U1 with a finger to the buck
+output and the LDO input, and 3V3 is the rest with a forward finger for the 3V3 buck's output, D120 and the servo clamp.
+The outer GND pours are drawn by the ground family. Zones are filled at the end of the build.
 """
-import csv
-from pathlib import Path
-
 import pcbnew
-import r9_power
-from r10_route import Translated, xy
 
-HERE = Path(__file__).resolve().parent
-PLACEMENT = HERE / 'assembly_review/sources/r10_design/power_place.tsv'
+FULL = pcbnew.ZONE_CONNECTION_FULL
+BAT, W = 1.0, 0.4                      # battery / rail width; ordinary supply branch width
+NECK = 0.25                            # U9's IN / OUT bar entries (between its corner pads)
+
+IN1_GND = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7)]
+IN2_RAW = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7), (0.3, 58.0), (17.5, 58.0), (17.5, 62.0), (22.0, 62.0),
+           (22.0, 76.0), (32.0, 76.0), (32.0, 58.0), (40.0, 58.0), (40.0, 7.0), (18.0, 7.0), (18.0, 10.5), (9.0, 10.5),
+           (9.0, 7.0), (0.3, 7.0)]
+IN2_PORT = [(24.5, 7.3), (39.7, 7.3), (39.7, 57.7), (33.4, 57.7), (33.4, 8.8), (28.0, 8.8), (28.0, 15.5),
+            (24.5, 15.5)]
+IN2_4V8 = [(28.3, 9.1), (33.1, 9.1), (33.1, 29.0), (28.3, 29.0)]
+IN2_3V3 = [(0.3, 7.3), (8.7, 7.3), (8.7, 10.8), (18.3, 10.8), (18.3, 7.3), (24.2, 7.3), (24.2, 15.8), (28.0, 15.8),
+           (28.0, 29.3), (33.1, 29.3), (33.1, 57.7), (31.7, 57.7), (31.7, 75.7), (22.3, 75.7), (22.3, 61.7),
+           (17.8, 61.7), (17.8, 57.7), (0.3, 57.7)]
 
 
-def placement_asserts(d):
-    for row in csv.DictReader(PLACEMENT.open(), delimiter='\t'):
-        f = d.board.FindFootprintByReference(row['ref'])
-        assert f, row['ref']
-        expected = (round(float(row['x']),4), round(float(row['y']),4))
-        assert xy(f.GetPosition()) == expected, (row['ref'], xy(f.GetPosition()), expected)
-        assert abs((f.GetOrientationDegrees()-float(row['rot'])+180) % 360-180) < .001
-        assert f.IsFlipped() == (row['side'] == 'B')
+def planes(d):
+    d.zone('R10_GND_In1', 'GND', 'In1', IN1_GND, 1, clr=0.25, conn=FULL)
+    d.zone('R10_RAW_In2', 'RAW_PROTECTED', 'In2', IN2_RAW, 1, clr=0.25, conn=FULL)
+    d.zone('R10_PORT_5V3_In2', 'PORT_5V3', 'In2', IN2_PORT, 1, clr=0.25, conn=FULL)
+    d.zone('R10_PORT_4V8_In2', 'PORT_4V8', 'In2', IN2_4V8, 1, clr=0.25, conn=FULL)
+    d.zone('R10_3V3_In2', '3V3', 'In2', IN2_3V3, 1, clr=0.25, conn=FULL)
+
+
+def battery(d):
+    t, p = d.track, d.pad
+    # F.Cu: J1.1 -> one bar along y 77 -> the protection column (C95 / C89 / C96 / C80 on x 27.52), D8 tapped.
+    t('BAT_IN', 'F', BAT, [p('J1.1'), (9.9, 77.0), (27.525, 77.0), p('C95.1')])
+    t('BAT_IN', 'F', BAT, [p('C95.1'), p('C89.1')])
+    t('BAT_IN', 'F', BAT, [p('C89.1'), p('C96.1')])
+    t('BAT_IN', 'F', BAT, [p('C96.1'), p('C80.1')])
+    t('BAT_IN', 'F', BAT, [p('D8.1'), (19.85, 77.0)])
+    t('BAT_IN', 'F', W, [(13.8, 77.0), p('TP80.1')])
+    # B.Cu: J1.1 -> Q120's drain pad; Q120.7 -> down the west side of the J122 tie hole -> under J122's GND row ->
+    # U9's IN bar (south tip, 0.25 mm neck between its corner pads), with R167 / R82 / C88 tapped.
+    t('BAT_IN', 'B', BAT, [p('J1.1'), (10.6, 74.1), (12.0, 75.5)])
+    t('BAT_IN', 'B', BAT, [p('Q120.7'), (12.87, 86.6), (38.75, 86.6), (38.75, 81.9)])
+    t('BAT_IN', 'B', NECK, [(38.75, 81.9), (38.75, 80.9)])
+    t('BAT_IN', 'B', W, [(29.175, 86.6), p('R167.1')])
+    t('BAT_IN', 'B', W, [(38.75, 83.025), p('R82.1')])
+    t('BAT_IN', 'B', W, [(38.75, 84.32), p('C88.1')])
+
+
+def efuse(d):
+    t, p, via = d.track, d.pad, d.via
+    rp = 'RAW_PROTECTED'
+    # U9's OUT bar (north tip) -> R92 bleed, two vias into In2 RAW.
+    t(rp, 'B', NECK, [(39.25, 78.3), (39.25, 77.9)])
+    t(rp, 'B', W, [(39.25, 77.9), (39.25, 77.0), p('R92.1')])
+    t(rp, 'B', W, [(39.25, 77.0), (40.9, 77.0), (40.9, 76.2)])
+    for at in ((40.9, 77.0), (40.9, 76.2)):       # east of C84's VLOGIC pad (top)
+        via(rp, at)
+    # U9 control and timing pins.
+    t('BAT_ILIM', 'B', 0.2, [p('U9.9'), p('R84.1')])
+    t('BAT_ILIM', 'B', 0.2, [p('R84.1'), (41.275, 81.275), p('TP89.1')])
+    t('BAT_DVDT', 'B', 0.2, [(39.9, 78.9), (40.7, 78.1), p('C81.1')])
+    t('BAT_OVLO', 'B', 0.2, [p('U9.2'), p('R83.1')])
+    t('BAT_OVLO', 'B', 0.2, [p('R83.1'), p('R82.2')])
+    # The 5.3 V buck's input on the aft band: C400 / C401 to U400's two IN pins, two vias into In2 RAW.
+    t(rp, 'F', W, [p('C400.1'), p('U400.2')])
+    t(rp, 'F', W, [p('U400.2'), p('U400.3')])
+    t(rp, 'F', W, [p('C401.1'), (14.1, 8.3), (14.1, 7.6), (14.1, 6.5), p('U400.3')])
+    for at in ((14.1, 7.6), (14.1, 8.3)):
+        via(rp, at)
+
+
+def ports(d):
+    t, p, via = d.track, d.pad, d.via
+    # 5.3 V buck (top, aft band): SW node and bootstrap, feedback divider on y 1.8, output bar to C403 / C404, two vias
+    # into In2 PORT_5V3 (Diodes DS41326 layout guidance: short SW loop, input caps at IN).
+    t('PORT_SW', 'F', W, [p('U400.5'), p('C402.2')])
+    t('PORT_SW', 'F', W, [p('C402.2'), p('L400.1')])
+    t('PORT_BST', 'F', 0.25, [p('U400.6'), (18.6, 4.0), p('C402.1')])
+    t('PORT_FB', 'F', 0.2, [p('U400.1'), p('R404.2')])
+    t('PORT_FB', 'F', 0.2, [p('R404.2'), p('R401.1')])
+    t('PORT_FB_TOP', 'F', 0.2, [p('R404.1'), p('R400.2')])
+    t('PORT_5V3', 'F', 0.2, [p('R400.1'), (27.8, 1.8), (28.6, 2.6)])
+    t('PORT_5V3', 'F', BAT, [p('L400.2'), (28.6, 5.55)])
+    t('PORT_5V3', 'F', BAT, [p('C403.1'), (28.6, 5.55)])
+    t('PORT_5V3', 'F', BAT, [(28.6, 5.55), p('C404.1')])
+    t('PORT_5V3', 'F', W, [p('C404.1'), (27.6, 8.0), (26.8, 8.0)])
+    for at in ((27.6, 8.0), (26.8, 8.0)):
+        via('PORT_5V3', at)
+    # 4.8 V LDO (bottom): IN from C405 and its own via, EN (pin 7) to the PORT_5V3 plane, SS to C408, OUT and FB
+    # through vias to the top divider R402 / R403 and into In2 PORT_4V8.
+    t('PORT_5V3', 'B', W, [p('C405.1'), (25.9, 8.6)])
+    via('PORT_5V3', (25.9, 8.6))
+    t('PORT_5V3', 'B', W, [p('C405.1'), (25.9, 12.6), p('U401.10')])
+    t('PORT_5V3', 'B', 0.25, [p('U401.10'), p('U401.9')])
+    t('PORT_5V3', 'B', 0.2, [p('U401.7'), (25.65, 14.1), (25.65, 14.9)])
+    via('PORT_5V3', (25.65, 14.9))
+    t('PORT_LDO_SS', 'B', 0.2, [p('U401.8'), p('C408.1')])
+    t('PORT_4V8', 'B', 0.25, [p('U401.1'), p('U401.2')])
+    t('PORT_4V8', 'B', W, [p('U401.1'), (29.75, 12.6)])
+    t('PORT_LDO_FB', 'B', 0.2, [p('U401.3'), (29.75, 13.6)])
+    via('PORT_4V8', (29.75, 12.6))
+    t('PORT_4V8', 'B', W, [(29.75, 12.6), (31.6, 12.6)])        # into C406.1's pad
+    via('PORT_LDO_FB', (29.75, 13.6))
+    t('PORT_4V8', 'F', W, [(29.75, 12.6), p('R402.1')])
+    t('PORT_LDO_FB', 'F', 0.2, [(29.75, 13.6), (32.225, 13.6)])
+    t('PORT_LDO_FB', 'F', 0.2, [p('R402.2'), (32.225, 13.6), p('R403.1')])
+    # PORT_4V8 taps: each pad on its own via into the In2 PORT_4V8 region.
+    t('PORT_4V8', 'B', W, [p('U410.1'), (29.3, 10.95)])
+    via('PORT_4V8', (29.3, 10.95))
+    t('PORT_4V8', 'F', W, [(29.3, 10.95), (29.75, 10.5), p('C410.1')])
+    for pad, at in (('C407.1', (31.7, 21.6)), ('R405.1', (29.0, 19.4)),
+                    ('U420.1', (28.7, 27.35))):
+        t('PORT_4V8', 'B', W, [p(pad), at])
+        via('PORT_4V8', at)
+    via('PORT_4V8', (28.8, 22.9))
+    t('PORT_4V8', 'F', W, [(28.8, 22.9), (29.2, 22.5), p('C420.1')])
+    # Port rails east to their cells (B.Cu), the GH connector pin through one via each.
+    t('GPS_4V8', 'B', W, [p('U410.6'), (39.9, 10.95)])
+    t('GPS_4V8', 'B', W, [(39.9, 10.95), (41.4, 10.95)])
+    t('GPS_4V8', 'B', W, [(39.9, 10.95), (39.9, 12.125), (39.9, 18.45), p('U412.1')])
+    t('GPS_4V8', 'B', W, [(39.9, 18.45), (40.55, 19.1)])
+    via('GPS_4V8', (39.9, 12.125))
+    t('GPS_4V8', 'F', W, [(39.9, 12.125), p('J410.1')])
+    t('RADIO_4V8', 'B', W, [p('U420.6'), (39.9, 27.35)])
+    t('RADIO_4V8', 'B', W, [(39.9, 27.35), (39.9, 24.125), (39.9, 22.2), p('C421.1')])
+    t('RADIO_4V8', 'B', W, [(39.9, 27.35), (39.9, 30.45), p('U422.1')])
+    t('RADIO_4V8', 'B', W, [(39.9, 30.45), (40.55, 31.1)])
+    via('RADIO_4V8', (39.9, 24.125))
+    t('RADIO_4V8', 'F', W, [(39.9, 24.125), p('J420.1')])
+    t('CAM_5V', 'B', W, [p('U402.6'), p('U13.1')])
+    t('CAM_5V', 'B', W, [p('U13.1'), (40.43, 42.45)])
+    t('CAM_5V', 'B', W, [(40.43, 42.45), (40.43, 44.6)])          # through C91.1's pad
+    via('CAM_5V', (40.43, 44.6))
+    t('CAM_5V', 'F', 0.2, [(40.43, 44.6), p('R104.1')])
+    t('CAM_5V', 'B', W, [p('U402.6'), (42.9, 40.05), (42.9, 36.125), (42.9, 35.7), p('C431.1')])
+    via('CAM_5V', (42.9, 36.125))
+    t('CAM_5V', 'F', W, [(42.9, 36.125), (40.75, 36.125)])
+    t('PORT_5V3', 'B', W, [p('U402.1'), (35.5, 40.05)])
+    via('PORT_5V3', (35.5, 40.05))
+    t('PORT_5V3', 'B', W, [(39.6, 41.25), (39.95, 40.9), p('C430.1')])
+    via('PORT_5V3', (39.6, 41.25))
+    # Switch control (local): ILIM resistors, EN pull-downs.
+    t('GPS_ILIM', 'B', 0.2, [p('U410.5'), p('R410.1')])
+    t('RADIO_ILIM', 'B', 0.2, [p('U420.5'), p('R420.1')])
+    t('CAM_ILIM', 'B', 0.2, [p('U402.5'), p('R430.1')])
+    t('GPS_PWR_EN', 'B', 0.2, [p('R411.1'), p('U410.3')])
+    t('RADIO_PWR_EN', 'B', 0.2, [p('R421.1'), p('U420.3')])
 
 
 def logic(d):
-    t = Translated(d, (-7, -5))
-    # R9 local regulator loop, with the changed hold-up and test point branches
-    # regenerated below rather than silently retaining their old endpoints.
-    for net, layer, width, pts in r9_power.LOGIC_TRACKS:
-        if net == 'VLOGIC' and (layer == 'F' or pts[0] in [(44.6, 74.8),(40.0,69.6)]):
-            continue
-        if net == '3V3' and pts[-1] == (40.0,82.24):
-            pts = pts[:-1] + [(40.0,81.24),(41.0,82.24)]
-        if net == '3V3' and pts[-1] == r9_power.V_3V3:
-            pts = [pts[0], (41.0,78.9)]
-        t.track(net, layer, width, pts)
-    for net, at, size in r9_power.LOGIC_VIAS:
-        if at not in [r9_power.V_TP83,r9_power.V_HOLDUP,r9_power.V_3V3]:
-            t.via(net, at, size)
-    d.via('3V3',(34,73.9),(.6,.3))
-    d.via('VLOGIC',(37.6,69.8),(.6,.3))
-    d.pad('C84.1', net='VLOGIC', at=(38.5,70.75))
-    d.track('VLOGIC','F',.4,[(37.6,69.8),(38.5,69.8),(38.5,70.75)])
-    d.track('VLOGIC','B',.4,[(37.6,69.8),(37.6,73.2),(44.5,73.2)])
-    d.via('VLOGIC',(44.5,73.2),(.6,.3))
-    # Local input1, USB input2 and mux control resistors/capacitors.
-    d.track('RAW_PROTECTED','B',.3,[(32.3,62.175),(32.3,63.2)])
-    d.via('RAW_PROTECTED',(32.3,63.2),(.6,.3))
-    d.link('RAW_PROTECTED','F',.4,'C97.1','C82.1',[(32.3,63.2),(32.3,67.4)])
-    d.track('RAW_PROTECTED','F',.4,[(33.9,67.4),(43.9,67.4),(44.5,68),(44.5,69)])
-    d.track('USB_LIMITED','B',.4,[(31.05,49.65),(34.4,53),(34.4,56.85),(33.05,58.2),(33.05,59.2)])
-    d.link('USB_LIMITED','B',.3,'C98.1','U11.7',[(32.3,59.95)])
-    d.link('USB_LIMITED','B',.3,'C98.1','R87.1',[(33.05,58.2),(30,58.2)])
-    d.link('USB_OVLO','B',.2,'R87.2','R88.1')
-    d.link('USB_OVLO','B',.2,'U11.5','R87.2')
-    d.link('LOGIC_ILIM','B',.2,'U11.10','R86.1',[(34.325,61.25)])
-    d.link('LOGIC_SS','B',.2,'U11.11','C85.1',[(34.3,61.75),(35.125,62.575)])
-    grounds = [(.4,[(33.95,68),(35.75,68)]),(.4,[(34.9,68),(34.9,68.75)]),
-               (.4,[(35,75.28),(35,76.24),(36,77.24)]),(.4,[(36.3,71.8),(35.2,71.8)]),
-               (.4,[(33.8,62.25),(33.8,63.25),(33.8,63.9)]),
-               (.2,[(31.5,60.75),(31.5,60.2)]),(.2,[(31.5,61.75),(31.5,62.25),(31.5,63.35)])]
-    for width, pts in grounds:
-        d.track('GND','B',width,pts)
-    d.track('GND','F',.4,[(33.8,63.25),(33.8,64.4),(33.9,64.4)])
-    d.track('GND','F',.4,[(32.3,59.625),(33.8,61.125),(33.8,63.25)])
-    d.track('GND','B',.2,[(31.5,60.2),(31.5,59.2)])
-    d.track('GND','B',.4,[(35,76.24),(36,76.24)])
-    for at in [(34.9,68.75),(36,76.24),(35.2,71.8),(33.8,63.25),(31.5,60.2),(31.5,63.35)]:
-        d.via('GND',at,(.6,.3))
-
-
-BUCK_TRACKS = [
-    ('RAW_PROTECTED','B',.3,[(40.8,51),(41.75,51),(43,51)]),
-    ('RAW_PROTECTED','F',1.0,[(43,50.6),(43,51)]),
-    ('RAW_PROTECTED','F',1.0,[(43,51),(40.5,53.5),(40.5,56.5),(41.5,57.5)]),
-    ('PORT_SW','B',.4,[(40.8,53.2),(40.8,55.25)]),
-    ('PORT_SW','B',.4,[(37,54.75),(40.8,54.75)]),
-    ('PORT_BST','B',.3,[(39.85,53.2),(37,53.2)]),
-    ('PORT_5V3','B',1.0,[(40.8,59.95),(40.8,60.8),(41.5,61.5)]),
-    ('PORT_5V3','F',1.0,[(41.5,61.5),(41.5,65)]),
-    ('PORT_FB_TOP','F',.2,[(35.675,52.4),(35.675,50.8)]),
-    ('PORT_FB','F',.2,[(37.325,50.8),(36.8,50.8),(35.675,49.675),(35.675,49.2)]),
-    ('PORT_FB','F',.2,[(37.325,50.8),(38.05,50.8)]),
-    ('PORT_FB','B',.2,[(38.05,50.8),(39.65,50.8),(39.85,51)]),
-    ('PORT_5V3','F',.2,[(37.325,52.4),(38.5,53.575),(38.5,54.8),(35.2,58.1),(35.2,62.5),(40.5,62.5),(41.5,61.5)]),
-    ('GND','B',.4,[(41.75,53.2),(43.6,53.2)]),
-    ('GND','F',.4,[(43,53.6),(43.2,53.6),(43.6,53.2)]),
-    ('GND','F',.4,[(44.5,57.5),(44.5,58.8)]),
-    ('GND','F',.4,[(44.5,61.5),(44.5,62.8)]),
-    ('GND','F',.4,[(44.5,65),(44.5,66.3)]),
-    ('GND','F',.2,[(37.325,49.2),(38.2,49.2)]),
-]
-BUCK_VIAS = [('RAW_PROTECTED',(43,51),(.6,.3)),('PORT_5V3',(41.5,61.5),(.6,.3)),
-             ('PORT_FB',(38.05,50.8),(.5,.3)),('GND',(43.6,53.2),(.6,.3)),
-             ('GND',(44.5,58.8),(.6,.3)),('GND',(44.5,62.8),(.6,.3)),
-             ('GND',(44.5,66.3),(.6,.3)),('GND',(38.2,49.2),(.5,.3))]
-LDO_TRACKS = [
-    ('PORT_5V3','B',.2,[(29.15,16.5),(29.15,17),(29.65,17.5)]),
-    ('PORT_5V3','B',.4,[(29.65,17.5),(32,17.5)]),
-    ('PORT_5V3','B',.2,[(29.15,15.5),(30.5,15.5),(30.5,17.5)]),
-    ('PORT_LDO_SS','B',.2,[(29.15,16),(29.8,16)]),
-    ('PORT_LDO_SS','F',.2,[(29.8,16),(30.08,16)]),
-    ('PORT_4V8','B',.2,[(26.85,16.5),(26.85,17),(26.2,17)]),
-    ('PORT_4V8','B',.4,[(26.2,17),(25.9,17.3),(24,17.3),(24,19.2)]),
-    ('PORT_4V8','B',.25,[(24,19.2),(25.8,19.2),(26.3,19.7),(26.3,22.3),(26.475,22.3)]),
-    ('PORT_LDO_FB','B',.2,[(25.625,12),(26.2,12),(26.925,12),(27.7,11.225)]),
-    ('PORT_LDO_FB','F',.2,[(26.2,12),(26.2,15.7),(25.9,16)]),
-    ('PORT_LDO_FB','B',.2,[(25.9,16),(26.85,16)]),
-    ('PORT_4V8','B',.2,[(23.975,12),(23.975,12.8)]),
-    ('PORT_4V8','F',.2,[(23.975,12.8),(22.4,14.375),(22.4,17.3)]),
-    ('PORT_4V8','B',.2,[(22.4,17.3),(24,17.3)]),
-    ('GND','B',.2,[(26.85,15.5),(28,15.5)]),
-    ('GND','B',.2,[(29.15,15),(28,15),(28,15.5)]),
-    ('GND','B',.4,[(24,14.3),(25.5,14.3)]),
-    ('GND','B',.4,[(24,22.2),(24,23.5)]),
-    ('GND','B',.4,[(32,14.5),(32,13.2)]),
-    ('GND','F',.2,[(30.92,16),(31.6,16)]),
-    ('GND','B',.2,[(27.7,9.575),(27.7,8.8)]),
-    ('GND','B',.2,[(28.125,22.3),(28.8,22.3)]),
-]
-LDO_VIAS = [('PORT_LDO_SS',(29.8,16)),('PORT_LDO_FB',(26.2,12)),('PORT_LDO_FB',(25.9,16)),
-            ('PORT_4V8',(23.975,12.8)),('PORT_4V8',(22.4,17.3)),
-            ('GND',(28,15.25)),('GND',(28,16.75)),('GND',(25.5,14.3)),
-            ('GND',(24,23.5)),('GND',(32,13.2)),('GND',(31.6,16)),
-            ('GND',(27.7,8.8)),('GND',(28.8,22.3))]
+    t, p, via = d.track, d.pad, d.via
+    # U11 (source mux) -> VLOGIC: one B.Cu spine x 33.0 through U11's two OUT pads, C99 and U2's IN, east to C6, then a
+    # spine at x 37.8 (C7, R60's sense tap, and a via up to C84 and TP83 on F.Cu).
+    t('VLOGIC', 'B', W, [p('U11.8'), p('U11.1')])
+    t('VLOGIC', 'B', W, [p('U11.1'), p('C99.1')])
+    t('VLOGIC', 'B', W, [p('C99.1'), p('U2.2')])
+    t('VLOGIC', 'B', W, [p('U2.2'), p('U2.3')])
+    t('VLOGIC', 'B', W, [p('U2.3'), (35.75, 65.6), (37.8, 65.6)])
+    t('VLOGIC', 'B', W, [(37.8, 65.6), (37.8, 54.96), p('R60.1')])
+    t('VLOGIC', 'B', W, [(37.8, 65.6), (37.8, 67.0), (37.8, 69.8), p('C7.1')])
+    t('VLOGIC', 'B', W, [(37.8, 69.8), (37.8, 75.6)])
+    via('VLOGIC', (37.8, 75.6))
+    t('VLOGIC', 'F', W, [(37.8, 75.6), (37.8, 76.6)])
+    t('VLOGIC', 'B', W, [(37.8, 67.0), p('TP83.1')])
+    t('LOGIC_ILIM', 'B', 0.2, [p('U11.10'), p('R86.1')])
+    t('LOGIC_SS', 'B', 0.2, [p('U11.11'), (34.15, 61.75), p('C85.1')])
+    t('USB_OVLO', 'B', 0.2, [p('U11.5'), p('R87.2')])
+    t('USB_OVLO', 'B', 0.2, [p('R87.2'), p('R88.1')])
+    # 3V3 buck U2 (Diodes DS41326 Figure 25): SW node, bootstrap, the output into the In2 3V3 finger.
+    t('SW_NODE', 'B', W, [p('U2.5'), p('L1.1')])
+    t('SW_NODE', 'B', W, [(32.4, 69.5), (29.78, 69.5), p('C5.1')])
+    t('BST', 'B', 0.25, [p('U2.6'), (31.05, 68.0), p('C5.2')])
+    t('3V3', 'B', W, [p('U2.1'), (31.2, 65.6)])
+    via('3V3', (31.2, 65.6))
+    t('3V3', 'B', W, [(32.2, 74.0), (31.4, 74.0)])
+    via('3V3', (31.4, 74.0))
+    t('3V3', 'B', W, [p('C8.1'), p('C9.1')])
 
 
 def draw(d):
-    placement_asserts(d)
+    planes(d)
+    battery(d)
+    efuse(d)
+    ports(d)
     logic(d)
-    for ref, num, net, at in [('U400','5','PORT_SW',(40.8,53.2)),('L400','1','PORT_SW',(40.8,55.25)),
-                               ('U401','1','PORT_4V8',(26.85,17)),('U401','10','PORT_5V3',(29.15,17))]:
-        d.pad(ref,num,net,at)
-    for row in BUCK_TRACKS + LDO_TRACKS:
-        d.track(*row)
-    for row in BUCK_VIAS:
-        d.via(*row)
-    for net, at in LDO_VIAS:
-        d.via(net,at)

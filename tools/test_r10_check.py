@@ -401,6 +401,27 @@ class Synthetic(unittest.TestCase):
         f.SetOrientationDegrees(0)
         self.assertEqual(gate.entry_dir(f), '-y')
 
+    def test_route_profile_r10_critical_nets(self):
+        import route_check as rc
+        self.addCleanup(rc.set_profile, 'r8')
+        rc.set_profile('r10')
+        self.assertEqual((rc.ALLOWLIST, rc.LEFTOVERS, rc.ROUTE_FIGURES), ([], [], {}))
+        expect = {'PYRO1_GATE': 'pyro', 'PYRO1_BUS': 'pyro', 'ARM1_SENSE_MCU': 'pyro', 'RAW_ACT_SENSE': 'pyro',
+                  'RAW_ACT_SENSE_MCU': 'pyro', 'HSE_IN': 'crystal', 'USB_DP': 'usb', 'USB_DM': 'usb',
+                  'QSPI_CLK': 'spi', 'SPI1_SCK': 'spi', 'IMU_CS': 'spi', 'GPS_TX_MCU': 'uart', 'RADIO_RX_MCU': 'uart',
+                  'GND': 'power', '3V3': 'power', 'RAW_ACT': 'power', 'PORT_5V3': 'power', 'GPS_4V8': 'power',
+                  'RADIO_4V8': 'power', 'CAM_5V': 'power', 'GPS_IO_3V3': 'power', 'SERVO1_OUT': 'actuator'}
+        for net, cls in expect.items():
+            self.assertEqual(rc.net_class(net), cls, net)
+        for net in expect:
+            if expect[net] not in ('power', 'actuator'):
+                self.assertIn(rc.net_class(net), rc.SIGNAL_CRITICAL, net)
+        for net in ('GNSS_RF_ANT', 'RADIO_RF', 'RADIO_SCK', 'GPS_PWR_EN', 'CAM_MCU_TX', 'GPS_TX_WIRE', 'NRST'):
+            self.assertNotIn(rc.net_class(net), rc.SIGNAL_CRITICAL, net)
+        rc.set_profile('r9')                                  # r9 unchanged: RF classes still critical
+        self.assertEqual((rc.net_class('GNSS_RF_ANT'), rc.net_class('RADIO_SCK'), rc.net_class('GPS_TX_MCU')),
+                         ('rf', 'spi', 'other'))
+
     def test_rule_list_and_stages(self):
         ids = [rid for rid, _, _ in gate.RULES]
         self.assertEqual(len(ids), len(set(ids)))
