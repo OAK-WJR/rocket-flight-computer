@@ -90,6 +90,11 @@ def draw(d):
     via('ACT_GATE', (19.6, 72.3))
     t('ACT_GATE', 'F', P, [(19.6, 72.3), d.pad('R121.1')])
     t('ACT_GATE', 'F', P, [d.pad('TP121.1'), (16.2, 73.2), (17.1, 72.3)])
+    # Q121's gate (west end) hops over the source bridge: via west of it, F.Cu to R121.1; GND partner via.
+    t('ACT_GATE', 'B', P, [d.pad('Q121.4'), (10.8, 71.3)])
+    via('ACT_GATE', (10.8, 71.3))
+    via('GND', (9.9, 70.4))
+    t('ACT_GATE', 'F', P, [(10.8, 71.3), (11.8, 72.3), d.pad('R121.1')])
     link('ACT_DRV', 'F', P, 'Q122.3', 'R121.2', ((15.8, 70.14),))
     link('ACT_EN', 'F', S, 'Q122.1', 'R122.2', ((19.08, 70.75),))
     link('ACT_EN', 'F', S, 'R122.2', 'R123.1')

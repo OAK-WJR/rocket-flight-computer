@@ -204,8 +204,8 @@ R63	20.85	53.88	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 R64	11.23	52.28	-90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
 R7	9	28.9	90	B	USB edge circuit translated 0,-3.5; direct new MCU links
 R8	9	32.5	90	B	USB edge circuit translated 0,-3.5; direct new MCU links
-R80	15.6	86.8	0	F	R10 forward-band legalisation (D-R2-01)
-R81	16.5	88.9	0	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
+R80	15.6	86.8	180	F	R10 switch-input resistors toward their routes (D-R2-05)
+R81	29	87.4	0	F	R10 switch-input resistors toward their routes (D-R2-05)
 R82	36.725	82.2	90	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
 R83	35.9	79.825	180	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
 R84	42.1	79.825	0	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)

@@ -32,7 +32,7 @@ def planes(d):
 
 
 def battery(d):
-    t, p = d.track, d.pad
+    t, p, via = d.track, d.pad, d.via
     # F.Cu: J1.1 -> one bar along y 77 -> the protection column (C95 / C89 / C96 / C80 on x 27.52), D8 tapped.
     t('BAT_IN', 'F', BAT, [p('J1.1'), (9.9, 77.0), (27.525, 77.0), p('C95.1')])
     t('BAT_IN', 'F', BAT, [p('C95.1'), p('C89.1')])
@@ -43,11 +43,30 @@ def battery(d):
     # B.Cu: J1.1 -> Q120's drain pad; Q120.7 -> down the west side of the J122 tie hole -> under J122's GND row ->
     # U9's IN bar (south tip, 0.25 mm neck between its corner pads), with R167 / R82 / C88 tapped.
     t('BAT_IN', 'B', BAT, [p('J1.1'), (10.6, 74.1), (12.0, 75.5)])
-    t('BAT_IN', 'B', BAT, [p('Q120.7'), (12.87, 86.6), (38.75, 86.6), (38.75, 81.9)])
+    t('BAT_IN', 'B', BAT, [p('Q120.7'), (12.87, 86.6), (17.35, 86.6), (36.725, 86.6), (38.75, 86.6), (38.75, 81.9)])
+    via('BAT_IN', (17.35, 86.6))
+    t('BAT_IN', 'F', W, [(17.35, 86.6), (16.625, 86.6)])                 # into R80.1's pad (R80's battery side)
+    t('BAT_IN', 'B', W, [(36.725, 86.6), p('R82.1')])
     t('BAT_IN', 'B', NECK, [(38.75, 81.9), (38.75, 80.9)])
     t('BAT_IN', 'B', W, [(29.175, 86.6), p('R167.1')])
-    t('BAT_IN', 'B', W, [(38.75, 83.025), p('R82.1')])
     t('BAT_IN', 'B', W, [(38.75, 84.32), p('C88.1')])
+
+
+def control(d):
+    t, p, via = d.track, d.pad, d.via
+    # Damper (C89 / C95 -> R166) on F.Cu, clear of J122's tie hole (30.8, 79) by >= 1.85 mm.
+    t('BAT_DAMP', 'F', W, [p('C89.2'), p('C95.2')])
+    t('BAT_DAMP', 'F', W, [p('C95.2'), (33.2, 77.925), (33.2, 81.4), p('R166.1')])
+    # External switch J400 (GH 2-pin): SW_SOURCE to R80, SW_RETURN to R165 (7 uA contact current).
+    t('BAT_SW_SOURCE', 'F', 0.2, [p('J400.1'), (9.875, 86.1), (14.775, 86.1), p('R80.2')])
+    t('BAT_SW_RETURN', 'F', 0.2, [p('J400.2'), (12.075, 88.4), p('R165.1')])
+    # BAT_ENABLE: R165 -> C87 -> TP84 -> R81 pull-down, then east on F.Cu below J122's GND row and down to U9.1.
+    t('BAT_ENABLE', 'F', 0.2, [p('R165.2'), (17.225, 87.6), p('C87.1')])
+    t('BAT_ENABLE', 'F', 0.2, [p('C87.1'), (19.1, 86.7), (22.1, 86.7), p('TP84.1')])
+    t('BAT_ENABLE', 'F', 0.2, [p('TP84.1'), (24.8, 85.8), (28.175, 85.8), (37.3, 85.8), (37.7, 85.4)])
+    t('BAT_ENABLE', 'F', 0.2, [(28.175, 85.8), p('R81.1')])
+    via('BAT_ENABLE', (37.7, 85.4))
+    t('BAT_ENABLE', 'B', 0.2, [(37.7, 85.4), (37.7, 80.7), p('U9.1', at=(38.1, 80.3))])
 
 
 def efuse(d):
@@ -184,6 +203,7 @@ def logic(d):
 def draw(d):
     planes(d)
     battery(d)
+    control(d)
     efuse(d)
     ports(d)
     logic(d)
