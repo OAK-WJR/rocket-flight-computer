@@ -23,7 +23,8 @@ level silkscreen item is deleted and every footprint field hidden, then, in this
      other; a crowded one goes on the bottom under its part; one with no such spot is hidden and kept on the Fab
      layer), then R8's courtyard and run-on tests (r8_post); one that fails is placed again or hidden;
   5. Fab-layer designators (r5_post.fab_refs, r9_post.fab_clear) and the title-block revision;
-  6. the zone fill (KiCad's filler on every zone), which must reproduce the routed board's fill (R8 digest).
+  6. the zone fill: every zone is filled before step 1 (the routing families save them unfilled) and again last,
+     after the silkscreen; the two fills must agree (R8's digest covers the fill).
 Any essential legend that does not fit, a terminal legend whose nearest pin is not its own, or a legend beyond
 LEGEND_REACH fails the run (check_r7.pin_legends / legend_subjects with R10's words, check_r8.terminal_legends with R10's
 pins, duplicate ids). Runs once, on the ground-stage board (refuses a board that already carries the J9 / J2 pin
@@ -195,11 +196,12 @@ def main():
     b = pcbnew.LoadBoard(str(board))
     if not check_r7.pin_legends(b):
         raise SystemExit('r10_post runs once, on the ground-stage board: this board already carries its pin tables')
+    pcbnew.ZONE_FILLER(b).Fill(b.Zones())          # the zone fill (the routing families leave zones unfilled)
     before = r8_post.fixed_digest(b)
     evidence = finish(b)
     assert r8_post.fixed_digest(b) == before, 'r10_post changed copper, a zone, a pad or a footprint position'
-    pcbnew.ZONE_FILLER(b).Fill(b.Zones())          # the final zone fill (it must reproduce the routed board's fill)
-    assert r8_post.fixed_digest(b) == before, 'the final zone fill differs from the routed board\'s fill'
+    pcbnew.ZONE_FILLER(b).Fill(b.Zones())          # the final fill, after the silkscreen: it must reproduce the first
+    assert r8_post.fixed_digest(b) == before, 'the final zone fill differs from the first'
     assert pcbnew.SaveBoard(str(board), b, True), 'save failed'
     b = pcbnew.LoadBoard(str(board))
     assert r8_post.fixed_digest(b) == before, 'the saved board differs in copper, zones, pads or footprint positions'

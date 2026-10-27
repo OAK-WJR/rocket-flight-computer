@@ -6,7 +6,7 @@
 	(title_block
 		(title "03 | Memory and sensors")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R9")
+		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:Barometer"

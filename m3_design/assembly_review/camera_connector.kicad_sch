@@ -6,7 +6,7 @@
 	(title_block
 		(title "06 | Camera terminal and characterization")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R9")
+		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:CameraTerminal"
@@ -159,13 +159,6 @@
 					(font
 						(size 1.27 1.27))
 					(hide yes)))))
-	(text "06 | Camera terminal and characterization"
-		(at 20.32 20.32 0)
-		(effects
-			(font
-				(size 2.54 2.54))
-			(justify left))
-		(uuid daeb40dd-c14c-5c2a-a4f9-cf25499e1780))
 	(symbol
 		(lib_id "M3:CameraTerminal")
 		(at 76.2 88.9 0)
@@ -292,63 +285,6 @@
 		(uuid f4fee09a-b55f-5ac0-8582-1a9092809040))
 	(symbol
 		(lib_id "M3:TestPoint")
-		(at 170.18 58.42 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid 78628bd3-598e-50bb-a977-2e614d353bd2)
-		(property "Reference" "TP72"
-			(at 170.18 50.800000000000004 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "CAM_5V"
-			(at 170.18 54.61000000000001 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 170.18 58.42 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 170.18 58.42 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 170.18 58.42 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
-					(reference "TP72")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 170.18 58.42)
-			(xy 162.56 58.42))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c6fc5fb2-e035-5749-b42f-311fe81a3fc4))
-	(global_label "CAM_5V"
-		(shape passive)
-		(at 162.56 58.42 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 20cb4007-c73c-5669-8a65-7428367aa40f))
-	(symbol
-		(lib_id "M3:TestPoint")
 		(at 170.18 88.9 0)
 		(unit 1)
 		(in_bom no)
@@ -404,190 +340,20 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 2aecc2cf-6104-5935-b702-97ded790c010))
-	(symbol
-		(lib_id "M3:TestPoint")
-		(at 170.18 119.38 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid 5895f940-1832-5bfa-af3b-c2585ddd145f)
-		(property "Reference" "TP75"
-			(at 170.18 111.75999999999999 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "CAM_RX_TEST"
-			(at 170.18 115.57 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 170.18 119.38 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 170.18 119.38 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 170.18 119.38 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
-					(reference "TP75")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 170.18 119.38)
-			(xy 162.56 119.38))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid dc5e4d1d-3487-5fc8-b0df-c243a9fe619c))
-	(global_label "CAM_RX_WIRE"
-		(shape passive)
-		(at 162.56 119.38 0)
+	(text "R10 camera GH port: regulated switched supply, GND, camera RX and camera TX. UART isolation remains on sheet09."
+		(at 20.32 15.24 0)
 		(effects
 			(font
 				(size 1.05 1.05))
-			(justify right))
-		(uuid daa3d1fa-275f-5baf-89cd-ab93287a563e))
-	(symbol
-		(lib_id "M3:TestPoint")
-		(at 170.18 149.86 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid 894aa248-0f96-59f0-8c65-3d66c00ae4e1)
-		(property "Reference" "TP76"
-			(at 170.18 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "CAM_TX_TEST"
-			(at 170.18 146.05 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 170.18 149.86 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 170.18 149.86 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 170.18 149.86 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
-					(reference "TP76")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 170.18 149.86)
-			(xy 162.56 149.86))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 7d3b83db-29af-52bc-a5ed-71901cd34f79))
-	(global_label "CAM_TX_WIRE"
-		(shape passive)
-		(at 162.56 149.86 0)
+			(justify left))
+		(uuid 5586ba24-10dc-578b-9b7a-f8d2c933cc8c))
+	(text "The5 redundant camera characterization pads were removed; probe the connector or fitted circuitry. No pyro/arming test pads changed."
+		(at 20.32 20.32 0)
 		(effects
 			(font
 				(size 1.05 1.05))
-			(justify right))
-		(uuid d4096269-50ab-5585-bb31-ed0a5dbc09d2))
-	(text "J9 is a dedicated camera output, not a generic USB 5 V source."
-		(at 20.32 180.34 0)
-		(effects
-			(font
-				(size 1.27 1.27))
 			(justify left))
-		(uuid 62a17457-ab83-5101-8bf3-8c4340baa438))
-	(text "Pin 1: regulated power. Pin 2: GND. Pin 3: from camera TX. Pin 4: to camera RX."
-		(at 20.32 187.96 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 2c52830c-9f80-5612-83e3-291ea1825902))
-	(text "Pins 3/4: UART through U12; TP75/76 remain wire-side measurement points."
-		(at 20.32 195.58 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 351812cc-0ad4-5b13-8110-0cf4b7c1152b))
-	(text "3.3V signalling candidate. Actual camera thresholds and power-off leakage need measurement."
-		(at 20.32 203.2 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 43793254-6686-5e82-b194-6cd2f2429bd3))
-	(text "Battery entry added in PWR-R1; dynamic/thermal/USB qualification is pending."
-		(at 20.32 210.82 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 9ab77afe-82ba-5f4e-b525-e5bf0745000b))
-	(text "TP70 -> TP71 -> TP72 localizes input / eFuse / regulator faults."
-		(at 20.32 218.44 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 881da4d7-727a-591a-8d44-3844020d627e))
-	(text "Measure TP73 with >=10 Mohm input; loading ILM alters the current limit."
-		(at 20.32 226.06 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 38b37ebf-ba8b-5f17-afbc-19e7f92ce26a))
-	(text "Camera power toggling can corrupt recording: stop recording before normal shutdown."
-		(at 20.32 233.68 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 81fb4704-c41a-54d3-9ccf-85586bc44d3a))
-	(text "RunCam manual: 5-20 V regulated input; source capability >=1 A; max 450 mA at 5 V."
-		(at 20.32 241.3 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 18e5c042-fc5e-53a3-9472-205f3d30ed99))
-	(text "This is an engineering candidate; it is not released for fabrication or flight."
-		(at 20.32 248.92000000000002 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 957a0d00-9e50-5f55-8992-5f8c548f3733))
+		(uuid 89f9d89c-21e5-5d71-a602-20d1665dd0ac))
 	(sheet_instances
 		(path "/"
 			(page "6"))))

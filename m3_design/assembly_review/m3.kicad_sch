@@ -6,7 +6,7 @@
 	(title_block
 		(title "01 | USB input and regulated supplies")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R9")
+		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:Buck"
@@ -2836,22 +2836,6 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
 					(reference "#FLG06")
 					(unit 1)))))
-	(wire
-		(pts
-			(xy 302.26 218.44)
-			(xy 294.64 218.44))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid ce2e4437-bc66-5fda-9033-5492adacbf25))
-	(global_label "CAM_5V"
-		(shape passive)
-		(at 294.64 218.44 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 1c2dba87-f936-5a28-9e54-722deb2b8edb))
 	(sheet
 		(at 20.32 231.14)
 		(size 83.82 10.16)
@@ -2936,7 +2920,7 @@
 		(fill
 			(color 0 0 0 0))
 		(uuid 60dd1974-7d11-571e-8043-304f52487d73)
-		(property "Sheetname" "05 | Camera branch protection and regulator"
+		(property "Sheetname" "05 | Regulated camera, radio and GPS port supplies"
 			(at 20.32 248.92 0)
 			(effects
 				(font
@@ -3207,7 +3191,7 @@
 		(fill
 			(color 0 0 0 0))
 		(uuid 05a85211-bc24-59d4-a8a4-ff7347ee84fc)
-		(property "Sheetname" "15 | GNSS and telemetry radio (R7)"
+		(property "Sheetname" "15 | External GPS and radio UART ports"
 			(at 294.64 229.87 0)
 			(effects
 				(font
@@ -3223,6 +3207,22 @@
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8"
 					(page "15")))))
+	(wire
+		(pts
+			(xy 302.26 218.44)
+			(xy 302.26 223.52))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bd48e9c1-ab3d-5d21-a43a-505588661d26))
+	(global_label "PORT_5V3"
+		(shape passive)
+		(at 302.26 223.52 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 01d238b9-8d85-5d8b-8df5-9d832fb6e297))
 	(sheet_instances
 		(path "/"
 			(page "1"))))

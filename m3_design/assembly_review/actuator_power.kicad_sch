@@ -6,7 +6,7 @@
 	(title_block
 		(title "11 | Actuator power switch")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R9")
+		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
 			(symbol "M3:C"
@@ -339,128 +339,128 @@
 							(size 1.05 1.05))))))
 		(embedded_fonts no))
 			(symbol "M3:PolarCap"
-		(pin_numbers
-			(hide yes))
-		(pin_names
-			(offset 0.254))
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(duplicate_pin_numbers_are_jumpers no)
-		(property "Reference" "C"
-			(at 0.635 2.54 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "C_Polarized"
-			(at 0.635 -2.54 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" ""
-			(at 0.9652 -3.81 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Description" "Polarized capacitor"
-			(at 0 0 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "ki_keywords" "cap capacitor"
-			(at 0 0 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(symbol "PolarCap_0_1"
-			(rectangle
-				(start -2.286 0.508)
-				(end 2.286 1.016)
-				(stroke
-					(width 0)
-					(type default))
-				(fill
-					(type none)))
-			(polyline
-				(pts
-					(xy -1.778 2.286)
-					(xy -0.762 2.286))
-				(stroke
-					(width 0)
-					(type default))
-				(fill
-					(type none)))
-			(polyline
-				(pts
-					(xy -1.27 2.794)
-					(xy -1.27 1.778))
-				(stroke
-					(width 0)
-					(type default))
-				(fill
-					(type none)))
-			(rectangle
-				(start 2.286 -0.508)
-				(end -2.286 -1.016)
-				(stroke
-					(width 0)
-					(type default))
-				(fill
-					(type outline))))
-		(symbol "PolarCap_1_1"
-			(pin passive line
-				(at 0 3.81 270)
-				(length 2.794)
-				(name ""
-					(effects
-						(font
-							(size 1.27 1.27))))
-				(number "1"
-					(effects
-						(font
-							(size 1.27 1.27)))))
-			(pin passive line
-				(at 0 -3.81 90)
-				(length 2.794)
-				(name ""
-					(effects
-						(font
-							(size 1.27 1.27))))
-				(number "2"
-					(effects
-						(font
-							(size 1.27 1.27))))))
-		(embedded_fonts no)
-		(property "ki_fp_filters" "M3_OSCON_F12 CAP-SMD_BD8.0*"
-			(at 0 0 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(hide yes))))
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Value" "C_Polarized"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Polarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "PolarCap_0_1"
+				(rectangle
+					(start -2.286 0.508)
+					(end 2.286 1.016)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.778 2.286)
+						(xy -0.762 2.286))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.27 2.794)
+						(xy -1.27 1.778))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(rectangle
+					(start 2.286 -0.508)
+					(end -2.286 -1.016)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type outline))))
+			(symbol "PolarCap_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_OSCON_F12 CAP-SMD_BD8.0* M3_MA_8x10"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
 			(symbol "M3:R"
 		(pin_numbers
 			(hide yes))
@@ -1386,93 +1386,6 @@
 			(justify right))
 		(uuid 14fc8abf-798e-59ad-afb1-f40a967fa93d))
 	(symbol
-		(lib_id "M3:PolarCap")
-		(at 157.48 114.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid e1f3fb87-e35d-558f-b31e-d9d3f7781b14)
-		(property "Reference" "C121"
-			(at 161.29 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "470uF 25V"
-			(at 161.29 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:CAP-SMD_BD8.0-L8.3-W8.3-LS9.0-FD_H10.5"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C46550466"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "JIERR"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "MA25V470M8x10"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
-					(reference "C121")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 157.48 110.49)
-			(xy 157.48 105.41))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 1a7aff4c-4f0f-5027-abd0-d9ce6c737eb5))
-	(global_label "RAW_ACT"
-		(shape passive)
-		(at 157.48 105.41 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid fabe651b-c44b-5a21-a84a-e22793e3b277))
-	(wire
-		(pts
-			(xy 157.48 118.11)
-			(xy 157.48 123.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4c3cdd54-9768-537c-a666-b8b9ccbbd5a2))
-	(global_label "GND"
-		(shape passive)
-		(at 157.48 123.19 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 181bafe5-d4a8-515a-b504-6101bf989d1f))
-	(symbol
 		(lib_id "M3:R")
 		(at 215.9 114.3 0)
 		(unit 1)
@@ -1851,55 +1764,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 88ec35d1-8abb-5409-bd68-e5cd9a75ec1d))
-	(text "11 | Actuator power switch"
-		(at 20.32 20.32 0)
-		(effects
-			(font
-				(size 2.54 2.54))
-			(justify left))
-		(uuid ed417ce0-96d9-53db-a75b-03be6e545f03))
-	(text "Second, high-current battery path for servos and pyro. U9 (sheet 07) is NOT sized for actuator current."
-		(at 20.32 245 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 8f519bf7-2b9b-56d1-9080-75f314474fad))
-	(text "Q120/Q121 AON6403 back-to-back: load switch + reverse-battery block + no back-feed from RAW_ACT."
-		(at 20.32 252.62 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 59a6e5b6-56f0-507f-aad6-b28f444599c4))
-	(text "Q122 turns the pair on only while RAW_PROTECTED is up, i.e. it follows the single J1.3-J1.4 switch and U9 fault latch."
-		(at 20.32 260.24 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 83e74923-63dc-5d45-adcf-609d24774c6e))
-	(text "USB alone: RAW_PROTECTED = 0, so RAW_ACT, the servo header and the ARM terminal are dead."
-		(at 20.32 267.86 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 88d81db1-b800-5c23-b93c-6385c5a3271e))
-	(text "C120 is gate-SOURCE (P0-4): a shorted C120 fails OFF. ~150 ms ride-through of contact bounce (inference, X5R bias)."
-		(at 20.32 275.48 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 8c0445c0-a410-543c-84c4-63eb9f386e59))
-	(text "R177 + R124 (2 x 5.1k) over R125 + R182 (2 x 2k parallel) -> R172 4.7k -> PB0 (RAW_ACT / 11.2: 0.75 V at 8.4 V, 1.78 V at the 19.9 V TVS clamp; one shorted or open part leaves PB0 <= 3.3 V): RAW_ACT sense AND bleed (tau ~5 s with C121). Mandatory external 15 A ATO fuse in battery lead."
-		(at 20.32 283.1 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 130b79de-6842-5793-9be4-01e5cf6f9de4))
 	(symbol
 		(lib_id "M3:R")
 		(at 254 83.82 0)
@@ -2084,6 +1948,27 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 3fb1bdef-3aa0-5933-bd41-cc99424ec4da))
+	(text "R10: Q120/Q121 and gate network retained as the pyro-bus load switch; RAW_ACT feeds J124 and RAW_ACT sensing only."
+		(at 20.32 15.24 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 83127760-6cb2-56c5-a73d-92d39a229209))
+	(text "C121 removed; servos use external pack power and return. The ARM plug remains a complete break; no feed directly from BAT_IN or RAW_PROTECTED."
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 873aaf0c-ec31-581c-b038-72788d10ea03))
+	(text "R134 limits a shorted igniter; firmware ends each fire pulse within20ms. Copper and harness pulse qualification remains required."
+		(at 20.32 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 7277bbaf-c52c-5d00-8f90-b09edb6bdeae))
 	(sheet_instances
 		(path "/"
 			(page "11"))))

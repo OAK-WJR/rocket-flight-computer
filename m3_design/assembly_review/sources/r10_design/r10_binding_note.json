@@ -1,7 +1,7 @@
 {
   "profile": "M3-ASSY-R10",
   "status": "record only; R1 binding invalid; no R10 firmware or flight approval",
-  "board_sha256": null,
+  "board_sha256": "883d2db5bb35a8f88958a95a5da9cb96424ed1d1fe37b3b361d15d446bdc3b9a",
   "netlist_sha256": "3ebd815ccb1fc45b48dbb6904fc623f04f6f8e0c1e41c1972d6ae1f604c4e4a8",
   "pin_table_sha256": "4373dd80f77bfb66acaf4c99148301acee50bafee956d0b60ae891f8493c6586",
   "circuit_sha256": "294f1520b5d9e17356d8b8bc942a2e04c8b9bc6d2413947cf0138c59ad75e060",
@@ -507,9 +507,18 @@
       "mode": "VDD"
     }
   },
-  "u1_board_map_checked": false,
+  "u1_board_map_checked": true,
   "imu": {
-    "status": "pending final PCB orientation and lever-arm measurement"
+    "x_mm": 17.0,
+    "y_mm": 45.9,
+    "rotation_deg": 180.0,
+    "side": "bottom",
+    "lever_arm_x_mm": -6.0,
+    "lever_arm_z_mm": null,
+    "bench_sign_check": "required",
+    "axis_basis": "same signed frame as R9: bottom180",
+    "roll_about_forward_axis": "-gyro_Y",
+    "forward_thrust": "-a_Y"
   },
   "sources": {
     "mcu": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",

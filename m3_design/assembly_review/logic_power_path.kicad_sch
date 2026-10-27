@@ -6,7 +6,7 @@
 	(title_block
 		(title "08 | USB limit, source mux and hold-up")
 		(date "2026-10-12")
-		(rev "M3-ASSY-R9")
+		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -386,7 +386,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "M3_OSCON_F12 CAP-SMD_BD8.0*"
+			(property "ki_fp_filters" "M3_OSCON_F12 CAP-SMD_BD8.0* M3_MA_8x10"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1156,97 +1156,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 7a9647ad-d0fd-5a24-abfa-67b8f8de41aa))
-	(symbol
-		(lib_id "M3:PolarCap")
-		(at 360.68 127 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid a4f1fa8f-3c00-5b53-bcc1-e2084938a46e)
-		(property "Reference" "C84"
-			(at 360.68 115.57 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "330uF 35V"
-			(at 360.68 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_OSCON_F12"
-			(at 360.68 127 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 360.68 127 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C178373"
-			(at 360.68 127 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC Part" "C178373"
-			(at 360.68 127 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Panasonic"
-			(at 360.68 127 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "35SVPK330M"
-			(at 360.68 127 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
-					(reference "C84")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 360.68 123.19)
-			(xy 353.06 123.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 71cb353b-5f2e-5b1c-8d3d-d570ae60ca95))
-	(global_label "VLOGIC"
-		(shape passive)
-		(at 353.06 123.19 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 39cd6849-80c7-56cf-bccc-5cffed96d93f))
-	(wire
-		(pts
-			(xy 360.68 130.81)
-			(xy 353.06 130.81))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c82848c2-1c6c-5465-bdaa-a41e1314ebce))
-	(global_label "GND"
-		(shape passive)
-		(at 353.06 130.81 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 6a751110-b063-5a89-9512-30be355dcdb3))
 	(symbol
 		(lib_id "M3:C")
 		(at 309.88 127 0)
@@ -2299,6 +2208,98 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 28183e46-b9a3-5826-b967-252f4c7d2b21))
+	(symbol
+		(lib_id "M3:PolarCap")
+		(at 360.68 127 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid a4f1fa8f-3c00-5b53-bcc1-e2084938a46e)
+		(property "Reference" "C84"
+			(at 363.22 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "470uF 25V polymer"
+			(at 363.22 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_MA_8x10"
+			(at 360.68 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf"
+			(at 360.68 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C46550466"
+			(at 360.68 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "jieerrui"
+			(at 360.68 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "MA25V470M8x10"
+			(at 360.68 127 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da"
+					(reference "C84")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 360.68 123.19)
+			(xy 360.68 118.11))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 14c959c4-cc39-5c0b-b47f-cbcf36af466a))
+	(global_label "VLOGIC"
+		(shape passive)
+		(at 360.68 118.11 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ea4f4a21-fc47-5303-b58f-06352da11de4))
+	(wire
+		(pts
+			(xy 360.68 130.81)
+			(xy 360.68 135.89))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c56fd738-3c9c-533e-932f-e804bd5140d5))
+	(global_label "GND"
+		(shape passive)
+		(at 360.68 135.89 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f4caefcb-95f6-568d-9ade-20b58ff5d62c))
 	(sheet_instances
 		(path "/"
 			(page "8")))

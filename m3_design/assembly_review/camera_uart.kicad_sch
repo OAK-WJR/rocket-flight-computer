@@ -6,7 +6,7 @@
 	(title_block
 		(title "09 | Camera UART, separate supply domains")
 		(date "2026-10-12")
-		(rev "M3-ASSY-R9")
+		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -480,7 +480,127 @@
 				(effects
 					(font
 						(size 1.27 1.27))
-					(hide yes)))))
+					(hide yes))))		(symbol "M3:ESD_Bidir"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 1.016)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "ESD_Bidir"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Bidirectional low-capacitance ESD protection diode (RF line)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "diode TVS thyrector"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "ESD_Bidir_0_1"
+				(polyline
+					(pts
+						(xy -2.54 1.27)
+						(xy -2.54 -1.27)
+						(xy 2.54 1.27)
+						(xy 2.54 -1.27)
+						(xy -2.54 1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 0.508 1.27)
+						(xy 0 1.27)
+						(xy 0 -1.27)
+						(xy -0.508 -1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 1.27 0)
+						(xy -1.27 0))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "ESD_Bidir_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "A1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A2"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TSLP_2_20"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+)
 	(text "09 | Camera UART, separate supply domains"
 		(at 20.32 20.32 0)
 		(effects
@@ -1556,120 +1676,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid c3f3faf1-e983-500a-86e4-747ba8cf4167))
-	(symbol
-		(lib_id "M3:TestPoint")
-		(at 264.16 193.04 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid a9ec69cd-69b2-5110-b9bf-6f2e7ba8322a)
-		(property "Reference" "TP90"
-			(at 264.16 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "CAM_IO_3V3"
-			(at 264.16 189.23 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 264.16 193.04 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 264.16 193.04 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 264.16 193.04 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
-					(reference "TP90")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 264.16 193.04)
-			(xy 256.54 193.04))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 8b251026-5cad-53ad-9ffb-93432b2ffd7c))
-	(global_label "CAM_IO_3V3"
-		(shape passive)
-		(at 256.54 193.04 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid bfcd833a-0f07-547d-904c-30ed5f6b6572))
-	(symbol
-		(lib_id "M3:TestPoint")
-		(at 335.28 193.04 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid 6d3bd86d-6784-5d12-9a85-d3d2923f0a7a)
-		(property "Reference" "TP91"
-			(at 335.28 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "CAM_UART_OE"
-			(at 335.28 189.23 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 335.28 193.04 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 335.28 193.04 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 335.28 193.04 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
-					(reference "TP91")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 335.28 193.04)
-			(xy 327.65999999999997 193.04))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid eff1721f-acbb-5222-92ae-2d83bd42f81a))
-	(global_label "CAM_UART_OE"
-		(shape passive)
-		(at 327.65999999999997 193.04 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 5055f561-cefb-55e6-a83f-11b078a580e3))
 	(text "R8: PE8/pin38 UART7_TX and PE7/pin37 UART7_RX use AF7, no flow control (never AF7 on PE9 or PE10); off the ROM loader's USART3. PA7/pin31 controls OE as GPIO."
 		(at 20.32 231.14 0)
 		(effects
@@ -1719,6 +1725,190 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 415e371b-131c-5d32-8310-b12dc26f0763))
+	(symbol
+		(lib_id "M3:ESD_Bidir")
+		(at 330.2 228.6 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 9d4aec07-401b-59d3-a399-763f848646a0)
+		(property "Reference" "D400"
+			(at 327.66 224.79 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "ESD103-B1-02EL"
+			(at 327.66 232.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TSLP_2_20"
+			(at 330.2 228.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146"
+			(at 330.2 228.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C535146"
+			(at 330.2 228.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Infineon Technologies"
+			(at 330.2 228.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "ESD103-B1-02EL E6327"
+			(at 330.2 228.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "D400")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 326.39 228.6)
+			(xy 321.31 228.6))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c11e614b-335b-5bbe-a668-05707a09c572))
+	(global_label "CAM_TX_WIRE"
+		(shape passive)
+		(at 321.31 228.6 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3327922d-d90a-5ca5-8eed-b7c36547c90d))
+	(wire
+		(pts
+			(xy 334.01 228.6)
+			(xy 339.09 228.6))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2ed8d41d-afab-5173-b865-2b0ae604f492))
+	(global_label "GND"
+		(shape passive)
+		(at 339.09 228.6 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 617b9107-c2f5-5cc8-aaa4-60c1e013b125))
+	(symbol
+		(lib_id "M3:ESD_Bidir")
+		(at 330.2 251.46 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 23d7dc6b-e2b0-5162-b35c-6503e6952770)
+		(property "Reference" "D401"
+			(at 327.66 247.65 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "ESD103-B1-02EL"
+			(at 327.66 255.27 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TSLP_2_20"
+			(at 330.2 251.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146"
+			(at 330.2 251.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C535146"
+			(at 330.2 251.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Infineon Technologies"
+			(at 330.2 251.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "ESD103-B1-02EL E6327"
+			(at 330.2 251.46 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "D401")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 326.39 251.46)
+			(xy 321.31 251.46))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5ee2c2da-68fd-5907-86df-1c577abf0228))
+	(global_label "CAM_RX_WIRE"
+		(shape passive)
+		(at 321.31 251.46 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9b686719-c531-55a5-9f2a-b7d29a0d9e58))
+	(wire
+		(pts
+			(xy 334.01 251.46)
+			(xy 339.09 251.46))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 368e308f-f7bf-531c-8d81-a2616107fc40))
+	(global_label "GND"
+		(shape passive)
+		(at 339.09 251.46 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 1d07fd6e-5bbd-5d34-94e5-fdb5aa5a03db))
 	(sheet_instances
 		(path "/"
 			(page "9")))

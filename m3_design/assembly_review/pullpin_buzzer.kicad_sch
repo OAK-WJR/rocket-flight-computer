@@ -6,7 +6,7 @@
 	(title_block
 		(title "14 | Launch pull-pin and buzzer")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R9")
+		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
 		(symbol "M3:BAT54S"
@@ -580,99 +580,6 @@
 				(font
 					(size 1.27 1.27))
 				(hide yes)))))
-	(symbol
-		(lib_id "M3:Conn_1x2")
-		(at 40.64 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid f14a72d8-b5ef-574a-9770-ce840f6656ec)
-		(property "Reference" "J123"
-			(at 44.45 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "PULL-PIN PH 1x2"
-			(at 44.45 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:M3_JST_PH_B2B_2P"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C131337"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC Part" "C131337"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "JST"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "B2B-PH-K-S(LF)(SN)"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
-					(reference "J123")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 33.02 49.53)
-			(xy 27.94 49.53))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 6a598039-4b81-56c8-acad-87f433b6218f))
-	(global_label "PULLPIN_EXT"
-		(shape passive)
-		(at 27.94 49.53 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid db00ad15-bf82-59c3-8f93-d45b9bf14883))
-	(wire
-		(pts
-			(xy 33.02 52.07)
-			(xy 27.94 52.07))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 19c1d6c3-c460-5d35-9e41-c0c0d6a98c52))
-	(global_label "GND"
-		(shape passive)
-		(at 27.94 52.07 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a1669829-3efe-579b-8753-d49429047128))
 	(symbol
 		(lib_id "M3:R")
 		(at 99.06 50.8 0)
@@ -1547,6 +1454,98 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 0a6a0f85-a230-5dd5-89f3-5963d980197d))
+	(symbol
+		(lib_id "M3:Conn_1x2")
+		(at 40.64 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f14a72d8-b5ef-574a-9770-ce840f6656ec)
+		(property "Reference" "J123"
+			(at 43.18 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "BM02B-GHS-TBT(LF)(SN)"
+			(at 43.18 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GH_BM02B_GHS_TBT"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.jst-mfg.com/product/pdf/eng/eGH.pdf"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C161690"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "JST"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "BM02B-GHS-TBT(LF)(SN)"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "J123")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 33.02 49.53)
+			(xy 27.94 49.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ca67dfa6-1030-5ba8-a274-bab7b3aa4ac2))
+	(global_label "PULLPIN_EXT"
+		(shape passive)
+		(at 27.94 49.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cecf4881-889c-5370-9ae0-043ce604fd8a))
+	(wire
+		(pts
+			(xy 33.02 52.07)
+			(xy 27.94 52.07))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 457fb89a-143e-572a-8b3b-630e93aa439c))
+	(global_label "GND"
+		(shape passive)
+		(at 27.94 52.07 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 692b70fe-867c-562d-850e-b405aca9e426))
 	(sheet_instances
 		(path "/"
 			(page "14"))))

@@ -6,7 +6,7 @@
 	(title_block
 		(title "07 | Battery input, contact and protection")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R9")
+		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:BatteryEFuse"
@@ -732,7 +732,74 @@
 				(effects
 					(font
 						(size 1.27 1.27))
-					(hide yes)))))
+					(hide yes))))		(symbol "M3:Conn_1x2"
+			(pin_names
+				(offset 0.508))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "Conn_1x2"
+				(at 0 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "2-position connector"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "Conn_1x2_0_1"
+				(rectangle
+					(start -2.54 2.54)
+					(end 2.54 -2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "Conn_1x2_1_1"
+				(pin passive line
+					(at -7.62 1.27 0)
+					(length 5.08)
+					(name "1"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -7.62 -1.27 0)
+					(length 5.08)
+					(name "2"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+)
 	(text "07 | Battery input, contact and protection"
 		(at 20.32 20.32 0)
 		(effects
@@ -740,123 +807,6 @@
 				(size 2.54 2.54))
 			(justify left))
 		(uuid d3045b84-8519-5e1d-8e39-1fe93ee6b59e))
-	(symbol
-		(lib_id "M3:BatteryTerminal")
-		(at 71.12 71.12 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 0739be2b-5495-5630-875b-2152b68c988d)
-		(property "Reference" "J1"
-			(at 71.12 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "BAT+ / GND / SW / SW"
-			(at 71.12 66.03999999999999 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_DB128V_4P_Entry"
-			(at 71.12 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 71.12 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C2915641"
-			(at 71.12 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "DORABO"
-			(at 71.12 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "DB128V-5.08-4P-GN-S"
-			(at 71.12 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
-					(reference "J1")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 45.72 69.85)
-			(xy 40.64 69.85))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid fb9836d2-8b20-5c8c-a9c0-138fd3f40c6b))
-	(global_label "BAT_IN"
-		(shape passive)
-		(at 40.64 69.85 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f70141a6-366f-523c-8e25-d2d5140d8e4f))
-	(wire
-		(pts
-			(xy 45.72 72.39)
-			(xy 40.64 72.39))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4ac31bc6-f24f-5afe-aa0d-ac9852c89ee3))
-	(global_label "GND"
-		(shape passive)
-		(at 40.64 72.39 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f62ce980-184c-556b-a5f7-904a16c0b9de))
-	(wire
-		(pts
-			(xy 96.52 69.85)
-			(xy 101.6 69.85))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 2ee5a667-0a03-536e-be69-f8659979bc97))
-	(global_label "BAT_SW_SOURCE"
-		(shape passive)
-		(at 101.6 69.85 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid e561743d-ff9c-58a4-80ff-b8fd742839c1))
-	(wire
-		(pts
-			(xy 96.52 72.39)
-			(xy 101.6 72.39))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 0934d5cb-19f0-5eaf-844d-a2c3f2d5a90e))
-	(global_label "BAT_SW_RETURN"
-		(shape passive)
-		(at 101.6 72.39 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 2692b3ca-c2c1-5d33-b75a-a5797eb593de))
 	(symbol
 		(lib_id "M3:BatteryEFuse")
 		(at 223.52 76.2 0)
@@ -3383,6 +3333,190 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid d0c1e0f2-311d-580c-a585-45d2071cf109))
+	(symbol
+		(lib_id "M3:Conn_1x2")
+		(at 71.12 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 0739be2b-5495-5630-875b-2152b68c988d)
+		(property "Reference" "J1"
+			(at 73.66 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "DB125-3.5-2P-GN-S"
+			(at 73.66 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_DB125_2P_GN"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C466970"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "DORABO"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "DB125-3.5-2P-GN-S"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "J1")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 63.5 69.85)
+			(xy 58.42 69.85))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid decca300-ac23-55ff-862d-863f01f8200e))
+	(global_label "BAT_IN"
+		(shape passive)
+		(at 58.42 69.85 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0955cb84-8f9b-57b7-97ef-d380e8c8e0ac))
+	(wire
+		(pts
+			(xy 63.5 72.39)
+			(xy 58.42 72.39))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a2fd903d-b39d-5a9b-8b18-b5764004bc28))
+	(global_label "GND"
+		(shape passive)
+		(at 58.42 72.39 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f9387734-1801-5743-bf29-8b779a5df0e8))
+	(symbol
+		(lib_id "M3:Conn_1x2")
+		(at 330.2 238.76 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 7f53478f-3ba1-5003-a7a4-c3919c442e8d)
+		(property "Reference" "J400"
+			(at 332.74 237.49 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "BM02B-GHS-TBT(LF)(SN)"
+			(at 332.74 240.03 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GH_BM02B_GHS_TBT"
+			(at 330.2 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.jst-mfg.com/product/pdf/eng/eGH.pdf"
+			(at 330.2 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C161690"
+			(at 330.2 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "JST"
+			(at 330.2 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "BM02B-GHS-TBT(LF)(SN)"
+			(at 330.2 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "J400")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 322.58 237.49)
+			(xy 317.5 237.49))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 397c375f-a600-5c0e-af9b-7c056424eef3))
+	(global_label "BAT_SW_SOURCE"
+		(shape passive)
+		(at 317.5 237.49 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a3d17165-dcb3-52d0-ab22-277e7ccfa1b6))
+	(wire
+		(pts
+			(xy 322.58 240.03)
+			(xy 317.5 240.03))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid be8846cf-7b30-5341-a633-bec19eb53893))
+	(global_label "BAT_SW_RETURN"
+		(shape passive)
+		(at 317.5 240.03 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1c89241f-d370-5f19-902d-a3d99f9e819b))
 	(sheet_instances
 		(path "/"
 			(page "7"))))

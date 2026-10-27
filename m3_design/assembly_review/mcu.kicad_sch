@@ -6,7 +6,7 @@
 	(title_block
 		(title "02 | MCU, clock and debug")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R9")
+		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:C"
@@ -1819,7 +1819,7 @@
 			(width 0)
 			(type default))
 		(uuid 8951e394-97fc-508b-bdb6-20e68cc9ead9))
-	(global_label "BUZZ_DRV"
+	(global_label "PULLPIN"
 		(shape passive)
 		(at 58.42 77.47 0)
 		(effects
@@ -1907,22 +1907,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid b6029a2e-a504-543b-bfe9-33451235ca9c))
-	(wire
-		(pts
-			(xy 63.5 92.71)
-			(xy 58.42 92.71))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid e8988ac0-c7e6-5902-b7b7-cbcbd2e0c999))
-	(global_label "VLOGIC_SENSE"
-		(shape passive)
-		(at 58.42 92.71 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 10ccbcfe-7439-5ae3-b515-ae105c345dc4))
 	(wire
 		(pts
 			(xy 63.5 95.25)
@@ -2053,38 +2037,6 @@
 		(uuid 4289dee8-8dbf-5d22-b068-611523c049cb))
 	(wire
 		(pts
-			(xy 63.5 118.11)
-			(xy 58.42 118.11))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid ce38ca5a-3edd-5d2d-83c4-8382f2361f1f))
-	(global_label "RADIO_SCK_MCU"
-		(shape passive)
-		(at 58.42 118.11 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a80ee7a6-a152-5f04-8c5c-4c9aeab43169))
-	(wire
-		(pts
-			(xy 63.5 120.65)
-			(xy 58.42 120.65))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 692f1997-85ae-59fd-9b94-d10b80f1f77b))
-	(global_label "RADIO_NSS"
-		(shape passive)
-		(at 58.42 120.65 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid d69b0b11-c4ed-50ee-b7ae-5e14e9d223b8))
-	(wire
-		(pts
 			(xy 63.5 123.19)
 			(xy 58.42 123.19))
 		(stroke
@@ -2187,7 +2139,7 @@
 			(width 0)
 			(type default))
 		(uuid 371e6984-e96a-5f38-8ed4-95307f2412af))
-	(global_label "GNSS_TP_MCU"
+	(global_label "GPS_UART_OE"
 		(shape passive)
 		(at 58.42 138.43 0)
 		(effects
@@ -2473,9 +2425,6 @@
 	(no_connect
 		(at 119.38 77.47)
 		(uuid 6c7d8bd8-ad1d-5f0c-858d-43eb1329c062))
-	(no_connect
-		(at 119.38 100.33)
-		(uuid 21a7516d-9925-5ecd-a1ee-7b30974fd4de))
 	(no_connect
 		(at 119.38 125.73)
 		(uuid ccb3546e-65d6-55ed-a3a4-3ac1e85218fc))
@@ -4305,7 +4254,7 @@
 			(width 0)
 			(type default))
 		(uuid 623632ed-8b9e-56d6-921c-282e8f191529))
-	(global_label "LOGIC_SOURCE_ST"
+	(global_label "BAT_FAULT_N"
 		(shape input)
 		(at 127 97.79 0)
 		(effects
@@ -4321,7 +4270,7 @@
 			(width 0)
 			(type default))
 		(uuid 9715a3be-ed40-5df2-99f6-707ee32cf9c5))
-	(global_label "PULLPIN"
+	(global_label "BUZZ_DRV"
 		(shape passive)
 		(at 127 74.93 0)
 		(effects
@@ -4736,13 +4685,6 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 4756ffcd-376b-5b54-8e68-a7107a6a083e))
-	(text "IMU INT1: PE1 polled input only. R8 EXTI: 4 BAT_FAULT_N PA4, 5 LOGIC_SOURCE_ST PA5, 6 USB_FAULT_N PD6, 8 VBUS_SENSE PC8, 11 CAM_FAULT_N PE11, 14 PULLPIN PC14, 15 RADIO_DIO1 PE15. PE10 NC; pyro sentinels unchanged."
-		(at 40.64 248.92 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid ac18f987-c35c-5553-8245-c0e1b88b1fc3))
 	(wire
 		(pts
 			(xy 119.38 130.81)
@@ -4751,7 +4693,7 @@
 			(width 0)
 			(type default))
 		(uuid 482fea17-ce71-5aae-a68d-747b5d3b3ccb))
-	(global_label "RADIO_DIO1"
+	(global_label "RADIO_UART_OE"
 		(shape passive)
 		(at 124.46 130.81 180)
 		(effects
@@ -4761,45 +4703,13 @@
 		(uuid a7887a2d-c780-506e-91ab-b5bd4f0583ff))
 	(wire
 		(pts
-			(xy 119.38 138.43)
-			(xy 124.46 138.43))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 74844977-af4b-53be-bc0b-5cca9cae982d))
-	(global_label "RADIO_MOSI_MCU"
-		(shape passive)
-		(at 124.46 138.43 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 9c456111-fcb4-5e57-a1bf-6a0adbea57c4))
-	(wire
-		(pts
-			(xy 119.38 140.97)
-			(xy 124.46 140.97))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid db901a63-407f-5528-9d54-45cc0428a496))
-	(global_label "RADIO_MISO_MCU"
-		(shape passive)
-		(at 124.46 140.97 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 63365ba9-3930-500e-95fe-51c83f5c9bda))
-	(wire
-		(pts
 			(xy 119.38 143.51)
 			(xy 124.46 143.51))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 086c108c-bd0b-5aba-88a9-a5a26c35f257))
-	(global_label "RADIO_BUSY"
+	(global_label "RADIO_PWR_EN"
 		(shape passive)
 		(at 124.46 143.51 180)
 		(effects
@@ -4815,7 +4725,7 @@
 			(width 0)
 			(type default))
 		(uuid d496141e-28bc-52ad-ae11-fdda7160b256))
-	(global_label "RADIO_RXEN"
+	(global_label "RADIO_FAULT_N"
 		(shape passive)
 		(at 124.46 146.05 180)
 		(effects
@@ -4831,7 +4741,7 @@
 			(width 0)
 			(type default))
 		(uuid 4925f0f6-284c-59e3-bae8-49e6289b7d4e))
-	(global_label "GNSS_RESET_N"
+	(global_label "GPS_PWR_EN"
 		(shape passive)
 		(at 124.46 151.13 180)
 		(effects
@@ -4847,7 +4757,7 @@
 			(width 0)
 			(type default))
 		(uuid 13043d22-01ca-51d8-9ab6-ee323afd8dc8))
-	(global_label "GNSS_RXD_MCU"
+	(global_label "GPS_TX_MCU"
 		(shape passive)
 		(at 58.42 140.97 0)
 		(effects
@@ -4863,7 +4773,7 @@
 			(width 0)
 			(type default))
 		(uuid 23496b3d-9bb0-551b-bc2c-de9708226080))
-	(global_label "GNSS_TXD_MCU"
+	(global_label "GPS_RX_MCU"
 		(shape passive)
 		(at 58.42 143.51 0)
 		(effects
@@ -4899,13 +4809,6 @@
 	(no_connect
 		(at 119.38 163.83)
 		(uuid e7c5efc8-66c3-5b7e-9e94-bbdbccf81f80))
-	(text "R8 (sheet 15): radio SPI2 PB10 SCK, PB11 NSS (software; R310 100k to 3V3), PB14 MOSI / PB15 MISO (AF5 with SPI_CFG2.IOSWP = 1); PD8 BUSY (polled), PD9 RXEN, PE9 NRST, PE15 DIO1. GNSS USART6 PC6/PC7, PD14 RESET_N (open drain), PD15 TIMEPULSE (TIM4_CH4)."
-		(at 20.32 259.08 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 75490ef9-4775-5490-8e6f-82c6123a15aa))
 	(wire
 		(pts
 			(xy 119.38 95.25)
@@ -4914,7 +4817,7 @@
 			(width 0)
 			(type default))
 		(uuid 103ec2cb-582c-54e8-b82e-0fab7ff4ee9d))
-	(global_label "BAT_FAULT_N"
+	(global_label "LOGIC_SOURCE_ST"
 		(shape input)
 		(at 124.46 95.25 180)
 		(effects
@@ -4924,29 +4827,13 @@
 		(uuid ed946356-d44c-5603-bc76-e0c3d5ecf599))
 	(wire
 		(pts
-			(xy 119.38 102.87)
-			(xy 124.46 102.87))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid ad59f219-0fcf-5ef0-8d72-e1cc37980d8f))
-	(global_label "CAM_UART_OE"
-		(shape passive)
-		(at 124.46 102.87 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid d9ea3f29-0961-5dbd-854a-68ff954eacbe))
-	(wire
-		(pts
 			(xy 119.38 118.11)
 			(xy 124.46 118.11))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid bae1e790-6e1f-541f-83b9-f7529ac05207))
-	(global_label "RADIO_NRST"
+	(global_label "CAM_UART_OE"
 		(shape passive)
 		(at 124.46 118.11 180)
 		(effects
@@ -4962,7 +4849,7 @@
 			(width 0)
 			(type default))
 		(uuid 4bf6e3ee-a2cf-5670-8081-0d10d1e04553))
-	(global_label "CAM_FAULT_N"
+	(global_label "CAM_PWR_EN"
 		(shape passive)
 		(at 124.46 120.65 180)
 		(effects
@@ -4978,7 +4865,7 @@
 			(width 0)
 			(type default))
 		(uuid 0372f102-5994-554e-a524-0a2a5246ef4a))
-	(global_label "CAM_PWR_EN"
+	(global_label "CAM_FAULT_N"
 		(shape passive)
 		(at 124.46 123.19 180)
 		(effects
@@ -4986,15 +4873,6 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid f4b08ab6-223e-5d32-8818-f4d507b7e35f))
-	(no_connect
-		(at 119.38 133.35)
-		(uuid 2eeea3c9-8b75-502f-957b-f7720f47cd23))
-	(no_connect
-		(at 119.38 135.89)
-		(uuid 044f4f83-9b60-5dbc-b5e8-d15485b94620))
-	(no_connect
-		(at 119.38 148.59)
-		(uuid 0de9482c-3e57-5e62-9d9b-a9bca129aaee))
 	(no_connect
 		(at 119.38 176.53)
 		(uuid 91da2ce4-72c5-5f46-9d73-6fd2a0a446c9))
@@ -5053,6 +4931,95 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 3f0d087a-169f-51fa-b24e-acdb834fcca3))
+	(no_connect
+		(at 63.5 92.71)
+		(uuid 6ad4e78c-4b81-5e19-b386-dc896f195773))
+	(wire
+		(pts
+			(xy 119.38 100.33)
+			(xy 124.46 100.33))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0253592f-5c5f-5369-a148-14e366a8a49d))
+	(global_label "VLOGIC_SENSE"
+		(shape passive)
+		(at 124.46 100.33 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 24f34773-3f2b-53fd-8810-113907c0b47c))
+	(no_connect
+		(at 119.38 102.87)
+		(uuid c00067c9-3e8e-5853-8f86-f1685cf50f90))
+	(no_connect
+		(at 63.5 118.11)
+		(uuid 484a6d03-63cd-59f3-ab2a-f318ee3395c2))
+	(no_connect
+		(at 63.5 120.65)
+		(uuid 22c3c017-dd9b-5b19-b8af-cf580cfaa632))
+	(wire
+		(pts
+			(xy 119.38 133.35)
+			(xy 124.46 133.35))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid eeb8e351-a96f-5524-87dd-ec779ee632a6))
+	(global_label "RADIO_RX_MCU"
+		(shape passive)
+		(at 124.46 133.35 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 8f4e8c6a-e6cf-5286-b416-d68e55eea4b5))
+	(wire
+		(pts
+			(xy 119.38 135.89)
+			(xy 124.46 135.89))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 51a78efa-8642-5049-9b6a-fa675bdc67cb))
+	(global_label "RADIO_TX_MCU"
+		(shape passive)
+		(at 124.46 135.89 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f9d59d05-41d5-5003-9371-e1efa744e9a3))
+	(no_connect
+		(at 119.38 138.43)
+		(uuid 9d0f1991-7770-52c8-adbb-38bd327a4643))
+	(no_connect
+		(at 119.38 140.97)
+		(uuid 0b527c25-7210-5139-a425-638444416f80))
+	(wire
+		(pts
+			(xy 119.38 148.59)
+			(xy 124.46 148.59))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2bf7b322-4183-51d0-b6f6-a0994b9aa1da))
+	(global_label "GPS_FAULT_N"
+		(shape passive)
+		(at 124.46 148.59 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 85a7d47a-eb47-5121-a608-994668de826c))
+	(text "R10: USART6 PC6/PC7 AF7 GPS; UART5 PB13/PB12 AF14 radio. Port EN and OE default low. EXTI10 GPS_FAULT_N; EXTI9 RADIO_FAULT_N; EXTI12 CAM_FAULT_N; EXTI4 LOGIC_SOURCE_ST (PA4), EXTI5 BAT_FAULT_N (PA5); VLOGIC_SENSE ADC on PA6 (D-R2-09). PE1 remains polled."
+		(at 20.32 259.08 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 04c4ac9e-2417-59ff-834e-3c7793af9cef))
 	(sheet_instances
 		(path "/"
 			(page "2")))
