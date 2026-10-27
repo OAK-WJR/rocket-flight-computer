@@ -74,6 +74,28 @@ class Draw:
             v.SetPosition(point(at)); v.SetWidth(pcbnew.FromMM(size[0])); v.SetDrill(pcbnew.FromMM(size[1]))
             v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(self.net(net)); self.board.Add(v)
 
+    def zone(self, name, net, layer, pts, prio, clr=0.25, minw=0.25, conn=pcbnew.ZONE_CONNECTION_THERMAL,
+             tgap=0.25, spoke=0.3):
+        z = pcbnew.ZONE(self.board)
+        z.SetLayer(LAYERS[layer])
+        z.SetNet(self.net(net))
+        z.SetZoneName(name)
+        z.SetAssignedPriority(prio)
+        z.SetLocalClearance(pcbnew.FromMM(clr))
+        z.SetMinThickness(pcbnew.FromMM(minw))
+        z.SetPadConnection(conn)
+        z.SetThermalReliefGap(pcbnew.FromMM(tgap))
+        z.SetThermalReliefSpokeWidth(pcbnew.FromMM(spoke))
+        z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
+        o = z.Outline()
+        o.NewOutline()
+        for x, y in pts:
+            o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        assert not o.IsSelfIntersecting(), name
+        if not self.dry:
+            self.board.Add(z)
+        return z
+
     def link(self, net, layer, width, start, end, corners=()):
         """Pad-referenced, explicitly chosen polyline. No implicit routing choice."""
         self.track(net, layer, width, [self.pad(start, net=net), *corners, self.pad(end, net=net)])

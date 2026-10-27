@@ -112,3 +112,55 @@ bound invalidates this calculation.
 MCU centred across the width, west battery/ARM/igniter terminals, east GH ports and
 an end-mounted servo header. Length is provisional; routing simplicity takes
 priority over shortening it. No placement or copper qualification is implied.
+
+## D-R2-01. Placement legalised by moves, not rebuilt
+
+**Decision.** Keep the round-1 placement's floorplan (screw terminals on the west edge, GH ports in an east column with
+their circuits under them, U1 central, J122 at the forward end) and remove its 36 placement violations by moves
+recorded in `m3_design/r10_place.tsv` (basis column cites this record). The MCU core block stays at R9 + (5, -1.5) so
+R9's hand-routed core tables (QSPI / HSE, IMU / barometer, decoupling) apply unchanged; the terminals and the pyro /
+load-switch cluster moved 1.85 mm forward for the barometer's clearance to J121's pins.
+
+**Basis.** Owner priority: correctness, then simple, clean routing; reusing qualified R9 tables is simpler than redrawing
+them. Measured with `m3_design/r10_aid/ptool.py` and DRC: 0 courtyard, outline and hole violations.
+
+## D-R2-02. Pyro channel and USB / SWD routing redrawn from the pads
+
+**Decision.** `m3_design/r10_route_pyro.py` replaces round 1's table: 1.0 mm F.Cu fire loop (J124.1 -> R134 -> J121.2,
+J121.1 -> Q124 drain), Q124's source bar with two GND vias, continuity / ARM / RAW_ACT sense chains with a GND via within
+1.5 mm of every layer change (AGENTS 3), the load switch Q120 / Q121 on B.Cu with a 0.4 mm source bridge clear of both
+gates. Small passives were aligned so each chain is straight. `m3_design/r10_route_usb.py`: SWD leads end inside J2's
+pads but outside its F.Cu keep-out and clear of its locating holes (as R9); NRST hops USB_FAULT_N on F.Cu; USB_LIMITED
+runs on B.Cu east of U1 instead of under it. Core + USB + pyro: 0 DRC violations.
+
+## D-R2-03. Port supply re-planned for routability
+
+**Decision.** The 5.3 V buck (U400 / L400 / C400-C404 / feedback divider) moves to the empty aft-west top area as one
+row (input west, output east); the 4.8 V LDO U401 sits on the bottom beside it, input facing the 5.3 V side and output
+facing the two port switches; each port switch's EN pull-down sits on its EN side and its ILIM resistor on its ILIM
+side (round 1 had them swapped); the camera switch U402 moves into the camera cell (bottom, beside J9) so CAM_5V is
+local; the switches' FAULT pull-ups move toward the MCU ends of their lines.
+
+**In2 plan (to implement in the power stage):** In1 solid GND. In2 split into RAW_PROTECTED (the forward area y > 58,
+an east strip x > 40 and an aft band reaching the buck input), PORT_5V3 (a column x 33-40 from the buck output finger
+to the camera switch), and 3V3 (the rest, with a forward finger x 17.5-32 for the 3V3 buck output, D120 and the servo
+clamp). F.Cu / B.Cu GND pours last. Inference until the zones are filled and checked.
+
+**Pending:** the radio UART should move from PD0 / PD1 (U1's west edge, away from its port) to UART5 on PB12 / PB13
+(pins 51 / 52, north edge, free in the R9 netlist) after checking DS12110's alternate-function table; the 3V3 buck
+(U2 / L1) stays forward and reaches In2 3V3 through the finger.
+
+## D-R2-04. Hand-routing kept for critical nets (owner, 2026-10-26)
+
+The owner chose to keep AGENTS 3's hand-routing of critical nets (power, pyro, crystal, USB, SPI / QSPI). Freerouting may
+be used only for non-critical signals (LEDs, buzzer, servo PWM, port enables / faults / OE and UARTs, non-pyro sense),
+its result frozen into a table and held to `tools/route_check.py`.
+
+## Handover state (2026-10-27)
+
+Done: schematic (r10_sch, 9 seeded faults caught), legal placement, core / USB / pyro routing families (0 DRC errors).
+In progress: power family (U9 cell, BAT_IN / RAW_PROTECTED / VLOGIC / port rails, In2 zones). Not started: ports,
+servo, status, camera UART routing; ground pours and stitching; silkscreen; `m3_design/r10_build.sh`; fab script;
+docs (M3_R10, REQUIREMENTS F6/F8/F9/F10/P1/M2, STATUS, AGENTS rows, VEHICLE.md); review rounds 2+. The R10 gate
+(`tools/check_r10.py`, route_check profile r10, check.sh) is being written in parallel. Design aids:
+`m3_design/r10_aid/README.md`.
