@@ -14,7 +14,7 @@ import r9_route
 
 PROJECT = ROOT / 'm3_design/assembly_review'
 LAYERS = {'F': pcbnew.F_Cu, 'B': pcbnew.B_Cu, 'In1': pcbnew.In1_Cu, 'In2': pcbnew.In2_Cu}
-FAMILIES = ('core', 'power', 'pyro', 'ports', 'servo', 'usb', 'status', 'ground')
+FAMILIES = ('core', 'power', 'pyro', 'ports', 'servo', 'usb', 'status', 'signals', 'ground')
 WIDTHS = (0.2, 0.25, 0.3, 0.4, 1.0, 2.0)
 CORE_SHIFT = (5.0, -1.5)
 

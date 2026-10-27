@@ -45,11 +45,11 @@ def battery(d):
     # B.Cu: J1.1 -> Q120's drain pad; Q120.7 -> down the west side of the J122 tie hole -> under J122's GND row ->
     # U9's IN bar (south tip, 0.25 mm neck between its corner pads), with R167 / R82 / C88 tapped.
     t('BAT_IN', 'B', BAT, [p('J1.1'), (10.6, 74.1), (12.0, 75.5)])
-    t('BAT_IN', 'B', BAT, [p('Q120.7'), (12.87, 86.6), (17.35, 86.6), (36.725, 86.6), (38.75, 86.6), (38.75, 81.9)])
+    t('BAT_IN', 'B', BAT, [p('Q120.7'), (12.87, 86.6), (17.35, 86.6), (36.725, 86.6), (38.75, 86.6), (38.75, 81.7)])
     via('BAT_IN', (17.35, 86.6))
     t('BAT_IN', 'F', W, [(17.35, 86.6), (16.625, 86.6)])                 # into R80.1's pad (R80's battery side)
     t('BAT_IN', 'B', W, [(36.725, 86.6), p('R82.1')])
-    t('BAT_IN', 'B', NECK, [(38.75, 81.9), (38.75, 80.9)])
+    t('BAT_IN', 'B', NECK, [(38.75, 81.7), p('U9.5')])             # pad-entry neck (pad edge 0.9 mm away)
     t('BAT_IN', 'B', W, [(29.175, 86.6), p('R167.1')])
     t('BAT_IN', 'B', W, [(38.75, 84.32), p('C88.1')])
 
@@ -75,7 +75,7 @@ def efuse(d):
     t, p, via = d.track, d.pad, d.via
     rp = 'RAW_PROTECTED'
     # U9's OUT bar (north tip) -> R92 bleed, two vias into In2 RAW.
-    t(rp, 'B', NECK, [(39.25, 78.3), (39.25, 77.9)])
+    t(rp, 'B', NECK, [p('U9.6'), (39.25, 77.9)])
     t(rp, 'B', W, [(39.25, 77.9), (39.25, 77.0), p('R92.1')])
     t(rp, 'B', W, [(39.25, 77.0), (40.9, 77.0), (40.9, 76.2)])
     for at in ((40.9, 77.0), (40.9, 76.2)):       # east of C84's VLOGIC pad (top)
@@ -141,8 +141,8 @@ def ports(d):
                     ('U420.1', (28.7, 27.35))):
         t('PORT_4V8', 'B', W, [p(pad), at])
         via('PORT_4V8', at)
-    via('PORT_4V8', (28.8, 22.9))
-    t('PORT_4V8', 'F', W, [(28.8, 22.9), (29.2, 22.5), p('C420.1')])
+    via('PORT_4V8', (31.0, 23.5))                 # south-east of C420, clear of the GPS UART pair (D-R2-07)
+    t('PORT_4V8', 'F', W, [p('C420.1'), (30.225, 22.725), (31.0, 23.5)])
     # Port rails east to their cells (B.Cu), the GH connector pin through one via each.
     t('GPS_4V8', 'B', W, [p('U410.6'), (39.9, 10.95)])
     t('GPS_4V8', 'B', W, [(39.9, 10.95), (41.4, 10.95)])
@@ -170,7 +170,9 @@ def ports(d):
     via('PORT_5V3', (39.6, 41.25))
     # Each port buffer's 3V3 pin joins its decoupling capacitor, whose own via reaches the In2 3V3 strip (D-R2-06).
     t('3V3', 'F', 0.2, [p('U411.3'), (34.95, 12.9), (34.425, 12.375), p('C440.1')])
-    t('3V3', 'F', 0.2, [p('U421.3'), (34.95, 24.9), (34.425, 24.375), p('C450.1')])
+    t('3V3', 'F', 0.2, [p('U421.3'), (34.95, 25.35), (34.425, 24.825)])     # C442 (bottom) blocks a via west of C450
+    t('3V3', 'F', 0.3, [p('C450.1'), (34.425, 24.825)])
+    via('3V3', (34.425, 24.825))
     t('3V3', 'F', 0.2, [p('U12.3'), (34.95, 36.77), p('C100.1')])
     # Switch control (local): ILIM resistors, EN pull-downs.
     t('GPS_ILIM', 'B', 0.2, [p('U410.5'), p('R410.1')])

@@ -45,7 +45,7 @@ def draw(d):
     link('PYRO1_GATE_N', 'F', S, 'R126.1', 'R127.1')
     link('PYRO1_GATE', 'F', P, 'TP122.1', 'R126.2', ((16.0, 53.3),))
     t('PYRO1_GATE', 'F', P, [d.pad('R126.2'), (16.0, 55.395)])
-    t('PYRO1_GATE', 'F', P, [(16.0, 55.395), d.pad('Q124.4')])
+    t('PYRO1_GATE', 'F', P, [(16.0, 55.395), (15.0, 55.395), d.pad('Q124.4')])   # square T (no 45 deg branch)
     t('PYRO1_GATE', 'F', P, [(16.0, 55.395), (16.0, 56.275), d.pad('C126.1')])
     link('PYRO1_GATE', 'F', P, 'C126.1', 'R128.1')
 
@@ -76,25 +76,28 @@ def draw(d):
     link('ARM1_SENSE_MCU', 'F', S, 'R170.2', 'U1.33', ((31.6, 45.5),))
 
     # Load switch (bottom): sources bridged by C120 / R120, gates tied on F.Cu through R121 to the driver Q122.
+    # C120 / R120 tap the source and gate rows: each pad pair joined straight, R120 by a stub to its centre.
     t('ACT_FET_S', 'B', P, [d.pad('Q121.1'), (16.7, 70.5), d.pad('C120.1')])
-    t('ACT_FET_S', 'B', P, [d.pad('C120.1'), (18.23, 70.9), d.pad('R120.1')])
+    t('ACT_FET_S', 'B', P, [d.pad('C120.1'), (18.5, 70.9), d.pad('R120.1')])
     # Source bridge between the facing source rows (pulse current), clear of both gate pads.
     t('ACT_FET_S', 'B', RAWW, [d.pad('Q120.1'), (11.59, 71.6), (15.41, 71.6), d.pad('Q121.1')])
     for n in ('2', '3'):
         for q in ('Q120', 'Q121'):
             a = d.pad(f'{q}.{n}')
             t('ACT_FET_S', 'B', RAWW, [a, (a[0], 71.6)])
-    t('ACT_GATE', 'B', P, [d.pad('Q120.4'), (16.7, 72.7), d.pad('C120.2')])
-    t('ACT_GATE', 'B', P, [d.pad('C120.2'), (18.23, 72.3), d.pad('R120.2')])
-    t('ACT_GATE', 'B', P, [(18.23, 72.3), (19.6, 72.3)])
-    via('ACT_GATE', (19.6, 72.3))
-    t('ACT_GATE', 'F', P, [(19.6, 72.3), d.pad('R121.1')])
-    t('ACT_GATE', 'F', P, [d.pad('TP121.1'), (16.2, 73.2), (17.1, 72.3)])
+    # Gate: Q120.4 -> via (16.2, 72.3) -> C120.2 -> R120.2 on B.Cu; on F.Cu the via takes TP121 (north stub) and the run
+    # west through R121.1 to Q121's gate via.
+    t('ACT_GATE', 'B', P, [d.pad('Q120.4'), (15.8, 72.7), (16.2, 72.3)])
+    t('ACT_GATE', 'B', P, [(16.2, 72.3), d.pad('C120.2')])
+    t('ACT_GATE', 'B', P, [d.pad('C120.2'), (18.5, 72.3), d.pad('R120.2')])
+    via('ACT_GATE', (16.2, 72.3))
+    t('ACT_GATE', 'F', P, [d.pad('TP121.1'), (16.2, 72.3)])
     # Q121's gate (west end) hops over the source bridge: via west of it, F.Cu to R121.1; GND partner via.
     t('ACT_GATE', 'B', P, [d.pad('Q121.4'), (10.8, 71.3)])
     via('ACT_GATE', (10.8, 71.3))
     via('GND', (9.9, 70.4))
     t('ACT_GATE', 'F', P, [(10.8, 71.3), (11.8, 72.3), d.pad('R121.1')])
+    t('ACT_GATE', 'F', P, [d.pad('R121.1'), (16.2, 72.3)])
     link('ACT_DRV', 'F', P, 'Q122.3', 'R121.2', ((15.8, 70.14),))
     link('ACT_EN', 'F', S, 'Q122.1', 'R122.2', ((19.08, 70.75),))
     link('ACT_EN', 'F', S, 'R122.2', 'R123.1')
