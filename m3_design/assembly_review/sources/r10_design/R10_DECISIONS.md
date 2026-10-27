@@ -221,3 +221,54 @@ ROM-loader interfaces. PD0 / PD1 return to NC. Changed: `pin_table.tsv` rows 51 
 obligation (`r10_sch_check.py --binding-note`), `tools/check_r10.py`'s MCU map and the seeded "radio USB injection
 bypass" fault (now on U1.51). `r10_sch_check.py`: ok, 0 ERC, all nine seeded faults caught. The previous record cited
 DS12110 Rev 11 Table 10 p. 92 for PD0 / PD1; the Rev 10 copy checked here numbers the Port B table 11 (p. 90).
+
+## D-R2-07. Signal routing: pin re-map, re-placements, hand-routed escapes and a frozen router table
+
+**Pins (plain GPIO, each in DS12110 Rev 10 Table 9; none an AN2606 Rev 64 Table 119 loader pin).** Chosen so each
+port's control nets leave U1 on the side of their cell without crossing the UART lanes: GPS_UART_OE PE9 -> PD15
+(U1.62, between the GPS lanes and GPS_PWR_EN), CAM_UART_OE PA7 -> PE9 (U1.39, with the camera pins, north of the pyro
+sense escapes), RADIO_UART_OE PD8 -> PE15 (U1.45), RADIO_PWR_EN PD9 -> PD8 (U1.55), RADIO_FAULT_N PE15 -> PD9 (U1.56,
+EXTI9), CAM_PWR_EN / CAM_FAULT_N swapped onto PE11 / PE12 (U1.41 / U1.42, EXTI12), BUZZ_DRV / PULLPIN swapped onto
+PC14 / PC13 (U1.8 / U1.7; both VBAT-domain pins, 2 MHz limit, DS12110 Table 63 note 2, pp. 142-143). pin_table,
+circuit.json, the binding note, check_r10's MCU map and port-power tuples and the test follow; r10_sch_check ok.
+
+**Placement (r10_place.tsv, basis cites this record).** R150-R153 turned 180 deg (MCU pad toward the clamp, OUT pad
+toward J122); D121 turned 90 deg and the pull-downs R154-R157 regrouped round it (servo cell); R422 (RADIO_FAULT_N
+pull-up) moved into the radio-control strip north of U1 and R432 (CAM_FAULT_N pull-up) to the top of U1's east pin row,
+both off the east escape channel. 0 placement violations (ptool).
+
+**Copper.** `r10_route_signals.py` (family `signals`, before `ground` so the fan-out aid sees it): the critical port
+UARTs and IO rails by hand (unchanged from the previous commit), and by hand also the GPS / radio connector-side wires
+(RX on a short B.Cu hop: the buffer orders RX above TX, the connector TX above RX), the camera control escapes (RX and
+TX each on one B.Cu hop east of USB_LIMITED), GPS_UART_OE, the servo cell's bottom copper (inner lanes down the channel
+between D121's pin columns) and six GND joins the signal copper boxes in. RADIO_4V8 crosses the radio cell on In2
+(one 0.4 mm In2 run between two vias) so B.Cu under the cell stays free. The other non-critical nets come from the
+design aid `m3_design/r10_aid/ncroute.py` (octilinear A*, negotiated congestion, kernel `astar.c`), frozen into the
+module's AUTO table and hand-cleaned (CAM_RX_WIRE, BUZZ_G, BUZZ_OUT, PULLPIN, the IO bleed runs, RADIO_PWR_EN).
+Freerouting 2.4.1 was tried first on a DSN with the critical copper fixed; on this board two runs ended with 9 and 11 connections
+unrouted and 1162 / 624 reported violations (its 0.2 mm rule against the fixed copper), and its output would have needed a full redraw to
+meet M2, so the octilinear aid was used for the same non-critical scope (D-R2-04). The fan-out aid's clearance is now
+0.17 mm and its search reaches 3 mm.
+
+**Result (measured, families core usb pyro power signals ground, board SHA-256 6ea9d8be...):** DRC 0 violations, 13
+unconnected items in 7 nets, all open by design of this pass (below); route_check r10: 15 failing, of which 10 are the
+four dangling servo entry vias and their stubs (open lanes), 1 C93's 0.68 mm GND stub into the bottom pour (needed for
+DRC's two-spoke rule, judged dead copper by route_check), and 4 unrecorded non-critical leftovers (BUZZ_OUT detour,
+CAM_5V_SENSE detour and 4 vias, NRST 5 vias inherited from the usb family).
+
+**Open.** SERVO1-4_MCU (U1.22-25 to the four servo-cell entry vias at (19.3, 65.05), (22.7, 66.5), (23.3, 67.2),
+(28.3, 65.6)), VLOGIC_SENSE, LOGIC_SOURCE_ST and BAT_FAULT_N. They share the area south of U1, where the F.Cu escapes
+are fenced by TP85's 1 mm bare-pad clearance, D9, the ARM1 / RAW_ACT sense diagonals and their vias, and B.Cu by the
+two sense resistor chains, R91, R61 / C60 and USB_LIMITED; BAT_FAULT_N (U1 SE corner -> TP85 -> R89 -> U9) crosses the
+servo lanes topologically. The router leaves 132 conflict cells there at any iteration count. Candidate fixes (owner
+or next pass): move TP85 off the servo lanes' path (it may sit anywhere on BAT_FAULT_N), turn D9 so its pads leave a
+3-lane gap, and move R91 off the corridor east of the ARM1 vias.
+
+## Handover update (2026-10-27, signals family)
+
+State: schematic and pin map per D-R2-06 / D-R2-07; families core, usb, pyro, power, signals, ground; DRC 0
+violations, 13 unconnected in 7 nets (D-R2-07 "Open"). Build: `r10_sch.py`, `r10_pcb.py`, then `r10_route.py` for
+core, usb, pyro, power, signals; run `m3_design/r10_fanout_aid.py` on that board to refresh `r10_fanout.tsv`; then
+`r10_route.py ground`; fill zones. Two builds are byte-identical. Next: route the seven open nets (placement relief
+first), clear route_check's leftovers (BUZZ_OUT, CAM_5V_SENSE, NRST), then silkscreen, build / fab scripts, docs and
+review rounds as in the earlier handover list.

@@ -150,7 +150,7 @@ R150	19.19	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp
 R151	21.73	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp and each OUT pad faces J122 (D-R2-07)
 R152	24.27	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp and each OUT pad faces J122 (D-R2-07)
 R153	26.81	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp and each OUT pad faces J122 (D-R2-07)
-R154	20.3	69.3	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
+R154	19.97	70.6	180	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
 R155	21.85	68.6	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
 R156	24.15	68.6	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
 R157	25.7	69.3	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)

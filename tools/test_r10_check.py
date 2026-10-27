@@ -60,7 +60,7 @@ class Assembly(unittest.TestCase):
             values[ref] = part['value']; codes[ref] = part['fields']['LCSC']
             pins.update({f'{ref}.{p}': n for p, n in part['nets'].items()})
         pins.update({f'U1.{p}': n for p, n in gate.MCU.items()})
-        pins.update({'U1.42': 'CAM_PWR_EN', 'U1.41': 'CAM_FAULT_N'})
+        pins.update({'U1.41': 'CAM_PWR_EN', 'U1.42': 'CAM_FAULT_N'})          # D-R2-07 pin swap
         self.assertEqual(gate.port_power(pins, values, codes), [])
         for pin, net in (('U410.1', '3V3'), ('U420.6', 'CAM_5V'), ('U401.9', 'RAW_PROTECTED'),
                          ('R431.2', '3V3'), ('R412.2', 'GPS_4V8'), ('R420.2', 'RADIO_FAULT_N')):

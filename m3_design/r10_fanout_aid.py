@@ -19,7 +19,7 @@ import pcbnew
 ROOT = Path(__file__).resolve().parents[1]
 NETS = ('GND', '3V3', 'RAW_PROTECTED', 'PORT_5V3', 'PORT_4V8')
 VIA_D, VIA_H = 0.5, 0.3
-CLEAR = 0.2          # mm to other nets' copper (board default 0.15 plus margin)
+CLEAR = 0.17         # mm to other nets' copper (board default 0.15 plus margin)
 TP_CLEAR = 1.0       # bare test pads keep 1.0 mm (DRU)
 EDGE = 0.6
 PLANE_MARGIN = 0.35   # via centre to its plane region's outline
@@ -139,7 +139,7 @@ def main():
         cx, cy = mm(p.GetPosition().x), mm(p.GetPosition().y)
         half = max(mm(p.GetBoundingBox().GetWidth()), mm(p.GetBoundingBox().GetHeight())) / 2
         best = None
-        for dist in [round(half + 0.35 + 0.05 * i, 3) for i in range(40)]:
+        for dist in [round(half + 0.35 + 0.05 * i, 3) for i in range(60)]:
             for dx, dy in DIRS:
                 k = round(dist / math.hypot(dx, dy), 3) if dx and dy else dist
                 x, y = round(cx + dx * k, 4), round(cy + dy * k, 4)
