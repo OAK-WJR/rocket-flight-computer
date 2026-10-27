@@ -316,5 +316,21 @@ VLOGIC_SENSE: straight escapes, one via each, straight B.Cu runs (two of them un
 CAM_5V_SENSE: one F.Cu run, no via (under R102's body, between its pads). C82's RAW via moved under C82
 (33.1, 66.6) off BAT_FAULT_N's column. The fan-out aid was re-run (its table stays legal: DRC 0).
 
-**Result (measured).** Families core, usb, pyro, power, signals, ground: DRC 0 violations, 0 unconnected; check_r10
-S-1..S-7, P-8 and K-contract OK; test_r10_check 44 tests OK.
+**Hand-drawn signal table (D-R2-08).** `r10_route_signals.py` no longer has an AUTO table: every non-critical signal
+is a deliberate polyline in a named cell function (port_links, port_control, leds, buzzer, pullpin, servo_out besides
+the lanes above), the old router output used only as a sketch. Changes beyond transcription: RADIO_UART_OE straight
+U421.6 -> R452.1; RADIO_PWR_EN / RADIO_FAULT_N as a parallel 45 deg escape pair, each with one via; GPS_PWR_EN's via
+moved north of USB_LIMITED so its bottom lane is one straight run; BUZZ_OUT one via under LS120.2 on Q123's drain
+column (Q123 (20.6, 17) -> (20.85, 17), the row cites this record; removes route_check's detour); CAM_PWR_EN
+unchanged. NRST (usb family): leaves J2.3 south on F.Cu and crosses USB_FAULT_N with one via instead of a J2 via and
+a two-via hop (5 -> 3 vias; route_check's extra_vias gone, a u_turn is counted). C93's GND pad, boxed in on three
+sides, is strapped on B.Cu to U13.2 (its regulator's GND pin) instead of a stub into the pour (route_check's
+dead_copper gone, DRC's two-connection thermal rule met). The fan-out aid (`r10_fanout_aid.py`) now also rejects a
+via whose ring comes within 0.06 mm of any SMD pad, its own included (check_r8.via_paste, D87); re-run, its table
+stays legal and leaves 20 rail pads to the pours as before.
+
+**Result (measured, build reproduced byte for byte, board SHA-256 9bed1410...).** DRC 0 violations, 0 unconnected,
+0 dangling vias; route_check --profile r10: 0 failing, empty allowlist, 0 leftovers; check_r10 S-1..S-7, P-8 and
+K-contract OK, the full gate 79 findings against 102 on D-R2-07's board (none new: the remaining ones are silkscreen,
+fit / M-rules, K-reference, T-1 and pre-existing K-copper paste items outside the routed signals); test_r10_check 44
+tests OK; r10_sch_check ok.

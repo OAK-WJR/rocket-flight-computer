@@ -42,11 +42,10 @@ def draw(d):
     d.track('SWDIO', 'F', .2, [(3.73, 38.45), (3.73, 36.5), (13.0, 36.5), (15.65, 33.85), (18.5, 33.85),
                                d.pad('U1.72')])
     d.track('SWCLK', 'F', .2, [(5.0, 38.45), (5.0, 38.0), (6.0, 37.0), d.pad('U1.76')])
-    d.track('NRST', 'F', .2, [(5.0, 40.35), (5, 40.8)])
-    # NRST hops over the bottom USB_FAULT_N run on F.Cu (between SWCLK and R32), then enters V_NRST from the west.
-    d.track('NRST', 'B', .2, [(5, 40.8), (5, 37.4), (9.3, 37.4), (9.8, 37.9)])
-    d.via('NRST', (9.8, 37.9))
-    d.track('NRST', 'F', .2, [(9.8, 37.9), (12.4, 37.9)])
+    # NRST leaves J2.3 south on F.Cu (between J2's 3V3 / GND stub vias and R33), runs north west of R32 / R33 and east
+    # over the bottom USB_FAULT_N run to one via, then enters V_NRST from the west on B.Cu (R10_DECISIONS D-R2-09: the
+    # former B.Cu leg from J2 and its two hop vias are gone).
+    d.track('NRST', 'F', .2, [(5.0, 40.35), (5.0, 41.3), (8.5, 41.3), (9.5, 40.3), (9.5, 38.4), (10.0, 37.9), (12.4, 37.9)])
     d.via('NRST', (12.4, 37.9))
     d.track('NRST', 'B', .2, [(12.4, 37.9), (14.2, 36.1), (21.9, 36.1), (22.54, 36.74), core.move(old.V_NRST)])
     for net, x in [('3V3', 3.73), ('GND', 6.27)]:
@@ -59,7 +58,6 @@ def draw(d):
             local.via(net, at)
     for at in (old.V_NRST, old.V_C24):
         core.via('NRST', at)
-    d.via('NRST', (5, 40.8))
     d.via('USB_FAULT_N', (16.75, 39.05))
     local.via('3V3', old.V3['R90'])
     local.via('GND', old.G_D4)

@@ -23,6 +23,7 @@ CLEAR = 0.17         # mm to other nets' copper (board default 0.15 plus margin)
 TP_CLEAR = 1.0       # bare test pads keep 1.0 mm (DRU)
 EDGE = 0.6
 PLANE_MARGIN = 0.35   # via centre to its plane region's outline
+PASTE = 0.06          # via ring to any SMD pad (paste aperture / mask opening, check_r8.via_paste D87)
 MM, mm = pcbnew.FromMM, pcbnew.ToMM
 DIRS = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
 
@@ -99,7 +100,12 @@ def main():
     def clear(shape_layer_pairs, net, x, y, own):
         for layer, shape in shape_layer_pairs:
             for it, n, tp in items:
-                if it.m_Uuid.AsString() == own or not it.IsOnLayer(layer):
+                if not it.IsOnLayer(layer):
+                    continue
+                if shape.Type() == pcbnew.SH_CIRCLE and it.GetClass() == 'PAD' and \
+                        it.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and it.GetEffectiveShape(layer).Collide(shape, MM(PASTE)):
+                    return False             # no via ring on any SMD pad's paste, hole clear of its mask (D87)
+                if it.m_Uuid.AsString() == own:
                     continue
                 if n == net:             # the via overlaps no other copper of its net (no off-centre joins)
                     if shape.Type() == pcbnew.SH_CIRCLE and it.GetEffectiveShape(layer).Collide(shape, 0):

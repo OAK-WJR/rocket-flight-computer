@@ -118,7 +118,7 @@ LS120	20.0	17.5	0	F	R9 local buzzer circuit translated -9,-8
 Q120	13.5	75.6	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
 Q121	13.5	67.6	180	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
 Q122	16.8	69.8	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
-Q123	20.6	17.0	180	B	R9 local buzzer circuit translated -9,-8
+Q123	20.85	17.0	180	B	R10 buzzer drain under LS120.2 for a one-via BUZZ_OUT (D-R2-09)
 Q124	13.6	57.37	90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
 R10	20.0	44.69	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 R100	37.5	36.974999999999994	-90.0	F	R9 local camera geometry translated -10.2mm y
