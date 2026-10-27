@@ -105,12 +105,27 @@ def embed(text, library, names):
     return text
 
 
+def sheet_path(name):
+    """The hierarchical instance path of sheet file `name`: the root uuid, then the root's sheet-symbol uuid for that
+    file (not the sub-sheet file's own uuid; they differ for camera_power, battery_entry and camera_uart, and a symbol
+    instance on the wrong path breaks the board's schematic parity)."""
+    text = (BASE / 'm3.kicad_sch').read_text()
+    for m in re.finditer(r'\(sheet\n', text):
+        block = text[m.start():sch.close_paren(text, m.start())]
+        if f'(property "Sheetfile" "{name}"' in block:
+            return '/' + sch.ROOT + '/' + re.search(r'\(uuid ([0-9a-f-]+)\)', block).group(1)
+    raise AssertionError(f'no sheet symbol for {name}')
+
+
+SHEET = {}
+
+
 def add(text, library, ref, spec, x, y):
     sch.RF_PARTS = {ref: part_tuple(spec)}
     sch.FLAGS = {}
     sch.NS = NS
     text = embed(text, library, {spec['lib'].split(':')[1]})
-    path = '/' + sch.ROOT + '/' + sheet_id(text)
+    path = SHEET['path']
     return sch.insert(text, sch._sym(library, ref, x, y, path))
 
 
@@ -152,7 +167,7 @@ def generated_sheet(old, library, specs, title, page, notes):
     sch.FLAGS = {}
     # A regular, deliberately generous schematic grid; no symbol/label collisions.
     for i, (ref, spec) in enumerate(specs.items()):
-        text += sch._sym(library, ref, 86.36 + 139.7 * (i % 5), 88.9 + 48.26 * (i // 5), '/' + sch.ROOT + '/' + sid)
+        text += sch._sym(library, ref, 86.36 + 139.7 * (i % 5), 88.9 + 48.26 * (i // 5), SHEET['path'])
     for i, line in enumerate(notes):
         text += sch.note(line, 20.32, 15.24 + i * 5.08, f'note:{sid}:{i}')
     return text + f'\t(sheet_instances (path "/" (page "{page}"))))\n'
@@ -198,6 +213,7 @@ def build(out, netlist=True):
     mcuchanges = {p: ns for p, ns in pinmap.items() if ns[0] != ns[1]}
     for file in sorted(BASE.glob('*.kicad_sch')):
         t = file.read_text()
+        SHEET['path'] = None if file.name == 'm3.kicad_sch' else sheet_path(file.name)
         if file.name in ('telemetry.kicad_sch', 'camera_power.kicad_sch'):
             group = 'telemetry' if file.stem == 'telemetry' else 'power'
             specs = {ref: spec for ref, spec in changed.items() if data['sheets'][ref] == group}

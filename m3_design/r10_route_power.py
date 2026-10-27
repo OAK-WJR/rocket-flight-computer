@@ -50,15 +50,15 @@ def battery(d):
     t('BAT_IN', 'F', W, [(17.35, 86.6), (16.625, 86.6)])                 # into R80.1's pad (R80's battery side)
     t('BAT_IN', 'B', W, [(36.725, 86.6), p('R82.1')])
     t('BAT_IN', 'B', NECK, [(38.75, 81.7), p('U9.5')])             # pad-entry neck (pad edge 0.9 mm away)
-    t('BAT_IN', 'B', W, [(29.175, 86.6), p('R167.1')])
-    t('BAT_IN', 'B', W, [(38.75, 84.32), p('C88.1')])
+    t('BAT_IN', 'B', W, [(29.825, 86.6), p('R167.1')])
+    t('BAT_IN', 'B', W, [(38.75, 82.37), p('C88.1')])
 
 
 def control(d):
     t, p, via = d.track, d.pad, d.via
     # Damper (C89 / C95 -> R166) on F.Cu, clear of J122's tie hole (30.8, 79) by >= 1.85 mm.
     t('BAT_DAMP', 'F', W, [p('C89.2'), p('C95.2')])
-    t('BAT_DAMP', 'F', W, [p('C95.2'), (33.2, 77.925), (33.2, 81.4), p('R166.1')])
+    t('BAT_DAMP', 'F', W, [p('C95.2'), p('R166.1')])               # one 45 deg run to R166 turned north-south (D-R2-12)
     # External switch J400 (GH 2-pin): SW_SOURCE to R80, SW_RETURN to R165 (7 uA contact current).
     t('BAT_SW_SOURCE', 'F', 0.2, [p('J400.1'), (9.875, 86.1), (14.775, 86.1), p('R80.2')])
     t('BAT_SW_RETURN', 'F', 0.2, [p('J400.2'), (12.075, 88.4), p('R165.1')])
@@ -86,15 +86,19 @@ def efuse(d):
     via(rp, (32.3, 63.0))
     # U9 control and timing pins.
     t('BAT_ILIM', 'B', 0.2, [p('U9.9'), p('R84.1')])
-    t('BAT_ILIM', 'B', 0.2, [p('R84.1'), (41.275, 81.275), p('TP89.1')])
+    t('BAT_ILIM', 'B', 0.2, [p('R84.1'), (41.275, 81.85)])          # TP89 on the top, clear of the support (D-R2-12)
+    via('BAT_ILIM', (41.275, 81.85))
+    t('BAT_ILIM', 'F', 0.2, [(41.275, 81.85), p('TP89.1')])
     t('BAT_DVDT', 'B', 0.2, [(39.9, 78.9), (40.7, 78.1), p('C81.1')])
     t('BAT_OVLO', 'B', 0.2, [p('U9.2'), p('R83.1')])
     t('BAT_OVLO', 'B', 0.2, [p('R83.1'), p('R82.2')])
     # The 5.3 V buck's input on the aft band: C400 / C401 to U400's two IN pins, two vias into In2 RAW.
     t(rp, 'F', W, [p('C400.1'), p('U400.2')])
     t(rp, 'F', W, [p('U400.2'), p('U400.3')])
-    t(rp, 'F', W, [p('C401.1'), (14.1, 8.3), (14.1, 7.6), (14.1, 6.5), p('U400.3')])
-    for at in ((14.1, 7.6), (14.1, 8.3)):
+    # Two vias between C401 and C400, neither in a pad nor over its paste (D-R2-11): one on the run, one west of it.
+    t(rp, 'F', W, [p('C401.1'), (14.1, 7.6), (14.1, 6.5), p('U400.3')])
+    t(rp, 'F', W, [p('C401.1'), (14.95, 9.0)])
+    for at in ((14.1, 7.6), (14.95, 9.0)):
         via(rp, at)
 
 
@@ -144,20 +148,23 @@ def ports(d):
     via('PORT_4V8', (31.0, 23.5))                 # south-east of C420, clear of the GPS UART pair (D-R2-07)
     t('PORT_4V8', 'F', W, [p('C420.1'), (30.225, 22.725), (31.0, 23.5)])
     # Port rails east to their cells (B.Cu), the GH connector pin through one via each.
-    t('GPS_4V8', 'B', W, [p('U410.6'), (39.9, 10.95)])
-    t('GPS_4V8', 'B', W, [(39.9, 10.95), (41.4, 10.95)])
-    t('GPS_4V8', 'B', W, [(39.9, 10.95), (39.9, 12.125), (39.9, 18.45), p('U412.1')])
-    t('GPS_4V8', 'B', W, [(39.9, 18.45), (40.55, 19.1)])
-    via('GPS_4V8', (39.9, 12.125))
-    t('GPS_4V8', 'F', W, [(39.9, 12.125), p('J410.1')])
-    # RADIO_4V8 crosses the radio port cell on In2 (D-R2-07): B.Cu stays free under the cell for the RX / TX crossing.
+    # Each port's connector pin 1 takes its rail through one via 0.3 mm aft of the pad (hole and ring clear of the pad's
+    # mask and paste) on the cell's B.Cu spine at x 40.05, clear of the ESD return vias at x 39.4 (D-R2-11).
+    t('GPS_4V8', 'B', W, [p('U410.6'), (40.05, 10.95)])
+    t('GPS_4V8', 'B', W, [(40.05, 10.95), (41.4, 10.95)])
+    t('GPS_4V8', 'B', W, [(40.05, 10.95), (40.05, 11.45), (40.05, 18.45), p('U412.1')])
+    t('GPS_4V8', 'B', W, [(40.05, 18.45), (40.675, 19.075)])
+    via('GPS_4V8', (40.05, 11.45))
+    t('GPS_4V8', 'F', W, [(40.05, 11.45), (40.725, 12.125)])
+    # RADIO_4V8 crosses the radio port cell on In2 (D-R2-07), north of the RX wire's B.Cu run so the PORT_5V3 plane stays
+    # whole under that run (K-reference, D-R2-10): B.Cu stays free under the cell for the RX / TX crossing.
     t('RADIO_4V8', 'B', W, [p('U420.6'), (36.675, 27.35)])
     via('RADIO_4V8', (36.675, 27.35))
-    t('RADIO_4V8', 'In2', W, [(36.675, 27.35), (39.9, 24.125)])     # to J420.1's via
-    t('RADIO_4V8', 'B', W, [p('U422.1'), (39.9, 30.45), (39.9, 24.125), (39.9, 22.2), p('C421.1')])
-    t('RADIO_4V8', 'B', W, [(39.9, 30.45), (40.55, 31.1)])
-    via('RADIO_4V8', (39.9, 24.125))
-    t('RADIO_4V8', 'F', W, [(39.9, 24.125), p('J420.1')])
+    t('RADIO_4V8', 'In2', W, [(36.675, 27.35), (36.675, 23.5), (40.05, 23.5)])     # to J420.1's via
+    t('RADIO_4V8', 'B', W, [p('U422.1'), (40.05, 30.45), (40.05, 23.5), (40.05, 22.2), p('C421.1')])
+    t('RADIO_4V8', 'B', W, [(40.05, 30.45), (40.675, 31.075)])
+    via('RADIO_4V8', (40.05, 23.5))
+    t('RADIO_4V8', 'F', W, [(40.05, 23.5), (40.675, 24.125)])
     t('CAM_5V', 'B', W, [p('U402.6'), p('U13.1')])
     t('CAM_5V', 'B', W, [p('U13.1'), (40.43, 42.45)])
     t('CAM_5V', 'B', W, [(40.43, 42.45), (40.43, 44.6)])          # through C91.1's pad
@@ -195,9 +202,9 @@ def logic(d):
     t('VLOGIC', 'B', W, [p('U2.3'), (35.75, 65.6), (37.8, 65.6)])
     t('VLOGIC', 'B', W, [(37.8, 65.6), p('R60.1')])
     t('VLOGIC', 'B', W, [(37.8, 65.6), (37.8, 67.0), (37.8, 69.8), p('C7.1')])
-    t('VLOGIC', 'B', W, [(37.8, 69.8), (37.8, 75.6)])
-    via('VLOGIC', (37.8, 75.6))
-    t('VLOGIC', 'F', W, [(37.8, 75.6), (37.8, 76.6)])
+    t('VLOGIC', 'B', W, [(37.8, 69.8), (37.8, 75.15)])
+    via('VLOGIC', (37.8, 75.15))                                    # 0.35 mm aft of C84.1's pad, not in it (D-R2-11)
+    t('VLOGIC', 'F', W, [(37.8, 75.15), (37.8, 76.6)])
     t('VLOGIC', 'B', W, [(37.8, 67.0), p('TP83.1')])
     t('LOGIC_ILIM', 'B', 0.2, [p('U11.10'), p('R86.1')])
     t('LOGIC_SS', 'B', 0.2, [p('U11.11'), (34.15, 61.75), p('C85.1')])
@@ -209,8 +216,8 @@ def logic(d):
     t('BST', 'B', 0.25, [p('U2.6'), (31.05, 68.0), p('C5.2')])
     t('3V3', 'B', W, [p('U2.1'), (31.2, 65.6)])
     via('3V3', (31.2, 65.6))
-    t('3V3', 'B', W, [(32.2, 74.0), (31.4, 74.0)])
-    via('3V3', (31.4, 74.0))
+    t('3V3', 'B', W, [(32.2, 74.0), (31.6, 74.6)])
+    via('3V3', (31.6, 74.6))                                        # off L1.2's pad corner and paste (D-R2-11)
     t('3V3', 'B', W, [p('C8.1'), p('C9.1')])
     t('3V3', 'B', W, [p('L1.2'), (33.0, 74.88), p('C8.1')])       # output caps join L1.2, whose via is in the finger
 
@@ -225,13 +232,17 @@ def joins(d):
     via('RAW_PROTECTED', (33.1, 66.6))
     # U1.74 (VSS): south on F.Cu between pin 75's 3V3 via and pin 73's VCAP2 via (TP82 forbids a via north of it), to a
     # via that also takes C17's GND pad.
-    t('GND', 'F', 0.2, [p('U1.74'), (17.5, 38.32)])
-    t('GND', 'B', 0.3, [p('C17.2'), (17.5, 38.32)])
-    via('GND', (17.5, 38.32))
+    # (into the core table's GND via (17.5, 39.3), off C17.2's pad and paste: D-R2-11)
+    t('GND', 'F', 0.2, [p('U1.74'), (17.5, 39.3)])
+    t('GND', 'B', 0.3, [p('C17.2'), (17.5, 38.82), (17.5, 39.3)])
     t('GND', 'B', 0.2, [p('U9.8'), (40.325, 79.375), (40.7, 79.0)])         # U9's GND pin, via into the F pour / In1
     via('GND', (40.7, 79.0))
-    t('GND', 'B', 0.3, [p('C88.2'), (39.9, 82.7)])                         # C88's return: a via in R166's GND pad
-    via('GND', (39.9, 82.7))
+    t('GND', 'B', 0.3, [p('C88.2'), (40.65, 81.53)])                       # C88's return: its own via (D-R2-12)
+    via('GND', (40.65, 81.53))
+    # The USB-C receptacle's GND contacts strap onto its plated shell tabs (GND on every layer) instead of fan-out vias
+    # over the tabs' paste (D-R2-11).
+    t('GND', 'F', 0.3, [p('J3.A1B12'), (6.88, 26.8)])
+    t('GND', 'F', 0.3, [p('J3.B1A12'), (6.88, 34.8)])
     t('GND', 'B', 0.2, [p('C98.2'), p('U11.6')])                             # C98's return straight to U11's GND pin
 
 

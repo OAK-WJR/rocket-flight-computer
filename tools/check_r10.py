@@ -50,17 +50,31 @@ Mechanical and placement (kept from check_r9 where they still apply, read from t
   M-7   U4 on the bottom at R9's rotation 180 (roll = -gyro_Y, R9_DECISIONS D-S7-06) with |x - board centre| <= 13 mm;
         no via or fill under U4 / U5 on their side (check_r9.m7); the axis map is read from the board and reported
   P-8   R168 / R170 / R172 at the MCU end (check_r9.p8)
-  P-11  J121 / J124 wires enter from -x (owner, r10_plan 2 item 2) with >= 6.25 mm wire room to the bore wall; the
-        entry direction is read from the footprint description ("wire entry +y"), else DB128's local -y
-  F9-1  input protection near J1.1 (check_r9.f9)
-  T-1   a legal 5 mm tab on each long edge in the aft and forward thirds (check_r9.t1)
+  P-11  J121 / J124 wires enter from -x (owner, r10_plan 2 item 2); the entry direction is read from the footprint
+        description ("wire entry +y"), else DB128's local -y. Wire room to the bore wall: R8 / R9's 6.25 mm is R8's
+        measured value (a non-regression floor, not a derived need); R10's west-edge terminals have 4.95 mm. OWNER
+        QUESTION OQ-1 (R10_DECISIONS D-R2-14): until the owner sets a figure, the rule holds R10's recorded room
+        (WIRE_ROOM_R10, no regression) and reports R8's floor in the evidence; it is listed as a deviation, not passed
+  F9-1  input protection near J1.1. R8 / R9's premise (D76: the hot-plug model lumps the harness at J1, so D8, C80, C96,
+        the C89 / C95 / R166 damper and R167 within 10.6 mm of J1.1 and U9 within 27.07 mm) does not hold on R10: the
+        parts sit 12.9-29.8 mm from J1.1 and U9 32.2 mm. OWNER QUESTION OQ-2 (D-R2-14): whether to re-model the hot
+        plug with R10's feed or to re-place the cluster at J1. Until then the rule holds R10's recorded distances
+        (F9_R10, no regression) and reports R8's premise in the evidence; it is listed as a deviation
+  T-1   panel tabs (D-R2-13): R9 barred the aft edge because the SMA jacks overhung it; R10 has no jack, and its east
+        edge's aft third carries the three GH ports. Each end third must be held on both sides: a legal 5 mm tab on the
+        west edge in the aft and in the forward third, and on the east side in each end third either a legal east-edge
+        tab or a legal tab on that end's short edge within its east third (tools/tab_windows.py's clearances)
 Kept contract and copper rules:
   K-contract   R10 netlist contract: pin map, connectors, port power / UART isolation, camera UART, parts, removed parts
   K-actuators  m3_design/check_actuators.py --profile r10 in process (check.sh also runs it on its own)
   K-legends    duplicate ids, pin legends, legend subjects (R10 word legends), R10 terminal pin legends
   K-copper     vias in pads, overlap-only joints, thermal policy, via paste (check_r9.k_copper)
   K-inner      In1 carries no track, In2 power and GND only (check_r9.k_inner_signal, route_check r10 classes)
-  K-reference  critical signal samples have adjacent reference copper (critical_reference, R10 port nets)
+  K-reference  critical signal samples have adjacent reference copper (critical_reference's extended set and the R10
+               port nets): F.Cu over In1 GND; B.Cu over any In2 rail plane (GND, 3V3, 3V3A and R10's PORT_5V3,
+               PORT_4V8, RAW_PROTECTED regions: decoupled DC rails, as R6 counted 3V3; Inference for the new ones);
+               In1 / In2 tracks over F.Cu / B.Cu GND. An unreferenced sample passes only inside its own net's via
+               antipad (REF_OWN_R of a same-net via, R9 D-S8-17) or as a recorded REF_STRAY (D-R2-10)
   K-retained   bare test pads 1.0 mm / Tag-Connect 0.508 mm from foreign copper, C29 flash bypass, camera bypass,
                TP122 on the bottom
 """
@@ -250,18 +264,41 @@ def port_power(pins, values, codes):
 
 
 def references(board):
+    """K-reference (D-R2-10): critical_reference's samples with B.Cu over any In2 rail plane; an unreferenced sample
+    passes inside its own net's via antipad (REF_OWN_R) or as a recorded REF_STRAY."""
     import critical_reference as cr
+    import pcbnew
     refs = cr.references(True)
+    refs[pcbnew.B_Cu] = (pcbnew.In2_Cu, REF_PLANES_B)
     nets = cr.R6_NETS + cr.EXTENDED + cr.R10_PORT_NETS
     samples = cr.samples(board, nets, refs)
     fill = cr.fills(board, refs)
-    missing = [s for s in samples if not cr.inside(fill[s[1]], s[2], s[3])]
+    empty = pcbnew.SHAPE_POLY_SET()
+    missing = [s for s in samples if not cr.inside(fill.get(s[1], empty), s[2], s[3])]
+    own = {}
+    for v in board.GetTracks():
+        if v.GetClass() == 'PCB_VIA':
+            own.setdefault(v.GetNetname(), []).append((pcbnew.ToMM(v.GetPosition().x), pcbnew.ToMM(v.GetPosition().y)))
+    stray = [s for s in missing if min((math.dist(s[2:4], q) for q in own.get(s[0], ())), default=99.0) > REF_OWN_R]
+    used, loose = set(), []
+    for s in stray:
+        name = pcbnew.LayerName(s[1])
+        hit = [k for k, e in enumerate(REF_STRAY) if e[:2] == (s[0], name) and math.dist(e[2:4], s[2:4]) <= 0.01]
+        if hit:
+            used.add(hit[0])
+        else:
+            loose.append((s[0], name, s[2], s[3]))
     issues = []
     if not samples:
         issues.append('no critical routed-reference samples (unrouted board)')
-    if missing:
-        issues.append(f'{len(missing)} critical signal samples lack adjacent reference copper')
-    return issues, {'samples': len(samples), 'unreferenced': len(missing), 'by_net_layer': cr._group(missing)}
+    if loose:
+        issues.append(f'{len(loose)} critical signal samples lack adjacent reference copper outside their own via '
+                      f'antipads, e.g. {loose[:3]}')
+    issues += [f'stale REF_STRAY entry {e[:4]}' for k, e in enumerate(REF_STRAY) if k not in used and samples
+               and len(samples) > 1000]
+    return issues, {'samples': len(samples), 'unreferenced': len(missing), 'inside_own_antipad': len(missing) -
+                    len(stray), 'recorded_stray': len(used), 'loose': len(loose),
+                    'b_cu_planes': list(REF_PLANES_B), 'by_net_layer': cr._group([s for s in stray])}
 
 
 
@@ -354,6 +391,27 @@ TERMINAL_PINS_R10 = (('J124', (('1', 'BUS1'), ('2', 'RAW'))),
                      ('J400', (('1', 'SW'), ('2', 'SW'))),
                      ('J123', (('1', 'PULL'), ('2', 'GND'))))
 EPS = 1e-3
+# K-reference (R10_DECISIONS D-R2-10): R9's D-S8-17 method on R10's planes.
+REF_PLANES_B = ('GND', '3V3', '3V3A', 'PORT_5V3', 'PORT_4V8', 'RAW_PROTECTED')
+REF_OWN_R = 0.45               # mm: a sample this close to a same-net via centre lies in that via's own antipad
+REF_STRAY = [   # (net, layer, x, y, reason): unreferenced samples outside their own via antipads; matched within 0.01 mm
+    ('USB_DM', 'F.Cu', 8.0793, 29.5793, "USB_DM's 45-degree run's copper edge grazes CC1's via antipad (7.85, 29.25), "
+                                         "r 0.40 mm: 0.401 mm from its centre (R9's REF_STRAY, translated; one edge sample)"),
+    ('SPI1_MISO', 'B.Cu', 17.7904, 43.8818, "R9's translated IMU fan-out: the edge of SPI1_MISO's 45-degree stub passes "
+                                             "SPI1_MOSI's via (17.55, 44.25) antipad at 0.440 mm (edge samples)"),
+    ('SPI1_MISO', 'B.Cu', 17.7975, 43.8889, 'as above'),
+    ('SPI1_MISO', 'F.Cu', 17.3046, 43.8869, "as above, F.Cu side: SPI1_MOSI's via (17.55, 44.25) at 0.438 mm, its In1 "
+                                             "antipad"),
+    ('SPI1_SCK', 'B.Cu', 17.1, 43.4, "R9's translated IMU fan-out: SPI1_SCK's B.Cu edge passes SPI1_MISO's via "
+                                     "(17.55, 43.5) antipad at 0.461 mm"),
+    ('SPI1_SCK', 'B.Cu', 17.1, 43.42, 'as above'),
+]
+# P-11 / F9-1 (D-R2-14, owner questions OQ-1 / OQ-2): R10's recorded figures, held against regression until the owner
+# decides; R8 / R9's figures are reported beside them.
+WIRE_ROOM_R10 = 4.95
+F9_R10 = {'D8': 12.86, 'C80': 21.59, 'C96': 20.93, 'C89': 20.58, 'C95': 20.55, 'R166': 29.75, 'R167': 25.47,
+          'U9': 32.22}          # mm from J1.1, measured on the D-R2-12 placement (nearest pad centre; U9: its BAT_IN pad)
+F9_PREMISE = (10.6, 27.07)      # R8 D76: protection parts / U9 from J1.1
 
 
 def real_net(n):
@@ -909,12 +967,83 @@ def p11(ctx):
         face, box = r9.entry_face(ctx, f, d)
         if d in ('-x', '+x'):
             room = r9.wire_room(face)
-            ev[ref]['wire_room_mm'] = round(room, 3)
-            if room < WIRE_ROOM - EPS:
-                issues.append(f'P-11: {ref} has {room:.2f} mm of wire room to the bore wall (minimum {WIRE_ROOM}, R8)')
+            ev[ref].update(wire_room_mm=round(room, 3), r8_floor_mm=WIRE_ROOM, r10_recorded_mm=WIRE_ROOM_R10,
+                           owner_question='OQ-1 (R10_DECISIONS D-R2-14): R8 floor not met; R10 figure held')
+            if room < WIRE_ROOM_R10 - EPS:
+                issues.append(f'P-11: {ref} has {room:.2f} mm of wire room to the bore wall (R10 recorded '
+                              f'{WIRE_ROOM_R10}, owner question OQ-1; R8 {WIRE_ROOM})')
         else:
             issues += [f'P-11: {i}' for i in r9.axial_ok(ctx, f, d, face, box)]
     return issues, ev
+
+
+def f9(ctx):
+    """F9-1 (D-R2-14, owner question OQ-2): R10's recorded distances from J1.1, no regression; R8's premise reported."""
+    import check_r9 as r9
+    _, dist = r9.f9(ctx)
+    issues = []
+    for ref, rec in sorted(F9_R10.items()):
+        d = dist.get(ref)
+        if d is None:
+            issues.append(f'F9-1: {ref} missing')
+        elif d > rec + 0.05:
+            issues.append(f'F9-1: {ref} is {d:.2f} mm from J1.1 (R10 recorded {rec}, owner question OQ-2)')
+    over = {ref: d for ref, d in dist.items() if d > (F9_PREMISE[1] if ref == 'U9' else F9_PREMISE[0]) + 0.005}
+    return issues, dict(distances=dist, r10_recorded=F9_R10, r8_premise_mm=dict(parts=F9_PREMISE[0], U9=F9_PREMISE[1]),
+                        beyond_r8_premise=over, owner_question='OQ-2 (R10_DECISIONS D-R2-14)')
+
+
+def t1(ctx):
+    """T-1 for R10 (D-R2-13): the west edge holds each end third; on the east side each end third is held by an
+    east-edge tab or by a tab on that end's short edge within its east third. Clearances as tools/tab_windows.py."""
+    import pcbnew
+    import tab_windows as tw
+    from fit_check import board_geometry
+    b = ctx.board
+    _, (x0, y0, x1, y1) = board_geometry(b)
+    obs = tw.obstacles(b)
+    holes = [((pcbnew.ToMM(d.GetCenter().x), pcbnew.ToMM(d.GetCenter().y)), pcbnew.ToMM(d.GetRadius()))
+             for d in b.GetDrawings() if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_CIRCLE]
+
+    def spans(edge):
+        horiz = edge in ('aft', 'forward')
+        e = {'west': x0, 'east': x1, 'aft': y0, 'forward': y1}[edge]
+        lo, hi = (x0, x1) if horiz else (y0, y1)
+        ok, a = [], lo + 0.5
+        while a + tw.TAB_LEN <= hi - 0.5 + 1e-9:
+            z = a + tw.TAB_LEN
+
+            def gap(bb):
+                along = max(bb[0] - z, a - bb[2], 0) if horiz else max(bb[1] - z, a - bb[3], 0)
+                across = max(bb[1] - e, e - bb[3], 0) if horiz else max(bb[0] - e, e - bb[2], 0)
+                return math.hypot(along, across)
+            good = all(gap(bb) >= need - 1e-6 for _, bb, need in obs) and \
+                all(gap((c[0] - r, c[1] - r, c[0] + r, c[1] + r)) >= tw.TAB_HOLE - 1e-6 for c, r in holes)
+            if good:
+                ok.append(round(a, 2))
+            a = round(a + tw.STEP, 2)
+        out = []
+        for s in ok:
+            if out and s - out[-1][1] <= tw.STEP + 0.01:
+                out[-1][1] = s
+            else:
+                out.append([s, s])
+        return [(p, round(q + tw.TAB_LEN, 2)) for p, q in out]
+    wins = {e: spans(e) for e in ('west', 'east', 'aft', 'forward')}
+    third_y, third_x = (y1 - y0) * tw.END_SHARE, (x1 - x0) * tw.END_SHARE
+    aft = lambda ss: any(s[0] <= y0 + third_y - tw.TAB_LEN + 1e-6 for s in ss)           # noqa: E731
+    fwd = lambda ss: any(s[1] >= y1 - third_y + tw.TAB_LEN - 1e-6 for s in ss)           # noqa: E731
+    east_third = lambda ss: any(s[1] >= x1 - third_x + tw.TAB_LEN - 1e-6 for s in ss)    # noqa: E731
+    issues = []
+    if not aft(wins['west']):
+        issues.append('T-1: no legal 5 mm tab on the west edge within the aft third')
+    if not fwd(wins['west']):
+        issues.append('T-1: no legal 5 mm tab on the west edge within the forward third')
+    if not (aft(wins['east']) or east_third(wins['aft'])):
+        issues.append('T-1: the east side of the aft third has no legal tab (east edge or aft edge east third)')
+    if not (fwd(wins['east']) or east_third(wins['forward'])):
+        issues.append('T-1: the east side of the forward third has no legal tab (east edge or forward edge east third)')
+    return issues, dict(windows=wins, rule='R10_DECISIONS D-R2-13')
 
 
 # ======================================================================================================================
@@ -1015,9 +1144,9 @@ RULES = [
     ('M-5', 'fit (profile r10)', lambda c, s: m5(c, s)),
     ('M-6', 'bottom keep-outs', lambda c, s: m6(c)),
     ('M-7', 'IMU and MEMS', lambda c, s: m7(c)),
-    ('P-11', 'terminal entry', lambda c, s: p11(c)),
-    ('F9-1', 'input protection at J1', _r9('f9')),
-    ('T-1', 'panel-tab windows', _r9('t1')),
+    ('P-11', 'terminal entry (owner question OQ-1)', lambda c, s: p11(c)),
+    ('F9-1', 'input protection at J1 (owner question OQ-2)', lambda c, s: f9(c)),
+    ('T-1', 'panel-tab windows (R10)', lambda c, s: t1(c)),
     ('K-legends', 'legends and ids', lambda c, s: k_legends(c)),
     ('M-2', 'vibration (plate model, r10_mated)', lambda c, s: m2(c, s)),
     ('P-8', 'sense resistors at the MCU end', _r9('p8')),

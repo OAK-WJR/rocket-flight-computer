@@ -334,3 +334,94 @@ stays legal and leaves 20 rail pads to the pours as before.
 K-contract OK, the full gate 79 findings against 102 on D-R2-07's board (none new: the remaining ones are silkscreen,
 fit / M-rules, K-reference, T-1 and pre-existing K-copper paste items outside the routed signals); test_r10_check 44
 tests OK; r10_sch_check ok.
+
+## D-R2-10. K-reference re-derived on R10's planes; via inner pads removed
+
+**Why.** check_r10's K-reference counted every unreferenced critical sample as a failure (10,761 on D-R2-09's board),
+against R9's own method (R9_DECISIONS D-S8-17), which passes a sample inside its own net's via antipad, and it took
+only GND / 3V3 / 3V3A on In2 as B.Cu reference while R10's In2 carries four rail regions.
+
+**Decision.** (1) The ground family now strips every via's unconnected inner pads (KiCad "remove unconnected layers,
+keep start and end"), as R9's ground stage did (D-S8-19): the In1 / In2 planes clear a via by the 0.25 mm hole
+clearance (antipad r 0.40 mm) instead of r 0.50 mm. (2) K-reference: F.Cu over In1 GND; B.Cu over any In2 rail plane
+(GND, 3V3, 3V3A, PORT_5V3, PORT_4V8, RAW_PROTECTED); In1 / In2 tracks over F.Cu / B.Cu GND (critical_reference's
+extended set plus the R10 port nets); an unreferenced sample passes only within 0.45 mm of a same-net via (its own
+antipad) or as a recorded REF_STRAY entry (seven edge samples where the translated R9 IMU fan-out and USB_DM graze a
+neighbouring via's antipad, as R9's one USB_DM entry). (3) RADIO_4V8's In2 hop is redrawn north of RADIO_RX_WIRE's
+B.Cu run (it crossed under it and cut the PORT_5V3 plane there: 393 unreferenced samples), and the ESD return vias of
+D411 / D421 move 0.1 mm east, off the RX runs' antipads.
+
+**Basis.** R9 D-S8-17 / D-S8-19; R6 counted the decoupled 3V3 plane as reference. That R10's PORT_5V3, PORT_4V8 and
+RAW_PROTECTED regions act as AC reference through their bypass capacitors is an **Inference** (no field solve), as for
+3V3 in R6. Result (measured, build of this record): 98,844 samples, 6,344 unreferenced, all inside their own via
+antipads but the 6 recorded strays.
+
+## D-R2-11. Copper fixes for K-copper, K-retained and schematic parity
+
+**Decision (measured on the build; DRC 0, route_check r10 0 failing).**
+- Vias off pads (check_r7.vias_in_smd_pads, check_r8.via_paste): J410.1 / J420.1 feed vias 0.3 mm aft of the pads on a
+  B.Cu spine moved from x 39.9 to 40.05 (one 45 deg F.Cu entry into each pad); D411.2 / D421.2 ESD return vias x 39.3
+  -> 39.4; C401's second buck-input via east of the pad (14.95, 9.0) instead of inside it; the VLOGIC via 0.35 mm aft
+  of C84.1 (it sat in the pad); L1.2's 3V3 via off the pad corner (31.6, 74.6); U1.74 / C17.2 into the core table's
+  existing GND via (17.5, 39.3); D121's GND strap via (21.05, 71.6), off R123.2's mask on the top; the USB-C GND
+  contacts A1B12 / B1A12 strapped onto the receptacle's plated shell tabs instead of fan-out vias over the tabs' paste
+  (two r10_fanout.tsv rows removed, recorded in the table's header).
+- TP122 (the pyro gate's bare test pad) on the bottom (check_actuators; R9 practice): one PYRO1_GATE via beside it,
+  its GND partner (15.35, 52.15) 1.49 mm away and >= 1.0 mm from the bare pad (no route_check exception).
+- C93 (U12.7's bypass): the U13.5 -> C93.1 run has a node at the VCCB via, so the bypass route is endpoint-linked
+  (check_r7.camera_bypass: 4.1 mm by track and via, limit 5 mm across faces).
+- Schematic parity: the generated sheets placed symbol instances on `/root/<sub-sheet file uuid>`, which differs from
+  the root's sheet-symbol uuid for camera_power, battery_entry and camera_uart; KiCad's parity then lost U401.5 (PG,
+  no-connect). r10_sch.py now uses the root's sheet-symbol uuid (`sheet_path`); netlist and board are unchanged.
+
+## D-R2-12. Placement relief for the supports, J122's pins and the tie channel
+
+**Why.** fit_check / M-5 / M-6 / M-3 failed on D-R2-09's board: R166 (top) 2.2 mm, C88 / TP89 (bottom) 2.1-2.6 mm
+from the (42, 86) support; C32 (bottom) 3.1 mm and J2's pads 3.58 mm from (4, 44); J400 3.56 mm from (4, 86);
+R150-R153 and R167 0.45-1.23 mm from J122's pins (1.5 mm); R152 / R153 / C9 inside the 4 mm tie channel.
+
+**Decision (r10_place.tsv rows cite this record).** R166 turned north-south at (36.0, 84.0) so BAT_DAMP is one 45 deg
+run from C95.2; C88 east of U9's BAT_IN bar (39.9, 81.95) with its own GND via; TP89 to the top (44.7, 81.85) through
+one via; R83.2's fan-out via out from under R166.1 (35.075, 78.9); C32 north of U5.1 on the 3V3A line (8.72, 45.85),
+its R9 straps and via skipped in the translated core table (r10_route_core.CoreTable) and redrawn; the west mid
+support (4, 44) -> (4, 44.3) and the forward-west support (4, 86) -> (3.7, 86); R150-R153 1.15 mm aft (y 75.25) and
+D121 0.6 mm aft with their lanes (corners and taps moved, no new via); R167 0.65 mm east; the east tie hole
+(30.8, 79) -> (30.8, 79.5). Every support keeps >= 3.5 mm to bottom parts and >= 3.8 mm to top hardware (fit_check),
+M-6 >= 1.5 mm to J122's pins, M-3's channel clear. The plate model is re-run on the moved supports (M-2).
+
+## D-R2-13. T-1 re-derived for R10
+
+R9 barred the aft edge from tabs because the SMA jacks overhung it (ORDERING §3); R10 has no jack, and the east edge's
+aft third is the GH port column (each connector needs JLC's 2 mm, so the east edge has no legal tab there). R10's
+T-1: each end third is held on both sides: the west edge has a legal tab in the aft and the forward third; on the east
+side each end third has a legal east-edge tab or a legal tab on that end's short edge within its east third
+(tab_windows.py's clearances unchanged). Measured: west 0.5-23.25 and 43.0-89.5; east 49.25-58.75 and 84.5-89.5;
+aft edge 0.5-7.0 and 37.0-45.5. So the aft-east hold is an aft-edge tab (x 37.0-45.5), which needs a rail or frame on
+the aft edge as well as the long edges: a panel request to confirm with JLC (deviation list), not a board change.
+
+## D-R2-14. P-11 and F9-1: owner questions, R10 figures held meanwhile
+
+Neither rule's R8 / R9 figure is a derived need on R10, and changing either is an owner decision (r10_plan handover):
+- **OQ-1 (P-11).** R8 / R9's 6.25 mm wire room is R8's measured value (a non-regression floor). R10's west-edge 3.5 mm
+  terminals leave 4.95 mm from their wire face to the bore wall. Accept 4.95 mm, or move the terminals inboard?
+- **OQ-2 (F9-1).** R8's hot-plug model (D76) lumps the harness at J1 and modelled D8, C80, C96, the C89 / C95 / R166
+  damper and R167 within 10.6 mm of J1.1 and U9 within 27.07 mm. On R10 they sit 12.9-29.8 mm away and U9 32.2 mm.
+  Re-model the reverse hot plug with R10's feed, or re-place the protection cluster at J1?
+Until the owner answers, check_r10 holds R10's recorded figures (no regression: WIRE_ROOM_R10, F9_R10) and reports
+R8's figures in its evidence; both are on the R10 deviation list, not passed silently.
+
+## D-R2-15. Build and fab scripts
+
+`m3_design/r10_build.sh` rebuilds m3_design/assembly_review from the hash-pinned R9 sources (r10_sch.py's manifest,
+r10_pcb.py's pinned R9 blob) through the schematic, its gate, the placement, every routing family, the ground family,
+the post stage and the final fill, with a DRC / route_check gate after every family and tools/check.sh last;
+`m3_design/r10_fab.sh` makes the fab package. The fan-out table stays frozen (r10_fanout_aid.py is a design aid, not a
+build stage).
+
+## D-R2-16. Silkscreen
+
+`m3_design/r10_post.py` (R9's post stage on R10's geometry): J122's plug numbers, the connector words (ARM, IGN, BAT,
+CAM, SWD, SERVO, PULL, GPS, RADIO, SWITCH), J9 / J2 pin tables, J122's row table `J122 1:S 2:NC 3:GND` and the note
+`SERVO + FROM HARNESS` (O3 / O6), R8's ARM-plug and fuse notes, the terminal pin legends by pin, M3-ASSY-R10, JLC's
+order mark, pin-1 dots (R9's four required; U402 has no free spot within 1 mm of its pad 1 and keeps its Fab mark), the
+designators by the R4 rule and the final zone fill, with no copper, zone or pad change (asserted).

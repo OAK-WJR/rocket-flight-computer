@@ -3,11 +3,11 @@ ref	x	y	rot	side	basis
 @OUTLINE	46	90	0	F	R10 mechanical proposal
 @M3	4	4	0	F	R10 mechanical proposal
 @M3	42	4	0	F	R10 mechanical proposal
-@M3	4	86	0	F	R10 mechanical proposal
+@M3	3.7	86	0	F	R10 forward-west support 0.3 mm west: J400 3.8 mm clear of the washer (D-R2-12)
 @M3	42	86	0	F	R10 mechanical proposal
-@M3	4	44	0	F	R10 mechanical proposal
+@M3	4	44.3	0	F	R10 west mid support 0.3 mm forward: J2 pads 3.8 mm clear of the washer (D-R2-12)
 @TIE	15.6	82	0	F	R10 mechanical proposal
-@TIE	30.8	79	0	F	R10 mechanical proposal
+@TIE	30.8	79.5	0	F	R10 east tie hole 0.5 mm forward: the tie channel clears C9 by 2 mm (D-R2-12)
 C10	17.5	54.1	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C100	35.2	36.599999999999994	0.0	F	R9 local camera geometry translated -10.2mm y
 C11	17.5	52.1	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
@@ -36,7 +36,7 @@ C28	13.05	24.9	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 C29	28.0	43.52	-90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C30	17.05	48.73	270	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C31	14.7	47.07	270	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
-C32	7	46.65	180	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+C32	8.72	45.85	90	B	R10 3V3A bypass north of U5.1 on its 3V3A line, 3.5 mm clear of the support (D-R2-12)
 C400	12.6	5.55	180	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 C401	12.6	9	180	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 C402	19.6	4.775	-90	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
@@ -73,7 +73,7 @@ C84	38.5	74	90	F	R10 power-local placement; maker loop geometry
 C85	35.9	62.724999999999994	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
 C86	16.725	28.9	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 C87	19.8	87.6	0	F	R10 forward-band legalisation (D-R2-01)
-C88	39.9	83.9	90	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
+C88	39.9	81.95	90	B	R10 U9 IN bypass east of the BAT_IN bar, under U9, 3.5 mm clear of the (42, 86) support (D-R2-12)
 C89	29	72.6	0	F	R10 forward-band legalisation (D-R2-01)
 C9	34.4	77.24	0	B	R10 forward-band legalisation (D-R2-01)
 C90	37.5	46.5	0	F	R10 port-local placement; explicit routing lanes
@@ -87,7 +87,7 @@ C97	32.3	61.400000000000006	90.0	F	R9 logic local geometry translated -7,-5; fin
 C98	32.275	59.2	180.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
 C99	33.42	63.9	0	B	R10 power-family alignment (D-R2-05)
 D120	17	60.2	180	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
-D121	23	72.2	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
+D121	23	71.6	90	B	R10 servo clamp 0.6 mm aft with the series resistors (D-R2-12)
 D122	12	17	0	B	R10 pull-pin protection beside GH2
 D123	20.6	21.2	90	B	R10 forward-band legalisation (D-R2-01)
 D4	9.95	30.6	-90	F	USB edge circuit translated 0,-3.5; direct new MCU links
@@ -146,10 +146,10 @@ R131	10.8	61.15	0	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 R132	20	58.75	0	B	R10 forward-band legalisation (D-R2-01)
 R133	23.3	59.18	-90	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 R134	17	63.6	-90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
-R150	19.19	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp and each OUT pad faces J122 (D-R2-07)
-R151	21.73	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp and each OUT pad faces J122 (D-R2-07)
-R152	24.27	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp and each OUT pad faces J122 (D-R2-07)
-R153	26.81	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp and each OUT pad faces J122 (D-R2-07)
+R150	19.19	75.25	-90	B	R10 servo series resistors 1.15 mm aft: 1.5 mm from J122's pins (M-6) (D-R2-12)
+R151	21.73	75.25	-90	B	R10 servo series resistors 1.15 mm aft: 1.5 mm from J122's pins (M-6) (D-R2-12)
+R152	24.27	75.25	-90	B	R10 servo series resistors 1.15 mm aft: 1.5 mm from J122's pins (M-6) (D-R2-12)
+R153	26.81	75.25	-90	B	R10 servo series resistors 1.15 mm aft: 1.5 mm from J122's pins (M-6) (D-R2-12)
 R154	19.97	70.6	180	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
 R155	21.85	68.6	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
 R156	24.15	68.6	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
@@ -160,8 +160,8 @@ R162	17.1	18.15	0	B	R9 local buzzer circuit translated -9,-8
 R163	17.6	16.3	90	B	R9 local buzzer circuit translated -9,-8
 R164	17.325	55.9	180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 R165	15.6	88.4	0	F	R10 forward-band legalisation (D-R2-01)
-R166	37.4	82.3	0	F	R10 forward-band legalisation (D-R2-01)
-R167	30	85.4	0	B	R10 power-family alignment (D-R2-05)
+R166	36	84.025	-90	F	R10 damper resistor turned north-south, one 45 deg run from C95.2, clear of the (42, 86) support (D-R2-12)
+R167	30.65	85.4	0	B	R10 input bleed 0.65 mm east: 1.5 mm from J122's pins (M-6) (D-R2-12)
 R168	24	52.7	90	F	R10 forward-band legalisation (D-R2-01)
 R170	32.56	46.2	180	F	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
 R172	32.56	45.25	180	F	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
@@ -220,7 +220,7 @@ R91	33.8	54.025	-90	B	R10 south-of-U1 relief: straight grouped sense / status / 
 R92	39.25	75.9	90	B	R10 power-family alignment (D-R2-05)
 TP120	18	68.1	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
 TP121	16.2	74.2	0	F	R10 pyro / load-switch layout for straight routes (D-R2-02)
-TP122	13.2	53.3	0	F	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
+TP122	13.3	53.3	0	B	R10 bare gate test pad on the bottom (check_actuators, R9 practice) (D-R2-11)
 TP74	41.9	53.5	0	F	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
 TP80	13.8	78.4	0	F	R10 power-family alignment (D-R2-05)
 TP81	44.5	68	0	F	R10 power-local placement; maker loop geometry
@@ -231,7 +231,7 @@ TP85	37	65.5	0	F	R10 south-of-U1 relief: straight grouped sense / status / servo
 TP86	13.6	22.4	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 TP87	34.6	56.6	0	B	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
 TP88	44.5	76.3	0	F	R10 power-local placement; maker loop geometry
-TP89	42.4	82.4	0	B	R10 U9 cell (D-R2-05)
+TP89	44.7	81.85	0	F	R10 ILIM test pad on the top, clear of the (42, 86) support and R84 (D-R2-12)
 TP92	21.6	28.5	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 U1	23.0	43.0	0	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
 U10	12.6	27.5	0	B	USB edge circuit translated 0,-3.5; direct new MCU links

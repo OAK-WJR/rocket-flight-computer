@@ -44,7 +44,7 @@ def io_rails(d):
         t(net, 'B', IO, [(42.0, 17.2 + dy), p(f'{bleed}.1')])
     # Camera: U13 -> C93 -> C92 -> R103 on B.Cu, U12's VCCB through a via under it.
     net = 'CAM_IO_3V3'
-    t(net, 'B', IO, [p('U13.5'), p('C93.1')])
+    t(net, 'B', IO, [p('U13.5'), (35.6, 42.45), p('C93.1')])        # node at the VCCB via: C93 is U12.7's bypass (D-R2-11)
     t(net, 'B', IO, [p('C93.1'), (34.675, 45.245), p('C92.1')])
     t(net, 'B', IO, [p('C92.1'), (40.695, 46.02), p('R103.1')])
     t(net, 'F', S, [p('U12.7'), (35.45, 41.75), (35.6, 41.9)])
@@ -113,8 +113,8 @@ def gnd_joins(d):
     # U12 and down the gap between U13's pin columns (its pad is boxed in on three sides, D-R2-09).
     t('GND', 'B', IO, [p('C93.2'), (37.0, 40.9), (37.6, 41.5), (37.6, 43.4), p('U13.2')])
     for d_gnd, y in (('D411.2', 15.625), ('D421.2', 27.625)):     # ESD returns boxed in by the port wires
-        t('GND', 'F', S, [p(d_gnd), (39.3, y)])
-        via('GND', (39.3, y))
+        t('GND', 'F', S, [p(d_gnd), (39.4, y)])           # hole >= 0.1 mm off the pad's mask, ring off its paste (D-R2-11)
+        via('GND', (39.4, y))
 
 
 def servo_lanes(d):
@@ -138,21 +138,22 @@ def servo_cell(d):
     The clamp's GND and 3V3 pins strap out sideways to one via each."""
     t, p, via = d.track, d.pad, d.via
     t('SERVO1_MCU', 'B', S, [(20.4, 68.6), p('R154.1')])
-    t('SERVO1_MCU', 'B', S, [p('R154.1'), (20.4, 74.19), p('R150.1')])
-    t('SERVO1_MCU', 'B', S, [(20.4, 73.15), p('D121.1')])
-    t('SERVO2_MCU', 'B', S, [(22.7, 66.2), (22.7, 74.43), p('R151.1')])
+    # R150-R153 and D121 sit 1.15 / 0.6 mm aft of D-R2-07's spots (M-6: 1.5 mm from J122's pins, D-R2-12).
+    t('SERVO1_MCU', 'B', S, [p('R154.1'), (20.4, 73.04), p('R150.1')])
+    t('SERVO1_MCU', 'B', S, [(20.4, 72.55), p('D121.1')])
+    t('SERVO2_MCU', 'B', S, [(22.7, 66.2), (22.7, 73.28), p('R151.1')])
     t('SERVO2_MCU', 'B', S, [(22.7, 69.03), p('R155.1')])
-    t('SERVO2_MCU', 'B', S, [(22.7, 71.25), p('D121.3')])
-    t('SERVO3_MCU', 'B', S, [(23.3, 66.7), (23.3, 74.43), p('R152.1')])
+    t('SERVO2_MCU', 'B', S, [(22.7, 70.65), p('D121.3')])
+    t('SERVO3_MCU', 'B', S, [(23.3, 66.7), (23.3, 73.28), p('R152.1')])
     t('SERVO3_MCU', 'B', S, [(23.3, 69.03), p('R156.1')])
-    t('SERVO3_MCU', 'B', S, [(23.3, 71.25), p('D121.4')])
+    t('SERVO3_MCU', 'B', S, [(23.3, 70.65), p('D121.4')])
     t('SERVO4_MCU', 'B', S, [(25.7, 66.4), p('R157.1')])
-    t('SERVO4_MCU', 'B', S, [p('R157.1'), (25.7, 74.29), p('R153.1')])
-    t('SERVO4_MCU', 'B', S, [(25.7, 73.15), p('D121.6')])
-    t('GND', 'B', IO, [p('D121.2'), (20.95, 72.2)])
-    via('GND', (20.95, 72.2))
-    t('3V3', 'B', IO, [p('D121.5'), (25.05, 72.2)])
-    via('3V3', (25.05, 72.2))
+    t('SERVO4_MCU', 'B', S, [p('R157.1'), (25.7, 73.14), p('R153.1')])
+    t('SERVO4_MCU', 'B', S, [(25.7, 72.55), p('D121.6')])
+    t('GND', 'B', IO, [p('D121.2'), (21.05, 71.6)])                # hole / ring clear of R123.2's mask / paste (top)
+    via('GND', (21.05, 71.6))
+    t('3V3', 'B', IO, [p('D121.5'), (25.05, 71.6)])
+    via('3V3', (25.05, 71.6))
 
 
 def east_lanes(d):

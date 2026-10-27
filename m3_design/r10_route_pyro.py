@@ -43,7 +43,12 @@ def draw(d):
     # Gate: U1.3 -> R126 (series) -> Q124.4, C126 / R128 (gate-source hold and pull-down), TP122.
     link('PYRO1_GATE_N', 'F', S, 'U1.3', 'R126.1')
     link('PYRO1_GATE_N', 'F', S, 'R126.1', 'R127.1')
-    link('PYRO1_GATE', 'F', P, 'TP122.1', 'R126.2', ((16.0, 53.3),))
+    # TP122 (the gate's bare test pad) sits on the bottom (check_actuators; R9 practice): one via beside it, its GND
+    # partner 1.49 mm away and >= 1.0 mm from the bare pad's edge (R10_DECISIONS D-R2-11).
+    t('PYRO1_GATE', 'B', P, [d.pad('TP122.1'), (14.4, 53.3)])
+    via('PYRO1_GATE', (14.4, 53.3))
+    via('GND', (15.35, 52.15))
+    t('PYRO1_GATE', 'F', P, [(14.4, 53.3), (16.0, 53.3), d.pad('R126.2')])
     t('PYRO1_GATE', 'F', P, [d.pad('R126.2'), (16.0, 55.395)])
     t('PYRO1_GATE', 'F', P, [(16.0, 55.395), (15.0, 55.395), d.pad('Q124.4')])   # square T (no 45 deg branch)
     t('PYRO1_GATE', 'F', P, [(16.0, 55.395), (16.0, 56.275), d.pad('C126.1')])
