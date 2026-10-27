@@ -41,7 +41,7 @@ is accepted. Branch `m3-assy-r10` starts from R9's tip.
 
 | # | Change | Area freed (estimate) | Notes |
 |---|---|---|---|
-| 1 | Battery-live to armed copper ≥ **1.5 mm** (R9: 2.5 mm; R8: 1.0 mm), inner plan-view variant ≥ 1.65 mm (R9: 2.65). Every other pyro rule unchanged: A–H, the strict pad rules, P-3, P-6, P-7, LC-1. | enables #2 | Still ≥ 10× the IPC clearance and above rule H's 1.2 mm solder-bridge pairs. |
+| 1 | **No pyro-specific spacing rules** (owner, 2026-10-26): drop the battery-live rule (R9: 2.5 mm), rules A–H, the strict pad rules and P-3 / P-6 / P-7; pyro copper uses the board default clearance (0.15 mm, already above IPC-2221B's ~0.1 mm at 0–15 V). The AGENTS §2 hard rules stay, and so do the functional pyro requirements (the ARM plug as a complete break, gates defined off in reset, no fire at power-up or reset, sense dividers that are safe after one resistor fault) and the 2 Ω shorted-igniter limit. | enables #2 and denser placement | Accepted loss: one defect (solder bridge, strand, debris) that bridges a default gap could join RAW to the armed bus. The terminals' own pitch keeps their pads ~1.5 mm apart; bench gates (ORDERING §5) and inspection remain the check. |
 | 2 | J121 / J124 become **3.5 mm-pitch 2-position screw terminals** (AVA's size), black, ARM / IGN legends kept, wires entering from −x. | ~100 mm² for both | Pick a JLC-stocked part rated ≥ 8 A; measure J124's RAW–BUS1 copper gap ≥ 1.5 mm on its real land before adopting. |
 | 3 | **Split J1**: battery on a 2-position 5.08 mm terminal (≥ 15 A), the external power switch on a keyed 2-pin locking connector (JST PH like J123, or GH). | ~100 mm² | The switch contact carries about 7 µA (470 kΩ each side, since R4), so it needs no power terminal; a battery lead can no longer go into the switch terminal (F9). F8's "green 4-pin battery/switch terminal" text changes. |
 | 4 | **C84 → 470 µF / 25 V, 8 × 10 mm polymer** (C121's part, C46550466), and F6 gains firmware load shedding (ADC watchdog on VLOGIC_SENSE → radio held in reset, flash writes paused, MCU clock down, LEDs and buzzer off). | ~58 mm², 2.6 mm less height | +42 % capacitance, one BOM line fewer. Ride-through hot: about 14.5 ms (11.7 ms at −20 %) with shedding, about 10 ms without. R9's 35 V C84 was a stock substitute for a 25 V part (ORDERING), and VLOGIC never exceeds U9's ~10 V OVLO. The C121 part has no maker datasheet: verify it on the bench or pick a datasheet-backed 8 mm part. |
@@ -80,7 +80,7 @@ Recommendation: adopt the external GPS port for R10 and keep the on-board radio;
 
 - REQUIREMENTS F8 (terminal description; the battery-live figure), F9 (J1 split), F6 (load shedding, the new
   ride-through), F10 (GPS on a port, if §3 is adopted), P1 (length target), M2 (R10 deviation list).
-- `tools/check_r9.py` → `check_r10.py`: K-power-pyro's 2.5 / 2.65 mm become 1.5 / 1.65 mm; the R-rules lose the GNSS
+- `tools/check_r9.py` → `check_r10.py`: K-power-pyro and the pyro spacing checks (rules A–H, strict pad rules, P-3 / P-6 / P-7) are dropped; the functional pyro checks (check_actuators, the ARM-break netlist checks) stay; the R-rules lose the GNSS
   chain if §3 is adopted; M-7's IMU map is re-derived if U4 moves. `m3.kicad_dru` and `tools/route_check.py` gain an r10
   profile.
 - A new firmware board binding (AGENTS §3).
