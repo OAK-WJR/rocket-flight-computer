@@ -1,0 +1,31 @@
+{
+  "profile": "r10",
+  "basis": "Inference: conservative engineering mass allowances, not maker or measured masses. Body and mated-plug allowances are separate additive lumped masses. Validate by weighing the actual populated board and supported harness. Connector/capacitor dimensions: parts_qualification.md; GH drawings eGH.pdf pp2-3; DB125 drawing T0-1; MA drawing p2. No inherited R9 RF or SMA masses.",
+  "masses_g": {
+    "J1": 3.0,
+    "J121": 3.0,
+    "J124": 3.0,
+    "J122": 2.0,
+    "C84": 3.0,
+    "J3": 1.0,
+    "J9": 0.7,
+    "J123": 0.5,
+    "J400": 0.5,
+    "J410": 0.7,
+    "J420": 0.7,
+    "J2": 0.2,
+    "J1 mated": 1.0,
+    "J121 mated": 1.0,
+    "J124 mated": 1.0,
+    "J122 mated": 4.0,
+    "J3 mated": 3.0,
+    "J9 mated": 1.5,
+    "J123 mated": 1.0,
+    "J400 mated": 1.0,
+    "J410 mated": 1.5,
+    "J420 mated": 1.5,
+    "J2 mated": 1.0
+  },
+  "physical_mass_verified": false,
+  "harness_rule": "Strain relief carries cable mass beyond the modelled plug/local-wire envelope; unrestrained long leads invalidate these allowances."
+}

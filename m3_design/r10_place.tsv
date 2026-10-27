@@ -1,0 +1,255 @@
+# R10 explicit placement; DRAFT rows prevent placement acceptance.
+ref	x	y	rot	side	basis
+@OUTLINE	46	90	0	F	R10 mechanical proposal
+@M3	4	4	0	F	R10 mechanical proposal
+@M3	42	4	0	F	R10 mechanical proposal
+@M3	4	86	0	F	R10 mechanical proposal
+@M3	42	86	0	F	R10 mechanical proposal
+@M3	4	44	0	F	R10 mechanical proposal
+@TIE	15.6	82	0	F	R10 mechanical proposal
+@TIE	30.8	79	0	F	R10 mechanical proposal
+C10	17.5	54.1	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C100	35.2	36.599999999999994	0.0	F	R9 local camera geometry translated -10.2mm y
+C11	17.5	52.1	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C120	12.8	67.6	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+C122	24.8	67.1	-90	B	R10 forward-band legalisation (D-R2-01)
+C126	16.7	57.675	-90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+C127	19.6	56.6	-90	B	R10 forward-band legalisation (D-R2-01)
+C128	12	59.5	0	B	Drain snubber below terminal-adjacent signal row
+C129	24.8	61.6	-90	B	R10 forward-band legalisation (D-R2-01)
+C13	14.85	50.1	-90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C14	21.4	52.1	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C15	29.2	47.4	90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C16	28.1	36.62	-180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C160	12	14	270	B	R10 pull-pin protection beside GH2
+C17	17.0	37.9	-90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C18	18.3	49.15	-180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C19	28.35	38.45	-90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C20	19.8	37.3	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C21	28.1	49.25	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C22	27.0	47.3	90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C23	27.8	35.3	180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C24	25.75	49.1	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C25	19.95	47.7	-180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C26	25.75	45.5	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C28	13.05	24.9	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
+C29	28.0	43.52	-90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C30	17.05	48.73	270	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C31	14.7	47.07	270	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+C32	7	46.65	180	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+C400	43	52.1	-90	F	R10 power-local placement; maker loop geometry
+C401	43	57.5	0	F	R10 power-local placement; maker loop geometry
+C402	37	53.98	-90	B	R10 power-local placement; maker loop geometry
+C403	43	61.5	0	F	R10 power-local placement; maker loop geometry
+C404	43	65	0	F	R10 power-local placement; maker loop geometry
+C405	32	16	90	B	R10 power-local placement; maker loop geometry
+C406	24	15.8	90	B	R10 power-local placement; maker loop geometry
+C407	24	20.7	-90	B	R10 power-local placement; maker loop geometry
+C408	30.5	16	0	F	R10 power-local placement; maker loop geometry
+C410	31	10.5	0	F	R10 port-local placement; explicit routing lanes
+C411	42.9	10.2	0	B	R10 port-local placement; explicit routing lanes
+C420	31	22.5	0	F	R10 port-local placement; explicit routing lanes
+C421	42.9	22.2	0	B	R10 port-local placement; explicit routing lanes
+C430	31.8	28.6	0	F	R10 port-local placement; explicit routing lanes
+C431	42.9	34.2	0	B	R10 port-local placement; explicit routing lanes
+C440	35.2	12	0	F	R10 port-local placement; explicit routing lanes
+C441	42.15	19.1	0	B	R10 port-local placement; explicit routing lanes
+C442	35.7	23	0	B	R10 port-local placement; explicit routing lanes
+C443	34.675	17.675	90	B	R10 port-local placement; explicit routing lanes
+C450	35.2	24	0	F	R10 port-local placement; explicit routing lanes
+C451	42.15	31.1	0	B	R10 port-local placement; explicit routing lanes
+C452	35.7	35	0	B	R10 port-local placement; explicit routing lanes
+C453	34.675	29.675	90	B	R10 port-local placement; explicit routing lanes
+C5	30.200000000000003	68.4	90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+C6	35.75	66.75	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+C60	30.5	54.8	-90	B	R10 VLOGIC divider beside lower MCU exit
+C7	36.3	70.8	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+C8	34.4	75.28	0	B	R10 forward-band legalisation (D-R2-01)
+C80	29	67.4	0	F	R10 forward-band legalisation (D-R2-01)
+C81	9.3	77.95	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+C82	33.9	65.9	90.0	F	R9 logic local geometry translated -7,-5; final R10 requalification required
+C83	10.2	24.9	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
+C84	38.5	74	90	F	R10 power-local placement; maker loop geometry
+C85	35.9	62.724999999999994	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+C86	16.725	28.9	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
+C87	19.8	87.6	0	F	R10 forward-band legalisation (D-R2-01)
+C88	7.9	81.43	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+C89	29	72.6	0	F	R10 forward-band legalisation (D-R2-01)
+C9	34.4	77.24	0	B	R10 forward-band legalisation (D-R2-01)
+C90	37.5	46.5	0	F	R10 port-local placement; explicit routing lanes
+C91	42.15	43.099999999999994	0.0	B	R9 local camera geometry translated -10.2mm y
+C92	35.45	47.519999999999996	-90.0	B	R9 local camera geometry translated -10.2mm y
+C93	34.675	41.675	90.0	B	R9 local camera geometry translated -10.2mm y
+C94	42.3	48.5	90	F	R10 port-local placement; explicit routing lanes
+C95	29	75.2	0	F	R10 forward-band legalisation (D-R2-01)
+C96	29	70	0	F	R10 forward-band legalisation (D-R2-01)
+C97	32.3	61.400000000000006	90.0	F	R9 logic local geometry translated -7,-5; final R10 requalification required
+C98	32.275	59.2	180.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+C99	33.5	63.900000000000006	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+D120	17	60.2	0	B	Cold continuity bias diode
+D121	23	72.2	0	B	R10 forward-band legalisation (D-R2-01)
+D122	12	17	0	B	R10 pull-pin protection beside GH2
+D123	20.6	21.2	90	B	R10 forward-band legalisation (D-R2-01)
+D4	9.95	30.6	-90	F	USB edge circuit translated 0,-3.5; direct new MCU links
+D400	38.8	39.95	90	F	R10 port-local placement; explicit routing lanes
+D401	38.8	38.45	90	F	R10 port-local placement; explicit routing lanes
+D410	38.8	14.45	90	F	R10 port-local placement; explicit routing lanes
+D411	38.8	15.95	90	F	R10 port-local placement; explicit routing lanes
+D420	38.8	26.45	90	F	R10 port-local placement; explicit routing lanes
+D421	38.8	27.95	90	F	R10 port-local placement; explicit routing lanes
+D8	22	74.5	0	F	R10 forward-band legalisation (D-R2-01)
+D9	23	65	0	F	R10 forward-band legalisation (D-R2-01)
+J1	7	75.6	-90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+J121	7	55.6	-90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+J122	23	82.0	-180	F	Servo end group; external power and return harness
+J123	12	7	0	F	R10 functional edge group; provisional
+J124	7	65.6	-90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+J2	5	39.4	0	F	R10 functional edge group; provisional
+J3	4.6	30.799999999999997	-90	F	USB edge circuit translated 0,-3.5; direct new MCU links
+J400	10.5	85.5	0	F	R10 forward-band legalisation (D-R2-01)
+J410	42.7	14	-90	F	GH mouth at east edge; 12mm connector pitch
+J420	42.7	26	-90	F	GH mouth at east edge; 12mm connector pitch
+J9	42.7	38.0	-90.0	F	R9 local camera geometry translated -10.2mm y
+L1	33.0	71.6	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+L400	40.8	57.6	-90	B	R10 power-local placement; maker loop geometry
+LED1	11.05	43.6	0	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
+LED2	11.85	45.5	0	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
+LS120	20.0	17.5	0	F	R9 local buzzer circuit translated -9,-8
+Q120	13.5	75.6	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+Q121	13.5	67.6	180	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+Q122	16.8	69.8	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+Q123	20.6	17.0	180	B	R9 local buzzer circuit translated -9,-8
+Q124	13.6	57.37	90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R10	20.0	44.69	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+R100	37.5	36.974999999999994	-90.0	F	R9 local camera geometry translated -10.2mm y
+R101	37.5	41.724999999999994	-90.0	F	R9 local camera geometry translated -10.2mm y
+R102	34.95	43.400000000000006	-90.0	F	R9 local camera geometry translated -10.2mm y
+R103	41.8	46.3	0	B	R10 port-local placement; explicit routing lanes
+R104	40	47.8	180	F	R10 port-local placement; explicit routing lanes
+R105	40	49.5	180	F	R10 port-local placement; explicit routing lanes
+R11	14.2	43.75	90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+R110	19.8	30.9	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
+R12	7	49.37	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R120	12.8	69.6	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R121	14.5	71.8	90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R122	19.6	69.8	90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R123	16.5	72.1	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R124	21.8	64	0	B	RAW divider node-side top
+R125	23.3	64.7	270	B	RAW divider parallel lower leg
+R126	16.8	54.24	180	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R127	19.9	56.3	-90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R128	18.3	57.675	-90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R129	12.6	56.8	0	B	Continuity divider node-side top
+R13	9.97	52.55	-90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R130	14.1	57.5	270	B	Continuity divider parallel lower leg
+R131	10.5	60.8	0	B	Cold continuity pull-up
+R132	20	58.75	0	B	R10 forward-band legalisation (D-R2-01)
+R133	23.3	59.2	270	B	ARM divider parallel lower leg
+R134	17	63.6	-90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R150	19.19	76.4	90	B	R10 forward-band legalisation (D-R2-01)
+R151	21.73	76.4	90	B	R10 forward-band legalisation (D-R2-01)
+R152	24.27	76.4	90	B	R10 forward-band legalisation (D-R2-01)
+R153	26.81	76.4	90	B	R10 forward-band legalisation (D-R2-01)
+R154	18.05	72.4	90	B	R10 forward-band legalisation (D-R2-01)
+R155	19.25	72.4	90	B	R10 forward-band legalisation (D-R2-01)
+R156	26.75	72.4	90	B	R10 forward-band legalisation (D-R2-01)
+R157	27.95	72.4	90	B	R10 forward-band legalisation (D-R2-01)
+R160	12	11	270	B	R10 pull-pin protection beside GH2
+R161	14	12	180	B	R10 pull-pin protection beside GH2
+R162	17.1	18.15	0	B	R9 local buzzer circuit translated -9,-8
+R163	17.6	16.3	90	B	R9 local buzzer circuit translated -9,-8
+R164	17.325	55.9	180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+R165	15.6	88.4	0	F	R10 forward-band legalisation (D-R2-01)
+R166	37.4	82.3	0	F	R10 forward-band legalisation (D-R2-01)
+R167	26.8	61.5	90	F	R10 forward-band legalisation (D-R2-01)
+R168	24	52.7	90	F	R10 forward-band legalisation (D-R2-01)
+R170	32.7	45.5	180	F	R10 forward-band legalisation (D-R2-01)
+R172	32.7	44.4	180	F	R10 forward-band legalisation (D-R2-01)
+R173	10.8	56.8	0	B	Continuity divider source-side top
+R175	21.8	58.5	0	B	ARM divider node-side top
+R177	20	64	0	B	RAW divider source-side top
+R178	15.6	57.5	270	B	Continuity divider parallel lower leg
+R180	24.8	59.2	270	B	ARM divider parallel lower leg
+R182	24.8	64.7	270	B	RAW divider parallel lower leg
+R32	11.9	39.65	180	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
+R33	11.9	41.6	180	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
+R400	35.5	52.4	180	F	R10 power-local placement; maker loop geometry
+R401	35.5	49.2	0	F	R10 power-local placement; maker loop geometry
+R402	24.8	12	0	B	R10 power-local placement; maker loop geometry
+R403	27.9	12.6	90	B	R10 forward-band legalisation (D-R2-01)
+R404	35.5	50.8	0	F	R10 power-local placement; maker loop geometry
+R405	27.3	22.3	0	B	R10 power-local placement; maker loop geometry
+R410	28.6	7.3	0	B	R10 port-local placement; explicit routing lanes
+R411	32	7.7	0	B	R10 port-local placement; explicit routing lanes
+R412	29.5	5.5	0	B	R10 port-local placement; explicit routing lanes
+R420	28.6	19.3	0	B	R10 port-local placement; explicit routing lanes
+R421	32	19.7	0	B	R10 port-local placement; explicit routing lanes
+R422	29.5	17.5	0	F	R10 port-local placement; explicit routing lanes
+R430	36.9	32.9	90	F	R10 port-local placement; explicit routing lanes
+R431	28.6	28.6	0	F	R10 port-local placement; explicit routing lanes
+R432	31.8	26.3	0	F	R10 port-local placement; explicit routing lanes
+R440	37.5	12.975	-90	F	R10 port-local placement; explicit routing lanes
+R441	37.5	17.725	-90	F	R10 port-local placement; explicit routing lanes
+R442	34.95	19.4	-90	F	R10 port-local placement; explicit routing lanes
+R443	42	17.2	0	B	R10 port-local placement; explicit routing lanes
+R450	37.5	24.975	-90	F	R10 port-local placement; explicit routing lanes
+R451	37.5	29.725	-90	F	R10 port-local placement; explicit routing lanes
+R452	34.95	31.4	-90	F	R10 port-local placement; explicit routing lanes
+R453	42	29.2	0	B	R10 port-local placement; explicit routing lanes
+R5	13	45.17	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R60	33	54.53	90	B	R10 VLOGIC divider beside lower MCU exit
+R61	29	54.53	270	B	R10 VLOGIC divider beside lower MCU exit
+R62	20.85	53.0	180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+R63	20.85	53.88	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+R64	11.23	52.28	-90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R7	9	28.9	90	B	USB edge circuit translated 0,-3.5; direct new MCU links
+R8	9	32.5	90	B	USB edge circuit translated 0,-3.5; direct new MCU links
+R80	15.6	86.8	0	F	R10 forward-band legalisation (D-R2-01)
+R81	12.4	85.2	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R82	9.4	84.1	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R83	9.4	86	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R84	12.6	81.6	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R85	15.6	26.675	90	B	USB edge circuit translated 0,-3.5; direct new MCU links
+R86	35.9	61.25	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+R87	30.0	60.425	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+R88	30.0	63.5	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+R89	27.5	66	0	B	R10 forward-band legalisation (D-R2-01)
+R9	9.95	28.9	90	B	USB edge circuit translated 0,-3.5; direct new MCU links
+R90	14.3	31.299999999999997	180	B	USB edge circuit translated 0,-3.5; direct new MCU links
+R91	27	57.8	0	B	R10 power-local placement; maker loop geometry
+R92	6	83.1	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+TP120	18	68.1	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+TP121	25	60.5	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+TP122	8	60.6	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+TP74	39	53.5	0	F	R10 forward-band legalisation (D-R2-01)
+TP80	22	57.5	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+TP81	44.5	68	0	F	R10 power-local placement; maker loop geometry
+TP82	18.25	33.25	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
+TP83	44.5	73.2	0	F	R10 power-local placement; maker loop geometry
+TP84	22	60.5	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+TP85	25	57.5	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+TP86	13.6	22.4	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
+TP87	39	62.8	0	F	R10 power-local placement; maker loop geometry
+TP88	44.5	76.3	0	F	R10 power-local placement; maker loop geometry
+TP89	12	88.6	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+TP92	21.6	28.5	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
+U1	23.0	43.0	0	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
+U10	12.6	27.5	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
+U11	32.65	61.5	90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+U12	35.2	39.349999999999994	-90.0	F	R9 local camera geometry translated -10.2mm y
+U13	37.6	43.400000000000006	180.0	B	R9 local camera geometry translated -10.2mm y
+U2	33.0	66.8	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+U3	22.6	41.2	90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+U4	17.0	45.9	180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
+U400	40.8	52.1	-90	B	R10 power-local placement; maker loop geometry
+U401	28	16	0	B	R10 power-local placement; maker loop geometry
+U402	31.8	31.8	0	F	R10 port-local placement; explicit routing lanes
+U410	31	10.5	0	B	R10 port-local placement; explicit routing lanes
+U411	35.2	15.35	-90	F	R10 port-local placement; explicit routing lanes
+U412	37.6	19.4	180	B	R10 port-local placement; explicit routing lanes
+U420	31	22.5	0	B	R10 port-local placement; explicit routing lanes
+U421	35.2	27.35	-90	F	R10 port-local placement; explicit routing lanes
+U422	37.6	31.4	180	B	R10 port-local placement; explicit routing lanes
+U5	10.6	49.1	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+U9	10	81.6	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+Y1	22.85	46.6	90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10

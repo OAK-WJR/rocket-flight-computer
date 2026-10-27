@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "issues": [],
+  "components": 250,
+  "pins": 746,
+  "erc_violations": 0,
+  "seeded_faults": {
+    "ARM bypass": true,
+    "servo middle row powered": true,
+    "radio USB injection bypass": true,
+    "GPS OE pulldown missing": true,
+    "radio enable bias missing": true,
+    "pyro load switch removed": true,
+    "pyro gate capacitor excluded": true,
+    "shorted igniter limiter DNP": true,
+    "GPS FAULT pullup externally powered": true
+  },
+  "netlist_sha256": "bc343ccbf18dfffcda2b8b2c5872ea9f081ec5c23b8d2cf467dafb23174c57fd",
+  "scope": "schematic, parts, exact pin nets and default-clearance DRU; no PCB/physical qualification"
+}

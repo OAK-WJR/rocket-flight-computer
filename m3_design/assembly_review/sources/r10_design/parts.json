@@ -1,0 +1,694 @@
+{
+  "schema": 1,
+  "status": "component contract; board, harness and transient validation pending",
+  "parts": {
+    "U400": {
+      "lib": "M3:CameraBuck",
+      "value": "AP63201WU-7",
+      "footprint": "rocket:M3_AP63200_TSOT26",
+      "fields": {
+        "LCSC": "C2071044",
+        "Manufacturer": "Diodes Incorporated",
+        "Manufacturer Part": "AP63201WU-7",
+        "Datasheet": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf"
+      },
+      "nets": {
+        "1": "PORT_FB",
+        "2": "RAW_PROTECTED",
+        "3": "RAW_PROTECTED",
+        "4": "GND",
+        "5": "PORT_SW",
+        "6": "PORT_BST"
+      },
+      "kind": "power"
+    },
+    "U401": {
+      "lib": "M3:PortLDO",
+      "value": "TPS7A9101DSKR",
+      "footprint": "rocket:M3_TPS7A91_DSK10",
+      "fields": {
+        "LCSC": "C2878140",
+        "Manufacturer": "Texas Instruments",
+        "Manufacturer Part": "TPS7A9101DSKR",
+        "Datasheet": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "PORT_4V8",
+        "3": "PORT_LDO_FB",
+        "4": "GND",
+        "5": null,
+        "6": "GND",
+        "7": "PORT_5V3",
+        "8": "PORT_LDO_SS",
+        "9": "PORT_5V3",
+        "10": "PORT_5V3",
+        "11": "GND"
+      },
+      "kind": "power"
+    },
+    "L400": {
+      "lib": "M3:L",
+      "value": "6.8uH",
+      "footprint": "rocket:M3_SRP5030TA",
+      "fields": {
+        "LCSC": "C1329837",
+        "Manufacturer": "Bourns",
+        "Manufacturer Part": "SRP5030T-6R8M",
+        "Datasheet": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf"
+      },
+      "nets": {
+        "1": "PORT_SW",
+        "2": "PORT_5V3"
+      },
+      "kind": "power"
+    },
+    "R400": {
+      "lib": "M3:R",
+      "value": "56.2k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C705784",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RT0603BRD0756K2L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C705784.html"
+      },
+      "nets": {
+        "1": "PORT_5V3",
+        "2": "PORT_FB_TOP"
+      },
+      "kind": "power"
+    },
+    "R404": {
+      "lib": "M3:R",
+      "value": "2k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C22975",
+        "Manufacturer": "UNI-ROYAL",
+        "Manufacturer Part": "0603WAF2001T5E",
+        "Datasheet": "https://www.lcsc.com/product-detail/C22975.html"
+      },
+      "nets": {
+        "1": "PORT_FB_TOP",
+        "2": "PORT_FB"
+      },
+      "kind": "power"
+    },
+    "R401": {
+      "lib": "M3:R",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C95204",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RT0603BRD0710KL",
+        "Datasheet": "https://www.lcsc.com/product-detail/C95204.html"
+      },
+      "nets": {
+        "1": "PORT_FB",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "R402": {
+      "lib": "M3:R",
+      "value": "49.9k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C705780",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RT0603BRD0749K9L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C705780.html"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "PORT_LDO_FB"
+      },
+      "kind": "power"
+    },
+    "R403": {
+      "lib": "M3:R",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C95204",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RT0603BRD0710KL",
+        "Datasheet": "https://www.lcsc.com/product-detail/C95204.html"
+      },
+      "nets": {
+        "1": "PORT_LDO_FB",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "C400": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "RAW_PROTECTED",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "C401": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "RAW_PROTECTED",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "C403": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "PORT_5V3",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "C404": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "PORT_5V3",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "C405": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "PORT_5V3",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "C406": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "C407": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "C402": {
+      "lib": "M3:C",
+      "value": "100nF 50V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104",
+        "Datasheet": "https://www.lcsc.com/product-detail/C14663.html"
+      },
+      "nets": {
+        "1": "PORT_BST",
+        "2": "PORT_SW"
+      },
+      "kind": "power"
+    },
+    "C408": {
+      "lib": "M3:C",
+      "value": "10nF 50V X7R 10%",
+      "footprint": "rocket:C0402",
+      "fields": {
+        "LCSC": "C15195",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B103KB5NNNC",
+        "Datasheet": "https://www.lcsc.com/product-detail/C15195.html"
+      },
+      "nets": {
+        "1": "PORT_LDO_SS",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "U402": {
+      "lib": "M3:USBCurrentLimit",
+      "value": "TPS2553DBVR",
+      "footprint": "rocket:M3_TPS2553_DBV",
+      "fields": {
+        "LCSC": "C55266",
+        "Manufacturer": "Texas Instruments",
+        "Manufacturer Part": "TPS2553DBVR",
+        "Datasheet": "https://www.ti.com/lit/ds/symlink/tps2553.pdf"
+      },
+      "nets": {
+        "1": "PORT_5V3",
+        "2": "GND",
+        "3": "CAM_PWR_EN",
+        "4": "CAM_FAULT_N",
+        "5": "CAM_ILIM",
+        "6": "CAM_5V"
+      },
+      "kind": "power"
+    },
+    "R430": {
+      "lib": "M3:R",
+      "value": "22.6k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C185349",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RC0603FR-0722K6L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C185349.html"
+      },
+      "nets": {
+        "1": "CAM_ILIM",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "R431": {
+      "lib": "M3:R",
+      "value": "100k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14675",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RC0603FR-07100KL",
+        "Datasheet": "https://www.lcsc.com/product-detail/C14675.html"
+      },
+      "nets": {
+        "1": "CAM_PWR_EN",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "R432": {
+      "lib": "M3:R",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C95204",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RT0603BRD0710KL",
+        "Datasheet": "https://www.lcsc.com/product-detail/C95204.html"
+      },
+      "nets": {
+        "1": "CAM_FAULT_N",
+        "2": "3V3"
+      },
+      "kind": "power"
+    },
+    "C430": {
+      "lib": "M3:C",
+      "value": "100nF 50V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104",
+        "Datasheet": "https://www.lcsc.com/product-detail/C14663.html"
+      },
+      "nets": {
+        "1": "PORT_5V3",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "C431": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "CAM_5V",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "U410": {
+      "lib": "M3:USBCurrentLimit",
+      "value": "TPS2553DBVR",
+      "footprint": "rocket:M3_TPS2553_DBV",
+      "fields": {
+        "LCSC": "C55266",
+        "Manufacturer": "Texas Instruments",
+        "Manufacturer Part": "TPS2553DBVR",
+        "Datasheet": "https://www.ti.com/lit/ds/symlink/tps2553.pdf"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "GPS_PWR_EN",
+        "4": "GPS_FAULT_N",
+        "5": "GPS_ILIM",
+        "6": "GPS_4V8"
+      },
+      "kind": "power"
+    },
+    "R410": {
+      "lib": "M3:R",
+      "value": "120k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C114607",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RC0603FR-07120KL",
+        "Datasheet": "https://www.lcsc.com/product-detail/C114607.html"
+      },
+      "nets": {
+        "1": "GPS_ILIM",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "R411": {
+      "lib": "M3:R",
+      "value": "100k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14675",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RC0603FR-07100KL",
+        "Datasheet": "https://www.lcsc.com/product-detail/C14675.html"
+      },
+      "nets": {
+        "1": "GPS_PWR_EN",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "R412": {
+      "lib": "M3:R",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C95204",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RT0603BRD0710KL",
+        "Datasheet": "https://www.lcsc.com/product-detail/C95204.html"
+      },
+      "nets": {
+        "1": "GPS_FAULT_N",
+        "2": "3V3"
+      },
+      "kind": "power"
+    },
+    "C410": {
+      "lib": "M3:C",
+      "value": "100nF 50V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104",
+        "Datasheet": "https://www.lcsc.com/product-detail/C14663.html"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "C411": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "GPS_4V8",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "U420": {
+      "lib": "M3:USBCurrentLimit",
+      "value": "TPS2553DBVR",
+      "footprint": "rocket:M3_TPS2553_DBV",
+      "fields": {
+        "LCSC": "C55266",
+        "Manufacturer": "Texas Instruments",
+        "Manufacturer Part": "TPS2553DBVR",
+        "Datasheet": "https://www.ti.com/lit/ds/symlink/tps2553.pdf"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "RADIO_PWR_EN",
+        "4": "RADIO_FAULT_N",
+        "5": "RADIO_ILIM",
+        "6": "RADIO_4V8"
+      },
+      "kind": "power"
+    },
+    "R420": {
+      "lib": "M3:R",
+      "value": "66.5k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C137691",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RC0603FR-0766K5L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C137691.html"
+      },
+      "nets": {
+        "1": "RADIO_ILIM",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "R421": {
+      "lib": "M3:R",
+      "value": "100k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14675",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RC0603FR-07100KL",
+        "Datasheet": "https://www.lcsc.com/product-detail/C14675.html"
+      },
+      "nets": {
+        "1": "RADIO_PWR_EN",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "R422": {
+      "lib": "M3:R",
+      "value": "10k 0.1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C95204",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "RT0603BRD0710KL",
+        "Datasheet": "https://www.lcsc.com/product-detail/C95204.html"
+      },
+      "nets": {
+        "1": "RADIO_FAULT_N",
+        "2": "3V3"
+      },
+      "kind": "power"
+    },
+    "C420": {
+      "lib": "M3:C",
+      "value": "100nF 50V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104",
+        "Datasheet": "https://www.lcsc.com/product-detail/C14663.html"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "C421": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "RADIO_4V8",
+        "2": "GND"
+      },
+      "kind": "power"
+    },
+    "J400": {
+      "lib": "M3:Conn_01x02",
+      "value": "BM02B-GHS-TBT(LF)(SN)",
+      "footprint": "rocket:M3_GH_BM02B_GHS_TBT",
+      "fields": {
+        "LCSC": "C161690",
+        "Manufacturer": "JST",
+        "Manufacturer Part": "BM02B-GHS-TBT(LF)(SN)",
+        "Datasheet": "https://www.jst-mfg.com/product/pdf/eng/eGH.pdf"
+      },
+      "nets": {
+        "1": "SW_A",
+        "2": "SW_B"
+      },
+      "kind": "connector"
+    },
+    "J123": {
+      "lib": "M3:Conn_01x02",
+      "value": "BM02B-GHS-TBT(LF)(SN)",
+      "footprint": "rocket:M3_GH_BM02B_GHS_TBT",
+      "fields": {
+        "LCSC": "C161690",
+        "Manufacturer": "JST",
+        "Manufacturer Part": "BM02B-GHS-TBT(LF)(SN)",
+        "Datasheet": "https://www.jst-mfg.com/product/pdf/eng/eGH.pdf"
+      },
+      "nets": {
+        "1": "PULL_PIN",
+        "2": "GND"
+      },
+      "kind": "connector"
+    },
+    "J1": {
+      "lib": "M3:Conn_01x02",
+      "value": "DB125-3.5-2P-GN-S",
+      "footprint": "rocket:M3_DB125_2P_GN",
+      "fields": {
+        "LCSC": "C466970",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-2P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+      },
+      "nets": {},
+      "kind": "replacement"
+    },
+    "J121": {
+      "lib": "M3:Conn_01x02",
+      "value": "DB125-3.5-2P-BK-S",
+      "footprint": "rocket:M3_DB125_2P_BK",
+      "fields": {
+        "LCSC": "C52993880",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-2P-BK-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+      },
+      "nets": {},
+      "kind": "replacement"
+    },
+    "J124": {
+      "lib": "M3:Conn_01x02",
+      "value": "DB125-3.5-2P-BK-S",
+      "footprint": "rocket:M3_DB125_2P_BK",
+      "fields": {
+        "LCSC": "C52993880",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-2P-BK-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+      },
+      "nets": {},
+      "kind": "replacement"
+    },
+    "C84": {
+      "lib": "M3:C_Polarized",
+      "value": "470uF 25V polymer",
+      "footprint": "rocket:M3_MA_8x10",
+      "fields": {
+        "LCSC": "C46550466",
+        "Manufacturer": "jieerrui",
+        "Manufacturer Part": "MA25V470M8x10",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf"
+      },
+      "nets": {
+        "1": "VLOGIC",
+        "2": "GND"
+      },
+      "kind": "replacement"
+    },
+    "R405": {
+      "lib": "M3:R",
+      "value": "820R 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C23253",
+        "Manufacturer": "UNI-ROYAL",
+        "Manufacturer Part": "0603WAF8200T5E",
+        "Datasheet": "https://www.lcsc.com/product-detail/C23253.html"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "GND"
+      },
+      "kind": "power"
+    }
+  }
+}

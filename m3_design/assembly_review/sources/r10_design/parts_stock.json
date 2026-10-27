@@ -1,0 +1,227 @@
+{
+  "retrieved_utc": "2026-10-27T01:14:54.415689+00:00",
+  "endpoint": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList",
+  "scope": "Candidate selected components only; not final BOM quantity or order gate",
+  "parts": {
+    "C2878140": {
+      "componentCode": "C2878140",
+      "componentModelEn": "TPS7A9101DSKR",
+      "componentBrandEn": "Texas Instruments",
+      "stockCount": 2881,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2302282330_Texas-Instruments-TPS7A9101DSKR_C2878140.pdf"
+    },
+    "C2071044": {
+      "componentCode": "C2071044",
+      "componentModelEn": "AP63201WU-7",
+      "componentBrandEn": "Diodes Incorporated",
+      "stockCount": 8898,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://jlcpcb.com/api/file/downloadByFileSystemAccessId/8589830170564452352"
+    },
+    "C46550466": {
+      "componentCode": "C46550466",
+      "componentModelEn": "MA25V470M8x10",
+      "componentBrandEn": "jieerrui",
+      "stockCount": 121382,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": null
+    },
+    "C1329837": {
+      "componentCode": "C1329837",
+      "componentModelEn": "SRP5030T-6R8M",
+      "componentBrandEn": "BOURNS",
+      "stockCount": 1567,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_BOURNS-SRP5030T-6R8M_C1329837.pdf"
+    },
+    "C161692": {
+      "componentCode": "C161692",
+      "componentModelEn": "BM04B-GHS-TBT(LF)(SN)",
+      "componentBrandEn": "JST",
+      "stockCount": 31698,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2410010302_JST-BM04B-GHS-TBT-LF-SN_C161692.pdf"
+    },
+    "C5186957": {
+      "componentCode": "C5186957",
+      "componentModelEn": "TXU0202DCUR",
+      "componentBrandEn": "Texas Instruments",
+      "stockCount": 15116,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2309210904_Texas-Instruments-TXU0202DCUR_C5186957.pdf"
+    },
+    "C21397": {
+      "componentCode": "C21397",
+      "componentModelEn": "GRM32ER71E226KE15L",
+      "componentBrandEn": "Murata Electronics",
+      "stockCount": 80546,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2308111542_Murata-Electronics-GRM32ER71E226KE15L_C21397.pdf"
+    },
+    "C22975": {
+      "componentCode": "C22975",
+      "componentModelEn": "0603WAF2001T5E",
+      "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+      "stockCount": 10472782,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "base",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010116_UNI-ROYAL-Uniroyal-Elec-0603WAF2001T5E_C22975.pdf"
+    },
+    "C705784": {
+      "componentCode": "C705784",
+      "componentModelEn": "RT0603BRD0756K2L",
+      "componentBrandEn": "YAGEO",
+      "stockCount": 8253,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2009282136_YAGEO-RT0603BRD0756K2L_C705784.pdf"
+    },
+    "C705780": {
+      "componentCode": "C705780",
+      "componentModelEn": "RT0603BRD0749K9L",
+      "componentBrandEn": "YAGEO",
+      "stockCount": 199211,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2008171235_YAGEO-RT0603BRD0749K9L_C705780.pdf"
+    },
+    "C137691": {
+      "componentCode": "C137691",
+      "componentModelEn": "RC0603FR-0766K5L",
+      "componentBrandEn": "YAGEO",
+      "stockCount": 18762,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RC0603FR-0766K5L_C137691.pdf"
+    },
+    "C15195": {
+      "componentCode": "C15195",
+      "componentModelEn": "CL05B103KB5NNNC",
+      "componentBrandEn": "Samsung Electro-Mechanics",
+      "stockCount": 6704087,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "base",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL05B103KB5NNNC_C15195.pdf"
+    },
+    "C14675": {
+      "componentCode": "C14675",
+      "componentModelEn": "RC0603FR-07100KL",
+      "componentBrandEn": "YAGEO",
+      "stockCount": 9025173,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_1809281124_YAGEO-RC0603FR-07100KL_C14675.pdf"
+    },
+    "C466970": {
+      "componentCode": "C466970",
+      "componentModelEn": "DB125-3.5-2P-GN-S",
+      "componentBrandEn": "DORABO",
+      "stockCount": 36987,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2404011707_DORABO-DB125-3-5-2P-GN-S_C466970.pdf"
+    },
+    "C14663": {
+      "componentCode": "C14663",
+      "componentModelEn": "CC0603KRX7R9BB104",
+      "componentBrandEn": "YAGEO",
+      "stockCount": 42594056,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "base",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2211101700_YAGEO-CC0603KRX7R9BB104_C14663.pdf"
+    },
+    "C95204": {
+      "componentCode": "C95204",
+      "componentModelEn": "RT0603BRD0710KL",
+      "componentBrandEn": "YAGEO",
+      "stockCount": 2007720,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/1811082117_YAGEO-RT0603BRD0710KL_C95204.pdf"
+    },
+    "C185349": {
+      "componentCode": "C185349",
+      "componentModelEn": "RC0603FR-0722K6L",
+      "componentBrandEn": "YAGEO",
+      "stockCount": 17,
+      "minPurchaseNum": 3610,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RC0603FR-0722K6L_C185349.pdf"
+    },
+    "C52993880": {
+      "componentCode": "C52993880",
+      "componentModelEn": "DB125-3.5-2P-BK-S",
+      "componentBrandEn": "DORABO",
+      "stockCount": 675,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": null
+    },
+    "C161690": {
+      "componentCode": "C161690",
+      "componentModelEn": "BM02B-GHS-TBT(LF)(SN)",
+      "componentBrandEn": "JST",
+      "stockCount": 71713,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_JST-BM02B-GHS-TBT-LF-SN_C161690.pdf"
+    },
+    "C55266": {
+      "componentCode": "C55266",
+      "componentModelEn": "TPS2553DBVR",
+      "componentBrandEn": "Texas Instruments",
+      "stockCount": 49241,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_1810221710_Texas-Instruments-TPS2553DBVR_C55266.pdf"
+    },
+    "C23253": {
+      "componentCode": "C23253",
+      "componentModelEn": "0603WAF8200T5E",
+      "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+      "stockCount": 868132,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "base",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0603WAF8200T5E_C23253.pdf"
+    },
+    "C114607": {
+      "componentCode": "C114607",
+      "componentModelEn": "RC0603FR-07120KL",
+      "componentBrandEn": "YAGEO",
+      "stockCount": 169135,
+      "minPurchaseNum": 1,
+      "componentLibraryType": "expand",
+      "componentSource": "shop",
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RC0603FR-07120KL_C114607.pdf"
+    }
+  }
+}

@@ -59,6 +59,13 @@ MATED = {
         'refs': ('J123',), 'box': (-3.0, -1.75, 3.0, 2.85, 0.0, 9.5),
         'basis': 'R5 engineering allocation: JST PH plug and wire; physical fit unverified'},
 }
+# R10: explicit reference coverage, including both new port plugs and the split switch.
+# GH geometry: JST eGH.pdf pp.2–3; 3 mm wire allocation remains an inference.
+R10_MATED = {k: dict(v) for k, v in MATED.items() if k not in ('M3_SMA_KH_KE8_EDGE', 'M3_JST_PH_B2B_2P')}
+R10_MATED['M3_GH_BM04B_GHS_TBT'] = dict(MATED['M3_GH_BM04B_GHS_TBT'], refs=('J9', 'J410', 'J420'))
+R10_MATED['M3_GH_BM02B_GHS_TBT'] = dict(
+    MATED['M3_GH_BM04B_GHS_TBT'], refs=('J123', 'J400'), box=(-2.875, -2.5, 2.875, 1.75, 0.0, 10.3))
+R10_MATED_REFS = {'J9', 'J122', 'J123', 'J400', 'J410', 'J420'}
 REQUIRED_MATED = {'M3_GH_BM04B_GHS_TBT', 'M3_SMA_KH_KE8_EDGE'}
 # These are bare board features, not an escape hatch for missing fitted-part geometry.
 BOARD_FEATURES = {'M3_TestPad_1.5': r'TP\d+', 'M3_ToolingHole_JLC': r'TH[123]',
@@ -348,7 +355,11 @@ def pad_box(p):
     return mm(bounds.GetX()), mm(bounds.GetY()), mm(bounds.GetRight()), mm(bounds.GetBottom()), -BOARD_T, 0.0
 
 
-def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3):
+def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
+    if profile not in ('r9', 'r10'):
+        raise ValueError(f'unknown fit profile {profile!r}')
+    mated = R10_MATED if profile == 'r10' else MATED
+    required_refs = R10_MATED_REFS if profile == 'r10' else {'J9', 'J122', 'J123', 'J30', 'J31'}
     rows, bodies, mating, bottom, issues, excluded = [], [], [], [], [], []
     top_bodies, top_pads = [], []
     if not all(math.isfinite(value) for value in (radius, axis_x, tol)) or radius <= 0 or tol < 0:
@@ -383,7 +394,7 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3):
             top_bodies.append((ref, box))
             bottom.extend((ref + '.' + p.GetNumber() + ' pin', pad_box(p)) for p in f.Pads()
                           if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH)
-        spec = MATED.get(fp_name(f))
+        spec = mated.get(fp_name(f))
         if spec:
             if ref not in spec['refs']:
                 issues.append(f'{ref}: mated envelope is not reviewed for this reference')
@@ -391,9 +402,14 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3):
             mb = footprint_box(f, spec['box'])
             rows.append((margin(mb, radius, axis_x, tol), ref + ' mated', side, mb))
             mating.append((ref, mb))
-        elif fp_name(f) in REQUIRED_MATED or (ref in ('J9', 'J122', 'J123', 'J30', 'J31')
+        elif fp_name(f) in REQUIRED_MATED or (ref in required_refs
                                              and not fp_name(f).startswith('M3_DB128')):
             issues.append(f'{ref}: mated housing/wire envelope has not been reviewed')
+    if profile == 'r10':
+        missing = required_refs - {ref for ref, box in mating}
+        issues.extend(f'{ref}: required R10 mated envelope missing' for ref in sorted(missing))
+        _, tie_issues, _ = retention_holes(b, with_info=True)
+        issues.extend(tie_issues)
     for index, (ref, box) in enumerate(mating):
         for other, body in bodies:
             if other != ref and box_overlap(box, body):
@@ -413,7 +429,7 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3):
     nearest_top, top_issues = top_support_check(supports, top_bodies, top_pads)
     issues.extend(top_issues)
     issues.extend(f'{ref}: outside bore by {-mgn:.3f} mm' for mgn, ref, _, _ in rows if mgn < 0)
-    return dict(rows=sorted(rows), issues=issues, supports=supports, nearest_support=nearest,
+    return dict(profile=profile, rows=sorted(rows), issues=issues, supports=supports, nearest_support=nearest,
                 nearest_top_support=nearest_top, top_hardware_radius_mm=TOP_HARDWARE_RADIUS,
                 outline=outline, width_mm=width, length_mm=length, excluded=sorted(excluded), ok=not issues)
 
@@ -428,6 +444,7 @@ def margin(box, radius, axis_x, tol):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('board', nargs='?', default='m3_design/assembly_review/m3.kicad_pcb')
+    ap.add_argument('--profile', choices=('r9', 'r10'), default='r9')
     ap.add_argument('--radius', type=float, default=24.9)
     ap.add_argument('--axis-x', type=float, default=23.0)
     ap.add_argument('--tol', type=float, default=0.3)
@@ -437,7 +454,7 @@ def main():
     before = input_hashes(board_path)
     b = pcbnew.LoadBoard(a.board)
     prj = Path(a.board).resolve().parent
-    report = check_board(b, prj, a.radius, a.axis_x, a.tol)
+    report = check_board(b, prj, a.radius, a.axis_x, a.tol, a.profile)
     if before != input_hashes(board_path):
         report['issues'].append('board or model inputs changed during fit check')
         report['ok'] = False

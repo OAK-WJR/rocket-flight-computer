@@ -9,6 +9,7 @@ usage: python3 m3_design/check_actuators.py [board.kicad_pcb]      exit 0 = ever
 These rules restate AGENTS.md §2 and docs/M3_ACTUATOR_MERGE.md in machine-checkable form. They
 qualify the CAD netlist only: no electrical, thermal or physical behaviour is proven here.
 """
+import argparse
 import hashlib
 import math
 import re
@@ -331,7 +332,10 @@ def block_cover(root, poly):
     return miss
 
 
-def check(text, dru=None):
+def check(text, dru=None, profile="r9"):
+    if profile not in ("r9", "r10"):
+        raise ValueError(f"unknown actuator profile {profile!r}")
+    r10 = profile == "r10"
     part, side = {}, {}
     pin, val = pad_nets(text, part, side)
     fpname = {properties(fp)['Reference'].items[2].atom: fp.items[1].atom for fp in read(text).children('footprint')}
@@ -459,7 +463,11 @@ def check(text, dru=None):
         # 7b. each servo line has its own 10k pull-down to GND, so it is a defined low in reset (F6)
         req({pin.get(f'R{153 + i}.1'), pin.get(f'R{153 + i}.2')} == {m, 'GND'} and val.get(f'R{153 + i}') == '10k',
             f'R{153 + i} must be a 10k pull-down from {m} to GND')
-    req(all(pin.get(f'J122.{k}') == 'RAW_ACT' for k in (2, 5, 8, 11)), 'servo + row on RAW_ACT')
+    if r10:
+        req(all(pin.get(f'J122.{k}') is None or pin.get(f'J122.{k}', '').startswith('unconnected-')
+                for k in (2, 5, 8, 11)), 'R10 servo + row must have no board net')
+    else:
+        req(all(pin.get(f'J122.{k}') == 'RAW_ACT' for k in (2, 5, 8, 11)), 'servo + row on RAW_ACT')
     req(all(pin.get(f'J122.{k}') == 'GND' for k in (3, 6, 9, 12)), 'servo - row on GND')
     # 7c (pass 2): the SRV05-4 clamp's rails, so a servo-lead transient goes to 3V3/GND, not into a power rail
     req(pin.get('D121.2') == 'GND' and pin.get('D121.5') == '3V3', 'D121 SRV05-4: pin 2 GND, pin 5 3V3')
@@ -470,6 +478,8 @@ def check(text, dru=None):
     req(pin.get('Q122.1') == 'ACT_EN' and pin.get('Q122.3') == 'ACT_DRV', 'Q122 drives the load-switch gate')
     # 8a (pass 9, actuators F3): every load-switch net exactly, Q122's source and the enable divider's foot on GND
     for n, want in ACT_NETS.items():
+        if r10 and n == 'RAW_ACT':
+            want = want - {'C121.1', 'C150.1', 'C151.1', 'J122.2', 'J122.5', 'J122.8', 'J122.11'}
         req(members.get(n) == want, f'{n} must be exactly {sorted(want)} (is {sorted(members.get(n, ()))})')
     req(pin.get('Q122.2') == 'GND' and pin.get('R123.2') == 'GND', 'Q122 source and R123 foot on GND')
     # 8b (pass 2): C120 sits gate-to-source on Q120/Q121, so a shorted C120 turns the switch off (never on)
@@ -484,8 +494,9 @@ def check(text, dru=None):
         'D120 BAT54A: anode 3V3, cathode 1 PYRO1_COLD, cathode 2 NC')
     # 11. Pyro terminals share a stocked black 2P body; PCB silk must distinguish ARM and IGN.
     arm_t, ign_t, other_t = ('J124',), ('J121',), ('J1', 'J9')
-    req(all(part.get(j) == 'C430601' for j in arm_t), 'ARM terminal J124 must be black C430601')
-    req(all(part.get(j) == 'C430601' for j in ign_t), 'igniter terminal J121 must be black C430601 with explicit IGN silk')
+    terminal_code = 'C52993880' if r10 else 'C430601'
+    req(all(part.get(j) == terminal_code for j in arm_t), 'ARM terminal J124 must be black C430601')
+    req(all(part.get(j) == terminal_code for j in ign_t), 'igniter terminal J121 must be black C430601 with explicit IGN silk')
     groups = [{part.get(j) for j in g} for g in (arm_t, ign_t, other_t)]
     req(not (groups[0] & groups[2] or groups[1] & groups[2]),
         'pyro terminal part must remain distinct from battery/camera connectors')
@@ -493,8 +504,9 @@ def check(text, dru=None):
         and re.search(r'\(gr_text "IGN(?:1| CH1)?"', text) is not None,
         'shared black pyro terminals require explicit ARM and IGN silkscreen')
     # 12. external power contact: a 470k on each side, so no wire fault puts the pack on U9 EN (F8/F9)
-    req(members.get('BAT_SW_SOURCE') == {'J1.3', 'R80.2'} and pin.get('R80.1') == 'BAT_IN', 'J1.3 only through R80 to BAT_IN')
-    req(members.get('BAT_SW_RETURN') == {'J1.4', 'R165.1'} and pin.get('R165.2') == 'BAT_ENABLE', 'J1.4 only through R165 to EN')
+    switch_a, switch_b = ('J400.1', 'J400.2') if r10 else ('J1.3', 'J1.4')
+    req(members.get('BAT_SW_SOURCE') == {switch_a, 'R80.2'} and pin.get('R80.1') == 'BAT_IN', 'J1.3 only through R80 to BAT_IN')
+    req(members.get('BAT_SW_RETURN') == {switch_b, 'R165.1'} and pin.get('R165.2') == 'BAT_ENABLE', 'J1.4 only through R165 to EN')
     # 13. input TVS: bidirectional, VBR >= 13.3 V, so a wrong 3S pack (12.6 V) cannot drive it (F9)
     req(val.get('D8') in ('SMBJ12CA', 'SMBJ13CA') and {pin.get('D8.1'), pin.get('D8.2')} == {'BAT_IN', 'GND'},
         'D8 must be an SMBJ12CA/13CA across BAT_IN-GND')
@@ -510,7 +522,7 @@ def check(text, dru=None):
     req(fpname.get('R166') == 'rocket:M3_R2512_UR', f"R166 must use UNI-ROYAL's land rocket:M3_R2512_UR (is {fpname.get('R166')})")
     # 15 (pass 2/3, actuators F2/F6/F3): the spacing rules live in m3.kicad_dru, where tools/check.sh's DRC enforces
     # them; each rule must keep its minimum and name every net it protects
-    if dru is not None:
+    if dru is not None and not r10:
         sha = hashlib.sha256(dru.encode()).hexdigest()[:16]
         req(sha == DRU_SHA, f'm3.kicad_dru changed (sha {sha}): review the whole file, then update DRU_SHA')
         for name, (dmin, nets) in PYRO_RULES.items():
@@ -535,20 +547,21 @@ def check(text, dru=None):
     # grown by 1.0 mm, of every pad, track, arc, via and fill of the block's internal nets, and of the exit nets'
     # copper within 3 mm of a CH1 pad of the same net (pass 6's notch fails here too: the notch must hold no block
     # copper or courtyard). An area larger than that only widens rule G; tools/check_r9.py P-10 bounds it from above.
-    areas = [z for z in read(text).children('zone') if z.children('name') and z.children('name')[0].items[1].atom == 'PYRO_BLOCK']
-    ok, missing = False, []
-    for z in areas:
-        layers = {a.atom for n in z.children('layers') for a in n.items[1:]}
-        polys = [[(float(xy.items[1].atom), float(xy.items[2].atom)) for pp in pl.children('pts') for xy in pp.children('xy')]
-                 for pl in z.children('polygon')]
-        keep = [a.atom for k in z.children('keepout') for n in k.items[1:] if hasattr(n, 'children') for a in n.items[1:2]]
-        if {'F.Cu', 'In1.Cu', 'In2.Cu', 'B.Cu'} <= layers and len(polys) == 1 and len(polys[0]) >= 3 and keep \
-                and all(a == 'allowed' for a in keep):
-            missing = block_cover(read(text), polys[0])
-            ok = not missing
-    req(len(areas) == 1 and ok, 'one PYRO_BLOCK rule area on F.Cu/In1/In2/B.Cu, one outline, restricting nothing, '
-        'covering the CH1 block (courtyards + 1 mm, internal-net copper, exit copper to 3 mm)'
-        + (f'; not covered: {missing[:4]}' if missing else ''))
+    if not r10:
+        areas = [z for z in read(text).children('zone') if z.children('name') and z.children('name')[0].items[1].atom == 'PYRO_BLOCK']
+        ok, missing = False, []
+        for z in areas:
+            layers = {a.atom for n in z.children('layers') for a in n.items[1:]}
+            polys = [[(float(xy.items[1].atom), float(xy.items[2].atom)) for pp in pl.children('pts') for xy in pp.children('xy')]
+                     for pl in z.children('polygon')]
+            keep = [a.atom for k in z.children('keepout') for n in k.items[1:] if hasattr(n, 'children') for a in n.items[1:2]]
+            if {'F.Cu', 'In1.Cu', 'In2.Cu', 'B.Cu'} <= layers and len(polys) == 1 and len(polys[0]) >= 3 and keep \
+                    and all(a == 'allowed' for a in keep):
+                missing = block_cover(read(text), polys[0])
+                ok = not missing
+        req(len(areas) == 1 and ok, 'one PYRO_BLOCK rule area on F.Cu/In1/In2/B.Cu, one outline, restricting nothing, '
+            'covering the CH1 block (courtyards + 1 mm, internal-net copper, exit copper to 3 mm)'
+            + (f'; not covered: {missing[:4]}' if missing else ''))
     # IMU status on polled PE1; PE10 and PE0 stay no-connect (R6, kept)
     req(members.get('IMU_INT1') == {'U1.98', 'U4.4'}
         and pin.get('U1.40', '').startswith('unconnected-'),
@@ -563,14 +576,20 @@ def check(text, dru=None):
     req(pin.get('J2.6') is None or pin.get('J2.6', '').startswith('unconnected-'), 'J2.6 SWO is NC; no BOOT0 harness')
     # 16 (pass 3, actuators F3 / system m7): pinned parts (protection values, pyro parts, terminals)
     for ref, code in PINNED.items():
+        if r10 and ref in ('C121', 'J1', 'J121', 'J124'):
+            continue  # R10 parts checked by check_r10; safety parts below remain pinned.
         req(part.get(ref) == code, f'{ref} must be LCSC {code} (is {part.get(ref)})')
     return issues
 
 
 def main():
-    board = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / 'assembly_review' / 'm3.kicad_pcb'
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('board', nargs='?', type=Path, default=HERE / 'assembly_review' / 'm3.kicad_pcb')
+    ap.add_argument('--profile', choices=('r9', 'r10'), default='r9')
+    args = ap.parse_args()
+    board = args.board
     dru = board.with_suffix('.kicad_dru')
-    issues = check(board.read_text(), dru.read_text() if dru.exists() else '')
+    issues = check(board.read_text(), dru.read_text() if dru.exists() else '', args.profile)
     for i in issues: print('FAIL', i)
     print('actuator safety contract:', 'OK' if not issues else f'{len(issues)} issue(s)')
     return 1 if issues else 0

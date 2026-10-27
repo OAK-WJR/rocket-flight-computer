@@ -26,6 +26,8 @@ R6_NETS = ('USB_DP', 'USB_DM', 'HSE_IN', 'HSE_OUT', 'QSPI_CLK', 'QSPI_NCS', 'QSP
            'QSPI_IO3', 'SPI1_SCK', 'SPI1_MOSI', 'SPI1_MISO', 'IMU_CS')
 EXTENDED = ('SWDIO', 'SWCLK', 'NRST', 'RADIO_NSS', 'RADIO_SCK', 'RADIO_SCK_MCU', 'RADIO_MOSI', 'RADIO_MOSI_MCU',
             'RADIO_MISO', 'RADIO_MISO_MCU')
+R10_PORT_NETS = ('CAM_MCU_TX', 'CAM_MCU_RX') + tuple(f'{port}_{signal}_{side}' for port in ('GPS', 'RADIO', 'CAM')
+                      for signal in ('TX', 'RX') for side in ('MCU', 'WIRE', 'BUFFER'))
 STEP = 0.01
 
 
@@ -73,9 +75,11 @@ def inside(polys, x, y):
     return polys.Contains(pcbnew.VECTOR2I(MM(x), MM(y)), -1, 0, True)
 
 
-def compare(base, cand, dy, extended):
+def compare(base, cand, dy, extended, profile="r9"):
     refs = references(extended)
-    nets = R6_NETS + (EXTENDED if extended else ())
+    if profile not in ('r9', 'r10'):
+        raise ValueError(f'unknown reference profile {profile!r}')
+    nets = R6_NETS + (EXTENDED if extended else ()) + (R10_PORT_NETS if profile == 'r10' else ())
     fb, fc = fills(base, refs), fills(cand, refs)
     rep = {'nets': list(nets), 'layers': {pcbnew.LayerName(k): [pcbnew.LayerName(v[0]), list(v[1])]
                                           for k, v in refs.items()}}
@@ -116,8 +120,9 @@ def main():
     ap.add_argument('--dy', type=float, default=0.0, help='move the base by this much in y (R6 -> R7: 18)')
     ap.add_argument('--extended', action='store_true')
     ap.add_argument('--json')
+    ap.add_argument('--profile', choices=('r9', 'r10'), default='r9')
     a = ap.parse_args()
-    rep = compare(pcbnew.LoadBoard(a.base), pcbnew.LoadBoard(a.candidate), a.dy, a.extended)
+    rep = compare(pcbnew.LoadBoard(a.base), pcbnew.LoadBoard(a.candidate), a.dy, a.extended, a.profile)
     print(f"base referenced samples {rep['base_referenced_samples']} of {rep['base_samples']}; lost on the candidate "
           f"{rep['lost_on_candidate']}")
     for k, v in rep['lost_by_net_layer'].items():

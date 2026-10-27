@@ -113,7 +113,8 @@ CHECK_ACTUATORS = ROOT / 'm3_design/check_actuators.py'
 # the reviewed R9 check_actuators.py (15b rule-based, D-S1-02; DRU_SHA and rule G's PYRO_RULE_SHA re-pinned to R9's
 # m3.kicad_dru, D-S2-11; DRU_SHA re-pinned for the zone fill margins, D-S5-12); a reviewed change re-pins this and
 # records why
-CHECK_ACTUATORS_SHA = '3f22b273b712418a0a16646d4af28e46ee3c1167a35547650076338c06725240'
+# R10 migration: explicit --profile r10; default r9 behavior retained and regression-checked.
+CHECK_ACTUATORS_SHA = '85aaa6165b6deb1f1fde8e6d42701a5ce11bcedcf847015675b5956962d71dcf'
 EPS = 1e-3
 
 # --- recorded geometry (owner decisions, R9_OWNER_DECISIONS.md) --------------------------------------------------------

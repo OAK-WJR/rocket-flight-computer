@@ -256,7 +256,7 @@ ROUTE_FIGURES = {'GNSS_LNA_EN': (7.65, 1), 'GNSS_VCC_RF': (6.2, 1)}         # D5
 
 # Profiles: r8 (default) = the lists above and the keep-out-aware detour baseline (D10); r7 = the R7 record's lists
 # (route_lists_r7.py) and the plain baseline, which reproduces the owner-accepted R7 verdict on board c872a3d3...
-PROFILES = ('r9', 'r8', 'r7')
+PROFILES = ('r10', 'r9', 'r8', 'r7')
 PROFILE = 'r8'
 KEEPOUT_BASELINE = True
 _R8_LISTS = (ALLOWLIST, LEFTOVERS, ROUTE_FIGURES)
@@ -275,7 +275,7 @@ def set_profile(name):
     elif name == 'r8':
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = _R8_LISTS
         KEEPOUT_BASELINE = True
-    elif name == 'r9':                                      # r9_plan.md section 2: no exception of any kind
+    elif name in ('r9', 'r10'):                                      # r9_plan.md section 2: no exception of any kind
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = [], [], {}
         KEEPOUT_BASELINE = True
     else:
@@ -284,6 +284,13 @@ def set_profile(name):
 
 
 def net_class(name):
+    if PROFILE == 'r10':
+        if name.startswith('PORT_'):
+            return 'power'
+        if re.match(r'^(GPS_|RADIO_|CAM_).*?(TX|RX|EN|FAULT|OE)', name):
+            return 'rfif'  # same critical-signal policy, without an RF geometry contract
+        if re.match(r'^(PORT_|GPS_|RADIO_|CAM_).*(V[0-9]*|SUPPLY|SW|BST|INPUT|POWER|LIMITED)$', name):
+            return 'power'
     for c, rx in CLASSES:
         if re.search(rx, name):
             return c
@@ -862,7 +869,7 @@ def keepout_obstacles(board):
     if closed is not None:
         for i in range(closed.OutlineCount()):
             obs.append(('track keep-out on every layer', _poly_mm(closed.Outline(i))))
-    for ref, (w, h) in MODULE_BODIES.items():
+    for ref, (w, h) in ({} if PROFILE == 'r10' else MODULE_BODIES).items():
         f = board.FindFootprintByReference(ref)
         if f:
             x, y = mm(f.GetPosition().x), mm(f.GetPosition().y)
@@ -2439,7 +2446,31 @@ def _clearance_class(clearance):
         if str(p) not in sys.path:
             sys.path.insert(0, str(p))
     import r7_hygiene as hy                     # noqa: E402 (board-specific rules, imported only here)
-    return hy.Clearance
+    if PROFILE != 'r10':
+        return hy.Clearance
+
+    class R10Clearance(hy.Clearance):
+        """R10 board-default gap; retained probe/Tag-Connect rules, no pyro-specific spacing."""
+        def __init__(self, board):
+            super().__init__(board)
+            self.items = [(o, n, layers, box, 0.0 if extra == 0.3 else extra, uid)
+                          for o, n, layers, box, extra, uid in self.items]
+
+        def why(self, net, lay, a, c, w):
+            seg = pcbnew.SHAPE_SEGMENT(hy.V(a), hy.V(c), int(w))
+            for obj, other, layers, box, extra, uid in self.items:
+                if other == net or lay not in layers or uid in self.gone:
+                    continue
+                if isinstance(obj, pcbnew.SHAPE_SEGMENT):
+                    shape = obj
+                elif obj.GetClass() == 'PCB_VIA':
+                    shape = pcbnew.SHAPE_CIRCLE(obj.GetPosition(), obj.GetWidth(lay) // 2)
+                else:
+                    shape = obj.GetEffectiveShape(lay)
+                if seg.Collide(shape, pcbnew.FromMM(max(0.15, extra) + 0.01)):
+                    return other, 'R10 copper clearance'
+            return None
+    return R10Clearance
 
 
 class RedrawCheck:
@@ -2457,7 +2488,8 @@ class RedrawCheck:
         self.board = board
         self.clr = _clearance_class(clearance)(board)
         self.keep = [z for z in board.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowTracks()]
-        self.named = [z for z in board.Zones() if z.GetIsRuleArea() and z.GetZoneName() in NAMED_KEEPOUTS]
+        self.named = [z for z in board.Zones() if PROFILE != 'r10' and z.GetIsRuleArea()
+                      and z.GetZoneName() in NAMED_KEEPOUTS]
         self.npth = [((f_p.GetPosition().x, f_p.GetPosition().y), max(f_p.GetDrillSize().x, f_p.GetDrillSize().y) / 2)
                      for f in board.GetFootprints() for f_p in f.Pads() if f_p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH]
         self.edges, self.circles, self.outline = [], [], None

@@ -1,0 +1,44 @@
+{
+  "status": "Calculated conditional bounds; no physical or transient tests performed",
+  "temperature_excursion_from_25C": 100,
+  "buck_V": [
+    5.366681973094171,
+    5.546269302558957
+  ],
+  "ldo_V": [
+    4.711504463251122,
+    4.873250033991471
+  ],
+  "switch_Rmax_ohm": 0.135,
+  "camera_harness_copper_loop_max_ohm": 0.15,
+  "radio_gps_harness_copper_loop_max_ohm": 0.2,
+  "transient_allowance_V": 0.05,
+  "camera_module_min_V": 5.031681973094171,
+  "radio_module_min_V": 4.5610044632511215,
+  "gps_module_min_V": 4.611254463251122,
+  "radio_gps_module_max_V": 4.92325003399147,
+  "ldo_headroom_min_V": 0.44343193910270085,
+  "switch_limit_A": {
+    "camera": [
+      1.0408911159585672,
+      1.2494980434153073
+    ],
+    "radio": [
+      0.34769038777999106,
+      0.4530489900670699
+    ],
+    "gps": [
+      0.19086721209561405,
+      0.26011604492241286
+    ]
+  },
+  "buck_all_shorts_A": 1.9736630784047902,
+  "buck_camera_short_radio_gps_normal_A": 1.7104980434153072,
+  "ldo_bleeder_min_A": 0.005633075637555143,
+  "ldo_full_load_loss_W": 0.4061769032918402,
+  "ldo_ambient_85C_junction_inference_C": 110.38605645574,
+  "pack_7V4_four_stall_loaded_V": 5.920737507690561,
+  "pack_6V0_four_stall_loaded_V": 4.436329810008626,
+  "servo_star_board_return_max_A": 0.6144,
+  "u9_input_at_all_port_shorts_inference_A": 2.8591523589117456
+}

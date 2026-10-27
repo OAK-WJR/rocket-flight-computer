@@ -100,18 +100,38 @@ class Plate:                       # a, b [m]; D [N m]; rho_h [kg/m^2]  (pass2_m
         return X.T @ C @ Y                                           # (nx, ny)
 
 
-def build(fit, D, clamp, case):
+def build(fit, D, clamp, case, profile='r9', mass_spec=None):
+    if profile not in ('r9', 'r10'):
+        raise ValueError(f'unknown plate profile {profile!r}')
+    if profile == 'r10':
+        if fit.get('profile') != 'r10' or not mass_spec or mass_spec.get('profile') != 'r10':
+            raise ValueError('R10 requires an R10 fit report and explicit R10 mass specification')
+        if len(fit['supports']) != 5:
+            raise ValueError('R10 plate requires five effective supports')
+        if case != 'r10_mated':
+            raise ValueError('R10 plate must include the allocated mated plugs')
+        names = {row[1] for row in fit['rows']}
+        required = {'J1', 'J121', 'J124', 'J122', 'C84', 'J3', 'J9', 'J123', 'J400', 'J410', 'J420'}
+        required |= {name for name in names if name.endswith(' mated')}
+        if required - names or required - mass_spec.get('masses_g', {}).keys():
+            raise ValueError('R10 missing explicit body/plug masses: ' + str(sorted(
+                (required - names) | (required - mass_spec.get('masses_g', {}).keys()))))
+        if not mass_spec.get('basis'):
+            raise ValueError('R10 mass specification requires a source or labelled inference basis')
+        if any(not math.isfinite(v) or v <= 0 for v in mass_spec['masses_g'].values()):
+            raise ValueError('R10 masses must be finite and positive')
     x0, y0, x1, y1 = fit['outline']
     a, b = (x1 - x0) / 1e3, (y1 - y0) / 1e3
     p = Plate(a, b, D, NU, RHO_H)
     masses = {}
     for _, name, side, box in fit['rows']:
-        if ' ' in name or name in JACKS:
+        if profile != 'r10' and (' ' in name or name in JACKS):
             continue                                                # mated envelopes; the jacks are overhangs
         bx0, by0, bx1, by1, z0, z1 = box
         cx, cy = ((bx0 + bx1) / 2 - x0) / 1e3, ((by0 + by1) / 2 - y0) / 1e3
         cx, cy = min(max(cx, 0.0), a), min(max(cy, 0.0), b)
-        m = LUMPED[name] / 1e3 if name in LUMPED else SMALL_RHO * (bx1 - bx0) * (by1 - by0) * (z1 - z0) * 1e-9
+        lumped = mass_spec['masses_g'] if profile == 'r10' else LUMPED
+        m = lumped[name] / 1e3 if name in lumped else SMALL_RHO * (bx1 - bx0) * (by1 - by0) * (z1 - z0) * 1e-9
         masses[name] = (m, cx, cy, box)
         p.mass(cx, cy, m)
     if case in OVERHANG:
@@ -124,20 +144,20 @@ def build(fit, D, clamp, case):
     return p, masses, total
 
 
-def run(fit, label):
-    out = dict(label=label, board_sha256=fit.get('board_sha256'), supports=fit['supports'], f1={}, static={})
-    for case in ('jacks_only', 'plugs_on_jacks', 'no_jacks'):
+def run(fit, label, profile='r9', mass_spec=None):
+    out = dict(label=label, profile=profile, mass_spec=mass_spec, board_sha256=fit.get('board_sha256'), supports=fit['supports'], f1={}, static={})
+    for case in (('r10_mated',) if profile == 'r10' else ('jacks_only', 'plugs_on_jacks', 'no_jacks')):
         row = {}
         for clamp in (False, True):
             for D in (5.0, 10.0):
-                p, masses, total = build(fit, D, clamp, case)
+                p, masses, total = build(fit, D, clamp, case, profile, mass_spec)
                 f1 = float(p.modes(1)[0])
                 assert math.isfinite(f1), 'non-finite mode'
                 row[f"{'clamped' if clamp else 'pinned'}_D{int(D)}"] = round(f1, 1)
         out['f1'][case] = dict(row, board_mass_g=round(total * 1e3, 1))
     # quasi-static 100 g, D 5 pinned (halve for D 10), flight configuration (jacks only) and plugs on the jacks
-    for case in ('jacks_only', 'plugs_on_jacks', 'no_jacks'):
-        p, masses, _ = build(fit, 5.0, False, case)
+    for case in (('r10_mated',) if profile == 'r10' else ('jacks_only', 'plugs_on_jacks', 'no_jacks')):
+        p, masses, _ = build(fit, 5.0, False, case, profile, mass_spec)
         c = p.static(100 * 9.80665)
         assert np.all(np.isfinite(c)), 'non-finite static solution'
         x0, y0, x1, y1 = fit['outline']
@@ -166,8 +186,10 @@ def main():
     ap.add_argument('fit')
     ap.add_argument('--label', default='')
     ap.add_argument('--json')
+    ap.add_argument('--profile', choices=('r9', 'r10'), default='r9')
+    ap.add_argument('--mass-spec', help='R10 JSON: profile, basis and explicit masses_g for changed bodies and plugs')
     a = ap.parse_args()
-    out = run(json.load(open(a.fit)), a.label)
+    out = run(json.load(open(a.fit)), a.label, a.profile, json.load(open(a.mass_spec)) if a.mass_spec else None)
     print(json.dumps(out, indent=1))
     if a.json:
         json.dump(out, open(a.json, 'w'), indent=1)
