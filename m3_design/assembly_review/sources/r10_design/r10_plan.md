@@ -91,3 +91,41 @@ Estimated: items 1–4 plus the GPS port free about 500 mm² of parts, enough fo
 (Inference until placement is tried); item 5 or 6 would go further. Process as R9: generators rebuild the board
 reproducibly, `tools/check.sh` gates every step, and independent review passes run until two consecutive passes find
 no Critical or Major, then the owner accepts the deviation list.
+
+## 6. Owner decisions, second round (2026-10-26)
+
+The owner answered the plan's open items on 2026-10-26. These replace §2 items 5 and 6 and §3's recommendation.
+
+| # | Decision | What it means for the board |
+|---|---|---|
+| O1 | **External GPS on a JST GH UART port** (§3 adopted). | Remove U30, J30, the antenna-bias limiter, the GNSS ESD and pi network and their strip copper. Add a GH 4-pin GPS port with 3V3 through a current-limited load switch the MCU can turn off, ESD on the port lines and series resistors on TX / RX. The HGLRC M100 Mini (3.3–5 V, 115200 baud, SH1.0-4P) connects through an SH-to-GH lead. |
+| O2 | **External radio on a JST GH UART port** (this reverses the 2026-10-15 "radio on the board" decision). | Remove U31, J31 and the rest of the RF strip, so the board has no RF copper, no SMA jacks and no aft overhang. Add a GH 4-pin radio port for the MicoAir LR900-F air unit: 5 V DC on its GH port, about 200 mA average while transmitting at 27 dBm, 3.3 V UART, GH 4-pin ([MicoAir](https://micoair.com/radio_telemetry_lr900f/); figures from the reseller listing, to be checked against MicoAir's manual or by bench measurement). Its 5 V goes through a current-limited load switch the MCU can turn off. The uplink still can never arm or fire a pyro: no radio net may touch pyro, arming or actuator copper. The LR900-F's channels must be set inside 902–928 MHz (firmware and setup, not the board). |
+| O3 | **Servo power off the board** (§2 item 6 adopted). | Remove C121, C150, C151 and the 7.7 A copper. The servos are powered from the pack through the harness. The board keeps the four signal lines with their series resistors, pull-downs and clamp. Accepted loss: the board can no longer switch servo power, so F6's "tab to neutral on reset" no longer has a board-level means and becomes a harness and servo matter. The deviation list must say so. |
+| O4 | **Camera: a small 5 V regulator** in place of R9's camera supply block (U7, U8, L3 and their parts), not a direct feed from 2S. | RunCam's manual says "DC 5–20V (Non-direct power supply from battery, powered directly with battery will generate surges and burn the camera)" (`docs/SIMULATION.md` item 20), so the camera stays on a regulated 5 V. Use one compact buck (first candidate: AP63205WU-7, the 5 V sibling of U2's AP63203; verify against the maker's datasheet and JLC stock). Keep the camera UART back-feed protection (U12 / U13). |
+
+## 7. Build decisions that follow (agent defaults; review may change them with a recorded basis)
+
+- **Pyro bus source (AGENTS §2.2).** The pyro bus must still come "after the load switch (RAW), never straight from the
+  battery". With the servos gone, Q120 / Q121 and their gate network stay as the **pyro-bus load switch** feeding RAW_ACT,
+  which now serves J124.2 and the RAW_ACT sense only. Size the copper for the fire pulse: the R134 2 Ω limit gives about
+  4.2 A at 8.4 V for at most 20 ms. Smaller FETs are allowed only with a verified datasheet and JLC stock. The pyro bus
+  must not be fed from RAW_PROTECTED: U9's 3.96 A minimum limit is below the shorted-igniter current, so a shorted igniter
+  would brown out the logic.
+- **One 5 V rail** from the new buck feeds the camera port and the radio port, each through its own current-limited switch.
+  The GPS port runs on 3V3 through its own switch. Each switch has an MCU enable and a fault flag. The first candidate is
+  TPS2553DBVR, U10's part, which is already verified. F6's load shedding turns these switches off.
+- **Servo header:** keep J122 (3 × 4, 2.54 mm) so JR plugs seat. The signal row and the GND row are connected; the middle
+  (+) row has no connection, and the harness brings servo power to it. The silkscreen says so.
+- **J1 split:** the battery goes on a 2-position screw terminal from the same 3.5 mm family as J121 / J124, if its rating
+  covers about 6 A peak (logic plus a fire pulse); otherwise it goes on a 5.08 mm terminal. The external switch goes on a
+  keyed JST GH 2-pin.
+- **J123 (pull-pin):** JST PH becomes JST GH 2-pin (connector policy).
+- **C84:** becomes the 470 µF / 25 V 8 × 10 mm polymer (C46550466). C121 itself is removed (O3).
+- **MCU pins:** reuse the freed pins with each alternate function checked against DS12110. GPS on USART6 (PC6 TX, PC7 RX,
+  as the MAX-F10S used). Radio on a UART that is not a system-bootloader port (first candidate UART4, PD0 RX / PD1 TX).
+  The port enables and fault flags go on freed GPIOs (PD14, PD15, PE9, PD9, …).
+- **Layout (AVA as reference):** the board is 46 mm wide. Make it as short as the parts allow, and expect well under R9's
+  102 mm now that the RF strip is gone. Put U1 in the middle with the IMU next to it, the connectors on the edges (the
+  screw terminals on one long edge, the GH ports grouped on an edge, J122 at an end), the passives on the back where
+  possible, and four corner M3 holes. Simplicity and cleanness come first: short direct routes, few vias, no detours,
+  a solid ground. VEHICLE.md's bore (Ø50.8 mm) and height limits apply; update its board entry once R10 has an outline.
