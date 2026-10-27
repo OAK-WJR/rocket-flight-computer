@@ -1,5 +1,10 @@
 # R10 validation — round 1 implementation
 
+> **2026-10-27 update.** The R10 board is built and committed (board `883d2db5…`, 46 × 90 mm; `docs/M3_R10.md`);
+> `tools/check.sh` passes at zero on it. See "R10 build state" and "R10 deviations for owner acceptance" at the end.
+> The round-1 plan-review record below is kept as written; statements in it that no R10 implementation exists describe
+> that time. No independent review round has yet run on the built board.
+
 ## Owner decisions resolved; implementation in progress
 
 The owner resolved R1-01, R1-02 and R1-03 in plan §8, commit `40a1d28`.
@@ -210,6 +215,82 @@ fab manifest check: five outputs matched. This remains R9 evidence only.
 - Remaining mechanical, vibration, electrical, firmware and RF bench verification.
 
 No final deviation list is possible before the design is implemented and reviewed.
-The parent `../../docs/VEHICLE.md` has not been changed: no R10 outline is frozen,
-and the parent file lies outside this session's writable roots. No parent commit
-has been attempted.
+(Round-1 note, superseded 2026-10-27: the parent `../../docs/VEHICLE.md` board entry is now edited for 46 × 90 mm in the
+parent repository and left uncommitted there for the owner.)
+
+## R10 build state (2026-10-27)
+
+**Board** `m3_design/assembly_review/m3.kicad_pcb`, SHA-256
+`883d2db5bb35a8f88958a95a5da9cb96424ed1d1fe37b3b361d15d446bdc3b9a`, 46 × 90 mm, built by `m3_design/r10_build.sh` from
+the hash-pinned R9 inputs; three builds byte-identical (board and every schematic file). Netlist SHA-256 `3ebd815c…`.
+
+**Gates on the committed board** (CAD only; nothing below is a bench, physical or flight result):
+
+| Gate | Result |
+|---|---|
+| `r10_sch_check.py` (pins, parts, safety / UART-isolation contracts, strict ERC, deterministic regeneration, nine seeded faults) | OK, 0 ERC, all nine seeds caught |
+| `r10_stage_check.py` after each routing family (core, usb, pyro, power, signals, ground) | OK at every family; after ground: DRC 0, 0 unconnected, route_check 0 failing |
+| KiCad DRC, every severity incl. silkscreen, with schematic parity | 0 violations, 0 unconnected, 0 parity |
+| ERC | 0 |
+| Metadata / 3D model audit (quality_audit) | OK |
+| Silkscreen outline (tools/silk_check.py) | 0 stroke points outside |
+| fit_check --profile r10 | OK (CAD envelopes; GH ports mated 0.03 mm margin to the bore) |
+| plate_model --profile r10 | f1 276.4 Hz pinned (≥ 209 Hz); masses are Inference allowances |
+| check_r10 (S-1 … S-7, K-contract, K-actuators, LC-1, M-1 … M-7, P-8, P-11, F9-1, T-1, K-legends, K-copper, K-inner, K-reference, K-retained) | OK; P-11 and F9-1 hold R10's recorded figures pending OQ-1 / OQ-2 |
+| route_check --profile r10 (empty allowlist) | 0 failing, 0 leftovers |
+| check_actuators --profile r10 | OK |
+| tools/test_r10_check.py (44 seeded tests, on the committed board) | OK |
+| Fab (`m3_design/r10_fab.sh`): jlc_orient, export, CPL rebuild, paste, manifest | OK (229 placed parts, 82 BOM lines) |
+| JLC cost / stock (live data 2026-10-27) | **$87.01 per board vs the $84.41 target: missed**; 47 extended codes (≤ 52); short: R430 C185349 (17 in stock, 3,610 minimum purchase), U4 C26633007 (0, consign) |
+
+**Rules re-derived for R10 with a recorded basis** (R10_DECISIONS): K-reference (D-R2-10: B.Cu over any In2 rail plane,
+R9's own-antipad allowance, seven recorded edge strays); T-1 (D-R2-13: short edges admissible without SMA jacks).
+**Held pending the owner** (D-R2-14): P-11 (OQ-1), F9-1 (OQ-2).
+
+### Owner questions
+
+- **OQ-1 (P-11, wire room).** R10's west-edge 3.5 mm terminals leave 4.95 mm from their wire face to the bore wall;
+  R8 / R9 recorded 6.25 mm (R8's measured value, used as a floor). Accept 4.95 mm, or move J121 / J124 / J1 inboard
+  (costs length or re-placement)?
+- **OQ-2 (F9-1, reverse hot-plug premise).** R8's model lumps the harness at J1 with the protection parts within
+  10.6 mm of J1.1 and U9 within 27.07 mm; on R10 they are 12.9–29.8 mm away (D8 12.86, C80 21.59, C96 20.93, C89 20.58,
+  C95 20.55, R166 29.75, R167 25.47) and U9 32.22 mm. Re-model the hot plug with R10's feed (the board copper as added
+  harness inductance), or re-place the protection cluster beside J1?
+- **OQ-3 (cost).** The parts and feeder fees are $87.01 per board, $2.60 over M3's $84.41: accept, or reduce
+  (e.g. basic-library substitutes for extended codes)?
+- **OQ-4 (panel).** The aft-east corner can only be held by an aft-edge tab (east edge's aft third is the GH port column):
+  accept rails / frame on the aft edge as well (JLC to confirm), or move a port?
+
+## R10 deviations for owner acceptance (skeleton; to be completed by the review rounds)
+
+Each item needs its measured reason and the board hash it was measured on; review rounds add their Minor findings.
+
+1. **Pyro spacing rules dropped** (r10_plan §2 item 1): no rules A–H / A2, strict pad rules, battery-live 2.5 mm or
+   P-3 / P-6 / P-7; pyro copper at the board default 0.15 mm (DRC). **Accepted single-fault loss:** one defect (solder
+   bridge, strand, debris) bridging a default gap could join RAW to the armed bus. Kept: the ARM plug as a complete break
+   (S-1, by copper connectivity), the feed only through the load switch (S-2), gates defined off (S-3), J124's RAW–BUS1
+   gap ≥ 1.5 mm (S-5), the 2 Ω limit, bench gates and inspection.
+2. **O3, no board-level servo-power switching or failsafe:** the board can no longer cut servo power, so F6's "tab to
+   neutral on reset" has no board-level means; it becomes a harness and servo matter (neutral-on-reset qualified with the
+   chosen servo and harness).
+3. **O6, servo return through the harness:** each servo's − wire runs to the pack star; J122's GND row is a signal
+   reference only. Bounded board share: ≤ 0.62 A (4 × 7.68 mV / 50 mΩ with ≤ 1 mΩ star transfer resistance and ≥ 50 mΩ
+   per reference branch; an **Inference** from the specified harness, to be measured four-wire before flight).
+4. **External GPS and radio (O1 / O2):** L5 lost (M100 Mini is L1 only); the LR900-F link is a closed protocol
+   (transparent telemetry); its channels must be set inside 902–928 MHz (setup and firmware); module supply envelopes,
+   back-feed (TPS2553 reverse transient up to 7 ms) and installed immunity to be bench-qualified; the uplink still has no
+   path to arming or firing (S-6, binding note).
+5. **MCU pin re-maps** (D-R2-06, D-R2-07, D-R2-09): radio on UART5 PB12 / PB13; port enables / faults / OE on freed GPIOs;
+   PULLPIN / BUZZ_DRV swapped onto PC13 / PC14; LOGIC_SOURCE_ST / BAT_FAULT_N swapped onto PA4 / PA5; VLOGIC_SENSE moved
+   to PA6 (F6 watchdog input). Each checked against DS12110 Rev 10 and AN2606 Rev 64 (no loader pin); firmware binding new.
+6. **Parts without a maker datasheet:** C84 (MA25V470M8x10, C46550466; supplier-hosted JIERRUI datasheet only, reflow
+   qualification open, conservative 300.8 µF used for hold-up); generated 3D envelopes, not vendor models, for the five
+   new lands.
+7. **P-11 / F9-1** at R10's recorded figures (OQ-1, OQ-2) until the owner decides.
+8. **T-1 re-derived** (D-R2-13): tabs on the aft edge needed; ORDERING to be rewritten for R10.
+9. **Cost** $87.01 per board against $84.41 (OQ-3); R430's stock / minimum purchase.
+10. **Silkscreen:** 89 designators hidden (kept on Fab); U402 without a pin-1 dot (Fab mark only).
+11. **Agent decisions** D-R1-01 … D-R1-07 and D-R2-01 … D-R2-16 (R10_DECISIONS.md), each to be accepted or overruled.
+12. **Not verified:** DC / thermal (no 7.7 A path remains; fire pulse and buck input not solved), hold-up simulation,
+    port-supply corners, plate model masses, bore fit with real plugs and wires, every bench test.
+
