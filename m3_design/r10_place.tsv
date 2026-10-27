@@ -37,20 +37,20 @@ C29	28.0	43.52	-90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C30	17.05	48.73	270	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C31	14.7	47.07	270	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C32	7	46.65	180	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
-C400	43	52.1	-90	F	R10 power-local placement; maker loop geometry
-C401	43	57.5	0	F	R10 power-local placement; maker loop geometry
-C402	37	53.98	-90	B	R10 power-local placement; maker loop geometry
-C403	43	61.5	0	F	R10 power-local placement; maker loop geometry
-C404	43	65	0	F	R10 power-local placement; maker loop geometry
-C405	32	16	90	B	R10 power-local placement; maker loop geometry
-C406	24	15.8	90	B	R10 power-local placement; maker loop geometry
-C407	24	20.7	-90	B	R10 power-local placement; maker loop geometry
-C408	30.5	16	0	F	R10 power-local placement; maker loop geometry
+C400	12.6	5.55	180	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+C401	12.6	9	180	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+C402	19.6	4.775	-90	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+C403	30.1	3.6	0	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+C404	30.1	7	0	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+C405	24.4	10.3	180	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+C406	32.2	14.4	90	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+C407	31.7	19.1	90	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+C408	24.9	13.6	180	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 C410	31	10.5	0	F	R10 port-local placement; explicit routing lanes
 C411	42.9	10.2	0	B	R10 port-local placement; explicit routing lanes
 C420	31	22.5	0	F	R10 port-local placement; explicit routing lanes
 C421	42.9	22.2	0	B	R10 port-local placement; explicit routing lanes
-C430	31.8	28.6	0	F	R10 port-local placement; explicit routing lanes
+C430	41.3	40.9	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 C431	42.9	34.2	0	B	R10 port-local placement; explicit routing lanes
 C440	35.2	12	0	F	R10 port-local placement; explicit routing lanes
 C441	42.15	19.1	0	B	R10 port-local placement; explicit routing lanes
@@ -102,7 +102,7 @@ D9	23	65	0	F	R10 forward-band legalisation (D-R2-01)
 J1	7	75.85	-90	F	R10 pyro clearances (D-R2-02)
 J121	7	55.85	-90	F	R10 pyro clearances (D-R2-02)
 J122	23	82.0	-180	F	Servo end group; external power and return harness
-J123	12	7	0	F	R10 functional edge group; provisional
+J123	9	14	0	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 J124	7	65.85	-90	F	R10 pyro clearances (D-R2-02)
 J2	5	39.4	0	F	R10 functional edge group; provisional
 J3	4.6	30.799999999999997	-90	F	USB edge circuit translated 0,-3.5; direct new MCU links
@@ -111,7 +111,7 @@ J410	42.7	14	-90	F	GH mouth at east edge; 12mm connector pitch
 J420	42.7	26	-90	F	GH mouth at east edge; 12mm connector pitch
 J9	42.7	38.0	-90.0	F	R9 local camera geometry translated -10.2mm y
 L1	33.0	71.6	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
-L400	40.8	57.6	-90	B	R10 power-local placement; maker loop geometry
+L400	24.2	5.55	0	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 LED1	11.05	43.6	0	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
 LED2	11.85	45.5	0	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
 LS120	20.0	17.5	0	F	R9 local buzzer circuit translated -9,-8
@@ -173,21 +173,21 @@ R180	24.8	59.18	-90	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 R182	24.8	64.43	-90	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 R32	11.9	39.65	180	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
 R33	11.9	41.6	180	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
-R400	35.5	52.4	180	F	R10 power-local placement; maker loop geometry
-R401	35.5	49.2	0	F	R10 power-local placement; maker loop geometry
-R402	24.8	12	0	B	R10 power-local placement; maker loop geometry
-R403	27.9	12.6	90	B	R10 forward-band legalisation (D-R2-01)
-R404	35.5	50.8	0	F	R10 power-local placement; maker loop geometry
-R405	27.3	22.3	0	B	R10 power-local placement; maker loop geometry
-R410	28.6	7.3	0	B	R10 port-local placement; explicit routing lanes
-R411	32	7.7	0	B	R10 port-local placement; explicit routing lanes
-R412	29.5	5.5	0	B	R10 port-local placement; explicit routing lanes
-R420	28.6	19.3	0	B	R10 port-local placement; explicit routing lanes
-R421	32	19.7	0	B	R10 port-local placement; explicit routing lanes
-R422	29.5	17.5	0	F	R10 port-local placement; explicit routing lanes
-R430	36.9	32.9	90	F	R10 port-local placement; explicit routing lanes
-R431	28.6	28.6	0	F	R10 port-local placement; explicit routing lanes
-R432	31.8	26.3	0	F	R10 port-local placement; explicit routing lanes
+R400	19.9	1.8	180	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R401	13	1.8	180	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R402	29.6	13.1	0	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R403	29.6	14.9	0	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R404	16.625	1.8	180	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R405	27	18.4	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R410	35.3	10	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R411	30.3	6.6	90	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R412	26	32.6	90	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R420	35.3	26.4	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R421	29.7	23	90	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R422	32.6	38	90	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R430	41.3	39.1	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R431	34.6	38.4	90	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R432	32.6	41.6	90	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 R440	37.5	12.975	-90	F	R10 port-local placement; explicit routing lanes
 R441	37.5	17.725	-90	F	R10 port-local placement; explicit routing lanes
 R442	34.95	19.4	-90	F	R10 port-local placement; explicit routing lanes
@@ -241,13 +241,13 @@ U13	37.6	43.400000000000006	180.0	B	R9 local camera geometry translated -10.2mm 
 U2	33.0	66.8	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
 U3	22.6	41.2	90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 U4	17.0	45.9	180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
-U400	40.8	52.1	-90	B	R10 power-local placement; maker loop geometry
-U401	28	16	0	B	R10 power-local placement; maker loop geometry
-U402	31.8	31.8	0	F	R10 port-local placement; explicit routing lanes
-U410	31	10.5	0	B	R10 port-local placement; explicit routing lanes
+U400	16.9	5.55	0	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+U401	27.6	13.6	180	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+U402	37.6	39.1	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+U410	31.6	10	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 U411	35.2	15.35	-90	F	R10 port-local placement; explicit routing lanes
 U412	37.6	19.4	180	B	R10 port-local placement; explicit routing lanes
-U420	31	22.5	0	B	R10 port-local placement; explicit routing lanes
+U420	31	26.4	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 U421	35.2	27.35	-90	F	R10 port-local placement; explicit routing lanes
 U422	37.6	31.4	180	B	R10 port-local placement; explicit routing lanes
 U5	10.6	49.1	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
