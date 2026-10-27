@@ -129,3 +129,10 @@ The owner answered the plan's open items on 2026-10-26. These replace §2 items 
   screw terminals on one long edge, the GH ports grouped on an edge, J122 at an end), the passives on the back where
   possible, and four corner M3 holes. Simplicity and cleanness come first: short direct routes, few vias, no detours,
   a solid ground. VEHICLE.md's bore (Ø50.8 mm) and height limits apply; update its board entry once R10 has an outline.
+
+## 8. Owner decisions, third round (2026-10-26, answering review round 1's R1-01 / R1-02 / R1-03)
+
+| # | Decision |
+|---|---|
+| O5 | **Port supplies:** one small buck at about 5.3 V feeds the camera port (RunCam ≥ 5 V). A small LDO of about 4.8 V runs off that rail and feeds both the radio port (LR900 4.5–5 V) and the GPS port (M100 Mini 3.3–5 V). Each port keeps its own current-limited, MCU-switched load switch. This replaces §7's single 5 V rail and O1's 3V3 GPS supply. The exact set points, parts and tolerance budget (at the module input, after switch and harness losses) are for the implementation to qualify against the maker datasheets. |
+| O6 | **Servo return:** the harness runs each servo's − wire straight to the pack, alongside its + wire. J122's GND row stays connected to board GND as the signal reference only. The residual share of motor return current through the board, in parallel with the harness, must be bounded by calculation and listed. The board carries no designed servo current. |
