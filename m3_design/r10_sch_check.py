@@ -84,7 +84,7 @@ def seeds(parts, pins):
     mutations = {
         'ARM bypass': lambda p, n: n.update({('J124', '1'): 'RAW_ACT'}),
         'servo middle row powered': lambda p, n: n.update({('J122', '2'): 'RAW_ACT'}),
-        'radio USB injection bypass': lambda p, n: n.update({('U1', '81'): 'RADIO_RX_WIRE'}),
+        'radio USB injection bypass': lambda p, n: n.update({('U1', '51'): 'RADIO_RX_WIRE'}),
         'GPS OE pulldown missing': lambda p, n: p.pop('R442'),
         'radio enable bias missing': lambda p, n: p.pop('R421'),
         'pyro load switch removed': lambda p, n: p.pop('Q120'),
@@ -163,8 +163,8 @@ def binding_note(project, board=None):
             'usb_radio_vcc_backfeed': 'Separately qualify TPS2553 reverse current and up-to-7ms reverse-trip transition; UART isolation alone does not qualify the power pin.'},
         'firmware_obligations': [
             'Build a new reviewed binding through the assembly_binding design process; never substitute a board hash into the R1 chain.',
-            'GPS USART6 PC6 TX/PC7 RX AF7; radio UART4 PD1 TX/PD0 RX AF8. DS12110 Rev11 Table10 p92.',
-            'Camera UART7 PE8 TX/PE7 RX AF7 without flow control. UART4/USART6 are separate from the loader USART interfaces.',
+            'GPS USART6 PC6 TX/PC7 RX AF7; radio UART5 PB13 TX/PB12 RX AF14. DS12110 Rev10 Table11 p90.',
+            'Camera UART7 PE8 TX/PE7 RX AF7 without flow control. UART5/USART6 are separate from the loader USART interfaces (AN2606 Rev64 Table119 pp277-280: no UART5, PB12 or PB13).',
             'EXTI10 GPS fault, EXTI15 radio fault, EXTI11 camera fault; inherited EXTI4/5/6/8/14 retained. PE1 IMU interrupt polled.',
             'PE4 pyro gate low before GPIO configuration, port shutdown, ROM-loader entry or reset. Keep sentinel pins PE3/PE5/PE6/PC1/PC4 without nets and driven low in operation.',
             'Keep hardware watchdog and independent safety task; end every fire pulse within20ms. Ground ARM/continuity refusal; in-flight readings never veto a fire.',

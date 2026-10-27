@@ -1104,8 +1104,8 @@
     "62": "NC",
     "63": "GPS_TX_MCU",
     "64": "GPS_RX_MCU",
-    "81": "RADIO_RX_MCU",
-    "82": "RADIO_TX_MCU"
+    "51": "RADIO_RX_MCU",
+    "52": "RADIO_TX_MCU"
   },
   "replacements": {
     "J123": {
@@ -1340,7 +1340,7 @@
     ],
     "telemetry": [
       "R10: external GPS J410 and radio J420. GH4 pins 1 supply, 2 GND, 3 board TX, 4 board RX; harness crosses TX to endpoint RX.",
-      "GPS USART6 PC6 TX / PC7 RX AF7; radio UART4 PD1 TX / PD0 RX AF8 (DS12110 Rev11 Table10 p92).",
+      "GPS USART6 PC6 TX / PC7 RX AF7; radio UART5 PB13 TX / PB12 RX AF14 (DS12110 Rev10 Table11 p90).",
       "TXU0202 VCCA = main 3V3, VCCB = own switched TPS70933 output. OE has 10k pull-down. 1k UART series resistors and ground-only ESD clamps.",
       "Reset / boot / off: EN=0 and OE=0. Startup: EN, stable downstream supply, UART idle-high configuration, then OE. Shutdown: OE low before EN low.",
       "Radio USB-powered with board off: TXU partial-power-down isolation protects MCU; power-pin reverse/transient qualification remains a separate bench gate.",

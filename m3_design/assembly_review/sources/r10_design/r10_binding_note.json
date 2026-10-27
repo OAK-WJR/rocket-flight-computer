@@ -2,9 +2,9 @@
   "profile": "M3-ASSY-R10",
   "status": "record only; R1 binding invalid; no R10 firmware or flight approval",
   "board_sha256": null,
-  "netlist_sha256": "bc343ccbf18dfffcda2b8b2c5872ea9f081ec5c23b8d2cf467dafb23174c57fd",
-  "pin_table_sha256": "4835690464d1c9e28734f4b28cc0acee0df44526ffadc7fe37ffcfcbbc5a9114",
-  "circuit_sha256": "5685cc735b33f22efacf9edd615dfef1c15baf488b42e12ef8845f1aa190b74b",
+  "netlist_sha256": "05680d87c5f3bf52b1784694b56ec368a1c75cfe781c3906179ca611b98e7af6",
+  "pin_table_sha256": "2a696f54cd53c04050911fb95c91421dbed29527b239e3a9d1329e0fcac632d8",
+  "circuit_sha256": "4d7585b8e5c9d05d1673b55f5673acf2b54c7071d67083dffca4f81ab7811c54",
   "u1_pins": {
     "1": {
       "port": "PE2",
@@ -258,13 +258,13 @@
     },
     "51": {
       "port": "PB12",
-      "net": "NC",
-      "mode": "NC (firmware: analog)"
+      "net": "RADIO_RX_MCU",
+      "mode": "AF14 UART5_RX"
     },
     "52": {
       "port": "PB13",
-      "net": "NC",
-      "mode": "NC (firmware: analog)"
+      "net": "RADIO_TX_MCU",
+      "mode": "AF14 UART5_TX"
     },
     "53": {
       "port": "PB14",
@@ -408,13 +408,13 @@
     },
     "81": {
       "port": "PD0",
-      "net": "RADIO_RX_MCU",
-      "mode": "AF8 UART4_RX"
+      "net": "NC",
+      "mode": "NC (firmware: analog)"
     },
     "82": {
       "port": "PD1",
-      "net": "RADIO_TX_MCU",
-      "mode": "AF8 UART4_TX"
+      "net": "NC",
+      "mode": "NC (firmware: analog)"
     },
     "83": {
       "port": "PD2",
@@ -525,8 +525,8 @@
   },
   "firmware_obligations": [
     "Build a new reviewed binding through the assembly_binding design process; never substitute a board hash into the R1 chain.",
-    "GPS USART6 PC6 TX/PC7 RX AF7; radio UART4 PD1 TX/PD0 RX AF8. DS12110 Rev11 Table10 p92.",
-    "Camera UART7 PE8 TX/PE7 RX AF7 without flow control. UART4/USART6 are separate from the loader USART interfaces.",
+    "GPS USART6 PC6 TX/PC7 RX AF7; radio UART5 PB13 TX/PB12 RX AF14. DS12110 Rev10 Table11 p90.",
+    "Camera UART7 PE8 TX/PE7 RX AF7 without flow control. UART5/USART6 are separate from the loader USART interfaces (AN2606 Rev64 Table119 pp277-280: no UART5, PB12 or PB13).",
     "EXTI10 GPS fault, EXTI15 radio fault, EXTI11 camera fault; inherited EXTI4/5/6/8/14 retained. PE1 IMU interrupt polled.",
     "PE4 pyro gate low before GPIO configuration, port shutdown, ROM-loader entry or reset. Keep sentinel pins PE3/PE5/PE6/PC1/PC4 without nets and driven low in operation.",
     "Keep hardware watchdog and independent safety task; end every fire pulse within20ms. Ground ARM/continuity refusal; in-flight readings never veto a fire.",

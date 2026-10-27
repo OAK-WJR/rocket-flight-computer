@@ -96,7 +96,7 @@ CONNECTORS = {
     'J410': ('GPS_4V8', 'GND', 'GPS_TX_WIRE', 'GPS_RX_WIRE'),
     'J420': ('RADIO_4V8', 'GND', 'RADIO_TX_WIRE', 'RADIO_RX_WIRE'),
     'J9': ('CAM_5V', 'GND', 'CAM_RX_WIRE', 'CAM_TX_WIRE')}
-MCU = {'63': 'GPS_TX_MCU', '64': 'GPS_RX_MCU', '82': 'RADIO_TX_MCU', '81': 'RADIO_RX_MCU',
+MCU = {'63': 'GPS_TX_MCU', '64': 'GPS_RX_MCU', '52': 'RADIO_TX_MCU', '51': 'RADIO_RX_MCU',
        '61': 'GPS_PWR_EN', '57': 'GPS_FAULT_N', '39': 'GPS_UART_OE',
        '56': 'RADIO_PWR_EN', '45': 'RADIO_FAULT_N', '55': 'RADIO_UART_OE'}
 PARTS = {'J1': ('C466970', 'M3_DB125_2P_GN'),

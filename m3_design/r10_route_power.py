@@ -1,8 +1,10 @@
 """R10 power copper: the inner planes and the hand-routed supply nets (AGENTS 3), explicit pad-referenced polylines.
 
-In1 is solid GND. In2 is split by rail (R10_DECISIONS D-R2-03): RAW_PROTECTED wraps the board (the forward area, an east
-strip and an aft band that reaches the 5.3 V buck's input), PORT_5V3 is a column east of U1 with a finger to the buck
-output and the LDO input, and 3V3 is the rest with a forward finger for the 3V3 buck's output, D120 and the servo clamp.
+In1 is solid GND. In2 is split by rail (R10_DECISIONS D-R2-03, D-R2-05, D-R2-06): RAW_PROTECTED wraps the board (the
+forward area, an east strip and an aft band that reaches the 5.3 V buck's input), PORT_5V3 is a column x 35.2-39.7 from
+the buck output to the camera switch (y <= 42.5), PORT_4V8 the LDO output block x 28.3-32.4, and 3V3 is the rest: a
+strip x 32.7-34.9 under the port buffers, the area east of U1 forward of the camera switch, and a forward finger for
+the 3V3 buck's output, D120 and the servo clamp.
 The outer GND pours are drawn by the ground family. Zones are filled at the end of the build.
 """
 import pcbnew
@@ -15,12 +17,12 @@ IN1_GND = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7)]
 IN2_RAW = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7), (0.3, 58.0), (17.5, 58.0), (17.5, 62.0), (22.0, 62.0),
            (22.0, 76.0), (32.0, 76.0), (32.0, 58.0), (40.0, 58.0), (40.0, 7.0), (18.0, 7.0), (18.0, 10.5), (9.0, 10.5),
            (9.0, 7.0), (0.3, 7.0)]
-IN2_PORT = [(24.5, 7.3), (39.7, 7.3), (39.7, 57.7), (33.4, 57.7), (33.4, 8.8), (28.0, 8.8), (28.0, 15.5),
+IN2_PORT = [(24.5, 7.3), (39.7, 7.3), (39.7, 42.5), (35.2, 42.5), (35.2, 8.8), (28.0, 8.8), (28.0, 15.5),
             (24.5, 15.5)]
-IN2_4V8 = [(28.3, 9.1), (33.1, 9.1), (33.1, 29.0), (28.3, 29.0)]
+IN2_4V8 = [(28.3, 9.1), (32.4, 9.1), (32.4, 29.0), (28.3, 29.0)]
 IN2_3V3 = [(0.3, 7.3), (8.7, 7.3), (8.7, 10.8), (18.3, 10.8), (18.3, 7.3), (24.2, 7.3), (24.2, 15.8), (28.0, 15.8),
-           (28.0, 29.3), (33.1, 29.3), (33.1, 57.7), (31.7, 57.7), (31.7, 75.7), (22.3, 75.7), (22.3, 61.7),
-           (17.8, 61.7), (17.8, 57.7), (0.3, 57.7)]
+           (28.0, 29.3), (32.7, 29.3), (32.7, 9.1), (34.9, 9.1), (34.9, 42.8), (39.7, 42.8), (39.7, 57.7),
+           (31.7, 57.7), (31.7, 75.7), (22.3, 75.7), (22.3, 61.7), (17.8, 61.7), (17.8, 57.7), (0.3, 57.7)]
 
 
 def planes(d):
@@ -78,6 +80,10 @@ def efuse(d):
     t(rp, 'B', W, [(39.25, 77.0), (40.9, 77.0), (40.9, 76.2)])
     for at in ((40.9, 77.0), (40.9, 76.2)):       # east of C84's VLOGIC pad (top)
         via(rp, at)
+    # U11's RAW input (bottom) and C97 (top, directly over it) share one via into In2 RAW.
+    t(rp, 'B', 0.3, [p('U11.2'), (32.3, 63.0)])
+    t(rp, 'F', 0.3, [p('C97.1'), (32.3, 63.0)])
+    via(rp, (32.3, 63.0))
     # U9 control and timing pins.
     t('BAT_ILIM', 'B', 0.2, [p('U9.9'), p('R84.1')])
     t('BAT_ILIM', 'B', 0.2, [p('R84.1'), (41.275, 81.275), p('TP89.1')])
@@ -162,6 +168,10 @@ def ports(d):
     via('PORT_5V3', (35.5, 40.05))
     t('PORT_5V3', 'B', W, [(39.6, 41.25), (39.95, 40.9), p('C430.1')])
     via('PORT_5V3', (39.6, 41.25))
+    # Each port buffer's 3V3 pin joins its decoupling capacitor, whose own via reaches the In2 3V3 strip (D-R2-06).
+    t('3V3', 'F', 0.2, [p('U411.3'), (34.95, 12.9), (34.425, 12.375), p('C440.1')])
+    t('3V3', 'F', 0.2, [p('U421.3'), (34.95, 24.9), (34.425, 24.375), p('C450.1')])
+    t('3V3', 'F', 0.2, [p('U12.3'), (34.95, 36.77), p('C100.1')])
     # Switch control (local): ILIM resistors, EN pull-downs.
     t('GPS_ILIM', 'B', 0.2, [p('U410.5'), p('R410.1')])
     t('RADIO_ILIM', 'B', 0.2, [p('U420.5'), p('R420.1')])
@@ -198,6 +208,25 @@ def logic(d):
     t('3V3', 'B', W, [(32.2, 74.0), (31.4, 74.0)])
     via('3V3', (31.4, 74.0))
     t('3V3', 'B', W, [p('C8.1'), p('C9.1')])
+    t('3V3', 'B', W, [p('L1.2'), (33.0, 74.88), p('C8.1')])       # output caps join L1.2, whose via is in the finger
+
+
+def joins(d):
+    """Rail pads the fan-out aid finds no clear spot for, joined by hand (R10_DECISIONS D-R2-06)."""
+    t, p, via = d.track, d.pad, d.via
+    t('3V3', 'B', 0.2, [p('R62.1'), (21.28, 52.4), p('C14.1')])            # onto C14's 3V3 pad and its via
+    t('RAW_PROTECTED', 'F', W, [p('C82.1'), (36.2, 67.4), (36.9, 66.7)])    # east of C82 into In2 RAW
+    via('RAW_PROTECTED', (36.9, 66.7))
+    # U1.74 (VSS): south on F.Cu between pin 75's 3V3 via and pin 73's VCAP2 via (TP82 forbids a via north of it), to a
+    # via that also takes C17's GND pad.
+    t('GND', 'F', 0.2, [p('U1.74'), (17.5, 38.32)])
+    t('GND', 'B', 0.3, [p('C17.2'), (17.5, 38.32)])
+    via('GND', (17.5, 38.32))
+    t('GND', 'B', 0.2, [p('U9.8'), (40.325, 79.375), (40.7, 79.0)])         # U9's GND pin, via into the F pour / In1
+    via('GND', (40.7, 79.0))
+    t('GND', 'B', 0.3, [p('C88.2'), (39.9, 82.7)])                         # C88's return: a via in R166's GND pad
+    via('GND', (39.9, 82.7))
+    t('GND', 'B', 0.2, [p('C98.2'), p('U11.6')])                             # C98's return straight to U11's GND pin
 
 
 def draw(d):
@@ -207,3 +236,4 @@ def draw(d):
     efuse(d)
     ports(d)
     logic(d)
+    joins(d)

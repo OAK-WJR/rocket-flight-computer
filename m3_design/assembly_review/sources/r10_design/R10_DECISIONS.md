@@ -191,3 +191,33 @@ U12.3, U421.3 on 3V3; C82.1, U11.2 on RAW_PROTECTED; C11.2, C98.2, D421.2, D9.2,
 U1.10 / 49 / 74, U10.2, U11.6, U9.8 on GND, some of which the pours may reach) and 3 violations (a 3V3 fan-out via
 0.10 mm from a GND fan-out stub, C98.2 starved thermal, one GND stub not centred on a via). Fix those by hand in the
 power / ground tables, then route the non-critical signals.
+
+## D-R2-06. Rail fan-out finished; radio UART on UART5 (PB12 / PB13)
+
+**Decision (rails).** In2 is re-cut so every rail pad's via lands in its own plane: a 3V3 strip x 32.7-34.9 (y 9.1-42.8)
+under the three port buffers and pull-ups, PORT_5V3 narrowed to x 35.2-39.7 and ending at y 42.5 below the camera
+switch, PORT_4V8 narrowed to x 28.3-32.4, and the area x 33.4-39.7 forward of y 42.8 joined to 3V3 (C90). The fan-out
+aid (`m3_design/r10_fanout_aid.py`) now accepts a via only inside its net's plane region (>= 0.35 mm from the region
+edge; GND on In1), never overlapping other copper of its own net (no off-centre joins), and stops reporting a pad whose
+island got a via earlier in the same run. Pads it cannot serve are joined by hand in `r10_route_power.joins()`: R62.1
+to C14.1 (3V3), C82.1 east to a RAW via, U1.74 south between pin 75's and pin 73's vias to a via shared with C17.2
+(TP82 forbids a via north of it), U9.8 and C88.2 to their own GND vias (C88.2's sits in R166's GND pad, >= 1 mm from
+TP89), C98.2 straight to U11.6, U11.2 and C97.1 (stacked) to one shared RAW via; the buck output caps C8 / C9 join
+L1.2. Each port buffer's 3V3 pin joins its decoupling capacitor on F.Cu. No placement row changed.
+
+**Result (measured).** Families core, usb, pyro, power, ground: 0 DRC violations, 0 dangling vias; every unconnected
+item is a non-critical signal net (96 items in 52 nets). The 15 pads the aid still reports (C11.2, C98.2, D421.2,
+Q122.2, R178.2, R420.2, R5.2, R8.2, U1.10, U1.49, U10.2, U11.12, U11.4, U11.6, U401.4) are GND pads joined by the outer
+pours' thermals or by the hand joins.
+
+**Decision (radio UART).** The radio UART moves from UART4 on PD0 / PD1 (U1 pins 81 / 82, west edge) to UART5 on
+PB12 (RX, pin 51) / PB13 (TX, pin 52) on U1's north edge, next to the radio port cell. Verified in ST DS12110 Rev 10
+(March 2023, https://www.st.com/resource/en/datasheet/stm32h743vi.pdf): Table 11 "Port B alternate functions
+(continued)", p. 90, PB12 AF14 = UART5_RX and PB13 AF14 = UART5_TX; Table 9 pp. 73-75, LQFP100 pins 51 (PB12) and 52
+(PB13), both FT_u (footnote 9: VDD33USB supplies the pad only in USB configuration). ST AN2606 Rev 64 Table 119
+(pp. 277-280, STM32H74xxx/75xxx system-memory boot) uses neither UART5 nor PB12 / PB13, so the radio port stays off the
+ROM-loader interfaces. PD0 / PD1 return to NC. Changed: `pin_table.tsv` rows 51 / 52 / 81 / 82, `circuit.json`
+(mcu_changes, telemetry note), the schematic note in `r10_sch.py`, the binding note's pin entries and firmware
+obligation (`r10_sch_check.py --binding-note`), `tools/check_r10.py`'s MCU map and the seeded "radio USB injection
+bypass" fault (now on U1.51). `r10_sch_check.py`: ok, 0 ERC, all nine seeded faults caught. The previous record cited
+DS12110 Rev 11 Table 10 p. 92 for PD0 / PD1; the Rev 10 copy checked here numbers the Port B table 11 (p. 90).

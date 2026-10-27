@@ -22,6 +22,7 @@ VIA_D, VIA_H = 0.5, 0.3
 CLEAR = 0.2          # mm to other nets' copper (board default 0.15 plus margin)
 TP_CLEAR = 1.0       # bare test pads keep 1.0 mm (DRU)
 EDGE = 0.6
+PLANE_MARGIN = 0.35   # via centre to its plane region's outline
 MM, mm = pcbnew.FromMM, pcbnew.ToMM
 DIRS = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
 
@@ -54,6 +55,19 @@ def main():
     holes = [(mm(d.GetCenter().x), mm(d.GetCenter().y), mm(d.GetRadius())) for d in b.GetDrawings()
              if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_CIRCLE]
     keepouts = [z for z in b.Zones() if z.GetIsRuleArea()]
+    # The via must land inside its own net's plane: GND on In1, the rails on their In2 region (D-R2-06).
+    planes = {}
+    for z in b.Zones():
+        if not z.GetIsRuleArea() and z.GetNetname() in NETS and \
+                z.GetLayer() == (pcbnew.In1_Cu if z.GetNetname() == 'GND' else pcbnew.In2_Cu):
+            o = z.Outline().Outline(0)
+            pts = [(mm(o.CPoint(k).x), mm(o.CPoint(k).y)) for k in range(o.PointCount())]
+            planes.setdefault(z.GetNetname(), []).append((z.Outline(), pts))
+
+    def in_plane(net, x, y):
+        pt = pcbnew.VECTOR2I(MM(x), MM(y))
+        return any(o.Contains(pt) and min(seg_dist(x, y, *a, *b) for a, b in zip(pts, pts[1:] + pts[:1])) >= PLANE_MARGIN
+                   for o, pts in planes.get(net, ()))
     pads = [p for f in b.GetFootprints() for p in f.Pads()]
     items = [(p, p.GetNetname(), p.GetParentFootprint().GetReference().startswith('TP')) for p in pads] + \
             [(t, t.GetNetname(), False) for t in b.GetTracks()]
@@ -82,10 +96,14 @@ def main():
                         out.append(seg_dist(qx, qy, ax, ay, bx, by) - 0.15)
         return min(out) + (VIA_D / 2 if not seg else 0.15)
 
-    def clear(shape_layer_pairs, net, x, y):
+    def clear(shape_layer_pairs, net, x, y, own):
         for layer, shape in shape_layer_pairs:
             for it, n, tp in items:
-                if n == net or not it.IsOnLayer(layer):
+                if it.m_Uuid.AsString() == own or not it.IsOnLayer(layer):
+                    continue
+                if n == net:             # the via overlaps no other copper of its net (no off-centre joins)
+                    if shape.Type() == pcbnew.SH_CIRCLE and it.GetEffectiveShape(layer).Collide(shape, 0):
+                        return False
                     continue
                 c = TP_CLEAR if tp else CLEAR
                 if it.GetEffectiveShape(layer).Collide(shape, MM(c)):
@@ -106,14 +124,15 @@ def main():
         for z in keepouts:
             if z.GetDoNotAllowVias() and z.Outline().Contains(pcbnew.VECTOR2I(MM(x), MM(y))):
                 return False
-        return X0 + EDGE < x < X1 - EDGE and Y0 + EDGE < y < Y1 - EDGE
+        return X0 + EDGE < x < X1 - EDGE and Y0 + EDGE < y < Y1 - EDGE and in_plane(net, x, y)
 
     rows, missing = [], []
+    served = set()   # pads whose island got a via earlier in this run
     for p in sorted(pads, key=lambda p: (p.GetNetname(), p.GetParentFootprint().GetReference(), p.GetNumber())):
         net = p.GetNetname()
         if net not in NETS or p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD:
             continue
-        if island_has_via(b, p, net):
+        if island_has_via(b, p, net) or p.m_Uuid.AsString() in served:
             continue
         ref = f'{p.GetParentFootprint().GetReference()}.{p.GetNumber()}'
         layer = pcbnew.B_Cu if p.IsOnLayer(pcbnew.B_Cu) else pcbnew.F_Cu
@@ -129,13 +148,15 @@ def main():
                 if any(seg_dist(px, py, cx, cy, x, y) < VIA_D / 2 + 0.15 + 0.1 for px, py in placed + vias):
                     continue
                 cand.update(x=x, y=y, cx=cx, cy=cy, layer=layer)
-                if clear([(pcbnew.F_Cu, via), (pcbnew.B_Cu, via), (layer, stub)], net, x, y):
+                if clear([(pcbnew.F_Cu, via), (pcbnew.B_Cu, via), (layer, stub)], net, x, y, p.m_Uuid.AsString()):
                     best = (x, y)
                     break
             if best:
                 break
         if best:
             placed.append(best)
+            served.update(it.m_Uuid.AsString() for it in b.GetConnectivity().GetConnectedItems(p)
+                          if it.GetClass() == 'PAD')
             vx, vy = best
             new.append((net, pcbnew.F_Cu, ('via', vx, vy)))
             new.append((net, pcbnew.B_Cu, ('via', vx, vy)))
