@@ -87,7 +87,7 @@ C97	32.3	61.400000000000006	90.0	F	R9 logic local geometry translated -7,-5; fin
 C98	32.275	59.2	180.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
 C99	33.42	63.9	0	B	R10 power-family alignment (D-R2-05)
 D120	17	60.2	180	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
-D121	23	72.2	0	B	R10 forward-band legalisation (D-R2-01)
+D121	23	72.2	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
 D122	12	17	0	B	R10 pull-pin protection beside GH2
 D123	20.6	21.2	90	B	R10 forward-band legalisation (D-R2-01)
 D4	9.95	30.6	-90	F	USB edge circuit translated 0,-3.5; direct new MCU links
@@ -146,14 +146,14 @@ R131	10.8	61.15	0	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 R132	20	58.75	0	B	R10 forward-band legalisation (D-R2-01)
 R133	23.3	59.18	-90	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 R134	17	63.6	-90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
-R150	19.19	76.4	90	B	R10 forward-band legalisation (D-R2-01)
-R151	21.73	76.4	90	B	R10 forward-band legalisation (D-R2-01)
-R152	24.27	76.4	90	B	R10 forward-band legalisation (D-R2-01)
-R153	26.81	76.4	90	B	R10 forward-band legalisation (D-R2-01)
-R154	20.05	68.6	90	B	R10 pyro clearances (D-R2-02)
-R155	21.25	68.6	90	B	R10 pyro clearances (D-R2-02)
-R156	26.75	72.4	90	B	R10 forward-band legalisation (D-R2-01)
-R157	27.95	72.4	90	B	R10 forward-band legalisation (D-R2-01)
+R150	19.19	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp and each OUT pad faces J122 (D-R2-07)
+R151	21.73	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp and each OUT pad faces J122 (D-R2-07)
+R152	24.27	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp and each OUT pad faces J122 (D-R2-07)
+R153	26.81	76.4	-90	B	R10 servo resistors turned so each MCU pad faces the clamp and each OUT pad faces J122 (D-R2-07)
+R154	20.3	69.3	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
+R155	21.85	68.6	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
+R156	24.15	68.6	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
+R157	25.7	69.3	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
 R160	12	11	270	B	R10 pull-pin protection beside GH2
 R161	14	12	180	B	R10 pull-pin protection beside GH2
 R162	17.1	18.15	0	B	R9 local buzzer circuit translated -9,-8
@@ -184,10 +184,10 @@ R411	30.3	6.6	90	B	R10 port supply re-plan: buck aft-west top, LDO and switch ce
 R412	26	32.6	90	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 R420	35.3	26.4	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 R421	29.7	23	90	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
-R422	32.6	38	90	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R422	27.4	27.6	90	F	R10 RADIO_FAULT_N pull-up moved into the radio-control strip north of U1, off the U1 east escape channel (D-R2-07)
 R430	41.3	39.1	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 R431	34.6	38.4	90	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
-R432	32.6	41.6	90	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
+R432	32.6	38	90	F	R10 CAM_FAULT_N pull-up at the top of U1's east pin row, on its pin's lane (D-R2-07)
 R440	37.5	12.975	-90	F	R10 port-local placement; explicit routing lanes
 R441	37.5	17.725	-90	F	R10 port-local placement; explicit routing lanes
 R442	34.95	19.4	-90	F	R10 port-local placement; explicit routing lanes

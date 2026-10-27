@@ -165,7 +165,7 @@ def binding_note(project, board=None):
             'Build a new reviewed binding through the assembly_binding design process; never substitute a board hash into the R1 chain.',
             'GPS USART6 PC6 TX/PC7 RX AF7; radio UART5 PB13 TX/PB12 RX AF14. DS12110 Rev10 Table11 p90.',
             'Camera UART7 PE8 TX/PE7 RX AF7 without flow control. UART5/USART6 are separate from the loader USART interfaces (AN2606 Rev64 Table119 pp277-280: no UART5, PB12 or PB13).',
-            'EXTI10 GPS fault, EXTI15 radio fault, EXTI11 camera fault; inherited EXTI4/5/6/8/14 retained. PE1 IMU interrupt polled.',
+            'EXTI10 GPS fault, EXTI9 radio fault (PD9), EXTI12 camera fault (PE12); inherited EXTI4/5/6/8/14 retained. PE1 IMU interrupt polled.',
             'PE4 pyro gate low before GPIO configuration, port shutdown, ROM-loader entry or reset. Keep sentinel pins PE3/PE5/PE6/PC1/PC4 without nets and driven low in operation.',
             'Keep hardware watchdog and independent safety task; end every fire pulse within20ms. Ground ARM/continuity refusal; in-flight readings never veto a fire.',
             'Servo positive and motor return direct to pack. Board cannot cut servo power; qualify neutral-on-reset with the chosen servo and harness.',
@@ -174,7 +174,7 @@ def binding_note(project, board=None):
             'On shedding disable all three UART OEs and port switches, pause flash writes, lower MCU clock, extinguish LEDs/buzzer; retain IMU/barometer/flight state and safety timing.',
             'Preserve >=150ms switch-bounce immunity separately from battery-lead-break ride-through. Resume flight state from live evidence after reset.',
             'Radio uplink cannot arm or fire; configure LR900 channels within902-928MHz and qualify installed maximum-power radio/GPS immunity.',
-            'PC13 buzzer remains GPIO-toggled; PE10 and PE0 remain NC. Retained safety ADC dividers and sensor functions unchanged.'
+            'PC14 buzzer GPIO-toggled and PC13 pull-pin input (swapped for routing, D-R2-07); PE10 and PE0 remain NC. Retained safety ADC dividers and sensor functions unchanged.'
         ],
         'physical_tests': 'not performed; see R10 validation and power qualification',
     }

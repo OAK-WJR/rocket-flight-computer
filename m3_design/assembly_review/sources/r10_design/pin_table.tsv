@@ -5,8 +5,8 @@ pin	port	r9_net	r10_net	mode_af	exti	reset_contract	source
 4	PE5	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 64
 5	PE6	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 64
 6	VBAT	3V3	3V3	VBAT	-	-	-
-7	PC13	BUZZ_DRV	BUZZ_DRV	GPIO out	-	R163 10k to GND (via R162 220R): Q123 off	DS12110 Table 10 pp. 89-94 images, Table 9 p. 64 image
-8	PC14	PULLPIN	PULLPIN	GPIO in	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 65
+7	PC13	BUZZ_DRV	PULLPIN	GPIO in	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract); swapped with PC14 for routing (R10_DECISIONS D-R2-07)	DS12110 Rev10 Table9 (pin 7); Table63 note 2 pp142-143: VBAT-domain GPIO (PC13/PC14/PC15) limited to 2 MHz
+8	PC14	PULLPIN	BUZZ_DRV	GPIO out	-	R163 10k to GND (via R162 220R): Q123 off; swapped with PC13 for routing (R10_DECISIONS D-R2-07)	DS12110 Rev10 Table9 (pin 8); Table63 note 2 pp142-143: VBAT-domain GPIO limited to 2 MHz, as PC13 was (buzzer 4 kHz)
 9	PC15	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 65
 10	VSS	GND	GND	VSS	-	-	-
 11	VDD	3V3	3V3	VDD	-	-	-
@@ -29,7 +29,7 @@ pin	port	r9_net	r10_net	mode_af	exti	reset_contract	source
 28	PA4	BAT_FAULT_N	BAT_FAULT_N	GPIO in	EXTI4	R89 10k to 3V3: high (no fault)	DS12110 Table 10 pp. 89-94 images, Table 9 p. 69 image
 29	PA5	LOGIC_SOURCE_ST	LOGIC_SOURCE_ST	GPIO in	EXTI5	R91 10k to 3V3: high	DS12110 Table 10 pp. 89-94 images, Table 9 p. 69 image
 30	PA6	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 69
-31	PA7	CAM_UART_OE	CAM_UART_OE	GPIO out	-	R102 10k to GND: U12 disabled	DS12110 Table 10 pp. 89-94 images, Table 9 p. 70 image
+31	PA7	CAM_UART_OE	NC	NC (firmware: analog)	-	no net; CAM_UART_OE moved to PE9 (R10_DECISIONS D-R2-07)	DS12110 Rev10 Table9
 32	PC4	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 70
 33	PC5	ARM1_SENSE_MCU	ARM1_SENSE_MCU	ADC	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 70
 34	PB0	RAW_ACT_SENSE_MCU	RAW_ACT_SENSE_MCU	ADC	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 70
@@ -37,13 +37,13 @@ pin	port	r9_net	r10_net	mode_af	exti	reset_contract	source
 36	PB2	QSPI_CLK	QSPI_CLK	AF9 QUADSPI_CLK	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 71; Table 10 p. 90 image
 37	PE7	CAM_MCU_RX	CAM_MCU_RX	AF7 UART7_RX	-	U12 A2Y output, Hi-Z while OE low	DS12110 Table 10 pp. 89-94 images, Table 9 p. 72 image
 38	PE8	CAM_MCU_TX	CAM_MCU_TX	AF7 UART7_TX	-	U12 A1 input (CMOS)	DS12110 Table 10 pp. 89-94 images, Table 9 p. 72 image
-39	PE9	RADIO_NRST	GPS_UART_OE	GPIO output	-	100k EN / 10k OE external pulldown: off	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
+39	PE9	RADIO_NRST	CAM_UART_OE	GPIO out	-	R102 10k to GND: U12 disabled	DS12110 Rev10 Table9; GPIO only (no AF); not an AN2606 Rev64 Table119 loader pin; reassigned for routing (R10_DECISIONS D-R2-07)
 40	PE10	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 72
-41	PE11	CAM_FAULT_N	CAM_FAULT_N	GPIO in	EXTI11	R76 10k to 3V3: high	DS12110 Table 10 pp. 89-94 images, Table 9 p. 72 image
-42	PE12	CAM_PWR_EN	CAM_PWR_EN	GPIO out	-	R75 10k to GND (via R74 1k): camera eFuse U7 off	DS12110 Table 10 pp. 89-94 images, Table 9 p. 72 image
+41	PE11	CAM_FAULT_N	CAM_PWR_EN	GPIO out	-	100k EN external pulldown: off	DS12110 Rev10 Table9; GPIO only (no AF); swapped with PE11/PE12 for routing (R10_DECISIONS D-R2-07)
+42	PE12	CAM_PWR_EN	CAM_FAULT_N	GPIO in	EXTI12	10k pullup to main 3V3	DS12110 Rev10 Table9; GPIO only (no AF); swapped with PE11/PE12 for routing (R10_DECISIONS D-R2-07)
 43	PE13	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 72
 44	PE14	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 73
-45	PE15	RADIO_DIO1	RADIO_FAULT_N	GPIO input	15	10k pullup to main 3V3; no independent supply pullup	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
+45	PE15	RADIO_DIO1	RADIO_UART_OE	GPIO output	-	100k EN / 10k OE external pulldown: off	DS12110 Rev10 Table9; GPIO only (no AF); not an AN2606 Rev64 Table119 loader pin; reassigned for routing (R10_DECISIONS D-R2-07)
 46	PB10	RADIO_SCK_MCU	NC	NC	-	NC; analog mode	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
 47	PB11	RADIO_NSS	NC	NC	-	NC; analog mode	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
 48	VCAP	VCAP1	VCAP1	VCAP	-	-	-
@@ -53,14 +53,14 @@ pin	port	r9_net	r10_net	mode_af	exti	reset_contract	source
 52	PB13	NC	RADIO_TX_MCU	AF14 UART5_TX	-	TXU0202: isolated while OE low or either supply off	DS12110 Rev10 (March 2023) Table9 pp73-75 (LQFP100 pins 51/52, FT_u); AF Table11 "Port B alternate functions (continued)" p90: PB12 AF14 UART5_RX, PB13 AF14 UART5_TX; GPIO reset section3.8 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
 53	PB14	RADIO_MOSI_MCU	NC	NC	-	NC; analog mode	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
 54	PB15	RADIO_MISO_MCU	NC	NC	-	NC; analog mode	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
-55	PD8	RADIO_BUSY	RADIO_UART_OE	GPIO output	-	100k EN / 10k OE external pulldown: off	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
-56	PD9	RADIO_RXEN	RADIO_PWR_EN	GPIO output	-	100k EN / 10k OE external pulldown: off	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
+55	PD8	RADIO_BUSY	RADIO_PWR_EN	GPIO output	-	100k EN / 10k OE external pulldown: off	DS12110 Rev10 Table9; GPIO only (no AF); not an AN2606 Rev64 Table119 loader pin; reassigned for routing (R10_DECISIONS D-R2-07)
+56	PD9	RADIO_RXEN	RADIO_FAULT_N	GPIO input	9	10k pullup to main 3V3; no independent supply pullup	DS12110 Rev10 Table9; GPIO only (no AF); not an AN2606 Rev64 Table119 loader pin; reassigned for routing (R10_DECISIONS D-R2-07)
 57	PD10	NC	GPS_FAULT_N	GPIO input	10	10k pullup to main 3V3; no independent supply pullup	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
 58	PD11	QSPI_IO0	QSPI_IO0	AF9 QUADSPI_BK1_IO0	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 76; Table 10 p. 93 image
 59	PD12	QSPI_IO1	QSPI_IO1	AF9 QUADSPI_BK1_IO1	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 76; Table 10 p. 93 image
 60	PD13	QSPI_IO3	QSPI_IO3	AF9 QUADSPI_BK1_IO3	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 76; Table 10 p. 93 image
 61	PD14	GNSS_RESET_N	GPS_PWR_EN	GPIO output	-	100k EN / 10k OE external pulldown: off	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
-62	PD15	GNSS_TP_MCU	NC	NC	-	NC; analog mode	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
+62	PD15	GNSS_TP_MCU	GPS_UART_OE	GPIO output	-	100k EN / 10k OE external pulldown: off	DS12110 Rev10 Table9 pp75-76 (LQFP100 pin 62, FT_h); not an AN2606 Rev64 Table119 loader pin; GPIO reset section3.8 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
 63	PC6	GNSS_RXD_MCU	GPS_TX_MCU	AF7 USART6_TX	-	TXU0202: isolated while OE low or either supply off	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
 64	PC7	GNSS_TXD_MCU	GPS_RX_MCU	AF7 USART6_RX	-	TXU0202: isolated while OE low or either supply off	DS12110 Rev11 Table9 pp77-83; GPIO reset section3.8 p32; AF Table10 p92 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
 65	PC8	VBUS_SENSE	VBUS_SENSE	GPIO in	EXTI8 (BUSY PD8 polled)	R9/R110 1k:1k divider from VBUS: 0 V without USB	DS12110 Table 10 pp. 89-94 images, Table 9 p. 79 image

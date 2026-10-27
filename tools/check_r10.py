@@ -97,8 +97,8 @@ CONNECTORS = {
     'J420': ('RADIO_4V8', 'GND', 'RADIO_TX_WIRE', 'RADIO_RX_WIRE'),
     'J9': ('CAM_5V', 'GND', 'CAM_RX_WIRE', 'CAM_TX_WIRE')}
 MCU = {'63': 'GPS_TX_MCU', '64': 'GPS_RX_MCU', '52': 'RADIO_TX_MCU', '51': 'RADIO_RX_MCU',
-       '61': 'GPS_PWR_EN', '57': 'GPS_FAULT_N', '39': 'GPS_UART_OE',
-       '56': 'RADIO_PWR_EN', '45': 'RADIO_FAULT_N', '55': 'RADIO_UART_OE'}
+       '61': 'GPS_PWR_EN', '57': 'GPS_FAULT_N', '62': 'GPS_UART_OE',
+       '55': 'RADIO_PWR_EN', '56': 'RADIO_FAULT_N', '45': 'RADIO_UART_OE'}
 PARTS = {'J1': ('C466970', 'M3_DB125_2P_GN'),
          'J121': ('C52993880', 'M3_DB125_2P_BK'), 'J124': ('C52993880', 'M3_DB125_2P_BK'),
          'J400': ('C161690', 'M3_GH_BM02B_GHS_TBT'), 'J123': ('C161690', 'M3_GH_BM02B_GHS_TBT'),
@@ -205,9 +205,9 @@ def port_power(pins, values, codes):
                  7: 'PORT_5V3', 8: 'PORT_LDO_SS', 9: 'PORT_5V3', 10: 'PORT_5V3', 11: 'GND'}}
     pinned = {'U400': 'C2071044', 'U401': 'C2878140'}
     for port, switch, rb, supply, out, limit, code, mcu in (
-            ('CAM', 'U402', 430, 'PORT_5V3', 'CAM_5V', '22.6k 1%', 'C185349', ('42', '41')),
+            ('CAM', 'U402', 430, 'PORT_5V3', 'CAM_5V', '22.6k 1%', 'C185349', ('41', '42')),
             ('GPS', 'U410', 410, 'PORT_4V8', 'GPS_4V8', '100k 1%', 'C14675', ('61', '57')),
-            ('RADIO', 'U420', 420, 'PORT_4V8', 'RADIO_4V8', '66.5k 1%', 'C137691', ('56', '45'))):
+            ('RADIO', 'U420', 420, 'PORT_4V8', 'RADIO_4V8', '66.5k 1%', 'C137691', ('55', '56'))):
         expected[switch] = {1: supply, 2: 'GND', 3: f'{port}_PWR_EN', 4: f'{port}_FAULT_N',
                             5: f'{port}_ILIM', 6: out}
         pinned[switch] = 'C55266'

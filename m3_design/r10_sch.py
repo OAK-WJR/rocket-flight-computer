@@ -216,7 +216,7 @@ def build(out, netlist=True):
                 read, patch, _ = sch._reader()
                 t = patch(t, [(n.start, n.end, '') for n in read(t).children('text')
                               if 'radio SPI2' in n.items[1].atom or 'R8 EXTI:' in n.items[1].atom])
-                t = sch.insert(t, sch.note('R10: USART6 PC6/PC7 AF7 GPS; UART5 PB13/PB12 AF14 radio. Port EN and OE default low. EXTI10 GPS_FAULT_N; EXTI15 RADIO_FAULT_N. PE1 remains polled.', 20.32, 259.08, 'mcu:r10:ports'))
+                t = sch.insert(t, sch.note('R10: USART6 PC6/PC7 AF7 GPS; UART5 PB13/PB12 AF14 radio. Port EN and OE default low. EXTI10 GPS_FAULT_N; EXTI9 RADIO_FAULT_N; EXTI12 CAM_FAULT_N. PE1 remains polled.', 20.32, 259.08, 'mcu:r10:ports'))
             if file.name == 'servos.kicad_sch':
                 for pin in ('2', '5', '8', '11'):
                     t = change_pin(t, 'J122', pin, None, library)

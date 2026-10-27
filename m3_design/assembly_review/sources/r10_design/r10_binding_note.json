@@ -2,9 +2,9 @@
   "profile": "M3-ASSY-R10",
   "status": "record only; R1 binding invalid; no R10 firmware or flight approval",
   "board_sha256": null,
-  "netlist_sha256": "05680d87c5f3bf52b1784694b56ec368a1c75cfe781c3906179ca611b98e7af6",
-  "pin_table_sha256": "2a696f54cd53c04050911fb95c91421dbed29527b239e3a9d1329e0fcac632d8",
-  "circuit_sha256": "4d7585b8e5c9d05d1673b55f5673acf2b54c7071d67083dffca4f81ab7811c54",
+  "netlist_sha256": "0be820e627fcd06a7aba0f04d52476b3889130cc9ded89baa1193c499d40f1c8",
+  "pin_table_sha256": "5a4efcc2183d9ad95519dec426baa79ea162122c5345595861a46f9accda77d1",
+  "circuit_sha256": "97896fb54de5b24c11779ede80769e8c37d384032e8aa1a3b83c0fdcc12e265b",
   "u1_pins": {
     "1": {
       "port": "PE2",
@@ -38,13 +38,13 @@
     },
     "7": {
       "port": "PC13",
-      "net": "BUZZ_DRV",
-      "mode": "GPIO out"
+      "net": "PULLPIN",
+      "mode": "GPIO in"
     },
     "8": {
       "port": "PC14",
-      "net": "PULLPIN",
-      "mode": "GPIO in"
+      "net": "BUZZ_DRV",
+      "mode": "GPIO out"
     },
     "9": {
       "port": "PC15",
@@ -158,8 +158,8 @@
     },
     "31": {
       "port": "PA7",
-      "net": "CAM_UART_OE",
-      "mode": "GPIO out"
+      "net": "NC",
+      "mode": "NC (firmware: analog)"
     },
     "32": {
       "port": "PC4",
@@ -198,8 +198,8 @@
     },
     "39": {
       "port": "PE9",
-      "net": "GPS_UART_OE",
-      "mode": "GPIO output"
+      "net": "CAM_UART_OE",
+      "mode": "GPIO out"
     },
     "40": {
       "port": "PE10",
@@ -208,13 +208,13 @@
     },
     "41": {
       "port": "PE11",
-      "net": "CAM_FAULT_N",
-      "mode": "GPIO in"
+      "net": "CAM_PWR_EN",
+      "mode": "GPIO out"
     },
     "42": {
       "port": "PE12",
-      "net": "CAM_PWR_EN",
-      "mode": "GPIO out"
+      "net": "CAM_FAULT_N",
+      "mode": "GPIO in"
     },
     "43": {
       "port": "PE13",
@@ -228,8 +228,8 @@
     },
     "45": {
       "port": "PE15",
-      "net": "RADIO_FAULT_N",
-      "mode": "GPIO input"
+      "net": "RADIO_UART_OE",
+      "mode": "GPIO output"
     },
     "46": {
       "port": "PB10",
@@ -278,13 +278,13 @@
     },
     "55": {
       "port": "PD8",
-      "net": "RADIO_UART_OE",
+      "net": "RADIO_PWR_EN",
       "mode": "GPIO output"
     },
     "56": {
       "port": "PD9",
-      "net": "RADIO_PWR_EN",
-      "mode": "GPIO output"
+      "net": "RADIO_FAULT_N",
+      "mode": "GPIO input"
     },
     "57": {
       "port": "PD10",
@@ -313,8 +313,8 @@
     },
     "62": {
       "port": "PD15",
-      "net": "NC",
-      "mode": "NC"
+      "net": "GPS_UART_OE",
+      "mode": "GPIO output"
     },
     "63": {
       "port": "PC6",
@@ -527,7 +527,7 @@
     "Build a new reviewed binding through the assembly_binding design process; never substitute a board hash into the R1 chain.",
     "GPS USART6 PC6 TX/PC7 RX AF7; radio UART5 PB13 TX/PB12 RX AF14. DS12110 Rev10 Table11 p90.",
     "Camera UART7 PE8 TX/PE7 RX AF7 without flow control. UART5/USART6 are separate from the loader USART interfaces (AN2606 Rev64 Table119 pp277-280: no UART5, PB12 or PB13).",
-    "EXTI10 GPS fault, EXTI15 radio fault, EXTI11 camera fault; inherited EXTI4/5/6/8/14 retained. PE1 IMU interrupt polled.",
+    "EXTI10 GPS fault, EXTI9 radio fault (PD9), EXTI12 camera fault (PE12); inherited EXTI4/5/6/8/14 retained. PE1 IMU interrupt polled.",
     "PE4 pyro gate low before GPIO configuration, port shutdown, ROM-loader entry or reset. Keep sentinel pins PE3/PE5/PE6/PC1/PC4 without nets and driven low in operation.",
     "Keep hardware watchdog and independent safety task; end every fire pulse within20ms. Ground ARM/continuity refusal; in-flight readings never veto a fire.",
     "Servo positive and motor return direct to pack. Board cannot cut servo power; qualify neutral-on-reset with the chosen servo and harness.",
@@ -536,7 +536,7 @@
     "On shedding disable all three UART OEs and port switches, pause flash writes, lower MCU clock, extinguish LEDs/buzzer; retain IMU/barometer/flight state and safety timing.",
     "Preserve >=150ms switch-bounce immunity separately from battery-lead-break ride-through. Resume flight state from live evidence after reset.",
     "Radio uplink cannot arm or fire; configure LR900 channels within902-928MHz and qualify installed maximum-power radio/GPS immunity.",
-    "PC13 buzzer remains GPIO-toggled; PE10 and PE0 remain NC. Retained safety ADC dividers and sensor functions unchanged."
+    "PC14 buzzer GPIO-toggled and PC13 pull-pin input (swapped for routing, D-R2-07); PE10 and PE0 remain NC. Retained safety ADC dividers and sensor functions unchanged."
   ],
   "physical_tests": "not performed; see R10 validation and power qualification"
 }
