@@ -26,6 +26,12 @@ MM, mm = pcbnew.FromMM, pcbnew.ToMM
 DIRS = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
 
 
+def seg_dist(px, py, ax, ay, bx, by):
+    vx, vy = bx - ax, by - ay
+    t = max(0.0, min(1.0, ((px - ax) * vx + (py - ay) * vy) / (vx * vx + vy * vy or 1e-12)))
+    return math.hypot(px - ax - t * vx, py - ay - t * vy)
+
+
 def island_has_via(board, pad, net):
     conn = board.GetConnectivity()
     for it in conn.GetConnectedItems(pad):
@@ -52,6 +58,29 @@ def main():
     items = [(p, p.GetNetname(), p.GetParentFootprint().GetReference().startswith('TP')) for p in pads] + \
             [(t, t.GetNetname(), False) for t in b.GetTracks()]
     placed = []      # vias chosen in this run, (x, y)
+    vias = [(mm(t.GetPosition().x), mm(t.GetPosition().y)) for t in b.GetTracks() if t.GetClass() == 'PCB_VIA']
+    new = []         # (net, layer, shape) of the stubs and vias chosen in this run
+
+    cand = {}
+
+    def min_dist_to(geo, shape_layer_pairs, layer, seg=False):
+        # distance from a stored item to the candidate via (both layers) or its stub (pad layer only)
+        pts = [(cand['x'], cand['y'])]
+        out = []
+        for gx in ([geo] if not seg else [geo]):
+            if not seg:
+                out.append(math.hypot(gx[0] - cand['x'], gx[1] - cand['y']) - VIA_D / 2)
+                if layer == cand['layer']:
+                    out.append(seg_dist(gx[0], gx[1], cand['cx'], cand['cy'], cand['x'], cand['y']) - 0.15)
+            else:
+                ax, ay, bx, by = gx
+                out.append(seg_dist(cand['x'], cand['y'], ax, ay, bx, by) - VIA_D / 2)
+                if layer == cand['layer']:
+                    for k in range(11):
+                        qx = cand['cx'] + (cand['x'] - cand['cx']) * k / 10
+                        qy = cand['cy'] + (cand['y'] - cand['cy']) * k / 10
+                        out.append(seg_dist(qx, qy, ax, ay, bx, by) - 0.15)
+        return min(out) + (VIA_D / 2 if not seg else 0.15)
 
     def clear(shape_layer_pairs, net, x, y):
         for layer, shape in shape_layer_pairs:
@@ -61,11 +90,18 @@ def main():
                 c = TP_CLEAR if tp else CLEAR
                 if it.GetEffectiveShape(layer).Collide(shape, MM(c)):
                     return False
-        for hx, hy, hr in holes:
-            if math.hypot(hx - x, hy - y) < hr + VIA_D / 2 + 0.25:
+        for n, l2, geo in new:                   # this run's own stubs and vias (plain geometry)
+            if n == net or l2 not in [l for l, _ in shape_layer_pairs]:
+                continue
+            if geo[0] == 'via' and min_dist_to(geo[1:], shape_layer_pairs, l2) < VIA_D / 2 + CLEAR:
                 return False
-        for px, py in placed:
-            if math.hypot(px - x, py - y) < VIA_D + CLEAR:
+            if geo[0] == 'seg' and min_dist_to(geo[1:], shape_layer_pairs, l2, seg=True) < 0.15 + CLEAR:
+                return False
+        for hx, hy, hr in holes:                 # Edge.Cuts holes: copper-to-edge 0.5 mm
+            if math.hypot(hx - x, hy - y) < hr + VIA_D / 2 + 0.55:
+                return False
+        for px, py in placed + vias:             # hole-to-hole 0.25 mm and no ring overlap, any net
+            if math.hypot(px - x, py - y) < VIA_D + 0.15:
                 return False
         for z in keepouts:
             if z.GetDoNotAllowVias() and z.Outline().Contains(pcbnew.VECTOR2I(MM(x), MM(y))):
@@ -86,12 +122,13 @@ def main():
         best = None
         for dist in [round(half + 0.35 + 0.05 * i, 3) for i in range(40)]:
             for dx, dy in DIRS:
-                k = dist / math.hypot(dx, dy) if dx and dy else dist
-                x, y = round(cx + dx * k, 2), round(cy + dy * k, 2)
-                if dx and dy and abs(abs(x - cx) - abs(y - cy)) > 1e-6:
-                    y = round(cy + dy * abs(x - cx), 2)
+                k = round(dist / math.hypot(dx, dy), 3) if dx and dy else dist
+                x, y = round(cx + dx * k, 4), round(cy + dy * k, 4)
                 via = pcbnew.SHAPE_CIRCLE(pcbnew.VECTOR2I(MM(x), MM(y)), MM(VIA_D / 2))
                 stub = pcbnew.SHAPE_SEGMENT(pcbnew.VECTOR2I(MM(cx), MM(cy)), pcbnew.VECTOR2I(MM(x), MM(y)), MM(0.3))
+                if any(seg_dist(px, py, cx, cy, x, y) < VIA_D / 2 + 0.15 + 0.1 for px, py in placed + vias):
+                    continue
+                cand.update(x=x, y=y, cx=cx, cy=cy, layer=layer)
                 if clear([(pcbnew.F_Cu, via), (pcbnew.B_Cu, via), (layer, stub)], net, x, y):
                     best = (x, y)
                     break
@@ -99,6 +136,10 @@ def main():
                 break
         if best:
             placed.append(best)
+            vx, vy = best
+            new.append((net, pcbnew.F_Cu, ('via', vx, vy)))
+            new.append((net, pcbnew.B_Cu, ('via', vx, vy)))
+            new.append((net, layer, ('seg', cx, cy, vx, vy)))
             rows.append((net, ref, 'B' if layer == pcbnew.B_Cu else 'F', *best))
         else:
             missing.append(ref)

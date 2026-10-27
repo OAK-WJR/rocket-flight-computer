@@ -180,3 +180,14 @@ lines; move the radio UART to UART5 PB12 / PB13 first (DS12110 AF check); (4) si
 fab script; (6) docs; (7) review rounds. Gate findings to settle: P-11 wire room (4.95 vs R8's 6.25 mm), F9-1's
 10.6 mm hot-plug premise with the split J1, legend wording. Since ff1ca18 check.sh targets R10 while the committed
 board is R9, so WIP commits do not pass the gate.
+
+## Handover update (2026-10-27, ground family started)
+
+`m3_design/r10_route_ground.py` (F.Cu / B.Cu GND pours, THT thermals; SMD GND pads get the DRU's small-pad relief) draws
+the frozen plane-via table `m3_design/r10_fanout.tsv`, made by the design aid `m3_design/r10_fanout_aid.py` on the
+routed board (run it after the core, usb, pyro and power families, on a filled copy). State with families core, usb,
+pyro, power, ground: 111 unconnected (the non-critical signals plus 19 rail pads the aid found no spot for: R62.1,
+U12.3, U421.3 on 3V3; C82.1, U11.2 on RAW_PROTECTED; C11.2, C98.2, D421.2, D9.2, Q122.2, R178.2, R420.2, R5.2,
+U1.10 / 49 / 74, U10.2, U11.6, U9.8 on GND, some of which the pours may reach) and 3 violations (a 3V3 fan-out via
+0.10 mm from a GND fan-out stub, C98.2 starved thermal, one GND stub not centred on a via). Fix those by hand in the
+power / ground tables, then route the non-critical signals.
