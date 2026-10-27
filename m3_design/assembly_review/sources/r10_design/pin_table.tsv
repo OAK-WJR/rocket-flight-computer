@@ -15,7 +15,7 @@ pin	port	r9_net	r10_net	mode_af	exti	reset_contract	source
 14	NRST	NRST	NRST	NRST	-	-	-
 15	PC0	PYRO1_CONT_MCU	PYRO1_CONT_MCU	ADC	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 67
 16	PC1	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 67
-17	PC2_C	VLOGIC_SENSE	VLOGIC_SENSE	ADC	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 67
+17	PC2_C	VLOGIC_SENSE	NC	NC (firmware: analog)	-	no net; VLOGIC_SENSE moved to PA6 (R10_DECISIONS D-R2-09)	DS12110 Rev10 Table 9 p. 67
 18	PC3_C	V3V3_SENSE	V3V3_SENSE	ADC	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 67
 19	VSSA	GND	GND	VSSA	-	-	-
 20	VREF+	3V3A	3V3A	VREF+	-	-	-
@@ -26,9 +26,9 @@ pin	port	r9_net	r10_net	mode_af	exti	reset_contract	source
 25	PA3	SERVO4_MCU	SERVO4_MCU	AF2 TIM5_CH4	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 69; Table 10 p. 89 image
 26	VSS	GND	GND	VSS	-	-	-
 27	VDD	3V3	3V3	VDD	-	-	-
-28	PA4	BAT_FAULT_N	BAT_FAULT_N	GPIO in	EXTI4	R89 10k to 3V3: high (no fault)	DS12110 Table 10 pp. 89-94 images, Table 9 p. 69 image
-29	PA5	LOGIC_SOURCE_ST	LOGIC_SOURCE_ST	GPIO in	EXTI5	R91 10k to 3V3: high	DS12110 Table 10 pp. 89-94 images, Table 9 p. 69 image
-30	PA6	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 69
+28	PA4	BAT_FAULT_N	LOGIC_SOURCE_ST	GPIO in	EXTI4	R91 10k to 3V3: high; moved from PA5 (R10_DECISIONS D-R2-09)	DS12110 Rev10 Table 9 p. 69 (PA4 TT_a)
+29	PA5	LOGIC_SOURCE_ST	BAT_FAULT_N	GPIO in	EXTI5	R89 10k to 3V3: high (no fault); moved from PA4 (R10_DECISIONS D-R2-09)	DS12110 Rev10 Table 9 p. 69 (PA5 TT_ha)
+30	PA6	NC	VLOGIC_SENSE	ADC (ADC12_INP3)	-	VLOGIC sense and F6 ADC watchdog input; moved from PC2_C (R10_DECISIONS D-R2-09)	DS12110 Rev10 Table 9 p. 69 (PA6 FT_a, ADC12_INP3)
 31	PA7	CAM_UART_OE	NC	NC (firmware: analog)	-	no net; CAM_UART_OE moved to PE9 (R10_DECISIONS D-R2-07)	DS12110 Rev10 Table9
 32	PC4	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 70
 33	PC5	ARM1_SENSE_MCU	ARM1_SENSE_MCU	ADC	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 70

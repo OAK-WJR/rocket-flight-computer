@@ -280,3 +280,41 @@ remaining and all non-critical signals too. The design-aid router's frozen outpu
 `m3_design/r10_aid/ncroute.py`) is to be replaced by deliberate hand-drawn tables; it may serve only as a sketch of
 feasible paths. First relieve the placement south of U1 (TP85, D9, R91, the sense-resistor chains and their diagonal
 runs) so the servo, sense and status lines can run as straight, grouped lanes, AVA-style.
+
+## D-R2-09. Placement relieved south and east of U1; three status pins re-mapped
+
+**Why.** D-R2-07's open nets were boxed in by one topology, not by lack of space: the ARM1 / RAW_ACT sense runs
+(chains south-west of U1, MCU pins U1.33 / U1.34 on its east edge) had to cross the servo bundle and the status lines
+from U1.28 / U1.29, and USB_LIMITED's bottom run at x 32.3 walls U1's east pins off on B.Cu from the U11 / U9 cells.
+U1.33 / U1.34 and the U1.32 sentinel stay (check_actuators pins them: sense resistors at the MCU end and the pyro
+guard pin), so the fix is: sense lanes outside, status lines inside crossing under them on B.Cu east of the wall.
+
+**Pins (plain GPIO / ADC, DS12110 Rev 10 Table 9 p. 69, LQFP100; none an AN2606 Rev 64 Table 119 loader pin).**
+LOGIC_SOURCE_ST PA5 -> PA4 (U1.28, EXTI4), BAT_FAULT_N PA4 -> PA5 (U1.29, EXTI5), VLOGIC_SENSE PC2_C (U1.17) -> PA6
+(U1.30, FT_a, ADC12_INP3; the F6 ADC watchdog input moves with it); U1.17 is NC. pin_table, circuit.json, the
+schematic note, the binding note's firmware obligations and check_r10's MCU map follow (the map now also carries
+D-R2-07's camera / buzzer / pull-pin moves, which it had missed). r10_sch_check: ok, 0 ERC, nine seeded faults caught.
+
+**Placement (r10_place.tsv rows citing this record; ptool: 0 placement violations).**
+- D9 (RAW_PROTECTED clamp) (23, 65) -> (41, 61) rot 180, beside C82 on the east, as R9 had it; its F.Cu band south of
+  U1 becomes the servo bundle's path. R122's RAW_PROTECTED end now takes its own In2 via (19.6, 66.0).
+- TP85 (BAT_FAULT_N) (25, 57.5) -> (37, 65.5), on BAT_FAULT_N's F.Cu column east of C82; R89 (its pull-up) B (28.3,
+  66.6) -> F (37.825, 55.0) on the same column. TP87 (LOGIC_SOURCE_ST) F (39, 62.8) -> B (34.6, 56.6) and R91 (its
+  pull-up) (28, 56.4) -> (33.8, 54.025) rot -90, both stubs off LOGIC_SOURCE_ST's straight B.Cu run to U11.9.
+- R170 / R172 (sense series 4.7k) turned horizontal at (32.56, 46.2) / (32.56, 45.25) beside U1.33 / U1.34 (P-8:
+  1.9 / 1.7 mm of *_MCU track), leaving U1.28-30's escapes and vias between them and the sense lanes.
+- VLOGIC divider R61 / C60 / R60 from x 29-33 (it straddled USB_LIMITED: VLOGIC_SENSE was unroutable) to a column at
+  x 38.7 on B.Cu with R60's VLOGIC pad on the spine (spine extended to R60.1).
+- R157 turned (GND pad east) so SERVO4 enters it straight; R105 turned and C94 / TP74 moved so the camera-5V divider
+  is one straight column R104 -> R105 -> C94 at x 39.57.
+
+**Copper.** SERVO1-4_MCU: one F.Cu bundle from U1.22-25, straight south, one staggered 45 deg turn (0.6 / 0.7 / 0.6 mm
+between diagonals), straight south over the bottom sense rows to one via each, then the servo cell unchanged.
+ARM1_SENSE / RAW_ACT_SENSE: one 45 deg run each from the chain vias, parallel to the servo bundle, then straight
+north at x 34.4 / 35.1 into R170 / R172 (chains, their vias and GND vias unchanged). BAT_FAULT_N, LOGIC_SOURCE_ST,
+VLOGIC_SENSE: straight escapes, one via each, straight B.Cu runs (two of them under C92's body, between its pads).
+CAM_5V_SENSE: one F.Cu run, no via (under R102's body, between its pads). C82's RAW via moved under C82
+(33.1, 66.6) off BAT_FAULT_N's column. The fan-out aid was re-run (its table stays legal: DRC 0).
+
+**Result (measured).** Families core, usb, pyro, power, signals, ground: DRC 0 violations, 0 unconnected; check_r10
+S-1..S-7, P-8 and K-contract OK; test_r10_check 44 tests OK.

@@ -115,32 +115,96 @@ def gnd_joins(d):
         via('GND', (39.3, y))
 
 
+def servo_lanes(d):
+    """SERVO1-4_MCU (U1.22-25, PA0-PA3) as one F.Cu bundle (R10_DECISIONS D-R2-09): straight south from the pins,
+    one staggered 45 deg turn (0.6 / 0.7 / 0.6 mm between the diagonals), straight south again over the bottom sense
+    rows to one via each at the head of the servo cell (SERVO1's lower, beside R122, so no bottom GND pour finger is
+    left between it and TP120's 1 mm clearance). The diagonals run parallel to the two sense lanes east of them."""
+    t, p, via = d.track, d.pad, d.via
+    for net, pin, turn, x, end in (('SERVO1_MCU', 'U1.22', 54.8, 20.4, 68.6), ('SERVO2_MCU', 'U1.23', 55.15, 22.7, 66.2),
+                                   ('SERVO3_MCU', 'U1.24', 55.65, 23.3, 66.7), ('SERVO4_MCU', 'U1.25', 56.0, 25.7, 66.4)):
+        a = p(pin)
+        t(net, 'F', S, [a, (a[0], turn), (x, turn + a[0] - x), (x, end)])
+        via(net, (x, end))
+
+
 def servo_cell(d):
     """Bottom servo cell: D121 (turned 90 deg) has S2 / S1 in its west column and S3 / S4 in its east column, so the
     inner lanes S2 and S3 run down the channel between the columns (tapping their pins and pull-downs from inside) and
     the outer lanes S1 and S4 pass outside and tap the south pins; each lane then ends in its 1 k resistor's MCU pad.
-    The lanes reach the cell through vias the MCU-side table brings them to (S1 west of D9, S2 / S3 between D9's pads,
-    S4 between R89's pads). The clamp's GND and 3V3 pins strap out sideways to one via each."""
+    Every lane enters from its via straight south (D-R2-09: R157 turned so its GND pad sits east of the S4 lane).
+    The clamp's GND and 3V3 pins strap out sideways to one via each."""
     t, p, via = d.track, d.pad, d.via
-    t('SERVO1_MCU', 'B', S, [(19.3, 65.05), (20.4, 66.15), p('R154.1')])
+    t('SERVO1_MCU', 'B', S, [(20.4, 68.6), p('R154.1')])
     t('SERVO1_MCU', 'B', S, [p('R154.1'), (20.4, 74.19), p('R150.1')])
     t('SERVO1_MCU', 'B', S, [(20.4, 73.15), p('D121.1')])
-    t('SERVO2_MCU', 'B', S, [(22.7, 66.5), (22.7, 74.43), p('R151.1')])
+    t('SERVO2_MCU', 'B', S, [(22.7, 66.2), (22.7, 74.43), p('R151.1')])
     t('SERVO2_MCU', 'B', S, [(22.7, 69.03), p('R155.1')])
     t('SERVO2_MCU', 'B', S, [(22.7, 71.25), p('D121.3')])
-    t('SERVO3_MCU', 'B', S, [(23.3, 67.2), (23.3, 74.43), p('R152.1')])
+    t('SERVO3_MCU', 'B', S, [(23.3, 66.7), (23.3, 74.43), p('R152.1')])
     t('SERVO3_MCU', 'B', S, [(23.3, 69.03), p('R156.1')])
     t('SERVO3_MCU', 'B', S, [(23.3, 71.25), p('D121.4')])
-    t('SERVO4_MCU', 'B', S, [(28.3, 65.6), (28.3, 69.73), p('R157.1')])
+    t('SERVO4_MCU', 'B', S, [(25.7, 66.4), p('R157.1')])
     t('SERVO4_MCU', 'B', S, [p('R157.1'), (25.7, 74.29), p('R153.1')])
     t('SERVO4_MCU', 'B', S, [(25.7, 73.15), p('D121.6')])
-    for net, at in (('SERVO1_MCU', (19.3, 65.05)), ('SERVO2_MCU', (22.7, 66.5)), ('SERVO3_MCU', (23.3, 67.2)),
-                    ('SERVO4_MCU', (28.3, 65.6))):
-        via(net, at)
     t('GND', 'B', IO, [p('D121.2'), (20.95, 72.2)])
     via('GND', (20.95, 72.2))
     t('3V3', 'B', IO, [p('D121.5'), (25.05, 72.2)])
     via('3V3', (25.05, 72.2))
+
+
+def east_lanes(d):
+    """U1's east-side status and supply-sense lines (R10_DECISIONS D-R2-09). The pyro sense lanes (pyro family) leave
+    U1.33 / U1.34 through R170 / R172 and run south at x 34.4 / 35.1. The three lines from U1.28-30 escape straight
+    east inside them, drop through one via each east of the USB_LIMITED run and cross under the sense lanes on B.Cu:
+    VLOGIC_SENSE (PA6) and BAT_FAULT_N (PA5) straight east under C92's body (between its pads), to the VLOGIC divider
+    and to BAT_FAULT_N's F.Cu column x 37.0; LOGIC_SOURCE_ST (PA4) straight south to U11.9, taking its pull-up R91 and
+    test pad TP87 by short stubs. BAT_FAULT_N's column takes its pull-up R89 and test pad TP85, passes C82 and runs
+    under C84's body (between its pads) to a via, then straight south on B.Cu between C9 and the VLOGIC spine into
+    U9.4."""
+    t, p, via = d.track, d.pad, d.via
+    # VLOGIC_SENSE (PA6): divider R61 / C60 / R60 hangs off a short lane x 38.66, R60's VLOGIC pad on the spine.
+    t('VLOGIC_SENSE', 'F', S, [p('U1.30'), (33.5, 47.0)])
+    via('VLOGIC_SENSE', (33.5, 47.0))
+    t('VLOGIC_SENSE', 'B', S, [(33.5, 47.0), (38.66, 47.0), p('R61.1')])
+    t('VLOGIC_SENSE', 'B', S, [p('R61.1'), p('C60.1')])
+    t('VLOGIC_SENSE', 'B', S, [p('C60.1'), p('R60.2')])
+    # BAT_FAULT_N (PA5)
+    t('BAT_FAULT_N', 'F', S, [p('U1.29'), (33.2, 47.5), (33.6, 47.9)])
+    via('BAT_FAULT_N', (33.6, 47.9))
+    t('BAT_FAULT_N', 'B', S, [(33.6, 47.9), (37.0, 47.9)])
+    via('BAT_FAULT_N', (37.0, 47.9))
+    t('BAT_FAULT_N', 'F', S, [(37.0, 47.9), p('R89.2')])
+    t('BAT_FAULT_N', 'F', S, [p('R89.2'), p('TP85.1')])
+    t('BAT_FAULT_N', 'F', S, [p('TP85.1'), (37.0, 74.0)])
+    via('BAT_FAULT_N', (37.0, 74.0))
+    t('BAT_FAULT_N', 'B', S, [(37.0, 74.0), (37.0, 78.9), (38.1, 78.9)])
+    # LOGIC_SOURCE_ST (PA4)
+    t('LOGIC_SOURCE_ST', 'F', S, [p('U1.28'), (32.65, 48.0), (32.95, 48.3)])
+    via('LOGIC_SOURCE_ST', (32.95, 48.3))
+    t('LOGIC_SOURCE_ST', 'B', S, [(32.95, 48.3), (32.95, 57.0), (33.8, 57.85), p('U11.9')])
+    t('LOGIC_SOURCE_ST', 'B', S, [(32.95, 54.85), p('R91.2')])
+    t('LOGIC_SOURCE_ST', 'B', S, [(32.95, 56.6), p('TP87.1')])
+
+
+def cam_sense(d):
+    """CAM_5V_SENSE (PB1, U1.35): straight east from the pin above the sense resistors, one 45 deg rise between the
+    camera UART hop vias, east under R102's body (between its pads) and straight south into the camera-supply
+    divider column R104 / R105 / C94 (R10_DECISIONS D-R2-09)."""
+    t, p = d.track, d.pad
+    t('CAM_5V_SENSE', 'F', S, [p('U1.35'), (33.35, 44.5), (34.45, 43.4), (39.57, 43.4), p('R104.2')])
+    t('CAM_5V_SENSE', 'F', S, [p('R104.2'), p('R105.1')])
+    t('CAM_5V_SENSE', 'F', S, [p('R105.1'), p('C94.1')])
+
+
+def south_sense(d):
+    """V3V3_SENSE (PC3_C, U1.18): one via under the pin, one 45 deg run south-west on B.Cu and into the divider node
+    R62.2 / R63.1 from the south."""
+    t, p, via = d.track, d.pad, d.via
+    t('V3V3_SENSE', 'F', S, [p('U1.18'), (25.5, 51.55)])
+    via('V3V3_SENSE', (25.5, 51.55))
+    t('V3V3_SENSE', 'B', S, [(25.5, 51.55), (22.6, 54.45), (20.42, 54.45), p('R63.1')])
+    t('V3V3_SENSE', 'B', S, [p('R62.2'), p('R63.1')])
 
 
 # ---- AUTO: generated by m3_design/r10_aid/ncroute.py + freeze_signals.py, then hand-cleaned (D-R2-07) ----
@@ -172,13 +236,6 @@ AUTO_TRACKS = [
     ('SERVO2_OUT', 'B', ['J122.4', 'R151.2']),
     ('SERVO3_OUT', 'B', ['J122.7', 'R152.2']),
     ('SERVO4_OUT', 'B', ['J122.10', 'R153.2']),
-    ('CAM_5V_SENSE', 'F', ['C94.1', (40.73, 49.2), 'R105.1']),
-    ('CAM_5V_SENSE', 'F', ['R105.1', (40.43, 49.11), (39.57, 48.25), 'R104.2']),
-    ('CAM_5V_SENSE', 'F', ['R104.2', (38.97, 47.8)]),
-    ('CAM_5V_SENSE', 'B', [(38.97, 47.8), (33.37, 53.4)]),
-    ('CAM_5V_SENSE', 'F', [(33.37, 53.4), (31.67, 55.1)]),
-    ('CAM_5V_SENSE', 'B', [(31.67, 55.1), (31.67, 44.4)]),
-    ('CAM_5V_SENSE', 'F', [(31.67, 44.4), (31.57, 44.5), 'U1.35']),
     ('GPS_FAULT_N', 'F', ['R412.1', 'U1.57']),
     ('GPS_FAULT_N', 'F', ['R412.1', (26.9, 32.525)]),
     ('GPS_FAULT_N', 'B', [(26.9, 32.525), (26.9, 15.725)]),
@@ -193,9 +250,6 @@ AUTO_TRACKS = [
     ('RADIO_FAULT_N', 'B', [(32.3, 24.5), 'U420.4']),
     ('RADIO_PWR_EN', 'F', ['U1.55', (27, 34.35), (28, 33.35), (28, 29.45)]),
     ('RADIO_PWR_EN', 'B', [(28, 29.45), (27.35, 28.8), (27.35, 25.45), 'U420.3']),
-    ('V3V3_SENSE', 'F', ['U1.18', (25.5, 51.55)]),
-    ('V3V3_SENSE', 'B', [(25.5, 51.55), (22.6, 54.45), (20.42, 54.45), 'R63.1']),
-    ('V3V3_SENSE', 'B', ['R62.2', 'R63.1']),
     ('BUZZ_DRV', 'F', ['U1.8', (20.5, 48.75), (21.8, 47.45), (21.8, 37.95), (23.1, 36.65)]),
     ('BUZZ_DRV', 'B', [(23.1, 36.65), (20.3, 33.85)]),
     ('BUZZ_DRV', 'F', [(20.3, 33.85), (20.3, 33.05), (17.8, 30.55)]),
@@ -209,10 +263,6 @@ AUTO_TRACKS = [
 AUTO_VIAS = [
     ('BUZZ_OUT', (21.85, 20.6)),
     ('PULLPIN_EXT', (8.375, 14.45)),
-    ('CAM_5V_SENSE', (38.97, 47.8)),
-    ('CAM_5V_SENSE', (33.37, 53.4)),
-    ('CAM_5V_SENSE', (31.67, 55.1)),
-    ('CAM_5V_SENSE', (31.67, 44.4)),
     ('GPS_FAULT_N', (26.9, 32.525)),
     ('GPS_FAULT_N', (26.9, 15.725)),
     ('GPS_FAULT_N', (31.3, 11.425)),
@@ -221,7 +271,6 @@ AUTO_VIAS = [
     ('GPS_PWR_EN', (27.2, 12.15)),
     ('RADIO_FAULT_N', (32.3, 24.5)),
     ('RADIO_PWR_EN', (28, 29.45)),
-    ('V3V3_SENSE', (25.5, 51.55)),
     ('BUZZ_DRV', (23.1, 36.65)),
     ('BUZZ_DRV', (20.3, 33.85)),
     ('BUZZ_DRV', (17.8, 30.55)),
@@ -236,7 +285,11 @@ def draw(d):
     port_wires(d)
     camera_control(d)
     gps_oe(d)
+    servo_lanes(d)
     servo_cell(d)
+    east_lanes(d)
+    south_sense(d)
+    cam_sense(d)
     gnd_joins(d)
     for net, layer, pts in AUTO_TRACKS:
         d.track(net, layer, S, [d.pad(p) if isinstance(p, str) else p for p in pts])

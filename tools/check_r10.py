@@ -98,7 +98,10 @@ CONNECTORS = {
     'J9': ('CAM_5V', 'GND', 'CAM_RX_WIRE', 'CAM_TX_WIRE')}
 MCU = {'63': 'GPS_TX_MCU', '64': 'GPS_RX_MCU', '52': 'RADIO_TX_MCU', '51': 'RADIO_RX_MCU',
        '61': 'GPS_PWR_EN', '57': 'GPS_FAULT_N', '62': 'GPS_UART_OE',
-       '55': 'RADIO_PWR_EN', '56': 'RADIO_FAULT_N', '45': 'RADIO_UART_OE'}
+       '55': 'RADIO_PWR_EN', '56': 'RADIO_FAULT_N', '45': 'RADIO_UART_OE',
+       # R10_DECISIONS D-R2-07 (camera control, buzzer / pull-pin) and D-R2-09 (status / VLOGIC sense pins)
+       '7': 'PULLPIN', '8': 'BUZZ_DRV', '31': 'NC', '39': 'CAM_UART_OE', '41': 'CAM_PWR_EN', '42': 'CAM_FAULT_N',
+       '17': 'NC', '28': 'LOGIC_SOURCE_ST', '29': 'BAT_FAULT_N', '30': 'VLOGIC_SENSE'}
 PARTS = {'J1': ('C466970', 'M3_DB125_2P_GN'),
          'J121': ('C52993880', 'M3_DB125_2P_BK'), 'J124': ('C52993880', 'M3_DB125_2P_BK'),
          'J400': ('C161690', 'M3_GH_BM02B_GHS_TBT'), 'J123': ('C161690', 'M3_GH_BM02B_GHS_TBT'),
@@ -285,7 +288,7 @@ def contract(text):
     with (ROOT / 'm3_design/assembly_review/sources/r8_design/pin_table.tsv').open() as table:
         expected_mcu = {row['pin']: row['r8_net'] for row in csv.DictReader(table, delimiter='\t')}
     expected_mcu.update(MCU)
-    expected_mcu.update({pin: 'NC' for pin in ('46', '47', '53', '54', '62')})
+    expected_mcu.update({pin: 'NC' for pin in ('46', '47', '53', '54')})
     for pin, net in expected_mcu.items():
         actual = pins.get('U1.' + pin)
         if actual != net and not (net == 'NC' and (actual is None or actual.startswith('unconnected-'))):

@@ -193,7 +193,7 @@ def logic(d):
     t('VLOGIC', 'B', W, [p('C99.1'), p('U2.2')])
     t('VLOGIC', 'B', W, [p('U2.2'), p('U2.3')])
     t('VLOGIC', 'B', W, [p('U2.3'), (35.75, 65.6), (37.8, 65.6)])
-    t('VLOGIC', 'B', W, [(37.8, 65.6), (37.8, 54.96), p('R60.1')])
+    t('VLOGIC', 'B', W, [(37.8, 65.6), p('R60.1')])
     t('VLOGIC', 'B', W, [(37.8, 65.6), (37.8, 67.0), (37.8, 69.8), p('C7.1')])
     t('VLOGIC', 'B', W, [(37.8, 69.8), (37.8, 75.6)])
     via('VLOGIC', (37.8, 75.6))
@@ -219,8 +219,10 @@ def joins(d):
     """Rail pads the fan-out aid finds no clear spot for, joined by hand (R10_DECISIONS D-R2-06)."""
     t, p, via = d.track, d.pad, d.via
     t('3V3', 'B', 0.2, [p('R62.1'), (21.28, 52.4), p('C14.1')])            # onto C14's 3V3 pad and its via
-    t('RAW_PROTECTED', 'F', W, [p('C82.1'), (36.2, 67.4), (36.9, 66.7)])    # east of C82 into In2 RAW
-    via('RAW_PROTECTED', (36.9, 66.7))
+    # C82's RAW end into In2 RAW by one 45 deg stub to a via under the part, between U2's pad rows on B.Cu (moved off
+    # the BAT_FAULT_N column east of C82, D-R2-09).
+    t('RAW_PROTECTED', 'F', W, [p('C82.1'), (33.1, 66.6)])
+    via('RAW_PROTECTED', (33.1, 66.6))
     # U1.74 (VSS): south on F.Cu between pin 75's 3V3 via and pin 73's VCAP2 via (TP82 forbids a via north of it), to a
     # via that also takes C17's GND pad.
     t('GND', 'F', 0.2, [p('U1.74'), (17.5, 38.32)])

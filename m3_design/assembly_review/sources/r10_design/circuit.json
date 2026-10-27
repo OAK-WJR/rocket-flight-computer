@@ -1110,7 +1110,11 @@
     "63": "GPS_TX_MCU",
     "64": "GPS_RX_MCU",
     "51": "RADIO_RX_MCU",
-    "52": "RADIO_TX_MCU"
+    "52": "RADIO_TX_MCU",
+    "17": "NC",
+    "28": "LOGIC_SOURCE_ST",
+    "29": "BAT_FAULT_N",
+    "30": "VLOGIC_SENSE"
   },
   "replacements": {
     "J123": {

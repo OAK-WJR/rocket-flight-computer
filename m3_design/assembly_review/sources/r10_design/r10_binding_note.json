@@ -2,9 +2,9 @@
   "profile": "M3-ASSY-R10",
   "status": "record only; R1 binding invalid; no R10 firmware or flight approval",
   "board_sha256": null,
-  "netlist_sha256": "0be820e627fcd06a7aba0f04d52476b3889130cc9ded89baa1193c499d40f1c8",
-  "pin_table_sha256": "5a4efcc2183d9ad95519dec426baa79ea162122c5345595861a46f9accda77d1",
-  "circuit_sha256": "97896fb54de5b24c11779ede80769e8c37d384032e8aa1a3b83c0fdcc12e265b",
+  "netlist_sha256": "3ebd815ccb1fc45b48dbb6904fc623f04f6f8e0c1e41c1972d6ae1f604c4e4a8",
+  "pin_table_sha256": "4373dd80f77bfb66acaf4c99148301acee50bafee956d0b60ae891f8493c6586",
+  "circuit_sha256": "294f1520b5d9e17356d8b8bc942a2e04c8b9bc6d2413947cf0138c59ad75e060",
   "u1_pins": {
     "1": {
       "port": "PE2",
@@ -88,8 +88,8 @@
     },
     "17": {
       "port": "PC2_C",
-      "net": "VLOGIC_SENSE",
-      "mode": "ADC"
+      "net": "NC",
+      "mode": "NC (firmware: analog)"
     },
     "18": {
       "port": "PC3_C",
@@ -143,18 +143,18 @@
     },
     "28": {
       "port": "PA4",
-      "net": "BAT_FAULT_N",
+      "net": "LOGIC_SOURCE_ST",
       "mode": "GPIO in"
     },
     "29": {
       "port": "PA5",
-      "net": "LOGIC_SOURCE_ST",
+      "net": "BAT_FAULT_N",
       "mode": "GPIO in"
     },
     "30": {
       "port": "PA6",
-      "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "net": "VLOGIC_SENSE",
+      "mode": "ADC (ADC12_INP3)"
     },
     "31": {
       "port": "PA7",
@@ -527,12 +527,12 @@
     "Build a new reviewed binding through the assembly_binding design process; never substitute a board hash into the R1 chain.",
     "GPS USART6 PC6 TX/PC7 RX AF7; radio UART5 PB13 TX/PB12 RX AF14. DS12110 Rev10 Table11 p90.",
     "Camera UART7 PE8 TX/PE7 RX AF7 without flow control. UART5/USART6 are separate from the loader USART interfaces (AN2606 Rev64 Table119 pp277-280: no UART5, PB12 or PB13).",
-    "EXTI10 GPS fault, EXTI9 radio fault (PD9), EXTI12 camera fault (PE12); inherited EXTI4/5/6/8/14 retained. PE1 IMU interrupt polled.",
+    "EXTI10 GPS fault, EXTI9 radio fault (PD9), EXTI12 camera fault (PE12); EXTI4 LOGIC_SOURCE_ST (PA4) and EXTI5 BAT_FAULT_N (PA5), swapped for routing (D-R2-09); inherited EXTI6/8/14 retained. PE1 IMU interrupt polled.",
     "PE4 pyro gate low before GPIO configuration, port shutdown, ROM-loader entry or reset. Keep sentinel pins PE3/PE5/PE6/PC1/PC4 without nets and driven low in operation.",
     "Keep hardware watchdog and independent safety task; end every fire pulse within20ms. Ground ARM/continuity refusal; in-flight readings never veto a fire.",
     "Servo positive and motor return direct to pack. Board cannot cut servo power; qualify neutral-on-reset with the chosen servo and harness.",
     "Maximum normal-flight MCU clock200MHz for the retained-load budget. Firmware not implemented.",
-    "F6 battery-break response uses PC2_C VLOGIC_SENSE ADC watchdog, not delayed port FAULT. Threshold, maximum detection/shedding latency and retained-load envelope require measured qualification.",
+    "F6 battery-break response uses the PA6 (ADC12_INP3, moved from PC2_C, D-R2-09) VLOGIC_SENSE ADC watchdog, not delayed port FAULT. Threshold, maximum detection/shedding latency and retained-load envelope require measured qualification.",
     "On shedding disable all three UART OEs and port switches, pause flash writes, lower MCU clock, extinguish LEDs/buzzer; retain IMU/barometer/flight state and safety timing.",
     "Preserve >=150ms switch-bounce immunity separately from battery-lead-break ride-through. Resume flight state from live evidence after reset.",
     "Radio uplink cannot arm or fire; configure LR900 channels within902-928MHz and qualify installed maximum-power radio/GPS immunity.",

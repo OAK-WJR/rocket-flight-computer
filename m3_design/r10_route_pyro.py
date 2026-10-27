@@ -72,8 +72,10 @@ def draw(d):
     t('ARM1_SENSE', 'B', S, [d.pad('C129.1'), (27.2, 58.75)])
     via('ARM1_SENSE', (27.2, 58.75))
     via('GND', (28.2, 59.6))
-    t('ARM1_SENSE', 'F', S, [(27.2, 58.75), (32.6, 53.35), d.pad('R170.1')])
-    link('ARM1_SENSE_MCU', 'F', S, 'R170.2', 'U1.33', ((31.6, 45.5),))
+    # F.Cu (R10_DECISIONS D-R2-09): one 45 deg run parallel to the servo lanes, north as the inner sense lane x 34.4
+    # (outside the status-line vias at U1's east pins), west into R170 beside U1.33.
+    t('ARM1_SENSE', 'F', S, [(27.2, 58.75), (34.4, 51.55), (34.4, 46.2), d.pad('R170.1')])
+    link('ARM1_SENSE_MCU', 'F', S, 'R170.2', 'U1.33', ((31.43, 45.5),))
 
     # Load switch (bottom): sources bridged by C120 / R120, gates tied on F.Cu through R121 to the driver Q122.
     # C120 / R120 tap the source and gate rows: each pad pair joined straight, R120 by a stub to its centre.
@@ -101,7 +103,10 @@ def draw(d):
     link('ACT_DRV', 'F', P, 'Q122.3', 'R121.2', ((15.8, 70.14),))
     link('ACT_EN', 'F', S, 'Q122.1', 'R122.2', ((19.08, 70.75),))
     link('ACT_EN', 'F', S, 'R122.2', 'R123.1')
-    link('RAW_PROTECTED', 'F', P, 'R122.1', 'D9.1', ((19.6, 66.4),))
+    # R122's RAW_PROTECTED end reaches the In2 RAW_PROTECTED plane by its own via (D9 moved east, D-R2-09); >= 1 mm
+    # from TP120 and clear of the SERVO1 lane.
+    t('RAW_PROTECTED', 'F', P, [d.pad('R122.1'), (19.6, 66.0)])
+    via('RAW_PROTECTED', (19.6, 66.0))
 
     # RAW_ACT: Q121's drain to J124.2 (the ARM plug's live side), TP120 and the sense divider top R177.
     t('RAW_ACT', 'B', FIRE, [d.pad('J124.2'), (11.5, 67.6)])
@@ -114,5 +119,6 @@ def draw(d):
     t('RAW_ACT_SENSE', 'B', S, [d.pad('C122.1'), (27.2, 64.0)])
     via('RAW_ACT_SENSE', (27.2, 64.0))
     via('GND', (27.2, 65.4))
-    t('RAW_ACT_SENSE', 'F', S, [(27.2, 64.0), (33.9, 57.3), (33.9, 45.0), d.pad('R172.1')])
-    link('RAW_ACT_SENSE_MCU', 'F', S, 'R172.2', 'U1.34')
+    # F.Cu (D-R2-09): a 45 deg run parallel to ARM1_SENSE, north as the outer sense lane x 35.1, west into R172 beside U1.34.
+    t('RAW_ACT_SENSE', 'F', S, [(27.2, 64.0), (35.1, 56.1), (35.1, 45.25), d.pad('R172.1')])
+    link('RAW_ACT_SENSE_MCU', 'F', S, 'R172.2', 'U1.34', ((31.88, 45.0),))
