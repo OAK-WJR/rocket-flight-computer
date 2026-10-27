@@ -272,3 +272,11 @@ core, usb, pyro, power, signals; run `m3_design/r10_fanout_aid.py` on that board
 `r10_route.py ground`; fill zones. Two builds are byte-identical. Next: route the seven open nets (placement relief
 first), clear route_check's leftovers (BUZZ_OUT, CAM_5V_SENSE, NRST), then silkscreen, build / fab scripts, docs and
 review rounds as in the earlier handover list.
+
+## D-R2-08. Owner: hand-route every signal (2026-10-27)
+
+**Owner decision.** Asked which gives the better-organized, AVA-like board, the owner chose hand-routing for all
+remaining and all non-critical signals too. The design-aid router's frozen output (`r10_route_signals.py` AUTO table,
+`m3_design/r10_aid/ncroute.py`) is to be replaced by deliberate hand-drawn tables; it may serve only as a sketch of
+feasible paths. First relieve the placement south of U1 (TP85, D9, R91, the sense-resistor chains and their diagonal
+runs) so the servo, sense and status lines can run as straight, grouped lanes, AVA-style.
