@@ -6,6 +6,16 @@ is accepted. Branch `m3-assy-r10` starts from R9's tip.
 
 ## 1. Basis
 
+- **Inspiration: AVA.** R10 takes BPS.space's AVA as its reference design. Where a choice is open, look at AVA first
+  for component sizes and packages, general layout (processor in the middle, I/O on the edges, passives on the back)
+  and scope (what lives on the board and what goes off it), and for routing where its images show it. The best
+  images are listed in the parent repository's `reports/AVA board layout images.md`. Use AVA as the starting point,
+  not the rule: AGENTS §2's safety constraints and this plan's adopted changes still govern.
+- **Connector policy (owner, 2026-10-26): two families, not one.** JST GH (keyed, latching) for every signal
+  connector: GPS, spare UARTs, camera, switch, pull-pin. One screw-terminal family, 3.5 mm pitch where the current
+  allows it, for wires that carry current or get changed in the field: igniter, ARM, battery. The servo header stays
+  2.54 mm, because the servos come with JR plugs. A single family can't do both: GH pins are rated about 1 A, too
+  little for the battery and servo current, and screw terminals are bulky and grip thin signal wires poorly.
 - **AVA comparison.** BPS.space's AVA flight computer is about 47.5 × 99 mm, essentially R9's area (46 × 102 mm), with
   more I/O on it: 3.5 mm screw terminals for every wire, a bulk capacitor on the back, cameras switched by a transistor,
   big servos powered off the board, the flight radio and its antenna off the board. The images, sizes and revisions are
