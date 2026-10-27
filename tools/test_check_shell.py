@@ -26,7 +26,7 @@ pathlib.Path(sys.argv[sys.argv.index('-o') + 1]).write_text(json.dumps(report))
 ''')
         self.cli.chmod(0o755)
         for path in ('quality_audit/verify_board.py', 'tools/silk_check.py', 'tools/fit_check.py',
-                     'tools/plate_model.py', 'tools/rule_h_seed.py', 'tools/check_r9.py', 'tools/route_check.py',
+                     'tools/plate_model.py', 'tools/check_r10.py', 'tools/route_check.py',
                      'm3_design/check_actuators.py'):
             (self.root / path).write_text('''
 import os, pathlib, sys
@@ -47,11 +47,11 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
         result = self.run_gate()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual(self.log.read_text().splitlines(),
-                         ['verify_board', 'silk_check', 'fit_check', 'plate_model', 'rule_h_seed', 'check_r9',
-                          'route_check', 'check_actuators'])
+                         ['verify_board', 'silk_check', 'fit_check', 'plate_model', 'check_r10', 'route_check',
+                          'check_actuators'])
 
     def test_each_new_contract_failure_blocks_later_stages(self):
-        stages = ['fit_check', 'plate_model', 'rule_h_seed', 'check_r9', 'route_check', 'check_actuators']
+        stages = ['fit_check', 'plate_model', 'check_r10', 'route_check', 'check_actuators']
         for stage in stages:
             with self.subTest(stage=stage):
                 self.log.unlink(missing_ok=True)

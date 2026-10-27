@@ -66,14 +66,14 @@ C60	30.5	54.8	-90	B	R10 VLOGIC divider beside lower MCU exit
 C7	36.3	70.8	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
 C8	34.4	75.28	0	B	R10 forward-band legalisation (D-R2-01)
 C80	29	67.4	0	F	R10 forward-band legalisation (D-R2-01)
-C81	9.3	77.95	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+C81	42.1	78.1	0	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
 C82	33.9	65.9	90.0	F	R9 logic local geometry translated -7,-5; final R10 requalification required
 C83	10.2	24.9	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 C84	38.5	74	90	F	R10 power-local placement; maker loop geometry
 C85	35.9	62.724999999999994	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
 C86	16.725	28.9	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 C87	19.8	87.6	0	F	R10 forward-band legalisation (D-R2-01)
-C88	7.9	81.43	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+C88	39.9	83.9	90	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
 C89	29	72.6	0	F	R10 forward-band legalisation (D-R2-01)
 C9	34.4	77.24	0	B	R10 forward-band legalisation (D-R2-01)
 C90	37.5	46.5	0	F	R10 port-local placement; explicit routing lanes
@@ -161,7 +161,7 @@ R163	17.6	16.3	90	B	R9 local buzzer circuit translated -9,-8
 R164	17.325	55.9	180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 R165	15.6	88.4	0	F	R10 forward-band legalisation (D-R2-01)
 R166	37.4	82.3	0	F	R10 forward-band legalisation (D-R2-01)
-R167	32.3	75	90	F	R10 pyro / load-switch layout for straight routes (D-R2-02)
+R167	17.1	79	-90	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
 R168	24	52.7	90	F	R10 forward-band legalisation (D-R2-01)
 R170	32.6	46.93	90	F	R10 pyro / load-switch layout for straight routes (D-R2-02)
 R172	32.7	45	180	F	R10 pyro / load-switch layout for straight routes (D-R2-02)
@@ -205,10 +205,10 @@ R64	11.23	52.28	-90	B	R10 forward-band legalisation; core block kept at R9+(5,-1
 R7	9	28.9	90	B	USB edge circuit translated 0,-3.5; direct new MCU links
 R8	9	32.5	90	B	USB edge circuit translated 0,-3.5; direct new MCU links
 R80	15.6	86.8	0	F	R10 forward-band legalisation (D-R2-01)
-R81	12.4	85.2	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
-R82	9.4	84.1	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
-R83	9.4	86	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
-R84	12.6	81.6	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R81	16.5	88.9	0	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
+R82	36.725	82.2	90	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
+R83	35.9	79.825	180	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
+R84	42.1	79.825	0	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
 R85	15.6	26.675	90	B	USB edge circuit translated 0,-3.5; direct new MCU links
 R86	35.9	61.25	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
 R87	30.0	60.425	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
@@ -217,21 +217,21 @@ R89	28.3	66.6	0	B	R10 pyro / load-switch layout for straight routes (D-R2-02)
 R9	9.95	28.9	90	B	USB edge circuit translated 0,-3.5; direct new MCU links
 R90	14.3	31.299999999999997	180	B	USB edge circuit translated 0,-3.5; direct new MCU links
 R91	28	56.4	0	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
-R92	6	83.1	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R92	39.25	76.3	90	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
 TP120	18	68.1	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
 TP121	16.2	74.2	0	F	R10 pyro / load-switch layout for straight routes (D-R2-02)
 TP122	13.2	53.3	0	F	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 TP74	39	53.5	0	F	R10 forward-band legalisation (D-R2-01)
-TP80	22	57.5	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+TP80	13.8	78	0	F	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
 TP81	44.5	68	0	F	R10 power-local placement; maker loop geometry
 TP82	18.25	33.25	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 TP83	44.5	73.2	0	F	R10 power-local placement; maker loop geometry
-TP84	22	60.5	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+TP84	23	87.6	0	F	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
 TP85	25	57.5	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
 TP86	13.6	22.4	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 TP87	39	62.8	0	F	R10 power-local placement; maker loop geometry
 TP88	44.5	76.3	0	F	R10 power-local placement; maker loop geometry
-TP89	12	88.6	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+TP89	42.4	82.4	0	B	R10 U9 cell (D-R2-05)
 TP92	21.6	28.5	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 U1	23.0	43.0	0	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
 U10	12.6	27.5	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
@@ -251,5 +251,5 @@ U420	31	26.4	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cell
 U421	35.2	27.35	-90	F	R10 port-local placement; explicit routing lanes
 U422	37.6	31.4	180	B	R10 port-local placement; explicit routing lanes
 U5	10.6	49.1	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
-U9	10	81.6	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+U9	39	79.6	0	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
 Y1	22.85	46.6	90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10

@@ -2,7 +2,7 @@
 """Routing hygiene gate: the clean-routing rules of AGENTS.md §3 and the owner's acceptance list, on every track and
 via of the board (the review pass-2 geometry scan, sources/r7_review/pass2_routing_geometry.md §2, made a gate).
 
-usage: <KiCad python3> -I tools/route_check.py [board.kicad_pcb] [--report out.json] [--list] [--profile r9|r8|r7]
+usage: <KiCad python3> -I tools/route_check.py [board.kicad_pcb] [--report out.json] [--list] [--profile r10|r9|r8|r7]
 exit 0 = no failing instance and no stale allowlist entry (see GATE below)
 
 Profiles: r8 (default, M3-ASSY-R8): ALLOWLIST holds A8 (R8_DECISIONS D9) and the antenna-bias limiter's two
@@ -10,6 +10,12 @@ keep-out-forced detours (D51), LEFTOVERS is empty, and the detour test uses the 
 the plain baseline; on board c872a3d3... it reproduces the owner-accepted R7 verdict. r9 (M3-ASSY-R9, the R9 gate in
 tools/check.sh): ALLOWLIST, LEFTOVERS and ROUTE_FIGURES all empty (r9_plan.md section 2: C1 = C3 = 0), the keep-out-
 aware baseline (D10) kept so that RADIO_TXEN's maker-forced loop round U31 is judged against the legal shortest path.
+r10 (M3-ASSY-R10, the R10 gate in tools/check.sh): cloned from r9 with ALLOWLIST, LEFTOVERS and ROUTE_FIGURES empty and
+no RF part (no U31 body or U30 / U31 keep-out obstacles, no RF or radio-SPI net classes: R10 has no on-board RF, O1 /
+O2) and no pyro-specific clearance (r10_plan section 2 item 1: the board default). Its critical signal nets
+(R10_CLASSES): pyro and arming (PYRO1_*, ARM1_*, RAW_ACT_SENSE*), crystal (HSE_*), USB data (USB_DP / USB_DM),
+SPI / QSPI / IMU chip select (QSPI_*, SPI1_*, IMU_CS) and the external-port UART nets (GPS_*_MCU, RADIO_*_MCU); the
+power rails and GND as before, with the R10 port rails (PORT_*, *_4V8, CAM_5V, the port IO rails).
 
 Copper is grouped per (layer, net). Track end points within 1 µm form a node. A node is "plain" when exactly two
 track ends meet there and it holds no pad, via or T (another track's body); a chain is a run of segments through
@@ -40,7 +46,7 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
     critical_via_no_gnd   a via carrying a critical signal net's copper on >= 2 layers (its tracks, or a same-net pad
                           the via sits in: a layer change into a test pad counts, fix pass 5) with no GND via centre
                           within 1.5 mm (critical signal nets: RF, pyro/arm, HSE, USB data, SPI/QSPI/IMU_CS/radio
-                          SPI, the other RADIO_*/GNSS_* nets)
+                          SPI, the other RADIO_*/GNSS_* nets; r10: R10_CLASSES)
   hygiene categories, gated on critical nets (the signal nets above and the power rails, GND included):
     micro_segment         a segment shorter than 50 µm (zero length included)
     short_segment         a segment from 50 µm up to max(its own width, 0.2 mm) long in open routing (not wholly
@@ -190,7 +196,19 @@ CLASSES = [
               r'CAM_5V|CAM_INPUT_LIMITED|CAM_IO_3V3|SW_NODE|CAM_SW|BST|CAM_BST|VCAP1|VCAP2|ACT_FET_S|GND)$'),
     ('actuator', r'^(ACT_|SERVO)'),
 ]
-SIGNAL_CRITICAL = {'rf', 'pyro', 'crystal', 'usb', 'spi', 'rfif'}
+# R10 (profile r10): no RF class; the external-port UARTs are their own critical class (uart)
+R10_CLASSES = [
+    ('pyro', r'^(PYRO1_|ARM1_|RAW_ACT_SENSE)'),
+    ('crystal', r'^HSE_'),
+    ('usb', r'^USB_D[PM]$'),
+    ('spi', r'^(QSPI_|SPI1_|IMU_CS$)'),
+    ('uart', r'^(GPS|RADIO)_\w*_MCU$'),
+    ('power', r'^PORT_'),
+    ('power', r'^(GPS_|RADIO_|CAM_)\w*(V[0-9]*|SUPPLY|SW|BST|INPUT|POWER|LIMITED)$'),
+    ('power', dict(CLASSES)['power']),
+    ('actuator', r'^(ACT_|SERVO)'),
+]
+SIGNAL_CRITICAL = {'rf', 'pyro', 'crystal', 'usb', 'spi', 'rfif', 'uart'}
 CRITICAL = SIGNAL_CRITICAL | {'power'}
 RULE = ('off_angle', 'staircase', 'acute_angle', 'fold_back', 'dead_copper', 'pour_stub', 'dangling_via',
         'critical_via_no_gnd')
@@ -284,14 +302,7 @@ def set_profile(name):
 
 
 def net_class(name):
-    if PROFILE == 'r10':
-        if name.startswith('PORT_'):
-            return 'power'
-        if re.match(r'^(GPS_|RADIO_|CAM_).*?(TX|RX|EN|FAULT|OE)', name):
-            return 'rfif'  # same critical-signal policy, without an RF geometry contract
-        if re.match(r'^(PORT_|GPS_|RADIO_|CAM_).*(V[0-9]*|SUPPLY|SW|BST|INPUT|POWER|LIMITED)$', name):
-            return 'power'
-    for c, rx in CLASSES:
+    for c, rx in (R10_CLASSES if PROFILE == 'r10' else CLASSES):
         if re.search(rx, name):
             return c
     return 'other'
@@ -2807,7 +2818,8 @@ def main():
     ap.add_argument('--bumps-all', action='store_true', help='also search the non-critical nets for removable local '
                     'bumps (information, local_bump_review; slow)')
     ap.add_argument('--profile', choices=PROFILES, default='r8', help='exception lists and detour baseline: r8 (default; '
-                    'R8_DECISIONS D9 / D10), r9 (empty lists, D10 baseline; the R9 gate) or r7 (the R7 record, '
+                    'R8_DECISIONS D9 / D10), r10 (empty lists, R10 classes, no RF parts; the R10 gate), r9 (empty lists, D10 '
+                    'baseline; the R9 record) or r7 (the R7 record, '
                     'route_lists_r7.py, plain baseline)')
     args = ap.parse_args()
     set_profile(args.profile)
