@@ -77,7 +77,9 @@ IN2_GND_CH1 = [(0.3, 51.8), (8.65, 51.8), (8.65, 53.55), (9.75, 53.55), (9.75, 5
 # 0.1 + 0.3 mm), the same rule re-run on R10's routed board (no other critical B.Cu track lies wholly outside within
 # reach).
 Y1_AREA = [(18.9, 44.3), (26.8, 44.3), (26.8, 48.95), (18.9, 48.95)]
-IN2_GND_Y1 = [(20.6, 44.3), (26.8, 44.3), (26.8, 48.95), (25.73, 48.95), (25.73, 48.7), (23.9, 48.7), (23.9, 48.95),
+# R8-RTE-02 (round 8): a bump (x 26.8-28.6, y 45.8-47.0) takes the 3V3 tooth between the island's edge and C22.2's GND via
+# (27.8, 46.6) into the island, its edge meeting the antipad of the GND via (29.2, 46.2).
+IN2_GND_Y1 = [(20.6, 44.3), (26.8, 44.3), (26.8, 45.8), (28.6, 45.8), (28.6, 47.0), (26.8, 47.0), (26.8, 48.95), (25.73, 48.95), (25.73, 48.7), (23.9, 48.7), (23.9, 48.95),
               (18.9, 48.95), (18.9, 45.45), (20.6, 45.45)]
 
 

@@ -36,8 +36,8 @@ def draw(d):
     d.track('VBUS_SENSE', 'F', .2, [(9.95, 27.7), (14.5, 27.7), (16.6, 29.8), (17.875, 29.8),
                                     (22.0, 33.925), d.pad('U1.65')])
     d.via('VBUS_SENSE', (17.875, 29.8))
-    d.track('VBUS_SENSE', 'B', .2, [(17.875, 29.8), d.pad('R110.1')])
-    d.track('VBUS_SENSE', 'B', .2, [d.pad('R110.1'), (19.2, 30.9), d.pad('TP92.1')])
+    # R8-fix: one apex (two opposed 45 deg runs meet) instead of a 0.225 mm flat jog at R110.1; the apex lies on the pad
+    d.track('VBUS_SENSE', 'B', .2, [(17.875, 29.8), (19.0875, 31.0125), d.pad('TP92.1')])
     # D-R3-B4: the drop sits 0.05 mm west of R2's (16.75, 39.05) (0.20 mm from U1.80) to widen PULLPIN's pass
     d.track('USB_FAULT_N', 'F', .2, [d.pad('U1.87'), (16.7, 42.5), (16.7, 39.05)])
     d.track('USB_FAULT_N', 'B', .2, [(16.7, 39.05), (16.15, 38.5), (11.2, 38.5),

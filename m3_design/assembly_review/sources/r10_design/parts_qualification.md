@@ -138,7 +138,7 @@ no thermal via:** M2 bars vias in SMD pads, so the pad (bottom side, 1.2×2.0 mm
 14.95), sits 0.35 mm (centre) outside the pad edge; In2 under it is PORT_5V3
 (pad, via and In2 zone read on board `579575bd…` in round 4: pad 11 1.2×2.0 mm at (27.6, 13.6), the nearest GND via
 (27.6, 14.95) 1.35 mm centre to centre from the pad centre, In2 zone R10_PORT_5V3_In2; the round-4 routing pass was
-not re-measured on `b242ab8e…`). TI's62.5°C/W thetaJA (SBVS282A p4) is the
+not re-measured on `407d1d84…`). TI's62.5°C/W thetaJA (SBVS282A p4) is the
 JEDEC high-K board figure and is not used. Without vias under the pad, take
 80–110°C/W (Inference, outer-layer pour spreading only, RθJC(bot)7.8°C/W): the
 full allocation gives a32–45 K rise, junction≈117–130°C at85°C ambient and
@@ -388,3 +388,20 @@ reviewer's readings and were not re-read from the PDFs in this pass (Inference u
 - **W25Q128JV erase times (R7-MCU-04).** Winbond W25Q128JV Rev I (08/23/2021), AC characteristics (erase and program), read in this pass: sector (4 KB) erase 45 ms typical / 400 ms maximum, 32 KB block 120 ms / 1,600 ms, 64 KB block 150 ms / 2,000 ms, chip erase 40 s / 200 s, /CS high to next instruction after suspend (tSUS) 20 µs. The earlier "about 45 ms" was the typical value only; the maximum is 400 ms.
 - **IWDG period (R7-MCU-03).** LSI 29.76–33.60 kHz (DS12110 Table 39 as the reviewer read it; **not re-read**, ST's server refused the download in this pass) gives a nominal 32 ms setting a worst case of about 34 ms (32 ms × 32 kHz / 29.76 kHz ≈ 34 ms with a 32 kHz-based reload), inside F6's 50 ms target. A started IWDG cannot be stopped; a loader jump after it starts lands in the application about 32 ms later with BOOT0 low (**Inference**, AN2606 not read).
 - **PA15 reset state (R7-MCU-01).** PA15 resets to JTDI with the internal pull-up, not analog (**Inference**: the reviewer's reading of DS12110 / RM0433, not re-read); firmware sets it to analog explicitly.
+
+## Round-8 records (R8-MCU-02, R8-BOM-02, R8-MEC-05; records only, board unchanged)
+
+- **GPS UART level (R8-MCU-02).** HGLRC's M100 Mini page gives the supply as 3.3–5 V and does not specify the UART
+  logic level. **Inference:** a u-blox M10 part with 3.3 V I/O; the J410 translator (TXU0202, B side on PORT_4V8)
+  tolerates a B2 input up to 5.5 V, so a 3.3 V or a 5 V device both stay inside its rating. Measure the module's TX
+  high level before flight; do not treat the level as qualified.
+- **GPS cable (R8-MCU-02).** The GPS's own cable is SH1.0-4P (plan, as the owner's list gives it; not re-checked
+  against HGLRC's drawing here), while J410 is a JST GH 1.25 mm 4-position header: a **SH1.0-to-GH1.25 harness
+  adapter** is needed, with the pin order of ORDERING §8 "Camera harness and port cables" checked end to end.
+- **DB125 height (R8-MEC-05).** DORABO T0-1 drawing (read 2026-10-28, link in the "Local lands" table above): body
+  height 8.60 mm with the drawing's general tolerance ±0.30 mm for 6–10 mm (so 8.9 mm maximum, the envelope used),
+  body width 7.40 mm, pin length below the body 3.90 mm. A first-article caliper check of the seated terminal remains
+  advised.
+- **Port UART break (R8-MCU-01).** With a port's OE high and its device unplugged or unpowered, the TXU0202's 5 MΩ
+  input pull-down holds the MCU RX low, a continuous break (Inference from the pull-down, not measured): the firmware
+  obligation is in the binding note and M3_R10 "Firmware".

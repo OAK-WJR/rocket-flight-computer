@@ -53,14 +53,31 @@ python3 "$ROOT/tools/silk_check.py" "$BOARD" --cli "$CLI"     # DRC skips silksc
 "$KICAD_PY" -I "$ROOT/tools/route_check.py" "$BOARD" --profile r10 --report "$OUT/route.json" \
   | { grep -E '^(FAIL|routing hygiene: [0-9])' || true; }       # clean routing (AGENTS.md §3); full list in route.json
 python3 "$ROOT/m3_design/check_actuators.py" "$BOARD" --profile r10
+# R8-GATE-05: the fab package (if one sits next to the board) is bound to the board it was made from. Only the repository
+# board is held to it; a copy elsewhere is not.
+MANIFEST="$(dirname "$BOARD")/fab/m3_fab_manifest.json"
+if [[ "${R10_SKIP_FAB_MANIFEST:-0}" == 1 ]]; then   # m3_design/r10_build.sh: the package is rebuilt after the board
+  echo "fab manifest: not checked (build stage: run m3_design/r10_fab.sh, then tools/check.sh)"
+elif [[ -f "$MANIFEST" ]]; then
+  if [[ "$BOARD" == "$ROOT/m3_design/assembly_review/m3.kicad_pcb" ]]; then
+    python3 "$ROOT/tools/fab_manifest.py" "$BOARD" \
+      || { echo "fab package bound to a different board: run m3_design/r10_fab.sh"; exit 1; }
+  else
+    echo "fab manifest: not checked (board copy)"
+  fi
+fi
 # Gate self-tests (R4-GATE-02): a weakened gate fails here. Seeded faults on synthetic boards and on a temporary copy of
 # the R10 board (R10_BOARD, set here to the checked board); about 2 minutes.
 export R10_BOARD="$BOARD"
+unset R10_SKIP_FAB_MANIFEST     # test_check_shell runs check.sh copies of its own
 selftest() {          # print the unittest summary; a failing run prints its tail and fails the gate
   local out
   out="$("$@" 2>&1)" || { { printf '%s\n' "$out" | grep -v Debug || true; } | tail -40; echo "gate self-test FAILED: $*"; exit 1; }
   { printf '%s\n' "$out" | grep -v Debug || true; } | tail -3
 }
+selftest python3 "$ROOT/tools/test_check_shell.py"       # check.sh itself fails closed (R8-GATE-01)
+selftest "$KICAD_PY" "$ROOT/tools/test_fit_check.py"       # no -I: the test imports fit_check from its own folder
+selftest "$KICAD_PY" -I "$ROOT/tools/test_paste_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_route_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_check.py"
 selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" Plate

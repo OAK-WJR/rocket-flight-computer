@@ -81,7 +81,8 @@ Kept contract and copper rules:
   K-loader     R3-MCU-01: every U1 pin that the H74x ROM bootloader uses (AN2606 Rev 64 Table 119, pp. 277-280) and
                that carries a net is in LOADER_R10 with that net, its recorded members (every other pad on the net, with
                its part value) and an electrical reason; pins the loader drives need a reason for the drive
-  K-legends    duplicate ids, pin legends, legend subjects (R10 word legends), R10 terminal pin legends; R3-MFG-01: no
+  K-width      BAT_IN / RAW_PROTECTED tracks >= 0.3 mm, no 0.3 mm run > 2 mm (R8-GATE-04)
+  K-legends    pinned revision / safety texts, shown safety refs (R8-GATE-02/03), duplicate ids, pin legends, legend subjects (R10 word legends), R10 terminal pin legends; R3-MFG-01: no
                silkscreen item (board or footprint graphic, text, field), as its polygon, overlaps a pad's solder mask
                opening (pad copper + mask expansion) on its side
   K-copper     vias in pads, overlap-only joints, thermal policy, via paste (check_r9.k_copper)
@@ -2116,6 +2117,85 @@ def port_legends(board, required=PORT_LEGENDS_R10):
             for i, name in enumerate(names, 1) if seen.get((ref, i)) != {name}]
 
 
+# K-text (R8-GATE-02): the revision and safety legends are pinned to their exact words (a changed text fails).
+PINNED_TEXTS = (('B.Silkscreen', 'M3-ASSY-R10'), ('B.Silkscreen', 'J124 ARM LAST'),
+                ('B.Silkscreen', 'J124 5A FAST 2S'), ('B.Silkscreen', 'J1 BAT 15A FUSE'))
+# R8-GATE-03: these references must stay shown on silkscreen (all shown on the R10 board now). The full hidden list is
+# reported in the evidence, not pinned.
+SHOWN_REFS = ('J1', 'J121', 'J124', 'J122', 'J400', 'J9', 'J410', 'J420', 'J123', 'J3', 'Q120', 'Q121', 'Q124', 'R134')
+
+
+def pinned_texts(board, pinned=PINNED_TEXTS):
+    import pcbnew
+    have = {}
+    for item in board.GetDrawings():
+        if isinstance(item, pcbnew.PCB_TEXT):
+            have[(board.GetLayerName(item.GetLayer()), item.GetText())] = have.get(
+                (board.GetLayerName(item.GetLayer()), item.GetText()), 0) + 1
+    out = [f'silkscreen text {t!r} missing on {lay} (pinned revision / safety legend)' for lay, t in pinned
+           if have.get((lay, t), 0) != 1]
+    revs = sorted({t for (_, t) in have if re.match(r'^M3-ASSY-R\d+$', t)})
+    return out + [f'revision legends {revs}: only M3-ASSY-R10 allowed' for _ in [0] if revs != ['M3-ASSY-R10']]
+
+
+def hidden_refs(board, shown=SHOWN_REFS):
+    """(issues, evidence): references not drawn on a silkscreen layer; a pinned safety / connector part may not be."""
+    import pcbnew
+    hidden = sorted(f.GetReference() for f in board.GetFootprints()
+                    if not (f.Reference().IsVisible() and f.Reference().GetLayer() in (pcbnew.F_SilkS, pcbnew.B_SilkS)))
+    issues = [f'{r}: reference designator hidden (a safety / connector part must show it)'
+              for r in shown if r in hidden]
+    return issues, dict(hidden=hidden, hidden_count=len(hidden))
+
+
+# K-width (R8-GATE-04): BAT_IN / RAW_PROTECTED track widths (recorded minimum 0.3 mm: U9 pad entries, D-R3-03).
+HC_MIN_W = {'BAT_IN': 0.3, 'RAW_PROTECTED': 0.3}
+HC_NARROW_MAX_LEN = 2.0          # mm: a chain of minimum-width segments longer than this fails
+
+
+def k_width(board, floor=HC_MIN_W, max_len=HC_NARROW_MAX_LEN):
+    import pcbnew
+    mm = pcbnew.ToMM
+    issues, ev = [], {}
+    for net, wmin in floor.items():
+        tr = [t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == net]
+        ev[net] = dict(tracks=len(tr), min_width_mm=round(min((mm(t.GetWidth()) for t in tr), default=0), 3))
+        narrow = []
+        for t in tr:
+            w = mm(t.GetWidth())
+            if w < wmin - EPS:
+                issues.append(f'{net} track {w:.3f} mm wide at ({mm(t.GetStart().x):.2f}, {mm(t.GetStart().y):.2f}) '
+                              f'on {board.GetLayerName(t.GetLayer())}; minimum {wmin} mm')
+            elif w <= wmin + EPS:
+                narrow.append(t)
+        parent = list(range(len(narrow)))
+
+        def find(i):
+            while parent[i] != i:
+                parent[i] = parent[parent[i]]
+                i = parent[i]
+            return i
+        for i, a in enumerate(narrow):
+            for j in range(i):
+                b = narrow[j]
+                ends = lambda t: {(t.GetStart().x, t.GetStart().y), (t.GetEnd().x, t.GetEnd().y)}   # noqa: E731
+                if a.GetLayer() == b.GetLayer() and ends(a) & ends(b):
+                    parent[find(i)] = find(j)
+        chains = {}
+        for i, t in enumerate(narrow):
+            chains.setdefault(find(i), []).append(t)
+        longest = 0.0
+        for ts in chains.values():
+            length = sum(mm(t.GetLength()) for t in ts)
+            longest = max(longest, length)
+            if length > max_len + EPS:
+                t = ts[0]
+                issues.append(f'{net}: {wmin} mm-wide run {length:.2f} mm long on {board.GetLayerName(t.GetLayer())} '
+                              f'near ({mm(t.GetStart().x):.2f}, {mm(t.GetStart().y):.2f}); limit {max_len} mm')
+        ev[net]['longest_narrow_run_mm'] = round(longest, 2)
+    return issues, ev
+
+
 def k_legends(ctx):
     import check_r7 as r7
     import check_r8 as r8
@@ -2126,7 +2206,10 @@ def k_legends(ctx):
     overlaps = silk_mask_overlaps(ctx.board)
     found += [f'K-legends: silkscreen {s} overlaps the solder mask opening of {p} by {d:.3f} mm (R3-MFG-01)'
               for s, p, d in overlaps]
-    return issues + found, dict(terminal_legends=ev, silk_mask_overlaps=len(overlaps))
+    texts = [f'K-legends: {i}' for i in pinned_texts(ctx.board)]
+    hid, hev = hidden_refs(ctx.board)
+    texts += [f'K-legends: {i}' for i in hid]
+    return issues + found + texts, dict(terminal_legends=ev, silk_mask_overlaps=len(overlaps), **hev)
 
 
 def k_reference(ctx):
@@ -2254,11 +2337,12 @@ RULES = [
     ('K-region', 'critical B.Cu runs over one In2 plane region (R4-RTE-02)', lambda c, s: k_region(c)),
     ('K-fill', 'saved zone fills are current (refill a copy, R4-GATE-05)', lambda c, s: k_fill(c)),
     ('K-rules', 'm3.kicad_dru pinned, board design rules floor (R4-GATE-01)', lambda c, s: k_rules(c)),
+    ('K-width', 'BAT_IN / RAW_PROTECTED width floor (R8-GATE-04)', lambda c, s: k_width(c.board)),
     ('K-retained', 'bare contacts, flash and camera bypass, TP122', lambda c, s: retained_routing(c)),
 ]
 STAGES = {'functional': {'S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'K-contract', 'K-loader', 'K-actuators'}}
 STAGES['placement'] = STAGES['functional'] | {'LC-1', 'M-1', 'M-3', 'M-5', 'M-6', 'M-7', 'P-11', 'F9-1', 'T-1',
-                                              'K-legends'}
+                                              'K-legends', 'K-width'}
 STAGES['full'] = {rid for rid, _, _ in RULES}
 
 

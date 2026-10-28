@@ -37,6 +37,8 @@ STITCH = (
     (25.6, 28.85), (13.5, 33.0), (12.4, 34.0),       # B.Cu void pair below J2's bottom pin-table spot (y >= 34.68)
     # a second via in the larger outer-pour islands that hung on one (F.Cu at J2, F.Cu west of U12)
     (9.05, 37.75), (30.0, 34.4),
+    # R8-RTE-03 (round 8): a GND partner 1.43 mm from I2C1_SCL's layer-change via (7.75, 49.8), 1.0 mm from U5's pads
+    (7.4, 51.2),
     # coverage spots
     (8.0, 3.0), (18.0, 3.0), (25.0, 2.5), (38.0, 3.0), (43.5, 8.0), (10.5, 9.0), (16.5, 12.5), (15.0, 20.5),
     (7.0, 22.0), (22.0, 23.0), (30.0, 55.0), (36.0, 54.5), (42.5, 59.0), (43.0, 65.0), (29.5, 74.0),

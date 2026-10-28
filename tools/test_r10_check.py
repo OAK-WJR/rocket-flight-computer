@@ -1406,6 +1406,37 @@ class RealBoardSeeds(unittest.TestCase):
                     break
         self.seeded('S-9', leg, 'ACT_FET_S fire-path track 0.300 mm')
 
+    def test_r8_gate_text_hidden_width(self):
+        """R8-GATE-02 / 03 / 04: pinned legends, shown safety references, BAT_IN / RAW_PROTECTED width floor."""
+        for rid in ('K-legends', 'K-width'):
+            self.assertEqual(self.run_rule(rid, self.load()), set(), rid)
+        for text in ('J124 ARM LAST', 'J124 5A FAST 2S', 'J1 BAT 15A FUSE', 'M3-ASSY-R10'):
+            def seed(b, text=text):
+                for d in b.GetDrawings():
+                    if isinstance(d, pcbnew.PCB_TEXT) and d.GetText() == text:
+                        d.SetText(text + 'X')
+            self.seeded('K-legends', seed, repr(text))
+        for ref in ('J124', 'Q120'):
+            self.seeded('K-legends', lambda b, ref=ref: b.FindFootprintByReference(ref).Reference().SetVisible(False),
+                        f'{ref}: reference designator hidden')
+        rep = gate.check_board(self.load(), real_project(), real_project() / 'm3.kicad_pcb', only={'K-legends'})
+        ev = rep['rules']['K-legends']['evidence']
+        self.assertEqual(ev['hidden_count'], len(ev['hidden']))
+
+        def narrow(b):                      # the B.Cu BAT_IN run (17.35, 86.6) -> (36.725, 86.6) narrowed to 0.3 mm
+            for t in b.GetTracks():
+                if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'BAT_IN' and t.GetLayer() == pcbnew.B_Cu and \
+                        abs(pcbnew.ToMM(t.GetWidth()) - 1.0) < 1e-6 and abs(pcbnew.ToMM(t.GetStart().y) - 86.6) < 1e-3 \
+                        and abs(pcbnew.ToMM(t.GetEnd().y) - 86.6) < 1e-3:
+                    t.SetWidth(pcbnew.FromMM(0.3))
+        self.seeded('K-width', narrow, 'BAT_IN: 0.3 mm-wide run')
+
+        def thin(b):
+            for t in b.GetTracks():
+                if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'RAW_PROTECTED':
+                    t.SetWidth(pcbnew.FromMM(0.2)); break
+        self.seeded('K-width', thin, 'RAW_PROTECTED track 0.200')
+
     def test_silk_over_mask_opening(self):
         """R3-MFG-01: a near-zero-length silk arc (drawn as a nearly full circle, as Q121's pin-1 dot) and a silk line
         over a top pad's mask opening."""

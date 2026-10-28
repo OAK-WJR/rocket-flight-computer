@@ -752,3 +752,38 @@ R430 confirmation and fallback, USB attach inrush, nut-inclusive bound h + t < 6
 battery-lead row. M3_R10: shroud list with J3 and washers, offsets vs radial, the stack arithmetic (OQ-7 bites only if
 the bay or lead zone shrinks by ≈ 30 mm), left-handed board frame, TP89 nearest top hardware, fit_check's two-decimal
 print. AGENTS GNSS / radio cell wording.
+
+## Round 8 (review of `b242ab8e…` again, commit 6bc0a63; fix pass; board `407d1d84…`)
+
+Ten independent reviewers: 0 Critical, 3 Major (a red gate test and two ORDERING records), 22 Minor
+(`docs/R10_VALIDATION.md` "Round 8"). The clean-round count restarts. Three slices (copper clean-ups, gates, records),
+merged and rebuilt by the root; the slice's clone build and the worktree build gave `407d1d84…`.
+
+## D-R8-01. Copper clean-ups (R7-RTE-01 / -02 / -03, R8-RTE-03)
+
+VBUS_SENSE is one B.Cu run via (17.875, 29.8) → apex (19.0875, 31.0125) → TP92.1 (no flat jog). U11.3's GND via
+(31.5, 62.9) → (31.5, 63.3), widening the In2 3V3 neck beside C97.2's via from 0.24 to ≈ 0.59 mm (C97.2's own via has no
+clean spot: R87.2 / R88.1 leave 0.525 mm). `IN2_GND_Y1` gains a bump (x 26.8–28.6, y 45.8–47.0) that takes the 3V3 tooth
+beside C22.2's via into the crystal GND island (35.6 mm²). A GND stitch via at (7.4, 51.2), 1.43 mm from I2C1_SCL's
+layer change, 1.0 mm from U5's pads; I2C1_SDA's via (9.97, 51.5) keeps 1.88 mm (no DRC-clean spot within 1.5 mm:
+U5's 1.0 mm keep-out, R13 / R64, the 3V3 via (9.2, 52.98)). Side effect: U5's designator is now hidden (94 hidden).
+
+## D-R8-02. Gates (R8-GATE-01 … -05)
+
+`tools/test_check_shell.py` stubs every self-test and the fab manifest step, adds a failing case per self-test stage,
+and runs in check.sh's self-test stage (a mutation that removes the stage fails it). K-legends pins the exact
+"M3-ASSY-R10", "J124 ARM LAST", "J124 5A FAST 2S", "J1 BAT 15A FUSE" texts and refuses a hidden designator on J1, J121,
+J124, J122, J400, J9, J410, J420, J123, J3, Q120, Q121, Q124, R134; the hidden set is reported. K-width (new): no
+BAT_IN / RAW_PROTECTED track below 0.3 mm and no 0.3 mm run longer than 2.0 mm. check.sh verifies the fab manifest
+when it checks the repository board (`R10_SKIP_FAB_MANIFEST=1` inside `r10_build.sh`, which runs before `r10_fab.sh`)
+and runs test_fit_check (23) and test_paste_check (5).
+
+## D-R8-03. Records (R8-MEC-01, R8-MFG-01 / -02 / -03, R8-REQ-01 … -04, R8-SAF-01, R8-MCU-01 / -02, R8-MEC-02 … -05, R8-RTE-01 / -02, R8-DOC-01 / -02)
+
+ORDERING 8: coat ≥ 3 mm off U5's pads and body, R13 / R64 masked, U5 taped whole while coating, TP122 brushed from its
+south / east side; one complete R10 order-remarks block (no cleaning, reflow order, paste and U4 mask as supplied,
+stencil, THT method and hole-fill pins, J3 legs, vias, consigned U4, preview checks) and the §4 lines that do not apply;
+cost / stock files are evidence; trace-override and HSE bench steps; standoffs ≥ 4.0 mm recommended (L1 gap 0.48 mm
+minus ≈ 0.29 mm static deflection). REQUIREMENTS: F7 path wording, board position, pad-time pack ≥ 2 Ah with continuous
+transmit, binding plate bound 6.3 / 5.7 mm. M3_R10: QSPI lengths, nets over Y1, DB125 8.60 ± 0.30 mm (DORABO T0-1),
+U4–U5 spacing, foam cap. Binding note: UART break handling on an unplugged port, trace-override step. README cells.

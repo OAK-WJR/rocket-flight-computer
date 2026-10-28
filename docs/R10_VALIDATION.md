@@ -2,8 +2,9 @@
 
 > **2026-10-27 update.** The R10 board is built and committed; review rounds 3 (on `883d2db5…`), 4 (on `579575bd…`),
 > 5 (on `af18ac49…`) and 6 (on `3b6e15f3…`) and their fix passes are done (board `b242ab8e…`, 46 × 90 mm;
-> `docs/M3_R10.md`); round 7 on `b242ab8e…` was clean (0 Critical, 0 Major) and changed gates and records only;
-> `tools/check.sh` passes at zero. See "R10 build state", "Round 3" … "Round 7", the review-round log and "R10
+> `docs/M3_R10.md`); round 7 on `b242ab8e…` was clean (0 Critical, 0 Major), round 8 on the same board was not
+> (3 Major, all records / gate tests, fixed; board now `407d1d84…`); `tools/check.sh` passes at zero. See "R10 build
+> state", "Round 3" … "Round 8", the review-round log and "R10
 > deviations for owner acceptance" at the end. The round-1 plan-review record below is kept as written; statements in it that no R10 implementation
 > exists describe that time.
 
@@ -220,13 +221,13 @@ No final deviation list is possible before the design is implemented and reviewe
 (Round-1 note, superseded 2026-10-27: the parent `../../docs/VEHICLE.md` board entry is now edited for 46 × 90 mm in the
 parent repository and left uncommitted there for the owner.)
 
-## R10 build state (2026-10-27, after round 6's fix pass)
+## R10 build state (2026-10-28, after round 8's fix pass)
 
 **Board** `m3_design/assembly_review/m3.kicad_pcb`, SHA-256
-`b242ab8e2f4efa1e2e6cf5766294faa07d307cfa0c0f8cd90d08cade850db8e7`, 46 × 90 mm, built by `m3_design/r10_build.sh` from
-the hash-pinned R9 inputs; two consecutive builds in the worktree (and the routing slice's clone) byte-identical.
-Netlist SHA-256 `a9516746…`. (Review round 3 examined `883d2db5…`, round 4 `579575bd…`, round 5 `af18ac49…`, round 6
-`3b6e15f3…`.)
+`407d1d8408330849526dbd31cf70ec94b9f012b23ff5c8324eb8a7b1f98bed05`, 46 × 90 mm, built by `m3_design/r10_build.sh` from
+the hash-pinned R9 inputs; the worktree build and the routing slice's clone build byte-identical. Netlist SHA-256
+`a9516746…`. (Review round 3 examined `883d2db5…`, round 4 `579575bd…`, round 5 `af18ac49…`, round 6 `3b6e15f3…`,
+rounds 7 and 8 `b242ab8e…`.)
 
 **Gates on the board** (CAD only; nothing below is a bench, physical or flight result):
 
@@ -243,9 +244,9 @@ Netlist SHA-256 `a9516746…`. (Review round 3 examined `883d2db5…`, round 4 `
 | check_r10 (S-1 … S-9, K-contract, K-loader, K-actuators, LC-1, M-1, M-2, M-3, M-5, M-6, M-7, P-8, P-11, F9-1, T-1, K-legends, K-copper, K-inner, K-reference, K-region, K-fill, K-rules, K-retained) | OK; P-11 and F9-1 hold R10's recorded figures pending OQ-1 / OQ-2 |
 | route_check --profile r10 (empty allowlist; arcs fail; port UART / control and ACT_* nets critical; needless-hop test) | 0 failing, 0 leftovers |
 | check_actuators --profile r10 | OK |
-| tools/test_r10_check.py (108 tests; run by `tools/check.sh` since round 4) | OK (KiCad python; the numpy-only plate test under the numpy python) |
+| tools/test_r10_check.py (109 tests), test_check_shell (4), test_fit_check (23), test_paste_check (5): all run by `tools/check.sh` | OK (KiCad python; the numpy-only plate test under the numpy python) |
 | tools/test_route_check.py (run by `tools/check.sh` since round 4) | 57 OK |
-| Fab (`m3_design/r10_fab.sh`): jlc_orient, export, S-4 on the exported BOM / CPL, CPL rebuild, paste, manifest | OK (229 placed parts, 82 BOM lines; BOM unchanged since round 3), bound to `b242ab8e…` |
+| Fab (`m3_design/r10_fab.sh`): jlc_orient, export, S-4 on the exported BOM / CPL, CPL rebuild, paste, manifest | OK (229 placed parts, 82 BOM lines; BOM unchanged since round 3), bound to `407d1d84…`; `tools/check.sh` verifies the binding since round 8 |
 | JLC cost / stock (live data 2026-10-27) | **$87.01 per board vs the $84.41 target: missed** (OQ-3); 47 extended codes (≤ 52); short: R430 C185349 (17 in stock, 3,610 minimum purchase), U4 C26633007 (0, consign) |
 
 **Rules re-derived for R10 with a recorded basis** (R10_DECISIONS): K-reference (D-R2-10, extended to the port control
@@ -532,6 +533,48 @@ board.
 | R7-DOC-01 | Minor | "fit_check prints 5.0–5.6" stale | **Fixed** |
 | R7-DOC-02 | Minor | AGENTS GNSS / radio cell read as if the ports were removed | **Fixed** |
 
+## Round 8: independent review of `b242ab8e…` (commit 6bc0a63)
+
+Ten reviewers, one lens each, fresh read-only contexts, all started together in one batch, on the same board as round 7.
+Each reported Major was re-verified by the root: R8-GATE-01 by running `tools/test_check_shell.py` at HEAD (2 tests,
+1 failure) and at 8f10f17 (OK), so round 4's check.sh change broke the gate's own fail-closed test; R8-MEC-01 by
+measuring U5's pad extents against R13 / R64 / TP122 (0.69 / 0.42 / 1.40 mm) and reading ORDERING §8's coat list;
+R8-MFG-01 by reading ORDERING §8's remarks block and its "not carried over" rule. **Result on `b242ab8e…`: 0 Critical,
+3 Major (confirmed), 22 Minor** (counting rule as round 6). Not clean: the clean-round count restarts. The fix pass
+(three slices, merged and rebuilt by the root, D-R8-01 … D-R8-03) produced `407d1d84…`.
+
+| ID (duplicates) | Severity | Finding (evidence on `b242ab8e…`) | Disposition |
+|---|---|---|---|
+| R8-GATE-01 | Major | `tools/test_check_shell.py` (check.sh's fail-closed test) red since round 4 (its temp tree lacked the self-test scripts check.sh now runs) and not run by check.sh | **Fixed** (gate): stubs, a failure case per self-test stage, run by check.sh; a mutation removing the self-test stage fails it |
+| R8-MEC-01 | Major | ORDERING §8 coated R13 / R64 "whole" 0.69 / 0.42 mm from U5's pads (MS5611, open pressure port) and TP122 1.40 mm; U5's exclusion had no distance | **Fixed** (records): coat ≥ 3 mm off U5's pads and body; R13 / R64 masked; U5 taped whole while coating; TP122 brushed from its south / east side, coat edge ≥ 1.0 mm from U5 |
+| R8-MFG-01 (MFG-02) | Major | ORDERING §8's "type these" remarks held only the via items; no-cleaning, reflow order, paste-as-supplied, U4 mask webs, stencil, THT method and hole-fill lived in §4 with R9 designators, which §8 says are not carried over | **Fixed** (records): one complete R10 remarks block (a–j) in R10 designators; §4's u-blox profile, MSL bake, SMA, C121 and R9 hole-fill lines named as not applying |
+| R8-REQ-01 (DOC-02) | Minor | F7's ACT_FET_S path is an upper bound; 62.6 mΩ rounding | **Fixed** |
+| R8-REQ-02 | Minor | Board-position row figure; "no conflict as drawn" rests on R9's coax zone | **Fixed** (records; OQ-7 stands) |
+| R8-REQ-03 | Minor | Pad-time pack size with the LR900-F at full power not restated | **Fixed** (Calc, Inference): ≈ 1.65–1.9 Ah before reserve; pack ≥ 2 Ah if the radio transmits continuously |
+| R8-REQ-04 | Minor | 6.9 mm plate bound led, the nut-inclusive 6.3 / 5.7 mm followed | **Fixed** |
+| R8-SAF-01 | Minor | PE4 trace override unmeasured; no bench step | **Fixed** (records): ORDERING 8 bench step (ARM link out, trace enabled, PE4 / TP122 observed) |
+| R8-BOM-01 / -02 | Minor | GH-2 envelope is the mated height; .wrl header path | **Listed**: the .wrl files are hash-bound by the fab manifest and `r10_parts.py --check`; comment change deferred to the next part-library change |
+| R8-MCU-01 | Minor | Unplugged port with OE high drives a continuous UART break (TXU0202's 5 MΩ input pull-down) | **Recorded**: binding-note obligation (DMA / IDLE reception, error masking, drop OE after repeated framing errors) |
+| R8-MCU-02 | Minor | GPS UART level not specified by HGLRC; SH1.0 cable | **Recorded**: Inference; SH1.0-to-GH1.25 adapter |
+| R8-MEC-02 | Minor | L1-to-plate gap 0.48 mm minus ≈ 0.29 mm static 100 g deflection | **Recorded**: standoffs ≥ 4.0 mm recommended (Calc) |
+| R8-MEC-03 | Minor | U4 under U1's west pin row; no thermal record | **Recorded**: bench item (U4 / U5 temperature against U1 load) |
+| R8-MEC-04 | Minor | U4–U5 spacing not re-measured | **Fixed**: ≈ 2.0 mm body, 1.71 mm courtyard; foam capped at U5 + 1 mm |
+| R8-MEC-05 | Minor | DB125 height from the model only | **Fixed**: DORABO T0-1 read: 8.60 ± 0.30 mm |
+| R8-RTE-01 | Minor | QSPI skew not recorded | **Recorded** (M3_R10): ≤ 10.4 mm (Inference: harmless at W25Q clocks) |
+| R8-RTE-02 | Minor | Four F.Cu nets (BUZZ_DRV ≈ 3 mm of a 4 kHz square wave) cross over Y1, In1 GND between | **Listed**; HSE bench check (ORDERING 8) |
+| R8-RTE-03 | Minor | I2C1 layer-change vias 4.53 / 1.88 mm from a GND via | **Partly fixed**: GND via (7.4, 51.2) 1.43 mm from SCL's; SDA's has no DRC-clean spot (U5 keep-out, R13 / R64) **listed** |
+| R8-MFG-03 | Minor | cost / stock evidence files sit in fab/ | **Fixed**: stated as evidence, not uploads |
+| R8-GATE-02 | Minor | Safety / revision legend text not pinned | **Fixed** (gate, K-legends) |
+| R8-GATE-03 | Minor | A hidden designator on J124 passed | **Fixed** (gate): 14 safety / connector designators must stay shown; hidden set reported |
+| R8-GATE-04 | Minor | BAT_IN / RAW_PROTECTED width not gated outside the fire path | **Fixed** (gate, K-width) |
+| R8-GATE-05 | Minor | fab package drift not checked by check.sh; unrun tool tests | **Fixed**: check.sh verifies the fab manifest on the repository board (skipped inside `r10_build.sh`, which runs before `r10_fab.sh`); test_fit_check, test_paste_check added |
+| R8-DOC-01 | Minor | README layout cells said fab / ORDERING are R9's | **Fixed** |
+
+Also fixed in this pass (round 7 Minors that had been listed to keep the board frozen; the clean-round count had
+restarted anyway): VBUS_SENSE's flat jog (R7-RTE-03), the In2 3V3 neck beside the GND via at (30.9, 62.0) (R7-RTE-01:
+0.24 → ≈ 0.59 mm by moving U11.3's GND via to (31.5, 63.3)), the In2 3V3 tooth beside the crystal island (R7-RTE-02,
+the island bumped to x 28.6); the 3V3 finger R7-RTE-02 reported at (26.0–29.8, 54.5–54.9) was not found on the fill.
+
 ### Review-round log
 
 | Round | Board reviewed | Critical / Major / Minor (confirmed) | Fix pass → board |
@@ -542,6 +585,7 @@ board.
 | 5 | `af18ac49…` | 0 / 1 / 36 | D-R5-01 … D-R5-04 → `3b6e15f3…` |
 | 6 | `3b6e15f3…` | 0 / 1 / 39 | D-R6-01 … D-R6-03 → `b242ab8e…` |
 | 7 | `b242ab8e…` | **0 / 0 / 33 (clean)** | D-R7-01, D-R7-02 (gates and records; board unchanged) |
+| 8 | `b242ab8e…` | 0 / 3 / 22 | D-R8-01 … D-R8-03 → `407d1d84…` |
 
 ## R10 deviations for owner acceptance (skeleton; completed when two consecutive rounds are clean)
 
@@ -594,11 +638,11 @@ Each item needs its measured reason and the board hash it was measured on; revie
 7. **P-11 / F9-1** at R10's recorded figures (OQ-1, OQ-2) until the owner decides.
 8. **T-1 re-derived** (D-R2-13): tabs on the aft edge needed (OQ-4; ORDERING §8).
 9. **Cost** $87.01 per board against $84.41 (OQ-3); R430's stock / minimum purchase.
-10. **Silkscreen and port pin order:** 93 designators hidden on `b242ab8e…` (kept on Fab); J410 / J420 without pin
+10. **Silkscreen and port pin order:** 94 designators hidden on `407d1d84…` (U5's since round 8: the I2C GND via took its spot) (kept on Fab); J410 / J420 without pin
     tables (no legal spot within 6 mm, D-R3-11); their UART pin order differs from J9's (J9: 3 RX_WIRE, 4 TX_WIRE;
     J410 / J420: 3 TX_WIRE, 4 RX_WIRE; R4-REQ-06): each cable is checked end to end before mating (ORDERING 8.2);
     `J2 5:GND 6:NC` beside J2 but nearer J3.
-11. **Agent decisions** D-R1-01 … D-R1-07, D-R2-01 … D-R2-16, D-R3-01 … D-R3-13, D-R4-01 … D-R4-04, D-R5-01 … D-R5-04, D-R6-01 … D-R6-03 and D-R7-01 / D-R7-02 (R10_DECISIONS.md), each to be
+11. **Agent decisions** D-R1-01 … D-R1-07, D-R2-01 … D-R2-16, D-R3-01 … D-R3-13, D-R4-01 … D-R4-04, D-R5-01 … D-R5-04, D-R6-01 … D-R6-03, D-R7-01 / D-R7-02 and D-R8-01 … D-R8-03 (R10_DECISIONS.md), each to be
     accepted or overruled.
 12. **Not verified:** DC solve (the IPC-2152 estimates of D-R3-03 are an upper-bound fit), hold-up simulation, port-supply
     corners, plate model masses, bore fit with real plugs and wires, every bench test.
@@ -617,4 +661,6 @@ Each item needs its measured reason and the board hash it was measured on; revie
     R5-RTE-07 (CC1's 0.113 mm segment inside its via), R5-MFG-02 (TP88's footprint silk 0.426 mm from the east edge),
     R5-MFG-03 (silk stroke at JLC's 0.15 mm minimum), R5-DOC-03 (pre-R10 absolute paths), R6-BOM-02 (U4 mask web
     0.100 mm, JLC's limit), R6-MFG-02 (silk edge keep-in by generator constant; J3 footprint silk 0.50 mm), R6-REQ-06
-    (cost evidence BOM-bound); shroud placement: OQ-7.
+    (cost evidence BOM-bound), R7-BOM-01 (C29936 → C15849 merge, OQ-3 option), R7-BOM-02 (capacitor Values without
+    rating), R8-BOM-01 / -02 (envelope comments), R8-RTE-02 (F.Cu nets over Y1), R8-RTE-03 (I2C1_SDA's via 1.88 mm from
+    GND), R8-MCU-01 (UART break on an unplugged port: firmware); shroud placement: OQ-7.
