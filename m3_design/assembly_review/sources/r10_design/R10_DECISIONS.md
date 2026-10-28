@@ -817,8 +817,14 @@ lead or ferruled before the terminal.
   reports/AVA board layout images.md). So no port-buck cutoff is added: F6's ride-through relies on C84 plus firmware
   load shedding (ports off on the PA6 analog watchdog), and the 0.55-1.0 ms ports-on figure is listed as a deviation
   with the shedding latency as the firmware requirement.
-- **OQ-6 (battery-lead fuse):** whether AVA has one is not known from public material; the owner's rule for unknowns is
-  the lower option: specify a <= 10 A fuse on the battery lead (board draw <= ~6 A peak with servo power off the board).
+- **OQ-6 (battery-lead fuse), revised the same day:** **no battery-lead fuse**, as AVA (no fuse visible in its public
+  images, Inference). The owner first chose a <= 10 A fuse, then dropped it after weighing it: everything after U9
+  (TPS25947 eFuse, 3.96-4.84 A) is current-limited, a shorted igniter is held to about 4.2 A by R134 for <= 20 ms, and
+  servo power is off the board; a fuse holder adds a series contact whose vibration break the board rides through for
+  only 0.55-1.0 ms with the ports on (F6). Accepted residual risk (R10 deviation list): a hard short between the pack and
+  U9 / Q120 (battery lead, J1, BAT_IN copper, D8, C80 / C96 / C89 / C95) is not current-limited. Mitigation is harness
+  practice: strain relief, no chafe points, crimped or soldered leads. The `J1 BAT 15A FUSE` legend (r10_post.J1_FUSE)
+  is removed; the ARM link's 5 A fuse (`J124 5A FAST 2S`) is unaffected.
 - **OQ-7 (camera shroud):** the lower option: keep the board wholly forward of joint + 47 mm, so no shroud clocking is
   needed for fit qualification; VEHICLE.md's stack keeps its slack.
 - **OQ-3 (cost $87.01 vs $84.41)** is not yet answered: it stays on the deviation list for the owner's acceptance.
