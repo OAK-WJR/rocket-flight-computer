@@ -168,10 +168,10 @@
     "cad/kilib/rocket.pretty/USB-C_SMD-TYPE-C-31-M-12_1.kicad_mod": "f77f08eb642c6ec21933dc0cf3e2e4866e5b54717d8f1c237a4159bbdc6e8ce6",
     "cad/logic_power_path.kicad_sch": "6cf8a3d111d08e093e3bacf40ec0aab701a2d2b001b928185943f2f66cef4839",
     "cad/m3.kicad_dru": "f4f53dd3ac41e5e75272fd62a5b65e671debc2b8f2c715f2d16f01335fc13548",
-    "cad/m3.kicad_pcb": "3b6e15f3d0682530173d063ae524f36466da645c6ebe09e4ecf1bfc1d584c266",
+    "cad/m3.kicad_pcb": "b242ab8e2f4efa1e2e6cf5766294faa07d307cfa0c0f8cd90d08cade850db8e7",
     "cad/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
     "cad/m3.kicad_sch": "d048ce11d22608781937c8efa65b6da949311fce5efb7f50b4dc34fdb0337925",
-    "cad/mcu.kicad_sch": "3ad54b55a2dacc311fc39c805aac06121a693a25aa8ca9c801333788e618d8fb",
+    "cad/mcu.kicad_sch": "a5d2263bf187f1c0486aab51b0a36be04c123d3c585bd437420a01a310f33df3",
     "cad/pullpin_buzzer.kicad_sch": "1340ee6e70ddff8570d8fd25089ceaa33a3f80f9d25c485c78381c904de1a296",
     "cad/pyro.kicad_sch": "f206ace8bb0c6611876311fc56c78240a1744b373af5f2456af5df8c2ad42732",
     "cad/sensors.kicad_sch": "bc81013b62caf9c9093acac15a3fd8cfce56a6b0c922f4899906e745d5af8ece",
@@ -187,11 +187,11 @@
     "tools/jlc_orient.py": "33f14158a5fe0107bf2493660f2923c6afd90998610cc49868f9fc2d803cfa61"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "5ecfbaba38dd041a1904e637e85029ed4952fb91efd4834d3ffd15049a10494c",
-    "m3_assembly_top.pdf": "da790746f80cbc64aa40fcd9d5aef4369b5c5e5660b99f2b69b212a91c819a4d",
+    "m3_assembly_bottom.pdf": "a851949b7c1eb183ccecd627287e692e294339f61df30324a1ce4057ecf6a136",
+    "m3_assembly_top.pdf": "a98b8a529fb0bfb4a75897f739c6768f03c0686bd687b9bfcbcd7a3c397cddf4",
     "m3_bom_jlc.csv": "3ada66369f7dae5d86db92afebc2f4d653b6f3b4f0aefc291e1c0f1c7b7752bc",
     "m3_cpl_jlc.csv": "e6885622b4f0542a00384e2f9873cbd386487e5359f168350c9577d494ab2df3",
-    "m3_gerber.zip": "2a7c65ba9e479565e032b3e80f0606c0103fab682307db031a871c05b0603762"
+    "m3_gerber.zip": "6afade6691bb486fc555a5cccd5c58244cf59360c1922bea8e3c11e99cc1920a"
   },
   "schema": 1
 }

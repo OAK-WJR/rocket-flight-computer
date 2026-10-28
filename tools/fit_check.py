@@ -483,7 +483,7 @@ def main():
         if ref in side_entry and fp_name(b.FindFootprintByReference(ref)).startswith(lands):
             face = box[0] if abs(box[0] - a.axis_x) > abs(box[2] - a.axis_x) else box[2]
             room = math.sqrt(BORE_R ** 2 - WIRE_Z ** 2) - abs(face - a.axis_x)
-            walls.append(f'{ref} {room - a.tol:.1f}-{room + a.tol:.1f}')
+            walls.append(f'{ref} {room - a.tol:.2f}-{room + a.tol:.2f}')
     if walls:
         print(f'  wire entry to the bore wall at {WIRE_Z} mm height: ' + ', '.join(sorted(walls)))
     for issue in report['issues']:
@@ -493,7 +493,7 @@ def main():
         report.update(board_sha256=before[board_path.name], inputs_sha256=before,
                       checker_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                       radius_mm=a.radius, axis_x_mm=a.axis_x, tolerance_mm=a.tol,
-                      mated_envelopes=MATED, physical_fit_verified=False)
+                      mated_envelopes=R10_MATED if a.profile == 'r10' else MATED, physical_fit_verified=False)
         a.report.write_text(json.dumps(report, indent=2) + '\n')
     return 0 if report['ok'] else 1
 

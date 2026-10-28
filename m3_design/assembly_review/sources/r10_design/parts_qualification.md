@@ -138,7 +138,7 @@ no thermal via:** M2 bars vias in SMD pads, so the pad (bottom side, 1.2×2.0 mm
 14.95), sits 0.35 mm (centre) outside the pad edge; In2 under it is PORT_5V3
 (pad, via and In2 zone read on board `579575bd…` in round 4: pad 11 1.2×2.0 mm at (27.6, 13.6), the nearest GND via
 (27.6, 14.95) 1.35 mm centre to centre from the pad centre, In2 zone R10_PORT_5V3_In2; the round-4 routing pass was
-not re-measured on `3b6e15f3…`). TI's62.5°C/W thetaJA (SBVS282A p4) is the
+not re-measured on `b242ab8e…`). TI's62.5°C/W thetaJA (SBVS282A p4) is the
 JEDEC high-K board figure and is not used. Without vias under the pad, take
 80–110°C/W (Inference, outer-layer pour spreading only, RθJC(bot)7.8°C/W): the
 full allocation gives a32–45 K rise, junction≈117–130°C at85°C ambient and
@@ -296,8 +296,8 @@ footprint):**
   + on pad 1 (VLOGIC at (38.5, 77.25)) and − on pad 2 (GND at (38.5, 70.75)); the polarity in JLC's CPL / preview
   is not confirmed (the MA-series datasheet gives no land, see the parts table above): confirm + on the VLOGIC pad in the
   preview, and check the fitted part's polarity stripe on the first boards (ORDERING §8). `parts_stock.json` is a dated component snapshot, not a final
-BOM stock gate. Camera ILIM resistor C185349 had only17 units: sufficient for a
-small prototype batch only; recheck the actual quantity before ordering.
+BOM stock gate. Camera ILIM resistor C185349 (R430): 17 in stock against a 3,610-piece minimum purchase
+(JLC, 2026-10-27): sufficient for a small prototype batch only; recheck the actual quantity before ordering.
 
 ## Servo-reference return and mechanical mass
 
@@ -360,3 +360,23 @@ reviewer's readings and were not re-read from the PDFs in this pass (Inference u
 - **LSEON (R5-MCU-02).** PC14 is OSC32_IN and drives BUZZ_DRV through R162; VBAT is tied to 3V3, so a stray LSEON set in
   the backup domain survives NRST and would load the buzzer node: LSEON stays 0 and the backup domain is never
   set up for the LSE (binding note).
+
+## Round-6 records (R6-PWR-02 / -03; Calc unless marked)
+
+- **USB-only attach (R6-PWR-02).** With only USB-C connected, VBUS feeds VLOGIC through U10 (TPS2553, current limit
+  355–445 mA as the round-6 reviewer reads it; ILIM resistor and datasheet limit not re-read here) and U11 behind it:
+  C84 470 µF, C6 and C7 22 µF each and C99 100 nF are charged through that limit. With the load ignored, the charge
+  of about 514 µF to 5 V (2.57 mC) takes 5.8 ms at 445 mA and 7.2 ms at 355 mA (dV/dt about 0.7–0.87 V/ms; Calc).
+  Bench: attach USB alone and measure the VBUS current and dV/dt, and the 3V3 start-up. USB-only programming or logging
+  needs a host that allows at least 450 mA (Inference: a USB 2.0 port allows 500 mA after enumeration, 100 mA before; the
+  board's draw with the MCU running and the ports off is not measured).
+- **Q120 / Q121 turn-on time (R6-PWR-03).** The gate network is R120 100 kΩ (gate to source, RAW side) in parallel with
+  R121 10 kΩ (gate to Q122's drain) charging C120 2.2 µF: R120 ∥ R121 = 9.09 kΩ, tau = 9.09 kΩ x 2.2 µF = 20.0 ms.
+  Q120 / Q121 are fully enhanced about 22 ms after Q122 turns on (1.1 tau: Vgs about 67 % of its final value, which
+  is 0.909 x RAW, so about −4.5 V at 7.4 V; threshold and Rds(on) against Vgs not re-read; Calc). This supersedes the
+  microsecond-scale switching figures of R9's servo-power path for R10, where Q120 / Q121 only switch the pyro bus:
+  RAW_ACT (TP120) rises over tens of milliseconds, so a gate or RAW_ACT reading taken sooner than about 50 ms after the
+  enable is not valid (Inference: 50 ms is about 2.5 tau).
+- **PORT_5V3 In2 band narrowest point (R6-PWR-01).** 1.20 mm at x about 30.25 (a via clearance notch; round-6
+  reviewer's measurement, not re-measured here); `tools/ipc2152.py` internal fit, 1.20 mm, 2.02 A: 8.5 °C (re-computed),
+  so the earlier 1.49 mm / 6.7 °C figure is superseded.

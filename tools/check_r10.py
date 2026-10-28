@@ -329,39 +329,67 @@ def in_own_antipad(own, net, x, y):
 REGION_STEP = 0.02             # mm: K-region sample spacing along a track (centre line and both pushed edges)
 REGION_MARGIN = 0.1            # mm: the edges are sampled this far outside the copper edge (R5-RTE-02)
 REGION_PAD_STEP = 0.05         # mm: K-region sample grid over an SMD pad grown by REGION_MARGIN
-REGION_ANTIPAD = 0.30          # mm: In2 zone clearance (0.25) + 0.05 beyond a via's pad radius: its antipad hole
-VOID_STEP = 0.04               # mm: grid of the own-pad void flood fill
+REGION_HOLE_REACH = 0.30       # mm: a via's fill hole reaches no further than its pad radius + this (measured hole radius
+                               # 0.401 = pad 0.25 + 0.15 on the R10 board; R6-RTE-02)
+VOID_RIM_SIDES = 64            # the pad-void disc is this many sided polygon
 
 
-def pad_void_labels(zones, cx, cy, radius, step=VOID_STEP):
-    """Flood-fill the In2 no-copper cells inside the disc (cx, cy, radius): returns (labels, escaping) with labels
-    {(i, j): component} for every free cell and `escaping` the components that reach the disc's rim (R5-GATE-01)."""
-    import critical_reference as cr
-    n = int(radius / step) + 2
-    free = {}
-    for i in range(-n, n + 1):
-        for j in range(-n, n + 1):
-            x, y = cx + i * step, cy + j * step
-            if math.hypot(i * step, j * step) <= radius + step and not any(cr.inside(ps, x, y) for ps in zones.values()):
-                free[(i, j)] = (x, y)
-    labels, escaping, comp = {}, set(), 0
-    for start in free:
-        if start in labels:
-            continue
-        comp += 1
-        labels[start] = comp
-        stack = [start]
-        while stack:
-            i, j = stack.pop()
-            if math.hypot(i * step, j * step) >= radius - step:
-                escaping.add(comp)
-            for di in (-1, 0, 1):
-                for dj in (-1, 0, 1):
-                    c = (i + di, j + dj)
-                    if c in free and c not in labels:
-                        labels[c] = comp
-                        stack.append(c)
-    return labels, escaping
+def fill_hole_table(zones, vias):
+    """[(x0, y0, x1, y1, chain, {nets})] mm: every hole (inner outline) of the In2 fills that is a via clearance hole:
+    its area contains a via centre and every vertex of its outline lies within (pad radius + REGION_HOLE_REACH) of a via
+    centre, so the hole is covered by via discs (one via: its box is no larger than 2 x (pad radius + reach); vias with
+    merged antipads: a hole of the union). `nets` are the nets of the vias inside it. A slot, a plane pull-back or any
+    other no-copper shape is no via hole (R6-RTE-02 / R6-GATE-01)."""
+    import pcbnew
+    out = []
+    for ps in zones.values():
+        for o in range(ps.OutlineCount()):
+            for h in range(ps.HoleCount(o)):
+                chain = ps.Hole(o, h)
+                bb = chain.BBox()
+                x0, y0 = pcbnew.ToMM(bb.GetLeft()), pcbnew.ToMM(bb.GetTop())
+                x1, y1 = pcbnew.ToMM(bb.GetRight()), pcbnew.ToMM(bb.GetBottom())
+                near = [v for v in vias if x0 - 1.5 <= v[0] <= x1 + 1.5 and y0 - 1.5 <= v[1] <= y1 + 1.5]
+                nets = {n for vx, vy, n, _ in near if x0 <= vx <= x1 and y0 <= vy <= y1
+                        and chain.PointInside(pcbnew.VECTOR2I(pcbnew.FromMM(vx), pcbnew.FromMM(vy)))}
+                covered = all(any(math.hypot(pcbnew.ToMM(chain.CPoint(k).x) - vx, pcbnew.ToMM(chain.CPoint(k).y) - vy)
+                                  <= r + REGION_HOLE_REACH for vx, vy, _, r in near) for k in range(chain.PointCount()))
+                if nets and covered:
+                    out.append((x0, y0, x1, y1, chain, nets))
+    return out
+
+
+def in_via_hole(table, net, x, y):
+    import pcbnew
+    pt = None
+    for x0, y0, x1, y1, chain, nets in table:
+        if x0 <= x <= x1 and y0 <= y <= y1 and any(n != net for n in nets):
+            pt = pt or pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y))
+            if chain.PointInside(pt):
+                return True
+    return False
+
+
+def pad_void_regions(zones, cx, cy, radius):
+    """[(free SHAPE_POLY_SET, outline index, escapes)]: the In2 no-copper regions inside the disc (cx, cy, radius) by
+    polygon subtraction (no grid, so a 0.02 mm exit slot cannot slip through; R6-GATE-05); `escapes` when the region
+    reaches the disc's rim (a vertex on the rim polygon)."""
+    import pcbnew
+    disc = pcbnew.SHAPE_POLY_SET()
+    disc.NewOutline()
+    for k in range(VOID_RIM_SIDES):
+        a = 2 * math.pi * k / VOID_RIM_SIDES
+        disc.Append(pcbnew.FromMM(cx + radius * math.cos(a)), pcbnew.FromMM(cy + radius * math.sin(a)))
+    for ps in zones.values():
+        disc.BooleanSubtract(ps)
+    rim = radius * math.cos(math.pi / VOID_RIM_SIDES) - 0.002
+    out = []
+    for i in range(disc.OutlineCount()):
+        chain = disc.COutline(i)
+        escapes = any(math.hypot(pcbnew.ToMM(chain.CPoint(k).x) - cx, pcbnew.ToMM(chain.CPoint(k).y) - cy) >= rim
+                      for k in range(chain.PointCount()))
+        out.append((disc, i, escapes))
+    return out
 
 
 class OwnPadVoids:
@@ -383,15 +411,16 @@ class OwnPadVoids:
                     self.cache[len(self.cache)] = None
 
     def exempt(self, net, x, y):
+        import pcbnew
+        pt = pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y))
         for key, cx, cy, radius in self.pads.get(net, ()):
             if math.dist((x, y), (cx, cy)) > radius:
                 continue
             if self.cache[key] is None:
-                self.cache[key] = pad_void_labels(self.zones, cx, cy, radius)
-            labels, escaping = self.cache[key]
-            i, j = round((x - cx) / VOID_STEP), round((y - cy) / VOID_STEP)
-            near = {labels[(i + di, j + dj)] for di in (-1, 0, 1) for dj in (-1, 0, 1) if (i + di, j + dj) in labels}
-            if near and not (near & escaping):
+                self.cache[key] = pad_void_regions(self.zones, cx, cy, radius)
+            regions = self.cache[key]
+            hit = [esc for ps, i, esc in regions if ps.Contains(pt, i, 1000, True)]
+            if hit and not any(hit):
                 return True
         return False
 
@@ -401,8 +430,8 @@ def region_issues(board):
     sampled every REGION_STEP on its centre line and on both edges pushed REGION_MARGIN outward, and every B.Cu SMD pad
     of such a net on a REGION_PAD_STEP grid over the pad grown by REGION_MARGIN; each sample lies over exactly one In2
     plane net, outside REF_OWN_R of the net's own vias and outside the net's own through-hole pads' clearance voids (a
-    no-copper region wholly inside the pad's disc, OwnPadVoids); a no-copper sample inside another net's via antipad
-    (REGION_ANTIPAD) is a clearance hole, not a boundary. Each connected B.Cu chain (tracks joined end to end or
+    no-copper region wholly inside the pad's disc, OwnPadVoids); a no-copper sample inside a hole of the fill that holds
+    another net's via (hole box <= 2 x (via pad radius + REGION_HOLE_REACH)) is a clearance hole, not a boundary. Each connected B.Cu chain (tracks joined end to end or
     through a pad of the net) sees exactly one In2 plane net in total. Returns (issues, evidence)."""
     import critical_reference as cr
     import pcbnew
@@ -416,11 +445,12 @@ def region_issues(board):
         if v.GetClass() == 'PCB_VIA':
             vias.setdefault(v.GetNetname(), []).append((pcbnew.ToMM(v.GetPosition().x), pcbnew.ToMM(v.GetPosition().y)))
     voids = OwnPadVoids(board, zones)
-    # a sample over no copper inside any other net's via antipad (via pad radius + REGION_ANTIPAD) is a via clearance
-    # hole, not a plane boundary: K-reference already holds the run's own reference there (R5 fix pass, D-R5-03)
-    antipads = [(pcbnew.ToMM(v.GetPosition().x), pcbnew.ToMM(v.GetPosition().y), v.GetNetname(),
-                 pcbnew.ToMM(v.GetWidth(pcbnew.F_Cu)) / 2 + REGION_ANTIPAD)
-                for v in board.GetTracks() if v.GetClass() == 'PCB_VIA']
+    # a sample over no copper inside a hole of the In2 fill that holds another net's via is that via's clearance hole,
+    # not a plane boundary (geometric: the hole's own outline and size, R6-RTE-02); K-reference holds the run's own
+    # reference there (R5 fix pass, D-R5-03)
+    via_holes = fill_hole_table(zones, [(pcbnew.ToMM(v.GetPosition().x), pcbnew.ToMM(v.GetPosition().y), v.GetNetname(),
+                                         pcbnew.ToMM(v.GetWidth(pcbnew.F_Cu)) / 2)
+                                        for v in board.GetTracks() if v.GetClass() == 'PCB_VIA'])
     items, count = [], 0       # (net, label, endpoint keys, planes seen, gaps)
 
     def scan(net, pts):
@@ -432,7 +462,7 @@ def region_issues(board):
             on = [n for n, ps in zones.items() if cr.inside(ps, x, y)]
             if not on and voids.exempt(net, x, y):
                 continue
-            if not on and any(n != net and math.dist((x, y), (vx, vy)) <= r for vx, vy, n, r in antipads):
+            if not on and in_via_hole(via_holes, net, x, y):
                 continue
             count += 1
             seen.update(on)
@@ -718,7 +748,7 @@ F9_PREMISE = (10.6, 27.07)      # R8 D76: protection parts / U9 from J1.1
 
 # S-5 window / S-8 barrels (R3-SAF-01)
 ARM_WINDOW_NETS = frozenset({'GND', RAW, BUS})  # the only nets allowed between J124's pads
-BARREL_NETS = ('PYRO1_BUS', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE')
+BARREL_NETS = ('PYRO1_BUS', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE', 'RAW_ACT')
 BARREL_GAP = 1.0                # mm, plated barrel wall to foreign In1 / In2 copper
 # S-9 (R3-GATE-07): the fire-loop current path of each net, between its power terminals (pad sets; a pad number set
 # per reference). D-R2-02: the fire loop is drawn 1.0 mm on F.Cu; the load-switch feed (J1 -> Q120 drain) and RAW_ACT
@@ -1002,6 +1032,17 @@ SUPPLY_TIES = {   # the board's intended ties to a supply, rail or the load-swit
     ('Q121', 'RAW_ACT', 'ACT_FET_S'): 'load switch Q121 drain RAW_ACT, source on the back-to-back node (S-2)'}
 
 
+ARMED_PARTS = {       # part: ({armed nets it may touch}, reason) (R6-GATE-07; the whole list on the R10 board, each named)
+    'J124': ({'PYRO1_BUS'}, 'ARM terminal: the break itself'),
+    'J121': ({'PYRO1_OUT', 'PYRO1_IGN'}, 'igniter terminal'),
+    'R134': ({'PYRO1_IGN', 'PYRO1_BUS'}, 'igniter pulse resistor, bus to igniter'),
+    'Q124': ({'PYRO1_OUT'}, 'pyro FET: drain on the igniter return'),
+    'R132': ({'PYRO1_BUS'}, 'ARM_SENSE divider high side'),
+    'R131': ({'PYRO1_OUT'}, 'continuity cold pull-up (H-1)'),
+    'R173': ({'PYRO1_OUT'}, 'continuity divider high side'),
+    'C128': ({'PYRO1_OUT'}, 'igniter-output bypass capacitor')}
+
+
 def armed_net(n):
     """A net on the armed bus or RAW_ACT side (including the high side of the sense dividers and the gate net)."""
     return bool(ARMED_SIDE.match(n) or RAW_SIDE.match(n)) and not MCU_SIDE.search(n)
@@ -1059,11 +1100,17 @@ def s1(ctx):
         if ref != ARM_REF and RAW in nets and both:
             issues.append(f'S-1: {ref} has pads on {RAW} and the armed net(s) {both}; only J124 may join them')
     issues += tie_issues(ctx, 'S-1', lambda a: a in ARMED or a == RAW)
-    for ref, fp in ctx.fps.items():
-        if re.fullmatch(r'TP\d+', ref):
-            on = sorted({p.GetNetname() for p in fp.Pads()} & set(ARMED))
-            if on:
-                issues.append(f'S-1: test pad {ref} on armed copper {on} (a clip from it bypasses the ARM plug)')
+    for ref, fp in sorted(ctx.fps.items()):                    # R6-GATE-07 / R6-SAF-01: any part, whatever its reference
+        on = sorted({p.GetNetname() for p in fp.Pads()} & set(ARMED))
+        if not on or ref == ARM_REF:
+            continue
+        if ref not in ARMED_PARTS:
+            what = 'test pad' if re.fullmatch(r'(TP|PT|TPA|TEST)\w*', ref) or len(fp.Pads()) == 1 else 'part'
+            issues.append(f'S-1: {what} {ref} on armed copper {on} is not a named armed-side part (ARMED_PARTS in '
+                          f'tools/check_r10.py; a clip or wire from it bypasses the ARM plug)')
+        elif not set(on) <= ARMED_PARTS[ref][0]:
+            issues.append(f'S-1: {ref} is on armed net(s) {on}; its named armed nets are {sorted(ARMED_PARTS[ref][0])}')
+    ev['armed_parts'] = sorted(ARMED_PARTS)
     reach = connectivity(ctx)
     for start, other in ((RAW, ARMED), (BUS, (RAW,))):
         foreign, count = reach[start]
@@ -1121,19 +1168,25 @@ SUPPLY_NETS = RAILS | {'BAT_IN', 'RAW_PROTECTED', 'VLOGIC', 'ACT_FET_S', 'RAW_AC
 
 
 def parse_value(text, kind):
-    """A part Value field ('220nF 25V X7R', '4.7k', '2R 1%', '2.2uF') as ohms ('R') or farads ('C'); None if not
-    readable."""
-    m = re.match(r'\s*([0-9]+(?:\.[0-9]+)?)\s*(meg|[pnuµmrRkKMG])?\s*(F)?', text or '')
-    if not m:
-        return None
-    mult = m.group(2) or ''
-    if kind == 'C' and not mult and not m.group(3):
+    """A part Value field ('220nF 25V X7R', '4.7k', '4k7', '2R2', '2R 1%', '2.2uF') as ohms ('R') or farads ('C'); None
+    if not readable. The first token is read whole: plain 'number[unit]' or infix notation ('4k7' = 4.7k, '100k5' =
+    100.5k); anything else in it ('1e3', '1,5k') is unreadable (R6-GATE-06)."""
+    text = (text or '').strip()
+    m = re.fullmatch(r'(\d+)(meg|[pnuµmrRkKMG])(\d+)(F?)(?:\s.*)?', text, re.S)
+    if m:
+        number, mult, has_f = float(f'{m.group(1)}.{m.group(3)}'), m.group(2), True
+    else:
+        m = re.fullmatch(r'(\d+(?:\.\d+)?)\s*(meg|[pnuµmrRkKMG])?\s*(F?)(?:\s.*)?', text, re.S)
+        if not m:
+            return None
+        number, mult, has_f = float(m.group(1)), m.group(2) or '', bool(m.group(3))
+    if kind == 'C' and not mult and not has_f:
         return None                  # a unitless capacitor value ('220') is not read as farads (R5-SAF-02)
     if kind == 'R':
         factor = {'': 1.0, 'r': 1.0, 'R': 1.0, 'k': 1e3, 'K': 1e3, 'm': 1e-3, 'M': 1e6, 'meg': 1e6, 'G': 1e9}.get(mult)
     else:
         factor = {'': 1.0, 'p': 1e-12, 'n': 1e-9, 'u': 1e-6, 'µ': 1e-6, 'm': 1e-3}.get(mult)
-    return None if factor is None else float(m.group(1)) * factor
+    return None if factor is None else number * factor
 
 
 def gate_network(ctx, fet, roles, label):
@@ -1191,6 +1244,14 @@ def s3(ctx):
         if not pulls:
             issues.append(f'S-3: pyro FET Q124: no resistor of 100 ohm - 100 k from the MCU-side gate node {node} to GND '
                           f'(it must be defined off while the MCU pin floats)')
+        series = {r for r, o in ev['Q124']['series'] if o == node}
+        for ref, nn in sorted(part_nets(ctx.board).items()):          # R6-SAF-02: only U1, the series R and R to GND
+            if node not in nn or ref == 'U1' or ref in series:
+                continue
+            fp = ctx.fps[ref]
+            if not (ref.startswith('R') and len(fp.Pads()) == 2 and nn == {node, 'GND'}):
+                issues.append(f'S-3: {ref} is on the MCU-side gate node {node} (nets {sorted(nn)}): only U1, the series '
+                              f'resistor and resistors to GND may touch it (a pull-up would hold the gate on)')
     for fet in ('Q120', 'Q121'):
         found, ev[fet] = gate_network(ctx, fet, PFET_ROLES, 'load switch')
         issues += found
@@ -1356,8 +1417,8 @@ def s8(ctx, gap=BARREL_GAP):
     inner = (pcbnew.In1_Cu, pcbnew.In2_Cu)
     barrels = barrel_shapes(ctx.board)
     issues, worst = [], {}
-    others = [it for it in ctx.net_items(lambda n: n != 'GND', inner)
-              if isinstance(it[4], (pcbnew.PCB_TRACK, pcbnew.ZONE))]       # PCB_ARC is a PCB_TRACK
+    others = [it for it in ctx.net_items(lambda n: n != 'GND', inner)     # PCB_ARC and PCB_VIA are PCB_TRACKs; + pads (R6-SAF-02)
+              if isinstance(it[4], (pcbnew.PCB_TRACK, pcbnew.ZONE, pcbnew.PAD))]
     for blabel, bnet, bshape in barrels:
         for label, net, lay, shape, obj in others:
             if net == bnet or not pcbnew.SHAPE.Collide(bshape, shape, pcbnew.FromMM(gap) - 1):

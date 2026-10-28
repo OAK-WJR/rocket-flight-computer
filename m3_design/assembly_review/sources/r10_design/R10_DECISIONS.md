@@ -678,3 +678,47 @@ retention table with body + plug masses and J3 / LS120 rows, "5V4". masses.json:
 Binding note: LSE never enabled, every no-net pin analog, PA6 / PB1 pin-fault notes, VBUS_SENSE not a safety input.
 pin_table.tsv: 26 DS12110 page citations corrected (citation column only; no gate pins the file; the binding note
 records its new hash).
+
+## Round 6 (fourth board review round on `3b6e15f3…`, fix pass; board `b242ab8e…`)
+
+Ten independent reviewers (one lens each, fresh contexts, started together) reviewed `3b6e15f3…` (commit b3ed2fe):
+0 Critical, 1 Major, 39 Minor (`docs/R10_VALIDATION.md` "Round 6"). Three file-disjoint slices (In2 copper, gates,
+records), merged and rebuilt by the root; two consecutive worktree builds and the slice's clone gave `b242ab8e…`.
+
+## D-R6-01. CH1 In2 GND arms widened round the sense vias (R6-RTE-01)
+
+`IN2_GND_CH1` now widens round each sense via: PYRO1_CONT x 22.5–25.7, y 53.9–56.1; ARM1_SENSE x 25.2–28.6,
+y 57.65–60.8; RAW_ACT_SENSE x 25.8–28.6, y 62.85–65.75 (its south edge pushed out over x 23.4–25.8). Existing GND vias
+that sat in In2 3V3 now fall inside the arms and stitch them ((25.2, 55.0); (24.8, 60.24), (26.8, 60.15), (28.2, 59.6),
+(21.917, 59.61); (23.93, 64.86), (24.8, 65.49), (27.2, 65.4), (26.67, 66.07)). Measured on the filled polygon (0.05 mm
+raster): no GND strip narrower than 0.5 mm; 0.65–1.65 mm of GND round each via hole; farthest arm point 2.64–2.89 mm of
+copper from a GND via. Filled In2 areas: GND CH1 377.5 mm², 3V3 1477.2 mm² (others unchanged). The ARM1_SENSE and
+RAW_ACT_SENSE F.Cu diagonals cross over In2 3V3 as before (F.Cu references In1 GND; K-reference holds).
+
+## D-R6-02. Gates and the fit tool (R6-RTE-02, R6-SAF-01 / -02, R6-GATE-01 … -08, R6-MEC-04 / -05)
+
+- **K-region:** a no-copper sample is exempt only inside a hole of the In2 fill that contains a foreign via centre and
+  whose every vertex lies within (that via's pad radius + 0.3 mm) of a via centre (so merged holes of adjacent vias,
+  like SPI1's three at (16.7, 43.1), (17.55, 43.5), (17.55, 44.25), stay exempt; a slot or pull-back does not).
+  `OwnPadVoids` tests on polygon geometry (64-gon disc) instead of the 0.04 mm grid, so a 0.03 mm exit slot counts.
+- **S-1:** any part with a pad on an armed net must be in `ARMED_PARTS` (J124, J121, R134, Q124, R132, R131, R173,
+  C128), each with its nets. **S-3:** PYRO1_GATE_N may touch only U1, the series resistor and 2-pad resistors to GND.
+  **S-8:** plated pads of other nets count; RAW_ACT (J124.2) is a barrel net.
+- **parse_value:** infix values (4k7, 2R2, 4n7, 100k5) and a fully consumed token.
+- **Tests:** `tools/test_r10_check.py` 102 (margin, arcs, step, pad-chain join, void radius, slots, via holes, the
+  round-6 seeds).
+- **fit_check:** wire room with two decimals (4.95–5.55 mm); the r10 report's `mated_envelopes` uses the GH-2 box for
+  J123 / J400.
+
+## D-R6-03. Records (R6-MEC-01 … -06, R6-REQ-01 … -08, R6-PWR-01 … -03, R6-MCU-01 … -05, R6-SAF-03 / -04, R6-MFG-02, R6-RTE-03)
+
+Camera shroud rewritten (M3_R10, ORDERING 8.4, REQUIREMENTS P2): the board, its GH-4 plugs and (if the shroud faces the
+top) J122's plugs would penetrate the shroud by ≈ 4.6 / 3.8 / 5.1 mm wherever the board overlaps joint + 4…+47 axially,
+so the board sits wholly forward of joint + 47 mm in any clocking unless a measured clearance replaces the rule; owner
+question OQ-7. REQUIREMENTS F7 R10 hand budget (Calc), M3 R10 line, R430 wording; ORDERING 8: via counts 222 / 108 in
+the order remark, method, C11 nearest coated part to U4, J3 staked (J123 / J400 tie or RTV), USB-only attach and
+ACT_GATE turn-on bench steps, nut on the sled side, TP89 0.306 mm to a nominal washer; M3_R10: PORT_5V3 neck 1.20 mm,
+τ ≈ 20 ms, lever-arm frame, silk keep-in basis. Binding note and pin_table: PE1 EXTI1 data-ready with pull-down,
+sentinels analog never driven, ADC channels verified, no synchronous trace and GPIOE_LCKR on PE4, W25Q QE bit, IMU SPI
+≤ 10 MHz, 40 ms gyro Ton, no blocking erase in flight. Schematic note (mcu sheet, r10_sch.py): "PE1 remains polled"
+replaced (the netlist is unchanged).

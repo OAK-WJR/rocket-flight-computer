@@ -214,6 +214,18 @@ class SyntheticBase(unittest.TestCase):
         self.board.Add(t)
         return t
 
+    def via(self, x, y, net, d=0.6, drill=0.3):
+        v = pcbnew.PCB_VIA(self.board); v.SetPosition(self.P(x, y)); v.SetWidth(pcbnew.FromMM(d))
+        v.SetDrill(pcbnew.FromMM(drill)); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(self.board.FindNet(net))
+        self.board.Add(v)
+        return v
+
+    def arc(self, a, mid, b, net, layer=None, width=0.2):
+        t = pcbnew.PCB_ARC(self.board)
+        t.SetStart(self.P(*a)); t.SetMid(self.P(*mid)); t.SetEnd(self.P(*b)); t.SetWidth(pcbnew.FromMM(width))
+        t.SetLayer(pcbnew.F_Cu if layer is None else layer); t.SetNet(self.board.FindNet(net)); self.board.Add(t)
+        return t
+
     def ctx(self):
         return gate.make_ctx(self.board)
 
@@ -290,6 +302,19 @@ class Synthetic(SyntheticBase):
     def test_s1_test_pad_on_armed_copper(self):
         self.part('TP9', [('1', 0, 0, 'PYRO1_BUS')], at=(30, 30))
         self.assertTrue(any('test pad TP9' in i for i in gate.s1(self.ctx())[0]))
+
+    def test_s1_any_part_on_armed_copper(self):
+        """R6-GATE-07 / R6-SAF-01: any part but the named armed-side ones, whatever its reference."""
+        self.part('PT121', [('1', 0, 0, 'PYRO1_BUS')], at=(30, 30))
+        self.assertTrue(any('PT121' in i and 'named armed-side' in i for i in gate.s1(self.ctx())[0]))
+        self.board.Remove(self.board.FindFootprintByReference('PT121'))
+        self.part('U77', [('1', 0, 0, 'PYRO1_IGN'), ('2', 1, 0, 'GND')], at=(30, 35))
+        self.assertTrue(any('U77' in i for i in gate.s1(self.ctx())[0]))
+        self.board.Remove(self.board.FindFootprintByReference('U77'))
+        self.part('R132', [('1', 0, 0, 'PYRO1_BUS'), ('2', 1, 0, 'ARM1_SENSE_MID')], at=(30, 40))   # named: fine
+        self.assertEqual(gate.s1(self.ctx())[0], [])
+        self.board.FindFootprintByReference('R132').FindPadByNumber('1').SetNet(self.board.FindNet('PYRO1_IGN'))
+        self.assertTrue(any('R132 is on armed net' in i for i in gate.s1(self.ctx())[0]))
 
     def test_s1_j124_pad_nets(self):
         self.j124.FindPadByNumber('2').SetNet(self.board.FindNet('BAT_IN'))
@@ -383,6 +408,29 @@ class Synthetic(SyntheticBase):
         p.SetNet(self.board.FindNet('GND'))
         self.board.Remove(self.board.FindFootprintByReference('R127'))
         self.assertTrue(any('MCU-side' in i for i in gate.s3(self.ctx())[0]))
+
+    def test_s3_mcu_side_gate_node_only_u1_series_and_gnd_resistors(self):
+        """R6-SAF-02: a pull-up (or anything else) on PYRO1_GATE_N fails."""
+        self.gates()
+        self.assertEqual(gate.s3(self.ctx())[0], [])
+        f = self.part('R13', [('1', 0, 0, 'PYRO1_GATE_N'), ('2', 1, 0, '3V3')], at=(30, 30)); f.SetValue('100R')
+        self.assertTrue(any('R13 is on the MCU-side gate node' in i for i in gate.s3(self.ctx())[0]))
+        f.FindPadByNumber('2').SetNet(self.board.FindNet('GND'))                         # a second pull-down: allowed
+        self.assertEqual(gate.s3(self.ctx())[0], [])
+        c = self.part('C13', [('1', 0, 0, 'PYRO1_GATE_N'), ('2', 1, 0, 'GND')], at=(30, 35))
+        self.assertTrue(any('C13 is on the MCU-side gate node' in i for i in gate.s3(self.ctx())[0]))
+
+    def test_parse_value_infix_and_whole_token(self):
+        """R6-GATE-06."""
+        for text, want in (('4k7', 4700.0), ('1k5', 1500.0), ('2R2', 2.2), ('100k5', 100500.0), ('4.7k', 4700.0),
+                           ('2R 1%', 2.0), ('1M', 1e6), ('10k 1%', 1e4)):
+            self.assertAlmostEqual(gate.parse_value(text, 'R'), want, msg=text)
+        for text in ('1e3', '1,5k', '4k7x', '', None, 'abc', '10kk'):
+            self.assertIsNone(gate.parse_value(text, 'R'), text)
+        self.assertAlmostEqual(gate.parse_value('4n7', 'C'), 4.7e-9)
+        self.assertAlmostEqual(gate.parse_value('220nF 25V X7R', 'C'), 220e-9)
+        self.assertIsNone(gate.parse_value('1e-6', 'C'))
+        self.assertIsNone(gate.parse_value('220', 'C'))
 
     def test_s3_series_resistor_far_net_and_values(self):
         """R4-SAF-01: the series resistor's far net is a non-rail U1 net; the pull is 1 k - 100 k and the capacitor
@@ -676,6 +724,121 @@ class R4Synthetic(SyntheticBase):
         issues = gate.region_issues(self.board)[0]
         self.assertTrue(any('no In2 copper' in i for i in issues), issues)
 
+    def keepout(self, pts, layer=None):
+        slot = pcbnew.ZONE(self.board); slot.SetIsRuleArea(True); slot.SetDoNotAllowZoneFills(True)
+        ls = pcbnew.LSET(); ls.AddLayer(pcbnew.In2_Cu if layer is None else layer); slot.SetLayerSet(ls)
+        o = slot.Outline(); o.NewOutline()
+        for x, y in pts:
+            o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        self.board.Add(slot)
+        pcbnew.ZONE_FILLER(self.board).Fill(self.board.Zones())
+        return slot
+
+    def box(self, x0, y0, x1, y1):
+        return [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
+
+    def test_k_region_margin_isolated(self):
+        """R6-GATE-02: a copper edge 0.05 mm inside the plane edge fails with REGION_MARGIN 0.1, passes with 0."""
+        self.plane('GND', 10, 10, 30, 40)
+        self.track((12, 39.85), (28, 39.85), 'PYRO1_CONT', pcbnew.B_Cu)               # copper edge at 39.95
+        self.assertTrue(gate.region_issues(self.board)[0])
+        with patch.object(gate, 'REGION_MARGIN', 0.0):
+            self.assertEqual(gate.region_issues(self.board)[0], [])
+
+    def test_k_region_arc_beside_plane_edge_and_arc_in_chain(self):
+        """R6-GATE-03: an arc track is sampled with the margin, and an arc joins a chain by its ends."""
+        self.plane('GND', 10, 10, 30, 40)
+        self.arc((12, 38), (20, 39.85), (28, 38), 'SPI1_SCK', pcbnew.B_Cu)           # apex copper edge at 39.95
+        self.assertTrue(gate.region_issues(self.board)[0])
+        with patch.object(gate, 'REGION_MARGIN', 0.0):
+            self.assertEqual(gate.region_issues(self.board)[0], [])
+        self.board.Remove(self.board.GetTracks()[0])
+        self.arc((12, 37), (20, 38.5), (28, 37), 'SPI1_SCK', pcbnew.B_Cu)            # well inside: clean
+        self.assertEqual(gate.region_issues(self.board)[0], [])
+        # a chain: a straight run over GND, an arc over 3V3, joined end to end at a seam covered by an own via
+        for t in list(self.board.GetTracks()):
+            self.board.Remove(t)
+        self.plane('3V3', 25.15, 10, 45, 40)
+        self.board.Remove(self.board.Zones()[0]); self.plane('GND', 10, 10, 24.85, 40)
+        self.track((12, 30), (25, 30), 'SPI1_SCK', pcbnew.B_Cu)
+        self.arc((25, 30), (30, 30.5), (35, 30), 'SPI1_SCK', pcbnew.B_Cu)
+        self.via(25, 30, 'SPI1_SCK')
+        issues = gate.region_issues(self.board)[0]
+        self.assertTrue(any('connected B.Cu chain' in i for i in issues), issues)
+        self.assertFalse([i for i in issues if 'connected' not in i], issues)
+
+    def test_k_region_step_catches_a_narrow_plane_gap(self):
+        """R6-GATE-04: REGION_STEP: a 0.03 mm gap between two same-net planes is seen at 0.02, missed at 1 mm."""
+        self.plane('GND', 10, 10, 25.01, 40)
+        self.plane('GND', 25.04, 10, 40, 40)
+        self.track((12, 30), (38, 30), 'PYRO1_CONT', pcbnew.B_Cu)
+        self.assertTrue(any('no In2 copper' in i for i in gate.region_issues(self.board)[0]))
+        with patch.object(gate, 'REGION_STEP', 1.0):
+            self.assertEqual(gate.region_issues(self.board)[0], [])
+
+    def test_k_region_track_end_on_smd_pad_joins_a_pad_only_chain(self):
+        """R6-GATE-04: a track over GND ending on an SMD pad over 3V3: each clean alone, one chain together."""
+        for z in (self.plane('GND', 10, 10, 24.85, 40), self.plane('3V3', 25.15, 10, 45, 40)):
+            z.SetLocalClearance(pcbnew.FromMM(0.15))
+        pcbnew.ZONE_FILLER(self.board).Fill(self.board.Zones())
+        self.via(25.0, 30, 'SPI1_SCK')                                            # covers the seam
+        f = self.part('R992', [('1', 0, 0, 'SPI1_SCK')], at=(25.5, 30))
+        pad = f.FindPadByNumber('1'); ls = pcbnew.LSET(); ls.AddLayer(pcbnew.B_Cu); pad.SetLayerSet(ls)
+        t = self.track((12, 30), (24.0, 30), 'SPI1_SCK', pcbnew.B_Cu, width=0.1)
+        self.assertEqual(gate.region_issues(self.board)[0], [])                   # apart
+        t.SetEnd(self.P(25.25, 30))                                                # the end now lies on the pad
+        issues = gate.region_issues(self.board)[0]
+        self.assertEqual([i for i in issues if 'connected' not in i], [], issues)
+        self.assertTrue(any('connected B.Cu chain' in i and 'pad R992.1' in i for i in issues), issues)
+
+    def test_k_region_own_pad_void_disc_radius(self):
+        """R6-GATE-04: a closed no-copper hole 3 mm from a through-hole pad is not that pad's void."""
+        self.plane('GND', 0, 10, 46, 40)
+        self.j124.FindPadByNumber('1').SetNet(self.board.FindNet('SPI1_SCK'))
+        self.keepout(self.box(4.7, 22.7, 5.3, 23.3))                              # a closed hole, centre 3 mm from (5, 20)
+        self.track((5, 22.9), (5, 23.1), 'SPI1_SCK', pcbnew.B_Cu)
+        self.assertTrue(any('no In2 copper' in i for i in gate.region_issues(self.board)[0]))
+
+    def test_own_pad_void_exit_slot_of_0_03(self):
+        """R6-GATE-05: a 0.03 mm slot from the void to outside the pad disc defeats the exemption."""
+        def poly(*pts):
+            ps = pcbnew.SHAPE_POLY_SET(); ps.NewOutline()
+            for x, y in pts:
+                ps.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+            return ps
+        def fill(slot_width):
+            ps = poly(*self.box(0, 10, 46, 40))
+            ps.BooleanSubtract(poly(*[(5 + 0.9 * math.cos(k * math.pi / 16), 20 + 0.9 * math.sin(k * math.pi / 16))
+                                      for k in range(32)]))
+            if slot_width:
+                ps.BooleanSubtract(poly(*self.box(0, 20 - slot_width / 2, 5, 20 + slot_width / 2)))
+            return {'GND': ps}
+        self.j124.FindPadByNumber('1').SetNet(self.board.FindNet('SPI1_SCK'))
+        self.assertTrue(gate.OwnPadVoids(self.board, fill(0)).exempt('SPI1_SCK', 5, 20.3))
+        for width in (0.03, 0.02):
+            with self.subTest(width=width):
+                self.assertFalse(gate.OwnPadVoids(self.board, fill(width)).exempt('SPI1_SCK', 5, 20.3))
+
+    def test_k_region_foreign_via_hole_geometry(self):
+        """R6-RTE-02 / R6-GATE-01: a no-copper sample is exempt only inside a via clearance hole of the fill."""
+        self.board.Add(pcbnew.NETINFO_ITEM(self.board, 'FOREIGN'))
+        z = self.plane('GND', 0, 10, 46, 40)
+        z.SetLocalClearance(pcbnew.FromMM(0.15))                                   # hole radius 0.3 + 0.15
+        self.via(20, 25, 'FOREIGN')
+        pcbnew.ZONE_FILLER(self.board).Fill(self.board.Zones())
+        self.track((19.7, 24.4), (19.7, 25.6), 'SPI1_SCK', pcbnew.B_Cu)            # centre line 0.3 from the via
+        issues = gate.region_issues(self.board)[0]
+        self.assertFalse([i for i in issues if 'no In2 copper' in i], issues)      # in the real hole: exempt
+        # a pull-back: the same hole widened to a 1 mm square is no via hole
+        self.keepout(self.box(19.5, 24.5, 20.5, 25.5))
+        self.assertTrue(any('no In2 copper' in i for i in gate.region_issues(self.board)[0]))
+        # a slot through the via, out of the plane: not a hole at all
+        self.board.Remove(self.board.Zones()[1])
+        pcbnew.ZONE_FILLER(self.board).Fill(self.board.Zones())
+        self.assertEqual([i for i in gate.region_issues(self.board)[0] if 'no In2 copper' in i], [])
+        self.keepout(self.box(0, 24.8, 46, 25.2))
+        self.assertTrue(any('no In2 copper' in i for i in gate.region_issues(self.board)[0]))
+
     def test_k_region_in_rule_list(self):
         self.assertIn('K-region', [rid for rid, _, _ in gate.RULES])
         self.assertIn('K-rules', [rid for rid, _, _ in gate.RULES])
@@ -722,18 +885,6 @@ class R3Synthetic(SyntheticBase):
             self.board.Add(pcbnew.NETINFO_ITEM(self.board, net))
         import route_check as rc
         self.addCleanup(rc.set_profile, 'r8')
-
-    def via(self, x, y, net, d=0.6, drill=0.3):
-        v = pcbnew.PCB_VIA(self.board); v.SetPosition(self.P(x, y)); v.SetWidth(pcbnew.FromMM(d))
-        v.SetDrill(pcbnew.FromMM(drill)); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(self.board.FindNet(net))
-        self.board.Add(v)
-        return v
-
-    def arc(self, a, mid, b, net, layer=None, width=0.2):
-        t = pcbnew.PCB_ARC(self.board)
-        t.SetStart(self.P(*a)); t.SetMid(self.P(*mid)); t.SetEnd(self.P(*b)); t.SetWidth(pcbnew.FromMM(width))
-        t.SetLayer(pcbnew.F_Cu if layer is None else layer); t.SetNet(self.board.FindNet(net)); self.board.Add(t)
-        return t
 
     # --- R3-GATE-01 arcs ------------------------------------------------------------------------------------------
     def test_arc_segment_fails_r10_only(self):
@@ -825,6 +976,17 @@ class R3Synthetic(SyntheticBase):
         self.part('X3', [('1', 0, 0, 'PYRO1_IGN')], at=(10, 50), tht=True)     # a plated pad hole counts too
         self.track((10.6, 48), (10.6, 52), 'SERVO1_OUT', pcbnew.In1_Cu)
         self.assertTrue(any('X3.1 hole' in i and 'In1.Cu' in i for i in gate.s8(self.ctx())[0]))
+
+    def test_s8_plated_pad_and_raw_act_barrel(self):
+        """R6-SAF-02: a foreign plated pad's inner copper counts; RAW_ACT's barrel is a barrel net."""
+        self.assertIn('RAW_ACT', gate.BARREL_NETS)
+        self.part('X5', [('1', 0, 0, 'PYRO1_BUS')], at=(10, 50), tht=True)
+        self.assertEqual(gate.s8(self.ctx())[0], [])
+        self.part('X6', [('1', 0, 0, 'SERVO1_OUT')], at=(11.9, 50), tht=True)      # pad edge 0.4 mm from the barrel wall
+        self.assertTrue(any('SERVO1_OUT copper' in i and 'X5.1' in i for i in gate.s8(self.ctx())[0]))
+        self.part('X7', [('1', 0, 0, 'RAW_ACT')], at=(30, 60), tht=True)
+        self.track((30.9, 58), (30.9, 62), '3V3', pcbnew.In2_Cu)                    # 0.25 mm from the RAW_ACT hole wall
+        self.assertTrue(any('X7.1 hole' in i for i in gate.s8(self.ctx())[0]))
 
     def test_s5_foreign_copper_between_j124_pads(self):
         self.assertEqual(gate.arm_window(self.board)[0], [])
@@ -1226,6 +1388,29 @@ class RealBoardSeeds(unittest.TestCase):
                              pcbnew.VECTOR2I(x0 + 25, c.y + 2245))
             b.Add(a)
         self.seeded('K-legends', dot, 'R134.1')
+
+    def test_round6_gate_seeds(self):
+        """R6-GATE-07 / R6-SAF-01 / R6-SAF-02: a renamed test point on PYRO1_BUS (S-1); R913 100R from PYRO1_GATE_N to
+        3V3 (S-3); an In2 RAW_PROTECTED track 0.425 mm from J124.2's hole (S-8); a PTH pad of another net near it."""
+        def renamed_tp(b):
+            tp = b.FindFootprintByReference('TP120')
+            tp.SetReference('PT121'); tp.FindPadByNumber('1').SetNet(b.FindNet('PYRO1_BUS'))
+        self.seeded('S-1', renamed_tp, 'PT121')
+
+        def pull_up(b):
+            f = pcbnew.Cast_to_FOOTPRINT(b.FindFootprintByReference('R127').Duplicate(False))
+            f.SetReference('R913'); f.SetValue('100R'); b.Add(f)
+            next(q for q in f.Pads() if q.GetNetname() == 'GND').SetNet(b.FindNet('3V3'))
+        self.seeded('S-3', pull_up, 'R913')
+
+        def in2_track(b):
+            p = self.pad(b, 'J124', '2')
+            c, r = p.GetPosition(), p.GetDrillSize().x // 2
+            x = c.x + r + pcbnew.FromMM(0.425 + 0.1)
+            t = pcbnew.PCB_TRACK(b); t.SetNet(b.FindNet('RAW_PROTECTED')); t.SetLayer(pcbnew.In2_Cu)
+            t.SetWidth(pcbnew.FromMM(0.2)); t.SetStart(pcbnew.VECTOR2I(x, c.y - pcbnew.FromMM(1)))
+            t.SetEnd(pcbnew.VECTOR2I(x, c.y + pcbnew.FromMM(1))); b.Add(t)
+        self.seeded('S-8', in2_track, 'RAW_PROTECTED')
 
     def test_s3_series_resistor_moved_to_3v3(self):
         """R4-SAF-01: R126.1 moved from PYRO1_GATE_N to 3V3."""

@@ -1,9 +1,9 @@
 {
   "profile": "M3-ASSY-R10",
   "status": "record only; R1 binding invalid; no R10 firmware or flight approval",
-  "board_sha256": "3b6e15f3d0682530173d063ae524f36466da645c6ebe09e4ecf1bfc1d584c266",
+  "board_sha256": "b242ab8e2f4efa1e2e6cf5766294faa07d307cfa0c0f8cd90d08cade850db8e7",
   "netlist_sha256": "a951674660915a47013e4a74696fd8da21e1c99001a137daf80c4f1dc962be7e",
-  "pin_table_sha256": "5715a52dc86b456b69959ab72f90a40bd471967b3bee76049b0e6d52e17e8530",
+  "pin_table_sha256": "a262cb2ab6e6906f686abb7e8aae48c32efb1f4446933de5b7de699ebad977d9",
   "circuit_sha256": "b29e9de82b5149f5cb3d9452890b609edc343658242869206bd66185d01ceba3",
   "u1_pins": {
     "1": {
@@ -14,7 +14,7 @@
     "2": {
       "port": "PE3",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "3": {
       "port": "PE4",
@@ -24,12 +24,12 @@
     "4": {
       "port": "PE5",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "5": {
       "port": "PE6",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "6": {
       "port": "VBAT",
@@ -49,7 +49,7 @@
     "9": {
       "port": "PC15",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "10": {
       "port": "VSS",
@@ -84,7 +84,7 @@
     "16": {
       "port": "PC1",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "17": {
       "port": "PC2_C",
@@ -164,7 +164,7 @@
     "32": {
       "port": "PC4",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "33": {
       "port": "PC5",
@@ -204,7 +204,7 @@
     "40": {
       "port": "PE10",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "41": {
       "port": "PE11",
@@ -219,12 +219,12 @@
     "43": {
       "port": "PE13",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "44": {
       "port": "PE14",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "45": {
       "port": "PE15",
@@ -334,22 +334,22 @@
     "66": {
       "port": "PC9",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "67": {
       "port": "PA8",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "68": {
       "port": "PA9",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "69": {
       "port": "PA10",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "70": {
       "port": "PA11",
@@ -389,22 +389,22 @@
     "77": {
       "port": "PA15",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "78": {
       "port": "PC10",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "79": {
       "port": "PC11",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "80": {
       "port": "PC12",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "81": {
       "port": "PD0",
@@ -419,7 +419,7 @@
     "83": {
       "port": "PD2",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "84": {
       "port": "PD3",
@@ -489,12 +489,12 @@
     "97": {
       "port": "PE0",
       "net": "NC",
-      "mode": "NC (firmware: analog or driven low for sentinels)"
+      "mode": "NC (firmware: analog, never driven)"
     },
     "98": {
       "port": "PE1",
       "net": "IMU_INT1",
-      "mode": "GPIO in (polled)"
+      "mode": "GPIO in, internal pull-down, EXTI1 data-ready interrupt (LSM6DSV320X INT1 push-pull, active high by default)"
     },
     "99": {
       "port": "VSS",
@@ -516,6 +516,7 @@
     "lever_arm_x_mm": -6.0,
     "lever_arm_z_mm": -2.06,
     "lever_arm_z_basis": "Inference: centre of the U4 3D model box, not measured",
+    "lever_arm_frame": "board frame: x east (+x toward the x = 46 edge), y forward, z up from the top face; lever_arm_x_mm and lever_arm_z_mm are the sensor position relative to the roll axis in that frame; in the IMU frame (+X_imu = -x, +Y_imu = -y, +Z_imu = -z) the lever arm is (+6.0, ., +2.06) mm",
     "bench_sign_check": "required",
     "axis_basis": "same signed frame as R9: bottom180",
     "roll_about_forward_axis": "-gyro_Y",
@@ -539,7 +540,7 @@
     "GPS USART6 PC6 TX/PC7 RX AF7 (DS12110 Rev10 Table12 p91); radio UART5 PB13 TX/PB12 RX AF14 (Table11 p90).",
     "Camera UART7 PE8 TX/PE7 RX AF7 without flow control. UART5/USART6 are separate from the loader USART interfaces (AN2606 Rev64 Table119 pp277-280: no UART5, PB12 or PB13).",
     "Re-mapped loader pins (AN2606 Rev64 Table119 pp279-280; pin_table an2606_t119_loader_role): PA4 / PA5 / PA6 are SPI1 NSS / SCK / MISO and PE11 / PE12 SPI4 NSS / SCK. In the ROM loader PA6 is driven push-pull into the VLOGIC_SENSE divider only (<= 0.36 mA) and PE11 is an input that R431 holds low (camera port off); before a loader jump drive every port EN and OE low as well as PE4.",
-    "EXTI10 GPS_FAULT_N (PD10), EXTI9 RADIO_FAULT_N (PD9), EXTI12 CAM_FAULT_N (PE12); EXTI4 LOGIC_SOURCE_ST (PA4) and EXTI5 BAT_FAULT_N (PA5), swapped for routing (D-R2-09); EXTI6 USB_FAULT_N (PD6), EXTI8 VBUS_SENSE (PC8), EXTI13 PULLPIN (PC13). One port per EXTI line; lines 5/6/8/9 share EXTI9_5 and 10/12/13 share EXTI15_10, so each handler checks its pending bit. PE1 IMU interrupt polled.",
+    "EXTI10 GPS_FAULT_N (PD10), EXTI9 RADIO_FAULT_N (PD9), EXTI12 CAM_FAULT_N (PE12); EXTI4 LOGIC_SOURCE_ST (PA4) and EXTI5 BAT_FAULT_N (PA5), swapped for routing (D-R2-09); EXTI6 USB_FAULT_N (PD6), EXTI8 VBUS_SENSE (PC8), EXTI13 PULLPIN (PC13). One port per EXTI line; lines 5/6/8/9 share EXTI9_5 and 10/12/13 share EXTI15_10, so each handler checks its pending bit. PE1 IMU_INT1 is on EXTI1 (free on R10; R6-MCU-01): configure PE1 as an input with the internal pull-down and take the roll-loop data-ready interrupt on it; LSM6DSV320X INT1 is push-pull and active high by default (Inference: DS14623 not re-read here), so no pull-up is wanted. EXTI1 has its own vector.",
     "PE4 pyro gate low before GPIO configuration, port shutdown, ROM-loader entry or reset. Keep sentinel pins PE3/PE5/PE6/PC1/PC4 without nets and in analog mode (the reset state), never driven: every no-net pin, the sentinels included, stays analog (R5-MCU-03).",
     "Keep hardware watchdog and independent safety task; end every fire pulse within20ms. Ground ARM/continuity refusal; in-flight readings never veto a fire.",
     "F6 / FMEA F-1: the first SERVO1-4 output after any reset is neutral 1520 us; IWDG <= 32 ms, fed only by the 100 Hz safety task.",
@@ -553,11 +554,14 @@
     "Radio uplink cannot arm or fire; LR900-F band is 890-915 MHz: use manual channels 12-25 (902-915 MHz) or a maker-confirmed FHSS set inside 902-928 MHz; qualify installed maximum-power radio/GPS immunity.",
     "PC14 buzzer GPIO-toggled and PC13 pull-pin input (swapped for routing, D-R2-07); PE10 and PE0 remain NC. Retained safety ADC dividers and sensor functions unchanged.",
     "Port UART start-up (R4-MCU-01): while U1 is in reset the TXU0202 A side floats and the OE pull-downs hold the translators off. Before any translator OE goes high, enable the internal pull-ups on the three MCU receive pins GPS_RX_MCU (PC7), RADIO_RX_MCU (PB12) and CAM_MCU_RX (PE7), and drive the three TX pins (PC6, PB13, PE8) idle-high; only then raise OE.",
-    "Per-sense ADC instance and channel (R4-MCU-02; Inference until each is checked against DS12110 Rev10 Table 9): PC0 PYRO1_CONT_MCU ADC123_INP10, PA6 VLOGIC_SENSE ADC12_INP3, PC5 ARM1_SENSE_MCU ADC12_INP8, PB0 RAW_ACT_SENSE_MCU ADC12_INP9, PB1 CAM_5V_SENSE ADC12_INP5, PC3_C V3V3_SENSE ADC3_INP1 (ADC3 only). The F6 analog watchdog on PA6 must therefore run on ADC1 or ADC2, not ADC3; V3V3_SENSE is read on ADC3.",
+    "Per-sense ADC instance and channel (R4-MCU-02; verified against DS12110 Rev10 Table 9 in review round 5, no longer an Inference): PC0 PYRO1_CONT_MCU ADC123_INP10, PA6 VLOGIC_SENSE ADC12_INP3, PC5 ARM1_SENSE_MCU ADC12_INP8, PB0 RAW_ACT_SENSE_MCU ADC12_INP9, PB1 CAM_5V_SENSE ADC12_INP5, PC3_C V3V3_SENSE ADC3_INP1 (ADC3 only). The F6 analog watchdog on PA6 must therefore run on ADC1 or ADC2, not ADC3; V3V3_SENSE is read on ADC3.",
     "No-net U1 pins (R4-MCU-04): every U1 pin with no net stays in analog mode (the reset state) and is never configured as an output; the K-loader no-net pins (pin_table an2606_t119_loader_role) are never outputs, so a ROM-loader drive or a stray configuration cannot reach copper.",
     "LSE (R5-MCU-02): keep RCC_BDCR.LSEON = 0 and never set up the backup domain for the LSE: PC14 is OSC32_IN and drives BUZZ_DRV through R162, and VBAT is tied to 3V3, so a stray LSEON persists across NRST.",
     "VBUS_SENSE (R5-MCU-05): PC8 = VBUS / 2 (R9 1 kOhm / R110 1 kOhm); at 4.4 V VBUS the node is 2.20 V, below VIH = 0.7 x VDD = 2.31 V, so VBUS detection needs VBUS >= 4.62 V at VDD 3.3 V. A low PC8 is not proof of no USB: never use it as the sole input to a safety decision.",
-    "Sense pins without a 4.7 kOhm pin resistor (R5-MCU-04): PA6 VLOGIC_SENSE (shorted R60 puts VLOGIC on an FT_a pin, limit min(VDD,VDDA,VBAT)+4.0 V, 0 mA injection) and PB1 CAM_5V_SENSE (open R105 puts CAM_5V on a TT_a pin through R104 10 kOhm, limit 4.0 V); single-fault pin-damage cases recorded in parts_qualification.md, no firmware mitigation."
+    "Sense pins without a 4.7 kOhm pin resistor (R5-MCU-04): PA6 VLOGIC_SENSE (shorted R60 puts VLOGIC on an FT_a pin, limit min(VDD,VDDA,VBAT)+4.0 V, 0 mA injection) and PB1 CAM_5V_SENSE (open R105 puts CAM_5V on a TT_a pin through R104 10 kOhm, limit 4.0 V); single-fault pin-damage cases recorded in parts_qualification.md, no firmware mitigation.",
+    "Trace (R6-MCU-03): never enable synchronous trace (PE2 TRACECLK, PE4 TRACED1) in any debug configuration: PE4 is the pyro gate (PYRO1_GATE) and trace would drive it. After PE4 is configured as a low output, lock it with GPIOE_LCKR (the lock holds until the next reset).",
+    "W25Q128JV (R6-MCU-04): set the QE bit in status register 2 before QSPI quad mode is used; no blocking flash erase in flight: pre-erase before flight or use erase-suspend, so that the <= 32 ms IWDG period of F6 holds (a sector erase can take tens of ms: the 45 ms figure is an Inference, not read from the W25Q128JV datasheet in this review).",
+    "LSM6DSV320X (R6-MCU-05): IMU SPI clock <= 10 MHz (DS14623, as the reviewer read it, not re-read here); ignore gyro data for 40 ms after an IMU power-up (Ton, same source)."
   ],
   "physical_tests": "not performed; see R10 validation and power qualification"
 }

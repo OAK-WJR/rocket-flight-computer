@@ -7,13 +7,13 @@ Last updated 2026-10-27 (R10 candidate section below; the rest as of 2026-10-25)
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
 **Built and gated in CAD on 2026-10-27; review rounds 3 (ten independent lenses on `883d2db5…`: 0 Critical, 7 Major,
-49 Minor), 4 (on `579575bd…`: 0 Critical, 4 Major, 28 Minor) and 5 (on `af18ac49…`: 0 Critical, 1 Major, 36 Minor) and
-their fix passes are done; the stop condition (two consecutive clean
+49 Minor), 4 (on `579575bd…`: 0 Critical, 4 Major, 28 Minor) 5 (on `af18ac49…`: 0 Critical, 1 Major, 36 Minor) and 6
+(on `3b6e15f3…`: 0 Critical, 1 Major, 39 Minor) and their fix passes are done; the stop condition (two consecutive clean
 rounds) is not yet met and the owner has not accepted it. R9 (below) stays the accepted board and the one to order.**
 Record: [docs/M3_R10.md](docs/M3_R10.md); validation, review rounds, owner questions and the deviation list:
 [docs/R10_VALIDATION.md](docs/R10_VALIDATION.md); plan and decisions: `m3_design/assembly_review/sources/r10_design/`
-(r10_plan.md, R10_DECISIONS.md D-R1-01 … D-R5-04).
-- Board SHA-256 `3b6e15f3d0682530173d063ae524f36466da645c6ebe09e4ecf1bfc1d584c266`, 46 × 90 mm, rebuilt byte for byte by
+(r10_plan.md, R10_DECISIONS.md D-R1-01 … D-R6-03).
+- Board SHA-256 `b242ab8e2f4efa1e2e6cf5766294faa07d307cfa0c0f8cd90d08cade850db8e7`, 46 × 90 mm, rebuilt byte for byte by
   `m3_design/r10_build.sh` (two identical builds); netlist `a9516746…`; fab package `m3_design/r10_fab.sh` bound to it.
 - What changed from R9: no on-board GNSS / radio (external GPS and LR900-F radio on GH-4 ports with translators and
   switched, current-limited supplies: a 5.456 V buck and a 4.792 V LDO), no board servo power (O3: J122's + row open,
@@ -31,9 +31,12 @@ Record: [docs/M3_R10.md](docs/M3_R10.md); validation, review rounds, owner quest
 - **Round 5 fix pass:** In2 edges re-cut so every critical B.Cu run, pad and chain sits on one plane with a 0.1 mm margin
   (D-R5-01), straight diode entries, silkscreen ≥ 0.6 mm inside the outline; K-region with margin, pads, chains and a
   real-void THT exemption; ORDERING §8 via-covering (tent where not pluggable) and coat list; LS120 mass.
+- **Round 6 fix pass:** CH1 In2 GND arms widened and stitched round the sense vias (D-R6-01); K-region via-hole test,
+  S-1 armed-parts list, S-3 GATE_N membership, S-8 pads and RAW_ACT; camera-shroud record corrected (owner question
+  OQ-7); F7 R10 budget; firmware obligations (PE1 EXTI1, trace off, QE, IMU SPI clock).
 - **Verified (CAD / software only):** `tools/check.sh` passes at zero (DRC every severity incl. silkscreen with
   schematic parity 0 / 0 / 0, ERC 0, metadata / 3D audit, silkscreen outline, fit, plate model f1 275.6 Hz, check_r10
-  full OK, route_check r10 0 failing, check_actuators OK, tools/test_r10_check.py 90 tests OK, test_route_check 57 OK);
+  full OK, route_check r10 0 failing, check_actuators OK, tools/test_r10_check.py 102 tests OK, test_route_check 57 OK);
   r10_sch_check OK with nine seeded faults caught; the fab package's S-4 / CPL / paste /
   manifest checks OK.
 - **Calculated, not measured:** IPC-2152 estimates of the battery / U9 / fire-loop copper; battery-break ride-through
@@ -42,7 +45,7 @@ Record: [docs/M3_R10.md](docs/M3_R10.md); validation, review rounds, owner quest
   kind; no firmware (a new binding is needed: the binding note `sources/r10_design/r10_binding_note.json`).
 - **Open:** further review rounds; owner questions OQ-1 (wire room), OQ-2 (hot-plug premise with the split J1), OQ-3
   (cost $87.01 vs the $84.41 target; 47 extended codes ≤ 52), OQ-4 (an aft-edge panel tab), OQ-5 (port-buck EN cutoff
-  for the ports-on ride-through), OQ-6 (battery-lead fuse ≤ 10 A); R430 and U4 short at JLC.
+  for the ports-on ride-through), OQ-6 (battery-lead fuse ≤ 10 A), OQ-7 (board axial position against the camera shroud); R430 (17 in stock, 3,610-piece minimum purchase) and U4 (out of stock: consign) at JLC.
 
 ## Current candidate: M3-ASSY-R9 (clean-sheet B-spine layout, 46 × 102 mm, owner-accepted 2026-10-25)
 
