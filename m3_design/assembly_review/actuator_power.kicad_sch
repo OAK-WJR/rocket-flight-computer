@@ -642,212 +642,6 @@
 					(size 1.27 1.27))
 				(hide yes)))))
 	(symbol
-		(lib_id "M3:PMOS_PDFN8")
-		(at 40.64 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 2332f5de-f568-55a5-824c-1ef8f2dd9c96)
-		(property "Reference" "Q120"
-			(at 44.45 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "AON6403"
-			(at 44.45 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C2760089"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Alpha & Omega Semicon"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "AON6403"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
-					(reference "Q120")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 30.48 50.8)
-			(xy 25.4 50.8))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid a3bb511f-4d73-5a3f-b9e9-a08276c9edc1))
-	(global_label "ACT_GATE"
-		(shape passive)
-		(at 25.4 50.8 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid eb301a93-2602-5f86-977e-61f54ebc29c9))
-	(wire
-		(pts
-			(xy 40.64 60.96)
-			(xy 40.64 66.04))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b2b377a6-d5bb-584e-a8a0-38254c6974c3))
-	(global_label "ACT_FET_S"
-		(shape passive)
-		(at 40.64 66.04 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid fda1f5e8-f3f8-5512-bec8-4bb3b952b2f7))
-	(wire
-		(pts
-			(xy 40.64 40.64)
-			(xy 40.64 35.56))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 5c33e8de-ead6-539d-8c92-11daa27157c3))
-	(global_label "BAT_IN"
-		(shape passive)
-		(at 40.64 35.56 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid a95a944c-aec4-53d1-8e79-687dd4989394))
-	(symbol
-		(lib_id "M3:PMOS_PDFN8")
-		(at 99.06 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 9f0730ac-8cc5-5e0c-b414-00262766385c)
-		(property "Reference" "Q121"
-			(at 102.87 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "AON6403"
-			(at 102.87 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C2760089"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Alpha & Omega Semicon"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "AON6403"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
-					(reference "Q121")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 88.9 50.8)
-			(xy 83.82 50.8))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 42ac5d80-e327-50f9-ba64-fcf53a166753))
-	(global_label "ACT_GATE"
-		(shape passive)
-		(at 83.82 50.8 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid ec31307f-cc57-52bc-a9ef-afb327a32f36))
-	(wire
-		(pts
-			(xy 99.06 60.96)
-			(xy 99.06 66.04))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 95432431-daf5-56f2-8ff9-2b41ea8899c7))
-	(global_label "ACT_FET_S"
-		(shape passive)
-		(at 99.06 66.04 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 15fc637b-ca99-5b7f-8122-383ea9e9562e))
-	(wire
-		(pts
-			(xy 99.06 40.64)
-			(xy 99.06 35.56))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid e6ad1c9f-26b5-5b97-8fcf-b61efdee3b0f))
-	(global_label "RAW_ACT"
-		(shape passive)
-		(at 99.06 35.56 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid d0af7e6b-0356-50cc-ad7c-e121c7a386f9))
-	(symbol
 		(lib_id "M3:R")
 		(at 157.48 50.8 0)
 		(unit 1)
@@ -934,93 +728,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 1cedb523-8eb9-53d5-9237-2db8fe5eb433))
-	(symbol
-		(lib_id "M3:C")
-		(at 215.9 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 5c13fbaa-53c7-5045-a2e4-81f0e11e0ecc)
-		(property "Reference" "C120"
-			(at 219.71 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "2.2uF"
-			(at 219.71 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:C0603"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C23630"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10A225KO8NNNC"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
-					(reference "C120")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 215.9 46.99)
-			(xy 215.9 41.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 53e3ffa1-2d4c-5ae6-85d3-7059b4f36194))
-	(global_label "ACT_FET_S"
-		(shape passive)
-		(at 215.9 41.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 933cf275-3aba-59d8-b41d-9eec87ee2d04))
-	(wire
-		(pts
-			(xy 215.9 54.61)
-			(xy 215.9 59.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid d3824976-d1fa-52b7-99dd-a066551ce39b))
-	(global_label "ACT_GATE"
-		(shape passive)
-		(at 215.9 59.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid d8d0b36e-1577-5f2f-be33-05812f1786f5))
 	(symbol
 		(lib_id "M3:R")
 		(at 274.32 50.8 0)
@@ -1953,6 +1660,314 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 8cc5fe19-579a-5ad8-ae2e-482e87c4097f))
+	(symbol
+		(lib_id "M3:C")
+		(at 215.9 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 5c13fbaa-53c7-5045-a2e4-81f0e11e0ecc)
+		(property "Reference" "C120"
+			(at 218.44 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1uF 25V X7R 10%"
+			(at 218.44 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://product.samsungsem.com/mlcc/CL10B105KA8NNN.do"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C29936"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL10B105KA8NNNC"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
+					(reference "C120")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 215.9 46.99)
+			(xy 215.9 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a5bfbc9c-3026-5c8d-8027-fc00acb69dc6))
+	(global_label "ACT_FET_S"
+		(shape passive)
+		(at 215.9 41.91 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f4f5b830-befd-5a26-9471-5a72d60b74f7))
+	(wire
+		(pts
+			(xy 215.9 54.61)
+			(xy 215.9 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 06fbd819-67d2-5dbf-a5e1-c6a2118ea671))
+	(global_label "ACT_GATE"
+		(shape passive)
+		(at 215.9 59.69 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7c0b64a9-791d-59e6-b060-1fd6f6cecc1b))
+	(symbol
+		(lib_id "M3:PMOS_PDFN8")
+		(at 40.64 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 2332f5de-f568-55a5-824c-1ef8f2dd9c96)
+		(property "Reference" "Q120"
+			(at 43.18 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "AONR21357"
+			(at 43.18 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_AONR21357_DFN3x3A_EP1"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.aosmd.com/res/datasheets/AONR21357.pdf"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C431196"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Alpha & Omega Semicon"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "AONR21357"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
+					(reference "Q120")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 40.64 60.96)
+			(xy 40.64 66.04))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3b8c3896-aea5-5edd-975e-ffd861ce6aaa))
+	(global_label "ACT_FET_S"
+		(shape passive)
+		(at 40.64 66.04 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid af236ffe-328c-5760-bc78-238be601e576))
+	(wire
+		(pts
+			(xy 30.48 50.8)
+			(xy 25.4 50.8))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4d0749e2-f79a-56f6-ab0c-09b0a9112747))
+	(global_label "ACT_GATE"
+		(shape passive)
+		(at 25.4 50.8 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid dc3e1078-fd79-5330-9cdf-c230dbf4bb03))
+	(wire
+		(pts
+			(xy 40.64 40.64)
+			(xy 40.64 35.56))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2d471f7a-4d1c-59a8-97ad-f917eab71f46))
+	(global_label "BAT_IN"
+		(shape passive)
+		(at 40.64 35.56 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bf599a6a-c91c-58ad-bdfe-ac4b4f55f522))
+	(symbol
+		(lib_id "M3:PMOS_PDFN8")
+		(at 99.06 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 9f0730ac-8cc5-5e0c-b414-00262766385c)
+		(property "Reference" "Q121"
+			(at 101.6 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "AONR21357"
+			(at 101.6 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_AONR21357_DFN3x3A_EP1"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.aosmd.com/res/datasheets/AONR21357.pdf"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C431196"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Alpha & Omega Semicon"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "AONR21357"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
+					(reference "Q121")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 99.06 60.96)
+			(xy 99.06 66.04))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c3a8228e-e516-53f7-ab3b-397a0c9657a2))
+	(global_label "ACT_FET_S"
+		(shape passive)
+		(at 99.06 66.04 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 43fefe40-ba88-5f01-9fbf-2ca785e5e16b))
+	(wire
+		(pts
+			(xy 88.9 50.8)
+			(xy 83.82 50.8))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0c718b3a-71ec-5570-b0a2-97af32350e47))
+	(global_label "ACT_GATE"
+		(shape passive)
+		(at 83.82 50.8 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid eef74a4d-1ad1-5cf8-a4d0-4f6a8ce0503e))
+	(wire
+		(pts
+			(xy 99.06 40.64)
+			(xy 99.06 35.56))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7d14aa7b-26c6-5dcb-b099-cef82df174a2))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 99.06 35.56 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cbc3e735-1299-5bba-ba77-6ac9b5bef9c2))
 	(text "R10 single screw switch (owner 2026-10-28): J400 powers and arms the board; J124 is removed. Q120/Q121 remain the pyro-bus load switch feeding RAW_ACT."
 		(at 20.32 15.24 0)
 		(effects
@@ -1967,20 +1982,27 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 873aaf0c-ec31-581c-b038-72788d10ea03))
-	(text "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and both retained bus-sense dividers; no feed directly from BAT_IN or RAW_PROTECTED."
+	(text "AUD-3: Q120/Q121 AONR21357, C120 1uF 25V X7R. Hold PE4 low and wait >=100 ms after ACT_EN before bus checks or any permitted fire; hot resistance and turn-on SOA remain bench qualifications."
 		(at 20.32 25.4 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 7277bbaf-c52c-5d00-8f90-b09edb6bdeae))
-	(text "R134 limits a shorted igniter; firmware ends each fire pulse within 20 ms. Copper and harness pulse qualification remains required."
+	(text "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and both retained bus-sense dividers; no feed directly from BAT_IN or RAW_PROTECTED."
 		(at 20.32 30.48 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid e379a682-3ef2-58c6-a879-d5cbff021361))
+	(text "R134 limits a shorted igniter; normal physical fire current <=20 ms. Firmware timing and pulse qualification: sources/r10_design/parts_qualification.md; no firmware implemented."
+		(at 20.32 35.56 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid e795d07f-117b-513a-aa8d-555acc2ba3aa))
 	(sheet_instances
 		(path "/"
 			(page "11"))))

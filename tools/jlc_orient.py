@@ -40,10 +40,17 @@ MIL10 = 0.254
 TOL = 0.35    # mm, max pad-centre residual (land sizes differ between libraries, centres move a little)
 MARGIN = 0.4  # mm, the next-best rotation must be worse by at least this much (orientation is unambiguous)
 # pads compared by number; a footprint that merges pads (AON7524 drain fingers + paddle = pad 5) compares its distinct pins only
-ONLY = {'M3_AON7524_DFN3x3A': ['1', '2', '3', '4']}
+ONLY = {'M3_AON7524_DFN3x3A': ['1', '2', '3', '4'],
+        # AUD-3: custom EP9 is anchored at (0,0), not its polygon centroid;
+        # the supplier anchors its paddle at (0,-0.350). Match all eight
+        # distinct fingers instead; their largest maker/supplier delta is 0.100 mm.
+        'M3_AONR21357_DFN3x3A_EP1': [str(n) for n in range(1, 9)]}
 # both origins are the package centre (EasyEDA pins at +-1.5 mm; ours: drain fingers centred at -1.5, source lands
 # pulled in to +1.4 per AOS PO-00047), so the one-row fit's 0.1 mm is land shape, not an origin shift
-OFFSET = {'M3_AON7524_DFN3x3A': (0.0, 0.0)}
+OFFSET = {'M3_AON7524_DFN3x3A': (0.0, 0.0),
+          # Both origins are the package centre. The 0.100 mm source-row
+          # difference is maker land toe/heel geometry, not a body displacement.
+          'M3_AONR21357_DFN3x3A_EP1': (0.0, 0.0)}
 # Body correction for parts whose pin row is symmetric but whose body is not, so pad matching cannot see a
 # 180 deg turn. DORABO DB128V (C2915641): EasyEDA's footprint puts the wire entry on its +y side (body
 # -5.00/+5.20 mm, 3D model turned 180 deg; the DORABO drawing agrees: pin row 5.00 mm from the BACK face).
@@ -90,6 +97,16 @@ def ez_pads(rec):
         x, y, num = float(f[2]), float(f[3]), f[8]
         out.setdefault(num, []).append(((x - hx) * MIL10, (y - hy) * MIL10))
     return out
+
+
+def pad_residual(ours, ez, common, theta, offset):
+    worst = 0.0
+    for n in common:
+        for v in ours[n]:
+            w = rot(v, theta)
+            w = (w[0] + offset[0], w[1] + offset[1])
+            worst = max(worst, min(math.hypot(w[0] - e[0], w[1] - e[1]) for e in ez[n]))
+    return worst
 
 
 b = pcbnew.LoadBoard(BOARD)
@@ -226,15 +243,13 @@ for f in b.GetFootprints():
         ta = ((min(x for x, _ in A) + max(x for x, _ in A)) / 2, (min(y for _, y in A) + max(y for _, y in A)) / 2)
         tb = ((min(x for x, _ in B) + max(x for x, _ in B)) / 2, (min(y for _, y in B) + max(y for _, y in B)) / 2)
         t = (tb[0] - ta[0], tb[1] - ta[1])
-        worst = 0.0
-        for n in common:
-            for v in ours[n]:
-                w = rot(v, th); w = (w[0] + t[0], w[1] + t[1])
-                worst = max(worst, min(math.hypot(w[0] - e[0], w[1] - e[1]) for e in ez[n]))
+        worst = pad_residual(ours, ez, common, th, t)
         tried.append(worst)
         if best is None or worst < best[0]: best = (worst, th, t)
     worst, th, t = best
-    if fpname in OFFSET: t = OFFSET[fpname]
+    if fpname in OFFSET:
+        t = OFFSET[fpname]
+        worst = pad_residual(ours, ez, common, th, t)
     second = sorted(tried)[1] if len(tried) > 1 else 99
     rec = dict(footprint=fpname, easyeda=EZ[lcsc].get('title'), easyeda_proxy=EZ[lcsc].get('proxy'), theta=th, offset=[round(t[0], 4), round(t[1], 4)],
                residual_mm=round(worst, 3), next_best_mm=round(second, 3), pads_ours=len(ours), pads_easyeda=len(ez), pads_matched=len(common))

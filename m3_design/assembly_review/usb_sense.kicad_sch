@@ -388,63 +388,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid d5fd5e19-2147-56ba-a0d9-2285cb5d878c))
-	(symbol
-		(lib_id "M3:TestPoint")
-		(at 256.54 83.82 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid 975ce4e4-ef26-5199-99a9-c3c9119243d5)
-		(property "Reference" "TP92"
-			(at 256.54 76.19999999999999 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "VBUS_SENSE"
-			(at 256.54 80.00999999999999 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 256.54 83.82 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 256.54 83.82 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 256.54 83.82 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/7323b515-8986-5814-85b5-9e04db992507"
-					(reference "TP92")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 256.54 83.82)
-			(xy 248.92000000000002 83.82))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 5cb2376b-e0ea-5b91-847f-a34e7b66e6e0))
-	(global_label "VBUS_SENSE"
-		(shape passive)
-		(at 248.92000000000002 83.82 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 518f5ef6-36fa-508f-af1b-eb0af9f3ca44))
 	(text "PC8 / U1 pin65 (R8) is a regular FT_h GPIO input (EXTI8). PA9 remains NC. D+/D- are unchanged."
 		(at 20.32 137.16 0)
 		(effects
@@ -452,7 +395,7 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 3c2f066c-5afe-5892-b82e-b7d3bdb87f81))
-	(text "R9 = R110 = 1k (R4): PC8 <= 1.01 V when D4 back-feeds VBUS with the D+ pull-up on, 2.18 V at VBUS 4.40 V. TP92 measures their junction. No internal pull-up/down."
+	(text "R9 = R110 = 1k (R4): PC8 <= 1.01 V when D4 back-feeds VBUS with the D+ pull-up on, 2.18 V at VBUS 4.40 V. Probe R9.2 / R110.1; TP92 removed (AUD-5). No internal pull-up/down."
 		(at 20.32 147.32 0)
 		(effects
 			(font

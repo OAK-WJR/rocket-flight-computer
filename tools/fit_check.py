@@ -64,8 +64,8 @@ MATED = {
 R10_MATED = {k: dict(v) for k, v in MATED.items() if k not in ('M3_SMA_KH_KE8_EDGE', 'M3_JST_PH_B2B_2P')}
 R10_MATED['M3_GH_BM04B_GHS_TBT'] = dict(MATED['M3_GH_BM04B_GHS_TBT'], refs=('J9', 'J410', 'J420'))
 R10_MATED['M3_GH_BM02B_GHS_TBT'] = dict(
-    MATED['M3_GH_BM04B_GHS_TBT'], refs=('J123', 'J400'), box=(-2.875, -2.5, 2.875, 1.75, 0.0, 10.3))
-R10_MATED_REFS = {'J9', 'J122', 'J123', 'J400', 'J410', 'J420'}
+    MATED['M3_GH_BM04B_GHS_TBT'], refs=('J400',), box=(-2.875, -2.5, 2.875, 1.75, 0.0, 10.3))  # AUD-4.
+R10_MATED_REFS = {'J9', 'J122', 'J400', 'J410', 'J420'}
 REQUIRED_MATED = {'M3_GH_BM04B_GHS_TBT', 'M3_SMA_KH_KE8_EDGE'}
 # These are bare board features, not an escape hatch for missing fitted-part geometry.
 BOARD_FEATURES = {'M3_TestPad_1.5': r'TP\d+', 'M3_ToolingHole_JLC': r'TH[123]',

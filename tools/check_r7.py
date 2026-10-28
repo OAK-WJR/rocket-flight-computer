@@ -584,9 +584,10 @@ def dnp_paste(board):
     return issues
 
 
-def vias_in_smd_pads(board):
+def vias_in_smd_pads(board, exempt=None):
     """REQUIREMENTS M2: no via hole opens into a soldered SMD pad, and every via hole keeps >= VIA_PAD_GAP from a pad's
-    solder-mask opening (bare contacts exempt). DRC hole clearance does not see same-net pads."""
+    solder-mask opening (bare contacts exempt). DRC hole clearance does not see same-net pads.
+    Optional caller predicate exempt(pad, via) defaults to no additional exceptions (R10 GAP-3 only)."""
     issues, checked = [], 0
     vias = [t for t in board.GetTracks() if t.GetClass() == 'PCB_VIA']
     for f in board.GetFootprints():
@@ -604,6 +605,8 @@ def vias_in_smd_pads(board):
                 for v in vias:
                     hole = pcbnew.SHAPE_CIRCLE(v.GetPosition(), v.GetDrillValue() // 2)
                     if near_boxes(shape.BBox(), hole.BBox(), gap) and shape.Collide(hole, gap - 1):
+                        if exempt is not None and exempt(p, v):
+                            continue
                         issues.append(f'via hole at {xy(v.GetPosition())} ({v.GetNetname()}) is within '
                                       f'{VIA_PAD_GAP} mm of {f.GetReference()}.{p.GetNumber()}\'s mask opening')
     return issues, checked
@@ -828,10 +831,11 @@ def _box_gap(a, c):
     return math.hypot(dx, dy)
 
 
-def legend_subjects(board):
+def legend_subjects(board, distance_review=None):
     """Fix pass 7 (AGENTS.md silkscreen rule, P6-DOCS-04(d)): every board legend about a part (its text starts with
     that part's designator, J124: ..., or is one of the connector words ARM / IGN / BAT / CAM / SWD / SERVO / PULL /
-    GNSS / RADIO) has its ink within LEGEND_REACH of that part's courtyard box, and names a part on the board."""
+    GNSS / RADIO) has its ink within LEGEND_REACH of that part's courtyard box, and names a part on the board.
+    Optional distance_review collects distance findings only (R10 AUD-10); missing subjects always fail."""
     issues = []
     for t in board.GetDrawings():
         if not isinstance(t, pcbnew.PCB_TEXT) or t.GetLayer() not in (pcbnew.F_SilkS, pcbnew.B_SilkS):
@@ -854,7 +858,8 @@ def legend_subjects(board):
         ink = (pcbnew.ToMM(q.GetX()), pcbnew.ToMM(q.GetY()), pcbnew.ToMM(q.GetRight()), pcbnew.ToMM(q.GetBottom()))
         g = _box_gap(ink, box)
         if g > LEGEND_REACH:
-            issues.append(f'silkscreen legend {text!r} is {g:.1f} mm from {ref} (maximum {LEGEND_REACH} mm)')
+            target = issues if distance_review is None else distance_review
+            target.append(f'silkscreen legend {text!r} is {g:.1f} mm from {ref} (maximum {LEGEND_REACH} mm)')
     return issues
 
 

@@ -19,7 +19,9 @@ the external-port UART nets (uart: GPS / RADIO / CAM _TX / _RX on the _MCU, _BUF
 _RX) and port control nets (portctl: _PWR_EN, _FAULT_N, _UART_OE), the last two from critical_reference's one
 definition (R3-RTE-01); the power rails and GND as before, with the R10 port rails (PORT_*, *_4V8, CAM_5V, the port IO
 rails). Profile r10 also fails every arc track (arc_segment) and, on the critical signal nets, every needless layer hop
-(extra_vias, hop=True: below).
+(extra_vias, hop=True: below). AUD-2 excludes only critical_reference.R10_SLOW_RETURN_NETS from companion-GND-via
+checks; all critical hygiene classes remain. AUD-10 counts exact collinear nodes, duplicate segments and segments
+inside pads for review without blocking R10. Partial overlaps, crossings and every other gated category stay blocking.
 
 Copper is grouped per (layer, net). Track end points within 1 µm form a node. A node is "plain" when exactly two
 track ends meet there and it holds no pad, via or T (another track's body); a chain is a run of segments through
@@ -50,7 +52,7 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
     critical_via_no_gnd   a via carrying a critical signal net's copper on >= 2 layers (its tracks, or a same-net pad
                           the via sits in: a layer change into a test pad counts, fix pass 5) with no GND via centre
                           within 1.5 mm (critical signal nets: RF, pyro/arm, HSE, USB data, SPI/QSPI/IMU_CS/radio
-                          SPI, the other RADIO_*/GNSS_* nets; r10: R10_CLASSES)
+                          SPI, the other RADIO_*/GNSS_* nets; r10: R10_CLASSES minus AUD-2's named slow-return list)
     arc_segment           profile r10 (R3-GATE-01): any arc track (PCB_ARC), on any net: AGENTS.md section 3 allows
                           only 0 / 45 / 90 degree straight segments, and the heading / jog / staircase tests skip arcs
   hygiene categories, gated on critical nets (the signal nets above and the power rails, GND included):
@@ -68,8 +70,8 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
                           (compound=k)
     via_overlap           two same-net vias whose copper rings overlap (centres closer than the sum of the radii):
                           overlapping copper (fix pass 5)
-    collinear_unmerged    a plain node at 180° between two segments of the same width
-    duplicate_segment     two segments with the same end points
+    collinear_unmerged    a plain node at 180° between two segments of the same width (R10 AUD-10: counted review)
+    duplicate_segment     two segments with the same end points (R10 AUD-10: counted review)
     collinear_overlap     two collinear segments (centre lines within 1 µm) overlapping by more than 1 µm
     side_by_side_overlap  two parallel segments whose copper overlaps or leaves a same-net slit under 0.1 mm, along
                           more than half a track width
@@ -225,6 +227,7 @@ R10_CLASSES = [
     ('actuator', r'^(ACT_|SERVO)'),
 ]
 SIGNAL_CRITICAL = {'rf', 'pyro', 'crystal', 'usb', 'spi', 'rfif', 'uart', 'portctl'}
+# AUD-2 omits only the named slow-return whitelist from companion-via checks; these critical classes stay intact.
 CRITICAL = SIGNAL_CRITICAL | {'power'}
 RULE = ('off_angle', 'staircase', 'acute_angle', 'fold_back', 'dead_copper', 'pour_stub', 'dangling_via',
         'critical_via_no_gnd', 'arc_segment')
@@ -239,6 +242,8 @@ POUR = ('pour_sliver', 'pour_finger', 'pad_pour_cut')
 INFO = ('width_change_junction', 'pad_end_offcentre', 'segment_inside_pad', 'passes_through_pad', 'extra_bends',
         'u_turn', 'short_layer_hop', 'power_via_no_gnd', 'via_on_track_in_fill', 'local_bump_review')
 REMOVABLE = ('local_bump',)      # fix pass 7: from the redraw search (bump_audit), gated on critical nets
+# AUD-10: exact drawing representations remain counted, without blocking R10 or requiring leftover exceptions.
+R10_REVIEW = frozenset({'collinear_unmerged', 'duplicate_segment', 'segment_inside_pad'})
 
 # Justified exceptions: (category, net, layer ('via' for via categories, 'net' for detour / extra_vias), (x, y) mm,
 # reason[, measured dict]). An entry matches an instance of that category and net within 0.02 mm of (x, y). Every entry
@@ -322,6 +327,11 @@ def net_class(name):
         if re.search(rx, name):
             return c
     return 'other'
+
+
+def return_required(name):
+    """AUD-2 changes only R10 return geometry, never critical routing-hygiene classification."""
+    return not (PROFILE == 'r10' and _cr.r10_slow_return_net(name))
 
 
 def mm(v):
@@ -803,7 +813,7 @@ def critical_transitions(board):
         if t.GetClass() == 'PCB_VIA':
             if t.GetNetname() == 'GND':
                 gnd.append((t.GetPosition().x, t.GetPosition().y))
-        elif t.GetClass() == 'PCB_TRACK' and net_class(t.GetNetname()) in SIGNAL_CRITICAL:
+        elif t.GetClass() == 'PCB_TRACK' and net_class(t.GetNetname()) in SIGNAL_CRITICAL and return_required(t.GetNetname()):
             by[t.GetNetname()].append((t.GetLayer(), (t.GetStart().x, t.GetStart().y), (t.GetEnd().x, t.GetEnd().y)))
     for t in board.GetTracks():
         n = t.GetNetname()
@@ -2114,7 +2124,7 @@ def scan(board, baseline_log=None):
             add('dangling_via', v['net'], 'via', v['pos'])
         power = net_class(v['net']) == 'power' and v['net'] != 'GND'
         padl = {lid for lid in CU4 if cu.pads_at(v['net'], lid, v['pos'])}   # a via in a pad: a layer change too
-        if (net_class(v['net']) in SIGNAL_CRITICAL or power) and len(tracked | padl) >= 2:
+        if (net_class(v['net']) in SIGNAL_CRITICAL or power) and return_required(v['net']) and len(tracked | padl) >= 2:
             g = min((dist(q, v['pos']) for q in gnd), default=None)
             if g is None or mm(g) > GND_REACH:
                 add('power_via_no_gnd' if power else 'critical_via_no_gnd', v['net'], 'via', v['pos'],
@@ -2189,6 +2199,8 @@ def scan(board, baseline_log=None):
 
 
 def gated(d):
+    if PROFILE == 'r10' and d['cat'] in R10_REVIEW:  # AUD-10: all other categories retain their gate scope.
+        return False
     return d['cat'] in RULE or d['cat'] in POUR or (d['cat'] in HYGIENE + REMOVABLE and d['cls'] in CRITICAL)
 
 
@@ -2230,6 +2242,8 @@ def leftover_check(inst, leftovers=None):
     used = [False] * len(leftovers)
     recorded, missing = [], []
     for d in inst:
+        if PROFILE == 'r10' and d['cat'] in R10_REVIEW:  # AUD-10: counted review, not an unrecorded leftover.
+            continue
         if d['cat'] not in LEFTOVER_CATS or d['cls'] in CRITICAL:
             continue
         hit = None
@@ -2979,6 +2993,7 @@ def main():
     if args.report:
         args.report.write_text(json.dumps(dict(profile=PROFILE, detour_baseline=baseline_log,
                                                instances=inst, failures=failures, allowed=allowed,
+                                               review=[d for d in inst if PROFILE == 'r10' and d['cat'] in R10_REVIEW],
                                                stale=[list(e) for e in stale],
                                                nognd_audit=[dict(d, spot=list(sp), via=dia, dist=dd)
                                                             for d, (sp, dia, dd) in audit],

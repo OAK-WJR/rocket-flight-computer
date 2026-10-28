@@ -1050,10 +1050,10 @@ ACT_EN gate; retain R123 (100 kΩ) to GND. Remove the RAW_PROTECTED divider feed
 controls Q124. Both control inputs have external pull-downs and firmware initializes both low before deliberate
 on-rail bus checks; only a confirmed launch permits a fire command. No firmware implementation is claimed.
 
-Maker evidence: [ST DS12110 Rev 11](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf), Figure 6 p.55 and
-Table 9 p.67, identifies PC1 at LQFP100 pin 16 as an ordinary GPIO (also TRACED0); the existing ban on synchronous
+Maker evidence: [ST DS12110 Rev 11](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf), Figure 6 p. 55 and
+Table 9 p. 67, identifies PC1 at LQFP100 pin 16 as an ordinary GPIO (also TRACED0); the existing ban on synchronous
 trace therefore covers PC1 as well as PE4. [AO3400A Rev 3.1](https://www.aosmd.com/sites/default/files/res/datasheets/AO3400A.pdf),
-pp.1–2, specifies its on-resistance at 2.5 V gate drive. At the 3V3 lower corner of 3.27 V, allowing 0.4 V MCU
+pp. 1–2, specifies its on-resistance at 2.5 V gate drive. At the 3V3 lower corner of 3.27 V, allowing 0.4 V MCU
 output drop and resistor tolerance, ACT_EN is above 2.83 V (Calc). R123 holds the gate below 0.12 V for 1 µA MCU
 leakage plus the MOSFET's 0.1 µA gate-leakage limit (Calc; unpowered transient behavior remains a bench test).
 PC1 is not an AN2606 Table 119 loader pin. Firmware must keep it low in loader/debug transitions and clear it
@@ -1074,8 +1074,279 @@ rejected by the current R10 gates. All other AGENTS §2 constraints remain.
 
 The first full integration build hid Q121 / Q124 after the changed legend and part packing; K-legends correctly
 rejected it. Give the existing required connector/safety designators placement priority in the R10 post generator,
-including its courtyard/run-on correction pass. The generic designator helper accepts an optional priority list;
+including its courtyard and run-on correction pass. The generic designator helper accepts an optional priority list;
 its default behavior for historical generators is unchanged. Keep the 1.0 mm text, 0.15 mm stroke, pad clearance
 and nearest-subject rules. Re-pin the DRU hash only for its reviewed ARM-to-switch comment: the actual rules are
 byte-unchanged. Remove J124's body/wire masses from the R10 plate profile and fix the standalone plate test's
 incomplete fixture (LS120 was absent); three standalone mass-profile tests pass. No R9 profile is changed.
+
+## AUD/GAP implementation (2026-10-28, after single-switch commit `73af96b`)
+
+The owner-answer pass was committed by the supervisor in `6fdac43` and the single-switch pass in `73af96b`.
+The earlier Git-blocked hand-off is historical. The following decisions implement the adopted audit; statements
+in its original snapshot that retain J124 / an ARM fuse are superseded by the later single-switch owner decision.
+This pass earns no full-review or consecutive-clean credit. All new copper is drawn explicitly by the generators.
+
+### D-AUD-01. Size the surviving IO-LDO capacitor for its electrical load
+
+C92 uses the existing Samsung CL10A475KO8NNNC / C19666 4.7 µF, 16 V X5R 0603 family. TPS709 requires at least
+1.5 µF effective output capacitance; the maker's typical bias curve at 3.4 V, followed by tolerance, temperature
+and an explicit aging allowance, gives 2.211 µF (Calc / Inference; `parts_qualification.md`). This is not a
+measured worst-case capacitance guarantee; verify stability on the actual part. The deleted GPS / radio LDOs
+need no output reservoirs. Sources: [TI TPS709](https://www.ti.com/lit/ds/symlink/tps709.pdf), §8.2.2, and
+[Samsung part data](https://product.samsungsem.com/mlcc/CL10A475KO8NNN.do).
+
+### D-AUD-02. Keep fast returns constrained; simplify slow returns by explicit name
+
+One shared, explicit slow-net list covers filtered ADC sense and its divider / MCU tails, ACT_EN / ACT_EN_MCU
+/ ACT_DRV / ACT_GATE, and GPS / RADIO / CAM EN / FAULT / OE controls. Only the 1.5 mm partner-via and
+one-In2-region / reference checks exclude that list. The critical classification and routing-hygiene checks do
+not change. USB, HSE, SPI, QSPI, IMU CS, UARTs, existing SWD / reset checks and S-8 stay blocking. Remove
+partner vias and In2 arms used only by the excluded rules; keep the solid In1 GND plane. Slow-path noise and
+threshold behavior remain bench checks. Every narrowed gate scope cites AUD-2; the shared executable list is
+in `tools/critical_reference.py`, imported by `tools/route_check.py`.
+
+### D-AUD-03. Use a qualified smaller post-switch pair
+
+Select genuine AOS AONR21357 / C431196 for Q120 / Q121, preserving the back-to-back source connection and
+independent PC1 enable. The maker's DFN3x3A land is used, including its asymmetric drain shape; a generic
+square land or another manufacturer's same-numbered part is not substituted. Its −30 V drain and ±25 V gate
+ratings cover the recorded ~18 V gate event. Its maximum 12.3 mΩ at −4.5 V / 25 °C, with the typical hot-ratio
+curve, estimates about 17.2 mΩ at 125 °C (Inference), below the 40 mΩ design bound. The actual gate-drive,
+SOA / load-line calculation, exact land and source notes are in `parts_qualification.md`.
+Allow at least 100 ms from ACT_EN assertion to bus checks, with PE4 held low, to cover the retained slew network;
+the former 50 ms delay is withdrawn. Bench-check VGS / VDS / current and heating on a shorted dummy load at 70 °C;
+reference-board SOA is not proof for this PCB. Genuine JLC API identity C431196 showed 56, 301 pieces / minimum 1
+on 2026-10-28; refresh before ordering. Sources: [AOS device](https://www.aosmd.com/res/datasheets/AONR21357.pdf),
+pp. 1–4; [maker land](https://www.aosmd.com/sites/default/files/res/packaging_information/DFN3x3A_8L_EP1_P.pdf);
+[JLC exact part](https://jlcpcb.com/partdetail/Alpha_OmegaSemicon-AONR21357/C431196).
+
+### D-AUD-04. Delete the advisory pull-pin as a complete function
+
+Remove J123, R160 / R161, C160 and D122; PC13 becomes NC / analog. R10 F9, FMEA F-7 and pad checklists no longer
+require a pull-pin witness or annunciation. Launch detection remains accelerometer plus barometer, independent
+of every port or uplink; bus / continuity ground refusals remain. The single screw switch is the pad arming device.
+The removed input had no flight authority; its wiring, retention and exposed-wire fault paths disappear with it.
+Historical R1–R9 analysis retains its original revision scope.
+
+### D-AUD-05. Remove redundant probe branches
+
+Delete TP84 / TP85 / TP86 / TP87 / TP89 / TP92 and their dedicated copper branches. TP74, TP80–83, TP88 and
+TP120–122 remain; hot-plug still has separate IN / OUT access and pyro has a gate probe. The other measurements use
+existing component pads. Probing is less convenient; no monitoring function or protection is removed. Probe U9
+ILM only at its own pad with a high-impedance instrument; never load or short it.
+
+### D-AUD-06. Size fire-only copper for bounded pulse energy
+
+RAW_ACT / PYRO1_IGN / PYRO1_OUT fire runs use 0.5 mm. Continuous BAT_IN / U9 feed widths are unchanged; the
+source-to-source bridge keeps its existing qualified minimum. At 4.2 A / 20 ms the no-plane adiabatic estimate
+is about 5.6 K near room temperature (Calc / Inference), about 10.1 K at the 36 ms fault guard. Starting at 70
+°C and allowing the low-R134 current corner raises the estimates to approximately 7 K / 13 K; no heat
+spreading is credited. Final path lengths, resistance and coupled pack-load current replace the historical
+ARM-link loop budget. This does not license a continuous 4.2 A load.
+
+### D-AUD-07. Use ordinary digital pull-ups and fault-rated servo resistors
+
+R412 / R422 / R432 remain 10 kΩ, now the existing C25744 0402 family. R150–R153 remain 1 kΩ, now C21190 0603
+rated 100 mW through 70 °C. The conservative 8.4 V chafe into a 0 V output and −2 % resistor is 72 mW (Calc),
+leaving about 1.39 × power-rating margin. The physical continuous-fault rating replaces the inherited blanket
+rule limiting dissipation to 30 % of rating for these parts; ESD / clamp / MCU-injection functions and bench
+tests remain. No 0402 servo series substitution is allowed on that budget.
+
+### D-AUD-08. Share 3V3 for GPS / radio UART IO; retain local bypasses
+
+Remove U412 / U422, R443 / R453 and C441 / C442 / C451 / C452. Both sides of the GPS / radio TXU0202 translators
+use main 3V3. **Retain C443 / C453** as local 100 nF VCCB bypasses on 3V3: the maker requires bypassing each supply
+(TI TXU0202 §12.1, Figure 12-1). This datasheet-driven refinement of AUD-8 removes eight parts, not ten.
+OE pull-downs, 1 kΩ signal resistors, ESD and OE-before-EN shutdown remain. Accepted containment loss: an erroneous
+OE high can feed an unpowered module a few mA through 1 kΩ; firmware must hold OE low whenever its port is off.
+Main-rail-off isolation still follows TXU0202 partial-power-down behavior. Keep camera U13 because PORT_5V3's
+maximum exceeds the translator's 5.5 V recommended supply limit. [TI TXU0202](https://www.ti.com/lit/ds/symlink/txu0202.pdf).
+
+### D-AUD-09. Keep USB-only programming and log download
+
+Retain U10 / U11 and their support. They provide a real pack-free bench function and source selection, with
+host-dependent attach inrush already disclosed. No circuit or return-path assumption may silently remove that
+function in the name of simplifying the board.
+
+### D-AUD-10. Report harmless drawing artifacts without blocking the electrical gate
+
+For R10 only, exact collinear nodes, exact duplicate segments, inside-pad segments and legend-subject
+distances over 6 mm are counted for review. Partial overlaps, crossings without nodes, connectivity, DRC,
+required / correct legends, 1.0 mm text / 0.15 mm strokes, mask clearance and fast-return checks remain
+blocking. Every counted residual and its measured reason belongs in the final deviation list. Keep the goal of
+clean routes; this is not permission to add unnecessary copper. Use the freed LDO space for J410 / J420 pin
+tables where a clear legal spot exists.
+
+### D-GAP-01. Superpose all pack loads at the fire instant
+
+Use the final board resistance, hot FET allowance and actual harness with I_fire = (Voc − Rpack × I_other) /
+(Rpack + R_fire). Include logic and port power as well as servo stalls; constant-power converter demand
+increases as the pack sags. A neutral PWM command cannot unload a jam. Preserve the original F7 idle-servo ≥
+1.5 × 1 A all-fire criterion at 7.4 V, with that voltage available at the fire instant after pad / flight
+drain. Two simultaneous stalls with all ports on do not meet it; do not claim that the 200 ms neutral wait
+proves they have cleared. Derived limits on e-match all-fire current or a higher pack voltage are conditional
+acceptance envelopes, not adoption of an unselected igniter. `parts_budget.json` holds the calculation; final
+copper numbers and first-article harness / source-impedance measurements are required before flight.
+
+### D-GAP-02. Make U9's output-protection loop local
+
+Move existing C82 and D9 beside U9 OUT on B.Cu; move R92 to C82's old vacant area. Draw short OUT and local GND
+connections and measure the actual copper paths, not just part-center distance. Keep the C88-before-IN feed and
+continuous current widths unchanged. [TI TPS25947](https://www.ti.com/lit/ds/symlink/tps25947.pdf), §8.4.1,
+requires an output capacitor and a local Schottky for fast input collapse; final loop measurements and detour /
+missing-return seeds are recorded with the build evidence.
+
+### D-GAP-03. Add two explicitly manufactured U401 thermal vias
+
+Use only two GND vias with a 0.5 mm ring and 0.3 mm drill inside U401 pad 11, at (27.3, 13.6) and (27.9, 13.6).
+Require **resin filling, copper capping and planarization (VIPPO)** at these two vias before assembly; mask / plug
+ink is not an equivalent. Preserve TI's split paste windows and the ordinary drill / pad-clearance rules elsewhere.
+The gate exception requires exact count, position, size, GND net and containment in U401.11; manufacturing quality
+is an order / first-article condition, not something a CAD check proves. Keep the conservative 80–110 °C/W estimate
+as an Inference: at 0.406 W and 70 °C bay ambient it predicts 102.5–114.7 °C, below 125 °C. The added vias improve
+the heat path but do not prove a particular thetaJA. Measure full-load temperatures before flight; include VIPPO in
+the quote rather than hiding its cost. [TI TPS7A91](https://www.ti.com/lit/ds/symlink/tps7a91.pdf), thermal / layout guidance.
+
+### D-GAP-04. Fit C84 after all reflow
+
+C84 is the JIERRUI MA25V470M8x10 / C46550466, not the former Panasonic OS-CON. Its supplier sheet gives no
+reflow profile. Keep it listed as required and fitted in BOM / CPL, but instruct the assembler to fit it manually **after both
+reflow passes** using a validated local soldering process; confirm this separate operation before placing the
+order. Do not infer a 250 °C condition-C qualification or an iron temperature from another capacitor family.
+Check polarity, seating / height, capacitance and ESR before and after first-article soldering; record the process
+and reject damage or drift outside the maker's electrical limits. This is the hand-solder instruction allowed by
+GAP-4, with process qualification remaining explicit. [Exact supplier sheet](https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf).
+
+### D-GAP-05. One physical-current duration contract
+
+Normal commanded firing current must end within **20 ms**, including gate turn-off tail. A timer / DMA clear and
+independent abort reserve that tail; the older 25 / 30 ms software backstops do not define the R10 normal pulse.
+Use IWDG prescaler ÷ 4 / reload 239: **960 LSI cycles, nominal 30 ms**. DS12110 Rev 11 Table 136 gives Rev V LSI
+29.4–33.6 kHz through 125 °C junction, hence 28.571–32.653 ms (Calc); the earlier 29.76 kHz floor does not cover
+that entire temperature range. Identify and qualify the fitted silicon revision and its applicable LSI limits.
+Refresh immediately before PE4 rises, then **do not refresh throughout firing**. After physical current ends,
+complete a valid SAFETY pass and refresh within 5 ms: 20 + 5 ms is below the fastest watchdog expiry.
+
+The fault bound allocates 0.2 ms prefire / synchronization, 0.5 ms reset-to-GPIO-high-impedance and 1.5 ms physical
+turn-off tail: 32.653 + 0.2 + 0.5 + 1.5 = 34.853 ms, guarded to **36 ms** with intact gate / watchdog hardware.
+A failed-short FET is outside this timed cutoff claim. With MCU floating, 10 kΩ || (220 Ω + 1 kΩ) = 1.087 kΩ;
+C126 is 220 nF, not the old 10 nF. Nominal 3.3 → 0.4 V discharge is about 0.50 ms. Tolerance / temperature and a
+conservative gate-charge allowance still estimate about 1.01 ms to 0.2 V (Calc / Inference); actual current tail
+must be measured ≤ 1.5 ms, including hot behavior. These are firmware / bench obligations, not implemented firmware.
+
+At 70 °C, R134's −1 % / adverse 100 ppm corner is 1.97109 Ω. Ignoring all other resistance at 8.4 V gives 4.262 A,
+35.80 W and 0.716 J at 20 ms / 1.289 J at 36 ms (Calc, conservative). Bourns CRM2512's ≥ 1 Ω single-pulse curve
+is about 61 W / 44 W at those times by log interpolation (Inference from the graph), approximately 1.7 × / 1.23 ×
+the estimated stress. The 85 °C sensitivity has almost no margin after inferred thermal derating; do not qualify
+that as the bay design point. No repeated pulse / automatic retry is authorized by a single-pulse graph. On the bench,
+qualify hot dummy-load pulses, hang / reset timing and resistance drift. [ST DS12110](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf),
+Table 136; [Bourns CRM](https://www.bourns.com/docs/product-datasheets/CRM.pdf), p. 3. The neutral-command allocation
+is ≤ 32.653 ms watchdog + ≤ 6 ms reset release + ≤ 10 ms startup = ≤ 48.653 ms (Inference), inside the 50 ms target;
+physical tab motion or a jam remains a servo / hinge-load measurement.
+
+### D-AUD-03a. Correct the retained gate-slew capacitor's voltage rating
+
+Replace C120's 2.2 µF / 16 V part with the existing Samsung CL10B105KA8NNNC / C29936, 1 µF / 25 V X7R 0603
+family (already C86 / C97 / C98). No new code or fitted component is added; D-AUD-01a corrects the initial
+unchanged-land choice to the existing C29936 land for assembly consistency.
+The old 16 V rating did not cover the recorded ~18 V clamp event. Maker bias data plus explicit tolerance,
+temperature and aging allowances estimate at least 0.588 µF over the 0–4.5 V turn-on interval (Inference);
+2 × 70 nC total gate charge divided by this gives about 0.238 V as a conservative transient bound (Calc /
+Inference, not a measured Miller waveform). The maximum capacitance / resistor corner gives about 11.73 ms
+turn-on RC and reaches 4.5 V within about 23.7 ms at the stated minimum drive. Keep the ≥ 100 ms bus-check
+settling delay. The faster slew improves the limited-load SOA calculation; verify hot shorted-dummy turn-on,
+Miller / reset / off behavior and the independent Q124 pulse cutoff on the bench. [Samsung maker data](https://product.samsungsem.com/mlcc/CL10B105KA8NNN.do).
+
+### D-AUD-03b. Verify new assembly orientation against the supplier
+
+Fetch only C431196's official supplier pad map into `tools/jlc_easyeda/pads.json`; retain its retrieval date and
+source URL. Geometry source: **JLCEDA/EasyEDA Official Library**, [JLCEDA](https://lceda.cn/) /
+[EasyEDA](https://easyeda.com), exact-part API linked in that record. The PCB land remains the AOS maker land;
+this independent supplier map serves placement orientation and CPL verification. No account / owner metadata is
+copied into the repository. Confirm physical pad polarity and both FET bodies in the factory preview before order.
+
+### D-SS-04. Recalculate passive cold readings before enabling the merged bus
+
+With PC1 low / both gates off, the merged RAW_ACT bus adds the second 11.2 kΩ sense-divider load to the cold
+network. The nominal 3.1 V diode-side source gives healthy ADC readings about 75.27 mV CONT / 75.22 mV ARM and
+RAW, open e-match CONT about 146.23 mV with the RAW readings near 0, and grounded-drain readings near 0 (Calc
+/ Inference; tolerance, diode and leakage assumptions in `parts_qualification.md`). The old plug-out bands of
+approximately 100 mV do not transfer. For a previously enabled bus, wait at least 1 s with PC1 low and observe
+that it has discharged before classifying the passive readings; then wait ≥ 100 ms after deliberate ACT_EN
+assertion before bus checks, with PE4 still low. Cold screening precedes enabling the load switch, especially
+for a failed-short low-side FET. Bench qualification must establish actual bands / noise / leakage before an
+e-match is connected. This ground diagnostic never vetoes an in-flight fire (AGENTS §2.3).
+
+### D-GAP-01a. Final track-based conservative fire envelope
+
+The AUD geometry has 19.304478 mm of 0.5 mm fire-only track, 7.121320 mm of 1.0 mm battery branch and a
+conservative single 2.2 mm / 0.4 mm source-bridge path (no parallel credit). At 1.72 × 10⁻⁸ Ω·m / 35 µm copper
+this is 25.1760 mΩ at 20 °C, 30.1231 mΩ at 70 °C (Calc / Inference). Add R134 at 2.02909 Ω (hot, upper
+tolerance), two 40 mΩ high-side FET ceilings, Q124 at 8.236 mΩ (hot, Inference), 5 mΩ GND and 10 mΩ contact
+allowances, 2 Ω e-match, 0.3 Ω leads and 0.15 Ω pack: loop 4.612449 Ω. With 11.545807 W of other normal loads
+and pack sag solved consistently, 7.4 V gives 1.550071 A idle, 1.485263 A with one persistent 1.92 A stall,
+1.420229 A with two, 1.354934 A with three and 1.289335 A with four. Thus even one persistent stall misses the
+conservative 1.5 A margin; the original idle-servo F7 case passes. No assertion that a neutral command clears
+a jam is retained. A two-stall envelope would require an all-fire current ≤ 0.946819 A or Voc-equivalent ≥
+7.753406 V at fire, with the same harness / source limits; these are derived conditions, not adoption of a new
+igniter. The secondary typical-hot FET calculation is not the acceptance basis. Verify these premises against
+final saved-board geometry and first-article harness / source / copper temperature measurements.
+
+### D-GAP-02a. Reject the nearer diode position on measured clearance
+
+The candidate D9 B (43.35, 77.0), rotation 90°, would put its RAW pad box at x 42.45–44.25, y 77.75–80.25, overlapping
+C81.2 GND at x 42.4–43.35, y 77.65–78.55. Moving east clears that pad only by routing around the DVDT / GND cell.
+Retain the noncolliding diode position and simplify its OUT branch through the C82 RAW node. Per-part OUT /
+GND / total-loop and detour bounds are engineering regression limits for this cell, explicitly separate from
+TI's qualitative short-loop guidance; saved-copper measurements and loop-area evidence accompany the build.
+
+### D-AUD-03c. Match orientation by distinct fingers, not an arbitrary EP anchor
+
+The first C431196 dry run rejected a 0.398 mm nine-pad residual: the custom EP9 anchor is (0, 0), whereas the
+supplier's polygon anchor is (0, −0.35001) mm. These are reference points within unlike representations of the
+same drain land, not package origins. Compare all eight distinct fingers 1–8 for this footprint only, and fix
+its body-origin offset at (0, 0). Maker / supplier source-row centers are y 1.4 / 1.50012 mm (0.10012 mm difference),
+drain-row centers −1.495 / −1.50012 mm (0.00512 mm); both origins are package-centered. The eight-finger fit gives
+unique theta 0° (best residual 0.053 mm / next rotation 2.52 mm); with the fixed body origin, the largest actual
+finger-center delta is 0.10012 mm, inside the unchanged 0.35 mm limit. The part-specific rule preserves the maker
+land and does not widen general tolerances. Full CPL verification and the factory preview remain required.
+
+The orientation tool now recomputes its residual after a fixed-origin override instead of reporting the discarded
+auto-fit's residual. C431196 reports 0.100 mm at theta 0°, offset (0, 0), with CHECK: none and unchanged general
+limits. The official body rectangle and 3D origin coincide with its declared package head; all eight actual
+finger residuals are independently checked. The final exported CPL remains a separate check.
+
+### D-GAP-02b. Freeze the actual output and return paths
+
+C82 is B (39.8, 74.75), rotation 90°, with its GND via at (39.8, 74.35); D9 is B (43.35, 73.45), rotation 90°,
+and R92 is F (33.9, 65.775), rotation 90°. Saved copper gives C82 OUT 3.390990 mm B.Cu plus GND 9.177817 mm
+B.Cu / In1, total 12.568808 mm (the return includes two conservative full 1.6 mm via penalties), projected
+loop area 2.3153 mm². D9 has OUT 6.873402 mm B.Cu plus GND 9.818377 mm all B.Cu, total 16.691778 mm, projected
+area 17.4197 mm². OUT ratios to pad-center octilinear distance are 0.948 × / 1.175 ×; the cap path terminates
+inside its pad, explaining the ratio below 1. The local regression limits are C82 OUT / GND / total ≤ 4 / 10 /
+13.5 mm, D9 ≤ 7 / 10.5 / 17 mm, and OUT detour ≤ 1.25 ×. These are measured-layout engineering bounds, not
+maker numerical limits, inductance estimates or physical transient qualification. Missing-return and detour
+seeds fail. The continuous J1 → C88 → U9 input feed is unchanged; the local output-entry neck is 1.414 mm of
+0.7 mm copper before the four 0.5 / 0.3 mm rail vias.
+
+### D-AUD-01a. Keep one assembly land per supplier code
+
+FAB rejected C19666 on both `rocket:C0603` and `rocket:C_0603_1608Metric`. Use `rocket:C0603` for C92,
+matching existing C23 / C28. The same inventory check exposed C120 / C29936 on `rocket:C0603` while existing
+C86 / C97 / C98 use `rocket:C_0603_1608Metric`; give C120 that established metric land. Values, maker identities
+and nets are unchanged. Keep the exporter's one-footprint-per-LCSC-code requirement unchanged.
+
+Local library measurements: C0603 has pad centres x ±0.700 mm, 0.80 × 0.90 mm rectangular pads and a
+2.70 × 1.40 mm courtyard; the metric land has centres x ±0.775 mm, 0.90 × 0.95 mm roundrect pads and a
+2.96 × 1.46 mm courtyard. At unchanged C92 B (34.2, 45.2), −90°, its pads move 0.075 mm inward to
+(34.2, 44.500) / (34.2, 45.900); adapt the three local routing corners. Move C120 0.075 mm north to
+B (17.1, 71.525), −90°: metric pad 2 remains on ACT_GATE at (17.1, 72.300), while pad 1 becomes
+(17.1, 70.750). Recheck local clearances and the source tap after regeneration. R150–R153 / C21190 already
+share `rocket:R_0603_1608Metric` with their retained counterparts, and R412 / R422 / R432 / C25744 share
+`rocket:R0402`. These land corrections do not change capacitance, gate timing or bench obligations.
+
+The schematic preflight now checks the same per-supplier-code footprint / part-number grouping as the exporter,
+separately for JLC and owner BOMs. A matching wrong schematic/source land must still fail this independent
+assembly-group rule. Both split-land seeds are detected; the total is 22 seeded contract faults. The exporter
+remains unchanged. This integration correction precedes the fresh full review round 9.

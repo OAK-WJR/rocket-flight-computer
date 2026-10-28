@@ -2,11 +2,184 @@
 
 This is the component contract, not board acceptance. `parts.json` contains exact
 parts, pads and intended nets for the schematic generator; its final `circuit.json`
-resolves connector role names and MCU signals. `r10_parts.py` reproduces five local
-lands, five small VRML envelopes, and `parts_budget.json`. It never edits the board.
+resolves connector role names and MCU signals. `r10_parts.py` reproduces six local
+lands, six small VRML envelopes, and `parts_budget.json`. It never edits the board.
 Sources were read on 2026-10-26 locally; the R3 fix pass (2026-10-27) re-read
 DS41326, SLVS841F, SLVSEA3F, SBVS282A, SCES942A and the LR900 manual. No physical
-tests were performed.
+tests were performed. The 2026-10-28 AUD/GAP amendments below supersede earlier
+R10 part selections and timing figures; dated review records remain historical.
+
+
+## AUD/GAP component amendments (2026-10-28; CAD / Calc / Inference only)
+
+**AUD-1:** C92 is Samsung CL10A475KO8NNNC / C19666, 4.7 µF 16 V X5R ±10%
+0603, B (34.2,45.2), −90°, using `rocket:C0603` as already used by C23/C28
+with the same C19666 code. The FAB integration correction uses these local-library measurements:
+local pad centres ±0.775 → ±0.700 mm, pads 0.90 × 0.95 mm roundrect →
+0.80 × 0.90 mm rectangular, courtyard 2.96 × 1.46 → 2.70 × 1.40 mm.
+C92.1/.2 move to (34.2, 44.500) / (34.2, 45.900); three local routing corners
+must follow the 0.075 mm inward pad shifts. The component value, nets and
+capacitance calculation are unchanged. [The exact maker page](https://product.samsungsem.com/mlcc/CL10A475KO8NNN.do)
+gives a typical retained fraction 0.6832757 at 3.4 V. Applying 0.9 initial,
+0.85 temperature and 0.9 aging factors gives **2.211046 µF**, above
+[TPS709's 1.5 µF effective minimum](https://www.ti.com/lit/ds/symlink/tps709.pdf).
+Bias and aging allowances are **Inference**, not a guaranteed production minimum;
+the part is NRND. Bench stability and load-transient verification remain open.
+
+**AUD-3 / D-AUD-03a:** Q120/Q121 become AOS AONR21357 / C431196.
+[Maker Rev2.1 pp1–4](https://www.aosmd.com/res/datasheets/AONR21357.pdf)
+specifies −30 V drain, ±25 V gate and 12.3 mΩ maximum at −4.5 V /25°C.
+The ~18 V gate event therefore remains inside its absolute gate limit.
+The ~1.4 hot factor at 125°C is a typical curve: 17.22 mΩ is **Inference**;
+use **40 mΩ per FET** for the primary fire-current acceptance envelope and
+measure hot resistance. At 6 V loaded BAT_IN, 4.2 A through that source-side
+resistance, 0.1 V allowed at Q122 drain, and resistor 1% plus 100 ppm/K through
+125°C, settled |Vgs| ≥5.1916 V. Fully-on 4.2 A /20 ms at 40 mΩ dissipates
+0.706 W /0.0141 J per FET. The shorted-load turn-on line is
+I=(8.4−|Vds|)/R134min; maximum one-FET linear dissipation is 8.95 W at
+|Vds|=4.2 V, I=2.13 A. This is inside the maker's reference-case SOA after
+70°C derating; the reference-board 50 ms power curve is about24 W at25°C,
+about15 W after derating. These graph reads and extrapolation to actual copper
+are **Inference**: note F assumes a heatsink, note H a 1 in² /2 oz board.
+Bench shorted-dummy enabling and 20 ms /4.2 A pulses at70°C must measure Vgs,
+Vds, current and case rise; 85°C remains a sensitivity until qualified.
+
+The new land follows [AOS PO-00047 rev I](https://www.aosmd.com/sites/default/files/res/packaging_information/DFN3x3A_8L_EP1_P.pdf),
+DFN3x3A_8L_EP1_P: nominal3×3 mm body, max3.1×3.1×0.9 mm and3.3 mm lead span.
+Local S1–3/G4 centres are x−0.975/−0.325/+0.325/+0.975,y+1.4, pads0.35×0.50;
+D5–8 are x+0.975/+0.325/−0.325/−0.975,y−1.495, pads0.40×0.31 (0.01 overlap
+with drain9, leaving the maker's0.30 mm finger copper union). Drain9 is the
+maker polygon, x±1.225,y−1.35…+0.63, with wings to x±1.605 at y±0.215.
+The 3.3×3.3×0.9 mm model is a fit envelope. Verify actual supplier numbered
+pads and CPL orientation, stencil/assembly quality and solder coverage before order.
+
+C120 reuses Samsung **CL10B105KA8NNNC / C29936**, 1 µF 25 V X7R ±10%, on
+`rocket:C_0603_1608Metric`, matching C86/C97/C98 with the same C29936 code.
+This FAB integration correction supersedes the initial unchanged-C0603-land choice:
+the pad and courtyard changes are the reverse of C92's above. Move C120 0.075 mm
+north to B (17.1, 71.525), −90°, retaining pad 2 on the existing ACT_GATE lane
+at (17.1, 72.300); pad 1 becomes (17.1, 70.750). Review its source tap and local
+clearance after regeneration. The electrical timing assumptions are unchanged.
+[Maker identity and typical curves](https://product.samsungsem.com/mlcc/CL10B105KA8NNN.do)
+replace the former2.2 µF16 V part's above-rating condition. Cmax=1.265 µF;
+R120∥R121 gives tau≤11.73 ms and ≤23.65 ms to |Vgs|=4.5 V at the corner above.
+Hold PE4 low and wait **≥100 ms after ACT_EN** before bus checks or a permitted
+fire. The typical bias curve with0.9 tolerance/0.85 temperature/0.9 aging yields
+Ceff≈0.587 µF at4.5 V (linear interpolation), so both FETs'2×70 nC maximum10 V total gate charge
+would step it about0.239 V (**Inference**, not a hot off-state guarantee).
+Check Miller turn-on with power attachment, reset/unpowered behavior and gate
+turn-off on the actual board. The load-switch off RC is≤129.03 ms; Q124's
+independent fast current-off contract remains below.
+
+**AUD-4/5/7/9:** J123/R160/R161/C160/D122 and TP84/85/86/87/89/92 are removed;
+PC13 U1.7 is NC/analog, no EXTI13. Keep TP80–83/TP120–122 and USB-only U10/U11.
+R412/R422/R432 use10 kΩ1%0402 C25744; R150–153 use1 kΩ1%0603 C21190,
+UNI-ROYAL0603WAF1001T5E rated100 mW through70°C.
+[Maker series specification](https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf)
+gives the above10Ω resistors100 ppm/K. The8.4 V chafe is64 mW with a0.4 V
+low output, or a conservative72 mW at0 V and980Ω; neither needs the inherited
+30%-of-rating rule. Port and servo component changes retain their protective networks.
+
+**Single-switch passive cold check (Calc / Inference, no firmware thresholds):**
+keep PC1 ACT_EN low and PE4 low. If the load switch was previously enabled, wait
+at least1 s and verify RAW_ACT has discharged / ACT_GATE has returned off before
+classifying a reading. New C120/R120 maximum off tau≈129 ms makes1 s about7.75tau;
+this wait is provisional until bench-qualified. At boot without a prior enable,
+C120 starts near Vgs=0. Only after a valid passive fault check may firmware enable
+PC1, still holding PE4 low, then wait≥100 ms before powered-bus checks.
+
+OUT has one11.2 kΩ divider; merged RAW_ACT has two11.2 kΩ dividers in parallel.
+Each is10.2 kΩ over1 kΩ (two5.1 kΩ series, two2 kΩ parallel). With a1–2Ω e-match
+plus R1342Ω, all three banks load D120/R13110 kΩ. For U=3V3−Vf,
+Rload=11.2k∥(Rmatch+R134+5.6k), Vout=U×Rload/(10k+Rload),
+Vraw=Vout×5.6k/(Rmatch+R134+5.6k); each sense ADC is its bus divided by11.2.
+Use nominal3V3=3.3 V, Vf=0.20 V for the nominal column. The illustrative band
+uses3V3=3.135–3.465 V (existing±5% budgeting assumption), Vf=0–0.32 V, and each
+resistor at±1.45% (1% plus100 ppm/K to70°C). The diode range is an **Inference**
+from the [JSCJ BAT54/A/C/S25°C table](https://www.lcsc.com/datasheet/lcsc_datasheet_1809200014_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54A_C8591.pdf)
+(Vf max0.32 V at1 mA, above the diagnostic current); it is not a guaranteed hot/cold
+range. Original supplier PDF access was blocked in this pass; the cached maker
+excerpt was available. ADC pins are analog with no pull, fully settled, and the
+listed bands assume zero ADC/FET/board leakage and no external backfeed.
+
+| ACT_EN off / PE4 low, settled state | CONT ADC nominal (illustrative band) | ARM1 and RAW_ACT ADC nominal (illustrative band) |
+|---|---|---|
+| Healthy1–2Ω dummy e-match |75.27 mV (65.58–87.65 mV)|75.22 mV (65.54–87.60 mV each)|
+| Open e-match |146.23 mV (129.16–168.02 mV)|0 V before leakage|
+| Q124 drain grounded / stuck-on, e-match connected |approximately0 V|approximately0 V|
+| Shorted e-match |approximately the healthy row|approximately the healthy row; not distinguishable here|
+
+These bands exclude leakage, ADC offset, reference error, acquisition effects and
+unqualified diode temperature behavior. As sensitivity only, ±10 µA net leakage
+at both OUT and RAW shifts a healthy ADC about±4.85 mV; with an open e-match,
+±10 µA shifts CONT about±4.72 mV or a RAW sense about±5.0 mV. ADC-pin leakage of
+1 µA can add roughly5.7 mV through its4.7 kΩ plus divider impedance. These are
+assumptions, not published hot leakage guarantees. Bench the actual low/healthy/open
+states and unexpected powered-bus states across temperature before selecting hard
+refusal thresholds. Old ARM-plug-out≈100 mV bands do not transfer. These checks
+are hard refusals on the ground; in flight they only log/annunciate and never veto
+a fire (AGENTS§2.3).
+
+**GAP-1:** `parts_budget.json` includes the actual11.545807 W worst normal
+logic/ports allocation, rather than assuming all other pack loads vanish. The
+pack has Voc=7.4 V equivalent **at the fire instant after pad/flight drain**, Rpack≤0.15Ω;
+servo stall current is1.92 A each. Solve
+(1+Rpack/Rfire)V²−(Voc−Rpack×Iservo)V+Rpack×Pother=0, taking the high root,
+then Ifire=V/Rfire. Include R134 upper tolerance/temperature, 2Ω e-match,
+≤0.3Ω external leads/harness, final CAD copper, hot FETs, 5 mΩ GND-return and
+10 mΩ contact allowances. Copper at20°C is scaled to70°C by1.1965 using
+[standard annealed copper TCR0.00393/K](https://nvlpubs.nist.gov/nistpubs/Legacy/hb/nbshandbook100.pdf);
+actual thickness, contact, source and harness resistance remain bench conditions.
+The old4.533Ω loop with a fixed1.5 A other load gives1.58284 A idle or1.45577 A
+with two stalls; these are illustrations, not qualification of changed copper.
+The primary40 mΩ/FET final calculation and secondary17.22 mΩ curve estimate
+are generated in the budget. Final CAD track bounds at20°C are BAT_IN3.49962,
+ACT_FET_S2.70286 (one2.2 mm/0.4 mm aligned path; no parallel-leg credit),
+RAW_ACT6.38857, IGN4.76686 and OUT7.81812 mΩ: total25.17602 mΩ, or30.12311 mΩ
+at70°C. With R134max2.02909Ω, Q1248.236 mΩ hot inference, and the stated
+allowances, primary total loop including pack is4.612449Ω. At7.4 V equivalent,
+Ifire is1.550071 A idle,1.485263 A with one persistent stall,1.420229 A with two,
+1.354934 A with three and1.289335 A with four. Idle-servo≥1.5 A remains required
+and passes; even one persistent stall misses the primary margin. Two stalls imply
+a compatible all-fire limit0.946819 A, or require≥7.753406 V equivalent at fire
+for the existing1 A all-fire part under the same conditions. The secondary
+17.22 mΩ/FET case gives1.565516 A idle /1.434377 A with two stalls; it does not
+set acceptance. A neutral command and200 ms wait cannot unload a jam. The compatible
+all-fire limit is derived, not adoption of another e-match, and a margin failure
+does not establish that a1 A-rated e-match will not fire. Measure source reserve
+and resistance at the deployment time, not only prelaunch voltage.
+
+**GAP-5:** [ST DS12110 Rev11 Table136 p233](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf)
+gives RevV LSI29.4–33.6 kHz through Tj125°C (29.76 kHz applies only through110°C;
+RevY has a different qualification). Bind the actual silicon ID and temperature.
+IWDG prescaler÷4/reload239 =960 cycles, nominal30 ms, actual28.571–32.653 ms.
+Refresh immediately **before** PE4 rises and never refresh while fire is active.
+An independent timer/DMA abort ends normal **physical current within20 ms**,
+including gate tail; set its command cutoff early enough for the measured tail.
+After current off, complete a valid SAFETY pass and refresh within5 ms:
+20+5<28.571 ms. Refreshing during fire is invalid: a late hang adds the watchdog
+time to elapsed current and can exceed the resistor envelope.
+
+Floating-MCU discharge is10 kΩ∥(220Ω+1 kΩ)=1087.344Ω. C126 is Samsung
+[CL10B224KA8NNNC / C21120](https://product.samsungsem.com/mlcc/CL10B224KA8NNN.do),220 nF X7R ±10% with±15% temperature:
+Cmax278.3 nF. Resistor1%+100 ppm/K through125°C gives Rmax1109.091Ω.
+From3.6 V to0.4 V, RC≤0.67820 ms; adding [AON7524's22 nC maximum gate-charge](https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf)
+allowance yields≈0.73920 ms (**Inference**: hot charge and0.4 V off criterion
+are not guaranteed). Use **1.5 ms actual-current tail** only after bench validation.
+With prefire/sync≤0.2 ms and reset-to-HiZ≤0.5 ms, total≤34.8531 ms, guarded
+at **36 ms**. No firmware or reset/current-tail bench test has passed.
+
+[Bourns CRM2512 maker pulse chart p3](https://www.bourns.com/docs/product-datasheets/CRM.pdf),
+≥1Ω curve, reads about90 W at10 ms and25 W at100 ms. Log interpolation gives
+61.204 W at20 ms /44.134 W at36 ms (**Inference**, graphical precision).
+R134 minimum at70°C is1.97109Ω; ignoring every other series resistance gives
+35.7975 W,0.71595 J/20 ms and1.28871 J/36 ms. Thus36 ms has about1.23×
+chart margin at70°C under those assumptions. Applying linear155°C derating at
+85°C gives only36.345 W versus35.851 W demand (**Inference**), essentially no
+useful margin; the85°C condition is unqualified. Scope watchdog refresh, PE4,
+TP122, NRST and dummy-load current for early/late CPU starvation, normal abort,
+postfire refresh, reset/unpowered gate tails and hot R134 pulses; record resistor
+drift and actual physical20/36 ms limits across supply and temperature.
 
 ## Supply contract and sources
 
@@ -131,22 +304,20 @@ simulation and bench testing. Even at6 V loaded input, loaded-dropout qualificat
 is open because AP63201 only gives typical switch resistance; never label that
 corner guaranteed from the nominal duty calculation.
 
-**Inference, LDO thermal (R3-PWR-09):** at the allocated460 mA output, extreme
-rail tolerance and4 mA quiescent draw, loss≈0.406 W. **U401's thermal pad 11 has
-no thermal via:** M2 bars vias in SMD pads, so the pad (bottom side, 1.2×2.0 mm at
-(27.6, 13.6)) joins the B.Cu GND pour solidly and the nearest GND via, (27.6,
-14.95), sits 0.35 mm (centre) outside the pad edge; In2 under it is PORT_5V3
-(pad, via and In2 zone read on board `579575bd…` in round 4: pad 11 1.2×2.0 mm at (27.6, 13.6), the nearest GND via
-(27.6, 14.95) 1.35 mm centre to centre from the pad centre, In2 zone R10_PORT_5V3_In2; the round-4 routing pass was
-not re-measured on `407d1d84…`). TI's62.5°C/W thetaJA (SBVS282A p4) is the
-JEDEC high-K board figure and is not used. Without vias under the pad, take
-80–110°C/W (Inference, outer-layer pour spreading only, RθJC(bot)7.8°C/W): the
-full allocation gives a32–45 K rise, junction≈117–130°C at85°C ambient and
-≈102–115°C in the70°C bay, against the125°C recommended maximum (SBVS282A p4;
-thermal shutdown160°C typical). A typical load (radio about0.2 A from LR900-F's
-1 W maximum average, GPS about0.05 A) is about0.19 W, +15–21 K. Measure U401 with
-a thermal camera at full port load (ORDERING R10 bench list); the 85°C case is the
-unshaded worst case (REQUIREMENTS "Temperature").
+**GAP-3, LDO thermal (Calc / Inference):** allocated 460 mA output, extreme
+rail tolerances and 4 mA quiescent draw give 0.406177 W. U401 pad 11 is
+1.2 × 2.0 mm, centred at (27.6,13.6), and now has two GND vias at
+(27.3,13.6)/(27.9,13.6), 0.5 mm ring / 0.3 mm drill. These two vias require
+resin filling, copper capping and planar VIPPO; the maker's paste windows stay
+unchanged. Fabricator acceptance is pending. TI TPS7A91 §7.1.4 / layout guidance
+calls for thermal vias; its 62.5°C/W JEDEC thetaJA is not this board's thermal
+resistance. Retain 80–110°C/W as a conservative **Inference**, without claiming
+that the vias establish or improve that number. Junction estimate is
+102.494–114.679°C at the 70°C bay ambient, below 125°C recommended maximum;
+at 85°C it is 117.494–129.679°C, an unqualified unshaded sensitivity. Full-load
+thermal measurement remains required; the inferred theta ceiling for 125°C at
+70°C is 135.409°C/W. Measure the complete power knot and qualify the actual
+fabricated via process; do not substitute an unfilled hole or shrink the paste.
 Buck thermal qualification remains open:89°C/W is a reference-board metric,
 maximum MOSFET resistance and switching loss are not specified, and80% conversion
 efficiency is an input-current budgeting assumption rather than a guarantee of
@@ -154,11 +325,15 @@ acceptable junction temperature. Test the complete power knot under full load.
 
 ## Off-state and USB back-feed
 
-TXU0202DCUR C5186957 and TPS70933DBVR C89347 reproduce the camera's two-domain
-UART isolation separately for radio and GPS. Their peripheral supply comes from
-the corresponding switched port; OE defaults low. Port ESD must return to GND,
-never clamp an externally powered line into main3V3. Firmware must disable OE
-before switching a port off. See the final schematic contract for actual nets.
+**AUD-8:** U411/U421 TXU0202DCUR C5186957 now use main 3V3 on both VCCA and
+VCCB. U412/U422, R443/R453 and C441/C442/C451/C452 are removed. C443/C453 remain
+100 nF local VCCB bypasses, retagged to 3V3: [TI TXU0202 §12.1 and Fig12-1](https://www.ti.com/lit/ds/symlink/txu0202.pdf)
+recommend a local 0.1 µF at each supply. C440/C450 remain the VCCA bypasses.
+Camera U13 TPS70933DBVR and C92/C93 remain because PORT_5V3 can exceed the
+TXU0202's 5.5 V maximum supply. Port ESD returns to GND. EN/OE default low;
+firmware holds OE low whenever its peripheral supply is off, and lowers OE before
+EN. Accepted: incorrect OE can feed an unpowered external module a few mA through
+1 kΩ. Partial-power isolation still requires the installed-module bench test.
 
 TPS2553 specifies≤1µA reverse leakage at OUT6.5 V/IN0 V **at25°C only**.
 It is not an instantaneous ideal diode: powered reverse detection can take7 ms
@@ -270,8 +445,8 @@ use `${KIPRJMOD}/kilib/rocket.3dshapes`. New lands have no clearance overrides.
 | DB125 black C52993880; green C466970 | [DORABO supplier-linked T0-1 drawing](https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf):3.5 mm pitch,7.0×7.4×8.6 mm body,28–16 AWG,10 A UL/13.5 A IEC,0.2 N·m,4–5 mm strip. Pads±1.75 mm,Ø1.9 copper/Ø1.3 drill. Bodyy−3.9…3.5; wire-entry+y. | This T0-1 supplier drawing recommendsØ1.2 holes; the [older maker drawing](https://www.nbdibo.com/wp-content/uploads/2020/06/DB125-3.5-XXP-C-S.pdf) was reported as1.3 in round1.1.3 selected conservatively. Nominal copper gap1.6 mm and radial annulus0.3 mm are calculated, not actual manufactured measurements. Final board must hold≥1.5 mm including tracks; no role alias inherited from R9. Envelope7.3×7.7×8.9 includes general tolerance. J1 peak≈6 A is below10 A; validate installed wire/contact heating. |
 | GH2 C161690 | [JST eGH pp2–3](https://www.jst-mfg.com/product/pdf/eng/eGH.pdf):1.25 mm pitch; pads0.6×1.7 atx±0.625,y1.95; tabs1×2.8 atx±2.475,y−1.4. | Same frame as GH4; mechanical pads unnamed. Body5.75×4.25, mated height7.3 mm, further3 mm wire allowance belongs to fit gate.1 A withAWG26; contact50 mΩ maximum after test. Harness allocation must include both supply and return contacts. |
 | GH4 C161692 | Existing M3_GH_BM04B_GHS_TBT land/model, same JST drawing. | Used for camera/GPS/radio; keyed connectors remain electrically different, require labels and harness pin check. |
-| TPS7A9101 C2878140 | TI DSK0010A:0.6×0.25 pads,0.5 pitch,row centres±1.15; pad11 1.2×2.0. | Maker land, thermal-pad paste split to the maker's84%. No via in pad 11 (M2); it joins the B.Cu GND pour solidly, nearest GND via0.35 mm outside the pad edge (thermal estimate above). Body maximum2.6×2.6×0.8 mm. |
-| C84 MA25V470M8x10 C46550466 | [MA-series supplier datasheet](https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf), logo JIERRUI/深圳市捷而瑞:470µF25 V,25 mΩ/100 kHz,4.1 A ripple/105°C; tolerance±20%, endurance±20% of initial andESR≤150%. Base8.3±0.2, lead gap3.1±0.2,width0.8–1.1, height10±0.5 plus0.3 mm projection conservatively. | Inference: derived3.5×1.7 pads at±3.25 give3.0 mm copper gap and toe allowance. Envelope8.5×8.5×10.8. Not a maker-recommended land: datasheet supplies no land/reflow profile. Verify polarity, mounting height and manufacturer/JLC reflow compatibility before fabrication. A fitted part is not qualified by stock alone. |
+| TPS7A9101 C2878140 | TI DSK0010A:0.6×0.25 pads,0.5 pitch,row centres±1.15; pad11 1.2×2.0. | Maker land, thermal-pad paste split to the maker's84%. GAP-3 adds two 0.5/0.3 GND vias in pad11, resin-filled/copper-capped planar VIPPO; original paste windows unchanged (thermal estimate above). Body maximum2.6×2.6×0.8 mm. |
+| C84 MA25V470M8x10 C46550466 | [MA-series supplier datasheet](https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf), logo JIERRUI/深圳市捷而瑞:470µF25 V,25 mΩ/100 kHz,4.1 A ripple/105°C; tolerance±20%, endurance±20% of initial andESR≤150%. Base8.3±0.2, lead gap3.1±0.2,width0.8–1.1, height10±0.5 plus0.3 mm projection conservatively. | Inference: derived3.5×1.7 pads at±3.25 give3.0 mm copper gap and toe allowance. Envelope8.5×8.5×10.8. Not a maker-recommended land: datasheet supplies no land/reflow profile. GAP-4: manually fit AFTER ALL REFLOW; do not expose this part to an unprovided reflow profile. Keep fitted BOM/CPL identity/polarity, with manual-fit order remarks. Qualify the hand-solder process and first-article capacitance/ESR, polarity and height before release. |
 
 C84 conservative beginning/end-of-life capacitance is470×0.8×0.8=300.8µF,
 ESR at most37.5 mΩ under the specified endpoint test. Neither number supplies an
@@ -365,7 +540,7 @@ reviewer's readings and were not re-read from the PDFs in this pass (Inference u
   the backup domain survives NRST and would load the buzzer node: LSEON stays 0 and the backup domain is never
   set up for the LSE (binding note).
 
-## Round-6 records (R6-PWR-02 / -03; Calc unless marked)
+## Round-6 records (historical pre-AUD hardware; Calc unless marked)
 
 - **USB-only attach (R6-PWR-02).** With only USB-C connected, VBUS feeds VLOGIC through U10 (TPS2553, current limit
   355–445 mA as the round-6 reviewer reads it; ILIM resistor and datasheet limit not re-read here) and U11 behind it:
@@ -393,7 +568,7 @@ reviewer's readings and were not re-read from the PDFs in this pass (Inference u
 - **IWDG period (R7-MCU-03).** LSI 29.76–33.60 kHz (DS12110 Table 39 as the reviewer read it; **not re-read**, ST's server refused the download in this pass) gives a nominal 32 ms setting a worst case of about 34 ms (32 ms × 32 kHz / 29.76 kHz ≈ 34 ms with a 32 kHz-based reload), inside F6's 50 ms target. A started IWDG cannot be stopped; a loader jump after it starts lands in the application about 32 ms later with BOOT0 low (**Inference**, AN2606 not read).
 - **PA15 reset state (R7-MCU-01).** PA15 resets to JTDI with the internal pull-up, not analog (**Inference**: the reviewer's reading of DS12110 / RM0433, not re-read); firmware sets it to analog explicitly.
 
-## Round-8 records (R8-MCU-02, R8-BOM-02, R8-MEC-05; records only, board unchanged)
+## Round-8 records (historical pre-AUD hardware; records only, board unchanged)
 
 - **GPS UART level (R8-MCU-02).** HGLRC's M100 Mini page gives the supply as 3.3–5 V and does not specify the UART
   logic level. **Inference:** a u-blox M10 part with 3.3 V I/O; the J410 translator (TXU0202, B side on GPS_IO_3V3

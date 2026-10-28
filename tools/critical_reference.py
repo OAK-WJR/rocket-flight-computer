@@ -29,8 +29,8 @@ R6_NETS = ('USB_DP', 'USB_DM', 'HSE_IN', 'HSE_OUT', 'QSPI_CLK', 'QSPI_NCS', 'QSP
 EXTENDED = ('SWDIO', 'SWCLK', 'NRST', 'RADIO_NSS', 'RADIO_SCK', 'RADIO_SCK_MCU', 'RADIO_MOSI', 'RADIO_MOSI_MCU',
             'RADIO_MISO', 'RADIO_MISO_MCU')
 # R10 external-port signal nets: the ONE definition both gates use (R3-RTE-01 / R3-GATE-04): route_check profile r10
-# classes them critical (GND via within 1.5 mm of every layer change, the critical hygiene rules) and check_r10
-# K-reference samples them. UART data on all three segments (MCU side, translator buffer side, wire side after the
+# classes them critical for hygiene; AUD-2 omits only the named slow controls from 1.5 mm GND-partner and reference
+# checks. UART data on all three segments (MCU side, translator buffer side, wire side after the
 # 1 kOhm), the camera's MCU-side pair (CAM_MCU_TX / _RX: the R9 names kept for U12), and the port control lines
 # (load-switch enable, fault flag, translator output enable).
 R10_PORT_UART = re.compile(r'^((GPS|RADIO|CAM)_(TX|RX)_(MCU|WIRE|BUFFER)|CAM_MCU_(TX|RX))$')
@@ -39,6 +39,19 @@ R10_PORT_NETS = ('CAM_MCU_TX', 'CAM_MCU_RX') + tuple(f'{port}_{signal}_{side}' f
                       for signal in ('TX', 'RX') for side in ('MCU', 'WIRE', 'BUFFER')) + tuple(
     f'{port}_{signal}' for port in ('GPS', 'RADIO', 'CAM') for signal in ('PWR_EN', 'FAULT_N', 'UART_OE'))
 assert all(R10_PORT_UART.match(n) or R10_PORT_CONTROL.match(n) for n in R10_PORT_NETS)
+
+# AUD-2: these named slow nets omit return geometry only; route_check keeps their critical hygiene classes.
+R10_SLOW_RETURN_NETS = frozenset(
+    {'VLOGIC_SENSE', 'V3V3_SENSE', 'CAM_5V_SENSE', 'ACT_EN', 'ACT_EN_MCU', 'ACT_DRV', 'ACT_GATE'}
+    | {base + suffix for base in ('PYRO1_CONT', 'ARM1_SENSE', 'RAW_ACT_SENSE')
+       for suffix in ('', '_MID', '_MCU')}
+    | {f'{port}_{signal}' for port in ('GPS', 'RADIO', 'CAM')
+       for signal in ('PWR_EN', 'FAULT_N', 'UART_OE')})
+
+
+def r10_slow_return_net(name):
+    """AUD-2's complete whitelist; no prefix-based exemption for another safety or interface net."""
+    return name in R10_SLOW_RETURN_NETS
 
 
 def r10_port_net(name):
@@ -146,6 +159,8 @@ def compare(base, cand, dy, extended, profile="r9"):
     if profile not in ('r9', 'r10'):
         raise ValueError(f'unknown reference profile {profile!r}')
     nets = R6_NETS + (EXTENDED if extended else ()) + (R10_PORT_NETS if profile == 'r10' else ())
+    if profile == 'r10':
+        nets = tuple(n for n in nets if not r10_slow_return_net(n))  # AUD-2; legacy profiles unchanged.
     fb, fc = fills(base, refs), fills(cand, refs)
     rep = {'nets': list(nets), 'layers': {pcbnew.LayerName(k): [pcbnew.LayerName(v[0]), list(v[1])]
                                           for k, v in refs.items()}}

@@ -7,6 +7,7 @@ The PortLDO symbol is exposed for the schematic generator, not written here.
 """
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -88,9 +89,34 @@ def polymer():
     return make_fp(name, body, -5.4, 'jieerrui MA25V470M8x10; positive pad1 left; derived land, reflow qualification open')
 
 
+def load_switch():
+    name = 'M3_AONR21357_DFN3x3A_EP1'
+    # AOS PO-00047 rev I: recommended top-side copper land, in a frame
+    # with source pins 1-3 / gate 4 south and the drain fingers north.
+    body = _rect((-1.5, -1.5), (1.5, 1.5), 'F.Fab', .1)
+    body += _rect((-1.9, -1.9), (1.9, 1.9), 'F.CrtYd', .05)
+    body += _circle((-1.7, 1.4), .1, 'F.SilkS', .15)
+    for n in range(1, 5):
+        body += _pad(str(n), (n - 2.5) * .65, 1.4, .35, .5, ('F.Cu', 'F.Paste', 'F.Mask'))
+    for n in range(5, 9):
+        # 0.01 mm overlaps the common drain pad. The copper union is
+        # exactly the maker's .40 x .30 fingers plus the main polygon.
+        body += _pad(str(n), (6.5 - n) * .65, -1.495, .4, .31, ('F.Cu', 'F.Paste', 'F.Mask'))
+    outline = ((-1.225, -1.35), (1.225, -1.35), (1.225, -.215),
+               (1.605, -.215), (1.605, .215), (1.225, .215),
+               (1.225, .63), (-1.225, .63), (-1.225, .215),
+               (-1.605, .215), (-1.605, -.215), (-1.225, -.215))
+    points = ' '.join(f'(xy {x} {y})' for x, y in outline)
+    body += ('(pad "9" smd custom (at 0 0) (size .43 .43) (layers "F.Cu" "F.Paste" "F.Mask") '
+             '(options (clearance outline) (anchor rect)) '
+             f'(primitives (gr_poly (pts {points}) (width 0) (fill yes))))\n')
+    return make_fp(name, body, -2.5,
+                   'AOS AONR21357; PO-00047 rev I maker land; S1-3 G4 D5-8 and common exposed drain9')
+
+
 FOOTPRINTS = {'M3_GH_BM02B_GHS_TBT': gh2, 'M3_DB125_2P_BK': lambda: terminal('BK'),
               'M3_DB125_2P_GN': lambda: terminal('GN'), 'M3_TPS7A91_DSK10': ldo,
-              'M3_MA_8x10': polymer}
+              'M3_MA_8x10': polymer, 'M3_AONR21357_DFN3x3A_EP1': load_switch}
 # Boxes use millimetres, KiCad VRML scale .1in handled by r7_parts._box.
 MODELS = {
     'M3_GH_BM02B_GHS_TBT': (0, -.375, 0, 5.75, 4.25, 7.3, '.85 .85 .8'),
@@ -98,6 +124,7 @@ MODELS = {
     'M3_DB125_2P_GN': (0, -.2, 0, 7.3, 7.7, 8.9, '.1 .55 .2'),
     'M3_TPS7A91_DSK10': (0, 0, 0, 2.6, 2.6, .8, '.12 .12 .12'),
     'M3_MA_8x10': (0, 0, 0, 8.5, 8.5, 10.8, '.65 .65 .68'),
+    'M3_AONR21357_DFN3x3A_EP1': (0, 0, 0, 3.3, 3.3, .9, '.12 .12 .12'),
 }
 
 
@@ -133,6 +160,10 @@ def geometry_checks():
                 for p in fp.Pads() if p.GetNumber()}
         assert all(p.GetLocalClearance() in (None, 0) for p in fp.Pads()), name
         result[name] = rows
+        if name == 'M3_AONR21357_DFN3x3A_EP1':
+            drain = next(p for p in fp.Pads() if p.GetNumber() == '9')
+            box = drain.GetBoundingBox()
+            assert [round(mm(v),5) for v in (box.GetX(),box.GetY(),box.GetWidth(),box.GetHeight())] == [-1.605,-1.35,3.21,1.98]
     for name in ('M3_DB125_2P_BK', 'M3_DB125_2P_GN'):
         p = result[name]
         assert p['2'][0] - p['1'][0] - (p['1'][2] + p['2'][2]) / 2 >= 1.5
@@ -141,6 +172,9 @@ def geometry_checks():
     assert result['M3_TPS7A91_DSK10']['11'] == [0, 0, 1.2, 2]
     assert len(result['M3_TPS7A91_DSK10']) == 11
     assert result['M3_MA_8x10']['1'] == [-3.25, 0, 3.5, 1.7]
+    fet = result['M3_AONR21357_DFN3x3A_EP1']
+    assert len(fet) == 9 and fet['1'] == [-.975, 1.4, .35, .5]
+    assert fet['4'] == [.975, 1.4, .35, .5] and fet['8'] == [-.975, -1.495, .4, .31]
     return result
 
 
@@ -197,6 +231,48 @@ def power_budget():
         r, logic, power, efficiency = .15, .5, 5.456 * 1.46, .8
         a = open_v - r * (servos + logic)
         return (a + (a*a - 4*r*power/efficiency)**.5) / 2
+    # GAP-1: final AUD/GAP CAD path lengths; rho=1.72e-8 ohm m, nominal 35 um outer copper at 20 C.
+    # Use one aligned 2.2 mm source-to-source path, taking no parallel-source-leg credit.
+    # These are geometry / material inferences; actual copper thickness and resistance need qualification.
+    copper_paths = dict(BAT_IN=[7.121320343559643,1.0], ACT_FET_S=[2.2,.4],
+                        RAW_ACT=[6.5,.5], PYRO1_IGN=[4.85,.5], PYRO1_OUT=[7.954478348960021,.5])
+    copper_by_net = {net: length/width * (1.72e-8/35e-6) for net,(length,width) in copper_paths.items()}
+    copper_20c = sum(copper_by_net.values())
+    copper_70c = copper_20c * (1 + .00393 * (70 - 20))
+    r134_hot = 2 * 1.01 * (1 + 100e-6 * (70 - 25))
+    q124_hot = .0058 * 1.42       # inherited hot-factor inference; bench qualification remains open
+    other_w = loads_w['c_camera_radio_gps_on'][1]
+    def fire_case(pfet_r):
+        rest = r134_hot + 2 + .3 + copper_70c + .005 + .010 + 2 * pfet_r + q124_hot
+        def current(open_v, stalls):
+            # Pack feeds the firing branch, servo current and the other constant-power loads simultaneously.
+            a, b = 1 + .15 / rest, open_v - .15 * 1.92 * stalls
+            voltage = (b + math.sqrt(b*b - 4*a*.15*other_w)) / (2*a)
+            return dict(loaded_pack_V=voltage, fire_A=voltage/rest,
+                        other_A=other_w/voltage + 1.92*stalls)
+        cases = {str(n): current(7.4, n) for n in range(5)}
+        target_v = 1.5 * rest
+        return dict(fire_branch_without_pack_ohm=rest, total_loop_ohm=rest+.15,
+                    pack_7V4_by_stall_count=cases,
+                    two_stall_compatible_all_fire_A=cases['2']['fire_A']/1.5,
+                    two_stall_open_equivalent_V_for_1A_all_fire=target_v+.15*(1.5+3.84+other_w/target_v))
+    fire_primary, fire_typical = fire_case(.040), fire_case(.0123*1.4)
+    # GAP-5: 960 LSI cycles, including Rev V's 29.4 kHz minimum through Tj=125 C (DS12110 Rev11 table136).
+    watchdog_ms = [960/33600*1000, 960/29400*1000]
+    c126_max = 220e-9*1.10*1.15
+    r_discharge_max = (1/(1/10000 + 1/(220+1000))) * 1.02
+    rc_tail_ms = r_discharge_max*c126_max*math.log(3.6/.4)*1000
+    charge_tail_ms = r_discharge_max*22e-9/.4*1000
+    r134_min = 2*.99*(1-100e-6*(70-25))
+    fault_power = 8.4**2/r134_min
+    def pulse_curve(ms):
+        return 90*(ms/10)**(math.log(25/90)/math.log(10))
+    enable_ratio = (100000*.98)/(100000*.98+10000*1.02)
+    enable_tau = (100000*10000/110000)*1.02*(1e-6*1.10*1.15)
+    enable_vgs = (6-4.2*.040-.1)*enable_ratio
+    # Linear interpolation of the maker's typical bias curve at 4.5 V, then tolerance / temperature / aging factors.
+    c120_bias_delta_pct = -14.594404761904764 + (4.5-4.471875)/(5.2344-4.471875)*(-18.78912+14.594404761904764)
+    c120_effective = (1+c120_bias_delta_pct/100)*.9*.85*.9
     results = dict(
         status='Calculated conditional bounds; no physical or transient tests performed',
         temperature_excursion_from_25C=100,
@@ -218,9 +294,12 @@ def power_budget():
         buck_camera_short_radio_gps_normal_A=limits['camera'][1]+.3+.15+.011,
         ldo_bleeder_min_A=ldo_min/(820*(1+thick)),
         ldo_full_load_loss_W=(buck_max-ldo_min)*.46+buck_max*.004,
-        # U401 has no thermal vias: use the layout inference in parts_qualification,
-        # not the datasheet reference-board thermal resistance (partial round 9).
+        # GAP-3 adds two filled/capped vias; retain the conservative, unmeasured layout estimate.
         ldo_theta_ja_inference_C_per_W=[80, 110],
+        ldo_thermal_vias=dict(count=2, at_mm=[[27.3,13.6],[27.9,13.6]], ring_mm=.5, drill_mm=.3,
+                             process='Resin-filled, copper-capped planar VIPPO; maker paste unchanged'),
+        ldo_ambient_70C_junction_inference_C=[70+r*((buck_max-ldo_min)*.46+buck_max*.004)
+                                             for r in (80, 110)],
         ldo_ambient_85C_junction_inference_C=[85+r*((buck_max-ldo_min)*.46+buck_max*.004)
                                              for r in (80, 110)],
         pack_7V4_four_stall_loaded_V=loaded_pack(7.4,7.68),
@@ -238,6 +317,57 @@ def power_budget():
                                          'c: ports at 1.461 A, 80-85 % buck efficiency, + unshed logic; no credit for '
                                          'RAW_PROTECTED capacitance or U11 reverse blocking; each case additionally '
                                          'includes the 3.3 kohm R92 loss at 7.4 V and minimum resistance'),
+        camera_io_C92=dict(code='C19666', nominal_uF=4.7, max_bias_V=3.4,
+                           typical_bias_retained=.6832757,
+                           effective_uF_inference=4.7*.6832757*.9*.85*.9,
+                           tps709_required_effective_uF=1.5,
+                           note='Typical bias curve and 10% aging allowance are inferences; bench stability required'),
+        load_switch_AUD3=dict(code='C431196', part='AONR21357', gate_abs_max_V=25,
+                             gate_event_inference_V=18, hot_R_acceptance_ceiling_ohm=.040,
+                             hot_R_typical_curve_inference_ohm=.0123*1.4,
+                             minimum_loaded_BAT_IN_V=6, Q122_drain_allowance_V=.1,
+                             settled_min_Vgs_magnitude_V=enable_vgs,
+                             C120_code='C29936', C120_max_uF=1.265,
+                             C120_effective_at_4V5_uF_inference=c120_effective,
+                             two_FET_140nC_gate_step_V_inference=.14/c120_effective,
+                             tau_max_ms=enable_tau*1000,
+                             time_to_4V5_max_ms=-enable_tau*math.log(1-4.5/enable_vgs)*1000,
+                             enable_settle_min_ms=100,
+                             note='Hot R, effective C, Miller and actual board SOA are conditional inferences; bench required'),
+        fire_current_GAP1=dict(status='Final AUD/GAP CAD path calculation; material, hot FET and harness conditions unmeasured',
+                              pack_R_ohm=.15, open_equivalent_at_fire_V=7.4,
+                              other_converter_load_W=other_w, servo_stall_A=1.92,
+                              R134_hot_max_ohm=r134_hot, ematch_max_ohm=2,
+                              external_leads_harness_max_ohm=.3,
+                              CAD_track_length_width_mm=copper_paths,
+                              copper_20C_by_net_ohm=copper_by_net,
+                              copper_20C_ohm=copper_20c, copper_TCR_per_K=.00393,
+                              copper_70C_ohm=copper_70c,
+                              ground_return_allowance_ohm=.005, terminal_allowance_ohm=.010,
+                              Q124_hot_R_inference_ohm=q124_hot,
+                              primary_40mohm_FETs=fire_primary, secondary_typical_hot_curve_FETs=fire_typical,
+                              historical_4R533_fixed_other_1p5A_fire_A=(7.4-.15*1.5)/4.533,
+                              historical_4R533_fixed_other_5p34A_fire_A=(7.4-.15*(1.5+3.84))/4.533,
+                              note='7.4V equivalent must remain at fire after pad/flight drain; neutral does not unload a jam. '
+                                   'Compatible all-fire current is a derived limit, not adoption of a new e-match.'),
+        pyro_fault_GAP5=dict(watchdog_prescaler=4, watchdog_reload=239, watchdog_LSI_cycles=960,
+                            watchdog_nominal_ms=30, LSI_qualified_Hz=[29400,33600],
+                            watchdog_actual_ms=watchdog_ms, prefire_sync_max_ms=.2,
+                            reset_to_HiZ_max_ms=.5, actual_current_tail_max_ms=1.5,
+                            physical_fault_bound_ms=watchdog_ms[1]+.2+.5+1.5,
+                            guarded_fault_max_ms=36, normal_physical_current_max_ms=20,
+                            postfire_SAFETY_refresh_max_ms=5, C126_max_F=c126_max,
+                            floating_MCU_Rdis_max_ohm=r_discharge_max,
+                            RC_to_0V4_ms=rc_tail_ms, gate_charge_tail_ms_inference=charge_tail_ms,
+                            combined_tail_model_ms_inference=rc_tail_ms+charge_tail_ms,
+                            R134_min_70C_ohm=r134_min, R134_fault_max_W=fault_power,
+                            R134_20ms_energy_J=fault_power*.020, R134_36ms_energy_J=fault_power*.036,
+                            R134_curve_20ms_W_inference=pulse_curve(20),
+                            R134_curve_36ms_W_inference=pulse_curve(36),
+                            R134_85C_curve_36ms_W_sensitivity_inference=pulse_curve(36)*(155-85)/(155-70),
+                            note='Refresh immediately before PE4 rises; no refresh during fire; normal abort includes gate tail. '
+                                 'All timing/actual-current and hot pulse limits need bench tests; no firmware implemented. '
+                                 '0.4V off criterion and hot gate-charge extrapolation are inferences, not a hot off guarantee.'),
         option_oq5_status='Not adopted: owner 2026-10-28 retained firmware shedding without a hardware cutoff',
         option_oq5_en_divider_ohm=[en_r5, en_r6],
         option_oq5_voff_V=voff, option_oq5_von_V=von,
@@ -258,6 +388,11 @@ def power_budget():
     assert pk['8V4_470kHz'] < 2.41 < 2.5 and pk['9V97_500kHz'] < 2.5
     assert pk['9V97_470kHz'] < 2.51
     assert results['u9_input_at_all_port_shorts_inference_A'] < 2.95 < results['u9_current_limit_min_A']
+    assert fire_primary['pack_7V4_by_stall_count']['0']['fire_A'] >= 1.5
+    assert fire_primary['pack_7V4_by_stall_count']['2']['fire_A'] < 1.5
+    assert results['camera_io_C92']['effective_uF_inference'] > 1.5
+    assert results['pyro_fault_GAP5']['physical_fault_bound_ms'] < 36
+    assert .2+20+5 < watchdog_ms[0] and enable_vgs > 4.5
     return results
 
 

@@ -178,10 +178,10 @@ at 25 ps versus 4.792413154 from the compiled solver; at 12.5 ps the two give 4.
 This checks the finite-edge integration independently of the production solver. All local edges remain;
 seeding a feed that bypasses C88 fails the topology check.
 
-### Final production sweep
+### Current audit sweep (CAD simulation, 2026-10-28)
 
-The generated board SHA-256 is `3b960b46e72b74cc8b78ec942f558420f276e23976eb13f49759a7e6c40daeac`, with electrical
-signature `1f638065387491e1e8c9102de0f59067cc7bce60e9f5f288faa193001b7ade6d`. `hotplug_results.json` binds its
+The generated board SHA-256 is `877d01996a59e9dd5c6dbc367274bb9a323a13982d67960fe46df9b0ee53205d`, with electrical
+signature `cbebb3323b12671dff52f8df5723e86ee4a2876e9c927ffb004e01e6cae4ff3b`. `hotplug_results.json` binds its
 2304 cases and model-source hash to those inputs; `validate()` reports no issue. Required and half-step extrema are:
 
 | Metric | Result | Limit |
@@ -206,7 +206,7 @@ establishes microsecond pulse durability.
 R92 is 3.3 kΩ, ±1%, ±100 ppm/°C. `retained_output` inventories every board capacitor, doubles nominal C84,
 and uses +20% tolerance and +15% temperature for all other capacitors. All are conservatively placed on one
 8.5 V node and discharged only through R92 at 3354.6645 Ω; no load, divider or U11 reverse-blocking credit is
-used. The 1675.3395136 µF envelope yields 5.954856276 V after two seconds, making the cold IN floor -15 V. This is an
+used. The 1586.1915136 µF envelope yields 5.836941131 V after two seconds, making the cold IN floor -15 V. This is an
 **Inference**, not a guaranteed bound for arbitrary converter reverse-energy transfer or the unprovided C84
 capacitance-versus-temperature behavior. Scope U9 OUT together with IN during reverse insertion after two seconds.
 

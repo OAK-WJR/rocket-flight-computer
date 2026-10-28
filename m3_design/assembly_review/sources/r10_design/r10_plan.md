@@ -144,8 +144,20 @@ The later "Single screw switch for power and arming" decision in R10_DECISIONS s
 J124, an ARM link and its fuse. J124 is removed; RAW_ACT is the common post-Q120/Q121 pyro bus. J400 connects one
 external screw switch for power and pad arming. PC1 independently enables the load switch through R122 and Q122;
 PE4 commands Q124. Both default off in reset. The power switch is turned on last and off first, only on the rail;
-firmware must detect launch using the accelerometer and barometer before firing. Bench work uses USB or a
-disconnected e-match. USB or an independently powered port can keep logic alive with the switch open, so attach
+firmware must detect launch using the accelerometer and barometer before firing. Bench work uses USB with the pack disconnected or the e-match disconnected. USB or an independently powered port can keep logic alive with the switch open, so attach
 an e-match only with every back-feed source disconnected. This accepted loss of a powered physical break does not
 change the gate networks, single-resistor sense protection, post-load-switch feed or independent Blue Jay backup.
 Implementation and evidence: D-SS-01 / D-SS-02 and R10_VALIDATION's single-switch pass.
+
+
+## 10. Audit implementation supersession (2026-10-28)
+
+After the committed single-switch pass `73af96b`, AUD-1…AUD-10 / GAP-1…GAP-5 are implemented as recorded in
+R10_DECISIONS D-AUD-01…D-AUD-10 and D-GAP-01…D-GAP-05. The earlier plan's J123 / pull-pin, separate ARM link,
+GPS/radio IO LDOs, selected probe pads and 1.0 mm fire-only tracks are historical at this boundary. Keep C443 /
+C453 as main 3V3 TXU VCCB bypasses, as required by the maker. Adopt the smaller AONR21357 pair and the existing
+1 µF / 25 V C29936 metric 0603 land for C120 (D-AUD-01a); allow ≥100 ms load-switch settling before bus checks. U401's two specified in-pad thermal vias
+require filled/capped planar VIPPO; C84 is manually fitted after both reflows. The narrowed slow-return and
+review-only drawing scopes cite AUD-2 / AUD-10; fast-return and electrical/manufacturing checks remain blocking.
+No preparation pass earns full-round credit. Rebuild, check to zero, prove byte equality, export and bind the fab
+package, request a supervisor commit, then start ten fresh independent lenses in round 9.

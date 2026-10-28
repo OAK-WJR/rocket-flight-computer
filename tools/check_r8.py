@@ -717,9 +717,10 @@ def paste_polys(board):
     return out
 
 
-def via_paste(board, hole_gap=VIA_PASTE_HOLE):
+def via_paste(board, hole_gap=VIA_PASTE_HOLE, exempt=None):
     """No via ring overlaps a paste aperture on its side (0 mm) and no via hole lies within hole_gap of one (D87); the
-    ring clause is looser than r7_route.ViaCheck's 0.1 mm (R8P2-INTEGRITY-02)."""
+    ring clause is looser than r7_route.ViaCheck's 0.1 mm (R8P2-INTEGRITY-02).
+    Optional exempt(name, copper_layer, polygon, via) defaults to no exceptions (R10 GAP-3 only)."""
     issues, nearest, checked = [], None, 0
     vias = [t for t in board.GetTracks() if t.GetClass() == 'PCB_VIA']
     for name, cu, poly in paste_polys(board):
@@ -728,6 +729,8 @@ def via_paste(board, hole_gap=VIA_PASTE_HOLE):
             c = v.GetPosition()
             if (abs(c.x - box.Centre().x) > box.GetWidth() // 2 + MM(1.0)
                     or abs(c.y - box.Centre().y) > box.GetHeight() // 2 + MM(1.0)) or not v.IsOnLayer(cu):
+                continue
+            if exempt is not None and exempt(name, cu, poly, v):
                 continue
             checked += 1
             ring = pcbnew.SHAPE_CIRCLE(c, v.GetWidth(cu) // 2)

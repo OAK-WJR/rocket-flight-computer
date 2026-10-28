@@ -11,7 +11,7 @@ ref	x	y	rot	side	basis
 C10	17.5	54.1	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C100	35.2	36.599999999999994	0.0	F	R9 local camera geometry translated -10.2mm y
 C11	17.5	52.1	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
-C120	17.1	71.6	-90	B	R10 pyro / load-switch layout for straight routes (D-R2-02)
+C120	17.1	71.525	-90	B	AUD-3: incumbent C29936 metric land, pad 2 kept on ACT_GATE y72.3
 C122	26	64.7	-90	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 C126	16.7	57.675	-90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
 C127	20.5	56.85	-90	B	R10 pyro / load-switch layout for straight routes (D-R2-02)
@@ -21,7 +21,6 @@ C13	14.85	50.1	-90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C14	21.4	52.1	0	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C15	29.2	47.4	90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C16	28.1	36.62	-180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
-C160	12	14	270	B	R10 pull-pin protection beside GH2
 C17	17.0	37.9	-90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C18	18.3	49.15	-180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
 C19	28.35	38.45	-90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
@@ -53,12 +52,8 @@ C421	42.9	22.2	0	B	R10 port-local placement; explicit routing lanes
 C430	41.3	40.9	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 C431	42.9	34.2	0	B	R10 port-local placement; explicit routing lanes
 C440	35.2	12	0	F	R10 port-local placement; explicit routing lanes
-C441	42.15	19.1	0	B	R10 port-local placement; explicit routing lanes
-C442	35.7	23	0	B	R10 port-local placement; explicit routing lanes
 C443	34.675	17.675	90	B	R10 port-local placement; explicit routing lanes
 C450	35.2	24	0	F	R10 port-local placement; explicit routing lanes
-C451	42.15	31.1	0	B	R10 port-local placement; explicit routing lanes
-C452	35.7	35	0	B	R10 port-local placement; explicit routing lanes
 C453	34.675	29.675	90	B	R10 port-local placement; explicit routing lanes
 C5	30.2	68.43	0	B	R10 3V3 buck bootstrap alignment (D-R2-05)
 C6	35.75	66.75	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
@@ -67,7 +62,7 @@ C7	36.3	70.8	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requali
 C8	34.4	75.28	0	B	R10 forward-band legalisation (D-R2-01)
 C80	29	67.4	0	F	R10 forward-band legalisation (D-R2-01)
 C81	42.1	78.1	0	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
-C82	33.9	65.9	90.0	F	R9 logic local geometry translated -7,-5; final R10 requalification required
+C82	39.8	74.75	90	B	GAP-2: output bypass beside U9 OUT, clear of VLOGIC and BAT_FAULT; BAT_IN feed unchanged
 C83	10.2	24.9	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 C84	38.5	74	90	F	R10 power-local placement; maker loop geometry
 C85	35.9	62.724999999999994	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
@@ -78,7 +73,7 @@ C89	29	72.6	0	F	R10 forward-band legalisation (D-R2-01)
 C9	34.4	77.24	0	B	R10 forward-band legalisation (D-R2-01)
 C90	37.5	46.5	0	F	R10 port-local placement; explicit routing lanes
 C91	42.15	43.099999999999994	0.0	B	R9 local camera geometry translated -10.2mm y
-C92	35.45	47.519999999999996	-90.0	B	R9 local camera geometry translated -10.2mm y
+C92	34.2	45.2	-90	B	AUD-1: 0603 output capacitor clear of the status lanes
 C93	34.675	41.675	90.0	B	R9 local camera geometry translated -10.2mm y
 C94	39.57	51.5	-90	F	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
 C95	29	75.2	0	F	R10 forward-band legalisation (D-R2-01)
@@ -88,7 +83,6 @@ C98	32.275	59.2	180.0	B	R9 logic local geometry translated -7,-5; final R10 requ
 C99	33.42	63.9	0	B	R10 power-family alignment (D-R2-05)
 D120	17	60.2	180	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 D121	23	71.6	90	B	R10 servo clamp 0.6 mm aft with the series resistors (D-R2-12)
-D122	12	17	0	B	R10 pull-pin protection beside GH2
 D123	20.6	21.2	90	B	R10 forward-band legalisation (D-R2-01)
 D4	9.95	30.6	-90	F	USB edge circuit translated 0,-3.5; direct new MCU links
 D400	38.8	39.95	90	F	R10 port-local placement; explicit routing lanes
@@ -98,11 +92,10 @@ D411	38.8	15.95	90	F	R10 port-local placement; explicit routing lanes
 D420	38.8	26.3	90	F	R10 port-local placement; explicit routing lanes
 D421	38.8	27.95	90	F	R10 port-local placement; explicit routing lanes
 D8	22	74.5	0	F	R10 forward-band legalisation (D-R2-01)
-D9	41	61	180	F	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
+D9	43.35	73.45	90	B	GAP-2: output Schottky beside U9 OUT
 J1	7	75.85	-90	F	R10 pyro clearances (D-R2-02)
 J121	7	55.85	-90	F	R10 pyro clearances (D-R2-02)
 J122	23	82.0	-180	F	Servo end group; external power and return harness
-J123	9	14	0	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 J2	5	39.4	0	F	R10 functional edge group; provisional
 J3	4.6	30.799999999999997	-90	F	USB edge circuit translated 0,-3.5; direct new MCU links
 J400	10.5	85.5	0	F	R10 forward-band legalisation (D-R2-01)
@@ -114,8 +107,8 @@ L400	24.2	5.55	0	F	R10 port supply re-plan: buck aft-west top, LDO and switch ce
 LED1	11.05	43.6	0	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
 LED2	11.85	45.5	0	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
 LS120	20.0	17.5	0	F	R9 local buzzer circuit translated -9,-8
-Q120	13.5	75.6	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
-Q121	13.5	67.6	180	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+Q120	13.5	72.6	0	B	AUD-3: DFN3x3 load-switch pair, sources facing Q121
+Q121	13.5	67.6	180	B	AUD-3: DFN3x3 load-switch pair, sources facing Q120
 Q122	16.8	69.8	0	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
 Q123	20.85	17.0	180	B	R10 buzzer drain under LS120.2 for a one-via BUZZ_OUT (D-R2-09)
 Q124	13.6	57.37	90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
@@ -144,7 +137,7 @@ R130	14.15	57.23	-90	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 R131	10.8	61.15	0	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 R132	20	58.75	0	B	R10 forward-band legalisation (D-R2-01)
 R133	23.3	59.18	-90	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
-R134	7	64.335	-90	B	Single screw switch (owner 2026-10-28): freed ARM space, straight Q121 drain and J121 feeds
+R134	7	65.025	-90	B	AUD-3/6: straight RAW_ACT fire feed at y67.6
 R150	19.19	75.25	-90	B	R10 servo series resistors 1.15 mm aft: 1.5 mm from J122's pins (M-6) (D-R2-12)
 R151	21.73	75.25	-90	B	R10 servo series resistors 1.15 mm aft: 1.5 mm from J122's pins (M-6) (D-R2-12)
 R152	24.27	75.25	-90	B	R10 servo series resistors 1.15 mm aft: 1.5 mm from J122's pins (M-6) (D-R2-12)
@@ -153,8 +146,6 @@ R154	19.97	70.6	180	B	R10 servo clamp turned and pull-downs regrouped so each la
 R155	21.85	68.6	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
 R156	24.15	68.6	90	B	R10 servo clamp turned and pull-downs regrouped so each lane taps the clamp without crossing (D-R2-07)
 R157	26.13	69.3	0	B	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
-R160	12	11	270	B	R10 pull-pin protection beside GH2
-R161	14	12	180	B	R10 pull-pin protection beside GH2
 R162	17.1	18.15	0	B	R9 local buzzer circuit translated -9,-8
 R163	17.6	16.3	90	B	R9 local buzzer circuit translated -9,-8
 R164	17.325	55.9	180	B	R9 local MCU circuit translated +5,-1.5; requalify on R10
@@ -190,11 +181,9 @@ R432	32.6	38	90	F	R10 CAM_FAULT_N pull-up at the top of U1's east pin row, on it
 R440	37.5	12.975	-90	F	R10 port-local placement; explicit routing lanes
 R441	37.5	17.725	-90	F	R10 port-local placement; explicit routing lanes
 R442	34.95	19.4	-90	F	R10 port-local placement; explicit routing lanes
-R443	42	17.2	0	B	R10 port-local placement; explicit routing lanes
 R450	37.5	24.975	-90	F	R10 port-local placement; explicit routing lanes
 R451	37.5	29.725	-90	F	R10 port-local placement; explicit routing lanes
 R452	34.95	31.4	-90	F	R10 port-local placement; explicit routing lanes
-R453	42	29.2	0	B	R10 port-local placement; explicit routing lanes
 R5	13	45.17	90	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
 R60	38.23	50.8	0	B	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
 R61	39.09	48.2	0	B	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
@@ -216,8 +205,8 @@ R89	37.825	55	180	F	R10 south-of-U1 relief: straight grouped sense / status / se
 R9	9.95	28.9	90	B	USB edge circuit translated 0,-3.5; direct new MCU links
 R90	14.3	31.299999999999997	180	B	USB edge circuit translated 0,-3.5; direct new MCU links
 R91	33.8	54.025	-90	B	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
-R92	39.25	75.9	90	B	R10 power-family alignment (D-R2-05)
-TP120	18.0	67.3	0	B	R10 RAW_ACT test pad 0.8 mm north: 1.0 mm from R122's RAW via (K-retained) (D-R3-01)
+R92	33.9	65.775	90	F	GAP-2: bleed in vacated C82 position, reusing its plane vias
+TP120	18	67.6	0	B	AUD-3: retained RAW_ACT test pad aligned with Q121 drain
 TP121	16.2	74.2	0	F	R10 pyro / load-switch layout for straight routes (D-R2-02)
 TP122	13.3	53.3	0	B	R10 bare gate test pad on the bottom (check_actuators, R9 practice) (D-R2-11)
 TP74	41.9	53.5	0	F	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
@@ -225,13 +214,7 @@ TP80	13.8	78.4	0	F	R10 power-family alignment (D-R2-05)
 TP81	44.3	68	0	F	R10 power-local placement; maker loop geometry
 TP82	18.25	33.25	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 TP83	39.5	67	0	B	R10 VLOGIC test pad beside the VLOGIC spine (D-R2-05)
-TP84	23	87.6	0	F	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
-TP85	37	65.5	0	F	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
-TP86	13.6	22.4	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
-TP87	34.6	56.6	0	B	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
 TP88	44.5	76.3	0	F	R10 power-local placement; maker loop geometry
-TP89	44.42	81.83	0	F	R10 ILIM test pad on the top, clear of the (42, 86) support and R84 (D-R2-12)
-TP92	21.6	28.5	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 U1	23.0	43.0	0	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
 U10	12.6	27.5	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 U11	32.65	61.5	90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
@@ -245,10 +228,8 @@ U401	27.6	13.6	180	B	R10 port supply re-plan: buck aft-west top, LDO and switch 
 U402	37.6	39.1	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 U410	31.6	10	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 U411	35.2	15.35	-90	F	R10 port-local placement; explicit routing lanes
-U412	37.6	19.4	180	B	R10 port-local placement; explicit routing lanes
 U420	31	26.4	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 U421	35.2	27.35	-90	F	R10 port-local placement; explicit routing lanes
-U422	37.6	31.4	180	B	R10 port-local placement; explicit routing lanes
 U5	10.6	49.1	0	B	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
 U9	39	79.6	0	B	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
 Y1	22.85	46.6	90	B	R9 local MCU circuit translated +5,-1.5; requalify on R10

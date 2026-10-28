@@ -3166,7 +3166,7 @@
 		(fill
 			(color 0 0 0 0))
 		(uuid 5ee931eb-d962-5c64-b0fd-46233c13323f)
-		(property "Sheetname" "14 | Launch pull-pin and buzzer"
+		(property "Sheetname" "14 | Buzzer"
 			(at 294.64 255.27 0)
 			(effects
 				(font

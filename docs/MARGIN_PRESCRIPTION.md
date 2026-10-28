@@ -1,5 +1,20 @@
 # Rocket Flight Computer v1 — Margin Prescription (an executable translation of the "10×" requirement)
 
+## R10 applicability (AUD-7 / GAP-5, 2026-10-28)
+
+The analysis below records the original hardware. Current R10 removes the pull-pin, board servo power and
+separate ARM link; its binding and current decisions are in M3_R10 / R10_DECISIONS. For R150–R153, the passive
+power rule is the actual fault rating: 1 kΩ / 100 mW 0603 through 70 °C, with conservative 72 mW under an 8.4 V
+chafe into a low output (Calc), rather than an arbitrary 30% utilization ceiling. Preserve the clamp / MCU-current
+and ESD checks. Other passives retain their explicitly qualified part-specific limits.
+
+For R10, replace the old 1 kΩ / 10 nF / 21 µs gate-discharge example with 10 kΩ || (220 Ω + 1 kΩ), 220 nF:
+about 0.50 ms nominal to 0.4 V, with measured physical-current tail required ≤1.5 ms. Normal current must end
+within 20 ms including that tail. IWDG is 960 LSI cycles, nominal 30 ms (28.571–32.653 ms over the stated range);
+refresh just before firing and never during it. D-GAP-05 defines a guarded ≤36 ms worst-fault current bound,
+R134 pulse energy and the required hot hang/reset test. No R10 firmware or physical timing is qualified here.
+All 25 / 30 ms software backstops and 10 nF discharge claims below apply only to their historical circuit.
+
 > **Operating-point convention**: steady-state items use an av-bay ambient of **TA = 70 °C**; 20 ms pyro-pulse items use **TA = 60 °C** (the original derivation point; if the 70 °C design ambient is adopted, add 10 K to every pyro Tj). 70 °C itself is an **assumption** — its +30 K solar term comes from data on horizontal closed enclosures; an upright airframe in wind is more likely +15…+20 K. **Measure it with a temperature logger at a hot range day**; do not use it to manufacture a "nine parts over temperature" conclusion.
 > **Two upstream conflicts run through this whole document; do not release a board until they are resolved**: see §8.1 (outline/airframe) and §8.2 (servo current baseline, 7.48 A vs 12 A).
 
@@ -295,7 +310,7 @@ Replace each igniter with a **10 Ω / 1 W resistor + ammeter**, arm, and confirm
 |---|---|---|---|---|
 | R1 | Semiconductor junction temperature | Every semiconductor's Tj at least **50 K** below Tj(max) (NASA asks 40 K; deliberately 25 % stricter here) | EEE-INST-002 §S1 T4 Note 2 | AP63203 ✅ (Tj 66 °C); AON6403 ✅ (80–85 °C); **AO3400A ❌ (116–122 °C) → ✅ after §4.1 + §4.2 (63 °C)** |
 | R2 | Power semiconductor continuous current | ≥ NASA 0.75 derating, i.e. **1.33×**; pulse stress is assessed only against IDM/SOA/transient thermal impedance; **never** rate a pulse against the continuous derating table | EEE-INST-002 §S1 T4 | AON6403 ✅ 1.66×; AO3400A pulse ✅ 3.01× (8.08× after the part change) |
-| R3 | Passive power | Every passive ≤ **30 %** of rating (NASA allows 60 %; doubled here), **fault cases included** | EEE-INST-002 §R2 T4 | LED / gate resistors / dividers ✅ (5.7×–1000×); **servo 220R ❌ (Case B 233 %) → ✅ after §4.5** |
+| R3 | Passive power | Historical blanket target: every passive ≤ **30 %** of rating; **R10 AUD-7 instead uses maker fault-power/temperature ratings**, as stated above | EEE-INST-002 §R2 T4 | LED / gate resistors / dividers ✅ (5.7×–1000×); **servo 220R ❌ (Case B 233 %) → ✅ after §4.5** |
 | R4 | MCU pins | Under any conceivable fault, current into or out of an MCU pin must not exceed the **specified operating point** (VOL ≤ 0.4 V @ 8 mA), not the 20 mA absolute maximum | DS12110 | **❌ 36.4 mA today → 8.0 mA ✅ after §4.5** |
 | R5 | Connector contacts | ≤ **50 %** of rating, or rated by contact size against the equivalent wire gauge per NASA §C2, whichever is stricter | ECSS ⚠ unverified / EEE-INST-002 §C2 | J-BAT ✅ 1.90×; **servo header 0.80× (ECSS reading) / 1.60× (NASA contact-size reading)** → accepted because contact rise is only 11.7 K, with positive retention per §4.13 |
 | R6 | Ceramic capacitor voltage | DC bias + AC peak ≤ **30 %** of rating (NASA 60 %) | EEE-INST-002 §C1 T4 | ✅ worst 34 % (22 µF/25 V @ 8.4 V) — effectively met. BOM marked "no substitution to lower voltage" |

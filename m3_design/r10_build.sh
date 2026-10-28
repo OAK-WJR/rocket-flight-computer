@@ -10,7 +10,7 @@
 #   r10_sch.py        the 15 sheets, schematic.net.xml (kicad-cli export), m3.kicad_dru (board-default clearance, no
 #                     pyro / RF spacing rule: r10_plan section 2 item 1), m3.kicad_pro, the PortLDO symbol
 #   gate              r10_sch_check.py: every pin and fitted part against circuit.json / pin_table.tsv, the safety and
-#                     UART-isolation contracts, strict ERC, a fresh netlist export, deterministic regeneration and nine
+#                     UART-isolation contracts, strict ERC, a fresh netlist export, deterministic regeneration and twenty-two
 #                     seeded contract faults (in memory)
 #   r10_pcb.py        the placement board from r10_place.tsv on R9's netlist importer: 46 x 90 mm outline, five M3
 #                     supports, J122's two tie holes, every part placed, no inherited copper

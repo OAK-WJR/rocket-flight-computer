@@ -883,5 +883,53 @@ class RouteCheck(unittest.TestCase):
                 self.assertTrue(len(e) > 5 and 'path_mm' in e[5], e[:4])
 
 
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R10AuditScope(unittest.TestCase):
+    def setUp(self):
+        self.helper = RouteCheck(); self.helper.setUp()
+        self.board = self.helper.board; self.board.SetCopperLayerCount(4)
+        rc.set_profile('r10'); self.addCleanup(rc.set_profile, 'r8')
+
+    def test_aud2_return_exclusions_keep_other_critical_checks(self):
+        slow = ('ARM1_SENSE_MID', 'RAW_ACT_SENSE_MCU', 'ACT_GATE', 'ACT_DRV', 'ACT_EN_MCU', 'GPS_PWR_EN', 'CAM_UART_OE')
+        fast = ('USB_DP', 'HSE_IN', 'QSPI_CLK', 'SPI1_SCK', 'IMU_CS', 'GPS_TX_WIRE', 'PYRO1_GATE_N', 'PYRO1_COLD')
+        for net in slow + fast:
+            if not self.board.FindNet(net): self.board.Add(pcbnew.NETINFO_ITEM(self.board, net))
+            self.helper.track((0, 0), (5, 0), net, layer=pcbnew.F_Cu)
+            self.helper.via(5, 0, net)
+            self.helper.track((5, 0), (10, 0), net, layer=pcbnew.B_Cu)
+        found = {d['net'] for d in rc.scan(self.board) if d['cat'] == 'critical_via_no_gnd'}
+        self.assertEqual(found, set(fast))
+        self.assertEqual({n for n, _, _ in rc.critical_transitions(self.board)}, set(fast))
+        for net in slow:
+            self.assertIn(rc.net_class(net), rc.SIGNAL_CRITICAL)
+        self.helper.track((20, 20), (25, 20.3), 'ACT_GATE')
+        off = [d for d in rc.scan(self.board) if d['net'] == 'ACT_GATE' and d['cat'] == 'off_angle']
+        self.assertTrue(off and rc.evaluate(off, [])[0])
+        self.assertTrue(rc.return_required('RAW_ACT'))
+        rc.set_profile('r9')
+        self.assertTrue(rc.return_required('ACT_GATE'))
+
+    def test_aud10_exact_representations_count_without_leftover_but_real_overlaps_block(self):
+        self.helper.two_pads('3V3')
+        self.helper.chain([(0, 0), (5, 0), (10, 0)], '3V3')
+        self.helper.track((0, 0), (5, 0), '3V3')
+        instances = rc.scan(self.board)
+        review = [d for d in instances if d['cat'] in rc.R10_REVIEW]
+        self.assertTrue(any(d['cat'] == 'duplicate_segment' for d in review))
+        self.assertFalse(rc.evaluate(review, [])[0])
+        self.assertEqual(rc.leftover_check([dict(d, cls='other') for d in review], []), ([], [], []))
+        self.helper.track((2, 0), (8, 0), '3V3')
+        self.helper.track((4, -3), (4, 3), '3V3')
+        harmful = [d for d in rc.scan(self.board) if d['cat'] in ('collinear_overlap', 'crossing_without_node')]
+        self.assertEqual({d['cat'] for d in harmful}, {'collinear_overlap', 'crossing_without_node'})
+        self.assertTrue(all(rc.gated(d) for d in harmful))
+        for category in ('collinear_overlap', 'crossing_without_node', 'overlap_only_joint', 'via_on_track'):
+            fault = dict(cat=category, cls='spi', net='QSPI_CLK', layer='F.Cu', x=0., y=0.)
+            self.assertTrue(rc.evaluate([fault], [])[0], category)
+        rc.set_profile('r9')
+        self.assertTrue(rc.evaluate(review, [])[0])
+
+
 if __name__ == '__main__':
     unittest.main()

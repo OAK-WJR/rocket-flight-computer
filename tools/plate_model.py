@@ -111,7 +111,7 @@ def build(fit, D, clamp, case, profile='r9', mass_spec=None):
         if case != 'r10_mated':
             raise ValueError('R10 plate must include the allocated mated plugs')
         names = {row[1] for row in fit['rows']}
-        required = {'J1', 'J121', 'J122', 'C84', 'J3', 'J9', 'J123', 'J400', 'J410', 'J420'}
+        required = {'J1', 'J121', 'J122', 'C84', 'J3', 'J9', 'J400', 'J410', 'J420'}  # AUD-4: no pull-pin body/plug.
         required |= {name for name in names if name.endswith(' mated')}
         if required - names or required - mass_spec.get('masses_g', {}).keys():
             raise ValueError('R10 missing explicit body/plug masses: ' + str(sorted(

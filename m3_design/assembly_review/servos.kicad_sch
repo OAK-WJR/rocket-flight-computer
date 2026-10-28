@@ -684,93 +684,6 @@
 		(uuid cfbf39c3-205d-5266-a339-bd6bfa9766b9))
 	(symbol
 		(lib_id "M3:R")
-		(at 99.06 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid a0e85516-460d-5a2b-970e-e10a33d89c40)
-		(property "Reference" "R150"
-			(at 102.87 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "1k 0805"
-			(at 102.87 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0805"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C17513"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0805W8F1001T5E"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
-					(reference "R150")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 99.06 46.99)
-			(xy 99.06 41.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid d2c6b1cb-942c-523d-937d-63c16a165038))
-	(global_label "SERVO1_MCU"
-		(shape passive)
-		(at 99.06 41.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 74886b4c-cf07-5faf-8fba-25b9a770f90b))
-	(wire
-		(pts
-			(xy 99.06 54.61)
-			(xy 99.06 59.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 9647c1e5-564e-5ea8-b206-a4068c7b5701))
-	(global_label "SERVO1_OUT"
-		(shape passive)
-		(at 99.06 59.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid d255d9f9-0526-55f6-9f2c-d61ebaa08a98))
-	(symbol
-		(lib_id "M3:R")
 		(at 157.48 50.8 0)
 		(unit 1)
 		(in_bom yes)
@@ -856,93 +769,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 5bb14e6f-856f-5888-97f9-bae519c3e481))
-	(symbol
-		(lib_id "M3:R")
-		(at 215.9 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 8b9abd3c-8933-5279-80b4-36cb9ec23d12)
-		(property "Reference" "R151"
-			(at 219.71 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "1k 0805"
-			(at 219.71 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0805"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C17513"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0805W8F1001T5E"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
-					(reference "R151")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 215.9 46.99)
-			(xy 215.9 41.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 9cb12312-6a15-535e-919f-5f8379e9e245))
-	(global_label "SERVO2_MCU"
-		(shape passive)
-		(at 215.9 41.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 21db2654-e399-5d19-b7b6-b90fa17aabb6))
-	(wire
-		(pts
-			(xy 215.9 54.61)
-			(xy 215.9 59.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid edfb4b1f-5289-57a2-873b-4dae7f798f08))
-	(global_label "SERVO2_OUT"
-		(shape passive)
-		(at 215.9 59.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid e5a7fd26-e82b-5afb-913f-dd2983a9df0f))
 	(symbol
 		(lib_id "M3:R")
 		(at 274.32 50.8 0)
@@ -1032,93 +858,6 @@
 		(uuid 2b6bae0f-0884-5618-8ad5-a0408130f84c))
 	(symbol
 		(lib_id "M3:R")
-		(at 332.74 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid e6c07d33-44f7-5ff0-b126-3c2578a07b7c)
-		(property "Reference" "R152"
-			(at 336.55 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "1k 0805"
-			(at 336.55 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0805"
-			(at 332.74 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 332.74 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C17513"
-			(at 332.74 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 332.74 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0805W8F1001T5E"
-			(at 332.74 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
-					(reference "R152")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 332.74 46.99)
-			(xy 332.74 41.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c5d47f66-9091-53b0-a3d4-d5bb69a662ec))
-	(global_label "SERVO3_MCU"
-		(shape passive)
-		(at 332.74 41.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid f8489016-64eb-5645-a9ea-184e52af994e))
-	(wire
-		(pts
-			(xy 332.74 54.61)
-			(xy 332.74 59.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 2282959a-8d19-51bb-8cda-ff6a99d96783))
-	(global_label "SERVO3_OUT"
-		(shape passive)
-		(at 332.74 59.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 143f3620-6a82-5d7c-999d-affb2f78e097))
-	(symbol
-		(lib_id "M3:R")
 		(at 40.64 114.3 0)
 		(unit 1)
 		(in_bom yes)
@@ -1204,93 +943,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 7f4d5570-f7a8-58f2-b5b9-c0b07ee013b3))
-	(symbol
-		(lib_id "M3:R")
-		(at 99.06 114.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 4853c618-40f5-5386-8b42-c7f87a4b1e03)
-		(property "Reference" "R153"
-			(at 102.87 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "1k 0805"
-			(at 102.87 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0805"
-			(at 99.06 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 99.06 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C17513"
-			(at 99.06 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 99.06 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0805W8F1001T5E"
-			(at 99.06 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
-					(reference "R153")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 99.06 110.49)
-			(xy 99.06 105.41))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 71814370-426f-5333-b565-8e2e0353e2cd))
-	(global_label "SERVO4_MCU"
-		(shape passive)
-		(at 99.06 105.41 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 30301b1e-fa54-5523-8775-9f60873a2ecf))
-	(wire
-		(pts
-			(xy 99.06 118.11)
-			(xy 99.06 123.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 2d1a9c78-fb0a-5d2d-a67a-7829af5a3b85))
-	(global_label "SERVO4_OUT"
-		(shape passive)
-		(at 99.06 123.19 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 4ca900ba-54dc-5a2f-b2f0-a0102598cca6))
 	(symbol
 		(lib_id "M3:R")
 		(at 157.48 114.3 0)
@@ -1529,6 +1181,374 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 1a568775-e9ba-5d76-997e-9dfaa096171f))
+	(symbol
+		(lib_id "M3:R")
+		(at 99.06 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid a0e85516-460d-5a2b-970e-e10a33d89c40)
+		(property "Reference" "R150"
+			(at 101.6 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0603"
+			(at 101.6 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R150")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 99.06 46.99)
+			(xy 99.06 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d042c92f-c387-5854-b09f-a964c7b72184))
+	(global_label "SERVO1_MCU"
+		(shape passive)
+		(at 99.06 41.91 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 17164d23-227f-5890-ac40-8ddadd17bb35))
+	(wire
+		(pts
+			(xy 99.06 54.61)
+			(xy 99.06 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 34227d94-c777-5b41-bf47-426e8b71cf55))
+	(global_label "SERVO1_OUT"
+		(shape passive)
+		(at 99.06 59.69 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c1afbd25-89aa-544b-b786-9b032d2755be))
+	(symbol
+		(lib_id "M3:R")
+		(at 215.9 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 8b9abd3c-8933-5279-80b4-36cb9ec23d12)
+		(property "Reference" "R151"
+			(at 218.44 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0603"
+			(at 218.44 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R151")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 215.9 46.99)
+			(xy 215.9 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 131c147d-81b2-53c1-b2cc-47393aec0259))
+	(global_label "SERVO2_MCU"
+		(shape passive)
+		(at 215.9 41.91 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e1f3fd13-3ec6-570e-9eee-c40a21b0cb0c))
+	(wire
+		(pts
+			(xy 215.9 54.61)
+			(xy 215.9 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 48451752-5348-59a3-a181-40519fe04310))
+	(global_label "SERVO2_OUT"
+		(shape passive)
+		(at 215.9 59.69 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0e7d4c6e-e0a8-577b-897e-c1364a1dd3c2))
+	(symbol
+		(lib_id "M3:R")
+		(at 332.74 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e6c07d33-44f7-5ff0-b126-3c2578a07b7c)
+		(property "Reference" "R152"
+			(at 335.28 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0603"
+			(at 335.28 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R152")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 332.74 46.99)
+			(xy 332.74 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 02d8025c-3a8f-5ee7-8528-cb6707abab4b))
+	(global_label "SERVO3_MCU"
+		(shape passive)
+		(at 332.74 41.91 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e1f8dad0-e3ff-515d-9a30-69dc5c7a0a8a))
+	(wire
+		(pts
+			(xy 332.74 54.61)
+			(xy 332.74 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e6cdc8cb-ef5b-529d-ae8d-a39427a277e7))
+	(global_label "SERVO3_OUT"
+		(shape passive)
+		(at 332.74 59.69 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 878a3ef7-4b17-5301-a906-cd88649a4dd7))
+	(symbol
+		(lib_id "M3:R")
+		(at 99.06 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4853c618-40f5-5386-8b42-c7f87a4b1e03)
+		(property "Reference" "R153"
+			(at 101.6 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0603"
+			(at 101.6 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R153")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 99.06 110.49)
+			(xy 99.06 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4953303d-15a5-59c6-af72-a0cbf33244ed))
+	(global_label "SERVO4_MCU"
+		(shape passive)
+		(at 99.06 105.41 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ec456446-55cc-5109-9e57-b0e9fbfee031))
+	(wire
+		(pts
+			(xy 99.06 118.11)
+			(xy 99.06 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bb133b59-5776-5f05-b6ac-a59d0c4c9303))
+	(global_label "SERVO4_OUT"
+		(shape passive)
+		(at 99.06 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1e2ef9f0-fb22-5acd-9a6c-5b4894831dbc))
 	(no_connect
 		(at 33.02 39.37)
 		(uuid e2eef0a2-029a-5324-b146-93539cec1e5e))
@@ -1562,7 +1582,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 5b80fd05-489b-5c3a-9bf1-324ebc99cf26))
-	(text "Retained: four 1k series resistors, 10k MCU-side pull-downs and SRV05-4 clamp."
+	(text "AUD-7: four 1k 100mW 0603 series resistors, 10k MCU-side pull-downs and SRV05-4 clamp; command neutral within 50 ms, without assuming a jam unloads."
 		(at 20.32 30.48 0)
 		(effects
 			(font

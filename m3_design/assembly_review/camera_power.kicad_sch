@@ -2797,41 +2797,41 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "10k 1%"
 			(at 88.9 283.21 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:R_0603_1608Metric"
+		(property "Footprint" "rocket:R0402"
 			(at 86.36 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/product-detail/C95204.html"
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
 			(at 86.36 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C25744"
 			(at 86.36 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "YAGEO"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 86.36 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0402WGF1002TCE"
 			(at 86.36 281.94 0)
 			(hide yes)
 			(effects
@@ -3413,41 +3413,41 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "10k 1%"
 			(at 228.6 331.47 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:R_0603_1608Metric"
+		(property "Footprint" "rocket:R0402"
 			(at 226.06 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/product-detail/C95204.html"
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
 			(at 226.06 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C25744"
 			(at 226.06 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "YAGEO"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 226.06 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0402WGF1002TCE"
 			(at 226.06 330.2 0)
 			(hide yes)
 			(effects
@@ -4029,41 +4029,41 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "10k 1%"
 			(at 368.3 379.73 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:R_0603_1608Metric"
+		(property "Footprint" "rocket:R0402"
 			(at 365.76 378.46 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/product-detail/C95204.html"
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
 			(at 365.76 378.46 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C25744"
 			(at 365.76 378.46 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "YAGEO"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 365.76 378.46 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0402WGF1002TCE"
 			(at 365.76 378.46 0)
 			(hide yes)
 			(effects

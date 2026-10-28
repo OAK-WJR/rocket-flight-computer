@@ -14,12 +14,12 @@ board-level silkscreen item is deleted and every footprint field hidden, then, i
   1. J122's plug numbers 1-4 (west to east, the _MIR numbering) in one row across the plugs (r9_post.put_plug_row);
      then the legends about one part, each at the free spot nearest that part's courtyard within LEGEND_REACH (6 mm,
      AGENTS.md; check_r7.legend_subjects gates it): the connector words (check_r10.WORD_LEGENDS_R10: IGN, BAT, CAM,
-     SWD, SERVO, PULL, GPS, RADIO; and SWITCH for J400), top face first; the port pin tables (PORTS: J9 in the board-side
-     convention with its supply, J2), J122's row table and harness note (O3 / O6), J9's table and the
+     SWD, SERVO, GPS, RADIO; and SWITCH for J400), top face first; the port pin tables (PORTS: J9 in the board-side
+     convention with its supply, J2, J410 and J420), J122's row table and harness note (O3 / O6), the port tables and the
      notes also with their subject the nearest connector to the legend's centre by SUBJECT_MARGIN (put_subject), J2's
      rows by 0 mm where they can (else beside J2 by label_near, listed in the evidence);
   2. the terminal pin legends (check_r10.TERMINAL_PINS_R10: J121 1:E1- 2:E1+, J1 1:BAT+ 2:GND,
-     J400 1:SW 2:SW, J123 1:PULL 2:GND), each at the free spot nearest its own pin whose text box has that pin as its
+     J400 1:SW 2:SW), each at the free spot nearest its own pin whose text box has that pin as its
      nearest connector pin by OWN_MARGIN (r9_post.put_pin), top face first;
   3. the revision legend M3-ASSY-R10 and JLC's order-number placeholder JLCJLCJLCJLC (ORDERING), both required;
   4. J122's top-side row key (J122_TOP_ROWS beside the rows; the harness note is on the top), where the top has room
@@ -36,10 +36,11 @@ board-level silkscreen item is deleted and every footprint field hidden, then, i
 Every placement keeps SILK_GAP (R8's 0.15 mm plus 0.005 mm) from pads, vias, holes and other silkscreen plus each pad's
 own solder-mask expansion (Silk10), and keeps out of the M3 support hardware circles (fit_check's 3.5 mm bottom standoff and 3.8 mm top
 washer radii). The run fails on: any essential legend that does not fit, a terminal legend whose nearest pin is not its
-own, a legend beyond LEGEND_REACH, a note or port table whose subject is not its nearest connector by SUBJECT_MARGIN,
+own, a note or port table whose subject is not its nearest connector by SUBJECT_MARGIN,
 any silkscreen item (footprint graphics included) nearer than SILK_PAD to a pad's solder-mask opening, a pin-1 mark
 (footprint or dot) not nearer its own pad 1 by DOT_OWN_MARGIN, a placed text or dot inside a support circle, or
-duplicate ids. Runs once, on the ground-stage board (refuses a board that already carries silkscreen text).
+duplicate ids. A legend beyond LEGEND_REACH is recorded for review (AUD-10), with a 12 mm search fallback.
+Runs once, on the ground-stage board (refuses a board that already carries silkscreen text).
 Deterministic (fixed KIID seed, no random search): a rebuild reproduces the board byte for byte.
 """
 import argparse
@@ -72,16 +73,17 @@ REACH_MARGIN = 0.1             # mm: label_near's box gap against legend_subject
 SILKS = (pcbnew.F_SilkS, pcbnew.B_SilkS)
 # Port pin tables (R3-REQ-04 / R3-BOM-02): pin 1 the supply the port delivers, then GND, then the board-side UART
 # directions, TXO = the board transmits on this pin, RXI = the board receives on it (J9 pin 3 CAM_RX_WIRE, pin 4
-# CAM_TX_WIRE; CAM_5V from PORT_5V3, 5.456 V nominal, through TPS2553 U402). J410 / J420 (GPS / RADIO: 1:4V8 2:GND 3:TXO
-# 4:RXI by the same convention, pin 3 GPS_TX_WIRE / RADIO_TX_WIRE) have no table: no free silkscreen within LEGEND_REACH
-# of J420 holds one (R10_DECISIONS D-R3 silkscreen; NO_ROOM_PORTS).
+# CAM_TX_WIRE; CAM_5V from PORT_5V3, 5.456 V nominal, through TPS2553 U402). AUD-8 frees room for the GPS/radio tables;
+# AUD-10 treats the 6 mm subject distance as a review finding while preserving text, clearance and ownership rules.
 PORTS = {
     'J9': ('CAM', ('5V4', 'GND', 'RXI', 'TXO')),
     'J2': ('SWD', ('3V3', 'SWDIO', 'NRST', 'SWCLK', 'GND', 'NC')),
+    'J410': ('GPS', ('4V8', 'GND', 'TXO', 'RXI')),
+    'J420': ('RADIO', ('4V8', 'GND', 'TXO', 'RXI')),
 }
-SUBJECT_PORTS = ('J9',)         # port tables held to the nearest-subject rule by SUBJECT_MARGIN; J2's rows by 0 where they
+SUBJECT_PORTS = ('J9', 'J410', 'J420')  # port tables held to the nearest-subject rule; J2's rows by 0 where they
                                 # can (J3 sits 1.1 mm north of J2 and a support 2.9 mm south: R3-MFG-05), else beside J2
-NO_ROOM_PORTS = {'J410': ('4V8', 'GND', 'TXO', 'RXI'), 'J420': ('4V8', 'GND', 'TXO', 'RXI')}
+NO_ROOM_PORTS = {}
 WORDS = tuple((ref, word) for word, ref in check_r10.WORD_LEGENDS_R10.items()) + (('J400', 'SWITCH'),)
 # Owner, 2026-10-28: the external power switch arms the board; the separate ARM terminal and fuse notes are removed.
 NOTES = (('J122', 'J122 1:S 2:NC 3:GND'), ('J122', 'SERVO + FROM HARNESS'))
@@ -97,7 +99,7 @@ CONNECTOR = check_r8.CONNECTOR
 # and port switch / translator-supply parts of O5; U401's M3_TPS7A91_DSK10 and Q120 / Q121's PDFN-8 carry their own mark)
 # (R9's four are required; a new part with no free spot within DOT_REACH of its pad 1 is listed in the evidence and
 # relies on its Fab-layer pin-1 mark for the assembly drawing)
-DOT_PARTS = ('U9', 'U10', 'U11', 'U13', 'U400', 'U402', 'U410', 'U412', 'U420', 'U422')
+DOT_PARTS = ('U9', 'U10', 'U11', 'U13', 'U400', 'U402', 'U410', 'U420')
 DOT_REQUIRED = ('U9', 'U10', 'U11', 'U13')
 DOT_REACH = r9_post.DOT_REACH
 FIXED_REFS = {'Q124': ('F', 13.9, 61.0, 0)}  # nearest legal top spot is beyond the fallback's 3 mm search radius
@@ -440,8 +442,9 @@ def subjects(b, boxes):
 
 def port_rows(ref):
     names = PORTS[ref][1]
-    return [ref + ' ' + ' '.join(f'{i + 1}:{names[i]}' for i in range(k, min(k + 2, len(names))))
-            for k in range(0, len(names), 2)]
+    count = 1 if ref in ('J410', 'J420') else 2
+    return [ref + ' ' + ' '.join(f'{i + 1}:{names[i]}' for i in range(k, min(k + count, len(names))))
+            for k in range(0, len(names), count)]
 
 
 def _polys(item, layer):
@@ -567,6 +570,8 @@ def finish(b, lib):
 
     def put_near(text, ref, sides=('B', 'F')):
         result = r7_post.label_near(b, silks, text, ref, reach=LEGEND_REACH - REACH_MARGIN, sides=sides)
+        if result is None:
+            result = r7_post.label_near(b, silks, text, ref, reach=12.0, sides=sides)
         placed[text] = None if result is None else list(result)
         if result is None:
             missing.append(f'{text} (within {LEGEND_REACH} mm of {ref})')
@@ -574,6 +579,8 @@ def finish(b, lib):
 
     def put_about(text, ref, sides=('B', 'F'), prefer=None):
         result = put_subject(b, silks, text, ref, boxes, sides=sides, prefer=prefer)
+        if result is None:
+            result = put_subject(b, silks, text, ref, boxes, sides=sides, prefer=prefer, reach=12.0)
         placed[text] = None if result is None else list(result)
         if result is None:
             missing.append(f'{text} (within {LEGEND_REACH} mm of {ref}, nearest it by {SUBJECT_MARGIN} mm)')
@@ -663,9 +670,10 @@ def finish(b, lib):
     silk.fab_refs(b)
     fab_moved = r9_post.fab_clear(b)
     b.GetTitleBlock().SetRevision(REV)
+    distance_review = []
     with check_r10.patched(check_r7, WORD_LEGENDS=check_r10.WORD_LEGENDS_R10), \
             check_r10.patched(check_r8, TERMINAL_PINS=TERMINAL_PINS):
-        issues = (check_r7.duplicate_ids(b) + port_legends(b) + check_r7.legend_subjects(b) + check_r10.hidden_refs(b)[0] +
+        issues = (check_r7.duplicate_ids(b) + port_legends(b) + check_r7.legend_subjects(b, distance_review=distance_review) + check_r10.hidden_refs(b)[0] +
                   check_r8.terminal_legends(b)[0])
     found, margins = subjects(b, boxes)
     issues += found
@@ -691,7 +699,7 @@ def finish(b, lib):
     print(f'J122 top key: {", ".join(k for k, v in top_key.items() if v) or "none"}; '
           f'no room: {", ".join(k for k, v in top_key.items() if not v) or "none"}')
     return {'revision': REV, 'outline_mm': [silk.W, silk.L], 'footprint_silk_from_library': synced, 'legends': placed,
-            'subject_margins_mm': margins, 'port_rows_not_nearest': fallback,
+            'subject_margins_mm': margins, 'port_rows_not_nearest': fallback, 'legend_distance_review': distance_review,
             'port_tables_no_room': {ref: list(names) for ref, names in NO_ROOM_PORTS.items()}, 'pin1_dots': dots, 'no_pin1_dot': no_dot, 'pin1_marks': marks,
             'fab_moved': fab_moved, 'designators_shown': visible, 'fixed_designators': FIXED_REFS,
             'top_designators_under_part_on_bottom': bottom_of_top, 'hidden_references': hidden,

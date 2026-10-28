@@ -9,7 +9,7 @@ def draw(d):
     local = Translated(d, USB_SHIFT)
     core = Translated(d, CORE_SHIFT)
     for ref, num, net, at in old.PADS:
-        if ref not in ('U1', 'J2', 'C24'):
+        if ref not in ('U1', 'J2', 'C24', 'TP86', 'TP92'):
             local.pad(ref, num, net, at)
     nrst_count = 0
     for index, (net, layer, width, pts) in enumerate(old.TRACKS):
@@ -17,9 +17,7 @@ def draw(d):
             local.track(net, layer, width, pts)
         elif net == 'USB_FAULT_N' and layer == 'B' and pts[0] != old.V_FAULT:
             if pts[-1] == (14.05, 26.5):
-                # R9's TP86 lead ended 0.75 mm off the test pad's centre: redrawn into its centre by one longer
-                # 45 deg run (R10_DECISIONS D-R3-B5)
-                d.track(net, layer, width, [local.move(q) for q in pts[:2]] + [(14.85, 23.65), d.pad('TP86.1')])
+                # AUD-5: delete the entire TP86 branch; U10.4 and R90 remain connected below.
                 continue
             local.track(net, layer, width, pts)
         elif net == 'NRST':
@@ -31,14 +29,14 @@ def draw(d):
 
     d.track('USB_DM', 'F', .2, [d.pad('D4.6'), (15.85, 29.65), (19.5, 33.3), d.pad('U1.70')])
     d.track('USB_DP', 'F', .2, [d.pad('D4.4'), (16.75, 31.55), (19, 33.8), d.pad('U1.71')])
-    # VBUS sense: R9 (bottom) -> F.Cu over the USB pair's outside -> U1.65; R110 / TP92 tapped on the bottom.
+    # VBUS sense: R9 (bottom) -> F.Cu over the USB pair's outside -> U1.65; R110 tapped on the bottom.
     d.track('VBUS_SENSE', 'B', .2, [d.pad('R9.2'), (9.95, 27.7)])
     d.track('VBUS_SENSE', 'F', .2, [(9.95, 27.7), (14.5, 27.7), (16.6, 29.8), (17.875, 29.8),
                                     (22.0, 33.925), d.pad('U1.65')])
     d.via('VBUS_SENSE', (17.875, 29.8))
-    # R8-fix: one apex (two opposed 45 deg runs meet) instead of a 0.225 mm flat jog at R110.1; the apex lies on the pad
-    d.track('VBUS_SENSE', 'B', .2, [(17.875, 29.8), (19.0875, 31.0125), d.pad('TP92.1')])
-    # D-R3-B4: the drop sits 0.05 mm west of R2's (16.75, 39.05) (0.20 mm from U1.80) to widen PULLPIN's pass
+    # AUD-5: stop at the divider pad, removing TP92 and its entire branch.
+    d.track('VBUS_SENSE', 'B', .2, [(17.875, 29.8), d.pad('R110.1')])
+    # D-R3-B4: the drop sits 0.05 mm west of R2's (16.75, 39.05), 0.20 mm from U1.80.
     d.track('USB_FAULT_N', 'F', .2, [d.pad('U1.87'), (16.7, 42.5), (16.7, 39.05)])
     d.track('USB_FAULT_N', 'B', .2, [(16.7, 39.05), (16.15, 38.5), (11.2, 38.5),
                                     (11.2, 32.5), (12.6, 31.1), (12.6, 26.55), (13.9, 26.55)])

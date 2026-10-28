@@ -1,22 +1,18 @@
 """R10 signal copper, all hand-drawn: the external-port UARTs and IO rails, then every non-critical signal.
 
 Hand-routed (AGENTS 3 critical nets, r10 route_check classes 'uart' and 'power'): GPS_*_MCU and RADIO_*_MCU from U1's
-north edge to the port buffers U411 / U421, and the three port IO rails (*_IO_3V3: the TPS70933 output, its capacitors,
-its bleed resistor and the buffer's VCCB). The radio pair crosses once (PB12 / PB13 order against U421's pin order):
+north edge to the port buffers U411 / U421, their local 3V3 bypasses and the retained camera IO supply. The radio pair
+crosses once (PB12 / PB13 order against U421's pin order):
 RADIO_TX_MCU hops under RADIO_RX_MCU on B.Cu, a GND via within 1.5 mm of each layer change (AGENTS 3).
-R3 (R10_DECISIONS D-R3-B2 / B3): every layer change of an external-port signal (the *_MCU / *_WIRE / *_BUFFER UART
-nets and the *_PWR_EN / *_FAULT_N / *_UART_OE control nets) has a GND via centre within 1.5 mm, drawn here beside it
-or, where named, a fan-out GND via of r10_fanout.tsv (C410.2 (32.959, 11.684), U401.11 (27.6, 14.95), U410.2
-(29.35, 10.0), D411.2 / D421.2's ESD returns below); every remaining hop crosses other copper.
+AUD-2: fast UART layer changes retain their GND partners. Slow EN / FAULT / OE controls keep their copper but no
+longer require partner vias or one In2 region per chain; the redundant partners are removed.
 
 Every other signal is a deliberate hand-drawn polyline (R10_DECISIONS D-R2-08 / D-R2-09), grouped by cell; the design
 aid's earlier frozen table (m3_design/r10_aid/ncroute.py) served only as a sketch of feasible paths.
 """
 S, IO = 0.2, 0.3        # signal width; IO rail trunk width (bottom)
-# GND return vias beside the port-control layer changes (R10_DECISIONS D-R3-B3; centre-to-centre distances measured on
-# the built board): GPS_PWR_EN / GPS_FAULT_N south hop vias (24.5, 31.0) / (26.9, 31.0): 1.26 / 1.26; GPS_PWR_EN north
-# hop via (24.5, 16.3): 1.14; RADIO_FAULT_N (32.3, 24.525): 0.68; RADIO_PWR_EN (31.25, 27.35): 1.06 (across RADIO_RX_MCU).
-PORT_CONTROL_GND = ((25.7, 30.6), (23.6, 17.0), (32.6, 23.925), (32.0, 28.1))
+# This former control partner also joins the F.Cu GND pour island, so it remains a general stitch (AUD-2).
+PORT_CONTROL_GND = ((25.7, 30.6),)
 
 
 def uarts(d):
@@ -37,29 +33,20 @@ def uarts(d):
 
 def io_rails(d):
     t, p, via = d.track, d.pad, d.via
-    # GPS / radio (the radio cell is the GPS cell 12 mm forward): LDO output -> its capacitors on B.Cu, the buffer's VCCB
-    # through a via under it, and over the port-rail track on F.Cu to the bleed resistor east of it.
-    for net, dy in (('GPS_IO_3V3', 0.0), ('RADIO_IO_3V3', 12.0)):
-        ldo, cin, cbulk, bleed, buf = (('U412', 'C443', 'C442', 'R443', 'U411') if dy == 0 else
-                                        ('U422', 'C453', 'C452', 'R453', 'U421'))
-        t(net, 'B', IO, [p(f'{ldo}.5'), p(f'{cin}.1')])
-        t(net, 'B', IO, [p(f'{cin}.1'), (34.675, 22.525 + dy), p(f'{cbulk}.1')])
-        # VCCB leaves its pad 0.05 mm east of centre on x 35.5 to the via, 0.55 mm from the *_UART_OE run at x 34.95,
-        # so the via's In1 antipad (r 0.40) clears that run's copper edge by 0.05 mm (K-reference, D-R3-xx); the bleed
-        # run leaves the via's centre by the 45 deg run onto R9's line under R441 / R451 (R5-RTE-07: the via sits 0.1 mm
-        # south of R4's, so no stub is hidden in its ring).
+    # AUD-8: both TXU supplies use main 3V3. Retain C443 / C453 as local VCCB bypasses (TI TXU0202 section 12.1).
+    for cap, buf, dy in (('C443', 'U411', 0.0), ('C453', 'U421', 12.0)):
         p(f'{buf}.7', at=(35.45, 16.9 + dy))
-        t(net, 'F', S, [(35.5, 16.9 + dy), (35.5, 17.8 + dy)])
-        via(net, (35.5, 17.8 + dy))
-        t(net, 'B', IO, [(35.5, 17.8 + dy), (35.5, 18.45 + dy)])
-        t(net, 'F', S, [(35.5, 17.8 + dy), (36.9, 19.2 + dy), (40.0, 19.2 + dy), (42.0, 17.2 + dy)])
-        via(net, (42.0, 17.2 + dy))
-        t(net, 'B', IO, [(42.0, 17.2 + dy), p(f'{bleed}.1')])
+        t('3V3', 'F', S, [(35.5, 16.9 + dy), (35.5, 17.8 + dy)])
+        via('3V3', (35.5, 17.8 + dy))
+        t('3V3', 'B', IO, [(35.5, 17.8 + dy), (35.5, 18.45 + dy), p(f'{cap}.1')])
+        # The VCCB-side via is east of the main In2 3V3 strip. Cross OE on B.Cu to a via inside that strip.
+        t('3V3', 'B', IO, [p(f'{cap}.1'), (33.7, 18.45 + dy)])
+        via('3V3', (33.7, 18.45 + dy))
     # Camera: U13 -> C93 -> C92 -> R103 on B.Cu, U12's VCCB through a via under it.
     net = 'CAM_IO_3V3'
     t(net, 'B', IO, [p('U13.5'), (35.6, 42.45), p('C93.1')])        # node at the VCCB via: C93 is U12.7's bypass (D-R2-11)
-    t(net, 'B', IO, [p('C93.1'), (34.675, 45.245), p('C92.1')])
-    t(net, 'B', IO, [p('C92.1'), (40.695, 46.02), p('R103.1')])
+    t(net, 'B', IO, [p('C93.1'), (34.675, 44.025), p('C92.1')])
+    t(net, 'B', IO, [p('C92.1'), (35.72, 46.02), (40.695, 46.02), p('R103.1')])
     t(net, 'F', S, [p('U12.7'), (35.45, 41.75), (35.6, 41.9)])
     via(net, (35.6, 41.9))
     t(net, 'B', IO, [(35.6, 41.9), (35.6, 42.45)])
@@ -106,10 +93,11 @@ def camera_control(d):
     via('CAM_PWR_EN', (33.15, 41.5))
     t('CAM_PWR_EN', 'B', S, [(33.15, 41.5), (33.9, 40.75), (33.9, 40.1), (34.6, 40.1), p('R431.1')])
     t('CAM_PWR_EN', 'B', S, [p('R431.1'), (35.675, 38.15), p('U402.3')])
-    for at in ((33.2, 43.85), (33.15, 40.55), (33.1, 35.825)):
-        via('GND', at)          # RX south hop via 0.72 mm; PWR_EN 0.95 and RX north hop 1.44; FAULT_N's via 1.28
-    t('CAM_FAULT_N', 'F', S, [p('U1.42'), (32.6, 41.0), p('R432.1')])
-    t('CAM_FAULT_N', 'F', S, [p('R432.1'), (33.9, 37.525), (33.9, 36.825)])
+    for at in ((33.2, 43.85), (33.15, 40.55)):
+        via('GND', at)          # CAM_MCU_RX fast return partners; slow-only FAULT_N partner removed (AUD-2)
+    t('CAM_FAULT_N', 'F', S, [p('U1.42'), (32.6, 41.0), (32.6, 38.825), (33.1, 38.825),
+                               (33.9, 38.025), (33.9, 36.825)])
+    t('CAM_FAULT_N', 'F', S, [p('R432.1'), (32.6, 38.825)])  # axial entry clears the opposite 0402 pad
     via('CAM_FAULT_N', (33.9, 36.825))
     t('CAM_FAULT_N', 'B', S, [(33.9, 36.825), (37.575, 36.825), p('U402.4')])
 
@@ -131,6 +119,8 @@ def gnd_joins(d):
     # C93 (U13's output capacitor) returns straight to U13's GND pin: a short strap between the two pads, east under
     # U12 and down the gap between U13's pin columns (its pad is boxed in on three sides, D-R2-09).
     t('GND', 'B', IO, [p('C93.2'), (37.0, 40.9), (37.6, 41.5), (37.6, 43.4), p('U13.2')])
+    # AUD-1: small C92 returns to the existing UART GND partner, without another via.
+    t('GND', 'B', IO, [p('C92.2'), (33.2, 44.9), (33.2, 43.85)])
     for d_gnd, y in (('D411.2', 15.625), ('D421.2', 27.625)):     # ESD returns boxed in by the port wires
         t('GND', 'F', S, [p(d_gnd), (39.45, y)])           # hole >= 0.1 mm off the pad's mask, ring off its paste (D-R2-11)
         via('GND', (39.45, y))
@@ -158,16 +148,16 @@ def servo_cell(d):
     t, p, via = d.track, d.pad, d.via
     t('SERVO1_MCU', 'B', S, [(20.4, 68.6), p('R154.1')])
     # R150-R153 and D121 sit 1.15 / 0.6 mm aft of D-R2-07's spots (M-6: 1.5 mm from J122's pins, D-R2-12).
-    t('SERVO1_MCU', 'B', S, [p('R154.1'), (20.4, 73.04), p('R150.1')])
+    t('SERVO1_MCU', 'B', S, [p('R154.1'), (20.4, 73.215), p('R150.1')])
     t('SERVO1_MCU', 'B', S, [(20.4, 72.55), p('D121.1')])
-    t('SERVO2_MCU', 'B', S, [(22.7, 66.2), (22.7, 73.28), p('R151.1')])
+    t('SERVO2_MCU', 'B', S, [(22.7, 66.2), (22.7, 73.455), p('R151.1')])
     t('SERVO2_MCU', 'B', S, [(22.7, 69.03), p('R155.1')])
     t('SERVO2_MCU', 'B', S, [(22.7, 70.65), p('D121.3')])
-    t('SERVO3_MCU', 'B', S, [(23.3, 66.7), (23.3, 73.28), p('R152.1')])
+    t('SERVO3_MCU', 'B', S, [(23.3, 66.7), (23.3, 73.455), p('R152.1')])
     t('SERVO3_MCU', 'B', S, [(23.3, 69.03), p('R156.1')])
     t('SERVO3_MCU', 'B', S, [(23.3, 70.65), p('D121.4')])
     t('SERVO4_MCU', 'B', S, [(25.7, 66.4), p('R157.1')])
-    t('SERVO4_MCU', 'B', S, [p('R157.1'), (25.7, 73.14), p('R153.1')])
+    t('SERVO4_MCU', 'B', S, [p('R157.1'), (25.7, 73.315), p('R153.1')])
     t('SERVO4_MCU', 'B', S, [(25.7, 72.55), p('D121.6')])
     t('GND', 'B', IO, [p('D121.2'), (21.05, 71.6)])                # hole / ring clear of R123.2's mask / paste (top)
     via('GND', (21.05, 71.6))
@@ -181,7 +171,7 @@ def east_lanes(d):
     east inside them, drop through one via each east of the USB_LIMITED run and cross under the sense lanes on B.Cu:
     VLOGIC_SENSE (PA6) and BAT_FAULT_N (PA5) straight east under C92's body (between its pads), to the VLOGIC divider
     and to BAT_FAULT_N's F.Cu column x 37.0; LOGIC_SOURCE_ST (PA4) straight south to U11.9, taking its pull-up R91 and
-    test pad TP87 by short stubs. BAT_FAULT_N's column takes its pull-up R89 and test pad TP85, passes C82 and runs
+    its pull-up R91. BAT_FAULT_N's column takes its pull-up R89, passes C82 and runs
     under C84's body (between its pads) to a via, then straight south on B.Cu between C9 and the VLOGIC spine into
     U9.4."""
     t, p, via = d.track, d.pad, d.via
@@ -197,8 +187,7 @@ def east_lanes(d):
     t('BAT_FAULT_N', 'B', S, [(33.6, 47.9), (37.0, 47.9)])
     via('BAT_FAULT_N', (37.0, 47.9))
     t('BAT_FAULT_N', 'F', S, [(37.0, 47.9), p('R89.2')])
-    t('BAT_FAULT_N', 'F', S, [p('R89.2'), p('TP85.1')])
-    t('BAT_FAULT_N', 'F', S, [p('TP85.1'), (37.0, 74.0)])
+    t('BAT_FAULT_N', 'F', S, [p('R89.2'), (37.0, 74.0)])
     via('BAT_FAULT_N', (37.0, 74.0))
     t('BAT_FAULT_N', 'B', S, [(37.0, 74.0), (37.0, 78.9), (38.1, 78.9)])
     # LOGIC_SOURCE_ST (PA4)
@@ -206,7 +195,6 @@ def east_lanes(d):
     via('LOGIC_SOURCE_ST', (32.95, 48.3))
     t('LOGIC_SOURCE_ST', 'B', S, [(32.95, 48.3), (32.95, 57.0), (33.8, 57.85), p('U11.9')])
     t('LOGIC_SOURCE_ST', 'B', S, [(32.95, 54.85), p('R91.2')])
-    t('LOGIC_SOURCE_ST', 'B', S, [(32.95, 56.6), p('TP87.1')])
 
 
 def cam_sense(d):
@@ -245,8 +233,8 @@ def port_links(d):
 
 def port_control(d):
     """GPS / radio power-switch enables and fault flags from U1's north edge (pins 55 / 56 / 57 / 61) and the radio
-    UART OE from its east edge (R10_DECISIONS D-R3-B3). Each GND via named below sits within 1.5 mm (centre to centre)
-    of the layer changes it serves (AGENTS 3; these nets are critical in route_check r10).
+    UART OE from its east edge (R10_DECISIONS D-R3-B3). AUD-2 removes the slow-control GND-partner and In2-region
+    obligations; the signal paths still avoid foreign copper.
     Radio: RADIO_FAULT_N north through its pull-up R422 and one 45 deg run to a via over U420.4; RADIO_PWR_EN (U1.55
     is west of U1.56 while U420.3 is west of U420.4, so the pair crosses once) runs a parallel 45 deg F.Cu lane between
     RADIO_FAULT_N's and RADIO_RX_MCU's to one via between U420's pin columns and reaches U420.3 from the east on B.Cu,
@@ -261,9 +249,8 @@ def port_control(d):
     In2 region (r10_route_power)."""
     t, p, via = d.track, d.pad, d.via
     # radio
-    p('R422.1', at=(27.45, 28.425))
-    t('RADIO_FAULT_N', 'F', S, [p('U1.56'), (26.5, 34.15), (27.45, 33.2), (27.45, 28.425)])
-    t('RADIO_FAULT_N', 'F', S, [p('R422.1'), (28.4, 28.425), (32.3, 24.525)])
+    t('RADIO_FAULT_N', 'F', S, [p('U1.56'), (26.5, 34.15), (27.45, 33.2), p('R422.1')])
+    t('RADIO_FAULT_N', 'F', S, [p('R422.1'), (28.795, 28.03), (32.3, 24.525)])
     via('RADIO_FAULT_N', (32.3, 24.525))
     t('RADIO_FAULT_N', 'B', S, [(32.3, 24.525), p('U420.4')])
     t('RADIO_PWR_EN', 'F', S, [p('U1.55'), (27.0, 34.35), (27.95, 33.4), (27.95, 30.65), (31.25, 27.35)])
@@ -272,14 +259,15 @@ def port_control(d):
     t('RADIO_UART_OE', 'F', S, [p('U421.6'), p('R452.1')])
     t('RADIO_UART_OE', 'F', S, [p('R452.1'), (31.75, 33.775), (31.75, 39.5), p('U1.45')])
     # GPS
-    t('GPS_FAULT_N', 'F', S, [p('R412.1'), p('U1.57')])
-    t('GPS_FAULT_N', 'F', S, [p('R412.1'), (26.9, 32.525), (26.9, 31.0)])
+    t('GPS_FAULT_N', 'F', S, [p('R412.1'), (26.0, 33.425)])  # axial entry clears the opposite 0402 pad
+    t('GPS_FAULT_N', 'F', S, [p('U1.57'), (26.0, 33.425), (26.5, 33.425), (26.9, 33.025), (26.9, 31.0)])
     via('GPS_FAULT_N', (26.9, 31.0))
     t('GPS_FAULT_N', 'B', S, [(26.9, 31.0), (26.9, 15.825)])
     via('GPS_FAULT_N', (26.9, 15.825))
-    t('GPS_FAULT_N', 'F', S, [(26.9, 15.825), (26.9, 14.725), (30.2, 11.425), (31.6, 11.425)])
-    via('GPS_FAULT_N', (31.6, 11.425))
-    t('GPS_FAULT_N', 'B', S, [(31.6, 11.425), (31.6, 9.05), p('U410.4')])
+    # GAP-3: skirt U401's exposed pad and the two filled/capped thermal vias on F.Cu.
+    t('GPS_FAULT_N', 'F', S, [(26.9, 15.825), (28.5, 15.825), (29.1, 15.225), (29.1, 11.65), (31.6, 11.65)])
+    via('GPS_FAULT_N', (31.6, 11.65))
+    t('GPS_FAULT_N', 'B', S, [(31.6, 11.65), (31.6, 9.05), p('U410.4')])
     t('GPS_PWR_EN', 'F', S, [p('U1.61'), (24.0, 33.45), (24.5, 32.95), (24.5, 31.0)])
     via('GPS_PWR_EN', (24.5, 31.0))
     t('GPS_PWR_EN', 'B', S, [(24.5, 31.0), (24.5, 16.3)])
@@ -322,25 +310,6 @@ def buzzer(d):
     t('BUZZ_OUT', 'B', S, [p('Q123.3'), (21.85, 17.95), (21.85, 18.78), p('D123.2')])
 
 
-def pullpin(d):
-    """Pull-pin: PULLPIN (PC13, U1.7) north under U1 on F.Cu beside BUZZ_DRV, one 45 deg run parallel to QSPI_IO2's
-    and west between the QSPI_IO2 and GND vias at U3's north-west corner to one via west of U3's pad column
-    (R10_DECISIONS D-R3-B4: no copper between U3's pads; 0.63 mm from U3.3, 0.19 mm from QSPI_IO2's via), then west on
-    B.Cu south of USB_FAULT_N, up the board's west edge between J3's shell tabs (x 4.15: 1.01 mm from J3.4, 1.02 mm
-    from J3.3) to the clamp D122 and the input filter C160 / R160 / R161 at J123; J123.1 reaches R160 by one via."""
-    t, p, via = d.track, d.pad, d.via
-    t('PULLPIN', 'F', S, [(20.05, 51.0), (20.05, 46.2), (21.4, 44.85), (21.4, 43.4), (17.93, 39.93), (17.25, 39.93)])
-    via('PULLPIN', (17.25, 39.93))
-    t('PULLPIN', 'B', S, [(17.25, 39.93), (11.8, 39.93), (10.8, 38.93), (10.8, 37.55), (4.15, 30.9), (4.15, 23.85),
-                          p('D122.3')])
-    t('PULLPIN', 'B', S, [p('D122.3'), (11.0, 13.58), p('C160.1')])
-    t('PULLPIN', 'B', S, [p('C160.1'), p('R160.2')])
-    t('PULLPIN', 'B', S, [p('R160.2'), (13.0, 11.43), p('R161.2')])
-    t('PULLPIN_EXT', 'F', S, [p('J123.1'), (8.375, 14.45)])
-    via('PULLPIN_EXT', (8.375, 14.45))
-    t('PULLPIN_EXT', 'B', S, [(8.375, 14.45), (8.375, 10.57), p('R160.1')])
-
-
 def servo_out(d):
     """Series resistors R150-R153 straight up into J122's signal row (2.54 mm pitch, one column each)."""
     for i, pin in ((1, 1), (2, 4), (3, 7), (4, 10)):
@@ -362,6 +331,5 @@ def draw(d):
     port_control(d)
     leds(d)
     buzzer(d)
-    pullpin(d)
     servo_out(d)
     gnd_joins(d)

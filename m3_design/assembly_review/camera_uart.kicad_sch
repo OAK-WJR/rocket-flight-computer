@@ -1486,102 +1486,6 @@
 		(uuid be75fef3-1745-5744-a306-0f017d0e4b6e))
 	(symbol
 		(lib_id "M3:C")
-		(at 91.44 137.16 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 586c2371-cb10-55d1-a276-3792c18b785f)
-		(property "Reference" "C92"
-			(at 93.98 135.89 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "22uF 25V X7R 10%"
-			(at 93.98 138.42999999999998 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:M3_GRM32_1210"
-			(at 91.44 137.16 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" ""
-			(at 91.44 137.16 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C21397"
-			(at 91.44 137.16 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
-					(reference "C92")
-					(unit 1))))
-		(property "Manufacturer" "Murata"
-			(at 91.44 137.16 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "GRM32ER71E226KE15L"
-			(at 91.44 137.16 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC Part" "C21397"
-			(at 91.44 137.16 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)))))
-	(wire
-		(pts
-			(xy 91.44 133.35)
-			(xy 83.82 133.35))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid cb3a592c-c129-5f22-bce2-fb74456b44b9))
-	(global_label "CAM_IO_3V3"
-		(shape passive)
-		(at 83.82 133.35 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid e0bb1d7a-9bf2-5fb4-a8ba-dde727e6eda2))
-	(wire
-		(pts
-			(xy 91.44 140.97)
-			(xy 83.82 140.97))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b8e97e56-4edf-53fc-bb96-77c928a2e19b))
-	(global_label "GND"
-		(shape passive)
-		(at 83.82 140.97 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 0d091e3b-130f-5e06-9a3b-e4e05ae953eb))
-	(symbol
-		(lib_id "M3:C")
 		(at 269.24 137.16 0)
 		(unit 1)
 		(in_bom yes)
@@ -1725,6 +1629,98 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 415e371b-131c-5d32-8310-b12dc26f0763))
+	(symbol
+		(lib_id "M3:C")
+		(at 91.44 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 586c2371-cb10-55d1-a276-3792c18b785f)
+		(property "Reference" "C92"
+			(at 93.98 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "4.7uF 16V X5R 10%"
+			(at 93.98 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0603"
+			(at 91.44 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://product.samsungsem.com/mlcc/CL10A475KO8NNN.do"
+			(at 91.44 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C19666"
+			(at 91.44 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 91.44 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL10A475KO8NNNC"
+			(at 91.44 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab"
+					(reference "C92")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 91.44 133.35)
+			(xy 91.44 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 589f5580-75ea-5dc3-9d3e-6a68c6e2a5f7))
+	(global_label "CAM_IO_3V3"
+		(shape passive)
+		(at 91.44 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid efe93bbe-5a20-54fb-951c-7b3932d2c06d))
+	(wire
+		(pts
+			(xy 91.44 140.97)
+			(xy 91.44 146.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5e91f5a4-eb93-59d7-9b60-936d797bcd7e))
+	(global_label "GND"
+		(shape passive)
+		(at 91.44 146.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cfc91e93-173a-5d91-b6e6-60a909faecea))
 	(symbol
 		(lib_id "M3:ESD_Bidir")
 		(at 330.2 228.6 0)

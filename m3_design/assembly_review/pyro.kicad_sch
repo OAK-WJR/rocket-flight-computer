@@ -2504,7 +2504,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 84d49b35-a87d-5fca-9999-f2f86fcf1da9))
-	(text "Ground bus/continuity checks refuse firing; in flight readings only log/annunciate and never veto a fire. Firmware fire timeout <=20 ms."
+	(text "Ground bus/continuity checks refuse firing; in flight readings only log/annunciate and never veto a fire. Refresh 960-cycle IWDG immediately before PE4 rises; never refresh while fire is active. Normal physical current <=20 ms; fault physical current <=36 ms; complete SAFETY and refresh <=5 ms after current off. Bench required."
 		(at 20.32 30.48 0)
 		(effects
 			(font

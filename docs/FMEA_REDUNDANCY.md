@@ -11,9 +11,25 @@ Current R10 supersedes the ARM-link procedures below. J124, its removable ARM li
 | I-4 / V-16; H-5 / F-14 | J124's RAW–BUS1 strand / fuse-bypass hazards and separate-link state checks retire with the terminal. Retain checks for no loose strands at J121 / J1, the igniter's actual resistance and sense integrity; final geometry and thresholds require qualification. No software claim may imply a physical ARM break remains |
 | I-7; F-6 / F-10 / F-16 | Firmware never fires before launch detected by accelerometer + barometer. PC1 (U1.16), formerly NC, drives ACT_EN_MCU through R122 1 kΩ into Q122 with R123 100 kΩ pull-down; the load switch is deliberately enabled after safe boot for on-rail bus checks. PE4 separately drives Q124; both outputs default off in reset / unpowered. Bus / continuity readings are hard refusals on the ground and only logged / annunciated in flight, never vetoing recovery. The post-reset live-evidence rule and ≤ 20 ms fire limit stay |
 | I-6 / I-11; H-6(b); switch / port tests | No physical break while powered is owner-accepted. USB or a self-powered camera / GPS / radio may keep the logic alive with the switch open. Connect the e-match only with no back-feed source attached. Keep the switch-open integrity, port back-feed, reset / power transition and installed radio-immunity tests, with dummy loads and no e-match (ORDERING §8) |
-| V-11 / V-12; H-7 / F-7 | Qualify the screw switch and J400 at the ≈ 7 µA dry-circuit current, including vibration. The pull-pin J123 and its advisory-only firmware rule remain in this pass; AUD/GAP removals are separate |
+| V-11 / V-12; H-7 / F-7 | Qualify the screw switch and J400 at the ≈ 7 µA dry-circuit current, including vibration. AUD-4 removes J123 / R160 / R161 / C160 / D122 and the pull-pin witness, F-7 readiness requirement and associated annunciation; PC13 is NC / analog. Accelerometer + barometer launch detection remains |
 
-This decision is not bench evidence or R10 acceptance. The revised board, S-1 … S-5 contracts, sense thresholds, firmware binding and dummy-load tests need fresh verification. The electrically isolated Blue Jay remains the recovery backstop. The R6–R9 decisions and original analysis below are retained by revision; their separate-ARM-link and fused-bus claims do not apply to current R10.
+This decision is not bench evidence or R10 acceptance. The single-switch topology and S-1…S-5 passed in `73af96b`; the subsequent AUD/GAP board needs its own CAD verification. Sense thresholds, firmware and dummy-load tests remain unverified. The electrically isolated Blue Jay remains the recovery backstop. The R6–R9 decisions and original analysis below are retained by revision; their separate-ARM-link and fused-bus claims do not apply to current R10.
+
+### Current R10 timing and fault envelope (GAP-5)
+
+F-1 / F-9 now use the single physical-current contract in R10_DECISIONS D-GAP-05: normal current ends within
+20 ms including tail, timer/DMA termination plus independent abort, and a 960-cycle IWDG (nominal 30 ms,
+28.571–32.653 ms over the stated RevV LSI range). Refresh immediately before firing and suppress refresh until
+current is off; complete a valid SAFETY pass / refresh within 5 ms afterwards. With the stated reset / tail
+allowances, fault current ends within 36 ms with intact gate and watchdog hardware. The older 25 ms / 30 ms
+software backstops and 21 µs gate-discharge figure are historical, not R10 guarantees. R134 is checked for the
+36 ms single-pulse energy at 70 °C; no automatic retry follows from that curve. Firmware is not implemented;
+hang/reset, physical-current tail, hot pulse and servo-neutral timing remain bench gates.
+
+The explicit R10 single-fault obligation is AGENTS §2 and the pyro/bus sense-divider single-resistor rule;
+the MCU, ordinary diagnostic dividers and deployment chain otherwise remain single-string. The isolated
+Blue Jay is retained. This scope does not promise survival of every component fault or a software-independent
+arming system.
 
 ## R6–R9 applicability (historical; owner decision, 2026-10-13)
 

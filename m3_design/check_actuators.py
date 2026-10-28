@@ -345,6 +345,11 @@ def check(text, dru=None, profile="r9"):
     issues = []
     def req(ok, msg):
         if not ok: issues.append(msg)
+    if r10:
+        obsolete = {'J123', 'R160', 'R161', 'C160', 'D122', 'TP84', 'TP85', 'TP86', 'TP87', 'TP89', 'TP92'}
+        req(not (obsolete & val.keys()), 'AUD-4 / AUD-5: removed pull-pin or test pad remains')
+        req('PULLPIN' not in members and (pin.get('U1.7') is None or pin.get('U1.7', '').startswith('unconnected-')),
+            'AUD-4: PC13 must be NC; no PULLPIN net')
     removed = ['C138',
      'C139',
      'C140',
@@ -466,7 +471,10 @@ def check(text, dru=None, profile="r9"):
         req(f'U1.{pa}' in members.get(m, set()), f'{m} on U1.{pa}')
         req(members.get(o) == {f'J122.{1 + 3 * (i - 1)}', f'R{149 + i}.2'}, f'{o} only header + series R')
         req(pin.get(f'R{149 + i}.1') == m, f'R{149 + i}.1 must be on {m} (pass 9)')
-        req(val.get(f'R{149 + i}') == '1k 0805', f'R{149 + i} must be 1k 0805')
+        ref = f'R{149 + i}'
+        req(val.get(ref) == ('1k 0603' if r10 else '1k 0805'), f'{ref} must be 1k {"0603 100mW (AUD-7)" if r10 else "0805"}')
+        if r10:
+            req(fpname.get(ref) == 'rocket:R_0603_1608Metric', f'AUD-7: {ref} must use the 100mW 0603 land')
         # 7b. each servo line has its own 10k pull-down to GND, so it is a defined low in reset (F6)
         req({pin.get(f'R{153 + i}.1'), pin.get(f'R{153 + i}.2')} == {m, 'GND'} and val.get(f'R{153 + i}') == '10k',
             f'R{153 + i} must be a 10k pull-down from {m} to GND')
@@ -502,7 +510,8 @@ def check(text, dru=None, profile="r9"):
     req(pin.get('LS120.1') == '3V3' and pin.get('LS120.2') == 'BUZZ_OUT', 'LS120 + to 3V3, - to BUZZ_OUT')
     req(val.get('LS120') == 'MLT-5020' and part.get('LS120') == 'C94598', 'LS120 must use compact MLT-5020 C94598')
     req((pin.get('LS120.3') is None or pin.get('LS120.3', '').startswith('unconnected-')) and 'LS120.4' not in pin, 'LS120 has one isolated mechanical tab and no fourth pad')
-    req(pin.get('D122.3') == 'PULLPIN' and pin.get('D122.2') == '3V3' and pin.get('D122.1') == 'GND', 'BAT54S clamp')
+    if not r10:  # AUD-4 removes the advisory pull-pin input from R10 only.
+        req(pin.get('D122.3') == 'PULLPIN' and pin.get('D122.2') == '3V3' and pin.get('D122.1') == 'GND', 'BAT54S clamp')
     # 10. FMEA H-1 cold pull-up: BAT54A common anode on 3V3, one cathode per channel
     req(pin.get('D120.3') == '3V3' and pin.get('D120.1') == 'PYRO1_COLD' and (pin.get('D120.2') is None or pin.get('D120.2', '').startswith('unconnected-')),
         'D120 BAT54A: anode 3V3, cathode 1 PYRO1_COLD, cathode 2 NC')
@@ -600,6 +609,12 @@ def check(text, dru=None, profile="r9"):
             code = 'C168925'  # OQ-2: qualified 0.36 ohm damper on the existing UNI-ROYAL 2512 land.
         if r10 and ref == 'R122':
             code = 'C11702'  # Independent PC1 load-switch enable, 1k 0402.
+        if r10 and ref in ('R150', 'R151', 'R152', 'R153'):
+            code = 'C21190'  # AUD-7: 0603 100mW, 72mW worst fault at 8.4V / 980ohm.
+        if r10 and ref == 'C120':
+            code = 'C29936'  # AUD-3 corrective 1uF gate capacitor; original pads retained.
+        if r10 and ref in ('Q120', 'Q121'):
+            code = 'C431196'  # AUD-3: AONR21357; the maker pad roles are unchanged.
         if r10 and ref in ('C121', 'J1', 'J121', 'J124'):
             continue  # R10 parts checked by check_r10; safety parts below remain pinned.
         req(part.get(ref) == code, f'{ref} must be LCSC {code} (is {part.get(ref)})')

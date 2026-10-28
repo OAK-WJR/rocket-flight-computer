@@ -15,6 +15,11 @@ if pcbnew:
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
 class FitValidation(unittest.TestCase):
+    def test_aud4_r10_omits_pull_pin_plug_and_preserves_other_required_plugs(self):
+        self.assertEqual(fit.R10_MATED_REFS, {'J9', 'J122', 'J400', 'J410', 'J420'})
+        self.assertEqual(fit.R10_MATED['M3_GH_BM02B_GHS_TBT']['refs'], ('J400',))
+        self.assertEqual(fit.MATED['M3_JST_PH_B2B_2P']['refs'], ('J123',))  # Legacy fit policy stays intact.
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

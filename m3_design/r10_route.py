@@ -15,7 +15,7 @@ import r9_route
 PROJECT = ROOT / 'm3_design/assembly_review'
 LAYERS = {'F': pcbnew.F_Cu, 'B': pcbnew.B_Cu, 'In1': pcbnew.In1_Cu, 'In2': pcbnew.In2_Cu}
 FAMILIES = ('core', 'power', 'pyro', 'ports', 'servo', 'usb', 'status', 'signals', 'ground')
-WIDTHS = (0.2, 0.25, 0.3, 0.4, 0.7, 1.0, 2.0)
+WIDTHS = (0.2, 0.25, 0.3, 0.4, 0.5, 0.7, 1.0, 2.0)
 CORE_SHIFT = (5.0, -1.5)
 
 
@@ -62,7 +62,7 @@ class Draw:
                 t.SetWidth(pcbnew.FromMM(width)); t.SetLayer(LAYERS[layer]); t.SetNet(self.net(net))
                 self.board.Add(t)
 
-    def via(self, net, at, size=(0.5, 0.3)):
+    def via(self, net, at, size=(0.5, 0.3), filled=False, capped=False):
         at = tuple(round(v, 4) for v in at)
         assert at not in self.vias, f'duplicate via {at}'
         self.vias[at] = net
@@ -73,6 +73,10 @@ class Draw:
             v = pcbnew.PCB_VIA(self.board)
             v.SetPosition(point(at)); v.SetWidth(pcbnew.FromMM(size[0])); v.SetDrill(pcbnew.FromMM(size[1]))
             v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(self.net(net)); self.board.Add(v)
+            if filled:
+                v.SetFillingMode(pcbnew.FILLING_MODE_FILLED)
+            if capped:
+                v.SetCappingMode(pcbnew.CAPPING_MODE_CAPPED)
 
     def zone(self, name, net, layer, pts, prio, clr=0.25, minw=0.25, conn=pcbnew.ZONE_CONNECTION_THERMAL,
              tgap=0.25, spoke=0.3):

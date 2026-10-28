@@ -54,7 +54,7 @@ class Assembly(unittest.TestCase):
             values[ref] = part['value']; codes[ref] = part['fields']['LCSC']
             pins.update({f'{ref}.{p}': n for p, n in part['nets'].items()})
         self.assertEqual(gate.uart_ports(pins, values, codes), [])
-        for pin, net in (('U411.7', '3V3'), ('U421.6', '3V3'), ('R442.2', '3V3'),
+        for pin, net in (('U411.7', 'GPS_4V8'), ('U421.6', '3V3'), ('R442.2', '3V3'),
                          ('U422.1', 'PORT_4V8'), ('R450.2', 'RADIO_RX_MCU'), ('D410.2', '3V3')):
             with self.subTest(pin=pin):
                 mutant = dict(pins); mutant[pin] = net
@@ -100,11 +100,44 @@ class SchematicContract(unittest.TestCase):
                 ET.SubElement(fields, 'field', name=key).text = value
             parts[ref] = comp
         self.assertEqual(sch.contract(parts, pins), [])
+        # A wrong source and schematic can agree; BOM grouping must still reject the C92 split.
+        parts['C92'].find('footprint').text = 'rocket:C_0603_1608Metric'
+        with patch.object(sch, 'expected', return_value=(parts, pins)):
+            self.assertTrue(any('BOM contract: LCSC C19666' in i and 'C92' in i
+                                for i in sch.contract(parts, pins)))
+        parts['C92'].find('footprint').text = 'rocket:C0603'
         seeded = sch.seeds(parts, pins)
         self.assertTrue(all(seeded.values()), seeded)
         self.assertTrue({'obsolete ARM terminal restored', 'obsolete separate pyro bus',
                          'pyro feed directly from pack', 'load switch follows logic rail',
-                         'load switch enable pull-down missing'} <= seeded.keys())
+                         'load switch enable pull-down missing', 'C92 split assembly footprint',
+                         'C120 split assembly footprint'} <= seeded.keys())
+
+    def test_assembly_groups_match_separate_owner_and_jlc_boms(self):
+        import xml.etree.ElementTree as ET
+        import r10_sch_check as sch
+        def part(ref):
+            p = ET.Element('comp', ref=ref)
+            ET.SubElement(p, 'footprint').text = 'rocket:C0603'
+            fields = ET.SubElement(p, 'fields')
+            ET.SubElement(fields, 'field', name='LCSC').text = 'C19666'
+            ET.SubElement(fields, 'field', name='Manufacturer Part').text = 'CL10A475KO8NNNC'
+            return p
+        parts = {ref: part(ref) for ref in ('C23', 'C28', 'C92')}
+        self.assertEqual(sch.assembly_groups(parts), [])
+        mpn = next(f for f in parts['C92'].findall('./fields/field') if f.get('name') == 'Manufacturer Part')
+        mpn.text = 'different-capacitor'
+        self.assertTrue(sch.assembly_groups(parts))
+        mpn.text = 'CL10A475KO8NNNC'
+        parts['C92'].find('footprint').text = 'rocket:C_0603_1608Metric'
+        self.assertTrue(sch.assembly_groups(parts))
+        ET.SubElement(parts['C92'], 'property', name='exclude_from_bom')
+        self.assertEqual(sch.assembly_groups(parts), [])
+        parts['C92'].remove(parts['C92'].find('property'))
+        ET.SubElement(parts['C92'], 'property', name='dnp')
+        self.assertEqual(sch.assembly_groups(parts), [])  # One member in the separate owner BOM.
+        ET.SubElement(parts['C28'], 'property', name='dnp')
+        self.assertTrue(sch.assembly_groups(parts))
 
     def test_binding_note_has_pad_policy_and_both_trace_locks(self):
         import r10_sch_check as sch
@@ -112,11 +145,30 @@ class SchematicContract(unittest.TestCase):
         self.assertIn('not a separate ARM-link state', note['arming_policy']['limits'])
         obligations = '\n'.join(note['firmware_obligations'])
         for text in ('PC1 ACT_EN_MCU', 'GPIOC_LCKR', 'GPIOE_LCKR', 'accelerometer and barometer',
-                     'in flight they are logged and annunciated and never veto a fire'):
+                     'in flight they are logged and annunciated and never veto a fire',
+                     'at least 100ms', 'before bus checks or raising PE4'):
             self.assertIn(text, obligations)
         self.assertNotIn('PE3/PE5/PE6/PC1/PC4', obligations)
         self.assertNotIn('ARM link out', obligations)
         self.assertNotIn('ARM link in:', obligations)
+        timing = note['fire_timing']
+        watchdog = timing['watchdog']
+        self.assertEqual((watchdog['prescaler_divisor'], watchdog['PR_register'], watchdog['RLR'],
+                          watchdog['LSI_cycles']), (4, 0, 239, 960))
+        self.assertAlmostEqual(watchdog['minimum_ms'], 28.5714285714)
+        self.assertAlmostEqual(watchdog['maximum_ms'], 32.6530612245)
+        self.assertEqual(timing['normal_physical_current_max_ms'], 20.)
+        self.assertLess(watchdog['maximum_ms'] + timing['prefire_sync_max_ms'] + timing['reset_HiZ_max_ms']
+                        + timing['actual_gate_current_tail_max_ms'], timing['fault_physical_current_max_ms'])
+        self.assertEqual(timing['postfire_safety_pass_and_refeed_max_ms'], 5.)
+        self.assertIn('No IWDG refresh from prefire', timing['refresh_contract'])
+        self.assertIn('until physical firing current has ended (including tail)', timing['refresh_contract'])
+        states = note['port_states']
+        self.assertIn('isolation requires OE low', states['off_external_uart_active'])
+        self.assertIn('main 3V3 itself is off', states['off_external_uart_active'])
+        self.assertIn('Camera VCCB retains U13', states['off_external_uart_active'])
+        self.assertIn('no state sensor', states['port_device_backfeed'])
+        self.assertNotIn('when the power switch opens', obligations)
 
 
 class HotplugEvidence(unittest.TestCase):
@@ -859,27 +911,27 @@ class R4Synthetic(SyntheticBase):
 
     def test_k_reference_samples_the_pyro_class(self):
         import critical_reference as cr
-        self.track((20, 30), (22.5, 30), 'PYRO1_CONT', pcbnew.B_Cu)
+        self.track((20, 30), (22.5, 30), 'PYRO1_GATE', pcbnew.B_Cu)
         gnd = pcbnew.SHAPE_POLY_SET(); gnd.NewOutline()
         for x, y in ((10, 10), (40, 10), (40, 40), (10, 40)):
             gnd.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
         with patch.object(cr, 'fills', return_value={pcbnew.B_Cu: pcbnew.SHAPE_POLY_SET()}):
             issues, ev = gate.references(self.board)
-        self.assertTrue(issues and 'PYRO1_CONT B.Cu' in ev['by_net_layer'], (issues, ev))
+        self.assertTrue(issues and 'PYRO1_GATE B.Cu' in ev['by_net_layer'], (issues, ev))
         with patch.object(cr, 'fills', return_value={pcbnew.B_Cu: gnd}):
             self.assertEqual(gate.references(self.board)[0], [])
 
     def test_k_region_one_plane_per_run(self):
         self.plane('GND', 10, 10, 30, 40)
-        self.track((12, 30), (28, 30), 'PYRO1_CONT', pcbnew.B_Cu)
+        self.track((12, 30), (28, 30), 'PYRO1_GATE', pcbnew.B_Cu)
         self.assertEqual(gate.region_issues(self.board)[0], [])
         self.track((12, 32), (28, 32), 'GND', pcbnew.B_Cu)                       # not signal-critical: ignored
         self.assertEqual(gate.region_issues(self.board)[0], [])
         self.plane('3V3', 30.05, 10, 40, 40)                                    # a second plane, a 0.05 mm seam
-        self.track((24, 20), (36, 20), 'ARM1_SENSE_MID', pcbnew.B_Cu)           # crosses GND -> 3V3
+        self.track((24, 20), (36, 20), 'GPS_TX_MCU', pcbnew.B_Cu)           # crosses GND -> 3V3
         issues = gate.region_issues(self.board)[0]
-        self.assertTrue(any('ARM1_SENSE_MID' in i and "['3V3', 'GND']" in i for i in issues), issues)
-        self.assertFalse(any('PYRO1_CONT' in i for i in issues))
+        self.assertTrue(any('GPS_TX_MCU' in i and "['3V3', 'GND']" in i for i in issues), issues)
+        self.assertFalse(any('PYRO1_GATE' in i for i in issues))
 
     def test_k_region_no_in2_copper_and_own_via_antipad(self):
         self.plane('GND', 10, 10, 30, 40)
@@ -899,14 +951,14 @@ class R4Synthetic(SyntheticBase):
     def test_k_region_margin_pad_and_chain(self):
         """R5-RTE-01 / -02 / -06: edges pushed 0.1 mm out, SMD pads sampled, connected chains one plane in total."""
         self.plane('GND', 10, 10, 30, 40)
-        t = self.track((12, 39.95), (28, 39.95), 'PYRO1_CONT', pcbnew.B_Cu)       # edge 0.1 inside the plane edge
+        t = self.track((12, 39.95), (28, 39.95), 'PYRO1_GATE', pcbnew.B_Cu)       # edge 0.1 inside the plane edge
         self.assertTrue(gate.region_issues(self.board)[0])                       # edge + 0.1 margin is off the plane
         self.board.Remove(t)
-        self.track((12, 39.5), (28, 39.5), 'PYRO1_CONT', pcbnew.B_Cu)
+        self.track((12, 39.5), (28, 39.5), 'PYRO1_GATE', pcbnew.B_Cu)
         self.assertEqual(gate.region_issues(self.board)[0], [])
         # a B.Cu SMD pad straddling the seam of two planes
         self.plane('3V3', 30.05, 10, 45, 40)
-        f = self.part('R991', [('1', 0, 0, 'PYRO1_CONT')], at=(30.025, 20))
+        f = self.part('R991', [('1', 0, 0, 'PYRO1_GATE')], at=(30.025, 20))
         pad = f.FindPadByNumber('1'); ls = pcbnew.LSET(); ls.AddLayer(pcbnew.B_Cu); pad.SetLayerSet(ls)
         issues = gate.region_issues(self.board)[0]
         self.assertTrue(any('pad R991.1' in i for i in issues), issues)
@@ -963,7 +1015,7 @@ class R4Synthetic(SyntheticBase):
     def test_k_region_margin_isolated(self):
         """R6-GATE-02: a copper edge 0.05 mm inside the plane edge fails with REGION_MARGIN 0.1, passes with 0."""
         self.plane('GND', 10, 10, 30, 40)
-        self.track((12, 39.85), (28, 39.85), 'PYRO1_CONT', pcbnew.B_Cu)               # copper edge at 39.95
+        self.track((12, 39.85), (28, 39.85), 'PYRO1_GATE', pcbnew.B_Cu)               # copper edge at 39.95
         self.assertTrue(gate.region_issues(self.board)[0])
         with patch.object(gate, 'REGION_MARGIN', 0.0):
             self.assertEqual(gate.region_issues(self.board)[0], [])
@@ -994,7 +1046,7 @@ class R4Synthetic(SyntheticBase):
         """R6-GATE-04: REGION_STEP: a 0.03 mm gap between two same-net planes is seen at 0.02, missed at 1 mm."""
         self.plane('GND', 10, 10, 25.01, 40)
         self.plane('GND', 25.04, 10, 40, 40)
-        self.track((12, 30), (38, 30), 'PYRO1_CONT', pcbnew.B_Cu)
+        self.track((12, 30), (38, 30), 'PYRO1_GATE', pcbnew.B_Cu)
         self.assertTrue(any('no In2 copper' in i for i in gate.region_issues(self.board)[0]))
         with patch.object(gate, 'REGION_STEP', 1.0):
             self.assertEqual(gate.region_issues(self.board)[0], [])
@@ -1164,10 +1216,10 @@ class R3Synthetic(SyntheticBase):
         self.track((23, 30), (27, 30), net, pcbnew.B_Cu); self.via(27, 30, net)
         self.track((27, 30), (30, 30), net, pcbnew.F_Cu)
 
-    def test_port_control_layer_change_needs_gnd_via(self):
+    def test_fast_uart_layer_change_needs_gnd_via(self):
         import route_check as rc
         rc.set_profile('r10')
-        self.hop('CAM_UART_OE')
+        self.hop('GPS_TX_MCU')
         self.assertEqual(len([d for d in rc.scan(self.board) if d['cat'] == 'critical_via_no_gnd']), 2)
         self.via(23, 31.2, 'GND'); self.via(27, 31.2, 'GND')
         self.assertFalse([d for d in rc.scan(self.board) if d['cat'] == 'critical_via_no_gnd'])
@@ -1263,8 +1315,18 @@ class R3Synthetic(SyntheticBase):
         self.assertTrue(joined)
         self.assertEqual(sorted(round(pcbnew.ToMM(t.GetWidth()), 2) for t in segs), [1.0, 1.0])
         self.assertFalse([i for i in gate.s9(self.ctx())[0] if 'RAW_ACT fire-path' in i])
+        main[1].SetWidth(pcbnew.FromMM(0.4))
+        self.assertTrue([i for i in gate.s9(self.ctx())[0] if 'RAW_ACT fire-path track 0.400 mm' in i])
         main[1].SetWidth(pcbnew.FromMM(0.5))
-        self.assertTrue([i for i in gate.s9(self.ctx())[0] if 'RAW_ACT fire-path track 0.500 mm' in i])
+        self.assertFalse([i for i in gate.s9(self.ctx())[0] if 'RAW_ACT fire-path' in i])  # AUD-6 boundary.
+
+    def test_aud6_does_not_narrow_the_continuous_battery_feed(self):
+        self.part('J1', [('1', 0, 0, 'BAT_IN')], at=(5, 30))
+        self.part('Q120', [('9', 0, 0, 'BAT_IN')], at=(24, 30))
+        self.track((5, 30), (10, 30), 'BAT_IN', width=1.)
+        self.track((10, 30), (24, 30), 'BAT_IN', width=.5)
+        with patch.object(gate, 'FIRE_TERMINALS', {'BAT_IN': ({'J1': ('1',)}, {'Q120': ('9',)})}):
+            self.assertTrue(any('BAT_IN fire-path track 0.500 mm' in i for i in gate.s9(self.ctx(), narrow=[])[0]))
 
     # --- R3-MFG-01 silk over mask openings ------------------------------------------------------------------------
     def test_silk_over_mask_opening(self):
@@ -1285,14 +1347,151 @@ class R3Synthetic(SyntheticBase):
         self.assertEqual(gate.silk_mask_overlaps(self.board), [])
 
 
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class AuditScope(SyntheticBase):
+    plane = R4Synthetic.plane
+
+    def setUp(self):
+        super().setUp()
+        for net in ('SPI1_SCK', 'GPS_PWR_EN', 'CAM_UART_OE'):
+            self.board.Add(pcbnew.NETINFO_ITEM(self.board, net))
+
+    def test_aud2_exact_whitelist_and_fast_reference_boundary(self):
+        import critical_reference as cr
+        self.assertTrue({'ARM1_SENSE_MID', 'RAW_ACT_SENSE_MCU', 'ACT_EN_MCU', 'CAM_UART_OE'} <= cr.R10_SLOW_RETURN_NETS)
+        for net in ('RAW_ACT', 'PYRO1_GATE', 'PYRO1_GATE_N', 'PYRO1_COLD', 'GPS_TX_MCU', 'ACT_EN_EXTRA', 'ARM1_SENSE_EXTRA'):
+            self.assertFalse(cr.r10_slow_return_net(net), net)
+        self.track((12, 30), (38, 30), 'ARM1_SENSE', pcbnew.B_Cu)
+        self.track((20, 15), (22, 15), 'GPS_TX_MCU', pcbnew.F_Cu)
+        gnd = pcbnew.SHAPE_POLY_SET(); gnd.NewOutline()
+        for x, y in ((10, 10), (40, 10), (40, 20), (10, 20)):
+            gnd.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        with patch.object(cr, 'fills', return_value={pcbnew.F_Cu: gnd}):
+            issues, evidence = gate.references(self.board)
+        self.assertEqual(issues, [], evidence)
+        self.assertEqual(gate.region_issues(self.board)[0], [])
+        self.track((12, 32), (38, 32), 'SPI1_SCK', pcbnew.B_Cu)
+        self.assertTrue(any('SPI1_SCK' in i for i in gate.region_issues(self.board)[0]))
+        with patch.object(cr, 'fills', return_value={pcbnew.F_Cu: gnd}):
+            self.assertTrue(gate.references(self.board)[0])
+        report = cr.compare(self.board, self.board, 0., True, 'r10')
+        self.assertNotIn('GPS_PWR_EN', report['nets'])
+        self.assertIn('GPS_TX_MCU', report['nets'])
+
+    def test_aud10_distance_only_is_review_missing_subject_still_blocks(self):
+        import check_r7 as r7
+        text = pcbnew.PCB_TEXT(self.board); text.SetText('R134 terminal'); text.SetLayer(pcbnew.F_SilkS)
+        text.SetTextSize(self.P(1, 1)); text.SetPosition(self.P(40, 80)); self.board.Add(text)
+        review = []
+        self.assertEqual(r7.legend_subjects(self.board, distance_review=review), [])
+        self.assertEqual(len(review), 1)
+        self.assertTrue(r7.legend_subjects(self.board))  # Legacy default still blocks distance.
+        text.SetText('R999 terminal')
+        self.assertTrue(any('not on the board' in i for i in r7.legend_subjects(self.board, distance_review=[])))
+
+    def vippo(self):
+        for f in list(self.board.GetFootprints()):
+            if f.GetReference() == 'U401': self.board.Remove(f)
+        for v in list(self.board.GetTracks()):
+            if v.GetClass() == 'PCB_VIA': self.board.Remove(v)
+        f = pcbnew.FootprintLoad(str(gate.ROOT / 'm3_design/assembly_review/kilib/rocket.pretty'), 'M3_TPS7A91_DSK10')
+        self.assertIsNotNone(f)
+        self.board.Add(f); f.SetReference('U401'); f.SetPosition(self.P(27.6, 13.6))
+        f.Flip(f.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT); f.SetOrientationDegrees(180)
+        f.FindPadByNumber('11').SetNet(self.board.FindNet('GND'))
+        vias = []
+        for x, y in gate.VIPPO_CENTRES:
+            v = self.via(x, y, 'GND', d=.5, drill=.3)
+            v.SetFillingMode(pcbnew.FILLING_MODE_FILLED); v.SetCappingMode(pcbnew.CAPPING_MODE_CAPPED); vias.append(v)
+        return f, vias
+
+    def test_gap3_exact_vippo_is_the_only_pad_paste_exception(self):
+        import check_r7 as r7
+        f, vias = self.vippo()
+        issues, evidence, allowed = gate.thermal_vias(self.board)
+        self.assertEqual(issues, [], evidence); self.assertEqual(len(allowed), 2)
+        self.assertTrue(r7.vias_in_smd_pads(self.board)[0])  # Legacy default admits no thermal exception.
+        ctx = gate.make_ctx(self.board, dru='(constraint thermal_relief_gap (min 0.25mm)) (constraint thermal_spoke_width (min 0.3mm))')
+        self.assertEqual(gate.k_copper(ctx)[0], [])
+        extra = self.part('X8', [], at=(27.3, 13.6))
+        paste = pcbnew.PAD(extra); paste.SetAttribute(pcbnew.PAD_ATTRIB_SMD); paste.SetShape(pcbnew.PAD_SHAPE_RECT)
+        paste.SetSize(self.P(.2, .2)); paste.SetPosition(self.P(27.3, 13.6))
+        layers = pcbnew.LSET(); layers.AddLayer(pcbnew.B_Paste); paste.SetLayerSet(layers); extra.Add(paste)
+        self.assertTrue(any('X8' in i for i in gate.k_copper(ctx)[0]))
+        self.board.Remove(extra)
+        self.part('X9', [('1', 0, 0, 'GND')], at=(35, 55))
+        p = self.board.FindFootprintByReference('X9').FindPadByNumber('1')
+        layers = pcbnew.LSET(); layers.AddLayer(pcbnew.F_Cu); layers.AddLayer(pcbnew.F_Mask); p.SetLayerSet(layers)
+        self.via(35, 55, 'GND')
+        self.assertTrue(any('X9.1' in i for i in gate.k_copper(ctx)[0]))
+
+    def test_gap3_wrong_net_extra_moved_size_pad_or_unfilled_is_rejected(self):
+        mutations = (
+            lambda f, vs: vs[0].SetNet(self.board.FindNet('RAW_ACT')),
+            lambda f, vs: self.via(27.6, 13.6, 'GND', d=.5, drill=.3),
+            lambda f, vs: vs[0].SetPosition(self.P(27.32, 13.6)),
+            lambda f, vs: vs[0].SetPosition(self.P(27.302, 13.6)),
+            lambda f, vs: vs[0].SetDrill(pcbnew.FromMM(.2)),
+            lambda f, vs: vs[0].SetDrill(pcbnew.FromMM(.001)),  # Zero means inherit the board drill in KiCad.
+            lambda f, vs: vs[0].SetWidth(pcbnew.FromMM(.6)),
+            lambda f, vs: vs[0].SetViaType(pcbnew.VIATYPE_BLIND),
+            lambda f, vs: vs[0].SetFillingMode(pcbnew.FILLING_MODE_NOT_FILLED),
+            lambda f, vs: vs[0].SetCappingMode(pcbnew.CAPPING_MODE_FROM_BOARD),
+            lambda f, vs: f.FindPadByNumber('11').SetNumber('12'),
+            lambda f, vs: f.FindPadByNumber('11').SetSize(self.P(1.3, 2)),
+            lambda f, vs: next(p for p in f.Pads() if not p.GetNumber()).Move(self.P(.02, 0)),
+            lambda f, vs: next(p for p in f.Pads() if not p.GetNumber()).SetShape(pcbnew.PAD_SHAPE_OVAL),
+        )
+        for i, mutate in enumerate(mutations):
+            with self.subTest(seed=i):
+                f, vias = self.vippo(); mutate(f, vias)
+                self.assertTrue(gate.thermal_vias(self.board)[0])
+
+    def output_cell(self):
+        parts = {}
+        for ref, pads, at, value in (
+            ('U9', [('6', 0, 0, 'RAW_PROTECTED'), ('8', 0, 2, 'GND')], (20, 50), 'TPS259470LRPWR'),
+            ('C82', [('1', 0, 0, 'RAW_PROTECTED'), ('2', 0, 2, 'GND')], (23, 50), '22uF 25V X7R'),
+            ('D9', [('1', 0, 0, 'RAW_PROTECTED'), ('2', 0, 2, 'GND')], (20, 46), 'B340A-13-F')):
+            f = self.part(ref, pads, at=at); f.SetValue(value)
+            f.Flip(f.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT); parts[ref] = f
+        self.out = self.track((20, 50), (23, 50), 'RAW_PROTECTED', pcbnew.B_Cu, width=.5)
+        self.track((20, 50), (20, 46), 'RAW_PROTECTED', pcbnew.B_Cu, width=.5)
+        self.ret = self.track((23, 52), (20, 52), 'GND', pcbnew.B_Cu, width=.5)
+        self.track((20, 48), (20, 52), 'GND', pcbnew.B_Cu, width=.5)
+        return parts
+
+    def test_gap2_actual_routes_and_missing_return_not_pad_distance(self):
+        parts = self.output_cell()
+        issues, evidence = gate.output_loop(self.ctx())
+        self.assertEqual(issues, [], evidence)
+        self.assertEqual(evidence['C82']['ground_path']['layers'], ['B.Cu'])
+        self.assertEqual(evidence['C82']['out_path']['path_mm'], [[20., 50.], [23., 50.]])
+        self.assertGreater(evidence['C82']['projected_loop_area_mm2'], 0.)
+        self.board.Remove(self.out)
+        # Still under the absolute OUT limit: the route's detour must independently fail.
+        detour = [self.track(a, b, 'RAW_PROTECTED', pcbnew.B_Cu, width=.5) for a, b in
+                  (((20, 50), (20, 50.5)), ((20, 50.5), (23, 50.5)), ((23, 50.5), (23, 50)))]
+        issues, evidence = gate.output_loop(self.ctx())
+        self.assertLessEqual(evidence['C82']['out_route_mm'], evidence['bounds_mm']['C82'][0])
+        self.assertTrue(any('C82' in i for i in issues))
+        for t in detour: self.board.Remove(t)
+        for a, b in (((20, 50), (20, 58)), ((20, 58), (23, 58)), ((23, 58), (23, 50))):
+            self.track(a, b, 'RAW_PROTECTED', pcbnew.B_Cu, width=.5)
+        self.assertTrue(any('C82' in i for i in gate.output_loop(self.ctx())[0]))
+        self.board.Remove(self.ret)
+        self.assertIsNone(gate.local_ground_return(self.board, parts['C82'].FindPadByNumber('2'),
+                                                  parts['U9'].FindPadByNumber('8')))
+
+
 @unittest.skipUnless(plate, 'NumPy required (run under a python3 with numpy)')
 class Plate(unittest.TestCase):
     """R3-MEC-01: every R10 mass key is placed (own row, or a mated allowance on its parent's box) or refused."""
     def setUp(self):
         self.spec = json.loads((Path(__file__).resolve().parents[1] /
                                 'm3_design/assembly_review/sources/r10_design/masses.json').read_text())
-        refs = ['J1', 'J121', 'J122', 'C84', 'LS120', 'J3', 'J9', 'J123', 'J400', 'J410', 'J420',
-                'J9 mated', 'J123 mated', 'J400 mated', 'J410 mated', 'J420 mated', 'J122 mated']
+        refs = ['J1', 'J121', 'J122', 'C84', 'LS120', 'J3', 'J9', 'J400', 'J410', 'J420',
+                'J9 mated', 'J400 mated', 'J410 mated', 'J420 mated', 'J122 mated']
         self.fit = dict(profile='r10', outline=[0, 0, 46, 84], supports=[[4, 4], [42, 4], [4, 80], [42, 80], [42, 42]],
                         rows=[(1, ref, 'F', [20 + i, 40, 22 + i, 42, 0, 2]) for i, ref in enumerate(refs)])
 
@@ -1389,6 +1588,45 @@ class RealBoardSeeds(unittest.TestCase):
     def pad(self, board, ref, num):
         return board.FindFootprintByReference(ref).FindPadByNumber(num)
 
+    def test_gap2_real_output_detour_and_absent_return(self):
+        b = self.load()
+        issues, evidence = gate.output_loop(gate.make_ctx(b))
+        self.assertEqual(issues, [], evidence)
+        for ref in ('C82', 'D9'):
+            self.assertTrue(evidence[ref]['ground_path']['path_mm'])
+            self.assertGreater(evidence[ref]['projected_loop_area_mm2'], 0.)
+        start = self.pad(b, 'U9', '6')
+        neck = next(t for t in b.GetTracks() if t.GetClass() == 'PCB_TRACK'
+                    and t.GetNetname() == 'RAW_PROTECTED' and t.GetLayer() == pcbnew.B_Cu
+                    and (t.GetStart() == start.GetPosition() or t.GetEnd() == start.GetPosition()))
+        a, c = neck.GetStart(), neck.GetEnd()
+        detour = (a, self.P(pcbnew.ToMM(a.x) - 6, pcbnew.ToMM(a.y)),
+                  self.P(pcbnew.ToMM(c.x) - 6, pcbnew.ToMM(c.y)), c)
+        for p, q in zip(detour, detour[1:]):
+            t = pcbnew.Cast_to_PCB_TRACK(neck.Duplicate()); t.SetStart(p); t.SetEnd(q); b.Add(t)
+        b.Delete(neck)
+        self.assertTrue(any('short actual OUT / GND loop' in i for i in gate.output_loop(gate.make_ctx(b))[0]))
+        b = self.load()
+        for t in list(b.GetTracks()):
+            if t.GetNetname() == 'GND': b.Delete(t)
+        for z in list(b.Zones()):
+            if z.GetNetname() == 'GND' and not z.GetIsRuleArea(): b.Delete(z)
+        issues, evidence = gate.output_loop(gate.make_ctx(b))
+        self.assertTrue(any('C82' in i for i in issues))
+        self.assertIsNone(evidence['C82']['local_ground_route_mm'])
+
+    def test_gap3_real_vippo_wrong_net_and_extra_via(self):
+        b = self.load()
+        issues, evidence, allowed = gate.thermal_vias(b)
+        self.assertEqual(issues, [], evidence); self.assertEqual(len(allowed), 2)
+        via = next(t for t in b.GetTracks() if t.m_Uuid.AsString() in allowed)
+        via.SetNet(b.FindNet('RAW_PROTECTED'))
+        self.assertTrue(gate.thermal_vias(b)[0])
+        b = self.load()
+        via = pcbnew.PCB_VIA(b); via.SetPosition(self.P(27.6, 13.6)); via.SetNet(b.FindNet('GND'))
+        via.SetWidth(pcbnew.FromMM(.5)); via.SetDrill(pcbnew.FromMM(.3)); b.Add(via)
+        self.assertTrue(any('exactly two' in i for i in gate.thermal_vias(b)[0]))
+
     def test_bypass_r134_with_a_track(self):
         def seed(b):
             p1, p2 = self.pad(b, 'R134', '1'), self.pad(b, 'R134', '2')
@@ -1421,7 +1659,7 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('S-3', lambda b: self.pad(b, 'R122', '1').SetNet(b.FindNet('RAW_PROTECTED')), 'R122.1 must be ACT_EN_MCU')
         self.seeded('S-3', lambda b: self.pad(b, 'U1', '16').SetNet(b.FindNet('PYRO1_GATE_N')), 'U1.16 must be ACT_EN_MCU')
         self.seeded('S-3', lambda b: self.pad(b, 'R123', '2').SetNet(b.FindNet('3V3')), 'R123.2 must be GND')
-        self.seeded('S-3', lambda b: b.Remove(b.FindFootprintByReference('R123')), 'R123')
+        self.seeded('S-3', lambda b: b.Delete(b.FindFootprintByReference('R123')), 'R123')
 
     def test_required_fitted_seeds(self):
         for ref, flag in (('R134', pcbnew.FP_DNP), ('R127', pcbnew.FP_EXCLUDE_FROM_BOM),
@@ -1431,7 +1669,7 @@ class RealBoardSeeds(unittest.TestCase):
                     f = b.FindFootprintByReference(ref); f.SetAttributes(f.GetAttributes() | flag)
                 self.seeded('S-4', seed, ref)
         with self.subTest(ref='R180 removed'):
-            self.seeded('S-4', lambda b: b.Remove(b.FindFootprintByReference('R180')), 'R180')
+            self.seeded('S-4', lambda b: b.Delete(b.FindFootprintByReference('R180')), 'R180')
 
     def test_gps_net_next_to_pyro_bus(self):
         def seed(b):
@@ -1548,14 +1786,16 @@ class RealBoardSeeds(unittest.TestCase):
         new = self.route_new(seed, 'extra_vias')
         self.assertTrue(any(d['net'] == net_name and d.get('hop') for d in new), (net_name, new))
 
-    def test_port_layer_change_without_gnd_via(self):
-        """R3-RTE-01: a new GPS_PWR_EN layer change with no GND via within 1.5 mm fails critical_via_no_gnd."""
+    def test_fast_uart_layer_change_without_gnd_via(self):
+        """R3-RTE-01: a new GPS_TX_MCU layer change with no GND via within 1.5 mm fails critical_via_no_gnd."""
         def seed(b):
-            t = self.longest(b, 'GPS_PWR_EN', pcbnew.B_Cu)
+            t = max((t for t in b.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'GPS_TX_MCU'),
+                    key=lambda t: t.GetLength())
             s, e, w, net = t.GetStart(), t.GetEnd(), t.GetWidth(), t.GetNet()
+            source = t.GetLayer(); target = pcbnew.B_Cu if source == pcbnew.F_Cu else pcbnew.F_Cu
             m = pcbnew.VECTOR2I((s.x + e.x) // 2, (s.y + e.y) // 2)
             b.Remove(t)
-            for a, c, lay in ((s, m, pcbnew.B_Cu), (m, e, pcbnew.F_Cu)):
+            for a, c, lay in ((s, m, source), (m, e, target)):
                 x = pcbnew.PCB_TRACK(b); x.SetStart(a); x.SetEnd(c); x.SetWidth(w); x.SetLayer(lay); x.SetNet(net)
                 b.Add(x)
             v = pcbnew.PCB_VIA(b); v.SetPosition(m); v.SetWidth(pcbnew.FromMM(0.45)); v.SetDrill(pcbnew.FromMM(0.2))
@@ -1564,7 +1804,7 @@ class RealBoardSeeds(unittest.TestCase):
                       and (x.GetPosition() - m).EuclideanNorm() < pcbnew.FromMM(1.6)]:
                 b.Remove(g)
         new = self.route_new(seed, 'critical_via_no_gnd')
-        self.assertTrue(any(d['net'] == 'GPS_PWR_EN' for d in new), new)
+        self.assertTrue(any(d['net'] == 'GPS_TX_MCU' for d in new), new)
 
     def test_loader_pin_seeds(self):
         """R3-MCU-01: a net on a loader-driven pin, a changed member value and an extra part on an allowed net."""

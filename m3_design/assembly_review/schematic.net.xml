@@ -238,9 +238,9 @@
         <comment number="9" value=""/>
       </title_block>
     </sheet>
-    <sheet number="14" name="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/">
+    <sheet number="14" name="/14 | Buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/">
       <title_block>
-        <title>14 | Launch pull-pin and buzzer</title>
+        <title>14 | Buzzer</title>
         <company>Single-board M3 candidate; actuator merge, not bench-verified</company>
         <rev>M3-ASSY-R10</rev>
         <date></date>
@@ -2996,21 +2996,21 @@
       </units>
     </comp>
     <comp ref="R412">
-      <value>10k 0.1%</value>
-      <footprint>rocket:R_0603_1608Metric</footprint>
-      <datasheet>https://www.lcsc.com/product-detail/C95204.html</datasheet>
+      <value>10k 1%</value>
+      <footprint>rocket:R0402</footprint>
+      <datasheet>https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</datasheet>
       <fields>
-        <field name="LCSC">C95204</field>
-        <field name="Manufacturer">YAGEO</field>
-        <field name="Manufacturer Part">RT0603BRD0710KL</field>
-        <field name="Footprint">rocket:R_0603_1608Metric</field>
-        <field name="Datasheet">https://www.lcsc.com/product-detail/C95204.html</field>
+        <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet">https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C95204"/>
-      <property name="Manufacturer" value="YAGEO"/>
-      <property name="Manufacturer Part" value="RT0603BRD0710KL"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="05 | Regulated camera, radio and GPS port supplies"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -3089,21 +3089,21 @@
       </units>
     </comp>
     <comp ref="R422">
-      <value>10k 0.1%</value>
-      <footprint>rocket:R_0603_1608Metric</footprint>
-      <datasheet>https://www.lcsc.com/product-detail/C95204.html</datasheet>
+      <value>10k 1%</value>
+      <footprint>rocket:R0402</footprint>
+      <datasheet>https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</datasheet>
       <fields>
-        <field name="LCSC">C95204</field>
-        <field name="Manufacturer">YAGEO</field>
-        <field name="Manufacturer Part">RT0603BRD0710KL</field>
-        <field name="Footprint">rocket:R_0603_1608Metric</field>
-        <field name="Datasheet">https://www.lcsc.com/product-detail/C95204.html</field>
+        <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet">https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C95204"/>
-      <property name="Manufacturer" value="YAGEO"/>
-      <property name="Manufacturer Part" value="RT0603BRD0710KL"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="05 | Regulated camera, radio and GPS port supplies"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -3182,21 +3182,21 @@
       </units>
     </comp>
     <comp ref="R432">
-      <value>10k 0.1%</value>
-      <footprint>rocket:R_0603_1608Metric</footprint>
-      <datasheet>https://www.lcsc.com/product-detail/C95204.html</datasheet>
+      <value>10k 1%</value>
+      <footprint>rocket:R0402</footprint>
+      <datasheet>https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</datasheet>
       <fields>
-        <field name="LCSC">C95204</field>
-        <field name="Manufacturer">YAGEO</field>
-        <field name="Manufacturer Part">RT0603BRD0710KL</field>
-        <field name="Footprint">rocket:R_0603_1608Metric</field>
-        <field name="Datasheet">https://www.lcsc.com/product-detail/C95204.html</field>
+        <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet">https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C95204"/>
-      <property name="Manufacturer" value="YAGEO"/>
-      <property name="Manufacturer Part" value="RT0603BRD0710KL"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="05 | Regulated camera, radio and GPS port supplies"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4193,58 +4193,6 @@
         </unit>
       </units>
     </comp>
-    <comp ref="TP84">
-      <value>BAT_ENABLE</value>
-      <footprint>rocket:M3_TestPad_1.5</footprint>
-      <fields>
-        <field name="LCSC"/>
-        <field name="Footprint">rocket:M3_TestPad_1.5</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="TestPoint" description="test point"/>
-      <property name="LCSC" value=""/>
-      <property name="Sheetname" value="07 | Battery input, contact and protection"/>
-      <property name="Sheetfile" value="battery_entry.kicad_sch"/>
-      <property name="exclude_from_bom"/>
-      <property name="ki_keywords" value="test point tp"/>
-      <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
-      <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/69ee5338-a377-5d7b-bbd8-28b781c5d2c5/"/>
-      <tstamps>83b76d63-fa32-5c40-a5f2-a2626416b4cf</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="TP85">
-      <value>BAT_FAULT_N</value>
-      <footprint>rocket:M3_TestPad_1.5</footprint>
-      <fields>
-        <field name="LCSC"/>
-        <field name="Footprint">rocket:M3_TestPad_1.5</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="TestPoint" description="test point"/>
-      <property name="LCSC" value=""/>
-      <property name="Sheetname" value="07 | Battery input, contact and protection"/>
-      <property name="Sheetfile" value="battery_entry.kicad_sch"/>
-      <property name="exclude_from_bom"/>
-      <property name="ki_keywords" value="test point tp"/>
-      <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
-      <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/69ee5338-a377-5d7b-bbd8-28b781c5d2c5/"/>
-      <tstamps>34871e5e-7c51-5c60-bdb2-605e3c56c804</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
     <comp ref="TP88">
       <value>GND</value>
       <footprint>rocket:M3_TestPad_1.5</footprint>
@@ -4263,32 +4211,6 @@
       <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/69ee5338-a377-5d7b-bbd8-28b781c5d2c5/"/>
       <tstamps>3cf81e9e-5b6c-5d9b-a5c5-7dc51ef953de</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="TP89">
-      <value>BAT_ILIM</value>
-      <footprint>rocket:M3_TestPad_1.5</footprint>
-      <fields>
-        <field name="LCSC"/>
-        <field name="Footprint">rocket:M3_TestPad_1.5</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="TestPoint" description="test point"/>
-      <property name="LCSC" value=""/>
-      <property name="Sheetname" value="07 | Battery input, contact and protection"/>
-      <property name="Sheetfile" value="battery_entry.kicad_sch"/>
-      <property name="exclude_from_bom"/>
-      <property name="ki_keywords" value="test point tp"/>
-      <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
-      <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/69ee5338-a377-5d7b-bbd8-28b781c5d2c5/"/>
-      <tstamps>c306d3c1-b340-5c0d-95d9-c81caa8ef48a</tstamps>
       <units>
         <unit name="A">
           <pins>
@@ -4801,58 +4723,6 @@
         </unit>
       </units>
     </comp>
-    <comp ref="TP86">
-      <value>USB_FAULT_N</value>
-      <footprint>rocket:M3_TestPad_1.5</footprint>
-      <fields>
-        <field name="LCSC"/>
-        <field name="Footprint">rocket:M3_TestPad_1.5</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="TestPoint" description="test point"/>
-      <property name="LCSC" value=""/>
-      <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
-      <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
-      <property name="exclude_from_bom"/>
-      <property name="ki_keywords" value="test point tp"/>
-      <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
-      <sheetpath names="/08 | USB limit, source mux and hold-up/" tstamps="/98c21473-b271-5039-bfe5-b3672097f1da/"/>
-      <tstamps>fe5fa01e-d517-5599-a198-2c11e4bff0a6</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="TP87">
-      <value>LOGIC_SOURCE_ST</value>
-      <footprint>rocket:M3_TestPad_1.5</footprint>
-      <fields>
-        <field name="LCSC"/>
-        <field name="Footprint">rocket:M3_TestPad_1.5</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="TestPoint" description="test point"/>
-      <property name="LCSC" value=""/>
-      <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
-      <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
-      <property name="exclude_from_bom"/>
-      <property name="ki_keywords" value="test point tp"/>
-      <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
-      <sheetpath names="/08 | USB limit, source mux and hold-up/" tstamps="/98c21473-b271-5039-bfe5-b3672097f1da/"/>
-      <tstamps>20598e4b-81a5-574f-a4d1-c80ea149db5b</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
     <comp ref="U10">
       <value>TPS2553DBVR</value>
       <footprint>rocket:M3_TPS2553_DBV</footprint>
@@ -4990,22 +4860,21 @@
       </units>
     </comp>
     <comp ref="C92">
-      <value>22uF 25V X7R 10%</value>
-      <footprint>rocket:M3_GRM32_1210</footprint>
+      <value>4.7uF 16V X5R 10%</value>
+      <footprint>rocket:C0603</footprint>
+      <datasheet>https://product.samsungsem.com/mlcc/CL10A475KO8NNN.do</datasheet>
       <fields>
-        <field name="LCSC">C21397</field>
-        <field name="Manufacturer">Murata</field>
-        <field name="Manufacturer Part">GRM32ER71E226KE15L</field>
-        <field name="LCSC Part">C21397</field>
-        <field name="Footprint">rocket:M3_GRM32_1210</field>
-        <field name="Datasheet"/>
+        <field name="LCSC">C19666</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL10A475KO8NNNC</field>
+        <field name="Footprint">rocket:C0603</field>
+        <field name="Datasheet">https://product.samsungsem.com/mlcc/CL10A475KO8NNN.do</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C21397"/>
-      <property name="Manufacturer" value="Murata"/>
-      <property name="Manufacturer Part" value="GRM32ER71E226KE15L"/>
-      <property name="LCSC Part" value="C21397"/>
+      <property name="LCSC" value="C19666"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL10A475KO8NNNC"/>
       <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
       <property name="Sheetfile" value="camera_uart.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -5410,47 +5279,22 @@
         </unit>
       </units>
     </comp>
-    <comp ref="TP92">
-      <value>VBUS_SENSE</value>
-      <footprint>rocket:M3_TestPad_1.5</footprint>
-      <fields>
-        <field name="LCSC"/>
-        <field name="Footprint">rocket:M3_TestPad_1.5</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="TestPoint" description="test point"/>
-      <property name="LCSC" value=""/>
-      <property name="Sheetname" value="10 | USB cable presence, ordinary GPIO sensing"/>
-      <property name="Sheetfile" value="usb_sense.kicad_sch"/>
-      <property name="exclude_from_bom"/>
-      <property name="ki_keywords" value="test point tp"/>
-      <property name="ki_fp_filters" value="M3_TestPad_1.5"/>
-      <sheetpath names="/10 | USB cable presence, ordinary GPIO sensing/" tstamps="/7323b515-8986-5814-85b5-9e04db992507/"/>
-      <tstamps>975ce4e4-ef26-5199-99a9-c3c9119243d5</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
     <comp ref="C120">
-      <value>2.2uF</value>
-      <footprint>rocket:C0603</footprint>
+      <value>1uF 25V X7R 10%</value>
+      <footprint>rocket:C_0603_1608Metric</footprint>
+      <datasheet>https://product.samsungsem.com/mlcc/CL10B105KA8NNN.do</datasheet>
       <fields>
-        <field name="LCSC">C23630</field>
+        <field name="LCSC">C29936</field>
         <field name="Manufacturer">Samsung Electro-Mechanics</field>
-        <field name="Manufacturer Part">CL10A225KO8NNNC</field>
-        <field name="Footprint">rocket:C0603</field>
-        <field name="Datasheet"/>
+        <field name="Manufacturer Part">CL10B105KA8NNNC</field>
+        <field name="Footprint">rocket:C_0603_1608Metric</field>
+        <field name="Datasheet">https://product.samsungsem.com/mlcc/CL10B105KA8NNN.do</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C23630"/>
+      <property name="LCSC" value="C29936"/>
       <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
-      <property name="Manufacturer Part" value="CL10A225KO8NNNC"/>
+      <property name="Manufacturer Part" value="CL10B105KA8NNNC"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -5497,20 +5341,21 @@
       </units>
     </comp>
     <comp ref="Q120">
-      <value>AON6403</value>
-      <footprint>rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL</footprint>
+      <value>AONR21357</value>
+      <footprint>rocket:M3_AONR21357_DFN3x3A_EP1</footprint>
+      <datasheet>https://www.aosmd.com/res/datasheets/AONR21357.pdf</datasheet>
       <fields>
-        <field name="LCSC">C2760089</field>
+        <field name="LCSC">C431196</field>
         <field name="Manufacturer">Alpha &amp; Omega Semicon</field>
-        <field name="Manufacturer Part">AON6403</field>
-        <field name="Footprint">rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL</field>
-        <field name="Datasheet"/>
+        <field name="Manufacturer Part">AONR21357</field>
+        <field name="Footprint">rocket:M3_AONR21357_DFN3x3A_EP1</field>
+        <field name="Datasheet">https://www.aosmd.com/res/datasheets/AONR21357.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="PMOS_PDFN8" description="P-MOSFET, PDFN5x6-8 (1-3 S, 4 G, 5-8 + tab D)"/>
-      <property name="LCSC" value="C2760089"/>
+      <property name="LCSC" value="C431196"/>
       <property name="Manufacturer" value="Alpha &amp; Omega Semicon"/>
-      <property name="Manufacturer Part" value="AON6403"/>
+      <property name="Manufacturer Part" value="AONR21357"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
@@ -5532,20 +5377,21 @@
       </units>
     </comp>
     <comp ref="Q121">
-      <value>AON6403</value>
-      <footprint>rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL</footprint>
+      <value>AONR21357</value>
+      <footprint>rocket:M3_AONR21357_DFN3x3A_EP1</footprint>
+      <datasheet>https://www.aosmd.com/res/datasheets/AONR21357.pdf</datasheet>
       <fields>
-        <field name="LCSC">C2760089</field>
+        <field name="LCSC">C431196</field>
         <field name="Manufacturer">Alpha &amp; Omega Semicon</field>
-        <field name="Manufacturer Part">AON6403</field>
-        <field name="Footprint">rocket:PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL</field>
-        <field name="Datasheet"/>
+        <field name="Manufacturer Part">AONR21357</field>
+        <field name="Footprint">rocket:M3_AONR21357_DFN3x3A_EP1</field>
+        <field name="Datasheet">https://www.aosmd.com/res/datasheets/AONR21357.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="PMOS_PDFN8" description="P-MOSFET, PDFN5x6-8 (1-3 S, 4 G, 5-8 + tab D)"/>
-      <property name="LCSC" value="C2760089"/>
+      <property name="LCSC" value="C431196"/>
       <property name="Manufacturer" value="Alpha &amp; Omega Semicon"/>
-      <property name="Manufacturer Part" value="AON6403"/>
+      <property name="Manufacturer Part" value="AONR21357"/>
       <property name="Sheetname" value="11 | Actuator power switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <sheetpath names="/11 | Actuator power switch/" tstamps="/6133d301-6422-5dca-9dda-573ff465fb31/"/>
@@ -6584,20 +6430,21 @@
       </units>
     </comp>
     <comp ref="R150">
-      <value>1k 0805</value>
-      <footprint>rocket:R0805</footprint>
+      <value>1k 0603</value>
+      <footprint>rocket:R_0603_1608Metric</footprint>
+      <datasheet>https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</datasheet>
       <fields>
-        <field name="LCSC">C17513</field>
+        <field name="LCSC">C21190</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0805W8F1001T5E</field>
-        <field name="Footprint">rocket:R0805</field>
-        <field name="Datasheet"/>
+        <field name="Manufacturer Part">0603WAF1001T5E</field>
+        <field name="Footprint">rocket:R_0603_1608Metric</field>
+        <field name="Datasheet">https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C17513"/>
+      <property name="LCSC" value="C21190"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0805W8F1001T5E"/>
+      <property name="Manufacturer Part" value="0603WAF1001T5E"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6614,20 +6461,21 @@
       </units>
     </comp>
     <comp ref="R151">
-      <value>1k 0805</value>
-      <footprint>rocket:R0805</footprint>
+      <value>1k 0603</value>
+      <footprint>rocket:R_0603_1608Metric</footprint>
+      <datasheet>https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</datasheet>
       <fields>
-        <field name="LCSC">C17513</field>
+        <field name="LCSC">C21190</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0805W8F1001T5E</field>
-        <field name="Footprint">rocket:R0805</field>
-        <field name="Datasheet"/>
+        <field name="Manufacturer Part">0603WAF1001T5E</field>
+        <field name="Footprint">rocket:R_0603_1608Metric</field>
+        <field name="Datasheet">https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C17513"/>
+      <property name="LCSC" value="C21190"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0805W8F1001T5E"/>
+      <property name="Manufacturer Part" value="0603WAF1001T5E"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6644,20 +6492,21 @@
       </units>
     </comp>
     <comp ref="R152">
-      <value>1k 0805</value>
-      <footprint>rocket:R0805</footprint>
+      <value>1k 0603</value>
+      <footprint>rocket:R_0603_1608Metric</footprint>
+      <datasheet>https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</datasheet>
       <fields>
-        <field name="LCSC">C17513</field>
+        <field name="LCSC">C21190</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0805W8F1001T5E</field>
-        <field name="Footprint">rocket:R0805</field>
-        <field name="Datasheet"/>
+        <field name="Manufacturer Part">0603WAF1001T5E</field>
+        <field name="Footprint">rocket:R_0603_1608Metric</field>
+        <field name="Datasheet">https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C17513"/>
+      <property name="LCSC" value="C21190"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0805W8F1001T5E"/>
+      <property name="Manufacturer Part" value="0603WAF1001T5E"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6674,20 +6523,21 @@
       </units>
     </comp>
     <comp ref="R153">
-      <value>1k 0805</value>
-      <footprint>rocket:R0805</footprint>
+      <value>1k 0603</value>
+      <footprint>rocket:R_0603_1608Metric</footprint>
+      <datasheet>https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</datasheet>
       <fields>
-        <field name="LCSC">C17513</field>
+        <field name="LCSC">C21190</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0805W8F1001T5E</field>
-        <field name="Footprint">rocket:R0805</field>
-        <field name="Datasheet"/>
+        <field name="Manufacturer Part">0603WAF1001T5E</field>
+        <field name="Footprint">rocket:R_0603_1608Metric</field>
+        <field name="Datasheet">https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C17513"/>
+      <property name="LCSC" value="C21190"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0805W8F1001T5E"/>
+      <property name="Manufacturer Part" value="0603WAF1001T5E"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6823,67 +6673,6 @@
         </unit>
       </units>
     </comp>
-    <comp ref="C160">
-      <value>100nF 50V X7R 10%</value>
-      <footprint>rocket:C0402</footprint>
-      <fields>
-        <field name="LCSC">C307331</field>
-        <field name="Manufacturer">Samsung Electro-Mechanics</field>
-        <field name="Manufacturer Part">CL05B104KB54PNC</field>
-        <field name="LCSC Part">C307331</field>
-        <field name="Footprint">rocket:C0402</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C307331"/>
-      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
-      <property name="Manufacturer Part" value="CL05B104KB54PNC"/>
-      <property name="LCSC Part" value="C307331"/>
-      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
-      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
-      <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
-      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
-      <tstamps>76995d75-e433-5d05-b6cf-da7cef87b5c0</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="D122">
-      <value>BAT54S</value>
-      <footprint>rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR</footprint>
-      <fields>
-        <field name="LCSC">C47546</field>
-        <field name="Manufacturer">Nexperia</field>
-        <field name="Manufacturer Part">BAT54S,215</field>
-        <field name="Footprint">rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="BAT54S" description="Dual Schottky, series (1 A1, 2 K2, 3 K1/A2)"/>
-      <property name="LCSC" value="C47546"/>
-      <property name="Manufacturer" value="Nexperia"/>
-      <property name="Manufacturer Part" value="BAT54S,215"/>
-      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
-      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
-      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
-      <tstamps>d87fd5f7-3f04-50c0-ac78-3b71aae7b65d</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="3"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
     <comp ref="D123">
       <value>1N5819WS</value>
       <footprint>rocket:SOD-323_L1.8-W1.3-LS2.5-RD</footprint>
@@ -6899,44 +6688,15 @@
       <property name="LCSC" value="C191023"/>
       <property name="Manufacturer" value="Guangdong Hottech"/>
       <property name="Manufacturer Part" value="1N5819WS"/>
-      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetname" value="14 | Buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
-      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <sheetpath names="/14 | Buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
       <tstamps>51aadcbc-2da4-5844-9db2-6a6022a277cb</tstamps>
       <units>
         <unit name="A">
           <pins>
             <pin num="2"/>
             <pin num="1"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="J123">
-      <value>BM02B-GHS-TBT(LF)(SN)</value>
-      <footprint>rocket:M3_GH_BM02B_GHS_TBT</footprint>
-      <datasheet>https://www.jst-mfg.com/product/pdf/eng/eGH.pdf</datasheet>
-      <fields>
-        <field name="LCSC">C161690</field>
-        <field name="Manufacturer">JST</field>
-        <field name="Manufacturer Part">BM02B-GHS-TBT(LF)(SN)</field>
-        <field name="Footprint">rocket:M3_GH_BM02B_GHS_TBT</field>
-        <field name="Datasheet">https://www.jst-mfg.com/product/pdf/eng/eGH.pdf</field>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="Conn_1x2" description="2-position connector"/>
-      <property name="LCSC" value="C161690"/>
-      <property name="Manufacturer" value="JST"/>
-      <property name="Manufacturer Part" value="BM02B-GHS-TBT(LF)(SN)"/>
-      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
-      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
-      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
-      <tstamps>f14a72d8-b5ef-574a-9770-ce840f6656ec</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
           </pins>
         </unit>
       </units>
@@ -6959,9 +6719,9 @@
       <property name="Manufacturer" value="Jiangsu Huaneng Elec"/>
       <property name="Manufacturer Part" value="MLT-5020"/>
       <property name="LCSC Part" value="C94598"/>
-      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetname" value="14 | Buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
-      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <sheetpath names="/14 | Buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
       <tstamps>147908ea-9ac1-5282-8959-c1434d74a21d</tstamps>
       <units>
         <unit name="A">
@@ -6988,75 +6748,15 @@
       <property name="LCSC" value="C20917"/>
       <property name="Manufacturer" value="Alpha &amp; Omega Semicon"/>
       <property name="Manufacturer Part" value="AO3400A"/>
-      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetname" value="14 | Buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
-      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <sheetpath names="/14 | Buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
       <tstamps>25615ebf-59b4-59da-9087-652c7c36d1d4</tstamps>
       <units>
         <unit name="A">
           <pins>
             <pin num="1"/>
             <pin num="3"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="R160">
-      <value>1k</value>
-      <footprint>rocket:R0402</footprint>
-      <fields>
-        <field name="LCSC">C11702</field>
-        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0402WGF1001TCE</field>
-        <field name="Footprint">rocket:R0402</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C11702"/>
-      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0402WGF1001TCE"/>
-      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
-      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
-      <property name="ki_keywords" value="R res resistor"/>
-      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"/>
-      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
-      <tstamps>76acb321-f1bc-5df9-9045-eba4a751850f</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="R161">
-      <value>10k</value>
-      <footprint>rocket:R0402</footprint>
-      <fields>
-        <field name="LCSC">C25744</field>
-        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0402WGF1002TCE</field>
-        <field name="Footprint">rocket:R0402</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C25744"/>
-      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
-      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
-      <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
-      <property name="ki_keywords" value="R res resistor"/>
-      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"/>
-      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
-      <tstamps>6d91a63f-e927-5d3b-99ff-3acda81009e1</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
             <pin num="2"/>
           </pins>
         </unit>
@@ -7079,11 +6779,11 @@
       <property name="LCSC Part" value="C17513"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0805W8F1001T5E"/>
-      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetname" value="14 | Buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
       <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"/>
-      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <sheetpath names="/14 | Buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
       <tstamps>6a71a63c-5726-5897-8c0a-e5737d5110d8</tstamps>
       <units>
         <unit name="A">
@@ -7109,11 +6809,11 @@
       <property name="LCSC" value="C25744"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1002TCE"/>
-      <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
+      <property name="Sheetname" value="14 | Buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
       <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"/>
-      <sheetpath names="/14 | Launch pull-pin and buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
+      <sheetpath names="/14 | Buzzer/" tstamps="/5ee931eb-d962-5c64-b0fd-46233c13323f/"/>
       <tstamps>d219091c-ae7a-5444-9408-0ff31439bad9</tstamps>
       <units>
         <unit name="A">
@@ -7145,66 +6845,6 @@
       <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
       <sheetpath names="/15 | External GPS and radio UART ports/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
       <tstamps>6fd79681-0332-5467-ba36-bc8c7b5c79ae</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="C441">
-      <value>1uF 50V X7R 10%</value>
-      <footprint>rocket:C_1206_3216Metric</footprint>
-      <fields>
-        <field name="LCSC">C1848</field>
-        <field name="Manufacturer">Samsung Electro-Mechanics</field>
-        <field name="Manufacturer Part">CL31B105KBHNNNE</field>
-        <field name="Footprint">rocket:C_1206_3216Metric</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C1848"/>
-      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
-      <property name="Manufacturer Part" value="CL31B105KBHNNNE"/>
-      <property name="Sheetname" value="15 | External GPS and radio UART ports"/>
-      <property name="Sheetfile" value="telemetry.kicad_sch"/>
-      <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
-      <sheetpath names="/15 | External GPS and radio UART ports/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
-      <tstamps>8c5583da-0e74-5084-a5a7-1fd443b5a305</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="C442">
-      <value>22uF 25V X7R 10%</value>
-      <footprint>rocket:M3_GRM32_1210</footprint>
-      <fields>
-        <field name="LCSC">C21397</field>
-        <field name="Manufacturer">Murata</field>
-        <field name="Manufacturer Part">GRM32ER71E226KE15L</field>
-        <field name="Footprint">rocket:M3_GRM32_1210</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C21397"/>
-      <property name="Manufacturer" value="Murata"/>
-      <property name="Manufacturer Part" value="GRM32ER71E226KE15L"/>
-      <property name="Sheetname" value="15 | External GPS and radio UART ports"/>
-      <property name="Sheetfile" value="telemetry.kicad_sch"/>
-      <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
-      <sheetpath names="/15 | External GPS and radio UART ports/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
-      <tstamps>b105e7ad-8f8f-568c-ba6c-727dd37c2bcd</tstamps>
       <units>
         <unit name="A">
           <pins>
@@ -7265,66 +6905,6 @@
       <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
       <sheetpath names="/15 | External GPS and radio UART ports/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
       <tstamps>fe979599-489d-5343-8902-0a4bfc007fd0</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="C451">
-      <value>1uF 50V X7R 10%</value>
-      <footprint>rocket:C_1206_3216Metric</footprint>
-      <fields>
-        <field name="LCSC">C1848</field>
-        <field name="Manufacturer">Samsung Electro-Mechanics</field>
-        <field name="Manufacturer Part">CL31B105KBHNNNE</field>
-        <field name="Footprint">rocket:C_1206_3216Metric</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C1848"/>
-      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
-      <property name="Manufacturer Part" value="CL31B105KBHNNNE"/>
-      <property name="Sheetname" value="15 | External GPS and radio UART ports"/>
-      <property name="Sheetfile" value="telemetry.kicad_sch"/>
-      <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
-      <sheetpath names="/15 | External GPS and radio UART ports/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
-      <tstamps>cb082212-cd6f-5ee8-84c5-ef6f80710969</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="C452">
-      <value>22uF 25V X7R 10%</value>
-      <footprint>rocket:M3_GRM32_1210</footprint>
-      <fields>
-        <field name="LCSC">C21397</field>
-        <field name="Manufacturer">Murata</field>
-        <field name="Manufacturer Part">GRM32ER71E226KE15L</field>
-        <field name="Footprint">rocket:M3_GRM32_1210</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C21397"/>
-      <property name="Manufacturer" value="Murata"/>
-      <property name="Manufacturer Part" value="GRM32ER71E226KE15L"/>
-      <property name="Sheetname" value="15 | External GPS and radio UART ports"/>
-      <property name="Sheetfile" value="telemetry.kicad_sch"/>
-      <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"/>
-      <sheetpath names="/15 | External GPS and radio UART ports/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
-      <tstamps>59535e20-6503-5b05-8b36-8bc9805c017b</tstamps>
       <units>
         <unit name="A">
           <pins>
@@ -7640,36 +7220,6 @@
         </unit>
       </units>
     </comp>
-    <comp ref="R443">
-      <value>1k 1%</value>
-      <footprint>rocket:R_0603_1608Metric</footprint>
-      <fields>
-        <field name="LCSC">C21190</field>
-        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0603WAF1001T5E</field>
-        <field name="Footprint">rocket:R_0603_1608Metric</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C21190"/>
-      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0603WAF1001T5E"/>
-      <property name="Sheetname" value="15 | External GPS and radio UART ports"/>
-      <property name="Sheetfile" value="telemetry.kicad_sch"/>
-      <property name="ki_keywords" value="R res resistor"/>
-      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"/>
-      <sheetpath names="/15 | External GPS and radio UART ports/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
-      <tstamps>08f2f7d2-9b1c-5ede-90d3-edb3937c1d2f</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
     <comp ref="R450">
       <value>1k 1%</value>
       <footprint>rocket:R_0603_1608Metric</footprint>
@@ -7760,36 +7310,6 @@
         </unit>
       </units>
     </comp>
-    <comp ref="R453">
-      <value>1k 1%</value>
-      <footprint>rocket:R_0603_1608Metric</footprint>
-      <fields>
-        <field name="LCSC">C21190</field>
-        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0603WAF1001T5E</field>
-        <field name="Footprint">rocket:R_0603_1608Metric</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C21190"/>
-      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0603WAF1001T5E"/>
-      <property name="Sheetname" value="15 | External GPS and radio UART ports"/>
-      <property name="Sheetfile" value="telemetry.kicad_sch"/>
-      <property name="ki_keywords" value="R res resistor"/>
-      <property name="ki_fp_filters" value="R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"/>
-      <sheetpath names="/15 | External GPS and radio UART ports/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
-      <tstamps>9b72aa8c-2a0d-5a7a-a9d0-1aa774a65476</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="2"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
     <comp ref="U411">
       <value>TXU0202DCUR</value>
       <footprint>rocket:M3_TXU0202_DCU</footprint>
@@ -7821,38 +7341,6 @@
             <pin num="8"/>
             <pin num="1"/>
             <pin num="7"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
-    <comp ref="U412">
-      <value>TPS70933DBVR</value>
-      <footprint>rocket:M3_TPS709_DBV</footprint>
-      <fields>
-        <field name="LCSC">C89347</field>
-        <field name="Manufacturer">Texas Instruments</field>
-        <field name="Manufacturer Part">TPS70933DBVR</field>
-        <field name="Footprint">rocket:M3_TPS709_DBV</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="CameraUARTSupply" description=""/>
-      <property name="LCSC" value="C89347"/>
-      <property name="Manufacturer" value="Texas Instruments"/>
-      <property name="Manufacturer Part" value="TPS70933DBVR"/>
-      <property name="Sheetname" value="15 | External GPS and radio UART ports"/>
-      <property name="Sheetfile" value="telemetry.kicad_sch"/>
-      <property name="ki_fp_filters" value="M3_TPS709_DBV"/>
-      <sheetpath names="/15 | External GPS and radio UART ports/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
-      <tstamps>108f1299-3738-510a-8f56-cb9470d51a75</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="3"/>
-            <pin num="2"/>
-            <pin num="5"/>
-            <pin num="4"/>
           </pins>
         </unit>
       </units>
@@ -7892,38 +7380,6 @@
         </unit>
       </units>
     </comp>
-    <comp ref="U422">
-      <value>TPS70933DBVR</value>
-      <footprint>rocket:M3_TPS709_DBV</footprint>
-      <fields>
-        <field name="LCSC">C89347</field>
-        <field name="Manufacturer">Texas Instruments</field>
-        <field name="Manufacturer Part">TPS70933DBVR</field>
-        <field name="Footprint">rocket:M3_TPS709_DBV</field>
-        <field name="Datasheet"/>
-        <field name="Description"/>
-      </fields>
-      <libsource lib="M3" part="CameraUARTSupply" description=""/>
-      <property name="LCSC" value="C89347"/>
-      <property name="Manufacturer" value="Texas Instruments"/>
-      <property name="Manufacturer Part" value="TPS70933DBVR"/>
-      <property name="Sheetname" value="15 | External GPS and radio UART ports"/>
-      <property name="Sheetfile" value="telemetry.kicad_sch"/>
-      <property name="ki_fp_filters" value="M3_TPS709_DBV"/>
-      <sheetpath names="/15 | External GPS and radio UART ports/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
-      <tstamps>1918bb4f-0a83-5313-9a9e-c8ca0769c2a8</tstamps>
-      <units>
-        <unit name="A">
-          <pins>
-            <pin num="1"/>
-            <pin num="3"/>
-            <pin num="2"/>
-            <pin num="5"/>
-            <pin num="4"/>
-          </pins>
-        </unit>
-      </units>
-    </comp>
   </components>
   <libparts>
     <libpart lib="M3" part="BAT54A">
@@ -7939,21 +7395,6 @@
         <pin num="1" name="K1" type="passive"/>
         <pin num="2" name="K2" type="passive"/>
         <pin num="3" name="A" type="passive"/>
-      </pins>
-    </libpart>
-    <libpart lib="M3" part="BAT54S">
-      <description>Dual Schottky, series (1 A1, 2 K2, 3 K1/A2)</description>
-      <fields>
-        <field name="Reference">D</field>
-        <field name="Value">BAT54S</field>
-        <field name="Footprint"/>
-        <field name="Datasheet"/>
-        <field name="Description">Dual Schottky, series (1 A1, 2 K2, 3 K1/A2)</field>
-      </fields>
-      <pins>
-        <pin num="1" name="A1" type="passive"/>
-        <pin num="2" name="K2" type="passive"/>
-        <pin num="3" name="K1A2" type="passive"/>
       </pins>
     </libpart>
     <libpart lib="M3" part="Barometer">
@@ -8770,13 +8211,14 @@
       <node ref="C23" pin="1" pintype="passive"/>
       <node ref="C29" pin="1" pintype="passive"/>
       <node ref="C440" pin="1" pintype="passive"/>
+      <node ref="C443" pin="1" pintype="passive"/>
       <node ref="C450" pin="1" pintype="passive"/>
+      <node ref="C453" pin="1" pintype="passive"/>
       <node ref="C8" pin="1" pintype="passive"/>
       <node ref="C9" pin="1" pintype="passive"/>
       <node ref="C90" pin="1" pintype="passive"/>
       <node ref="D120" pin="3" pinfunction="A_3" pintype="passive"/>
       <node ref="D121" pin="5" pinfunction="VCC_5" pintype="passive"/>
-      <node ref="D122" pin="2" pinfunction="K2_2" pintype="passive"/>
       <node ref="D123" pin="1" pinfunction="K_1" pintype="passive"/>
       <node ref="J2" pin="1" pinfunction="Pin_1_1" pintype="passive"/>
       <node ref="L1" pin="2" pinfunction="2_2" pintype="passive"/>
@@ -8785,7 +8227,6 @@
       <node ref="R11" pin="2" pintype="passive"/>
       <node ref="R12" pin="2" pintype="passive"/>
       <node ref="R13" pin="2" pintype="passive"/>
-      <node ref="R161" pin="1" pintype="passive"/>
       <node ref="R164" pin="1" pintype="passive"/>
       <node ref="R412" pin="2" pintype="passive"/>
       <node ref="R422" pin="2" pintype="passive"/>
@@ -8804,7 +8245,9 @@
       <node ref="U2" pin="1" pinfunction="FB_1" pintype="input"/>
       <node ref="U3" pin="8" pinfunction="VCC_8" pintype="power_in"/>
       <node ref="U411" pin="3" pinfunction="VCCA_MCU_3" pintype="power_in"/>
+      <node ref="U411" pin="7" pinfunction="VCCB_CAMERA_7" pintype="power_in"/>
       <node ref="U421" pin="3" pinfunction="VCCA_MCU_3" pintype="power_in"/>
+      <node ref="U421" pin="7" pinfunction="VCCB_CAMERA_7" pintype="power_in"/>
     </net>
     <net code="2" name="3V3A" class="Default">
       <node ref="C10" pin="1" pintype="passive"/>
@@ -8885,18 +8328,15 @@
       <node ref="C87" pin="1" pintype="passive"/>
       <node ref="R165" pin="2" pintype="passive"/>
       <node ref="R81" pin="1" pintype="passive"/>
-      <node ref="TP84" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U9" pin="1" pinfunction="EN/UVLO_1" pintype="input"/>
     </net>
     <net code="15" name="BAT_FAULT_N" class="Default">
       <node ref="R89" pin="2" pintype="passive"/>
-      <node ref="TP85" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="29" pinfunction="PA5_29" pintype="bidirectional"/>
       <node ref="U9" pin="4" pinfunction="FLT_N_4" pintype="open_collector"/>
     </net>
     <net code="16" name="BAT_ILIM" class="Default">
       <node ref="R84" pin="1" pintype="passive"/>
-      <node ref="TP89" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U9" pin="9" pinfunction="ILM_9" pintype="passive"/>
     </net>
     <net code="17" name="BAT_IN" class="Default">
@@ -9040,7 +8480,6 @@
       <node ref="C14" pin="2" pintype="passive"/>
       <node ref="C15" pin="2" pintype="passive"/>
       <node ref="C16" pin="2" pintype="passive"/>
-      <node ref="C160" pin="2" pintype="passive"/>
       <node ref="C17" pin="2" pintype="passive"/>
       <node ref="C18" pin="2" pintype="passive"/>
       <node ref="C19" pin="2" pintype="passive"/>
@@ -9071,12 +8510,8 @@
       <node ref="C430" pin="2" pintype="passive"/>
       <node ref="C431" pin="2" pintype="passive"/>
       <node ref="C440" pin="2" pintype="passive"/>
-      <node ref="C441" pin="2" pintype="passive"/>
-      <node ref="C442" pin="2" pintype="passive"/>
       <node ref="C443" pin="2" pintype="passive"/>
       <node ref="C450" pin="2" pintype="passive"/>
-      <node ref="C451" pin="2" pintype="passive"/>
-      <node ref="C452" pin="2" pintype="passive"/>
       <node ref="C453" pin="2" pintype="passive"/>
       <node ref="C6" pin="2" pintype="passive"/>
       <node ref="C60" pin="2" pintype="passive"/>
@@ -9102,7 +8537,6 @@
       <node ref="C98" pin="2" pintype="passive"/>
       <node ref="C99" pin="2" pintype="passive"/>
       <node ref="D121" pin="2" pinfunction="GND_2" pintype="passive"/>
-      <node ref="D122" pin="1" pinfunction="A1_1" pintype="passive"/>
       <node ref="D4" pin="2" pinfunction="GND_2" pintype="passive"/>
       <node ref="D400" pin="2" pinfunction="A2_2" pintype="passive"/>
       <node ref="D401" pin="2" pinfunction="A2_2" pintype="passive"/>
@@ -9117,7 +8551,6 @@
       <node ref="J122" pin="3" pinfunction="3_3" pintype="passive"/>
       <node ref="J122" pin="6" pinfunction="6_6" pintype="passive"/>
       <node ref="J122" pin="9" pinfunction="9_9" pintype="passive"/>
-      <node ref="J123" pin="2" pinfunction="2_2" pintype="passive"/>
       <node ref="J2" pin="5" pinfunction="Pin_5_5" pintype="passive"/>
       <node ref="J3" pin="1" pinfunction="SHELL_1_1" pintype="passive"/>
       <node ref="J3" pin="2" pinfunction="SHELL_2_2" pintype="passive"/>
@@ -9165,9 +8598,7 @@
       <node ref="R430" pin="2" pintype="passive"/>
       <node ref="R431" pin="2" pintype="passive"/>
       <node ref="R442" pin="2" pintype="passive"/>
-      <node ref="R443" pin="2" pintype="passive"/>
       <node ref="R452" pin="2" pintype="passive"/>
-      <node ref="R453" pin="2" pintype="passive"/>
       <node ref="R5" pin="2" pintype="passive"/>
       <node ref="R61" pin="2" pintype="passive"/>
       <node ref="R63" pin="2" pintype="passive"/>
@@ -9209,10 +8640,8 @@
       <node ref="U402" pin="2" pinfunction="GND_2" pintype="power_in"/>
       <node ref="U410" pin="2" pinfunction="GND_2" pintype="power_in"/>
       <node ref="U411" pin="2" pinfunction="GND_2" pintype="power_in"/>
-      <node ref="U412" pin="2" pinfunction="GND_2" pintype="power_in"/>
       <node ref="U420" pin="2" pinfunction="GND_2" pintype="power_in"/>
       <node ref="U421" pin="2" pinfunction="GND_2" pintype="power_in"/>
-      <node ref="U422" pin="2" pinfunction="GND_2" pintype="power_in"/>
       <node ref="U5" pin="3" pinfunction="GND_3" pintype="power_in"/>
       <node ref="U5" pin="4" pinfunction="CSB_4" pintype="input"/>
       <node ref="U5" pin="5" pinfunction="CSB_5" pintype="input"/>
@@ -9222,10 +8651,8 @@
     </net>
     <net code="42" name="GPS_4V8" class="Default">
       <node ref="C411" pin="1" pintype="passive"/>
-      <node ref="C441" pin="1" pintype="passive"/>
       <node ref="J410" pin="1" pinfunction="5V_OUT_1" pintype="passive"/>
       <node ref="U410" pin="6" pinfunction="OUT_6" pintype="power_out"/>
-      <node ref="U412" pin="1" pinfunction="IN_1" pintype="power_in"/>
     </net>
     <net code="43" name="GPS_FAULT_N" class="Default">
       <node ref="R412" pin="1" pintype="passive"/>
@@ -9236,114 +8663,106 @@
       <node ref="R410" pin="1" pintype="passive"/>
       <node ref="U410" pin="5" pinfunction="ILIM_5" pintype="passive"/>
     </net>
-    <net code="45" name="GPS_IO_3V3" class="Default">
-      <node ref="C442" pin="1" pintype="passive"/>
-      <node ref="C443" pin="1" pintype="passive"/>
-      <node ref="R443" pin="1" pintype="passive"/>
-      <node ref="U411" pin="7" pinfunction="VCCB_CAMERA_7" pintype="power_in"/>
-      <node ref="U412" pin="5" pinfunction="OUT3.3V_5" pintype="power_out"/>
-    </net>
-    <net code="46" name="GPS_PWR_EN" class="Default">
+    <net code="45" name="GPS_PWR_EN" class="Default">
       <node ref="R411" pin="1" pintype="passive"/>
       <node ref="U1" pin="61" pinfunction="PD14_61" pintype="bidirectional"/>
       <node ref="U410" pin="3" pinfunction="EN_3" pintype="input"/>
     </net>
-    <net code="47" name="GPS_RX_BUFFER" class="Default">
+    <net code="46" name="GPS_RX_BUFFER" class="Default">
       <node ref="R440" pin="2" pintype="passive"/>
       <node ref="U411" pin="1" pinfunction="B2_FROM_CAMERA_1" pintype="input"/>
     </net>
-    <net code="48" name="GPS_RX_MCU" class="Default">
+    <net code="47" name="GPS_RX_MCU" class="Default">
       <node ref="U1" pin="64" pinfunction="PC7_64" pintype="bidirectional"/>
       <node ref="U411" pin="4" pinfunction="A2Y_RX_OUTPUT_4" pintype="tri_state"/>
     </net>
-    <net code="49" name="GPS_RX_WIRE" class="Default">
+    <net code="48" name="GPS_RX_WIRE" class="Default">
       <node ref="D411" pin="1" pinfunction="A1_1" pintype="passive"/>
       <node ref="J410" pin="4" pinfunction="TX_TO_CAMERA_RX_4" pintype="passive"/>
       <node ref="R440" pin="1" pintype="passive"/>
     </net>
-    <net code="50" name="GPS_TX_BUFFER" class="Default">
+    <net code="49" name="GPS_TX_BUFFER" class="Default">
       <node ref="R441" pin="1" pintype="passive"/>
       <node ref="U411" pin="8" pinfunction="B1Y_TO_CAMERA_8" pintype="tri_state"/>
     </net>
-    <net code="51" name="GPS_TX_MCU" class="Default">
+    <net code="50" name="GPS_TX_MCU" class="Default">
       <node ref="U1" pin="63" pinfunction="PC6_63" pintype="bidirectional"/>
       <node ref="U411" pin="5" pinfunction="A1_TX_INPUT_5" pintype="input"/>
     </net>
-    <net code="52" name="GPS_TX_WIRE" class="Default">
+    <net code="51" name="GPS_TX_WIRE" class="Default">
       <node ref="D410" pin="1" pinfunction="A1_1" pintype="passive"/>
       <node ref="J410" pin="3" pinfunction="RX_FROM_CAMERA_TX_3" pintype="passive"/>
       <node ref="R441" pin="2" pintype="passive"/>
     </net>
-    <net code="53" name="GPS_UART_OE" class="Default">
+    <net code="52" name="GPS_UART_OE" class="Default">
       <node ref="R442" pin="1" pintype="passive"/>
       <node ref="U1" pin="62" pinfunction="PD15_62" pintype="bidirectional"/>
       <node ref="U411" pin="6" pinfunction="OE_6" pintype="input"/>
     </net>
-    <net code="54" name="HSE_IN" class="Default">
+    <net code="53" name="HSE_IN" class="Default">
       <node ref="C25" pin="1" pintype="passive"/>
       <node ref="U1" pin="12" pinfunction="PH0_12" pintype="bidirectional"/>
       <node ref="Y1" pin="1" pinfunction="1_1" pintype="passive"/>
     </net>
-    <net code="55" name="HSE_OUT" class="Default">
+    <net code="54" name="HSE_OUT" class="Default">
       <node ref="C26" pin="1" pintype="passive"/>
       <node ref="U1" pin="13" pinfunction="PH1_13" pintype="bidirectional"/>
       <node ref="Y1" pin="3" pinfunction="3_3" pintype="passive"/>
     </net>
-    <net code="56" name="I2C1_SCL" class="Default">
+    <net code="55" name="I2C1_SCL" class="Default">
       <node ref="R12" pin="1" pintype="passive"/>
       <node ref="U1" pin="95" pinfunction="PB8_95" pintype="bidirectional"/>
       <node ref="U5" pin="8" pinfunction="SCLK_8" pintype="input"/>
     </net>
-    <net code="57" name="I2C1_SDA" class="Default">
+    <net code="56" name="I2C1_SDA" class="Default">
       <node ref="R13" pin="1" pintype="passive"/>
       <node ref="U1" pin="96" pinfunction="PB9_96" pintype="bidirectional"/>
       <node ref="U5" pin="7" pinfunction="SDI/SDA_7" pintype="bidirectional"/>
     </net>
-    <net code="58" name="IMU_CS" class="Default">
+    <net code="57" name="IMU_CS" class="Default">
       <node ref="R11" pin="1" pintype="passive"/>
       <node ref="U1" pin="93" pinfunction="PB7_93" pintype="bidirectional"/>
       <node ref="U4" pin="12" pinfunction="CS_12" pintype="input"/>
     </net>
-    <net code="59" name="IMU_INT1" class="Default">
+    <net code="58" name="IMU_INT1" class="Default">
       <node ref="U1" pin="98" pinfunction="PE1_98" pintype="bidirectional"/>
       <node ref="U4" pin="4" pinfunction="INT1_4" pintype="output"/>
     </net>
-    <net code="60" name="LED_RED" class="Default">
+    <net code="59" name="LED_RED" class="Default">
       <node ref="R32" pin="1" pintype="passive"/>
       <node ref="U1" pin="86" pinfunction="PD5_86" pintype="bidirectional"/>
     </net>
-    <net code="61" name="LED_RED_A" class="Default">
+    <net code="60" name="LED_RED_A" class="Default">
       <node ref="LED1" pin="2" pinfunction="A_2" pintype="passive"/>
       <node ref="R32" pin="2" pintype="passive"/>
     </net>
-    <net code="62" name="LED_YEL" class="Default">
+    <net code="61" name="LED_YEL" class="Default">
       <node ref="R33" pin="1" pintype="passive"/>
       <node ref="U1" pin="88" pinfunction="PD7_88" pintype="bidirectional"/>
     </net>
-    <net code="63" name="LED_YEL_A" class="Default">
+    <net code="62" name="LED_YEL_A" class="Default">
       <node ref="LED2" pin="1" pinfunction="A_1" pintype="passive"/>
       <node ref="R33" pin="2" pintype="passive"/>
     </net>
-    <net code="64" name="LOGIC_ILIM" class="Default">
+    <net code="63" name="LOGIC_ILIM" class="Default">
       <node ref="R86" pin="1" pintype="passive"/>
       <node ref="U11" pin="10" pinfunction="ILIM_10" pintype="passive"/>
     </net>
-    <net code="65" name="LOGIC_SOURCE_ST" class="Default">
+    <net code="64" name="LOGIC_SOURCE_ST" class="Default">
       <node ref="R91" pin="2" pintype="passive"/>
-      <node ref="TP87" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="28" pinfunction="PA4_28" pintype="bidirectional"/>
       <node ref="U11" pin="9" pinfunction="ST_9" pintype="open_collector"/>
     </net>
-    <net code="66" name="LOGIC_SS" class="Default">
+    <net code="65" name="LOGIC_SS" class="Default">
       <node ref="C85" pin="1" pintype="passive"/>
       <node ref="U11" pin="11" pinfunction="SS_11" pintype="passive"/>
     </net>
-    <net code="67" name="NRST" class="Default">
+    <net code="66" name="NRST" class="Default">
       <node ref="C24" pin="1" pintype="passive"/>
       <node ref="J2" pin="3" pinfunction="Pin_3_3" pintype="passive"/>
       <node ref="U1" pin="14" pinfunction="NRST_14" pintype="input"/>
     </net>
-    <net code="68" name="PORT_4V8" class="Default">
+    <net code="67" name="PORT_4V8" class="Default">
       <node ref="C406" pin="1" pintype="passive"/>
       <node ref="C407" pin="1" pintype="passive"/>
       <node ref="C410" pin="1" pintype="passive"/>
@@ -9355,7 +8774,7 @@
       <node ref="U410" pin="1" pinfunction="IN_1" pintype="power_in"/>
       <node ref="U420" pin="1" pinfunction="IN_1" pintype="power_in"/>
     </net>
-    <net code="69" name="PORT_5V3" class="Default">
+    <net code="68" name="PORT_5V3" class="Default">
       <node ref="C403" pin="1" pintype="passive"/>
       <node ref="C404" pin="1" pintype="passive"/>
       <node ref="C405" pin="1" pintype="passive"/>
@@ -9367,171 +8786,151 @@
       <node ref="U401" pin="9" pinfunction="IN_9" pintype="power_in"/>
       <node ref="U402" pin="1" pinfunction="IN_1" pintype="power_in"/>
     </net>
-    <net code="70" name="PORT_BST" class="Default">
+    <net code="69" name="PORT_BST" class="Default">
       <node ref="C402" pin="1" pintype="passive"/>
       <node ref="U400" pin="6" pinfunction="BST_6" pintype="passive"/>
     </net>
-    <net code="71" name="PORT_FB" class="Default">
+    <net code="70" name="PORT_FB" class="Default">
       <node ref="R401" pin="1" pintype="passive"/>
       <node ref="R404" pin="2" pintype="passive"/>
       <node ref="U400" pin="1" pinfunction="FB_1" pintype="input"/>
     </net>
-    <net code="72" name="PORT_FB_TOP" class="Default">
+    <net code="71" name="PORT_FB_TOP" class="Default">
       <node ref="R400" pin="2" pintype="passive"/>
       <node ref="R404" pin="1" pintype="passive"/>
     </net>
-    <net code="73" name="PORT_LDO_FB" class="Default">
+    <net code="72" name="PORT_LDO_FB" class="Default">
       <node ref="R402" pin="2" pintype="passive"/>
       <node ref="R403" pin="1" pintype="passive"/>
       <node ref="U401" pin="3" pinfunction="FB_3" pintype="input"/>
     </net>
-    <net code="74" name="PORT_LDO_SS" class="Default">
+    <net code="73" name="PORT_LDO_SS" class="Default">
       <node ref="C408" pin="1" pintype="passive"/>
       <node ref="U401" pin="8" pinfunction="NR_SS_8" pintype="passive"/>
     </net>
-    <net code="75" name="PORT_SW" class="Default">
+    <net code="74" name="PORT_SW" class="Default">
       <node ref="C402" pin="2" pintype="passive"/>
       <node ref="L400" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U400" pin="5" pinfunction="SW_5" pintype="output"/>
     </net>
-    <net code="76" name="PULLPIN" class="Default">
-      <node ref="C160" pin="1" pintype="passive"/>
-      <node ref="D122" pin="3" pinfunction="K1A2_3" pintype="passive"/>
-      <node ref="R160" pin="2" pintype="passive"/>
-      <node ref="R161" pin="2" pintype="passive"/>
-      <node ref="U1" pin="7" pinfunction="PC13_7" pintype="bidirectional"/>
-    </net>
-    <net code="77" name="PULLPIN_EXT" class="Default">
-      <node ref="J123" pin="1" pinfunction="1_1" pintype="passive"/>
-      <node ref="R160" pin="1" pintype="passive"/>
-    </net>
-    <net code="78" name="PYRO1_COLD" class="Default">
+    <net code="75" name="PYRO1_COLD" class="Default">
       <node ref="D120" pin="1" pinfunction="K1_1" pintype="passive"/>
       <node ref="R131" pin="2" pintype="passive"/>
     </net>
-    <net code="79" name="PYRO1_CONT" class="Default">
+    <net code="76" name="PYRO1_CONT" class="Default">
       <node ref="C127" pin="1" pintype="passive"/>
       <node ref="R129" pin="2" pintype="passive"/>
       <node ref="R130" pin="1" pintype="passive"/>
       <node ref="R168" pin="1" pintype="passive"/>
       <node ref="R178" pin="1" pintype="passive"/>
     </net>
-    <net code="80" name="PYRO1_CONT_MCU" class="Default">
+    <net code="77" name="PYRO1_CONT_MCU" class="Default">
       <node ref="R168" pin="2" pintype="passive"/>
       <node ref="U1" pin="15" pinfunction="PC0_15" pintype="bidirectional"/>
     </net>
-    <net code="81" name="PYRO1_CONT_MID" class="Default">
+    <net code="78" name="PYRO1_CONT_MID" class="Default">
       <node ref="R129" pin="1" pintype="passive"/>
       <node ref="R173" pin="2" pintype="passive"/>
     </net>
-    <net code="82" name="PYRO1_GATE" class="Default">
+    <net code="79" name="PYRO1_GATE" class="Default">
       <node ref="C126" pin="1" pintype="passive"/>
       <node ref="Q124" pin="4" pinfunction="G_4" pintype="passive"/>
       <node ref="R126" pin="2" pintype="passive"/>
       <node ref="R128" pin="1" pintype="passive"/>
       <node ref="TP122" pin="1" pinfunction="1_1" pintype="passive"/>
     </net>
-    <net code="83" name="PYRO1_GATE_N" class="Default">
+    <net code="80" name="PYRO1_GATE_N" class="Default">
       <node ref="R126" pin="1" pintype="passive"/>
       <node ref="R127" pin="1" pintype="passive"/>
       <node ref="U1" pin="3" pinfunction="PE4_3" pintype="bidirectional"/>
     </net>
-    <net code="84" name="PYRO1_IGN" class="Default">
+    <net code="81" name="PYRO1_IGN" class="Default">
       <node ref="J121" pin="2" pinfunction="2_2" pintype="passive"/>
       <node ref="R134" pin="1" pintype="passive"/>
     </net>
-    <net code="85" name="PYRO1_OUT" class="Default">
+    <net code="82" name="PYRO1_OUT" class="Default">
       <node ref="C128" pin="1" pintype="passive"/>
       <node ref="J121" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="Q124" pin="5" pinfunction="D_5" pintype="passive"/>
       <node ref="R131" pin="1" pintype="passive"/>
       <node ref="R173" pin="1" pintype="passive"/>
     </net>
-    <net code="86" name="QSPI_CLK" class="Default">
+    <net code="83" name="QSPI_CLK" class="Default">
       <node ref="U1" pin="36" pinfunction="PB2_36" pintype="bidirectional"/>
       <node ref="U3" pin="6" pinfunction="CLK_6" pintype="input"/>
     </net>
-    <net code="87" name="QSPI_IO0" class="Default">
+    <net code="84" name="QSPI_IO0" class="Default">
       <node ref="U1" pin="58" pinfunction="PD11_58" pintype="bidirectional"/>
       <node ref="U3" pin="5" pinfunction="DI/IO_{0}_5" pintype="bidirectional"/>
     </net>
-    <net code="88" name="QSPI_IO1" class="Default">
+    <net code="85" name="QSPI_IO1" class="Default">
       <node ref="U1" pin="59" pinfunction="PD12_59" pintype="bidirectional"/>
       <node ref="U3" pin="2" pinfunction="DO/IO_{1}_2" pintype="bidirectional"/>
     </net>
-    <net code="89" name="QSPI_IO2" class="Default">
+    <net code="86" name="QSPI_IO2" class="Default">
       <node ref="U1" pin="1" pinfunction="PE2_1" pintype="bidirectional"/>
       <node ref="U3" pin="3" pinfunction="~{WP}/IO_{2}_3" pintype="bidirectional"/>
     </net>
-    <net code="90" name="QSPI_IO3" class="Default">
+    <net code="87" name="QSPI_IO3" class="Default">
       <node ref="U1" pin="60" pinfunction="PD13_60" pintype="bidirectional"/>
       <node ref="U3" pin="7" pinfunction="~{HOLD}/~{RESET}/IO_{3}_7" pintype="bidirectional"/>
     </net>
-    <net code="91" name="QSPI_NCS" class="Default">
+    <net code="88" name="QSPI_NCS" class="Default">
       <node ref="R10" pin="1" pintype="passive"/>
       <node ref="U1" pin="92" pinfunction="PB6_92" pintype="bidirectional"/>
       <node ref="U3" pin="1" pinfunction="~{CS}_1" pintype="input"/>
     </net>
-    <net code="92" name="RADIO_4V8" class="Default">
+    <net code="89" name="RADIO_4V8" class="Default">
       <node ref="C421" pin="1" pintype="passive"/>
-      <node ref="C451" pin="1" pintype="passive"/>
       <node ref="J420" pin="1" pinfunction="5V_OUT_1" pintype="passive"/>
       <node ref="U420" pin="6" pinfunction="OUT_6" pintype="power_out"/>
-      <node ref="U422" pin="1" pinfunction="IN_1" pintype="power_in"/>
     </net>
-    <net code="93" name="RADIO_FAULT_N" class="Default">
+    <net code="90" name="RADIO_FAULT_N" class="Default">
       <node ref="R422" pin="1" pintype="passive"/>
       <node ref="U1" pin="56" pinfunction="PD9_56" pintype="bidirectional"/>
       <node ref="U420" pin="4" pinfunction="FAULT_N_4" pintype="open_collector"/>
     </net>
-    <net code="94" name="RADIO_ILIM" class="Default">
+    <net code="91" name="RADIO_ILIM" class="Default">
       <node ref="R420" pin="1" pintype="passive"/>
       <node ref="U420" pin="5" pinfunction="ILIM_5" pintype="passive"/>
     </net>
-    <net code="95" name="RADIO_IO_3V3" class="Default">
-      <node ref="C452" pin="1" pintype="passive"/>
-      <node ref="C453" pin="1" pintype="passive"/>
-      <node ref="R453" pin="1" pintype="passive"/>
-      <node ref="U421" pin="7" pinfunction="VCCB_CAMERA_7" pintype="power_in"/>
-      <node ref="U422" pin="5" pinfunction="OUT3.3V_5" pintype="power_out"/>
-    </net>
-    <net code="96" name="RADIO_PWR_EN" class="Default">
+    <net code="92" name="RADIO_PWR_EN" class="Default">
       <node ref="R421" pin="1" pintype="passive"/>
       <node ref="U1" pin="55" pinfunction="PD8_55" pintype="bidirectional"/>
       <node ref="U420" pin="3" pinfunction="EN_3" pintype="input"/>
     </net>
-    <net code="97" name="RADIO_RX_BUFFER" class="Default">
+    <net code="93" name="RADIO_RX_BUFFER" class="Default">
       <node ref="R450" pin="2" pintype="passive"/>
       <node ref="U421" pin="1" pinfunction="B2_FROM_CAMERA_1" pintype="input"/>
     </net>
-    <net code="98" name="RADIO_RX_MCU" class="Default">
+    <net code="94" name="RADIO_RX_MCU" class="Default">
       <node ref="U1" pin="51" pinfunction="PB12_51" pintype="bidirectional"/>
       <node ref="U421" pin="4" pinfunction="A2Y_RX_OUTPUT_4" pintype="tri_state"/>
     </net>
-    <net code="99" name="RADIO_RX_WIRE" class="Default">
+    <net code="95" name="RADIO_RX_WIRE" class="Default">
       <node ref="D421" pin="1" pinfunction="A1_1" pintype="passive"/>
       <node ref="J420" pin="4" pinfunction="TX_TO_CAMERA_RX_4" pintype="passive"/>
       <node ref="R450" pin="1" pintype="passive"/>
     </net>
-    <net code="100" name="RADIO_TX_BUFFER" class="Default">
+    <net code="96" name="RADIO_TX_BUFFER" class="Default">
       <node ref="R451" pin="1" pintype="passive"/>
       <node ref="U421" pin="8" pinfunction="B1Y_TO_CAMERA_8" pintype="tri_state"/>
     </net>
-    <net code="101" name="RADIO_TX_MCU" class="Default">
+    <net code="97" name="RADIO_TX_MCU" class="Default">
       <node ref="U1" pin="52" pinfunction="PB13_52" pintype="bidirectional"/>
       <node ref="U421" pin="5" pinfunction="A1_TX_INPUT_5" pintype="input"/>
     </net>
-    <net code="102" name="RADIO_TX_WIRE" class="Default">
+    <net code="98" name="RADIO_TX_WIRE" class="Default">
       <node ref="D420" pin="1" pinfunction="A1_1" pintype="passive"/>
       <node ref="J420" pin="3" pinfunction="RX_FROM_CAMERA_TX_3" pintype="passive"/>
       <node ref="R451" pin="2" pintype="passive"/>
     </net>
-    <net code="103" name="RADIO_UART_OE" class="Default">
+    <net code="99" name="RADIO_UART_OE" class="Default">
       <node ref="R452" pin="1" pintype="passive"/>
       <node ref="U1" pin="45" pinfunction="PE15_45" pintype="bidirectional"/>
       <node ref="U421" pin="6" pinfunction="OE_6" pintype="input"/>
     </net>
-    <net code="104" name="RAW_ACT" class="Default">
+    <net code="100" name="RAW_ACT" class="Default">
       <node ref="Q121" pin="5" pinfunction="D_5" pintype="passive"/>
       <node ref="Q121" pin="6" pinfunction="D_6" pintype="passive"/>
       <node ref="Q121" pin="7" pinfunction="D_7" pintype="passive"/>
@@ -9542,22 +8941,22 @@
       <node ref="R177" pin="1" pintype="passive"/>
       <node ref="TP120" pin="1" pinfunction="1_1" pintype="passive"/>
     </net>
-    <net code="105" name="RAW_ACT_SENSE" class="Default">
+    <net code="101" name="RAW_ACT_SENSE" class="Default">
       <node ref="C122" pin="1" pintype="passive"/>
       <node ref="R124" pin="2" pintype="passive"/>
       <node ref="R125" pin="1" pintype="passive"/>
       <node ref="R172" pin="1" pintype="passive"/>
       <node ref="R182" pin="1" pintype="passive"/>
     </net>
-    <net code="106" name="RAW_ACT_SENSE_MCU" class="Default">
+    <net code="102" name="RAW_ACT_SENSE_MCU" class="Default">
       <node ref="R172" pin="2" pintype="passive"/>
       <node ref="U1" pin="34" pinfunction="PB0_34" pintype="bidirectional"/>
     </net>
-    <net code="107" name="RAW_ACT_SENSE_MID" class="Default">
+    <net code="103" name="RAW_ACT_SENSE_MID" class="Default">
       <node ref="R124" pin="1" pintype="passive"/>
       <node ref="R177" pin="2" pintype="passive"/>
     </net>
-    <net code="108" name="RAW_PROTECTED" class="Default">
+    <net code="104" name="RAW_PROTECTED" class="Default">
       <node ref="C400" pin="1" pintype="passive"/>
       <node ref="C401" pin="1" pintype="passive"/>
       <node ref="C82" pin="1" pintype="passive"/>
@@ -9570,96 +8969,95 @@
       <node ref="U400" pin="3" pinfunction="IN_3" pintype="power_in"/>
       <node ref="U9" pin="6" pinfunction="OUT_6" pintype="power_out"/>
     </net>
-    <net code="109" name="SERVO1_MCU" class="Default">
+    <net code="105" name="SERVO1_MCU" class="Default">
       <node ref="D121" pin="1" pinfunction="IO1_1" pintype="passive"/>
       <node ref="R150" pin="1" pintype="passive"/>
       <node ref="R154" pin="1" pintype="passive"/>
       <node ref="U1" pin="22" pinfunction="PA0_22" pintype="bidirectional"/>
     </net>
-    <net code="110" name="SERVO1_OUT" class="Default">
+    <net code="106" name="SERVO1_OUT" class="Default">
       <node ref="J122" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="R150" pin="2" pintype="passive"/>
     </net>
-    <net code="111" name="SERVO2_MCU" class="Default">
+    <net code="107" name="SERVO2_MCU" class="Default">
       <node ref="D121" pin="3" pinfunction="IO2_3" pintype="passive"/>
       <node ref="R151" pin="1" pintype="passive"/>
       <node ref="R155" pin="1" pintype="passive"/>
       <node ref="U1" pin="23" pinfunction="PA1_23" pintype="bidirectional"/>
     </net>
-    <net code="112" name="SERVO2_OUT" class="Default">
+    <net code="108" name="SERVO2_OUT" class="Default">
       <node ref="J122" pin="4" pinfunction="4_4" pintype="passive"/>
       <node ref="R151" pin="2" pintype="passive"/>
     </net>
-    <net code="113" name="SERVO3_MCU" class="Default">
+    <net code="109" name="SERVO3_MCU" class="Default">
       <node ref="D121" pin="4" pinfunction="IO3_4" pintype="passive"/>
       <node ref="R152" pin="1" pintype="passive"/>
       <node ref="R156" pin="1" pintype="passive"/>
       <node ref="U1" pin="24" pinfunction="PA2_24" pintype="bidirectional"/>
     </net>
-    <net code="114" name="SERVO3_OUT" class="Default">
+    <net code="110" name="SERVO3_OUT" class="Default">
       <node ref="J122" pin="7" pinfunction="7_7" pintype="passive"/>
       <node ref="R152" pin="2" pintype="passive"/>
     </net>
-    <net code="115" name="SERVO4_MCU" class="Default">
+    <net code="111" name="SERVO4_MCU" class="Default">
       <node ref="D121" pin="6" pinfunction="IO4_6" pintype="passive"/>
       <node ref="R153" pin="1" pintype="passive"/>
       <node ref="R157" pin="1" pintype="passive"/>
       <node ref="U1" pin="25" pinfunction="PA3_25" pintype="bidirectional"/>
     </net>
-    <net code="116" name="SERVO4_OUT" class="Default">
+    <net code="112" name="SERVO4_OUT" class="Default">
       <node ref="J122" pin="10" pinfunction="10_10" pintype="passive"/>
       <node ref="R153" pin="2" pintype="passive"/>
     </net>
-    <net code="117" name="SPI1_MISO" class="Default">
+    <net code="113" name="SPI1_MISO" class="Default">
       <node ref="U1" pin="90" pinfunction="PB4_90" pintype="bidirectional"/>
       <node ref="U4" pin="1" pinfunction="SDO_1" pintype="output"/>
     </net>
-    <net code="118" name="SPI1_MOSI" class="Default">
+    <net code="114" name="SPI1_MOSI" class="Default">
       <node ref="U1" pin="91" pinfunction="PB5_91" pintype="bidirectional"/>
       <node ref="U4" pin="14" pinfunction="SDA/SDI_14" pintype="input"/>
     </net>
-    <net code="119" name="SPI1_SCK" class="Default">
+    <net code="115" name="SPI1_SCK" class="Default">
       <node ref="U1" pin="89" pinfunction="PB3_89" pintype="bidirectional"/>
       <node ref="U4" pin="13" pinfunction="SCL/SPC_13" pintype="input"/>
     </net>
-    <net code="120" name="SWCLK" class="Default">
+    <net code="116" name="SWCLK" class="Default">
       <node ref="J2" pin="4" pinfunction="Pin_4_4" pintype="passive"/>
       <node ref="U1" pin="76" pinfunction="PA14_76" pintype="bidirectional"/>
     </net>
-    <net code="121" name="SWDIO" class="Default">
+    <net code="117" name="SWDIO" class="Default">
       <node ref="J2" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
       <node ref="U1" pin="72" pinfunction="PA13_72" pintype="bidirectional"/>
     </net>
-    <net code="122" name="SW_NODE" class="Default">
+    <net code="118" name="SW_NODE" class="Default">
       <node ref="C5" pin="1" pintype="passive"/>
       <node ref="L1" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U2" pin="5" pinfunction="SW_5" pintype="output"/>
     </net>
-    <net code="123" name="USB_DM" class="Default">
+    <net code="119" name="USB_DM" class="Default">
       <node ref="D4" pin="1" pinfunction="I/O1_1" pintype="passive"/>
       <node ref="D4" pin="6" pinfunction="I/O1_6" pintype="passive"/>
       <node ref="J3" pin="A7" pinfunction="D-_A7" pintype="passive"/>
       <node ref="J3" pin="B7" pinfunction="D-_B7" pintype="passive"/>
       <node ref="U1" pin="70" pinfunction="PA11_70" pintype="bidirectional"/>
     </net>
-    <net code="124" name="USB_DP" class="Default">
+    <net code="120" name="USB_DP" class="Default">
       <node ref="D4" pin="3" pinfunction="I/O2_3" pintype="passive"/>
       <node ref="D4" pin="4" pinfunction="I/O2_4" pintype="passive"/>
       <node ref="J3" pin="A6" pinfunction="D+_A6" pintype="passive"/>
       <node ref="J3" pin="B6" pinfunction="D+_B6" pintype="passive"/>
       <node ref="U1" pin="71" pinfunction="PA12_71" pintype="bidirectional"/>
     </net>
-    <net code="125" name="USB_FAULT_N" class="Default">
+    <net code="121" name="USB_FAULT_N" class="Default">
       <node ref="R90" pin="2" pintype="passive"/>
-      <node ref="TP86" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="87" pinfunction="PD6_87" pintype="bidirectional"/>
       <node ref="U10" pin="4" pinfunction="FAULT_N_4" pintype="open_collector"/>
     </net>
-    <net code="126" name="USB_ILIM" class="Default">
+    <net code="122" name="USB_ILIM" class="Default">
       <node ref="R85" pin="1" pintype="passive"/>
       <node ref="U10" pin="5" pinfunction="ILIM_5" pintype="passive"/>
     </net>
-    <net code="127" name="USB_LIMITED" class="Default">
+    <net code="123" name="USB_LIMITED" class="Default">
       <node ref="C86" pin="1" pintype="passive"/>
       <node ref="C98" pin="1" pintype="passive"/>
       <node ref="R87" pin="1" pintype="passive"/>
@@ -9667,17 +9065,17 @@
       <node ref="U10" pin="6" pinfunction="OUT_6" pintype="power_out"/>
       <node ref="U11" pin="7" pinfunction="IN1_USB_7" pintype="power_in"/>
     </net>
-    <net code="128" name="USB_OVLO" class="Default">
+    <net code="124" name="USB_OVLO" class="Default">
       <node ref="R87" pin="2" pintype="passive"/>
       <node ref="R88" pin="1" pintype="passive"/>
       <node ref="U11" pin="5" pinfunction="OV1_5" pintype="input"/>
     </net>
-    <net code="129" name="V3V3_SENSE" class="Default">
+    <net code="125" name="V3V3_SENSE" class="Default">
       <node ref="R62" pin="2" pintype="passive"/>
       <node ref="R63" pin="1" pintype="passive"/>
       <node ref="U1" pin="18" pinfunction="PC3_C_18" pintype="bidirectional"/>
     </net>
-    <net code="130" name="VBUS" class="Default">
+    <net code="126" name="VBUS" class="Default">
       <node ref="C28" pin="1" pintype="passive"/>
       <node ref="C83" pin="1" pintype="passive"/>
       <node ref="D4" pin="5" pinfunction="VBUS_5" pintype="passive"/>
@@ -9687,21 +9085,20 @@
       <node ref="U10" pin="1" pinfunction="IN_1" pintype="power_in"/>
       <node ref="U10" pin="3" pinfunction="EN_3" pintype="input"/>
     </net>
-    <net code="131" name="VBUS_SENSE" class="Default">
+    <net code="127" name="VBUS_SENSE" class="Default">
       <node ref="R110" pin="1" pintype="passive"/>
       <node ref="R9" pin="2" pintype="passive"/>
-      <node ref="TP92" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U1" pin="65" pinfunction="PC8_65" pintype="bidirectional"/>
     </net>
-    <net code="132" name="VCAP1" class="Default">
+    <net code="128" name="VCAP1" class="Default">
       <node ref="C19" pin="1" pintype="passive"/>
       <node ref="U1" pin="48" pinfunction="VCAP_48" pintype="power_out"/>
     </net>
-    <net code="133" name="VCAP2" class="Default">
+    <net code="129" name="VCAP2" class="Default">
       <node ref="C20" pin="1" pintype="passive"/>
       <node ref="U1" pin="73" pinfunction="VCAP_73" pintype="power_out"/>
     </net>
-    <net code="134" name="VLOGIC" class="Default">
+    <net code="130" name="VLOGIC" class="Default">
       <node ref="C6" pin="1" pintype="passive"/>
       <node ref="C7" pin="1" pintype="passive"/>
       <node ref="C84" pin="1" pintype="passive"/>
@@ -9713,158 +9110,149 @@
       <node ref="U2" pin="2" pinfunction="EN_2" pintype="input"/>
       <node ref="U2" pin="3" pinfunction="IN_3" pintype="power_in"/>
     </net>
-    <net code="135" name="VLOGIC_SENSE" class="Default">
+    <net code="131" name="VLOGIC_SENSE" class="Default">
       <node ref="C60" pin="1" pintype="passive"/>
       <node ref="R60" pin="2" pintype="passive"/>
       <node ref="R61" pin="1" pintype="passive"/>
       <node ref="U1" pin="30" pinfunction="PA6_30" pintype="bidirectional"/>
     </net>
-    <net code="136" name="unconnected-(D120-K2-Pad2)" class="Default">
+    <net code="132" name="unconnected-(D120-K2-Pad2)" class="Default">
       <node ref="D120" pin="2" pinfunction="K2_2" pintype="passive+no_connect"/>
     </net>
-    <net code="137" name="unconnected-(J2-Pin_6-Pad6)" class="Default">
+    <net code="133" name="unconnected-(J2-Pin_6-Pad6)" class="Default">
       <node ref="J2" pin="6" pinfunction="Pin_6_6" pintype="passive+no_connect"/>
     </net>
-    <net code="138" name="unconnected-(J3-SBU1-PadA8)" class="Default">
+    <net code="134" name="unconnected-(J3-SBU1-PadA8)" class="Default">
       <node ref="J3" pin="A8" pinfunction="SBU1_A8" pintype="passive+no_connect"/>
     </net>
-    <net code="139" name="unconnected-(J3-SBU2-PadB8)" class="Default">
+    <net code="135" name="unconnected-(J3-SBU2-PadB8)" class="Default">
       <node ref="J3" pin="B8" pinfunction="SBU2_B8" pintype="passive+no_connect"/>
     </net>
-    <net code="140" name="unconnected-(J122-Pad2)" class="Default">
+    <net code="136" name="unconnected-(J122-Pad2)" class="Default">
       <node ref="J122" pin="2" pinfunction="2_2" pintype="passive+no_connect"/>
     </net>
-    <net code="141" name="unconnected-(J122-Pad5)" class="Default">
+    <net code="137" name="unconnected-(J122-Pad5)" class="Default">
       <node ref="J122" pin="5" pinfunction="5_5" pintype="passive+no_connect"/>
     </net>
-    <net code="142" name="unconnected-(J122-Pad8)" class="Default">
+    <net code="138" name="unconnected-(J122-Pad8)" class="Default">
       <node ref="J122" pin="8" pinfunction="8_8" pintype="passive+no_connect"/>
     </net>
-    <net code="143" name="unconnected-(J122-Pad11)" class="Default">
+    <net code="139" name="unconnected-(J122-Pad11)" class="Default">
       <node ref="J122" pin="11" pinfunction="11_11" pintype="passive+no_connect"/>
     </net>
-    <net code="144" name="unconnected-(LS120-DUMMY-Pad3)" class="Default">
+    <net code="140" name="unconnected-(LS120-DUMMY-Pad3)" class="Default">
       <node ref="LS120" pin="3" pinfunction="DUMMY_3" pintype="passive+no_connect"/>
     </net>
-    <net code="145" name="unconnected-(U1-PA7-Pad31)" class="Default">
+    <net code="141" name="unconnected-(U1-PA7-Pad31)" class="Default">
       <node ref="U1" pin="31" pinfunction="PA7_31" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="146" name="unconnected-(U1-PA8-Pad67)" class="Default">
+    <net code="142" name="unconnected-(U1-PA8-Pad67)" class="Default">
       <node ref="U1" pin="67" pinfunction="PA8_67" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="147" name="unconnected-(U1-PA9-Pad68)" class="Default">
+    <net code="143" name="unconnected-(U1-PA9-Pad68)" class="Default">
       <node ref="U1" pin="68" pinfunction="PA9_68" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="148" name="unconnected-(U1-PA10-Pad69)" class="Default">
+    <net code="144" name="unconnected-(U1-PA10-Pad69)" class="Default">
       <node ref="U1" pin="69" pinfunction="PA10_69" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="149" name="unconnected-(U1-PA15-Pad77)" class="Default">
+    <net code="145" name="unconnected-(U1-PA15-Pad77)" class="Default">
       <node ref="U1" pin="77" pinfunction="PA15_77" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="150" name="unconnected-(U1-PB10-Pad46)" class="Default">
+    <net code="146" name="unconnected-(U1-PB10-Pad46)" class="Default">
       <node ref="U1" pin="46" pinfunction="PB10_46" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="151" name="unconnected-(U1-PB11-Pad47)" class="Default">
+    <net code="147" name="unconnected-(U1-PB11-Pad47)" class="Default">
       <node ref="U1" pin="47" pinfunction="PB11_47" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="152" name="unconnected-(U1-PB14-Pad53)" class="Default">
+    <net code="148" name="unconnected-(U1-PB14-Pad53)" class="Default">
       <node ref="U1" pin="53" pinfunction="PB14_53" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="153" name="unconnected-(U1-PB15-Pad54)" class="Default">
+    <net code="149" name="unconnected-(U1-PB15-Pad54)" class="Default">
       <node ref="U1" pin="54" pinfunction="PB15_54" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="154" name="unconnected-(U1-PC2_C-Pad17)" class="Default">
+    <net code="150" name="unconnected-(U1-PC2_C-Pad17)" class="Default">
       <node ref="U1" pin="17" pinfunction="PC2_C_17" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="155" name="unconnected-(U1-PC4-Pad32)" class="Default">
+    <net code="151" name="unconnected-(U1-PC4-Pad32)" class="Default">
       <node ref="U1" pin="32" pinfunction="PC4_32" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="156" name="unconnected-(U1-PC9-Pad66)" class="Default">
+    <net code="152" name="unconnected-(U1-PC9-Pad66)" class="Default">
       <node ref="U1" pin="66" pinfunction="PC9_66" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="157" name="unconnected-(U1-PC10-Pad78)" class="Default">
+    <net code="153" name="unconnected-(U1-PC10-Pad78)" class="Default">
       <node ref="U1" pin="78" pinfunction="PC10_78" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="158" name="unconnected-(U1-PC11-Pad79)" class="Default">
+    <net code="154" name="unconnected-(U1-PC11-Pad79)" class="Default">
       <node ref="U1" pin="79" pinfunction="PC11_79" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="159" name="unconnected-(U1-PC12-Pad80)" class="Default">
+    <net code="155" name="unconnected-(U1-PC12-Pad80)" class="Default">
       <node ref="U1" pin="80" pinfunction="PC12_80" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="160" name="unconnected-(U1-PC15-Pad9)" class="Default">
+    <net code="156" name="unconnected-(U1-PC13-Pad7)" class="Default">
+      <node ref="U1" pin="7" pinfunction="PC13_7" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="157" name="unconnected-(U1-PC15-Pad9)" class="Default">
       <node ref="U1" pin="9" pinfunction="PC15_9" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="161" name="unconnected-(U1-PD0-Pad81)" class="Default">
+    <net code="158" name="unconnected-(U1-PD0-Pad81)" class="Default">
       <node ref="U1" pin="81" pinfunction="PD0_81" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="162" name="unconnected-(U1-PD1-Pad82)" class="Default">
+    <net code="159" name="unconnected-(U1-PD1-Pad82)" class="Default">
       <node ref="U1" pin="82" pinfunction="PD1_82" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="163" name="unconnected-(U1-PD2-Pad83)" class="Default">
+    <net code="160" name="unconnected-(U1-PD2-Pad83)" class="Default">
       <node ref="U1" pin="83" pinfunction="PD2_83" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="164" name="unconnected-(U1-PD3-Pad84)" class="Default">
+    <net code="161" name="unconnected-(U1-PD3-Pad84)" class="Default">
       <node ref="U1" pin="84" pinfunction="PD3_84" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="165" name="unconnected-(U1-PD4-Pad85)" class="Default">
+    <net code="162" name="unconnected-(U1-PD4-Pad85)" class="Default">
       <node ref="U1" pin="85" pinfunction="PD4_85" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="166" name="unconnected-(U1-PE0-Pad97)" class="Default">
+    <net code="163" name="unconnected-(U1-PE0-Pad97)" class="Default">
       <node ref="U1" pin="97" pinfunction="PE0_97" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="167" name="unconnected-(U1-PE3-Pad2)" class="Default">
+    <net code="164" name="unconnected-(U1-PE3-Pad2)" class="Default">
       <node ref="U1" pin="2" pinfunction="PE3_2" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="168" name="unconnected-(U1-PE5-Pad4)" class="Default">
+    <net code="165" name="unconnected-(U1-PE5-Pad4)" class="Default">
       <node ref="U1" pin="4" pinfunction="PE5_4" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="169" name="unconnected-(U1-PE6-Pad5)" class="Default">
+    <net code="166" name="unconnected-(U1-PE6-Pad5)" class="Default">
       <node ref="U1" pin="5" pinfunction="PE6_5" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="170" name="unconnected-(U1-PE10-Pad40)" class="Default">
+    <net code="167" name="unconnected-(U1-PE10-Pad40)" class="Default">
       <node ref="U1" pin="40" pinfunction="PE10_40" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="171" name="unconnected-(U1-PE13-Pad43)" class="Default">
+    <net code="168" name="unconnected-(U1-PE13-Pad43)" class="Default">
       <node ref="U1" pin="43" pinfunction="PE13_43" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="172" name="unconnected-(U1-PE14-Pad44)" class="Default">
+    <net code="169" name="unconnected-(U1-PE14-Pad44)" class="Default">
       <node ref="U1" pin="44" pinfunction="PE14_44" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="173" name="unconnected-(U4-INT2-Pad9)" class="Default">
+    <net code="170" name="unconnected-(U4-INT2-Pad9)" class="Default">
       <node ref="U4" pin="9" pinfunction="INT2_9" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="174" name="unconnected-(U4-OCS_aux-Pad10)" class="Default">
+    <net code="171" name="unconnected-(U4-OCS_aux-Pad10)" class="Default">
       <node ref="U4" pin="10" pinfunction="OCS_aux_10" pintype="passive+no_connect"/>
     </net>
-    <net code="175" name="unconnected-(U4-SDO_aux-Pad11)" class="Default">
+    <net code="172" name="unconnected-(U4-SDO_aux-Pad11)" class="Default">
       <node ref="U4" pin="11" pinfunction="SDO_aux_11" pintype="passive+no_connect"/>
     </net>
-    <net code="176" name="unconnected-(U9-AUXOFF-Pad3)" class="Default">
+    <net code="173" name="unconnected-(U9-AUXOFF-Pad3)" class="Default">
       <node ref="U9" pin="3" pinfunction="AUXOFF_3" pintype="open_collector+no_connect"/>
     </net>
-    <net code="177" name="unconnected-(U9-ITIMER-Pad10)" class="Default">
+    <net code="174" name="unconnected-(U9-ITIMER-Pad10)" class="Default">
       <node ref="U9" pin="10" pinfunction="ITIMER_10" pintype="passive+no_connect"/>
     </net>
-    <net code="178" name="unconnected-(U13-EN_LEAVE_OPEN-Pad3)" class="Default">
+    <net code="175" name="unconnected-(U13-EN_LEAVE_OPEN-Pad3)" class="Default">
       <node ref="U13" pin="3" pinfunction="EN_LEAVE_OPEN_3" pintype="input+no_connect"/>
     </net>
-    <net code="179" name="unconnected-(U13-NC-Pad4)" class="Default">
+    <net code="176" name="unconnected-(U13-NC-Pad4)" class="Default">
       <node ref="U13" pin="4" pinfunction="NC_4" pintype="no_connect"/>
     </net>
-    <net code="180" name="unconnected-(U401-PG-Pad5)" class="Default">
+    <net code="177" name="unconnected-(U401-PG-Pad5)" class="Default">
       <node ref="U401" pin="5" pinfunction="PG_5" pintype="open_collector+no_connect"/>
-    </net>
-    <net code="181" name="unconnected-(U412-EN_LEAVE_OPEN-Pad3)" class="Default">
-      <node ref="U412" pin="3" pinfunction="EN_LEAVE_OPEN_3" pintype="input+no_connect"/>
-    </net>
-    <net code="182" name="unconnected-(U412-NC-Pad4)" class="Default">
-      <node ref="U412" pin="4" pinfunction="NC_4" pintype="no_connect"/>
-    </net>
-    <net code="183" name="unconnected-(U422-EN_LEAVE_OPEN-Pad3)" class="Default">
-      <node ref="U422" pin="3" pinfunction="EN_LEAVE_OPEN_3" pintype="input+no_connect"/>
-    </net>
-    <net code="184" name="unconnected-(U422-NC-Pad4)" class="Default">
-      <node ref="U422" pin="4" pinfunction="NC_4" pintype="no_connect"/>
     </net>
   </nets>
 </export>

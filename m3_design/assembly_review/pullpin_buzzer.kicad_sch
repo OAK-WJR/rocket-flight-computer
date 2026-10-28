@@ -4,7 +4,7 @@
 	(uuid 169afdd7-d08d-585a-bb42-706654a24862)
 	(paper "A3")
 	(title_block
-		(title "14 | Launch pull-pin and buzzer")
+		(title "14 | Buzzer")
 		(date "2026-09-25")
 		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
@@ -581,377 +581,6 @@
 					(size 1.27 1.27))
 				(hide yes)))))
 	(symbol
-		(lib_id "M3:R")
-		(at 99.06 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 76acb321-f1bc-5df9-9045-eba4a751850f)
-		(property "Reference" "R160"
-			(at 102.87 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "1k"
-			(at 102.87 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C11702"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0402WGF1001TCE"
-			(at 99.06 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
-					(reference "R160")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 99.06 46.99)
-			(xy 99.06 41.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 76c3226e-1873-5f59-9709-5c92b3ca805f))
-	(global_label "PULLPIN_EXT"
-		(shape passive)
-		(at 99.06 41.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid f4c22d9d-edc5-5589-a35b-7a7765edb5b6))
-	(wire
-		(pts
-			(xy 99.06 54.61)
-			(xy 99.06 59.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 198ff86d-2991-5b2e-a297-c905d034b5ee))
-	(global_label "PULLPIN"
-		(shape passive)
-		(at 99.06 59.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 03585788-170c-595f-a226-4e3f4940ed0f))
-	(symbol
-		(lib_id "M3:R")
-		(at 157.48 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 6d91a63f-e927-5d3b-99ff-3acda81009e1)
-		(property "Reference" "R161"
-			(at 161.29 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k"
-			(at 161.29 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 157.48 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 157.48 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
-			(at 157.48 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 157.48 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 157.48 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
-					(reference "R161")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 157.48 46.99)
-			(xy 157.48 41.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 8647041c-50c2-5e8e-9800-ca7b963bfb92))
-	(global_label "3V3"
-		(shape passive)
-		(at 157.48 41.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid ad4e3a81-927c-52c5-a008-f4f7d0e5a588))
-	(wire
-		(pts
-			(xy 157.48 54.61)
-			(xy 157.48 59.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 8254116c-4434-593b-b633-77f503986a10))
-	(global_label "PULLPIN"
-		(shape passive)
-		(at 157.48 59.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid b73a70a9-0f6d-5e67-86d8-164439a61b00))
-	(symbol
-		(lib_id "M3:C")
-		(at 215.9 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 76995d75-e433-5d05-b6cf-da7cef87b5c0)
-		(property "Reference" "C160"
-			(at 219.71 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "100nF 50V X7R 10%"
-			(at 219.71 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:C0402"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C307331"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL05B104KB54PNC"
-			(at 215.9 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
-					(reference "C160")
-					(unit 1))))		(property "LCSC Part" "C307331"
-			(at 0 0 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-)
-	(wire
-		(pts
-			(xy 215.9 46.99)
-			(xy 215.9 41.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 79d57adb-bfa7-52db-81c7-965e39d931db))
-	(global_label "PULLPIN"
-		(shape passive)
-		(at 215.9 41.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid aa54d235-5e1c-5770-b805-c5e136906c7c))
-	(wire
-		(pts
-			(xy 215.9 54.61)
-			(xy 215.9 59.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid d5f99c6f-889b-50e0-94ce-37a1f51ccde2))
-	(global_label "GND"
-		(shape passive)
-		(at 215.9 59.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid dd6ee54a-6c12-5c18-84cd-ac8c885ca1f5))
-	(symbol
-		(lib_id "M3:BAT54S")
-		(at 274.32 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid d87fd5f7-3f04-50c0-ac78-3b71aae7b65d)
-		(property "Reference" "D122"
-			(at 278.13 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "BAT54S"
-			(at 278.13 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
-			(at 274.32 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 274.32 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C47546"
-			(at 274.32 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Nexperia"
-			(at 274.32 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "BAT54S,215"
-			(at 274.32 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
-					(reference "D122")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 266.7 50.8)
-			(xy 261.62 50.8))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid d34fafe9-48f7-5ffe-8c8f-2bca38f920a2))
-	(global_label "GND"
-		(shape passive)
-		(at 261.62 50.8 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 85d1ae55-9817-5978-9c2e-9001ffebaa91))
-	(wire
-		(pts
-			(xy 281.94 50.8)
-			(xy 287.02 50.8))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid abfe41c8-8529-5d33-874d-c4a875816d61))
-	(global_label "3V3"
-		(shape passive)
-		(at 287.02 50.8 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid d3c310dd-c424-5f44-a879-820eb04f41e6))
-	(wire
-		(pts
-			(xy 274.32 58.42)
-			(xy 274.32 63.5))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c4594c44-8f36-5ff4-954a-374a81a7f61a))
-	(global_label "PULLPIN"
-		(shape passive)
-		(at 274.32 63.5 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 5f9d4da7-8a68-5bc8-b10b-72383d913e48))
-	(symbol
 		(lib_id "M3:Buzzer_3pad")
 		(at 332.74 50.8 0)
 		(unit 1)
@@ -1325,140 +954,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 06597c7a-706b-5445-9940-f1c9c740e312))
-	(text "14 | Launch pull-pin and buzzer"
-		(at 20.32 20.32 0)
-		(effects
-			(font
-				(size 2.54 2.54))
-			(justify left))
-		(uuid f9d4e91b-e386-52f4-ab19-bd289fa6eff7))
-	(text "Pull-pin: PC14 (pin 8) reads LOW with the pin inserted, HIGH when pulled. Advisory only (FMEA F-7); ignored after launch."
-		(at 20.32 245 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid d386b156-bac9-5863-a9c0-449a6f4bdcc3))
-	(text "D122 BAT54S clamps PULLPIN to 3V3/GND: an 8.4 V chafe would otherwise put 7.94 V on the pin (FMEA H-10)."
-		(at 20.32 252.62 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid dde5b69a-71e6-57c0-9829-2913f7e3935e))
-	(text "LS120 MLT-5020: pad 1 = +, pad 2 = -, pad 3 = isolated mechanical tab. Huaneng 2021-05-27 drawing; body 5.0 +/-0.3 mm, height 2.0 +/-0.2 mm."
-		(at 20.32 260.24 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid bd454544-a8f7-52a8-92ea-81cbb5cbd667))
-	(text "BUZZ_DRV = PC13 (pin 7, R8). MLT-5020: 4 kHz, 50% duty; software toggle only (PC13 has no timer AF; backup-domain pin, <= 2 MHz, no RTC output on it). Never leave the coil driven with DC."
-		(at 20.32 267.86 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 9b6eda0c-dc2d-529d-acd1-9acd1c5f825e))
-	(text "J123 = JST PH B2B-PH-K-S (R4): ~6 mm high, latching; pin 1 = PULLPIN_EXT, pin 2 = GND. The 2.54 mm PZ254 plug and its wire bend did not fit the bore 19 mm off axis."
-		(at 20.32 275.48 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 0a6a0f85-a230-5dd5-89f3-5963d980197d))
-	(symbol
-		(lib_id "M3:Conn_1x2")
-		(at 40.64 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid f14a72d8-b5ef-574a-9770-ce840f6656ec)
-		(property "Reference" "J123"
-			(at 43.18 49.53 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "BM02B-GHS-TBT(LF)(SN)"
-			(at 43.18 52.07 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:M3_GH_BM02B_GHS_TBT"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" "https://www.jst-mfg.com/product/pdf/eng/eGH.pdf"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C161690"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "JST"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "BM02B-GHS-TBT(LF)(SN)"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
-					(reference "J123")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 33.02 49.53)
-			(xy 27.94 49.53))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid ca67dfa6-1030-5ba8-a274-bab7b3aa4ac2))
-	(global_label "PULLPIN_EXT"
-		(shape passive)
-		(at 27.94 49.53 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid cecf4881-889c-5370-9ae0-043ce604fd8a))
-	(wire
-		(pts
-			(xy 33.02 52.07)
-			(xy 27.94 52.07))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 457fb89a-143e-572a-8b3b-630e93aa439c))
-	(global_label "GND"
-		(shape passive)
-		(at 27.94 52.07 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 692b70fe-867c-562d-850e-b405aca9e426))
 	(symbol
 		(lib_id "M3:R")
 		(at 157.48 114.3 0)
@@ -1558,6 +1053,34 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 561ab97b-0a60-5607-af3e-05a2979a3b48))
+	(text "14 | Buzzer; AUD-4 removes J123, R160/R161, C160 and D122. PC13 U1.7 is NC/analog, with no pull-pin or EXTI13."
+		(at 20.32 15.24 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid c7940a10-f64f-55f2-aab3-b53d686344da))
+	(text "LS120 MLT-5020: pad1 positive, pad2 negative, pad3 isolated mechanical tab. Huaneng 2021-05-27 drawing; body5.0 +/-0.3 mm, height2.0 +/-0.2 mm."
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f2a45cb8-e38e-5cce-9114-38af4efcf313))
+	(text "BUZZ_DRV = PC14 U1.8 (R10); R162 1k and R163 10k retain the gate network. Use4kHz,50% duty GPIO software toggle; backup-domain GPIO <=2MHz. Never drive the coil with DC."
+		(at 20.32 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 164aed60-4833-53fe-a6d2-64e8794085a6))
+	(text "Keep LSEON=0 and do not assign RTC/clock outputs to PC14; VBAT=3V3, so backup-domain settings survive NRST. Buzzer and servo neutral behavior remain bench qualifications."
+		(at 20.32 30.48 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 433b0ad4-b6fb-5542-ba7d-f8bc66b057c9))
 	(sheet_instances
 		(path "/"
 			(page "14"))))

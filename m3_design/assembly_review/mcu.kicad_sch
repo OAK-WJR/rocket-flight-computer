@@ -1813,22 +1813,6 @@
 		(uuid 0b7bc4e7-1e0e-5cc0-b6ee-984270d9a388))
 	(wire
 		(pts
-			(xy 63.5 77.47)
-			(xy 58.42 77.47))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 8951e394-97fc-508b-bdb6-20e68cc9ead9))
-	(global_label "PULLPIN"
-		(shape passive)
-		(at 58.42 77.47 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a6e4a971-f74d-5b43-ac44-f9de63968f07))
-	(wire
-		(pts
 			(xy 63.5 80.01)
 			(xy 58.42 80.01))
 		(stroke
@@ -4929,6 +4913,9 @@
 			(justify left))
 		(uuid 3f0d087a-169f-51fa-b24e-acdb834fcca3))
 	(no_connect
+		(at 63.5 77.47)
+		(uuid 9c79ea49-fd10-57ae-b53a-7561dc5cabeb))
+	(no_connect
 		(at 63.5 92.71)
 		(uuid 6ad4e78c-4b81-5e19-b386-dc896f195773))
 	(wire
@@ -5033,7 +5020,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 04c4ac9e-2417-59ff-834e-3c7793af9cef))
-	(text "Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise low before output mode. R123 100k holds the load switch off at reset. Disable synchronous trace (PC1 TRACED0, PE4 TRACED1); lock and read back both gate GPIO configurations."
+	(text "Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise low before output mode. R123 100k holds the load switch off at reset. Hold PE4 low for >=100 ms after ACT_EN before bus checks. Disable synchronous trace (PC1 TRACED0, PE4 TRACED1); lock/read back both gate GPIO configurations. AUD-4: PC13 U1.7 is NC/analog; no pull-pin."
 		(at 20.32 269.24 0)
 		(effects
 			(font
