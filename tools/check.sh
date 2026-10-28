@@ -80,4 +80,4 @@ selftest "$KICAD_PY" "$ROOT/tools/test_fit_check.py"       # no -I: the test imp
 selftest "$KICAD_PY" -I "$ROOT/tools/test_paste_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_route_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_check.py"
-selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" Plate
+selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" Plate HotplugNumerics

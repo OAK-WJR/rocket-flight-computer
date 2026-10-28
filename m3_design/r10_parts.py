@@ -169,8 +169,12 @@ def power_budget():
     # port buck U400 (EN tied to VIN; port switch turn-off up to 3 ms, SLVS841F section 7.5 p. 7). Constant-power
     # loads from 7.4 V; no credit for RAW_PROTECTED / C6 / C7 capacitance or for U11 blocking (Calc / Inference).
     ports_w = [buck_min * 1.461 / .85, buck_max * 1.461 / .80]     # camera 1 A + radio .3 A + GPS .15 A + 11 mA
+    # D-OA-05: account explicitly for R92 (3.3 kohm) while C84 can feed RAW_PROTECTED through U11.
+    # Hold its worst loss at the 7.4 V launch floor constant as voltage falls; no credit for any old envelope allowance.
+    r92_bleed_w = 7.4 ** 2 / (3300 * (1-thick))
     loads_w = dict(a_ports_off_logic_shed=[.62 + .1] * 2, b_ports_off_no_shed=[.6 + .1, 1.4 + .1],
                    c_camera_radio_gps_on=[ports_w[0] + .6, ports_w[1] + 1.4])
+    loads_w = {case: [w + r92_bleed_w for w in watts] for case, watts in loads_w.items()}
     def ride(c, v_end, w):
         return .5 * c * (7.4 ** 2 - v_end ** 2) / w * 1000
     ride_through = {f'{case}_C{int(round(c * 1e7)) / 10:g}uF_to_{v}V': [ride(c, v, w[1]), ride(c, v, w[0])]
@@ -185,8 +189,8 @@ def power_budget():
     def ride_en(c, v_end, w_all, w_logic, v_off=voff[0]):  # lowest VOFF: ports drain C84 longest
         return (.5 * c * (7.4 ** 2 - v_off ** 2) / w_all + .5 * c * (v_off ** 2 - v_end ** 2) / w_logic) * 1000
     ride_through_en = {f'{case}_C{int(round(c * 1e7)) / 10:g}uF_to_{v}V': ride_en(c, v, wa, wl)
-                       for case, wa, wl in (('ports_on_then_logic_shed', loads_w['c_camera_radio_gps_on'][1], .72),
-                                            ('ports_on_then_logic_no_shed', loads_w['c_camera_radio_gps_on'][1], 1.5))
+                       for case, wa, wl in (('ports_on_then_logic_shed', loads_w['c_camera_radio_gps_on'][1], .72+r92_bleed_w),
+                                            ('ports_on_then_logic_no_shed', loads_w['c_camera_radio_gps_on'][1], 1.5+r92_bleed_w))
                        for c in (300.8e-6, 470e-6) for v in (3.5, 3.8)}
     # Equation roots include input power as constant power, not a guessed current.
     def loaded_pack(open_v, servos):
@@ -214,19 +218,27 @@ def power_budget():
         buck_camera_short_radio_gps_normal_A=limits['camera'][1]+.3+.15+.011,
         ldo_bleeder_min_A=ldo_min/(820*(1+thick)),
         ldo_full_load_loss_W=(buck_max-ldo_min)*.46+buck_max*.004,
-        ldo_ambient_85C_junction_inference_C=85+62.5*((buck_max-ldo_min)*.46+buck_max*.004),
+        # U401 has no thermal vias: use the layout inference in parts_qualification,
+        # not the datasheet reference-board thermal resistance (partial round 9).
+        ldo_theta_ja_inference_C_per_W=[80, 110],
+        ldo_ambient_85C_junction_inference_C=[85+r*((buck_max-ldo_min)*.46+buck_max*.004)
+                                             for r in (80, 110)],
         pack_7V4_four_stall_loaded_V=loaded_pack(7.4,7.68),
         pack_6V0_four_stall_loaded_V=loaded_pack(6,7.68),
         servo_star_board_return_max_A=4*7.68*.001/.05,
         u9_input_at_all_port_shorts_inference_A=(buck_max*all_shorts/(.8*5.8))+.5,
         u9_current_limit_min_A=3.96,
+        r92_ohm=3300,
+        battery_break_r92_bleed_bound_W=r92_bleed_w,
         battery_break_load_W=loads_w,
         battery_break_ride_through_ms=ride_through,
         battery_break_ride_through_note=('[shortest, longest] ms; Calc / Inference: constant-power loads at the '
                                          'AP63203 / AP63201 inputs from 7.4 V; a: 0.62 W retained logic + 0.1 W idle '
                                          'port chain; b: 0.6-1.4 W unshed logic (pass1_electrical 4.4, no RF) + 0.1 W; '
                                          'c: ports at 1.461 A, 80-85 % buck efficiency, + unshed logic; no credit for '
-                                         'RAW_PROTECTED capacitance or U11 reverse blocking'),
+                                         'RAW_PROTECTED capacitance or U11 reverse blocking; each case additionally '
+                                         'includes the 3.3 kohm R92 loss at 7.4 V and minimum resistance'),
+        option_oq5_status='Not adopted: owner 2026-10-28 retained firmware shedding without a hardware cutoff',
         option_oq5_en_divider_ohm=[en_r5, en_r6],
         option_oq5_voff_V=voff, option_oq5_von_V=von,
         option_oq5_ride_through_ms=ride_through_en)

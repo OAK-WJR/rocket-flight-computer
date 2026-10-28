@@ -262,6 +262,22 @@
    "pads_matched": 16,
    "status": "OK"
   },
+  "C168925|M3_R2512_UR": {
+   "footprint": "M3_R2512_UR",
+   "easyeda": "R2512",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.234,
+   "next_best_mm": 4.505,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
   "C17513|R0805": {
    "footprint": "R0805",
    "easyeda": "R0805",
@@ -503,6 +519,22 @@
    "pads_matched": 2,
    "status": "OK"
   },
+  "C22978|R_0603_1608Metric": {
+   "footprint": "R_0603_1608Metric",
+   "easyeda": "R0603",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.072,
+   "next_best_mm": 1.117,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
   "C23024|R_0603_1608Metric": {
    "footprint": "R_0603_1608Metric",
    "easyeda": "R0603",
@@ -562,22 +594,6 @@
    ],
    "residual_mm": 0.0,
    "next_best_mm": 0.99,
-   "pads_ours": 2,
-   "pads_easyeda": 2,
-   "pads_matched": 2,
-   "status": "OK"
-  },
-  "C25468|M3_R2512_UR": {
-   "footprint": "M3_R2512_UR",
-   "easyeda": "R2512",
-   "easyeda_proxy": null,
-   "theta": 0,
-   "offset": [
-    0.0,
-    0.0
-   ],
-   "residual_mm": 0.234,
-   "next_best_mm": 4.505,
    "pads_ours": 2,
    "pads_easyeda": 2,
    "pads_matched": 2,

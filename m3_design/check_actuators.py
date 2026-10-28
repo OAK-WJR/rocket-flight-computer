@@ -576,6 +576,8 @@ def check(text, dru=None, profile="r9"):
     req(pin.get('J2.6') is None or pin.get('J2.6', '').startswith('unconnected-'), 'J2.6 SWO is NC; no BOOT0 harness')
     # 16 (pass 3, actuators F3 / system m7): pinned parts (protection values, pyro parts, terminals)
     for ref, code in PINNED.items():
+        if r10 and ref == 'R166':
+            code = 'C168925'  # OQ-2: qualified 0.36 ohm damper on the existing UNI-ROYAL 2512 land.
         if r10 and ref in ('C121', 'J1', 'J121', 'J124'):
             continue  # R10 parts checked by check_r10; safety parts below remain pinned.
         req(part.get(ref) == code, f'{ref} must be LCSC {code} (is {part.get(ref)})')

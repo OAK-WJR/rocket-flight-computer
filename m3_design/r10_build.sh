@@ -51,6 +51,9 @@ for FAMILY in core usb pyro power signals ground; do
 done
 PYTHONUNBUFFERED=1 "$KICAD_PY" -I -B m3_design/r10_post.py --report "$T/post.json" 2>&1 | quiet
 shasum -a 256 "$D/m3.kicad_pcb"
+# OQ-2: qualify the generated input feed before the full board gate.
+"$KICAD_PY" -I -B tools/r10_hotplug.py --extract "$D/m3.kicad_pcb"
+"$NUMPY_PY" -I -B tools/r10_hotplug.py
 # the fab package is bound to the board it was made from: rebuild it with m3_design/r10_fab.sh, then run tools/check.sh
 R10_SKIP_FAB_MANIFEST=1 KICAD_PY="$KICAD_PY" NUMPY_PY="$NUMPY_PY" tools/check.sh
 # the firmware binding evidence record (never an approval: AGENTS.md section 3), bound to the board just checked

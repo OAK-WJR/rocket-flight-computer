@@ -229,12 +229,12 @@ to VIN, so it keeps drawing until RAW_PROTECTED collapses; firmware shedding of 
 ports cannot act in time (TPS2553 turn-off up to3 ms, SLVS841F §7.5 p7). Energy
 from 7.4 V, constant-power loads, no credit for RAW_PROTECTED, C6 / C7 capacitance
 or for U11 blocking (Calc / Inference; `parts_budget.json`
-`battery_break_ride_through_ms`):
+`battery_break_ride_through_ms`; each case includes an explicit 16.93 mW constant allowance for R92 at 7.4 V and minimum resistance, D-OA-05):
 
 | Case (load at the converter inputs) | C84 300.8 µF, to 3.5 V / 3.8 V | C84 470 µF, to 3.5 V / 3.8 V |
 |---|---|---|
-| (a) ports off, logic shed: 0.62 W retained + 0.1 W idle port chain | 8.9 / 8.4 ms | 13.9 / 13.2 ms |
-| (b) ports off, no shed: 0.6–1.4 W logic (`pass1_electrical.md` §4.4, no RF) + 0.1 W | 4.3–9.1 / 4.0–8.7 ms | 6.7–14.3 / 6.3–13.5 ms |
+| (a) ports off, logic shed: 0.62 W retained + 0.1 W idle port chain | 8.7 / 8.2 ms | 13.6 / 12.9 ms |
+| (b) ports off, no shed: 0.6–1.4 W logic (`pass1_electrical.md` §4.4, no RF) + 0.1 W | 4.2–8.9 / 4.0–8.5 ms | 6.6–13.9 / 6.2–13.2 ms |
 | (c) camera 1 A, radio, GPS on: 9.2–10.1 W ports + 0.6–1.4 W logic | 0.55–0.65 / 0.53–0.62 ms | 0.87–1.02 / 0.82–0.96 ms |
 
 3.5 V is the logic floor used since R7; 3.8 V is the AP63203's minimum input
@@ -242,7 +242,7 @@ or for U11 blocking (Calc / Inference; `parts_budget.json`
 not credited). R9 had the same camera-on limitation (about 1–3 ms, its F6 text);
 R10 adds the radio and GPS to it.
 
-**Owner question OQ-5 (hardware option, not implemented):** an AP63201 EN divider
+**OQ-5 hardware option (not adopted by the owner, 2026-10-28):** an AP63201 EN divider
 from RAW_PROTECTED to GND in place of the EN–VIN tie (DS41326 p10 eq. 1–2), on
 existing BOM values R5 47 kΩ 1% (C25819) / R6 10 kΩ, turns the port buck off at
 VOFF 5.73–6.30 V (6.01 V typical; VEN_L 1.05–1.15 V, EN currents typical) and back
@@ -392,7 +392,8 @@ reviewer's readings and were not re-read from the PDFs in this pass (Inference u
 ## Round-8 records (R8-MCU-02, R8-BOM-02, R8-MEC-05; records only, board unchanged)
 
 - **GPS UART level (R8-MCU-02).** HGLRC's M100 Mini page gives the supply as 3.3–5 V and does not specify the UART
-  logic level. **Inference:** a u-blox M10 part with 3.3 V I/O; the J410 translator (TXU0202, B side on PORT_4V8)
+  logic level. **Inference:** a u-blox M10 part with 3.3 V I/O; the J410 translator (TXU0202, B side on GPS_IO_3V3
+  from U412, enabled with GPS_4V8)
   tolerates a B2 input up to 5.5 V, so a 3.3 V or a 5 V device both stay inside its rating. Measure the module's TX
   high level before flight; do not treat the level as qualified.
 - **GPS cable (R8-MCU-02).** The GPS's own cable is SH1.0-4P (plan, as the owner's list gives it; not re-checked
@@ -405,3 +406,48 @@ reviewer's readings and were not re-read from the PDFs in this pass (Inference u
 - **Port UART break (R8-MCU-01).** With a port's OE high and its device unplugged or unpowered, the TXU0202's 5 MΩ
   input pull-down holds the MCU RX low, a continuous break (Inference from the pull-down, not measured): the firmware
   obligation is in the binding note and M3_R10 "Firmware".
+
+## R92 discharge change before the fresh round 9 (2026-10-28)
+
+OQ-2's requalification must include U9 OUT as well as IN: below -10 C, TPS25947's input limit is
+`max(-15 V, VOUT - 21 V)` (TI SLVSFC9C p. 7). R92 changes from 10 kohm to **3.3 kohm, 1%, 0603** on the same land
+and RAW_PROTECTED-to-GND nets. This reduces retained output voltage after unplugging without adding a component or
+changing the pack-change waiting rule. U11's reverse-current threshold is not treated as an ideal blocking diode.
+
+The replacement is **UNI-ROYAL 0603WAF3301T5E, C22978**. The
+[LCSC part specification](https://www.lcsc.com/product-detail/Chip-Resistor-Surface-Mount_Uniroyal-Elec-0603WAF3301T5E_C22978.html)
+gives 100 mW, 75 V, +/-1%, +/-100 ppm/C and -55 to +155 C; the same 0603 package family preserves the existing land.
+[JLC's part page](https://jlcpcb.com/partdetail/C22978) and the exact-code public lookup on 2026-10-28 identify it as
+Basic, with 5,345,859 available and a 1-piece tier of USD 0.0022. This adds one Basic code, no extended code; refresh
+the complete BOM cost/stock evidence before ordering. The fields in `circuit.json` agree on this exact part.
+
+At 8.5 V the nominal loss is 21.89 mW (14.67 mW more than 10 kohm). The hot-plug record includes the board's
+capacitor inventory, a doubled-C84 sensitivity and the other explicit model assumptions. With all 1675.3395136 uF
+of that conservative inventory initially at 8.5 V, R92 alone at its +1% tolerance and +0.65% temperature corner
+(3354.6645 ohm) gives 5.954856276 V after two seconds in the common-node model. No load current or divider bleeds are
+credited. These are CAD estimates, not a guarantee of C84's unprovided capacitance-versus-temperature curve or
+of arbitrary converter reverse-energy behavior. The existing simultaneous U9 IN / OUT reverse-plug bench
+qualification remains mandatory.
+
+## R166 damper change before the fresh round 9 (2026-10-28)
+
+OQ-2's model selects **0.36 Ω, 1%, UNI-ROYAL 25121WF360LT4E / C168925** in place of 0.33 Ω. The preliminary
+feed with 0.33 Ω reaches -15.100485 V at the cold/tolerance corner; 0.36 Ω passed that model's 2304 cases.
+The preliminary local-shunt approximation is superseded by D-OA-07: C88 is now fed before U9 and its actual
+trace path stays in the model. Final qualification comes from the production-bound model results in
+`hotplug_results.json`: all 2304 required cases pass on board `3b960b46…`, with -14.497874 V minimum and
+8.525257 V/µs maximum falling slew. Its assumptions in `hotplug.md` remain simulation inferences.
+[LCSC's exact-part page](https://item.szlcsc.com/180309.html) confirms the identity and 2512 package.
+[UNI-ROYAL SMD-SP-001 V10, pp. 4–6](https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf)
+gives 6.35 ±0.10 × 3.20 ±0.20 × 0.55 ±0.10 mm, matching the existing family and land; 1 W through 70 °C,
+derating to zero at 155 °C; and ±800 ppm/°C below 1 Ω. Over -40…85 °C, tolerance and temperature give
+0.3378672–0.3825072 Ω, swept independently of the capacitor and copper corners. `circuit.json` binds the new
+value, order code and maker part without changing nets or footprint. Refresh BOM stock and cost before ordering.
+
+**Pulse qualification remains open.** The maker's ordinary thick-film specification gives a five-second overload
+test at 2.5 times sqrt(P×R), or 1.5 V for this value at the 1 W rating; it supplies no microsecond pulse curve.
+The absolute 200 V family ceiling is not the low-value resistor's allowable continuous voltage. The final sweep
+gives 504.292318 W peak and 2.888490051 mJ over 150 µs in different corners; separate half-step checks give
+504.293235 W and 2.888489824 mJ. A low energy alone does not prove survival. Obtain maker confirmation for
+that waveform or test repeated hot/cold insertions and resistance drift. This is a component-data/model update,
+not a claim of measured pulse durability or board acceptance.

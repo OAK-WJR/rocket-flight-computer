@@ -69,6 +69,10 @@ def build(project, table):
     synced = r10_post.sync_silk(board, project / 'kilib' / 'rocket.pretty')
     print(f'r10_pcb: footprint silkscreen from the library: {" ".join(synced) or "none"}')
     for footprint in board.GetFootprints():
+        # The importer updates native fields but keeps legacy fields absent from the new schematic part.
+        if footprint.HasField('LCSC Part') and footprint.HasField('LCSC') and \
+                footprint.GetField('LCSC Part').GetText() != footprint.GetField('LCSC').GetText():
+            footprint.Delete(footprint.GetField('LCSC Part'))
         for field in footprint.GetFields():
             field.SetVisible(False)
         footprint.Value().SetLayer(pcbnew.B_Fab if footprint.IsFlipped() else pcbnew.F_Fab)

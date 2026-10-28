@@ -4016,22 +4016,21 @@
       </units>
     </comp>
     <comp ref="R92">
-      <value>10k 1%</value>
+      <value>3.3k 1%</value>
       <footprint>rocket:R_0603_1608Metric</footprint>
+      <datasheet>https://www.lcsc.com/datasheet/C22978.pdf</datasheet>
       <fields>
-        <field name="LCSC">C25804</field>
+        <field name="LCSC">C22978</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0603WAF1002T5E</field>
-        <field name="LCSC Part">C25804</field>
+        <field name="Manufacturer Part">0603WAF3301T5E</field>
         <field name="Footprint">rocket:R_0603_1608Metric</field>
-        <field name="Datasheet"/>
+        <field name="Datasheet">https://www.lcsc.com/datasheet/C22978.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C25804"/>
+      <property name="LCSC" value="C22978"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0603WAF1002T5E"/>
-      <property name="LCSC Part" value="C25804"/>
+      <property name="Manufacturer Part" value="0603WAF3301T5E"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4080,22 +4079,21 @@
       </units>
     </comp>
     <comp ref="R166">
-      <value>0.33R 1% 2512</value>
+      <value>0.36R 1% 2512</value>
       <footprint>rocket:M3_R2512_UR</footprint>
+      <datasheet>https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf</datasheet>
       <fields>
-        <field name="LCSC">C25468</field>
-        <field name="LCSC Part">C25468</field>
+        <field name="LCSC">C168925</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">25121WF330LT4E</field>
+        <field name="Manufacturer Part">25121WF360LT4E</field>
         <field name="Footprint">rocket:M3_R2512_UR</field>
-        <field name="Datasheet"/>
+        <field name="Datasheet">https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C25468"/>
-      <property name="LCSC Part" value="C25468"/>
+      <property name="LCSC" value="C168925"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="25121WF330LT4E"/>
+      <property name="Manufacturer Part" value="25121WF360LT4E"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>

@@ -1,4 +1,12 @@
-# R10 validation — round 1 implementation
+# R10 validation and adversarial review
+
+> **Current continuation, 2026-10-28:** the interrupted owner-answer pass is complete and verified. Two fresh
+> full builds produced byte-identical board `b860afbe…`; the regenerated fab package and final `tools/check.sh`
+> pass. The required commit is blocked: Git cannot create the worktree's `index.lock` (Operation not permitted),
+> despite the session declaring the common Git directory writable. No commit was created. Requirements-audit
+> cuts AUD-1…AUD-10 / GAP-1…GAP-5 are the next implementation pass, before ten fresh
+> review lenses in round 9. OQ-3 cost acceptance remains pending and does not block clean review. Focused model
+> checks and owner answers are not a full clean review round.
 
 > **2026-10-28 hand-off check: round 9 stopped for owner decisions.** Starting worktree clean at `04d0b04`,
 > board `407d1d84…`. Three fresh read-only reviewers started in parallel (requirements, safety, power); the
@@ -13,7 +21,7 @@
 > deviations for owner acceptance" at the end. The round-1 plan-review record below is kept as written; statements in it that no R10 implementation
 > exists describe that time.
 
-## Owner decisions resolved; implementation in progress
+## Round 1 owner decisions (historical implementation state)
 
 The owner resolved R1-01, R1-02 and R1-03 in plan §8, commit `40a1d28`.
 O5 supplies the camera from an adjustable buck and both external UART ports from
@@ -24,7 +32,7 @@ a signal reference with a calculated, explicitly bounded residual current.
 
 Round 1 Phase B is in progress. No passing R10 implementation has been committed.
 
-## Artifact and review status
+## Round 1 artifact and review status (historical)
 
 The R10 generators and scratch layout are under implementation, not qualified. Starting commit:
 `f5579f4a9c248d4aa6cf7a2add162cb813a93c63`. The unchanged inherited R9 PCB is
@@ -258,39 +266,20 @@ rounds 7 and 8 `b242ab8e…`.)
 nets D-R3-04 / -10); T-1 (D-R2-13); K-loader, S-8, S-9 (D-R3-10). **Held pending the owner** (D-R2-14): P-11 (OQ-1),
 F9-1 (OQ-2).
 
-### Owner questions
+### Owner questions and answers (2026-10-28)
 
-- **OQ-1 (P-11, wire room).** R10's west-edge 3.5 mm terminals leave 4.95 mm from their wire face to the bore wall
-  (R8's method: 5.0 mm wire height, bare bore radius; 4.44–5.39 mm on the DB125's own wire openings and with P2's 0.5 mm
-  wall allowance, R3-MEC-02); R8 / R9 recorded 6.25 mm (R8's measured value, used as a floor). Accept, or move J121 /
-  J124 / J1 inboard (costs length or re-placement)?
-- **OQ-2 (F9-1, reverse hot-plug premise).** R8's model lumps the harness at J1 with the protection parts within
-  10.6 mm of J1.1 and U9 within 27.07 mm; on R10 they are 12.9–29.8 mm away (D8 12.86, C80 21.59, C96 20.93, C89 20.58,
-  C95 20.55, R166 29.75, R167 25.47) and U9 32.22 mm. Re-model the hot plug with R10's feed (the board copper as added
-  harness inductance), or re-place the protection cluster beside J1?
-- **OQ-3 (cost).** The parts and feeder fees are $87.01 per board, $2.60 over M3's $84.41: accept, or reduce
-  (e.g. basic-library substitutes for extended codes)?
-- **OQ-4 (panel), answered 2026-10-28: aft-edge tab and panel rail, no layout change (R10_DECISIONS).** The aft-east corner can only be held by an aft-edge tab (east edge's aft third is the GH port column):
-  accept rails / frame on the aft edge as well (JLC to confirm), or move a port?
-- **OQ-5 (battery-break ride-through with the ports on; R3-PWR-02).** C84 sits on VLOGIC after U11; the port buck U400
-  sits on RAW_PROTECTED with EN tied to VIN, and U11 does not block reverse current below its 0.2–2 A threshold, so in a
-  battery-lead break C84 feeds the ports: 0.55–1.0 ms ride-through with the camera, radio and GPS on (8.9–13.9 ms with
-  the ports off and the logic shed; R9's camera-on figure was 1–3 ms). Option: a 47 kΩ / 10 kΩ EN divider at U400.2
-  (existing codes) stops the port buck at 5.73–6.30 V and restarts it at 6.49–6.94 V, giving ≥ 4.6 / 7.2 ms with the
-  ports on (300.8 / 470 µF, with shedding), at the price of the ports dropping out in deep pack sags (e.g. four stalled
-  servos at a low pack). Adopt, or accept the ports-on figure? (`parts_qualification.md`, Calc / Inference.)
-- **OQ-6 (battery-lead fuse; R3-REQ-05).** F9 and the J1 note call for a 15 A fuse, sized for the 7.7 A servo feed that
-  O3 removed; R10's J1 (DB125) is rated 10 A UL / 13.5 A IEC, and the board's own peak is the ≈ 4.2 A fire pulse plus
-  U9's ≤ 2.9 A. Adopt a ≤ 10 A board-lead fuse (the legend constant changes in `r10_post.py`), or keep 15 A?
+The answers in `R10_DECISIONS.md` (commits `afed4d0`, `1076059`, `f202ec3`) supersede the earlier open questions.
+They do not constitute acceptance of the complete R10 candidate or its remaining deviation list.
 
-- **OQ-7 (board axial position against the camera shroud; R6-MEC-01).** `../../docs/VEHICLE.md` puts the camera shroud
-  from joint + 4 to joint + 47 mm on the camera side, to within 18.4 mm of the axis. With the board's top face on the
-  axis, its edges (23.0 mm from the axis), the GH-4 mated plugs (17.95–22.20 mm) and, if the shroud faces the top face,
-  J122's mated servo plugs (23.5 mm tall) would cut into it by about 4.6 / 3.8 / 5.1 mm wherever the board overlaps that
-  window axially (Calc on fit_check envelopes). R9's stack placed the board beyond the battery bay and the coax loop zone
-  (≈ joint + 80 mm). Keep the R10 board wholly forward of joint + 47 mm (plus the sled's axial tolerance) in the stack,
-  i.e. do not use R10's freed length (≈ 12 mm plus the coax loop zone) to move it aft into the window; or give the
-  shroud's clocking against the board so a measured clearance can replace this rule?
+| Item | Owner disposition | Remaining verification |
+|---|---|---|
+| OQ-1, terminal wire room | Accept 4.95 mm, with 16–22 AWG in the DB125-3.5 terminals; P-11 holds that floor | Physical fit of wires and bends; measured CAD room is 4.953 mm, bare-bore method (4.44–5.39 mm on the actual openings with P2's wall allowance) |
+| OQ-2, reverse hot plug | Re-model with R10's actual feeds and parasitics; move parts only if it fails; F9-1 must require the R10 model to pass | Model implementation and qualification in progress; old distance-only F9-1 is not electrical qualification |
+| OQ-3, cost | **Unanswered:** $87.01 per board versus $84.41 ($2.60 over) on the 2026-10-27 snapshot; remains for owner acceptance and does not block a clean review round | Fresh supplier quote and stock, R430 minimum purchase, U4 stock or consignment |
+| OQ-4, panel | Keep placement; aft-edge tab and panel rail/frame | JLC acceptance before ordering |
+| OQ-5, loaded battery break | No hardware cutoff; C84 and PA6 analog-watchdog firmware shedding; accept 0.55–1.0 ms ports-on estimate as a deviation | Specify and measure detection, OE/EN latency and actual load decay; 8.7–13.6 ms applies only after ports are off and logic is shed |
+| OQ-6, revised battery-lead fuse | **No battery-lead fuse.** Remove J1 fuse legend/instructions; keep J124's 5 A fast ARM-link fuse | Accepted unfused pack-to-U9/Q120 short risk: strain relief, no chafe points, crimped or soldered leads; inspect and measure the installed harness |
+| OQ-7, shroud | Keep the board wholly forward of joint +47 mm, including sled axial tolerance; preserve stack slack | Physical sled, harness, external modules and shroud fit; no shroud clocking needed for the selected axial rule |
 
 ## Round 3: independent review of the built board (`883d2db5…`)
 
@@ -580,7 +569,7 @@ restarted anyway): VBUS_SENSE's flat jog (R7-RTE-03), the In2 3V3 neck beside th
 0.24 → ≈ 0.59 mm by moving U11.3's GND via to (31.5, 63.3)), the In2 3V3 tooth beside the crystal island (R7-RTE-02,
 the island bumped to x 28.6); the 3V3 finger R7-RTE-02 reported at (26.0–29.8, 54.5–54.9) was not found on the fill.
 
-## Round 9: incomplete review, stopped at the owner-decision boundary
+## Round 9 prelude: incomplete review, stopped at the owner-decision boundary
 
 The Codex hand-off started from committed round 8 (`04d0b04`) with no uncommitted changes to finish or discard.
 The board remains SHA-256 `407d1d8408330849526dbd31cf70ec94b9f012b23ff5c8324eb8a7b1f98bed05`,
@@ -596,19 +585,20 @@ choices to the owner. No substituted gate limit is treated as owner acceptance o
 
 | ID | Severity | Evidence | Concrete disposition |
 |---|---|---|---|
-| R9-REQ-01 | Major | P-11 measures 4.953 mm wire room at each of J1 / J121 / J124 against the recorded 6.25 mm floor. `check_r10.p11` passes against `WIRE_ROOM_R10 = 4.95` and explicitly reports OQ-1; D-R2-14 says the changed floor needs an owner decision. | **Open, OQ-1:** accept the measured clearance or move the terminals inboard and requalify layout and fit. Physical wire fit is unverified. |
-| R9-REQ-02 | Major | F9-1 measures D8 12.86, C80 21.59, C96 20.93, C89 20.58, C95 20.55, R166 29.75, R167 25.47 and U9 32.22 mm from J1.1. The inherited hot-plug premises are 10.6 mm for protection parts and 27.07 mm for U9. `check_r10.f9` discards the inherited distance issues and holds R10's recorded distances; it does not simulate the transient. | **Open, OQ-2:** select requalification including R10 feed parasitics or relocation of the protection cluster. This is missing qualification, not proof of electrical failure. |
-| R9-PWR-01 | Minor | `r10_parts.power_budget()` uses 62.5 °C/W for `ldo_ambient_85C_junction_inference_C`, yielding 110.386 °C at 0.40618 W. `parts_qualification.md` explicitly rejects that reference-board coefficient for U401's layout and uses an inferred 80–110 °C/W, yielding 117.49–129.68 °C. Root confirmed the generator expression against the qualification text. | **Open:** generate the same explicit inference range and regenerate its budget artifact; keep the thermal bench obligation. No overheating is established by this discrepancy. |
+| R9-REQ-01 | Major | P-11 measures 4.953 mm wire room at each of J1 / J121 / J124 against the recorded 6.25 mm floor. `check_r10.p11` passes against `WIRE_ROOM_R10 = 4.95` and explicitly reports OQ-1; D-R2-14 says the changed floor needs an owner decision. | **Resolved by owner 2026-10-28:** accept the measured clearance; P-11 floor 4.95 mm. Physical wire fit is unverified. |
+| R9-REQ-02 | Major | F9-1 measures D8 12.86, C80 21.59, C96 20.93, C89 20.58, C95 20.55, R166 29.75, R167 25.47 and U9 32.22 mm from J1.1. The inherited hot-plug premises are 10.6 mm for protection parts and 27.07 mm for U9. `check_r10.f9` discards the inherited distance issues and holds R10's recorded distances; it does not simulate the transient. | **Owner selected requalification 2026-10-28:** model actual R10 feed parasitics and move parts only if the model fails. Qualification remains pending the implementation below. |
+| R9-PWR-01 | Minor | `r10_parts.power_budget()` uses 62.5 °C/W for `ldo_ambient_85C_junction_inference_C`, yielding 110.386 °C at 0.40618 W. `parts_qualification.md` explicitly rejects that reference-board coefficient for U401's layout and uses an inferred 80–110 °C/W, yielding 117.49–129.68 °C. Root confirmed the generator expression against the qualification text. | **Fixed in owner-answer implementation:** generator and regenerated budget use the same 80–110 °C/W inference range (117.49–129.68 °C). Thermal bench obligation retained; no overheating is established by this discrepancy. |
 
 Partial safety checks passed: actuator contract; S-1 … S-9 and P-8; independent pad/net inspection of the ARM break,
 load-switch topology and gate network. J124's RAW–BUS gap is 1.600 mm on all four layers. An independent ideal DC
 divider calculation gives 1.4003 V maximum at 8.4 V with ±1% resistor corners after one upper resistor shorts or one
 lower resistor opens. These checks do not establish transient/reset behavior or bench safety.
 
-Partial power checks confirm U400 EN and VIN both on RAW_PROTECTED: OQ-5's hardware cutoff is absent. Conditional
+Partial power checks confirmed U400 EN and VIN both on RAW_PROTECTED: the proposed OQ-5 hardware cutoff was absent. Conditional
 ride-through recalculates to 0.555–0.651 ms with ports on and 8.880 ms with ports off and logic shed at 300.8 µF to
-3.5 V. These are calculations, not transient measurements. OQ-3 … OQ-7 remain open as listed above; supplier data
-was not refreshed. The deviation list remains unfinished because the two-clean-round stop condition is unmet.
+3.5 V. These were calculations, not transient measurements, before the later R92 allowance. OQ-3 … OQ-7 were
+open at that stop; the owner answers above supersede that state. Supplier data was not refreshed. The deviation
+list remains unfinished because the two-clean-round stop condition is unmet.
 
 The root's fresh `tools/check.sh` run on the unchanged board completed with **exit 0**, using the supplied
 NumPy-capable interpreter. No gate was skipped or weakened for this run. Summary:
@@ -626,7 +616,40 @@ Fab manifest: OK; 5 outputs match the current CAD and export inputs
 Self-tests: shell 4, fit 23, paste 5 and routing 57 passed; R10 109 tests passed with the NumPy-only plate test
 skipped under KiCad Python, then that one test passed separately under NumPy Python. Nonfatal wx initialization
 warnings were emitted. This passing gate does not resolve OQ-1 / OQ-2. No fix pass was performed or committed;
-this stop record is left uncommitted for continuation. Rebuild reproducibility was not rerun in this interrupted round.
+the stop record was subsequently committed in `afed4d0`. Rebuild reproducibility was not rerun in that interrupted round.
+
+### Owner-answer pass completed before the audit cuts (2026-10-28)
+
+The interrupted changes were retained and rebuilt; none were discarded. The commit remains blocked by the
+environment's denial of Git's `index.lock` write; neither staging nor committing succeeded. Two fresh executions of
+`m3_design/r10_build.sh` produced byte-identical board SHA-256
+`b860afbe406d7daec9757ccde89987d3439b32e0b1f8078bb01363be1704baa1` (46 × 90 mm, 2547258 bytes).
+The electrical signature is `1f638065…`. Each build passed its complete board gate. The fabrication package was
+then regenerated, including orientation and paste checks, and an unskipped `tools/check.sh` passed at zero with
+the current fab manifest. The supplied NumPy interpreter was used without recording its local path.
+
+```text
+DRC violations 0  unconnected 0  schematic parity 0  ERC 0
+metadata / 3D model audit: OK
+fit check: OK (CAD envelopes only)
+R10 CAD contract (full): OK
+routing hygiene: 0 failing, 0 allowlisted, 0 leftovers recorded
+actuator safety contract: OK
+Fab manifest: OK; 5 outputs match the current CAD and export inputs
+```
+
+Self-tests: shell 4, fit 23, paste 5 and routing 57 passed; R10 120 tests ran under KiCad Python (3 NumPy tests
+skipped there), and those 3 passed under NumPy Python. The headless CLI required D-R1-05's mouse-coordinate
+interposer; it does not alter any CAD or DRC rule. The runtime wrapper and logs remain outside the repository.
+A fresh read-only verifier found no Critical or Major in the owner-answer source/model scope, passed the seven
+hot-plug evidence tests and two independent numerical tests, and reproduced all four selected extrema exactly.
+The full 2304-case sweeps, refined extrema and 60 local sensitivities pass (simulation / Inference): minimum
+−14.497873371 V, maximum falling slew 8.525257186 V/µs. No bench result is claimed. R166 pulse durability,
+installed unfused harness R/L, simultaneous IN/OUT waveforms, retained output and package/ground parasitics
+remain qualification obligations. The earlier interrupted snapshot is not substituted for these two fresh builds.
+
+This is a preparatory fix pass, not review round 9 and not a clean-round credit. AUD/GAP adoption is recorded
+in R10_DECISIONS; its circuit and layout changes have not been included in this owner-answer board.
 
 ### Review-round log
 
@@ -688,8 +711,8 @@ Each item needs its measured reason and the board hash it was measured on; revie
 6. **Parts without a maker datasheet:** C84 (MA25V470M8x10, C46550466; supplier-hosted JIERRUI datasheet only, reflow
    qualification open, conservative 300.8 µF used for hold-up); generated 3D envelopes, not vendor models, for the five
    new lands.
-7. **P-11 / F9-1** at R10's recorded figures (OQ-1, OQ-2) until the owner decides.
-8. **T-1 re-derived** (D-R2-13): tabs on the aft edge needed (OQ-4; ORDERING §8).
+7. **P-11 / F9-1:** OQ-1 accepts 4.95 mm terminal wire room, physical fit pending. OQ-2 requires a passing model of R10's actual input feeds; implementation pending. The former distance-only premise is superseded by the owner's 2026-10-28 answer.
+8. **T-1 re-derived** (D-R2-13): the owner selected an aft-edge tab and panel rail/frame (OQ-4, 2026-10-28; ORDERING §8); JLC acceptance remains an ordering condition.
 9. **Cost** $87.01 per board against $84.41 (OQ-3); R430's stock / minimum purchase.
 10. **Silkscreen and port pin order:** 94 designators hidden on `407d1d84…` (U5's since round 8: the I2C GND via took its spot) (kept on Fab); J410 / J420 without pin
     tables (no legal spot within 6 mm, D-R3-11); their UART pin order differs from J9's (J9: 3 RX_WIRE, 4 TX_WIRE;
@@ -717,3 +740,29 @@ Each item needs its measured reason and the board hash it was measured on; revie
     (cost evidence BOM-bound), R7-BOM-01 (C29936 → C15849 merge, OQ-3 option), R7-BOM-02 (capacitor Values without
     rating), R8-BOM-01 / -02 (envelope comments), R8-RTE-02 (F.Cu nets over Y1), R8-RTE-03 (I2C1_SDA's via 1.88 mm from
     GND), R8-MCU-01 (UART break on an unplugged port: firmware); shroud placement: OQ-7.
+
+    **R3-DOC-11 / R5-DOC-03 inventory:** the six immutable records under `m3_design/assembly_review/sources/` are
+    `r6-independent-routing-reference-review-20261013.json`, `r6_final_dc.json`, `r6_aux_finish_packet.json`,
+    `r6_final_objectives_review.json`, `r6_final_checks/audit.json` and `r6_final_checks/cleanup.json`.
+    They retain historical local paths because other records pin their complete bytes by SHA-256. They are not
+    R10 qualification evidence; no new local path is introduced by this continuation.
+
+    **R7-BOM-02 inventory:** incomplete capacitor Value strings occur on C6–C11 (`22uF`), C23 / C28 (`4.7uF`),
+    C19 / C20 / C87 / C120 (`2.2uF`), C22 (`1uF`), C25 / C26 (`10pF`), C60 / C94 / C122 / C127 / C129 (`10nF`),
+    C88 / C99 (`100nF 50V`, no dielectric): seven strings across 22 parts. Their exact Manufacturer Part / LCSC
+    identity fields remain present and audited. The inherited display strings are retained; no ambiguous
+    substitute is permitted by omitting a rating from Value.
+
+    **R7-BOM-01 cost option:** C29936 → C15849 changes X7R to X5R. The replacement's effective capacitance versus
+    bias/temperature has not been qualified for these locations. Retain the existing qualified identity; do not
+    credit the proposed ≈ $0.31 saving until that check is complete. This replaces the expired board-freeze reason.
+
+15. **OQ-5, no hardware port cutoff** (owner 2026-10-28): C84 and firmware shedding retained; the loaded
+    battery-break estimate is 0.55–1.0 ms, not the ports-off 8.7–13.6 ms. The PA6 analog watchdog must trigger
+    port OE/EN shutdown, and firmware must specify and bench-verify the threshold, detection-to-command latency,
+    actual current decay and retained load. TPS2553 turn-off can take 3 ms, so no loaded-break guarantee is inferred.
+16. **OQ-6, no battery-lead fuse** (revised owner answer 2026-10-28, `f202ec3`): a hard short between the pack and
+    U9 / Q120 (battery lead, J1, BAT_IN copper, D8, C80 / C96 / C89 / C95) is not current-limited. Accepted harness
+    mitigations: strain relief, no chafe points, crimped or soldered leads. J124's 5 A fast ARM-link fuse remains.
+17. **OQ-7, axial placement** (owner 2026-10-28): the board and sled axial tolerance stay wholly forward of joint
+    +47 mm; freed length stays stack slack, so shroud clocking is unnecessary for this rule. Actual fit is unverified.

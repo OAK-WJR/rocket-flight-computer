@@ -1117,6 +1117,22 @@
     "30": "VLOGIC_SENSE"
   },
   "replacements": {
+    "R92": {
+      "lib": "M3:R",
+      "value": "3.3k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C22978",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF3301T5E",
+        "Datasheet": "https://www.lcsc.com/datasheet/C22978.pdf"
+      },
+      "nets": {
+        "1": "RAW_PROTECTED",
+        "2": "GND"
+      },
+      "kind": "fit"
+    },
     "J123": {
       "lib": "M3:Conn_1x2",
       "value": "BM02B-GHS-TBT(LF)(SN)",
@@ -1211,6 +1227,22 @@
       "nets": {
         "1": "BUZZ_DRV",
         "2": "BUZZ_G"
+      },
+      "kind": "fit"
+    },
+    "R166": {
+      "lib": "M3:R",
+      "value": "0.36R 1% 2512",
+      "footprint": "rocket:M3_R2512_UR",
+      "fields": {
+        "LCSC": "C168925",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "25121WF360LT4E",
+        "Datasheet": "https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf"
+      },
+      "nets": {
+        "1": "BAT_DAMP",
+        "2": "GND"
       },
       "kind": "fit"
     }

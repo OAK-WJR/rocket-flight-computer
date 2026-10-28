@@ -12,8 +12,7 @@ Work on a scratch project made by `m3_design/r10_sch.py --out <dir>` then `m3_de
   pad / courtyard / region / copper queries.
 - `map.py board out`: copy with courtyard boxes and designators on silkscreen, for `kicad-cli pcb render`.
 - `drc.sh board [regex]`: DRC summary (unconnected count, violations except silkscreen and dangling vias).
-- `ncroute.py` (+ `sigroute.py`, kernel `astar.c`, net list `signal_nets.txt`, `freeze_signals.py`): the non-critical
-  signal router of R10_DECISIONS D-R2-07 (octilinear A* with negotiated congestion). Compile the kernel beside it
-  (`cc -O2 -o astar astar.c -lm`), point `R10_NUMPY_PATH` at a numpy for KiCad's Python 3.9, run on the board built
-  through the `signals` family, then freeze with `freeze_signals.py routes.json board m3_design/r10_route_signals.py`.
-  The frozen table was hand-cleaned afterwards; re-running the aid replaces those edits.
+- `ncroute.py` (+ `sigroute.py`, kernel `astar.c`, net list `signal_nets.txt`, `freeze_signals.py`): historical
+  feasibility aids from D-R2-07. Owner decision D-R2-08 requires every signal to be hand-routed; D-R2-09 replaced
+  the router output with hand-drawn tables. These aids are not build stages. Do not use `freeze_signals.py` to
+  replace the current signal generator.

@@ -2,7 +2,7 @@
 
 > Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. On this branch (`m3-assy-r10`) the repository holds the M3-ASSY-R10 KiCad project (a CAD candidate, not accepted), built from the hash-pinned R9 inputs by `m3_design/r10_build.sh`; R9's project (built from the committed, owner-accepted R8 sources, commit 9c8179b, by `m3_design/r9_build.sh`) stays on branch `m3-assy-r9` (R8 came from R7 by `m3_design/r8_build.sh`, R7 from R6 by `m3_design/r7_build.sh`, R6 from R5, R5 from R4, R4 from R3), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. R8's project stays on branch `m3-assy-r8` (9c8179b) and R7's on `m3-assy-r7` (431025d). The older candidates are mentioned below only as the evolution record.
 
-Last updated 2026-10-27 (R10 candidate section below; the rest as of 2026-10-25). Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; R8 is R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block, owner-accepted on 2026-10-20; **M3-ASSY-R9 (R8's circuit laid out again from a clean sheet, 46 × 102 mm) is the current candidate, owner-accepted on 2026-10-25, and R8 is the accepted fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
+Last updated 2026-10-28 (R10 candidate section below; the rest as of 2026-10-25). Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; R8 is R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block, owner-accepted on 2026-10-20; **M3-ASSY-R9 (R8's circuit laid out again from a clean sheet, 46 × 102 mm) is the current candidate, owner-accepted on 2026-10-25, and R8 is the accepted fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
@@ -14,9 +14,14 @@ ORDERING records; fixed, board `407d1d84…`); the stop condition (two consecuti
 rounds) is not yet met and the owner has not accepted it. R9 (below) stays the accepted board and the one to order.**
 Record: [docs/M3_R10.md](docs/M3_R10.md); validation, review rounds, owner questions and the deviation list:
 [docs/R10_VALIDATION.md](docs/R10_VALIDATION.md); plan and decisions: `m3_design/assembly_review/sources/r10_design/`
-(r10_plan.md, R10_DECISIONS.md D-R1-01 … D-R8-03).
-- Board SHA-256 `407d1d8408330849526dbd31cf70ec94b9f012b23ff5c8324eb8a7b1f98bed05`, 46 × 90 mm, rebuilt byte for byte by
-  `m3_design/r10_build.sh` (two identical builds); netlist `a9516746…`; fab package `m3_design/r10_fab.sh` bound to it.
+(r10_plan.md, R10_DECISIONS.md D-R1-01 … D-R8-03, D-OA-01 … D-OA-09; adopted AUD/GAP cuts).
+- **Owner-answer pass (2026-10-28):** board SHA-256 `b860afbe406d7daec9757ccde89987d3439b32e0b1f8078bb01363be1704baa1`, 46 × 90 mm,
+  2,547,258 bytes; two fresh complete builds byte-identical. Netlist `30f3d571…`; regenerated fab package bound to it;
+  full `tools/check.sh` including the current manifest passes at zero. R92 3.3 kΩ, R166 0.36 Ω and C88-before-U9
+  feed qualify the 2304-case reverse hot-plug model (simulation / Inference, not bench qualification). No interrupted
+  edits were discarded. The AUD/GAP cuts are next, followed by ten fresh lenses in round 9; no clean-round credit.
+  **Commit pending:** the environment denies Git's worktree `index.lock` write; staging and committing both failed.
+  AUD/GAP source changes and fresh full reviews have not started.
 - What changed from R9: no on-board GNSS / radio (external GPS and LR900-F radio on GH-4 ports with translators and
   switched, current-limited supplies: a 5.456 V buck and a 4.792 V LDO), no board servo power (O3: J122's + row open,
   servo power and return through the harness, O6), the camera on the port buck's switch, 3.5 mm screw terminals, J1 split
@@ -41,16 +46,18 @@ Record: [docs/M3_R10.md](docs/M3_R10.md); validation, review rounds, owner quest
   check.sh; small copper clean-ups (VBUS_SENSE jog, In2 3V3 neck and tooth, an I2C stitch via).
 - **Verified (CAD / software only):** `tools/check.sh` passes at zero (DRC every severity incl. silkscreen with
   schematic parity 0 / 0 / 0, ERC 0, metadata / 3D audit, silkscreen outline, fit, plate model f1 275.6 Hz, check_r10
-  full OK, route_check r10 0 failing, check_actuators OK, tools/test_r10_check.py 109 tests OK, test_check_shell / test_fit_check / test_paste_check OK, test_route_check 57 OK);
+  full OK, route_check r10 0 failing, check_actuators OK, tools/test_r10_check.py 120 tests (3 NumPy cases rerun separately) OK, test_check_shell / test_fit_check / test_paste_check OK, test_route_check 57 OK);
   r10_sch_check OK with nine seeded faults caught; the fab package's S-4 / CPL / paste /
   manifest checks OK.
 - **Calculated, not measured:** IPC-2152 estimates of the battery / U9 / fire-loop copper; battery-break ride-through
-  (ports off and shed 8.9–13.9 ms; ports on 0.55–1.0 ms).
+  (ports off and shed 8.7–13.6 ms; ports on 0.55–1.0 ms).
 - **Not verified:** no DC solve, thermal, hold-up or port-supply simulation; no physical, bench or flight test of any
   kind; no firmware (a new binding is needed: the binding note `sources/r10_design/r10_binding_note.json`).
-- **Open:** further review rounds; owner questions OQ-1 (wire room), OQ-2 (hot-plug premise with the split J1), OQ-3
-  (cost $87.01 vs the $84.41 target; 47 extended codes ≤ 52), OQ-4 (an aft-edge panel tab), OQ-5 (port-buck EN cutoff
-  for the ports-on ride-through), OQ-6 (battery-lead fuse ≤ 10 A), OQ-7 (board axial position against the camera shroud); R430 (17 in stock, 3,610-piece minimum purchase) and U4 (out of stock: consign) at JLC.
+- **Owner choices resolved:** OQ-1 accepts 4.95 mm wire room; OQ-2 selects the actual-feed hot-plug model;
+  OQ-4 selects an aft-edge tab/rail; OQ-5 keeps firmware shedding without hardware cutoff; OQ-6 removes the
+  battery-lead fuse; OQ-7 keeps the board wholly forward of joint +47 mm. Physical and firmware qualification
+  obligations remain. OQ-3 cost acceptance stays open ($87.43 vs $84.41; 47 Extended codes); it does not block a clean
+  review. R430 and U4 remain short at JLC. No R10 firmware, bench, RF-immunity or physical-fit evidence exists.
 
 ## Current candidate: M3-ASSY-R9 (clean-sheet B-spine layout, 46 × 102 mm, owner-accepted 2026-10-25)
 

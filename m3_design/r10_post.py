@@ -16,7 +16,7 @@ board-level silkscreen item is deleted and every footprint field hidden, then, i
      AGENTS.md; check_r7.legend_subjects gates it): the connector words (check_r10.WORD_LEGENDS_R10: ARM, IGN, BAT, CAM,
      SWD, SERVO, PULL, GPS, RADIO; and SWITCH for J400), top face first (the black terminals J124 / J121 are told apart
      by ARM / IGN: REQUIREMENTS F8, check_actuators); the port pin tables (PORTS: J9 in the board-side convention with
-     its supply, J2), the J124 / J1 notes (NOTES) and J122's row table and harness note (O3 / O6), J9's table and the
+     its supply, J2), the J124 notes (NOTES) and J122's row table and harness note (O3 / O6), J9's table and the
      notes also with their subject the nearest connector to the legend's centre by SUBJECT_MARGIN (put_subject), J2's
      rows by 0 mm where they can (else beside J2 by label_near, listed in the evidence);
   2. the terminal pin legends (check_r10.TERMINAL_PINS_R10: J124 1:BUS1 2:RAW, J121 1:E1- 2:E1+, J1 1:BAT+ 2:GND,
@@ -83,13 +83,11 @@ SUBJECT_PORTS = ('J9',)         # port tables held to the nearest-subject rule b
                                 # can (J3 sits 1.1 mm north of J2 and a support 2.9 mm south: R3-MFG-05), else beside J2
 NO_ROOM_PORTS = {'J410': ('4V8', 'GND', 'TXO', 'RXI'), 'J420': ('4V8', 'GND', 'TXO', 'RXI')}
 WORDS = tuple((ref, word) for word, ref in check_r10.WORD_LEGENDS_R10.items()) + (('J400', 'SWITCH'),)
-# The ARM-plug and fuse notes (R8's 'J124 2-FUSE-1: ARM LAST', 'J124: 5A FAST / 2S', 'J1 BAT LEAD: 15A FUSE'), shortened
-# so each sits beside its own terminal (R3-REQ-06): the ARM link goes in last, its fuse is 5 A fast (2S pack), the
-# battery lead carries the external fuse. J1_FUSE is the one place the battery fuse rating is written.
-J1_FUSE = '15A'
-NOTES = (('J124', 'J124 ARM LAST'), ('J124', 'J124 5A FAST 2S'), ('J1', f'J1 BAT {J1_FUSE} FUSE'),
+# The ARM link goes in last and keeps its 5 A fast fuse (2S pack), with both notes beside J124 (R3-REQ-06).
+# OQ-6 revised (owner, 2026-10-28): no battery-lead fuse or J1 fuse note.
+NOTES = (('J124', 'J124 ARM LAST'), ('J124', 'J124 5A FAST 2S'),
          ('J122', 'J122 1:S 2:NC 3:GND'), ('J122', 'SERVO + FROM HARNESS'))
-NOTE_PLACE = {'J124': (('B', 'F'), '-x'), 'J1': (('B', 'F'), '-x'),   # (faces in order, preferred side)
+NOTE_PLACE = {'J124': (('B', 'F'), '-x'),                          # (faces in order, preferred side)
               'SERVO + FROM HARNESS': (('F', 'B'), None)}                # the plugs mate on the top (R3-REQ-06(b))
 SUBJECT_MARGIN = 1.0            # mm: a note / port table centre is this much nearer its connector's courtyard than any other
 # J122's top-side key (R3-REQ-06(b)): the plugs mate on the top, where only SERVO was; row labels beside the rows

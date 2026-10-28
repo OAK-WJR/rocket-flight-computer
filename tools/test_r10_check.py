@@ -9,9 +9,11 @@ import re
 import sys
 import unittest
 from unittest.mock import patch
+import copy
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import check_r10 as gate
+import r10_hotplug as hotplug
 try:
     import pcbnew
 except ImportError:
@@ -77,6 +79,157 @@ class Assembly(unittest.TestCase):
         self.assertTrue(gate.port_power(pins, mutant, codes))
         mutant = dict(pins); mutant['J420.5'] = 'RADIO_PWR_EN'
         self.assertTrue(gate.port_power(mutant, values, codes))
+
+
+class HotplugEvidence(unittest.TestCase):
+    """Faults in model artifacts must fail even when their summary says pass."""
+    def setUp(self):
+        parts = {ref: dict(value=value, fields={'LCSC': code, 'Manufacturer Part': part},
+                           pads=[dict(number=str(i), net=net) for i, net in enumerate(nets, 1)])
+                 for ref, (value, code, part, nets) in hotplug.MODEL_PARTS.items()}
+        parts['C84'] = dict(value='470uF 25V polymer',
+                           fields={'Manufacturer Part': 'MA25V470M8x10', 'LCSC': 'C46550466'},
+                           pads=[dict(number='1', net='VLOGIC'), dict(number='2', net='GND')])
+        parts['U9'] = dict(fields={'Manufacturer Part': 'TPS259470LRPWR'}, pads=[dict(number='6', net='RAW_PROTECTED')])
+        edge = dict(length_mm=1., R_ohm=.001, L_near_nH=.5, L_gnd_nH=.5)
+        self.inputs = dict(schema=hotplug.SCHEMA, electrical_sha256='electrical fixture', parts=parts,
+                           terminals={'J1.1': 'source', 'C88.1': 'bypass', 'U9.5': 'u9'},
+                           edges=[dict(edge, a='source', b='bypass'), dict(edge, a='bypass', b='u9')])
+        self.rows = [dict(corner=c, minimum_V=-14., maximum_V=2., falling_V_per_us=8., rising_V_per_us=3.)
+                     for c in hotplug.cases()]
+        self.result = dict(schema=hotplug.SCHEMA, inputs_sha256=hotplug.digest(self.inputs),
+                           model_sha256=hotplug.model_sha(), limits=hotplug.LIMITS, topology='board',
+                           pack_V=-8.4, initial_input_V=2., step_scale=1., end_us=150., rows=self.rows,
+                           passed=True, qualification='pass', convergence_passed=True,
+                           retained_output=hotplug.retained_output(self.inputs),
+                           no_clamp_control=dict(rows=[dict(self.rows[0], corner=dict(self.rows[0]['corner'], vbr_V=1000.))]),
+                           convergence=dict(step_scale=.5, rows=[copy.deepcopy(self.rows[0])]))
+        local = [dict(self.rows[0], corner=c) for c in hotplug.local_sensitivity_corners(self.rows)]
+        self.result['local_path_sensitivity'] = dict(rows=local, step_scale=hotplug.SENSITIVITY_STEP,
+            end_us=hotplug.SENSITIVITY_US, refined_rows=[copy.deepcopy(local[0])],
+            refined_step_scale=hotplug.SENSITIVITY_STEP / 2, passed=True)
+        self.assertEqual(self.check(self.result), [])
+
+    def check(self, result):
+        return hotplug.validate(self.inputs, result, self.inputs['electrical_sha256'])
+
+    def test_failing_corner_cannot_hide_behind_pass_summary(self):
+        for key, value in (('minimum_V', -15.001), ('maximum_V', 28.001), ('falling_V_per_us', 10.001),
+                           ('rising_V_per_us', 100.001), ('minimum_V', float('nan')),
+                           ('falling_V_per_us', float('inf'))):
+            with self.subTest(metric=key, value=value):
+                bad = copy.deepcopy(self.result); bad['rows'][3][key] = value
+                self.assertTrue(self.check(bad))
+
+    def test_stale_or_incomplete_artifacts(self):
+        for key, value in (('model_sha256', 'old'), ('inputs_sha256', 'old'), ('topology', 'lumped'),
+                           ('pack_V', -7.4), ('initial_input_V', 0.), ('end_us', 0.),
+                           ('step_scale', 10.), ('step_scale', float('nan')), ('qualification', 'failed')):
+            with self.subTest(field=key):
+                bad = copy.deepcopy(self.result); bad[key] = value
+                self.assertTrue(self.check(bad))
+        bad = copy.deepcopy(self.result); bad['rows'].pop()
+        self.assertTrue(self.check(bad))
+        bad = copy.deepcopy(self.result); bad['limits']['falling_V_per_us'] = 20.
+        # Keep the fixture from mutating the module's independent limit constant.
+        with patch.object(hotplug, 'LIMITS', dict(minimum_V=-15., maximum_V=28., falling_V_per_us=10., rising_V_per_us=100.)):
+            self.assertTrue(self.check(bad))
+        self.assertTrue(hotplug.validate(self.inputs, self.result, 'moved copper'))
+
+    def test_impossible_extrema_fail_even_when_all_controls_agree(self):
+        for key, value in (('minimum_V', 27.), ('maximum_V', -100.),
+                           ('falling_V_per_us', -1.), ('rising_V_per_us', -1.),
+                           ('maximum_V', True)):
+            with self.subTest(metric=key, value=value):
+                bad = copy.deepcopy(self.result)
+                for rows in (bad['rows'], bad['convergence']['rows'], bad['no_clamp_control']['rows']):
+                    for row in rows:
+                        row[key] = value
+                self.assertTrue(self.check(bad))
+
+    def test_numerical_convergence_is_checked_not_just_its_boolean(self):
+        for seed in ('missing', 'step', 'delta', 'nan'):
+            with self.subTest(seed=seed):
+                bad = copy.deepcopy(self.result)
+                if seed == 'missing': bad['convergence']['rows'] = []
+                if seed == 'step': bad['convergence']['step_scale'] = 1.
+                if seed == 'delta': bad['convergence']['rows'][0]['falling_V_per_us'] += .02
+                if seed == 'nan': bad['convergence']['rows'][0]['falling_V_per_us'] = float('nan')
+                self.assertTrue(self.check(bad))
+
+    def test_component_substitution_cannot_be_qualified_by_refreshing_hashes(self):
+        for ref, key, value in (('C80', 'Manufacturer Part', 'different-capacitor'),
+                                ('R92', 'LCSC', 'C25804')):
+            with self.subTest(ref=ref):
+                inputs = copy.deepcopy(self.inputs); result = copy.deepcopy(self.result)
+                inputs['parts'][ref]['fields'][key] = value
+                result['inputs_sha256'] = hotplug.digest(inputs)
+                self.assertTrue(hotplug.validate(inputs, result, inputs['electrical_sha256']))
+        inputs = copy.deepcopy(self.inputs); result = copy.deepcopy(self.result)
+        inputs['parts']['R92']['pads'][0]['net'] = 'VLOGIC'
+        result['inputs_sha256'] = hotplug.digest(inputs)
+        self.assertTrue(hotplug.validate(inputs, result, inputs['electrical_sha256']))
+
+    def test_retained_output_and_no_clamp_control_are_required(self):
+        for key in ('retained_output', 'no_clamp_control'):
+            bad = copy.deepcopy(self.result); bad.pop(key)
+            self.assertTrue(self.check(bad))
+        inputs = copy.deepcopy(self.inputs); result = copy.deepcopy(self.result)
+        for i in range(100):
+            inputs['parts']['C' + str(1000 + i)] = dict(value='22uF',
+                fields={'Manufacturer Part': 'CL21A226MAQNNNE', 'LCSC': 'C45783'})
+        result['inputs_sha256'] = hotplug.digest(inputs)
+        result['retained_output'] = hotplug.retained_output(inputs)
+        self.assertTrue(hotplug.validate(inputs, result, inputs['electrical_sha256']))
+
+    def test_local_path_topology_and_sensitivity_cannot_be_bypassed(self):
+        bad_inputs = copy.deepcopy(self.inputs)
+        bad_inputs['edges'].append(dict(bad_inputs['edges'][0], a='source', b='u9'))
+        bad = copy.deepcopy(self.result)
+        bad['inputs_sha256'] = hotplug.digest(bad_inputs)
+        self.assertTrue(hotplug.validate(bad_inputs, bad, bad_inputs['electrical_sha256']))
+        for seed in ('missing', 'coarse', 'short', 'corner', 'fails', 'convergence'):
+            with self.subTest(seed=seed):
+                bad = copy.deepcopy(self.result)
+                local = bad['local_path_sensitivity']
+                if seed == 'missing': bad.pop('local_path_sensitivity')
+                if seed == 'coarse': local['step_scale'] *= 2
+                if seed == 'short': local['end_us'] /= 2
+                if seed == 'corner': local['rows'].pop()
+                if seed == 'fails': local['rows'][0]['falling_V_per_us'] = 10.1
+                if seed == 'convergence': local['refined_rows'][0]['falling_V_per_us'] += .02
+                self.assertTrue(self.check(bad))
+
+
+@unittest.skipUnless(plate, 'numpy required')
+class HotplugNumerics(unittest.TestCase):
+    def test_charge_solver_matches_constant_capacitance_control(self):
+        """Independent Python MNA and compiled nonlinear charge solver agree when C is constant."""
+        import numpy as np
+        inputs = json.loads((hotplug.DESIGN / 'hotplug_baseline_inputs.json').read_text())
+        linear = dict(lh_uH=.1, rh_ohm=.03, cap_scale='derated', cb_nF=50., vbr_V=13.3, reference='gnd')
+        nonlinear = dict(lh_uH=.1, rh_ohm=.03, bulk='low', damper='low', bypass='low',
+                         vbr_V=13.3, reference='gnd', rdamp_ohm=.33)
+        ns = np.full(3, 2, dtype=np.int32)
+        xs = np.zeros((3, 160)); xs[:, 1] = 30.
+        cs = np.ones((3, 160)); qs = xs.copy()
+        factors = [dict(low=.47), dict(low=16.7/44.), dict(low=.5)]
+        expected = hotplug.run(inputs, [linear], dt_ns=.25, end_us=2.)[0]
+        with patch.object(hotplug, 'curves', return_value=(ns, xs, cs, qs, factors)):
+            actual = hotplug.run_nonlinear(inputs, [nonlinear], step_scale=.5, end_us=2.)[0]
+        self.assertAlmostEqual(actual['minimum_V'], expected['minimum_V'], delta=.002)
+        self.assertAlmostEqual(actual['falling_V_per_us'], expected['falling_V_per_us'], delta=.01)
+        self.assertGreater(actual['falling_V_per_us'], 10.)  # the real baseline split feed must fail
+
+    def test_invalid_circuit_and_integration_inputs_fail(self):
+        inputs = json.loads((hotplug.DESIGN / 'hotplug_baseline_inputs.json').read_text())
+        corner = hotplug.cases()[0]
+        for kwargs in ({'step_scale': 0.}, {'step_scale': float('nan')}, {'end_us': 0.}):
+            with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
+                hotplug.run_nonlinear(inputs, [corner], **kwargs)
+        inputs['edges'][0]['L_gnd_nH'] = float('nan')
+        with self.assertRaises(ValueError):
+            hotplug.run_nonlinear(inputs, [dict(corner, reference='gnd')], end_us=.1)
 
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
@@ -1410,7 +1563,7 @@ class RealBoardSeeds(unittest.TestCase):
         """R8-GATE-02 / 03 / 04: pinned legends, shown safety references, BAT_IN / RAW_PROTECTED width floor."""
         for rid in ('K-legends', 'K-width'):
             self.assertEqual(self.run_rule(rid, self.load()), set(), rid)
-        for text in ('J124 ARM LAST', 'J124 5A FAST 2S', 'J1 BAT 15A FUSE', 'M3-ASSY-R10'):
+        for text in ('J124 ARM LAST', 'J124 5A FAST 2S', 'M3-ASSY-R10'):
             def seed(b, text=text):
                 for d in b.GetDrawings():
                     if isinstance(d, pcbnew.PCB_TEXT) and d.GetText() == text:
@@ -1576,9 +1729,25 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('P-11', lambda b: self.move(b, 'J121', -0.6, 0), 'wire room')
 
     def test_f9_1_d8_moved_away(self):
-        """R7-GATE-04: D8 3 mm further from J1.1 breaks the recorded F9-1 distance."""
+        """OQ-2: D8 movement invalidates the electrical model even if the result still claims a pass."""
         self.assertEqual(self.run_rule('F9-1', self.load()), set())
         self.seeded('F9-1', lambda b: self.move(b, 'D8', 3, 0), 'D8')
+
+    def test_f9_1_changed_feed_copper_invalidates_model(self):
+        def narrow(b):
+            track = next(t for t in b.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'BAT_IN')
+            track.SetWidth(pcbnew.FromMM(.2))
+        self.seeded('F9-1', narrow, 'stale')
+
+    def test_no_battery_fuse_legend_required_but_arm_fuse_retained(self):
+        self.assertNotIn(('B.Silkscreen', 'J1 BAT 15A FUSE'), gate.PINNED_TEXTS)
+        self.assertIn(('B.Silkscreen', 'J124 5A FAST 2S'), gate.PINNED_TEXTS)
+        board = self.load()
+        text = pcbnew.PCB_TEXT(board)
+        text.SetLayer(pcbnew.B_SilkS)
+        text.SetText('J1 BAT 15A FUSE')
+        board.Add(text)
+        self.assertTrue(any('obsolete J1 battery-lead fuse legend' in issue for issue in gate.pinned_texts(board)))
 
     def test_armed_side_extra_parts(self):
         """R7-GATE-03 / R7-SAF-01 seeds."""

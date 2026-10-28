@@ -1,7 +1,7 @@
 {
   "inputs_sha256": {
     "cad/actuator_power.kicad_sch": "c54f038bcf36cfc2c7caee42abb252c1e3fb37ce4cf9e107115b645f0c311cf3",
-    "cad/battery_entry.kicad_sch": "3b6b75595c3957f8ee1353ce610447f477cf02911a7928acce86fd1994a6cc57",
+    "cad/battery_entry.kicad_sch": "1fe95abcab7b5915b3796a432f6ecdf37a48f58e5f050b59c46270a558c68d1a",
     "cad/camera_connector.kicad_sch": "6a4fcb67cda63d818a4d805c3aed38e473f5c6e74b2c47908d04fae2bb88c5e3",
     "cad/camera_power.kicad_sch": "95b8ab30f4667766add03df35741793a5dcf4a26bdc983dceb01d92e69cc9a38",
     "cad/camera_uart.kicad_sch": "5b3e4532540c5e907f335ca2162bc683b90aa6f879e7f0548cb3a33a9a0e7eb3",
@@ -168,7 +168,7 @@
     "cad/kilib/rocket.pretty/USB-C_SMD-TYPE-C-31-M-12_1.kicad_mod": "f77f08eb642c6ec21933dc0cf3e2e4866e5b54717d8f1c237a4159bbdc6e8ce6",
     "cad/logic_power_path.kicad_sch": "6cf8a3d111d08e093e3bacf40ec0aab701a2d2b001b928185943f2f66cef4839",
     "cad/m3.kicad_dru": "f4f53dd3ac41e5e75272fd62a5b65e671debc2b8f2c715f2d16f01335fc13548",
-    "cad/m3.kicad_pcb": "407d1d8408330849526dbd31cf70ec94b9f012b23ff5c8324eb8a7b1f98bed05",
+    "cad/m3.kicad_pcb": "b860afbe406d7daec9757ccde89987d3439b32e0b1f8078bb01363be1704baa1",
     "cad/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
     "cad/m3.kicad_sch": "d048ce11d22608781937c8efa65b6da949311fce5efb7f50b4dc34fdb0337925",
     "cad/mcu.kicad_sch": "a5d2263bf187f1c0486aab51b0a36be04c123d3c585bd437420a01a310f33df3",
@@ -182,16 +182,16 @@
     "quality_audit/sexpr.py": "32f5b57f3716ff98a6eebd2ec125cded7a97b003e0c6bc9d062a7abfea3da64a",
     "tools/export_fab.py": "4348552af1f11285a85ec2b4828d17d836623463585e0092ac2f270523c653b5",
     "tools/fab_manifest.py": "9319ae89ee6ecd087c981596ee08294965892ba030eeb3ed9f7ccb9d1b593aaf",
-    "tools/jlc_corrections.json": "a9e31d929d0a5152672ca78d40ce5248f9bd687a177ee07c542419bc343772a1",
-    "tools/jlc_easyeda/pads.json": "05c29d747079eaa460b207b9014163798cffa32d0ccfba1dabec12ad54d25025",
+    "tools/jlc_corrections.json": "647376d168f1d1d44866d4cf1c222e1e3503f20eeca76c8cc2aa88b0a9d410b7",
+    "tools/jlc_easyeda/pads.json": "ca1e8365a7b0b2ed6d6a6d39a27e0529af1434289d92713512d37f03f3a13eb6",
     "tools/jlc_orient.py": "33f14158a5fe0107bf2493660f2923c6afd90998610cc49868f9fc2d803cfa61"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "336d056f4f71b1337b3c5e84db1c6985f6f2ce7bb342d3ebe704b11c5ec3d0eb",
-    "m3_assembly_top.pdf": "da413c5ad925b42274aa47a73d4737ad3d3b09ded77e3ba26aeb2791b2f657b3",
-    "m3_bom_jlc.csv": "3ada66369f7dae5d86db92afebc2f4d653b6f3b4f0aefc291e1c0f1c7b7752bc",
+    "m3_assembly_bottom.pdf": "cbfbf9cb815d437bbc133892c5cc724122d294fc0535bde561e832bb460b55e7",
+    "m3_assembly_top.pdf": "b048a5cec72f746ec6b6f68aa6c8bb954b67920dde01564f29fda9a6cc27a04f",
+    "m3_bom_jlc.csv": "096d6e450c2e21baaf9d12b7668781ef04c41804063e7796bd4984591e52235c",
     "m3_cpl_jlc.csv": "e6885622b4f0542a00384e2f9873cbd386487e5359f168350c9577d494ab2df3",
-    "m3_gerber.zip": "6806dbc0094f898e3182bc0c350dc021cc119eea5dd9bdc821bac429e28c07fe"
+    "m3_gerber.zip": "24b74ee1d7cfbee41d909f4324f63f3f6500307934ad174fc380a8486a5eb516"
   },
   "schema": 1
 }

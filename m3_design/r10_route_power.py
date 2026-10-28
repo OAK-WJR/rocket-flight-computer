@@ -17,6 +17,7 @@ import pcbnew
 FULL = pcbnew.ZONE_CONNECTION_FULL
 BAT, W = 1.0, 0.4                      # battery / rail width; ordinary supply branch width
 PAD_W = 0.3                            # U9's IN / OUT bars entered at their full 0.3 mm width (D-R3-02)
+BYPASS_W = 0.7                         # C88 feed/exit carry U9's full input current (OQ-2 completion)
 
 IN1_GND = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7)]
 # D-R3-xx (K-reference on the port control nets, R3-RTE-01): every B.Cu run of a *_PWR_EN / *_FAULT_N / *_UART_OE
@@ -115,31 +116,42 @@ def planes(d):
 
 def battery(d):
     t, p, via = d.track, d.pad, d.via
-    # F.Cu: J1.1 -> one bar along y 77 -> the protection column (C95 / C89 / C96 / C80 on x 27.52), D8 tapped.
-    t('BAT_IN', 'F', BAT, [p('J1.1'), (9.9, 77.0), (27.525, 77.0), p('C95.1')])
+    # F.Cu: J1.1 -> one bar along y 76.8 -> the protection column (C95 / C89 / C96 / C80 on x 27.52), D8 tapped.
+    t('BAT_IN', 'F', BAT, [p('J1.1'), (9.7, 76.8), (27.525, 76.8), p('C95.1')])
     t('BAT_IN', 'F', BAT, [p('C95.1'), p('C89.1')])
     t('BAT_IN', 'F', BAT, [p('C89.1'), p('C96.1')])
     t('BAT_IN', 'F', BAT, [p('C96.1'), p('C80.1')])
-    t('BAT_IN', 'F', BAT, [p('D8.1'), (19.85, 77.0)])
-    t('BAT_IN', 'F', W, [(13.8, 77.0), p('TP80.1')])
-    # B.Cu: J1.1 -> Q120's drain pad; Q120.7 -> down the west side of the J122 tie hole -> under J122's GND row ->
-    # U9's IN bar (south tip: the 1.0 mm run ends 0.6 mm short of the bar, 0.195 mm clear of the corner pads 1 / 10,
-    # and the bar is entered at its full 0.3 mm width, D-R3-02), with R167 / R82 / C88 tapped.
+    t('BAT_IN', 'F', BAT, [p('D8.1'), (19.85, 76.8)])
+    t('BAT_IN', 'F', W, [(13.8, 76.8), p('TP80.1')])
+    # B.Cu: J1.1 -> Q120's drain; its branch west of the tie hole ends at the R80 switch feed.
     t('BAT_IN', 'B', BAT, [p('J1.1'), (10.6, 74.1), (12.0, 75.5)])
-    t('BAT_IN', 'B', BAT, [p('Q120.7'), (12.87, 86.6), (17.35, 86.6), (36.725, 86.6), (38.75, 86.6), (38.75, 81.4)])
+    t('BAT_IN', 'B', BAT, [p('Q120.7'), (12.87, 86.6), (17.35, 86.6)])
     via('BAT_IN', (17.35, 86.6))
     t('BAT_IN', 'F', W, [(17.35, 86.6), (16.625, 86.6)])                 # into R80.1's pad (R80's battery side)
+    # OQ-2: U9 takes its feed from the protection-column node, removing the independent J1 -> U9 branch.
+    # The 1.0 mm F.Cu feed goes north/east of J122's east tie hole, then through one 1.0 / 0.5 mm via (JLC plug limit).
+    # The via at x 34.7 also clears J122's existing harness legend (OQ-2 completion).
+    # The existing U9 bar entry stays 0.3 mm wide, with the 1.0 mm run ending 0.6 mm short (D-R3-03).
+    feed = (34.7, 84.0)
+    t('BAT_IN', 'F', BAT, [(27.525, 76.8), (33.45, 76.8), (33.45, 82.75), feed])
+    via('BAT_IN', feed, size=(1.0, 0.5))
+    t('BAT_IN', 'B', BAT, [feed, (34.7, 86.6)])
+    # Feed C88's input pad first; U9 is a dead end beyond that local bypass, never an independently driven spur.
+    # The 0.7 mm, 0.8 mm-long entry clears C88.2; the diagonal stays clear of U9's downstream bar.
+    t('BAT_IN', 'B', BAT, [(29.825, 86.6), (34.7, 86.6), (36.725, 86.6), (38.75, 86.6),
+                         (38.75, 84.32), (39.9, 83.17)])
+    t('BAT_IN', 'B', BYPASS_W, [(39.9, 83.17), p('C88.1')])
     t('BAT_IN', 'B', W, [(36.725, 86.6), p('R82.1')])
+    t('BAT_IN', 'B', BYPASS_W, [p('C88.1'), (38.75, 82.37), (38.75, 81.4)])
     t('BAT_IN', 'B', PAD_W, [(38.75, 81.4), p('U9.5')])            # pad-entry neck: 0.6 mm to the bar's tip
     t('BAT_IN', 'B', W, [(29.825, 86.6), p('R167.1')])
-    t('BAT_IN', 'B', W, [(38.75, 82.37), p('C88.1')])
 
 
 def control(d):
     t, p, via = d.track, d.pad, d.via
-    # Damper (C89 / C95 -> R166) on F.Cu, clear of J122's tie hole (30.8, 79) by >= 1.85 mm.
+    # Damper (C89 / C95 -> R166) on F.Cu, clear of J122's tie hole (30.8, 79.5) by >= 1.85 mm.
     t('BAT_DAMP', 'F', W, [p('C89.2'), p('C95.2')])
-    t('BAT_DAMP', 'F', W, [p('C95.2'), p('R166.1')])               # one 45 deg run to R166 turned north-south (D-R2-12)
+    t('BAT_DAMP', 'F', W, [p('C95.2'), (33.475, 75.2), (36.0, 77.725), p('R166.1')])  # clear of the OQ-2 input feed
     # External switch J400 (GH 2-pin): SW_SOURCE to R80, SW_RETURN to R165 (7 uA contact current).
     t('BAT_SW_SOURCE', 'F', 0.2, [p('J400.1'), (9.875, 86.1), (14.775, 86.1), p('R80.2')])
     t('BAT_SW_RETURN', 'F', 0.2, [p('J400.2'), (12.075, 88.4), p('R165.1')])

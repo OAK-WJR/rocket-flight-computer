@@ -63,14 +63,11 @@ Mechanical and placement (kept from check_r9 where they still apply, read from t
   P-11  J1 / J121 / J124 wires enter from -x (owner, r10_plan 2 item 2; J1's wires leave the same west face, R3-MEC-02);
         the entry direction is read from the footprint
         description ("wire entry +y"), else DB128's local -y. Wire room to the bore wall: R8 / R9's 6.25 mm is R8's
-        measured value (a non-regression floor, not a derived need); R10's west-edge terminals have 4.95 mm. OWNER
-        QUESTION OQ-1 (R10_DECISIONS D-R2-14): until the owner sets a figure, the rule holds R10's recorded room
-        (WIRE_ROOM_R10, no regression) and reports R8's floor in the evidence; it is listed as a deviation, not passed
-  F9-1  input protection near J1.1. R8 / R9's premise (D76: the hot-plug model lumps the harness at J1, so D8, C80, C96,
-        the C89 / C95 / R166 damper and R167 within 10.6 mm of J1.1 and U9 within 27.07 mm) does not hold on R10: the
-        parts sit 12.9-29.8 mm from J1.1 and U9 32.2 mm. OWNER QUESTION OQ-2 (D-R2-14): whether to re-model the hot
-        plug with R10's feed or to re-place the cluster at J1. Until then the rule holds R10's recorded distances
-        (F9_R10, no regression) and reports R8's premise in the evidence; it is listed as a deviation
+        measured value (a non-regression floor, not a derived need). Owner OQ-1, 2026-10-28: R10's accepted floor is
+        4.95 mm with 16-22 AWG in DB125 terminals, pending physical fit qualification
+  F9-1  owner OQ-2, 2026-10-28: the R10 reverse hot-plug model must pass. Its extracted copper/parts, source curves,
+        solver, complete corner set, numerical limits and convergence are checked; stale or failing evidence fails.
+        The old part-distance premise is not used. This remains a simulation inference, not a bench result
   T-1   panel tabs (D-R2-13): R9 barred the aft edge because the SMA jacks overhung it; R10 has no jack, and its east
         edge's aft third carries the three GH ports. Each end third must be held on both sides: a legal 5 mm tab on the
         west edge in the aft and in the forward third, and on the east side in each end third either a legal east-edge
@@ -761,12 +758,8 @@ def k_rules(ctx):
     return issues, ev
 
 
-# P-11 / F9-1 (D-R2-14, owner questions OQ-1 / OQ-2): R10's recorded figures, held against regression until the owner
-# decides; R8 / R9's figures are reported beside them.
+# OQ-1 accepted by the owner 2026-10-28; physical fit remains outstanding.
 WIRE_ROOM_R10 = 4.95
-F9_R10 = {'D8': 12.86, 'C80': 21.59, 'C96': 20.93, 'C89': 20.58, 'C95': 20.55, 'R166': 29.75, 'R167': 25.47,
-          'U9': 32.22}          # mm from J1.1, measured on the D-R2-12 placement (nearest pad centre; U9: its BAT_IN pad)
-F9_PREMISE = (10.6, 27.07)      # R8 D76: protection parts / U9 from J1.1
 
 # S-5 window / S-8 barrels (R3-SAF-01)
 ARM_WINDOW_NETS = frozenset({'GND', RAW, BUS})  # the only nets allowed between J124's pads
@@ -1876,30 +1869,32 @@ def p11(ctx):
         face, box = r9.entry_face(ctx, f, d)
         if d in ('-x', '+x'):
             room = r9.wire_room(face)
-            ev[ref].update(wire_room_mm=round(room, 3), r8_floor_mm=WIRE_ROOM, r10_recorded_mm=WIRE_ROOM_R10,
-                           owner_question='OQ-1 (R10_DECISIONS D-R2-14): R8 floor not met; R10 figure held')
+            ev[ref].update(wire_room_mm=round(room, 3), r8_floor_mm=WIRE_ROOM, r10_accepted_floor_mm=WIRE_ROOM_R10,
+                           owner_decision='OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified')
             if room < WIRE_ROOM_R10 - EPS:
-                issues.append(f'P-11: {ref} has {room:.2f} mm of wire room to the bore wall (R10 recorded '
-                              f'{WIRE_ROOM_R10}, owner question OQ-1; R8 {WIRE_ROOM})')
+                issues.append(f'P-11: {ref} has {room:.2f} mm of wire room to the bore wall (owner-accepted R10 '
+                              f'floor {WIRE_ROOM_R10}; R8 {WIRE_ROOM})')
         else:
             issues += [f'P-11: {i}' for i in r9.axial_ok(ctx, f, d, face, box)]
     return issues, ev
 
 
 def f9(ctx):
-    """F9-1 (D-R2-14, owner question OQ-2): R10's recorded distances from J1.1, no regression; R8's premise reported."""
-    import check_r9 as r9
-    _, dist = r9.f9(ctx)
+    """OQ-2: board-derived, reproducible reverse hot-plug evidence; never substitute a distance for a model pass."""
+    import r10_hotplug as hp
+    inputs = json.loads(hp.INPUTS.read_text())
+    result = json.loads(hp.RESULTS.read_text())
+    live = hp.extract(ctx.board, ctx.board_path)
     issues = []
-    for ref, rec in sorted(F9_R10.items()):
-        d = dist.get(ref)
-        if d is None:
-            issues.append(f'F9-1: {ref} missing')
-        elif d > rec + 0.05:
-            issues.append(f'F9-1: {ref} is {d:.2f} mm from J1.1 (R10 recorded {rec}, owner question OQ-2)')
-    over = {ref: d for ref, d in dist.items() if d > (F9_PREMISE[1] if ref == 'U9' else F9_PREMISE[0]) + 0.005}
-    return issues, dict(distances=dist, r10_recorded=F9_R10, r8_premise_mm=dict(parts=F9_PREMISE[0], U9=F9_PREMISE[1]),
-                        beyond_r8_premise=over, owner_question='OQ-2 (R10_DECISIONS D-R2-14)')
+    if hp.digest(live) != hp.digest(inputs):
+        changed = [ref for ref in sorted(set(live['parts']) | set(inputs.get('parts', {})))
+                   if hp.digest(live['parts'].get(ref)) != hp.digest(inputs.get('parts', {}).get(ref))]
+        issues.append('F9-1: stale board-derived model inputs' + (': ' + ', '.join(changed) if changed else ''))
+    issues += ['F9-1: ' + i for i in hp.validate(inputs, result, live['electrical_sha256'])]
+    return issues, dict(board_sha256=live['board_sha256'], electrical_sha256=live['electrical_sha256'],
+                        model_sha256=result.get('model_sha256'), qualification=result.get('qualification'),
+                        limits=result.get('limits'), convergence=result.get('convergence'),
+                        inference=result.get('inference'), owner_decision='OQ-2, 2026-10-28')
 
 
 def t1(ctx):
@@ -2119,7 +2114,7 @@ def port_legends(board, required=PORT_LEGENDS_R10):
 
 # K-text (R8-GATE-02): the revision and safety legends are pinned to their exact words (a changed text fails).
 PINNED_TEXTS = (('B.Silkscreen', 'M3-ASSY-R10'), ('B.Silkscreen', 'J124 ARM LAST'),
-                ('B.Silkscreen', 'J124 5A FAST 2S'), ('B.Silkscreen', 'J1 BAT 15A FUSE'))
+                ('B.Silkscreen', 'J124 5A FAST 2S'))  # OQ-6, 2026-10-28: no battery-lead fuse
 # R8-GATE-03: these references must stay shown on silkscreen (all shown on the R10 board now). The full hidden list is
 # reported in the evidence, not pinned.
 SHOWN_REFS = ('J1', 'J121', 'J124', 'J122', 'J400', 'J9', 'J410', 'J420', 'J123', 'J3', 'Q120', 'Q121', 'Q124', 'R134')
@@ -2134,6 +2129,8 @@ def pinned_texts(board, pinned=PINNED_TEXTS):
                 (board.GetLayerName(item.GetLayer()), item.GetText()), 0) + 1
     out = [f'silkscreen text {t!r} missing on {lay} (pinned revision / safety legend)' for lay, t in pinned
            if have.get((lay, t), 0) != 1]
+    out += [f'obsolete J1 battery-lead fuse legend {t!r} (OQ-6)' for (lay, t) in have
+            if lay.endswith('Silkscreen') and re.search(r'\bJ1\b', t) and re.search(r'\bFUSE\b', t, re.I)]
     revs = sorted({t for (_, t) in have if re.match(r'^M3-ASSY-R\d+$', t)})
     return out + [f'revision legends {revs}: only M3-ASSY-R10 allowed' for _ in [0] if revs != ['M3-ASSY-R10']]
 
@@ -2325,8 +2322,8 @@ RULES = [
     ('M-5', 'fit (profile r10)', lambda c, s: m5(c, s)),
     ('M-6', 'bottom keep-outs', lambda c, s: m6(c)),
     ('M-7', 'IMU and MEMS', lambda c, s: m7(c)),
-    ('P-11', 'terminal entry (owner question OQ-1)', lambda c, s: p11(c)),
-    ('F9-1', 'input protection at J1 (owner question OQ-2)', lambda c, s: f9(c)),
+    ('P-11', 'terminal entry and owner-accepted 4.95 mm wire room', lambda c, s: p11(c)),
+    ('F9-1', 'R10 reverse hot-plug model pass (OQ-2)', lambda c, s: f9(c)),
     ('T-1', 'panel-tab windows (R10)', lambda c, s: t1(c)),
     ('K-legends', 'legends and ids', lambda c, s: k_legends(c)),
     ('M-2', 'vibration (plate model, r10_mated)', lambda c, s: m2(c, s)),

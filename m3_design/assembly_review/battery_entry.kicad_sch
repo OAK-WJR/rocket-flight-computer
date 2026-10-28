@@ -2041,102 +2041,6 @@
 			(justify right))
 		(uuid 626263a4-44d6-5ff9-9a42-3a1ffc843738))
 	(symbol
-		(lib_id "M3:R")
-		(at 289.56 175.26 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 149c3911-2701-5275-9f6d-63156dd086ef)
-		(property "Reference" "R92"
-			(at 292.1 173.98999999999998 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k 1%"
-			(at 292.1 176.52999999999997 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R_0603_1608Metric"
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" ""
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C25804"
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
-					(reference "R92")
-					(unit 1))))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0603WAF1002T5E"
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC Part" "C25804"
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)))))
-	(wire
-		(pts
-			(xy 289.56 171.45)
-			(xy 281.94 171.45))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid a30fd857-2f02-5153-bf02-52e389104307))
-	(global_label "RAW_PROTECTED"
-		(shape passive)
-		(at 281.94 171.45 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 349b5179-1898-5fa8-90fe-1bc5477ff33d))
-	(wire
-		(pts
-			(xy 289.56 179.07)
-			(xy 281.94 179.07))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 2aeacea1-6c98-5f8c-80cd-33ae3e5c2847))
-	(global_label "GND"
-		(shape passive)
-		(at 281.94 179.07 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid de0f25cb-1ddf-50fb-825e-9d9b50cdff82))
-	(symbol
 		(lib_id "M3:TestPoint")
 		(at 35.56 213.36 0)
 		(unit 1)
@@ -3030,105 +2934,6 @@
 			(justify right))
 		(uuid 2a1356a1-3cf7-58e6-8698-7017621e80cb))
 	(symbol
-		(lib_id "M3:R")
-		(at 340.36 175.26 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid c9264fc9-c4a4-5e57-aa24-9dd90f0fad76)
-		(property "Reference" "R166"
-			(at 342.9 173.99 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "0.33R 1% 2512"
-			(at 342.9 176.53 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:M3_R2512_UR"
-			(at 340.36 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" ""
-			(at 340.36 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C25468"
-			(at 340.36 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC Part" "C25468"
-			(at 340.36 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 340.36 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "25121WF330LT4E"
-			(at 340.36 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
-					(reference "R166")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 340.36 171.45)
-			(xy 332.74 171.45))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 207581c5-8d13-5544-9fb1-244c51fd6774))
-	(global_label "BAT_DAMP"
-		(shape passive)
-		(at 332.74 171.45 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid fef7d4fb-e5e9-5da0-8fb7-532942502015))
-	(wire
-		(pts
-			(xy 340.36 179.07)
-			(xy 332.74 179.07))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 67adcbb5-50bd-55bc-a9eb-ca39dc27f7a1))
-	(global_label "GND"
-		(shape passive)
-		(at 332.74 179.07 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f8729f33-4605-5f6c-81b1-1d99376cc6a6))
-	(symbol
 		(lib_id "M3:C")
 		(at 355.6 175.26 0)
 		(unit 1)
@@ -3334,6 +3139,98 @@
 			(justify right))
 		(uuid d0c1e0f2-311d-580c-a585-45d2071cf109))
 	(symbol
+		(lib_id "M3:R")
+		(at 289.56 175.26 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 149c3911-2701-5275-9f6d-63156dd086ef)
+		(property "Reference" "R92"
+			(at 292.1 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "3.3k 1%"
+			(at 292.1 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 289.56 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C22978.pdf"
+			(at 289.56 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C22978"
+			(at 289.56 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 289.56 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF3301T5E"
+			(at 289.56 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "R92")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 289.56 171.45)
+			(xy 289.56 166.37))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3c72755d-c783-5838-96c1-200cb2c39554))
+	(global_label "RAW_PROTECTED"
+		(shape passive)
+		(at 289.56 166.37 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8800b66f-f5aa-5e63-aba3-6ce7f0ee27e0))
+	(wire
+		(pts
+			(xy 289.56 179.07)
+			(xy 289.56 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 38e3649c-a123-5424-abbc-7f79df46b327))
+	(global_label "GND"
+		(shape passive)
+		(at 289.56 184.15 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 05ca48a7-5e1d-576f-a766-f6f126600ed0))
+	(symbol
 		(lib_id "M3:Conn_1x2")
 		(at 71.12 71.12 0)
 		(unit 1)
@@ -3425,6 +3322,98 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid f9387734-1801-5743-bf29-8b779a5df0e8))
+	(symbol
+		(lib_id "M3:R")
+		(at 340.36 175.26 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid c9264fc9-c4a4-5e57-aa24-9dd90f0fad76)
+		(property "Reference" "R166"
+			(at 342.9 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "0.36R 1% 2512"
+			(at 342.9 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_R2512_UR"
+			(at 340.36 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf"
+			(at 340.36 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C168925"
+			(at 340.36 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 340.36 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "25121WF360LT4E"
+			(at 340.36 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "R166")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 340.36 171.45)
+			(xy 340.36 166.37))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 41bc9622-cce0-52ff-8b9a-c8b202902b1a))
+	(global_label "BAT_DAMP"
+		(shape passive)
+		(at 340.36 166.37 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f26284fc-3556-5a50-8c95-3c021dd5c3d5))
+	(wire
+		(pts
+			(xy 340.36 179.07)
+			(xy 340.36 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 02ba65f0-99f3-57b2-9e99-28eb98c8f172))
+	(global_label "GND"
+		(shape passive)
+		(at 340.36 184.15 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2afebdf4-b2c7-582c-afe3-e5f1675d45e0))
 	(symbol
 		(lib_id "M3:Conn_1x2")
 		(at 330.2 238.76 0)

@@ -828,3 +828,215 @@ lead or ferruled before the terminal.
 - **OQ-7 (camera shroud):** the lower option: keep the board wholly forward of joint + 47 mm, so no shroud clocking is
   needed for fit qualification; VEHICLE.md's stack keeps its slack.
 - **OQ-3 (cost $87.01 vs $84.41)** is not yet answered: it stays on the deviation list for the owner's acceptance.
+
+## Owner-answer implementation before the fresh round 9 (2026-10-28)
+
+The interrupted three-lens round 9 is a prelude, not a full review and not a clean pass. The following implements
+the answers above before freezing a new committed target for ten fresh review lenses. No overall acceptance of
+R10 is inferred from the individual answers.
+
+### D-OA-01. Harness, fit and assembly records (OQ-1 / -4 / -6 / -7)
+
+Remove only the J1 battery-fuse legend from the post generator and its exact-text gate; keep J124's `ARM LAST`
+and `5A FAST 2S` legends. R10's active ordering and requirement text specifies an unfused pack-to-U9 / Q120
+stretch and its accepted hard-short risk, strain relief, no chafe points and crimped or soldered leads. Earlier
+revision fuse instructions stay explicitly scoped to those revisions. The R10-specific harness table retains
+the separate 5 A fast 2S ARM-link fuse.
+
+P-11 uses the owner's 4.95 mm floor; the physical harness / bore check remains open. The aft-edge tab and panel
+rail are selected, with JLC confirmation before ordering. The fit record and vehicle stack place the board wholly
+forward of the booster/main joint + 47 mm, including mounting tolerance, and retain the freed length as slack.
+There is no new requirement to clock the board against the camera shroud.
+
+### D-OA-02. Firmware shedding and thermal estimate (OQ-5 / R9-PWR-01)
+
+No hardware port cutoff is added. The binding-note generator explicitly requires the PA6 ADC1/2 analog watchdog,
+port OE / EN shutdown, a qualified detection-to-command latency and actual load-current decay. TPS2553's turn-off
+can take up to 3 ms, longer than the estimated 0.55–1.0 ms ports-on ride-through; the 8.7–13.6 ms figure cannot be
+credited until the ports have actually stopped drawing current. The threshold, worst-case latency and surviving
+load envelope must be demonstrated in firmware / bench qualification.
+
+The parts-budget generator now uses the qualification record's inferred 80–110 C/W range for U401, not the
+62.5 C/W reference-board figure. At the existing 0.40618 W loss and 85 C ambient this is 117.49–129.68 C junction
+temperature (Inference). This fixes a contradictory estimate, not a measured thermal failure.
+
+### D-OA-03. Historical routing aids
+
+The aid README now identifies the router experiments as historical feasibility work. D-R2-08's owner decision
+requires every signal to be hand-routed, and D-R2-09's explicit tables are the production implementation. The
+obsolete instruction to freeze an autorouter result over those tables is removed.
+
+### D-OA-04. OQ-2 failure confirmation
+
+The saved board's separate J1-to-capacitor and J1-to-U9 branches fail the new transient model within F9's
+0.1 uH / 0.03 ohm corner. A fresh verifier reproduced the mechanism with independent RK4 and extracted-MNA
+calculations; see `owner_hotplug_reverification.md`. OQ-2's condition for layout remediation is therefore met.
+A takeoff downstream of the input capacitor branch is being qualified. No passing model, regenerated production
+board or passing fix commit is claimed by this decision alone.
+
+### D-OA-05. Retained U9 output voltage
+
+The TPS25947 cold limit also depends on retained OUT voltage. With C84 allowed to feed RAW_PROTECTED through
+U11, the old 10 kohm R92 does not provide a comfortable two-second discharge estimate. Change R92 to 3.3 kohm,
+1%, UNI-ROYAL 0603WAF3301T5E / C22978 on the same 0603 land and nets (`circuit.json` replacement). This adds one
+Basic BOM code and no component or extended code. The nominal extra draw is 1.73 mA at 8.5 V, 14.67 mW.
+
+The sensitivity calculation includes every inventoried board capacitor, C84 at twice its nominal capacitance,
+every rail initially at 8.5 V, R92 tolerance / temperature coefficient, and no load or divider-bleed credit.
+The final inventory is 1675.3395136 µF; its common-node estimate is 5.954856 V at two seconds. C84's temperature behavior and arbitrary
+converter reverse-energy behavior remain explicit inferences to verify on the bench; this is not a measured
+discharge guarantee. `parts_qualification.md` records the exact part source and `hotplug.md` the final calculation.
+
+The ride-through budget now adds R92's whole 7.4 V maximum dissipation explicitly (16.93 mW), without credit
+for an old load-envelope allowance. Ports-off/shed estimates become 8.7 / 13.6 ms at 300.8 / 470 uF to 3.5 V;
+ports-on estimates still round to 0.55–1.0 ms. This preserves OQ-5's firmware-only architecture.
+
+### D-OA-06. Input feed and damper requalification
+
+The independently confirmed split-feed failure in D-OA-04 authorizes OQ-2's remediation. U9 now takes BAT_IN
+downstream of the protection-column branch, through one 1.0 mm / 0.5 mm drilled via; Q120 retains its separate
+J1 feed. No parts move. R166 changes on its existing 2512 land to 0.36 Ω, 1%, UNI-ROYAL 25121WF360LT4E / C168925:
+the 0.33 Ω candidate reached −15.10 V at a cold-resistance corner. The 2304-case candidate sweep with 0.36 Ω
+passes numerically (−14.497874 V minimum, 8.654349 V/µs maximum falling slew), subject to final-board extraction
+and the full build gate. `hotplug.md` records the maker sources, tolerances, numerical controls and limitations.
+
+F9-1 replaces the old part-distance comparison with board-derived model evidence: actual feed tracks, pads,
+via and stack-up, capacitor and resistor identities, the source curves, solver, full corner set and refined
+extrema must match and pass. The unfused harness must still measure at least 0.03 Ω within the specified
+0.1–2 µH envelope; lower-resistance sensitivity cases are failures outside that domain. This does not add a
+battery fuse or infer a guaranteed R166 pulse rating. Physical pin waveforms, harness parasitics, retained OUT
+and repeated hot/cold R166 pulse durability remain qualification obligations.
+
+The two substituted resistor codes use their own LCSC-to-JLCEDA product mappings for the assembly rotation
+check (`tools/jlc_easyeda/pads.json`), fetched 2026-10-28 from the recorded public source URLs. No donor
+footprint or price/stock claim is inferred from the old codes.
+
+### D-OA-07. C88 intercepts the feed; local copper remains in the model
+
+The D-OA-06 numerical result used an ideal C88-to-U9 connection. A fresh independent MNA calculation retained
+that branch and demonstrated sensitivity to assumed pin capacitance and contact-edge time: 100 pF and 1 ns
+gave 13.60 V/µs, or 12.60 V/µs after removing trace counted inside the pads. The exceedances were at most
+0.60 ns long. Neither assumed parameter is maker-qualified; this establishes an optimistic model approximation,
+not a measured or guaranteed physical failure. The contracted result is superseded as qualification evidence.
+
+The simplest stronger topology feeds C88 before U9: U9 is a dead end beyond its bypass. No component moves or
+extra via is needed. The new entry/exit copper is 0.7 mm wide (0.80 + 1.15 + 0.97 mm), with the existing 0.3 mm
+U9 entry retained. At 4.84 A and 85 °C, a one-dimensional equal-end-temperature conduction estimate gives
+89.16 mW and 5.10 °C added neck rise (Inference, not the local board temperature). The thinner 0.4 mm trial
+gave 127.14 mW and 10.38 °C. `parts_qualification.md` records the model and clearances.
+
+The feed via moves from (33.45, 84.0) to (34.7, 84.0), with a 45° approach. This restores the required front
+`SERVO + FROM HARNESS` legend without changing its 1.0 mm text or clearance/subject rules; its ink is 0.425 mm
+from the via ring (required 0.155 mm). The approach is approximately 0.73 mm shorter to the U9 column. No
+post-generator algorithm or gate is weakened.
+
+Schema 3 retains every extracted local edge; the gate requires C88 to separate U9 from every other model terminal.
+It also checks finite-edge/pin-capacitance sensitivities and their convergence, labelled as assumptions. Independent
+constant-C Python MNA and the charge solver agree within 1.2e-9 V/µs on the 100 pF / 1 ns diagnostic; halving
+the 25 ps step changes the falling slew by 0.000183 V/µs. Final-board evidence and the full build gate are required.
+
+### D-OA-08. Record corrections before the fresh full round 9
+
+The GPS translator's B supply is GPS_IO_3V3 from U412, supplied by GPS_4V8; the round-8 qualification paragraph
+incorrectly named PORT_4V8. Correct the paragraph against `circuit.json`, without changing the circuit. Keep
+historical stop records explicitly historical, resolve the superseded owner questions, and report new CAD/software
+checks separately from simulation, firmware, physical and bench qualification.
+
+The first production build's metadata gate rejected R92 / R166: the reused footprint still carried its old
+`LCSC Part` field while the native netlist updated `LCSC`. In `r10_pcb.py`, remove that obsolete legacy field
+when it contradicts the new canonical field. The schematic's replacement part already omits it. This changes
+no copper or geometry, and the metadata audit remains mandatory and unchanged; rebuild before committing.
+K-legends also rejects a J1 fuse legend, rather than merely ceasing to require the old one; a seeded old
+`J1 BAT 15A FUSE` text fails while J124's ARM-link fuse note stays required.
+The actuator contract's R10 profile pins R166 to C168925, matching the qualified model; its R9 profile retains
+C25468. All other retained safety-part pins and topology checks remain in force.
+
+### D-OA-09. Complete the interrupted pass before audit implementation
+
+Retain all interrupted owner-answer changes. Two fresh complete builds agree byte for byte on `b860afbe…`;
+the regenerated fabrication package and unskipped full gate pass (R10_VALIDATION owner-answer completion).
+The CLI crashes at wxGetMousePosition in this headless session; use D-R1-05's external mouse-query interposer
+and a temporary wrapper, without changing a DRC result, gate, CAD rule or repository runtime dependency.
+The prior incomplete round-9 prelude receives no clean-round credit. Implement the adopted AUD/GAP cuts next,
+then freeze a committed target for ten fresh independent review lenses in round 9.
+
+**Commit blocked by the environment:** `git add` and `git commit` cannot create this worktree's `index.lock`
+(Operation not permitted), including when invoked from the declared writable common Git directory. No staging or
+commit succeeded. Do not label this board committed or count a fresh review round. The source audit cuts have not
+started; `audit_preflight.md` preserves the read-only part qualification and layout plan for continuation after the
+Git write access is repaired. No AGENTS §2 change or owner decision is required by this technical blocker.
+
+## Requirements audit cuts (owner direction, 2026-10-28)
+
+The owner directed that every requirement be rooted in the flight's physics (flight 1 K850DM ~Mach 1.45, flight 2
+L1000W ~Mach 1.9, 2S pack, one roll tab, one recovery channel plus the isolated Blue Jay) or in BPS.space AVA's design
+choices, not in margins inherited from R1-R9, and that the agents decide without further owner questions. A read-only
+requirements audit (2026-10-28, gpt-6.1-sol) ranked the cuts; these are adopted. AGENTS §2 items 1-5 are untouched.
+
+- **AUD-1 IO-LDO output capacitors** (C92 / C442 / C452 if they survive AUD-8): 22 uF / 25 V 1210 -> the TPS709
+  datasheet's requirement (Ceff >= 1.5 uF over bias, tolerance and temperature; TPS709 §8.1 / 8.2.2). Physics: the rail
+  feeds a translator and a 1 kOhm bleed (~3.3 mA).
+- **AUD-2 Slow nets leave the return-path geometry rules:** filtered ADC sense (tau ~9 us), ACT_EN / ACT_DRV /
+  ACT_GATE, port EN / FAULT / OE drop the 1.5 mm GND-partner via and one-In2-region-per-chain rules (AGENTS §3 and
+  REQUIREMENTS M2 scope narrowed by name). Fast interfaces (USB, HSE, SPI, QSPI, IMU CS, UARTs) and S-8 keep them. Remove
+  the partner vias and CH1 In2 plane arms that only those rules required.
+- **AUD-3 Load-switch FETs Q120 / Q121:** replace the 5 x 6 mm pair with a <= 3 x 3 mm back-to-back pair if one is
+  qualified: hot RDS(on) <= 40 mOhm at the minimum gate drive, 20 ms SOA at 4.2 A, and VGS tolerance for the ~18 V clamp
+  event (reject +-12 V gates). Physics: they now carry <= 4.2 A for <= 20 ms, not 7.7 A continuous. If no JLC-stocked
+  part qualifies, keep the incumbent and record why.
+- **AUD-4 Pull-pin removed** (J123, R160 / R161, C160, D122; F9 / FMEA F-7 clauses deleted). Root: none in the flight's
+  physics; launch is detected by the accelerometer (FMEA F-6) and the pin had no authority after launch. AVA has no
+  pull-pin input (Inference). The ARM plug and the power switch stay.
+- **AUD-5 Test pads TP84 / 85 / 86 / 87 / 89 / 92 removed;** TP80-83 and TP120-122 kept (hot-plug and pyro gate probes).
+  The values stay probeable at part pads, as on AVA.
+- **AUD-6 Fire-only copper** (RAW_ACT, PYRO1_BUS / IGN / OUT) 1.0 -> 0.5 mm; the continuous BAT_IN / U9 feed is unchanged.
+  Physics: 4.2 A for 20 ms gives ~5.6 K adiabatic rise at 0.5 mm; fire current falls ~0.01 A.
+- **AUD-7 Pull-ups and series resistors:** R412 / R422 / R432 10 kOhm 0.1 % 0603 -> 10 kOhm 0402 (a digital pull-up needs
+  no precision); R150-R153 1 kOhm 0805 -> 0603 rated >= 100 mW (8.4 V chafe into a low output: 64 mW). Correct the passive
+  derating rule to the fault power, not 30 % of rating.
+- **AUD-8 GPS and radio IO LDO cells removed** (U412 / U422, R443 / R453, C441-443, C451-453): the GPS / radio TXU0202 B
+  side runs from 3V3 (both are 3.3 V UART modules, as AVA wires its peripherals direct). The OE-low isolation, 1 kOhm
+  series resistors and ESD stay; firmware holds OE low whenever the port switch is off (firmware obligation). Accepted:
+  a mis-set OE can feed an unpowered module a few mA through 1 kOhm. The camera keeps U13 (PORT_5V3 exceeds TXU0202's
+  5.5 V supply maximum).
+- **AUD-9 USB-only board power kept** (U10 / U11): configuring and downloading logs on the bench without a pack is a real
+  use, and the mux is not a redundant protection layer.
+- **AUD-10 Drawing hygiene non-blocking:** route_check's harmless graph artifacts (collinear nodes, duplicate
+  representations, inside-pad segments) and the 6 mm legend-subject rule become review findings, not gate failures;
+  connectivity, DRC, clearance, assembly and fast-return checks stay blocking; 1.0 mm / 0.15 mm silkscreen (JLC) stays.
+  Add the missing J410 / J420 pin tables if room allows. Clean routing remains the goal.
+
+Real gaps from the same audit, to be fixed (physics or datasheet roots):
+- **GAP-1 Fire-current budget (F7):** superpose all pack loads through the pack resistance,
+  I_fire = (Voc - Rpack x I_other) / (Rpack + R_fire); restate the margin honestly (two stalled servos and the ports give
+  ~1.46 A vs the 1.5 A all-fire) and record the e-match all-fire / pack requirement that results, without weakening R134.
+- **GAP-2 U9 output protection layout:** a >= 1 uF capacitor and the output Schottky within a short loop of U9's OUT pins
+  (TPS25947 §8.4.1); today C82 is ~13.3 mm and D9 ~18.9 mm away. Move the existing parts.
+- **GAP-3 U401 thermal:** thermal vias under the exposed pad and a junction estimate at 70 °C bay ambient <= 125 °C.
+- **GAP-4 C84 order remarks:** remove the inherited OS-CON reflow text from ORDERING §8.2; record the MA capacitor's
+  real reflow basis or a hand-solder instruction.
+- **GAP-5 Pyro gate timing:** recompute the floating-MCU gate discharge (10 k || 1.22 k with 220 nF, ~0.5 ms) and write one
+  worst-fault fire-duration contract consistent with the watchdog period and R134's pulse energy.
+- **Owner questions closed by physics:** "neutral quickly" = a neutral PWM command within 50 ms (the servo's physical
+  response is a servo / bench matter); pad wait and pack size: REQUIREMENTS' existing operating assumptions stand (no
+  circuit depends on them); single-fault envelope = AGENTS §2 plus the pyro single-resistor rule, the rest single-string as AVA.
+
+## Single screw switch for power and arming (owner decision, 2026-10-28)
+
+The owner replaced the separate ARM plug with one external screw switch that both powers and arms the board, as
+commercial altimeters (Featherweight Blue Jay, EasyMini, RRC3) do. Owner's words: "Ok go with one switch".
+- **Board:** J124 (ARM terminal) is removed; RAW_ACT joins PYRO1_BUS on board copper behind the load switch Q120 / Q121, so
+  the pyro feed is still taken after the load switch, never straight from the battery (AGENTS §2.2 unchanged). The R134
+  2 ohm limit, Q124's gate network (pull-down, series resistor, gate-source capacitor, off in reset and unpowered) and
+  the continuity / bus sense stay. The ARM link's 5 A fuse and its `J124 ...` legends go with J124.
+- **Firing chain:** the screw switch on J400 (U9 EN) must be closed, then the MCU must turn on the load switch (ACT_EN)
+  and separately drive Q124's gate: two hardware FETs in series on two MCU pins, both defined off in reset. A commercial
+  altimeter typically has one.
+- **AGENTS §2.1 replaced:** "The external power switch is the pad arming device: the board is switched on only with the
+  vehicle on the pad / rail, and the pyro channel is live whenever the board is on. Firmware never fires before it has
+  detected launch (accelerometer + barometer), and on the ground continuity / bus readings are hard refusals (§2.3)."
+  §2.2's "ARM plug goes in last and comes out first" becomes "the power switch is turned on last and off first".
+- **Operating rules:** pad checks (GPS lock, telemetry, IMU) are done with the vehicle on the rail; bench work uses USB
+  power (the pyro feed needs the pack and the load switch) or the e-match disconnected.
+- **Accepted:** no physical break while the board is on; a back-feeding USB / self-powered port device with the switch
+  open can keep the logic up (audit §3 item 7), so the e-match is connected only with no back-feed source attached.
