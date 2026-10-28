@@ -20,10 +20,10 @@ pin	port	r9_net	r10_net	mode_af	exti	reset_contract	source	an2606_t119_loader_ro
 19	VSSA	GND	GND	VSSA	-	-	-	-
 20	VREF+	3V3A	3V3A	VREF+	-	-	-	-
 21	VDDA	3V3A	3V3A	VDDA	-	-	-	-
-22	PA0	SERVO1_MCU	SERVO1_MCU	AF2 TIM5_CH1	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 68; Table 10 p. 89 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-23	PA1	SERVO2_MCU	SERVO2_MCU	AF2 TIM5_CH2	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 68; Table 10 p. 89 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-24	PA2	SERVO3_MCU	SERVO3_MCU	AF2 TIM5_CH3	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 68; Table 10 p. 89 image	USART2_TX: output, AF push-pull pull-up; input until USART2 detected on V9.1 (p278) [LOADER-DRIVEN]. SERVO3_MCU, inherited from R8: R156 10k pull-down and R152 1k; the loader runs only after a firmware jump (BOOT0 tied low), servo 3 sees UART levels, never a fire or arming net
-25	PA3	SERVO4_MCU	SERVO4_MCU	AF2 TIM5_CH4	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 69; Table 10 p. 89 image	USART2_RX: input, pull-up (p278). SERVO4_MCU, inherited from R8: the 30-50 kOhm pull-up against R157 10k holds the line at <= 0.83 V (Calc): no pulses
+22	PA0	SERVO1_MCU	SERVO1_MCU	AF2 TIM5_CH1	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 68; Table 10 p. 88 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+23	PA1	SERVO2_MCU	SERVO2_MCU	AF2 TIM5_CH2	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 68; Table 10 p. 88 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+24	PA2	SERVO3_MCU	SERVO3_MCU	AF2 TIM5_CH3	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 68; Table 10 p. 88 image	USART2_TX: output, AF push-pull pull-up; input until USART2 detected on V9.1 (p278) [LOADER-DRIVEN]. SERVO3_MCU, inherited from R8: R156 10k pull-down and R152 1k; the loader runs only after a firmware jump (BOOT0 tied low), servo 3 sees UART levels, never a fire or arming net
+25	PA3	SERVO4_MCU	SERVO4_MCU	AF2 TIM5_CH4	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 69; Table 10 p. 88 image	USART2_RX: input, pull-up (p278). SERVO4_MCU, inherited from R8: the 30-50 kOhm pull-up against R157 10k holds the line at <= 0.83 V (Calc): no pulses
 26	VSS	GND	GND	VSS	-	-	-	-
 27	VDD	3V3	3V3	VDD	-	-	-	-
 28	PA4	BAT_FAULT_N	LOGIC_SOURCE_ST	GPIO in	EXTI4	R91 10k to 3V3: high; moved from PA5 (R10_DECISIONS D-R2-09)	DS12110 Rev10 Table 9 p. 69 (PA4 TT_a)	SPI1_NSS: slave input, no pull (p279). LOGIC_SOURCE_ST: driven by R91 10k pull-up and U11 ST open drain; an input changes nothing (R3-MCU-01)
@@ -34,15 +34,15 @@ pin	port	r9_net	r10_net	mode_af	exti	reset_contract	source	an2606_t119_loader_ro
 33	PC5	ARM1_SENSE_MCU	ARM1_SENSE_MCU	ADC	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 70	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 34	PB0	RAW_ACT_SENSE_MCU	RAW_ACT_SENSE_MCU	ADC	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 70	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 35	PB1	CAM_5V_SENSE	CAM_5V_SENSE	ADC	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 70	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-36	PB2	QSPI_CLK	QSPI_CLK	AF9 QUADSPI_CLK	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 71; Table 10 p. 90 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-37	PE7	CAM_MCU_RX	CAM_MCU_RX	AF7 UART7_RX	-	U12 A2Y output, Hi-Z while OE low	DS12110 Table 10 pp. 89-94 images, Table 9 p. 72 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-38	PE8	CAM_MCU_TX	CAM_MCU_TX	AF7 UART7_TX	-	U12 A1 input (CMOS)	DS12110 Table 10 pp. 89-94 images, Table 9 p. 72 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+36	PB2	QSPI_CLK	QSPI_CLK	AF9 QUADSPI_CLK	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 70; Table 10 p. 90 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+37	PE7	CAM_MCU_RX	CAM_MCU_RX	AF7 UART7_RX	-	U12 A2Y output, Hi-Z while OE low	DS12110 Table 10 pp. 89-94 images, Table 9 p. 71 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+38	PE8	CAM_MCU_TX	CAM_MCU_TX	AF7 UART7_TX	-	U12 A1 input (CMOS)	DS12110 Table 10 pp. 89-94 images, Table 9 p. 71 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 39	PE9	RADIO_NRST	CAM_UART_OE	GPIO out	-	R102 10k to GND: U12 disabled	DS12110 Rev10 Table9 p71; used as GPIO (AF Table14 pp94-95 unused); not an AN2606 Rev64 Table119 loader pin; reassigned for routing (R10_DECISIONS D-R2-07)	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 40	PE10	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 72	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 41	PE11	CAM_FAULT_N	CAM_PWR_EN	GPIO out	-	100k EN external pulldown: off	DS12110 Rev10 Table9 p72; used as GPIO (AF Table14 pp94-95 unused); swapped with PE12 for routing (R10_DECISIONS D-R2-07)	SPI4_NSS: slave input, no pull (p280). CAM_PWR_EN: input only; R431 100k pull-down holds U402 EN low, camera port off (R3-MCU-01)
 42	PE12	CAM_PWR_EN	CAM_FAULT_N	GPIO in	EXTI12	10k pullup to main 3V3	DS12110 Rev10 Table9 p72; used as GPIO (AF Table14 pp94-95 unused); swapped with PE11 for routing (R10_DECISIONS D-R2-07)	SPI4_SCK: slave input, no pull (p280). CAM_FAULT_N: driven by U402 FAULT open drain and R432 10k pull-up; an input changes nothing (R3-MCU-01)
 43	PE13	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 72	SPI4_MISO: slave output, push-pull (p280) [LOADER-DRIVEN]. NC (no net)
-44	PE14	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 73	SPI4_MOSI: slave input, no pull (p280). NC
+44	PE14	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 72	SPI4_MOSI: slave input, no pull (p280). NC
 45	PE15	RADIO_DIO1	RADIO_UART_OE	GPIO output	-	100k EN / 10k OE external pulldown: off	DS12110 Rev10 Table9 p72; used as GPIO (AF Table14 pp94-95 unused); not an AN2606 Rev64 Table119 loader pin; reassigned for routing (R10_DECISIONS D-R2-07)	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 46	PB10	RADIO_SCK_MCU	NC	NC	-	NC; analog mode	DS12110 Rev10 Table9 p73; GPIO reset section3.8 p32; AF Table11 p90 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf	USART3_TX: output, AF push-pull pull-up; input until USART3 detected on V9.1 (p278) [LOADER-DRIVEN]. NC (no net)
 47	PB11	RADIO_NSS	NC	NC	-	NC; analog mode	DS12110 Rev10 Table9 p73; GPIO reset section3.8 p32; AF Table11 p90 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf	USART3_RX: input, pull-up (p278). NC
@@ -65,37 +65,37 @@ pin	port	r9_net	r10_net	mode_af	exti	reset_contract	source	an2606_t119_loader_ro
 64	PC7	GNSS_TXD_MCU	GPS_RX_MCU	AF7 USART6_RX	-	TXU0202: isolated while OE low or either supply off	DS12110 Rev10 Table9 pp78-79 (LQFP100 pin 64); GPIO reset section3.8 p32; AF Table12 "Port C alternate functions" p91: PC7 AF7 USART6_RX https://www.st.com/resource/en/datasheet/stm32h743vi.pdf	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 65	PC8	VBUS_SENSE	VBUS_SENSE	GPIO in	EXTI8	R9/R110 1k:1k divider from VBUS: 0 V without USB	DS12110 Table 10 pp. 89-94 images, Table 9 p. 79 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 66	PC9	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 79	I2C3_SDA: open drain, no pull (p278) [LOADER-DRIVEN]. NC
-67	PA8	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 80	I2C3_SCL: open drain, no pull (p278) [LOADER-DRIVEN]. NC
-68	PA9	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 80	USART1_TX: output, AF push-pull pull-up; input until USART1 detected on V9.1 (p277) [LOADER-DRIVEN]. NC
+67	PA8	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 79	I2C3_SCL: open drain, no pull (p278) [LOADER-DRIVEN]. NC
+68	PA9	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 79	USART1_TX: output, AF push-pull pull-up; input until USART1 detected on V9.1 (p277) [LOADER-DRIVEN]. NC
 69	PA10	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 80	USART1_RX: input, pull-up (p277). NC
-70	PA11	USB_DM	USB_DM	AF10 OTG_FS_DM	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 80; Table 10 p. 89 image	USB DFU DM: AF push-pull, no pull (p280) [LOADER-DRIVEN]. USB_DM: the intended DFU path
-71	PA12	USB_DP	USB_DP	AF10 OTG_FS_DP	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 80; Table 10 p. 90 image	USB DFU DP: AF push-pull, no pull (p280) [LOADER-DRIVEN]. USB_DP: the intended DFU path
-72	PA13	SWDIO	SWDIO	AF0 SWDIO	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 80; Table 10 p. 90 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+70	PA11	USB_DM	USB_DM	AF10 OTG_FS_DM	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 80; Table 10 p. 88 image	USB DFU DM: AF push-pull, no pull (p280) [LOADER-DRIVEN]. USB_DM: the intended DFU path
+71	PA12	USB_DP	USB_DP	AF10 OTG_FS_DP	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 80; Table 10 p. 88 image	USB DFU DP: AF push-pull, no pull (p280) [LOADER-DRIVEN]. USB_DP: the intended DFU path
+72	PA13	SWDIO	SWDIO	AF0 SWDIO	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 80; Table 10 p. 89 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 73	VCAP	VCAP2	VCAP2	VCAP	-	-	-	-
 74	VSS	GND	GND	VSS	-	-	-	-
 75	VDD	3V3	3V3	VDD	-	-	-	-
-76	PA14	SWCLK	SWCLK	AF0 SWCLK	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 81; Table 10 p. 90 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+76	PA14	SWCLK	SWCLK	AF0 SWCLK	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 81; Table 10 p. 89 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 77	PA15	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 82	SPI3_NSS: slave input, no pull (p279). NC
-78	PC10	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 82	SPI3_SCK: slave input, no pull (p279). NC
+78	PC10	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 81	SPI3_SCK: slave input, no pull (p279). NC
 79	PC11	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 82	SPI3_MISO: slave output, push-pull (p279) [LOADER-DRIVEN]. NC
 80	PC12	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 82	SPI3_MOSI: slave input, no pull (p279). NC
 81	PD0	NC	NC	NC (firmware: analog)	-	no net; radio UART moved to UART5 PB12/PB13 (R10_DECISIONS D-R2-06)	DS12110 Rev10 Table9 pp81-82	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 82	PD1	NC	NC	NC (firmware: analog)	-	no net; radio UART moved to UART5 PB12/PB13 (R10_DECISIONS D-R2-06)	DS12110 Rev10 Table9 pp81-82	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-83	PD2	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 83	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-84	PD3	NC	NC	NC (firmware: analog)	-	no net	Table 9 p. 83 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-85	PD4	NC	NC	NC (firmware: analog)	-	no net	Table 9 p. 83 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-86	PD5	LED_RED	LED_RED	GPIO out	-	R32 220R + LED1 to GND: off	DS12110 Table 10 pp. 89-94 images, Table 9 p. 83 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+83	PD2	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 82	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+84	PD3	NC	NC	NC (firmware: analog)	-	no net	Table 9 p. 82 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+85	PD4	NC	NC	NC (firmware: analog)	-	no net	Table 9 p. 82 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+86	PD5	LED_RED	LED_RED	GPIO out	-	R32 220R + LED1 to GND: off	DS12110 Table 10 pp. 89-94 images, Table 9 p. 82 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 87	PD6	USB_FAULT_N	USB_FAULT_N	GPIO in	EXTI6	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 83	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 88	PD7	LED_YEL	LED_YEL	GPIO out	-	R33 220R + LED2 to GND: off	DS12110 Table 10 pp. 89-94 images, Table 9 p. 83 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-89	PB3	SPI1_SCK	SPI1_SCK	AF5 SPI1_SCK	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 85; Table 10 p. 90 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-90	PB4	SPI1_MISO	SPI1_MISO	AF5 SPI1_MISO	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 85; Table 10 p. 90 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-91	PB5	SPI1_MOSI	SPI1_MOSI	AF5 SPI1_MOSI	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 86; Table 10 p. 90 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-92	PB6	QSPI_NCS	QSPI_NCS	AF10 QUADSPI_BK1_NCS	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 86; Table 10 p. 90 image	I2C1_SCL: open drain, no pull (p278) [LOADER-DRIVEN]. QSPI_NCS, inherited from R8: R10 10k pull-up; a loader low selects U3, which gets no clock (PB2 is not a loader pin)
+89	PB3	SPI1_SCK	SPI1_SCK	AF5 SPI1_SCK	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 85; Table 10 p. 89 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+90	PB4	SPI1_MISO	SPI1_MISO	AF5 SPI1_MISO	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 85; Table 10 p. 89 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+91	PB5	SPI1_MOSI	SPI1_MOSI	AF5 SPI1_MOSI	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 85; Table 10 p. 89 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+92	PB6	QSPI_NCS	QSPI_NCS	AF10 QUADSPI_BK1_NCS	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 85; Table 10 p. 89 image	I2C1_SCL: open drain, no pull (p278) [LOADER-DRIVEN]. QSPI_NCS, inherited from R8: R10 10k pull-up; a loader low selects U3, which gets no clock (PB2 is not a loader pin)
 93	PB7	IMU_CS	IMU_CS	GPIO out	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 86	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 94	BOOT0	BOOT0	BOOT0	BOOT0	-	-	-	-
 95	PB8	I2C1_SCL	I2C1_SCL	AF4 I2C1_SCL	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 86; Table 10 p. 90 image	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-96	PB9	I2C1_SDA	I2C1_SDA	AF4 I2C1_SDA	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 87; Table 10 p. 90 image	I2C1_SDA: open drain, no pull (p278) [LOADER-DRIVEN]. I2C1_SDA, inherited from R8: loader slave address 0b1001110x, not U5 0x76/0x77
-97	PE0	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 87	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
-98	PE1	IMU_INT1	IMU_INT1	GPIO in (polled)	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 87	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+96	PB9	I2C1_SDA	I2C1_SDA	AF4 I2C1_SDA	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 86; Table 10 p. 90 image	I2C1_SDA: open drain, no pull (p278) [LOADER-DRIVEN]. I2C1_SDA, inherited from R8: loader slave address 0b1001110x, not U5 0x76/0x77
+97	PE0	NC	NC	NC (firmware: analog or driven low for sentinels)	-	no net	Table 9 p. 86	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
+98	PE1	IMU_INT1	IMU_INT1	GPIO in (polled)	-	as R7 (pass1/2/3_electrical, M3_R7 pin contract)	Table 9 p. 86	not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)
 99	VSS	GND	GND	VSS	-	-	-	-
 100	VDD	3V3	3V3	VDD	-	-	-	-

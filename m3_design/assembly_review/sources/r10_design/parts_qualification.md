@@ -138,7 +138,7 @@ no thermal via:** M2 bars vias in SMD pads, so the pad (bottom side, 1.2×2.0 mm
 14.95), sits 0.35 mm (centre) outside the pad edge; In2 under it is PORT_5V3
 (pad, via and In2 zone read on board `579575bd…` in round 4: pad 11 1.2×2.0 mm at (27.6, 13.6), the nearest GND via
 (27.6, 14.95) 1.35 mm centre to centre from the pad centre, In2 zone R10_PORT_5V3_In2; the round-4 routing pass was
-not re-measured on `af18ac49…`). TI's62.5°C/W thetaJA (SBVS282A p4) is the
+not re-measured on `3b6e15f3…`). TI's62.5°C/W thetaJA (SBVS282A p4) is the
 JEDEC high-K board figure and is not used. Without vias under the pad, take
 80–110°C/W (Inference, outer-layer pour spreading only, RθJC(bot)7.8°C/W): the
 full allocation gives a32–45 K rise, junction≈117–130°C at85°C ambient and
@@ -324,3 +324,39 @@ are conservative **Inference** allowances, not manufacturer or measured masses.
 A plate result using them remains conditional on weighing the populated assembly
 and supporting the long leads independently. Four corner mounting alone and bore
 fit must be established from the final board and actual mated plugs.
+
+## Round-5 power and pin records (R5-PWR-01 … -04, R5-MCU-04 / -05)
+
+Figures are Calc from the netlist values unless marked; datasheet figures marked "reviewer" are the round-5
+reviewer's readings and were not re-read from the PDFs in this pass (Inference until checked).
+
+- **U9 OVLO pin range (R5-PWR-01).** U9.2 sits on R82 2 MΩ / R83 280 kΩ (ratio 280 / 2280 = 0.1228). The pin leaves
+  the recommended 0.5–1.5 V range (reviewer, TPS259470L) above an input of 1.5 / 0.1228 = about 12.2 V, reaches
+  2.44 V at the 19.9 V D8 clamp, and would reach the 6.5 V absolute maximum (reviewer) only at 52.9 V, far above the clamp.
+  Above 12.2 V the part is in the over-voltage state it is there to detect; the out-of-range pin in that
+  fault state is recorded and accepted (Inference: behaviour of the pin outside its range is not specified).
+- **TP89 on U9 ILM (R5-PWR-02).** TP89 is the BAT_ILIM node (U9 pin 9, R84 750 Ω to GND; C81 4.7 nF is on BAT_DVDT, pin 7), an analog monitor that the
+  maker marks "do not leave floating" (reviewer). Bench probing is high-impedance only; never load, short or drive
+  it (ORDERING §8 bench gates). Loading it changes the current limit and the monitor reading.
+- **AP63201 quiescent current (R5-PWR-03).** 258 µA per the Diodes AP63200/1/3/5 datasheet (DS41326; reviewer); LCSC's
+  22 µA is the AP63200 / 63203 / 63205 figure. No idle figure in this directory used 22 µA; the 11 mA
+  "quiescent, divider and bleeder" allowance in the all-ports-shorted budget covers 0.258 mA of it with margin (Calc).
+- **Low-pack dropout (R5-PWR-04).** The AP63201's loaded dropout is typical-only (already stated above under
+  "Inference, stall input"); ORDERING §8 adds a bench step with the port rails read at a 6.0 V loaded battery.
+- **PA6 (VLOGIC_SENSE) single-fault pin damage (R5-MCU-04).** The divider is R60 100 kΩ (VLOGIC) / R61 10 kΩ with C60
+  10 nF, and there is no 4.7 kΩ pin resistor. A shorted R60 puts VLOGIC (up to RAW_PROTECTED, 8.4 V nominal full
+  pack) straight on PA6, an FT_a pin whose limit is min(VDD, VDDA, VBAT) + 4.0 V = 7.3 V with 0 mA injection
+  allowed (DS12110 Tables 21 / 22; reviewer): above 7.3 V the pin is overstressed. Single-fault case, pin damage;
+  listed as an owner deviation by the orchestrator. Mitigation none on the board.
+- **PB1 (CAM_5V_SENSE) single-fault pin damage (R5-MCU-04).** The divider is R104 10 kΩ (CAM_5V) / R105 1 kΩ with C94,
+  and PB1 has no 4.7 kΩ pin resistor. An open R105 puts CAM_5V (5.456 V nominal) on PB1 through R104 10 kΩ; PB1
+  is a TT_a pin with a 4.0 V limit (reviewer) and the fault current is about 0.15–0.19 mA ((5.456 − 4.0) / 10 kΩ to
+  (5.456 − 3.56) / 10 kΩ, depending on where the clamp conducts; the reviewer's figure is 0.19 mA). Single-fault
+  case, pin damage; listed as an owner deviation by the orchestrator.
+- **VBUS_SENSE threshold (R5-MCU-05).** PC8 = VBUS / 2 (R9 1 kΩ / R110 1 kΩ 1 %). At 4.4 V VBUS the node is 2.20 V,
+  below VIH = 0.7 × VDD = 2.31 V at 3.3 V (VIH as reviewer's figure, DS12110 row not re-read): VBUS detection needs
+  VBUS ≥ 4.62 V (2 × 2.31 V) at VDD 3.3 V. A host or charger within USB's 4.40–5.25 V band can read "absent".
+  Firmware must not treat a low PC8 as "no USB" in a safety decision (binding note).
+- **LSEON (R5-MCU-02).** PC14 is OSC32_IN and drives BUZZ_DRV through R162; VBAT is tied to 3V3, so a stray LSEON set in
+  the backup domain survives NRST and would load the buzzer node: LSEON stays 0 and the backup domain is never
+  set up for the LSE (binding note).

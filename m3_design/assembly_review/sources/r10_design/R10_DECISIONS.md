@@ -615,3 +615,66 @@ rests on staking and external retention, REQUIREMENTS P3's R10 text), the ports'
 note: RX pull-ups before OE, ADC instance per sense (Inference until checked against DS12110), every no-net pin
 analog, lever arm z −2.06 mm (Inference). parts_qualification: L400's proxy land, TXU0202 pin 1 and C84 polarity to
 confirm in JLC's preview.
+
+## Round 5 (third board review round on `af18ac49…`, fix pass; board `3b6e15f3…`)
+
+Ten independent reviewers (one lens each, fresh contexts, started together) reviewed the committed board `af18ac49…`
+(commit 4d3fe72): 0 Critical, 1 Major, 36 Minor (`docs/R10_VALIDATION.md` "Round 5"). Three file-disjoint slices
+(routing / placement / silk, gates, records), merged and rebuilt by the root; two consecutive worktree builds gave
+`3b6e15f3…` byte for byte.
+
+## D-R5-01. In2 edges re-cut for pads, margins and chains (R5-RTE-01 / -02 / -06)
+
+Every B.Cu track of a signal-critical net, with its edges pushed 0.1 mm out, every B.Cu SMD pad of such a net (+0.1 mm)
+and every connected B.Cu chain now lies over one In2 plane net. `IN2_GND_CH1` rewritten: a strip round C127.1 (x
+19.85–21.5, y 54.55–55.6), south edge y 57.2, two arms east to x 27.9 (y 58.05–59.45 and 63.35–64.7) carrying the
+ARM / RAW_ACT sense pads and runs, a bay at x 10.5–12.3 to y 71.5 (Q121.4), the strip under PYRO1_CONT ≥ 1.05 mm.
+`IN2_GND_Y1` notched at x 18.9–20.6, y 44.3–45.45 so QSPI_NCS's chain is wholly over 3V3. PORT_5V3 band bottom
+y 6.8 → 6.55 and a camera bump at x 33.95 (y 38.4–39.79); PORT_4V8 top y 7.1 → 6.85, radio bump x 32.75 → 33.05; 3V3
+edges by U420.4 and the camera cell moved 0.3 mm. GND vias moved: D401.2 (38.8, 37.275) → (38.8, 37.0), R411.2
+(30.3, 6.6) → (30.3, 4.9), C127.2 (21.3, 57.55) → (22.1, 57.55) with R128.2's strap. Filled In2 areas on `3b6e15f3…`:
+RAW_PROTECTED 1371.8, 3V3 1499.4, GND CH1 355.5, PORT_5V3 220.0, PORT_4V8 87.8, GND Y1 33.4 mm²; each region one
+piece; S-8 holds (every pyro barrel ≥ 1.0 mm from non-GND inner copper).
+
+## D-R5-02. Pad entries, stubs and silkscreen edge margin (R5-RTE-03 / -04 / -07, R5-MFG-02)
+
+D401 / D410 / D420 0.15 mm north so their UART lines enter the diode pad and the connector pad straight; R422 0.05 mm
+east (RADIO_FAULT_N on its axis); GPS_IO_3V3 / RADIO_IO_3V3 vias at (35.5, 17.8 / 29.8) with the 45° runs from the via
+centre (no 0.1 mm stub). `r10_post.py` keeps every legend and designator stroke ≥ 0.615 mm inside the outline; TP89
+(BAT_ILIM) moved to (44.42, 81.83) with its via and run, TP81 to (44.3, 68.0) and its RAW_PROTECTED via to (43.2,
+68.0) so its ring stays off the bare pad. TP89 is now the nearest top pad to the (42, 86) support: 3.806 mm against
+fit_check's 3.8 mm. Not done, each with its measured blocker: SPI1_MOSI → U4.14 (the SCK / MISO lanes leave 0.03 mm too
+little for a via on the pad axis), PULLPIN → U1.7 (C25.2's via 0.12 mm from an on-axis run), VBUS → U10.1 (D4.5's
+paste), IO rails → U411.7 / U421.7 (the via's antipad would reach the OE run), CC1's 0.113 mm segment inside its via
+(the clean geometry makes K-reference's REF_STRAY entry for USB_DM stale; left for a later gate edit), TP88's footprint
+silk 0.426 mm from the edge (its vias block a move). One more designator is hidden (93: C89 and R453 hidden, R153
+shown) because the silkscreen keep-in moved.
+
+## D-R5-03. Gates (R5-RTE-01 / -02 / -05 / -06, R5-SAF-01 / -02, R5-GATE-01 … -03)
+
+- **K-region:** tracks and arcs sampled every 0.02 mm on the centre line and on both edges pushed 0.1 mm out; B.Cu SMD
+  pads on a 0.05 mm grid over the pad grown by 0.1 mm; each sample over exactly one In2 plane net; each connected B.Cu
+  chain (track ends, or a track ending on a pad of the net) over one plane net. Exempt: samples within 0.45 mm of an
+  own-net via; samples in an own through-hole pad's real clearance void (a no-copper component wholly inside the pad's
+  disc of half size + zone clearance + 0.05 mm, by flood fill; a seeded slot running beyond it now fails); no-copper
+  samples inside another net's via antipad (via pad radius + 0.30 mm), a clearance hole that K-reference already
+  holds (root, for the SPI1_SCK / MISO samples beside the MOSI via (17.55, 43.5)). REF_STRAY no longer applies to
+  K-region.
+- **S-1 / S-2:** any part other than U1 with more than four nets on both a RAW-side net (RAW_ACT, its SENSE / MID / MCU
+  nets, ACT_*) and an armed-side net (PYRO1_*, ARM1_*) fails.
+- **S-3:** gate series resistor 100 Ω – 10 kΩ; a capacitor value without a unit is refused; GATE_N needs a resistor to
+  GND of 100 Ω – 100 kΩ.
+- **check.sh:** exports `R10_BOARD="$BOARD"` for the self-tests; a self-test failure prints its message even when the
+  output is only Debug lines. `tools/test_r10_check.py` 90 tests.
+
+## D-R5-04. Records (R5-MFG-01, R5-REQ-01 … -04, R5-PWR-01 … -04, R5-MCU-01 … -05, R5-MEC-01 … -05, R5-DOC-01 / -02)
+
+ORDERING 8.1 / 8.2: vias plugged where JLC's 0.35 mm plug-ink clearance allows, otherwise tented, never an opening
+over a via, the expected DFM query (222 of 350 vias within 0.35 mm of a pad opening, 108 within 0.15 mm, on
+`3b6e15f3…`); the bottom coat list with R177 and every part in the boxes; TP89 high-impedance probing; a 6.0 V
+loaded-pack port-rail step; standoff + plate ≤ 6.9 mm; the shroud placement rule (aft edge ≥ joint + 37.2 mm).
+REQUIREMENTS F6: R9's EN network (bounce figure carried). M3_R10: OVLO pin range, AP63201 IQ, VBUS_SENSE ≥ 4.62 V,
+retention table with body + plug masses and J3 / LS120 rows, "5V4". masses.json: LS120 0.3 g (Inference); f1 275.6 Hz.
+Binding note: LSE never enabled, every no-net pin analog, PA6 / PB1 pin-fault notes, VBUS_SENSE not a safety input.
+pin_table.tsv: 26 DS12110 page citations corrected (citation column only; no gate pins the file; the binding note
+records its new hash).

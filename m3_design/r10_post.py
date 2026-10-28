@@ -64,6 +64,8 @@ import r8_post  # noqa: E402
 import r9_post  # noqa: E402  (put_pin, put_plug_row, fab_clear, outline, connector_pads, owner_margin)
 
 REV = 'M3-ASSY-R10'
+silk.EDGE = 0.6                # R5-MFG-02: every silkscreen stroke >= 0.5 mm inside the outline (ink boxes exclude the half stroke)
+EDGE_MM = 0.6
 KIID_SEED = 10120               # r10_pcb 10103, r10_route families 10110-10118
 LEGEND_REACH = r7_post.LEGEND_REACH
 REACH_MARGIN = 0.1             # mm: label_near's box gap against legend_subjects' polygon ink (rounding)
@@ -565,7 +567,7 @@ def finish(b, lib):
     placed, missing = {}, []
 
     def clip(x0, y0, x1, y1):
-        return (max(0.4, x0), max(0.4, y0), min(silk.W - 0.4, x1), min(silk.L - 0.4, y1))
+        return (max(EDGE_MM, x0), max(EDGE_MM, y0), min(silk.W - EDGE_MM, x1), min(silk.L - EDGE_MM, y1))
 
     def put_near(text, ref, sides=('B', 'F')):
         result = r7_post.label_near(b, silks, text, ref, reach=LEGEND_REACH - REACH_MARGIN, sides=sides)
@@ -615,7 +617,7 @@ def finish(b, lib):
             if result is None:
                 missing.append(key)
     # 3. revision legend and JLC's order-number placeholder
-    whole = (0.4, 0.4, silk.W - 0.4, silk.L - 0.4)
+    whole = (EDGE_MM, EDGE_MM, silk.W - EDGE_MM, silk.L - EDGE_MM)
     for text, near in ((REV, (silk.W / 2, silk.L - 6.0)), (ORDER_MARK, (silk.W / 2, silk.L / 2))):
         result = silk.label(b, silks, text, near, whole, (0, 90), ('B', 'F'), size=1.0)
         placed[text] = None if result is None else list(result)

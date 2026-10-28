@@ -1,9 +1,9 @@
 # R10 validation — round 1 implementation
 
-> **2026-10-27 update.** The R10 board is built and committed; review rounds 3 (on `883d2db5…`) and 4 (on
-> `579575bd…`) and their fix passes are done (board `af18ac49…`, 46 × 90 mm; `docs/M3_R10.md`); `tools/check.sh` passes
-> at zero. See "R10 build state", "Round 3", "Round 4", the review-round log and "R10 deviations for owner acceptance"
-> at the end. The round-1 plan-review record below is kept as written; statements in it that no R10 implementation
+> **2026-10-27 update.** The R10 board is built and committed; review rounds 3 (on `883d2db5…`), 4 (on `579575bd…`)
+> and 5 (on `af18ac49…`) and their fix passes are done (board `3b6e15f3…`, 46 × 90 mm; `docs/M3_R10.md`);
+> `tools/check.sh` passes at zero. See "R10 build state", "Round 3" … "Round 5", the review-round log and "R10
+> deviations for owner acceptance" at the end. The round-1 plan-review record below is kept as written; statements in it that no R10 implementation
 > exists describe that time.
 
 ## Owner decisions resolved; implementation in progress
@@ -219,12 +219,12 @@ No final deviation list is possible before the design is implemented and reviewe
 (Round-1 note, superseded 2026-10-27: the parent `../../docs/VEHICLE.md` board entry is now edited for 46 × 90 mm in the
 parent repository and left uncommitted there for the owner.)
 
-## R10 build state (2026-10-27, after round 4's fix pass)
+## R10 build state (2026-10-27, after round 5's fix pass)
 
 **Board** `m3_design/assembly_review/m3.kicad_pcb`, SHA-256
-`af18ac4987ce8bd424a3059dcf14f038c62d4e7f4b829f16405e400868aadd51`, 46 × 90 mm, built by `m3_design/r10_build.sh` from
-the hash-pinned R9 inputs; two independent builds (the routing slice's clone and the worktree) byte-identical. Netlist
-SHA-256 `a9516746…`. (Review round 3 examined `883d2db5…`, round 4 `579575bd…`.)
+`3b6e15f3d0682530173d063ae524f36466da645c6ebe09e4ecf1bfc1d584c266`, 46 × 90 mm, built by `m3_design/r10_build.sh` from
+the hash-pinned R9 inputs; two consecutive builds in the worktree byte-identical. Netlist SHA-256 `a9516746…`. (Review
+round 3 examined `883d2db5…`, round 4 `579575bd…`, round 5 `af18ac49…`.)
 
 **Gates on the board** (CAD only; nothing below is a bench, physical or flight result):
 
@@ -237,13 +237,13 @@ SHA-256 `a9516746…`. (Review round 3 examined `883d2db5…`, round 4 `579575bd
 | Metadata / 3D model audit (quality_audit) | OK |
 | Silkscreen outline (tools/silk_check.py) | 0 stroke points outside |
 | fit_check --profile r10 | OK (CAD envelopes; GH ports mated 0.03 mm margin to the bore); wire room J1 / J121 / J124 printed |
-| plate_model --profile r10 | f1 275.7 Hz pinned (≥ 209 Hz); every mass placed or refused; masses are Inference allowances |
+| plate_model --profile r10 | f1 275.6 Hz pinned (≥ 209 Hz); every mass placed or refused; masses are Inference allowances |
 | check_r10 (S-1 … S-9, K-contract, K-loader, K-actuators, LC-1, M-1, M-2, M-3, M-5, M-6, M-7, P-8, P-11, F9-1, T-1, K-legends, K-copper, K-inner, K-reference, K-region, K-fill, K-rules, K-retained) | OK; P-11 and F9-1 hold R10's recorded figures pending OQ-1 / OQ-2 |
 | route_check --profile r10 (empty allowlist; arcs fail; port UART / control and ACT_* nets critical; needless-hop test) | 0 failing, 0 leftovers |
 | check_actuators --profile r10 | OK |
-| tools/test_r10_check.py (84 tests; run by `tools/check.sh` since round 4) | OK (KiCad python; the numpy-only plate test under the numpy python) |
+| tools/test_r10_check.py (90 tests; run by `tools/check.sh` since round 4) | OK (KiCad python; the numpy-only plate test under the numpy python) |
 | tools/test_route_check.py (run by `tools/check.sh` since round 4) | 57 OK |
-| Fab (`m3_design/r10_fab.sh`): jlc_orient, export, S-4 on the exported BOM / CPL, CPL rebuild, paste, manifest | OK (229 placed parts, 82 BOM lines; BOM and CPL unchanged from `579575bd…`), bound to `af18ac49…` |
+| Fab (`m3_design/r10_fab.sh`): jlc_orient, export, S-4 on the exported BOM / CPL, CPL rebuild, paste, manifest | OK (229 placed parts, 82 BOM lines; BOM unchanged; CPL positions of D401 / D410 / D420 / R422 moved), bound to `3b6e15f3…` |
 | JLC cost / stock (live data 2026-10-27) | **$87.01 per board vs the $84.41 target: missed** (OQ-3); 47 extended codes (≤ 52); short: R430 C185349 (17 in stock, 3,610 minimum purchase), U4 C26633007 (0, consign) |
 
 **Rules re-derived for R10 with a recorded basis** (R10_DECISIONS): K-reference (D-R2-10, extended to the port control
@@ -378,6 +378,58 @@ root, R10_DECISIONS D-R4-01 … D-R4-04) produced `af18ac49…`.
 | R4-GATE-05 | Minor | No fill-freshness gate | **Fixed**: K-fill |
 | R4-GATE-06 | Minor | Contract tables read from the repo without a printed hash | **Fixed** |
 
+## Round 5: independent review of `af18ac49…` (commit 4d3fe72)
+
+Ten reviewers, one lens each, fresh read-only contexts, all started together in one batch. The one reported Major was
+re-verified by the root (ORDERING §8 text and the board's via-to-mask-opening distances: 225 of 350 via rings within
+0.35 mm of a pad opening, 111 within 0.15 mm). **Result on `af18ac49…`: 0 Critical, 1 Major (confirmed), 36 Minor**
+(one row per reviewer ID; duplicates in parentheses are not counted again). The round is not clean. The fix pass (three
+file-disjoint implementer slices in their own clones, merged and rebuilt by the root, R10_DECISIONS D-R5-01 … D-R5-04)
+produced `3b6e15f3…`.
+
+| ID (duplicates) | Severity | Finding (evidence on `af18ac49…`) | Disposition |
+|---|---|---|---|
+| R5-MFG-01 | Major | ORDERING §8 carried no via-covering instruction (§8.1: "plugged, as section 3"; §4's tent remark not among the §4 items §8 keeps) although 225 of 350 vias sit within JLC's 0.35 mm plug-ink clearance of a pad opening; R3-MFG-03's "tent (ORDERING §8)" pointed at text that was not there | **Fixed** (records, D-R5-04): ORDERING 8.1 via row and 8.2 order remarks (plug where allowed, otherwise tent, never open mask; expected DFM query); counts on `3b6e15f3…`: 222 / 108 |
+| R5-REQ-01 | Minor | ORDERING §8 bottom coat list omitted R177 (RAW_ACT) inside its box | **Fixed**: added; every part in the boxes coated, unlisted ones named |
+| R5-REQ-02 | Minor | J9 legend "5V4" not backed by a record | **Fixed** (records): 5.456 V nominal PORT_5V3 |
+| R5-REQ-03 | Minor | F6's 0.15 s bounce figure not re-derived for R10 | **Fixed** (records): U9's EN network equals R9's (values compared with the hash-pinned R9 netlist) |
+| R5-REQ-04 | Minor | Parent VEHICLE.md put J400 on the x = 0 edge | **Fixed** in the parent repo (uncommitted there, for the owner) |
+| R5-SAF-01 | Minor | S-1 / S-2 skipped parts with > 4 nets for sense-net bridges | **Fixed** (gate): any non-U1 multi-net part on both a RAW-side and an armed-side net fails |
+| R5-SAF-02 (GATE-02) | Minor | S-3 did not bound the series resistor or GATE_N's pull; a unitless capacitor parsed as farads (check_actuators caught the seeds) | **Fixed** (gate) |
+| R5-SAF-03 | Minor | BUS via (17.0, 63.7) 1.139 mm from Q121.8 (RAW_ACT), outside S-5's window; tented | **Listed** (deviation 1 (a): surface RAW-to-bus at the default clearance) |
+| R5-SAF-04 | — (information) | Sense vias 0.151 mm from In2 3V3; harmless (≥ 10 kΩ, no gate) | No action |
+| R5-PWR-01 | Minor | U9 OVLO pin above its recommended 0.5–1.5 V for inputs > 12.2 V (2.44 V at the clamp; abs max 6.5 V) | **Recorded** (parts_qualification, M3_R10) |
+| R5-PWR-02 | Minor | TP89 on U9 ILM (analog, "do not leave floating") | **Recorded**: ORDERING 8 bench rule (high-impedance probe only) |
+| R5-PWR-03 | Minor | AP63201 IQ 258 µA (LCSC's 22 µA is another variant) | **Recorded** |
+| R5-PWR-04 | Minor | AP63201 loaded dropout typical-only | **Recorded**: bench step at a 6.0 V loaded pack |
+| R5-BOM-01 | Minor | C120 (ACT gate–source, 16 V) sees ≈ 17.5–18 V Vgs during a 19.9 V clamp event; short fails safe (gate = source, off) | **Listed** (deviation 13): a 25 V part needs a new code or C29936 1 µF (changes the gate time constant); clamp events are transient |
+| R5-BOM-02 | Minor | C84 Manufacturer "jieerrui" vs LCSC "JIERR" | **Listed** (deviation 6, the C84 maker gap) |
+| R5-MCU-01 | Minor | 26 DS12110 page citations in pin_table.tsv off by one | **Fixed** (citation column only; no gate pins the file) |
+| R5-MCU-02 | Minor | No obligation keeping LSE off (PC14 = OSC32_IN drives the buzzer) | **Fixed**: binding-note obligation |
+| R5-MCU-03 | Minor | Sentinel pins "driven low" vs "analog" contradiction | **Fixed** in the binding note; pin_table's mode text left (marked superseded) |
+| R5-MCU-04 | Minor | PA6 / PB1 single-fault over-voltage paths (no 4.7 kΩ pin resistor) | **Listed** (deviation 13), recorded in parts_qualification |
+| R5-MCU-05 | Minor | VBUS_SENSE (VBUS/2) below VIH at VBUS < 4.62 V | **Recorded**: M3_R10, binding note (never a safety input) |
+| R5-MEC-01 | Minor | Retention table's mated loads omitted the body mass | **Fixed** |
+| R5-MEC-02 | Minor | LS120 not in masses.json | **Fixed**: 0.3 g (Inference); f1 275.6 Hz |
+| R5-MEC-03 | Minor | J3 missing from the retention table | **Fixed** |
+| R5-MEC-04 | Minor | Shroud window: the stack does place the board | **Fixed** (records): placement rule aft edge ≥ joint + 37.2 mm, else ≤ 0.75 mm radial overlap at J410 (listed as a fit item) |
+| R5-MEC-05 | Minor | No upper bound on standoff + plate | **Fixed**: h + t ≤ 6.9 mm for a 46 mm plate (Calc) |
+| R5-RTE-01 / -02 / -06 | Minor | K-region had no margin, skipped pads and chains; pads R124.2, R175.2, C127.1, R411.1 straddled In2 edges; PYRO1_CONT strip 0.57 mm on the diagonal; QSPI_NCS chain over 3V3 and GND | **Fixed** (copper + gate, D-R5-01, D-R5-03): 0.1 mm margin, pads, chains; In2 edges re-cut; CH1 strip ≥ 1.05 mm |
+| R5-RTE-03 | Minor | 0.212 mm 45° stubs inside D410.1 / D420.1 / D401.1 | **Fixed**: diodes 0.15 mm north, straight entries |
+| R5-RTE-04 | Minor | 0.05 mm off-axis entries (SPI1_MOSI → U4.14, PULLPIN → U1.7, RADIO_FAULT_N → R422.1, IO rails → U411.7 / U421.7, VBUS → U10.1) | **Partly fixed** (RADIO_FAULT_N); the rest **listed** (C-12) with the measured blocker (SPI1 lanes 0.03 mm short; C25.2's via 0.12 mm; D4.5's paste; IO-rail antipad on the OE run) |
+| R5-RTE-05 (GATE-01) | Minor | Own-THT-pad exemption applied without a void (a seeded slot passed) | **Fixed** (gate): a sample is exempt only inside a no-copper component wholly within the pad's clearance disc |
+| R5-RTE-07 | Minor | 0.1 mm collinear segments inside vias (GPS_IO_3V3, RADIO_IO_3V3, CC1) | **Partly fixed** (the IO rails); CC1's needs K-reference's REF_STRAY entry moved: **listed** (C-12) |
+| R5-MFG-02 | Minor | Top-silk strokes 0.34 / 0.225 mm from the edges | **Fixed**: every legend and designator ≥ 0.615 mm inside; TP89 / TP81 moved; TP88's footprint silk 0.426 mm (its vias block a move) **listed** |
+| R5-MFG-03 | Minor | Silk stroke exactly at JLC's 0.15 mm minimum | **Listed** (deviation 10) |
+| R5-GATE-03 | Minor | check.sh's self-tests used the repo board; Debug-only output hid the failure message | **Fixed** |
+| R5-DOC-01 | Minor | Deviation 1's "In2 and sense runs only" narrower than round 4's diff | **Fixed**: cases re-measured on `3b6e15f3…` |
+| R5-DOC-02 | Minor | Round 4's count basis unstated | **Fixed**: this round states it |
+| R5-DOC-03 | Minor | R6-era files with local absolute paths (pre-R10) | **Listed** (C-14) |
+
+Root's own additions in the fix pass: K-region's no-copper samples inside another net's via antipad (via pad radius +
+0.30 mm) are clearance holes, not plane boundaries (the SPI1_SCK / SPI1_MISO samples beside the MOSI via at (17.55,
+43.5), which K-reference already holds; D-R5-03).
+
 ### Review-round log
 
 | Round | Board reviewed | Critical / Major / Minor (confirmed) | Fix pass → board |
@@ -385,6 +437,7 @@ root, R10_DECISIONS D-R4-01 … D-R4-04) produced `af18ac49…`.
 | 1 (plan) | none (plan, inherited R9) | 0 / 7 / 9 | owner decisions O5 / O6; R10 built (`883d2db5…`) |
 | 3 (first board round) | `883d2db5…` | 0 / 7 / 49 | D-R3-01 … D-R3-13 → `579575bd…` |
 | 4 | `579575bd…` | 0 / 4 / 28 | D-R4-01 … D-R4-04 → `af18ac49…` |
+| 5 | `af18ac49…` | 0 / 1 / 36 | D-R5-01 … D-R5-04 → `3b6e15f3…` |
 
 ## R10 deviations for owner acceptance (skeleton; completed when two consecutive rounds are clean)
 
@@ -395,15 +448,17 @@ Each item needs its measured reason and the board hash it was measured on; revie
    copper connectivity), the feed only through the load switch (S-2), gates defined off (S-3), required-fitted parts
    (S-4), J124's RAW–BUS1 gap ≥ 1.5 mm with only GND between the pads on every layer (S-5), In1 / In2 GND only within
    ≥ 1.0 mm of every pyro barrel (S-8; measured ≥ 1.458 mm, D-R3-02), the 2 Ω limit, bench gates and inspection.
-   **Accepted single-fault cases remaining (measured on `579575bd…`; the CH1 copper round 4 changed is In2 and the sense
-   runs only, D-R4-01):** a surface defect (solder bridge, strand,
+   **Accepted single-fault cases remaining (re-measured on `3b6e15f3…`, after rounds 4 and 5 changed CH1's In2 edges, the
+   sense runs, R128.2's GND strap, C127.2's via and the R120 entries; D-R4-01, D-R4-02, D-R5-01):** a surface defect (solder bridge, strand,
    debris) across a default gap can (a) join RAW_ACT or another live net to the armed bus or igniter on the outer layers;
    (b) join PYRO1_OUT to GND: In1 GND sits 0.25 mm from PYRO1_OUT's barrels and the outer GND pour at the default
    clearance, so such a defect fires an armed igniter, as a shorted Q124 would (the plug-out continuity self-test, H-1,
    and the ORDERING bench gates screen a static short); (c) join the gate to a live net on the surface: R128.1's
    neighbours, Q124's own gate pad to its drain pad (PYRO1_GATE–PYRO1_OUT, ≈ 0.5 mm inside the DFN package: OUT sits at
    bus potential when armed with Q124 off, so a bridge there turns Q124 on and fires; R4-SAF-03) and the 3V3 via
-   (19.05, 55.9) 0.75 mm from PYRO1_GATE copper on F.Cu (no other spot keeps its In2 3V3 connection, D-R4-02). Inner-layer shorts from pyro barrels now meet GND only (safe direction for the gate and bus; OUT-to-GND
+   (19.05, 55.9) 0.676 mm from R128.1 (PYRO1_GATE) on F.Cu (no other spot keeps its In2 3V3 connection, D-R4-02); on
+   the MCU side, U1.3 (PYRO1_GATE_N) has the no-net sentinels U1.2 / U1.4 0.2 mm away and QSPI_IO2 0.55–0.75 mm away
+   (GATE_N is held by R127's 1 kΩ). Inner-layer shorts from pyro barrels now meet GND only (safe direction for the gate and bus; OUT-to-GND
    is case (b)). JLC's electrical test screens manufactured shorts.
 2. **O3, no board-level servo-power switching or failsafe:** the board can no longer cut servo power, so F6's "tab to
    neutral on reset" has no board-level means; it becomes a harness and servo matter (neutral-on-reset qualified with the
@@ -430,11 +485,11 @@ Each item needs its measured reason and the board hash it was measured on; revie
 7. **P-11 / F9-1** at R10's recorded figures (OQ-1, OQ-2) until the owner decides.
 8. **T-1 re-derived** (D-R2-13): tabs on the aft edge needed (OQ-4; ORDERING §8).
 9. **Cost** $87.01 per board against $84.41 (OQ-3); R430's stock / minimum purchase.
-10. **Silkscreen and port pin order:** 92 designators hidden on `af18ac49…` (kept on Fab); J410 / J420 without pin
+10. **Silkscreen and port pin order:** 93 designators hidden on `3b6e15f3…` (kept on Fab); J410 / J420 without pin
     tables (no legal spot within 6 mm, D-R3-11); their UART pin order differs from J9's (J9: 3 RX_WIRE, 4 TX_WIRE;
     J410 / J420: 3 TX_WIRE, 4 RX_WIRE; R4-REQ-06): each cable is checked end to end before mating (ORDERING 8.2);
     `J2 5:GND 6:NC` beside J2 but nearer J3.
-11. **Agent decisions** D-R1-01 … D-R1-07, D-R2-01 … D-R2-16, D-R3-01 … D-R3-13 and D-R4-01 … D-R4-04 (R10_DECISIONS.md), each to be
+11. **Agent decisions** D-R1-01 … D-R1-07, D-R2-01 … D-R2-16, D-R3-01 … D-R3-13, D-R4-01 … D-R4-04 and D-R5-01 … D-R5-04 (R10_DECISIONS.md), each to be
     accepted or overruled.
 12. **Not verified:** DC solve (the IPC-2152 estimates of D-R3-03 are an upper-bound fit), hold-up simulation, port-supply
     corners, plate model masses, bore fit with real plugs and wires, every bench test.
@@ -445,3 +500,11 @@ Each item needs its measured reason and the board hash it was measured on; revie
     remaining off-centre pad entries and tracks between pads (LED_YEL_A through LED1, LED_RED_A through R33, BUZZ_DRV
     through C86, J3.A4B9's VBUS entry); C-14: six hash-pinned R6 records with local paths). To be completed with
     measured reasons when two consecutive rounds are clean.
+14. **Round 4 and 5 Minors listed** (see their tables): R4-RTE-03 (NRST / BOOT0 not in the critical classes, NRST's
+    layer changes 1.66–3.35 mm from GND vias), R4-RTE-04 (port IO / CAM_5V vias 1.73–2.80 mm from GND vias), R4-REQ-06
+    (port UART pin order), R5-SAF-03 (BUS via 1.139 mm from Q121.8, tented), R5-BOM-01 (C120 16 V at ≈ 18 V clamp-event
+    Vgs, fails safe), R5-BOM-02 (C84 maker name), R5-MCU-04 (PA6 / PB1 single-fault pin over-voltage), R5-RTE-04
+    (0.05 mm off-axis entries: SPI1_MOSI → U4.14, PULLPIN → U1.7, IO rails → U411.7 / U421.7, VBUS → U10.1),
+    R5-RTE-07 (CC1's 0.113 mm segment inside its via), R5-MFG-02 (TP88's footprint silk 0.426 mm from the east edge),
+    R5-MFG-03 (silk stroke at JLC's 0.15 mm minimum), R5-MEC-04 (shroud placement rule), R5-DOC-03 (pre-R10 absolute
+    paths).

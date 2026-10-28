@@ -68,21 +68,21 @@ def fills(b, refs):
     return out
 
 
-def track_samples(t, dy=0.0):
-    """(net, layer, x, y) samples (mm) of one straight track (centre line and both copper edges, every STEP mm) or arc
-    track, moved by dy."""
+def track_samples(t, dy=0.0, step=STEP, margin=0.0):
+    """(net, layer, x, y) samples (mm) of one straight track (centre line and both copper edges pushed `margin`
+    outward, every `step` mm) or arc track, moved by dy."""
     if t.GetClass() == 'PCB_ARC':
-        return arc_samples(t, dy)
+        return arc_samples(t, dy, step, margin)
     out = []
     ax, ay, cx, cy = mm(t.GetStart().x), mm(t.GetStart().y) + dy, mm(t.GetEnd().x), mm(t.GetEnd().y) + dy
     length = math.hypot(cx - ax, cy - ay)
     if length == 0:
         return out
     ux, uy = (cx - ax) / length, (cy - ay) / length
-    hw = mm(t.GetWidth()) / 2
-    n = int(math.ceil(length / STEP))
+    hw = mm(t.GetWidth()) / 2 + margin
+    n = int(math.ceil(length / step))
     for k in range(n + 1):
-        s = min(length, k * STEP)
+        s = min(length, k * step)
         px, py = ax + ux * s, ay + uy * s
         for off in (0.0, hw, -hw):
             out.append((t.GetNetname(), t.GetLayer(), round(px - uy * off, 4), round(py + ux * off, 4)))
@@ -99,14 +99,14 @@ def samples(b, nets, refs, dy=0.0):
     return out
 
 
-def arc_samples(t, dy=0.0):
+def arc_samples(t, dy=0.0, step=STEP, margin=0.0):
     """(net, layer, x, y) samples of an arc track along its curve (start -> mid -> end), every STEP mm of the centre
     radius, on the centre line and both copper edges (radius +- half width); a degenerate arc (collinear points) is
     sampled as its chord."""
     pts = [(mm(p.x), mm(p.y) + dy) for p in (t.GetStart(), t.GetMid(), t.GetEnd())]
     (x1, y1), (x2, y2), (x3, y3) = pts
     d = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
-    hw = mm(t.GetWidth()) / 2
+    hw = mm(t.GetWidth()) / 2 + margin
     net, lay = t.GetNetname(), t.GetLayer()
     if abs(d) < 1e-12:
         out = []
@@ -115,8 +115,8 @@ def arc_samples(t, dy=0.0):
             if length == 0:
                 continue
             ux, uy = (cx - ax) / length, (cy - ay) / length
-            for k in range(int(math.ceil(length / STEP)) + 1):
-                s = min(length, k * STEP)
+            for k in range(int(math.ceil(length / step)) + 1):
+                s = min(length, k * step)
                 for off in (0.0, hw, -hw):
                     out.append((net, lay, round(ax + ux * s - uy * off, 4), round(ay + uy * s + ux * off, 4)))
         return out
@@ -128,7 +128,7 @@ def arc_samples(t, dy=0.0):
     sweep = (a3 - a1) % (2 * math.pi)               # counter-clockwise from start to end ...
     if (a2 - a1) % (2 * math.pi) > sweep:           # ... unless the mid point lies on the other way round
         sweep -= 2 * math.pi
-    n = max(1, int(math.ceil(abs(sweep) * r / STEP)))
+    n = max(1, int(math.ceil(abs(sweep) * r / step)))
     out = []
     for k in range(n + 1):
         a = a1 + sweep * k / n

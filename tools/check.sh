@@ -7,6 +7,7 @@
 # no longer runs. R9's contract stays in tools/check_r9.py (route_check --profile r9) for the R9 record, R8's in
 # tools/check_r8.py (--profile r8), R7's in tools/check_r7.py (--profile r7).
 # The plate model needs a python3 with numpy: set NUMPY_PY (default python3).
+# The self-tests' real-board seeds run on the board being checked (R10_BOARD is exported as BOARD below, R5-GATE-03).
 # Usage: tools/check.sh [path/to/board.kicad_pcb]      exit 0 = every check clean
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -53,11 +54,12 @@ python3 "$ROOT/tools/silk_check.py" "$BOARD" --cli "$CLI"     # DRC skips silksc
   | { grep -E '^(FAIL|routing hygiene: [0-9])' || true; }       # clean routing (AGENTS.md §3); full list in route.json
 python3 "$ROOT/m3_design/check_actuators.py" "$BOARD" --profile r10
 # Gate self-tests (R4-GATE-02): a weakened gate fails here. Seeded faults on synthetic boards and on a temporary copy of
-# the R10 board (R10_BOARD overrides the repository board); about 2 minutes.
+# the R10 board (R10_BOARD, set here to the checked board); about 2 minutes.
+export R10_BOARD="$BOARD"
 selftest() {          # print the unittest summary; a failing run prints its tail and fails the gate
   local out
-  out="$("$@" 2>&1)" || { printf '%s\n' "$out" | grep -v Debug | tail -40; echo "gate self-test FAILED: $*"; exit 1; }
-  printf '%s\n' "$out" | grep -v Debug | tail -3
+  out="$("$@" 2>&1)" || { { printf '%s\n' "$out" | grep -v Debug || true; } | tail -40; echo "gate self-test FAILED: $*"; exit 1; }
+  { printf '%s\n' "$out" | grep -v Debug || true; } | tail -3
 }
 selftest "$KICAD_PY" -I "$ROOT/tools/test_route_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_check.py"

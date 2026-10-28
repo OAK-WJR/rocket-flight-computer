@@ -55,7 +55,7 @@ def draw(d):
             d.via(r['net'], at)
     # R128.2's GND joins C127.2's via (21.3, 57.55) on F.Cu (R4-RTE-01): its own via at (18.933, 57.835) would block the
     # 3V3 tongue's corridor on In2 to D120's via
-    d.track('GND', 'F', 0.3, [d.pad('R128.2', net='GND'), (21.015, 57.835), (21.3, 57.55)])
+    d.track('GND', 'F', 0.3, [d.pad('R128.2', net='GND'), (21.815, 57.835), (22.1, 57.55)])
     for at in STITCH:
         d.via('GND', at)
     if not d.dry:

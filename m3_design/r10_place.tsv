@@ -92,10 +92,10 @@ D122	12	17	0	B	R10 pull-pin protection beside GH2
 D123	20.6	21.2	90	B	R10 forward-band legalisation (D-R2-01)
 D4	9.95	30.6	-90	F	USB edge circuit translated 0,-3.5; direct new MCU links
 D400	38.8	39.95	90	F	R10 port-local placement; explicit routing lanes
-D401	38.8	38.45	90	F	R10 port-local placement; explicit routing lanes
-D410	38.8	14.45	90	F	R10 port-local placement; explicit routing lanes
+D401	38.8	38.3	90	F	R10 port-local placement; explicit routing lanes
+D410	38.8	14.3	90	F	R10 port-local placement; explicit routing lanes
 D411	38.8	15.95	90	F	R10 port-local placement; explicit routing lanes
-D420	38.8	26.45	90	F	R10 port-local placement; explicit routing lanes
+D420	38.8	26.3	90	F	R10 port-local placement; explicit routing lanes
 D421	38.8	27.95	90	F	R10 port-local placement; explicit routing lanes
 D8	22	74.5	0	F	R10 forward-band legalisation (D-R2-01)
 D9	41	61	180	F	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
@@ -184,7 +184,7 @@ R411	30.3	6.6	90	B	R10 port supply re-plan: buck aft-west top, LDO and switch ce
 R412	26	32.6	90	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 R420	35.3	26.4	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 R421	29.7	23	90	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
-R422	27.4	27.6	90	F	R10 RADIO_FAULT_N pull-up moved into the radio-control strip north of U1, off the U1 east escape channel (D-R2-07)
+R422	27.45	27.6	90	F	R10 RADIO_FAULT_N pull-up moved into the radio-control strip north of U1, off the U1 east escape channel (D-R2-07)
 R430	41.3	39.1	0	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 R431	34.6	38.4	90	B	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
 R432	32.6	38	90	F	R10 CAM_FAULT_N pull-up at the top of U1's east pin row, on its pin's lane (D-R2-07)
@@ -223,7 +223,7 @@ TP121	16.2	74.2	0	F	R10 pyro / load-switch layout for straight routes (D-R2-02)
 TP122	13.3	53.3	0	B	R10 bare gate test pad on the bottom (check_actuators, R9 practice) (D-R2-11)
 TP74	41.9	53.5	0	F	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
 TP80	13.8	78.4	0	F	R10 power-family alignment (D-R2-05)
-TP81	44.5	68	0	F	R10 power-local placement; maker loop geometry
+TP81	44.3	68	0	F	R10 power-local placement; maker loop geometry
 TP82	18.25	33.25	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 TP83	39.5	67	0	B	R10 VLOGIC test pad beside the VLOGIC spine (D-R2-05)
 TP84	23	87.6	0	F	R10 U9 cell moved to the free forward-east bottom; BAT_IN fed on B.Cu (D-R2-05)
@@ -231,7 +231,7 @@ TP85	37	65.5	0	F	R10 south-of-U1 relief: straight grouped sense / status / servo
 TP86	13.6	22.4	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 TP87	34.6	56.6	0	B	R10 south-of-U1 relief: straight grouped sense / status / servo lanes (D-R2-09)
 TP88	44.5	76.3	0	F	R10 power-local placement; maker loop geometry
-TP89	44.7	81.85	0	F	R10 ILIM test pad on the top, clear of the (42, 86) support and R84 (D-R2-12)
+TP89	44.42	81.83	0	F	R10 ILIM test pad on the top, clear of the (42, 86) support and R84 (D-R2-12)
 TP92	21.6	28.5	0	B	USB edge circuit translated 0,-3.5; direct new MCU links
 U1	23.0	43.0	0	F	R9 local MCU circuit translated +5,-1.5; requalify on R10
 U10	12.6	27.5	0	B	USB edge circuit translated 0,-3.5; direct new MCU links

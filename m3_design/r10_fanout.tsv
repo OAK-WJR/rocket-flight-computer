@@ -1,5 +1,6 @@
 # r10_fanout_aid.py output (frozen): net, pad, pad layer, via x, via y; stub 0.3 mm pad centre -> via
 # hand edits (R10_DECISIONS D-R2-11): J3.A1B12 / J3.B1A12 rows removed (strapped to the shell tabs in r10_route_power.joins); C442.2 via (38.7, 23.0) -> (38.0, 22.2), clear of RADIO_4V8's In2 run; R83.2 via (35.9, 79.825) -> (35.075, 78.9), out from under R166.1; R167.2 via follows R167 0.65 mm east (D-R2-12); R3 hand edit (R10_DECISIONS D-R3-04): C401.2 row removed (C401 moved south of U400, its GND pad joins U400.4's via in r10_route_power.efuse)
+# R5 fix pass hand edits (R5-RTE-01 ... -06, In2 reference check with 0.1 mm margins): D401.2 via (38.8, 37.275) -> (38.8, 37.0), off CAM_FAULT_N's entry diagonal (its In2 antipad touched the run's margin); R411.2 via (30.3, 6.6) -> (30.3, 4.9), clear of R411.1's pad region; C127.2 via (21.3, 57.55) -> (22.1, 57.55), out of the 3V3 corridor to D120's via (R128.2's F.Cu strap follows, r10_route_ground)
 net	pad	layer	x	y
 3V3	C100.1	F	33.246	35.066
 3V3	C440.1	F	33.6	12.0
@@ -18,7 +19,7 @@ GND	C100.2	F	35.62	35.98
 GND	C11.2	B	19.423	53.023
 GND	C122.2	B	26.672	66.072
 GND	C126.2	F	17.372	59.047
-GND	C127.2	B	21.3	57.55
+GND	C127.2	B	22.1	57.55
 GND	C128.2	B	13.6	59.5
 GND	C129.2	B	26.8	60.15
 GND	C16.2	B	27.171	37.129
@@ -71,7 +72,7 @@ GND	C97.2	F	30.903	62.022
 GND	C99.2	B	34.349	63.391
 GND	D122.1	B	13.85	16.05
 GND	D400.2	F	37.9	39.625
-GND	D401.2	F	38.8	37.275
+GND	D401.2	F	38.8	37.0
 GND	D8.2	F	25.494	75.844
 GND	D9.2	F	40.6	61.0
 GND	J123.2	F	9.625	17.15
@@ -102,7 +103,7 @@ GND	R401.2	F	13.0	1.8
 GND	R403.2	F	31.4	14.4
 GND	R405.2	B	29.825	16.775
 GND	R410.2	B	36.95	10.0
-GND	R411.2	B	30.3	6.6
+GND	R411.2	B	30.3	4.9
 GND	R421.2	B	28.692	21.167
 GND	R430.2	B	42.125	38.275
 GND	R442.2	F	34.075	20.225
@@ -138,4 +139,4 @@ GND	U422.2	B	36.35	31.4
 GND	Y1.2	B	21.116	46.384
 GND	Y1.4	B	24.8	47.7
 RAW_PROTECTED	D9.1	F	44.6	61.0
-RAW_PROTECTED	TP81.1	F	43.4	68.0
+RAW_PROTECTED	TP81.1	F	43.2	68.0

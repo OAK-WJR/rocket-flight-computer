@@ -46,12 +46,13 @@ def io_rails(d):
         t(net, 'B', IO, [p(f'{cin}.1'), (34.675, 22.525 + dy), p(f'{cbulk}.1')])
         # VCCB leaves its pad 0.05 mm east of centre on x 35.5 to the via, 0.55 mm from the *_UART_OE run at x 34.95,
         # so the via's In1 antipad (r 0.40) clears that run's copper edge by 0.05 mm (K-reference, D-R3-xx); the bleed
-        # run continues straight south 0.1 mm inside the via's ring onto R9's 45 deg line under R441 / R451.
+        # run leaves the via's centre by the 45 deg run onto R9's line under R441 / R451 (R5-RTE-07: the via sits 0.1 mm
+        # south of R4's, so no stub is hidden in its ring).
         p(f'{buf}.7', at=(35.45, 16.9 + dy))
-        t(net, 'F', S, [(35.5, 16.9 + dy), (35.5, 17.7 + dy)])
-        via(net, (35.5, 17.7 + dy))
-        t(net, 'B', IO, [(35.5, 17.7 + dy), (35.5, 18.45 + dy)])
-        t(net, 'F', S, [(35.5, 17.7 + dy), (35.5, 17.8 + dy), (36.9, 19.2 + dy), (40.0, 19.2 + dy), (42.0, 17.2 + dy)])
+        t(net, 'F', S, [(35.5, 16.9 + dy), (35.5, 17.8 + dy)])
+        via(net, (35.5, 17.8 + dy))
+        t(net, 'B', IO, [(35.5, 17.8 + dy), (35.5, 18.45 + dy)])
+        t(net, 'F', S, [(35.5, 17.8 + dy), (36.9, 19.2 + dy), (40.0, 19.2 + dy), (42.0, 17.2 + dy)])
         via(net, (42.0, 17.2 + dy))
         t(net, 'B', IO, [(42.0, 17.2 + dy), p(f'{bleed}.1')])
     # Camera: U13 -> C93 -> C92 -> R103 on B.Cu, U12's VCCB through a via under it.
@@ -72,16 +73,17 @@ def port_wires(d):
     for pre, r_rx, r_tx, d_tx, d_rx, j, dy in (('GPS', 'R440', 'R441', 'D410', 'D411', 'J410', 0.0),
                                                ('RADIO', 'R450', 'R451', 'D420', 'D421', 'J420', 12.0)):
         tx, rx = f'{pre}_TX_WIRE', f'{pre}_RX_WIRE'
-        t(tx, 'F', S, [p(f'{r_tx}.2'), (38.25, 18.55 + dy), (38.25, 15.325 + dy), p(f'{d_tx}.1')])
-        # straight on J's pin-3 centre line (R4-RTE-05): the 45 deg run in leaves the diode pad centre, 0.15 mm up
-        t(tx, 'F', S, [p(f'{d_tx}.1'), (38.95, 14.625 + dy), p(f'{j}.3')])
+        # the diode (0.15 mm north of R4's spot, R5-RTE-03) has its pad 1 on J's pin-3 centre line: the run leaves the
+        # pad straight on its axis, and the 45 deg run in ends on the pad's centre
+        t(tx, 'F', S, [p(f'{r_tx}.2'), (38.25, 18.55 + dy), (38.25, 15.175 + dy), p(f'{d_tx}.1')])
+        t(tx, 'F', S, [p(f'{d_tx}.1'), p(f'{j}.3')])
         t(rx, 'F', S, [p(f'{r_rx}.1'), (38.8, 12.15 + dy)])
         t(rx, 'B', S, [(38.8, 12.15 + dy), (38.8, 16.95 + dy)])
         t(rx, 'F', S, [(38.8, 16.95 + dy), p(f'{d_rx}.1')])
         t(rx, 'F', S, [p(f'{d_rx}.1'), (40.35, 16.275 + dy), p(f'{j}.4')])
         for at in ((38.8, 12.15 + dy), (38.8, 16.95 + dy)):
             via(rx, at)
-        via('GND', (39.4, 12.45 + dy))       # 0.67 mm from the north hop via (the south one has D411.2's / D421.2's)
+        via('GND', (39.45, 12.45 + dy))       # 0.67 mm from the north hop via (the south one has D411.2's / D421.2's)
 
 
 def camera_control(d):
@@ -130,8 +132,8 @@ def gnd_joins(d):
     # U12 and down the gap between U13's pin columns (its pad is boxed in on three sides, D-R2-09).
     t('GND', 'B', IO, [p('C93.2'), (37.0, 40.9), (37.6, 41.5), (37.6, 43.4), p('U13.2')])
     for d_gnd, y in (('D411.2', 15.625), ('D421.2', 27.625)):     # ESD returns boxed in by the port wires
-        t('GND', 'F', S, [p(d_gnd), (39.4, y)])           # hole >= 0.1 mm off the pad's mask, ring off its paste (D-R2-11)
-        via('GND', (39.4, y))
+        t('GND', 'F', S, [p(d_gnd), (39.45, y)])           # hole >= 0.1 mm off the pad's mask, ring off its paste (D-R2-11)
+        via('GND', (39.45, y))
 
 
 def servo_lanes(d):
@@ -236,7 +238,7 @@ def port_links(d):
                       ('CAM_RX_BUFFER', 'U12.1', 'R100.2'), ('CAM_TX_BUFFER', 'R101.1', 'U12.8')):
         t(net, 'F', S, [p(a), p(b)])
     t('CAM_RX_WIRE', 'F', S, [p('R100.1'), (39.4, 36.15), (39.4, 38.625), p('J9.3')])
-    t('CAM_RX_WIRE', 'F', S, [p('D401.1'), (38.95, 38.625), (39.4, 38.625)])
+    t('CAM_RX_WIRE', 'F', S, [p('D401.1'), (39.4, 38.625)])
     t('CAM_TX_WIRE', 'F', S, [p('R101.2'), (38.8, 42.55), p('D400.1')])
     t('CAM_TX_WIRE', 'F', S, [p('D400.1'), (40.35, 40.275), p('J9.4')])
 
@@ -259,7 +261,7 @@ def port_control(d):
     In2 region (r10_route_power)."""
     t, p, via = d.track, d.pad, d.via
     # radio
-    p('R422.1', at=(27.4, 28.425))
+    p('R422.1', at=(27.45, 28.425))
     t('RADIO_FAULT_N', 'F', S, [p('U1.56'), (26.5, 34.15), (27.45, 33.2), (27.45, 28.425)])
     t('RADIO_FAULT_N', 'F', S, [p('R422.1'), (28.4, 28.425), (32.3, 24.525)])
     via('RADIO_FAULT_N', (32.3, 24.525))
