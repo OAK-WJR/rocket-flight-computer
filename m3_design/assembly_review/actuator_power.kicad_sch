@@ -1193,7 +1193,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10nF"
+		(property "Value" "10nF 50V X7R 10%"
 			(at 336.55 123.19 0)
 			(effects
 				(font
@@ -1982,27 +1982,34 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 873aaf0c-ec31-581c-b038-72788d10ea03))
-	(text "AUD-3: Q120/Q121 AONR21357, C120 1uF 25V X7R. Hold PE4 low and wait >=100 ms after ACT_EN before bus checks or any permitted fire; hot resistance and turn-on SOA remain bench qualifications."
+	(text "D-SS-04: hold PC1 and PE4 low for passive cold screening; after prior enable wait >=1 s and verify RAW_ACT discharged / ACT_GATE off. Qualify passive fault bands and refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks."
 		(at 20.32 25.4 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 7277bbaf-c52c-5d00-8f90-b09edb6bdeae))
-	(text "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and both retained bus-sense dividers; no feed directly from BAT_IN or RAW_PROTECTED."
+	(text "AUD-3: Q120/Q121 AONR21357, C120 1uF 25V X7R. Hot resistance and turn-on SOA remain bench qualifications."
 		(at 20.32 30.48 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid e379a682-3ef2-58c6-a879-d5cbff021361))
-	(text "R134 limits a shorted igniter; normal physical fire current <=20 ms. Firmware timing and pulse qualification: sources/r10_design/parts_qualification.md; no firmware implemented."
+	(text "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and both retained bus-sense dividers; no feed directly from BAT_IN or RAW_PROTECTED."
 		(at 20.32 35.56 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid e795d07f-117b-513a-aa8d-555acc2ba3aa))
+	(text "R134 limits a shorted igniter; normal physical fire current <=20 ms. Firmware timing and pulse qualification: sources/r10_design/parts_qualification.md; no firmware implemented."
+		(at 20.32 40.64 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid de33d53c-27d7-5634-8d99-5f8d4881a39f))
 	(sheet_instances
 		(path "/"
 			(page "11"))))

@@ -184,6 +184,19 @@ def replace_notes(text, lines):
                                    for i, line in enumerate(lines)))
 
 
+def override_values(text, values):
+    """Expand retained-part labels without replacing symbols or their metadata."""
+    read, patch, properties = sch._reader()
+    edits = []
+    for node in read(text).children('symbol'):
+        props = properties(node)
+        ref = props['Reference'].items[2].atom
+        if ref in values:
+            value = props['Value'].items[2]
+            edits.append((value.start, value.end, json.dumps(values[ref])))
+    return patch(text, edits)
+
+
 def generated_sheet(old, library, specs, title, page, notes):
     sid = sheet_id(old)
     names = sorted({v['lib'].split(':')[1] for v in specs.values()})
@@ -241,6 +254,9 @@ def build(out, netlist=True):
     changed = data['parts']
     replacements = data['replacements']
     removed = set(data['removed_refs'])
+    values = data['value_overrides']
+    assert set(values) <= originals.keys() - removed, 'value override must name a retained R9 part'
+    assert not set(values) & (changed.keys() | replacements.keys()), 'value override conflicts with part specification'
     rows = list(csv.DictReader((SOURCE / 'pin_table.tsv').open(), delimiter='\t'))
     pinmap = {r['pin']: (r['r9_net'], r['r10_net']) for r in rows}
     mcuchanges = {p: ns for p, ns in pinmap.items() if ns[0] != ns[1]}
@@ -270,7 +286,7 @@ def build(out, netlist=True):
                               if 'radio SPI2' in n.items[1].atom or 'R8 EXTI:' in n.items[1].atom
                               or 'pull-pin' in n.items[1].atom.lower() or 'PULLPIN' in n.items[1].atom])
                 t = sch.insert(t, sch.note('R10: USART6 PC6/PC7 AF7 GPS; UART5 PB13/PB12 AF14 radio. Port EN and OE default low. EXTI10 GPS_FAULT_N; EXTI9 RADIO_FAULT_N; EXTI12 CAM_FAULT_N; EXTI4 LOGIC_SOURCE_ST (PA4), EXTI5 BAT_FAULT_N (PA5); VLOGIC_SENSE ADC on PA6 (D-R2-09). EXTI1 PE1 IMU_INT1 data-ready (R6-MCU-01).', 20.32, 259.08, 'mcu:r10:ports'))
-                t = sch.insert(t, sch.note('Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise low before output mode. R123 100k holds the load switch off at reset. Hold PE4 low for >=100 ms after ACT_EN before bus checks. Disable synchronous trace (PC1 TRACED0, PE4 TRACED1); lock/read back both gate GPIO configurations. AUD-4: PC13 U1.7 is NC/analog; no pull-pin.', 20.32, 269.24, 'mcu:r10:load-switch'))
+                t = sch.insert(t, sch.note('Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise PC1 and PE4 low before output mode. R123 100k holds the load switch off at reset. Both low for passive cold screening; after prior enable wait >=1 s and verify bus discharge. Refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks (D-SS-04). Disable synchronous trace; lock/read back both gate GPIO configurations. AUD-4: PC13 U1.7 is NC/analog; no pull-pin.', 20.32, 269.24, 'mcu:r10:load-switch'))
             if file.name == 'servos.kicad_sch':
                 for pin in ('2', '5', '8', '11'):
                     t = change_pin(t, 'J122', pin, None, library)
@@ -283,6 +299,7 @@ def build(out, netlist=True):
                 t = t.replace('TP92 measures their junction.', 'Probe R9.2 / R110.1; TP92 removed (AUD-5).')
             if file.stem in data['notes']:
                 t = replace_notes(t, data['notes'][file.stem])
+        t = override_values(t, values)
         t = t.replace('(rev "M3-ASSY-R9")', f'(rev "{REV}")')
         t = t.replace('14 | Launch pull-pin and buzzer', data['titles']['pullpin_buzzer'])
         # Root hierarchy names follow new sheet titles; their UUID/path never changes.

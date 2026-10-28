@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Board gate: DRC/parity, ERC, metadata/models, silkscreen, fit, vibration, the R10 CAD contract, clean routing, the
-# actuator contract and the gates' own seeded tests (test_route_check, test_r10_check).
+# actuator contract and the gates' own seeded tests (including routing, R10 and procurement).
 # R10 (M3-ASSY-R10, r10_plan.md section 4): tools/check_r10.py (rule-based; it reads the fit report and the plate model
 # made here, both --profile r10), route_check profile r10 (empty allowlist, no RF parts), check_actuators --profile r10.
 # R10 has no pyro-specific spacing rule (r10_plan section 2 item 1), so the rule-H seeded suite (tools/rule_h_seed.py)
@@ -76,6 +76,7 @@ selftest() {          # print the unittest summary; a failing run prints its tai
   { printf '%s\n' "$out" | grep -v Debug || true; } | tail -3
 }
 selftest python3 "$ROOT/tools/test_check_shell.py"       # check.sh itself fails closed (R8-GATE-01)
+selftest python3 "$ROOT/tools/test_procurement.py"       # required R9 / R10 limits cannot be weakened by report data
 selftest "$KICAD_PY" "$ROOT/tools/test_fit_check.py"       # no -I: the test imports fit_check from its own folder
 selftest "$KICAD_PY" -I "$ROOT/tools/test_paste_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_route_check.py"

@@ -3,8 +3,10 @@
 This is a **simulation / Inference**, not a bench result. The model uses the saved board's copper and maker capacitor
 curves. No R4 qualification result is transferred to R10. `hotplug_inputs.json` and `hotplug_results.json` are the
 current-board evidence; `hotplug_baseline_inputs.json` records the original split feed on board `407d1d84…`.
-The completed schema-3 model passes all 2304 required corners on the single-switch CAD board `60be35ea…` (unchanged input-feed electrical signature `1f638065…` from `b860afbe…`); it retains
-the C88 path and checks the feed-first topology. Physical qualification remains open.
+The completed schema-3 model passes all 2304 required corners on the round-9 fix board `b337fe63…`
+(electrical signature `c424a714…`); it retains the C88 path and checks the feed-first topology. The round-9
+label expansion changes the input identity bytes, not the modeled capacitances or input copper. Physical
+qualification remains open.
 
 ## Why the distance gate was insufficient
 
@@ -178,10 +180,10 @@ at 25 ps versus 4.792413154 from the compiled solver; at 12.5 ps the two give 4.
 This checks the finite-edge integration independently of the production solver. All local edges remain;
 seeding a feed that bypasses C88 fails the topology check.
 
-### Current audit sweep (CAD simulation, 2026-10-28)
+### Current round-9 fix sweep (CAD simulation, 2026-10-28)
 
-The generated board SHA-256 is `877d01996a59e9dd5c6dbc367274bb9a323a13982d67960fe46df9b0ee53205d`, with electrical
-signature `cbebb3323b12671dff52f8df5723e86ee4a2876e9c927ffb004e01e6cae4ff3b`. `hotplug_results.json` binds its
+The generated board SHA-256 is `b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9`, with electrical
+signature `c424a714ef94e2e03b9148aeab28beefcc3460cd8999d3c6702721118ce90d66`. `hotplug_results.json` binds its
 2304 cases and model-source hash to those inputs; `validate()` reports no issue. Required and half-step extrema are:
 
 | Metric | Result | Limit |

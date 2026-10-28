@@ -127,7 +127,7 @@ def control(d):
     t('BAT_DAMP', 'F', W, [p('C89.2'), p('C95.2')])
     t('BAT_DAMP', 'F', W, [p('C95.2'), (33.475, 75.2), (36.0, 77.725), p('R166.1')])  # clear of the OQ-2 input feed
     # External switch J400 (GH 2-pin): SW_SOURCE to R80, SW_RETURN to R165 (7 uA contact current).
-    t('BAT_SW_SOURCE', 'F', 0.2, [p('J400.1'), (9.875, 86.1), (14.775, 86.1), p('R80.2')])
+    t('BAT_SW_SOURCE', 'F', 0.2, [p('J400.1'), (9.875, 86.3), (14.275, 86.3), p('R80.2')])
     t('BAT_SW_RETURN', 'F', 0.2, [p('J400.2'), (12.075, 88.4), p('R165.1')])
     # BAT_ENABLE: R165 -> C87 -> R81 pull-down, east below J122's GND row and down to U9.1 (AUD-5).
     t('BAT_ENABLE', 'F', 0.2, [p('R165.2'), (17.225, 87.6), p('C87.1')])

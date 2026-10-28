@@ -36,14 +36,14 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
                      'tools/plate_model.py', 'tools/check_r10.py', 'tools/route_check.py',
                      'm3_design/check_actuators.py'):
             (self.root / path).write_text(stub)
-        for path in ('tools/fab_manifest.py', 'tools/test_check_shell.py', 'tools/test_fit_check.py',
+        for path in ('tools/fab_manifest.py', 'tools/test_check_shell.py', 'tools/test_procurement.py', 'tools/test_fit_check.py',
                      'tools/test_paste_check.py', 'tools/test_route_check.py', 'tools/test_r10_check.py'):
             (self.root / path).write_text(stub)
         self.log = self.root / 'gate.log'
         self.env = dict(os.environ, KICAD_CLI=str(self.cli), KICAD_PY=sys.executable, NUMPY_PY=sys.executable,
                         GATE_LOG=str(self.log), TMPDIR=str(self.root))
 
-    SELFTESTS = ['test_check_shell', 'test_fit_check', 'test_paste_check', 'test_route_check', 'test_r10_check',
+    SELFTESTS = ['test_check_shell', 'test_procurement', 'test_fit_check', 'test_paste_check', 'test_route_check', 'test_r10_check',
                  'test_r10_check']
     CONTRACTS = ['verify_board', 'silk_check', 'fit_check', 'plate_model', 'check_r10', 'route_check',
                  'check_actuators']

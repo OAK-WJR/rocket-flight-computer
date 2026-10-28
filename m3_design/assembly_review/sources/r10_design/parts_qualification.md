@@ -10,6 +10,22 @@ tests were performed. The 2026-10-28 AUD/GAP amendments below supersede earlier
 R10 part selections and timing figures; dated review records remain historical.
 
 
+## Round-9 retained capacitor labels (2026-10-28; R9-BOM-01)
+
+`circuit.json`'s `value_overrides` expands 21 retained R9 Value labels; order codes,
+maker identities, nets and lands are unchanged. Source inventory:
+
+| References | Full Value | Existing order code / source |
+|---|---|---|
+| C6–C11 | 22uF 25V X5R 20% | C45783, Samsung [CL21A226MAQNNNE](https://product.samsungsem.com/mlcc/CL21A226MAQNNN.do) |
+| C19/C20/C87 | 2.2uF 16V X5R 10% | C23630, Samsung [CL10A225KO8NNNC](https://www.lcsc.com/product-detail/C23630.html) |
+| C22 | 1uF 50V X5R 10% | C15849, Samsung [CL10A105KB8NNNC](https://product.samsungsem.com/mlcc/CL10A105KB8NNN.do) |
+| C23/C28 | 4.7uF 16V X5R 10% | C19666, Samsung [CL10A475KO8NNNC](https://product.samsungsem.com/mlcc/CL10A475KO8NNN.do) |
+| C25/C26 | 10pF 50V C0G 5% | C32949, Samsung [CL05C100JB5NNNC](https://product.samsungsem.com/mlcc/CL05C100JB5NNN.do) |
+| C60/C94/C122/C127/C129 | 10nF 50V X7R 10% | C57112, FH [0603B103K500NT](https://www.lcsc.com/product-detail/C57112.html) |
+| C88/C99 | 100nF 50V X7R 10% | C307331, Samsung [CL05B104KB54PNC](https://product.samsungsem.com/mlcc/CL05B104KB54PN.do) |
+
+
 ## AUD/GAP component amendments (2026-10-28; CAD / Calc / Inference only)
 
 **AUD-1:** C92 is Samsung CL10A475KO8NNNC / C19666, 4.7 µF 16 V X5R ±10%
@@ -203,9 +219,12 @@ TPS7A9101DSKR (C2878140); U402/U410/U420 are TPS2553DBVR (C55266).
   when all ports are off, keeping the accuracy claim inside its specified range.
   IN9/10, OUT1/2, FB3, GND4/11, PG5 unused, SS_CTRL6 ground, EN7 input,
   NR/SS8 has10 nF. No extrapolated accuracy at zero load is used.
-- [TI TPS2553 SLVS841F](https://www.ti.com/lit/ds/symlink/tps2553.pdf), pp5–7,13–16:
+- [TI TPS2553 SLVS841G](https://www.ti.com/lit/ds/symlink/tps2553.pdf), October2026,
+  electrical table p7 and revision history p27 (retrieved2026-10-28):
   operating2.5–6.5 V, DBV maximum RON135 mΩ over temperature; current-limit
-  equations with resistor tolerance; fault debounce up to10 ms. Pin1 IN,2 GND,
+  equations with resistor tolerance; overcurrent FAULT assertion/de-assertion
+  deglitch3–11 ms, superseding revisionF's2–10 ms. Reverse-voltage FAULT deglitch
+  is separately2–7 ms; reverse-voltage-to-MOSFET-off remains3–7 ms. Pin1 IN,2 GND,
   3 EN,4 open-drain FAULT,5 ILIM,6 OUT. EN has a100 kΩ pull-down; FAULT has a
   logic-side pull-up. Each switch has local input and output capacitors.
 - [Bourns SRP5030T](https://www.bourns.com/docs/product-datasheets/srp5030t.pdf):
@@ -258,6 +277,10 @@ startup. The RunCam minimum5 V and battery-surge prohibition remain as cited in
 `docs/SIMULATION.md` item20. A current allocation is not permission to exceed GH's
 1 A/contact rating. The camera's fault limit exceeds1 A briefly; firmware must
 turn off a faulted port, with thermal cycling only a backup.
+Budget **11 ms** worst-case overcurrent FAULT deglitch plus firmware detection /
+handling latency and actual switch turn-off / current-decay time before claiming
+fault shutdown (R9-PWR-02; SLVS841G p7). FAULT is unsuitable for battery-break
+detection. This timing correction does not change the current-limit or rail budgets.
 
 R430(camera)22.6 kΩ, R420(radio)66.5 kΩ, R410(GPS)100 kΩ (R10_DECISIONS
 D-R3-01: the board's value, on the existing 100 kΩ line C14675, no extra code)
@@ -405,7 +428,7 @@ C84 sits on VLOGIC after U11. In a battery-lead break it also back-feeds
 RAW_PROTECTED through U11: TPS2121 blocks reverse current only above IRCB
 0.2/1/2 A (SLVSEA3F §7.5 p8), and the port buck U400 on RAW_PROTECTED has EN tied
 to VIN, so it keeps drawing until RAW_PROTECTED collapses; firmware shedding of the
-ports cannot act in time (TPS2553 turn-off up to3 ms, SLVS841F §7.5 p7). Energy
+ports cannot act in time (TPS2553 turn-off up to3 ms, SLVS841G §6.5 p7). Energy
 from 7.4 V, constant-power loads, no credit for RAW_PROTECTED, C6 / C7 capacitance
 or for U11 blocking (Calc / Inference; `parts_budget.json`
 `battery_break_ride_through_ms`; each case includes an explicit 16.93 mW constant allowance for R92 at 7.4 V and minimum resistance, D-OA-05):

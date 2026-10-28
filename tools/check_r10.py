@@ -40,8 +40,8 @@ Safety (AGENTS.md section 2, F8; single screw switch owner decision 2026-10-28):
   S-8   R3-SAF-01: on In1 and In2 no track or zone fill of any net but GND (and the barrel's own net) lies within
         1.0 mm of a plated barrel (via or plated hole wall) of RAW_ACT, PYRO1_IGN, PYRO1_OUT or PYRO1_GATE
   S-9   R3-GATE-07 / AUD-6: current-path copper >= 0.5 mm on fire-only RAW_ACT / PYRO1_IGN / PYRO1_OUT,
-        >= 1.0 mm on BAT_IN / ACT_FET_S. FIRE_TERMINALS prunes dead-end branches such as sense taps; pad necks
-        (a segment ending in a pad no wider than the track) and named, measured FIRE_NARROW entries are excepted
+        >= 1.0 mm on BAT_IN / ACT_FET_S. FIRE_TERMINALS prunes dead-end branches such as sense taps; only the
+        named, measured FIRE_NARROW entries are excepted
 Mechanical and placement (kept from check_r9 where they still apply, read from the board):
   LC-1  no pad or footprint carries a local clearance override (check_r9.lc1)
   M-1   outline one rectangle from (0, 0), 46 mm wide, length read from the board <= 120 mm (P1), Edge.Cuts circles
@@ -848,7 +848,7 @@ LOADER_R10 = {
     'PA5': ('BAT_FAULT_N', {'R89.2': '10k 1%', 'U9.4': 'TPS259470LRPWR'},  # AUD-5.
             'SPI1_SCK: a slave input, no pull (p. 279), never driven; U9 FLT with its R89 10k pull-up (R8 pin table) is '
             'the only driver'),
-    'PA6': ('VLOGIC_SENSE', {'R60.2': '100k', 'R61.1': '10k', 'C60.1': '10nF'},
+    'PA6': ('VLOGIC_SENSE', {'R60.2': '100k', 'R61.1': '10k', 'C60.1': '10nF 50V X7R 10%'},
             'SPI1_MISO is driven push-pull by the loader into the VLOGIC divider node (R60 100k from VLOGIC, R61 10k to '
             'GND, C60 10 nF): the pin current is at most 3.3 V / (10k || 100k) = 0.36 mA (VLOGIC at 0 V, pin high), '
             'far below the 20 mA absolute-maximum I/O current (DS12110 Rev 10 Table 22, p. 105); VLOGIC (<= 8.4 V) '
@@ -1572,7 +1572,7 @@ def fire_path(board, net, terminals):
 
 
 def s9(ctx, floor=FIRE_MIN_W, narrow=FIRE_NARROW):
-    """R3-GATE-07: the fire-loop current path >= `floor` wide, pad necks and the measured `narrow` list excepted."""
+    """R3-GATE-07: current-path widths, with only the measured `narrow` list excepted."""
     import pcbnew
     mm = pcbnew.ToMM
     issues, ev, used = [], {}, set()
@@ -1592,20 +1592,11 @@ def s9(ctx, floor=FIRE_MIN_W, narrow=FIRE_NARROW):
             ends = tuple(round(v, 2) for v in sorted([(mm(s.x), mm(s.y)), (mm(e.x), mm(e.y))])[0] +
                          sorted([(mm(s.x), mm(s.y)), (mm(e.x), mm(e.y))])[1])
             length = mm(t.GetLength())
-            neck = False
-            for pt in (s, e):
-                for f in ctx.board.GetFootprints():
-                    for p in f.Pads():
-                        if p.GetNetname() == net and p.IsOnLayer(t.GetLayer()) and p.HitTest(pt) and \
-                                mm(min(p.GetSize().x, p.GetSize().y)) <= w + EPS:
-                            neck = True
             hit = [k for k, x in enumerate(narrow) if x[0] == net and x[1] == ctx.board.GetLayerName(t.GetLayer())
                    and abs(x[2] - w) <= 0.005 and abs(x[3] - length) <= 0.01
                    and all(abs(a - b) <= 0.01 for a, b in zip(x[4], ends))]
             if hit:
                 used.add(hit[0])
-                continue
-            if neck:
                 continue
             issues.append(f'S-9: {net} fire-path track {w:.3f} mm wide, {length:.3f} mm long on '
                           f'{ctx.board.GetLayerName(t.GetLayer())} ({ends[0]}, {ends[1]})-({ends[2]}, {ends[3]}); '
@@ -2208,22 +2199,41 @@ def silk_mask_overlaps(board, eps=0.001):
 
 
 
-PORT_LEGENDS_R10 = {'J9': ('5V4', 'GND', 'RXI', 'TXO'), 'J2': ('3V3', 'SWDIO', 'NRST', 'SWCLK', 'GND', 'NC')}
+PORT_LEGENDS_R10 = {'J9': ('5V4', 'GND', 'RXI', 'TXO'), 'J2': ('3V3', 'SWDIO', 'NRST', 'SWCLK', 'GND', 'NC'),
+                    'J410': ('4V8', 'GND', 'TXO', 'RXI'), 'J420': ('4V8', 'GND', 'TXO', 'RXI'),
+                    'J122': ('S', 'NC', 'GND')}
+SERVO_HARNESS_NOTE = 'SERVO + FROM HARNESS'
 
 
 def port_legends(board, required=PORT_LEGENDS_R10):
-    """R10's port pin tables (m3_design/r10_post.PORTS; R3-REQ-04, D-R3-D4): pin 1 the supply, GND, then the board-side
-    TXO / RXI. check_r7.pin_legends holds R7's camera-side J9 table."""
+    """R10 port / servo tables and harness note: every pin and note appears exactly once, without conflicting text."""
     import pcbnew
-    seen = {}
-    for item in board.GetDrawings():
-        if isinstance(item, pcbnew.PCB_TEXT) and item.GetLayer() in (pcbnew.F_SilkS, pcbnew.B_SilkS):
-            m = re.match(r'^(J\d+)\s+(.+)', item.GetText())
-            if m and m[1] in required:
-                for pin, name in re.findall(r'(\d+):([A-Z0-9]+)', m[2]):
-                    seen.setdefault((m[1], int(pin)), set()).add(name)
-    return [f'{ref}.{i}: silkscreen must identify {name} (R10 port table)' for ref, names in required.items()
-            for i, name in enumerate(names, 1) if seen.get((ref, i)) != {name}]
+    seen, texts, issues = {}, [], []
+    items = list(board.GetDrawings())
+    for fp in board.GetFootprints():
+        items += list(fp.GraphicalItems()) + list(fp.GetFields())
+    for item in items:
+        if (not isinstance(item, pcbnew.PCB_TEXT) or item.GetLayer() not in (pcbnew.F_SilkS, pcbnew.B_SilkS)
+                or (hasattr(item, 'IsVisible') and not item.IsVisible())):
+            continue
+        text = item.GetText().strip()
+        texts.append(text)
+        m = re.match(r'^(J\d+)\s+(.+)', text)
+        if m and m[1] in required:
+            if not re.fullmatch(r'\d+:[A-Z0-9]+(?:\s+\d+:[A-Z0-9]+)*', m[2]):
+                issues.append(f'{m[1]}: malformed silkscreen pin table {text!r}')
+            for pin, name in re.findall(r'(\d+):([A-Z0-9]+)', m[2]):
+                seen.setdefault((m[1], int(pin)), []).append(name)
+    issues += [f'{ref}.{i}: silkscreen must identify {name} exactly once (R10 port table)'
+               for ref, names in required.items() for i, name in enumerate(names, 1)
+               if seen.get((ref, i)) != [name]]
+    issues += [f'{ref}.{pin}: unexpected silkscreen pin legend (R10 port table)' for ref, pin in seen
+               if pin not in range(1, len(required[ref]) + 1)]
+    if texts.count(SERVO_HARNESS_NOTE) != 1:
+        issues.append(f'J122: silkscreen must identify {SERVO_HARNESS_NOTE!r} exactly once')
+    issues += [f'J122: conflicting servo harness legend {text!r}' for text in texts
+               if text.startswith('SERVO ') and text != SERVO_HARNESS_NOTE]
+    return issues
 
 
 # K-text (R8-GATE-02): the revision and safety legends are pinned to their exact words (a changed text fails).
@@ -2546,6 +2556,21 @@ STAGES['placement'] = STAGES['functional'] | {'LC-1', 'M-1', 'M-3', 'M-5', 'M-6'
 STAGES['full'] = {rid for rid, _, _ in RULES}
 
 
+def selected_rules(only=None, stage='full'):
+    """Validate explicit scope before loading context; an empty or unknown selection never passes."""
+    if only is None:
+        if stage not in STAGES:
+            raise ValueError(f'unknown rule stage: {stage!r}')
+        return STAGES[stage]
+    selected = set(only)
+    if not selected or not any(selected):
+        raise ValueError('explicit rule selection is empty')
+    unknown = selected - STAGES['full']
+    if unknown:
+        raise ValueError(f'unknown rule ids: {", ".join(repr(rid) for rid in sorted(unknown))}')
+    return selected
+
+
 def make_ctx(board, folder=None, board_path=None, fit=None, plate=None, seed=None, dru=None, text=None, bom=None,
              cpl=None):
     import check_r9 as r9
@@ -2566,6 +2591,7 @@ def make_ctx(board, folder=None, board_path=None, fit=None, plate=None, seed=Non
 def check_board(board, folder=None, board_path=None, fit=None, plate=None, seed=None, only=None, stage='full',
                 board_sha=None, dru=None, text=None, bom=None, cpl=None):
     """Run the rules of `stage` (or `only`) on a loaded board; each rule that cannot run fails."""
+    selected = selected_rules(only, stage)
     import route_check as rc
     ctx = make_ctx(board, folder, board_path, fit, plate, seed, dru, text, bom, cpl)
     previous = rc.PROFILE
@@ -2573,7 +2599,7 @@ def check_board(board, folder=None, board_path=None, fit=None, plate=None, seed=
     out, flat = {}, []
     try:
         for rid, title, fn in RULES:
-            if (only and rid not in only) or (not only and rid not in STAGES[stage]):
+            if rid not in selected:
                 continue
             try:
                 issues, ev = fn(ctx, board_sha)
@@ -2583,7 +2609,7 @@ def check_board(board, folder=None, board_path=None, fit=None, plate=None, seed=
             flat += [i if i.startswith(rid) else f'{rid}: {i}' for i in issues]
     finally:
         rc.set_profile(previous)
-    return dict(profile='r10', stage=stage, complete=stage == 'full' and not only, ok=not flat, rules=out,
+    return dict(profile='r10', stage=stage, complete=stage == 'full' and only is None, ok=not flat, rules=out,
                 issues=flat, failing=[k for k, v in out.items() if not v['ok']])
 
 
@@ -2593,8 +2619,6 @@ def file_sha(p):
 
 
 def main():
-    import pcbnew
-    import fit_check as fc
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('board', nargs='?', type=Path, default=ROOT / 'm3_design/assembly_review/m3.kicad_pcb')
     ap.add_argument('--report', type=Path)
@@ -2606,6 +2630,13 @@ def main():
     ap.add_argument('--bom', type=Path, help='JLC BOM CSV to check for the required-fitted parts')
     ap.add_argument('--cpl', type=Path, help='JLC CPL CSV to check for the required-fitted parts')
     a = ap.parse_args()
+    only = {rid.strip() for rid in a.only.split(',')} if a.only is not None else None
+    try:
+        selected_rules(only, a.stage)
+    except ValueError as error:
+        ap.error(str(error))
+    import pcbnew
+    import fit_check as fc
     bp = a.board.resolve()
     load = lambda p: json.loads(p.read_text()) if p else None      # noqa: E731
 
@@ -2621,7 +2652,7 @@ def main():
         print('FAIL the fit report is not bound to this board (board_sha256)')
         return 1
     report = check_board(pcbnew.LoadBoard(str(bp)), bp.parent, bp, fit=fit, plate=load(a.plate), seed=None,
-                         only=set(a.only.split(',')) if a.only else None, stage=a.stage, board_sha=sha,
+                         only=only, stage=a.stage, board_sha=sha,
                          bom=a.bom, cpl=a.cpl)
     if a.seed:
         report['seed_note'] = f'{a.seed} not read: R10 has no pyro rule H (r10_plan section 2 item 1)'
@@ -2642,7 +2673,7 @@ def main():
               f'<= {BOARD_MAX:g} mm long)')
     for i in report['issues']:
         print('FAIL', i)
-    scope = a.stage if not a.only else 'selected rules'
+    scope = a.stage if only is None else 'selected rules'
     print(f'R10 CAD contract ({scope}):', 'OK' if report['ok'] else f"FAIL ({len(report['issues'])} findings in "
           f"{len(report['failing'])} rules: {', '.join(report['failing'])})")
     if a.report:

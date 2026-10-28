@@ -1350,3 +1350,117 @@ The schematic preflight now checks the same per-supplier-code footprint / part-n
 separately for JLC and owner BOMs. A matching wrong schematic/source land must still fail this independent
 assembly-group rule. Both split-land seeds are detected; the total is 22 seeded contract faults. The exporter
 remains unchanged. This integration correction precedes the fresh full review round 9.
+
+## Round 9 (full review of `877d0199…`, commit `8bccb07`)
+
+Ten fresh validator contexts reviewed the committed board in parallel batches of up to three. Result after
+deduplication: **0 Critical, 0 Major, 21 Minor groups: 17 new and four carried routing groups**. The incomplete
+owner-decision prelude is not a full round. Its existing R9-PWR-01 identifier remains historical; this round's
+TPS2553 finding is R9-PWR-02. No Critical or Major finding required acceptance or an owner choice.
+
+### D-R9-01. Complete existing capacitor labels and use the current fault-delay bound
+
+R9-BOM-01: expand the seven abbreviated Value strings on 21 retained capacitors using the existing exact
+manufacturer identities. A small `value_overrides` source map changes labels only, preserving symbols,
+footprints, nets and supplier codes. The qualification record lists the seven original-maker / supplier sources;
+the schematic contract checks the expanded labels. Update the exact C60 loader-member and C88 hot-plug component
+labels too, retaining their original part codes, capacitances and net roles. The first integration build's 2304
+numerical corners passed but its component check rejected the old C88 label contract; that attempt is not a
+passing build. Complete passing replays follow the correction. No capacitor substitution or inferred rating is introduced.
+
+R9-PWR-02: TI SLVS841G p7 specifies overcurrent FAULT deglitch 3 / 7.5 / 11 ms. Budget 11 ms plus firmware latency
+and actual current decay; this is not the PA6 battery-break detector. The maker's live PDF retrieved 2026-10-28 is
+Rev G, SHA-256 `d30a12e7b91a23f82b4fdf0d1d00c891534486da9e19ac2c22c42143d4d3d1c0`; a web-indexed copy still
+returned Rev F. Reverse-voltage FAULT deglitch (2 / 4 / 7 ms) and MOSFET turn-off (3 / 5 / 7 ms) are distinct.
+No current-limit, rail or hold-up credit changes.
+
+### D-R9-02. Put the cold screen before enabling the bus
+
+R9-SAF-01: propagate D-SS-04 into the schematic note, generated firmware obligations, M3_R10 and ORDERING. PC1
+and PE4 stay low for the passive cold screen; after prior enable, wait at least one second and verify discharge.
+Ground faults refuse enable before PC1 rises. Only then may PC1 go high, with PE4 low for at least 100 ms before
+powered-bus checks. A shorted Q124 can otherwise complete the firing circuit at enable before the later check.
+The hardware supports the correct order; firmware and threshold qualification remain absent. In-flight sensing
+never vetoes recovery.
+
+The first complete gate attempt after the label correction caught an old literal-string assertion in the
+binding-note test. Replace it with checks for both-low screening, the discharge wait, pre-enable refusal and
+the later powered check. This failed attempt receives no passing-build credit; complete replays follow.
+
+R9-MCU-01 / R9-DOC-01: both PC1 and PE4 require their respective GPIO locks and LCKK / pin-bit readback. The
+dummy-load trace experiment uses an STM32H743-capable debugger's supported synchronous ETM setup, real
+DBGMCU_CR bit20 / PE2 AF0, observed TRACECLK and retained low-output modes / locks. A missing clock or lost lock
+invalidates the test. RM0433 Rev8 pp543 / 3209 and ST's H743 CMSIS header replace the other-family TRACE_IOEN
+instruction. No actual override behavior is claimed. FMEA's R10 row now agrees with the binding.
+
+### D-R9-03. Reject unmeasured gate exceptions and select R10 procurement explicitly
+
+R9-GATE-01: reject unknown, mixed-invalid and explicitly empty rule selections before CAD context construction.
+R9-GATE-02: require J410 / J420 / J122 pin tables and `SERVO + FROM HARNESS` in the final checker, including
+missing, duplicate and conflicting text. AUD-10 relaxes distance only.
+
+R9-GATE-03: remove R10's generic pad-neck width exemption. AONR21357 EP9's 0.43 mm anchor is not its
+3.21 × 1.98 mm copper land; it previously let entire 0.43 mm RAW_ACT / BAT_IN tracks pass. The actual board
+passes without that heuristic. Keep only the seven exact, measured source-bridge exceptions; their coordinates,
+widths and lengths remain held. Both whole-track seeds and changes to any source leg must fail.
+
+R9-PROC-01: use explicit `--profile r10` with the existing $84.41 / 52 limits in R10 fabrication and procurement.
+The shared tool's default remains R9's $126.41 / 52. A genuine under-budget R10 report must pass its own profile,
+while a forged R9 target or an over-budget R10 report fails. The new procurement regression suite runs in
+`check.sh`, with its failure propagation covered. Real cost / stock misses remain disclosed; no target is relaxed.
+
+### D-R9-04. Remove demonstrated detours and align three supply entries
+
+R9-RTE-01 / -02 / -03: shorten BAT_SW_SOURCE, NRST and USB_FAULT_N by 0.692893 / 0.347651 / 0.597056 mm,
+respectively, using the review's fixed octilinear vertices. Each redraw and their combined temporary board pass
+all-severity DRC, reference and region checks; the combined route scan has no local-bump candidate. No via is added.
+
+R9-RTE-05: align U411.7 / U421.7 and their main-3V3 vias at x35.45 instead of x35.50. Align U10.1's VBUS branch
+at x11.30, ending on its pad centre and teeing into the retained horizontal trunk. The combined temporary board
+with these changes and all three detours has zero DRC / unconnected / reference / region / routing failures.
+The old IO-via/OE-reference blocker is superseded by AUD-2; it is not used to justify keeping an offset.
+
+Retain SPI1_MOSI's 0.05 mm offset at U4.14: the tested on-axis via (17.50,44.30) enters IMU_body_B and loses
+11 adjacent reference samples on SPI1_SCK, while invalidating two existing MISO stray entries. This attempt is
+rejected, not counted as a passing alternative. Moving the MEMS or adjoining SPI lanes is a broader change.
+Current noncritical return distances, slow split crossings, necessary hops, between-pad routes and the remaining
+BUZZ_DRV / NRST crystal projections stay measured review deviations, not unqualified claims of impossibility.
+
+### D-R9-05. Include both transverse sled tolerances
+
+R9-MEC-01: add the missing 0.3 mm vertical centring tolerance to the nut / screw calculation. Under the stated
+6.35 mm across-corners, 2.4 mm nut and 0.4 mm protrusion assumptions, h+t is bounded by 6.018413 mm at x4 / 42
+and 5.365256 mm at x3.7. Use conservative <6.0 / <5.3 mm bounds. Select measured 4.0 mm standoffs and a plate
+at most 1.0 mm thick as the starting hardware stack. Substitute actual hardware maxima, hole / screw eccentricity
+and tolerances before physical release; no unmeasured nylon hardware or sled strength is qualified by this choice.
+R9-REQ-03 / -04 and R9-DOC-02 / -03 correct current pin / connector, cost, crystal-neighbour and AUD-2-scope records.
+
+The native fix-board inventory also closes the previously unmeasured surface-track list under nominal 3.5 mm
+washer discs: at (4,44.3), 3V3 F.Cu / its ordinary via have minimum copper radii 3.4104 / 3.2604 mm and NRST F.Cu
+3.4214 mm; at (42,86), BAT_IN B.Cu reaches 2.7500 mm. The other three supports have no non-GND surface track / via
+inside that disc. Required ordinary via covering, nylon hardware and insulation under the whole bottom face
+remain mandatory; this list does not qualify hardware eccentricity, mask wear or physical contact.
+
+### D-R9-06. Cover the Minor fix pass in the fresh round 10
+
+The label and local routing fixes change the CAD bytes. The owner’s continuation explicitly counts clean
+rounds 9 and 10 as the required pair if round 10 has no confirmed Critical or Major. Round 10 must therefore
+review the committed fix-pass bytes, including every changed route, label, gate and obligation; the older
+proposal for two additional rounds is superseded. Rebuild twice, prove byte equality, export the fabrication
+package and run the unskipped gate before the supervisor commit. Freeze the PCB after round 10; any later
+board change needs explicit review coverage or another full round. Software / CAD / simulation evidence
+remains separate from firmware, bench, RF immunity and physical fit.
+
+One reviewer performed an out-of-scope read-only legacy check in the R9 worktree. No files changed there; that
+run is excluded from evidence and further access is prohibited. Legacy checks use only this worktree's pinned
+R9 snapshot. Computer Use rejected both KiCad and PCB Editor launch, so native geometry and rendered CAD supplied
+visual evidence; no alternate GUI-control mechanism bypassed the rejection.
+
+
+Round-9 fix completion: two full builds reproduce all 21 CAD / binding files on `b337fe63…` (46 × 90 mm,
+2,366,509 bytes); the final unskipped gate exits 0, all 33 rules / self-tests and current fab manifest pass.
+The 2304-case model passes as simulation / Inference. Fab export/orientation/paste pass; live supplier
+23:24–23:25Z evidence still fails at $84.43 vs $84.41, R430 / U4 short. The restart used D-R1-05’s external
+headless mouse-query interposer; no repository dependency or CAD/gate relaxation. Evidence:
+`../r10_review/round9_fix_validation.json`, `../r10_review/round9_fix_check.txt` and `../r10_review/round9_geometry.json`.
+Round 10 covers this low-risk Minor fix pass in the required clean pair; physical / firmware limits remain open.

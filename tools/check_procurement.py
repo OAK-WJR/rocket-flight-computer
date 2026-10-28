@@ -10,9 +10,14 @@ from jlc_stock import FAB, input_hashes
 
 # REQUIREMENTS M3 (R7, owner 2026-10-15): R3's $84.41 plus the $42.00 on-board radio/GPS allowance, 52 extended codes
 MAX_TOTAL, MAX_EXTENDED = 126.41, 52
+# R10 removes the on-board radio/GPS allowance (R10_DECISIONS D-R1-06). Select explicitly; report data cannot choose it.
+PROFILES = {'r9': (MAX_TOTAL, MAX_EXTENDED), 'r10': (84.41, 52)}
 
 
-def verify(folder, cost_only=False, now=None, board=None):
+def verify(folder, cost_only=False, now=None, board=None, profile='r9'):
+    if profile not in PROFILES:
+        raise ValueError(f'unknown procurement profile: {profile!r}')
+    max_total, max_extended = PROFILES[profile]
     folder = Path(folder)
     if not cost_only:
         verify_manifest(board or folder.parent / 'm3.kicad_pcb', folder)
@@ -33,10 +38,10 @@ def verify(folder, cost_only=False, now=None, board=None):
             raise ValueError(f'{name}: procurement target is not met')
         if is_cost:
             cost = report
-            if (report.get('targets') != {'max_total': MAX_TOTAL, 'max_extended': MAX_EXTENDED}
-                    or report.get('errors') or report['total_usd_per_board'] > MAX_TOTAL
-                    or len(report['extended_codes']) > MAX_EXTENDED):
-                raise ValueError(f'{name}: required ${MAX_TOTAL:.2f} / {MAX_EXTENDED}-code targets were changed or missed')
+            if (report.get('targets') != {'max_total': max_total, 'max_extended': max_extended}
+                    or report.get('errors') or report['total_usd_per_board'] > max_total
+                    or len(report['extended_codes']) > max_extended):
+                raise ValueError(f'{name}: required ${max_total:.2f} / {max_extended}-code targets were changed or missed')
             default_fee = {'standard': 1.53, 'economic': 3.07}.get(report.get('tier'))
             if not cost_only and (default_fee is None or report.get('fee_usd_per_code') != default_fee):
                 raise ValueError(f'{name}: unknown assembly tier or nonstandard feeder fee; '
@@ -53,11 +58,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--fab', type=Path, default=FAB)
     parser.add_argument('--board', type=Path, help='CAD source for final verification; default: FAB/../m3.kicad_pcb')
+    parser.add_argument('--profile', choices=tuple(PROFILES), default='r9',
+                        help='required cost/code limits; r9 preserves the on-board RF allowance, r10 requires $84.41')
     parser.add_argument('--cost-only', action='store_true',
                         help='preliminary pricing only; skips current CAD/fab binding and stock verification')
     args = parser.parse_args()
     try:
-        cost = verify(args.fab, args.cost_only, board=args.board)
+        cost = verify(args.fab, args.cost_only, board=args.board, profile=args.profile)
     except (OSError, ValueError, KeyError, TypeError) as error:
         parser.exit(1, f'Procurement evidence: FAIL: {error}\n')
     if args.cost_only:
@@ -65,7 +72,8 @@ if __name__ == '__main__':
               'Current CAD/fab binding and stock were not verified. Not a release pass.')
     else:
         print('Procurement evidence: OK; current CAD/fab outputs, BOM/CPL, recent supplier data and required targets')
+    max_total, _ = PROFILES[args.profile]
     print(f"Components + feeder fees ({cost['boards']} boards, {cost['tier']}): "
           f"${cost['total_usd_per_board']:.2f}/board; "
           f"ordered components with minimum purchases: ${cost['order_usd_per_board_with_min_purchase']:.2f}/board. "
-          f'The ${MAX_TOTAL:.2f} target excludes fixed assembly fees, PCB fabrication and shipping.')
+          f'The ${max_total:.2f} target excludes fixed assembly fees, PCB fabrication and shipping.')

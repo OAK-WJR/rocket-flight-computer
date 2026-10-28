@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import sys
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import copy
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -81,6 +81,42 @@ class Assembly(unittest.TestCase):
         self.assertTrue(gate.port_power(mutant, values, codes))
 
 
+class RuleSelection(unittest.TestCase):
+    def test_invalid_explicit_scope_fails_before_context(self):
+        for only in (set(), {''}, {'NO-SUCH-RULE'}, {'S-1', 'NO-SUCH-RULE'}, {'S-1', ''}):
+            with self.subTest(only=only), patch.object(gate, 'make_ctx') as context:
+                with self.assertRaisesRegex(ValueError, 'rule (selection|ids)'):
+                    gate.check_board(None, only=only)
+                context.assert_not_called()
+
+    def test_valid_selection_and_default_stages_keep_their_scope(self):
+        rules = [(rid, title, Mock(return_value=([], {}))) for rid, title, _ in gate.RULES]
+        route = Mock(PROFILE='r9')
+        with patch.object(gate, 'RULES', rules), patch.object(gate, 'make_ctx', return_value=object()), \
+                patch.dict(sys.modules, {'route_check': route}):
+            for stage in gate.STAGES:
+                report = gate.check_board(None, stage=stage)
+                self.assertEqual(set(report['rules']), gate.STAGES[stage])
+                self.assertEqual(report['complete'], stage == 'full')
+                self.assertTrue(report['ok'])
+            report = gate.check_board(None, only={'S-9', 'K-legends'}, stage='functional')
+            self.assertEqual(set(report['rules']), {'S-9', 'K-legends'})
+            self.assertFalse(report['complete'])
+            self.assertTrue(report['ok'])
+
+    def test_cli_rejects_invalid_scope_before_loading_cad(self):
+        import subprocess
+        for only in ('NO-SUCH-RULE', 'S-1,NO-SUCH-RULE', '', ',', 'S-1,'):
+            with self.subTest(only=only):
+                result = subprocess.run([sys.executable, '-I', str(Path(gate.__file__)),
+                    str(gate.ROOT / 'missing-scope-test.kicad_pcb'), '--only', only],
+                    capture_output=True, text=True, timeout=30)
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertRegex(result.stderr, r'rule (selection|ids)')
+                self.assertNotIn('Traceback', result.stderr)
+                self.assertNotIn('R10 CAD contract', result.stdout)
+
+
 class SchematicContract(unittest.TestCase):
     def test_single_switch_contract_and_seeds(self):
         import xml.etree.ElementTree as ET
@@ -146,8 +182,12 @@ class SchematicContract(unittest.TestCase):
         obligations = '\n'.join(note['firmware_obligations'])
         for text in ('PC1 ACT_EN_MCU', 'GPIOC_LCKR', 'GPIOE_LCKR', 'accelerometer and barometer',
                      'in flight they are logged and annunciated and never veto a fire',
-                     'at least 100ms', 'before bus checks or raising PE4'):
+                     'at least 100ms', 'at least 1s', 'BEFORE PC1 enable', 'before powered-bus checks'):
             self.assertIn(text, obligations)
+        cold = next(rule for rule in note['firmware_obligations'] if rule.startswith('D-SS-04 / AUD-3:'))
+        self.assertIn('hold BOTH PC1 ACT_EN_MCU and PE4 low', cold)
+        self.assertLess(cold.index('passive cold screening'),
+                        cold.index('Only after a valid passive check may PC1 go high'))
         self.assertNotIn('PE3/PE5/PE6/PC1/PC4', obligations)
         self.assertNotIn('ARM link out', obligations)
         self.assertNotIn('ARM link in:', obligations)
@@ -1328,6 +1368,23 @@ class R3Synthetic(SyntheticBase):
         with patch.object(gate, 'FIRE_TERMINALS', {'BAT_IN': ({'J1': ('1',)}, {'Q120': ('9',)})}):
             self.assertTrue(any('BAT_IN fire-path track 0.500 mm' in i for i in gate.s9(self.ctx(), narrow=[])[0]))
 
+    def test_s9_small_pad_anchor_does_not_exempt_a_current_path(self):
+        self.board.Remove(self.r134); self.board.Remove(self.r132)
+        for net, left, right, minimum, y in (('RAW_ACT', 'Q121', 'R134', .5, 20),
+                                            ('BAT_IN', 'J1', 'Q120', 1., 30)):
+            a = self.part(left, [('9' if left == 'Q121' else '1', 0, 0, net)], at=(5, y))
+            b = self.part(right, [('2' if right == 'R134' else '9', 0, 0, net)], at=(24, y))
+            for f in (a, b):
+                for p in f.Pads():
+                    p.SetSize(self.P(.43, .43))
+            track = self.track((5, y), (24, y), net, width=minimum)
+            terminals = {net: gate.FIRE_TERMINALS[net]}
+            with patch.object(gate, 'FIRE_TERMINALS', terminals):
+                self.assertEqual(gate.s9(self.ctx(), narrow=[])[0], [])
+                track.SetWidth(pcbnew.FromMM(.43))
+                self.assertTrue(any(f'{net} fire-path track 0.430 mm' in i
+                                    for i in gate.s9(self.ctx(), narrow=[])[0]))
+
     # --- R3-MFG-01 silk over mask openings ------------------------------------------------------------------------
     def test_silk_over_mask_opening(self):
         f = self.part('X5', [('1', 0, 0, 'GND')], at=(30, 40))
@@ -1388,6 +1445,49 @@ class AuditScope(SyntheticBase):
         self.assertTrue(r7.legend_subjects(self.board))  # Legacy default still blocks distance.
         text.SetText('R999 terminal')
         self.assertTrue(any('not on the board' in i for i in r7.legend_subjects(self.board, distance_review=[])))
+
+    def test_port_and_servo_tables_require_each_correct_pin_once(self):
+        def text(value):
+            item = pcbnew.PCB_TEXT(self.board); item.SetText(value); item.SetLayer(pcbnew.F_SilkS)
+            self.board.Add(item)
+            return item
+        rows = {ref: text(ref + ' ' + ' '.join(f'{pin}:{name}' for pin, name in enumerate(names, 1)))
+                for ref, names in gate.PORT_LEGENDS_R10.items()}
+        text(gate.SERVO_HARNESS_NOTE)
+        self.assertEqual(gate.port_legends(self.board), [])
+        for ref in ('J410', 'J420', 'J122'):
+            row, original = rows[ref], rows[ref].GetText()
+            for pin, name in enumerate(gate.PORT_LEGENDS_R10[ref], 1):
+                for replacement in ('', f'{pin}:WRONG'):
+                    with self.subTest(ref=ref, pin=pin, replacement=replacement):
+                        row.SetText(original.replace(f'{pin}:{name}', replacement))
+                        self.assertTrue(any(f'{ref}.{pin}:' in i for i in gate.port_legends(self.board)))
+                        row.SetText(original)
+            for extra in (original, f'{ref} 2:WRONG', f'{ref} 99:NC', original + '!'):
+                with self.subTest(extra=extra):
+                    duplicate = text(extra)
+                    self.assertTrue(gate.port_legends(self.board))
+                    self.board.Remove(duplicate)
+        self.assertEqual(gate.port_legends(self.board), [])
+
+    def test_servo_harness_note_is_required_unique_and_without_conflicts(self):
+        def text(value):
+            item = pcbnew.PCB_TEXT(self.board); item.SetText(value); item.SetLayer(pcbnew.B_SilkS)
+            self.board.Add(item)
+            return item
+        for ref, names in gate.PORT_LEGENDS_R10.items():
+            text(ref + ' ' + ' '.join(f'{pin}:{name}' for pin, name in enumerate(names, 1)))
+        note = text(gate.SERVO_HARNESS_NOTE)
+        self.assertEqual(gate.port_legends(self.board), [])
+        for value in ('', 'SERVO + FROM BOARD', 'SERVO + FROM HARNESSX'):
+            note.SetText(value)
+            self.assertTrue(any('J122:' in i for i in gate.port_legends(self.board)))
+        note.SetText(gate.SERVO_HARNESS_NOTE)
+        for value in (gate.SERVO_HARNESS_NOTE, 'SERVO + FROM BOARD'):
+            duplicate = text(value)
+            self.assertTrue(any('J122:' in i for i in gate.port_legends(self.board)))
+            self.board.Remove(duplicate)
+        self.assertEqual(gate.port_legends(self.board), [])
 
     def vippo(self):
         for f in list(self.board.GetFootprints()):
@@ -1515,6 +1615,11 @@ class FabScript(unittest.TestCase):
         s4 = text.index('tools/check_r10.py "$B" --only S-4 --bom "$D/fab/m3_bom_jlc.csv"')
         self.assertLess(export, s4)
         self.assertIn('--cpl "$D/fab/m3_cpl_jlc.csv"', text[s4:s4 + 200])
+
+    def test_r10_fab_selects_the_r10_procurement_limits(self):
+        text = (gate.ROOT / 'm3_design/r10_fab.sh').read_text()
+        self.assertIn('python3 tools/jlc_cost.py --max-total 84.41 --max-extended 52', text)
+        self.assertIn('python3 tools/check_procurement.py --profile r10 --cost-only || STATUS=1', text)
 
 
 # ======================================================================================================================
@@ -1856,6 +1961,52 @@ class RealBoardSeeds(unittest.TestCase):
                     t.SetWidth(pcbnew.FromMM(0.3))
                     break
         self.seeded('S-9', leg, 'ACT_FET_S fire-path track 0.300 mm')
+
+    def test_s9_custom_pad_anchor_cannot_exempt_long_supply_tracks(self):
+        board = self.load()
+        issues, evidence = gate.s9(gate.make_ctx(board))
+        self.assertEqual(issues, [], evidence)
+        self.assertEqual(len(gate.FIRE_NARROW), 7)
+        self.assertEqual(len(evidence['narrow_used']), 7)
+        for net, ends in (('RAW_ACT', (7., 67.6, 13.5, 67.6)), ('BAT_IN', (12., 74.1, 13.5, 72.6))):
+            board = self.load()
+            fp = board.FindFootprintByReference('Q121' if net == 'RAW_ACT' else 'Q120')
+            self.assertAlmostEqual(pcbnew.ToMM(fp.FindPadByNumber('9').GetSize().x), .43)
+            tracks = []
+            for t in gate.fire_path(board, net, gate.FIRE_TERMINALS[net])[0]:
+                points = sorted((pcbnew.ToMM(p.x), pcbnew.ToMM(p.y)) for p in (t.GetStart(), t.GetEnd()))
+                if all(abs(a - b) < .001 for a, b in zip(points[0] + points[1], ends)):
+                    tracks.append(t)
+            self.assertEqual(len(tracks), 1, (net, ends))
+            tracks[0].SetWidth(pcbnew.FromMM(.43))
+            self.assertTrue(any(f'{net} fire-path track 0.430 mm' in i
+                                for i in gate.s9(gate.make_ctx(board))[0]))
+        for entry in gate.FIRE_NARROW:
+            with self.subTest(bridge=entry[5]):
+                board = self.load()
+                tracks = []
+                for t in gate.fire_path(board, entry[0], gate.FIRE_TERMINALS[entry[0]])[0]:
+                    points = sorted((pcbnew.ToMM(p.x), pcbnew.ToMM(p.y)) for p in (t.GetStart(), t.GetEnd()))
+                    if all(abs(a - b) < .001 for a, b in zip(points[0] + points[1], entry[4])):
+                        tracks.append(t)
+                self.assertEqual(len(tracks), 1, entry)
+                tracks[0].SetWidth(pcbnew.FromMM(.35))
+                issues = gate.s9(gate.make_ctx(board))[0]
+                self.assertTrue(any('ACT_FET_S fire-path track 0.350 mm' in i for i in issues), issues)
+                self.assertTrue(any('stale FIRE_NARROW' in i and entry[5] in i for i in issues), issues)
+
+    def test_external_port_and_servo_legend_faults(self):
+        self.assertEqual(self.run_rule('K-legends', self.load()), set())
+        for original, wrong, marker in (('J410 2:GND', 'J410 2:3V3', 'J410.2'),
+                ('J420 3:TXO', 'J420 3:RXI', 'J420.3'),
+                ('J122 1:S 2:NC 3:GND', 'J122 1:S 2:NC 3:NC', 'J122.3'),
+                (gate.SERVO_HARNESS_NOTE, 'SERVO + FROM BOARD', 'J122:')):
+            def seed(b, original=original, wrong=wrong):
+                matches = [d for d in b.GetDrawings() if isinstance(d, pcbnew.PCB_TEXT)
+                           and d.GetText() == original]
+                self.assertEqual(len(matches), 1, original)
+                matches[0].SetText(wrong)
+            self.seeded('K-legends', seed, marker)
 
     def test_r8_gate_text_hidden_width(self):
         """R8-GATE-02 / 03 / 04: pinned legends, shown safety references, BAT_IN / RAW_PROTECTED width floor."""

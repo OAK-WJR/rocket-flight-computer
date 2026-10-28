@@ -1861,7 +1861,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "22uF"
+		(property "Value" "22uF 25V X5R 20%"
 			(at 281.94 115.57000000000001 0)
 			(effects
 				(font
@@ -1953,7 +1953,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "22uF"
+		(property "Value" "22uF 25V X5R 20%"
 			(at 312.42 115.57000000000001 0)
 			(effects
 				(font
@@ -2045,7 +2045,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "22uF"
+		(property "Value" "22uF 25V X5R 20%"
 			(at 297.18 156.20999999999998 0)
 			(effects
 				(font
@@ -2137,7 +2137,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "22uF"
+		(property "Value" "22uF 25V X5R 20%"
 			(at 330.20000000000005 156.20999999999998 0)
 			(effects
 				(font
@@ -2229,7 +2229,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "22uF"
+		(property "Value" "22uF 25V X5R 20%"
 			(at 297.18 199.39 0)
 			(effects
 				(font
@@ -2321,7 +2321,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "22uF"
+		(property "Value" "22uF 25V X5R 20%"
 			(at 330.20000000000005 199.39 0)
 			(effects
 				(font
@@ -2413,7 +2413,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "4.7uF"
+		(property "Value" "4.7uF 16V X5R 10%"
 			(at 66.04 146.04999999999998 0)
 			(effects
 				(font

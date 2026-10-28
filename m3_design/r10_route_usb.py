@@ -14,7 +14,11 @@ def draw(d):
     nrst_count = 0
     for index, (net, layer, width, pts) in enumerate(old.TRACKS):
         if net in ('CC1', 'CC2', 'VBUS', 'USB_ILIM') or index < 6:
-            local.track(net, layer, width, pts)
+            if net == 'VBUS' and layer == 'B' and pts == [(11.35, 33.5), (11.35, 32.15)]:
+                # Tee into the retained trunk on U10.1's axis (R9-RTE-05).
+                d.track(net, layer, width, [(11.3, 30.0), d.pad('U10.1')])
+            else:
+                local.track(net, layer, width, pts)
         elif net == 'USB_FAULT_N' and layer == 'B' and pts[0] != old.V_FAULT:
             if pts[-1] == (14.05, 26.5):
                 # AUD-5: delete the entire TP86 branch; U10.4 and R90 remain connected below.
@@ -38,8 +42,8 @@ def draw(d):
     d.track('VBUS_SENSE', 'B', .2, [(17.875, 29.8), d.pad('R110.1')])
     # D-R3-B4: the drop sits 0.05 mm west of R2's (16.75, 39.05), 0.20 mm from U1.80.
     d.track('USB_FAULT_N', 'F', .2, [d.pad('U1.87'), (16.7, 42.5), (16.7, 39.05)])
-    d.track('USB_FAULT_N', 'B', .2, [(16.7, 39.05), (16.15, 38.5), (11.2, 38.5),
-                                    (11.2, 32.5), (12.6, 31.1), (12.6, 26.55), (13.9, 26.55)])
+    d.track('USB_FAULT_N', 'B', .2, [(16.7, 39.05), (11.85, 39.05), (11.85, 31.85),
+                                    (12.6, 31.1), (12.6, 26.55), (13.9, 26.55)])
     # SWD from the TC2030 pads (J2: 2 SWDIO, 4 SWCLK, 3 NRST), clear of its three locating holes.
     # J2's F.Cu keep-out covers the strip between its pad rows: each track ends inside its pad, outside the strip.
     d.pad('J2.2', at=(3.73, 38.765)); d.pad('J2.4', at=(5.0, 38.765)); d.pad('J2.3', at=(5.0, 40.035))
@@ -49,7 +53,8 @@ def draw(d):
     # NRST leaves J2.3 south on F.Cu (between J2's 3V3 / GND stub vias and R33), runs north west of R32 / R33 and east
     # over the bottom USB_FAULT_N run to one via, then enters V_NRST from the west on B.Cu (R10_DECISIONS D-R2-09: the
     # former B.Cu leg from J2 and its two hop vias are gone).
-    d.track('NRST', 'F', .2, [(5.0, 40.35), (5.0, 41.3), (8.5, 41.3), (9.5, 40.3), (9.5, 38.4), (10.0, 37.9), (12.4, 37.9)])
+    d.track('NRST', 'F', .2, [(5.0, 40.35), (6.2021, 41.5521), (8.2479, 41.5521),
+                            (9.5, 40.3), (9.5, 38.4), (10.0, 37.9), (12.4, 37.9)])
     d.via('NRST', (12.4, 37.9))
     d.track('NRST', 'B', .2, [(12.4, 37.9), (14.2, 36.1), (21.9, 36.1), (22.54, 36.74), core.move(old.V_NRST)])
     for net, x in [('3V3', 3.73), ('GND', 6.27)]:

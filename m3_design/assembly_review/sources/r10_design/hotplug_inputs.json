@@ -1,10 +1,10 @@
 {
   "schema": 3,
-  "board_sha256": "877d01996a59e9dd5c6dbc367274bb9a323a13982d67960fe46df9b0ee53205d",
-  "electrical_sha256": "cbebb3323b12671dff52f8df5723e86ee4a2876e9c927ffb004e01e6cae4ff3b",
+  "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+  "electrical_sha256": "c424a714ef94e2e03b9148aeab28beefcc3460cd8999d3c6702721118ce90d66",
   "parts": {
     "C10": {
-      "value": "22uF",
+      "value": "22uF 25V X5R 20%",
       "footprint": "C0805",
       "fields": {
         "LCSC": "C45783",
@@ -86,7 +86,7 @@
       ]
     },
     "C11": {
-      "value": "22uF",
+      "value": "22uF 25V X5R 20%",
       "footprint": "C0805",
       "fields": {
         "LCSC": "C45783",
@@ -168,7 +168,7 @@
       ]
     },
     "C122": {
-      "value": "10nF",
+      "value": "10nF 50V X7R 10%",
       "footprint": "C0603",
       "fields": {
         "LCSC": "C57112",
@@ -250,7 +250,7 @@
       ]
     },
     "C127": {
-      "value": "10nF",
+      "value": "10nF 50V X7R 10%",
       "footprint": "C0603",
       "fields": {
         "LCSC": "C57112",
@@ -332,7 +332,7 @@
       ]
     },
     "C129": {
-      "value": "10nF",
+      "value": "10nF 50V X7R 10%",
       "footprint": "C0603",
       "fields": {
         "LCSC": "C57112",
@@ -619,7 +619,7 @@
       ]
     },
     "C19": {
-      "value": "2.2uF",
+      "value": "2.2uF 16V X5R 10%",
       "footprint": "C0603",
       "fields": {
         "LCSC": "C23630",
@@ -660,7 +660,7 @@
       ]
     },
     "C20": {
-      "value": "2.2uF",
+      "value": "2.2uF 16V X5R 10%",
       "footprint": "C0603",
       "fields": {
         "LCSC": "C23630",
@@ -742,7 +742,7 @@
       ]
     },
     "C22": {
-      "value": "1uF",
+      "value": "1uF 50V X5R 10%",
       "footprint": "C0603",
       "fields": {
         "LCSC": "C15849",
@@ -783,7 +783,7 @@
       ]
     },
     "C23": {
-      "value": "4.7uF",
+      "value": "4.7uF 16V X5R 10%",
       "footprint": "C0603",
       "fields": {
         "LCSC": "C19666",
@@ -865,7 +865,7 @@
       ]
     },
     "C25": {
-      "value": "10pF",
+      "value": "10pF 50V C0G 5%",
       "footprint": "C0402",
       "fields": {
         "LCSC": "C32949",
@@ -906,7 +906,7 @@
       ]
     },
     "C26": {
-      "value": "10pF",
+      "value": "10pF 50V C0G 5%",
       "footprint": "C0402",
       "fields": {
         "LCSC": "C32949",
@@ -947,7 +947,7 @@
       ]
     },
     "C28": {
-      "value": "4.7uF",
+      "value": "4.7uF 16V X5R 10%",
       "footprint": "C0603",
       "fields": {
         "LCSC": "C19666",
@@ -1972,7 +1972,7 @@
       ]
     },
     "C6": {
-      "value": "22uF",
+      "value": "22uF 25V X5R 20%",
       "footprint": "C0805",
       "fields": {
         "LCSC": "C45783",
@@ -2013,7 +2013,7 @@
       ]
     },
     "C60": {
-      "value": "10nF",
+      "value": "10nF 50V X7R 10%",
       "footprint": "C0603",
       "fields": {
         "LCSC": "C57112",
@@ -2054,7 +2054,7 @@
       ]
     },
     "C7": {
-      "value": "22uF",
+      "value": "22uF 25V X5R 20%",
       "footprint": "C0805",
       "fields": {
         "LCSC": "C45783",
@@ -2095,7 +2095,7 @@
       ]
     },
     "C8": {
-      "value": "22uF",
+      "value": "22uF 25V X5R 20%",
       "footprint": "C0805",
       "fields": {
         "LCSC": "C45783",
@@ -2423,7 +2423,7 @@
       ]
     },
     "C87": {
-      "value": "2.2uF",
+      "value": "2.2uF 16V X5R 10%",
       "footprint": "C0603",
       "fields": {
         "LCSC": "C23630",
@@ -2464,7 +2464,7 @@
       ]
     },
     "C88": {
-      "value": "100nF 50V",
+      "value": "100nF 50V X7R 10%",
       "footprint": "C0402",
       "fields": {
         "LCSC": "C307331",
@@ -2546,7 +2546,7 @@
       ]
     },
     "C9": {
-      "value": "22uF",
+      "value": "22uF 25V X5R 20%",
       "footprint": "C0805",
       "fields": {
         "LCSC": "C45783",
@@ -2751,7 +2751,7 @@
       ]
     },
     "C94": {
-      "value": "10nF",
+      "value": "10nF 50V X7R 10%",
       "footprint": "C0603",
       "fields": {
         "LCSC": "C57112",
@@ -2956,7 +2956,7 @@
       ]
     },
     "C99": {
-      "value": "100nF 50V",
+      "value": "100nF 50V X7R 10%",
       "footprint": "C0402",
       "fields": {
         "LCSC": "C307331",

@@ -3306,7 +3306,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "2.2uF"
+		(property "Value" "2.2uF 16V X5R 10%"
 			(at 210.82 181.60999999999999 0)
 			(effects
 				(font
@@ -3398,7 +3398,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "2.2uF"
+		(property "Value" "2.2uF 16V X5R 10%"
 			(at 256.54 181.60999999999999 0)
 			(effects
 				(font
@@ -3589,7 +3589,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1uF"
+		(property "Value" "1uF 50V X5R 10%"
 			(at 332.74 181.60999999999999 0)
 			(effects
 				(font
@@ -3681,7 +3681,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "4.7uF"
+		(property "Value" "4.7uF 16V X5R 10%"
 			(at 363.22 181.60999999999999 0)
 			(effects
 				(font
@@ -3872,7 +3872,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10pF"
+		(property "Value" "10pF 50V C0G 5%"
 			(at 220.98 105.41000000000001 0)
 			(effects
 				(font
@@ -3964,7 +3964,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10pF"
+		(property "Value" "10pF 50V C0G 5%"
 			(at 251.45999999999998 105.41000000000001 0)
 			(effects
 				(font
@@ -5020,7 +5020,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 04c4ac9e-2417-59ff-834e-3c7793af9cef))
-	(text "Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise low before output mode. R123 100k holds the load switch off at reset. Hold PE4 low for >=100 ms after ACT_EN before bus checks. Disable synchronous trace (PC1 TRACED0, PE4 TRACED1); lock/read back both gate GPIO configurations. AUD-4: PC13 U1.7 is NC/analog; no pull-pin."
+	(text "Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise PC1 and PE4 low before output mode. R123 100k holds the load switch off at reset. Both low for passive cold screening; after prior enable wait >=1 s and verify bus discharge. Refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks (D-SS-04). Disable synchronous trace; lock/read back both gate GPIO configurations. AUD-4: PC13 U1.7 is NC/analog; no pull-pin."
 		(at 20.32 269.24 0)
 		(effects
 			(font

@@ -2339,7 +2339,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100nF 50V"
+		(property "Value" "100nF 50V X7R 10%"
 			(at 226.0600 153.6700 0)
 			(effects
 				(font

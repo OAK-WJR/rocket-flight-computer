@@ -1,7 +1,7 @@
 {
   "schema": 3,
-  "inputs_sha256": "0f06a4b2bde7b05b6785fb62bd4f5fa4f5911a99f5aa2ddab9a2b647a59b9f94",
-  "model_sha256": "b4ef53157efdc7038884bcebca037eeb43a3bb2a67b2f1523fb728c3ced87a18",
+  "inputs_sha256": "09469b51d06f77d93768c6a59110e4ff056f5b2e9a151a1c3018ebb33ebb63c7",
+  "model_sha256": "a7079e1a3ce189031ab28f8538a8c02b4bd8adcdf4cfc45877a0405935656883",
   "limits": {
     "minimum_V": -15.0,
     "maximum_V": 28.0,

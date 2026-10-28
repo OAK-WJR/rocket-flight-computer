@@ -1,10 +1,11 @@
 # R10 validation and adversarial review
 
-> **Current continuation, 2026-10-28:** the supervisor committed the owner-answer board `b860afbe…` in
-> `6fdac43`. The supervisor committed the verified single-switch preparatory pass as `73af96b` (`60be35ea…`). Adopted AUD-1…AUD-10 /
-> GAP-1…GAP-5 implementation and complete verification are recorded below (`877d0199…`), then a fresh ten-lens round 9. The incomplete prelude receives no clean-round credit;
-> the consecutive-clean count is zero. Commit requests use the external supervisor; no Git index mutation is
-> performed here. OQ-3 cost remains a disclosed acceptance deviation and does not block a clean review.
+> **Current continuation, 2026-10-28:** full round 9 reviewed committed `877d0199…` (`8bccb07`) with
+> **0 Critical / 0 Major / 21 Minor groups**, the first clean round. Its generator, gate and record fix pass
+> regenerates `b337fe63…`; the interrupted build is superseded by fresh complete rebuilds and the evidence
+> below. Round 10 will review the committed fix-pass board through ten fresh independent lenses. Clean rounds
+> 9 and 10 form the required pair under the owner’s continuation. Commit requests use the external supervisor;
+> no Git index mutation is performed here. OQ-3 cost remains an acceptance deviation, not a clean-review blocker.
 
 > **2026-10-28 hand-off check: round 9 stopped for owner decisions.** Starting worktree clean at `04d0b04`,
 > board `407d1d84…`. Three fresh read-only reviewers started in parallel (requirements, safety, power); the
@@ -753,6 +754,101 @@ position; the complete builds above use frozen executable sources. Neither inter
 passing complete build or a review round. Firmware, physical switch/gate/sense behavior, thermal performance,
 VIPPO / manual-capacitor assembly, RF immunity and actual fit remain unverified.
 
+## Round 9: full independent review of `877d0199…` (commit `8bccb07`)
+
+Ten fresh read-only validator contexts, one lens each, ran in parallel batches of at most three. The lenses were
+requirements / O1–O6, safety, power, parts / BOM, MCU interfaces, mechanics, routing / AVA, manufacturing,
+gate adversary, and docs / firmware binding. The whole Phase A left the board and working tree unchanged.
+The root deduplicated their findings and independently reproduced the cold-sequence discrepancy, hardware-stack
+arithmetic, rule-selection and procurement failures. No Critical or Major finding was reported or accepted.
+
+**Result: 0 Critical, 0 Major, 21 Minor groups: 17 new and four explicitly re-raised routing groups.** Existing
+adopted architecture / bench-qualification obligations are carried in the deviation inventory rather than counted
+again as new findings. This is a full round; the earlier three-lens owner-decision prelude is not. Its existing
+R9-PWR-01 remains the historical thermal-record finding; the new fault-delay item is R9-PWR-02.
+
+| Finding | Severity | Evidence on the reviewed board / source | Disposition |
+|---|---|---|---|
+| R9-REQ-03 (MFG / MEC / DOC duplicates) | Minor | REQUIREMENTS F10 retains PC13 / EXTI13; P2 / P3 retain J123, three DB125 terminals and 275.6 Hz. Native U1.7 is NC, J123 / J124 absent, two terminals; plate 280.9 Hz | Fixed records: current PC13 / EXTI / mating / retention / modal inventory; historical R7–R9 clauses remain qualified |
+| R9-REQ-04 | Minor | M3_R10 current open-cost row says $87.43 / 47 Extended, versus bound $84.43 / 46 | Fixed current snapshot and history distinction; OQ-3 remains nonblocking |
+| R9-SAF-01 (DOC duplicate) | Minor | M3_R10 firmware order enables PC1 before the passive test; generated obligations omit D-SS-04's pre-enable screen. A shorted Q124 can conduct before a later powered-bus refusal | Fixed schematic note, binding generator, ORDERING and FMEA: both controls low, qualified cold screen first, ≥1 s discharge check after prior enable, then PC1 high / PE4 low ≥100 ms and powered checks. Firmware absent; not an observed startup fire |
+| R9-PWR-02 | Minor | Current TI SLVS841G p7 / revision p27 gives overcurrent FAULT 3–11 ms, while qualification says maximum 10 ms | Fixed source / firmware budget to 11 ms plus actual handling / decay latency; electrical limit calculations unchanged |
+| R9-BOM-01 | Minor | Seven abbreviated capacitor Value strings across 21 fitted parts; exact identities already agree in PCB / XML / BOM | Fixed generator/source labels from seven primary source groups; no substitution / net / land change |
+| R9-MCU-01 | Minor | ORDERING and binding prescribe nonexistent H743 TRACE_IOEN / TRACE_MODE controls; RM0433 Rev8 p3209 and ST header give bit20 TRACECLKEN | Fixed H743 debugger procedure, observed PE2 clock and retained GPIO-mode / lock validity; actual override remains unmeasured |
+| R9-MEC-01 | Minor | Nut-stack calculation omits 0.3 mm vertical tolerance. Correct h+t maxima 6.018413 / 5.365256 mm; documented 5.7 mm at west support gives r25.037185 versus usable r24.9 | Fixed <6.0 / <5.3 mm bounds; measured 4.0 mm standoffs / ≤1.0 mm plate selected as starting stack; actual hardware maxima / eccentricity still qualify fit |
+| R9-RTE-01 | Minor | BAT_SW_SOURCE F0.2 path 6.950000 mm | Fixed generator corners: 6.257107 mm, saves 0.692893 mm |
+| R9-RTE-02 | Minor | NRST F0.2 prefix 5.864214 mm via (5,41.3) / (8.5,41.3) | Fixed corners (6.2021,41.5521) / (8.2479,41.5521): 5.516563 mm, saves 0.347651 mm |
+| R9-RTE-03 | Minor | USB_FAULT_N B0.2 prefix 13.707716 mm via (16.15,38.5), (11.2,38.5), (11.2,32.5) | Fixed via corners (11.85,39.05) / (11.85,31.85): 13.110660 mm, saves 0.597056 mm; remaining endpoint branches preserved |
+| R9-RTE-04 (carried) | Minor | NRST return companions 1.6552 / 3.3534 mm; BOOT0 1.6621; I2C1_SDA 1.8806. SCL now 1.4431 | Retain as noncritical-return deviations; these nets are outside the AGENTS named fast/critical set. The reference contract and bench obligations remain; no untested claim that every possible new stitch is impossible |
+| R9-RTE-05 (carried) | Minor | SPI1_MOSI U4.14 x17.55 vs pad x17.50; IO entries and U10.1 offset 0.05 mm; between-pad routes at LED1 / R33 / C86 | Partly fixed: IO entries / vias centred x35.45 and U10.1 VBUS centred x11.30 after combined DRC / reference checks. Rejected on-axis MOSI via (17.50,44.30): IMU_body_B violation and 11 unreferenced SCK samples. Keep SPI / between-pad cases with measured reasons |
+| R9-RTE-06 (carried) | Minor | SERVO2_MCU B tail crosses 3V3 / RAW_PROTECTED split for ≈0.42 mm; LOGIC_SOURCE_ST B chain crosses near y57.7–58.0 | Retain slow/control routing; a plane redraw needs power and return requalification. Fast interfaces remain held to their own reference contracts |
+| R9-RTE-07 (carried) | Minor | BUZZ_DRV 36.38 mm / 3 vias; F.Cu projections over Y1: BUZZ 2.732695 mm / NRST 0.777648 | Retain necessary hops: simple BUZZ layer swaps cross VBUS_SENSE or USB_LIMITED. Solid In1 GND intervenes; HSE / buzzer interference is a bench item |
+| R9-GATE-01 (root duplicate) | Minor | Unknown-only selector exits 0 with no rules; default full gate unaffected | Fixed API / CLI validation for unknown, mixed and explicit-empty selections; valid stage scope retained |
+| R9-GATE-02 | Minor | Single wrong J410 / J420 / J122 pin texts and altered harness note pass K-legends, while GPS / radio generator validation catches them | Fixed final required / unique / correct tables and harness-note checks; AUD-10 distance-only relaxation preserved |
+| R9-GATE-03 | Minor | EP9 anchor 0.43 ×0.43 mm vs actual copper 3.21 ×1.98 mm allows entire RAW_ACT 6.5 mm / BAT_IN 2.121 mm tracks at 0.43 mm through S-9 / K-width | Fixed by removing implicit pad-neck exemption. Current board passes; both width seeds fail; seven measured source-bridge exceptions remain exact |
+| R9-PROC-01 (root) | Minor | Input-bound hypothetical under-budget R10 report at $84.40 / target $84.41 is rejected by shared fixed $126.41 target; same report with R9 target accepted | Fixed explicit R10 $84.41 / 52 profile, used by R10 fab / ordering; legacy default preserved. Procurement regressions run in check.sh. This seed is not a real supplier quote |
+| R9-DOC-01 | Minor | Current FMEA F-16 R10 row says only PE4 locked; binding / PC1 enable require two locks | Fixed PC1 + PE4 locks, each LCKK / pin-bit readback; no firmware implementation claimed |
+| R9-DOC-02 | Minor | ORDERING counts QSPI_IO2 as a foreign Y1 crossing; native clipping gives zero | Fixed two foreign crossings; HSE_OUT own crossing 2.565488 mm. Keep QSPI and buzzer bench stimulation |
+| R9-DOC-03 | Minor | M3_R10 claims all port controls / ACT_GATE have ≤1.5 mm return partners and one In2 region after AUD-2; ACT_GATE examples 8.055674 / 3.506293 mm | Fixed wording to the retained critical scope and named AUD-2 slow exceptions; not a new unauthorized routing relaxation |
+
+Independent baseline evidence: all 100 U1 pins agree across native PCB, XML, table and binding; all four binding
+hashes match; 225 component identities / 700 pin mappings agree; expanded schematic contract and 22 fault seeds
+pass. Sixteen selected functional / mechanical checks, all nine focused safety checks, hot-plug native extraction
+and four fresh worst-corner solves, fit / plate, required-fitting, metadata and the five-output fab manifest pass.
+The parts reviewer queried all 82 supplier codes at 22:03 UTC: exact MPN matches, only the known R430 / U4
+shortages. Orientation reconstructs 203 rows plus 12 placement-only nonpolar resistors; paste 317 F / 365 B;
+silk 144 shown / 81 hidden references plus 38 legends, text ≥1.0 mm and strokes ≥0.15 mm.
+
+Routing baseline: 110,724 reference samples, 7,139 own-antipad exceptions, seven samples covered by six recorded
+strays, zero loose samples; K-region 57 items / 21,777 samples, zero issues. All 22 explicit fast-net signal vias
+have a GND partner within 1.4916 mm. In1 is one connected 3,778.91 mm² GND island. QSPI spread 10.413 mm, one via
+per signal. AVA photographs inform placement / simplicity only, not an inferred electrical qualification.
+
+Each of the three detour redraws passes all-severity DRC in a refilled temporary copy; their combination also
+passes K-reference / K-region and removes all three noncritical local-bump candidates. The root's additional
+combined IO / USB entry trial also passes DRC / unconnected / reference / region / route checks. The rejected
+SPI trial is recorded separately and is not transferred to CAD. The fix pass uses generator edits only.
+
+The source and gate fixes completed their focused checks: value-only schematic overlays,
+22 existing contract seeds, 15 new gate regressions, 19 procurement tests and four shell fail-closed tests.
+Two fresh complete canonical builds now pass and reproduce all 21 CAD / binding files byte for byte.
+Fabrication / orientation / paste / the five-output manifest pass; the final unskipped `tools/check.sh` exits 0.
+Live cost / stock refresh remains a disclosed failure ($84.43 vs $84.41; R430 / U4 short). R10_DECISIONS D-R9-01…D-R9-06 records the choices.
+Round 10 reviews every changed CAD label / route and the full committed fix-pass target. Under the owner’s
+continuation, clean rounds 9 and 10 form the required pair; no later PCB change is planned.
+
+Scope incident: one reviewer ran a read-only legacy check in the R9 worktree. No files changed; this run is
+excluded, access stopped, and later legacy evidence is limited to this worktree's pinned inputs. Computer Use
+rejected KiCad / PCB Editor launch; native geometry and rendered CAD were used, with no GUI bypass. No physical,
+firmware, installed RF-immunity or fit result is claimed.
+
+### Round 9 fix-pass completion (2026-10-28)
+
+Board **`b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9`**, 46 × 90 mm,
+2,366,509 bytes; netlist `ca70b6dd…`. All 21 generated CAD / binding files agree after two complete builds,
+including the regenerated evidence note. Native comparison to this worktree’s committed `8bccb07` blob finds
+225 unchanged footprint poses / lands / pad nets and 21 expanded Value labels; the five changed routing nets
+are BAT_SW_SOURCE, NRST, USB_FAULT_N, 3V3 and VBUS (D-R9-04). No part substitution or MCU pin change.
+
+The unskipped final `tools/check.sh` exits 0: DRC / unconnected / schematic parity / ERC **0 / 0 / 0 / 0**;
+metadata, silk, fit / plate, all 33 R10 rules, routing, actuator and current five-output fab manifest pass.
+Tests: shell 4, procurement 19, fit 24, paste 5, routing 59, R10 140; the three NumPy cases skipped by KiCad
+Python pass in the separate NumPy invocation, leaving no unresolved skip. Full output with routine tool noise
+and temporary paths omitted: `sources/r10_review/round9_fix_check.txt`; hashes, counts and limits:
+`round9_fix_validation.json`; native current-board measurements: `round9_geometry.json`.
+
+The 2304 required hot-plug cases and refinement / cold-output checks pass as simulation / Inference; numerical
+results equal the baseline, with fresh input/model binding for the expanded C88 label. Fab has 82 BOM codes /
+215 CPL rows, 203 pad reconstructions plus 12 nonpolar placement-only checks, paste 317 F / 365 B. Live stock
+23:24:17Z / price 23:25:10Z remains **$84.43 vs $84.41, 46 Extended codes**, R430 17 vs minimum 3610 and U4 0 vs 5.
+`FAB_NET=1` exits 1 for those real procurement misses; it is not a CAD/export failure or a release pass.
+
+This restart’s first plain CLI attempt aborted in the known headless wx mouse query. The external D-R1-05
+interposer restores that query only; the native DRC engine still reports the expected intermediate violations,
+and all final gates / fault seeds run. No repository runtime dependency or rule changes for the workaround.
+Software / CAD and simulation pass; firmware, bench, installed RF immunity, physical fit, process and order
+qualification remain unverified. Round 10 freshly reviews the committed fix pass; no new PCB change is planned.
+
 ### Review-round log
 
 | Round | Board reviewed | Critical / Major / Minor (confirmed) | Fix pass → board |
@@ -764,6 +860,7 @@ VIPPO / manual-capacitor assembly, RF immunity and actual fit remain unverified.
 | 6 | `3b6e15f3…` | 0 / 1 / 39 | D-R6-01 … D-R6-03 → `b242ab8e…` |
 | 7 | `b242ab8e…` | **0 / 0 / 33 (clean)** | D-R7-01, D-R7-02 (gates and records; board unchanged) |
 | 8 | `b242ab8e…` | 0 / 3 / 22 | D-R8-01 … D-R8-03 → `407d1d84…` |
+| 9 (full; prelude excluded) | `877d0199…`, `8bccb07` | **0 / 0 / 21 (17 new, 4 carried)** | D-R9-01 … D-R9-06 → `b337fe63…`; fresh round 10 covers the Minor fix pass |
 
 ## R10 deviations for owner acceptance (skeleton; completed when two consecutive rounds are clean)
 

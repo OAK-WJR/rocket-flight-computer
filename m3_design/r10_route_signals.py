@@ -36,9 +36,9 @@ def io_rails(d):
     # AUD-8: both TXU supplies use main 3V3. Retain C443 / C453 as local VCCB bypasses (TI TXU0202 section 12.1).
     for cap, buf, dy in (('C443', 'U411', 0.0), ('C453', 'U421', 12.0)):
         p(f'{buf}.7', at=(35.45, 16.9 + dy))
-        t('3V3', 'F', S, [(35.5, 16.9 + dy), (35.5, 17.8 + dy)])
-        via('3V3', (35.5, 17.8 + dy))
-        t('3V3', 'B', IO, [(35.5, 17.8 + dy), (35.5, 18.45 + dy), p(f'{cap}.1')])
+        t('3V3', 'F', S, [p(f'{buf}.7'), (35.45, 17.8 + dy)])
+        via('3V3', (35.45, 17.8 + dy))
+        t('3V3', 'B', IO, [(35.45, 17.8 + dy), (35.45, 18.45 + dy), p(f'{cap}.1')])
         # The VCCB-side via is east of the main In2 3V3 strip. Cross OE on B.Cu to a via inside that strip.
         t('3V3', 'B', IO, [p(f'{cap}.1'), (33.7, 18.45 + dy)])
         via('3V3', (33.7, 18.45 + dy))

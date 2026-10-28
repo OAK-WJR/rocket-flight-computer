@@ -309,7 +309,7 @@
       </units>
     </comp>
     <comp ref="C6">
-      <value>22uF</value>
+      <value>22uF 25V X5R 20%</value>
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
@@ -339,7 +339,7 @@
       </units>
     </comp>
     <comp ref="C7">
-      <value>22uF</value>
+      <value>22uF 25V X5R 20%</value>
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
@@ -369,7 +369,7 @@
       </units>
     </comp>
     <comp ref="C8">
-      <value>22uF</value>
+      <value>22uF 25V X5R 20%</value>
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
@@ -399,7 +399,7 @@
       </units>
     </comp>
     <comp ref="C9">
-      <value>22uF</value>
+      <value>22uF 25V X5R 20%</value>
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
@@ -429,7 +429,7 @@
       </units>
     </comp>
     <comp ref="C10">
-      <value>22uF</value>
+      <value>22uF 25V X5R 20%</value>
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
@@ -459,7 +459,7 @@
       </units>
     </comp>
     <comp ref="C11">
-      <value>22uF</value>
+      <value>22uF 25V X5R 20%</value>
       <footprint>rocket:C0805</footprint>
       <fields>
         <field name="LCSC">C45783</field>
@@ -489,7 +489,7 @@
       </units>
     </comp>
     <comp ref="C28">
-      <value>4.7uF</value>
+      <value>4.7uF 16V X5R 10%</value>
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C19666</field>
@@ -940,7 +940,7 @@
       </units>
     </comp>
     <comp ref="C19">
-      <value>2.2uF</value>
+      <value>2.2uF 16V X5R 10%</value>
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C23630</field>
@@ -970,7 +970,7 @@
       </units>
     </comp>
     <comp ref="C20">
-      <value>2.2uF</value>
+      <value>2.2uF 16V X5R 10%</value>
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C23630</field>
@@ -1032,7 +1032,7 @@
       </units>
     </comp>
     <comp ref="C22">
-      <value>1uF</value>
+      <value>1uF 50V X5R 10%</value>
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C15849</field>
@@ -1062,7 +1062,7 @@
       </units>
     </comp>
     <comp ref="C23">
-      <value>4.7uF</value>
+      <value>4.7uF 16V X5R 10%</value>
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C19666</field>
@@ -1124,7 +1124,7 @@
       </units>
     </comp>
     <comp ref="C25">
-      <value>10pF</value>
+      <value>10pF 50V C0G 5%</value>
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C32949</field>
@@ -1154,7 +1154,7 @@
       </units>
     </comp>
     <comp ref="C26">
-      <value>10pF</value>
+      <value>10pF 50V C0G 5%</value>
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C32949</field>
@@ -1890,7 +1890,7 @@
       </units>
     </comp>
     <comp ref="C60">
-      <value>10nF</value>
+      <value>10nF 50V X7R 10%</value>
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>
@@ -1920,7 +1920,7 @@
       </units>
     </comp>
     <comp ref="C94">
-      <value>10nF</value>
+      <value>10nF 50V X7R 10%</value>
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>
@@ -3544,7 +3544,7 @@
       </units>
     </comp>
     <comp ref="C87">
-      <value>2.2uF</value>
+      <value>2.2uF 16V X5R 10%</value>
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C23630</field>
@@ -3576,7 +3576,7 @@
       </units>
     </comp>
     <comp ref="C88">
-      <value>100nF 50V</value>
+      <value>100nF 50V X7R 10%</value>
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C307331</field>
@@ -4448,7 +4448,7 @@
       </units>
     </comp>
     <comp ref="C99">
-      <value>100nF 50V</value>
+      <value>100nF 50V X7R 10%</value>
       <footprint>rocket:C0402</footprint>
       <fields>
         <field name="LCSC">C307331</field>
@@ -5311,7 +5311,7 @@
       </units>
     </comp>
     <comp ref="C122">
-      <value>10nF</value>
+      <value>10nF 50V X7R 10%</value>
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>
@@ -5765,7 +5765,7 @@
       </units>
     </comp>
     <comp ref="C127">
-      <value>10nF</value>
+      <value>10nF 50V X7R 10%</value>
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>
@@ -5825,7 +5825,7 @@
       </units>
     </comp>
     <comp ref="C129">
-      <value>10nF</value>
+      <value>10nF 50V X7R 10%</value>
       <footprint>rocket:C0603</footprint>
       <fields>
         <field name="LCSC">C57112</field>

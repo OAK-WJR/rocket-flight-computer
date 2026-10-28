@@ -4,6 +4,8 @@ import datetime
 import hashlib
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
@@ -35,6 +37,17 @@ class ProcurementValidation(unittest.TestCase):
 
     def parts(self):
         return jlc_stock.read_bom(self.folder)
+
+    def reports(self, max_total=84.41, total=84.40):
+        item = dict(self.item, componentPrices=[dict(startNumber=1, endNumber=-1,
+                                                    productPrice=(total - 1.53 / 5) / 3)])
+        cost = jlc_cost.cost_report(self.parts(), 5, 'standard', 2, max_total=max_total, fetch=lambda _: item)
+        stock = jlc_stock.stock_report(self.parts(), 5, lambda _: item)
+        for name, report in (('cost_check.json', cost), ('stock_check.json', stock)):
+            report.update(checked_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                          inputs_sha256=jlc_stock.input_hashes(self.folder, include_cpl=name == 'cost_check.json'))
+            (self.folder / name).write_text(json.dumps(report))
+        return cost
 
     def test_shared_code_stock_uses_total_demand(self):
         fetch = Mock(return_value=dict(self.item, stockCount=10))
@@ -154,6 +167,56 @@ class ProcurementValidation(unittest.TestCase):
         self.bom([('C100', 'R1,R2,R3,R4')])
         with self.assertRaisesRegex(ValueError, 'BOM/CPL changed'):
             check_procurement.verify(self.folder, cost_only=True)
+
+    def test_r10_profile_accepts_under_budget_in_preliminary_and_final_checks(self):
+        cost = self.reports()
+        self.assertTrue(cost['ok'])
+        self.assertEqual(cost['total_usd_per_board'], 84.40)
+        self.assertEqual(cost['targets'], {'max_total': 84.41, 'max_extended': 52})
+        with patch.object(check_procurement, 'verify_manifest') as manifest:
+            for cost_only in (True, False):
+                with self.subTest(cost_only=cost_only):
+                    self.assertEqual(check_procurement.verify(self.folder, cost_only=cost_only, profile='r10'), cost)
+            manifest.assert_called_once()
+
+    def test_r10_profile_rejects_legacy_targets_over_budget_and_extra_codes(self):
+        original = self.reports()
+        path = self.folder / 'cost_check.json'
+        for change in ({'targets': {'max_total': 126.41, 'max_extended': 52}},
+                       {'total_usd_per_board': 84.42},
+                       {'targets': {'max_total': 84.41, 'max_extended': 53}},
+                       {'extended_codes': [f'C{i}' for i in range(53)]}):
+            path.write_text(json.dumps(dict(original, **change)))  # Even a forged ok=true cannot select a higher cap.
+            for cost_only in (True, False):
+                with self.subTest(change=change, cost_only=cost_only), \
+                        patch.object(check_procurement, 'verify_manifest'), \
+                        self.assertRaisesRegex(ValueError, r'required \$84\.41 / 52-code'):
+                    check_procurement.verify(self.folder, cost_only=cost_only, profile='r10')
+
+    def test_legacy_default_keeps_r9_limits_and_profile_is_explicit(self):
+        self.reports(max_total=126.41, total=100)
+        self.assertEqual(check_procurement.verify(self.folder, cost_only=True)['total_usd_per_board'], 100)
+        with self.assertRaisesRegex(ValueError, r'required \$84\.41'):
+            check_procurement.verify(self.folder, cost_only=True, profile='r10')
+        with patch.object(check_procurement, 'verify_manifest') as manifest:
+            with self.assertRaisesRegex(ValueError, 'unknown procurement profile'):
+                check_procurement.verify(self.folder, profile='auto')
+            manifest.assert_not_called()
+
+    def test_cli_requires_the_explicit_r10_profile_and_prints_its_target(self):
+        cost = self.reports()
+        command = [sys.executable, str(Path(check_procurement.__file__)), '--fab', str(self.folder), '--cost-only']
+        result = subprocess.run(command + ['--profile', 'r10'], capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('The $84.41 target', result.stdout)
+        result = subprocess.run(command, capture_output=True, text=True, timeout=30)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('required $126.41', result.stderr)
+        cost['targets']['max_total'] = 126.41
+        (self.folder / 'cost_check.json').write_text(json.dumps(cost))
+        result = subprocess.run(command + ['--profile', 'r10'], capture_output=True, text=True, timeout=30)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('required $84.41', result.stderr)
 
     def test_final_verifier_rejects_current_pricing_for_old_cad_export(self):
         board = self.folder / 'm3.kicad_pcb'

@@ -1,11 +1,11 @@
 {
   "inputs_sha256": {
-    "cad/actuator_power.kicad_sch": "00ad712c0a0aa848355035678475e285645f34d80a805a4ac3afabab6c01a788",
-    "cad/battery_entry.kicad_sch": "2f173002b9afa72bf92e76902185dcf62fce42a414632bd0125f74bab2effbc1",
+    "cad/actuator_power.kicad_sch": "8cc73bde6034cf6d349c2d240e5e71d2a9d7b4e2ba8fcbdf9ca9bf0933e1781f",
+    "cad/battery_entry.kicad_sch": "b397ce870d86a1c27a519758686da0e5981b454d4f5768df664a9f197fb8e813",
     "cad/camera_connector.kicad_sch": "6a4fcb67cda63d818a4d805c3aed38e473f5c6e74b2c47908d04fae2bb88c5e3",
     "cad/camera_power.kicad_sch": "ca947c2a1a3c2a4a22658898b65ca4404efb7530c9e3bf6405e932bde68f77ad",
     "cad/camera_uart.kicad_sch": "8f64fb78ed2f9b76023ace78df25557ee44908e973494356720db6b85e0a50a6",
-    "cad/diagnostics.kicad_sch": "4576ef0b9ade525c215271970d31054642b3b72395535fe355cc86c85c148583",
+    "cad/diagnostics.kicad_sch": "6e1ad47f47ee0003a9e595431a5ddcb279d3a4c587d8730248c5376f7c75b71d",
     "cad/fp-lib-table": "2f9ca0537f506ea6dc329b37b14493b33a1b073055eb2b83c86e650d2341e5a5",
     "cad/kilib/core.kicad_sym": "6f57b363124c8520657d6bea9b5aa7c33ad95c61b80e183a7ab595b83e0ee3e1",
     "cad/kilib/generic.3dshapes/DFN-8-1EP_3x3mm_P0.65mm_EP1.55x2.4mm.step": "113b3987035c6f315a2a5c49dcedc349f8184b3b415289cb0cb67e90e82112b4",
@@ -168,14 +168,14 @@
     "cad/kilib/rocket.pretty/SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR.kicad_mod": "72b564fbb112185438a6981a5c57bcb23ba4cf68b1cc18ca2eb5571bf1920641",
     "cad/kilib/rocket.pretty/TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL.kicad_mod": "5442069ef675d8aa52c12eec21bd8398a3ed7269c2a3acc393707d796ac21b03",
     "cad/kilib/rocket.pretty/USB-C_SMD-TYPE-C-31-M-12_1.kicad_mod": "f77f08eb642c6ec21933dc0cf3e2e4866e5b54717d8f1c237a4159bbdc6e8ce6",
-    "cad/logic_power_path.kicad_sch": "440a306c1e5cd5d43f7611a92852607c4a649fb4b738f8da61e7c27dcee520e5",
+    "cad/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
     "cad/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
-    "cad/m3.kicad_pcb": "877d01996a59e9dd5c6dbc367274bb9a323a13982d67960fe46df9b0ee53205d",
+    "cad/m3.kicad_pcb": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
     "cad/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
-    "cad/m3.kicad_sch": "79b0daca0f14e117aa8cdb64ea70e05da61498c71bd6d206bbe1d7afbc3e69c2",
-    "cad/mcu.kicad_sch": "f2719020c7755f17591542cdbd85ac5b7c836d80a1d489870076e4b44b26bc74",
+    "cad/m3.kicad_sch": "2b4dce42647b70bc6eef8a972809defb72704e9da84dffe352884fd13516a0a5",
+    "cad/mcu.kicad_sch": "84b50be1251545bbb29077faafb0bbb8941739fd67e9531a4452fec0337b64a0",
     "cad/pullpin_buzzer.kicad_sch": "6251166ef5e36bd43d48060c3085437fd637df326d82dd7709f9836d9282e1e7",
-    "cad/pyro.kicad_sch": "6f34c9987fc8ac73dc80f48f1e25082ca0736861b8c57202a9a8df9e76a888d6",
+    "cad/pyro.kicad_sch": "cd409773865c634ea9bb9d6d04ba72f2bc75d71e9e1acc97a6eae00bd76cf3d8",
     "cad/sensors.kicad_sch": "bc81013b62caf9c9093acac15a3fd8cfce56a6b0c922f4899906e745d5af8ece",
     "cad/servos.kicad_sch": "f56edc8fa8472171b7ed1d92efbaeacb9087b0a0289c2cfb6cd82be3704329c8",
     "cad/sym-lib-table": "4efd2ba454e433efeb8a4a72562b389141aa0b8fabf60041f03c34171402d37f",
@@ -189,11 +189,11 @@
     "tools/jlc_orient.py": "75b36799b732384eac5ac0f0d4e5ae3a9a2e8b2b1d230421ff791e76e77619ae"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "421811486e80206fbff65e5e941cd837dc98797629e8186b29b820e4485d1eda",
-    "m3_assembly_top.pdf": "57821cf2cfd90b973d68af53b4172ba7a83ae65062328149146bf4b41db55577",
-    "m3_bom_jlc.csv": "a2db7ae2b4995fbe690c9d8c8a22f0f4813c7e6cb6c981348429038f2db85eac",
+    "m3_assembly_bottom.pdf": "f01784a456af77cb0d85c9a4afe1250a0aeeb0b818ed1db377ddf4b29e36d0d3",
+    "m3_assembly_top.pdf": "5d3f130bd43f417e892a8e8d09143f3639bbe1b5c95fc85462beba7e895f65cb",
+    "m3_bom_jlc.csv": "fd9dc990e29ea555cc0ba2083b12f60f5729bc5ea6d3011d58b477574738bacc",
     "m3_cpl_jlc.csv": "358a0c090be1223d2f1dccdea6a61d4e6b652b5ebebd2c2d1caee7649bf98668",
-    "m3_gerber.zip": "08e7fb3731fb4085e3b4bd468ad07e8948e59e23d44aad016ed48fc2f1215c3b"
+    "m3_gerber.zip": "d330c42384c1fd18cff56e7373d968a064755bc532edbfb75105a0da5ca068ac"
   },
   "schema": 1
 }

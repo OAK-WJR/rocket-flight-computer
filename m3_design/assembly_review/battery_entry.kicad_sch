@@ -2274,7 +2274,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "2.2uF"
+		(property "Value" "2.2uF 16V X5R 10%"
 			(at 342.9 123.19 0)
 			(effects
 				(font
@@ -2380,7 +2380,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100nF 50V"
+		(property "Value" "100nF 50V X7R 10%"
 			(at 393.7 123.19 0)
 			(effects
 				(font
