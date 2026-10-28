@@ -17,7 +17,7 @@
       "peripheral_tx_contact": "3"
     }
   ],
-  "fresh_netlist": "/private/tmp/r6-independent-electrical.net.xml",
+  "fresh_netlist": "<scratch>/r6-independent-electrical.net.xml",
   "new_critical_major_findings": [],
   "known_limits": [
     "4.8 V nominal port supply follows prior GPS tolerance decision",

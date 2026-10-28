@@ -475,8 +475,12 @@ def main():
         distance, ref, hole = report['nearest_top_support']
         print(f'  nearest top hardware clearance: {ref}, {distance:.3f} mm from support {hole} (minimum 3.8 mm)')
     walls = []                                       # wire bend room: the entry face (the model box's side nearest
-    for mgn, ref, side, box in rows:                 # its long edge) to the wall at WIRE_Z, sled tolerance both ways
-        if ref in SIDE_ENTRY and fp_name(b.FindFootprintByReference(ref)).startswith('M3_DB128'):
+    # its long edge) to the wall at WIRE_Z, sled tolerance both ways; profile r10 (R3-MEC-02): also J1 and R10's DB125
+    # terminals (the same west face)
+    side_entry, lands = (SIDE_ENTRY + ('J1',), ('M3_DB128', 'M3_DB125')) if a.profile == 'r10' else \
+        (SIDE_ENTRY, ('M3_DB128',))
+    for mgn, ref, side, box in rows:
+        if ref in side_entry and fp_name(b.FindFootprintByReference(ref)).startswith(lands):
             face = box[0] if abs(box[0] - a.axis_x) > abs(box[2] - a.axis_x) else box[2]
             room = math.sqrt(BORE_R ** 2 - WIRE_Z ** 2) - abs(face - a.axis_x)
             walls.append(f'{ref} {room - a.tol:.1f}-{room + a.tol:.1f}')

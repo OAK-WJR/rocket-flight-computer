@@ -3,11 +3,11 @@
   "result": "PASS: no Critical or Major finding in this slice",
   "boards": [
     {
-      "path": "/private/tmp/r6-port-helper-73txq9mj/m3.kicad_pcb",
+      "path": "<scratch>/r6-port-helper-73txq9mj/m3.kicad_pcb",
       "sha256": "c7669c5896dc139a8b4dc3edb308541620d87aa7edaee1b60dd3f4cff5222868"
     },
     {
-      "path": "/private/tmp/r6-port-helper-73txq9mj/after.kicad_pcb",
+      "path": "<scratch>/r6-port-helper-73txq9mj/after.kicad_pcb",
       "sha256": "96790d186db79743bd57c33d546b00bcce04093255fd9427da317319a9daff0c"
     }
   ],
@@ -274,7 +274,7 @@
   "pad_partition_regressions": [],
   "native_reports": [
     {
-      "path": "/private/tmp/r6-port-helper-73txq9mj/before-drc.json",
+      "path": "<scratch>/r6-port-helper-73txq9mj/before-drc.json",
       "sha256": "977b658899abc62641d5595eb83825d8d2af3688318916d103103cc05bd6f91a",
       "violations": {
         "via_dangling": 11,
@@ -284,7 +284,7 @@
       "parity": 0
     },
     {
-      "path": "/private/tmp/r6-port-helper-73txq9mj/after-drc.json",
+      "path": "<scratch>/r6-port-helper-73txq9mj/after-drc.json",
       "sha256": "830fa31fcfa8118aec09d1cfcfdcefdc81c58510d95f54ee930fc76f031405fb",
       "violations": {
         "via_dangling": 11,

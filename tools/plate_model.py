@@ -120,11 +120,28 @@ def build(fit, D, clamp, case, profile='r9', mass_spec=None):
             raise ValueError('R10 mass specification requires a source or labelled inference basis')
         if any(not math.isfinite(v) or v <= 0 for v in mass_spec['masses_g'].values()):
             raise ValueError('R10 masses must be finite and positive')
+        # R3-MEC-01: every mass key is placed or refused, never dropped: a key with its own fit row sits on that row's
+        # box; 'X mated' with no row of its own (the DB125 terminals' wire and ferrule allowance: no mated envelope in
+        # fit_check) sits on its parent X's box; anything else is an error
+        parents = {}
+        for key in mass_spec['masses_g']:
+            if key in names:
+                continue
+            parent = key[:-len(' mated')] if key.endswith(' mated') else None
+            if parent and parent in names:
+                parents[key] = parent
+            else:
+                raise ValueError(f'R10 mass {key!r} has no fit-report row' + (f' and no parent row {parent!r}'
+                                                                               if parent else ''))
     x0, y0, x1, y1 = fit['outline']
     a, b = (x1 - x0) / 1e3, (y1 - y0) / 1e3
     p = Plate(a, b, D, NU, RHO_H)
     masses = {}
-    for _, name, side, box in fit['rows']:
+    rows = list(fit['rows'])
+    if profile == 'r10':
+        boxes = {row[1]: row for row in fit['rows']}
+        rows += [(boxes[parent][0], key, boxes[parent][2], boxes[parent][3]) for key, parent in sorted(parents.items())]
+    for _, name, side, box in rows:
         if profile != 'r10' and (' ' in name or name in JACKS):
             continue                                                # mated envelopes; the jacks are overhangs
         bx0, by0, bx1, by1, z0, z1 = box

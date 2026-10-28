@@ -3277,7 +3277,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 26a75c96-ffbc-5db5-aa06-c6ec09e73f5d))
-	(text "GPS USART6 PC6 TX / PC7 RX AF7; radio UART5 PB13 TX / PB12 RX AF14 (DS12110 Rev10 Table11 p90)."
+	(text "GPS USART6 PC6 TX / PC7 RX AF7 (DS12110 Rev10 Table12 p91); radio UART5 PB13 TX / PB12 RX AF14 (Table11 p90)."
 		(at 20.32 20.32 0)
 		(effects
 			(font
@@ -3305,7 +3305,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid be0c0a4b-896e-5082-9364-863c245f8e08))
-	(text "Radio messages may never arm/fire; no port signal reaches pyro, arming or actuator nets. Configure LR900 channels within 902-928MHz."
+	(text "Radio messages may never arm/fire; no port signal reaches pyro, arming or actuator nets. LR900-F band 890-915MHz: use channels 12-25 (902-915MHz) or a maker-confirmed FHSS set."
 		(at 20.32 40.64 0)
 		(effects
 			(font

@@ -1,7 +1,7 @@
 {
-  "source": "/private/tmp/r6-packet-integration-evetmqgh/m3.kicad_pcb",
+  "source": "<scratch>/r6-packet-integration-evetmqgh/m3.kicad_pcb",
   "source_sha256": "139d6b24ffb02af561039222395341345d9285d895fdf15c62d19a447d25b9cc",
-  "candidate": "/private/tmp/r6-selected-bezqgb7j/m3.kicad_pcb",
+  "candidate": "<scratch>/r6-selected-bezqgb7j/m3.kicad_pcb",
   "opens_before": 25,
   "opens_after": 23,
   "attempts": [

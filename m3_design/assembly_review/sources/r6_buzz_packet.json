@@ -375,7 +375,7 @@
   ],
   "pad_changes": [],
   "validation": {
-    "native_candidate": "/private/tmp/r6-selected-bojk80hg/candidate-9.json",
+    "native_candidate": "<scratch>/r6-selected-bojk80hg/candidate-9.json",
     "hard_drc": 0,
     "unconnected_before": 30,
     "unconnected_after": 29,

@@ -37,6 +37,8 @@ def draw(d):
     t('PYRO1_OUT', 'B', S, [(10.37, 59.5), d.pad('C128.1')])
     t('PYRO1_OUT', 'B', S, [(10.37, 59.5), d.pad('R131.1')])
     link('PYRO1_COLD', 'B', S, 'R131.2', 'D120.1')
+    # D120's 3V3 clamp rail: its own via into a 3V3 tongue of In2 that reaches it from the east (enclosed on B.Cu by
+    # PYRO1_CONT, PYRO1_BUS and PYRO1_COLD; r10_route_power.IN2_GND_CH1, D-R3-01).
     t('3V3', 'B', S, [d.pad('D120.3'), (18.0, 58.6)])
     via('3V3', (18.0, 58.6))
 
@@ -98,6 +100,7 @@ def draw(d):
     t('ACT_GATE', 'B', P, [(16.2, 72.3), d.pad('C120.2')])
     t('ACT_GATE', 'B', P, [d.pad('C120.2'), (18.5, 72.3), d.pad('R120.2')])
     via('ACT_GATE', (16.2, 72.3))
+    via('GND', (16.2, 71.2))           # its GND partner, 1.10 mm north (AGENTS 3; R3-SAF-03, D-R3-07)
     t('ACT_GATE', 'F', P, [d.pad('TP121.1'), (16.2, 72.3)])
     # Q121's gate (west end) hops over the source bridge: via west of it, F.Cu to R121.1; GND partner via.
     t('ACT_GATE', 'B', P, [d.pad('Q121.4'), (10.8, 71.3)])
@@ -108,14 +111,15 @@ def draw(d):
     link('ACT_DRV', 'F', P, 'Q122.3', 'R121.2', ((15.8, 70.14),))
     link('ACT_EN', 'F', S, 'Q122.1', 'R122.2', ((19.08, 70.75),))
     link('ACT_EN', 'F', S, 'R122.2', 'R123.1')
-    # R122's RAW_PROTECTED end reaches the In2 RAW_PROTECTED plane by its own via (D9 moved east, D-R2-09); >= 1 mm
-    # from TP120 and clear of the SERVO1 lane.
-    t('RAW_PROTECTED', 'F', P, [d.pad('R122.1'), (19.6, 66.0)])
-    via('RAW_PROTECTED', (19.6, 66.0))
+    # R122's RAW_PROTECTED end reaches the In2 RAW_PROTECTED plane by its own via 0.7 mm west of the pad (D-R3-01): the
+    # ring 1.72 mm from R134.2 (PYRO1_BUS, bare), 1.08 mm from TP120 (bare test pad, K-retained 1.0 mm), 0.35 mm from
+    # Q122.2, and on the In2 RAW region south of the CH1 In2 GND zone (y 68.4).
+    t('RAW_PROTECTED', 'F', P, [d.pad('R122.1'), (18.9, 69.37)])
+    via('RAW_PROTECTED', (18.9, 69.37))
 
     # RAW_ACT: Q121's drain to J124.2 (the ARM plug's live side), TP120 and the sense divider top R177.
     t('RAW_ACT', 'B', FIRE, [d.pad('J124.2'), (11.5, 67.6)])
-    t('RAW_ACT', 'B', RAWW, [(15.4, 67.4), (17.3, 67.4), d.pad('TP120.1')])
+    t('RAW_ACT', 'B', RAWW, [(15.4, 67.3), d.pad('TP120.1', at=(18.0, 67.3))])
     t('RAW_ACT', 'B', S, [d.pad('TP120.1'), (18.0, 65.57), d.pad('R177.1')])
     link('RAW_ACT_SENSE_MID', 'B', S, 'R177.2', 'R124.1')
     link('RAW_ACT_SENSE', 'B', S, 'R124.2', 'R125.1')

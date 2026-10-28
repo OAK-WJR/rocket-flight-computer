@@ -2,8 +2,8 @@
   "status": "Independent routing/pin review PASS; guarded helper and startup input installed; root integrates actual PCB/schematic/contracts",
   "source_sha256": "d361bd4bdf10d1562d1da38d2ff52562f72fe0075854b6675126352093ed4174",
   "candidate_sha256": "254964435c526a251f29466682af43a1766b193af8b53e020ae5d36357c355b2",
-  "candidate": "/private/tmp/r6-imu-pin98-pnzpv4l6/m3.kicad_pcb",
-  "baseline": "/private/tmp/r6-imu-pin98-pnzpv4l6/baseline.kicad_pcb",
+  "candidate": "<scratch>/r6-imu-pin98-pnzpv4l6/m3.kicad_pcb",
+  "baseline": "<scratch>/r6-imu-pin98-pnzpv4l6/baseline.kicad_pcb",
   "mapping": {
     "U1.40": {
       "from": "IMU_INT1",
@@ -488,12 +488,12 @@
     "project_sha": "3730b060a94ebbd8f5f5ad179927549cb0cda8f475801e0e85b4c559fecaa7bf"
   },
   "native_replay": {
-    "drc": "/private/tmp/r6-imu-pe1-helper-1gn2l_fi/drc.json",
+    "drc": "<scratch>/r6-imu-pe1-helper-1gn2l_fi/drc.json",
     "opens": 2,
     "dangling": 13,
     "hard": 0
   },
-  "helper_replay_path": "/private/tmp/r6-imu-pe1-helper-5u1xoz4_/m3.kicad_pcb",
+  "helper_replay_path": "<scratch>/r6-imu-pe1-helper-5u1xoz4_/m3.kicad_pcb",
   "firmware_tests": {
     "command": "python3 -m unittest m3_firmware.test_imu m3_firmware.test_firmware m3_firmware.test_power_status",
     "passed": 42,

@@ -21,8 +21,10 @@ J31 checks, GCPW). Pyro copper uses the board default clearance, which KiCad DRC
 Safety (AGENTS.md section 2, F8; functional, not spacing):
   S-1   ARM break: J124 has exactly one RAW_ACT and one PYRO1_BUS pad; no other part joins the RAW_ACT side to the
         armed side (a net path through any part but J124, rails GND / 3V3 / 3V3A excepted); no test pad on armed
-        copper (PYRO1_BUS / IGN / OUT); no copper (track, via, fill, drawing, any net or none) connects RAW_ACT pads
-        to armed pads (geometric copper connectivity from the pads, independent of net labels)
+        copper (PYRO1_BUS / IGN / OUT); no part but J124, whatever its net count, has pads on both RAW_ACT and an
+        armed net (R3-GATE-02: the net-path search passes only parts with <= 4 nets); no copper (track, arc, via, fill,
+        drawing, copper text, footprint copper zone, any net or none) connects RAW_ACT pads to armed pads (geometric
+        copper connectivity from the pads, independent of net labels)
   S-2   pyro feed: Q120 / Q121 are the back-to-back load switch BAT_IN -> ACT_FET_S -> RAW_ACT with gates on
         ACT_GATE; RAW_ACT is reached from no supply (BAT_IN, RAW_PROTECTED, ACT_FET_S, VLOGIC, ...) except through
         Q121; the armed side reaches no supply and no RAW_ACT except through J124; neither side's copper touches a
@@ -33,12 +35,20 @@ Safety (AGENTS.md section 2, F8; functional, not spacing):
   S-4   R1-07 required fitted: every safety part (and every R10 contract part) is on the board, not DNP, not excluded
         from BOM or position files, not board-only, on the board and in the schematic; also in --bom / --cpl if given
   S-5   R1-m10 J124 gap: J124's two pads >= 1.5 mm apart edge to edge on every copper layer, and RAW_ACT vs
-        PYRO1_BUS copper >= 1.5 mm inside J124's courtyard (and its pad field + 1.5 mm)
+        PYRO1_BUS copper >= 1.5 mm inside J124's courtyard (and its pad field + 1.5 mm); R3-SAF-01: no copper (track,
+        arc, via, pad, fill) of any net but GND, RAW_ACT or PYRO1_BUS inside J124's inter-pad window (the rectangle
+        from pad centre to pad centre, one pad width across) on any copper layer
   S-6   external ports: no part (the MCU U1 excepted) has pads on both a port net (GPS_ / RADIO_ / CAM_ / PORT_) and a pyro / arming net
         (PYRO1_ / ARM1_ / ACT_ / RAW_ACT*); port copper >= the board default clearance from pyro / arming copper on
         the same layer (no shared copper item)
   S-7   J122 (O3): the middle (+) row 2 / 5 / 8 / 11 has no net and no copper touching it, the GND row 3 / 6 / 9 / 12
         is on GND, the signal row 1 / 4 / 7 / 10 on SERVO1-4_OUT
+  S-8   R3-SAF-01: on In1 and In2 no track or zone fill of any net but GND (and the barrel's own net) lies within
+        1.0 mm of a plated barrel (via or plated hole wall) of PYRO1_BUS, PYRO1_IGN, PYRO1_OUT or PYRO1_GATE
+  S-9   R3-GATE-07: fire-loop copper width. On RAW_ACT, PYRO1_BUS, PYRO1_IGN, PYRO1_OUT, ACT_FET_S and BAT_IN, every
+        track on the current path between the net's power terminals (FIRE_TERMINALS; the copper left when dead-end
+        branches such as the sense taps are pruned back to the path) is >= 1.0 mm wide (D-R2-02's 1.0 mm loop), except a
+        pad neck (a segment ending in a pad no wider than the track) and the named, measured FIRE_NARROW exceptions
 Mechanical and placement (kept from check_r9 where they still apply, read from the board):
   LC-1  no pad or footprint carries a local clearance override (check_r9.lc1)
   M-1   outline one rectangle from (0, 0), 46 mm wide, length read from the board <= 120 mm (P1), Edge.Cuts circles
@@ -50,7 +60,8 @@ Mechanical and placement (kept from check_r9 where they still apply, read from t
   M-7   U4 on the bottom at R9's rotation 180 (roll = -gyro_Y, R9_DECISIONS D-S7-06) with |x - board centre| <= 13 mm;
         no via or fill under U4 / U5 on their side (check_r9.m7); the axis map is read from the board and reported
   P-8   R168 / R170 / R172 at the MCU end (check_r9.p8)
-  P-11  J121 / J124 wires enter from -x (owner, r10_plan 2 item 2); the entry direction is read from the footprint
+  P-11  J1 / J121 / J124 wires enter from -x (owner, r10_plan 2 item 2; J1's wires leave the same west face, R3-MEC-02);
+        the entry direction is read from the footprint
         description ("wire entry +y"), else DB128's local -y. Wire room to the bore wall: R8 / R9's 6.25 mm is R8's
         measured value (a non-regression floor, not a derived need); R10's west-edge terminals have 4.95 mm. OWNER
         QUESTION OQ-1 (R10_DECISIONS D-R2-14): until the owner sets a figure, the rule holds R10's recorded room
@@ -67,7 +78,12 @@ Mechanical and placement (kept from check_r9 where they still apply, read from t
 Kept contract and copper rules:
   K-contract   R10 netlist contract: pin map, connectors, port power / UART isolation, camera UART, parts, removed parts
   K-actuators  m3_design/check_actuators.py --profile r10 in process (check.sh also runs it on its own)
-  K-legends    duplicate ids, pin legends, legend subjects (R10 word legends), R10 terminal pin legends
+  K-loader     R3-MCU-01: every U1 pin that the H74x ROM bootloader uses (AN2606 Rev 64 Table 119, pp. 277-280) and
+               that carries a net is in LOADER_R10 with that net, its recorded members (every other pad on the net, with
+               its part value) and an electrical reason; pins the loader drives need a reason for the drive
+  K-legends    duplicate ids, pin legends, legend subjects (R10 word legends), R10 terminal pin legends; R3-MFG-01: no
+               silkscreen item (board or footprint graphic, text, field), as its polygon, overlaps a pad's solder mask
+               opening (pad copper + mask expansion) on its side
   K-copper     vias in pads, overlap-only joints, thermal policy, via paste (check_r9.k_copper)
   K-inner      In1 carries no track, In2 power and GND only (check_r9.k_inner_signal, route_check r10 classes)
   K-reference  critical signal samples have adjacent reference copper (critical_reference's extended set and the R10
@@ -377,7 +393,7 @@ DEFAULT_CLEARANCE = 0.15                       # mm, used only when the board ca
 J122_ROWS = {'signal': ('1', '4', '7', '10'), 'plus': ('2', '5', '8', '11'), 'ground': ('3', '6', '9', '12')}
 BOARD_WIDTH, BOARD_MAX = 46.0, 120.0            # P1
 F1_MIN = 209.0                                  # Hz, R9's plate floor, kept (r10_mated, pinned, D 5)
-WIRE_ENTRY = {'J121': '-x', 'J124': '-x'}       # r10_plan section 2 item 2
+WIRE_ENTRY = {'J1': '-x', 'J121': '-x', 'J124': '-x'}   # r10_plan section 2 item 2; J1 the same west face (R3-MEC-02)
 WIRE_ROOM = 6.25                                # mm, R8 / R9 P-11
 BOT_THT, BOT_M3 = 1.5, 3.5                      # mm, R9 M-6 without its pyro-via term (a pyro spacing rule)
 IMU_ROTATION_R10 = 180.0                        # R9 D-S7-06 kept: U4 bottom, rotation 180
@@ -412,6 +428,93 @@ WIRE_ROOM_R10 = 4.95
 F9_R10 = {'D8': 12.86, 'C80': 21.59, 'C96': 20.93, 'C89': 20.58, 'C95': 20.55, 'R166': 29.75, 'R167': 25.47,
           'U9': 32.22}          # mm from J1.1, measured on the D-R2-12 placement (nearest pad centre; U9: its BAT_IN pad)
 F9_PREMISE = (10.6, 27.07)      # R8 D76: protection parts / U9 from J1.1
+
+# S-5 window / S-8 barrels (R3-SAF-01)
+ARM_WINDOW_NETS = frozenset({'GND', RAW, BUS})  # the only nets allowed between J124's pads
+BARREL_NETS = ('PYRO1_BUS', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE')
+BARREL_GAP = 1.0                # mm, plated barrel wall to foreign In1 / In2 copper
+# S-9 (R3-GATE-07): the fire-loop current path of each net, between its power terminals (pad sets; a pad number set
+# per reference). D-R2-02: the fire loop is drawn 1.0 mm on F.Cu; the load-switch feed (J1 -> Q120 drain) and RAW_ACT
+# (Q121 drain -> J124.2) at 1.0 mm on B.Cu, measured on 883d2db5.
+FIRE_MIN_W = 1.0                # mm
+FIRE_TERMINALS = {
+    'PYRO1_BUS': ({'J124': ('1',)}, {'R134': ('2',)}),
+    'PYRO1_IGN': ({'R134': ('1',)}, {'J121': ('2',)}),
+    'PYRO1_OUT': ({'J121': ('1',)}, {'Q124': ('5',)}),
+    'RAW_ACT': ({'Q121': ('5', '6', '7', '8', '9')}, {'J124': ('2',)}),
+    'ACT_FET_S': ({'Q120': ('1', '2', '3')}, {'Q121': ('1', '2', '3')}),
+    'BAT_IN': ({'J1': ('1',)}, {'Q120': ('5', '6', '7', '8', '9')}),
+}
+# Named narrow fire-path copper, measured on 883d2db5 (net, layer, width mm, length mm, (x0, y0, x1, y1) ends sorted):
+# the ACT_FET_S bridge between the facing sources of Q120 / Q121 (AON6403 source pins 1-3 at 1.27 mm pitch, 0.58 mm
+# wide; a 0.4 mm leg from each pin to a 0.4 mm bar). Adiabatic rise of a 0.4 mm x 35 um outer track carrying the whole
+# 4.2 A pulse for 20 ms (Inference, upper bound: the six legs share it): J = 4.2 A / 1.4e-8 m^2 = 3.0e8 A/m^2;
+# dT = J^2 rho t / (rho_d c) = 9.0e16 x 1.72e-8 x 0.02 / (8960 x 385) = 9.0 K. Matched within 0.01 mm; a narrower,
+# longer or moved segment fails.
+FIRE_NARROW = [
+    ('ACT_FET_S', 'B.Cu', 0.4, 3.82, (11.59, 71.6, 15.41, 71.6), 'the bridge bar under the six source legs'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (11.59, 71.6, 11.59, 72.7), 'Q120.1 leg'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (12.86, 71.6, 12.86, 72.7), 'Q120.2 leg'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (14.13, 71.6, 14.13, 72.7), 'Q120.3 leg'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (12.87, 70.5, 12.87, 71.6), 'Q121.3 leg'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (14.14, 70.5, 14.14, 71.6), 'Q121.2 leg'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (15.41, 70.5, 15.41, 71.6), 'Q121.1 leg'),
+]
+
+# K-loader (R3-MCU-01). AN2606 Rev 64 (September 2024) Table 119 "STM32H74xxx/75xxx configuration in system memory boot
+# mode", pp. 277-280 (https://www.st.com/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-
+# mode-stmicroelectronics.pdf; R8 cited the same table as Rev 70 Table 135, pp. 320-323): port -> (interface pin, how
+# the loader uses it). 'out' = driven push-pull, 'od' = open-drain I/O (can drive low), 'in' = input ('in-pu' with the
+# loader's pull-up). PF0 / PF1 (I2C2), PI0-PI3 (SPI2) and PH13 / PH14 (FDCAN1) are not on the LQFP100 package.
+LOADER_H74X = {
+    'PA9': ('USART1_TX', 'out'), 'PA10': ('USART1_RX', 'in-pu'), 'PB14': ('USART1_TX (PB14/PB15 map)', 'out'),
+    'PB15': ('USART1_RX (PB14/PB15 map)', 'in-pu'), 'PA2': ('USART2_TX', 'out'), 'PA3': ('USART2_RX', 'in-pu'),
+    'PB10': ('USART3_TX', 'out'), 'PB11': ('USART3_RX', 'in-pu'), 'PB6': ('I2C1_SCL', 'od'), 'PB9': ('I2C1_SDA', 'od'),
+    'PF1': ('I2C2_SCL', 'od'), 'PF0': ('I2C2_SDA', 'od'), 'PA8': ('I2C3_SCL', 'od'), 'PC9': ('I2C3_SDA', 'od'),
+    'PA7': ('SPI1_MOSI', 'in'), 'PA6': ('SPI1_MISO', 'out'), 'PA5': ('SPI1_SCK', 'in'), 'PA4': ('SPI1_NSS', 'in'),
+    'PI3': ('SPI2_MOSI', 'in'), 'PI2': ('SPI2_MISO', 'out'), 'PI1': ('SPI2_SCK', 'in'), 'PI0': ('SPI2_NSS', 'in'),
+    'PC12': ('SPI3_MOSI', 'in'), 'PC11': ('SPI3_MISO', 'out'), 'PC10': ('SPI3_SCK', 'in'), 'PA15': ('SPI3_NSS', 'in'),
+    'PE14': ('SPI4_MOSI', 'in'), 'PE13': ('SPI4_MISO', 'out'), 'PE12': ('SPI4_SCK', 'in'), 'PE11': ('SPI4_NSS', 'in'),
+    'PA11': ('USB_DM (DFU)', 'od'), 'PA12': ('USB_DP (DFU)', 'od'),
+    'PH14': ('FDCAN1_RX', 'in-pu'), 'PH13': ('FDCAN1_TX', 'out')}
+LOADER_DRIVES = ('out', 'od')
+# R10 allowances: port -> (net, {pad: part value} of every other pad on the net, reason). A loader pin with a net must be
+# here with that net and exactly those members (a new part, a changed value or another net fails); a driven pin's
+# reason states why the drive is harmless. Members and values read from 883d2db5.
+LOADER_R10 = {
+    'PA2': ('SERVO3_MCU', {'R152.1': '1k 0805', 'R156.1': '10k', 'D121.4': 'SRV05-4'},
+            "USART2_TX drives the servo-3 signal through R152 1k: R8's allowance (frozen 3.2; a servo never sends 0x7F); "
+            'servo power is off the board (O3), so a byte at most twitches an unpowered or harness-powered servo on the '
+            'bench (BOOT0 is a bench-only state)'),
+    'PA3': ('SERVO4_MCU', {'R153.1': '1k 0805', 'R157.1': '10k', 'D121.6': 'SRV05-4'},
+            'USART2_RX: an input (AN2606 p. 278 lists both no pull and pull-up), never driven; the line is held by '
+            'R157 10k and driven only by U1 itself in flight'),
+    'PA4': ('LOGIC_SOURCE_ST', {'R91.2': '10k 1%', 'TP87.1': 'LOGIC_SOURCE_ST', 'U11.9': 'TPS2121RUXR'},
+            'SPI1_NSS: a slave input, no pull (p. 279), never driven; U11 ST with its R91 10k pull-up (R8 pin table) '
+            'is the only driver'),
+    'PA5': ('BAT_FAULT_N', {'R89.2': '10k 1%', 'TP85.1': 'BAT_FAULT_N', 'U9.4': 'TPS259470LRPWR'},
+            'SPI1_SCK: a slave input, no pull (p. 279), never driven; U9 FLT with its R89 10k pull-up (R8 pin table) is '
+            'the only driver'),
+    'PA6': ('VLOGIC_SENSE', {'R60.2': '100k', 'R61.1': '10k', 'C60.1': '10nF'},
+            'SPI1_MISO is driven push-pull by the loader into the VLOGIC divider node (R60 100k from VLOGIC, R61 10k to '
+            'GND, C60 10 nF): the pin current is at most 3.3 V / (10k || 100k) = 0.36 mA (VLOGIC at 0 V, pin high), '
+            'far below the 20 mA absolute-maximum I/O current (DS12110 Rev 10 Table 22, p. 105); VLOGIC (<= 8.4 V) '
+            'reaches the pin only through R60 (<= 84 uA into a low pin); the reading is wrong only while in the loader'),
+    'PE11': ('CAM_PWR_EN', {'R431.1': '100k 1%', 'U402.3': 'TPS2553DBVR'},
+             'SPI4_NSS: a slave input, no pull (AN2606 p. 280): R431 100k holds U402 EN low, so the camera supply stays '
+             'off in the loader'),
+    'PE12': ('CAM_FAULT_N', {'R432.1': '10k 0.1%', 'U402.4': 'TPS2553DBVR'},
+             'SPI4_SCK: a slave input, no pull (p. 280), never driven; U402 FAULT is open drain (TPS2553 data sheet) '
+             'with the R432 10k pull-up'),
+    'PA11': ('USB_DM', None, 'DFU is the loader interface itself (R8 allowance); members not pinned (USB contract)'),
+    'PA12': ('USB_DP', None, 'DFU is the loader interface itself (R8 allowance); members not pinned (USB contract)'),
+    'PB6': ('QSPI_NCS', {'R10.1': '10k', 'U3.1': 'W25Q128JVSIQ'},
+            "I2C1_SCL open drain, no pull: R8's allowance (frozen 3.5): the R10 10k pull-up keeps the flash deselected; "
+            'the loader as an I2C slave pulls SCL low only to stretch a clock it receives'),
+    'PB9': ('I2C1_SDA', {'R13.1': '4.7k', 'U5.7': 'MS561101BA03'},
+            "I2C1_SDA open drain, no pull: R8's allowance (frozen 3.6): the barometer's own I2C data line with its 4.7k "
+            'pull-up; the loader answers only address 0b1001110x, which the barometer (0x76 / 0x77) does not use'),
+}
 
 
 def real_net(n):
@@ -480,6 +583,25 @@ def copper_nodes(board):
     def add(key, lay, shape, pad, net, label):
         b = shape.BBox()
         out.append((key, lay, shape, (b.GetLeft(), b.GetTop(), b.GetRight(), b.GetBottom()), pad, net, label))
+
+    def add_text(t, label):
+        """Copper text (R3-GATE-02): its glyph polygons on its copper layer."""
+        if t.GetLayer() not in layers or (hasattr(t, 'IsVisible') and not t.IsVisible()):
+            return
+        poly = pcbnew.SHAPE_POLY_SET()
+        t.TransformShapeToPolygon(poly, t.GetLayer(), 0, pcbnew.FromMM(0.001), pcbnew.ERROR_OUTSIDE)
+        if poly.OutlineCount():
+            add(t.m_Uuid.AsString(), t.GetLayer(), poly, None, '', label)
+
+    def add_zone(z, label):
+        if z.GetIsRuleArea():
+            return
+        for lay in layers:
+            if z.IsOnLayer(lay) and z.HasFilledPolysForLayer(lay):
+                fill = z.GetFilledPolysList(lay)
+                for i in range(fill.OutlineCount()):
+                    add(f'{z.m_Uuid.AsString()}/{lay}/{i}', lay, fill.UnitSet(i), None, z.GetNetname(),
+                        f'{label or z.GetNetname() or "(no net)"} fill on {board.GetLayerName(lay)}')
     for f in board.GetFootprints():
         ref = f.GetReference()
         for p in f.Pads():
@@ -491,6 +613,12 @@ def copper_nodes(board):
         for g in f.GraphicalItems():
             if isinstance(g, pcbnew.PCB_SHAPE) and g.GetLayer() in layers:
                 add(g.m_Uuid.AsString(), g.GetLayer(), g.GetEffectiveShape(), None, g.GetNetname(), f'{ref} copper drawing')
+            elif not isinstance(g, pcbnew.PCB_SHAPE):
+                add_text(g, f'{ref} copper text')
+        for fld in f.GetFields():
+            add_text(fld, f'{ref} copper field {fld.GetName()}')
+        for z in f.Zones():
+            add_zone(z, f'{ref} footprint zone')
     for t in board.GetTracks():
         kind = 'via' if t.GetClass() == 'PCB_VIA' else 'track'
         at = t.GetPosition() if kind == 'via' else t.GetStart()
@@ -499,17 +627,12 @@ def copper_nodes(board):
                 add(t.m_Uuid.AsString(), lay, r8.item_shape(t, lay), None, t.GetNetname(),
                     f'{kind} {t.GetNetname() or "(no net)"} ({pcbnew.ToMM(at.x):.2f}, {pcbnew.ToMM(at.y):.2f})')
     for z in board.Zones():
-        if z.GetIsRuleArea():
-            continue
-        for lay in layers:
-            if z.IsOnLayer(lay) and z.HasFilledPolysForLayer(lay):
-                fill = z.GetFilledPolysList(lay)
-                for i in range(fill.OutlineCount()):
-                    add(f'{z.m_Uuid.AsString()}/{lay}/{i}', lay, fill.UnitSet(i), None, z.GetNetname(),
-                        f'{z.GetNetname() or "(no net)"} fill on {board.GetLayerName(lay)}')
+        add_zone(z, None)
     for d in board.GetDrawings():
         if isinstance(d, pcbnew.PCB_SHAPE) and d.GetLayer() in layers:
             add(d.m_Uuid.AsString(), d.GetLayer(), d.GetEffectiveShape(), None, d.GetNetname(), 'board copper drawing')
+        elif not isinstance(d, pcbnew.PCB_SHAPE):
+            add_text(d, 'board copper text')
     return out
 
 
@@ -568,6 +691,10 @@ def s1(ctx):
         if net in came:
             issues.append(f'S-1: {RAW} reaches the armed net {net} without J124: {net_path(came, net)}')
     ev['raw_act_reaches'] = sorted(came)
+    for ref, nets in sorted(nets_of.items()):            # R3-GATE-02: any part, whatever its net count
+        both = sorted(nets & set(ARMED))
+        if ref != ARM_REF and RAW in nets and both:
+            issues.append(f'S-1: {ref} has pads on {RAW} and the armed net(s) {both}; only J124 may join them')
     for ref, fp in ctx.fps.items():
         if re.fullmatch(r'TP\d+', ref):
             on = sorted({p.GetNetname() for p in fp.Pads()} & set(ARMED))
@@ -760,9 +887,203 @@ def arm_gap(board, limit=ARM_GAP):
     return issues, ev
 
 
+def arm_window(board):
+    """R3-SAF-01: (issues, evidence). J124's inter-pad window, the rectangle from pad centre to pad centre and one pad
+    width across, holds no copper (track, arc, via, pad, fill) of any net but ARM_WINDOW_NETS on any copper layer."""
+    import pcbnew
+    import check_r8 as geometry
+    f = board.FindFootprintByReference(ARM_REF)
+    if f is None:
+        return ['J124 missing'], {}
+    pads = sorted((p for p in f.Pads() if p.GetNumber() in ('1', '2')), key=lambda p: p.GetNumber())
+    if len(pads) != 2:
+        return ['J124 requires two pads'], {}
+    (ax, ay), (bx, by) = [(p.GetPosition().x, p.GetPosition().y) for p in pads]
+    length = math.hypot(bx - ax, by - ay)
+    if length == 0:
+        return ['J124 pads coincide'], {}
+    ux, uy = (bx - ax) / length, (by - ay) / length
+    half = min(min(p.GetSize().x, p.GetSize().y) for p in pads) / 2
+    window = pcbnew.SHAPE_POLY_SET()
+    window.NewOutline()
+    for x, y in ((ax - uy * half, ay + ux * half), (bx - uy * half, by + ux * half),
+                 (bx + uy * half, by - ux * half), (ax + uy * half, ay - ux * half)):
+        window.Append(int(round(x)), int(round(y)))
+    issues, found = [], []
+    for label, net, lay, shape, obj in geometry.net_items(board, lambda n: n not in ARM_WINDOW_NETS):
+        if not pcbnew.SHAPE.Collide(window, shape, 0):
+            continue
+        found.append((label, net, board.GetLayerName(lay)))
+        issues.append(f'{net} copper ({label}) on {board.GetLayerName(lay)} lies inside J124\'s inter-pad window '
+                      f'(only GND, RAW_ACT or PYRO1_BUS may be there)')
+    bb = window.BBox()
+    return sorted(set(issues)), dict(window_mm=[round(pcbnew.ToMM(v), 3) for v in (bb.GetLeft(), bb.GetTop(),
+                                                                                  bb.GetRight(), bb.GetBottom())],
+                                     foreign=sorted(set(found)))
+
+
 def s5(ctx):
     issues, ev = arm_gap(ctx.board)
-    return [f'S-5: {i}' for i in issues], ev
+    more, ev['window'] = arm_window(ctx.board)
+    return [f'S-5: {i}' for i in issues + more], ev
+
+
+def barrel_shapes(board, nets=BARREL_NETS):
+    """[(label, net, SHAPE)] of every plated barrel wall (via drill, plated pad hole) of `nets`."""
+    import pcbnew
+    out = []
+    for t in board.GetTracks():
+        if t.GetClass() == 'PCB_VIA' and t.GetNetname() in nets:
+            p = t.GetPosition()
+            out.append((f'via ({pcbnew.ToMM(p.x):.3f}, {pcbnew.ToMM(p.y):.3f})', t.GetNetname(),
+                        pcbnew.SHAPE_CIRCLE(p, t.GetDrillValue() // 2)))
+    for f in board.GetFootprints():
+        for p in f.Pads():
+            if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH and p.GetNetname() in nets:
+                out.append((f'{f.GetReference()}.{p.GetNumber()} hole', p.GetNetname(), p.GetEffectiveHoleShape()))
+    return out
+
+
+def s8(ctx, gap=BARREL_GAP):
+    """R3-SAF-01: no In1 / In2 track or zone fill of a net other than GND (or the barrel's own net) within `gap` of a
+    pyro barrel wall."""
+    import pcbnew
+    import check_r8 as r8
+    inner = (pcbnew.In1_Cu, pcbnew.In2_Cu)
+    barrels = barrel_shapes(ctx.board)
+    issues, worst = [], {}
+    others = [it for it in ctx.net_items(lambda n: n != 'GND', inner)
+              if isinstance(it[4], (pcbnew.PCB_TRACK, pcbnew.ZONE))]       # PCB_ARC is a PCB_TRACK
+    for blabel, bnet, bshape in barrels:
+        for label, net, lay, shape, obj in others:
+            if net == bnet or not pcbnew.SHAPE.Collide(bshape, shape, pcbnew.FromMM(gap) - 1):
+                continue
+            g = r8.min_gap(bshape, shape, gap + 1)
+            g = 0.0 if g is None else g
+            key = (blabel, net, ctx.board.GetLayerName(lay))
+            if key not in worst or g < worst[key]:
+                worst[key] = g
+    for (blabel, net, lay), g in sorted(worst.items()):
+        issues.append(f'S-8: {net} copper on {lay} is {g:.3f} mm from the {blabel} barrel of '
+                      f'{next(b[1] for b in barrels if b[0] == blabel)} (minimum {gap} mm)')
+    return issues, dict(barrels=len(barrels), gap_mm=gap, near={f'{k[0]} / {k[1]} / {k[2]}': round(v, 3)
+                                                                for k, v in sorted(worst.items())})
+
+
+def fire_path(board, net, terminals):
+    """(segments on the net's current path between the two terminal pad sets, connected?): the net's track graph
+    (track ends, vias, pads as nodes) with dead-end branches pruned back until only copper between the terminals
+    remains (a sense tap ending in a resistor pad is pruned; a branch inside one pad is no branch)."""
+    import pcbnew
+    pads, vias, segs = [], [], []
+    for f in board.GetFootprints():
+        for p in f.Pads():
+            if p.GetNetname() == net and p.GetAttribute() != pcbnew.PAD_ATTRIB_NPTH:
+                pads.append((f'{f.GetReference()}.{p.GetNumber()}', f.GetReference(), p.GetNumber(), p))
+    for t in board.GetTracks():
+        if t.GetNetname() != net:
+            continue
+        (vias if t.GetClass() == 'PCB_VIA' else segs).append(t)
+    term = [{lab for lab, ref, num, _ in pads if num in spec.get(ref, ())} for spec in terminals]
+
+    def node(pt, lay):
+        for lab, _, _, p in pads:
+            if p.IsOnLayer(lay) and p.HitTest(pt):
+                return 'P' + lab
+        for v in vias:
+            if (v.GetPosition() - pt).EuclideanNorm() <= v.GetWidth(lay) // 2:
+                return 'V' + v.m_Uuid.AsString()
+        return ('N', lay, round(pt.x / 1000), round(pt.y / 1000))
+    edges = {}
+    for t in segs:
+        # a track end on another track's body (a T) splits that track there
+        s, e = t.GetStart(), t.GetEnd()
+        length = (e - s).EuclideanNorm()
+        cuts = [0.0, 1.0]
+        for o in segs:
+            if o is t or o.GetLayer() != t.GetLayer() or length == 0:
+                continue
+            for q in (o.GetStart(), o.GetEnd()):
+                k = ((q.x - s.x) * (e.x - s.x) + (q.y - s.y) * (e.y - s.y)) / length ** 2
+                if 0 < k < 1:
+                    px, py = s.x + k * (e.x - s.x), s.y + k * (e.y - s.y)
+                    if math.hypot(q.x - px, q.y - py) <= 1000:
+                        cuts.append(k)
+        cuts = sorted(set(cuts))
+        for i in range(len(cuts) - 1):
+            pa = pcbnew.VECTOR2I(int(round(s.x + cuts[i] * (e.x - s.x))), int(round(s.y + cuts[i] * (e.y - s.y))))
+            pb = pcbnew.VECTOR2I(int(round(s.x + cuts[i + 1] * (e.x - s.x))), int(round(s.y + cuts[i + 1] * (e.y - s.y))))
+            a, b = node(pa, t.GetLayer()), node(pb, t.GetLayer())
+            if a != b:
+                edges[f'{t.m_Uuid.AsString()}/{i}'] = (a, b, t)
+    keep = {'P' + lab for group in term for lab in group}
+    while True:
+        deg = {}
+        for a, b, _ in edges.values():
+            deg[a] = deg.get(a, 0) + 1
+            deg[b] = deg.get(b, 0) + 1
+        leaves = {n for n, d in deg.items() if d == 1 and n not in keep}
+        if not leaves:
+            break
+        edges = {k: e for k, e in edges.items() if e[0] not in leaves and e[1] not in leaves}
+    # connected between the terminals?
+    adj = {}
+    for a, b, _ in edges.values():
+        adj.setdefault(a, set()).add(b)
+        adj.setdefault(b, set()).add(a)
+    seen, stack = set(), ['P' + lab for lab in term[0]]
+    while stack:
+        n = stack.pop()
+        if n in seen:
+            continue
+        seen.add(n)
+        stack += adj.get(n, ())
+    joined = any('P' + lab in seen for lab in term[1])
+    unique = {e[2].m_Uuid.AsString(): e[2] for e in edges.values()}
+    return list(unique.values()), joined, [sorted(t) for t in term]
+
+
+def s9(ctx, floor=FIRE_MIN_W, narrow=FIRE_NARROW):
+    """R3-GATE-07: the fire-loop current path >= `floor` wide, pad necks and the measured `narrow` list excepted."""
+    import pcbnew
+    mm = pcbnew.ToMM
+    issues, ev, used = [], {}, set()
+    for net, terminals in FIRE_TERMINALS.items():
+        segs, joined, term = fire_path(ctx.board, net, terminals)
+        widths = sorted({round(mm(t.GetWidth()), 3) for t in segs})
+        ev[net] = dict(terminals=term, path_segments=len(segs), widths_mm=widths, joined=joined)
+        if not joined:
+            issues.append(f'S-9: {net}: no copper path between its power terminals {term}')
+            continue
+        for t in segs:
+            w = mm(t.GetWidth())
+            if w >= floor - EPS:
+                continue
+            s, e = t.GetStart(), t.GetEnd()
+            ends = tuple(round(v, 2) for v in sorted([(mm(s.x), mm(s.y)), (mm(e.x), mm(e.y))])[0] +
+                         sorted([(mm(s.x), mm(s.y)), (mm(e.x), mm(e.y))])[1])
+            length = mm(t.GetLength())
+            neck = False
+            for pt in (s, e):
+                for f in ctx.board.GetFootprints():
+                    for p in f.Pads():
+                        if p.GetNetname() == net and p.IsOnLayer(t.GetLayer()) and p.HitTest(pt) and \
+                                mm(min(p.GetSize().x, p.GetSize().y)) <= w + EPS:
+                            neck = True
+            hit = [k for k, x in enumerate(narrow) if x[0] == net and x[1] == ctx.board.GetLayerName(t.GetLayer())
+                   and abs(x[2] - w) <= 0.005 and abs(x[3] - length) <= 0.01
+                   and all(abs(a - b) <= 0.01 for a, b in zip(x[4], ends))]
+            if hit:
+                used.add(hit[0])
+                continue
+            if neck:
+                continue
+            issues.append(f'S-9: {net} fire-path track {w:.3f} mm wide, {length:.3f} mm long on '
+                          f'{ctx.board.GetLayerName(t.GetLayer())} ({ends[0]}, {ends[1]})-({ends[2]}, {ends[3]}); '
+                          f'minimum {floor} mm (D-R2-02)')
+    issues += [f'S-9: stale FIRE_NARROW entry {x[:5]} ({x[5]})' for k, x in enumerate(narrow) if k not in used]
+    ev['narrow_used'] = [narrow[k][5] for k in sorted(used)]
+    return issues, ev
 
 
 def default_clearance(board):
@@ -1063,14 +1384,162 @@ def k_actuators(ctx):
     return [f'check_actuators: {i}' for i in actuators.check(ctx.text, ctx.dru, profile='r10')], dict(sha256=sha)
 
 
+R10_PIN_TABLE = ROOT / 'm3_design/assembly_review/sources/r10_design/pin_table.tsv'
+
+
+def loader_pins(board, port_pin=None, allowances=None):
+    """K-loader (R3-MCU-01): (issues, evidence). Every U1 pin on a LOADER_H74X port that carries a net needs a
+    LOADER_R10 allowance naming that net and the net's exact other members (pad -> part value); a loader-driven pin
+    needs a reason for the drive; stale allowances fail."""
+    allowances = LOADER_R10 if allowances is None else allowances
+    if port_pin is None:
+        with R10_PIN_TABLE.open() as table:
+            port_pin = {row['port']: row['pin'] for row in csv.DictReader(table, delimiter='\t')}
+    u1 = board.FindFootprintByReference(MCU_REF)
+    if u1 is None:
+        return ['U1 missing'], {}
+    members = {}
+    for f in board.GetFootprints():
+        for p in f.Pads():
+            if real_net(p.GetNetname()) and f.GetReference() != MCU_REF:
+                members.setdefault(p.GetNetname(), {})[f'{f.GetReference()}.{p.GetNumber()}'] = f.GetValue()
+    issues, ev, used = [], {}, set()
+    for port, (role, use) in sorted(LOADER_H74X.items()):
+        pin = port_pin.get(port)
+        if pin is None:
+            ev[port] = 'not on this package'
+            continue
+        pad = u1.FindPadByNumber(pin)
+        net = pad.GetNetname() if pad else None
+        where = f'U1.{pin} {port} ({role}, loader {use}; AN2606 Rev 64 Table 119)'
+        if pad is None:
+            issues.append(f'{where}: pad missing')
+            continue
+        if not real_net(net):
+            ev[port] = 'NC'
+            continue
+        entry = allowances.get(port)
+        if entry is None:
+            issues.append(f'{where} carries {net} with no LOADER_R10 allowance' +
+                          (' (the loader drives this pin)' if use in LOADER_DRIVES else ''))
+            continue
+        used.add(port)
+        want, pinned, reason = entry
+        ev[port] = dict(net=net, role=role, use=use, reason=reason)
+        if net != want:
+            issues.append(f'{where} carries {net}; its allowance is for {want}')
+            continue
+        if not reason or not reason.strip():
+            issues.append(f'{where}: allowance without an electrical reason')
+        if pinned is not None:
+            actual = members.get(net, {})
+            if actual != pinned:
+                extra = sorted(f'{k} {v}' for k, v in actual.items() if pinned.get(k) != v)
+                gone = sorted(f'{k} {v}' for k, v in pinned.items() if actual.get(k) != v)
+                issues.append(f'{where}: {net} members differ from the allowance (now {extra}, recorded {gone}); '
+                              're-qualify the loader state')
+    issues += [f'stale LOADER_R10 allowance {port} ({allowances[port][0]}): the pin carries no net or is not a loader '
+               'pin' for port in sorted(set(allowances) - used)]
+    return issues, ev
+
+
+def k_loader(ctx):
+    issues, ev = loader_pins(ctx.board)
+    return [f'K-loader: {i}' for i in issues], ev
+
+
+def silk_mask_overlaps(board, eps=0.001):
+    """R3-MFG-01: every silkscreen item (board graphics and texts, footprint graphics, texts and visible fields), as its
+    polygon, against every pad's solder mask opening on that side (the pad's copper polygon grown by its mask
+    expansion; a pad with no mask layer on that side has none). DRC's silk-to-mask test misses degenerate shapes (a
+    near-zero-length arc drawn as a nearly full circle); the polygons do not. Returns [(silk label, pad label, overlap
+    depth mm)] with the depth the smaller side of the overlap's bounding box."""
+    import pcbnew
+    sides = ((pcbnew.F_SilkS, pcbnew.F_Mask, pcbnew.F_Cu), (pcbnew.B_SilkS, pcbnew.B_Mask, pcbnew.B_Cu))
+    silk = {s: [] for s, _, _ in sides}
+
+    def add(item, label):
+        lay = item.GetLayer()
+        if lay not in silk:
+            return
+        if hasattr(item, 'IsVisible') and not item.IsVisible():
+            return
+        poly = pcbnew.SHAPE_POLY_SET()
+        item.TransformShapeToPolygon(poly, lay, 0, pcbnew.FromMM(0.001), pcbnew.ERROR_OUTSIDE)
+        if poly.OutlineCount():
+            silk[lay].append((label, poly, poly.BBox()))
+    for d in board.GetDrawings():
+        add(d, f'board {type(d).__name__} {getattr(d, "GetShapeStr", lambda: "")()}'.strip())
+    for f in board.GetFootprints():
+        ref = f.GetReference()
+        for g in f.GraphicalItems():
+            kind = g.GetShapeStr() if hasattr(g, 'GetShapeStr') else type(g).__name__
+            at = g.GetStart() if hasattr(g, 'GetStart') else g.GetPosition()
+            add(g, f'{ref} {kind} ({pcbnew.ToMM(at.x):.4f}, {pcbnew.ToMM(at.y):.4f})')
+        for fld in f.GetFields():
+            add(fld, f'{ref} field {fld.GetName()}')
+    out = []
+    for slay, mlay, clay in sides:
+        if not silk[slay]:
+            continue
+        for f in board.GetFootprints():
+            for p in f.Pads():
+                if not p.IsOnLayer(mlay):
+                    continue
+                opening = pcbnew.SHAPE_POLY_SET()
+                cu = clay if p.IsOnLayer(clay) else mlay
+                grow = p.GetSolderMaskExpansion(mlay)
+                p.TransformShapeToPolygon(opening, cu, max(0, grow), pcbnew.FromMM(0.001), pcbnew.ERROR_OUTSIDE)
+                if grow < 0:                                   # a negative local margin shrinks the opening
+                    opening.Inflate(grow, pcbnew.CORNER_STRATEGY_ROUND_ALL_CORNERS, pcbnew.FromMM(0.001))
+                if not opening.OutlineCount():
+                    continue
+                ob = opening.BBox()
+                for label, poly, pb in silk[slay]:
+                    if not pb.Intersects(ob):
+                        continue
+                    both = pcbnew.SHAPE_POLY_SET(poly)
+                    both.BooleanIntersection(opening)
+                    if not both.OutlineCount():
+                        continue
+                    bb = both.BBox()
+                    depth = pcbnew.ToMM(min(bb.GetWidth(), bb.GetHeight()))
+                    if depth > eps:
+                        out.append((label, f'{f.GetReference()}.{p.GetNumber()} ({board.GetLayerName(mlay)})',
+                                    round(depth, 3)))
+    return sorted(set(out))
+
+
+
+PORT_LEGENDS_R10 = {'J9': ('5V4', 'GND', 'RXI', 'TXO'), 'J2': ('3V3', 'SWDIO', 'NRST', 'SWCLK', 'GND', 'NC')}
+
+
+def port_legends(board, required=PORT_LEGENDS_R10):
+    """R10's port pin tables (m3_design/r10_post.PORTS; R3-REQ-04, D-R3-D4): pin 1 the supply, GND, then the board-side
+    TXO / RXI. check_r7.pin_legends holds R7's camera-side J9 table."""
+    import pcbnew
+    seen = {}
+    for item in board.GetDrawings():
+        if isinstance(item, pcbnew.PCB_TEXT) and item.GetLayer() in (pcbnew.F_SilkS, pcbnew.B_SilkS):
+            m = re.match(r'^(J\d+)\s+(.+)', item.GetText())
+            if m and m[1] in required:
+                for pin, name in re.findall(r'(\d+):([A-Z0-9]+)', m[2]):
+                    seen.setdefault((m[1], int(pin)), set()).add(name)
+    return [f'{ref}.{i}: silkscreen must identify {name} (R10 port table)' for ref, names in required.items()
+            for i, name in enumerate(names, 1) if seen.get((ref, i)) != {name}]
+
+
 def k_legends(ctx):
     import check_r7 as r7
     import check_r8 as r8
     with patched(r7, WORD_LEGENDS=WORD_LEGENDS_R10), patched(r8, TERMINAL_PINS=TERMINAL_PINS_R10):
-        issues = list(r7.duplicate_ids(ctx.board)) + list(r7.pin_legends(ctx.board)) + \
+        issues = list(r7.duplicate_ids(ctx.board)) + port_legends(ctx.board) + \
             list(r7.legend_subjects(ctx.board))
         found, ev = r8.terminal_legends(ctx.board)
-    return issues + found, dict(terminal_legends=ev)
+    overlaps = silk_mask_overlaps(ctx.board)
+    found += [f'K-legends: silkscreen {s} overlaps the solder mask opening of {p} by {d:.3f} mm (R3-MFG-01)'
+              for s, p, d in overlaps]
+    return issues + found, dict(terminal_legends=ev, silk_mask_overlaps=len(overlaps))
 
 
 def k_reference(ctx):
@@ -1136,7 +1605,10 @@ RULES = [
     ('S-5', 'J124 RAW_ACT to PYRO1_BUS gap >= 1.5 mm (R1-m10)', lambda c, s: s5(c)),
     ('S-6', 'external ports apart from pyro / arming copper', lambda c, s: s6(c)),
     ('S-7', 'J122 servo + row off board, GND row on GND (O3)', lambda c, s: s7(c)),
+    ('S-8', 'In1 / In2 copper >= 1.0 mm from pyro barrels (R3-SAF-01)', lambda c, s: s8(c)),
+    ('S-9', 'fire-loop copper >= 1.0 mm wide (R3-GATE-07)', lambda c, s: s9(c)),
     ('K-contract', 'R10 netlist contract', lambda c, s: k_contract(c)),
+    ('K-loader', 'ROM-loader pins (AN2606 Table 119, R3-MCU-01)', lambda c, s: k_loader(c)),
     ('K-actuators', 'check_actuators --profile r10', lambda c, s: k_actuators(c)),
     ('LC-1', 'local clearance overrides', lambda c, s: __import__('check_r9').lc1(c.board)),
     ('M-1', 'outline 46 mm wide, length <= 120 mm', lambda c, s: m1(c)),
@@ -1155,7 +1627,7 @@ RULES = [
     ('K-reference', 'critical signal reference copper', lambda c, s: k_reference(c)),
     ('K-retained', 'bare contacts, flash and camera bypass, TP122', lambda c, s: retained_routing(c)),
 ]
-STAGES = {'functional': {'S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'K-contract', 'K-actuators'}}
+STAGES = {'functional': {'S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'K-contract', 'K-loader', 'K-actuators'}}
 STAGES['placement'] = STAGES['functional'] | {'LC-1', 'M-1', 'M-3', 'M-5', 'M-6', 'M-7', 'P-11', 'F9-1', 'T-1',
                                               'K-legends'}
 STAGES['full'] = {rid for rid, _, _ in RULES}

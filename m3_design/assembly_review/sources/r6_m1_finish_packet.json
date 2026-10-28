@@ -1240,8 +1240,8 @@
   ],
   "pad_changes": [],
   "validation": {
-    "native_baseline": "/private/tmp/r6-m1-composed-usihbny0/baseline.json",
-    "native_candidate": "/private/tmp/r6-m1-composed-usihbny0/drc.json",
+    "native_baseline": "<scratch>/r6-m1-composed-usihbny0/baseline.json",
+    "native_candidate": "<scratch>/r6-m1-composed-usihbny0/drc.json",
     "hard_drc": 0,
     "unconnected_before": 5,
     "unconnected_after": 4,

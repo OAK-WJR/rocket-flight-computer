@@ -225,7 +225,7 @@
   "dangling_cleanup_required": true,
   "native_drc_required": true,
   "source_sha256": "88098ff62cad76acce81fa955578ed7c355b4ce2f0ee210bad33cace688db7e5",
-  "candidate": "/private/tmp/r6-joints-current-8r4dy8jn/m3.kicad_pcb",
+  "candidate": "<scratch>/r6-joints-current-8r4dy8jn/m3.kicad_pcb",
   "opens": 7,
   "hard": 0,
   "split_pad_groups": []

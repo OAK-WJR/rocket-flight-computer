@@ -57,9 +57,17 @@ def build(project, table):
     r6_pcb.PROJECT = project
     added, changed = r6_pcb.synchronize(board, project / 'schematic.net.xml')
     r9_lib.clear_overrides(board)
+    # J122's GND row: R9's solid zone connection was for the 7.7 A servo return; R10 carries no designed servo current
+    # through the board (O6), so the four pads take thermal relief like the board's other GND pads (D-R3-08).
+    for p in board.FindFootprintByReference('J122').Pads():
+        if p.GetNetname() == 'GND':
+            p.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_THERMAL)
     rows, features = r9_pcb.read_place(table)
     r9_pcb.outline(board, features)
     r9_pcb.place(board, rows)
+    import r10_post                     # footprint silkscreen from the project library (R3-MFG-01 / -02, D-R3-D1)
+    synced = r10_post.sync_silk(board, project / 'kilib' / 'rocket.pretty')
+    print(f'r10_pcb: footprint silkscreen from the library: {" ".join(synced) or "none"}')
     for footprint in board.GetFootprints():
         for field in footprint.GetFields():
             field.SetVisible(False)

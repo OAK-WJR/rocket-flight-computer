@@ -16,6 +16,11 @@ def draw(d):
         if net in ('CC1', 'CC2', 'VBUS', 'USB_ILIM') or index < 6:
             local.track(net, layer, width, pts)
         elif net == 'USB_FAULT_N' and layer == 'B' and pts[0] != old.V_FAULT:
+            if pts[-1] == (14.05, 26.5):
+                # R9's TP86 lead ended 0.75 mm off the test pad's centre: redrawn into its centre by one longer
+                # 45 deg run (R10_DECISIONS D-R3-B5)
+                d.track(net, layer, width, [local.move(q) for q in pts[:2]] + [(14.85, 23.65), d.pad('TP86.1')])
+                continue
             local.track(net, layer, width, pts)
         elif net == 'NRST':
             if nrst_count < 3:
@@ -33,8 +38,9 @@ def draw(d):
     d.via('VBUS_SENSE', (17.875, 29.8))
     d.track('VBUS_SENSE', 'B', .2, [(17.875, 29.8), d.pad('R110.1')])
     d.track('VBUS_SENSE', 'B', .2, [d.pad('R110.1'), (19.2, 30.9), d.pad('TP92.1')])
-    d.track('USB_FAULT_N', 'F', .2, [d.pad('U1.87'), (16.75, 42.5), (16.75, 39.05)])
-    d.track('USB_FAULT_N', 'B', .2, [(16.75, 39.05), (16.2, 38.5), (11.2, 38.5),
+    # D-R3-B4: the drop sits 0.05 mm west of R2's (16.75, 39.05) (0.20 mm from U1.80) to widen PULLPIN's pass
+    d.track('USB_FAULT_N', 'F', .2, [d.pad('U1.87'), (16.7, 42.5), (16.7, 39.05)])
+    d.track('USB_FAULT_N', 'B', .2, [(16.7, 39.05), (16.15, 38.5), (11.2, 38.5),
                                     (11.2, 32.5), (12.6, 31.1), (12.6, 26.55), (13.9, 26.55)])
     # SWD from the TC2030 pads (J2: 2 SWDIO, 4 SWCLK, 3 NRST), clear of its three locating holes.
     # J2's F.Cu keep-out covers the strip between its pad rows: each track ends inside its pad, outside the strip.
@@ -58,7 +64,7 @@ def draw(d):
             local.via(net, at)
     for at in (old.V_NRST, old.V_C24):
         core.via('NRST', at)
-    d.via('USB_FAULT_N', (16.75, 39.05))
+    d.via('USB_FAULT_N', (16.7, 39.05))
     local.via('3V3', old.V3['R90'])
     local.via('GND', old.G_D4)
 
@@ -66,7 +72,10 @@ def draw(d):
     # then down the free bottom lane at x 32.3 (east of U1's decoupling) to U11.7, with C98 and R87 tapped on the way.
     d.track('USB_LIMITED', 'B', .4, [d.pad('U10.6'), (14.35, 28.9), d.pad('C86.1')])
     d.track('USB_LIMITED', 'B', .4, [d.pad('C86.1'), (15.95, 30.95), d.pad('TP82.1')])
-    d.track('USB_LIMITED', 'B', .4, [d.pad('TP82.1'), (32.3, 33.25), (32.3, 58.2)])
+    # R10_DECISIONS D-R3-B1: beside the camera port the bottom lane runs at x 31.8 (0.5 mm west, in the free strip
+    # under U1's east pin row) so the bottom channel east of it holds the camera RX hop and its GND vias; one 45 deg
+    # step south of the camera cell returns it to x 32.3.
+    d.track('USB_LIMITED', 'B', .4, [d.pad('TP82.1'), (31.8, 33.25), (31.8, 45.0), (32.3, 45.5), (32.3, 58.2)])
     d.track('USB_LIMITED', 'B', .4, [(32.3, 58.2), (32.3, 59.2)])
     d.track('USB_LIMITED', 'B', .4, [(32.3, 59.2), d.pad('U11.7')])
     d.track('USB_LIMITED', 'B', .4, [(32.3, 59.2), d.pad('C98.1')])

@@ -54,10 +54,10 @@
 		(uuid "b9e56315-e9e1-4e04-91a3-d525ddf7aa32")
 	)
 	(fp_circle
-		(center -1.67 1.3)
-		(end -1.52 1.3)
+		(center -1.57 1.3)
+		(end -1.47 1.3)
 		(stroke
-			(width 0.3)
+			(width 0.2)
 			(type solid)
 		)
 		(fill no)

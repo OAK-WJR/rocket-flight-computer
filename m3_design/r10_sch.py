@@ -26,6 +26,7 @@ SOURCE = PROJECT / 'sources/r10_design'
 BASE = SOURCE / 'r9_input'
 NS = uuid.UUID('1af735a9-7221-5413-9d5c-c1284216d384')
 REV = 'M3-ASSY-R10'
+SILK_CLEARANCE = 0.15           # mm: m3.kicad_pro min_silk_clearance (JLC silkscreen clearance; R9 had 0)
 KEEP_RULES = ('General copper to hole clearance', 'HRO M-12 internal SMD lands to locating holes',
               'Small GND pad thermal relief', 'Tag-Connect contact to foreign copper',
               'R9 bare test pads to foreign copper')
@@ -194,7 +195,13 @@ def build(out, netlist=True):
         shutil.copytree(PROJECT / 'kilib', out / 'kilib', dirs_exist_ok=True)
         for name in ('sym-lib-table', 'fp-lib-table'):
             shutil.copy2(PROJECT / name, out / name)
-    shutil.copy2(BASE / 'm3.kicad_pro', out / 'm3.kicad_pro')
+    # R9's project settings with one change (R10_DECISIONS D-R3, R3-MFG-02): the board-setup silkscreen clearance is
+    # JLC's 0.15 mm instead of 0, so DRC's silk_overlap test holds every silkscreen item 0.15 mm from every other one
+    # (silkscreen to pad openings is r10_post.py's polygon assertion: KiCad's silk_over_copper tests overlap only)
+    pro = (BASE / 'm3.kicad_pro').read_text()
+    assert pro.count('"min_silk_clearance": 0.0,') == 1, 'R9 project settings changed: min_silk_clearance'
+    pro = pro.replace('"min_silk_clearance": 0.0,', f'"min_silk_clearance": {SILK_CLEARANCE},')
+    (out / 'm3.kicad_pro').write_text(pro)
     library_path = out / 'kilib/m3.kicad_sym'
     library = library_path.read_text()
     import r10_parts

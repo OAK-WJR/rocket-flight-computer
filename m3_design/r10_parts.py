@@ -63,7 +63,7 @@ def ldo():
     body = _rect((-1.25, -1.25), (1.25, 1.25), 'F.Fab', .1)
     body += _rect((-1.7, -1.55), (1.7, 1.55), 'F.CrtYd', .05)
     body += _line((-.85, -1.4), (.85, -1.4), 'F.SilkS', .15)
-    body += _circle((-1.65, -1.3), .1, 'F.SilkS', .15)
+    body += _circle((-1.65, -1.42), .1, 'F.SilkS', .15)
     for n in range(1, 11):
         x, y = (-1.15, (n - 3) * .5) if n <= 5 else (1.15, (8 - n) * .5)
         body += _pad(str(n), x, y, .6, .25, ('F.Cu', 'F.Paste', 'F.Mask'))
@@ -152,9 +152,42 @@ def power_budget():
     buck_max = .808 * (1 + (56200 * (1+thin) + 2000 * (1+thick)) / (10000 * (1-thin)))
     ldo_min = .792 * (1 + 49900 * (1-thin) / (10000 * (1+thin))) - 100e-9 * 49900 * (1+thin)
     ldo_max = .808 * (1 + 49900 * (1+thin) / (10000 * (1-thin))) + 100e-9 * 49900 * (1+thin)
+    # TI SLVS841F eq. 1 p. 15 (IOSmin / IOSmax, RILIM in kOhm, mA); R +/-2 % (1 % initial + 100 ppm/K x 100 K).
+    # R410 is 100 kOhm (R10_DECISIONS D-R3-01: the board's value, sharing the 100 kOhm BOM line, C14675).
     limits = {port: [25230 / (r * (1+thick)) ** 1.016 / 1000,
                      22980 / (r * (1-thick)) ** .94 / 1000]
-              for port, r in [('camera', 22.6), ('radio', 66.5), ('gps', 120)]}
+              for port, r in [('camera', 22.6), ('radio', 66.5), ('gps', 100)]}
+    all_shorts = sum(v[1] for v in limits.values()) + .011
+    # AP63201 (Diodes DS41326 Rev 3-2): 2 A continuous (p. 1), HS peak current limit 2.5 A min (p. 5), fSW 500 kHz
+    # typ with +/-6 % spread spectrum (p. 5: 470 kHz taken as the low edge, Inference), ripple dI = Vo (Vi - Vo) /
+    # (Vi L fSW) (p. 13); L400 6.8 uH -20 % (Bourns SRP5030T). Inputs: 8.4 V (2S full, F9) and 9.97 V (U9's OVLO trip,
+    # 9.63-9.96 V, M3_R4 A2: the highest RAW_PROTECTED can reach); Vo over the buck tolerance band.
+    def peak(vin, f, lmin=6.8e-6 * .8):
+        return max(all_shorts + vo * (vin - vo) / (vin * lmin * f) / 2 for vo in (buck_min, buck_max))
+    # Battery-lead-break ride-through (REQUIREMENTS F6, R3-PWR-02): C84 on VLOGIC back-feeds RAW_PROTECTED through
+    # U11 (TPS2121 reverse blocking only above IRCB 0.2 / 1 / 2 A, SLVSEA3F section 7.5 p. 8), so it also carries the
+    # port buck U400 (EN tied to VIN; port switch turn-off up to 3 ms, SLVS841F section 7.5 p. 7). Constant-power
+    # loads from 7.4 V; no credit for RAW_PROTECTED / C6 / C7 capacitance or for U11 blocking (Calc / Inference).
+    ports_w = [buck_min * 1.461 / .85, buck_max * 1.461 / .80]     # camera 1 A + radio .3 A + GPS .15 A + 11 mA
+    loads_w = dict(a_ports_off_logic_shed=[.62 + .1] * 2, b_ports_off_no_shed=[.6 + .1, 1.4 + .1],
+                   c_camera_radio_gps_on=[ports_w[0] + .6, ports_w[1] + 1.4])
+    def ride(c, v_end, w):
+        return .5 * c * (7.4 ** 2 - v_end ** 2) / w * 1000
+    ride_through = {f'{case}_C{int(round(c * 1e7)) / 10:g}uF_to_{v}V': [ride(c, v, w[1]), ride(c, v, w[0])]
+                    for case, w in loads_w.items() for c in (300.8e-6, 470e-6) for v in (3.5, 3.8)}
+    # Owner option OQ-5 (not implemented): an AP63201 EN divider from RAW_PROTECTED on existing BOM values, R5 47 k
+    # 1 % (C25819) / R6 10 k (DS41326 p. 10 eq. 1-2; VEN_L 1.05-1.15 V, VEN_H 1.15-1.23 V; 1.5 / 5.5 uA EN currents
+    # typical): the port buck stops at VOFF 5.73-6.30 V (6.01 V typ) and restarts at VON 6.49-6.94 V; then C84
+    # carries only the logic below VOFF.
+    en_r5, en_r6 = 47e3, 10e3
+    voff = [v * (1 + en_r5 / en_r6) - 5.5e-6 * en_r5 for v in (1.05, 1.10, 1.15)]
+    von = [v * (1 + en_r5 / en_r6) - 1.5e-6 * en_r5 for v in (1.15, 1.18, 1.23)]
+    def ride_en(c, v_end, w_all, w_logic, v_off=voff[0]):  # lowest VOFF: ports drain C84 longest
+        return (.5 * c * (7.4 ** 2 - v_off ** 2) / w_all + .5 * c * (v_off ** 2 - v_end ** 2) / w_logic) * 1000
+    ride_through_en = {f'{case}_C{int(round(c * 1e7)) / 10:g}uF_to_{v}V': ride_en(c, v, wa, wl)
+                       for case, wa, wl in (('ports_on_then_logic_shed', loads_w['c_camera_radio_gps_on'][1], .72),
+                                            ('ports_on_then_logic_no_shed', loads_w['c_camera_radio_gps_on'][1], 1.5))
+                       for c in (300.8e-6, 470e-6) for v in (3.5, 3.8)}
     # Equation roots include input power as constant power, not a guessed current.
     def loaded_pack(open_v, servos):
         r, logic, power, efficiency = .15, .5, 5.456 * 1.46, .8
@@ -173,7 +206,11 @@ def power_budget():
         radio_gps_module_max_V=ldo_max+.05,
         ldo_headroom_min_V=buck_min-.05-ldo_max,
         switch_limit_A=limits,
-        buck_all_shorts_A=sum(v[1] for v in limits.values())+.011,
+        buck_all_shorts_A=all_shorts,
+        buck_all_shorts_over_2A_continuous_pct=(all_shorts / 2 - 1) * 100,
+        buck_all_shorts_peak_inductor_A={'8V4_470kHz': peak(8.4, 470e3), '8V4_500kHz': peak(8.4, 500e3),
+                                         '9V97_470kHz': peak(9.97, 470e3), '9V97_500kHz': peak(9.97, 500e3)},
+        buck_peak_current_limit_min_A=2.5,
         buck_camera_short_radio_gps_normal_A=limits['camera'][1]+.3+.15+.011,
         ldo_bleeder_min_A=ldo_min/(820*(1+thick)),
         ldo_full_load_loss_W=(buck_max-ldo_min)*.46+buck_max*.004,
@@ -181,7 +218,18 @@ def power_budget():
         pack_7V4_four_stall_loaded_V=loaded_pack(7.4,7.68),
         pack_6V0_four_stall_loaded_V=loaded_pack(6,7.68),
         servo_star_board_return_max_A=4*7.68*.001/.05,
-        u9_input_at_all_port_shorts_inference_A=(buck_max*(sum(v[1] for v in limits.values())+.011)/(.8*5.8))+.5)
+        u9_input_at_all_port_shorts_inference_A=(buck_max*all_shorts/(.8*5.8))+.5,
+        u9_current_limit_min_A=3.96,
+        battery_break_load_W=loads_w,
+        battery_break_ride_through_ms=ride_through,
+        battery_break_ride_through_note=('[shortest, longest] ms; Calc / Inference: constant-power loads at the '
+                                         'AP63203 / AP63201 inputs from 7.4 V; a: 0.62 W retained logic + 0.1 W idle '
+                                         'port chain; b: 0.6-1.4 W unshed logic (pass1_electrical 4.4, no RF) + 0.1 W; '
+                                         'c: ports at 1.461 A, 80-85 % buck efficiency, + unshed logic; no credit for '
+                                         'RAW_PROTECTED capacitance or U11 reverse blocking'),
+        option_oq5_en_divider_ohm=[en_r5, en_r6],
+        option_oq5_voff_V=voff, option_oq5_von_V=von,
+        option_oq5_ride_through_ms=ride_through_en)
     assert results['camera_module_min_V'] >= 5
     assert results['radio_module_min_V'] >= 4.5
     assert results['gps_module_min_V'] >= 3.3
@@ -189,7 +237,15 @@ def power_budget():
     assert results['ldo_headroom_min_V'] > .2
     assert results['ldo_bleeder_min_A'] > .005
     assert results['buck_camera_short_radio_gps_normal_A'] < 2
-    assert results['buck_all_shorts_A'] < 2
+    # All three ports shorted (three faults) exceed AP63201's 2 A continuous rating by about 1 %. The criterion is
+    # that the inductor's peak current stays below the 2.5 A minimum cycle-by-cycle limit (else the buck hiccups,
+    # DS41326 p. 11: ports lose supply, VLOGIC / 3V3 are a separate path): met at 8.4 V; at the 9.97 V OVLO corner it
+    # holds at the 500 kHz nominal frequency and misses by <= 0.01 A at the -6 % spread-spectrum edge (recorded).
+    pk = results['buck_all_shorts_peak_inductor_A']
+    assert 2 < all_shorts < 2.03
+    assert pk['8V4_470kHz'] < 2.41 < 2.5 and pk['9V97_500kHz'] < 2.5
+    assert pk['9V97_470kHz'] < 2.51
+    assert results['u9_input_at_all_port_shorts_inference_A'] < 2.95 < results['u9_current_limit_min_A']
     return results
 
 

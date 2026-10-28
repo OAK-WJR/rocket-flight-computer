@@ -376,6 +376,6 @@
       "width": 0.15
     }
   ],
-  "candidate": "/private/tmp/r6-enable-pb12-0w31_rsh/m3.kicad_pcb",
+  "candidate": "<scratch>/r6-enable-pb12-0w31_rsh/m3.kicad_pcb",
   "pin_change": "TLM_PWR_EN U1.98 PE1 to U1.51 PB12; PE1 NC"
 }

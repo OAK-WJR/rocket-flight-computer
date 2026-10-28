@@ -50,16 +50,6 @@
 	(attr smd)
 	(duplicate_pad_numbers_are_jumpers no)
 	(fp_line
-		(start -2.6 -2.9)
-		(end -2.47 -2.9)
-		(stroke
-			(width 0.25)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "421d0dee-758f-49a5-a15b-c8b443784c68")
-	)
-	(fp_line
 		(start -2.6 0.03)
 		(end -2.6 -2.9)
 		(stroke
@@ -80,86 +70,6 @@
 		(uuid "5e3fb370-ba19-4847-96db-1e92e2e7cf9a")
 	)
 	(fp_line
-		(start -2.6 2.89)
-		(end -2.43 2.89)
-		(stroke
-			(width 0.25)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "46287d6b-ff12-4f23-96f4-a2495c84b665")
-	)
-	(fp_line
-		(start -2.5 -2.9)
-		(end -2.47 -2.9)
-		(stroke
-			(width 0.25)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "544f3139-3dc2-4cbb-893b-ad2491982235")
-	)
-	(fp_line
-		(start -1.39 2.89)
-		(end -1.16 2.89)
-		(stroke
-			(width 0.25)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "0b8b16a2-47a3-4050-9c0c-54d925f51775")
-	)
-	(fp_line
-		(start -0.12 2.89)
-		(end 0.12 2.89)
-		(stroke
-			(width 0.25)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "47721094-ce30-4a2b-be44-261e33bb0e09")
-	)
-	(fp_line
-		(start 1.16 2.89)
-		(end 1.39 2.89)
-		(stroke
-			(width 0.25)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "0e354edb-de17-4156-8969-35e18eb51e42")
-	)
-	(fp_line
-		(start 2.43 2.89)
-		(end 2.6 2.89)
-		(stroke
-			(width 0.25)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "9388290f-5230-4e7d-b7c6-ecc22c651b90")
-	)
-	(fp_line
-		(start 2.46 -2.9)
-		(end 2.5 -2.9)
-		(stroke
-			(width 0.25)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "4a1ac860-7b83-4c08-9919-9bbab9ec5ee3")
-	)
-	(fp_line
-		(start 2.46 -2.9)
-		(end 2.6 -2.9)
-		(stroke
-			(width 0.25)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "ec9ddcb9-aa56-46b8-93ea-e2c497c53bde")
-	)
-	(fp_line
 		(start 2.6 -2.9)
 		(end 2.6 0.03)
 		(stroke
@@ -178,17 +88,6 @@
 		)
 		(layer "F.SilkS")
 		(uuid "f72e5f9e-e904-41e9-94d2-c6e9ee9aa2e4")
-	)
-	(fp_arc
-		(start -3 3.42)
-		(mid -2.760006 3.418775)
-		(end -2.999975 3.42245)
-		(stroke
-			(width 0.5)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "0042ecf4-71a4-4769-aee8-23888e98b605")
 	)
 	(fp_circle
 		(center -2.6 3.05)

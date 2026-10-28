@@ -13,9 +13,13 @@ aware baseline (D10) kept so that RADIO_TXEN's maker-forced loop round U31 is ju
 r10 (M3-ASSY-R10, the R10 gate in tools/check.sh): cloned from r9 with ALLOWLIST, LEFTOVERS and ROUTE_FIGURES empty and
 no RF part (no U31 body or U30 / U31 keep-out obstacles, no RF or radio-SPI net classes: R10 has no on-board RF, O1 /
 O2) and no pyro-specific clearance (r10_plan section 2 item 1: the board default). Its critical signal nets
-(R10_CLASSES): pyro and arming (PYRO1_*, ARM1_*, RAW_ACT_SENSE*), crystal (HSE_*), USB data (USB_DP / USB_DM),
-SPI / QSPI / IMU chip select (QSPI_*, SPI1_*, IMU_CS) and the external-port UART nets (GPS_*_MCU, RADIO_*_MCU); the
-power rails and GND as before, with the R10 port rails (PORT_*, *_4V8, CAM_5V, the port IO rails).
+(R10_CLASSES): pyro and arming (PYRO1_*, ARM1_*, RAW_ACT_SENSE*, and the pyro-bus load-switch drive ACT_GATE /
+ACT_DRV / ACT_EN), crystal (HSE_*), USB data (USB_DP / USB_DM), SPI / QSPI / IMU chip select (QSPI_*, SPI1_*, IMU_CS),
+the external-port UART nets (uart: GPS / RADIO / CAM _TX / _RX on the _MCU, _BUFFER and _WIRE segments, CAM_MCU_TX /
+_RX) and port control nets (portctl: _PWR_EN, _FAULT_N, _UART_OE), the last two from critical_reference's one
+definition (R3-RTE-01); the power rails and GND as before, with the R10 port rails (PORT_*, *_4V8, CAM_5V, the port IO
+rails). Profile r10 also fails every arc track (arc_segment) and, on the critical signal nets, every needless layer hop
+(extra_vias, hop=True: below).
 
 Copper is grouped per (layer, net). Track end points within 1 µm form a node. A node is "plain" when exactly two
 track ends meet there and it holds no pad, via or T (another track's body); a chain is a run of segments through
@@ -47,6 +51,8 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
                           the via sits in: a layer change into a test pad counts, fix pass 5) with no GND via centre
                           within 1.5 mm (critical signal nets: RF, pyro/arm, HSE, USB data, SPI/QSPI/IMU_CS/radio
                           SPI, the other RADIO_*/GNSS_* nets; r10: R10_CLASSES)
+    arc_segment           profile r10 (R3-GATE-01): any arc track (PCB_ARC), on any net: AGENTS.md section 3 allows
+                          only 0 / 45 / 90 degree straight segments, and the heading / jog / staircase tests skip arcs
   hygiene categories, gated on critical nets (the signal nets above and the power rails, GND included):
     micro_segment         a segment shorter than 50 µm (zero length included)
     short_segment         a segment from 50 µm up to max(its own width, 0.2 mm) long in open routing (not wholly
@@ -87,7 +93,10 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
     extra_vias            such a net with more layer-changing vias (tracks on two or more layers) than it needs plus
                           VIA_SLACK (2: one crossing, under other copper and back): it needs none when all its pads
                           share a copper layer, one otherwise
-                          (each forced exception of either is an allowlist entry with its measured reason)
+                          (each forced exception of either is an allowlist entry with its measured reason); profile
+                          r10, critical signal nets (R3-GATE-03): also every L1 -> L2 -> L1 hop (a run between two pure
+                          layer-change vias) whose L2 run, drawn on L1, would cross no other-net track, via or pad
+                          there within the board default clearance (hop=True; needless_hops)
     chain_detour          fix pass 6, nets with a pour (which the two net-level tests above cannot judge): a chain (a run
                           between two junctions: pads, vias, T nodes or ends) longer than CHAIN_DETOUR_MAX (1.25) x the
                           octilinear distance of its ends and more than CHAIN_DETOUR_SLACK (0.5 mm) longer than it
@@ -196,22 +205,29 @@ CLASSES = [
               r'CAM_5V|CAM_INPUT_LIMITED|CAM_IO_3V3|SW_NODE|CAM_SW|BST|CAM_BST|VCAP1|VCAP2|ACT_FET_S|GND)$'),
     ('actuator', r'^(ACT_|SERVO)'),
 ]
-# R10 (profile r10): no RF class; the external-port UARTs are their own critical class (uart)
+# R10 (profile r10): no RF class; the external-port signals are their own critical classes, from the one definition
+# check_r10's K-reference also uses (critical_reference.R10_PORT_UART / R10_PORT_CONTROL; R3-RTE-01 / R3-GATE-04):
+# uart (data on the MCU, buffer and wire segments, CAM_MCU_TX / _RX) and portctl (PWR_EN, FAULT_N, UART_OE). The
+# load-switch nets ACT_GATE / ACT_DRV / ACT_EN drive only the pyro-bus feed switch on R10 (O3: servo power is off the
+# board), so they are pyro (R3-SAF-03); ACT_FET_S stays a power rail.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import critical_reference as _cr                                    # noqa: E402 (tools/, after the path insert)
 R10_CLASSES = [
-    ('pyro', r'^(PYRO1_|ARM1_|RAW_ACT_SENSE)'),
+    ('pyro', r'^(PYRO1_|ARM1_|RAW_ACT_SENSE|ACT_(GATE|DRV|EN)$)'),
     ('crystal', r'^HSE_'),
     ('usb', r'^USB_D[PM]$'),
     ('spi', r'^(QSPI_|SPI1_|IMU_CS$)'),
-    ('uart', r'^(GPS|RADIO)_\w*_MCU$'),
+    ('uart', _cr.R10_PORT_UART.pattern),
+    ('portctl', _cr.R10_PORT_CONTROL.pattern),
     ('power', r'^PORT_'),
     ('power', r'^(GPS_|RADIO_|CAM_)\w*(V[0-9]*|SUPPLY|SW|BST|INPUT|POWER|LIMITED)$'),
     ('power', dict(CLASSES)['power']),
     ('actuator', r'^(ACT_|SERVO)'),
 ]
-SIGNAL_CRITICAL = {'rf', 'pyro', 'crystal', 'usb', 'spi', 'rfif', 'uart'}
+SIGNAL_CRITICAL = {'rf', 'pyro', 'crystal', 'usb', 'spi', 'rfif', 'uart', 'portctl'}
 CRITICAL = SIGNAL_CRITICAL | {'power'}
 RULE = ('off_angle', 'staircase', 'acute_angle', 'fold_back', 'dead_copper', 'pour_stub', 'dangling_via',
-        'critical_via_no_gnd')
+        'critical_via_no_gnd', 'arc_segment')
 HYGIENE = ('micro_segment', 'short_segment', 'tiny_jog', 'collinear_unmerged', 'duplicate_segment',
            'collinear_overlap', 'side_by_side_overlap', 'crossing_without_node', 'overlap_only_joint',
            'via_offcentre_joint', 'neck_down', 'track_loop', 'via_overlap', 'detour', 'extra_vias', 'chain_detour',
@@ -1590,6 +1606,78 @@ def topology(board, cu):
     return ends, nodes, plain, chains
 
 
+def default_clearance_nm(board):
+    try:
+        return int(board.GetDesignSettings().m_NetSettings.GetDefaultNetclass().GetClearance())
+    except Exception:                                    # an older API or no net class: KiCad's default 0.2 mm
+        return int(0.2 / NM)
+
+
+def needless_hops(board, cu, chains, via_ends, poured):
+    """Profile r10 (R3-GATE-03): on every critical signal net without a pour, a run on layer L2 between two different
+    vias, each of them a pure layer change (no pad of the net at the via; the net's tracks end at its centre on exactly
+    L2 and one other layer L1, the same L1 at both vias): an L1 -> L2 -> L1 hop. VIA_SLACK lets two such vias pass the
+    net-level count; here the pair counts as needed only when the L2 run, drawn on L1, would cross other-net copper
+    there (tracks, vias, pads of any other net, within the board default clearance; pour fills give way to tracks, so
+    they do not count). Otherwise the hop is needless: one extra_vias instance (hop=True) per run."""
+    clr = default_clearance_nm(board)
+    out = []
+    other_l1 = {}
+
+    def obstacles(lid):
+        if lid not in other_l1:
+            items = []
+            for s in cu.segs:
+                if s['lid'] == lid:
+                    shape = pcbnew.SHAPE_SEGMENT(P(s['a']), P(s['b']), int(s['w']))
+                    items.append((s['net'], shape, f"track {s['net']}"))
+            for v in cu.vias:
+                if v['item'].IsOnLayer(lid):
+                    items.append((v['net'], pcbnew.SHAPE_CIRCLE(P(v['pos']), int(v['r'])), f"via {v['net']}"))
+            for p in cu.pads:
+                if p['pad'].IsOnLayer(lid):
+                    items.append((p['net'], p['pad'].GetEffectiveShape(lid), f"pad {p['name']}"))
+            other_l1[lid] = [(n, sh, lab, sh.BBox()) for n, sh, lab in items]
+        return other_l1[lid]
+
+    def pure_layers(v):
+        if any(cu.pads_at(v['net'], lid, v['pos']) for lid in CU4):
+            return None
+        return {s['lid'] for s, _ in via_ends.get(v['i'], [])}
+    for chain, n0, n1 in chains:
+        s0 = chain[0][0]
+        net, l2 = s0['net'], s0['lid']
+        if net in poured or net_class(net) not in SIGNAL_CRITICAL:
+            continue
+        v0, v1 = n0['via'], n1['via']
+        if v0 is None or v1 is None or v0 is v1:
+            continue
+        lay0, lay1 = pure_layers(v0), pure_layers(v1)
+        if not lay0 or not lay1 or len(lay0) != 2 or lay0 != lay1 or l2 not in lay0:
+            continue
+        l1 = next(iter(lay0 - {l2}))
+        crossed = None
+        for s, a, b in chain:
+            shape = pcbnew.SHAPE_SEGMENT(P(a), P(b), int(s['w']))
+            box = shape.BBox()
+            box.Inflate(clr)
+            for n, other, label, ob in obstacles(l1):
+                if n == net or not box.Intersects(ob):
+                    continue
+                if pcbnew.SHAPE.Collide(other, shape, clr):
+                    crossed = label
+                    break
+            if crossed:
+                break
+        if crossed is None:
+            out.append(dict(net=net, at=min(v0['pos'], v1['pos']), hop=True, via_layers=[board.GetLayerName(l1),
+                            board.GetLayerName(l2)], vias_at=sorted([round(mm(c), 4) for c in v['pos']] for v in (v0, v1)),
+                            run_mm=round(sum(s['len'] for s, _, _ in chain), 3),
+                            reason=f'the {board.GetLayerName(l2)} run crosses no other-net copper on '
+                                   f'{board.GetLayerName(l1)} (clearance {round(mm(clr), 3)} mm)'))
+    return out
+
+
 def scan(board, baseline_log=None):
     """Every instance of every category on the board, as dicts (cat, net, cls, layer, x, y and details). With the R8
     profile (KEEPOUT_BASELINE) every net whose detour test uses the keep-out-aware baseline (D10) is appended to
@@ -1705,6 +1793,11 @@ def scan(board, baseline_log=None):
         elif s['len'] < max(mm(s['w']), SHORT) and not cu.inside_one(s):
             add('short_segment', s['net'], s['layer'], s['a'], len_mm=round(s['len'], 4),
                 width=round(mm(s['w']), 3), end=(round(mm(s['b'][0]), 4), round(mm(s['b'][1]), 4)))
+        if s['arc'] and PROFILE == 'r10':
+            # R3-GATE-01: AGENTS.md section 3 allows only 0 / 45 / 90 degree straight segments; an arc is skipped by
+            # every heading, jog and staircase test below (its chord is not its copper), so it fails outright
+            add('arc_segment', s['net'], s['layer'], s['a'], end=(round(mm(s['b'][0]), 4), round(mm(s['b'][1]), 4)),
+                chord_mm=round(s['len'], 4))
         if s['len'] == 0 or s['arc']:
             continue
         h = heading(s['a'], s['b'])
@@ -1931,6 +2024,11 @@ def scan(board, baseline_log=None):
             add('pour_net_hop', pure[vs[0]]['net'], 'via', first, vias_n=len(vs),
                 path_mm=round(sum(chains[c][0][k][0]['len'] for c in cs for k in range(len(chains[c][0]))), 3),
                 at=sorted([round(mm(pure[i]['pos'][0]), 4), round(mm(pure[i]['pos'][1]), 4)] for i in vs))
+
+    # ---- profile r10, critical signal nets: needless layer hops (R3-GATE-03) -----------------------------------------
+    if PROFILE == 'r10':
+        for d in needless_hops(board, cu, chains, via_ends, poured):
+            add('extra_vias', d.pop('net'), 'net', d.pop('at'), **d)
 
     # ---- jogs and staircases through T, via and pad nodes (fix pass 5; the chains above see only plain nodes) ------
     for s in cu.segs:

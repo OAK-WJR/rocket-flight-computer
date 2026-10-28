@@ -52,7 +52,7 @@
 	(duplicate_pad_numbers_are_jumpers no)
 	(fp_line
 		(start -0.73 -1.53)
-		(end -0.73 -0.49)
+		(end -0.73 -0.556)
 		(stroke
 			(width 0.15)
 			(type solid)
@@ -62,7 +62,7 @@
 	)
 	(fp_line
 		(start -0.73 1.53)
-		(end -0.73 0.49)
+		(end -0.73 0.556)
 		(stroke
 			(width 0.15)
 			(type solid)
@@ -81,8 +81,8 @@
 		(uuid "27d61c6a-0fa9-4414-ae51-5992289bd452")
 	)
 	(fp_line
-		(start 0.73 -0.46)
-		(end 0.73 0.46)
+		(start 0.73 -0.394)
+		(end 0.73 0.394)
 		(stroke
 			(width 0.15)
 			(type solid)

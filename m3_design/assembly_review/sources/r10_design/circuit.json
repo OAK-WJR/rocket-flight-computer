@@ -1196,6 +1196,23 @@
         "1": "VLOGIC"
       },
       "kind": "fit"
+    },
+    "R162": {
+      "lib": "M3:R",
+      "value": "1k 0805",
+      "footprint": "rocket:R0805",
+      "fields": {
+        "LCSC": "C17513",
+        "LCSC Part": "C17513",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0805W8F1001T5E",
+        "Datasheet": ""
+      },
+      "nets": {
+        "1": "BUZZ_DRV",
+        "2": "BUZZ_G"
+      },
+      "kind": "fit"
     }
   },
   "sheets": {
@@ -1349,11 +1366,11 @@
     ],
     "telemetry": [
       "R10: external GPS J410 and radio J420. GH4 pins 1 supply, 2 GND, 3 board TX, 4 board RX; harness crosses TX to endpoint RX.",
-      "GPS USART6 PC6 TX / PC7 RX AF7; radio UART5 PB13 TX / PB12 RX AF14 (DS12110 Rev10 Table11 p90).",
+      "GPS USART6 PC6 TX / PC7 RX AF7 (DS12110 Rev10 Table12 p91); radio UART5 PB13 TX / PB12 RX AF14 (Table11 p90).",
       "TXU0202 VCCA = main 3V3, VCCB = own switched TPS70933 output. OE has 10k pull-down. 1k UART series resistors and ground-only ESD clamps.",
       "Reset / boot / off: EN=0 and OE=0. Startup: EN, stable downstream supply, UART idle-high configuration, then OE. Shutdown: OE low before EN low.",
       "Radio USB-powered with board off: TXU partial-power-down isolation protects MCU; power-pin reverse/transient qualification remains a separate bench gate.",
-      "Radio messages may never arm/fire; no port signal reaches pyro, arming or actuator nets. Configure LR900 channels within 902-928MHz."
+      "Radio messages may never arm/fire; no port signal reaches pyro, arming or actuator nets. LR900-F band 890-915MHz: use channels 12-25 (902-915MHz) or a maker-confirmed FHSS set."
     ],
     "servos": [
       "R10 O3/O6: J122 signal pins1/4/7/10; pins3/6/9/12 board GND for signal reference only; pins2/5/8/11 have NO BOARD CONNECTION.",

@@ -160,20 +160,28 @@ def binding_note(project, board=None):
             'off_external_uart_active': 'TXU0202 partial-power-down isolation; ground-only ESD clamps; test both UART lines and independently powered radio USB.',
             'startup': 'EN high, wait for verified rail settling, configure UART idle-high, then OE high; no GPIO alternate function before safe port state.',
             'shutdown_shedding': 'OE low before EN low; stop UART activity. Do not infer immediate loss of supply from delayed FAULT.',
-            'usb_radio_vcc_backfeed': 'Separately qualify TPS2553 reverse current and up-to-7ms reverse-trip transition; UART isolation alone does not qualify the power pin.'},
+            'usb_radio_vcc_backfeed': 'Separately qualify TPS2553 reverse current and up-to-7ms reverse-trip transition; UART isolation alone does not qualify the power pin.',
+            'port_device_backfeed': ('An ENABLED TPS2553 blocks reverse current only above 95-190 mV / 135 mOhm, about 0.7 A, after 3-7 ms '
+                                     '(SLVS841F section 7.5 p7): a self- or USB-powered GPS, radio or camera can back-feed PORT_4V8 / PORT_5V3, '
+                                     'then RAW_PROTECTED (U401 / U400 body paths, Inference), VLOGIC and ACT_EN (R122/R123) with the power '
+                                     'switch open; ORDERING R10 bench step (R3-SAF-02).')},
         'firmware_obligations': [
             'Build a new reviewed binding through the assembly_binding design process; never substitute a board hash into the R1 chain.',
-            'GPS USART6 PC6 TX/PC7 RX AF7; radio UART5 PB13 TX/PB12 RX AF14. DS12110 Rev10 Table11 p90.',
+            'GPS USART6 PC6 TX/PC7 RX AF7 (DS12110 Rev10 Table12 p91); radio UART5 PB13 TX/PB12 RX AF14 (Table11 p90).',
             'Camera UART7 PE8 TX/PE7 RX AF7 without flow control. UART5/USART6 are separate from the loader USART interfaces (AN2606 Rev64 Table119 pp277-280: no UART5, PB12 or PB13).',
-            'EXTI10 GPS fault, EXTI9 radio fault (PD9), EXTI12 camera fault (PE12); EXTI4 LOGIC_SOURCE_ST (PA4) and EXTI5 BAT_FAULT_N (PA5), swapped for routing (D-R2-09); inherited EXTI6/8/14 retained. PE1 IMU interrupt polled.',
+            'Re-mapped loader pins (AN2606 Rev64 Table119 pp279-280; pin_table an2606_t119_loader_role): PA4 / PA5 / PA6 are SPI1 NSS / SCK / MISO and PE11 / PE12 SPI4 NSS / SCK. In the ROM loader PA6 is driven push-pull into the VLOGIC_SENSE divider only (<= 0.36 mA) and PE11 is an input that R431 holds low (camera port off); before a loader jump drive every port EN and OE low as well as PE4.',
+            'EXTI10 GPS_FAULT_N (PD10), EXTI9 RADIO_FAULT_N (PD9), EXTI12 CAM_FAULT_N (PE12); EXTI4 LOGIC_SOURCE_ST (PA4) and EXTI5 BAT_FAULT_N (PA5), swapped for routing (D-R2-09); EXTI6 USB_FAULT_N (PD6), EXTI8 VBUS_SENSE (PC8), EXTI13 PULLPIN (PC13). One port per EXTI line; lines 5/6/8/9 share EXTI9_5 and 10/12/13 share EXTI15_10, so each handler checks its pending bit. PE1 IMU interrupt polled.',
             'PE4 pyro gate low before GPIO configuration, port shutdown, ROM-loader entry or reset. Keep sentinel pins PE3/PE5/PE6/PC1/PC4 without nets and driven low in operation.',
             'Keep hardware watchdog and independent safety task; end every fire pulse within20ms. Ground ARM/continuity refusal; in-flight readings never veto a fire.',
+            'F6 / FMEA F-1: the first SERVO1-4 output after any reset is neutral 1520 us; IWDG <= 32 ms, fed only by the 100 Hz safety task.',
             'Servo positive and motor return direct to pack. Board cannot cut servo power; qualify neutral-on-reset with the chosen servo and harness.',
             'Maximum normal-flight MCU clock200MHz for the retained-load budget. Firmware not implemented.',
             'F6 battery-break response uses the PA6 (ADC12_INP3, moved from PC2_C, D-R2-09) VLOGIC_SENSE ADC watchdog, not delayed port FAULT. Threshold, maximum detection/shedding latency and retained-load envelope require measured qualification.',
             'On shedding disable all three UART OEs and port switches, pause flash writes, lower MCU clock, extinguish LEDs/buzzer; retain IMU/barometer/flight state and safety timing.',
+            'Drop every port enable and UART OE when the power switch opens or VLOGIC sags: port back-feed through an enabled TPS2553 is not blocked below about 0.7 A (R3-SAF-02).',
+            'PC14 drives the buzzer gate through R162 1 kOhm: VBAT-domain PC13/PC14/PC15 are characterised at +/-3 mA only (DS12110 Rev10 Table62 p141); GPIO speed low (2 MHz limit, Table63 note 2).',
             'Preserve >=150ms switch-bounce immunity separately from battery-lead-break ride-through. Resume flight state from live evidence after reset.',
-            'Radio uplink cannot arm or fire; configure LR900 channels within902-928MHz and qualify installed maximum-power radio/GPS immunity.',
+            'Radio uplink cannot arm or fire; LR900-F band is 890-915 MHz: use manual channels 12-25 (902-915 MHz) or a maker-confirmed FHSS set inside 902-928 MHz; qualify installed maximum-power radio/GPS immunity.',
             'PC14 buzzer GPIO-toggled and PC13 pull-pin input (swapped for routing, D-R2-07); PE10 and PE0 remain NC. Retained safety ADC dividers and sensor functions unchanged.'
         ],
         'physical_tests': 'not performed; see R10 validation and power qualification',

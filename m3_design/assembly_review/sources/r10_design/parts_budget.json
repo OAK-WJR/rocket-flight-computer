@@ -28,11 +28,19 @@
       0.4530489900670699
     ],
     "gps": [
-      0.19086721209561405,
-      0.26011604492241286
+      0.22970977477982502,
+      0.3087432796694204
     ]
   },
-  "buck_all_shorts_A": 1.9736630784047902,
+  "buck_all_shorts_A": 2.0222903131517977,
+  "buck_all_shorts_over_2A_continuous_pct": 1.1145156575898874,
+  "buck_all_shorts_peak_inductor_A": {
+    "8V4_470kHz": 2.40127160053244,
+    "8V4_500kHz": 2.378532723289602,
+    "9V97_470kHz": 2.506858533445794,
+    "9V97_500kHz": 2.4777844402281546
+  },
+  "buck_peak_current_limit_min_A": 2.5,
   "buck_camera_short_radio_gps_normal_A": 1.7104980434153072,
   "ldo_bleeder_min_A": 0.005633075637555143,
   "ldo_full_load_loss_W": 0.4061769032918402,
@@ -40,5 +48,95 @@
   "pack_7V4_four_stall_loaded_V": 5.920737507690561,
   "pack_6V0_four_stall_loaded_V": 4.436329810008626,
   "servo_star_board_return_max_A": 0.6144,
-  "u9_input_at_all_port_shorts_inference_A": 2.8591523589117456
+  "u9_input_at_all_port_shorts_inference_A": 2.917277302736241,
+  "u9_current_limit_min_A": 3.96,
+  "battery_break_load_W": {
+    "a_ports_off_logic_shed": [
+      0.72,
+      0.72
+    ],
+    "b_ports_off_no_shed": [
+      0.7,
+      1.5
+    ],
+    "c_camera_radio_gps_on": [
+      9.824379250224217,
+      11.528874313798294
+    ]
+  },
+  "battery_break_ride_through_ms": {
+    "a_ports_off_logic_shed_C300.8uF_to_3.5V": [
+      8.879866666666668,
+      8.879866666666668
+    ],
+    "a_ports_off_logic_shed_C300.8uF_to_3.8V": [
+      8.422400000000001,
+      8.422400000000001
+    ],
+    "a_ports_off_logic_shed_C470uF_to_3.5V": [
+      13.874791666666669,
+      13.874791666666669
+    ],
+    "a_ports_off_logic_shed_C470uF_to_3.8V": [
+      13.160000000000002,
+      13.160000000000002
+    ],
+    "b_ports_off_no_shed_C300.8uF_to_3.5V": [
+      4.262336,
+      9.133577142857144
+    ],
+    "b_ports_off_no_shed_C300.8uF_to_3.8V": [
+      4.042752000000001,
+      8.663040000000002
+    ],
+    "b_ports_off_no_shed_C470uF_to_3.5V": [
+      6.6599,
+      14.271214285714288
+    ],
+    "b_ports_off_no_shed_C470uF_to_3.8V": [
+      6.316800000000001,
+      13.536000000000003
+    ],
+    "c_camera_radio_gps_on_C300.8uF_to_3.5V": [
+      0.5545644636222599,
+      0.6507794372712234
+    ],
+    "c_camera_radio_gps_on_C300.8uF_to_3.8V": [
+      0.525994805298742,
+      0.6172530442431365
+    ],
+    "c_camera_radio_gps_on_C470uF_to_3.5V": [
+      0.8665069744097811,
+      1.0168428707362869
+    ],
+    "c_camera_radio_gps_on_C470uF_to_3.8V": [
+      0.8218668832792844,
+      0.9644578816299008
+    ]
+  },
+  "battery_break_ride_through_note": "[shortest, longest] ms; Calc / Inference: constant-power loads at the AP63203 / AP63201 inputs from 7.4 V; a: 0.62 W retained logic + 0.1 W idle port chain; b: 0.6-1.4 W unshed logic (pass1_electrical 4.4, no RF) + 0.1 W; c: ports at 1.461 A, 80-85 % buck efficiency, + unshed logic; no credit for RAW_PROTECTED capacitance or U11 reverse blocking",
+  "option_oq5_en_divider_ohm": [
+    47000.0,
+    10000.0
+  ],
+  "option_oq5_voff_V": [
+    5.726500000000001,
+    6.011500000000001,
+    6.2965
+  ],
+  "option_oq5_von_V": [
+    6.4845,
+    6.6555,
+    6.9405
+  ],
+  "option_oq5_ride_through_ms": {
+    "ports_on_then_logic_shed_C300.8uF_to_3.5V": 4.5777363485582905,
+    "ports_on_then_logic_shed_C300.8uF_to_3.8V": 4.1202696818916245,
+    "ports_on_then_logic_shed_C470uF_to_3.5V": 7.152713044622329,
+    "ports_on_then_logic_shed_C470uF_to_3.8V": 6.4379213779556625,
+    "ports_on_then_logic_no_shed_C300.8uF_to_3.5V": 2.346331517491623,
+    "ports_on_then_logic_no_shed_C300.8uF_to_3.8V": 2.1267475174916233,
+    "ports_on_then_logic_no_shed_C470uF_to_3.5V": 3.6661429960806613,
+    "ports_on_then_logic_no_shed_C470uF_to_3.8V": 3.323042996080661
+  }
 }

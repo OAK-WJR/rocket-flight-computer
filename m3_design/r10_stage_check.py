@@ -12,7 +12,8 @@ library tables; the board itself is not touched):
   unconnected items: before `signals`, no more than after the previous family (--state carries the count); after
       `signals`, only on the pending nets; after `ground`, none;
   route_check --profile r10 (the empty-allowlist clean-routing gate): before `ground`, failing instances only on those
-      pending nets; after `ground`, none.
+      pending nets, or critical_via_no_gnd (the GND partner vias come with the ground family's plane-via table);
+      after `ground`, none.
 Exit 0 when the family's gate holds.
 """
 import argparse
@@ -93,7 +94,10 @@ def main():
                       f'{sorted(set(unconnected) - pending)}')
     elif previous is not None and total > previous:
         issues.append(f'unconnected items rose from {previous} to {total}')
-    bad = [line for line in route if final or not any(f' {n} ' in line for n in pending)]
+    # before `ground`, a layer change's GND partner may still be pending: the ground family places the plane-via table
+    # (r10_fanout.tsv) that the R10 port nets' critical_via_no_gnd test counts (R3-RTE-01); after `ground` it is final
+    later = () if final else ('FAIL critical_via_no_gnd ',)
+    bad = [line for line in route if final or not (any(f' {n} ' in line for n in pending) or line.startswith(later))]
     if bad:
         issues.append(f'route_check: {len(bad)} failing instances outside the pending nets, e.g. {bad[:3]}')
     if a.state:

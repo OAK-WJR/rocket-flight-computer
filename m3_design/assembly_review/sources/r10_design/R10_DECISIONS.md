@@ -1,6 +1,6 @@
 # R10 decisions
 
-R10 is not built. R9 remains the accepted fallback. These records do not change the
+R10 is a CAD candidate (built by `m3_design/r10_build.sh`; not owner-accepted). R9 remains the accepted board. These records do not change the
 owner's decisions in `r10_plan.md` sections 6, 7 and 8.
 
 ## D-R1-01. Review the plan before changing CAD
@@ -425,3 +425,125 @@ CAM, SWD, SERVO, PULL, GPS, RADIO, SWITCH), J9 / J2 pin tables, J122's row table
 `SERVO + FROM HARNESS` (O3 / O6), R8's ARM-plug and fuse notes, the terminal pin legends by pin, M3-ASSY-R10, JLC's
 order mark, pin-1 dots (R9's four required; U402 has no free spot within 1 mm of its pad 1 and keeps its Fab mark), the
 designators by the R4 rule and the final zone fill, with no copper, zone or pad change (asserted).
+
+## Round 3 (first board review round on `883d2db5…`, fix pass; board `579575bd…`)
+
+Ten independent reviewers (one lens each, fresh contexts, started together) reviewed the committed board `883d2db5…`;
+findings and dispositions: `docs/R10_VALIDATION.md` "Round 3". The fix pass ran in five file-disjoint slices (power and
+planes, signals, gates, silkscreen, records), each built and gated in its own clone, then merged and rebuilt here.
+
+## D-R3-01. R410 (GPS ILIM) stays 100 kΩ; the port budget re-derived on it
+
+R410 shares the 100 kΩ line (C14675; 120 kΩ C114607 would add an extended code). `parts.json`, `r10_parts.py` and
+`parts_budget.json` now carry 100 kΩ: GPS limit 0.230–0.309 A (TI SLVS841F eq. 1 p. 15, R ± 2 %); all three ports
+shorted 2.022 A, 1.1 % above the AP63201's 2 A continuous rating. The criterion that matters is the peak current limit:
+peak inductor current at that load 2.38–2.40 A at 8.4 V and 2.48 A (500 kHz) / 2.507 A (470 kHz, the −6 % spread
+edge) at U9's 9.97 V OVLO corner, against AP63201's 2.5 A minimum (DS41326 p. 5): the last corner (three port shorts
+plus an over-range input) ends in cycle-by-cycle limit / hiccup of the port rails only, recorded as a deviation. U9 at
+all port shorts 2.917 A against its 3.96 A minimum limit.
+
+## D-R3-02. In2 is GND under the CH1 pyro column (R3-SAF-01)
+
+`R10_GND_In2_CH1` (In2, priority over the rail planes; x 0.3–22, y ≈ 51.3–68.4, to y 69.7 west of x 16.3): every
+PYRO1_BUS / IGN / OUT / GATE barrel is ≥ 1.458 mm from any non-GND In2 or In1 fill (was 0.25 mm to 3V3 and
+RAW_PROTECTED), and J124's inter-pad window is GND on all four layers. A notch serves R13's 3V3 via and a tongue D120's.
+R122's RAW_PROTECTED via moved to (18.9, 69.37), 1.72 mm from R134.2 (was 0.50 mm); TP120 to (18.0, 67.3) for its 1 mm
+bare-pad clearance. A short from a pyro barrel to inner copper now meets GND only. This is a plane assignment at zero
+area, not a pyro spacing rule (r10_plan §2 item 1 keeps the board default clearance); check_r10 S-8 and the widened S-5
+hold it. In1 GND still sits 0.25 mm from PYRO1_OUT barrels (a defect there fires an armed igniter, as a shorted Q124
+would): on the deviation list.
+
+## D-R3-03. U9's power path widened (R3-PWR-01)
+
+U9's IN and OUT bars are entered at their full 0.3 mm width; 1.0 mm runs end 0.6 mm from the bars; RAW_PROTECTED reaches
+In2 through four vias at 0.7 mm pitch on y 76.725 (was two, behind a 0.25 mm / 0.4 mm path). IPC-2152 (tools/ipc2152.py,
+external, no plane credit) at 1.8 / 2.9 A: 1.0 mm runs 7.4 / 19.2 °C; the 0.4 mm via links (0.7 mm long) 21.3 / 55.2 °C
+as long conductors and the 0.3 mm pad entries (≈ 0.1 mm exposed) negligible (**Inference**: short-length conduction to
+the pads and vias). Fire loop at 4.2 A / 20 ms (adiabatic): 1.0 mm runs 1.4 °C, ACT_FET_S 0.4 mm bridge 9.0 °C, Q124's
+0.3 mm source bar 16 °C. Basis: TI SLVSFC9C §8.4.1 p. 62; AGENTS §3.
+
+## D-R3-04. In2 regions re-cut for the port control nets (R3-RTE-01, R3-PWR-04)
+
+RADIO_4V8 now runs on B.Cu (In2 carries no tracks). PORT_4V8 covers U410's cell (x 28.3–33.6, y ≥ 7.1) and reaches
+x 32.75 at y 24.4–26.0; the PORT_5V3 band runs aft of U410 at y 4.7–6.8 (narrowest 1.49 mm: IPC-2152 internal at 1.25 /
+2.02 A 2.7 / 6.7 °C), RAW_PROTECTED's aft band ends at y 4.4 east of x 24.2 (narrowest 3.09 mm); PORT_5V3 extends west
+under the camera switch's enable and fault runs. Every port UART and control net's B.Cu run lies over one In2 region,
+F.Cu runs keep ≥ 0.55 mm from other nets' vias (IO-rail vias at (35.5, 17.7 / 29.7), RADIO_FAULT_N x 27.45,
+RADIO_PWR_EN x 27.95). PORT_5V3 column narrowest 2.395 mm (was 0.376 mm). K-reference 0 loose samples, REF_STRAY
+unchanged (6).
+
+## D-R3-05. Buck input loop (R3-PWR-05)
+
+C401 at (17.35, 9.0) rot 0 straddles U400's VIN (pin 3) and GND (pin 4), each pad edge 1.0 mm from its pin (the GND pad
+was 6.97 / 7.34 mm away). Basis: Diodes DS41326 p. 15 item 4, Fig. 25.
+
+## D-R3-06. Crystal In2 GND restored (R3-RTE-02)
+
+R9's D-S8-20 (owner-accepted with R9) was dropped without a record when the core block moved. Restored translated by
+(5, −1.5): `R10_GND_In2_Y1` (x 18.9–26.8, y 44.3–48.95, NRST notch) and its In2 track keep-out, 35.39 mm² in one piece
+(R9 35.31), 7 GND vias.
+
+## D-R3-07. Camera supply vias, ACT_GATE partner, J122 relief
+
+CAM_5V's single layer change is a 0.8 / 0.45 mm via (a second via on a pour-less net is a track loop); U402.1's PORT_5V3
+via at (35.45, 40.05), hole 0.15 mm from the pad opening and 0.15 mm from CAM_UART_OE (no room for a second via). ACT_GATE
+(16.2, 72.3) gets a GND partner 1.10 mm away (ACT_* are pyro-class on R10). J122's GND pads take thermal relief (O6: no
+designed servo current; DRC 0, no starved spoke).
+
+## D-R3-08. GND stitching (R3-RTE-05)
+
+37 stitching vias frozen in `r10_route_ground.STITCH` (a west-edge row x 0.9–5.0, the review's two voids, second vias
+in the larger single-via islands, coverage spots), clear of signal vias, legend spots and support keep-outs. Outer GND
+more than 4 mm from a GND via: 28.2 / 28.8 % → 7.7 / 7.8 % (F / B, slice measurement before the merge).
+
+## D-R3-09. Port-signal layer changes and hops (R3-RTE-01, -03, -04, -06, -07)
+
+Every layer change of a port UART / control net has a GND via within 1.5 mm (worst 1.455 mm), 9 new GND partners in the
+signal family. CAM_MCU_TX's hop removed (CAM_UART_OE enters U12.6 from the north, one 90° pair); CAM_MCU_RX keeps one
+hop (it crosses CAM_MCU_TX, CAM_UART_OE and CAM_FAULT_N); the remaining two-via hops each cross named copper
+(route_check's new needless-hop test passes all). PULLPIN now drops west of U3 (0.63 mm from U3.3, was 0.165) and climbs
+the west edge at x 4.15 (1.01 mm from J3.4, was 0.160). USB_LIMITED's bottom lane at x 31.8. TP86 and R162.2 entries end
+at pad centres. Remaining pad-entry / between-pad items are listed with measured reasons in R10_VALIDATION.
+
+## D-R3-10. Gates
+
+`route_check --profile r10`: `arc_segment` (any arc fails); one R10 critical-net definition shared with K-reference
+(`critical_reference.R10_PORT_UART` / `R10_PORT_CONTROL`: port UART nets at MCU, buffer and wire, `*_PWR_EN`,
+`*_FAULT_N`, `*_UART_OE`), ACT_GATE / ACT_DRV / ACT_EN in the pyro class; on critical nets a two-via hop is needed only if
+the other-layer run crosses other-net copper. `critical_reference` samples arcs. `check_r10`: K-loader (AN2606 Rev 64
+Table 119 pp. 277–280; allowance table with each pin's electrical reason: PA6 VLOGIC_SENSE ≤ 0.36 mA into R60 / R61, PE11
+held off by R431, PA4 / PA5 / PE12 inputs, PA2 / PA3 servos, PA11 / PA12 USB, PB6 / PB9); S-8 (In1 / In2 ≥ 1.0 mm from
+pyro barrels); S-5 window (only GND, RAW_ACT, PYRO1_BUS between J124's pads on any layer); S-9 (fire path ≥ 1.0 mm,
+ACT_FET_S 0.4 mm bridge a named exception); S-1 counts copper text / footprint zones and any multi-net part; K-legends
+checks silkscreen against mask openings as polygons and R10's port tables; P-11 holds J1's −x entry. `plate_model`
+refuses or places every mass (f1 275.7 Hz pinned, was 276.4). `r10_fab.sh` runs S-4 on the exported BOM / CPL.
+`r10_stage_check` treats `critical_via_no_gnd` as pending before the ground family. `test_r10_check.py`: 68 tests, 20 on
+the real board.
+
+## D-R3-11. Silkscreen and footprint graphics
+
+Footprint silkscreen trimmed in `kilib` (pads untouched): PDFN-8's stray EasyEDA arc deleted, near-full arcs made
+circles, corner ticks removed; `r10_pcb.py` copies the library silkscreen onto the board (`r10_post.sync_silk`) so
+DRC's library parity holds; `min_silk_clearance` 0.15 (JLC pad-to-silkscreen) and the post stage asserts ≥ 0.15 mm from
+every mask opening (minimum 0.150 mm). Notes shortened and centred on their terminals: `J124 ARM LAST`,
+`J124 5A FAST 2S`, `J1 BAT 15A FUSE` (fuse rating in one constant, OQ-6). One port convention: pin 1 supply, GND, then
+board-side TXO / RXI: J9 `1:5V4 2:GND` / `3:RXI 4:TXO`; J410 / J420 tables do not fit within 6 mm (deviation). J122 gets a
+top key (`S`, `NC`, `GND`, `SERVO + FROM HARNESS` on top). Every pin-1 mark is ≥ 0.5 mm nearer its own pad 1 than any
+other (U401 keeps its footprint mark). Support hardware circles (3.5 mm bottom, 3.8 mm top) are legend keep-outs.
+
+## D-R3-12. R162 1 kΩ (PC14's 3 mA)
+
+R162 (BUZZ_DRV gate resistor) 220 Ω → 1 kΩ (C17513, the existing 1k 0805 line): edge current ≤ ≈ 2.9 mA (DS12110 Rev 10
+Table 62 p. 141 characterises PC13–PC15 at ± 3 mA), the gate still reaches 3.0 V (AO3400A V_GS(th) ≤ 1.45 V).
+
+## D-R3-13. Records
+
+F6's battery-break ride-through recomputed (parts_budget.json; 300.8 / 470 µF, to 3.5 V): ports off and logic shed
+8.9 / 13.9 ms; ports off, no shedding 4.3–9.1 / 6.7–14.3 ms; camera, radio and GPS on 0.55–0.65 / 0.87–1.02 ms (C84
+back-feeds the port buck through U11 below its reverse-blocking threshold; R9 had the camera-on case at 1–3 ms). The
+14.5 ms figure is withdrawn as a general claim. Hardware option (port-buck EN cutoff) offered as OQ-5, not implemented.
+pin_table gains `an2606_t119_loader_role`; the binding note gains EXTI13 PULLPIN, neutral-first servo output with IWDG
+≤ 32 ms, dropping port EN / OE on a power-switch opening or VLOGIC sag, the loader pins and the LR900 band facts; DS12110
+citations are Rev 10 throughout. REQUIREMENTS carries R10 amendments (owner-decision bullet, F4, F6, F8, F9, F10, P2,
+P3, M1, operating assumptions); ORDERING §8 and README carry R10 banners; FMEA has an R10 row. Local paths removed from
+19 R6 records; six R6 records pinned by SHA-256 in other records keep theirs (listed deviation).

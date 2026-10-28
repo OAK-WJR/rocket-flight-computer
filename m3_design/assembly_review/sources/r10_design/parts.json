@@ -409,13 +409,13 @@
     },
     "R410": {
       "lib": "M3:R",
-      "value": "120k 1%",
+      "value": "100k 1%",
       "footprint": "rocket:R_0603_1608Metric",
       "fields": {
-        "LCSC": "C114607",
+        "LCSC": "C14675",
         "Manufacturer": "YAGEO",
-        "Manufacturer Part": "RC0603FR-07120KL",
-        "Datasheet": "https://www.lcsc.com/product-detail/C114607.html"
+        "Manufacturer Part": "RC0603FR-07100KL",
+        "Datasheet": "https://www.lcsc.com/product-detail/C14675.html"
       },
       "nets": {
         "1": "GPS_ILIM",

@@ -55,7 +55,7 @@
   ],
   "pad_changes": [],
   "validation": {
-    "native_candidate": "/private/tmp/r6-d131-ground-mlbmtjkx/drc.json",
+    "native_candidate": "<scratch>/r6-d131-ground-mlbmtjkx/drc.json",
     "hard_drc": 0,
     "via_dangling": 11,
     "track_dangling": 5,

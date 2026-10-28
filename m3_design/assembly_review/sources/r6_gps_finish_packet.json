@@ -4,7 +4,7 @@
   "description": "Independently reviewed GPS_TX_MCU closure; all prior copper and pads preserved. Caller refills and validates integrated CAD.",
   "base_sha256": "d361bd4bdf10d1562d1da38d2ff52562f72fe0075854b6675126352093ed4174",
   "reviewed_candidate_sha256": "398debd17c46d1767e04a2e254f519042a4451738a97f04a29cbb77e3e581938",
-  "source_candidate": "/private/tmp/r6-gps-fixed-current-zy58tp02/m3.kicad_pcb",
+  "source_candidate": "<scratch>/r6-gps-fixed-current-zy58tp02/m3.kicad_pcb",
   "removed_tracks_guard": [],
   "pad_changes": [],
   "added_tracks": [
@@ -1143,7 +1143,7 @@
       "opens": 2,
       "hard": 0,
       "dangling": 14,
-      "report": "/private/tmp/r6-gps-helper-proof-td720w5e/drc.json"
+      "report": "<scratch>/r6-gps-helper-proof-td720w5e/drc.json"
     },
     "saved_board_difference": "Reviewed tracks, vias, UUIDs, locks and pads match exactly. Refilled board differs only in one filled-polygon hunk: collinear vertices and nanometre rounding."
   },

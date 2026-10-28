@@ -599,7 +599,7 @@
   ],
   "pad_changes": [],
   "validation": {
-    "native_candidate": "/private/tmp/r6-swd-final-ym31ql26/drc.json",
+    "native_candidate": "<scratch>/r6-swd-final-ym31ql26/drc.json",
     "hard_drc": 0,
     "unconnected_before": 9,
     "unconnected_after": 8,

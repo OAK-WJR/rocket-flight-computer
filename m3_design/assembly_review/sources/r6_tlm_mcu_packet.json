@@ -568,7 +568,7 @@
   ],
   "pad_changes": [],
   "validation": {
-    "native_candidate": "/private/tmp/r6-tlm-exit-oqn1iy7j/drc.json",
+    "native_candidate": "<scratch>/r6-tlm-exit-oqn1iy7j/drc.json",
     "hard_drc": 0,
     "via_dangling": 9,
     "track_dangling": 5,

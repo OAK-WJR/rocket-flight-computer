@@ -1240,93 +1240,6 @@
 		(uuid 2242edff-01cf-5c91-8691-3c1f8690c1f3))
 	(symbol
 		(lib_id "M3:R")
-		(at 157.48 114.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 6a71a63c-5726-5897-8c0a-e5737d5110d8)
-		(property "Reference" "R162"
-			(at 161.29 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "220R"
-			(at 161.29 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0805"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C17557"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0805W8F2200T5E"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
-					(reference "R162")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 157.48 110.49)
-			(xy 157.48 105.41))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4e7c8598-a951-57b4-8fff-54da1a16b6c2))
-	(global_label "BUZZ_DRV"
-		(shape passive)
-		(at 157.48 105.41 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 1859907f-6d54-5549-a9ea-7fb2ed44b58b))
-	(wire
-		(pts
-			(xy 157.48 118.11)
-			(xy 157.48 123.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 99de25e2-7778-505c-bdda-ba483173aaa4))
-	(global_label "BUZZ_G"
-		(shape passive)
-		(at 157.48 123.19 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 5388fb6e-4fc3-5083-971b-afcfe9faa339))
-	(symbol
-		(lib_id "M3:R")
 		(at 215.9 114.3 0)
 		(unit 1)
 		(in_bom yes)
@@ -1546,6 +1459,105 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 692b70fe-867c-562d-850e-b405aca9e426))
+	(symbol
+		(lib_id "M3:R")
+		(at 157.48 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6a71a63c-5726-5897-8c0a-e5737d5110d8)
+		(property "Reference" "R162"
+			(at 160.02 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0805"
+			(at 160.02 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0805"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C17513"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C17513"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0805W8F1001T5E"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "R162")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 157.48 110.49)
+			(xy 157.48 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 50b82770-90fa-56a0-b1d5-9c54f251822e))
+	(global_label "BUZZ_DRV"
+		(shape passive)
+		(at 157.48 105.41 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5578617f-ac73-59b0-91e9-adb7859f3c33))
+	(wire
+		(pts
+			(xy 157.48 118.11)
+			(xy 157.48 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 70065cbe-613d-5136-bb31-6791c5b9dd24))
+	(global_label "BUZZ_G"
+		(shape passive)
+		(at 157.48 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 561ab97b-0a60-5607-af3e-05a2979a3b48))
 	(sheet_instances
 		(path "/"
 			(page "14"))))

@@ -308,10 +308,10 @@
     },
     {
       "time": "2026-10-14T01:32:36.560208+00:00",
-      "candidate": "/private/tmp/r6-final-cleanup-v0kq3iak/m3.kicad_pcb",
+      "candidate": "<scratch>/r6-final-cleanup-v0kq3iak/m3.kicad_pcb",
       "pcb_sha256": "364d61369267c6f14f55768a91a2462dd3d37849fb83e8c61499dc27ca9be475",
       "full_check": "PASS",
-      "report_directory": "/var/folders/wj/j67ly6dj2zngrq4ljy4q6z2r0000gn/T/tmp.4EtxN0AG3Q",
+      "report_directory": "<scratch>/tmp.4EtxN0AG3Q",
       "adopted": false,
       "major_findings": [
         "AUX MCU east ground barrier",

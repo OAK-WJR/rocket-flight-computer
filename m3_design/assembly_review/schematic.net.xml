@@ -7093,20 +7093,22 @@
       </units>
     </comp>
     <comp ref="R162">
-      <value>220R</value>
+      <value>1k 0805</value>
       <footprint>rocket:R0805</footprint>
       <fields>
-        <field name="LCSC">C17557</field>
+        <field name="LCSC">C17513</field>
+        <field name="LCSC Part">C17513</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0805W8F2200T5E</field>
+        <field name="Manufacturer Part">0805W8F1001T5E</field>
         <field name="Footprint">rocket:R0805</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C17557"/>
+      <property name="LCSC" value="C17513"/>
+      <property name="LCSC Part" value="C17513"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0805W8F2200T5E"/>
+      <property name="Manufacturer Part" value="0805W8F1001T5E"/>
       <property name="Sheetname" value="14 | Launch pull-pin and buzzer"/>
       <property name="Sheetfile" value="pullpin_buzzer.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>

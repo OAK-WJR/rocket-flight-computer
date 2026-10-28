@@ -4,7 +4,9 @@ This is the component contract, not board acceptance. `parts.json` contains exac
 parts, pads and intended nets for the schematic generator; its final `circuit.json`
 resolves connector role names and MCU signals. `r10_parts.py` reproduces five local
 lands, five small VRML envelopes, and `parts_budget.json`. It never edits the board.
-Sources were read on 2026-10-26 locally. No physical tests were performed.
+Sources were read on 2026-10-26 locally; the R3 fix pass (2026-10-27) re-read
+DS41326, SLVS841F, SLVSEA3F, SBVS282A, SCES942A and the LR900 manual. No physical
+tests were performed.
 
 ## Supply contract and sources
 
@@ -35,10 +37,11 @@ TPS7A9101DSKR (C2878140); U402/U410/U420 are TPS2553DBVR (C55266).
   logic-side pull-up. Each switch has local input and output capacitors.
 - [Bourns SRP5030T](https://www.bourns.com/docs/product-datasheets/srp5030t.pdf):
   L4006.8µH C1329837, ±20%, DCR76.2 mΩ maximum, Irms4 A, Isat4.3 A.
-  Keep the existing maker land. At8.4 V input,5.456 V output, Lmin5.44µH and
- 470 kHz, calculated ripple is approximately0.75 A; 2 A plus half this ripple
-  is below the buck's2.5 A minimum peak limit. Isat is a typical20% drop rating,
-  not an absolute limit.
+  Keep the existing maker land. At8.4 V input,5.367–5.546 V output, Lmin5.44µH
+  and470 kHz (500 kHz less the±6% spread spectrum, DS41326 p5; Inference for the
+  low edge), calculated ripple is0.74–0.76 A (DS41326 p13 equation). The peak
+  inductor current at the all-ports-shorted load is in the next section. Isat is a
+  typical20% drop rating, not an absolute limit.
 - [Yageo RT part specification](https://yageogroup.com/component-documentation/download/specsheet/RT0603BRD0725K5L)
   and the same RT0603BRD ordering family establish0.1%/25 ppm/°C.
   [UNI-ROYAL thick-film specification](https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf)
@@ -83,18 +86,34 @@ startup. The RunCam minimum5 V and battery-surge prohibition remain as cited in
 1 A/contact rating. The camera's fault limit exceeds1 A briefly; firmware must
 turn off a faulted port, with thermal cycling only a backup.
 
-R430(camera)22.6 kΩ, R420(radio)66.5 kΩ, R410(GPS)120 kΩ include1% initial
-plus1% temperature allowance in the switch equations. Approximate bounds are
-camera1.041–1.249 A, radio0.348–0.453 A, GPS0.191–0.260 A.
-All three simultaneous port shorts plus11 mA for quiescent/divider/bleeder load
-stay below2 A. A camera short with the other two at their normal allocations is
-1.711 A. The LDO's two shorted ports stay below its1 A rating. Shorted switch
-outputs dissipate watts before shutdown; do not characterize this as continuous
-thermal capability. Hardware limits current even before the MCU handles FAULT.
+R430(camera)22.6 kΩ, R420(radio)66.5 kΩ, R410(GPS)100 kΩ (R10_DECISIONS
+D-R3-01: the board's value, on the existing 100 kΩ line C14675, no extra code)
+include1% initial plus1% temperature allowance in TI SLVS841F equation 1 (p15,
+IOSmin/IOSmax). Bounds: camera1.041–1.249 A, radio0.348–0.453 A, GPS0.230–0.309 A.
+A camera short with the other two at their normal allocations is1.711 A. The
+LDO's two shorted ports (0.762 A) stay below its1 A rating.
+
+**All three ports shorted** (three simultaneous faults) plus11 mA quiescent,
+divider and bleeder load draw2.022 A from the buck,1.1% over the AP63201's2 A
+continuous rating (DS41326 p1). The criterion that matters is the cycle-by-cycle
+limit: the peak inductor current, 2.022 A plus half the ripple (L400 6.8µH−20%,
+buck output5.367–5.546 V), must stay below the2.5 A minimum HS peak current
+limit (DS41326 p5). Calculated (`parts_budget.json`): 2.38 A at8.4 V and500 kHz,
+2.40 A at8.4 V and470 kHz; at the9.97 V OVLO corner (the highest RAW_PROTECTED
+U9 lets through, M3_R4 A2)2.48 A at500 kHz and2.51 A at470 kHz, i.e. up to
+0.007 A over the limit at the spread-spectrum low edge. If the limit is reached
+the buck limits each cycle and after2 ms enters hiccup (DS41326 p11): the ports
+lose supply, VLOGIC and3V3 are a separate path. Accepted as a triple-fault,
+out-of-range-input corner (Inference, no transient simulation). `r10_parts.py`
+asserts the8.4 V figure below2.41 A and the OVLO figures below2.5 A (500 kHz)
+and2.51 A (470 kHz). Shorted switch outputs dissipate watts before shutdown; do
+not characterize this as continuous thermal capability. Hardware limits current
+even before the MCU handles FAULT.
 
 **Inference, upstream coordination:** with≥80% buck efficiency,5.8 V buck input,
-logic path≤0.5 A and all port shorts, U9 current is below2.9 A, versus its3.96 A
-minimum limit. Buck's own3.1 A maximum peak limit plus0.5 A logic is3.6 A.
+logic path≤0.5 A and all port shorts, U9 current is about2.92 A (below2.95 A,
+asserted), versus its3.96 A minimum limit. Buck's own3.1 A maximum peak limit
+plus0.5 A logic is3.6 A.
 These bounds exclude switching overshoot and are not a proof of transient
 selectivity. Starting the2 A logic mux and all peripherals together is prohibited;
 port enables default off and firmware sequences their startup. Test a short on
@@ -112,10 +131,20 @@ simulation and bench testing. Even at6 V loaded input, loaded-dropout qualificat
 is open because AP63201 only gives typical switch resistance; never label that
 corner guaranteed from the nominal duty calculation.
 
-**Inference, LDO thermal:** at the allocated460 mA output, extreme rail tolerance
-and4 mA quiescent draw, loss≈0.406 W; TI's62.5°C/W reference-board thetaJA gives
-junction≈110.4°C at85°C ambient. Actual board copper must be reviewed and measured.
-Solder pad11, provide ground heat spreading and thermal vias in the board.
+**Inference, LDO thermal (R3-PWR-09):** at the allocated460 mA output, extreme
+rail tolerance and4 mA quiescent draw, loss≈0.406 W. **U401's thermal pad 11 has
+no thermal via:** M2 bars vias in SMD pads, so the pad (bottom side, 1.2×2.0 mm at
+(27.6, 13.6)) joins the B.Cu GND pour solidly and the nearest GND via, (27.6,
+14.95), sits 0.35 mm (centre) outside the pad edge; In2 under it is PORT_5V3
+(measured on board `883d2db5…`). TI's62.5°C/W thetaJA (SBVS282A p4) is the
+JEDEC high-K board figure and is not used. Without vias under the pad, take
+80–110°C/W (Inference, outer-layer pour spreading only, RθJC(bot)7.8°C/W): the
+full allocation gives a32–45 K rise, junction≈117–130°C at85°C ambient and
+≈102–115°C in the70°C bay, against the125°C recommended maximum (SBVS282A p4;
+thermal shutdown160°C typical). A typical load (radio about0.2 A from LR900-F's
+1 W maximum average, GPS about0.05 A) is about0.19 W, +15–21 K. Measure U401 with
+a thermal camera at full port load (ORDERING R10 bench list); the 85°C case is the
+unshaded worst case (REQUIREMENTS "Temperature").
 Buck thermal qualification remains open:89°C/W is a reference-board metric,
 maximum MOSFET resistance and switching loss are not specified, and80% conversion
 efficiency is an input-current budgeting assumption rather than a guarantee of
@@ -139,6 +168,92 @@ transient can charge the shared rail before cutoff. Camera supply back-drive rem
 prohibited. Small leakage does not establish a zero-voltage unpowered rail without
 its discharge impedance. No unconditional back-feed immunity claim is made here.
 
+**Back-feed through an ENABLED switch (R3-SAF-02).** TPS2553's reverse comparator
+trips only when OUT exceeds IN by95/135/190 mV, after3/5/7 ms (SLVS841F §7.5 p7,
+§9.3.2 p14); with r_DS(on)≤135 mΩ that is≥0.7 A of reverse current before any
+blocking. A self-powered or USB-powered GPS (J410), radio (J420, LR900-F has its
+own USB-C) or camera (J9) on an enabled port therefore back-feeds GPS_4V8 /
+RADIO_4V8 → PORT_4V8 → U401 (TPS7A91 states no reverse-current behaviour:
+Inference) → PORT_5V3, and CAM_5V → PORT_5V3, then through U400's high-side body
+diode (Inference) into RAW_PROTECTED. From there U11 feeds VLOGIC (the logic can
+stay up) and R122/R123 put about half of RAW_PROTECTED on ACT_EN: at a back-fed
+≈4.4 V that is ≈2.2 V, above AO3400A's1.45 V maximum threshold, so Q122 turns the
+pyro-bus load switch Q120/Q121 on and RAW_ACT is live from BAT_IN **with the power
+switch open** (Inference). Mitigation: firmware drops every port EN and UART OE
+when the power switch opens or VLOGIC sags (binding note), all EN pull-downs keep a
+reset or unpowered MCU from enabling a port, and the ORDERING R10 bench step checks
+it with each port device self- or USB-powered and enabled (RAW_ACT < 1 V within
+1 s of opening the switch). The camera back-feed prohibition (REQUIREMENTS
+"Camera") extends to J410 and J420.
+
+**Port UART ESD (R3-MCU-05).** D400/D401, D410/D411, D420/D421 are ESD103-B1-02EL
+(shared code with R9's RF clamps): ±15 V working, clamping at about20/36/48 V at
+1/8/16 A TLP (Infineon ESD103-B1-02 datasheet; R3 review read rev 1.3 Tables 3/5
+p6, R7 pass 2 v2.0 Tables 2/4/6). That clamp is far above a 3.3–5 V I/O, so the
+diode only limits the surge; the port pin is protected by the 1 kΩ series resistor
+into TXU0202's B-side cell, rated ±2500 V HBM (TI SCES942A §7.2 p5), and the
+MCU sits behind the translator's A side. Accepted as a handling-level protection
+(Inference: no system-level IEC 61000-4-2 rating is claimed); connect port
+harnesses with the board unpowered on an ESD-safe bench.
+
+**Camera supply loop split (R3-PWR-08; harness specification).** The camera's
+≥5.03 V at 1 A rests on a ≤150 mΩ supply-plus-return loop (table above). Of it,
+the board-end GH contacts may take up to 2 × 50 mΩ = 100 mΩ (JST eGH, maximum after
+test) and the board copper CAM_5V / GND about 14 mΩ (R3 review figure, not
+re-solved here), leaving **≤36 mΩ for both harness conductors and any camera-end
+termination**. At about 0.134 Ω/m for 26 AWG (GH's largest wire; Inference,
+typical annealed copper) that is about 0.13 m of conductor in total, roughly a
+6–7 cm two-wire lead with a soldered camera end. A longer lead or a camera-end
+connector needs a measured camera minimum below 5 V, a lower camera current or a
+different supply arrangement (owner / harness item); measure the installed loop
+four-wire.
+
+**LR900-F maker figures (R3-REQ-08/09).** MicoAir's LR900 manual (URL above,
+updated 2026-10-25): LR900-F 27 dBm (500 mW) transmit, **maximum average power
+consumption 1 W**, 4.5–5 V supply, operating band **890–915 MHz** with manual
+channels 0–25 for 890–915 MHz: only channels 12–25 (902–915 MHz) lie in the US
+902–928 MHz band, and the FHSS channel set and its restriction are not documented.
+Configure manual channels 12–25 only, or confirm the FHSS set with MicoAir before
+flight (regulatory: Inference). R420's 0.348 A minimum limit covers the 1 W
+average (≈0.21 A at 4.8 V), but the transmit peak is unpublished: measure the
+radio's supply current at full power on J420 before flight; R420 is not changed.
+
+## Battery-lead break ride-through (REQUIREMENTS F6; R3-PWR-02)
+
+C84 sits on VLOGIC after U11. In a battery-lead break it also back-feeds
+RAW_PROTECTED through U11: TPS2121 blocks reverse current only above IRCB
+0.2/1/2 A (SLVSEA3F §7.5 p8), and the port buck U400 on RAW_PROTECTED has EN tied
+to VIN, so it keeps drawing until RAW_PROTECTED collapses; firmware shedding of the
+ports cannot act in time (TPS2553 turn-off up to3 ms, SLVS841F §7.5 p7). Energy
+from 7.4 V, constant-power loads, no credit for RAW_PROTECTED, C6 / C7 capacitance
+or for U11 blocking (Calc / Inference; `parts_budget.json`
+`battery_break_ride_through_ms`):
+
+| Case (load at the converter inputs) | C84 300.8 µF, to 3.5 V / 3.8 V | C84 470 µF, to 3.5 V / 3.8 V |
+|---|---|---|
+| (a) ports off, logic shed: 0.62 W retained + 0.1 W idle port chain | 8.9 / 8.4 ms | 13.9 / 13.2 ms |
+| (b) ports off, no shed: 0.6–1.4 W logic (`pass1_electrical.md` §4.4, no RF) + 0.1 W | 4.3–9.1 / 4.0–8.7 ms | 6.7–14.3 / 6.3–13.5 ms |
+| (c) camera 1 A, radio, GPS on: 9.2–10.1 W ports + 0.6–1.4 W logic | 0.55–0.65 / 0.53–0.62 ms | 0.87–1.02 / 0.82–0.96 ms |
+
+3.5 V is the logic floor used since R7; 3.8 V is the AP63203's minimum input
+(DS41326 p4). Case (a) assumes shedding from the first moment (detection latency
+not credited). R9 had the same camera-on limitation (about 1–3 ms, its F6 text);
+R10 adds the radio and GPS to it.
+
+**Owner question OQ-5 (hardware option, not implemented):** an AP63201 EN divider
+from RAW_PROTECTED to GND in place of the EN–VIN tie (DS41326 p10 eq. 1–2), on
+existing BOM values R5 47 kΩ 1% (C25819) / R6 10 kΩ, turns the port buck off at
+VOFF 5.73–6.30 V (6.01 V typical; VEN_L 1.05–1.15 V, EN currents typical) and back
+on at VON 6.49–6.94 V, which puts this file's own rule "shed all port enables
+before RAW_PROTECTED falls below 6.2 V" into hardware. In a lead break with all
+ports on, C84 then carries the ports only from 7.4 V down to VOFF (0.29–0.53 ms at
+the lowest VOFF) and the logic alone below it: ride-through at least 4.6 / 7.2 ms
+with shedding and 2.3 / 3.7 ms without (300.8 / 470 µF, to 3.5 V;
+`parts_budget.json` `option_oq5_*`). Cost: two 0603 parts on existing codes, a
+0.13 mA divider load, a placement and routing change at U400.2; the ports turn off
+whenever a four-servo stall pulls the pack below about 6 V (already accepted for
+the firmware rule).
+
 ## Local lands, envelopes and assembly
 
 All models are small generated fit envelopes, not vendor STEP models. Their paths
@@ -149,7 +264,7 @@ use `${KIPRJMOD}/kilib/rocket.3dshapes`. New lands have no clearance overrides.
 | DB125 black C52993880; green C466970 | [DORABO supplier-linked T0-1 drawing](https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf):3.5 mm pitch,7.0×7.4×8.6 mm body,28–16 AWG,10 A UL/13.5 A IEC,0.2 N·m,4–5 mm strip. Pads±1.75 mm,Ø1.9 copper/Ø1.3 drill. Bodyy−3.9…3.5; wire-entry+y. | This T0-1 supplier drawing recommendsØ1.2 holes; the [older maker drawing](https://www.nbdibo.com/wp-content/uploads/2020/06/DB125-3.5-XXP-C-S.pdf) was reported as1.3 in round1.1.3 selected conservatively. Nominal copper gap1.6 mm and radial annulus0.3 mm are calculated, not actual manufactured measurements. Final board must hold≥1.5 mm including tracks; no role alias inherited from R9. Envelope7.3×7.7×8.9 includes general tolerance. J1 peak≈6 A is below10 A; validate installed wire/contact heating. |
 | GH2 C161690 | [JST eGH pp2–3](https://www.jst-mfg.com/product/pdf/eng/eGH.pdf):1.25 mm pitch; pads0.6×1.7 atx±0.625,y1.95; tabs1×2.8 atx±2.475,y−1.4. | Same frame as GH4; mechanical pads unnamed. Body5.75×4.25, mated height7.3 mm, further3 mm wire allowance belongs to fit gate.1 A withAWG26; contact50 mΩ maximum after test. Harness allocation must include both supply and return contacts. |
 | GH4 C161692 | Existing M3_GH_BM04B_GHS_TBT land/model, same JST drawing. | Used for camera/GPS/radio; keyed connectors remain electrically different, require labels and harness pin check. |
-| TPS7A9101 C2878140 | TI DSK0010A:0.6×0.25 pads,0.5 pitch,row centres±1.15; pad11 1.2×2.0. | Maker land, thermal-pad paste split to the maker's84%; ground vias supplied by board generator. Body maximum2.6×2.6×0.8 mm. |
+| TPS7A9101 C2878140 | TI DSK0010A:0.6×0.25 pads,0.5 pitch,row centres±1.15; pad11 1.2×2.0. | Maker land, thermal-pad paste split to the maker's84%. No via in pad 11 (M2); it joins the B.Cu GND pour solidly, nearest GND via0.35 mm outside the pad edge (thermal estimate above). Body maximum2.6×2.6×0.8 mm. |
 | C84 MA25V470M8x10 C46550466 | [MA-series supplier datasheet](https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf), logo JIERRUI/深圳市捷而瑞:470µF25 V,25 mΩ/100 kHz,4.1 A ripple/105°C; tolerance±20%, endurance±20% of initial andESR≤150%. Base8.3±0.2, lead gap3.1±0.2,width0.8–1.1, height10±0.5 plus0.3 mm projection conservatively. | Inference: derived3.5×1.7 pads at±3.25 give3.0 mm copper gap and toe allowance. Envelope8.5×8.5×10.8. Not a maker-recommended land: datasheet supplies no land/reflow profile. Verify polarity, mounting height and manufacturer/JLC reflow compatibility before fabrication. A fitted part is not qualified by stock alone. |
 
 C84 conservative beginning/end-of-life capacitance is470×0.8×0.8=300.8µF,

@@ -10,6 +10,7 @@
 #                   fails on any part it cannot match ("CHECK: none")
 #   export_fab.py   Gerber zip (11 layers, PTH / NPTH drill, job file), the JLC BOM (one line per LCSC code), the CPL,
 #                   the assembly drawings and the manifest binding them to the CAD inputs
+#   check_r10.py --only S-4 --bom --cpl   R1-07: every required-fitted part is in the exported BOM and CPL
 #   jlc_orient.py --verify-cpl   every CPL row rebuilt from JLC's own footprint and compared with our pads
 #   paste_check.py  the paste Gerbers against the pads: one opening per pasted pad, none stray
 #   fab_manifest.py the outputs still match the CAD and export inputs (bound to the board's SHA-256)
@@ -29,6 +30,9 @@ grep -q '"M3-ASSY-R10"' "$B" || { echo "r10_fab: $B is not an M3-ASSY-R10 board"
 quiet() { grep -v 'Debug: Adding duplicate\|create wxApp\|Fontconfig' || true; }
 PYTHONUNBUFFERED=1 "$KICAD_PY" -I tools/jlc_orient.py tools/jlc_easyeda/pads.json "$B" 2>&1 | quiet | tail -1
 python3 tools/export_fab.py "$B"
+# R1-07 / R3-GATE-05: every required-fitted safety and contract part is in the exported BOM and CPL (fails the script)
+PYTHONUNBUFFERED=1 "$KICAD_PY" -I tools/check_r10.py "$B" --only S-4 --bom "$D/fab/m3_bom_jlc.csv" \
+  --cpl "$D/fab/m3_cpl_jlc.csv" 2>&1 | quiet
 PYTHONUNBUFFERED=1 "$KICAD_PY" -I tools/jlc_orient.py tools/jlc_easyeda/pads.json "$B" \
   --verify-cpl "$D/fab/m3_cpl_jlc.csv" 2>&1 | quiet
 PYTHONUNBUFFERED=1 "$KICAD_PY" -I tools/paste_check.py "$B" "$D/fab/m3_gerber.zip" 2>&1 | quiet

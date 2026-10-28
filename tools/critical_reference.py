@@ -5,7 +5,8 @@ sources/r6-independent-routing-reference-review-20261013.json "method"), between
 usage: <KiCad python3> tools/critical_reference.py BASE.kicad_pcb CANDIDATE.kicad_pcb [--dy 18] [--extended] [--json OUT]
 
 Both boards must carry their saved zone fills. Every track of the critical nets is sampled along its centre line and
-both copper edges every 0.01 mm; a sample is referenced when it lies inside the adjacent reference fill:
+both copper edges every 0.01 mm (an arc track along its curve: centre radius and radius +- half width, R3-GATE-01);
+a sample is referenced when it lies inside the adjacent reference fill:
   F.Cu track -> In1.Cu GND;  B.Cu track -> In2.Cu GND, 3V3 or 3V3A  (R6 method)
   --extended also samples In1 tracks (reference F.Cu GND) and In2 tracks (reference B.Cu GND) and adds SWDIO, SWCLK,
   NRST and the radio SPI nets (the R7 pass-2 regression review's extension).
@@ -18,6 +19,7 @@ import argparse
 from collections import defaultdict
 import json
 import math
+import re
 
 import pcbnew
 
@@ -26,8 +28,24 @@ R6_NETS = ('USB_DP', 'USB_DM', 'HSE_IN', 'HSE_OUT', 'QSPI_CLK', 'QSPI_NCS', 'QSP
            'QSPI_IO3', 'SPI1_SCK', 'SPI1_MOSI', 'SPI1_MISO', 'IMU_CS')
 EXTENDED = ('SWDIO', 'SWCLK', 'NRST', 'RADIO_NSS', 'RADIO_SCK', 'RADIO_SCK_MCU', 'RADIO_MOSI', 'RADIO_MOSI_MCU',
             'RADIO_MISO', 'RADIO_MISO_MCU')
+# R10 external-port signal nets: the ONE definition both gates use (R3-RTE-01 / R3-GATE-04): route_check profile r10
+# classes them critical (GND via within 1.5 mm of every layer change, the critical hygiene rules) and check_r10
+# K-reference samples them. UART data on all three segments (MCU side, translator buffer side, wire side after the
+# 1 kOhm), the camera's MCU-side pair (CAM_MCU_TX / _RX: the R9 names kept for U12), and the port control lines
+# (load-switch enable, fault flag, translator output enable).
+R10_PORT_UART = re.compile(r'^((GPS|RADIO|CAM)_(TX|RX)_(MCU|WIRE|BUFFER)|CAM_MCU_(TX|RX))$')
+R10_PORT_CONTROL = re.compile(r'^(GPS|RADIO|CAM)_(PWR_EN|FAULT_N|UART_OE)$')
 R10_PORT_NETS = ('CAM_MCU_TX', 'CAM_MCU_RX') + tuple(f'{port}_{signal}_{side}' for port in ('GPS', 'RADIO', 'CAM')
-                      for signal in ('TX', 'RX') for side in ('MCU', 'WIRE', 'BUFFER'))
+                      for signal in ('TX', 'RX') for side in ('MCU', 'WIRE', 'BUFFER')) + tuple(
+    f'{port}_{signal}' for port in ('GPS', 'RADIO', 'CAM') for signal in ('PWR_EN', 'FAULT_N', 'UART_OE'))
+assert all(R10_PORT_UART.match(n) or R10_PORT_CONTROL.match(n) for n in R10_PORT_NETS)
+
+
+def r10_port_net(name):
+    """Whether `name` is an R10 external-port signal net (R10_PORT_UART or R10_PORT_CONTROL)."""
+    return bool(R10_PORT_UART.match(name or '') or R10_PORT_CONTROL.match(name or ''))
+
+
 STEP = 0.01
 
 
@@ -54,7 +72,10 @@ def samples(b, nets, refs, dy=0.0):
     """(net, layer, x, y) samples (mm) of the nets' tracks on the reference-mapped layers, moved by dy."""
     out = []
     for t in b.GetTracks():
-        if t.GetClass() != 'PCB_TRACK' or t.GetNetname() not in nets or t.GetLayer() not in refs:
+        if t.GetClass() not in ('PCB_TRACK', 'PCB_ARC') or t.GetNetname() not in nets or t.GetLayer() not in refs:
+            continue
+        if t.GetClass() == 'PCB_ARC':
+            out += arc_samples(t, dy)
             continue
         ax, ay, cx, cy = mm(t.GetStart().x), mm(t.GetStart().y) + dy, mm(t.GetEnd().x), mm(t.GetEnd().y) + dy
         length = math.hypot(cx - ax, cy - ay)
@@ -68,6 +89,44 @@ def samples(b, nets, refs, dy=0.0):
             px, py = ax + ux * s, ay + uy * s
             for off in (0.0, hw, -hw):
                 out.append((t.GetNetname(), t.GetLayer(), round(px - uy * off, 4), round(py + ux * off, 4)))
+    return out
+
+
+def arc_samples(t, dy=0.0):
+    """(net, layer, x, y) samples of an arc track along its curve (start -> mid -> end), every STEP mm of the centre
+    radius, on the centre line and both copper edges (radius +- half width); a degenerate arc (collinear points) is
+    sampled as its chord."""
+    pts = [(mm(p.x), mm(p.y) + dy) for p in (t.GetStart(), t.GetMid(), t.GetEnd())]
+    (x1, y1), (x2, y2), (x3, y3) = pts
+    d = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
+    hw = mm(t.GetWidth()) / 2
+    net, lay = t.GetNetname(), t.GetLayer()
+    if abs(d) < 1e-12:
+        out = []
+        for (ax, ay), (cx, cy) in ((pts[0], pts[1]), (pts[1], pts[2])):
+            length = math.hypot(cx - ax, cy - ay)
+            if length == 0:
+                continue
+            ux, uy = (cx - ax) / length, (cy - ay) / length
+            for k in range(int(math.ceil(length / STEP)) + 1):
+                s = min(length, k * STEP)
+                for off in (0.0, hw, -hw):
+                    out.append((net, lay, round(ax + ux * s - uy * off, 4), round(ay + uy * s + ux * off, 4)))
+        return out
+    s1, s2, s3 = x1 * x1 + y1 * y1, x2 * x2 + y2 * y2, x3 * x3 + y3 * y3
+    ux = (s1 * (y2 - y3) + s2 * (y3 - y1) + s3 * (y1 - y2)) / d
+    uy = (s1 * (x3 - x2) + s2 * (x1 - x3) + s3 * (x2 - x1)) / d
+    r = math.hypot(x1 - ux, y1 - uy)
+    a1, a2, a3 = (math.atan2(y - uy, x - ux) for x, y in pts)
+    sweep = (a3 - a1) % (2 * math.pi)               # counter-clockwise from start to end ...
+    if (a2 - a1) % (2 * math.pi) > sweep:           # ... unless the mid point lies on the other way round
+        sweep -= 2 * math.pi
+    n = max(1, int(math.ceil(abs(sweep) * r / STEP)))
+    out = []
+    for k in range(n + 1):
+        a = a1 + sweep * k / n
+        for rr in (r, r + hw, max(0.0, r - hw)):
+            out.append((net, lay, round(ux + rr * math.cos(a), 4), round(uy + rr * math.sin(a), 4)))
     return out
 
 
