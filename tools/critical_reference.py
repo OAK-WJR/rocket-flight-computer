@@ -68,27 +68,34 @@ def fills(b, refs):
     return out
 
 
+def track_samples(t, dy=0.0):
+    """(net, layer, x, y) samples (mm) of one straight track (centre line and both copper edges, every STEP mm) or arc
+    track, moved by dy."""
+    if t.GetClass() == 'PCB_ARC':
+        return arc_samples(t, dy)
+    out = []
+    ax, ay, cx, cy = mm(t.GetStart().x), mm(t.GetStart().y) + dy, mm(t.GetEnd().x), mm(t.GetEnd().y) + dy
+    length = math.hypot(cx - ax, cy - ay)
+    if length == 0:
+        return out
+    ux, uy = (cx - ax) / length, (cy - ay) / length
+    hw = mm(t.GetWidth()) / 2
+    n = int(math.ceil(length / STEP))
+    for k in range(n + 1):
+        s = min(length, k * STEP)
+        px, py = ax + ux * s, ay + uy * s
+        for off in (0.0, hw, -hw):
+            out.append((t.GetNetname(), t.GetLayer(), round(px - uy * off, 4), round(py + ux * off, 4)))
+    return out
+
+
 def samples(b, nets, refs, dy=0.0):
     """(net, layer, x, y) samples (mm) of the nets' tracks on the reference-mapped layers, moved by dy."""
     out = []
     for t in b.GetTracks():
         if t.GetClass() not in ('PCB_TRACK', 'PCB_ARC') or t.GetNetname() not in nets or t.GetLayer() not in refs:
             continue
-        if t.GetClass() == 'PCB_ARC':
-            out += arc_samples(t, dy)
-            continue
-        ax, ay, cx, cy = mm(t.GetStart().x), mm(t.GetStart().y) + dy, mm(t.GetEnd().x), mm(t.GetEnd().y) + dy
-        length = math.hypot(cx - ax, cy - ay)
-        if length == 0:
-            continue
-        ux, uy = (cx - ax) / length, (cy - ay) / length
-        hw = mm(t.GetWidth()) / 2
-        n = int(math.ceil(length / STEP))
-        for k in range(n + 1):
-            s = min(length, k * STEP)
-            px, py = ax + ux * s, ay + uy * s
-            for off in (0.0, hw, -hw):
-                out.append((t.GetNetname(), t.GetLayer(), round(px - uy * off, 4), round(py + ux * off, 4)))
+        out += track_samples(t, dy)
     return out
 
 

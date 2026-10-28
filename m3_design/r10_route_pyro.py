@@ -87,7 +87,9 @@ def draw(d):
     # Load switch (bottom): sources bridged by C120 / R120, gates tied on F.Cu through R121 to the driver Q122.
     # C120 / R120 tap the source and gate rows: each pad pair joined straight, R120 by a stub to its centre.
     t('ACT_FET_S', 'B', P, [d.pad('Q121.1'), (16.7, 70.5), d.pad('C120.1')])
-    t('ACT_FET_S', 'B', P, [d.pad('C120.1'), (18.5, 70.9), d.pad('R120.1')])
+    # R120's pad entered on its centre line (R4-RTE-05): the 45 deg run of Q121.1 -> C120.1 continues 0.27 mm past the
+    # land centre, then straight east into R120.1.
+    t('ACT_FET_S', 'B', P, [d.pad('C120.1'), (17.37, 71.17), d.pad('R120.1')])
     # Source bridge between the facing source rows (pulse current), clear of both gate pads.
     t('ACT_FET_S', 'B', RAWW, [d.pad('Q120.1'), (11.59, 71.6), (15.41, 71.6), d.pad('Q121.1')])
     for n in ('2', '3'):
@@ -97,8 +99,10 @@ def draw(d):
     # Gate: Q120.4 -> via (16.2, 72.3) -> C120.2 -> R120.2 on B.Cu; on F.Cu the via takes TP121 (north stub) and the run
     # west through R121.1 to Q121's gate via.
     t('ACT_GATE', 'B', P, [d.pad('Q120.4'), (15.8, 72.7), (16.2, 72.3)])
+    # R120.2 (R4-RTE-05): the run enters on the pad's centre, by a 45 deg approach 0.27 mm from it ending on the centre
+    # (a straight-in entry along y 72.03 needs a 0.27 mm jog, which the tiny-jog rule refuses).
     t('ACT_GATE', 'B', P, [(16.2, 72.3), d.pad('C120.2')])
-    t('ACT_GATE', 'B', P, [d.pad('C120.2'), (18.5, 72.3), d.pad('R120.2')])
+    t('ACT_GATE', 'B', P, [d.pad('C120.2'), (18.23, 72.3), d.pad('R120.2')])
     via('ACT_GATE', (16.2, 72.3))
     via('GND', (16.2, 71.2))           # its GND partner, 1.10 mm north (AGENTS 3; R3-SAF-03, D-R3-07)
     t('ACT_GATE', 'F', P, [d.pad('TP121.1'), (16.2, 72.3)])

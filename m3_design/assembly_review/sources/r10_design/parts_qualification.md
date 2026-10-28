@@ -136,7 +136,9 @@ rail tolerance and4 mA quiescent draw, loss≈0.406 W. **U401's thermal pad 11 h
 no thermal via:** M2 bars vias in SMD pads, so the pad (bottom side, 1.2×2.0 mm at
 (27.6, 13.6)) joins the B.Cu GND pour solidly and the nearest GND via, (27.6,
 14.95), sits 0.35 mm (centre) outside the pad edge; In2 under it is PORT_5V3
-(measured on board `883d2db5…`). TI's62.5°C/W thetaJA (SBVS282A p4) is the
+(pad, via and In2 zone read on board `579575bd…` in round 4: pad 11 1.2×2.0 mm at (27.6, 13.6), the nearest GND via
+(27.6, 14.95) 1.35 mm centre to centre from the pad centre, In2 zone R10_PORT_5V3_In2; the round-4 routing pass was
+not re-measured on `af18ac49…`). TI's62.5°C/W thetaJA (SBVS282A p4) is the
 JEDEC high-K board figure and is not used. Without vias under the pad, take
 80–110°C/W (Inference, outer-layer pour spreading only, RθJC(bot)7.8°C/W): the
 full allocation gives a32–45 K rise, junction≈117–130°C at85°C ambient and
@@ -276,7 +278,24 @@ Supplier/EasyEDA API calls for the four new package codes returnedHTTP403 in thi
 session. Their pad-number/orientation check remains open; no CPL rotation correction
 has been guessed. Local maker geometry was parsed and checked using KiCad. Final
 BOM/CPL gate must fetch each actual supplier package and check numbered pads and
-GH mechanical tabs. `parts_stock.json` is a dated component snapshot, not a final
+GH mechanical tabs.
+
+**CPL orientation items to confirm in JLC's placement preview (R4-BOM-01 to -03;
+`tools/jlc_corrections.json`, residuals are the worst pad distance between our land and the EasyEDA
+footprint):**
+
+- **L400 (C1329837, SRP5030T-6R8M, land `M3_SRP5030TA` at (24.2, 5.55), rotation 0):** EasyEDA has no entry for
+  C1329837, so the JLC orientation comes from the proxy C189932 (SRP5030T-100M, the same SRP5030T package): rotation
+  correction 0, offset 0, residual 0.15 mm. The part is symmetric (two terminals, no pin-1 mark that matters
+  electrically), so a 180° error is harmless electrically; the land itself is still to be checked against Bourns' own
+  drawing (the proxy supplies the numbering, not the dimensions; Inference until done).
+- **U411 / U12 / U421 (TXU0202DCUR C5186957, land `M3_TXU0202_DCU`, top, rotation −90 on the board):** correction
+  180°, offset 0, residual 0.147 mm. Pin 1 on JLC's footprint is matched by pad
+  geometry, not by the mark: confirm pin 1 in JLC's preview on all three before paying.
+- **C84 (C46550466, MA25V470M8x10, top at (38.5, 74.0), rotation 90):** correction 0, residual 0.045 mm. The board has
+  + on pad 1 (VLOGIC at (38.5, 77.25)) and − on pad 2 (GND at (38.5, 70.75)); the polarity in JLC's CPL / preview
+  is not confirmed (the MA-series datasheet gives no land, see the parts table above): confirm + on the VLOGIC pad in the
+  preview, and check the fitted part's polarity stripe on the first boards (ORDERING §8). `parts_stock.json` is a dated component snapshot, not a final
 BOM stock gate. Camera ILIM resistor C185349 had only17 units: sufficient for a
 small prototype batch only; recheck the actual quantity before ordering.
 

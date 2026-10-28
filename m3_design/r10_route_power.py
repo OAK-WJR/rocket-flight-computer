@@ -29,8 +29,8 @@ IN1_GND = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7)]
 # - Camera: PORT_5V3 reaches west of the column under CAM_FAULT_N's run (x >= 34.2, y 36.35-39.44) and CAM_PWR_EN's
 #   (R431 and its run from the via (33.15, 41.5): x >= 33.1 below the 45 deg edge x + y = 73.64, which keeps 3V3 under
 #   CAM_MCU_RX's B.Cu hop (33.65, 39.2)-(32.5, 40.35)-(32.5, 43.7), >= 0.15 mm beyond its copper edges).
-IN2_RAW = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7), (0.3, 58.0), (17.5, 58.0), (17.5, 62.0), (22.0, 62.0),
-           (22.0, 76.0), (32.0, 76.0), (32.0, 58.0), (40.0, 58.0), (40.0, 4.4), (24.2, 4.4), (24.2, 7.0), (18.0, 7.0),
+IN2_RAW = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7), (0.3, 58.0), (17.5, 58.0), (17.5, 62.0), (21.8, 62.0),
+           (21.8, 76.0), (32.0, 76.0), (32.0, 58.0), (40.0, 58.0), (40.0, 4.4), (24.2, 4.4), (24.2, 7.0), (18.0, 7.0),
            (18.0, 10.5), (9.0, 10.5), (9.0, 7.0), (0.3, 7.0)]
 IN2_PORT = [(24.5, 4.7), (39.7, 4.7), (39.7, 42.5), (33.1, 42.5), (33.1, 40.54), (34.2, 39.44), (34.2, 36.35),
             (35.2, 36.35), (35.2, 9.6), (33.9, 9.6), (33.9, 6.8), (28.0, 6.8), (28.0, 8.7), (27.85, 8.7), (27.85, 10.5),
@@ -40,7 +40,7 @@ IN2_4V8 = [(28.3, 7.1), (33.6, 7.1), (33.6, 9.6), (32.4, 9.6), (32.4, 24.4), (32
 IN2_3V3 = [(0.3, 7.3), (8.7, 7.3), (8.7, 10.8), (18.3, 10.8), (18.3, 7.3), (24.2, 7.3), (24.2, 15.8), (28.0, 15.8),
            (28.0, 29.3), (32.7, 29.3), (32.7, 26.3), (33.05, 26.3), (33.05, 24.1), (32.7, 24.1), (32.7, 9.9),
            (34.9, 9.9), (34.9, 36.05), (33.9, 36.05), (33.9, 39.31), (32.8, 40.41), (32.8, 42.8), (39.7, 42.8),
-           (39.7, 57.7), (31.7, 57.7), (31.7, 75.7), (22.3, 75.7), (22.3, 61.7), (17.8, 61.7), (17.8, 57.7), (0.3, 57.7)]
+           (39.7, 57.7), (31.7, 57.7), (31.7, 75.7), (22.1, 75.7), (22.1, 61.7), (17.8, 61.7), (17.8, 57.7), (0.3, 57.7)]
 # D-R3-01: In2 GND under the CH1 column, priority over the rail regions. Every PYRO1_BUS / _IGN / _OUT / _GATE barrel
 # and its outer copper lies >= 1.25 mm inside it (a rail fill keeps its 0.25 mm clearance beyond it), J124's inter-pad
 # window included. One notch (x 8.65-9.75) keeps R13's 3V3 via (9.2, 52.98) on the 3V3 region, 1.41 mm from J121.1's
@@ -49,9 +49,16 @@ IN2_3V3 = [(0.3, 7.3), (8.7, 7.3), (8.7, 10.8), (18.3, 10.8), (18.3, 7.3), (24.2
 # via (19.05, 55.9) and C14's (20.2, 52.1) stay east of x 18.55; R122's RAW via sits south of y 68.4. West of x 16.3
 # the zone reaches y 69.7, so RAW_PROTECTED also keeps >= 1.0 mm from J124.2's barrel and from under Q121's RAW_ACT
 # drain pad (a RAW_PROTECTED - RAW_ACT defect would bypass the load switch).
-IN2_GND_CH1 = [(0.3, 51.8), (8.65, 51.8), (8.65, 53.55), (9.75, 53.55), (9.75, 51.3), (18.55, 51.3), (18.55, 56.85),
-               (17.45, 56.85), (17.45, 59.15), (18.75, 59.15), (18.75, 57.75), (20.9, 57.75), (20.9, 61.7),
-               (22.0, 61.7), (22.0, 68.4), (16.3, 68.4), (16.3, 69.7), (0.3, 69.7)]
+IN2_GND_CH1 = [(0.3, 51.8), (8.65, 51.8), (8.65, 53.55), (9.75, 53.55), (9.75, 51.3), (18.55, 51.3), (18.55, 53.4),
+               (18.0, 53.4), (18.0, 56.45), (19.65, 56.45), (21.4, 54.7), (24.4, 54.7), (24.4, 55.45), (21.75, 55.45), (20.2, 57.0), (17.45, 57.0),
+               (17.45, 59.15), (18.75, 59.15), (18.75, 58.2), (21.8, 58.2), (21.8, 68.4), (16.3, 68.4), (16.3, 69.7),
+               (0.3, 69.7)]
+# R4-RTE-01 (K-reference): the zone also covers the whole B.Cu run of PYRO1_CONT (R178.1 -> C127.1 -> its via, a strip
+# hugging the run >= 0.3 mm each side), ARM1_SENSE_MID (to x 21.8) and RAW_ACT_SENSE_MID, so each lies wholly over In2
+# GND; ARM1_SENSE and RAW_ACT_SENSE start over In2 3V3 (its edge x 22.1, the zone clearance 0.25 beyond GND's x 21.8);
+# the 3V3 tongue's corridor to D120's via is y 57.25-57.95 (R128.2's GND via moved off it, r10_route_ground), and the
+# zone's west edge steps back to x 18.0 at y 53.4-56.45 so R164.1's 3V3 via (19.05, 55.9) keeps a 3V3 path round the
+# GND vias (19.42, 55.02) / (20.23, 55.07) to the 3V3 region north (x >= 18.25, 0.67 mm wide).
 # D-R3-05: R9's Y1_In2_keepout (x 13.9-21.8, y 45.8-50.45) + CORE_SHIFT (5, -1.5), and R9_GND_In2_Y1's outline: the area
 # less r9_ground.xtal_outline's one notch (NRST's B.Cu run (24.3, 49.1)-(25.33, 49.1) to C24.1, its box grown by
 # 0.1 + 0.3 mm), the same rule re-run on R10's routed board (no other critical B.Cu track lies wholly outside within

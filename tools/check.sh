@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Board gate: DRC/parity, ERC, metadata/models, silkscreen, fit, vibration, the R10 CAD contract, clean routing and the
-# actuator contract.
+# Board gate: DRC/parity, ERC, metadata/models, silkscreen, fit, vibration, the R10 CAD contract, clean routing, the
+# actuator contract and the gates' own seeded tests (test_route_check, test_r10_check).
 # R10 (M3-ASSY-R10, r10_plan.md section 4): tools/check_r10.py (rule-based; it reads the fit report and the plate model
 # made here, both --profile r10), route_check profile r10 (empty allowlist, no RF parts), check_actuators --profile r10.
 # R10 has no pyro-specific spacing rule (r10_plan section 2 item 1), so the rule-H seeded suite (tools/rule_h_seed.py)
@@ -52,3 +52,13 @@ python3 "$ROOT/tools/silk_check.py" "$BOARD" --cli "$CLI"     # DRC skips silksc
 "$KICAD_PY" -I "$ROOT/tools/route_check.py" "$BOARD" --profile r10 --report "$OUT/route.json" \
   | { grep -E '^(FAIL|routing hygiene: [0-9])' || true; }       # clean routing (AGENTS.md §3); full list in route.json
 python3 "$ROOT/m3_design/check_actuators.py" "$BOARD" --profile r10
+# Gate self-tests (R4-GATE-02): a weakened gate fails here. Seeded faults on synthetic boards and on a temporary copy of
+# the R10 board (R10_BOARD overrides the repository board); about 2 minutes.
+selftest() {          # print the unittest summary; a failing run prints its tail and fails the gate
+  local out
+  out="$("$@" 2>&1)" || { printf '%s\n' "$out" | grep -v Debug | tail -40; echo "gate self-test FAILED: $*"; exit 1; }
+  printf '%s\n' "$out" | grep -v Debug | tail -3
+}
+selftest "$KICAD_PY" -I "$ROOT/tools/test_route_check.py"
+selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_check.py"
+selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" Plate

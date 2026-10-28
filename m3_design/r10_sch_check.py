@@ -182,7 +182,10 @@ def binding_note(project, board=None):
             'PC14 drives the buzzer gate through R162 1 kOhm: VBAT-domain PC13/PC14/PC15 are characterised at +/-3 mA only (DS12110 Rev10 Table62 p141); GPIO speed low (2 MHz limit, Table63 note 2).',
             'Preserve >=150ms switch-bounce immunity separately from battery-lead-break ride-through. Resume flight state from live evidence after reset.',
             'Radio uplink cannot arm or fire; LR900-F band is 890-915 MHz: use manual channels 12-25 (902-915 MHz) or a maker-confirmed FHSS set inside 902-928 MHz; qualify installed maximum-power radio/GPS immunity.',
-            'PC14 buzzer GPIO-toggled and PC13 pull-pin input (swapped for routing, D-R2-07); PE10 and PE0 remain NC. Retained safety ADC dividers and sensor functions unchanged.'
+            'PC14 buzzer GPIO-toggled and PC13 pull-pin input (swapped for routing, D-R2-07); PE10 and PE0 remain NC. Retained safety ADC dividers and sensor functions unchanged.',
+            'Port UART start-up (R4-MCU-01): while U1 is in reset the TXU0202 A side floats and the OE pull-downs hold the translators off. Before any translator OE goes high, enable the internal pull-ups on the three MCU receive pins GPS_RX_MCU (PC7), RADIO_RX_MCU (PB12) and CAM_MCU_RX (PE7), and drive the three TX pins (PC6, PB13, PE8) idle-high; only then raise OE.',
+            'Per-sense ADC instance and channel (R4-MCU-02; Inference until each is checked against DS12110 Rev10 Table 9): PC0 PYRO1_CONT_MCU ADC123_INP10, PA6 VLOGIC_SENSE ADC12_INP3, PC5 ARM1_SENSE_MCU ADC12_INP8, PB0 RAW_ACT_SENSE_MCU ADC12_INP9, PB1 CAM_5V_SENSE ADC12_INP5, PC3_C V3V3_SENSE ADC3_INP1 (ADC3 only). The F6 analog watchdog on PA6 must therefore run on ADC1 or ADC2, not ADC3; V3V3_SENSE is read on ADC3.',
+            'No-net U1 pins (R4-MCU-04): every U1 pin with no net stays in analog mode (the reset state) and is never configured as an output; the K-loader no-net pins (pin_table an2606_t119_loader_role) are never outputs, so a ROM-loader drive or a stray configuration cannot reach copper.'
         ],
         'physical_tests': 'not performed; see R10 validation and power qualification',
     }
@@ -206,7 +209,7 @@ def binding_note(project, board=None):
         note['imu'] = {'x_mm': pcbnew.ToMM(pos.x), 'y_mm': pcbnew.ToMM(pos.y),
                        'rotation_deg': rotation, 'side': 'bottom' if bottom else 'top',
                        'lever_arm_x_mm': pcbnew.ToMM(pos.x) - 23.0,
-                       'lever_arm_z_mm': None, 'bench_sign_check': 'required'}
+                       'lever_arm_z_mm': -2.06, 'lever_arm_z_basis': 'Inference: centre of the U4 3D model box, not measured', 'bench_sign_check': 'required'}
         if bottom and abs(rotation - 180) < .001:
             note['imu'].update(axis_basis='same signed frame as R9: bottom180',
                                roll_about_forward_axis='-gyro_Y', forward_thrust='-a_Y')

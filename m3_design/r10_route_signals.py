@@ -73,7 +73,8 @@ def port_wires(d):
                                                ('RADIO', 'R450', 'R451', 'D420', 'D421', 'J420', 12.0)):
         tx, rx = f'{pre}_TX_WIRE', f'{pre}_RX_WIRE'
         t(tx, 'F', S, [p(f'{r_tx}.2'), (38.25, 18.55 + dy), (38.25, 15.325 + dy), p(f'{d_tx}.1')])
-        t(tx, 'F', S, [p(f'{d_tx}.1'), (40.6, 14.775 + dy), p(f'{j}.3')])
+        # straight on J's pin-3 centre line (R4-RTE-05): the 45 deg run in leaves the diode pad centre, 0.15 mm up
+        t(tx, 'F', S, [p(f'{d_tx}.1'), (38.95, 14.625 + dy), p(f'{j}.3')])
         t(rx, 'F', S, [p(f'{r_rx}.1'), (38.8, 12.15 + dy)])
         t(rx, 'B', S, [(38.8, 12.15 + dy), (38.8, 16.95 + dy)])
         t(rx, 'F', S, [(38.8, 16.95 + dy), p(f'{d_rx}.1')])
@@ -234,8 +235,8 @@ def port_links(d):
                       ('RADIO_RX_BUFFER', 'U421.1', 'R450.2'), ('RADIO_TX_BUFFER', 'U421.8', 'R451.1'),
                       ('CAM_RX_BUFFER', 'U12.1', 'R100.2'), ('CAM_TX_BUFFER', 'R101.1', 'U12.8')):
         t(net, 'F', S, [p(a), p(b)])
-    t('CAM_RX_WIRE', 'F', S, [p('R100.1'), (39.4, 36.15), (39.4, 38.775), (40.6, 38.775), p('J9.3')])
-    t('CAM_RX_WIRE', 'F', S, [(39.4, 38.775), p('D401.1')])
+    t('CAM_RX_WIRE', 'F', S, [p('R100.1'), (39.4, 36.15), (39.4, 38.625), p('J9.3')])
+    t('CAM_RX_WIRE', 'F', S, [p('D401.1'), (38.95, 38.625), (39.4, 38.625)])
     t('CAM_TX_WIRE', 'F', S, [p('R101.2'), (38.8, 42.55), p('D400.1')])
     t('CAM_TX_WIRE', 'F', S, [p('D400.1'), (40.35, 40.275), p('J9.4')])
 
