@@ -420,6 +420,19 @@ class Synthetic(SyntheticBase):
         c = self.part('C13', [('1', 0, 0, 'PYRO1_GATE_N'), ('2', 1, 0, 'GND')], at=(30, 35))
         self.assertTrue(any('C13 is on the MCU-side gate node' in i for i in gate.s3(self.ctx())[0]))
 
+    def test_parse_value_spaced_unit_and_mu(self):
+        """R7-GATE-01: a space before the multiplier or unit, Omega after the multiplier, Greek mu."""
+        for text, want in (('4.7 k\u03a9', 4700.0), ('220 \u03a9', 220.0), ('220 k\u03a9', 220e3), ('4.7k\u03a9', 4700.0),
+                           ('4.7 k', 4700.0), ('10 ohm', 10.0), ('1 M', 1e6), ('4.7k\u2126 1%', 4700.0)):
+            self.assertAlmostEqual(gate.parse_value(text, 'R'), want, msg=text)
+        for text in ('4.7 kx', '4.7k\u03a9x', '220 kk'):
+            self.assertIsNone(gate.parse_value(text, 'R'), text)
+        self.assertAlmostEqual(gate.parse_value('2.2 \u03bcF', 'C'), 2.2e-6)
+        self.assertAlmostEqual(gate.parse_value('2.2\u00b5F', 'C'), 2.2e-6)
+        self.assertIsNone(gate.parse_value('100m', 'C'))
+        self.assertAlmostEqual(gate.parse_value('100mF', 'C'), 0.1)
+        self.assertAlmostEqual(gate.parse_value('100 nF', 'C'), 100e-9)
+
     def test_parse_value_infix_and_whole_token(self):
         """R6-GATE-06."""
         for text, want in (('4k7', 4700.0), ('1k5', 1500.0), ('2R2', 2.2), ('100k5', 100500.0), ('4.7k', 4700.0),
@@ -838,6 +851,25 @@ class R4Synthetic(SyntheticBase):
         self.assertEqual([i for i in gate.region_issues(self.board)[0] if 'no In2 copper' in i], [])
         self.keepout(self.box(0, 24.8, 46, 25.2))
         self.assertTrue(any('no In2 copper' in i for i in gate.region_issues(self.board)[0]))
+
+    def hole_table(self, hole_pts, vias):
+        ps = pcbnew.SHAPE_POLY_SET()
+        ps.NewOutline()
+        for x, y in ((-5, -5), (30, -5), (30, 10), (-5, 10)):
+            ps.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        h = ps.NewHole()
+        for x, y in hole_pts:
+            ps.Append(pcbnew.FromMM(x), pcbnew.FromMM(y), -1, h)
+        return gate.fill_hole_table({'GND': ps}, [(x, y, n, 0.3) for x, y, n in vias])
+
+    def test_fill_hole_slot_between_vias_is_no_via_hole(self):
+        """R7-GATE-02: a 10 mm slot whose end vertices sit by two vias is not covered by the via discs."""
+        slot = [(-0.4, -0.4), (10.4, -0.4), (10.4, 0.4), (-0.4, 0.4)]
+        self.assertEqual(self.hole_table(slot, [(0, 0, 'A'), (10, 0, 'B')]), [])
+        # the same outline with vias along it (merged antipads) is a via hole
+        merged = [(-0.4, -0.4), (2.0, -0.4), (2.0, 0.4), (-0.4, 0.4)]
+        self.assertEqual(len(self.hole_table(merged, [(0, 0, 'A'), (0.8, 0, 'B'), (1.6, 0, 'C')])), 1)
+        self.assertEqual(len(self.hole_table([(-0.4, -0.4), (0.4, -0.4), (0.4, 0.4), (-0.4, 0.4)], [(0, 0, 'A')])), 1)
 
     def test_k_region_in_rule_list(self):
         self.assertIn('K-region', [rid for rid, _, _ in gate.RULES])
@@ -1501,6 +1533,42 @@ class RealBoardSeeds(unittest.TestCase):
     def test_j1_wire_entry(self):
         """R3-MEC-02: J1 turned away from the west face."""
         self.seeded('P-11', lambda b: b.FindFootprintByReference('J1').SetOrientationDegrees(90), 'J1 wires enter')
+
+    def move(self, b, ref, dx, dy):
+        f = b.FindFootprintByReference(ref)
+        f.SetPosition(pcbnew.VECTOR2I(f.GetPosition().x + pcbnew.FromMM(dx), f.GetPosition().y + pcbnew.FromMM(dy)))
+
+    def test_p11_j121_moved_west_loses_wire_room(self):
+        """R7-GATE-04: J121 0.6 mm west leaves 4.35 mm of wire room, below WIRE_ROOM_R10 (4.95)."""
+        self.assertEqual(gate.WIRE_ROOM_R10, 4.95)
+        self.assertEqual(self.run_rule('P-11', self.load()), set())
+        self.seeded('P-11', lambda b: self.move(b, 'J121', -0.6, 0), 'wire room')
+
+    def test_f9_1_d8_moved_away(self):
+        """R7-GATE-04: D8 3 mm further from J1.1 breaks the recorded F9-1 distance."""
+        self.assertEqual(self.run_rule('F9-1', self.load()), set())
+        self.seeded('F9-1', lambda b: self.move(b, 'D8', 3, 0), 'D8')
+
+    def test_armed_side_extra_parts(self):
+        """R7-GATE-03 / R7-SAF-01 seeds."""
+        def r133(b):                                  # R133 rewired as a PYRO1_GATE - PYRO1_COLD pull-up
+            self.pad(b, 'R133', '1').SetNet(b.FindNet('PYRO1_GATE')); self.pad(b, 'R133', '2').SetNet(b.FindNet('PYRO1_COLD'))
+        self.seeded('S-1', r133, 'R133')
+        self.seeded('S-3', r133, 'R133')
+        self.seeded('S-1', lambda b: self.pad(b, 'TP122', '1').SetNet(b.FindNet('PYRO1_COLD')), 'TP122')
+        self.seeded('S-1', lambda b: self.pad(b, 'TP122', '1').SetNet(b.FindNet('ARM1_SENSE_MID')), 'TP122')
+        self.seeded('S-3', lambda b: self.pad(b, 'C129', '1').SetNet(b.FindNet('PYRO1_GATE')), 'C129')
+
+    def test_misnamed_armed_net_is_caught(self):
+        """R7-SAF-02: an armed net renamed to an MCU-side name has the wrong topology."""
+        def seed(b):
+            b.Add(pcbnew.NETINFO_ITEM(b, 'PYRO1_COLD_MCU'))
+            for ref in ('D120', 'R131'):
+                for p in b.FindFootprintByReference(ref).Pads():
+                    if p.GetNetname() == 'PYRO1_COLD':
+                        p.SetNet(b.FindNet('PYRO1_COLD_MCU'))
+        self.seeded('S-1', seed, 'PYRO1_COLD_MCU')
+        self.seeded('S-1', lambda b: self.pad(b, 'R168', '1').SetNet(b.FindNet('GND')) if self.pad(b, 'R168', '1').GetNetname() == 'PYRO1_CONT_MCU' else self.pad(b, 'R168', '2').SetNet(b.FindNet('GND')), 'PYRO1_CONT')
 
     def test_cli_end_to_end_on_a_saved_seed(self):
         """A seeded board saved in a temporary copy: the CLI prints a named line per rule and exits non-zero."""

@@ -8,11 +8,12 @@ Last updated 2026-10-27 (R10 candidate section below; the rest as of 2026-10-25)
 
 **Built and gated in CAD on 2026-10-27; review rounds 3 (ten independent lenses on `883d2db5…`: 0 Critical, 7 Major,
 49 Minor), 4 (on `579575bd…`: 0 Critical, 4 Major, 28 Minor) 5 (on `af18ac49…`: 0 Critical, 1 Major, 36 Minor) and 6
-(on `3b6e15f3…`: 0 Critical, 1 Major, 39 Minor) and their fix passes are done; the stop condition (two consecutive clean
+(on `3b6e15f3…`: 0 Critical, 1 Major, 39 Minor) and their fix passes are done, and round 7 on `b242ab8e…` was clean
+(0 Critical, 0 Major, 33 Minor; gates and records fixed, board unchanged); the stop condition (two consecutive clean
 rounds) is not yet met and the owner has not accepted it. R9 (below) stays the accepted board and the one to order.**
 Record: [docs/M3_R10.md](docs/M3_R10.md); validation, review rounds, owner questions and the deviation list:
 [docs/R10_VALIDATION.md](docs/R10_VALIDATION.md); plan and decisions: `m3_design/assembly_review/sources/r10_design/`
-(r10_plan.md, R10_DECISIONS.md D-R1-01 … D-R6-03).
+(r10_plan.md, R10_DECISIONS.md D-R1-01 … D-R7-02).
 - Board SHA-256 `b242ab8e2f4efa1e2e6cf5766294faa07d307cfa0c0f8cd90d08cade850db8e7`, 46 × 90 mm, rebuilt byte for byte by
   `m3_design/r10_build.sh` (two identical builds); netlist `a9516746…`; fab package `m3_design/r10_fab.sh` bound to it.
 - What changed from R9: no on-board GNSS / radio (external GPS and LR900-F radio on GH-4 ports with translators and
@@ -36,7 +37,7 @@ Record: [docs/M3_R10.md](docs/M3_R10.md); validation, review rounds, owner quest
   OQ-7); F7 R10 budget; firmware obligations (PE1 EXTI1, trace off, QE, IMU SPI clock).
 - **Verified (CAD / software only):** `tools/check.sh` passes at zero (DRC every severity incl. silkscreen with
   schematic parity 0 / 0 / 0, ERC 0, metadata / 3D audit, silkscreen outline, fit, plate model f1 275.6 Hz, check_r10
-  full OK, route_check r10 0 failing, check_actuators OK, tools/test_r10_check.py 102 tests OK, test_route_check 57 OK);
+  full OK, route_check r10 0 failing, check_actuators OK, tools/test_r10_check.py 108 tests OK, test_route_check 57 OK);
   r10_sch_check OK with nine seeded faults caught; the fab package's S-4 / CPL / paste /
   manifest checks OK.
 - **Calculated, not measured:** IPC-2152 estimates of the battery / U9 / fire-loop copper; battery-break ride-through

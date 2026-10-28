@@ -2,7 +2,8 @@
 
 > **2026-10-27 update.** The R10 board is built and committed; review rounds 3 (on `883d2db5…`), 4 (on `579575bd…`),
 > 5 (on `af18ac49…`) and 6 (on `3b6e15f3…`) and their fix passes are done (board `b242ab8e…`, 46 × 90 mm;
-> `docs/M3_R10.md`); `tools/check.sh` passes at zero. See "R10 build state", "Round 3" … "Round 6", the review-round log and "R10
+> `docs/M3_R10.md`); round 7 on `b242ab8e…` was clean (0 Critical, 0 Major) and changed gates and records only;
+> `tools/check.sh` passes at zero. See "R10 build state", "Round 3" … "Round 7", the review-round log and "R10
 > deviations for owner acceptance" at the end. The round-1 plan-review record below is kept as written; statements in it that no R10 implementation
 > exists describe that time.
 
@@ -242,7 +243,7 @@ Netlist SHA-256 `a9516746…`. (Review round 3 examined `883d2db5…`, round 4 `
 | check_r10 (S-1 … S-9, K-contract, K-loader, K-actuators, LC-1, M-1, M-2, M-3, M-5, M-6, M-7, P-8, P-11, F9-1, T-1, K-legends, K-copper, K-inner, K-reference, K-region, K-fill, K-rules, K-retained) | OK; P-11 and F9-1 hold R10's recorded figures pending OQ-1 / OQ-2 |
 | route_check --profile r10 (empty allowlist; arcs fail; port UART / control and ACT_* nets critical; needless-hop test) | 0 failing, 0 leftovers |
 | check_actuators --profile r10 | OK |
-| tools/test_r10_check.py (102 tests; run by `tools/check.sh` since round 4) | OK (KiCad python; the numpy-only plate test under the numpy python) |
+| tools/test_r10_check.py (108 tests; run by `tools/check.sh` since round 4) | OK (KiCad python; the numpy-only plate test under the numpy python) |
 | tools/test_route_check.py (run by `tools/check.sh` since round 4) | 57 OK |
 | Fab (`m3_design/r10_fab.sh`): jlc_orient, export, S-4 on the exported BOM / CPL, CPL rebuild, paste, manifest | OK (229 placed parts, 82 BOM lines; BOM unchanged since round 3), bound to `b242ab8e…` |
 | JLC cost / stock (live data 2026-10-27) | **$87.01 per board vs the $84.41 target: missed** (OQ-3); 47 extended codes (≤ 52); short: R430 C185349 (17 in stock, 3,610 minimum purchase), U4 C26633007 (0, consign) |
@@ -487,6 +488,50 @@ the root, R10_DECISIONS D-R6-01 … D-R6-03) produced `b242ab8e…`.
 | R6-GATE-07 / -08 | Minor | S-1 test-point rule by name; S-3 allowed a GATE_N pull-up (check_actuators caught both) | **Fixed** (gate): ARMED_PARTS allowlist; GATE_N membership |
 | R6-DOC-01 | Minor | Round 5's counting rule wording | **Fixed** (this round's rule) |
 
+## Round 7: independent review of `b242ab8e…` (commit 9dadb9a)
+
+Ten reviewers, one lens each, fresh read-only contexts, all started together in one batch. **Result on `b242ab8e…`:
+0 Critical, 0 Major, 33 Minor** (counting rule as round 6; R7-PWR-01 merged into R7-REQ-02). **First clean round.** The root re-checked the one copper
+item that could matter electrically (R7-RTE-01: the In2 3V3 lobe that carries U2's output via (31.6, 74.6) into the
+plane): the widest path from the lobe to the plane under U1 is ≈ 1.3 mm wide at its narrowest (26.7, 42.6), so the
+0.24 mm neck beside the GND via (30.903, 62.022) is a parallel branch, not the feed. The fix pass changed gates and
+records only (R10_DECISIONS D-R7-01, D-R7-02); **the board is unchanged** (`b242ab8e…`), so round 8 reviews the same
+board.
+
+| ID | Severity | Finding (evidence on `b242ab8e…`) | Disposition |
+|---|---|---|---|
+| R7-REQ-01 | Minor | F10's R8 parenthetical duplicated | **Fixed** |
+| R7-REQ-02 (PWR-01) | Minor | F7 budget's paths not tabulated; two-stall case 1.52 A ignored R134 ±1 %, hot FETs, contacts | **Fixed** (Calc, re-measured fire path): 4.533 Ω; 1.633 A at 7.4 V; 1.506 A with two stalls (no margin: treated as failing until the harness is measured), 1.442 / 1.379 A with three / four; 1.32 A at 6.0 V |
+| R7-SAF-01 | Minor | S-1's per-part allowlist covered BUS / IGN / OUT only | **Fixed** (gate): every armed-side net (`ARMED_NET_PARTS`) |
+| R7-SAF-02 | Minor | MCU-side nets recognised by suffix only | **Fixed** (gate): `*_MCU` / GATE_N topology asserted |
+| R7-SAF-03 | Minor | Trace pin override on the H743 unchecked | **Recorded** (binding note: no trace-capable debugger with the ARM link in; Inference) |
+| R7-PWR-02 | Minor | USB attach inrush ≈ 2.4 mC beyond USB 2.0's allowance (Inference) | **Recorded**: ORDERING 8 bench step on a current-limited hub; USB-only programming host-dependent (**listed**) |
+| R7-BOM-01 | Minor | C29936 (1 µF 25 V X7R, extended) could merge into C15849 (1 µF 50 V X5R, basic): one code, ≈ $0.31 per board | **Listed** (OQ-3 cost options; board frozen for the clean-round pair) |
+| R7-BOM-02 | Minor | Seven capacitor Values carry no voltage / dielectric | **Listed** |
+| R7-BOM-03 | Minor | R430 order acceptance unconfirmed | **Recorded**: confirm in the quote; 22 kΩ C31850 fallback (1.070–1.282 A) needs a port-budget re-check |
+| R7-MCU-01 | Minor | PA15 resets to JTDI with a pull-up, not analog | **Fixed** (binding note; Inference until RM0433 is read) |
+| R7-MCU-02 | Minor | No GPIOE_LCKR read-back; FMEA F-16 still locked PE3 / 5 / 6 / 12–14 as outputs | **Fixed**: LCKK read-back before arming; loader-jump sequence; FMEA F-16 R10 line |
+| R7-MCU-03 | Minor | Loader jump vs a running IWDG; "≤ 32 ms" nominal | **Fixed** (binding note: jump only before the IWDG starts; ≈ 34 ms at the LSI corner, Inference) |
+| R7-MCU-04 | Minor | Erase time (W25Q128JV 4 KB: 45 ms typ / 400 ms max, read) not in F5's margin; pad ring buffer | **Recorded**: firmware obligation (erase-suspend slices or a single pre-erase before arming) |
+| R7-MEC-01 | Minor | Bore bound ignored the nut under the sled | **Fixed** (Calc): h + t < 6.3 mm at x = 4 / 42, < 5.7 mm at (3.7, 86) |
+| R7-MEC-02 / -03 / -04 | Minor | Shroud list missed J3 (5.05 mm) and washers (4.1 mm); offsets vs radial values; the stack (≈ joint + 79–83 mm) already clears + 47 | **Fixed** (records; OQ-7 kept: it bites only if the bay or lead zone shrinks by ≈ 30 mm) |
+| R7-MEC-05 | Minor | ORDERING §7's battery-lead row is R9's | **Fixed**: R10 row in 8.4 supersedes it |
+| R7-MEC-06 | Minor | M3_R10 named J400 as the nearest top hardware | **Fixed**: TP89 3.806 mm |
+| R7-MEC-07 | Minor | Board frame is left-handed (KiCad y-down) | **Fixed** (records): rotations in the IMU frame |
+| R7-RTE-01 | Minor | In2 3V3 neck ≈ 0.24 mm beside the GND via (30.903, 62.022) | **Listed**: a parallel branch (root: the lobe's widest path ≈ 1.3 mm) |
+| R7-RTE-02 | Minor | Two In2 3V3 slivers (26.0–29.8, 54.5–54.9; 27.1–27.6, 46.2–46.5) | **Listed** (plane copper, connected; board frozen) |
+| R7-RTE-03 | Minor | VBUS_SENSE 0.225 mm flat jog between two 45° runs at (18.98–19.2, 30.9) | **Listed** (non-critical net; board frozen) |
+| R7-MFG-01 | Minor | §1 / §2 output text is R9's | **Fixed** (8: what differs on R10) |
+| R7-MFG-02 | Minor | The 0.8 mm CAM_5V via cannot be plugged | **Fixed**: 127 pluggable; CAM_5V via tented |
+| R7-MFG-03 | Minor | J3 hand-finish neighbours on R10 unrecorded | **Fixed**: C83 / R8, 1.95 / 2.15 mm copper gap |
+| R7-MFG-04 | Minor | Order-number anchor rounding | **Fixed** |
+| R7-GATE-01 | Minor | parse_value: "4.7 kΩ" → 4.7 | **Fixed** |
+| R7-GATE-02 | Minor | Via-hole exemption tested vertices only (a 10 mm slot between two vias exempt) | **Fixed**: hole minus disc union must be empty (≤ 2e-3 mm²) |
+| R7-GATE-03 | Minor | Extra parts on PYRO1_GATE / armed-side nets passed S-rules (K-actuators caught them) | **Fixed** (S-3 `GATE_PARTS`, S-1 `ARMED_NET_PARTS`) |
+| R7-GATE-04 | Minor | P-11 / F9-1 constants survived mutation | **Fixed**: seeded real-board tests |
+| R7-DOC-01 | Minor | "fit_check prints 5.0–5.6" stale | **Fixed** |
+| R7-DOC-02 | Minor | AGENTS GNSS / radio cell read as if the ports were removed | **Fixed** |
+
 ### Review-round log
 
 | Round | Board reviewed | Critical / Major / Minor (confirmed) | Fix pass → board |
@@ -496,6 +541,7 @@ the root, R10_DECISIONS D-R6-01 … D-R6-03) produced `b242ab8e…`.
 | 4 | `579575bd…` | 0 / 4 / 28 | D-R4-01 … D-R4-04 → `af18ac49…` |
 | 5 | `af18ac49…` | 0 / 1 / 36 | D-R5-01 … D-R5-04 → `3b6e15f3…` |
 | 6 | `3b6e15f3…` | 0 / 1 / 39 | D-R6-01 … D-R6-03 → `b242ab8e…` |
+| 7 | `b242ab8e…` | **0 / 0 / 33 (clean)** | D-R7-01, D-R7-02 (gates and records; board unchanged) |
 
 ## R10 deviations for owner acceptance (skeleton; completed when two consecutive rounds are clean)
 
@@ -552,7 +598,7 @@ Each item needs its measured reason and the board hash it was measured on; revie
     tables (no legal spot within 6 mm, D-R3-11); their UART pin order differs from J9's (J9: 3 RX_WIRE, 4 TX_WIRE;
     J410 / J420: 3 TX_WIRE, 4 RX_WIRE; R4-REQ-06): each cable is checked end to end before mating (ORDERING 8.2);
     `J2 5:GND 6:NC` beside J2 but nearer J3.
-11. **Agent decisions** D-R1-01 … D-R1-07, D-R2-01 … D-R2-16, D-R3-01 … D-R3-13, D-R4-01 … D-R4-04, D-R5-01 … D-R5-04 and D-R6-01 … D-R6-03 (R10_DECISIONS.md), each to be
+11. **Agent decisions** D-R1-01 … D-R1-07, D-R2-01 … D-R2-16, D-R3-01 … D-R3-13, D-R4-01 … D-R4-04, D-R5-01 … D-R5-04, D-R6-01 … D-R6-03 and D-R7-01 / D-R7-02 (R10_DECISIONS.md), each to be
     accepted or overruled.
 12. **Not verified:** DC solve (the IPC-2152 estimates of D-R3-03 are an upper-bound fit), hold-up simulation, port-supply
     corners, plate model masses, bore fit with real plugs and wires, every bench test.

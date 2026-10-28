@@ -722,3 +722,33 @@ ACT_GATE turn-on bench steps, nut on the sled side, TP89 0.306 mm to a nominal w
 sentinels analog never driven, ADC channels verified, no synchronous trace and GPIOE_LCKR on PE4, W25Q QE bit, IMU SPI
 ≤ 10 MHz, 40 ms gyro Ton, no blocking erase in flight. Schematic note (mcu sheet, r10_sch.py): "PE1 remains polled"
 replaced (the netlist is unchanged).
+
+## Round 7 (fifth board review round on `b242ab8e…`; first clean round; gates and records only)
+
+Ten independent reviewers reviewed `b242ab8e…` (commit 9dadb9a): 0 Critical, 0 Major, 33 Minor (`docs/R10_VALIDATION.md`
+"Round 7"). The fix pass changed no generator input that reaches the board, so the board stays `b242ab8e…` and round 8
+reviews the same board. Copper Minors (R7-RTE-01 … -03) and part-code Minors (R7-BOM-01 / -02) are listed rather than
+fixed, to keep the board frozen for the second clean round.
+
+## D-R7-01. Gates (R7-GATE-01 … -04, R7-SAF-01 / -02)
+
+`parse_value` accepts "4.7 kΩ", "220 Ω", Ω / ohm after the multiplier and Greek mu, refuses a capacitor "100m" and any
+unconsumed tail. K-region's via-hole exemption requires the hole polygon minus the union of via discs (pad radius +
+0.3 mm, 64-gons) to leave ≤ 2e-3 mm² (SPI1's merged three-via hole leaves 4.95e-4 mm²; a 10 mm slot ≈ 8 mm²). S-1:
+`ARMED_NET_PARTS` names every part on every armed-side net (PYRO1_BUS / IGN / OUT / COLD / GATE / CONT / CONT_MID,
+ARM1_SENSE / _MID, RAW_ACT / _SENSE / _SENSE_MID); `mcu_side_issues` asserts each `*_MCU` net and PYRO1_GATE_N is U1
+plus one 3.3–6.8 kΩ resistor (R126 for GATE_N, plus its pull-downs). S-3: only R126, R128, C126, Q124 and TP122 on
+PYRO1_GATE. Seeded P-11 (J121 −0.6 mm) and F9-1 (D8 +3 mm) tests. `tools/test_r10_check.py` 108 tests.
+
+## D-R7-02. Records (R7-REQ-01 / -02, R7-PWR-02, R7-SAF-03, R7-MCU-01 … -04, R7-MEC-01 … -07, R7-MFG-01 … -04, R7-BOM-03, R7-DOC-01 / -02)
+
+REQUIREMENTS F7: the re-measured fire path (27.1 mΩ of track, 5 mΩ GND allowance, FETs × 1.42 hot, 10 mΩ contacts,
+R134 + 1 %: 4.533 Ω; 1.633 A at 7.4 V, two stalled servos 1.506 A with no margin, treated as failing until the harness
+is measured). Binding note: PA15 set to analog explicitly; GPIOE_LCKR LCKK read-back before arming and the loader-jump
+sequence; loader jump only before the IWDG starts (≈ 34 ms at the LSI corner); W25Q128JV erase 45 ms typ / 400 ms max
+and the pad ring-buffer obligation; no trace-capable debugger with the ARM link in. FMEA F-16 R10 line (only PE4
+locked). ORDERING 8: R10 differences from §1 / §2, 127 pluggable vias (CAM_5V tented), J3 hand-finish neighbours,
+R430 confirmation and fallback, USB attach inrush, nut-inclusive bound h + t < 6.3 mm (< 5.7 mm at (3.7, 86)), R10
+battery-lead row. M3_R10: shroud list with J3 and washers, offsets vs radial, the stack arithmetic (OQ-7 bites only if
+the bay or lead zone shrinks by ≈ 30 mm), left-handed board frame, TP89 nearest top hardware, fit_check's two-decimal
+print. AGENTS GNSS / radio cell wording.

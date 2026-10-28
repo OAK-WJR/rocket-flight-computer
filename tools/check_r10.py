@@ -354,9 +354,30 @@ def fill_hole_table(zones, vias):
                         and chain.PointInside(pcbnew.VECTOR2I(pcbnew.FromMM(vx), pcbnew.FromMM(vy)))}
                 covered = all(any(math.hypot(pcbnew.ToMM(chain.CPoint(k).x) - vx, pcbnew.ToMM(chain.CPoint(k).y) - vy)
                                   <= r + REGION_HOLE_REACH for vx, vy, _, r in near) for k in range(chain.PointCount()))
-                if nets and covered:
+                if nets and covered and not hole_uncovered_area(chain, near) > HOLE_SLIVER_MM2:
                     out.append((x0, y0, x1, y1, chain, nets))
     return out
+
+
+HOLE_SLIVER_MM2 = 2e-3         # mm2: what the via discs may leave of a via hole (R7-GATE-02); measured 4.95e-4 at the
+                               # merged SPI1 hole (a 0.04 mm triangle between three discs), a slot is mm2 (10 mm: 8)
+
+
+def hole_uncovered_area(chain, vias):
+    """mm2 of the hole polygon `chain` not covered by the union of the discs (via pad radius + REGION_HOLE_REACH) of
+    `vias`: a hole whose vertices are near vias but whose body is a slot between them is no via hole (R7-GATE-02)."""
+    import pcbnew
+    hole = pcbnew.SHAPE_POLY_SET()
+    hole.AddOutline(chain)
+    for vx, vy, _, r in vias:
+        disc = pcbnew.SHAPE_POLY_SET()
+        disc.NewOutline()
+        for k in range(VOID_RIM_SIDES):
+            a = 2 * math.pi * k / VOID_RIM_SIDES
+            rr = (r + REGION_HOLE_REACH) / math.cos(math.pi / VOID_RIM_SIDES)       # circumscribed: never smaller
+            disc.Append(pcbnew.FromMM(vx + rr * math.cos(a)), pcbnew.FromMM(vy + rr * math.sin(a)))
+        hole.BooleanSubtract(disc)
+    return hole.Area() / 1e12
 
 
 def in_via_hole(table, net, x, y):
@@ -1043,6 +1064,77 @@ ARMED_PARTS = {       # part: ({armed nets it may touch}, reason) (R6-GATE-07; t
     'C128': ({'PYRO1_OUT'}, 'igniter-output bypass capacitor')}
 
 
+ARMED_NET_PARTS = {   # armed-side / RAW_ACT net: every part on it on the R10 board, each named (R7-SAF-01 / R7-GATE-03)
+    'PYRO1_BUS': {'J124', 'R132', 'R134'}, 'PYRO1_IGN': {'J121', 'R134'},
+    'PYRO1_OUT': {'C128', 'J121', 'Q124', 'R131', 'R173'}, 'PYRO1_COLD': {'D120', 'R131'},
+    'PYRO1_GATE': {'C126', 'Q124', 'R126', 'R128', 'TP122'},
+    'PYRO1_CONT': {'C127', 'R129', 'R130', 'R168', 'R178'}, 'PYRO1_CONT_MID': {'R129', 'R173'},
+    'ARM1_SENSE': {'C129', 'R133', 'R170', 'R175', 'R180'}, 'ARM1_SENSE_MID': {'R132', 'R175'},
+    'RAW_ACT': {'J124', 'Q121', 'R177', 'TP120'},
+    'RAW_ACT_SENSE': {'C122', 'R124', 'R125', 'R172', 'R182'}, 'RAW_ACT_SENSE_MID': {'R124', 'R177'}}
+GATE_PARTS = {'R126': 'gate series resistor', 'R128': 'gate pull-down', 'C126': 'gate-source capacitor',
+              'Q124': 'pyro FET', 'TP122': 'gate test pad'}
+MCU_NET_PREFIX = re.compile(r'^(PYRO1_|ARM1_|RAW_ACT)')
+MCU_RESISTOR_RANGE = (3.3e3, 6.8e3)       # the "4.7 k class" sense resistor toward the MCU
+
+
+def net_parts(board):
+    out = {}
+    for ref, nets in part_nets(board).items():
+        for n in nets:
+            out.setdefault(n, set()).add(ref)
+    return out
+
+
+def armed_net_issues(board):
+    """R7-SAF-01: any part on an armed-side / RAW_ACT net other than the named ones (an extra test pad or part there is
+    a clip point beside the ARM break)."""
+    issues = []
+    for n, refs in sorted(net_parts(board).items()):
+        if not armed_net(n):
+            continue
+        if n not in ARMED_NET_PARTS:
+            issues.append(f'S-1: armed-side net {n} is not in ARMED_NET_PARTS (parts {sorted(refs)})')
+            continue
+        extra = sorted(refs - ARMED_NET_PARTS[n])
+        if extra:
+            issues.append(f'S-1: {extra} on armed-side net {n} is not a named part of it (ARMED_NET_PARTS in '
+                          f'tools/check_r10.py: {sorted(ARMED_NET_PARTS[n])})')
+    return issues
+
+
+def mcu_side_issues(board):
+    """R7-SAF-02: every armed-prefixed net named like an MCU-side net (`*_MCU`, PYRO1_GATE_N) has exactly the MCU-side
+    topology: U1, one 4.7 k-class resistor (R126 for the gate) toward an armed net, and for the gate node resistors to
+    GND; otherwise a mis-named armed net would drop out of armed_net() and of every armed-side check."""
+    issues, members, nets_of = [], net_parts(board), part_nets(board)
+    fps = {f.GetReference(): f for f in board.GetFootprints()}
+    for n, refs in sorted(members.items()):
+        if not (MCU_NET_PREFIX.match(n) and MCU_SIDE.search(n)):
+            continue
+        gate = n == 'PYRO1_GATE_N'
+        toward, others = [], []
+        for ref in sorted(refs - {'U1'}):
+            other = nets_of[ref] - {n}
+            two = ref.startswith('R') and len(fps[ref].Pads()) == 2 and len(other) == 1
+            if two and armed_net(next(iter(other))):
+                toward.append(ref)
+            elif two and gate and other == {'GND'}:
+                continue
+            else:
+                others.append(ref)
+        ok = 'U1' in refs and len(toward) == 1 and not others
+        if ok and gate:
+            ok = toward == ['R126']
+        elif ok:
+            v = parse_value(fps[toward[0]].GetValue(), 'R') or 0
+            ok = MCU_RESISTOR_RANGE[0] <= v <= MCU_RESISTOR_RANGE[1]
+        if not ok:
+            issues.append(f'S-1: MCU-side net {n} is not U1 + one {"R126" if gate else "4.7 k-class resistor"} toward '
+                          f'an armed net (parts {sorted(refs)}; toward {toward}, others {others}): a mis-named armed net')
+    return issues
+
+
 def armed_net(n):
     """A net on the armed bus or RAW_ACT side (including the high side of the sense dividers and the gate net)."""
     return bool(ARMED_SIDE.match(n) or RAW_SIDE.match(n)) and not MCU_SIDE.search(n)
@@ -1111,6 +1203,7 @@ def s1(ctx):
         elif not set(on) <= ARMED_PARTS[ref][0]:
             issues.append(f'S-1: {ref} is on armed net(s) {on}; its named armed nets are {sorted(ARMED_PARTS[ref][0])}')
     ev['armed_parts'] = sorted(ARMED_PARTS)
+    issues += armed_net_issues(ctx.board) + mcu_side_issues(ctx.board)
     reach = connectivity(ctx)
     for start, other in ((RAW, ARMED), (BUS, (RAW,))):
         foreign, count = reach[start]
@@ -1172,20 +1265,27 @@ def parse_value(text, kind):
     if not readable. The first token is read whole: plain 'number[unit]' or infix notation ('4k7' = 4.7k, '100k5' =
     100.5k); anything else in it ('1e3', '1,5k') is unreadable (R6-GATE-06)."""
     text = (text or '').strip()
-    m = re.fullmatch(r'(\d+)(meg|[pnuµmrRkKMG])(\d+)(F?)(?:\s.*)?', text, re.S)
+    mults = r'meg|[pnu\u00b5\u03bcmrRkKMG]'            # U+00B5 and U+03BC both read as micro (R7-GATE-01)
+    unit = r'(?:\u03a9|\u2126|ohms?|F)?' if kind == 'R' else r'F?'
+    m = re.match(rf'(\d+)({mults})(\d+)({unit})(?=\s|$)', text)
     if m:
-        number, mult, has_f = float(f'{m.group(1)}.{m.group(3)}'), m.group(2), True
+        number, mult, unit_found = float(f'{m.group(1)}.{m.group(3)}'), m.group(2), m.group(4)
     else:
-        m = re.fullmatch(r'(\d+(?:\.\d+)?)\s*(meg|[pnuµmrRkKMG])?\s*(F?)(?:\s.*)?', text, re.S)
+        m = re.match(rf'(\d+(?:\.\d+)?)\s*({mults})?\s*({unit})(?=\s|$)'
+                     rf'(?!\s*(?:meg|[pnu\u00b5\u03bcmrRkKMG\u03a9\u2126F]|ohm))', text)
         if not m:
-            return None
-        number, mult, has_f = float(m.group(1)), m.group(2) or '', bool(m.group(3))
+            return None                      # any other unconsumed tail is unreadable ('4.7 kx': a free-text tail
+            # after a number may not start like a multiplier or unit)
+        number, mult, unit_found = float(m.group(1)), m.group(2) or '', m.group(3) or ''
+    has_f = unit_found == 'F'
     if kind == 'C' and not mult and not has_f:
         return None                  # a unitless capacitor value ('220') is not read as farads (R5-SAF-02)
+    if kind == 'C' and mult == 'm' and not has_f:
+        return None                  # '100m' is not a capacitor value; '100mF' is
     if kind == 'R':
         factor = {'': 1.0, 'r': 1.0, 'R': 1.0, 'k': 1e3, 'K': 1e3, 'm': 1e-3, 'M': 1e6, 'meg': 1e6, 'G': 1e9}.get(mult)
     else:
-        factor = {'': 1.0, 'p': 1e-12, 'n': 1e-9, 'u': 1e-6, 'µ': 1e-6, 'm': 1e-3}.get(mult)
+        factor = {'': 1.0, 'p': 1e-12, 'n': 1e-9, 'u': 1e-6, '\u00b5': 1e-6, '\u03bc': 1e-6, 'm': 1e-3}.get(mult)
     return None if factor is None else number * factor
 
 
@@ -1252,6 +1352,11 @@ def s3(ctx):
             if not (ref.startswith('R') and len(fp.Pads()) == 2 and nn == {node, 'GND'}):
                 issues.append(f'S-3: {ref} is on the MCU-side gate node {node} (nets {sorted(nn)}): only U1, the series '
                               f'resistor and resistors to GND may touch it (a pull-up would hold the gate on)')
+    gate_net = ev['Q124'].get('gate')
+    for ref, nn in sorted(part_nets(ctx.board).items()):          # R7-GATE-03: only the named gate parts
+        if gate_net in nn and ref not in GATE_PARTS:
+            issues.append(f'S-3: {ref} is on the pyro gate net {gate_net}: only {sorted(GATE_PARTS)} may touch it '
+                          f'(a part there changes the gate network)')
     for fet in ('Q120', 'Q121'):
         found, ev[fet] = gate_network(ctx, fet, PFET_ROLES, 'load switch')
         issues += found
