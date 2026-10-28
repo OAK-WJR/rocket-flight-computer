@@ -29,7 +29,7 @@ TABLE = Path(__file__).resolve().parent / 'r10_fanout.tsv'
 POUR = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7)]
 STITCH = (
     # west-edge row (x < 6); beside the terminals at x 0.9 (ring 0.65 mm from the edge), clear of the terminal legends'
-    # spots (ARM / IGN / BAT on F.Cu at y 50.5-52.3, 60.5-62.3, 70.5-72.3; the J124 / J1 notes on B.Cu from x 1.18)
+    # spots (IGN / BAT on F.Cu at y 50.5-52.3, 70.5-72.3)
     (2.0, 9.0), (5.0, 9.5), (4.0, 12.0), (3.5, 18.0), (0.9, 48.0), (0.9, 54.5), (0.9, 57.5), (0.9, 64.0), (0.9, 67.0),
     (0.9, 74.5), (0.9, 77.5), (0.9, 80.5),
     # the two pour voids of the review (F.Cu, B.Cu), and a second via in the B.Cu one (the F.Cu void's second via is the

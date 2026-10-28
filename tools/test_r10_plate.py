@@ -14,7 +14,7 @@ class PlateProfile(unittest.TestCase):
     def setUp(self):
         self.spec = json.loads((Path(__file__).resolve().parents[1] /
             'm3_design/assembly_review/sources/r10_design/masses.json').read_text())
-        refs = ['J1', 'J121', 'J124', 'J122', 'C84', 'J3', 'J9', 'J123', 'J400', 'J410', 'J420',
+        refs = ['J1', 'J121', 'J122', 'C84', 'LS120', 'J3', 'J9', 'J123', 'J400', 'J410', 'J420',
                 'J9 mated', 'J123 mated', 'J400 mated', 'J410 mated', 'J420 mated', 'J122 mated']
         self.fit = dict(profile='r10', outline=[0, 0, 46, 84], supports=[[4,4], [42,4], [4,80], [42,80], [42,42]],
                         rows=[(1, ref, 'F', [20, 40, 22, 42, 0, 2]) for ref in refs])

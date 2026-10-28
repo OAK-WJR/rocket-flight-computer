@@ -7,7 +7,7 @@ block x 28.3-32.4 with U410's cell, and 3V3 is the rest: a strip x 32.7-34.9 und
 U1 forward of the camera switch, and a forward finger for the 3V3 buck's output, D120 and the servo clamp. Each port
 control net's B.Cu run lies wholly over one region (D-R3-xx, below).
 Two In2 GND zones take priority over the rail regions (R10_DECISIONS D-R3-01, D-R3-05): IN2_GND_CH1 under the whole CH1
-column (J121, J124, R134, Q124 and its gate network, TP122 and their pyro copper), so that no rail plane lies near a
+column (J121, R134, Q124 and its gate network, TP122 and their pyro copper), so that no rail plane lies near a
 pyro barrel; and IN2_GND_Y1, R9's crystal plane (R9_DECISIONS D-S8-20) translated by CORE_SHIFT, with R9's In2 track
 keep-out over it.
 The outer GND pours are drawn by the ground family. Zones are filled at the end of the build.
@@ -42,13 +42,13 @@ IN2_3V3 = [(0.3, 7.3), (8.7, 7.3), (8.7, 10.8), (18.3, 10.8), (18.3, 7.3), (24.2
            (28.0, 29.3), (32.7, 29.3), (32.7, 26.3), (33.35, 26.3), (33.35, 24.1), (32.7, 24.1), (32.7, 9.9),
            (34.9, 9.9), (34.9, 36.05), (33.9, 36.05), (33.9, 38.1), (33.65, 38.1), (33.65, 39.9), (32.8, 40.75), (32.8, 42.8), (39.7, 42.8),
            (39.7, 57.7), (31.7, 57.7), (31.7, 75.7), (22.1, 75.7), (22.1, 61.7), (17.8, 61.7), (17.8, 57.7), (0.3, 57.7)]
-# D-R3-01: In2 GND under the CH1 column, priority over the rail regions. Every PYRO1_BUS / _IGN / _OUT / _GATE barrel
-# and its outer copper lies >= 1.25 mm inside it (a rail fill keeps its 0.25 mm clearance beyond it), J124's inter-pad
-# window included. One notch (x 8.65-9.75) keeps R13's 3V3 via (9.2, 52.98) on the 3V3 region, 1.41 mm from J121.1's
+# D-R3-01: In2 GND under the CH1 column, priority over the rail regions. Every PYRO1_IGN / _OUT / _GATE barrel
+# and its outer copper lies >= 1.25 mm inside it (a rail fill keeps its 0.25 mm clearance beyond it).
+# One notch (x 8.65-9.75) keeps R13's 3V3 via (9.2, 52.98) on the 3V3 region, 1.41 mm from J121.1's
 # barrel; a 3V3 tongue (y 56.85-57.75 from the east, x 17.45-18.75 down to y 59.15) reaches D120's 3V3 via (18.0, 58.6),
-# which PYRO1_CONT, PYRO1_BUS and PYRO1_COLD enclose on B.Cu, its fill 0.79 mm from R132.1 (PYRO1_BUS, B.Cu); R164's 3V3
+# which PYRO1_CONT, RAW_ACT and PYRO1_COLD enclose on B.Cu, its fill 0.79 mm from R132.1 (RAW_ACT, B.Cu); R164's 3V3
 # via (19.05, 55.9) and C14's (20.2, 52.1) stay east of x 18.55; R122's RAW via sits south of y 68.4. West of x 16.3
-# the zone reaches y 69.7, so RAW_PROTECTED also keeps >= 1.0 mm from J124.2's barrel and from under Q121's RAW_ACT
+# the zone reaches y 69.7, so RAW_PROTECTED also keeps >= 1.0 mm from under Q121's RAW_ACT
 # drain pad (a RAW_PROTECTED - RAW_ACT defect would bypass the load switch).
 IN2_GND_CH1 = [(0.3, 51.8), (8.65, 51.8), (8.65, 53.55), (9.75, 53.55), (9.75, 51.3), (18.55, 51.3), (18.55, 53.4),
                (18.0, 53.4), (18.0, 56.45), (19.85, 56.45), (19.85, 55.55), (20.4, 55.55), (21.4, 54.55), (22.5, 54.55),

@@ -1114,7 +1114,8 @@
     "17": "NC",
     "28": "LOGIC_SOURCE_ST",
     "29": "BAT_FAULT_N",
-    "30": "VLOGIC_SENSE"
+    "30": "VLOGIC_SENSE",
+    "16": "ACT_EN_MCU"
   },
   "replacements": {
     "R92": {
@@ -1181,22 +1182,6 @@
       },
       "kind": "fit"
     },
-    "J124": {
-      "lib": "M3:Conn_1x2",
-      "value": "DB125-3.5-2P-BK-S",
-      "footprint": "rocket:M3_DB125_2P_BK",
-      "fields": {
-        "LCSC": "C52993880",
-        "Manufacturer": "DORABO",
-        "Manufacturer Part": "DB125-3.5-2P-BK-S",
-        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
-      },
-      "nets": {
-        "1": "PYRO1_BUS",
-        "2": "RAW_ACT"
-      },
-      "kind": "fit"
-    },
     "C84": {
       "lib": "M3:PolarCap",
       "value": "470uF 25V polymer",
@@ -1243,6 +1228,54 @@
       "nets": {
         "1": "BAT_DAMP",
         "2": "GND"
+      },
+      "kind": "fit"
+    },
+    "R132": {
+      "lib": "M3:R",
+      "value": "5.1k",
+      "footprint": "rocket:R0402",
+      "fields": {
+        "LCSC": "C25905",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF5101TCE",
+        "Datasheet": ""
+      },
+      "nets": {
+        "2": "ARM1_SENSE_MID",
+        "1": "RAW_ACT"
+      },
+      "kind": "fit"
+    },
+    "R134": {
+      "lib": "M3:R",
+      "value": "2R 1% 2W pulse",
+      "footprint": "rocket:R2512",
+      "fields": {
+        "LCSC": "C3013496",
+        "Manufacturer": "Bourns",
+        "Manufacturer Part": "CRM2512-FX-2R00ELF",
+        "Datasheet": ""
+      },
+      "nets": {
+        "2": "RAW_ACT",
+        "1": "PYRO1_IGN"
+      },
+      "kind": "fit"
+    },
+    "R122": {
+      "lib": "M3:R",
+      "value": "1k",
+      "footprint": "rocket:R0402",
+      "fields": {
+        "LCSC": "C11702",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1001TCE",
+        "Datasheet": "https://www.lcsc.com/product-detail/C11702.html"
+      },
+      "nets": {
+        "1": "ACT_EN_MCU",
+        "2": "ACT_EN"
       },
       "kind": "fit"
     }
@@ -1341,6 +1374,7 @@
     "D31",
     "FB30",
     "FB31",
+    "J124",
     "J30",
     "J31",
     "L3",
@@ -1411,15 +1445,16 @@
       "Retained: four 1k series resistors, 10k MCU-side pull-downs and SRV05-4 clamp."
     ],
     "actuator_power": [
-      "R10: Q120/Q121 and gate network retained as the pyro-bus load switch; RAW_ACT feeds J124 and RAW_ACT sensing only.",
-      "C121 removed; servos use external pack power and return. The ARM plug remains a complete break; no feed directly from BAT_IN or RAW_PROTECTED.",
-      "R134 limits a shorted igniter; firmware ends each fire pulse within20ms. Copper and harness pulse qualification remains required."
+      "R10 single screw switch (owner 2026-10-28): J400 powers and arms the board; J124 is removed. Q120/Q121 remain the pyro-bus load switch feeding RAW_ACT.",
+      "PC1 (U1.16) drives ACT_EN_MCU through R122 1k to Q122; R123 100k holds Q122 off in reset or unpowered. Q124 uses a separate MCU fire pin and its retained gate network.",
+      "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and both retained bus-sense dividers; no feed directly from BAT_IN or RAW_PROTECTED.",
+      "R134 limits a shorted igniter; firmware ends each fire pulse within 20 ms. Copper and harness pulse qualification remains required."
     ],
     "pyro": [
-      "R10: one recovery channel, unchanged functional fire/gate/sense network. J124.2 RAW_ACT, J124.1 BUS; J121.2 IGN, J121.1 OUT.",
-      "ARM plug is the complete electrical break: fit last, remove first. Black3.5mm terminals enter from -x; direct J124 pad/copper gap >=1.5mm.",
+      "R10 single screw switch: RAW_ACT directly feeds R134.2 and R132.1 behind Q120/Q121; no separate ARM terminal or PYRO1_BUS net. J121.2 IGN, J121.1 OUT.",
+      "Power switch on last, off first; the pyro channel is live whenever the board is on. No firing before accelerometer and barometer launch detection; bench USB or e-match disconnected.",
       "R10 uses default board clearance; accepted loss of R9 single-defect spacing margins does not waive functional reset, gate or divider safety.",
-      "Ground ARM/continuity checks refuse firing; in flight readings only log/annunciate and never veto a fire. Firmware fire timeout <=20ms."
+      "Ground bus/continuity checks refuse firing; in flight readings only log/annunciate and never veto a fire. Firmware fire timeout <=20 ms."
     ],
     "camera_connector": [
       "R10 camera GH port: regulated switched supply, GND, camera RX and camera TX. UART isolation remains on sheet09.",

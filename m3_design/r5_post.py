@@ -563,14 +563,15 @@ def _gap(a, c):
     return math.hypot(dx, dy)
 
 
-def designators(b, silks, rmax=5.0, cap=1.5, big_cap=3.0, margin=0.15):
+def designators(b, silks, rmax=5.0, cap=1.5, big_cap=3.0, margin=0.15, priority=(), fixed=()):
     """R4 place_ref_clear for every part: the text keeps GAP from pads, vias, holes and other silkscreen and stays
     off every package body, sits at most `cap` mm from its own pads (`big_cap` for parts over 5 mm) and nearer
     them (by `margin`) than any other part's pads. A top part tries the top first, then the bottom with the text
     centred within its own pads' extent and 1.2 mm (ink) clear of every bottom part's pads (AGENTS: crowded designators go
     to the bottom side under their part, never next to another part); a
     bottom part's designator stays on the bottom (on the top it read as a top part's). The most constrained
-    parts are placed first."""
+    parts are placed first, after any references named in `priority`. References in `fixed` were already placed
+    and added to `silks` by the caller."""
     HIDDEN[:] = []
     pads = [(f.GetReference(), p, bx(p)) for f in b.GetFootprints() for p in f.Pads()]
 
@@ -635,9 +636,10 @@ def designators(b, silks, rmax=5.0, cap=1.5, big_cap=3.0, margin=0.15):
             t.SetTextSize(pcbnew.VECTOR2I(MM(1.0), MM(1.0)))
         if t.GetTextThickness() < MM(0.15):
             t.SetTextThickness(MM(0.15))
-    todo = {f.GetReference(): f for f in b.GetFootprints()}
+    todo = {f.GetReference(): f for f in b.GetFootprints() if f.GetReference() not in fixed}
     counts = {ref: len(candidates(f, limit=60)) for ref, f in todo.items()}
-    for ref in sorted(todo, key=lambda r: (counts[r], r)):
+    preferred = set(priority)
+    for ref in sorted(todo, key=lambda r: (r not in preferred, counts[r], r)):
         f = todo[ref]
         t = f.Reference()
         c = candidates(f, limit=1)

@@ -13,20 +13,20 @@ graphics (sync_silk; nothing else in a footprint may differ, asserted with KiCad
 board-level silkscreen item is deleted and every footprint field hidden, then, in this order:
   1. J122's plug numbers 1-4 (west to east, the _MIR numbering) in one row across the plugs (r9_post.put_plug_row);
      then the legends about one part, each at the free spot nearest that part's courtyard within LEGEND_REACH (6 mm,
-     AGENTS.md; check_r7.legend_subjects gates it): the connector words (check_r10.WORD_LEGENDS_R10: ARM, IGN, BAT, CAM,
-     SWD, SERVO, PULL, GPS, RADIO; and SWITCH for J400), top face first (the black terminals J124 / J121 are told apart
-     by ARM / IGN: REQUIREMENTS F8, check_actuators); the port pin tables (PORTS: J9 in the board-side convention with
-     its supply, J2), the J124 notes (NOTES) and J122's row table and harness note (O3 / O6), J9's table and the
+     AGENTS.md; check_r7.legend_subjects gates it): the connector words (check_r10.WORD_LEGENDS_R10: IGN, BAT, CAM,
+     SWD, SERVO, PULL, GPS, RADIO; and SWITCH for J400), top face first; the port pin tables (PORTS: J9 in the board-side
+     convention with its supply, J2), J122's row table and harness note (O3 / O6), J9's table and the
      notes also with their subject the nearest connector to the legend's centre by SUBJECT_MARGIN (put_subject), J2's
      rows by 0 mm where they can (else beside J2 by label_near, listed in the evidence);
-  2. the terminal pin legends (check_r10.TERMINAL_PINS_R10: J124 1:BUS1 2:RAW, J121 1:E1- 2:E1+, J1 1:BAT+ 2:GND,
+  2. the terminal pin legends (check_r10.TERMINAL_PINS_R10: J121 1:E1- 2:E1+, J1 1:BAT+ 2:GND,
      J400 1:SW 2:SW, J123 1:PULL 2:GND), each at the free spot nearest its own pin whose text box has that pin as its
      nearest connector pin by OWN_MARGIN (r9_post.put_pin), top face first;
   3. the revision legend M3-ASSY-R10 and JLC's order-number placeholder JLCJLCJLCJLC (ORDERING), both required;
   4. J122's top-side row key (J122_TOP_ROWS beside the rows; the harness note is on the top), where the top has room
      (optional);
   5. pin-1 dots beside pad 1 of DOT_PARTS (pin1_dots: r9_post's mark and search, plus the dot nearer its own pad 1 than
-     any other part's pad 1 by DOT_OWN_MARGIN), then every designator by the R4 rule (r5_post.designators: >= 1.0 mm
+     any other part's pad 1 by DOT_OWN_MARGIN), then every designator by the R4 rule (r5_post.designators, required
+     SHOWN_REFS first: >= 1.0 mm
      text, never over a pad, via or hole or off the board, nearer its own part than any other; a crowded one goes on the
      bottom under its part; one with no such spot is hidden and kept on the Fab layer), then R8's courtyard and run-on
      tests (r8_post); one that fails is placed again or hidden;
@@ -83,12 +83,9 @@ SUBJECT_PORTS = ('J9',)         # port tables held to the nearest-subject rule b
                                 # can (J3 sits 1.1 mm north of J2 and a support 2.9 mm south: R3-MFG-05), else beside J2
 NO_ROOM_PORTS = {'J410': ('4V8', 'GND', 'TXO', 'RXI'), 'J420': ('4V8', 'GND', 'TXO', 'RXI')}
 WORDS = tuple((ref, word) for word, ref in check_r10.WORD_LEGENDS_R10.items()) + (('J400', 'SWITCH'),)
-# The ARM link goes in last and keeps its 5 A fast fuse (2S pack), with both notes beside J124 (R3-REQ-06).
-# OQ-6 revised (owner, 2026-10-28): no battery-lead fuse or J1 fuse note.
-NOTES = (('J124', 'J124 ARM LAST'), ('J124', 'J124 5A FAST 2S'),
-         ('J122', 'J122 1:S 2:NC 3:GND'), ('J122', 'SERVO + FROM HARNESS'))
-NOTE_PLACE = {'J124': (('B', 'F'), '-x'),                          # (faces in order, preferred side)
-              'SERVO + FROM HARNESS': (('F', 'B'), None)}                # the plugs mate on the top (R3-REQ-06(b))
+# Owner, 2026-10-28: the external power switch arms the board; the separate ARM terminal and fuse notes are removed.
+NOTES = (('J122', 'J122 1:S 2:NC 3:GND'), ('J122', 'SERVO + FROM HARNESS'))
+NOTE_PLACE = {'SERVO + FROM HARNESS': (('F', 'B'), None)}          # the plugs mate on the top (R3-REQ-06(b))
 SUBJECT_MARGIN = 1.0            # mm: a note / port table centre is this much nearer its connector's courtyard than any other
 # J122's top-side key (R3-REQ-06(b)): the plugs mate on the top, where only SERVO was; row labels beside the rows
 J122_TOP_ROWS = (('S', ('1', '4', '7', '10')), ('NC', ('2', '5', '8', '11')), ('GND', ('3', '6', '9', '12')))
@@ -103,6 +100,7 @@ CONNECTOR = check_r8.CONNECTOR
 DOT_PARTS = ('U9', 'U10', 'U11', 'U13', 'U400', 'U402', 'U410', 'U412', 'U420', 'U422')
 DOT_REQUIRED = ('U9', 'U10', 'U11', 'U13')
 DOT_REACH = r9_post.DOT_REACH
+FIXED_REFS = {'Q124': ('F', 13.9, 61.0, 0)}  # nearest legal top spot is beyond the fallback's 3 mm search radius
 DOT_OWN_MARGIN = 0.5            # mm: a pin-1 mark's centre is this much nearer its pad 1 than any other part's pad 1
 MARK_R = 0.35                   # mm: a footprint silkscreen circle this small is a mark, not an outline
 SILK_PAD = 0.15                 # mm: JLC pad-to-silkscreen minimum, every silkscreen item to every solder-mask opening
@@ -216,7 +214,7 @@ def put_subject(b, silks, text, ref, boxes, sides=('B', 'F'), angles=(90, 0), re
     distance between the two centres), within reach, on the first face in sides that has one, whose centre is nearer
     ref's courtyard than any other connector's by SUBJECT_MARGIN (R3-REQ-06: R8's notes were centred one terminal away
     from their subject). prefer '-x' ranks first the spots whose centre lies on the subject's -x side (the wire-entry
-    side of J124 / J1, where the harness is handled), then those centred along the terminal column (|dy|, 0.1 mm bands).
+    side of J1, where the harness is handled), then those centred along the terminal column (|dy|, 0.1 mm bands).
     Returns (side, x, y, angle, gap, margin) or None."""
     box = boxes[ref]
     bc = ((box[0] + box[2]) / 2, (box[1] + box[3]) / 2)
@@ -628,7 +626,20 @@ def finish(b, lib):
     placed.update(top_key)
     # 5. pin-1 dots, designators, the courtyard and run-on tests
     dots, no_dot = pin1_dots(b, silks, [r for r in DOT_PARTS if b.FindFootprintByReference(r) is not None])
-    silk.designators(b, silks)
+    for ref, (side, x, y, angle) in FIXED_REFS.items():
+        f = b.FindFootprintByReference(ref)
+        t = f.Reference()
+        t.SetLayer(silks[side].layer)
+        t.SetMirrored(side == 'B')
+        t.SetTextSize(pcbnew.VECTOR2I(silk.MM(1.0), silk.MM(1.0)))
+        t.SetTextThickness(silk.MM(0.15))
+        t.SetTextAngleDegrees(angle)
+        t.SetPosition(silk.P(x, y))
+        t.SetVisible(True)
+        if not silks[side].free(silk.ink(t)) or r8_post.courtyard_fails(b, f):
+            raise RuntimeError(f'{ref}: fixed designator spot no longer clear or nearest its own courtyard')
+        silks[side].add(silk.ink(t))
+    silk.designators(b, silks, priority=check_r10.SHOWN_REFS, fixed=FIXED_REFS)
     moved = {}
     with check_r10.patched(r8_post, RunOnSilk=Silk10):     # place_designator's own obstacle map keeps R10's keep-outs
         for _ in range(4):
@@ -636,7 +647,7 @@ def finish(b, lib):
             bad.update({ref: ('run-on',) for ref in r8_post.run_on_offenders(b) if ref not in bad})
             if not bad:
                 break
-            for ref in sorted(bad):
+            for ref in sorted(bad, key=lambda r: (r not in check_r10.SHOWN_REFS, r)):
                 moved[ref] = (bad[ref], r8_post.place_designator(b, ref))
     left = r7_post.courtyard_offenders(b)
     if left:
@@ -654,7 +665,7 @@ def finish(b, lib):
     b.GetTitleBlock().SetRevision(REV)
     with check_r10.patched(check_r7, WORD_LEGENDS=check_r10.WORD_LEGENDS_R10), \
             check_r10.patched(check_r8, TERMINAL_PINS=TERMINAL_PINS):
-        issues = (check_r7.duplicate_ids(b) + port_legends(b) + check_r7.legend_subjects(b) +
+        issues = (check_r7.duplicate_ids(b) + port_legends(b) + check_r7.legend_subjects(b) + check_r10.hidden_refs(b)[0] +
                   check_r8.terminal_legends(b)[0])
     found, margins = subjects(b, boxes)
     issues += found
@@ -682,7 +693,7 @@ def finish(b, lib):
     return {'revision': REV, 'outline_mm': [silk.W, silk.L], 'footprint_silk_from_library': synced, 'legends': placed,
             'subject_margins_mm': margins, 'port_rows_not_nearest': fallback,
             'port_tables_no_room': {ref: list(names) for ref, names in NO_ROOM_PORTS.items()}, 'pin1_dots': dots, 'no_pin1_dot': no_dot, 'pin1_marks': marks,
-            'fab_moved': fab_moved, 'designators_shown': visible,
+            'fab_moved': fab_moved, 'designators_shown': visible, 'fixed_designators': FIXED_REFS,
             'top_designators_under_part_on_bottom': bottom_of_top, 'hidden_references': hidden,
             'replaced_designators': {r: {'why': list(w), 'after': None if g is None else [g[0], list(g[1])]}
                                      for r, (w, g) in sorted(moved.items())}}

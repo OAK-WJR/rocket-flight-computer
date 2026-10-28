@@ -15,18 +15,17 @@ rounds) is not yet met and the owner has not accepted it. R9 (below) stays the a
 Record: [docs/M3_R10.md](docs/M3_R10.md); validation, review rounds, owner questions and the deviation list:
 [docs/R10_VALIDATION.md](docs/R10_VALIDATION.md); plan and decisions: `m3_design/assembly_review/sources/r10_design/`
 (r10_plan.md, R10_DECISIONS.md D-R1-01 … D-R8-03, D-OA-01 … D-OA-09; adopted AUD/GAP cuts).
-- **Owner-answer pass (2026-10-28):** board SHA-256 `b860afbe406d7daec9757ccde89987d3439b32e0b1f8078bb01363be1704baa1`, 46 × 90 mm,
+- **Single-switch pass (owner decision 2026-10-28; CAD / software / fabrication verified):** one external screw switch on GH-2 J400 powers and arms R10, on only on the pad / rail, on last and off first. J124, its removable ARM link / 5 A fuse and legends are removed; the former PYRO1_BUS joins canonical RAW_ACT behind Q120 / Q121. PC1 (U1.16) now drives ACT_EN_MCU through R122 1 kΩ / Q122 with R123 100 kΩ pull-down, deliberately enabled after safe boot for on-rail bus checks; PE4 separately drives Q124. Both default off in reset / unpowered. R134 2 Ω, gate networks, cold pull-up and bus / continuity measurements stay. Firmware never fires before accelerometer + barometer launch detection; ground readings are hard refusals and in-flight readings never veto a fire. No physical break while powered is owner-accepted: connect the e-match only with no USB / self-powered back-feed source attached. Pad GPS / telemetry / IMU checks are on-rail; bench work uses USB with the pack disconnected or the e-match disconnected, dummy loads for output tests. Pull-pin J123 remains; no AUD/GAP cuts in this pass. Board SHA-256 `60be35eaff86dd7a5fb8e065aa4204a51e7d786d7dfc8d2456cdd66c4b86f901` (46 × 90 mm, 2,521,622 bytes), refreshed netlist / binding, complete build gates and two-build byte equality pass. The same input-feed signature passes all 2304 hot-plug cases (simulation / Inference). The regenerated fab package has 228 CPL rows / 83 BOM lines and passes orientation, paste and manifest checks. Current self-tests: shell 4, fit 23, paste 5, routing 57, R10 122 (3 NumPy cases rerun separately). Plate f1 276.8 Hz (Calc). No physical / bench or firmware result; revised sense thresholds and installed harness remain unqualified.
+- **Historical owner-answer pass (2026-10-28, before the single-switch change):** board SHA-256 `b860afbe406d7daec9757ccde89987d3439b32e0b1f8078bb01363be1704baa1`, 46 × 90 mm,
   2,547,258 bytes; two fresh complete builds byte-identical. Netlist `30f3d571…`; regenerated fab package bound to it;
   full `tools/check.sh` including the current manifest passes at zero. R92 3.3 kΩ, R166 0.36 Ω and C88-before-U9
   feed qualify the 2304-case reverse hot-plug model (simulation / Inference, not bench qualification). No interrupted
-  edits were discarded. The AUD/GAP cuts are next, followed by ten fresh lenses in round 9; no clean-round credit.
-  **Commit pending:** the environment denies Git's worktree `index.lock` write; staging and committing both failed.
-  AUD/GAP source changes and fresh full reviews have not started.
+  edits were discarded. The supervisor committed the owner-answer pass in `6fdac43`. The single-switch pass above follows it; separate AUD/GAP cuts and ten fresh lenses in round 9 remain next. No preparatory pass receives clean-round credit.
 - What changed from R9: no on-board GNSS / radio (external GPS and LR900-F radio on GH-4 ports with translators and
   switched, current-limited supplies: a 5.456 V buck and a 4.792 V LDO), no board servo power (O3: J122's + row open,
   servo power and return through the harness, O6), the camera on the port buck's switch, 3.5 mm screw terminals, J1 split
   (battery terminal + GH-2 switch), C84 470 µF polymer with F6 firmware load shedding, no pyro-specific spacing rules
-  (In2 GND under the CH1 column since round 3), MCU pin re-maps (D-R2-06 / -07 / -09), every signal hand-drawn.
+  (In2 GND under the CH1 column since round 3), J124 removed for one screw power / arming switch on J400, MCU pin re-maps (D-R2-06 / -07 / -09), every signal hand-drawn.
 - **Round 3 fix pass:** In2 GND under the pyro column (S-8), U9's power path widened, In2 re-cut so every port control
   run has one reference plane, GND vias at every port-signal layer change, crystal In2 GND restored, GND stitching,
   silkscreen ≥ 0.15 mm from openings, R162 1 kΩ, R410's budget re-derived; new gates (arcs, K-loader, S-8, S-9, wider
@@ -44,7 +43,7 @@ Record: [docs/M3_R10.md](docs/M3_R10.md); validation, review rounds, owner quest
 - **Round 8 fix pass:** check.sh's own fail-closed test repaired and run; U5 coat exclusion and a complete R10 order-remarks
   block in ORDERING §8; legend-text, hidden-designator and BAT_IN / RAW_PROTECTED width gates; fab manifest checked by
   check.sh; small copper clean-ups (VBUS_SENSE jog, In2 3V3 neck and tooth, an I2C stitch via).
-- **Verified (CAD / software only):** `tools/check.sh` passes at zero (DRC every severity incl. silkscreen with
+- **Historical verification before the single-switch change (CAD / software only):** `tools/check.sh` passed at zero (DRC every severity incl. silkscreen with
   schematic parity 0 / 0 / 0, ERC 0, metadata / 3D audit, silkscreen outline, fit, plate model f1 275.6 Hz, check_r10
   full OK, route_check r10 0 failing, check_actuators OK, tools/test_r10_check.py 120 tests (3 NumPy cases rerun separately) OK, test_check_shell / test_fit_check / test_paste_check OK, test_route_check 57 OK);
   r10_sch_check OK with nine seeded faults caught; the fab package's S-4 / CPL / paste /

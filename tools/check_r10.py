@@ -18,34 +18,28 @@ P-2 PYRO_BLOCK, P-3 purity, P-4 rule H, P-5 bridge table, P-6 bare gate pads, P-
 block, the strict pad rules, K-power-pyro's D18 / D85 / D19 spacing) and every RF rule (R-1..R-13, the U30 / U31 / J30 /
 J31 checks, GCPW). Pyro copper uses the board default clearance, which KiCad DRC enforces.
 
-Safety (AGENTS.md section 2, F8; functional, not spacing):
-  S-1   ARM break: J124 has exactly one RAW_ACT and one PYRO1_BUS pad; no other part joins the RAW_ACT side to the
-        armed side (a net path through any part but J124, rails GND / 3V3 / 3V3A excepted); no test pad on armed
-        copper (PYRO1_BUS / IGN / OUT); no part but J124, whatever its net count, has pads on both RAW_ACT and an
-        armed net (R3-GATE-02: the net-path search passes only parts with <= 4 nets); no copper (track, arc, via, fill,
-        drawing, copper text, footprint copper zone, any net or none) connects RAW_ACT pads to armed pads (geometric
-        copper connectivity from the pads, independent of net labels)
+Safety (AGENTS.md section 2, F8; single screw switch owner decision 2026-10-28):
+  S-1   canonical pyro bus RAW_ACT: J124 and PYRO1_BUS are absent; R134.2 and R132.1 are on RAW_ACT behind Q121.
+        Only named parts touch pyro / sense copper; no other part or copper bypasses R134 or the sense-divider tops
+        (geometric copper connectivity includes tracks, arcs, vias, fill, drawings and copper text, any net or none).
   S-2   pyro feed: Q120 / Q121 are the back-to-back load switch BAT_IN -> ACT_FET_S -> RAW_ACT with gates on
         ACT_GATE; RAW_ACT is reached from no supply (BAT_IN, RAW_PROTECTED, ACT_FET_S, VLOGIC, ...) except through
-        Q121; the armed side reaches no supply and no RAW_ACT except through J124; neither side's copper touches a
-        foreign pad
+        Q121; the downstream pyro / sense network has only its named rail ties and its copper touches no foreign pad
   S-3   gate networks defined off: Q124 (pyro) gate has a pull-down to its source, a gate-source capacitor and a series
         resistor from a U1 pin; Q120 / Q121 (P-FET load switch) gate has a gate-source resistor and capacitor and a
-        series resistor from its driver
+        series resistor from its driver; PC1 independently enables Q122 through R122, with R123 to GND
   S-4   R1-07 required fitted: every safety part (and every R10 contract part) is on the board, not DNP, not excluded
         from BOM or position files, not board-only, on the board and in the schematic; also in --bom / --cpl if given
-  S-5   R1-m10 J124 gap: J124's two pads >= 1.5 mm apart edge to edge on every copper layer, and RAW_ACT vs
-        PYRO1_BUS copper >= 1.5 mm inside J124's courtyard (and its pad field + 1.5 mm); R3-SAF-01: no copper (track,
-        arc, via, pad, fill) of any net but GND, RAW_ACT or PYRO1_BUS inside J124's inter-pad window (the rectangle
-        from pad centre to pad centre, one pad width across) on any copper layer
+  S-5   single screw switch: J400 contacts lead only through their 470 k resistors to BAT_IN and U9 EN; no part or
+        copper bypasses the contact; obsolete ARM-terminal and fuse legends are rejected by K-legends
   S-6   external ports: no part (the MCU U1 excepted) has pads on both a port net (GPS_ / RADIO_ / CAM_ / PORT_) and a pyro / arming net
         (PYRO1_ / ARM1_ / ACT_ / RAW_ACT*); port copper >= the board default clearance from pyro / arming copper on
         the same layer (no shared copper item)
   S-7   J122 (O3): the middle (+) row 2 / 5 / 8 / 11 has no net and no copper touching it, the GND row 3 / 6 / 9 / 12
         is on GND, the signal row 1 / 4 / 7 / 10 on SERVO1-4_OUT
   S-8   R3-SAF-01: on In1 and In2 no track or zone fill of any net but GND (and the barrel's own net) lies within
-        1.0 mm of a plated barrel (via or plated hole wall) of PYRO1_BUS, PYRO1_IGN, PYRO1_OUT or PYRO1_GATE
-  S-9   R3-GATE-07: fire-loop copper width. On RAW_ACT, PYRO1_BUS, PYRO1_IGN, PYRO1_OUT, ACT_FET_S and BAT_IN, every
+        1.0 mm of a plated barrel (via or plated hole wall) of RAW_ACT, PYRO1_IGN, PYRO1_OUT or PYRO1_GATE
+  S-9   R3-GATE-07: fire-loop copper width. On RAW_ACT, PYRO1_IGN, PYRO1_OUT, ACT_FET_S and BAT_IN, every
         track on the current path between the net's power terminals (FIRE_TERMINALS; the copper left when dead-end
         branches such as the sense taps are pruned back to the path) is >= 1.0 mm wide (D-R2-02's 1.0 mm loop), except a
         pad neck (a segment ending in a pad no wider than the track) and the named, measured FIRE_NARROW exceptions
@@ -60,7 +54,7 @@ Mechanical and placement (kept from check_r9 where they still apply, read from t
   M-7   U4 on the bottom at R9's rotation 180 (roll = -gyro_Y, R9_DECISIONS D-S7-06) with |x - board centre| <= 13 mm;
         no via or fill under U4 / U5 on their side (check_r9.m7); the axis map is read from the board and reported
   P-8   R168 / R170 / R172 at the MCU end (check_r9.p8)
-  P-11  J1 / J121 / J124 wires enter from -x (owner, r10_plan 2 item 2; J1's wires leave the same west face, R3-MEC-02);
+  P-11  J1 / J121 wires enter from -x (owner, r10_plan 2 item 2; J1's wires leave the same west face, R3-MEC-02);
         the entry direction is read from the footprint
         description ("wire entry +y"), else DB128's local -y. Wire room to the bore wall: R8 / R9's 6.25 mm is R8's
         measured value (a non-regression floor, not a derived need). Owner OQ-1, 2026-10-28: R10's accepted floor is
@@ -122,7 +116,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import check_actuators as actuators                             # noqa: E402
 from sexpr import read, properties                              # noqa: E402
 
-REQUIRED_FITTED = (set(actuators.PINNED) - {'C121'}) | {
+REQUIRED_FITTED = (set(actuators.PINNED) - {'C121', 'J124'}) | {
     'R131', 'C127', 'C129', 'C122', 'C84', 'U11', 'U12', 'U13',
     'R100', 'R101', 'R102', 'R103', 'C91', 'C92', 'C93', 'C100', 'C29',
     'J123', 'J400', 'J410', 'J420', 'U400', 'U401', 'U402', 'U410', 'U420',
@@ -141,13 +135,13 @@ MCU = {'63': 'GPS_TX_MCU', '64': 'GPS_RX_MCU', '52': 'RADIO_TX_MCU', '51': 'RADI
        '55': 'RADIO_PWR_EN', '56': 'RADIO_FAULT_N', '45': 'RADIO_UART_OE',
        # R10_DECISIONS D-R2-07 (camera control, buzzer / pull-pin) and D-R2-09 (status / VLOGIC sense pins)
        '7': 'PULLPIN', '8': 'BUZZ_DRV', '31': 'NC', '39': 'CAM_UART_OE', '41': 'CAM_PWR_EN', '42': 'CAM_FAULT_N',
-       '17': 'NC', '28': 'LOGIC_SOURCE_ST', '29': 'BAT_FAULT_N', '30': 'VLOGIC_SENSE'}
+       '16': 'ACT_EN_MCU', '17': 'NC', '28': 'LOGIC_SOURCE_ST', '29': 'BAT_FAULT_N', '30': 'VLOGIC_SENSE'}
 PARTS = {'J1': ('C466970', 'M3_DB125_2P_GN'),
-         'J121': ('C52993880', 'M3_DB125_2P_BK'), 'J124': ('C52993880', 'M3_DB125_2P_BK'),
+         'J121': ('C52993880', 'M3_DB125_2P_BK'),
          'J400': ('C161690', 'M3_GH_BM02B_GHS_TBT'), 'J123': ('C161690', 'M3_GH_BM02B_GHS_TBT'),
          'J410': ('C161692', 'M3_GH_BM04B_GHS_TBT'), 'J420': ('C161692', 'M3_GH_BM04B_GHS_TBT'),
          'C84': ('C46550466', 'M3_MA_8x10')}
-REMOVED = {'U30', 'U31', 'J30', 'J31', 'C121', 'C150', 'C151', 'U7', 'U8', 'L3'}
+REMOVED = {'U30', 'U31', 'J30', 'J31', 'C121', 'C150', 'C151', 'U7', 'U8', 'L3', 'J124'}
 
 
 def population(text, required=REQUIRED_FITTED, schematic=False):
@@ -609,7 +603,7 @@ def contract(text):
         issues.append('duplicate footprint reference')
     rf = re.compile(r'(U3[01]|J3[01]|Q3\d|[RCDLQ]3\d\d|D3[01]|L30|FB3[01]|TP30)')
     for ref in sorted((REMOVED & fps.keys()) | {r for r in fps if rf.fullmatch(r)}):
-        issues.append(f'{ref}: removed R9 RF/servo/camera component remains')
+        issues.append(f'{ref}: removed RF/servo/camera/ARM component remains')
     for ref, nets in CONNECTORS.items():
         if tuple(pins.get(f'{ref}.{i}') for i in range(1, len(nets) + 1)) != nets:
             issues.append(f'{ref}: connector pin mapping must be {nets}')
@@ -633,6 +627,8 @@ def contract(text):
         if nets:
             issues.append(f'{ref}: external port touches safety nets {nets}')
     for net in set(pins.values()) - {None}:
+        if net == 'PYRO1_BUS':
+            issues.append('PYRO1_BUS: obsolete separate bus; R10 uses RAW_ACT behind Q120/Q121')
         if re.match(r'^(GNSS_|3V3_GNSS|3V3_RADIO|RADIO_(RF|SCK|MOSI|MISO|NSS|BUSY|DIO|NRST|TXEN|RXEN))', net):
             issues.append(f'{net}: obsolete on-board RF net remains')
     return issues
@@ -650,12 +646,11 @@ def functional(text):
 # driver and the cold pull-up, all of which the F8 functions rely on). REQUIRED_FITTED (above) adds every R10 contract
 # part and check_actuators' pinned parts.
 SAFETY_FITTED = {'R134', 'R126', 'R127', 'R128', 'C126', 'Q124', 'Q120', 'Q121', 'R120', 'C120', 'R121', 'Q122',
-                 'J124', 'J121', 'D120', 'R129', 'R130', 'R131', 'R132', 'R133', 'R173', 'R175', 'R178', 'R180',
+                 'J400', 'R80', 'R165', 'R122', 'R123', 'J121', 'D120', 'R129', 'R130', 'R131', 'R132', 'R133', 'R173', 'R175', 'R178', 'R180',
                  'R168', 'R170', 'R172', 'R124', 'R177', 'C122', 'C127', 'C128', 'C129'}
 REQUIRED_FITTED |= SAFETY_FITTED
-ARM_REF = 'J124'
-RAW, BUS = 'RAW_ACT', 'PYRO1_BUS'
-ARMED = ('PYRO1_BUS', 'PYRO1_IGN', 'PYRO1_OUT')
+RAW = 'RAW_ACT'
+ARMED = (RAW, 'PYRO1_IGN', 'PYRO1_OUT')
 RAILS = frozenset({'GND', '3V3', '3V3A'})        # net-path searches stop here (a divider foot is not a feed)
 MAX_PART_NETS = 4                               # parts with more distinct nets (ICs, U1) do not pass a path
 ARMED_SIDE = re.compile(r'^(PYRO1_|ARM1_)')
@@ -663,7 +658,6 @@ RAW_SIDE = re.compile(r'^RAW_ACT(_SENSE\w*)?$')
 LOAD_SWITCH = {'Q120': ('BAT_IN', 'ACT_FET_S'), 'Q121': ('RAW_ACT', 'ACT_FET_S')}   # (drain, source); gate ACT_GATE
 PFET_ROLES = {'S': ('1', '2', '3'), 'G': ('4',), 'D': ('5', '6', '7', '8', '9')}     # AON6403 PDFN 5x6 (AOS)
 NFET_ROLES = {'S': ('1', '2', '3'), 'G': ('4',), 'D': ('5',)}                       # AON7524 DFN 3x3 (AOS)
-ARM_GAP = 1.5                                   # mm, r10_plan section 2 item 2 and R1-m10
 PORT_NET = re.compile(r'^(GPS_|RADIO_|CAM_|PORT_)')
 SAFE_NET = re.compile(r'^(PYRO1_|ARM1_|ACT_|RAW_ACT)')
 MCU_REF = 'U1'
@@ -671,7 +665,7 @@ DEFAULT_CLEARANCE = 0.15                       # mm, used only when the board ca
 J122_ROWS = {'signal': ('1', '4', '7', '10'), 'plus': ('2', '5', '8', '11'), 'ground': ('3', '6', '9', '12')}
 BOARD_WIDTH, BOARD_MAX = 46.0, 120.0            # P1
 F1_MIN = 209.0                                  # Hz, R9's plate floor, kept (r10_mated, pinned, D 5)
-WIRE_ENTRY = {'J1': '-x', 'J121': '-x', 'J124': '-x'}   # r10_plan section 2 item 2; J1 the same west face (R3-MEC-02)
+WIRE_ENTRY = {'J1': '-x', 'J121': '-x'}           # r10_plan section 2 item 2; J1 the same west face (R3-MEC-02)
 WIRE_ROOM = 6.25                                # mm, R8 / R9 P-11
 BOT_THT, BOT_M3 = 1.5, 3.5                      # mm, R9 M-6 without its pyro-via term (a pyro spacing rule)
 IMU_LEVER_R10 = -6.0                           # mm: U4 centre x - 23 (roll axis), M3_R10 "IMU axis map" (R4-MEC-05)
@@ -679,10 +673,9 @@ IMU_PAD1_R10 = (1.21, -0.75)                   # mm: pad 1 board position from t
 IMU_ROTATION_R10 = 180.0                        # R9 D-S7-06 kept: U4 bottom, rotation 180
 IMU_MAPS = {0.0: 'M3_R5 axis map: +X_imu = +x_board, +Y_imu = +y_board; roll = +gyro_Y',
             180.0: 'R9 D-S7-06 axis map: +X_imu = -x_board, +Y_imu = -y_board; roll = -gyro_Y'}
-WORD_LEGENDS_R10 = {'ARM': 'J124', 'IGN': 'J121', 'BAT': 'J1', 'CAM': 'J9', 'SWD': 'J2', 'SERVO': 'J122',
+WORD_LEGENDS_R10 = {'IGN': 'J121', 'BAT': 'J1', 'CAM': 'J9', 'SWD': 'J2', 'SERVO': 'J122',
                     'PULL': 'J123', 'GPS': 'J410', 'RADIO': 'J420'}
-TERMINAL_PINS_R10 = (('J124', (('1', 'BUS1'), ('2', 'RAW'))),
-                     ('J121', (('1', 'E1-'), ('2', 'E1+'))),
+TERMINAL_PINS_R10 = (('J121', (('1', 'E1-'), ('2', 'E1+'))),
                      ('J1', (('1', 'BAT+'), ('2', 'GND'))),
                      ('J400', (('1', 'SW'), ('2', 'SW'))),
                      ('J123', (('1', 'PULL'), ('2', 'GND'))))
@@ -706,7 +699,7 @@ REF_STRAY = [   # (net, layer, x, y, reason): unreferenced samples outside their
 # K-rules (R4-GATE-01): R10 has no pyro-specific rule, so the board default clearance is the only pyro spacing: the
 # rules file is pinned (generated by m3_design/r10_sch.py; a reviewed change re-pins it) and the project's design rules
 # may not be loosened. Floors are the values set on the accepted R10 project.
-DRU_SHA256 = 'f4f53dd3ac41e5e75272fd62a5b65e671debc2b8f2c715f2d16f01335fc13548'
+DRU_SHA256 = '5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3'
 PRO_FLOORS = {'min_clearance': 0.15, 'min_track_width': 0.15, 'min_via_diameter': 0.5, 'min_via_annular_width': 0.1,
               'min_through_hole_diameter': 0.3, 'min_hole_clearance': 0.2, 'min_hole_to_hole': 0.25,
               'min_copper_edge_clearance': 0.5, 'min_microvia_diameter': 0.2, 'min_microvia_drill': 0.1}
@@ -761,20 +754,18 @@ def k_rules(ctx):
 # OQ-1 accepted by the owner 2026-10-28; physical fit remains outstanding.
 WIRE_ROOM_R10 = 4.95
 
-# S-5 window / S-8 barrels (R3-SAF-01)
-ARM_WINDOW_NETS = frozenset({'GND', RAW, BUS})  # the only nets allowed between J124's pads
-BARREL_NETS = ('PYRO1_BUS', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE', 'RAW_ACT')
+# S-8 barrels (R3-SAF-01); the former PYRO1_BUS is now RAW_ACT.
+BARREL_NETS = ('RAW_ACT', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE')
 BARREL_GAP = 1.0                # mm, plated barrel wall to foreign In1 / In2 copper
 # S-9 (R3-GATE-07): the fire-loop current path of each net, between its power terminals (pad sets; a pad number set
 # per reference). D-R2-02: the fire loop is drawn 1.0 mm on F.Cu; the load-switch feed (J1 -> Q120 drain) and RAW_ACT
-# (Q121 drain -> J124.2) at 1.0 mm on B.Cu. Figures recorded from the R10 board of the round that set them (not
+# (Q121 drain -> R134.2) at 1.0 mm on B.Cu. Figures recorded from the R10 board of the round that set them (not
 # re-measured in round 4; the rule holds the figures, not a board hash).
 FIRE_MIN_W = 1.0                # mm
 FIRE_TERMINALS = {
-    'PYRO1_BUS': ({'J124': ('1',)}, {'R134': ('2',)}),
     'PYRO1_IGN': ({'R134': ('1',)}, {'J121': ('2',)}),
     'PYRO1_OUT': ({'J121': ('1',)}, {'Q124': ('5',)}),
-    'RAW_ACT': ({'Q121': ('5', '6', '7', '8', '9')}, {'J124': ('2',)}),
+    'RAW_ACT': ({'Q121': ('5', '6', '7', '8', '9')}, {'R134': ('2',)}),
     'ACT_FET_S': ({'Q120': ('1', '2', '3')}, {'Q121': ('1', '2', '3')}),
     'BAT_IN': ({'J1': ('1',)}, {'Q120': ('5', '6', '7', '8', '9')}),
 }
@@ -902,7 +893,7 @@ RAW_SIDE_NET = re.compile(r'^(RAW_ACT(_\w+)?|ACT_\w+)$')
 def multinet_bridges(nets_of):
     """R5-SAF-01: parts other than U1 with more than MAX_PART_NETS nets are not walked by net_reach, so each is checked
     directly: pads on a RAW side net (RAW_ACT and its sense / MID / MCU nets, ACT_*) and on an armed-side net (PYRO1_*,
-    ARM1_* and their sense / MID / MCU nets) at once is a bridge of the ARM break. Returns [(ref, raw nets, armed
+    ARM1_* and their sense / MID / MCU nets) at once bypasses the named pyro / sense chain. Returns [(ref, raw nets, armed
     nets)]."""
     out = []
     for ref, nets in sorted(nets_of.items()):
@@ -916,7 +907,7 @@ def multinet_bridges(nets_of):
 
 def multinet_issues(nets_of, rid):
     return [f'{rid}: {ref} (more than {MAX_PART_NETS} nets) has pads on the RAW-side net(s) {raw} and the armed-side '
-            f'net(s) {armed}: it bridges the ARM break' for ref, raw, armed in multinet_bridges(nets_of)]
+            f'net(s) {armed}: it bypasses the named pyro / sense chain' for ref, raw, armed in multinet_bridges(nets_of)]
 
 
 def net_path(came, net):
@@ -1024,7 +1015,7 @@ def copper_reach(nodes, net):
 def connectivity(ctx):
     if getattr(ctx, '_reach', None) is None:
         nodes = copper_nodes(ctx.board)
-        ctx._reach = {net: copper_reach(nodes, net) for net in (RAW, BUS)}
+        ctx._reach = {net: copper_reach(nodes, net) for net in ARMED}
     return ctx._reach
 
 
@@ -1048,23 +1039,25 @@ SUPPLY_TIES = {   # the board's intended ties to a supply, rail or the load-swit
 
 
 ARMED_PARTS = {       # part: ({armed nets it may touch}, reason) (R6-GATE-07; the whole list on the R10 board, each named)
-    'J124': ({'PYRO1_BUS'}, 'ARM terminal: the break itself'),
+    'Q121': ({RAW}, 'load-switch drain feeds the pyro bus'),
+    'R177': ({RAW}, 'RAW_ACT sense divider high side'),
+    'TP120': ({RAW}, 'existing load-switch output test pad'),
     'J121': ({'PYRO1_OUT', 'PYRO1_IGN'}, 'igniter terminal'),
-    'R134': ({'PYRO1_IGN', 'PYRO1_BUS'}, 'igniter pulse resistor, bus to igniter'),
+    'R134': ({'PYRO1_IGN', RAW}, 'igniter pulse resistor, bus to igniter'),
     'Q124': ({'PYRO1_OUT'}, 'pyro FET: drain on the igniter return'),
-    'R132': ({'PYRO1_BUS'}, 'ARM_SENSE divider high side'),
+    'R132': ({RAW}, 'bus-sense divider high side'),
     'R131': ({'PYRO1_OUT'}, 'continuity cold pull-up (H-1)'),
     'R173': ({'PYRO1_OUT'}, 'continuity divider high side'),
     'C128': ({'PYRO1_OUT'}, 'igniter-output bypass capacitor')}
 
 
 ARMED_NET_PARTS = {   # armed-side / RAW_ACT net: every part on it on the R10 board, each named (R7-SAF-01 / R7-GATE-03)
-    'PYRO1_BUS': {'J124', 'R132', 'R134'}, 'PYRO1_IGN': {'J121', 'R134'},
+    'PYRO1_IGN': {'J121', 'R134'},
     'PYRO1_OUT': {'C128', 'J121', 'Q124', 'R131', 'R173'}, 'PYRO1_COLD': {'D120', 'R131'},
     'PYRO1_GATE': {'C126', 'Q124', 'R126', 'R128', 'TP122'},
     'PYRO1_CONT': {'C127', 'R129', 'R130', 'R168', 'R178'}, 'PYRO1_CONT_MID': {'R129', 'R173'},
     'ARM1_SENSE': {'C129', 'R133', 'R170', 'R175', 'R180'}, 'ARM1_SENSE_MID': {'R132', 'R175'},
-    'RAW_ACT': {'J124', 'Q121', 'R177', 'TP120'},
+    'RAW_ACT': {'Q121', 'R132', 'R134', 'R177', 'TP120'},
     'RAW_ACT_SENSE': {'C122', 'R124', 'R125', 'R172', 'R182'}, 'RAW_ACT_SENSE_MID': {'R124', 'R177'}}
 GATE_PARTS = {'R126': 'gate series resistor', 'R128': 'gate pull-down', 'C126': 'gate-source capacitor',
               'Q124': 'pyro FET', 'TP122': 'gate test pad'}
@@ -1082,7 +1075,7 @@ def net_parts(board):
 
 def armed_net_issues(board):
     """R7-SAF-01: any part on an armed-side / RAW_ACT net other than the named ones (an extra test pad or part there is
-    a clip point beside the ARM break)."""
+    an unreviewed connection to the firing / sense chain)."""
     issues = []
     for n, refs in sorted(net_parts(board).items()):
         if not armed_net(n):
@@ -1145,12 +1138,10 @@ def supply_net(n):
 
 
 def supply_ties(board):
-    """[(part, armed-side net, supply net)] of every part (J124 excepted; whatever its net count) that has pads on an
+    """[(part, armed-side net, supply net)] of every part (whatever its net count) that has pads on an
     armed-side / RAW_ACT net and on a supply or rail net, other than the named ties above (R4-SAF-02 / R4-GATE-03)."""
     out = []
     for ref, nets in sorted(part_nets(board).items()):
-        if ref == ARM_REF:
-            continue
         for a in sorted(n for n in nets if armed_net(n)):
             for sup in sorted(n for n in nets if n != a and supply_net(n) and not armed_net(n)):
                 if (ref, a, sup) in SUPPLY_TIES or (sup == 'GND' and (ref, a) in GND_TIES):
@@ -1165,52 +1156,52 @@ def tie_issues(ctx, rid, wanted):
 
 
 def s1(ctx):
-    """ARM break (AGENTS.md 2.1): J124 is the only thing between RAW_ACT and the armed bus."""
+    """Owner single screw switch: RAW_ACT is the bus; only R134 and R132 lead into the firing / bus-sense chain."""
     issues, ev = [], {}
-    f = ctx.fps.get(ARM_REF)
-    if f is None:
-        return ['S-1: J124 (ARM terminal) missing'], ev
-    pads = sorted((p.GetNumber(), p.GetNetname()) for p in f.Pads() if p.GetNumber())
-    ev['j124_pads'] = pads
-    if sorted(n for _, n in pads) != sorted((BUS, RAW)):
-        issues.append(f'S-1: J124 must have exactly one {RAW} and one {BUS} pad (has {pads})')
+    if 'J124' in ctx.fps:
+        issues.append('S-1: obsolete J124 ARM terminal must be removed')
     nets_of = part_nets(ctx.board)
-    came = net_reach(nets_of, RAW, skip={ARM_REF})
-    for net in ARMED:
-        if net in came:
-            issues.append(f'S-1: {RAW} reaches the armed net {net} without J124: {net_path(came, net)}')
-    ev['raw_act_reaches'] = sorted(came)
+    if any(n.GetNetname() == 'PYRO1_BUS' for n in ctx.board.GetNetsByNetcode().values()):
+        issues.append('S-1: obsolete PYRO1_BUS must be merged into RAW_ACT')
+    for ref, num, net in (('R134', '2', RAW), ('R134', '1', 'PYRO1_IGN'),
+                          ('R132', '1', RAW), ('R132', '2', 'ARM1_SENSE_MID')):
+        f = ctx.fps.get(ref)
+        pad = f.FindPadByNumber(num) if f else None
+        if pad is None or pad.GetNetname() != net:
+            issues.append(f'S-1: {ref}.{num} must be on {net} (RAW_ACT bus behind Q120/Q121)')
+    came = net_reach(nets_of, RAW, skip={'R134', 'R132'})
+    for net in sorted(n for n in came if ARMED_SIDE.match(n)):
+        issues.append(f'S-1: RAW_ACT reaches {net} outside R134 / R132: {net_path(came, net)}')
+    ev['raw_act_reaches_without_r134_r132'] = sorted(came)
     issues += multinet_issues(nets_of, 'S-1')
-    for ref, nets in sorted(nets_of.items()):            # R3-GATE-02: any part, whatever its net count
-        both = sorted(nets & set(ARMED))
-        if ref != ARM_REF and RAW in nets and both:
-            issues.append(f'S-1: {ref} has pads on {RAW} and the armed net(s) {both}; only J124 may join them')
-    issues += tie_issues(ctx, 'S-1', lambda a: a in ARMED or a == RAW)
-    for ref, fp in sorted(ctx.fps.items()):                    # R6-GATE-07 / R6-SAF-01: any part, whatever its reference
+    joins = {'R134': {RAW, 'PYRO1_IGN'}, 'R132': {RAW, 'ARM1_SENSE_MID'}}
+    for ref, nets in sorted(nets_of.items()):                # any part, whatever its net count
+        both = sorted(n for n in nets if ARMED_SIDE.match(n))
+        if RAW in nets and both and nets != joins.get(ref):
+            issues.append(f'S-1: {ref} has pads on RAW_ACT and pyro / sense net(s) {both}; only R134 / R132 may join them')
+    issues += tie_issues(ctx, 'S-1', lambda a: a in ARMED)
+    for ref, fp in sorted(ctx.fps.items()):                  # any part, whatever its reference
         on = sorted({p.GetNetname() for p in fp.Pads()} & set(ARMED))
-        if not on or ref == ARM_REF:
+        if not on:
             continue
         if ref not in ARMED_PARTS:
             what = 'test pad' if re.fullmatch(r'(TP|PT|TPA|TEST)\w*', ref) or len(fp.Pads()) == 1 else 'part'
             issues.append(f'S-1: {what} {ref} on armed copper {on} is not a named armed-side part (ARMED_PARTS in '
-                          f'tools/check_r10.py; a clip or wire from it bypasses the ARM plug)')
+                          f'tools/check_r10.py)')
         elif not set(on) <= ARMED_PARTS[ref][0]:
             issues.append(f'S-1: {ref} is on armed net(s) {on}; its named armed nets are {sorted(ARMED_PARTS[ref][0])}')
     ev['armed_parts'] = sorted(ARMED_PARTS)
     issues += armed_net_issues(ctx.board) + mcu_side_issues(ctx.board)
     reach = connectivity(ctx)
-    for start, other in ((RAW, ARMED), (BUS, (RAW,))):
-        foreign, count = reach[start]
-        ev[f'{start}_copper_items'] = count
-        for label, (net, via) in sorted(foreign.items()):
-            if net in other:
-                issues.append(f'S-1: {start} copper reaches {label} ({net}) through {via}: the ARM break is bridged')
+    ev['raw_act_copper_items'] = reach[RAW][1]
+    for label, (net, via) in sorted(reach[RAW][0].items()):
+        if ARMED_SIDE.match(net):
+            issues.append(f'S-1: RAW_ACT copper reaches {label} ({net}) through {via}: firing / sense chain is bypassed')
     return issues, ev
 
 
 def s2(ctx):
-    """Pyro feed (AGENTS.md 2.2): RAW_ACT only from BAT_IN through the Q120 / Q121 load switch; the armed side only
-    from RAW_ACT through J124."""
+    """The unified RAW_ACT bus is fed only through the back-to-back Q120 / Q121 load switch."""
     issues, ev = [], {}
     for ref, (drain, source) in LOAD_SWITCH.items():
         f = ctx.fps.get(ref)
@@ -1227,22 +1218,17 @@ def s2(ctx):
         if roles != want:
             issues.append(f'S-2: {ref} must be drain {drain}, source {source}, gate ACT_GATE (is {ev[ref]})')
     nets_of = part_nets(ctx.board)
-    came = net_reach(nets_of, RAW, skip={ARM_REF, 'Q121'})
-    bad = sorted(n for n in came if not RAW_SIDE.match(n) and n not in RAILS)
-    issues += [f'S-2: {RAW} is joined to {n} other than through Q121: {net_path(came, n)}' for n in bad]
-    ev['raw_side'] = sorted(came)
+    came = net_reach(nets_of, RAW, skip={'Q121'})
+    bad = sorted(n for n in came if not (RAW_SIDE.match(n) or ARMED_SIDE.match(n)) and n not in RAILS)
+    issues += [f'S-2: RAW_ACT is joined to {n} other than through Q121: {net_path(came, n)}' for n in bad]
+    ev['pyro_side'] = sorted(came)
     issues += multinet_issues(nets_of, 'S-2')
-    came = net_reach(nets_of, BUS, skip={ARM_REF})
-    bad = sorted(n for n in came if not ARMED_SIDE.match(n) and n not in RAILS)
-    issues += [f'S-2: the armed bus is joined to {n} other than through J124: {net_path(came, n)}' for n in bad]
-    ev['armed_side'] = sorted(came)
-    issues += tie_issues(ctx, 'S-2', lambda a: a not in ARMED and a != RAW)
+    issues += tie_issues(ctx, 'S-2', lambda a: a not in ARMED)
     ev['named_ties'] = {'gnd': len(GND_TIES), 'supply': [list(k) for k in SUPPLY_TIES]}
-    reach = connectivity(ctx)
-    for start in (RAW, BUS):
-        for label, (net, via) in sorted(reach[start][0].items()):
-            if not (start == RAW and net in ARMED) and not (start == BUS and net == RAW):   # S-1's findings
-                issues.append(f'S-2: {start} copper touches {label} ({net}) through {via}')
+    for start, (foreign, count) in connectivity(ctx).items():
+        ev[f'{start}_copper_items'] = count
+        for label, (net, via) in sorted(foreign.items()):
+            issues.append(f'S-2: {start} copper touches {label} ({net}) through {via}')
     return issues, ev
 
 
@@ -1354,6 +1340,20 @@ def s3(ctx):
     for fet in ('Q120', 'Q121'):
         found, ev[fet] = gate_network(ctx, fet, PFET_ROLES, 'load switch')
         issues += found
+    pins = {f'{ref}.{p.GetNumber()}': p.GetNetname() for ref, f in ctx.fps.items() for p in f.Pads()}
+    want = {'U1.16': 'ACT_EN_MCU', 'R122.1': 'ACT_EN_MCU', 'R122.2': 'ACT_EN', 'R123.1': 'ACT_EN',
+            'R123.2': 'GND', 'Q122.1': 'ACT_EN', 'Q122.2': 'GND', 'Q122.3': 'ACT_DRV'}
+    for pin, net in want.items():
+        if pins.get(pin) != net:
+            issues.append(f'S-3: independent load-switch enable {pin} must be {net} (is {pins.get(pin)})')
+    for net, refs in (('ACT_EN_MCU', {'U1', 'R122'}), ('ACT_EN', {'R122', 'R123', 'Q122'})):
+        if net_parts(ctx.board).get(net) != refs:
+            issues.append(f'S-3: independent load-switch enable {net} must touch only {sorted(refs)}')
+    for ref, value in (('R122', 1e3), ('R123', 100e3)):
+        f = ctx.fps.get(ref)
+        if f is None or parse_value(f.GetValue(), 'R') != value:
+            issues.append(f'S-3: independent load-switch enable {ref} must be {value:g} ohm')
+    ev['load_enable'] = {p: pins.get(p) for p in want}
     return sorted(set(issues)), ev
 
 
@@ -1396,100 +1396,37 @@ def s4(ctx):
     return [f'S-4: {i}' for i in sorted(set(issues))], ev
 
 
-def arm_gap(board, limit=ARM_GAP):
-    """R1-m10: J124's own pads and the RAW_ACT / PYRO1_BUS copper at J124, measured, never exempting same-part pairs.
-
-    Pad edge to pad edge on every copper layer both pads are on; then every RAW_ACT item against every PYRO1_BUS item
-    on the same layer, clipped to J124's courtyard united with the pad field's bounding box grown by `limit`."""
-    import pcbnew
-    import check_r8 as geometry
-    import pyro_probe
-    f = board.FindFootprintByReference(ARM_REF)
-    if f is None:
-        return ['J124 missing'], {}
-    pads = [p for p in f.Pads() if p.GetNumber() in ('1', '2')]
-    if len(pads) != 2 or {p.GetNetname() for p in pads} != {RAW, BUS}:
-        return ['J124 requires one RAW_ACT and one PYRO1_BUS pad'], {}
-    issues, ev = [], {'pad_to_pad': {}}
-    for lay in board.GetEnabledLayers().CuStack():
-        if all(p.IsOnLayer(lay) for p in pads):
-            g = geometry.min_gap(geometry.item_shape(pads[0], lay), geometry.item_shape(pads[1], lay), limit + 5)
-            ev['pad_to_pad'][board.GetLayerName(lay)] = g
-            if g is None or g < limit - EPS:
-                issues.append(f'J124 pad to pad {g:.3f} mm on {board.GetLayerName(lay)}; minimum {limit} mm')
-    boxes = [p.GetBoundingBox() for p in pads]
-    grow = pcbnew.FromMM(limit)
-    bounds = (min(b.GetLeft() for b in boxes) - grow, min(b.GetTop() for b in boxes) - grow,
-              max(b.GetRight() for b in boxes) + grow, max(b.GetBottom() for b in boxes) + grow)
-    window = pcbnew.SHAPE_POLY_SET()
-    window.NewOutline()
-    for x, y in ((bounds[0], bounds[1]), (bounds[2], bounds[1]), (bounds[2], bounds[3]), (bounds[0], bounds[3])):
-        window.Append(x, y)
-    court = f.GetCourtyard(pcbnew.B_CrtYd if f.IsFlipped() else pcbnew.F_CrtYd)
-    if court.OutlineCount():
-        window.BooleanAdd(pcbnew.SHAPE_POLY_SET(court))
-    items = []
-    for item in geometry.net_items(board, lambda n: n in (RAW, BUS)):
-        poly = pyro_probe._poly(item)
-        poly.BooleanIntersection(window)
-        if poly.OutlineCount():
-            items.append((*item[:3], poly))
-    closest = None
-    for a in items:
-        for b in items:
-            if a[1] != RAW or b[1] != BUS or a[2] != b[2]:
-                continue
-            gap = geometry.min_gap(a[3], b[3], 10)
-            if gap is not None and (closest is None or gap < closest[0]):
-                closest = gap, a[0], b[0], board.GetLayerName(a[2])
-    if closest is None or closest[0] < limit - EPS:
-        where = f'{closest[0]:.3f} mm, {closest[1]} to {closest[2]} on {closest[3]}' if closest else 'not measured'
-        issues.append(f'J124 RAW_ACT–PYRO1_BUS copper gap must be >={limit} mm ({where})')
-    bb = window.BBox()
-    ev.update(closest=closest, window_mm=[pcbnew.ToMM(v) for v in (bb.GetLeft(), bb.GetTop(), bb.GetRight(),
-                                                                       bb.GetBottom())])
-    return issues, ev
-
-
-def arm_window(board):
-    """R3-SAF-01: (issues, evidence). J124's inter-pad window, the rectangle from pad centre to pad centre and one pad
-    width across, holds no copper (track, arc, via, pad, fill) of any net but ARM_WINDOW_NETS on any copper layer."""
-    import pcbnew
-    import check_r8 as geometry
-    f = board.FindFootprintByReference(ARM_REF)
-    if f is None:
-        return ['J124 missing'], {}
-    pads = sorted((p for p in f.Pads() if p.GetNumber() in ('1', '2')), key=lambda p: p.GetNumber())
-    if len(pads) != 2:
-        return ['J124 requires two pads'], {}
-    (ax, ay), (bx, by) = [(p.GetPosition().x, p.GetPosition().y) for p in pads]
-    length = math.hypot(bx - ax, by - ay)
-    if length == 0:
-        return ['J124 pads coincide'], {}
-    ux, uy = (bx - ax) / length, (by - ay) / length
-    half = min(min(p.GetSize().x, p.GetSize().y) for p in pads) / 2
-    window = pcbnew.SHAPE_POLY_SET()
-    window.NewOutline()
-    for x, y in ((ax - uy * half, ay + ux * half), (bx - uy * half, by + ux * half),
-                 (bx + uy * half, by - ux * half), (ax + uy * half, ay - ux * half)):
-        window.Append(int(round(x)), int(round(y)))
-    issues, found = [], []
-    for label, net, lay, shape, obj in geometry.net_items(board, lambda n: n not in ARM_WINDOW_NETS):
-        if not pcbnew.SHAPE.Collide(window, shape, 0):
-            continue
-        found.append((label, net, board.GetLayerName(lay)))
-        issues.append(f'{net} copper ({label}) on {board.GetLayerName(lay)} lies inside J124\'s inter-pad window '
-                      f'(only GND, RAW_ACT or PYRO1_BUS may be there)')
-    bb = window.BBox()
-    return sorted(set(issues)), dict(window_mm=[round(pcbnew.ToMM(v), 3) for v in (bb.GetLeft(), bb.GetTop(),
-                                                                                  bb.GetRight(), bb.GetBottom())],
-                                     foreign=sorted(set(found)))
-
-
 def s5(ctx):
-    issues, ev = arm_gap(ctx.board)
-    more, ev['window'] = arm_window(ctx.board)
-    return [f'S-5: {i}' for i in issues + more], ev
+    """The external J400 screw switch is the arming contact, isolated by 470 k on each side."""
+    issues, ev = [], {}
+    pins = {f'{ref}.{p.GetNumber()}': p.GetNetname() for ref, f in ctx.fps.items() for p in f.Pads()}
+    members = net_parts(ctx.board)
+    for net, want in (('BAT_SW_SOURCE', {'J400', 'R80'}), ('BAT_SW_RETURN', {'J400', 'R165'})):
+        if members.get(net) != want:
+            issues.append(f'S-5: {net} must touch only {sorted(want)}')
+    expected = {'J400.1': 'BAT_SW_SOURCE', 'J400.2': 'BAT_SW_RETURN', 'R80.1': 'BAT_IN',
+                'R80.2': 'BAT_SW_SOURCE', 'R165.1': 'BAT_SW_RETURN', 'R165.2': 'BAT_ENABLE', 'U9.1': 'BAT_ENABLE'}
+    for pin, net in expected.items():
+        if pins.get(pin) != net:
+            issues.append(f'S-5: {pin} must be {net} (is {pins.get(pin)})')
+    j400 = ctx.fps.get('J400')
+    if j400 is not None and sorted(p.GetNumber() for p in j400.Pads() if p.GetNumber()) != ['1', '2']:
+        issues.append('S-5: J400 must have exactly two switch contacts')
+    for ref in ('R80', 'R165'):
+        f = ctx.fps.get(ref)
+        if f is None or parse_value(f.GetValue(), 'R') != 470e3:
+            issues.append(f'S-5: {ref} must be 470k (external switch wire protection)')
+    nets_of = part_nets(ctx.board)
+    came = net_reach(nets_of, 'BAT_SW_SOURCE', skip={'J400'}, stop=RAILS | {'BAT_IN', 'BAT_ENABLE'})
+    if 'BAT_SW_RETURN' in came:
+        issues.append('S-5: a part bypasses the open J400 switch: ' + net_path(came, 'BAT_SW_RETURN'))
+    nodes = copper_nodes(ctx.board)
+    for start in ('BAT_SW_SOURCE', 'BAT_SW_RETURN'):
+        foreign, count = copper_reach(nodes, start)
+        ev[f'{start}_copper_items'] = count
+        for label, (net, via) in sorted(foreign.items()):
+            issues.append(f'S-5: {start} copper touches {label} ({net}) through {via}: switch contact / resistor bypass')
+    return issues, ev
 
 
 def barrel_shapes(board, nets=BARREL_NETS):
@@ -2113,24 +2050,27 @@ def port_legends(board, required=PORT_LEGENDS_R10):
 
 
 # K-text (R8-GATE-02): the revision and safety legends are pinned to their exact words (a changed text fails).
-PINNED_TEXTS = (('B.Silkscreen', 'M3-ASSY-R10'), ('B.Silkscreen', 'J124 ARM LAST'),
-                ('B.Silkscreen', 'J124 5A FAST 2S'))  # OQ-6, 2026-10-28: no battery-lead fuse
+PINNED_TEXTS = (('B.Silkscreen', 'M3-ASSY-R10'),)
 # R8-GATE-03: these references must stay shown on silkscreen (all shown on the R10 board now). The full hidden list is
 # reported in the evidence, not pinned.
-SHOWN_REFS = ('J1', 'J121', 'J124', 'J122', 'J400', 'J9', 'J410', 'J420', 'J123', 'J3', 'Q120', 'Q121', 'Q124', 'R134')
+SHOWN_REFS = ('J1', 'J121', 'J122', 'J400', 'J9', 'J410', 'J420', 'J123', 'J3', 'Q120', 'Q121', 'Q124', 'R134')
 
 
 def pinned_texts(board, pinned=PINNED_TEXTS):
     import pcbnew
     have = {}
-    for item in board.GetDrawings():
-        if isinstance(item, pcbnew.PCB_TEXT):
+    items = list(board.GetDrawings())
+    for fp in board.GetFootprints():
+        items += list(fp.GraphicalItems()) + list(fp.GetFields())
+    for item in items:
+        if isinstance(item, pcbnew.PCB_TEXT) and (not hasattr(item, 'IsVisible') or item.IsVisible()):
             have[(board.GetLayerName(item.GetLayer()), item.GetText())] = have.get(
                 (board.GetLayerName(item.GetLayer()), item.GetText()), 0) + 1
     out = [f'silkscreen text {t!r} missing on {lay} (pinned revision / safety legend)' for lay, t in pinned
            if have.get((lay, t), 0) != 1]
-    out += [f'obsolete J1 battery-lead fuse legend {t!r} (OQ-6)' for (lay, t) in have
-            if lay.endswith('Silkscreen') and re.search(r'\bJ1\b', t) and re.search(r'\bFUSE\b', t, re.I)]
+    out += [f'obsolete ARM terminal or fuse legend {t!r} (single screw switch)' for (lay, t) in have
+            if lay.endswith('Silkscreen') and (re.search(r'\bJ124\b|\bFUSE\b|\b5A\s+FAST\b', t, re.I)
+                                               or re.fullmatch(r'ARM(?:1| CH1)?', t.strip(), re.I))]
     revs = sorted({t for (_, t) in have if re.match(r'^M3-ASSY-R\d+$', t)})
     return out + [f'revision legends {revs}: only M3-ASSY-R10 allowed' for _ in [0] if revs != ['M3-ASSY-R10']]
 
@@ -2304,11 +2244,11 @@ def _r9(name):
 
 
 RULES = [
-    ('S-1', 'ARM break (J124 the only RAW_ACT to armed link)', lambda c, s: s1(c)),
-    ('S-2', 'pyro feed only through the load switch and J124', lambda c, s: s2(c)),
+    ('S-1', 'single screw switch: RAW_ACT pyro bus, no J124', lambda c, s: s1(c)),
+    ('S-2', 'pyro feed only through the load switch', lambda c, s: s2(c)),
     ('S-3', 'gate networks defined off', lambda c, s: s3(c)),
     ('S-4', 'required-fitted safety parts (R1-07)', lambda c, s: s4(c)),
-    ('S-5', 'J124 RAW_ACT to PYRO1_BUS gap >= 1.5 mm (R1-m10)', lambda c, s: s5(c)),
+    ('S-5', 'J400 screw arming switch and protected EN contacts', lambda c, s: s5(c)),
     ('S-6', 'external ports apart from pyro / arming copper', lambda c, s: s6(c)),
     ('S-7', 'J122 servo + row off board, GND row on GND (O3)', lambda c, s: s7(c)),
     ('S-8', 'In1 / In2 copper >= 1.0 mm from pyro barrels (R3-SAF-01)', lambda c, s: s8(c)),

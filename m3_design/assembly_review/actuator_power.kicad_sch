@@ -1213,93 +1213,6 @@
 		(uuid 1cf0af22-b75f-5c03-bade-643b6e40c287))
 	(symbol
 		(lib_id "M3:R")
-		(at 40.64 114.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid ed092670-7d68-546d-aa2f-975b46624b76)
-		(property "Reference" "R122"
-			(at 44.45 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "100k"
-			(at 44.45 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 40.64 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 40.64 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C25741"
-			(at 40.64 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 40.64 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0402WGF1003TCE"
-			(at 40.64 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
-					(reference "R122")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 40.64 110.49)
-			(xy 40.64 105.41))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid f9116828-139f-5a94-b177-650e84fb11fc))
-	(global_label "RAW_PROTECTED"
-		(shape passive)
-		(at 40.64 105.41 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 7a90c09d-f454-5adb-9479-b92e32224712))
-	(wire
-		(pts
-			(xy 40.64 118.11)
-			(xy 40.64 123.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid e5f5d2fc-e314-5b62-83ee-e1fd568ed469))
-	(global_label "ACT_EN"
-		(shape passive)
-		(at 40.64 123.19 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 87271d79-99c7-5386-9284-f352ebd7326c))
-	(symbol
-		(lib_id "M3:R")
 		(at 99.06 114.3 0)
 		(unit 1)
 		(in_bom yes)
@@ -1948,27 +1861,126 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 3fb1bdef-3aa0-5933-bd41-cc99424ec4da))
-	(text "R10: Q120/Q121 and gate network retained as the pyro-bus load switch; RAW_ACT feeds J124 and RAW_ACT sensing only."
+	(symbol
+		(lib_id "M3:R")
+		(at 40.64 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid ed092670-7d68-546d-aa2f-975b46624b76)
+		(property "Reference" "R122"
+			(at 43.18 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k"
+			(at 43.18 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C11702.html"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C11702"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1001TCE"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
+					(reference "R122")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 40.64 110.49)
+			(xy 40.64 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7520bc10-5cec-5004-94ec-e90a86f734d9))
+	(global_label "ACT_EN_MCU"
+		(shape passive)
+		(at 40.64 105.41 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 60532ced-afd0-5d43-938f-08a3ed0c8de1))
+	(wire
+		(pts
+			(xy 40.64 118.11)
+			(xy 40.64 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1af71fa5-73ba-5d40-b31c-0d0547077e51))
+	(global_label "ACT_EN"
+		(shape passive)
+		(at 40.64 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8cc5fe19-579a-5ad8-ae2e-482e87c4097f))
+	(text "R10 single screw switch (owner 2026-10-28): J400 powers and arms the board; J124 is removed. Q120/Q121 remain the pyro-bus load switch feeding RAW_ACT."
 		(at 20.32 15.24 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 83127760-6cb2-56c5-a73d-92d39a229209))
-	(text "C121 removed; servos use external pack power and return. The ARM plug remains a complete break; no feed directly from BAT_IN or RAW_PROTECTED."
+	(text "PC1 (U1.16) drives ACT_EN_MCU through R122 1k to Q122; R123 100k holds Q122 off in reset or unpowered. Q124 uses a separate MCU fire pin and its retained gate network."
 		(at 20.32 20.32 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 873aaf0c-ec31-581c-b038-72788d10ea03))
-	(text "R134 limits a shorted igniter; firmware ends each fire pulse within20ms. Copper and harness pulse qualification remains required."
+	(text "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and both retained bus-sense dividers; no feed directly from BAT_IN or RAW_PROTECTED."
 		(at 20.32 25.4 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 7277bbaf-c52c-5d00-8f90-b09edb6bdeae))
+	(text "R134 limits a shorted igniter; firmware ends each fire pulse within 20 ms. Copper and harness pulse qualification remains required."
+		(at 20.32 30.48 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid e379a682-3ef2-58c6-a879-d5cbff021361))
 	(sheet_instances
 		(path "/"
 			(page "11"))))

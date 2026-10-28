@@ -1518,180 +1518,6 @@
 		(uuid 50b8a66f-fca3-5846-8101-a3e01290d56d))
 	(symbol
 		(lib_id "M3:R")
-		(at 157.48 114.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid d40390ad-b5bb-5b7e-a716-6a571a133158)
-		(property "Reference" "R132"
-			(at 161.29 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "5.1k"
-			(at 161.29 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C25905"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0402WGF5101TCE"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R132")
-					(unit 1)))))
-	(symbol
-		(lib_id "M3:R")
-		(at 340.36 279.4 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 3e965335-f19a-4f0c-90fe-a4a33a7c1534)
-		(property "Reference" "R134"
-			(at 344.17 270.51 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "2R 1% 2W pulse"
-			(at 344.17 288.29 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R2512"
-			(at 340.36 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 340.36 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C3013496"
-			(at 340.36 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Bourns"
-			(at 340.36 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CRM2512-FX-2R00ELF"
-			(at 340.36 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R134")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 340.36 275.59)
-			(xy 340.36 270.51))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c39544a1-5398-4085-9689-5ef04a72243e))
-	(global_label "PYRO1_IGN"
-		(shape passive)
-		(at 340.36 270.51 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 61f5d879-6c31-42fa-9307-1c688c35e602))
-	(wire
-		(pts
-			(xy 340.36 283.21)
-			(xy 340.36 288.29))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid a3858caf-5780-4fe4-a75a-1bb1dda5c2fe))
-	(global_label "PYRO1_BUS"
-		(shape passive)
-		(at 340.36 288.29 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 394b0807-0478-46f6-ad96-b9e80de08046))
-	(wire
-		(pts
-			(xy 157.48 110.49)
-			(xy 157.48 105.41))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid a2c102a4-87f5-5e99-b24b-ac81bb08dd53))
-	(global_label "PYRO1_BUS"
-		(shape passive)
-		(at 157.48 105.41 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 641979a1-262e-5070-9e0c-e731d0e99cfb))
-	(wire
-		(pts
-			(xy 157.48 118.11)
-			(xy 157.48 123.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c979d8b4-4018-5ce1-914b-aae8d3b74a3b))
-	(global_label "ARM1_SENSE_MID"
-		(shape passive)
-		(at 157.48 123.19 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 2cfd5efd-4bd8-58ed-b568-978430188b07))
-	(symbol
-		(lib_id "M3:R")
 		(at 215.9 114.3 0)
 		(unit 1)
 		(in_bom yes)
@@ -2474,55 +2300,55 @@
 			(justify right))
 		(uuid 00807ae1-f7ad-58ff-ad06-130a3a88767b))
 	(symbol
-		(lib_id "M3:Conn_1x2")
-		(at 332.74 243.84 0)
+		(lib_id "M3:R")
+		(at 157.48 114.3 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid 95b456b5-50db-589e-8cfd-7a65eeed8aa5)
-		(property "Reference" "J124"
-			(at 335.28 242.57 0)
+		(uuid d40390ad-b5bb-5b7e-a716-6a571a133158)
+		(property "Reference" "R132"
+			(at 160.02 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "DB125-3.5-2P-BK-S"
-			(at 335.28 245.11 0)
+		(property "Value" "5.1k"
+			(at 160.02 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_DB125_2P_BK"
-			(at 332.74 243.84 0)
+		(property "Footprint" "rocket:R0402"
+			(at 157.48 114.3 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
-			(at 332.74 243.84 0)
+		(property "Datasheet" ""
+			(at 157.48 114.3 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C52993880"
-			(at 332.74 243.84 0)
+		(property "LCSC" "C25905"
+			(at 157.48 114.3 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "DORABO"
-			(at 332.74 243.84 0)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 114.3 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "DB125-3.5-2P-BK-S"
-			(at 332.74 243.84 0)
+		(property "Manufacturer Part" "0402WGF5101TCE"
+			(at 157.48 114.3 0)
 			(hide yes)
 			(effects
 				(font
@@ -2531,48 +2357,140 @@
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "J124")
+					(reference "R132")
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 325.12 242.57)
-			(xy 320.04 242.57))
+			(xy 157.48 110.49)
+			(xy 157.48 105.41))
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 9d36e7fe-d7aa-52e6-8922-197f5d709480))
-	(global_label "PYRO1_BUS"
-		(shape passive)
-		(at 320.04 242.57 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 18534c57-2899-59ec-b52f-6952898b385f))
-	(wire
-		(pts
-			(xy 325.12 245.11)
-			(xy 320.04 245.11))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 78d78ec8-1a4c-538c-a579-055391cfc292))
+		(uuid 8af4858b-89b0-5ed2-8dd8-3f2e5808bed7))
 	(global_label "RAW_ACT"
 		(shape passive)
-		(at 320.04 245.11 0)
+		(at 157.48 105.41 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
-		(uuid 47a27128-15bf-50be-8395-23540e98f56d))
-	(text "R10: one recovery channel, unchanged functional fire/gate/sense network. J124.2 RAW_ACT, J124.1 BUS; J121.2 IGN, J121.1 OUT."
+		(uuid 9a96ebbe-d0ec-549b-990d-b767c5082d30))
+	(wire
+		(pts
+			(xy 157.48 118.11)
+			(xy 157.48 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a25b0e56-08e7-5896-8b09-b7c920daca15))
+	(global_label "ARM1_SENSE_MID"
+		(shape passive)
+		(at 157.48 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 49de4c79-f84f-57cf-96b8-e508b8143b1e))
+	(symbol
+		(lib_id "M3:R")
+		(at 340.36 279.4 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 3e965335-f19a-4f0c-90fe-a4a33a7c1534)
+		(property "Reference" "R134"
+			(at 342.9 278.13 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2R 1% 2W pulse"
+			(at 342.9 280.67 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R2512"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C3013496"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Bourns"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CRM2512-FX-2R00ELF"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R134")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 340.36 275.59)
+			(xy 340.36 270.51))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5fbe24d1-90de-53af-9e4d-48104398cbd1))
+	(global_label "PYRO1_IGN"
+		(shape passive)
+		(at 340.36 270.51 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f26d0caf-fb2c-566b-af49-0da757750250))
+	(wire
+		(pts
+			(xy 340.36 283.21)
+			(xy 340.36 288.29))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 59a84eff-c386-5b2a-a697-e545bb1f7c4a))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 340.36 288.29 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 814b372f-3c23-557a-8f07-e1ead7335eef))
+	(text "R10 single screw switch: RAW_ACT directly feeds R134.2 and R132.1 behind Q120/Q121; no separate ARM terminal or PYRO1_BUS net. J121.2 IGN, J121.1 OUT."
 		(at 20.32 15.24 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 9ac29cee-a930-5480-8e40-e6153d0063a3))
-	(text "ARM plug is the complete electrical break: fit last, remove first. Black3.5mm terminals enter from -x; direct J124 pad/copper gap >=1.5mm."
+	(text "Power switch on last, off first; the pyro channel is live whenever the board is on. No firing before accelerometer and barometer launch detection; bench USB or e-match disconnected."
 		(at 20.32 20.32 0)
 		(effects
 			(font
@@ -2586,7 +2504,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 84d49b35-a87d-5fca-9999-f2f86fcf1da9))
-	(text "Ground ARM/continuity checks refuse firing; in flight readings only log/annunciate and never veto a fire. Firmware fire timeout <=20ms."
+	(text "Ground bus/continuity checks refuse firing; in flight readings only log/annunciate and never veto a fire. Firmware fire timeout <=20 ms."
 		(at 20.32 30.48 0)
 		(effects
 			(font

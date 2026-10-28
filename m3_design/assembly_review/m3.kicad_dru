@@ -1,6 +1,6 @@
 (version 1)
 # R10 plan section 2 item 1: board-default copper clearance, no pyro/RF spacing overrides.
-# Functional ARM break, reset safety and J124 physical pad gap remain independently checked.
+# The external power switch arms the board; load-switch, reset and gate safety remain checked.
 (rule "General copper to hole clearance"
   (constraint hole_clearance (min 0.25mm)))
 

@@ -81,6 +81,44 @@ class Assembly(unittest.TestCase):
         self.assertTrue(gate.port_power(mutant, values, codes))
 
 
+class SchematicContract(unittest.TestCase):
+    def test_single_switch_contract_and_seeds(self):
+        import xml.etree.ElementTree as ET
+        import r10_sch_check as sch
+        expected, pins = sch.expected()
+        parts = {}
+        for ref, part in expected.items():
+            if isinstance(part, ET.Element):
+                parts[ref] = copy.deepcopy(part)
+                continue
+            comp = ET.Element('comp', ref=ref)
+            for key in ('value', 'footprint'):
+                ET.SubElement(comp, key).text = part[key]
+            ET.SubElement(comp, 'libsource', part=part['lib'].removeprefix('M3:'))
+            fields = ET.SubElement(comp, 'fields')
+            for key, value in part['fields'].items():
+                ET.SubElement(fields, 'field', name=key).text = value
+            parts[ref] = comp
+        self.assertEqual(sch.contract(parts, pins), [])
+        seeded = sch.seeds(parts, pins)
+        self.assertTrue(all(seeded.values()), seeded)
+        self.assertTrue({'obsolete ARM terminal restored', 'obsolete separate pyro bus',
+                         'pyro feed directly from pack', 'load switch follows logic rail',
+                         'load switch enable pull-down missing'} <= seeded.keys())
+
+    def test_binding_note_has_pad_policy_and_both_trace_locks(self):
+        import r10_sch_check as sch
+        note = sch.binding_note(gate.ROOT / 'm3_design/assembly_review')
+        self.assertIn('not a separate ARM-link state', note['arming_policy']['limits'])
+        obligations = '\n'.join(note['firmware_obligations'])
+        for text in ('PC1 ACT_EN_MCU', 'GPIOC_LCKR', 'GPIOE_LCKR', 'accelerometer and barometer',
+                     'in flight they are logged and annunciated and never veto a fire'):
+            self.assertIn(text, obligations)
+        self.assertNotIn('PE3/PE5/PE6/PC1/PC4', obligations)
+        self.assertNotIn('ARM link out', obligations)
+        self.assertNotIn('ARM link in:', obligations)
+
+
 class HotplugEvidence(unittest.TestCase):
     """Faults in model artifacts must fail even when their summary says pass."""
     def setUp(self):
@@ -242,35 +280,8 @@ class Native(unittest.TestCase):
         self.addCleanup(route_check.set_profile, 'r8')
         self.board = pcbnew.BOARD()
         self.board.SetCopperLayerCount(4)
-        for net in ('RAW_ACT', 'PYRO1_BUS', 'GPS_TX_MCU', 'GND'):
+        for net in ('RAW_ACT', 'GPS_TX_MCU', 'GND'):
             self.board.Add(pcbnew.NETINFO_ITEM(self.board, net))
-
-    def terminal(self, diameter=1.9):
-        f = pcbnew.FOOTPRINT(self.board); f.SetReference('J124'); self.board.Add(f)
-        pads = []
-        for num, x, net in (('1', 0, 'PYRO1_BUS'), ('2', 3.5, 'RAW_ACT')):
-            p = pcbnew.PAD(f); p.SetNumber(num); p.SetShape(pcbnew.PAD_SHAPE_CIRCLE)
-            p.SetAttribute(pcbnew.PAD_ATTRIB_PTH); p.SetLayerSet(pcbnew.LSET.AllCuMask())
-            p.SetSize(self.point(diameter, diameter)); p.SetDrillSize(self.point(1.3, 1.3))
-            p.SetPosition(self.point(x, 0)); p.SetNet(self.board.FindNet(net)); f.Add(p); pads.append(p)
-        return pads
-
-    def test_same_part_actual_gap_and_1_49_seed(self):
-        pads = self.terminal()
-        issues, evidence = gate.arm_gap(self.board)
-        self.assertEqual(issues, [], evidence)
-        self.assertAlmostEqual(evidence['closest'][0], 1.6, places=2)
-        for p in pads:
-            p.SetSize(self.point(2.01, 2.01))
-        self.assertTrue(gate.arm_gap(self.board)[0])
-
-    def test_adjoining_copper_gap(self):
-        self.terminal()
-        self.assertEqual(gate.arm_gap(self.board)[0], [])
-        t = pcbnew.PCB_TRACK(self.board); t.SetNet(self.board.FindNet('RAW_ACT'))
-        t.SetLayer(pcbnew.F_Cu); t.SetWidth(pcbnew.FromMM(.2))
-        t.SetStart(self.point(3.5, 0)); t.SetEnd(self.point(2, 0)); self.board.Add(t)
-        self.assertTrue(gate.arm_gap(self.board)[0])
 
     def test_route_profile_restores_r9_and_has_no_exceptions(self):
         import route_check as rc
@@ -319,9 +330,9 @@ VALUES = {'R126': '220R', 'R127': '1k', 'R128': '10k', 'C126': '220nF 25V X7R', 
 
 class SyntheticBase(unittest.TestCase):
     """Helpers for the synthetic boards (no tests of its own)."""
-    NETS = ('RAW_ACT', 'PYRO1_BUS', 'PYRO1_IGN', 'BAT_IN', 'ACT_FET_S', 'ACT_GATE', 'ACT_DRV', 'PYRO1_GATE',
+    NETS = ('RAW_ACT', 'PYRO1_IGN', 'PYRO1_OUT', 'BAT_IN', 'ACT_FET_S', 'ACT_GATE', 'ACT_DRV', 'PYRO1_GATE',
             'PYRO1_GATE_N', 'GND', 'GPS_TX_MCU', 'SERVO1_OUT', 'RAW_PROTECTED', '3V3', 'ARM1_SENSE', 'PYRO1_COLD',
-            'PYRO1_CONT', 'ARM1_SENSE_MID')
+            'PYRO1_CONT', 'ARM1_SENSE_MID', 'ACT_EN_MCU', 'ACT_EN', 'BAT_SW_SOURCE', 'BAT_SW_RETURN', 'BAT_ENABLE')
 
     def P(self, x, y):
         return pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y))
@@ -332,7 +343,8 @@ class SyntheticBase(unittest.TestCase):
         for net in self.NETS:
             self.board.Add(pcbnew.NETINFO_ITEM(self.board, net))
         self.outline(46, 90)
-        self.j124 = self.part('J124', [('1', 0, 0, 'PYRO1_BUS'), ('2', 3.5, 0, 'RAW_ACT')], at=(5, 20), tht=True)
+        self.r134 = self.part('R134', [('2', 0, 0, 'RAW_ACT'), ('1', 3.5, 0, 'PYRO1_IGN')], at=(5, 20), tht=True)
+        self.r132 = self.part('R132', [('1', 0, 0, 'RAW_ACT'), ('2', 1, 0, 'ARM1_SENSE_MID')], at=(30, 45))
 
     def outline(self, w, h):
         r = pcbnew.PCB_SHAPE(self.board)
@@ -390,15 +402,15 @@ class SyntheticBase(unittest.TestCase):
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
 class Synthetic(SyntheticBase):
-    # --- S-1 ARM break --------------------------------------------------------------------------------------------
-    def test_s1_clean_terminal(self):
+    # --- S-1 canonical RAW_ACT bus --------------------------------------------------------------------------------------------
+    def test_s1_clean_unified_bus(self):
         self.assertEqual(gate.s1(self.ctx())[0], [])
 
-    def test_s1_track_bridges_j124(self):
+    def test_s1_track_bypasses_r134(self):
         for net in (None, 'RAW_ACT', 'GND'):
             with self.subTest(net=net):
                 t = self.track((5, 20), (8.5, 20), net, pcbnew.B_Cu)
-                self.assertTrue(any('ARM break is bridged' in i for i in gate.s1(self.ctx())[0]))
+                self.assertTrue(any('firing / sense chain is bypassed' in i for i in gate.s1(self.ctx())[0]))
                 self.board.Remove(t)
 
     def test_s1_track_chain_and_via_bridge(self):
@@ -406,18 +418,18 @@ class Synthetic(SyntheticBase):
         v = pcbnew.PCB_VIA(self.board); v.SetPosition(self.P(5, 25)); v.SetWidth(pcbnew.FromMM(0.6))
         v.SetDrill(pcbnew.FromMM(0.3)); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); self.board.Add(v)
         self.track((5, 25), (8.5, 25), None, pcbnew.B_Cu)
-        self.assertEqual(gate.s1(self.ctx())[0], [])            # not yet joined to J124.2
+        self.assertEqual(gate.s1(self.ctx())[0], [])            # not yet joined to R134.1
         self.track((8.5, 25), (8.5, 20), None, pcbnew.B_Cu)
-        self.assertTrue(any('bridged' in i for i in gate.s1(self.ctx())[0]))
+        self.assertTrue(any('bypassed' in i for i in gate.s1(self.ctx())[0]))
 
-    def test_s1_part_bypasses_j124(self):
-        self.part('R999', [('1', 0, 0, 'RAW_ACT'), ('2', 1.5, 0, 'PYRO1_BUS')], at=(30, 30))
-        self.assertTrue(any('without J124' in i for i in gate.s1(self.ctx())[0]))
+    def test_s1_part_bypasses_r134(self):
+        self.part('R999', [('1', 0, 0, 'RAW_ACT'), ('2', 1.5, 0, 'PYRO1_IGN')], at=(30, 30))
+        self.assertTrue(any('outside R134 / R132' in i for i in gate.s1(self.ctx())[0]))
 
     def test_s1_part_bypass_through_another_net(self):
         self.part('R998', [('1', 0, 0, 'RAW_ACT'), ('2', 1.5, 0, 'PYRO1_GATE_N')], at=(30, 30))
         self.part('R997', [('1', 0, 0, 'PYRO1_GATE_N'), ('2', 1.5, 0, 'PYRO1_IGN')], at=(30, 35))
-        self.assertTrue(any('PYRO1_IGN without J124' in i for i in gate.s1(self.ctx())[0]))
+        self.assertTrue(any('RAW_ACT reaches PYRO1_IGN outside R134 / R132' in i for i in gate.s1(self.ctx())[0]))
 
     def test_s1_divider_feet_on_gnd_do_not_bridge(self):
         self.part('R133', [('1', 0, 0, 'ARM1_SENSE'), ('2', 1.5, 0, 'GND')], at=(30, 30))   # a named GND tie
@@ -434,7 +446,7 @@ class Synthetic(SyntheticBase):
         self.assertEqual(gate.s1(self.ctx())[0], [])
         self.assertEqual(gate.s2(self.ctx())[0], [])
         for ref, a, sup, rule in (('R990', 'RAW_ACT', 'GND', 'S-1'), ('R991', 'RAW_ACT', '3V3', 'S-1'),
-                                  ('R992', '3V3', 'PYRO1_BUS', 'S-1'), ('R989', 'PYRO1_CONT', 'BAT_IN', 'S-2'),
+                                  ('R992', '3V3', 'PYRO1_IGN', 'S-1'), ('R989', 'PYRO1_CONT', 'BAT_IN', 'S-2'),
                                   ('R988', 'PYRO1_COLD', 'GND', 'S-2')):
             with self.subTest(ref=ref):
                 f = self.part(ref, [('1', 0, 0, a), ('2', 1.5, 0, sup)], at=(30, 30))
@@ -445,7 +457,7 @@ class Synthetic(SyntheticBase):
     def test_s1_s2_chain_through_3v3_and_big_part(self):
         self.load_switch()
         self.part('R991', [('1', 0, 0, 'RAW_ACT'), ('2', 1.5, 0, '3V3')], at=(30, 30))
-        self.part('R992', [('1', 0, 0, '3V3'), ('2', 1.5, 0, 'PYRO1_BUS')], at=(30, 35))
+        self.part('R992', [('1', 0, 0, '3V3'), ('2', 1.5, 0, 'PYRO1_IGN')], at=(30, 35))
         self.assertEqual(len([i for i in gate.s1(self.ctx())[0] if 'has pads on' in i]), 2)
         # a six-net part (past MAX_PART_NETS) with one pad on RAW_ACT and one on BAT_IN
         self.part('U9', [('1', 0, 0, 'RAW_ACT'), ('2', 1, 0, 'BAT_IN'), ('3', 2, 0, 'GND'), ('4', 3, 0, 'ACT_DRV'),
@@ -453,25 +465,35 @@ class Synthetic(SyntheticBase):
         self.assertTrue(any('U9 has pads on' in i for i in gate.s1(self.ctx())[0]))
 
     def test_s1_test_pad_on_armed_copper(self):
-        self.part('TP9', [('1', 0, 0, 'PYRO1_BUS')], at=(30, 30))
+        self.part('TP9', [('1', 0, 0, 'RAW_ACT')], at=(30, 30))
         self.assertTrue(any('test pad TP9' in i for i in gate.s1(self.ctx())[0]))
 
     def test_s1_any_part_on_armed_copper(self):
         """R6-GATE-07 / R6-SAF-01: any part but the named armed-side ones, whatever its reference."""
-        self.part('PT121', [('1', 0, 0, 'PYRO1_BUS')], at=(30, 30))
+        self.part('PT121', [('1', 0, 0, 'RAW_ACT')], at=(30, 30))
         self.assertTrue(any('PT121' in i and 'named armed-side' in i for i in gate.s1(self.ctx())[0]))
         self.board.Remove(self.board.FindFootprintByReference('PT121'))
         self.part('U77', [('1', 0, 0, 'PYRO1_IGN'), ('2', 1, 0, 'GND')], at=(30, 35))
         self.assertTrue(any('U77' in i for i in gate.s1(self.ctx())[0]))
         self.board.Remove(self.board.FindFootprintByReference('U77'))
-        self.part('R132', [('1', 0, 0, 'PYRO1_BUS'), ('2', 1, 0, 'ARM1_SENSE_MID')], at=(30, 40))   # named: fine
         self.assertEqual(gate.s1(self.ctx())[0], [])
         self.board.FindFootprintByReference('R132').FindPadByNumber('1').SetNet(self.board.FindNet('PYRO1_IGN'))
         self.assertTrue(any('R132 is on armed net' in i for i in gate.s1(self.ctx())[0]))
 
-    def test_s1_j124_pad_nets(self):
-        self.j124.FindPadByNumber('2').SetNet(self.board.FindNet('BAT_IN'))
-        self.assertTrue(any('exactly one RAW_ACT' in i for i in gate.s1(self.ctx())[0]))
+    def test_s1_removed_terminal_and_separate_bus(self):
+        f = self.part('J124', [('1', 0, 0, 'RAW_ACT'), ('2', 3.5, 0, 'PYRO1_IGN')], at=(5, 10), tht=True)
+        self.assertTrue(any('obsolete J124' in i for i in gate.s1(self.ctx())[0]))
+        self.board.Remove(f)
+        self.board.Add(pcbnew.NETINFO_ITEM(self.board, 'PYRO1_BUS'))
+        self.assertTrue(any('obsolete PYRO1_BUS' in i for i in gate.s1(self.ctx())[0]))
+
+    def test_s1_feed_and_bus_sense_must_be_on_raw_act(self):
+        for f, num in ((self.r134, '2'), (self.r132, '1')):
+            with self.subTest(ref=f.GetReference()):
+                p = f.FindPadByNumber(num)
+                p.SetNet(self.board.FindNet('BAT_IN'))
+                self.assertTrue(any(f'{f.GetReference()}.{num} must be on RAW_ACT' in i for i in gate.s1(self.ctx())[0]))
+                p.SetNet(self.board.FindNet('RAW_ACT'))
 
     # --- S-2 pyro feed --------------------------------------------------------------------------------------------
     def test_s2_load_switch_topology(self):
@@ -487,13 +509,13 @@ class Synthetic(SyntheticBase):
 
     def test_s2_armed_bus_fed_from_battery(self):
         self.load_switch()
-        self.part('R993', [('1', 0, 0, 'PYRO1_BUS'), ('2', 1.5, 0, 'BAT_IN')], at=(30, 30))
-        self.assertTrue(any('armed bus is joined to BAT_IN' in i for i in gate.s2(self.ctx())[0]))
+        self.part('R993', [('1', 0, 0, 'RAW_ACT'), ('2', 1.5, 0, 'BAT_IN')], at=(30, 30))
+        self.assertTrue(any('RAW_ACT is joined to BAT_IN' in i for i in gate.s2(self.ctx())[0]))
 
     def test_s2_copper_short_to_supply(self):
         self.load_switch()
         self.part('C999', [('1', 0, 0, 'BAT_IN'), ('2', 1.5, 0, 'GND')], at=(30, 30))
-        self.track((8.5, 20), (30, 30), None)
+        self.track((5, 20), (30, 30), None)
         self.assertTrue(any('RAW_ACT copper touches C999.1 (BAT_IN)' in i for i in gate.s2(self.ctx())[0]))
 
     def test_s1_s2_multinet_part_bridge(self):
@@ -506,7 +528,7 @@ class Synthetic(SyntheticBase):
                 u = self.part('U12', [('1', 0, 0, raw), ('2', 1, 0, armed), ('3', 2, 0, 'GND'), ('4', 3, 0, '3V3'),
                                       ('5', 4, 0, 'GPS_TX_MCU')], at=(30, 30))
                 for fn, rid in ((gate.s1, 'S-1'), (gate.s2, 'S-2')):
-                    self.assertTrue(any('bridges the ARM break' in i for i in fn(self.ctx())[0]), (rid, fn(self.ctx())[0]))
+                    self.assertTrue(any('bypasses the named pyro / sense chain' in i for i in fn(self.ctx())[0]), (rid, fn(self.ctx())[0]))
                 self.board.Remove(u)
         u = self.part('U12', [('1', 0, 0, 'RAW_ACT_SENSE_MCU'), ('2', 1, 0, 'GND'), ('3', 2, 0, '3V3'),
                               ('4', 3, 0, 'GPS_TX_MCU'), ('5', 4, 0, 'ACT_DRV')], at=(30, 30))   # one side only: fine
@@ -516,7 +538,7 @@ class Synthetic(SyntheticBase):
     def gates(self):
         self.load_switch()
         self.part('U1', [('3', 0, 0, 'PYRO1_GATE_N'), ('5', 1, 0, 'GND'), ('6', 2, 0, 'GND'), ('7', 3, 0, 'GND'),
-                         ('8', 4, 0, 'GND'), ('9', 5, 0, 'GND')], at=(25, 70))
+                         ('8', 4, 0, 'GND'), ('9', 5, 0, 'GND'), ('16', 6, 0, 'ACT_EN_MCU')], at=(25, 70))
         self.part('Q124', [('1', 0, 0, 'GND'), ('2', 1, 0, 'GND'), ('3', 2, 0, 'GND'), ('4', 3, 0, 'PYRO1_GATE'),
                            ('5', 1, 3, 'PYRO1_IGN')], at=(10, 60))
         self.part('R128', [('1', 0, 0, 'PYRO1_GATE'), ('2', 1.5, 0, 'GND')], at=(10, 70))
@@ -526,6 +548,9 @@ class Synthetic(SyntheticBase):
         self.part('R120', [('1', 0, 0, 'ACT_FET_S'), ('2', 1.5, 0, 'ACT_GATE')], at=(30, 70))
         self.part('C120', [('1', 0, 0, 'ACT_FET_S'), ('2', 1.5, 0, 'ACT_GATE')], at=(30, 72))
         self.part('R121', [('1', 0, 0, 'ACT_GATE'), ('2', 1.5, 0, 'ACT_DRV')], at=(30, 74))
+        self.part('Q122', [('1', 0, 0, 'ACT_EN'), ('2', 1, 0, 'GND'), ('3', 2, 0, 'ACT_DRV')], at=(35, 65))
+        self.part('R122', [('1', 0, 0, 'ACT_EN_MCU'), ('2', 1.5, 0, 'ACT_EN')], at=(35, 68)).SetValue('1k')
+        self.part('R123', [('1', 0, 0, 'ACT_EN'), ('2', 1.5, 0, 'GND')], at=(35, 72)).SetValue('100k')
 
     def test_s3_gate_networks(self):
         self.gates()
@@ -541,6 +566,23 @@ class Synthetic(SyntheticBase):
                 p.SetNet(old)
         self.board.Remove(self.board.FindFootprintByReference('R126'))
         self.assertTrue(any('series resistor' in i for i in gate.s3(self.ctx())[0]))
+
+    def test_s3_independent_mcu_enable_and_reset_pull(self):
+        self.gates()
+        self.assertEqual(gate.s3(self.ctx())[0], [])
+        for ref, num, net in (('U1', '16', 'PYRO1_GATE_N'), ('R122', '1', 'RAW_PROTECTED'),
+                              ('R123', '2', '3V3'), ('Q122', '2', 'ACT_GATE')):
+            with self.subTest(ref=ref, num=num):
+                p = self.board.FindFootprintByReference(ref).FindPadByNumber(num)
+                old = p.GetNet(); p.SetNet(self.board.FindNet(net))
+                self.assertTrue(any('independent load-switch enable' in i for i in gate.s3(self.ctx())[0]))
+                p.SetNet(old)
+        for ref, value in (('R122', '0R'), ('R123', '1M')):
+            f = self.board.FindFootprintByReference(ref); old = f.GetValue(); f.SetValue(value)
+            self.assertTrue(any(f'{ref} must be' in i for i in gate.s3(self.ctx())[0]))
+            f.SetValue(old)
+        self.board.Remove(self.board.FindFootprintByReference('R123'))
+        self.assertTrue(any('R123' in i for i in gate.s3(self.ctx())[0]))
 
     def test_s3_round5_values_and_mcu_pull(self):
         """R5-SAF-02: series 100 ohm - 10 k, no unitless capacitor value, an MCU-side pull (R127) of 100 ohm - 100 k."""
@@ -623,7 +665,7 @@ class Synthetic(SyntheticBase):
 
     # --- S-4 required fitted (board flags) ------------------------------------------------------------------------
     def test_s4_board_flags_and_omission(self):
-        f = self.part('R134', [('1', 0, 0, 'PYRO1_IGN'), ('2', 1.5, 0, 'PYRO1_BUS')], at=(30, 30))
+        f = self.r134
         self.assertEqual(gate.board_population(self.board, {'R134'}), [])
         for flag in (pcbnew.FP_DNP, pcbnew.FP_EXCLUDE_FROM_BOM, pcbnew.FP_EXCLUDE_FROM_POS_FILES,
                      pcbnew.FP_BOARD_ONLY):
@@ -635,27 +677,42 @@ class Synthetic(SyntheticBase):
         self.assertTrue(gate.board_population(self.board, {'R134'}))
         self.assertTrue(gate.board_population(self.board, {'R127'}))
         self.assertTrue(gate.SAFETY_FITTED <= gate.REQUIRED_FITTED)
-        for ref in ('R134', 'R126', 'R127', 'R128', 'C126', 'Q124', 'Q120', 'Q121', 'R120', 'C120', 'J124', 'J121',
+        for ref in ('R134', 'R126', 'R127', 'R128', 'C126', 'Q124', 'Q120', 'Q121', 'R120', 'C120', 'J400', 'R80', 'R165', 'R122', 'R123', 'J121',
                     'R129', 'R130', 'R131', 'R132', 'R133', 'R173', 'R175', 'R178', 'R180', 'R168', 'R170', 'C128'):
             self.assertIn(ref, gate.SAFETY_FITTED)
 
-    # --- S-5 J124 gap ---------------------------------------------------------------------------------------------
-    def test_s5_pad_moved_closer(self):
-        self.assertEqual(gate.s5(self.ctx())[0], [])
-        self.j124.FindPadByNumber('2').SetPosition(self.P(8.3, 20))
-        found = gate.s5(self.ctx())[0]
-        self.assertTrue(any('pad to pad 1.400' in i for i in found), found)
+    # --- S-5 single screw switch -------------------------------------------------------------------------------
+    def power_switch(self):
+        self.part('J400', [('1', 0, 0, 'BAT_SW_SOURCE'), ('2', 3.5, 0, 'BAT_SW_RETURN')], at=(5, 10))
+        self.part('R80', [('1', 0, 0, 'BAT_IN'), ('2', 1.5, 0, 'BAT_SW_SOURCE')], at=(15, 10)).SetValue('470k 1%')
+        self.part('R165', [('1', 0, 0, 'BAT_SW_RETURN'), ('2', 1.5, 0, 'BAT_ENABLE')], at=(20, 10)).SetValue('470k 1%')
+        self.part('U9', [('1', 0, 0, 'BAT_ENABLE')], at=(25, 10))
 
-    def test_s5_bus_track_inside_courtyard(self):
-        self.track((5, 20), (6.9, 20), 'PYRO1_BUS')
-        self.assertTrue(any('copper gap' in i for i in gate.s5(self.ctx())[0]))
+    def test_s5_switch_topology_and_resistor_values(self):
+        self.power_switch()
+        self.assertEqual(gate.s5(self.ctx())[0], [])
+        for ref, num, net in (('J400', '1', 'BAT_IN'), ('R165', '2', 'RAW_PROTECTED'), ('U9', '1', 'RAW_ACT')):
+            p = self.board.FindFootprintByReference(ref).FindPadByNumber(num)
+            old = p.GetNet(); p.SetNet(self.board.FindNet(net))
+            self.assertTrue(any(f'{ref}.{num} must be' in i for i in gate.s5(self.ctx())[0]))
+            p.SetNet(old)
+        self.board.FindFootprintByReference('R80').SetValue('0R')
+        self.assertTrue(any('R80 must be 470k' in i for i in gate.s5(self.ctx())[0]))
+
+    def test_s5_switch_contact_cannot_be_bypassed(self):
+        self.power_switch()
+        f = self.part('R999', [('1', 0, 0, 'BAT_SW_SOURCE'), ('2', 1.5, 0, 'BAT_SW_RETURN')], at=(30, 10))
+        self.assertTrue(any('bypasses the open J400 switch' in i for i in gate.s5(self.ctx())[0]))
+        self.board.Remove(f)
+        self.track((5, 10), (8.5, 10), None)
+        self.assertTrue(any('switch contact / resistor bypass' in i for i in gate.s5(self.ctx())[0]))
 
     # --- S-6 external ports ---------------------------------------------------------------------------------------
     def test_s6_port_net_beside_pyro_bus(self):
         self.track((5, 22.0), (12, 22.0), 'GPS_TX_MCU')         # 1.0 mm from the pad edges: fine
         self.assertEqual(gate.s6(self.ctx())[0], [])
-        self.track((3, 21.1), (7, 21.1), 'GPS_TX_MCU')          # 0.05 mm from J124.1's copper
-        self.assertTrue(any('GPS_TX_MCU' in i and 'PYRO1_BUS' in i for i in gate.s6(self.ctx())[0]))
+        self.track((3, 21.1), (7, 21.1), 'GPS_TX_MCU')          # 0.05 mm from R134.2's synthetic pad
+        self.assertTrue(any('GPS_TX_MCU' in i and 'RAW_ACT' in i for i in gate.s6(self.ctx())[0]))
 
     def test_s6_shared_copper_and_shared_part(self):
         self.track((5, 20), (5, 26), 'GPS_TX_MCU')
@@ -707,7 +764,7 @@ class Synthetic(SyntheticBase):
                 self.assertTrue(any(word in i for i in gate.m1(self.ctx())[0]))
 
     def test_entry_direction_from_footprint_description(self):
-        f = self.j124
+        f = self.r134
         f.SetLibDescription('DORABO DB125-3.5-2P; wire entry +y')
         f.SetOrientationDegrees(-90)
         self.assertEqual(gate.entry_dir(f), '-x')
@@ -873,7 +930,7 @@ class R4Synthetic(SyntheticBase):
     def test_k_region_own_pad_void_needs_a_real_void(self):
         """R5-GATE-01: the own through-hole pad exemption holds only inside the pad's own clearance void."""
         self.plane('GND', 0, 10, 46, 40)
-        pad = self.j124.FindPadByNumber('1')                                     # (5, 20), PYRO1_BUS (not critical net?)
+        pad = self.r134.FindPadByNumber('2')                                     # (5, 20), RAW_ACT
         for n in ('SPI1_SCK',):
             pad.SetNet(self.board.FindNet(n))
         pcbnew.ZONE_FILLER(self.board).Fill(self.board.Zones())
@@ -960,7 +1017,7 @@ class R4Synthetic(SyntheticBase):
     def test_k_region_own_pad_void_disc_radius(self):
         """R6-GATE-04: a closed no-copper hole 3 mm from a through-hole pad is not that pad's void."""
         self.plane('GND', 0, 10, 46, 40)
-        self.j124.FindPadByNumber('1').SetNet(self.board.FindNet('SPI1_SCK'))
+        self.r134.FindPadByNumber('2').SetNet(self.board.FindNet('SPI1_SCK'))
         self.keepout(self.box(4.7, 22.7, 5.3, 23.3))                              # a closed hole, centre 3 mm from (5, 20)
         self.track((5, 22.9), (5, 23.1), 'SPI1_SCK', pcbnew.B_Cu)
         self.assertTrue(any('no In2 copper' in i for i in gate.region_issues(self.board)[0]))
@@ -979,7 +1036,7 @@ class R4Synthetic(SyntheticBase):
             if slot_width:
                 ps.BooleanSubtract(poly(*self.box(0, 20 - slot_width / 2, 5, 20 + slot_width / 2)))
             return {'GND': ps}
-        self.j124.FindPadByNumber('1').SetNet(self.board.FindNet('SPI1_SCK'))
+        self.r134.FindPadByNumber('2').SetNet(self.board.FindNet('SPI1_SCK'))
         self.assertTrue(gate.OwnPadVoids(self.board, fill(0)).exempt('SPI1_SCK', 5, 20.3))
         for width in (0.03, 0.02):
             with self.subTest(width=width):
@@ -1147,9 +1204,9 @@ class R3Synthetic(SyntheticBase):
             if use in gate.LOADER_DRIVES and port in gate.LOADER_R10:
                 self.assertTrue(len(gate.LOADER_R10[port][2]) > 40, port)
 
-    # --- R3-SAF-01 barrels and J124's window ----------------------------------------------------------------------
+    # --- R3-SAF-01 pyro barrels ----------------------------------------------------------------------
     def test_s8_inner_copper_near_pyro_barrel(self):
-        self.via(30, 30, 'PYRO1_BUS', drill=0.3)
+        self.via(30, 30, 'RAW_ACT', drill=0.3)
         self.assertEqual(gate.s8(self.ctx())[0], [])
         t = self.track((30.75, 28), (30.75, 32), '3V3', pcbnew.In2_Cu)    # barrel wall 0.15 + 0.5 gap + 0.1 half
         found = gate.s8(self.ctx())[0]
@@ -1165,7 +1222,7 @@ class R3Synthetic(SyntheticBase):
     def test_s8_plated_pad_and_raw_act_barrel(self):
         """R6-SAF-02: a foreign plated pad's inner copper counts; RAW_ACT's barrel is a barrel net."""
         self.assertIn('RAW_ACT', gate.BARREL_NETS)
-        self.part('X5', [('1', 0, 0, 'PYRO1_BUS')], at=(10, 50), tht=True)
+        self.part('X5', [('1', 0, 0, 'RAW_ACT')], at=(10, 50), tht=True)
         self.assertEqual(gate.s8(self.ctx())[0], [])
         self.part('X6', [('1', 0, 0, 'SERVO1_OUT')], at=(11.9, 50), tht=True)      # pad edge 0.4 mm from the barrel wall
         self.assertTrue(any('SERVO1_OUT copper' in i and 'X5.1' in i for i in gate.s8(self.ctx())[0]))
@@ -1173,25 +1230,18 @@ class R3Synthetic(SyntheticBase):
         self.track((30.9, 58), (30.9, 62), '3V3', pcbnew.In2_Cu)                    # 0.25 mm from the RAW_ACT hole wall
         self.assertTrue(any('X7.1 hole' in i for i in gate.s8(self.ctx())[0]))
 
-    def test_s5_foreign_copper_between_j124_pads(self):
-        self.assertEqual(gate.arm_window(self.board)[0], [])
-        t = self.track((6.75, 19), (6.75, 21), 'RAW_PROTECTED', pcbnew.In2_Cu)
-        self.assertTrue(any('RAW_PROTECTED' in i for i in gate.s5(self.ctx())[0]))
-        t.SetNet(self.board.FindNet('GND'))
-        self.assertEqual(gate.arm_window(self.board)[0], [])
-
     # --- R3-GATE-02 copper text, footprint zones, multi-net parts -------------------------------------------------
     def test_s1_copper_text_bridge(self):
         t = pcbnew.PCB_TEXT(self.board); t.SetText('I'); t.SetLayer(pcbnew.B_Cu); t.SetTextAngleDegrees(90)
         t.SetTextSize(self.P(4.5, 4.5)); t.SetTextThickness(pcbnew.FromMM(0.6)); t.SetPosition(self.P(6.75, 20))
         self.board.Add(t)
-        self.assertTrue(any('bridged' in i and 'copper text' in i for i in gate.s1(self.ctx())[0]))
+        self.assertTrue(any('bypassed' in i and 'copper text' in i for i in gate.s1(self.ctx())[0]))
         self.board.Remove(t)
         f = self.part('X4', [], at=(6.75, 20))
         ft = pcbnew.PCB_TEXT(f); ft.SetText('I'); ft.SetLayer(pcbnew.F_Cu); ft.SetTextAngleDegrees(90)
         ft.SetTextSize(self.P(4.5, 4.5)); ft.SetTextThickness(pcbnew.FromMM(0.6)); ft.SetPosition(self.P(6.75, 20))
         f.Add(ft)
-        self.assertTrue(any('bridged' in i and 'X4 copper text' in i for i in gate.s1(self.ctx())[0]))
+        self.assertTrue(any('bypassed' in i and 'X4 copper text' in i for i in gate.s1(self.ctx())[0]))
 
     def test_s1_multi_net_part(self):
         nets = ['RAW_ACT', 'GND', 'BAT_IN', 'ACT_GATE', 'GPS_TX_MCU', 'SERVO1_OUT']
@@ -1203,17 +1253,18 @@ class R3Synthetic(SyntheticBase):
 
     # --- R3-GATE-07 fire-loop width -------------------------------------------------------------------------------
     def test_s9_fire_path_and_sense_tap(self):
-        self.part('R134', [('1', 0, 0, 'PYRO1_IGN'), ('2', 4, 0, 'PYRO1_BUS')], at=(20, 20))
-        self.part('R132', [('1', 0, 0, 'PYRO1_BUS'), ('2', 1, 0, 'GND')], at=(14, 26))
-        main = [self.track((5, 20), (10, 20), 'PYRO1_BUS', width=1.0), self.track((10, 20), (24, 20), 'PYRO1_BUS',
-                                                                                    width=1.0)]
-        self.track((10, 20), (14, 26), 'PYRO1_BUS', width=0.2)            # a sense tap at a T: pruned, not fire path
-        segs, joined, _ = gate.fire_path(self.board, 'PYRO1_BUS', gate.FIRE_TERMINALS['PYRO1_BUS'])
+        self.board.Remove(self.r134); self.board.Remove(self.r132)
+        self.part('Q121', [('9', 0, 0, 'RAW_ACT')], at=(5, 20))
+        self.part('R134', [('1', 0, 0, 'PYRO1_IGN'), ('2', 4, 0, 'RAW_ACT')], at=(20, 20))
+        self.part('R132', [('1', 0, 0, 'RAW_ACT'), ('2', 1, 0, 'GND')], at=(14, 26))
+        main = [self.track((5, 20), (10, 20), 'RAW_ACT', width=1.0), self.track((10, 20), (24, 20), 'RAW_ACT', width=1.0)]
+        self.track((10, 20), (14, 26), 'RAW_ACT', width=0.2)              # sense tap is pruned from the fire path
+        segs, joined, _ = gate.fire_path(self.board, 'RAW_ACT', gate.FIRE_TERMINALS['RAW_ACT'])
         self.assertTrue(joined)
         self.assertEqual(sorted(round(pcbnew.ToMM(t.GetWidth()), 2) for t in segs), [1.0, 1.0])
-        self.assertFalse([i for i in gate.s9(self.ctx())[0] if 'PYRO1_BUS fire-path' in i])
+        self.assertFalse([i for i in gate.s9(self.ctx())[0] if 'RAW_ACT fire-path' in i])
         main[1].SetWidth(pcbnew.FromMM(0.5))
-        self.assertTrue([i for i in gate.s9(self.ctx())[0] if 'PYRO1_BUS fire-path track 0.500 mm' in i])
+        self.assertTrue([i for i in gate.s9(self.ctx())[0] if 'RAW_ACT fire-path track 0.500 mm' in i])
 
     # --- R3-MFG-01 silk over mask openings ------------------------------------------------------------------------
     def test_silk_over_mask_opening(self):
@@ -1240,14 +1291,14 @@ class Plate(unittest.TestCase):
     def setUp(self):
         self.spec = json.loads((Path(__file__).resolve().parents[1] /
                                 'm3_design/assembly_review/sources/r10_design/masses.json').read_text())
-        refs = ['J1', 'J121', 'J124', 'J122', 'C84', 'LS120', 'J3', 'J9', 'J123', 'J400', 'J410', 'J420',
+        refs = ['J1', 'J121', 'J122', 'C84', 'LS120', 'J3', 'J9', 'J123', 'J400', 'J410', 'J420',
                 'J9 mated', 'J123 mated', 'J400 mated', 'J410 mated', 'J420 mated', 'J122 mated']
         self.fit = dict(profile='r10', outline=[0, 0, 46, 84], supports=[[4, 4], [42, 4], [4, 80], [42, 80], [42, 42]],
                         rows=[(1, ref, 'F', [20 + i, 40, 22 + i, 42, 0, 2]) for i, ref in enumerate(refs)])
 
     def test_mated_allowance_on_parent_and_unmatched_key_refused(self):
         _, masses, _ = plate.build(self.fit, 5, False, 'r10_mated', 'r10', self.spec)
-        for ref in ('J1', 'J121', 'J124'):
+        for ref in ('J1', 'J121'):
             self.assertIn(f'{ref} mated', masses)
             self.assertEqual(masses[f'{ref} mated'][1:3], masses[ref][1:3])
         for key in ('J2', 'J5 mated', 'U77'):
@@ -1338,22 +1389,39 @@ class RealBoardSeeds(unittest.TestCase):
     def pad(self, board, ref, num):
         return board.FindFootprintByReference(ref).FindPadByNumber(num)
 
-    def test_bridge_j124_with_a_track(self):
+    def test_bypass_r134_with_a_track(self):
         def seed(b):
-            p1, p2 = self.pad(b, 'J124', '1'), self.pad(b, 'J124', '2')
+            p1, p2 = self.pad(b, 'R134', '1'), self.pad(b, 'R134', '2')
             t = pcbnew.PCB_TRACK(b); t.SetStart(p1.GetPosition()); t.SetEnd(p2.GetPosition())
             t.SetWidth(pcbnew.FromMM(0.25)); t.SetLayer(pcbnew.B_Cu); b.Add(t)
-        self.seeded('S-1', seed, 'ARM break is bridged')
+        self.seeded('S-1', seed, 'firing / sense chain is bypassed')
 
-    def test_part_bypasses_j124(self):
-        self.seeded('S-1', lambda b: self.pad(b, 'R132', '2').SetNet(b.FindNet('RAW_ACT')), 'without J124')
+    def test_single_switch_feed_and_bus_sense(self):
+        self.seeded('S-1', lambda b: self.pad(b, 'R132', '2').SetNet(b.FindNet('RAW_ACT')), 'R132.2 must be on')
+        self.seeded('S-1', lambda b: self.pad(b, 'R134', '2').SetNet(b.FindNet('BAT_IN')), 'R134.2 must be on RAW_ACT')
+        def old_bus(b):
+            b.Add(pcbnew.NETINFO_ITEM(b, 'PYRO1_BUS'))
+            self.pad(b, 'R134', '2').SetNet(b.FindNet('PYRO1_BUS'))
+        self.seeded('S-1', old_bus, 'obsolete PYRO1_BUS')
+        def old_terminal(b):
+            f = pcbnew.Cast_to_FOOTPRINT(b.FindFootprintByReference('J121').Duplicate(False))
+            f.SetReference('J124'); b.Add(f)
+        self.seeded('S-1', old_terminal, 'obsolete J124')
 
-    def test_j124_pad_moved_closer(self):
-        def seed(b):
-            p1, p2 = self.pad(b, 'J124', '1'), self.pad(b, 'J124', '2')
-            a, c = p1.GetPosition(), p2.GetPosition()
-            p1.SetPosition(pcbnew.VECTOR2I(a.x + (c.x - a.x) // 10, a.y + (c.y - a.y) // 10))   # 0.35 mm closer
-        self.seeded('S-5', seed, 'pad to pad')
+    def test_screw_switch_contacts_and_protection(self):
+        self.seeded('S-5', lambda b: self.pad(b, 'J400', '1').SetNet(b.FindNet('BAT_IN')), 'J400.1 must be')
+        self.seeded('S-5', lambda b: b.FindFootprintByReference('R165').SetValue('0R'), 'R165 must be 470k')
+        def bridge(b):
+            p1, p2 = self.pad(b, 'J400', '1'), self.pad(b, 'J400', '2')
+            t = pcbnew.PCB_TRACK(b); t.SetStart(p1.GetPosition()); t.SetEnd(p2.GetPosition())
+            t.SetWidth(pcbnew.FromMM(0.25)); t.SetLayer(pcbnew.F_Cu); b.Add(t)
+        self.seeded('S-5', bridge, 'switch contact / resistor bypass')
+
+    def test_independent_load_enable_default_off(self):
+        self.seeded('S-3', lambda b: self.pad(b, 'R122', '1').SetNet(b.FindNet('RAW_PROTECTED')), 'R122.1 must be ACT_EN_MCU')
+        self.seeded('S-3', lambda b: self.pad(b, 'U1', '16').SetNet(b.FindNet('PYRO1_GATE_N')), 'U1.16 must be ACT_EN_MCU')
+        self.seeded('S-3', lambda b: self.pad(b, 'R123', '2').SetNet(b.FindNet('3V3')), 'R123.2 must be GND')
+        self.seeded('S-3', lambda b: b.Remove(b.FindFootprintByReference('R123')), 'R123')
 
     def test_required_fitted_seeds(self):
         for ref, flag in (('R134', pcbnew.FP_DNP), ('R127', pcbnew.FP_EXCLUDE_FROM_BOM),
@@ -1367,7 +1435,7 @@ class RealBoardSeeds(unittest.TestCase):
 
     def test_gps_net_next_to_pyro_bus(self):
         def seed(b):
-            p = self.pad(b, 'J124', '1')
+            p = self.pad(b, 'R134', '2')
             c, r = p.GetPosition(), p.GetSize().x // 2
             t = pcbnew.PCB_TRACK(b); t.SetNet(b.FindNet('GPS_TX_MCU')); t.SetLayer(pcbnew.B_Cu)
             t.SetWidth(pcbnew.FromMM(0.2))
@@ -1389,7 +1457,7 @@ class RealBoardSeeds(unittest.TestCase):
 
     def test_imu_rotation_and_terminal_entry(self):
         self.seeded('M-7', lambda b: b.FindFootprintByReference('U4').SetOrientationDegrees(0), 'rotation')
-        self.seeded('P-11', lambda b: b.FindFootprintByReference('J124').SetOrientationDegrees(90), 'enter from')
+        self.seeded('P-11', lambda b: b.FindFootprintByReference('J121').SetOrientationDegrees(90), 'enter from')
 
     # --- R3 gate seeds on the real board (R3-GATE-01 .. R3-MEC-02) -------------------------------------------------
     def route_new(self, seed, cat):
@@ -1505,11 +1573,10 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('K-loader', lambda b: b.FindFootprintByReference('R61').SetValue('100'), 'VLOGIC_SENSE')
         self.seeded('K-loader', lambda b: self.pad(b, 'R156', '1').SetNet(b.FindNet('CAM_PWR_EN')), 'CAM_PWR_EN')
 
-    def test_barrel_and_arm_window_seeds(self):
-        """R3-SAF-01: a 3V3 In1 track 0.5 mm from J124.1's barrel (S-8); a SERVO1_OUT In1 track across J124's
-        inter-pad window (S-5)."""
+    def test_inner_copper_near_igniter_barrel(self):
+        """R3-SAF-01: a 3V3 In1 track 0.5 mm from J121.2's plated barrel."""
         def near_barrel(b):
-            p = self.pad(b, 'J124', '1')
+            p = self.pad(b, 'J121', '2')
             c, r = p.GetPosition(), p.GetDrillSize().x // 2
             x = c.x - r - pcbnew.FromMM(0.5) - pcbnew.FromMM(0.1)
             t = pcbnew.PCB_TRACK(b); t.SetNet(b.FindNet('3V3')); t.SetLayer(pcbnew.In1_Cu)
@@ -1517,19 +1584,10 @@ class RealBoardSeeds(unittest.TestCase):
             t.SetEnd(pcbnew.VECTOR2I(x, c.y + pcbnew.FromMM(1))); b.Add(t)
         self.seeded('S-8', near_barrel, 'In1.Cu')
 
-        def across(b):
-            p1, p2 = self.pad(b, 'J124', '1'), self.pad(b, 'J124', '2')
-            t = pcbnew.PCB_TRACK(b); t.SetNet(b.FindNet('SERVO1_OUT')); t.SetLayer(pcbnew.In1_Cu)
-            t.SetWidth(pcbnew.FromMM(0.2))
-            m = pcbnew.VECTOR2I((p1.GetPosition().x + p2.GetPosition().x) // 2, (p1.GetPosition().y + p2.GetPosition().y) // 2)
-            t.SetStart(m - pcbnew.VECTOR2I(pcbnew.FromMM(1.5), 0)); t.SetEnd(m + pcbnew.VECTOR2I(pcbnew.FromMM(1.5), 0))
-            b.Add(t)
-        self.seeded('S-5', across, 'SERVO1_OUT')
-
     def test_copper_text_and_multi_net_part_bridge(self):
-        """R3-GATE-02: copper text joining J124's pads; U1 (> 4 nets) on both RAW_ACT and PYRO1_IGN."""
+        """R3-GATE-02: copper text bypassing R134; U1 (> 4 nets) on both RAW_ACT and PYRO1_IGN."""
         def text(b):
-            p1, p2 = self.pad(b, 'J124', '1'), self.pad(b, 'J124', '2')
+            p1, p2 = self.pad(b, 'R134', '1'), self.pad(b, 'R134', '2')
             a, c = p1.GetPosition(), p2.GetPosition()
             t = pcbnew.PCB_TEXT(b); t.SetText('I'); t.SetLayer(pcbnew.B_Cu)
             span = (c - a).EuclideanNorm()
@@ -1537,7 +1595,7 @@ class RealBoardSeeds(unittest.TestCase):
             if abs(c.x - a.x) > abs(c.y - a.y):
                 t.SetTextAngleDegrees(90)
             t.SetPosition(pcbnew.VECTOR2I((a.x + c.x) // 2, (a.y + c.y) // 2)); b.Add(t)
-        self.seeded('S-1', text, 'ARM break is bridged')
+        self.seeded('S-1', text, 'firing / sense chain is bypassed')
 
         def u1(b):
             self.pad(b, 'U1', '68').SetNet(b.FindNet('RAW_ACT'))
@@ -1563,13 +1621,13 @@ class RealBoardSeeds(unittest.TestCase):
         """R8-GATE-02 / 03 / 04: pinned legends, shown safety references, BAT_IN / RAW_PROTECTED width floor."""
         for rid in ('K-legends', 'K-width'):
             self.assertEqual(self.run_rule(rid, self.load()), set(), rid)
-        for text in ('J124 ARM LAST', 'J124 5A FAST 2S', 'M3-ASSY-R10'):
+        for _, text in gate.PINNED_TEXTS:
             def seed(b, text=text):
                 for d in b.GetDrawings():
                     if isinstance(d, pcbnew.PCB_TEXT) and d.GetText() == text:
                         d.SetText(text + 'X')
             self.seeded('K-legends', seed, repr(text))
-        for ref in ('J124', 'Q120'):
+        for ref in ('J400', 'Q120'):
             self.seeded('K-legends', lambda b, ref=ref: b.FindFootprintByReference(ref).Reference().SetVisible(False),
                         f'{ref}: reference designator hidden')
         rep = gate.check_board(self.load(), real_project(), real_project() / 'm3.kicad_pcb', only={'K-legends'})
@@ -1606,11 +1664,11 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('K-legends', dot, 'R134.1')
 
     def test_round6_gate_seeds(self):
-        """R6-GATE-07 / R6-SAF-01 / R6-SAF-02: a renamed test point on PYRO1_BUS (S-1); R913 100R from PYRO1_GATE_N to
-        3V3 (S-3); an In2 RAW_PROTECTED track 0.425 mm from J124.2's hole (S-8); a PTH pad of another net near it."""
+        """R6-GATE-07 / R6-SAF-01 / R6-SAF-02: a renamed test point on RAW_ACT (S-1); R913 100R from PYRO1_GATE_N to
+        3V3 (S-3); an In2 RAW_PROTECTED track 0.425 mm from J121.2's hole (S-8); a PTH pad of another net near it."""
         def renamed_tp(b):
             tp = b.FindFootprintByReference('TP120')
-            tp.SetReference('PT121'); tp.FindPadByNumber('1').SetNet(b.FindNet('PYRO1_BUS'))
+            tp.SetReference('PT121'); tp.FindPadByNumber('1').SetNet(b.FindNet('RAW_ACT'))
         self.seeded('S-1', renamed_tp, 'PT121')
 
         def pull_up(b):
@@ -1620,7 +1678,7 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('S-3', pull_up, 'R913')
 
         def in2_track(b):
-            p = self.pad(b, 'J124', '2')
+            p = self.pad(b, 'J121', '2')
             c, r = p.GetPosition(), p.GetDrillSize().x // 2
             x = c.x + r + pcbnew.FromMM(0.425 + 0.1)
             t = pcbnew.PCB_TRACK(b); t.SetNet(b.FindNet('RAW_PROTECTED')); t.SetLayer(pcbnew.In2_Cu)
@@ -1649,10 +1707,10 @@ class RealBoardSeeds(unittest.TestCase):
             return seed
         for raw, armed in (('RAW_ACT_SENSE_MCU', 'ARM1_SENSE_MCU'), ('RAW_ACT_SENSE', 'ARM1_SENSE')):
             for rid in ('S-1', 'S-2'):
-                self.seeded(rid, bridge(raw, armed), 'bridges the ARM break')
+                self.seeded(rid, bridge(raw, armed), 'bypasses the named pyro / sense chain')
 
     def test_supply_ties_seeds(self):
-        """R4-SAF-02 / R4-GATE-03: RAW_ACT -> 3V3 -> PYRO1_BUS resistor chain (two parts), a U9 pad on RAW_ACT."""
+        """R4-SAF-02 / R4-GATE-03: RAW_ACT -> 3V3 resistor chain (two parts), a U9 pad on RAW_ACT."""
         def chain(b):
             self.pad(b, 'R132', '1').SetNet(b.FindNet('3V3'))
             self.pad(b, 'R177', '2').SetNet(b.FindNet('3V3'))
@@ -1667,7 +1725,7 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('M-7', lambda b: b.FindFootprintByReference('U4').Move(self.P(2, 0)), 'roll axis')
 
     def test_k_rules_seeds(self):
-        """R4-GATE-01: a PYRO1_BUS / 3V3 zero-clearance rule in m3.kicad_dru, min_clearance 0 and a net class
+        """R4-GATE-01: a RAW_ACT / 3V3 zero-clearance rule in m3.kicad_dru, min_clearance 0 and a net class
         clearance 0 in .kicad_pro, a severity set to ignore, a DRC exclusion."""
         folder = real_project()
         board = self.load()
@@ -1680,7 +1738,7 @@ class RealBoardSeeds(unittest.TestCase):
                 d = json.loads(old_pro); f(d['board']['design_settings'], d); pro.write_text(json.dumps(d))
             return go
         seeds = {
-            'rule': lambda: dru.write_text(old_dru + '\n(rule "x" (condition "A.NetName==\'PYRO1_BUS\' && '
+            'rule': lambda: dru.write_text(old_dru + '\n(rule "x" (condition "A.NetName==\'RAW_ACT\' && '
                                            'B.NetName==\'3V3\'") (constraint clearance (min 0mm)))\n'),
             'min_clearance': edit_pro(lambda ds, d: ds['rules'].__setitem__('min_clearance', 0)),
             'netclass': edit_pro(lambda ds, d: d['net_settings']['classes'][0].__setitem__('clearance', 0.0)),
@@ -1708,7 +1766,7 @@ class RealBoardSeeds(unittest.TestCase):
         self.addCleanup(shutil.rmtree, d, ignore_errors=True)
         b = self.load()
         v = pcbnew.PCB_VIA(b); v.SetPosition(self.P(23, 30)); v.SetWidth(pcbnew.FromMM(0.6))
-        v.SetDrill(pcbnew.FromMM(0.3)); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(b.FindNet('PYRO1_BUS'))
+        v.SetDrill(pcbnew.FromMM(0.3)); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(b.FindNet('RAW_ACT'))
         b.Add(v)
         pcbnew.SaveBoard(str(d / 'm3.kicad_pcb'), b)
         issues, ev = gate.fill_freshness(d / 'm3.kicad_pcb')
@@ -1739,15 +1797,13 @@ class RealBoardSeeds(unittest.TestCase):
             track.SetWidth(pcbnew.FromMM(.2))
         self.seeded('F9-1', narrow, 'stale')
 
-    def test_no_battery_fuse_legend_required_but_arm_fuse_retained(self):
-        self.assertNotIn(('B.Silkscreen', 'J1 BAT 15A FUSE'), gate.PINNED_TEXTS)
-        self.assertIn(('B.Silkscreen', 'J124 5A FAST 2S'), gate.PINNED_TEXTS)
-        board = self.load()
-        text = pcbnew.PCB_TEXT(board)
-        text.SetLayer(pcbnew.B_SilkS)
-        text.SetText('J1 BAT 15A FUSE')
-        board.Add(text)
-        self.assertTrue(any('obsolete J1 battery-lead fuse legend' in issue for issue in gate.pinned_texts(board)))
+    def test_obsolete_arm_and_fuse_legends_rejected(self):
+        self.assertEqual(gate.PINNED_TEXTS, (('B.Silkscreen', 'M3-ASSY-R10'),))
+        for legend in ('J1 BAT 15A FUSE', 'J124 ARM LAST', 'J124 5A FAST 2S', 'ARM', 'ARM1', 'ARM CH1'):
+            with self.subTest(legend=legend):
+                def seed(b):
+                    text = pcbnew.PCB_TEXT(b); text.SetLayer(pcbnew.B_SilkS); text.SetText(legend); b.Add(text)
+                self.seeded('K-legends', seed, 'obsolete ARM terminal or fuse legend')
 
     def test_armed_side_extra_parts(self):
         """R7-GATE-03 / R7-SAF-01 seeds."""

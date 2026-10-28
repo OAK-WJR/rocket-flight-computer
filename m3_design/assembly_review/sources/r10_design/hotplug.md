@@ -3,7 +3,7 @@
 This is a **simulation / Inference**, not a bench result. The model uses the saved board's copper and maker capacitor
 curves. No R4 qualification result is transferred to R10. `hotplug_inputs.json` and `hotplug_results.json` are the
 current-board evidence; `hotplug_baseline_inputs.json` records the original split feed on board `407d1d84…`.
-The completed schema-3 model passes all 2304 required corners on production board `b860afbe…`; it retains
+The completed schema-3 model passes all 2304 required corners on the single-switch CAD board `60be35ea…` (unchanged input-feed electrical signature `1f638065…` from `b860afbe…`); it retains
 the C88 path and checks the feed-first topology. Physical qualification remains open.
 
 ## Why the distance gate was insufficient

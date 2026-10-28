@@ -1040,3 +1040,42 @@ commercial altimeters (Featherweight Blue Jay, EasyMini, RRC3) do. Owner's words
   power (the pyro feed needs the pack and the load switch) or the e-match disconnected.
 - **Accepted:** no physical break while the board is on; a back-feeding USB / self-powered port device with the switch
   open can keep the logic up (audit §3 item 7), so the e-match is connected only with no back-feed source attached.
+
+### D-SS-01. Implement the two independent MCU controls in the recorded decision
+
+Source inspection found that the former R122 / R123 divider enabled Q122 automatically from RAW_PROTECTED;
+ACT_EN was not an MCU output. Merely deleting J124 would therefore not implement the decision's firing chain.
+Use the previously unconnected PC1 (U1.16) as ACT_EN_MCU, through R122 (1 kΩ, 0402WGF1001TCE / C11702) to Q122's
+ACT_EN gate; retain R123 (100 kΩ) to GND. Remove the RAW_PROTECTED divider feed. The separate PE4 output still
+controls Q124. Both control inputs have external pull-downs and firmware initializes both low before deliberate
+on-rail bus checks; only a confirmed launch permits a fire command. No firmware implementation is claimed.
+
+Maker evidence: [ST DS12110 Rev 11](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf), Figure 6 p.55 and
+Table 9 p.67, identifies PC1 at LQFP100 pin 16 as an ordinary GPIO (also TRACED0); the existing ban on synchronous
+trace therefore covers PC1 as well as PE4. [AO3400A Rev 3.1](https://www.aosmd.com/sites/default/files/res/datasheets/AO3400A.pdf),
+pp.1–2, specifies its on-resistance at 2.5 V gate drive. At the 3V3 lower corner of 3.27 V, allowing 0.4 V MCU
+output drop and resistor tolerance, ACT_EN is above 2.83 V (Calc). R123 holds the gate below 0.12 V for 1 µA MCU
+leakage plus the MOSFET's 0.1 µA gate-leakage limit (Calc; unpowered transient behavior remains a bench test).
+PC1 is not an AN2606 Table 119 loader pin. Firmware must keep it low in loader/debug transitions and clear it
+on a fault; GPIO configuration locking and read-back extend to PC1. A single shared MCU remains an accepted
+single-string limitation; two controls do not establish independent software safety.
+
+### D-SS-02. One named post-switch net and a shorter fire path
+
+Merge the former PYRO1_BUS into RAW_ACT; do not add a net-tie component or a zero-ohm bypass. R134.2 and the bus-sense
+divider R132.1 now join the Q121 drain. ARM1_SENSE signal names remain as historical identifiers for bus voltage,
+not evidence of a physical ARM link. Move R134 to the bottom at (7, 64.335), rotation −90°, beside J121's through-hole
+pad: the Q121 → R134 → J121 fire feed can be drawn directly on B.Cu. The separate RAW_ACT and bus dividers remain
+fitted as directed. S-1 / S-2 verify the unified net and its sole supply through Q120 / Q121; S-5 checks the external
+switch circuit rather than a nonexistent inter-pad ARM gap. The removed connector, fuse note and ARM legends are
+rejected by the current R10 gates. All other AGENTS §2 constraints remain.
+
+### D-SS-03. Keep required assembly references visible
+
+The first full integration build hid Q121 / Q124 after the changed legend and part packing; K-legends correctly
+rejected it. Give the existing required connector/safety designators placement priority in the R10 post generator,
+including its courtyard/run-on correction pass. The generic designator helper accepts an optional priority list;
+its default behavior for historical generators is unchanged. Keep the 1.0 mm text, 0.15 mm stroke, pad clearance
+and nearest-subject rules. Re-pin the DRU hash only for its reviewed ARM-to-switch comment: the actual rules are
+byte-unchanged. Remove J124's body/wire masses from the R10 plate profile and fix the standalone plate test's
+incomplete fixture (LS120 was absent); three standalone mass-profile tests pass. No R9 profile is changed.

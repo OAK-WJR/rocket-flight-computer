@@ -177,15 +177,19 @@ blocking. A self-powered or USB-powered GPS (J410), radio (J420, LR900-F has its
 own USB-C) or camera (J9) on an enabled port therefore back-feeds GPS_4V8 /
 RADIO_4V8 → PORT_4V8 → U401 (TPS7A91 states no reverse-current behaviour:
 Inference) → PORT_5V3, and CAM_5V → PORT_5V3, then through U400's high-side body
-diode (Inference) into RAW_PROTECTED. From there U11 feeds VLOGIC (the logic can
-stay up) and R122/R123 put about half of RAW_PROTECTED on ACT_EN: at a back-fed
-≈4.4 V that is ≈2.2 V, above AO3400A's1.45 V maximum threshold, so Q122 turns the
-pyro-bus load switch Q120/Q121 on and RAW_ACT is live from BAT_IN **with the power
-switch open** (Inference). Mitigation: firmware drops every port EN and UART OE
-when the power switch opens or VLOGIC sags (binding note), all EN pull-downs keep a
-reset or unpowered MCU from enabling a port, and the ORDERING R10 bench step checks
-it with each port device self- or USB-powered and enabled (RAW_ACT < 1 V within
-1 s of opening the switch). The camera back-feed prohibition (REQUIREMENTS
+diode (Inference) into RAW_PROTECTED. From there U11 can keep VLOGIC and the MCU alive with the external screw
+switch open. The single-switch implementation replaces the former automatic R122/R123 divider with PC1
+(ACT_EN_MCU) through R122 1 kΩ and R123 100 kΩ to GND. The pyro load switch is off during MCU reset or loss of
+3V3, but a still-running MCU can retain its deliberate enable: no physical ARM break remains. Treat the pyro
+channel as live while any source powers the board. Connect the e-match only with the screw switch off and no USB
+or self-powered port attached; perform bench work from USB with the e-match disconnected. Firmware drops UART
+OEs and port ENs on a VLOGIC sag, clears PC1 and PE4 on every safety fault, and must never fire before a confirmed
+accelerometer-plus-barometer launch. No separately wired switch-position input exists, so firmware cannot promise
+to detect a switch opening that a back-fed supply hides. The installed dummy-load bench test measures the behavior
+with each port independently powered and enabled. A passing CAD gate does not verify these firmware or transient
+behaviors (D-SS-01).
+
+The camera back-feed prohibition (REQUIREMENTS
 "Camera") extends to J410 and J420.
 
 **Port UART ESD (R3-MCU-05).** D400/D401, D410/D411, D420/D421 are ESD103-B1-02EL

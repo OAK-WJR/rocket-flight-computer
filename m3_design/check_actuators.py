@@ -370,9 +370,15 @@ def check(text, dru=None, profile="r9"):
      'TP123']
     req(not (set(removed) & set(val)), 'R6 must contain no removed CH2 components')
     req(not any(n.startswith(('PYRO2', 'ARM2')) for n in members), 'R6 must contain no CH2 net')
-    # 1. arming break: each bus touches only its ARM pin, its arm-sense upper arm and its series
-    #    resistor; the igniter side of that resistor touches only the igniter terminal
-    req(members.get('PYRO1_BUS') == {'J124.1', 'R134.2', 'R132.1'}, 'PYRO1_BUS must be {J124.1, R134.2, R132.1}')
+    # R10's single screw switch replaces the ARM link; the canonical bus is RAW_ACT behind Q120/Q121.
+    # Earlier revisions retain their complete ARM break.
+    if r10:
+        req('J124' not in val, 'R10 single screw switch: J124 must be removed')
+        req('PYRO1_BUS' not in members, 'R10 single screw switch: PYRO1_BUS must be merged into RAW_ACT')
+        req(pin.get('R134.2') == pin.get('R132.1') == 'RAW_ACT',
+            'R10 R134.2 and R132.1 must be on RAW_ACT behind Q120/Q121')
+    else:
+        req(members.get('PYRO1_BUS') == {'J124.1', 'R134.2', 'R132.1'}, 'PYRO1_BUS must be {J124.1, R134.2, R132.1}')
     req(members.get('PYRO1_IGN') == {'J121.2', 'R134.1'}, 'PYRO1_IGN must be {J121.2, R134.1}')
     # 1b. shorted-igniter current limit (sim_r2/FINDINGS.md 1): 2 ohm pulse-rated 2512 per channel
     for r in ('R134',):
@@ -380,8 +386,9 @@ def check(text, dru=None, profile="r9"):
     # 1c. cold pull-up strength (sim_r2/FINDINGS.md 2): 10k keeps the plug-out states apart
     for r in ('R131',):
         req(val.get(r) == '10k', f'{r} cold pull-up must be 10k')
-    req({'J124.2'} <= members.get('RAW_ACT', set()), 'ARM terminal outer pins must be RAW_ACT')
-    req(not ({'J124.1'} & members.get('RAW_ACT', set())), 'no ARM bus pin may be RAW_ACT')
+    if not r10:
+        req({'J124.2'} <= members.get('RAW_ACT', set()), 'ARM terminal outer pins must be RAW_ACT')
+        req(not ({'J124.1'} & members.get('RAW_ACT', set())), 'no ARM bus pin may be RAW_ACT')
     # 2. no probe points on bus or igniter nets (DESIGN_ASSURANCE: never place TP on BUS/OUT)
     for n in POWER + ('RAW_ACT',):
         tps = sorted(p for p in members.get(n, ()) if p.startswith('TP') and n != 'RAW_ACT')
@@ -411,7 +418,7 @@ def check(text, dru=None, profile="r9"):
         req(val.get(rs) == '220R' and val.get(rpd) == '1k' and val.get(rgs) == '10k', f'{rs}/{rpd}/{rgs} must be 220R / 1k / 10k')
         req(side.get(f'TP{121 + ch}') == 'B.Cu', f'TP{121 + ch} (bare gate pad) must stay on the bottom side')
     # 5. sentinel pins beside the pyro gates carry no net (firmware drives them low)
-    for p in ('U1.2', 'U1.4', 'U1.5', 'U1.16', 'U1.32'):
+    for p in ('U1.2', 'U1.4', 'U1.5', 'U1.32') + (() if r10 else ('U1.16',)):
         req(pin.get(p) is None or pin.get(p, '').startswith('unconnected-'), f'{p} must stay a no-net sentinel')
     # 6. CH1 drain contains only its terminal, FET, divider, cold pull-up and drain capacitor
     req(members.get('PYRO1_OUT') == {'J121.1', 'Q124.5', 'R173.1', 'R131.1', 'C128.1'}, 'PYRO1_OUT membership')
@@ -425,7 +432,7 @@ def check(text, dru=None, profile="r9"):
                 (f'PYRO{ch}_CONT', 'R173', 'R129', 'R130',
                  'R178', 'C127', 'R168', mcu_cont, f'PYRO{ch}_OUT'),
                 (f'ARM{ch}_SENSE', 'R132', 'R175', 'R133',
-                 'R180', 'C129', 'R170', mcu_arm, f'PYRO{ch}_BUS')):
+                 'R180', 'C129', 'R170', mcu_arm, 'RAW_ACT' if r10 else f'PYRO{ch}_BUS')):
             req(members.get(node) == {f'{tb}.2', f'{bot}.1', f'{bot2}.1', f'{cap}.1', f'{ser}.1'},
                 f'{node} must be only {tb}, {bot}, {bot2}, {cap} and {ser}')
             req(members.get(f'{node}_MID') == {f'{ta}.2', f'{tb}.1'} and pin.get(f'{ta}.1') == src,
@@ -473,13 +480,20 @@ def check(text, dru=None, profile="r9"):
     req(pin.get('D121.2') == 'GND' and pin.get('D121.5') == '3V3', 'D121 SRV05-4: pin 2 GND, pin 5 3V3')
     req([pin.get(f'D121.{k}') for k in (1, 3, 4, 6)] == ['SERVO1_MCU', 'SERVO2_MCU', 'SERVO3_MCU', 'SERVO4_MCU'],
         'D121 SRV05-4 I/O pins 1/3/4/6 on SERVO1-4_MCU (pass 5)')
-    # 8. actuator switch is gated by the logic path (single external switch)
-    req({pin.get('R122.1'), pin.get('R122.2')} == {'RAW_PROTECTED', 'ACT_EN'}, 'ACT_EN divider from RAW_PROTECTED')
+    # 8. R10 requires an independent MCU enable, default off through R123; R9 follows the logic path.
+    if r10:
+        req(pin.get('R122.1') == 'ACT_EN_MCU' and pin.get('R122.2') == 'ACT_EN'
+            and val.get('R122') == '1k' and fpname.get('R122') == 'rocket:R0402',
+            'R10 R122 must be 1k 0402 from ACT_EN_MCU to ACT_EN')
+        req(members.get('ACT_EN_MCU') == {'U1.16', 'R122.1'}, 'R10 ACT_EN_MCU must be only U1.16 (PC1) and R122.1')
+        req(val.get('R123') == '100k', 'R10 R123 must be the 100k ACT_EN pull-down')
+    else:
+        req({pin.get('R122.1'), pin.get('R122.2')} == {'RAW_PROTECTED', 'ACT_EN'}, 'ACT_EN divider from RAW_PROTECTED')
     req(pin.get('Q122.1') == 'ACT_EN' and pin.get('Q122.3') == 'ACT_DRV', 'Q122 drives the load-switch gate')
     # 8a (pass 9, actuators F3): every load-switch net exactly, Q122's source and the enable divider's foot on GND
     for n, want in ACT_NETS.items():
         if r10 and n == 'RAW_ACT':
-            want = want - {'C121.1', 'C150.1', 'C151.1', 'J122.2', 'J122.5', 'J122.8', 'J122.11'}
+            want = (want - {'C121.1', 'C150.1', 'C151.1', 'J122.2', 'J122.5', 'J122.8', 'J122.11', 'J124.2'}) | {'R134.2', 'R132.1'}
         req(members.get(n) == want, f'{n} must be exactly {sorted(want)} (is {sorted(members.get(n, ()))})')
     req(pin.get('Q122.2') == 'GND' and pin.get('R123.2') == 'GND', 'Q122 source and R123 foot on GND')
     # 8b (pass 2): C120 sits gate-to-source on Q120/Q121, so a shorted C120 turns the switch off (never on)
@@ -492,17 +506,23 @@ def check(text, dru=None, profile="r9"):
     # 10. FMEA H-1 cold pull-up: BAT54A common anode on 3V3, one cathode per channel
     req(pin.get('D120.3') == '3V3' and pin.get('D120.1') == 'PYRO1_COLD' and (pin.get('D120.2') is None or pin.get('D120.2', '').startswith('unconnected-')),
         'D120 BAT54A: anode 3V3, cathode 1 PYRO1_COLD, cathode 2 NC')
-    # 11. Pyro terminals share a stocked black 2P body; PCB silk must distinguish ARM and IGN.
-    arm_t, ign_t, other_t = ('J124',), ('J121',), ('J1', 'J9')
+    # 11. R10 has only the black IGN terminal; earlier revisions distinguish their shared ARM/IGN body in silk.
+    arm_t, ign_t, other_t = (() if r10 else ('J124',)), ('J121',), ('J1', 'J9')
     terminal_code = 'C52993880' if r10 else 'C430601'
     req(all(part.get(j) == terminal_code for j in arm_t), 'ARM terminal J124 must be black C430601')
     req(all(part.get(j) == terminal_code for j in ign_t), 'igniter terminal J121 must be black C430601 with explicit IGN silk')
     groups = [{part.get(j) for j in g} for g in (arm_t, ign_t, other_t)]
     req(not (groups[0] & groups[2] or groups[1] & groups[2]),
         'pyro terminal part must remain distinct from battery/camera connectors')
-    req(re.search(r'\(gr_text "ARM(?:1| CH1)?"', text) is not None
-        and re.search(r'\(gr_text "IGN(?:1| CH1)?"', text) is not None,
-        'shared black pyro terminals require explicit ARM and IGN silkscreen')
+    req(re.search(r'\(gr_text "IGN(?:1| CH1)?"', text) is not None, 'igniter terminal requires explicit IGN silkscreen')
+    if r10:
+        legends = re.findall(r'\(gr_text "([^"\n]*)"', text)
+        req(not any(re.search(r'\bJ124\b|\bFUSE\b|\b5A\s+FAST\b', t, re.I)
+                    or re.fullmatch(r'ARM(?:1| CH1)?', t.strip(), re.I) for t in legends),
+            'R10 obsolete ARM terminal or fuse silkscreen remains')
+    else:
+        req(re.search(r'\(gr_text "ARM(?:1| CH1)?"', text) is not None,
+            'shared black pyro terminals require explicit ARM and IGN silkscreen')
     # 12. external power contact: a 470k on each side, so no wire fault puts the pack on U9 EN (F8/F9)
     switch_a, switch_b = ('J400.1', 'J400.2') if r10 else ('J1.3', 'J1.4')
     req(members.get('BAT_SW_SOURCE') == {switch_a, 'R80.2'} and pin.get('R80.1') == 'BAT_IN', 'J1.3 only through R80 to BAT_IN')
@@ -578,6 +598,8 @@ def check(text, dru=None, profile="r9"):
     for ref, code in PINNED.items():
         if r10 and ref == 'R166':
             code = 'C168925'  # OQ-2: qualified 0.36 ohm damper on the existing UNI-ROYAL 2512 land.
+        if r10 and ref == 'R122':
+            code = 'C11702'  # Independent PC1 load-switch enable, 1k 0402.
         if r10 and ref in ('C121', 'J1', 'J121', 'J124'):
             continue  # R10 parts checked by check_r10; safety parts below remain pinned.
         req(part.get(ref) == code, f'{ref} must be LCSC {code} (is {part.get(ref)})')

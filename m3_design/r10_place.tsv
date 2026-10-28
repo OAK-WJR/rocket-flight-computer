@@ -103,7 +103,6 @@ J1	7	75.85	-90	F	R10 pyro clearances (D-R2-02)
 J121	7	55.85	-90	F	R10 pyro clearances (D-R2-02)
 J122	23	82.0	-180	F	Servo end group; external power and return harness
 J123	9	14	0	F	R10 port supply re-plan: buck aft-west top, LDO and switch cells legal, camera switch in its cell (D-R2-03)
-J124	7	65.85	-90	F	R10 pyro clearances (D-R2-02)
 J2	5	39.4	0	F	R10 functional edge group; provisional
 J3	4.6	30.799999999999997	-90	F	USB edge circuit translated 0,-3.5; direct new MCU links
 J400	10.5	85.5	0	F	R10 forward-band legalisation (D-R2-01)
@@ -145,7 +144,7 @@ R130	14.15	57.23	-90	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 R131	10.8	61.15	0	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
 R132	20	58.75	0	B	R10 forward-band legalisation (D-R2-01)
 R133	23.3	59.18	-90	B	R10 pyro alignment: straight pad-to-pad runs (D-R2-02)
-R134	17	63.6	-90	F	R10 forward-band legalisation; core block kept at R9+(5,-1.5) (D-R2-01)
+R134	7	64.335	-90	B	Single screw switch (owner 2026-10-28): freed ARM space, straight Q121 drain and J121 feeds
 R150	19.19	75.25	-90	B	R10 servo series resistors 1.15 mm aft: 1.5 mm from J122's pins (M-6) (D-R2-12)
 R151	21.73	75.25	-90	B	R10 servo series resistors 1.15 mm aft: 1.5 mm from J122's pins (M-6) (D-R2-12)
 R152	24.27	75.25	-90	B	R10 servo series resistors 1.15 mm aft: 1.5 mm from J122's pins (M-6) (D-R2-12)

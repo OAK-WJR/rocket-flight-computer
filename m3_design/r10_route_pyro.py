@@ -1,9 +1,9 @@
 """R10 CH1 pyro channel, its load switch and the two sense chains: explicit pad-referenced polylines (no search).
 
-Fire loop on F.Cu at 1.0 mm: J124.1 (BUS) -> R134 (2 ohm shorted-igniter limit) -> J121.2 (IGN); J121.1 (OUT) ->
-Q124's drain. Pulse at most 4.2 A for 20 ms (8.4 V / 2 ohm; firmware ends every pulse by 20 ms); no steady current.
-The load switch Q120 / Q121 (bottom, sources facing) feeds RAW_ACT, which reaches only J124.2 and the RAW_ACT
-sense, so the ARM plug is the only path from RAW_ACT to the pyro bus (AGENTS 2.1).
+Fire feed on B.Cu at 1.0 mm: Q121 drain (RAW_ACT) -> R134 (2 ohm shorted-igniter limit) -> J121.2 (IGN);
+J121.1 (OUT) -> Q124's drain on F.Cu. Pulse at most 4.2 A for 20 ms (8.4 V / 2 ohm; firmware ends every pulse by
+20 ms); no steady current. The external power switch is the pad arming device (owner, 2026-10-28); Q120 / Q121
+remain the independent load switch ahead of R134, and both bus-sense dividers tap RAW_ACT.
 Every layer change of a pyro, arming or sense net has a GND via within 1.5 mm (AGENTS 3).
 Pad positions are asserted by Draw.pad: a moved part stops the build.
 """
@@ -16,9 +16,9 @@ RAWW = 0.4               # RAW_ACT branch to TP120 / the sense divider
 def draw(d):
     t, link, via = d.track, d.link, d.via
 
-    # Fire loop (F.Cu).
-    link('PYRO1_IGN', 'F', FIRE, 'J121.2', 'R134.1', ((10.425, 61.025),))
-    link('PYRO1_BUS', 'F', FIRE, 'J124.1', 'R134.2', ((9.5, 64.1), (11.575, 66.175)))  # >= 1.5 mm from J124.2 (S-5)
+    # R134 occupies the removed ARM terminal's west-edge space on B.Cu: straight feed and igniter runs, no fire via.
+    link('RAW_ACT', 'B', FIRE, 'Q121.9', 'R134.2')
+    link('PYRO1_IGN', 'B', FIRE, 'R134.1', 'J121.2')
     t('PYRO1_OUT', 'F', FIRE, [d.pad('J121.1'), (10.33, 54.1), (11.33, 55.1)])
     t('PYRO1_OUT', 'F', FIRE, [(11.33, 55.1), d.pad('Q124.5')])
 
@@ -38,7 +38,7 @@ def draw(d):
     t('PYRO1_OUT', 'B', S, [(10.37, 59.5), d.pad('R131.1')])
     link('PYRO1_COLD', 'B', S, 'R131.2', 'D120.1')
     # D120's 3V3 clamp rail: its own via into a 3V3 tongue of In2 that reaches it from the east (enclosed on B.Cu by
-    # PYRO1_CONT, PYRO1_BUS and PYRO1_COLD; r10_route_power.IN2_GND_CH1, D-R3-01).
+    # PYRO1_CONT, RAW_ACT and PYRO1_COLD; r10_route_power.IN2_GND_CH1, D-R3-01).
     t('3V3', 'B', S, [d.pad('D120.3'), (18.0, 58.6)])
     via('3V3', (18.0, 58.6))
 
@@ -67,11 +67,8 @@ def draw(d):
     t('PYRO1_CONT', 'F', S, [(24.0, 55.0), d.pad('R168.1')])
     link('PYRO1_CONT_MCU', 'F', S, 'R168.2', 'U1.15')
 
-    # ARM sense: BUS -> R132 / R175 -> node (R133 / R180 / C129) -> R170 -> U1.33 (PC5).
-    t('PYRO1_BUS', 'F', P, [d.pad('R134.2'), (17.0, 63.7)])
-    via('PYRO1_BUS', (17.0, 63.7))
-    via('GND', (16.0, 63.7))
-    t('PYRO1_BUS', 'B', S, [(17.0, 63.7), (19.0, 61.7), (19.0, 59.32), d.pad('R132.1')])
+    # Bus sense (ARM1_SENSE signal names retained): RAW_ACT -> R132 / R175 -> divider -> R170 -> U1.33 (PC5).
+    t('RAW_ACT', 'B', S, [d.pad('Q121.8'), (19.0, 61.1), (19.0, 59.32), d.pad('R132.1')])
     link('ARM1_SENSE_MID', 'B', S, 'R132.2', 'R175.1')
     link('ARM1_SENSE', 'B', S, 'R175.2', 'R133.1')
     link('ARM1_SENSE', 'B', S, 'R133.1', 'R180.1')
@@ -113,16 +110,14 @@ def draw(d):
     t('ACT_GATE', 'F', P, [(10.8, 71.3), (11.8, 72.3), d.pad('R121.1')])
     t('ACT_GATE', 'F', P, [d.pad('R121.1'), (16.2, 72.3)])
     link('ACT_DRV', 'F', P, 'Q122.3', 'R121.2', ((15.8, 70.14),))
+    # PC1 controls the load switch independently of PE4's fire gate. F.Cu stays east of R168 / its GND via, then
+    # parallels SERVO1's diagonal on its inner side; no layer change. R123 holds Q122 off while PC1 floats at reset.
+    t('ACT_EN_MCU', 'F', S, [d.pad('U1.16'), (24.5, 51.6), (26.6, 53.7), (26.6, 54.6),
+                            (19.6, 61.6), d.pad('R122.1')])
     link('ACT_EN', 'F', S, 'Q122.1', 'R122.2', ((19.08, 70.75),))
     link('ACT_EN', 'F', S, 'R122.2', 'R123.1')
-    # R122's RAW_PROTECTED end reaches the In2 RAW_PROTECTED plane by its own via 0.7 mm west of the pad (D-R3-01): the
-    # ring 1.72 mm from R134.2 (PYRO1_BUS, bare), 1.08 mm from TP120 (bare test pad, K-retained 1.0 mm), 0.35 mm from
-    # Q122.2, and on the In2 RAW region south of the CH1 In2 GND zone (y 68.4).
-    t('RAW_PROTECTED', 'F', P, [d.pad('R122.1'), (18.9, 69.37)])
-    via('RAW_PROTECTED', (18.9, 69.37))
 
-    # RAW_ACT: Q121's drain to J124.2 (the ARM plug's live side), TP120 and the sense divider top R177.
-    t('RAW_ACT', 'B', FIRE, [d.pad('J124.2'), (11.5, 67.6)])
+    # RAW_ACT: Q121's drain to TP120 and the retained second bus-sense divider top R177.
     t('RAW_ACT', 'B', RAWW, [(15.4, 67.3), d.pad('TP120.1', at=(18.0, 67.3))])
     t('RAW_ACT', 'B', S, [d.pad('TP120.1'), (18.0, 65.57), d.pad('R177.1')])
     link('RAW_ACT_SENSE_MID', 'B', S, 'R177.2', 'R124.1')

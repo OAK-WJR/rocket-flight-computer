@@ -1,12 +1,10 @@
 # R10 validation and adversarial review
 
-> **Current continuation, 2026-10-28:** the interrupted owner-answer pass is complete and verified. Two fresh
-> full builds produced byte-identical board `b860afbe…`; the regenerated fab package and final `tools/check.sh`
-> pass. The required commit is blocked: Git cannot create the worktree's `index.lock` (Operation not permitted),
-> despite the session declaring the common Git directory writable. No commit was created. Requirements-audit
-> cuts AUD-1…AUD-10 / GAP-1…GAP-5 are the next implementation pass, before ten fresh
-> review lenses in round 9. OQ-3 cost acceptance remains pending and does not block clean review. Focused model
-> checks and owner answers are not a full clean review round.
+> **Current continuation, 2026-10-28:** the supervisor committed the owner-answer board `b860afbe…` in
+> `6fdac43`. The single screw-switch preparatory pass is generated and verified below (`60be35ea…`), followed by adopted AUD-1…AUD-10 /
+> GAP-1…GAP-5 cuts, then a fresh ten-lens round 9. The incomplete prelude receives no clean-round credit;
+> the consecutive-clean count is zero. Commit requests use the external supervisor; no Git index mutation is
+> performed here. OQ-3 cost remains a disclosed acceptance deviation and does not block a clean review.
 
 > **2026-10-28 hand-off check: round 9 stopped for owner decisions.** Starting worktree clean at `04d0b04`,
 > board `407d1d84…`. Three fresh read-only reviewers started in parallel (requirements, safety, power); the
@@ -620,8 +618,8 @@ the stop record was subsequently committed in `afed4d0`. Rebuild reproducibility
 
 ### Owner-answer pass completed before the audit cuts (2026-10-28)
 
-The interrupted changes were retained and rebuilt; none were discarded. The commit remains blocked by the
-environment's denial of Git's `index.lock` write; neither staging nor committing succeeded. Two fresh executions of
+The interrupted changes were retained and rebuilt; none were discarded. At that hand-off, committing was blocked by the environment's denial of Git's `index.lock` write.
+The supervisor subsequently committed this pass in `6fdac43`; no staging or commit was performed by this continuation. Two fresh executions of
 `m3_design/r10_build.sh` produced byte-identical board SHA-256
 `b860afbe406d7daec9757ccde89987d3439b32e0b1f8078bb01363be1704baa1` (46 × 90 mm, 2547258 bytes).
 The electrical signature is `1f638065…`. Each build passed its complete board gate. The fabrication package was
@@ -650,6 +648,48 @@ remain qualification obligations. The earlier interrupted snapshot is not substi
 
 This is a preparatory fix pass, not review round 9 and not a clean-round credit. AUD/GAP adoption is recorded
 in R10_DECISIONS; its circuit and layout changes have not been included in this owner-answer board.
+
+### Single screw-switch preparatory pass (2026-10-28)
+
+J124 and its ARM-link fuse / legends are removed; canonical RAW_ACT now feeds R134 / J121 behind Q120 / Q121.
+Source inspection exposed the old automatic divider enable. D-SS-01 assigns previously NC PC1 through a 1 kΩ
+R122 to Q122, with the existing 100 kΩ pull-down; PE4 separately drives Q124. The schematic, circuit manifest,
+pin table and binding agree. S-1…S-5 and check_actuators check this topology, required population, reset-off
+bias and switch circuit; seeded bypass, pin, component and legend faults are rejected. R134 moves to B.Cu at
+(7, 64.335): Q121 → R134 is 6.50 mm and R134 → J121 is 4.16 mm, both direct 1.0 mm copper without layer changes.
+D-SS-03 preserves required visible safety references; Q124 has a reserved legal 1.0 mm label at (13.9, 61.0).
+The DRU re-pin changes only its ARM-to-switch comment. Historical R9 profiles retain their behavior.
+
+Two fresh complete builds produce byte-identical SHA-256
+`60be35eaff86dd7a5fb8e065aa4204a51e7d786d7dfc8d2456cdd66c4b86f901`: 46 × 90 mm, four layers, 2,521,622 bytes,
+244 footprints (94 top / 150 bottom), 934 straight track segments, no arcs, 349 vias (210 GND).
+Netlist SHA-256 `3e08722d7ac997131cb11d7c9cb2d25e1b3babcfb853b71230db01118bc70e69`. The generated binding is refreshed.
+Each build passes its complete board gate. Self-tests: shell 4, fit 23, paste 5, route 57 and R10 122
+(3 NumPy tests skipped under KiCad Python and then passed separately); 3 standalone plate tests and 15 focused
+real-board fault seeds also pass. The plate model, after removing J124's body / wire masses, gives f1 276.8 Hz
+pinned (Calc / Inference; modeled mass 47.5 g). Physical gate timing, sense thresholds, firmware, vibration and fit
+remain unmeasured.
+
+The board-bound hot-plug model retains electrical signature `1f638065…` and passes 2304 required cases,
+refined extrema and 60 local-path sensitivities: minimum IN −14.497873371 V and maximum falling slew
+8.525257186 V/µs (simulation / Inference, not bench). `r10_fab.sh` regenerates 228 CPL rows and 83 BOM lines;
+orientation, paste (323 F / 400 B flashes), required-fitted checks and the five-output manifest pass. The last
+supplier-price / stock snapshot remains historical; no fresh procurement claim is made for this topology.
+The final unskipped `tools/check.sh` passes at zero, including the regenerated manifest:
+
+```text
+DRC violations 0  unconnected 0  schematic parity 0  ERC 0
+metadata / 3D model audit: OK
+fit check: OK (CAD envelopes only)
+R10 CAD contract (full): OK
+routing hygiene: 0 failing, 0 allowlisted, 0 leftovers recorded
+actuator safety contract: OK
+Fab manifest: OK; 5 outputs match the current CAD and export inputs
+```
+
+No interrupted source edits
+were discarded. This preparatory pass is not round 9 and earns no clean-round credit. AUD/GAP implementation
+is next; the pull-pin and IO LDO cells remain fitted at this boundary.
 
 ### Review-round log
 

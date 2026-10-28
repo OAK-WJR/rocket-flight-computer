@@ -136,3 +136,16 @@ The owner answered the plan's open items on 2026-10-26. These replace §2 items 
 |---|---|
 | O5 | **Port supplies:** one small buck at about 5.3 V feeds the camera port (RunCam ≥ 5 V). A small LDO of about 4.8 V runs off that rail and feeds both the radio port (LR900 4.5–5 V) and the GPS port (M100 Mini 3.3–5 V). Each port keeps its own current-limited, MCU-switched load switch. This replaces §7's single 5 V rail and O1's 3V3 GPS supply. The exact set points, parts and tolerance budget (at the module input, after switch and harness losses) are for the implementation to qualify against the maker datasheets. |
 | O6 | **Servo return:** the harness runs each servo's − wire straight to the pack, alongside its + wire. J122's GND row stays connected to board GND as the signal reference only. The residual share of motor return current through the board, in parallel with the harness, must be bounded by calculation and listed. The board carries no designed servo current. |
+
+
+## 9. Current arming amendment (owner, 2026-10-28)
+
+The later "Single screw switch for power and arming" decision in R10_DECISIONS supersedes references above to
+J124, an ARM link and its fuse. J124 is removed; RAW_ACT is the common post-Q120/Q121 pyro bus. J400 connects one
+external screw switch for power and pad arming. PC1 independently enables the load switch through R122 and Q122;
+PE4 commands Q124. Both default off in reset. The power switch is turned on last and off first, only on the rail;
+firmware must detect launch using the accelerometer and barometer before firing. Bench work uses USB or a
+disconnected e-match. USB or an independently powered port can keep logic alive with the switch open, so attach
+an e-match only with every back-feed source disconnected. This accepted loss of a powered physical break does not
+change the gate networks, single-resistor sense protection, post-load-switch feed or independent Blue Jay backup.
+Implementation and evidence: D-SS-01 / D-SS-02 and R10_VALIDATION's single-switch pass.

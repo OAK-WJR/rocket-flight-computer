@@ -645,19 +645,6 @@
       "nets": {},
       "kind": "replacement"
     },
-    "J124": {
-      "lib": "M3:Conn_01x02",
-      "value": "DB125-3.5-2P-BK-S",
-      "footprint": "rocket:M3_DB125_2P_BK",
-      "fields": {
-        "LCSC": "C52993880",
-        "Manufacturer": "DORABO",
-        "Manufacturer Part": "DB125-3.5-2P-BK-S",
-        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
-      },
-      "nets": {},
-      "kind": "replacement"
-    },
     "C84": {
       "lib": "M3:C_Polarized",
       "value": "470uF 25V polymer",
@@ -689,6 +676,22 @@
         "2": "GND"
       },
       "kind": "power"
+    },
+    "R122": {
+      "lib": "M3:R",
+      "value": "1k",
+      "footprint": "rocket:R0402",
+      "fields": {
+        "LCSC": "C11702",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1001TCE",
+        "Datasheet": "https://www.lcsc.com/product-detail/C11702.html"
+      },
+      "nets": {
+        "1": "ACT_EN_MCU",
+        "2": "ACT_EN"
+      },
+      "kind": "replacement"
     }
   }
 }

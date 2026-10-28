@@ -1,4 +1,5 @@
 # r10_fanout_aid.py output (frozen): net, pad, pad layer, via x, via y; stub 0.3 mm pad centre -> via
+# Single screw switch (owner 2026-10-28): R133.2 GND via (21.917,59.61) -> (20.65,59.61), west of PC1's ACT_EN_MCU diagonal and still on In2 GND (0.665 mm centre-to-track).
 # hand edits (R10_DECISIONS D-R2-11): J3.A1B12 / J3.B1A12 rows removed (strapped to the shell tabs in r10_route_power.joins); C442.2 via (38.7, 23.0) -> (38.0, 22.2), clear of RADIO_4V8's In2 run; R83.2 via (35.9, 79.825) -> (35.075, 78.9), out from under R166.1; R167.2 via follows R167 0.65 mm east (D-R2-12); R3 hand edit (R10_DECISIONS D-R3-04): C401.2 row removed (C401 moved south of U400, its GND pad joins U400.4's via in r10_route_power.efuse)
 # R5 fix pass hand edits (R5-RTE-01 ... -06, In2 reference check with 0.1 mm margins): D401.2 via (38.8, 37.275) -> (38.8, 37.0), off CAM_FAULT_N's entry diagonal (its In2 antipad touched the run's margin); R411.2 via (30.3, 6.6) -> (30.3, 4.9), clear of R411.1's pad region; C127.2 via (21.3, 57.55) -> (22.1, 57.55), out of the 3V3 corridor to D120's via (R128.2's F.Cu strap follows, r10_route_ground); R8 fix pass (R8-RTE-01): U11.3 via (31.5, 62.9) -> (31.5, 63.3), widening the In2 3V3 neck to C97.2's via (30.903, 62.022) from 0.24 to ~0.6 mm
 net	pad	layer	x	y
@@ -90,7 +91,7 @@ GND	R123.2	F	19.87	71.82
 GND	R125.2	B	23.933	64.86
 GND	R127.2	F	20.23	55.073
 GND	R130.2	B	14.15	59.893
-GND	R133.2	B	21.917	59.61
+GND	R133.2	B	20.65	59.61
 GND	R154.2	B	19.54	71.233
 GND	R155.2	B	21.217	68.17
 GND	R156.2	B	24.783	68.17

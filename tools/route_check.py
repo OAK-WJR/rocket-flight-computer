@@ -213,7 +213,7 @@ CLASSES = [
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import critical_reference as _cr                                    # noqa: E402 (tools/, after the path insert)
 R10_CLASSES = [
-    ('pyro', r'^(PYRO1_|ARM1_|RAW_ACT_SENSE|ACT_(GATE|DRV|EN)$)'),
+    ('pyro', r'^(PYRO1_|ARM1_|RAW_ACT_SENSE|ACT_(GATE|DRV|EN)$|ACT_EN_MCU$)'),
     ('crystal', r'^HSE_'),
     ('usb', r'^USB_D[PM]$'),
     ('spi', r'^(QSPI_|SPI1_|IMU_CS$)'),

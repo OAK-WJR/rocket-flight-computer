@@ -181,7 +181,7 @@ def dru(text):
             rules.append(text[m.start():sch.close_paren(text, m.start())])
     assert len(rules) == len(KEEP_RULES)
     return ('(version 1)\n# R10 plan section 2 item 1: board-default copper clearance, no pyro/RF spacing overrides.\n'
-            '# Functional ARM break, reset safety and J124 physical pad gap remain independently checked.\n' +
+            '# The external power switch arms the board; load-switch, reset and gate safety remain checked.\n' +
             '\n\n'.join(rules) + '\n')
 
 
@@ -234,12 +234,16 @@ def build(out, netlist=True):
                 if sch.symbol_block(t, ref):
                     t = replace(t, library, ref, spec)
             if file.name == 'mcu.kicad_sch':
-                t = pins.t_mcu(t, library, pinmap, mcuchanges)
+                # R8's translator holds PC1 as an NC sentinel; R10 now uses it for the independent load-switch enable.
+                legacy_map = {**pinmap, '16': ('NC', 'NC')}
+                t = pins.t_mcu(t, library, legacy_map, {p: ns for p, ns in mcuchanges.items() if p != '16'})
+                t = change_pin(t, 'U1', '16', pinmap['16'][1], library)
                 # Remove obsolete RF and EXTI narrative; preserve every safety note.
                 read, patch, _ = sch._reader()
                 t = patch(t, [(n.start, n.end, '') for n in read(t).children('text')
                               if 'radio SPI2' in n.items[1].atom or 'R8 EXTI:' in n.items[1].atom])
                 t = sch.insert(t, sch.note('R10: USART6 PC6/PC7 AF7 GPS; UART5 PB13/PB12 AF14 radio. Port EN and OE default low. EXTI10 GPS_FAULT_N; EXTI9 RADIO_FAULT_N; EXTI12 CAM_FAULT_N; EXTI4 LOGIC_SOURCE_ST (PA4), EXTI5 BAT_FAULT_N (PA5); VLOGIC_SENSE ADC on PA6 (D-R2-09). EXTI1 PE1 IMU_INT1 data-ready (R6-MCU-01).', 20.32, 259.08, 'mcu:r10:ports'))
+                t = sch.insert(t, sch.note('Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise low before output mode. R123 100k holds the load switch off at reset. Disable synchronous trace (PC1 TRACED0, PE4 TRACED1); lock and read back both gate GPIO configurations.', 20.32, 269.24, 'mcu:r10:load-switch'))
             if file.name == 'servos.kicad_sch':
                 for pin in ('2', '5', '8', '11'):
                     t = change_pin(t, 'J122', pin, None, library)
