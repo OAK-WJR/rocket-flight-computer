@@ -804,3 +804,21 @@ the XT30 battery pigtail (16 AWG) is at the top of the range (ferrule recommende
 leads for ARM / igniter fit; the battery current is <= ~6 A peak with servo power off the board, within 10 A. E-match
 leads thinner than 28 AWG (their gauge depends on the brand, not yet chosen: Inference) should be spliced to a 22 AWG
 lead or ferruled before the terminal.
+
+## Owner answers, 2026-10-28 (OQ-1, OQ-2, OQ-5, OQ-6, OQ-7)
+
+- **OQ-1 (wire room):** accept 4.95 mm (R8 / R9 6.25 mm) with 16-22 AWG in the DB125-3.5 terminals; a deviation, to be
+  confirmed by the physical fit check. check_r10 P-11 holds R10's 4.95 mm as the floor (no worse), not R8's figure.
+- **OQ-2 (hot plug):** re-model, do not move: re-run the reverse / hot-plug simulation (R8's model, docs F9) with R10's
+  actual BAT_IN feed lengths and parasitics to U9 and the protection parts; move the parts only if the model fails. F9-1
+  becomes "the R10 model passes" instead of R8's distance premise.
+- **OQ-5 (ride-through with ports on):** "do whatever AVA does". AVA has a bulk capacitor on the back and switches its
+  peripherals in firmware; no hardware dropout cutoff is known on it (Inference: none visible in the public images,
+  reports/AVA board layout images.md). So no port-buck cutoff is added: F6's ride-through relies on C84 plus firmware
+  load shedding (ports off on the PA6 analog watchdog), and the 0.55-1.0 ms ports-on figure is listed as a deviation
+  with the shedding latency as the firmware requirement.
+- **OQ-6 (battery-lead fuse):** whether AVA has one is not known from public material; the owner's rule for unknowns is
+  the lower option: specify a <= 10 A fuse on the battery lead (board draw <= ~6 A peak with servo power off the board).
+- **OQ-7 (camera shroud):** the lower option: keep the board wholly forward of joint + 47 mm, so no shroud clocking is
+  needed for fit qualification; VEHICLE.md's stack keeps its slack.
+- **OQ-3 (cost $87.01 vs $84.41)** is not yet answered: it stays on the deviation list for the owner's acceptance.
