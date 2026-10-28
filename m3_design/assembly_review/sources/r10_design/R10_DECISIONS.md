@@ -787,3 +787,20 @@ cost / stock files are evidence; trace-override and HSE bench steps; standoffs �
 minus ≈ 0.29 mm static deflection). REQUIREMENTS: F7 path wording, board position, pad-time pack ≥ 2 Ah with continuous
 transmit, binding plate bound 6.3 / 5.7 mm. M3_R10: QSPI lengths, nets over Y1, DB125 8.60 ± 0.30 mm (DORABO T0-1),
 U4–U5 spacing, foam cap. Binding note: UART break handling on an unplugged port, trace-override step. README cells.
+
+## OQ-4 answered (owner, 2026-10-28): panel rails, no layout change
+
+The owner chose the option that keeps the layout cleanest and closest to AVA's simplicity: keep the GH port column on the
+east edge as placed and hold the aft-east corner with a tab on the aft edge, so the JLC panel takes a rail (frame) along
+the aft edge. Moving a port to free a side tab would cost layout rework and break the port column's straight escapes.
+JLC's acceptance of the aft-edge tab and rail is to be confirmed before ordering (docs/ORDERING.md).
+
+## Terminal wire range (OQ-1 context, 2026-10-28)
+
+AVA uses 3.5 mm-pitch screw terminals for every wire (reports/AVA board layout images.md, pitch measured against the
+LQFP-64's 0.5 mm pins), the same pitch as R10's DORABO DB125-3.5 (J1 green, J121 / J124 black). DORABO's T0-1 drawing
+(parts_qualification.md) rates them 28-16 AWG, 10 A UL / 13.5 A IEC, 4-5 mm strip, 0.2 N m. Against the order's wires:
+the XT30 battery pigtail (16 AWG) is at the top of the range (ferrule recommended); the 16-18 AWG and 22 AWG silicone
+leads for ARM / igniter fit; the battery current is <= ~6 A peak with servo power off the board, within 10 A. E-match
+leads thinner than 28 AWG (their gauge depends on the brand, not yet chosen: Inference) should be spliced to a 22 AWG
+lead or ferruled before the terminal.

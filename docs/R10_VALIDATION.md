@@ -1,5 +1,10 @@
 # R10 validation — round 1 implementation
 
+> **2026-10-28 hand-off check: round 9 stopped for owner decisions.** Starting worktree clean at `04d0b04`,
+> board `407d1d84…`. Three fresh read-only reviewers started in parallel (requirements, safety, power); the
+> owner-decision boundary below stopped the review before the other seven lenses. This is not a completed round
+> or a clean pass. The consecutive-clean count remains zero. No implementation fix pass or rebuild was performed.
+
 > **2026-10-27 update.** The R10 board is built and committed; review rounds 3 (on `883d2db5…`), 4 (on `579575bd…`),
 > 5 (on `af18ac49…`) and 6 (on `3b6e15f3…`) and their fix passes are done (board `b242ab8e…`, 46 × 90 mm;
 > `docs/M3_R10.md`); round 7 on `b242ab8e…` was clean (0 Critical, 0 Major), round 8 on the same board was not
@@ -265,7 +270,7 @@ F9-1 (OQ-2).
   harness inductance), or re-place the protection cluster beside J1?
 - **OQ-3 (cost).** The parts and feeder fees are $87.01 per board, $2.60 over M3's $84.41: accept, or reduce
   (e.g. basic-library substitutes for extended codes)?
-- **OQ-4 (panel).** The aft-east corner can only be held by an aft-edge tab (east edge's aft third is the GH port column):
+- **OQ-4 (panel), answered 2026-10-28: aft-edge tab and panel rail, no layout change (R10_DECISIONS).** The aft-east corner can only be held by an aft-edge tab (east edge's aft third is the GH port column):
   accept rails / frame on the aft edge as well (JLC to confirm), or move a port?
 - **OQ-5 (battery-break ride-through with the ports on; R3-PWR-02).** C84 sits on VLOGIC after U11; the port buck U400
   sits on RAW_PROTECTED with EN tied to VIN, and U11 does not block reverse current below its 0.2–2 A threshold, so in a
@@ -574,6 +579,54 @@ Also fixed in this pass (round 7 Minors that had been listed to keep the board f
 restarted anyway): VBUS_SENSE's flat jog (R7-RTE-03), the In2 3V3 neck beside the GND via at (30.9, 62.0) (R7-RTE-01:
 0.24 → ≈ 0.59 mm by moving U11.3's GND via to (31.5, 63.3)), the In2 3V3 tooth beside the crystal island (R7-RTE-02,
 the island bumped to x 28.6); the 3V3 finger R7-RTE-02 reported at (26.0–29.8, 54.5–54.9) was not found on the fill.
+
+## Round 9: incomplete review, stopped at the owner-decision boundary
+
+The Codex hand-off started from committed round 8 (`04d0b04`) with no uncommitted changes to finish or discard.
+The board remains SHA-256 `407d1d8408330849526dbd31cf70ec94b9f012b23ff5c8324eb8a7b1f98bed05`,
+46 × 90 mm, 2,541,053 bytes. Three independent fresh validator contexts started together, within the session's
+three-reviewer concurrency limit. None completed its full lens before the stop; the remaining seven were not started.
+The findings below are a partial review record, not ten-lens round totals.
+
+The requirements reviewer measured P-11 / F9-1 directly on the saved board. The root independently checked their
+gate implementations, the inherited limits, D-R2-14 and the open OQ-1 / OQ-2 dispositions. The power reviewer also
+confirmed the F9-1 qualification gap. These are existing unresolved departures, not newly introduced geometry.
+The user's explicit instruction to stop when a requirement needs an owner decision applies: D-R2-14 reserves these
+choices to the owner. No substituted gate limit is treated as owner acceptance or as electrical qualification.
+
+| ID | Severity | Evidence | Concrete disposition |
+|---|---|---|---|
+| R9-REQ-01 | Major | P-11 measures 4.953 mm wire room at each of J1 / J121 / J124 against the recorded 6.25 mm floor. `check_r10.p11` passes against `WIRE_ROOM_R10 = 4.95` and explicitly reports OQ-1; D-R2-14 says the changed floor needs an owner decision. | **Open, OQ-1:** accept the measured clearance or move the terminals inboard and requalify layout and fit. Physical wire fit is unverified. |
+| R9-REQ-02 | Major | F9-1 measures D8 12.86, C80 21.59, C96 20.93, C89 20.58, C95 20.55, R166 29.75, R167 25.47 and U9 32.22 mm from J1.1. The inherited hot-plug premises are 10.6 mm for protection parts and 27.07 mm for U9. `check_r10.f9` discards the inherited distance issues and holds R10's recorded distances; it does not simulate the transient. | **Open, OQ-2:** select requalification including R10 feed parasitics or relocation of the protection cluster. This is missing qualification, not proof of electrical failure. |
+| R9-PWR-01 | Minor | `r10_parts.power_budget()` uses 62.5 °C/W for `ldo_ambient_85C_junction_inference_C`, yielding 110.386 °C at 0.40618 W. `parts_qualification.md` explicitly rejects that reference-board coefficient for U401's layout and uses an inferred 80–110 °C/W, yielding 117.49–129.68 °C. Root confirmed the generator expression against the qualification text. | **Open:** generate the same explicit inference range and regenerate its budget artifact; keep the thermal bench obligation. No overheating is established by this discrepancy. |
+
+Partial safety checks passed: actuator contract; S-1 … S-9 and P-8; independent pad/net inspection of the ARM break,
+load-switch topology and gate network. J124's RAW–BUS gap is 1.600 mm on all four layers. An independent ideal DC
+divider calculation gives 1.4003 V maximum at 8.4 V with ±1% resistor corners after one upper resistor shorts or one
+lower resistor opens. These checks do not establish transient/reset behavior or bench safety.
+
+Partial power checks confirm U400 EN and VIN both on RAW_PROTECTED: OQ-5's hardware cutoff is absent. Conditional
+ride-through recalculates to 0.555–0.651 ms with ports on and 8.880 ms with ports off and logic shed at 300.8 µF to
+3.5 V. These are calculations, not transient measurements. OQ-3 … OQ-7 remain open as listed above; supplier data
+was not refreshed. The deviation list remains unfinished because the two-clean-round stop condition is unmet.
+
+The root's fresh `tools/check.sh` run on the unchanged board completed with **exit 0**, using the supplied
+NumPy-capable interpreter. No gate was skipped or weakened for this run. Summary:
+
+```text
+DRC violations 0  unconnected 0  schematic parity 0  ERC 0
+metadata / 3D model audit: OK
+fit check: OK (CAD envelopes only)
+R10 CAD contract (full): OK
+routing hygiene: 0 failing, 0 allowlisted, 0 leftovers recorded
+actuator safety contract: OK
+Fab manifest: OK; 5 outputs match the current CAD and export inputs
+```
+
+Self-tests: shell 4, fit 23, paste 5 and routing 57 passed; R10 109 tests passed with the NumPy-only plate test
+skipped under KiCad Python, then that one test passed separately under NumPy Python. Nonfatal wx initialization
+warnings were emitted. This passing gate does not resolve OQ-1 / OQ-2. No fix pass was performed or committed;
+this stop record is left uncommitted for continuation. Rebuild reproducibility was not rerun in this interrupted round.
 
 ### Review-round log
 
