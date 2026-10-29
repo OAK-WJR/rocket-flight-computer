@@ -62,7 +62,7 @@ requested ten-at-once concurrency; it must not be reported as if it did.
 
 **Decision.** Keep environment fixes outside the repository. Default Python lacks
 NumPy; use a temporary virtual environment for the plate model. KiCad 10.0.6 crashes
-in the seeded DRC scratch project at `wxGetMousePosition`, because the headless session
+in the seeded DRC scratch project at `wxGetMousePosition `, because the headless session
 has no screen. Use the existing R9 D-S6-14/D-S9-06 workaround: a temporary interposer
 returns zero mouse coordinates. It does not replace DRC checks or alter CAD. Record
 plain and wrapped results separately; neither is R10 qualification.
@@ -216,7 +216,7 @@ PB12 (RX, pin 51) / PB13 (TX, pin 52) on U1's north edge, next to the radio port
 (continued)", p. 90, PB12 AF14 = UART5_RX and PB13 AF14 = UART5_TX; Table 9 pp. 73-75, LQFP100 pins 51 (PB12) and 52
 (PB13), both FT_u (footnote 9: VDD33USB supplies the pad only in USB configuration). ST AN2606 Rev 64 Table 119
 (pp. 277-280, STM32H74xxx/75xxx system-memory boot) uses neither UART5 nor PB12 / PB13, so the radio port stays off the
-ROM-loader interfaces. PD0 / PD1 return to NC. Changed: `pin_table.tsv` rows 51 / 52 / 81 / 82, `circuit.json`
+ROM-loader interfaces. PD0 / PD1 return to NC. Changed: `pin_table.tsv` rows 51 / 52 / 81 / 82, `circuit.json `
 (mcu_changes, telemetry note), the schematic note in `r10_sch.py`, the binding note's pin entries and firmware
 obligation (`r10_sch_check.py --binding-note`), `tools/check_r10.py`'s MCU map and the seeded "radio USB injection
 bypass" fault (now on U1.51). `r10_sch_check.py`: ok, 0 ERC, all nine seeded faults caught. The previous record cited
@@ -434,8 +434,8 @@ planes, signals, gates, silkscreen, records), each built and gated in its own cl
 
 ## D-R3-01. R410 (GPS ILIM) stays 100 kΩ; the port budget re-derived on it
 
-R410 shares the 100 kΩ line (C14675; 120 kΩ C114607 would add an extended code). `parts.json`, `r10_parts.py` and
-`parts_budget.json` now carry 100 kΩ: GPS limit 0.230–0.309 A (TI SLVS841F eq. 1 p. 15, R ± 2 %); all three ports
+R410 shares the 100 kΩ line (C14675; 120 kΩ C114607 would add an extended code). `parts.json `, `r10_parts.py` and
+`parts_budget.json ` now carry 100 kΩ: GPS limit 0.230–0.309 A (TI SLVS841F eq. 1 p. 15, R ± 2 %); all three ports
 shorted 2.022 A, 1.1 % above the AP63201's 2 A continuous rating. The criterion that matters is the peak current limit:
 peak inductor current at that load 2.38–2.40 A at 8.4 V and 2.48 A (500 kHz) / 2.507 A (470 kHz, the −6 % spread
 edge) at U9's 9.97 V OVLO corner, against AP63201's 2.5 A minimum (DS41326 p. 5): the last corner (three port shorts
@@ -878,7 +878,7 @@ board or passing fix commit is claimed by this decision alone.
 
 The TPS25947 cold limit also depends on retained OUT voltage. With C84 allowed to feed RAW_PROTECTED through
 U11, the old 10 kohm R92 does not provide a comfortable two-second discharge estimate. Change R92 to 3.3 kohm,
-1%, UNI-ROYAL 0603WAF3301T5E / C22978 on the same 0603 land and nets (`circuit.json` replacement). This adds one
+1%, UNI-ROYAL 0603WAF3301T5E / C22978 on the same 0603 land and nets (`circuit.json ` replacement). This adds one
 Basic BOM code and no component or extended code. The nominal extra draw is 1.73 mA at 8.5 V, 14.67 mW.
 
 The sensitivity calculation includes every inventoried board capacitor, C84 at twice its nominal capacitance,
@@ -908,7 +908,7 @@ battery fuse or infer a guaranteed R166 pulse rating. Physical pin waveforms, ha
 and repeated hot/cold R166 pulse durability remain qualification obligations.
 
 The two substituted resistor codes use their own LCSC-to-JLCEDA product mappings for the assembly rotation
-check (`tools/jlc_easyeda/pads.json`), fetched 2026-10-28 from the recorded public source URLs. No donor
+check (`tools/jlc_easyeda/pads.json `), fetched 2026-10-28 from the recorded public source URLs. No donor
 footprint or price/stock claim is inferred from the old codes.
 
 ### D-OA-07. C88 intercepts the feed; local copper remains in the model
@@ -938,7 +938,7 @@ the 25 ps step changes the falling slew by 0.000183 V/µs. Final-board evidence 
 ### D-OA-08. Record corrections before the fresh full round 9
 
 The GPS translator's B supply is GPS_IO_3V3 from U412, supplied by GPS_4V8; the round-8 qualification paragraph
-incorrectly named PORT_4V8. Correct the paragraph against `circuit.json`, without changing the circuit. Keep
+incorrectly named PORT_4V8. Correct the paragraph against `circuit.json `, without changing the circuit. Keep
 historical stop records explicitly historical, resolve the superseded owner questions, and report new CAD/software
 checks separately from simulation, firmware, physical and bench qualification.
 
@@ -1186,7 +1186,7 @@ increases as the pack sags. A neutral PWM command cannot unload a jam. Preserve 
 1.5 × 1 A all-fire criterion at 7.4 V, with that voltage available at the fire instant after pad / flight
 drain. Two simultaneous stalls with all ports on do not meet it; do not claim that the 200 ms neutral wait
 proves they have cleared. Derived limits on e-match all-fire current or a higher pack voltage are conditional
-acceptance envelopes, not adoption of an unselected igniter. `parts_budget.json` holds the calculation; final
+acceptance envelopes, not adoption of an unselected igniter. `parts_budget.json ` holds the calculation; final
 copper numbers and first-article harness / source-impedance measurements are required before flight.
 
 ### D-GAP-02. Make U9's output-protection loop local
@@ -1260,7 +1260,7 @@ Miller / reset / off behavior and the independent Q124 pulse cutoff on the bench
 
 ### D-AUD-03b. Verify new assembly orientation against the supplier
 
-Fetch only C431196's official supplier pad map into `tools/jlc_easyeda/pads.json`; retain its retrieval date and
+Fetch only C431196's official supplier pad map into `tools/jlc_easyeda/pads.json `; retain its retrieval date and
 source URL. Geometry source: **JLCEDA/EasyEDA Official Library**, [JLCEDA](https://lceda.cn/) /
 [EasyEDA](https://easyeda.com), exact-part API linked in that record. The PCB land remains the AOS maker land;
 this independent supplier map serves placement orientation and CPL verification. No account / owner metadata is
@@ -1462,5 +1462,53 @@ Round-9 fix completion: two full builds reproduce all 21 CAD / binding files on 
 The 2304-case model passes as simulation / Inference. Fab export/orientation/paste pass; live supplier
 23:24–23:25Z evidence still fails at $84.43 vs $84.41, R430 / U4 short. The restart used D-R1-05’s external
 headless mouse-query interposer; no repository dependency or CAD/gate relaxation. Evidence:
-`../r10_review/round9_fix_validation.json`, `../r10_review/round9_fix_check.txt` and `../r10_review/round9_geometry.json`.
+`../r10_review/round9_fix_validation.json `, `../r10_review/round9_fix_check.txt` and `../r10_review/round9_geometry.json `.
 Round 10 covers this low-risk Minor fix pass in the required clean pair; physical / firmware limits remain open.
+
+### D-R10-01. Close two representation gaps without changing CAD
+
+Round 10's fresh gate adversary found two Minor omissions; neither is present in the reviewed PCB. A conflicting
+PCB_TEXTBOX port table passes the old K-legends, and an In2 graphic 0.500 mm from J121.1's barrel passes the old S-8
+and refilled all-severity DRC. Include text boxes in port / harness-table checks and use the existing complete
+copper_nodes geometry for S-8, covering drawings, text, fields and footprint zones as well as routed copper.
+Preserve GND / own-net exceptions and the 1.0 mm limit. Add native board / footprint graphics and text seeds plus
+conflicting / duplicate text-box tables and harness notes. These are coverage fixes, not new clearance allowances.
+The unchanged baseline passes; both demonstrated faults must fail. AUD-2 / AUD-10 / GAP-3 scopes and AGENTS §2 stay.
+
+### D-R10-02. Correct PA6 limits and preserve the barometer coating exclusion
+
+R10-MCU-01: ST DS12110 Rev11 Table109 pp207–208 notes3–5 limits FT_a used by the ADC to 4 V; digital FT VIN is at most
+min(min(relevant supplies)+4 V,6 V), or 6 V with powered 3.3 V supplies, with pulls disabled above 4 V. Positive
+injection allowance is 0 mA. Correct the generator, regenerate its evidence note and qualify historical 7.3 V
+claims; the normal divider and existing single-fault pin-damage conclusion do not change. No hardware mitigation
+is inferred from firmware. Source: https://www.st.com/resource/en/datasheet/stm32h743vi.pdf.
+
+R10-MEC-01 / independently reproduced R10-MFG-01: the whole-coat instruction for non-pyro C11 conflicts with the
+project's ≥3 mm U5 body-and-pad exclusion. Native C11.1 to nominal maker body is 2.818449 mm; 3.027515 mm was to
+pads only. Mask C11 whole, retaining whole-U5 tape, R13 / R64 masks and the controlled TP122 exception. Use the union
+of body and pads, not the old pad-only rectangle. Next coated C10 conservative Fab/pad envelope clears 3.333144 mm;
+others ≥5.075 mm. Actual fitted tolerances and coating placement still require qualification. This preserves the
+sensor rule with no PCB move. TE maker body / handling: 06/2017 pp1/15/17, linked in ORDERING §8 and round-10 review.
+
+### D-R10-03. Freeze the reviewed board and finish the complete acceptance inventory
+
+Ten independent round-10 lenses reviewed committed `619db7e`, PCB `b337fe63…`, finding 0 Critical, 0 Major and
+8 Minor groups (4 new, 4 re-raised routing groups; manufacturing coating duplicate counted once). The previously
+recorded architecture / qualification / procurement deviations remain in the inventory, not new discoveries.
+Clean rounds 9 and 10 meet the owner's explicit consecutive-pair rule; no later PCB change is made. Final narrow
+gate/regression and record/generator-text fixes preserve every land, pose, part, net and copper / silk byte.
+Rebuild and verify the regenerated PA6 obligation, current bindings, unchanged PCB and final unskipped gate.
+
+Retain the measured routing / land compromises with their reasons. In particular the L400 proxy land differs
+from Bourns' recommendation: native 1.8 ×2.5 mm at ±2.35 versus maker 2.0 ×1.8 at ±2.25 mm; nominal contact coverage
+is not worst-tolerance qualification. Correcting it now requires a separately covered CAD revision or actual
+assembly qualification; do not describe factory preview as an assembled result. Do not use the approximately
+$0.3184 C29936→C15849 saving: X7R→X5R effective capacitance / temperature / gate-slew behavior is unqualified.
+Correctness takes priority over closing the $0.02 miss with an unqualified substitution.
+
+The completed final list in R10_VALIDATION is current-board-bound and reconciles all 229 historical review rows,
+all 93 prior agent decisions plus these three, remaining Minors, O1–O6, OQ answers and the narrow AUD/GAP changes.
+OQ-3 remains $84.43 vs $84.41, R430 / U4 short; owner acceptance is pending. Nothing is ordered. Software / CAD,
+simulation / Inference and physical / firmware evidence remain distinct. No change to AGENTS §2. Computer Use
+approval review rejected Preview launch without a further reason; native geometry and generated renders supplied
+visual evidence without bypassing GUI control approval. No push, other-worktree edit or Git index mutation.

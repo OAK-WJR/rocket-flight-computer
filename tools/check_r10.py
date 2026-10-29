@@ -1480,8 +1480,10 @@ def s8(ctx, gap=BARREL_GAP):
     inner = (pcbnew.In1_Cu, pcbnew.In2_Cu)
     barrels = barrel_shapes(ctx.board)
     issues, worst = [], {}
-    others = [it for it in ctx.net_items(lambda n: n != 'GND', inner)     # PCB_ARC and PCB_VIA are PCB_TRACKs; + pads (R6-SAF-02)
-              if isinstance(it[4], (pcbnew.PCB_TRACK, pcbnew.ZONE, pcbnew.PAD))]
+    # Every manufactured copper representation counts, including drawings, text and footprint zones.
+    others = [(label, net, lay, shape, pad)
+              for _, lay, shape, _, pad, net, label in copper_nodes(ctx.board)
+              if lay in inner and net != 'GND']
     for blabel, bnet, bshape in barrels:
         for label, net, lay, shape, obj in others:
             if net == bnet or not pcbnew.SHAPE.Collide(bshape, shape, pcbnew.FromMM(gap) - 1):
@@ -2213,7 +2215,8 @@ def port_legends(board, required=PORT_LEGENDS_R10):
     for fp in board.GetFootprints():
         items += list(fp.GraphicalItems()) + list(fp.GetFields())
     for item in items:
-        if (not isinstance(item, pcbnew.PCB_TEXT) or item.GetLayer() not in (pcbnew.F_SilkS, pcbnew.B_SilkS)
+        if (not isinstance(item, (pcbnew.PCB_TEXT, pcbnew.PCB_TEXTBOX))
+                or item.GetLayer() not in (pcbnew.F_SilkS, pcbnew.B_SilkS)
                 or (hasattr(item, 'IsVisible') and not item.IsVisible())):
             continue
         text = item.GetText().strip()

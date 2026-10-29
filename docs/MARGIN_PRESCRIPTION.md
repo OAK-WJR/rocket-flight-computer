@@ -20,6 +20,12 @@ All 25 / 30 ms software backstops and 10 nF discharge claims below apply only to
 
 ---
 
+**R10-MCU-01 pin-limit correction:** historical 7.3 V FT / ADC claims below are superseded by ST DS12110 Rev11
+Table109 pp207-208 notes3-5: digital FT VIN is at most min(min(relevant supplies)+4 V,6 V), with pulls disabled
+above 4 V; FT_a used by the ADC is limited to 4 V, positive injection allowance 0 mA. Current PA6 / PB1
+single-fault pin-damage cases remain deviations; see R10 parts_qualification and the regenerated binding note.
+This correction does not re-qualify the historical margin arithmetic or any physical fault.
+
 ## 1. Direct answer
 
 **No. This board cannot have 10× everywhere, and chasing 10× on the power path is the wrong engineering target.**

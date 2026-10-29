@@ -31,6 +31,12 @@ the MCU, ordinary diagnostic dividers and deployment chain otherwise remain sing
 Blue Jay is retained. This scope does not promise survival of every component fault or a software-independent
 arming system.
 
+**R10-MCU-01 pin-limit correction:** historical 7.3 V FT / ADC claims below are superseded by ST DS12110 Rev11
+Table109 pp207-208 notes3-5: digital FT VIN is at most min(min(relevant supplies)+4 V,6 V), with pulls disabled
+above 4 V; FT_a used by the ADC is limited to 4 V, positive injection allowance 0 mA. Current PA6 / PB1
+single-fault pin-damage cases remain deviations; see R10 parts_qualification and the regenerated binding note.
+This correction does not re-qualify the historical margin arithmetic or any physical fault.
+
 ## R6–R9 applicability (historical; owner decision, 2026-10-13)
 
 The original analysis below is retained as history. For R6–R9 hardware and

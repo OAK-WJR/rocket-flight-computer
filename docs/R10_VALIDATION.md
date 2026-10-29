@@ -1,11 +1,10 @@
 # R10 validation and adversarial review
 
-> **Current continuation, 2026-10-28:** full round 9 reviewed committed `877d0199…` (`8bccb07`) with
-> **0 Critical / 0 Major / 21 Minor groups**, the first clean round. Its generator, gate and record fix pass
-> regenerates `b337fe63…`; the interrupted build is superseded by fresh complete rebuilds and the evidence
-> below. Round 10 will review the committed fix-pass board through ten fresh independent lenses. Clean rounds
-> 9 and 10 form the required pair under the owner’s continuation. Commit requests use the external supervisor;
-> no Git index mutation is performed here. OQ-3 cost remains an acceptance deviation, not a clean-review blocker.
+> **Current completion, 2026-10-28:** full rounds 9 and 10 are clean: **0 Critical / 0 Major / 21 Minor** on
+> `877d0199…`, then **0 / 0 / 8** (four new / four carried) on committed`b337fe63…` /`619db7e`. The round-9 fix
+> pass was committed after two identical builds and gate0. Round10 covers every changed CAD byte; final fixes
+> affect gates/records only. The completed current-board deviation list below awaits owner acceptance, including
+> OQ-3 **$84.43 vs $84.41**. Procurement/process/physical/firmware qualifications remain open; nothing ordered.
 
 > **2026-10-28 hand-off check: round 9 stopped for owner decisions.** Starting worktree clean at `04d0b04`,
 > board `407d1d84…`. Three fresh read-only reviewers started in parallel (requirements, safety, power); the
@@ -192,7 +191,7 @@ fit check: OK (CAD envelopes only)
 
 Default Python lacked NumPy. A temporary Python environment resolved that dependency.
 The seeded scratch-project DRC then encountered KiCad 10.0.6's headless
-`wxGetMousePosition` crash. A scratch interposer following the existing R9
+`wxGetMousePosition ` crash. A scratch interposer following the existing R9
 D-S6-14/D-S9-06 precedent allowed scratch DRC execution; it changes mouse-coordinate
 queries, not DRC results. A subsequent full wrapped gate run was interrupted before
 the seeded-suite summary. Its exit status is unavailable and it is **not a pass**.
@@ -727,7 +726,7 @@ unskipped gate also pass. The preceding mixed-land candidate passed two CAD buil
 `877d01996a59e9dd5c6dbc367274bb9a323a13982d67960fe46df9b0ee53205d`, 46 × 90 mm, four layers, 2,365,477 bytes:
 225 footprints (89 top / 136 bottom), 883 straight track segments, no arcs, 323 vias (190 GND).
 Netlist SHA-256 `0843da709e2d7a757e9b35cdff48158a54012c5353619cbf409ab961efd2c3ca`.
-The native geometry inventory is `sources/r10_design/audit_native_inventory.json`; it records QSPI lengths,
+The native geometry inventory is `sources/r10_design/audit_native_inventory.json `; it records QSPI lengths,
 Y1 crossings, support clearances, silk edge clearances and S-8's 1.458 mm minimum on this board.
 
 Both complete builds and the final unskipped gate pass: DRC / unconnected / schematic parity / ERC all zero; metadata, fit, plate,
@@ -744,7 +743,7 @@ Both rendered sides were inspected. Supplier evidence: 2026-10-28 21:37:13 UTC s
 **$84.43 vs $84.41**, 46 Extended / 36 Basic codes. Minimum purchases give about $86.23 including feeder share,
 before fixed fees. R430 has 17 vs its 3610-piece minimum; U4 has 0 vs 5 needed. Procurement returns 1 for these
 disclosed misses; OQ-3 remains a deviation and does not block CAD review. No quote or process is accepted,
-nothing ordered. `sources/r10_design/audit_prep_evidence.json` binds the complete summary to this board.
+nothing ordered. `sources/r10_design/audit_prep_evidence.json ` binds the complete summary to this board.
 The final unskipped gate exits zero, including the current five-output manifest. This pass earns no clean-round
 credit; a fresh full round 9 is next on the supervisor-committed board.
 
@@ -835,7 +834,7 @@ metadata, silk, fit / plate, all 33 R10 rules, routing, actuator and current fiv
 Tests: shell 4, procurement 19, fit 24, paste 5, routing 59, R10 140; the three NumPy cases skipped by KiCad
 Python pass in the separate NumPy invocation, leaving no unresolved skip. Full output with routine tool noise
 and temporary paths omitted: `sources/r10_review/round9_fix_check.txt`; hashes, counts and limits:
-`round9_fix_validation.json`; native current-board measurements: `round9_geometry.json`.
+`round9_fix_validation.json `; native current-board measurements: `round9_geometry.json `.
 
 The 2304 required hot-plug cases and refinement / cold-output checks pass as simulation / Inference; numerical
 results equal the baseline, with fresh input/model binding for the expanded C88 label. Fab has 82 BOM codes /
@@ -860,108 +859,316 @@ qualification remain unverified. Round 10 freshly reviews the committed fix pass
 | 6 | `3b6e15f3…` | 0 / 1 / 39 | D-R6-01 … D-R6-03 → `b242ab8e…` |
 | 7 | `b242ab8e…` | **0 / 0 / 33 (clean)** | D-R7-01, D-R7-02 (gates and records; board unchanged) |
 | 8 | `b242ab8e…` | 0 / 3 / 22 | D-R8-01 … D-R8-03 → `407d1d84…` |
-| 9 (full; prelude excluded) | `877d0199…`, `8bccb07` | **0 / 0 / 21 (17 new, 4 carried)** | D-R9-01 … D-R9-06 → `b337fe63…`; fresh round 10 covers the Minor fix pass |
+| 9 (full; prelude excluded) | `877d0199…`, `8bccb07` | **0 / 0 / 21 (17 new, 4 carried; clean)** | D-R9-01 … D-R9-06 → `b337fe63…`; full round 10 covers the Minor fix pass |
+| 10 | `b337fe63…`, `619db7e` | **0 / 0 / 8 (4 new, 4 carried; clean)** | D-R10-01…03, gates/records only; PCB unchanged |
 
-## R10 deviations for owner acceptance (skeleton; completed when two consecutive rounds are clean)
+## Round 10: full independent review of `b337fe63…` (commit `619db7e`)
 
-**Historical draft:** this skeleton predates the single-switch and AUD/GAP passes. J124 / pull-pin / old-part statements below do not override the current owner decision, requirements or D-SS / D-AUD / D-GAP decisions. Replace it with a current-board inventory after two consecutive full clean rounds; no historical measurement is transferred without checking it. Each final item needs its measured reason, current applicability and board binding.
+Ten fresh independent contexts, one lens each, reviewed the immutable round-9 fix-pass commit: requirements /
+owner decisions, safety, power, parts / BOM, MCU, placement / mechanics, routing / AVA, manufacturing, gate
+adversary, and docs / firmware binding. Every reviewer verified the target before and after; Phase A made no
+canonical edit. Full records: `m3_design/assembly_review/sources/r10_review/round10_reviews.json `.
 
-1. **Pyro spacing rules dropped** (r10_plan §2 item 1): no rules A–H / A2, strict pad rules, battery-live 2.5 mm or
-   P-3 / P-6 / P-7; pyro copper at the board default 0.15 mm (DRC). Kept: the ARM plug as a complete break (S-1, by
-   copper connectivity), the feed only through the load switch (S-2), gates defined off (S-3), required-fitted parts
-   (S-4), J124's RAW–BUS1 gap ≥ 1.5 mm with only GND between the pads on every layer (S-5), In1 / In2 GND only within
-   ≥ 1.0 mm of every pyro barrel (S-8; measured ≥ 1.458 mm, D-R3-02), the 2 Ω limit, bench gates and inspection.
-   **Accepted single-fault cases remaining (re-measured on `b242ab8e…`, after rounds 4–6 changed CH1's In2 edges, the
-   sense runs, R128.2's GND strap, C127.2's via and the R120 entries; D-R4-01, D-R4-02, D-R5-01, D-R6-01):** a surface
-   defect (solder bridge, strand, debris) across a default gap can (a) join RAW_ACT or another live net to the armed bus
-   or igniter on the outer layers (nearest outside J124's window: the BUS via (17.0, 63.7) 1.139 mm from Q121.8, tented;
-   R5-SAF-03); (b) join PYRO1_OUT to GND: In1 GND sits 0.25 mm from PYRO1_OUT's barrels and the outer GND pour at the
-   default clearance, so such a defect fires an armed igniter, as a shorted Q124 would (the plug-out continuity
-   self-test, H-1, and the ORDERING bench gates screen a static short); (c) join the gate to a live net on the surface:
-   R128.1's neighbours; Q124's own gate pad to its drain pad (PYRO1_GATE–PYRO1_OUT 0.52 mm inside the DFN package) and
-   the gate track 0.62 mm from Q124.5 (OUT sits at bus potential when armed with Q124 off, so a bridge turns Q124 on and
-   fires; R4-SAF-03, R6-SAF-04); the 3V3 via (19.05, 55.9) 0.676 mm from R128.1 (PYRO1_GATE) and 0.835 mm from R126.1
-   (PYRO1_GATE_N, held only by R127's 1 kΩ: a direct bridge puts ≈ 3.2 V on the gate) on F.Cu (no other spot keeps its
-   In2 3V3 connection, D-R4-02); on the MCU side U1.3 (PYRO1_GATE_N) has the no-net sentinels U1.2 / U1.4 0.2 mm away
-   and QSPI_IO2 0.55–0.75 mm away. Inner layers: every PYRO1_BUS / IGN / OUT / GATE and RAW_ACT barrel meets only GND
-   within 1.0 mm on In1 / In2 (S-8, pads included since round 6), so an inner short from them meets GND (safe for the
-   gate and bus; OUT-to-GND is case (b)); the exceptions are the ACT_GATE vias (10.8, 71.3) and (16.2, 72.3), 0.251 mm
-   from In2 RAW_PROTECTED (a bridge holds Q120 / Q121 off: fails safe, no fire; R6-SAF-03). JLC's electrical test
-   screens manufactured shorts.
-2. **O3, no board-level servo-power switching or failsafe:** the board can no longer cut servo power, so F6's "tab to
-   neutral on reset" has no board-level means; it becomes a harness and servo matter (neutral-on-reset qualified with the
-   chosen servo and harness). The firmware still outputs neutral first after any reset (binding note).
-3. **O6, servo return through the harness:** each servo's − wire runs to the pack star; J122's GND row is a signal
-   reference only. Bounded board share: ≤ 0.62 A (4 × 7.68 mV / 50 mΩ with ≤ 1 mΩ star transfer resistance and ≥ 50 mΩ
-   per reference branch; an **Inference** from the specified harness, to be measured four-wire before flight).
-4. **External GPS and radio (O1 / O2):** L5 lost (M100 Mini is L1 only); the LR900-F link is a closed protocol
-   (transparent telemetry); its band is 890–915 MHz, so its channels must be set inside 902–915 MHz (setup and
-   firmware; FHSS channel restriction undocumented); module supply envelopes and installed immunity to be
-   bench-qualified; **port back-feed:** a self- or USB-powered module (or camera) on an enabled port back-feeds through
-   the TPS2553 (not blocked below ≈ 0.7 A, indefinitely), PORT_4V8 / PORT_5V3 and (Inference) the regulators' body
-   diodes into RAW_PROTECTED, which can keep the MCU and ACT_EN alive and RAW_ACT live with the power switch open:
-   firmware drops every port enable on a switch opening or VLOGIC sag, and ORDERING §8 bench-tests it (R3-SAF-02); the
-   uplink still has no path to arming or firing (S-6, binding note).
-5. **MCU pin re-maps** (D-R2-06, D-R2-07, D-R2-09): radio on UART5 PB12 / PB13; port enables / faults / OE on freed GPIOs;
-   PULLPIN / BUZZ_DRV swapped onto PC13 / PC14; LOGIC_SOURCE_ST / BAT_FAULT_N swapped onto PA4 / PA5; VLOGIC_SENSE moved
-   to PA6 (F6 watchdog input). Checked against DS12110 Rev 10; **PA4 / PA5 / PA6 and PE11 / PE12 are AN2606 Table 119
-   loader pins** (SPI1 / SPI4), each allowed with its electrical reason by check_r10 K-loader (PA6 ≤ 0.36 mA; PE11 held
-   off by R431); firmware binding new.
-6. **Parts without a maker datasheet:** C84 (MA25V470M8x10, C46550466; supplier-hosted JIERRUI datasheet only, reflow
-   qualification open, conservative 300.8 µF used for hold-up); generated 3D envelopes, not vendor models, for the five
-   new lands.
-7. **P-11 / F9-1:** OQ-1 accepts 4.95 mm terminal wire room, physical fit pending. OQ-2 requires a passing model of R10's actual input feeds; implementation pending. The former distance-only premise is superseded by the owner's 2026-10-28 answer.
-8. **T-1 re-derived** (D-R2-13): the owner selected an aft-edge tab and panel rail/frame (OQ-4, 2026-10-28; ORDERING §8); JLC acceptance remains an ordering condition.
-9. **Cost** $87.01 per board against $84.41 (OQ-3); R430's stock / minimum purchase.
-10. **Silkscreen and port pin order:** 94 designators hidden on `407d1d84…` (U5's since round 8: the I2C GND via took its spot) (kept on Fab); J410 / J420 without pin
-    tables (no legal spot within 6 mm, D-R3-11); their UART pin order differs from J9's (J9: 3 RX_WIRE, 4 TX_WIRE;
-    J410 / J420: 3 TX_WIRE, 4 RX_WIRE; R4-REQ-06): each cable is checked end to end before mating (ORDERING 8.2);
-    `J2 5:GND 6:NC` beside J2 but nearer J3.
-11. **Agent decisions** D-R1-01 … D-R1-07, D-R2-01 … D-R2-16, D-R3-01 … D-R3-13, D-R4-01 … D-R4-04, D-R5-01 … D-R5-04, D-R6-01 … D-R6-03, D-R7-01 / D-R7-02 and D-R8-01 … D-R8-03 (R10_DECISIONS.md), each to be
-    accepted or overruled.
-12. **Not verified:** DC solve (the IPC-2152 estimates of D-R3-03 are an upper-bound fit), hold-up simulation, port-supply
-    corners, plate model masses, bore fit with real plugs and wires, every bench test.
-13. **Round 3 Minors left open or partly fixed** (measured on `579575bd…` unless noted): see the round's table (C-9:
-    camera loop ≤ 150 mΩ, LR900 TX peak vs R420, tin J400 contacts; C-10: no capacitor / Schottky at U9's OUT, port-switch
-    bypass placement, one PORT_5V3 via into U402.1, U401 without thermal vias; C-11: R430 stock; C-12: routing review
-    items — hops that cross named copper, BUZZ_DRV's 3-via route, SERVO2_MCU and LOGIC_SOURCE_ST over In2 splits,
-    remaining off-centre pad entries and tracks between pads (LED_YEL_A through LED1, LED_RED_A through R33, BUZZ_DRV
-    through C86, J3.A4B9's VBUS entry); C-14: six hash-pinned R6 records with local paths). To be completed with
-    measured reasons when two consecutive rounds are clean.
-14. **Round 4 and 5 Minors listed** (see their tables): R4-RTE-03 (NRST / BOOT0 not in the critical classes, NRST's
-    layer changes 1.66–3.35 mm from GND vias), R4-RTE-04 (port IO / CAM_5V vias 1.73–2.80 mm from GND vias), R4-REQ-06
-    (port UART pin order), R5-SAF-03 (BUS via 1.139 mm from Q121.8, tented), R5-BOM-01 (C120 16 V at ≈ 18 V clamp-event
-    Vgs, fails safe), R5-BOM-02 (C84 maker name), R5-MCU-04 (PA6 / PB1 single-fault pin over-voltage), R5-RTE-04
-    (0.05 mm off-axis entries: SPI1_MOSI → U4.14, PULLPIN → U1.7, IO rails → U411.7 / U421.7, VBUS → U10.1),
-    R5-RTE-07 (CC1's 0.113 mm segment inside its via), R5-MFG-02 (TP88's footprint silk 0.426 mm from the east edge),
-    R5-MFG-03 (silk stroke at JLC's 0.15 mm minimum), R5-DOC-03 (pre-R10 absolute paths), R6-BOM-02 (U4 mask web
-    0.100 mm, JLC's limit), R6-MFG-02 (silk edge keep-in by generator constant; J3 footprint silk 0.50 mm), R6-REQ-06
-    (cost evidence BOM-bound), R7-BOM-01 (C29936 → C15849 merge, OQ-3 option), R7-BOM-02 (capacitor Values without
-    rating), R8-BOM-01 / -02 (envelope comments), R8-RTE-02 (F.Cu nets over Y1), R8-RTE-03 (I2C1_SDA's via 1.88 mm from
-    GND), R8-MCU-01 (UART break on an unplugged port: firmware); shroud placement: OQ-7.
+**Result: 0 Critical, 0 Major, 8 Minor groups: four new and four re-raised routing groups.** This uses round 9's
+counting convention: existing architecture / qualification / procurement obligations are inventoried rather than
+recounted as new discoveries. The independent manufacturing coating finding duplicates the mechanics finding.
+No Critical / Major candidate required a fresh verifier. Manufacturing and the root independently reproduced the
+coating geometry; gate seeds and MCU limits carry direct native / primary-source evidence.
 
-    **R3-DOC-11 / R5-DOC-03 inventory:** the six immutable records under `m3_design/assembly_review/sources/` are
-    `r6-independent-routing-reference-review-20261013.json`, `r6_final_dc.json`, `r6_aux_finish_packet.json`,
-    `r6_final_objectives_review.json`, `r6_final_checks/audit.json` and `r6_final_checks/cleanup.json`.
-    They retain historical local paths because other records pin their complete bytes by SHA-256. They are not
-    R10 qualification evidence; no new local path is introduced by this continuation.
+| Finding | Severity | Evidence on the reviewed target | Disposition |
+|---|---|---|---|
+| R10-GATE-01 | Minor | A conflicting F.Silk PCB_TEXTBOX `J420 3:RXI`, box (2,10)–(14,12), passes K-legends and native all-severity DRC; actual board has none | Include PCB_TEXTBOX in required/unique/correct port and harness legends; fault regressions reject conflicting/duplicate tables and notes |
+| R10-GATE-02 | Minor | In2 graphic (5.75,53.7)–(5.75,54.5), width 0.2 mm, is 0.500 mm from J121.1 barrel yet S-8 and refilled DRC pass; actual board has no inner graphics | Use complete copper_nodes geometry for S-8, including drawings/text/fields/footprint zones; no-net and net-labelled graphics/text fault tests |
+| R10-MCU-01 | Minor | PA6 current record says 7.3 V. DS12110 Rev11 Table109 pp207–208 notes 3–5 gives4 V ADC-mode ceiling, digital FT ceiling≤6 V | Correct generator/qualification and regenerate note; scope historical7.3 V claims. Normal divider and carried single-fault damage conclusion unchanged |
+| R10-MEC-01 / R10-MFG-01 | Minor, counted once | Whole-coated C11.1 lies2.818449 mm from U5 nominal body, versus stated3 mm; old3.027515 mm was pad-only | Mask C11 whole, keep3 mm from body+pad union and whole-U5 tape; preserve controlled TP122 exception. C10 conservative Fab/pad clearance3.333144 mm, others≥5.075 mm |
+| R9-RTE-04 | Minor, carried | NRST returns1.655174/3.353357 mm, BOOT0 1.662077, SDA1.880571; SCL1.443087 | Retain exact noncritical-return deviations; no fast-return waiver |
+| R9-RTE-05 | Minor, carried | MOSI U4.14 offset0.05 mm; between-pad LED1/R33/C86 lanes; new IO/U10 entries centred | Independent on-axis trial reproduces IMU keep-out and 11 loose SCK samples; retain measured residuals |
+| R9-RTE-06 | Minor, carried | SERVO2 slow tail0.42 mm over split; LOGIC_SOURCE_ST crosses near(33.65,57.70)–(33.8,58.01) | Retain slow routes; a plane redraw requires power/return requalification |
+| R9-RTE-07 | Minor, carried | BUZZ_DRV 36.376450 mm/3 vias; Y1 foreign projections BUZZ_DRV 2.732695/NRST 0.777648 mm | Simple swaps independently collide with named copper; solid In1GND intervenes; HSE stimulation remains bench work |
 
-    **R7-BOM-02 inventory:** incomplete capacitor Value strings occur on C6–C11 (`22uF`), C23 / C28 (`4.7uF`),
-    C19 / C20 / C87 / C120 (`2.2uF`), C22 (`1uF`), C25 / C26 (`10pF`), C60 / C94 / C122 / C127 / C129 (`10nF`),
-    C88 / C99 (`100nF 50V`, no dielectric): seven strings across 22 parts. Their exact Manufacturer Part / LCSC
-    identity fields remain present and audited. The inherited display strings are retained; no ambiguous
-    substitute is permitted by omitting a rating from Value.
+Fresh evidence includes all 100 U1 pins /25 AF assignments; four hashes / exact in-memory binding regeneration;
+101 safety pins across 41 parts; 65536 passive corner/state solves; independent hot-plug descriptor-MNA control
+and four refined worst corners; all 82 exact live supplier identities; independent 203 supplier-pad CPL
+reconstructions plus 12 nonpolar placement-only rows; fit /plate /seven mechanical rules; native all-severity
+DRC / unconnected /parity /ERC0/ 0/ 0/ 0; paste 317F/365B; current five-output manifest. No firmware or physical claim.
 
-    **R7-BOM-01 cost option:** C29936 → C15849 changes X7R to X5R. The replacement's effective capacitance versus
-    bias/temperature has not been qualified for these locations. Retain the existing qualified identity; do not
-    credit the proposed ≈ $0.31 saving until that check is complete. This replaces the expired board-freeze reason.
+Routing independently reproduces82 counted instances, no failures/allowlist/stale/leftovers/removable bumps;
+110625 reference samples with 7139 own-antipad and 7 samples matched by6 exact strays, zero loose; K-region
+57 items / 21777 samples; all 22 fast signal transitions have GND partners≤1.491643 mm. AVA photographs support only
+visible floorplan/routing inspiration. Supplier23:51:13Z confirms$84.43 vs $84.41,46 Extended and onlyR430/U4 short.
 
-15. **OQ-5, no hardware port cutoff** (owner 2026-10-28): C84 and firmware shedding retained; the loaded
-    battery-break estimate is 0.55–1.0 ms, not the ports-off 8.7–13.6 ms. The PA6 analog watchdog must trigger
-    port OE/EN shutdown, and firmware must specify and bench-verify the threshold, detection-to-command latency,
-    actual current decay and retained load. TPS2553 turn-off can take 3 ms, so no loaded-break guarantee is inferred.
-16. **OQ-6, no battery-lead fuse** (revised owner answer 2026-10-28, `f202ec3`): a hard short between the pack and
-    U9 / Q120 (battery lead, J1, BAT_IN copper, D8, C80 / C96 / C89 / C95) is not current-limited. Accepted harness
-    mitigations: strain relief, no chafe points, crimped or soldered leads. J124's 5 A fast ARM-link fuse remains.
-17. **OQ-7, axial placement** (owner 2026-10-28): the board and sled axial tolerance stay wholly forward of joint
-    +47 mm; freed length stays stack slack, so shroud clocking is unnecessary for this rule. Actual fit is unverified.
+Rounds9 and 10 are the required consecutive clean pair under the owner's continuation. After this review, only
+low-risk gate/regression and record/generator-text fixes are applied. The PCB is frozen at `b337fe63…`; no land,
+part, pose, net, track, via, plane or silkscreen changes follow. The binding note's PA6 obligation is regenerated
+from the corrected source; its four CAD/input hashes stay the same. Final rebuild/check evidence follows below.
+
+### Round 10 final fix validation (2026-10-28 local date)
+
+Both fresh complete final builds exit 0 and reproduce **all 21 generated CAD / binding files byte for byte**.
+The PCB remains **`b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9`**, 46 × 90 mm,
+2,366,509 bytes. Relative to reviewed `619db7e`, the only changed generated file is the binding note: one PA6
+limit obligation, with all four CAD/input hashes unchanged. No part, pin, land, pose, copper, plane or silk change.
+
+Final **unskipped `tools/check.sh` exits 0**: DRC / unconnected / parity / ERC **0 / 0 / 0 / 0**, all 33 R10 rules,
+metadata / 3D, silk, fit / plate, routing, actuator and current **five-output fab manifest pass**. Self-tests:
+shell 4, procurement 19, fit 24, paste 5, route 59, R10 **143**; three NumPy cases pass separately, **no unresolved
+skip**. Both builds freshly pass the 2304-case hot-plug sweep / refinement / cold / local checks (simulation /
+Inference). Routing remains 0 failing / 0 allowlisted / 0 leftovers; 215 CPL / 82 BOM codes, paste 317 F / 365 B,
+unchanged package inputs. Actual cost / stock still fail at $84.43 vs $84.41 with R430 / U4 short; no procurement
+or physical release is claimed.
+
+Evidence: `m3_design/assembly_review/sources/r10_review/round10_fix_validation.json` and `round10_fix_check.txt`;
+independent reviews, selected seed/geometry evidence and complete reconciliation: `round10_reviews.json`,
+`round10_evidence.json`, `round10_deviations.json`. The final consistency follow-up found no new review finding;
+its stale-status/current-USB-range/readability/test-count corrections are included. AGENTS §2 is byte-unchanged.
+The completed deviation list below remains pending owner acceptance; no ordering/push/other-worktree edit.
+
+## R10 deviations for owner acceptance
+
+**Current board only:** `b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9`,
+46 × 90 mm, 2,366,509 bytes, reviewed at `619db7e`. This replaces the obsolete skeleton; J124, its ARM-link fuse,
+J123 / pull-pin, the former separate PYRO1_BUS and their old coordinates are not current hardware.
+The clean review pair is complete. **Owner acceptance of this list and OQ-3 is pending; nothing is ordered.**
+R9 remains the accepted board. Passing CAD gates and simulations do not qualify firmware or physical hardware.
+
+The board-bound `round10_deviations.json ` under `m3_design/assembly_review/sources/r10_review/` maps all 229
+historical review rows to their current or closed dispositions and indexes every agent decision. Measurements below
+come from the round-10 native reviews, the unchanged round-9 geometry and the named primary sources. A calculated
+limit or CAD clearance is not a physical measurement. Every retained drawing-hygiene instance has its measured
+reason in `tools/route_check.py`; the round-10 routing record preserves the current instance list.
+
+### 1. Single-switch arming, surface faults and the protected barrel envelope
+
+The external screw switch on J400 is the sole power / pad-arming device, on last and off first, reachable on the
+rail. Treat the pyro channel as live whenever the board is powered. PC1 enables Q120 / Q121 through Q122; PE4 separately
+controls Q124. Both default off in reset / unpowered, but they share one MCU and software. There is no physical
+pyro break while powered, no switch-state sensor, and no ARM-link fuse. USB / self-powered port back-feed can hide a
+switch opening and retain logic, ACT_EN and RAW_ACT. Connect an e-match only with no such back-feed source attached;
+bench work uses USB with the pack or e-match disconnected and dummy loads. R3-SAF-02 remains an installed test.
+
+Pyro-specific surface spacing is deliberately absent (board default 0.15 mm). The retained single-fault cases
+(R4-SAF-03, R6-SAF-04) are concrete, not a claim that CAD is fault-tolerant:
+
+| Current geometry | Measured gap | Residual and disposition |
+|---|---:|---|
+| Q124 own gate–drain pads / external gate track–drain | 0.5200 / 0.6200 mm | A live-to-gate bridge can fire an enabled igniter; inspect, coat and qualify dummy-load startup / reset waveforms |
+| R128.1 / R126.1 to 3V3 via (19.05,55.9), F.Cu | 0.6761 / 0.8352 mm | A bridge can raise the gate; ground cold-screen / coating do not prevent a later defect |
+| U1.3 to NC sentinels U1.2 / U1.4; QSPI_IO2 track; U1.1 pad | 0.2000; 0.5500; 0.7000 mm | Pin contamination / internal fault remains possible; no independent software safety follows from two GPIOs |
+| OUT B.Cu track near GND via (10,55.6) | 0.2370 mm | OUT–GND can fire an enabled igniter; a passive short screen only detects a pre-existing static fault |
+| IGN / RAW_ACT to GND pour | 0.2505 / 0.2505 mm | Default-gap surface defects remain; inspection and coating required |
+| Q121 source–drain pads / source bridge–drain pad | 0.5200 / 0.5700 mm | A hard bridge bypasses deliberate load-switch enabling; software cannot clear it |
+| ACT_GATE vias (16.2,72.3) / (11.8,69) to In2 RAW_PROTECTED | 0.2505 / 0.8055 mm | Outside S-8's protected set; positive bridge biases the P-FET pair toward off, not proven immunity to all faults |
+
+S-8 remains blocking: four current pyro barrels have nearest foreign inner-copper gaps **1.4583, 1.9000, 2.4788
+and 2.1061 mm**, all ≥1.0 mm. Round-10 hardening checks graphical / textual copper too. Inner OUT–GND shorts can
+still fire; GND-only proximity is not universal failsafe behavior. The old separate RAW–BUS via-gap item is retired.
+
+Ground checks must run with both controls low **before** PC1 enable. After prior enabling, wait ≥1 s and verify
+bus discharge; then enable PC1 with PE4 low for ≥100 ms before powered-bus checks. Independent passive calculations
+at ±1.45% resistors give healthy 1 Ω CONT 65.582–87.644 mV and bus 65.547–87.597 mV; open CONT 129.162–168.020 mV.
+These exclude leakage / ADC / temperature effects; thresholds are unqualified. A shorted match resembles a healthy
+one. The three pyro dividers retain two series 5.1 kΩ top resistors, two parallel 2 kΩ bottom resistors and 4.7 kΩ
+ADC series parts: worst one-resistor-fault pin voltage 1.4108 V at 8.4 V or 3.3422 V at 19.9 V (Calc).
+Firmware ground refusals, accelerometer + barometer launch detection and in-flight sense-never-veto remain mandatory
+and unimplemented. AGENTS §2 is unchanged.
+
+### 2. External servo power, return sharing and fire-source reserve
+
+O3 removes board servo power switching and fault containment: J122's + row is NC; the harness powers every servo
+and returns its current to the pack star. There is no board means to remove servo power or prove neutral motion
+on reset. Firmware must issue neutral first and within the adopted 50 ms command budget; physical response is a
+chosen-servo / harness test. A jam can remain after a neutral command.
+
+O6's board-current bound is **0.6144 A** (Inference), conditional on ≤1 mΩ pack-star transfer resistance and
+≥50 mΩ in each signal-reference branch. Four-wire the actual star / branches before flight; ground pins remain
+connected references. Per-servo inline protection is a harness choice; OQ-6 leaves pack-to-U9 / Q120 hard shorts
+unfused. Strain relief, no chafe points, and crimped or soldered leads are retained mitigations, not current limiting.
+
+GAP-1 superposes **11.545807 W** normal converter load and servo current through the common source. At the stated
+7.4 V equivalent source / 0.15 Ω and hot loop bounds, fire current is **1.550071 A idle**, **1.485263 A with one
+persistent stall**, **1.420229 A with two**. Only idle meets the 1.5 A criterion. Qualify actual e-match all-fire,
+source reserve at deployment, contacts, hot FETs and harness; do not infer that a 7.4 V launch reading guarantees
+7.4 V available at recovery. The isolated Blue Jay has no shared copper.
+
+### 3. Camera, external GPS / radio and UART harnesses
+
+| Item / prior finding | Current reason | Required closure |
+|---|---|---|
+| Camera, R3-REQ-08 | Conditional minimum 5.031682 V at 1 A uses total loop ≤150 mΩ, 135 mΩ switch and 50 mV transient allowance | Four-wire installed board / harness / contacts and scope startup / load steps; keep the 1 A allocation |
+| Radio, R3-REQ-09 | LR900-F maker 4.5–5 V / 1 W average / 27 dBm; switch minimum 0.347690 A, peak demand unspecified | Measure full-power TX peak and delivered voltage; installed immunity with dummy loads |
+| Radio band / O2 | Maker 890–915 MHz; channels 12–25 correspond to 902–915 MHz; restricted FHSS set undocumented | Verify chosen channel / hop configuration with maker; no regulatory or RF qualification claimed |
+| GPS, O1 / R8-MCU-02 | M100 Mini is L1 only (L5 lost), maker 500 m / s / 4 g tracking limits; UART 3.3 V is an Inference, not a maker guarantee | Measure levels and unpowered behavior; qualify SH1.0-to-GH1.25 adapter; GPS is not the flight estimator |
+| Port sequence, R4-MCU-01 / R8-MCU-01 | OE-low isolation retained; AUD-8 main-3V3 B sides can feed an unpowered module a few mA through 1 kΩ if OE is wrong | OE low with power off; RX pull-ups and idle-high TX before OE; bounded DMA / framing-error handling and unplug test |
+| Cable order, R4-REQ-06 | J9 3=RXI / 4=TXO; J410 / J420 3=TXO / 4=RXI, despite identical GH4 bodies | Per-port end-to-end power / polarity / UART check; current complete correct tables stay blocking |
+| J400, R3-REQ-12 | Tin GH contacts in a 6–7 µA dry loop; external screw switch not physically qualified | Vibration / intermittency logging of VLOGIC and 3V3 with mated strain relief |
+| ESD, R3-MCU-05 | Exact ESD103 UART identity retained; part naming does not qualify real edges / ESD | Scope selected baud and perform installed cable / ESD tests; no new voltage rating inferred |
+
+O1–O6 move the modules / servo supply off board; they do not remove installed volume, antenna separation, retention,
+back-feed or fault obligations. The camera retains U12 / U13; its higher port rail is not placed directly on TXU0202.
+
+### 4. Power routing, thermal, hold-up and transient qualification
+
+| Item / prior finding | Current measurement / calculation and reason retained | Required closure |
+|---|---|---|
+| U9 / U400 necks, R4-PWR-01 / -02 | U9 entries 0.3 ×1.8 mm, 0.6 mm outside pads; 0.4 mm four-via ladder / U400 feeds; C88 0.7 mm necks total 2.92 mm | Full track / via DC and temperature tests; IPC fit does not bound short-neck absolute temperature |
+| Inner power cut | Conservative 1.20 mm PORT_5V3 basis; IPC fit 3.416 / 8.502 °C rise at 1.25 / 2.02 A; 1 mm outer basis 7.412 / 19.238 °C at 1.8 / 2.9 A | Actual copper / plating, pad heating and converter self-heating remain unmeasured |
+| Port bypass / feed, R3-PWR-07 | U402–C430 4.309655 mm, U420–C420 4.878332 mm, U410–C410 0.456207 mm; U402 one 0.5 / 0.3 mm via (35.45,40.05), 0.4 ×0.85 mm entry | Retain explicit nonideal bypass / single-via layout; verify load transients; no fresh proof that a second via is impossible |
+| U401 / GAP-3 | 0.406177 W normal; inferred 80–110 °C / W gives 102.494–114.679 °C at 70 °C, 117.494–129.679 °C at 85 °C | Exact two filled / capped vias do not establish thermal resistance; measure whole power knot |
+| Converter limits, R5-PWR-01 / -03 / -04 | U9 OVLO recommended 1.5 V exceeded above about 12.2 V input (below absolute at assumed clamp); AP63201 loaded dropout is typical-only | Fault-state behavior / loaded 6 V pack and converter capacitor stability tests; do not present recommended-range exceedance as normal compliance |
+| IO / gate capacitors | C92 effective 2.211 µF estimate exceeds 1.5 µF; C120 now 1 µF25 V X7R, earlier 16 V issue closed | Typical bias / aging / temperature allowances and C21397 converter effective-capacitance bounds still qualify physically |
+| C84 / F6 / OQ-5 | Supplier endpoint basis 300.8 µF /37.5 mΩ; off / shed hold-up 8.6758–13.5560 ms versus max-normal ports-on 0.55375–0.86524 ms | Cold ESR / capacitance, PA6 threshold, detection / command latency, actual current decay and retained state; no hardware cutoff, TPS2553 turn-off up to 3 ms |
+| USB attach, R6-PWR-02 / R7-PWR-02 | Nominal 514.1 µF behind limiter,2.416 mC to 4.7 V; current 347.7–453.0 mA, ideal no-load 5.33–6.95 ms | Host-dependent attach / startup and current-limited hub tests; no USB compliance claim |
+| OQ-2 actual-feed model | 2304 required cases / refinement pass; four fresh extrema and independent MNA control agree; minimum−14.497873 V, falling 8.525257 V / µs main step, rising 4.523496 refined | Actual unfused harness≥0.03 Ω,0.1–2 µH and simultaneous U9 IN / OUT scope traces;0 / 0.01 Ω sensitivities fail outside domain |
+| R166 endurance | Refined 504.293 W peak /2.888490 mJ in different corners; maker V10 has no microsecond pulse curve | Maker approval or repeated hot / cold insertion / resistance-drift test; small energy is not durability proof |
+| GAP-2 local output paths | C82 totalOUT+GND12.568808 mm /2.315313 mm²; D9 16.691778 mm /17.419688 mm² | Old missing / local-output-hardware item closed; saved-copper loop is not measured transient protection |
+
+### 5. Fire duration, MCU and firmware obligations
+
+R134's calculated worst **35.797452 W**, **0.715949 J at 20 ms /1.288708 J at 36 ms**, is below the maker's approximate
+log-interpolated single-pulse graph 61.2 /44.1 W. This is not repetitive-pulse or 85 °C qualification. Every normal
+physical fire, **including tail**, ends by 20 ms. GAP-5's separate intact-hardware watchdog-fault guard is≤36 ms:
+960 LSI cycles give 28.571–32.653 ms; allocated worst total 34.853 ms. No watchdog refresh during a fire; hot gate tail,
+reset behavior, actual silicon revision, resistor drift and physical current duration must be measured.
+
+All 100 U1 pins and all four evidence hashes match; the evidence note regenerates identically. This is **not R10
+firmware**. Existing v0.8.1 / diagnostics remain R1-bound and fail before compilation / artifact creation on this tree.
+The required new implementation still includes the launch / ground / in-flight safety policy, two GPIO locks and
+LCKK / pin-bit readbacks (PC1 / GPIOC and PE4 / GPIOE), neutral-first reset recovery, PA6 shedding, EXTI shared-vector demux,
+per-pin ADC mapping, UART sequence / errors, IMU axes / timing, QSPI QE / clock / logs and watchdog supervision.
+
+- PA4 / PA5 / PA6 / PE11 / PE12 retain exact AN2606 loader allowances and containment; PE11 has R431 pull-down,
+  PA6 loader sink≤0.363 mA. UART5 / USART6 are outside the cited H74x ROM UART interfaces. Loader transitions remain tests.
+- R5-MCU-04 / -05: ordinary PA6 / PB1 diagnostic dividers retain single-fault pin-damage cases; PA6 ADC-mode stress ceiling is 4 V (digital FT ceiling at powered 3.3 V supplies is 6 V), correcting the old 7.3 V claim; these are not the
+  protected three pyro dividers. PC8 VBUS / 2 can read low below about 4.62 V and never proves USB absence.
+- H743 synchronous trace uses DBGMCU_CR bit 20 TRACECLKEN (ST CMSIS DBG_TRACECKEN). A valid dummy-load test observes
+  PE2 trace clock while both locked-low control modes / locks remain valid; override behavior is unmeasured.
+- R7-MCU-04: flash sector erase 400 ms exceeds the fastest 28.571 ms watchdog. Pre-erase or bounded suspend slices /
+  buffering are required; program-only 85.33 kB / s ceiling versus 64 kB / s does not include blocking erase overhead.
+- Sensor accuracy / clipping / high-g aliasing, updated K850DM / L1000 W trajectory, vibration and temperatures remain
+  unqualified. Typical drift, modeled mass and AVA resemblance do not establish≤5° roll accuracy.
+
+### 6. Routing cleanliness and AVA scope
+
+All gates pass with **0 failing / 0 allowlisted / 0 leftovers**. The remaining measured categories are 35 off-centre
+pad ends,1 through-pad pass,8 inside-pad segments,11 width-change junctions,6 short layer hops,2 U-turns,4 extra-bend
+cases,14 power vias without GND partners and 1 via-on-track-in-fill: **82 instances**. Eight inside-pad segments are
+AUD-10 review items;74 other information instances have individual measured reasons in the tool. No partial overlap,
+crossing, connectivity failure or fast-return violation is waived.
+
+| Re-raised routing group | Current reason / disposition |
+|---|---|
+| R9-RTE-04: noncritical returns | NRST GND partners 1.6552 /3.3534 mm, BOOT0 1.6621, I2C1_SDA1.8806; SCL1.4431. Outside named critical set; retain measured deviation and bench checks, not a claim that all alternate stitches are impossible |
+| R9-RTE-05: entries / between-pad lanes | SPI1_MOSI U4.14 entry x 17.55 vs pad x 17.50; on-axis trial violated IMU_body_B and lost 11 SCK reference samples. LED1 / R33 / C86 between-pad routes remain. R9 aligned IO entries / vias and U10 VBUS; PULLPIN removed |
+| R9-RTE-06: slow split crossings | SERVO2_MCU approximately 0.42 mm over 3V3 / RAW_PROTECTED split; LOGIC_SOURCE_ST near y 57.7–58.0. Retain slow routing; plane redraw requires power / return requalification |
+| R9-RTE-07: buzzer / crystal neighbours | BUZZ_DRV 36.38 mm /3 vias; simple layer swaps cross VBUS_SENSE /USB_LIMITED. Foreign F.Cu projection over Y1 BUZZ_DRV 2.732695 mm /NRST 0.777648, solid In1 GND intervenes; no QSPI_IO2 crossing. Stimulate at bench |
+
+Round-9 shortened BAT_SW_SOURCE / NRST / USB_FAULT_N by 0.692893 / 0.347651 / 0.597056 mm and centred three supply
+entries. Those changes are covered by the full round 10. QSPI spread 10.413 mm, one via each, is a clock / setup / hold
+bench item. The retained reference check has 110625 samples,7139 own-antipad samples,7 samples under 6 exact strays,
+zero loose; region check 57 items / 21777 samples. AUD-2 excludes only the shared exact slow-net list; fast interfaces,
+S-8 and critical hygiene remain blocking. AVA photographs support arrangement / simplicity only; no private netlist,
+inner-plane, firmware or protection-performance claim is inferred from them.
+
+### 7. Silkscreen and assembly identification
+
+Current 144 shown / 81 hidden reference designators and 38 legends meet 1.0 mm text / 0.15 mm stroke; all hidden
+references stay on Fab and the complete list is in M3_R10. They are hidden where legal nearest-subject placement is
+unavailable. `J2 5:GND 6:NC` is nearerJ3 thanJ2: retain the identification deviation and TC2030 cable check.
+TP88 footprint silk edge≈0.425 mm andJ3≈0.50 mm retain generator 0.6 mm centreline-margin exceptions; actual outline /
+mask clearances still gate. Minimum 0.15 mm strokes andU4's 0.100 mm mask web sit at the stated JLC limits; inspect the
+first article. All current port /servo tables are complete, correct and unique, including text boxes after hardening.
+AUD-10 counts distance only; it does not waive missing / wrong legends or mask / text clearances.
+
+### 8. Mechanics, retention and sensor placement
+
+The current five-support / two-tie-hole outline is 46×90 mm. Fresh fit gives minimum matedGH margin 0.028 mm, J122 0.50 mm,
+J1 / J121 wire room 4.95–5.55 mm (OQ-1), bottom C88 support clearance 3.844 mm and top J400 3.858 mm. Those are CAD envelopes;
+real connectors,16–22AWG bends, insulation, plug retention and workmanship are unmeasured. Program viaTC2030 before
+fitting the interfering (4,44.3) support. BottomL1 hangs 3.02 mm. Use nylon / insulated hardware, measured 4 mm standoffs /
+plate≤1 mm as starting hardware; include actual screw / nut / washer maxima, eccentricity and both centring tolerances.
+Nut-inclusive h+t must be<6.0 mm at x 4 / 42 and<5.3 mm at x 3.7 under the stated nut / screw assumptions.
+
+The nominal 3.5 mm washer discs include non-GND copper: support(4,44.3) nearestF3V3track / via radii 3.4104 /3.2604 mm
+andNRST3.4214; support(42,86) BAT_INBtrack 2.7500 mm. Cover ordinary vias and insulate the entire bottom face; mask
+and unmeasured nylon hardware are not wear qualification. OQ-7 places board plus axial tolerance wholly forward of
+joint+47 mm; freed length remains stack slack. Fitted sled /shroud /harness /modules need a physical fit check.
+
+Plate f1 280.9 Hz /45.5 g uses assumed masses / stiffness, not a modal test. Qualify retention / staking / ties at the flight
+load; no measured 100 g joint strength is claimed. U4 B180 at(17,45.9), roll=−gyro_Y, x lever arm−6 mm, sits under U1's
+west pin row; log sensor temperatures under MCU load. Mask C11 whole: its nearest pad is 2.818449 mm from U5's body, not the pad-only 3.0275 mm. Preserve the 3 mm body-plus-pad union; next whole-coated C10 has conservative Fab / pad envelope clearance 3.333144 mm (pads alone 3.777017 mm), and other whole-coated envelopes clear at least 5.075 mm. R13 / R64 stay masked and TP122 retains its controlled exception. Do not coat or block U5's pressure port. Generated 3D envelopes
+are not vendor fit certification; GH2's old WRL header refers to historical dimensions, actual mated geometry is used.
+
+### 9. Parts, lands and manufacturing process
+
+| Item / prior finding | Measured reason and remaining action |
+|---|---|
+| L400 proxy land, R4-BOM-01 | Native 1.8×2.5 mm pads at x±2.35, outer 6.50 / inner 2.90 mm versus Bourns p 1 recommended 2.0×1.8 at±2.25, outer 6.50 / inner 2.50. Supplier proxy residual 0.15 mm. Nominal contact covered; worst heel may reachx 1.30 vs land edge 1.45. Retain explicit assembly-qualification deviation or adopt maker land through a new covered CAD revision |
+| TXU0202, R4-BOM-02 | U12 / U411 / U421 supplier residual≈0.147 mm, native−90° /CPL 90°. Factory preview / pin 1 and first-article inspection pending |
+| C84, R4-BOM-03 /R5-BOM-02 /GAP-4 | Supplier MA sheet only, no maker land / reflow / manual profile. Native derived 3.5×1.7 mm lands at±3.25; positive pad 1 VLOGIC at(38.5,77.25), CPL 90°, residual≈0.045 mm. Maker spelling alias remains; exact part unchanged. Fit manually after BOTH reflows using a separately validated operation; confirm polarity / height / capacitance / ESR |
+| U401 /GAP-3 | Only vias(27.3,13.6) / (27.9,13.6),0.5 / 0.3 mm, may enter soldered pad 11; resin-filled, copper-capped planarVIPPO quote / inspection mandatory. Ordinary via-covering rules elsewhere remain |
+| U4 /R6-BOM-02 | 0.50 mm pitch,0.35 mm lands,0.025 mm mask relief gives 0.100 mm web; fabricator acceptance /first article pending |
+| C29936→C15849 option, R7-BOM-01 | Approx$0.3184 / board apparent saving, X7R→X5R at C86 / C97 / C98 / C120; effective capacitance / aging / temperature and gate-slew behavior unqualified. Retain existing identities; no saving credited |
+| Preview /supplier visibility, R6-BOM-01 | Fresh 82 code query matches all exact MPNs; preview of J1 / J121 / L1, U4 stock / consignment and terminal pin-number / order remarks still mandatory. CAD / supplier agreement is not factory assembly evidence |
+
+Package:215 CPL rows / 82 BOM codes;203 supplier pad reconstructions plus 12 nonpolar placement-only rows, paste 317 F / 365 B,
+current five-output manifest pass. AONR21357 maker / supplier numbered fingers and Q120 / Q121 opposed rotations agree.
+R9 capacitor labels are complete with no substitutions; C120 25 V and exact same-code land resolve earlier issues.
+OQ-4 selects aft-edge tab plus rail / frame; obtain JLC acceptance before ordering. VIPPO and manual C84 are process
+conditions, not proof that Standard service has accepted the job. No quote has been accepted.
+
+### 10. Cost, stock and owner items
+
+**OQ-3 remains pending:** current bound stock 23:24:17Z /cost 23:25:10Z on 2026-10-28, independently re-queried 23:51:13Z,
+gives **$84.43 vs $84.41, a$0.02 miss**,46 Extended / 36 Basic (82total). Parts$59.34 +feeder share$25.092; minimum purchases
+raise parts to$61.14, about**$86.23 including feeder share before fixed fees**. R430C185349 has 17 versus 3610minimum;
+U4C26633007 has 0 versus 5needed. Cost /stock /procurement correctly fail; export /orientation /paste /manifest pass.
+Obtain a compliant quote or dated cost acceptance, resolveR430's actual minimum purchase and secureU4 stock or
+consignment. Refresh exact-code cost / stock within 24 h of ordering. No unqualified substitution was made for two cents.
+
+Owner answersOQ-1 / -2 / -4 / -5 / -6 / -7 andO1–O6 are implemented as amended by single-switch / AUD / GAP decisions; their
+physical / process obligations above remain. OQ-3 and acceptance of this full list are the outstanding owner items.
+
+### 11. Historical sources and current applicability
+
+Six immutable R6 records under `m3_design/assembly_review/sources/` retain old local paths because other records pin
+their full bytes: `r6-independent-routing-reference-review-20261013.json `, `r6_final_dc.json `,
+`r6_aux_finish_packet.json `, `r6_final_objectives_review.json `, `r6_final_checks/audit.json ` and
+`r6_final_checks/cleanup.json `. They are not R10 qualification; this continuation adds no local absolute path.
+The allowed parent VEHICLE mirror still names old ARM terminals; its separate follow-up is to describeJ400 as the
+sole power / arming switch and removeJ124 / link text. No other worktree was edited. Current native CAD /R10 records
+supersede that stale candidate mirror. The historical reconciliation retires removed pull-pin, old output-loop,
+thermal-via absence,16VC120, abbreviated-label and old plane / jog items; it never transfers their old coordinates.
+
+### 12. Every agent decision
+
+All 93 pre-round 10 `D-*` headings are indexed by ID / title / current applicability in `round10_deviations.json ` and remain
+reviewable in `R10_DECISIONS.md`. The coverage is exhaustive, including suffixes:
+
+| Decision family | IDs covered | Current scope |
+|---|---|---|
+| R1 | D-R1-01…07 | Plan / O5 / O6 and process; later owner amendments supersede voltage / arming premises |
+| R2 | D-R2-01…16 | Placement / pins / hand routing / planes / fab / silk; later scoped AUD / GAP changes apply |
+| R3 | D-R3-01…13 | GPSlimit / safety / returns / power / geometry / gates / records |
+| R4 /R5 /R6 | D-R4-01…04;D-R5-01…04;D-R6-01…03 | Successive plane / entry / gate / record fixes; removed hardware does not survive as a current claim |
+| R7 /R8 | D-R7-01…02;D-R8-01…03 | Gate hardening / routing / records, as amended |
+| Owner-answer implementation | D-OA-01…09 | Fit / harness / shedding / actual-feed model / C88 topology and interrupted-pass completion |
+| Single switch | D-SS-01…04 | Two MCU controls / merged post-switch bus / required references / pre-enable cold screen |
+| Audit | D-AUD-01…10;D-AUD-01a;D-AUD-03a / 03b / 03c | Exact adopted reductions plus capacitor rating / orientation / same-code lands |
+| Gaps | D-GAP-01…05;D-GAP-01a;D-GAP-02a / 02b | Coupled source / local OUT loops / VIPPO / manual C84 / physical fire timing |
+| R9 | D-R9-01…06 | Labels / delay / coldorder / gates / localroutes / stack / cleanpaircoverage |
+| R10 | D-R10-01…03 | Narrow gate hardening / corrected pin-limit record / frozen PCB and final inventory |
+
+The owner can accept or overrule retained agent choices; this list records no inferred owner acceptance. Measured
+routing, land, thermal and harness compromises stay deviations until accepted. Physics-based decisions retain the
+one-channel /isolatedbackup /2Spack /K850DM–L1000 W premises; AVA photographs supply only visible design inspiration.
+
+### 13. What remains unverified
+
+**Software /CAD:** two byte-identical complete builds, all-severityDRC / unconnected / parity / ERCzero, metadata / silk/
+fit / plate / contracts / routing / actuators / fabmanifest pass. **Simulation /Inference:** hot-plug corners, fire / pulse/
+hold-up / thermal estimates and modeled mechanics have the assumptions above. **Physical /firmware:** no R10 firmware,
+assembled-board tests, startup / reset / sense / trace / watchdog / current-tail / shedding timing, transient / thermal / endurance,
+installed RF / ESD, real harness / switch / sled / shroud / retention, modal / flight or assembly-process qualification is claimed.
+The PCB stayed byte-identical after full round 10; final changes are gate coverage, regressions and records only.
+Computer Use approval review rejected Preview launch without a further reason; native geometry and generated renders were used,
+with no GUI bypass. Ordering still requires acceptance, stock, cost freshness and JLC process / panel approval.

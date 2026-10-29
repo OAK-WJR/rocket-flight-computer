@@ -1929,6 +1929,40 @@ class RealBoardSeeds(unittest.TestCase):
             t.SetEnd(pcbnew.VECTOR2I(x, c.y + pcbnew.FromMM(1))); b.Add(t)
         self.seeded('S-8', near_barrel, 'In1.Cu')
 
+    def test_inner_graphics_near_pyro_barrel(self):
+        for footprint in (False, True):
+            for net in ('', '3V3'):
+                with self.subTest(footprint=footprint, net=net):
+                    def seed(b):
+                        owner = b.FindFootprintByReference('J121') if footprint else b
+                        item = pcbnew.PCB_SHAPE(owner); item.SetShape(pcbnew.SHAPE_T_SEGMENT)
+                        item.SetLayer(pcbnew.In2_Cu); item.SetWidth(pcbnew.FromMM(0.2))
+                        item.SetStart(self.P(5.75, 53.7)); item.SetEnd(self.P(5.75, 54.5))
+                        if net: item.SetNet(b.FindNet(net))
+                        owner.Add(item)
+                    self.seeded('S-8', seed, 'J121.1')
+
+    def test_inner_copper_text_near_pyro_barrel(self):
+        for footprint in (False, True):
+            with self.subTest(footprint=footprint):
+                def seed(b):
+                    owner = b.FindFootprintByReference('J121') if footprint else b
+                    item = pcbnew.PCB_TEXT(owner); item.SetText('I'); item.SetLayer(pcbnew.In2_Cu)
+                    item.SetTextSize(self.P(1, 1)); item.SetTextThickness(pcbnew.FromMM(0.2))
+                    item.SetPosition(self.P(5.75, 54.1)); owner.Add(item)
+                self.seeded('S-8', seed, 'J121.1')
+
+    def test_conflicting_silkscreen_textboxes(self):
+        for value, word in (('J420 3:RXI', 'J420.3'), ('J420 3:TXO', 'J420.3'),
+                            ('SERVO + FROM BOARD', 'J122:'), (gate.SERVO_HARNESS_NOTE, 'J122:')):
+            with self.subTest(text=value):
+                def seed(b):
+                    item = pcbnew.PCB_TEXTBOX(b); item.SetText(value); item.SetLayer(pcbnew.F_SilkS)
+                    item.SetStart(self.P(2, 10)); item.SetEnd(self.P(14, 12))
+                    item.SetTextSize(self.P(1, 1)); item.SetTextThickness(pcbnew.FromMM(0.15))
+                    item.SetBorderEnabled(False); b.Add(item)
+                self.seeded('K-legends', seed, word)
+
     def test_copper_text_and_multi_net_part_bridge(self):
         """R3-GATE-02: copper text bypassing R134; U1 (> 4 nets) on both RAW_ACT and PYRO1_IGN."""
         def text(b):

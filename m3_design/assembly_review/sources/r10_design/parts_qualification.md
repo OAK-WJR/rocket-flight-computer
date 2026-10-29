@@ -547,8 +547,13 @@ reviewer's readings and were not re-read from the PDFs in this pass (Inference u
   "Inference, stall input"); ORDERING §8 adds a bench step with the port rails read at a 6.0 V loaded battery.
 - **PA6 (VLOGIC_SENSE) single-fault pin damage (R5-MCU-04).** The divider is R60 100 kΩ (VLOGIC) / R61 10 kΩ with C60
   10 nF, and there is no 4.7 kΩ pin resistor. A shorted R60 puts VLOGIC (up to RAW_PROTECTED, 8.4 V nominal full
-  pack) straight on PA6, an FT_a pin whose limit is min(VDD, VDDA, VBAT) + 4.0 V = 7.3 V with 0 mA injection
-  allowed (DS12110 Tables 21 / 22; reviewer): above 7.3 V the pin is overstressed. Single-fault case, pin damage;
+  pack) straight on PA6. For this FT_a pin used by the ADC, VIN maximum is **4.0 V**, with positive injection
+  allowance **0 mA** ([DS12110 Rev11](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf), Table109 pp207-208
+  notes3-5 and Table110 p208; R10-MCU-01). The digital FT ceiling is min(min(relevant supplies)+4.0 V,6.0 V),
+  hence 6.0 V with powered 3.3 V supplies; pulls must be disabled above 4.0 V. The former 7.3 V claim omitted
+  both limits. Normal 8.4 V /11 = 0.764 V remains below 4.0 V (Calc); a shorted R60 still overstresses PA6.
+  An open R61 can also raise the steady-state node toward VLOGIC through R60 (Inference; leakage dependent).
+  Single-fault cases, pin damage;
   listed as an owner deviation by the orchestrator. Mitigation none on the board.
 - **PB1 (CAM_5V_SENSE) single-fault pin damage (R5-MCU-04).** The divider is R104 10 kΩ (CAM_5V) / R105 1 kΩ with C94,
   and PB1 has no 4.7 kΩ pin resistor. An open R105 puts CAM_5V (5.456 V nominal) on PB1 through R104 10 kΩ; PB1
@@ -562,6 +567,11 @@ reviewer's readings and were not re-read from the PDFs in this pass (Inference u
 - **LSEON (R5-MCU-02).** PC14 is OSC32_IN and drives BUZZ_DRV through R162; VBAT is tied to 3V3, so a stray LSEON set in
   the backup domain survives NRST and would load the buzzer node: LSEON stays 0 and the backup domain is never
   set up for the LSE (binding note).
+
+**Current USB-only calculation (round 10):** native R85 66.5 kΩ with ±2% resistance envelope gives
+347.7–453.0 mA. Nominal 514.1 µF to 4.7 V requires 2.416 mC, or ideal no-load 5.33–6.95 ms. Actual host /
+startup load remains unqualified; a 450 mA rating alone is insufficient. The 355–445 mA / 5.8–7.2 ms / ≥450 mA
+statements in the historical sections below are superseded for current R10. This is calculation, not USB compliance.
 
 ## Round-6 records (historical pre-AUD hardware; Calc unless marked)
 
