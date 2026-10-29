@@ -1,0 +1,28 @@
+{
+  "uart_paths": [
+    {
+      "port": "radio",
+      "uart": "USART6",
+      "mcu_tx_pin": "63",
+      "peripheral_rx_contact": "3",
+      "mcu_rx_pin": "64",
+      "peripheral_tx_contact": "4"
+    },
+    {
+      "port": "GPS",
+      "uart": "USART1",
+      "mcu_tx_pin": "68",
+      "peripheral_rx_contact": "4",
+      "mcu_rx_pin": "69",
+      "peripheral_tx_contact": "3"
+    }
+  ],
+  "fresh_netlist": "<scratch>/r6-independent-electrical.net.xml",
+  "new_critical_major_findings": [],
+  "known_limits": [
+    "4.8 V nominal port supply follows prior GPS tolerance decision",
+    "GPS maximum current/cable cavity order unverified",
+    "No transient/thermal/EMI qualification",
+    "Final routing/fabrication gates still pending"
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "sha256": [
+    "647b7e2d4e2b3f3d19d79b7faed2f4422d01cd7f8b6bf09dd811398b60148ae1",
+    "184a87e84e67576341244c82517de3e9f55f5c1c22995dfad83631d48c856680"
+  ],
+  "footprint_changes": {},
+  "pad_changes": [],
+  "physical_GND_loss": {
+    "MCU_clock_analog_reset_return": {
+      "0": {
+        "lost_area_mm2": 5.2720065e-06,
+        "polygons": 62,
+        "boxes_mm": [
+          [
+            31.151231,
+            38.326706,
+            0.003694,
+            0.005529
+          ]
+        ]
+      },
+      "2": {
+        "lost_area_mm2": 0.0001367897565,
+        "polygons": 32,
+        "boxes_mm": [
+          [
+            13.032992,
+            36.746741,
+            0.006285,
+            0.003759
+          ],
+          [
+            25.022728,
+            29.8495,
+            0.101859,
+            0.027293
+          ]
+        ]
+      },
+      "4": {
+        "lost_area_mm2": 4.1594e-07,
+        "polygons": 24,
+        "boxes_mm": []
+      },
+      "6": {
+        "lost_area_mm2": 0.0,
+        "polygons": 0,
+        "boxes_mm": []
+      }
+    },
+    "radio_camera_C100_return": {
+      "0": {
+        "lost_area_mm2": 9.2747e-08,
+        "polygons": 10,
+        "boxes_mm": []
+      },
+      "2": {
+        "lost_area_mm2": 0.0,
+        "polygons": 0,
+        "boxes_mm": []
+      },
+      "4": {
+        "lost_area_mm2": 7.265e-09,
+        "polygons": 3,
+        "boxes_mm": []
+      },
+      "6": {
+        "lost_area_mm2": 0.0,
+        "polygons": 0,
+        "boxes_mm": []
+      }
+    },
+    "lower_USB_servo_pyro_return": {
+      "0": {
+        "lost_area_mm2": 5.5557645e-06,
+        "polygons": 8,
+        "boxes_mm": [
+          [
+            16.53987,
+            79.318161,
+            0.010867,
+            0.02253
+          ]
+        ]
+      },
+      "2": {
+        "lost_area_mm2": 1.643746e-06,
+        "polygons": 3,
+        "boxes_mm": [
+          [
+            25.268312,
+            78.774776,
+            0.001421,
+            0.007138
+          ]
+        ]
+      },
+      "4": {
+        "lost_area_mm2": 8.00895e-08,
+        "polygons": 2,
+        "boxes_mm": []
+      },
+      "6": {
+        "lost_area_mm2": 0.0,
+        "polygons": 0,
+        "boxes_mm": []
+      }
+    }
+  },
+  "removed_by_net": {
+    "SERVO3_MCU": 7,
+    "GPS_TX_MCU": 1,
+    "CAM_5V_SENSE": 7,
+    "PULLPIN": 1,
+    "RADIO_TX_MCU": 6,
+    "RADIO_M1_MCU": 1,
+    "RADIO_AUX_MCU": 1,
+    "CAM_PWR_EN": 1,
+    "SERVO2_OUT": 8,
+    "3V3": 1,
+    "CAM_MCU_TX": 3,
+    "RADIO_RX_MCU": 1
+  },
+  "removed_GND": [],
+  "added": [
+    {
+      "uuid": "dd428945-ff91-5018-8afc-80ce9ed04925",
+      "net": "RADIO_TX_MCU",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        37.45,
+        32.3185
+      ],
+      "end": [
+        37.4548,
+        32.3137
+      ],
+      "width": 0.15
+    }
+  ]
+}

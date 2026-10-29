@@ -152,7 +152,7 @@ bench tests listed in `docs/M3_ACTUATOR_MERGE.md` section 4. See `FINDINGS.md` f
 | short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, R2 as merged in #1 (no R134): peak current / fuse | 29.6 A; fuse does not open | < IDM 112 A | **PASS** |
 | short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, R2 as merged in #1 (no R134): AON7524 junction | peak dTj 9 K | dTj < 90 K (Tj 150 C from 60 C) | **PASS** |
 | short at the igniter end of 1 m lead, 6.0 V pack 80 mOhm, R2 as merged in #1 (no R134): BAT_IN | min 3.66 V, below 5.0 V for 20.0 ms | below 5.0 V for < 3 ms (R1 hold-up study, 6.0 V corner) so the MCU does not reset and channel 2 still fires | **OLD-FAIL** |
-| R134 if the gate is left on (firmware fault), 8.4 V dead short | 35 W reaches the CRM2512 curve after ~60 ms | info: the resistor then fails open (channel lost, no fuse action); firmware must end every fire pulse | **INFO** |
+| R134 if the gate is left on (firmware fault), 8.4 V dead short | 35 W reaches the CRM2512 curve after ~60 ms | info: what the resistor then does is not documented (Inference: it fails open and the channel is lost; the 5 A fuse does not act; bench item, validation pass 6); firmware must end every fire pulse | **INFO** |
 
 ## D. ARM plug insertion, FET off (Miller self-turn-on)
 

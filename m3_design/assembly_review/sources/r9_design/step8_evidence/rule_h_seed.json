@@ -1,0 +1,233 @@
+{
+ "board": "m3.kicad_pcb",
+ "board_sha256": "89ddea8d7c396dc4e9825c25ad9fa7da2de84d8da971a0736d9db7f4d26fb001",
+ "seed_gap": 0.95,
+ "pairs": [
+  {
+   "pair": "Q124.5 -- R129.2",
+   "layer": "F.Cu",
+   "gap_before": 1.225,
+   "variants": {
+    "seed": {
+     "moved": "R129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "DRC",
+      "pyro_probe"
+     ]
+    },
+    "pad_override": {
+     "moved": "R129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_r9 LC-1",
+      "pyro_probe"
+     ]
+    },
+    "min_lowered": {
+     "moved": "R129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "deleted": {
+     "moved": "R129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "moved_first": {
+     "moved": "R129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "narrowed": {
+     "moved": "R129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "raw_dropped": {
+     "moved": "R129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "DRC",
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "act_gate_dropped": {
+     "moved": "R129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "DRC",
+      "check_actuators",
+      "pyro_probe"
+     ]
+    }
+   },
+   "control_drc_hits": 0
+  },
+  {
+   "pair": "R132.1 -- C129.1",
+   "layer": "F.Cu",
+   "gap_before": 1.758,
+   "variants": {
+    "seed": {
+     "moved": "C129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "DRC",
+      "pyro_probe"
+     ]
+    },
+    "pad_override": {
+     "moved": "C129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_r9 LC-1",
+      "pyro_probe"
+     ]
+    },
+    "min_lowered": {
+     "moved": "C129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "deleted": {
+     "moved": "C129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "moved_first": {
+     "moved": "C129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "narrowed": {
+     "moved": "C129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "raw_dropped": {
+     "moved": "C129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "DRC",
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "act_gate_dropped": {
+     "moved": "C129",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "DRC",
+      "check_actuators",
+      "pyro_probe"
+     ]
+    }
+   },
+   "control_drc_hits": 0
+  },
+  {
+   "pair": "R177.1 -- R124.2",
+   "layer": "B.Cu",
+   "gap_before": 2.054,
+   "variants": {
+    "seed": {
+     "moved": "R124",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "DRC",
+      "pyro_probe"
+     ]
+    },
+    "pad_override": {
+     "moved": "R124",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_r9 LC-1",
+      "pyro_probe"
+     ]
+    },
+    "min_lowered": {
+     "moved": "R124",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "deleted": {
+     "moved": "R124",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "moved_first": {
+     "moved": "R124",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "narrowed": {
+     "moved": "R124",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "raw_dropped": {
+     "moved": "R124",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "act_gate_dropped": {
+     "moved": "R124",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "DRC",
+      "check_actuators",
+      "pyro_probe"
+     ]
+    }
+   },
+   "control_drc_hits": 0
+  }
+ ],
+ "baseline": {
+  "check_actuators": [],
+  "lc1": []
+ },
+ "issues": []
+}

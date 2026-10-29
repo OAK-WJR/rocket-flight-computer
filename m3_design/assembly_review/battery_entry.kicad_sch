@@ -6,7 +6,7 @@
 	(title_block
 		(title "07 | Battery input, contact and protection")
 		(date "2026-09-07")
-		(rev "M3-ASSY-R1")
+		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; full system incomplete"))
 	(lib_symbols
 		(symbol "M3:BatteryEFuse"
@@ -306,7 +306,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+			(property "ki_fp_filters" "C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
 				(at 0 0 0)
 				(effects
 					(font
@@ -401,7 +401,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 				(at 0 0 0)
 				(effects
 					(font
@@ -732,7 +732,74 @@
 				(effects
 					(font
 						(size 1.27 1.27))
-					(hide yes)))))
+					(hide yes))))		(symbol "M3:Conn_1x2"
+			(pin_names
+				(offset 0.508))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "Conn_1x2"
+				(at 0 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "2-position connector"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "Conn_1x2_0_1"
+				(rectangle
+					(start -2.54 2.54)
+					(end 2.54 -2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "Conn_1x2_1_1"
+				(pin passive line
+					(at -7.62 1.27 0)
+					(length 5.08)
+					(name "1"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -7.62 -1.27 0)
+					(length 5.08)
+					(name "2"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+)
 	(text "07 | Battery input, contact and protection"
 		(at 20.32 20.32 0)
 		(effects
@@ -740,111 +807,6 @@
 				(size 2.54 2.54))
 			(justify left))
 		(uuid d3045b84-8519-5e1d-8e39-1fe93ee6b59e))
-	(symbol
-		(lib_id "M3:BatteryTerminal")
-		(at 71.12 71.12 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 0739be2b-5495-5630-875b-2152b68c988d)
-		(property "Reference" "J1"
-			(at 71.12 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "BAT+ / GND / SW / SW"
-			(at 71.12 66.03999999999999 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_DB128V_4P_Entry"
-			(at 71.12 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 71.12 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C2915641"
-			(at 71.12 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
-					(reference "J1")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 45.72 69.85)
-			(xy 40.64 69.85))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid fb9836d2-8b20-5c8c-a9c0-138fd3f40c6b))
-	(global_label "BAT_IN"
-		(shape passive)
-		(at 40.64 69.85 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f70141a6-366f-523c-8e25-d2d5140d8e4f))
-	(wire
-		(pts
-			(xy 45.72 72.39)
-			(xy 40.64 72.39))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4ac31bc6-f24f-5afe-aa0d-ac9852c89ee3))
-	(global_label "GND"
-		(shape passive)
-		(at 40.64 72.39 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f62ce980-184c-556b-a5f7-904a16c0b9de))
-	(wire
-		(pts
-			(xy 96.52 69.85)
-			(xy 101.6 69.85))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 2ee5a667-0a03-536e-be69-f8659979bc97))
-	(global_label "BAT_SW_SOURCE"
-		(shape passive)
-		(at 101.6 69.85 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid e561743d-ff9c-58a4-80ff-b8fd742839c1))
-	(wire
-		(pts
-			(xy 96.52 72.39)
-			(xy 101.6 72.39))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 0934d5cb-19f0-5eaf-844d-a2c3f2d5a90e))
-	(global_label "BAT_ENABLE"
-		(shape passive)
-		(at 101.6 72.39 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 2692b3ca-c2c1-5d33-b75a-a5797eb593de))
 	(symbol
 		(lib_id "M3:BatteryEFuse")
 		(at 223.52 76.2 0)
@@ -876,6 +838,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C3662793"
+			(at 223.52 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Texas Instruments"
+			(at 223.52 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "TPS259470LRPWR"
 			(at 223.52 76.2 0)
 			(hide yes)
 			(effects
@@ -1033,7 +1007,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Value" "SMBJ9.0CA"
+		(property "Value" "SMBJ12CA"
 			(at 35.56 171.45 0)
 			(effects
 				(font
@@ -1050,7 +1024,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C135111"
+		(property "LCSC" "C83849"
 			(at 35.56 175.26 0)
 			(hide yes)
 			(effects
@@ -1061,19 +1035,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
 					(reference "D8")
 					(unit 1))))
-		(property "Manufacturer" "Diodes Incorporated"
+		(property "Manufacturer" "Littelfuse"
 			(at 35.56 175.26 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "SMBJ9.0CA-13-F"
+		(property "Manufacturer Part" "SMBJ12CA"
 			(at 35.56 175.26 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C135111"
+		(property "LCSC Part" "C83849"
 			(at 35.56 175.26 0)
 			(hide yes)
 			(effects
@@ -1216,7 +1190,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1uF 50V X7R 10%"
+		(property "Value" "10uF 50V X5R 10%"
 			(at 88.9 176.52999999999997 0)
 			(effects
 				(font
@@ -1236,7 +1210,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C1848"
+		(property "LCSC" "C13585"
 			(at 86.36 175.26 0)
 			(hide yes)
 			(effects
@@ -1254,13 +1228,13 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL31B105KBHNNNE"
+		(property "Manufacturer Part" "CL31A106KBHNNNE"
 			(at 86.36 175.26 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C1848"
+		(property "LCSC Part" "C13585"
 			(at 86.36 175.26 0)
 			(hide yes)
 			(effects
@@ -1504,7 +1478,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1M 0.1%"
+		(property "Value" "470k 1%"
 			(at 38.1 123.19000000000001 0)
 			(effects
 				(font
@@ -1524,7 +1498,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C326730"
+		(property "LCSC" "C23178"
 			(at 35.56 121.92 0)
 			(hide yes)
 			(effects
@@ -1536,19 +1510,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
 					(reference "R80")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 35.56 121.92 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD071ML"
+		(property "Manufacturer Part" "0603WAF4703T5E"
 			(at 35.56 121.92 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C326730"
+		(property "LCSC Part" "C23178"
 			(at 35.56 121.92 0)
 			(hide yes)
 			(effects
@@ -1600,7 +1574,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "280k 0.1%"
+		(property "Value" "300k 1%"
 			(at 88.9 123.19000000000001 0)
 			(effects
 				(font
@@ -1620,7 +1594,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C705755"
+		(property "LCSC" "C23024"
 			(at 86.36 121.92 0)
 			(hide yes)
 			(effects
@@ -1632,19 +1606,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
 					(reference "R81")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 86.36 121.92 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD07280KL"
+		(property "Manufacturer Part" "0603WAF3003T5E"
 			(at 86.36 121.92 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C705755"
+		(property "LCSC Part" "C23024"
 			(at 86.36 121.92 0)
 			(hide yes)
 			(effects
@@ -1792,7 +1766,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "300k 0.1%"
+		(property "Value" "280k 0.1%"
 			(at 190.5 123.19000000000001 0)
 			(effects
 				(font
@@ -1812,7 +1786,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C705762"
+		(property "LCSC" "C705755"
 			(at 187.96 121.92 0)
 			(hide yes)
 			(effects
@@ -1830,13 +1804,13 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD07300KL"
+		(property "Manufacturer Part" "RT0603BRD07280KL"
 			(at 187.96 121.92 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C705762"
+		(property "LCSC Part" "C705755"
 			(at 187.96 121.92 0)
 			(hide yes)
 			(effects
@@ -1888,7 +1862,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1.65k 0.1%"
+		(property "Value" "750R 0.1%"
 			(at 241.29999999999998 123.19000000000001 0)
 			(effects
 				(font
@@ -1908,7 +1882,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C705743"
+		(property "LCSC" "C861551"
 			(at 238.76 121.92 0)
 			(hide yes)
 			(effects
@@ -1926,13 +1900,13 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD071K65L"
+		(property "Manufacturer Part" "RT0603BRD07750RL"
 			(at 238.76 121.92 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C705743"
+		(property "LCSC Part" "C861551"
 			(at 238.76 121.92 0)
 			(hide yes)
 			(effects
@@ -1984,7 +1958,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 0.1%"
+		(property "Value" "10k 1%"
 			(at 241.29999999999998 176.52999999999997 0)
 			(effects
 				(font
@@ -2004,7 +1978,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C95204"
+		(property "LCSC" "C25804"
 			(at 238.76 175.26 0)
 			(hide yes)
 			(effects
@@ -2016,19 +1990,19 @@
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
 					(reference "R89")
 					(unit 1))))
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
 			(at 238.76 175.26 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
+		(property "Manufacturer Part" "0603WAF1002T5E"
 			(at 238.76 175.26 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC Part" "C95204"
+		(property "LCSC Part" "C25804"
 			(at 238.76 175.26 0)
 			(hide yes)
 			(effects
@@ -2066,102 +2040,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 626263a4-44d6-5ff9-9a42-3a1ffc843738))
-	(symbol
-		(lib_id "M3:R")
-		(at 289.56 175.26 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 149c3911-2701-5275-9f6d-63156dd086ef)
-		(property "Reference" "R92"
-			(at 292.1 173.98999999999998 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k 0.1%"
-			(at 292.1 176.52999999999997 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R_0603_1608Metric"
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" ""
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C95204"
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
-					(reference "R92")
-					(unit 1))))
-		(property "Manufacturer" "Yageo"
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "RT0603BRD0710KL"
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC Part" "C95204"
-			(at 289.56 175.26 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)))))
-	(wire
-		(pts
-			(xy 289.56 171.45)
-			(xy 281.94 171.45))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid a30fd857-2f02-5153-bf02-52e389104307))
-	(global_label "RAW_PROTECTED"
-		(shape passive)
-		(at 281.94 171.45 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 349b5179-1898-5fa8-90fe-1bc5477ff33d))
-	(wire
-		(pts
-			(xy 289.56 179.07)
-			(xy 281.94 179.07))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 2aeacea1-6c98-5f8c-80cd-33ae3e5c2847))
-	(global_label "GND"
-		(shape passive)
-		(at 281.94 179.07 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid de0f25cb-1ddf-50fb-825e-9d9b50cdff82))
 	(symbol
 		(lib_id "M3:TestPoint")
 		(at 35.56 213.36 0)
@@ -2278,120 +2156,6 @@
 		(uuid 68e53dee-de76-50ef-a530-7e8b6ea4f525))
 	(symbol
 		(lib_id "M3:TestPoint")
-		(at 157.48 213.36 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid 83b76d63-fa32-5c40-a5f2-a2626416b4cf)
-		(property "Reference" "TP84"
-			(at 157.48 205.74 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "BAT_ENABLE"
-			(at 157.48 209.55 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 157.48 213.36 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 157.48 213.36 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 157.48 213.36 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
-					(reference "TP84")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 157.48 213.36)
-			(xy 149.85999999999999 213.36))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid de31e038-6b67-5297-b67f-ffcae35a35af))
-	(global_label "BAT_ENABLE"
-		(shape passive)
-		(at 149.85999999999999 213.36 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 6f94d3aa-c28c-5e34-8e06-3b6fd9717659))
-	(symbol
-		(lib_id "M3:TestPoint")
-		(at 218.44 213.36 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid 34871e5e-7c51-5c60-bdb2-605e3c56c804)
-		(property "Reference" "TP85"
-			(at 218.44 205.74 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "BAT_FAULT_N"
-			(at 218.44 209.55 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 218.44 213.36 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 218.44 213.36 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 218.44 213.36 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
-					(reference "TP85")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 218.44 213.36)
-			(xy 210.82 213.36))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid be6ebccc-068f-5eaf-8a88-180b209426c1))
-	(global_label "BAT_FAULT_N"
-		(shape passive)
-		(at 210.82 213.36 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 6ab7d3f1-20fe-54ca-9e21-bbfd13720422))
-	(symbol
-		(lib_id "M3:TestPoint")
 		(at 279.4 213.36 0)
 		(unit 1)
 		(in_bom no)
@@ -2447,63 +2211,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid c465f7d5-4bf3-5047-81cb-c863a304d0d9))
-	(symbol
-		(lib_id "M3:TestPoint")
-		(at 340.36 213.36 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid c306d3c1-b340-5c0d-95d9-c81caa8ef48a)
-		(property "Reference" "TP89"
-			(at 340.36 205.74 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "BAT_ILIM"
-			(at 340.36 209.55 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 340.36 213.36 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 340.36 213.36 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 340.36 213.36 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
-					(reference "TP89")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 340.36 213.36)
-			(xy 332.74 213.36))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 45f1850c-52bf-50a5-8eb3-d61b5d195a22))
-	(global_label "BAT_ILIM"
-		(shape passive)
-		(at 332.74 213.36 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 2f29f6be-957e-544f-a4b7-fc7e5bf2c192))
 	(text "J1.3--4: external dry contact. Closed = battery enabled; open/disconnected = OFF. USB remains independent."
 		(at 20.32 236.22 0)
 		(effects
@@ -2511,7 +2218,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid f7f7dd47-9f13-5b5d-be20-9447dbc24542))
-	(text "R80 precedes the contact and limits wire-fault current. This is a power-enable contact, not a physical main-current break."
+	(text "R80 (BAT_IN side) and R165 (EN side) bracket the contact: a chafed SW lead or a battery lead in J1.3/J1.4 puts <= 3.3 V (2S) / 4.9 V (3S) on EN (6.5 V abs max). Power-enable contact, not a main-current break."
 		(at 20.32 242.57 0)
 		(effects
 			(font
@@ -2525,7 +2232,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 134d7336-70f4-5fc4-8fca-4d3f4a2112d0))
-	(text "Reverse battery: R80/R82 limit EN/OV input injection below10uA; C80 and D8 are nonpolar."
+	(text "Reverse battery: R80+R165 (940k) and R82 hold EN/OV injection below 10 uA; C80 and D8 are nonpolar. D8 SMBJ12CA: VBR >= 13.3 V, so a wrong 3S pack (12.6 V) cannot drive it; its 19.9 V clamp is within U9, C80, C88 and Q120 ratings."
 		(at 20.32 255.26999999999998 0)
 		(effects
 			(font
@@ -2553,6 +2260,1081 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 02872c82-4632-5f02-bd4a-10d1087dd53e))
+	(symbol
+		(lib_id "M3:C")
+		(at 340.36 121.92 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid bf85c789-3a3e-5548-a07f-680462cea5f5)
+		(property "Reference" "C87"
+			(at 342.9 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2.2uF 16V X5R 10%"
+			(at 342.9 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0603"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C23630"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL10A225KO8NNNC"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C23630"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "C87")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 340.36 118.11)
+			(xy 332.74 118.11))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 01d66fe8-3cde-5840-9ca3-be5d5a3716ca))
+	(global_label "BAT_ENABLE"
+		(shape passive)
+		(at 332.74 118.11 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d5b81f47-184a-583a-80fb-ad9ba6f2474e))
+	(wire
+		(pts
+			(xy 340.36 125.73)
+			(xy 332.74 125.73))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6cefd7d2-c91e-5cc5-a13c-33fea6bc8458))
+	(global_label "GND"
+		(shape passive)
+		(at 332.74 125.73 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f48e4ca6-590a-5f97-8491-17545b0b0985))
+	(text "C87: EN/UVLO ride-through. (R80+R165)||R81 = 227k charges it (0.4-1.1 s turn-on); R81 alone discharges it (0.66 s), so switch bounce shorter than 0.19/0.33/0.41 s at 6.0/7.4/8.4 V (worst case 0.11/0.21/0.27 s) cannot trip U9 (25-64 us t_D,OFF). UVLO on 4.89-5.05 V, off 4.45-4.61 V."
+		(at 20.32 280.67 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 139639c0-95ae-5415-8573-9ddceca8935f))
+	(symbol
+		(lib_id "M3:C")
+		(at 391.16 121.92 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 69c75227-a4b7-57c6-941d-6a08daf67022)
+		(property "Reference" "C88"
+			(at 393.7 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 393.7 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0402"
+			(at 391.16 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 391.16 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C307331"
+			(at 391.16 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 391.16 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B104KB54PNC"
+			(at 391.16 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "C88")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 391.16 118.11)
+			(xy 383.54 118.11))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 63ca372e-8ee0-5ee2-8091-661555764495))
+	(global_label "BAT_IN"
+		(shape passive)
+		(at 383.54 118.11 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fededc9f-58f1-5732-83d5-bf23b59d7e68))
+	(wire
+		(pts
+			(xy 391.16 125.73)
+			(xy 383.54 125.73))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 625d13d2-3c2d-5db1-a667-1256917d5c1c))
+	(global_label "GND"
+		(shape passive)
+		(at 383.54 125.73 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b52563dd-83e6-5974-8296-cd2ea193df58))
+	(text "C88: U9 IN bypass at the pin (TI TPS25947 layout guidance); 50 V for the 19.9 V TVS clamp. C80/D8 stay at the terminal."
+		(at 20.32 287.02 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid e2a5b157-64b2-597b-8019-e1e576b7577f))
+	(symbol
+		(lib_id "M3:R")
+		(at 370.84 121.92 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 7e7bb26a-4bdf-5397-922d-0fb34c4ed3bb)
+		(property "Reference" "R165"
+			(at 373.38 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "470k 1%"
+			(at 373.38 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 370.84 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 370.84 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C23178"
+			(at 370.84 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C23178"
+			(at 370.84 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF4703T5E"
+			(at 370.84 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 370.84 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "R165")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 370.84 118.11)
+			(xy 363.22 118.11))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid aa12b473-fce6-52fc-823a-59c4abbf5df9))
+	(global_label "BAT_SW_RETURN"
+		(shape passive)
+		(at 363.22 118.11 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 31fddd8d-4399-5daf-99e1-6d832bca538a))
+	(wire
+		(pts
+			(xy 370.84 125.73)
+			(xy 363.22 125.73))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a031957a-564d-5e54-8992-e2c4345d5345))
+	(global_label "BAT_ENABLE"
+		(shape passive)
+		(at 363.22 125.73 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a44b03ca-1895-5fc1-b3e5-80390bb9bda0))
+	(symbol
+		(lib_id "M3:C")
+		(at 309.88 175.26 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 19af9072-bd2c-57da-8716-ea1b46e8ad20)
+		(property "Reference" "C89"
+			(at 312.42 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X5R 10%"
+			(at 312.42 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_1206_3216Metric"
+			(at 309.88 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 309.88 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C12891"
+			(at 309.88 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C12891"
+			(at 309.88 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 309.88 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL31A226KAHNNNE"
+			(at 309.88 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "C89")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 309.88 171.45)
+			(xy 302.26 171.45))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6e75dc05-188e-5eb0-913b-7b67b377d010))
+	(global_label "BAT_IN"
+		(shape passive)
+		(at 302.26 171.45 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cd8b4510-ee52-5e3a-909a-2fb8152c5a09))
+	(wire
+		(pts
+			(xy 309.88 179.07)
+			(xy 302.26 179.07))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 665d2149-5f15-5164-8cfc-e947e72a7468))
+	(global_label "BAT_DAMP"
+		(shape passive)
+		(at 302.26 179.07 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2f64916e-234c-575d-9054-c832b426826a))
+	(symbol
+		(lib_id "M3:C")
+		(at 325.12 175.26 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6ceb3f58-4562-5b3c-af52-fdff0c0e7dd0)
+		(property "Reference" "C95"
+			(at 327.66 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X5R 10%"
+			(at 327.66 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_1206_3216Metric"
+			(at 325.12 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 325.12 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C12891"
+			(at 325.12 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C12891"
+			(at 325.12 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 325.12 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL31A226KAHNNNE"
+			(at 325.12 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "C95")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 325.12 171.45)
+			(xy 317.5 171.45))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 63b82e1c-d810-51f9-a11a-5cbe55efece7))
+	(global_label "BAT_IN"
+		(shape passive)
+		(at 317.5 171.45 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 48cea3b0-69e3-5d3c-a7ae-b4cc7a0b4c42))
+	(wire
+		(pts
+			(xy 325.12 179.07)
+			(xy 317.5 179.07))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a172e82d-44cb-5a52-bd0e-d6169036b458))
+	(global_label "BAT_DAMP"
+		(shape passive)
+		(at 317.5 179.07 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2a1356a1-3cf7-58e6-8698-7017621e80cb))
+	(symbol
+		(lib_id "M3:C")
+		(at 355.6 175.26 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 15df602c-a208-5c2d-8dc8-84074a922c4a)
+		(property "Reference" "C96"
+			(at 358.14 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10uF 50V X5R 10%"
+			(at 358.14 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_1206_3216Metric"
+			(at 355.6 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 355.6 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C13585"
+			(at 355.6 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C13585"
+			(at 355.6 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 355.6 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL31A106KBHNNNE"
+			(at 355.6 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "C96")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 355.6 171.45)
+			(xy 347.98 171.45))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 983139ae-f006-525f-a79b-470b6909daba))
+	(global_label "BAT_IN"
+		(shape passive)
+		(at 347.98 171.45 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bc190e55-16bc-5f90-85a3-331d0f1bd9ea))
+	(wire
+		(pts
+			(xy 355.6 179.07)
+			(xy 347.98 179.07))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e9ad54bb-27ee-5784-ac83-16d3eaef8a32))
+	(global_label "GND"
+		(shape passive)
+		(at 347.98 179.07 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 144f97da-88f0-5679-af64-13984eb09cd3))
+	(text "C80 + C96 (2 x 10 uF) at the input; C89 + C95 (2 x 22 uF 25 V X5R) + R166 (0.33 ohm 2512): non-polar RC damper across BAT_IN; R167 (10k) bleeds the input below 2 V within 0.73 s of an unplug (about 1.3 s with the switch closed: wait 2 s). A reverse hot-plug through a 0.1-2 uH, >= 0.03 ohm harness, from <= 2 V left on the input, keeps U9 IN >= -14.6 V and <= 9.2 V/us (TPS25947: -15 V, 10 V/us). No polarized capacitor may sit ahead of U9."
+		(at 20.32 224.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid e6fb56cb-8b87-56fc-9ff4-ffa17623f88a))
+	(symbol
+		(lib_id "M3:R")
+		(at 309.88 195.58 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 0f300009-3116-5712-9844-3250d9671cd7)
+		(property "Reference" "R167"
+			(at 312.42 194.31 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 1%"
+			(at 312.42 196.85 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 309.88 195.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 309.88 195.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25804"
+			(at 309.88 195.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C25804"
+			(at 309.88 195.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 309.88 195.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1002T5E"
+			(at 309.88 195.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "R167")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 309.88 191.77)
+			(xy 302.26 191.77))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6fe3335b-c0ae-5322-bbf0-5ee06ae52022))
+	(global_label "BAT_IN"
+		(shape passive)
+		(at 302.26 191.77 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 41d78bb5-f651-52b2-b48f-c7cd16cbc113))
+	(wire
+		(pts
+			(xy 309.88 199.39)
+			(xy 302.26 199.39))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 83bc2f97-372d-5426-bc35-e0b93309d6a7))
+	(global_label "GND"
+		(shape passive)
+		(at 302.26 199.39 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d0c1e0f2-311d-580c-a585-45d2071cf109))
+	(symbol
+		(lib_id "M3:R")
+		(at 289.56 175.26 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 149c3911-2701-5275-9f6d-63156dd086ef)
+		(property "Reference" "R92"
+			(at 292.1 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "3.3k 1%"
+			(at 292.1 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 289.56 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C22978.pdf"
+			(at 289.56 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C22978"
+			(at 289.56 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 289.56 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF3301T5E"
+			(at 289.56 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "R92")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 289.56 171.45)
+			(xy 289.56 166.37))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3c72755d-c783-5838-96c1-200cb2c39554))
+	(global_label "RAW_PROTECTED"
+		(shape passive)
+		(at 289.56 166.37 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8800b66f-f5aa-5e63-aba3-6ce7f0ee27e0))
+	(wire
+		(pts
+			(xy 289.56 179.07)
+			(xy 289.56 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 38e3649c-a123-5424-abbc-7f79df46b327))
+	(global_label "GND"
+		(shape passive)
+		(at 289.56 184.15 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 05ca48a7-5e1d-576f-a766-f6f126600ed0))
+	(symbol
+		(lib_id "M3:Conn_1x2")
+		(at 71.12 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 0739be2b-5495-5630-875b-2152b68c988d)
+		(property "Reference" "J1"
+			(at 73.66 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "DB125-3.5-2P-GN-S"
+			(at 73.66 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_DB125_2P_GN"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C466970"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "DORABO"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "DB125-3.5-2P-GN-S"
+			(at 71.12 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "J1")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 63.5 69.85)
+			(xy 58.42 69.85))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid decca300-ac23-55ff-862d-863f01f8200e))
+	(global_label "BAT_IN"
+		(shape passive)
+		(at 58.42 69.85 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0955cb84-8f9b-57b7-97ef-d380e8c8e0ac))
+	(wire
+		(pts
+			(xy 63.5 72.39)
+			(xy 58.42 72.39))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a2fd903d-b39d-5a9b-8b18-b5764004bc28))
+	(global_label "GND"
+		(shape passive)
+		(at 58.42 72.39 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f9387734-1801-5743-bf29-8b779a5df0e8))
+	(symbol
+		(lib_id "M3:R")
+		(at 340.36 175.26 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid c9264fc9-c4a4-5e57-aa24-9dd90f0fad76)
+		(property "Reference" "R166"
+			(at 342.9 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "0.36R 1% 2512"
+			(at 342.9 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_R2512_UR"
+			(at 340.36 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf"
+			(at 340.36 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C168925"
+			(at 340.36 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 340.36 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "25121WF360LT4E"
+			(at 340.36 175.26 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "R166")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 340.36 171.45)
+			(xy 340.36 166.37))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 41bc9622-cce0-52ff-8b9a-c8b202902b1a))
+	(global_label "BAT_DAMP"
+		(shape passive)
+		(at 340.36 166.37 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f26284fc-3556-5a50-8c95-3c021dd5c3d5))
+	(wire
+		(pts
+			(xy 340.36 179.07)
+			(xy 340.36 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 02ba65f0-99f3-57b2-9e99-28eb98c8f172))
+	(global_label "GND"
+		(shape passive)
+		(at 340.36 184.15 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2afebdf4-b2c7-582c-afe3-e5f1675d45e0))
+	(symbol
+		(lib_id "M3:Conn_1x2")
+		(at 330.2 238.76 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 7f53478f-3ba1-5003-a7a4-c3919c442e8d)
+		(property "Reference" "J400"
+			(at 332.74 237.49 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "BM02B-GHS-TBT(LF)(SN)"
+			(at 332.74 240.03 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GH_BM02B_GHS_TBT"
+			(at 330.2 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.jst-mfg.com/product/pdf/eng/eGH.pdf"
+			(at 330.2 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C161690"
+			(at 330.2 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "JST"
+			(at 330.2 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "BM02B-GHS-TBT(LF)(SN)"
+			(at 330.2 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "J400")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 322.58 237.49)
+			(xy 317.5 237.49))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 397c375f-a600-5c0e-af9b-7c056424eef3))
+	(global_label "BAT_SW_SOURCE"
+		(shape passive)
+		(at 317.5 237.49 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a3d17165-dcb3-52d0-ab22-277e7ccfa1b6))
+	(wire
+		(pts
+			(xy 322.58 240.03)
+			(xy 317.5 240.03))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid be8846cf-7b30-5341-a633-bec19eb53893))
+	(global_label "BAT_SW_RETURN"
+		(shape passive)
+		(at 317.5 240.03 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1c89241f-d370-5f19-902d-a3d99f9e819b))
 	(sheet_instances
 		(path "/"
 			(page "7"))))

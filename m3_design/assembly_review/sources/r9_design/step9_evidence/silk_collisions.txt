@@ -1,0 +1,20 @@
+R9 step 9: kicad-cli DRC (every severity) on r9_post.py's first output, step 8's board 89ddea8d... (scratch copy):
+the silkscreen violations left once every designator and legend was placed. None has a text among its items:
+all are footprint graphics against footprint graphics or a pad opening, i.e. the placement's (D-S9-01).
+  silk_over_copper | Segment of C84 on F.Silkscreen (43.80, 75.00) | Pad 1 [GND] of TP88 on F.Cu (44.60, 75.60)
+  silk_overlap | Segment of Q30 on B.Silkscreen (12.83, 10.88) | Segment of Q31 on B.Silkscreen (12.85, 10.83)
+  silk_overlap | Segment of Q30 on B.Silkscreen (12.83, 9.42) | Segment of Q31 on B.Silkscreen (12.85, 9.37)
+  silk_overlap | Segment of Q30 on B.Silkscreen (12.83, 10.88) | Segment of Q31 on B.Silkscreen (12.85, 9.37)
+  silk_overlap | Segment of Q32 on B.Silkscreen (9.68, 9.17) | Segment of Q30 on B.Silkscreen (9.77, 9.42)
+  silk_overlap | Segment of Q32 on B.Silkscreen (9.68, 9.17) | Segment of Q30 on B.Silkscreen (9.77, 10.88)
+  silk_overlap | Segment of Q32 on B.Silkscreen (9.68, 10.63) | Segment of Q30 on B.Silkscreen (9.77, 10.88)
+  silk_overlap | Segment of D123 on B.Silkscreen (28.95, 26.52) | Segment of Q123 on B.Silkscreen (28.87, 26.53)
+  silk_overlap | Segment of Q123 on B.Silkscreen (30.33, 26.53) | Segment of D123 on B.Silkscreen (28.95, 26.52)
+  silk_overlap | Segment of D123 on B.Silkscreen (29.35, 27.98) | Segment of Q123 on B.Silkscreen (28.87, 26.53)
+  silk_overlap | Polygon of D123 on B.Silkscreen (29.02, 26.45) | Segment of Q123 on B.Silkscreen (28.87, 26.53)
+  silk_overlap | Circle of D123 on B.Silkscreen (28.57, 26.50) | Circle of Q123 on B.Silkscreen (28.60, 26.75)
+  silk_overlap | Polygon of D123 on B.Silkscreen (29.02, 26.45) | Circle of Q123 on B.Silkscreen (28.60, 26.75)
+
+Experiment (scratch, footprints moved without copper): Q31 +0.15 mm x, Q32 -0.1 mm x, D123 (+0.45, +0.33) mm, TP88
++0.1 mm x -> no silkscreen violation left (only the copper of the moved parts, redrawn in the tables afterwards).
+Adopted: r9_place.tsv / r9_rf.py / r9_route_status.py (D123 at +0.35 mm in y); the rebuilt board has DRC 0.

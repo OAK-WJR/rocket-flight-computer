@@ -6,6 +6,7 @@ extern GPIO_TypeDef gb, gd, ge;
 #define GPIOB (&gb)
 #define GPIOD (&gd)
 #define GPIOE (&ge)
+#define GPIO_PIN_1 (1U<<1)
 #define GPIO_PIN_2 (1U<<2)
 #define GPIO_PIN_3 (1U<<3)
 #define GPIO_PIN_4 (1U<<4)

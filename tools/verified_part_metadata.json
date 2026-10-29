@@ -1,0 +1,415 @@
+{
+  "parts": {
+    "C105432": {
+      "Manufacturer": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+      "Manufacturer Part": "S8550(RANGE:120-200)"
+    },
+    "C11702": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF1001TCE"
+    },
+    "C12891": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL31A226KAHNNNE"
+    },
+    "C131337": {
+      "Manufacturer": "JST",
+      "Manufacturer Part": "B2B-PH-K-S(LF)(SN)"
+    },
+    "C1329837": {
+      "Manufacturer": "BOURNS",
+      "Manufacturer Part": "SRP5030T-6R8M"
+    },
+    "C13585": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL31A106KBHNNNE"
+    },
+    "C13612": {
+      "Manufacturer": "SEMTECH",
+      "Manufacturer Part": "SRV05-4.TCT"
+    },
+    "C137691": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RC0603FR-0766K5L"
+    },
+    "C14663": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "CC0603KRX7R9BB104"
+    },
+    "C15127": {
+      "Manufacturer": "Alpha & Omega Semicon",
+      "Manufacturer Part": "AO3401A"
+    },
+    "C15195": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL05B103KB5NNNC"
+    },
+    "C1525": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL05B104KO5NNNC"
+    },
+    "C15639": {
+      "Manufacturer": "TE Connectivity",
+      "Manufacturer Part": "MS561101BA03-50"
+    },
+    "C15849": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL10A105KB8NNNC"
+    },
+    "C161115": {
+      "Manufacturer": "Murata Electronics",
+      "Manufacturer Part": "GCJ188R71H104KA12D"
+    },
+    "C161692": {
+      "Manufacturer": "JST",
+      "Manufacturer Part": "BM04B-GHS-TBT(LF)(SN)"
+    },
+    "C1623": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL10B474KA8NNNC"
+    },
+    "C165948": {
+      "Manufacturer": "Korean Hroparts Elec",
+      "Manufacturer Part": "TYPE-C-31-M-12"
+    },
+    "C1671": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL10C470JB8NNNC"
+    },
+    "C17168": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF0000TCE"
+    },
+    "C17513": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0805W8F1001T5E"
+    },
+    "C17557": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0805W8F2200T5E"
+    },
+    "C178373": {
+      "Manufacturer": "PANASONIC",
+      "Manufacturer Part": "35SVPK330M"
+    },
+    "C1848": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL31B105KBHNNNE"
+    },
+    "C1849463": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part": "TPS259570DSGR"
+    },
+    "C191023": {
+      "Manufacturer": "Guangdong Hottech",
+      "Manufacturer Part": "1N5819WS"
+    },
+    "C19666": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL10A475KO8NNNC"
+    },
+    "C19702": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL10A106KP8NNNC"
+    },
+    "C1985619": {
+      "Manufacturer": "NDK",
+      "Manufacturer Part": "NX3225GA-25.000M-STD-CRG-2"
+    },
+    "C20917": {
+      "Manufacturer": "Alpha & Omega Semicon",
+      "Manufacturer Part": "AO3400A"
+    },
+    "C21120": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL10B224KA8NNNC"
+    },
+    "C21190": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0603WAF1001T5E"
+    },
+    "C21397": {
+      "Manufacturer": "Murata Electronics",
+      "Manufacturer Part": "GRM32ER71E226KE15L"
+    },
+    "C2158003": {
+      "Manufacturer": "Diodes Incorporated",
+      "Manufacturer Part": "AP63301WU-7"
+    },
+    "C22807": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0603WAF1503T5E"
+    },
+    "C22810": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0603WAF150JT5E"
+    },
+    "C22928": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0603WAF2872T5E"
+    },
+    "C22939": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0603WAF220KT5E"
+    },
+    "C2296": {
+      "Manufacturer": "Hubei KENTO Elec",
+      "Manufacturer Part": "KT-0805Y"
+    },
+    "C23024": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0603WAF3003T5E"
+    },
+    "C23178": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0603WAF4703T5E"
+    },
+    "C23630": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL10A225KO8NNNC"
+    },
+    "C25091": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF2200TCE"
+    },
+    "C25105": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF330JTCE"
+    },
+    "C25468": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "25121WF330LT4E"
+    },
+    "C25741": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF1003TCE"
+    },
+    "C25744": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF1002TCE"
+    },
+    "C25790": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF4703TCE"
+    },
+    "C25804": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0603WAF1002T5E"
+    },
+    "C25819": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0603WAF4702T5E"
+    },
+    "C25900": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF4701TCE"
+    },
+    "C25905": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF5101TCE"
+    },
+    "C26633007": {
+      "Manufacturer": "STMicroelectronics",
+      "Manufacturer Part": "LSM6DSV320XTR"
+    },
+    "C2760089": {
+      "Manufacturer": "Alpha & Omega Semicon",
+      "Manufacturer Part": "AON6403"
+    },
+    "C2915641": {
+      "Manufacturer": "DORABO",
+      "Manufacturer Part": "DB128V-5.08-4P-GN-S"
+    },
+    "C29936": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL10B105KA8NNNC"
+    },
+    "C30005563": {
+      "Manufacturer": "U-BLOX",
+      "Manufacturer Part": "MAX-F10S-00B"
+    },
+    "C3013496": {
+      "Manufacturer": "BOURNS",
+      "Manufacturer Part": "CRM2512-FX-2R00ELF"
+    },
+    "C307331": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL05B104KB54PNC"
+    },
+    "C32713291": {
+      "Manufacturer": "hanxia",
+      "Manufacturer Part": "HX PZ2.54-3x4P ZZ"
+    },
+    "C32949": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL05C100JB5NNNC"
+    },
+    "C3662793": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part": "TPS259470LRPWR"
+    },
+    "C4109": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF2001TCE"
+    },
+    "C4153167": {
+      "Manufacturer": "U-BLOX",
+      "Manufacturer Part": "MAX-M10S-00B"
+    },
+    "C4241878": {
+      "Manufacturer": "Vishay Intertech",
+      "Manufacturer Part": "MCT0603MD2004BP500"
+    },
+    "C430601": {
+      "Manufacturer": "DORABO",
+      "Manufacturer Part": "DB128L-5.08-2P-BK-S"
+    },
+    "C430603": {
+      "Manufacturer": "DORABO",
+      "Manufacturer Part": "DB128L-5.08-2P-OG-S"
+    },
+    "C431195": {
+      "Manufacturer": "Alpha & Omega Semicon",
+      "Manufacturer Part": "AON7524"
+    },
+    "C45783": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL21A226MAQNNNE"
+    },
+    "C46550466": {
+      "Manufacturer": "jieerrui",
+      "Manufacturer Part": "MA25V470M8x10"
+    },
+    "C47546": {
+      "Manufacturer": "Nexperia",
+      "Manufacturer Part": "BAT54S,215"
+    },
+    "C485916": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part": "TPS2121RUXR"
+    },
+    "C492405": {
+      "Manufacturer": "XFCN",
+      "Manufacturer Part": "PZ254V-11-06P"
+    },
+    "C496550": {
+      "Manufacturer": "BAT WIRELESS",
+      "Manufacturer Part": "BWSMA-KE-P001"
+    },
+    "C5186957": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part": "TXU0202DCUR"
+    },
+    "C5271084": {
+      "Manufacturer": "STMicroelectronics",
+      "Manufacturer Part": "STM32H743VIT6TR"
+    },
+    "C530661": {
+      "Manufacturer": "Shenzhen Kinghelm Elec",
+      "Manufacturer Part": "KH-SMA-KE8-G"
+    },
+    "C5333985": {
+      "Manufacturer": "Chengdu Ebyte Elec Tech",
+      "Manufacturer Part": "E22-900MM22S"
+    },
+    "C535146": {
+      "Manufacturer": "Infineon Technologies",
+      "Manufacturer Part": "ESD103-B1-02EL E6327"
+    },
+    "C55266": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part": "TPS2553DBVR"
+    },
+    "C57112": {
+      "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
+      "Manufacturer Part": "0603B103K500NT"
+    },
+    "C57269": {
+      "Manufacturer": "Sunlord",
+      "Manufacturer Part": "SWPA4030S4R7MT"
+    },
+    "C705743": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RT0603BRD071K65L"
+    },
+    "C705755": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RT0603BRD07280KL"
+    },
+    "C7519": {
+      "Manufacturer": "STMicroelectronics",
+      "Manufacturer Part": "USBLC6-2SC6"
+    },
+    "C780769": {
+      "Manufacturer": "Diodes Incorporated",
+      "Manufacturer Part": "AP63203WU-7"
+    },
+    "C83849": {
+      "Manufacturer": "Littelfuse",
+      "Manufacturer Part": "SMBJ12CA"
+    },
+    "C84256": {
+      "Manufacturer": "Foshan NationStar Optoelectronics",
+      "Manufacturer Part": "NCD0805R1"
+    },
+    "C85098": {
+      "Manufacturer": "Diodes Incorporated",
+      "Manufacturer Part": "B340A-13-F"
+    },
+    "C8591": {
+      "Manufacturer": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+      "Manufacturer Part": "BAT54A"
+    },
+    "C85980": {
+      "Manufacturer": "Murata Electronics",
+      "Manufacturer Part": "GRM1885C1H472JA01D"
+    },
+    "C861162": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RT0603BRD07172KL"
+    },
+    "C861207": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RT0603BRD071K78L"
+    },
+    "C861313": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RT0603BRD0730K9L"
+    },
+    "C861551": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RT0603BRD07750RL"
+    },
+    "C861568": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RT0603BRD0780K6L"
+    },
+    "C88980": {
+      "Manufacturer": "Murata Electronics",
+      "Manufacturer Part": "BLM18KG221SN1D"
+    },
+    "C89347": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part": "TPS70933DBVR"
+    },
+    "C94598": {
+      "Manufacturer": "Jiangsu Huaneng Elec",
+      "Manufacturer Part": "MLT-5020"
+    },
+    "C94599": {
+      "Manufacturer": "Jiangsu Huaneng Elec",
+      "Manufacturer Part": "MLT-8530"
+    },
+    "C97521": {
+      "Manufacturer": "Winbond Elec",
+      "Manufacturer Part": "W25Q128JVSIQ"
+    },
+    "C97998": {
+      "Manufacturer": "Murata Electronics",
+      "Manufacturer Part": "LQG15HS47NJ02D"
+    }
+  },
+  "reviewed_date": "2026-10-15",
+  "scope": "Exact manufacturer identities from live public JLC component lookup; stock and price evidence in jlc_easyeda/supplier_snapshot.json is time-sensitive and does not reserve inventory.",
+  "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+}

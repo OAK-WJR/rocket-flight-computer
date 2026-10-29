@@ -19,14 +19,27 @@ def children(node, key):
     return [x for x in node if isinstance(x, list) and x and x[0] == key]
 
 
+def is_fitted_footprint(fp):
+    attrs = {value for group in children(fp, 'attr') for value in group[1:]}
+    return bool(attrs & {'smd', 'through_hole'}) and not (
+        attrs & {'dnp', 'exclude_from_bom'})
+
+
 def audit(board):
     data = board.read_bytes()
     root = parse(data.decode('utf-8'))
     footprints = children(root, 'footprint')
     conflicts, missing_fields, models, no_courtyard = [], [], [], []
+    missing_required, fitted = [], 0
     for fp in footprints:
         fields = {p[1]: p[2] for p in children(fp, 'property') if len(p) >= 3}
         ref = fields.get('Reference', '?')
+        if is_fitted_footprint(fp):
+            fitted += 1
+            absent = [key for key in ('LCSC', 'Manufacturer', 'Manufacturer Part')
+                      if not fields.get(key, '').strip()]
+            if absent:
+                missing_required.append({'ref': ref, 'fields': absent})
         a, b = fields.get('LCSC', '').strip(), fields.get('LCSC Part', '').strip()
         if a and b and a != b:
             conflicts.append({'ref': ref, 'value': fields.get('Value'),
@@ -51,7 +64,9 @@ def audit(board):
                                          ('offset', 'scale', 'rotate')},
                            'mechanical_geometry_verified': False})
     return {'board': str(board), 'sha256': hashlib.sha256(data).hexdigest(),
-            'footprints': len(footprints), 'conflicting_part_fields': conflicts,
+            'footprints': len(footprints), 'fitted_footprints': fitted,
+            'missing_required_part_fields': missing_required,
+            'conflicting_part_fields': conflicts,
             'no_part_field': missing_fields, 'no_courtyard': no_courtyard,
             'models': models}
 
@@ -66,15 +81,14 @@ def main():
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
     for item in result['boards']:
         print('{}: footprints={}, conflicting part fields={}, missing models={}, '
-              'absolute model paths={}, no courtyard={}'.format(
+              'absolute model paths={}, no courtyard={}, missing fitted part identities={}'.format(
                   Path(item['board']).name, item['footprints'],
                   len(item['conflicting_part_fields']),
                   sum(m['exists'] is False for m in item['models']),
                   sum(m['absolute_path'] for m in item['models']),
-                  len(item['no_courtyard'])))
-    # Fail closed for proven metadata conflicts/missing model files. Missing fields
-    # and courtyards are review items (e.g. intentionally unpopulated hardware).
-    return int(any(b['conflicting_part_fields'] or
+                  len(item['no_courtyard']), len(item['missing_required_part_fields'])))
+    # Unpopulated hardware is exempt; every fitted part needs all three identity fields.
+    return int(any(b['conflicting_part_fields'] or b['missing_required_part_fields'] or
                    any(m['exists'] is False for m in b['models']) for b in result['boards']))
 
 

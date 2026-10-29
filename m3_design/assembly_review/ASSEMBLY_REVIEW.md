@@ -1,10 +1,25 @@
-# M3-ASSY-R2 — actuator merge (current)
+# M3-ASSY-R5 — current CAD and assembly review
+
+2026-10-12. The native `m3.kicad_pro`/`m3.kicad_pcb` in this directory are the current 46 × 100 mm, four-layer, two-sided R5 candidate: 236 footprint positions, 209 fitted parts (93 top, 116 bottom), 24 test pads and three tooling holes. Final PCB SHA-256: `6fc208d613dc2c1a6e9381ec3e1a5888c223ea6246336ae8320421272ca93a43`.
+
+The current [r5_review.json](r5_review.json) binds the board hash, test counts, fabrication checks and reviewed images; `r5_audit.json`, `drc.json`, `erc.json` and `schematic.net.xml` are refreshed for R5. The fourth implementation pass and independent review are recorded in [R5_VALIDATION.md](../../docs/R5_VALIDATION.md); the current design and remaining qualifications are in [M3_R5.md](../../docs/M3_R5.md), with assembly instructions in [ORDERING.md](../../docs/ORDERING.md).
+
+- U10/U11/U12 local bypassing, crystal-area QSPI routing, U4/U5 routing and sensor lands, Q120/C73/servo-header spacing, five annotation objects and eight removed/one trimmed route fragments are repaired and independently reviewed. The native gate has zero DRC, unconnected, schematic-parity and ERC findings; metadata/model, silkscreen, actuator contract and modeled fit checks pass.
+- The current regenerated `fab/` package has 84 BOM lines and 209 CPL rows. Independent checking covers 200 supplier-pad reconstructions plus nine placement-only checks, all 150 manifest source inputs/five outputs, and all 14 archive members against fresh native export ignoring timestamps. CLI renders were reviewed; native GUI interaction was unavailable.
+- There are 83 hidden silkscreen references, including C99, C100, U1, U3 and J3. Fabrication layers and the assembly PDF retain every designator; use these documents to identify parts. The bottom legend `J1 SW 3-4` explicitly identifies the switch pair.
+- This is checked CAD and a generated manufacturing package, not a built, measured or flight-qualified board. Flash supply/timing, return paths/EMC, camera and servo thermal behavior, reflow, five nylon supports and sled/harness fit, coating/retention and all bench/firmware gates remain subject to qualification. Revised exact panel-tab windows in ORDERING pass independent geometry review; production-panel approval must reproduce them and the actual mouse-bite hole-to-copper clearances. Supplier rail/support review remains required.
+
+The R2/R1 sections below preserve historical evidence. Their counts, hashes, images, test claims and firmware bindings apply only to those revisions. In particular, unchanged `verification_assembly.json`, `visual_review.json`, `bom_review.json` and `visual_inputs.json` are bound to the R1 hash and **are not current R5 validation**. The current project and regenerated images/fabrication files supersede the historical instructions to open or inspect those artifacts. No fabrication order or git action was performed in this review.
+
+---
+
+# M3-ASSY-R2 — actuator merge (historical)
 
 2026-09-25. R2 adds the actuator power switch, dual independently fused pyro channels with a complete arming break, four servo outputs, the launch pull-pin and the buzzer to R1, on a 46 × 238 mm board (208 positions, 183 fitted parts, 25 test pads, 14 sheets; R134/R135 and the 10 k cold pull-ups added 2026-09-27, see §2.6 of the design record; CAM_5V sense R104/R105/C94 added 2026-09-28). Design rationale, datasheet evidence, routing method and the open verification list: [docs/M3_ACTUATOR_MERGE.md](../../docs/M3_ACTUATOR_MERGE.md). `top.png`, `bottom.png`, `drc.json`, `erc.json`, `schematic.net.xml` and `sheets/` are regenerated for R2. The R1 evidence files (`verification_assembly.json`, `visual_review.json`, `bom_review.json`, `visual_inputs.json`) are kept as the R1 record; they are bound to the R1 hash and do not describe R2. Manufacturing files: `fab/` (from `tools/export_fab.py`).
 
 ---
 
-# M3-ASSY-R1 assembly correction review
+# M3-ASSY-R1 assembly correction review (historical)
 
 2026-09-08. This revision is still a bench candidate: one 46 × 186 mm four-layer board for ordinary power / acquisition / logging / camera interface / bench diagnostics. 135 footprint positions: 115 nominally fitted parts and 20 test points. It does not implement every rocket function in the requirements; the full gap list is in [the requirement status](../../STATUS.md).
 

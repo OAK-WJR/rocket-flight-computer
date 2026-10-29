@@ -1,0 +1,306 @@
+{
+ "rigid": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "outline": "9558fcd7d3bc9b97",
+   "m3_holes": "00605c61132c1574",
+   "j122_tie": "4ecfed731f5c5bc1",
+   "j1": "63a58164251c7035",
+   "pyro_block_area": "0571313b8489059d",
+   "ch1_parts": "23bcce687f97f89b",
+   "ch1_copper": "9412831952118349",
+   "strip_parts": "c71c1250c4f732ae",
+   "strip_rf_copper": "7a2598349ad81c5f",
+   "strip_gnd": "bfcbe417a3b45e12",
+   "strip_rule_areas": "d105af8bf59da746",
+   "strip_gcpw": "8b46f56919611ca6"
+  }
+ },
+ "table": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "rows": 200,
+   "vias": 193,
+   "trims": 6
+  }
+ },
+ "drc": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "deferred": {
+    "silk_edge_clearance": 4,
+    "silk_overlap": 55,
+    "silk_over_copper": 104
+   },
+   "unconnected": 0
+  }
+ },
+ "route": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "agents3_rule_instances": 1,
+   "information": {
+    "pad_end_offcentre": 42,
+    "passes_through_pad": 9,
+    "segment_inside_pad": 8,
+    "width_change_junction": 15,
+    "u_turn": 7,
+    "short_layer_hop": 2,
+    "extra_bends": 4,
+    "power_via_no_gnd": 6
+   }
+  }
+ },
+ "islands": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "islands": 18,
+   "weak_allowed": [
+    {
+     "layer": "F",
+     "area": 2.891,
+     "vias": 1,
+     "pads": [
+      "D4.2"
+     ],
+     "box": [
+      8.61,
+      33.1,
+      11.59,
+      34.5
+     ],
+     "why": [
+      "F",
+      "D4.2",
+      2.9,
+      1
+     ]
+    }
+   ]
+  }
+ },
+ "reach": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "board_p95": 4.48,
+   "board_max": 9.65,
+   "board_max_at": [
+    0.25,
+    88.25
+   ],
+   "pour_p95": 2.9,
+   "pour_max": 5.89,
+   "pour_points": 16651
+  }
+ },
+ "power": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "vias": 193,
+   "corridors": {
+    "BAT_IN": [
+     15.07,
+     97.81,
+     32.62,
+     112.4
+    ],
+    "RAW_ACT": [
+     3.1,
+     69.89,
+     25.0,
+     106.91
+    ],
+    "ACT_FET_S": [
+     8.9,
+     99.09,
+     15.48,
+     105.63
+    ]
+   }
+  }
+ },
+ "trims": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "trims": 6
+  }
+ },
+ "pyro": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "inner_power_pyro": {
+    "nearest": [
+     2.65,
+     "BAT_IN zone R8_BAT_IN_In2 In2.Cu",
+     "R134.1 (PYRO1_IGN, F.Cu)"
+    ],
+    "items": 175,
+    "within_5mm": 41
+   },
+   "gate_servo": {
+    "nearest": null,
+    "under_limit": 0,
+    "layer_pairs": [
+     [
+      "B.Cu",
+      "B.Cu"
+     ],
+     [
+      "B.Cu",
+      "In2.Cu"
+     ],
+     [
+      "F.Cu",
+      "F.Cu"
+     ],
+     [
+      "F.Cu",
+      "In1.Cu"
+     ],
+     [
+      "In1.Cu",
+      "F.Cu"
+     ],
+     [
+      "In1.Cu",
+      "In1.Cu"
+     ],
+     [
+      "In2.Cu",
+      "B.Cu"
+     ],
+     [
+      "In2.Cu",
+      "In2.Cu"
+     ]
+    ]
+   }
+  }
+ },
+ "inner": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "rigid_inner_tracks": 1
+  }
+ },
+ "in2": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "islands": {
+    "RAW_ACT": 2,
+    "3V3": 1,
+    "BAT_IN": 1,
+    "GND": 1
+   },
+   "u1_field": [
+    13.86,
+    35.85,
+    32.14,
+    54.15
+   ],
+   "ch1_pads": 47,
+   "lane_segments": 34,
+   "u1_field_samples": 170
+  }
+ },
+ "contract": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "check_r8": {
+    "later": {
+     "r8_post (step 8): the J2 / J9 pin legends": 10,
+     "step-4 open item 1 (D15 against D20): the rigid CH1 ARM1_SENSE In2 link, for the orchestrator": 1
+    },
+    "fence": {
+     "fence_vias": 25,
+     "openings": [
+      {
+       "x0": 7.685,
+       "x1": 9.7,
+       "width": 2.015,
+       "lanes": [
+        "GNSS_RXD",
+        "GNSS_TP_MCU"
+       ]
+      },
+      {
+       "x0": 9.7,
+       "x1": 12.3,
+       "width": 2.6,
+       "lanes": [
+        "3V3_GNSS"
+       ]
+      },
+      {
+       "x0": 20.0,
+       "x1": 22.1,
+       "width": 2.1,
+       "lanes": [
+        "RADIO_BUSY",
+        "RADIO_MISO_MCU",
+        "RADIO_RXEN"
+       ]
+      },
+      {
+       "x0": 22.1,
+       "x1": 24.15,
+       "width": 2.05,
+       "lanes": [
+        "RADIO_MOSI",
+        "RADIO_NSS"
+       ]
+      }
+     ]
+    },
+    "strip_gnd_reach_mm": {
+     "F.Cu": 3.04,
+     "B.Cu": 3.49
+    },
+    "rf_stitching": {
+     "GNSS_west_largest_gap_mm": 3.9,
+     "GNSS_east_largest_gap_mm": 2.65,
+     "RADIO_west_largest_gap_mm": 1.55,
+     "RADIO_east_largest_gap_mm": 1.55,
+     "in1_missing_mm2": 0.0
+    }
+   },
+   "check_actuators": {
+    "ok": true
+   }
+  }
+ },
+ "l10": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "allowed": {
+    "PYRO1_CONT_MCU (24.0, 53.7) - R168": 0.235,
+    "ARM1_SENSE_MCU (29.3, 47.5) - R172": 0.635,
+    "ARM1_SENSE_MCU (29.3, 47.5) - C15": 0.835,
+    "ARM1_SENSE_MCU (29.3, 47.5) - R170": 0.635
+   }
+  }
+ },
+ "reserved": {
+  "ok": true,
+  "issues": [],
+  "evidence": {
+   "rows": 0
+  }
+ },
+ "board": "m3_design/assembly_review/m3.kicad_pcb",
+ "board_sha256": "52c643d679e54a6281aa89f6c21110d34ee1c92b61208fba03b2a79e8afb0dde",
+ "checker_sha256": "8987732594abc282edc503f3abe6ae1bb8ca5aea4e1c3562d8b46c151d0a9fd4"
+}

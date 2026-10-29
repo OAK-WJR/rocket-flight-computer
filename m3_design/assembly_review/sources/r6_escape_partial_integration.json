@@ -1,0 +1,8 @@
+{
+  "before_sha256": "ca846e3ac9b9df9adc36311e7e6552d833be6e32d3ae782b3c03180b7605035d",
+  "after_sha256": "e752e2af20714525afd1d90e5292208c8b4a1ddf7b8ecdcfd889393b895c5005",
+  "applied": "Four MCU GPIO escapes, J2 SWD connector escapes, NRST outward launch, C122/R63 thermal angles45",
+  "native_violations": 10,
+  "native_unconnected": 30,
+  "native_violation_types": "Four existing track_dangling, six unfinished escape via_dangling; no clearance/short/thermal/keepout errors"
+}

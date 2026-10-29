@@ -1,0 +1,14 @@
+template   OK
+margins    OK
+bridges    OK
+rule_h     OK
+gate_n     OK
+sense      OK
+armed      OK
+contract   OK
+actuators  OK
+drc        OK
+route      OK
+margins {'A': 0.32, 'B': 0.32, 'C': 0.277, 'D': 0.27, 'E': None, 'F': None, 'G': 0.112, 'A2': None, 'H': 0.225, 'H+': 0.025, 'GS': 0.48, 'AG': 0.162} excepted ['track (13.0, 53.35) (PYRO1_GATE_N) / U1.2 (unconnected-(U1-PE3-Pad2)) 0.412', 'track (13.0, 53.35) (PYRO1_GATE_N) / U1.4 (unconnected-(U1-PE5-Pad4)) 0.412']
+route pending ['dangling_via 3V3 (17.9, 56.3)', 'dangling_via GND (10.425, 62.45)', 'dangling_via GND (13.5, 54.6)', 'dangling_via GND (11.8, 62.45)', 'dead_copper 3V3 (17.9, 68.13)', 'dead_copper 3V3 (17.9, 56.3)', 'dead_copper 3V3 (18.9, 69.13)', 'dead_copper 3V3 (17.9, 56.3)', 'dead_copper GND (11.8, 62.45)', 'dead_copper GND (6.9, 58.8674)', 'dead_copper GND (9.2326, 58.8674)', 'dead_copper GND (13.5, 54.6)', 'dead_copper GND (10.425, 62.45)', 'dead_copper GND (13.5, 54.6)', 'dead_copper GND (11.8, 62.45)']
+R9 pyro block gate: OK

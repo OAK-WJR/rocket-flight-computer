@@ -1,0 +1,28 @@
+pair Q124.5 -- R129.2 (F.Cu, 1.225 mm before)
+   seed              seeded 0.950 mm (moved R129): caught by DRC, pyro_probe
+   pad_override      seeded 0.950 mm (moved R129): caught by check_r9 LC-1, pyro_probe
+   min_lowered       seeded 0.950 mm (moved R129): caught by check_actuators, pyro_probe
+   deleted           seeded 0.950 mm (moved R129): caught by check_actuators, pyro_probe
+   moved_first       seeded 0.950 mm (moved R129): caught by check_actuators, pyro_probe
+   narrowed          seeded 0.950 mm (moved R129): caught by check_actuators, pyro_probe
+   raw_dropped       seeded 0.950 mm (moved R129): caught by DRC, check_actuators, pyro_probe
+   act_gate_dropped  seeded 0.950 mm (moved R129): caught by DRC, check_actuators, pyro_probe
+pair R132.1 -- C129.1 (F.Cu, 1.758 mm before)
+   seed              seeded 0.950 mm (moved C129): caught by DRC, pyro_probe
+   pad_override      seeded 0.950 mm (moved C129): caught by check_r9 LC-1, pyro_probe
+   min_lowered       seeded 0.950 mm (moved C129): caught by check_actuators, pyro_probe
+   deleted           seeded 0.950 mm (moved C129): caught by check_actuators, pyro_probe
+   moved_first       seeded 0.950 mm (moved C129): caught by check_actuators, pyro_probe
+   narrowed          seeded 0.950 mm (moved C129): caught by check_actuators, pyro_probe
+   raw_dropped       seeded 0.950 mm (moved C129): caught by DRC, check_actuators, pyro_probe
+   act_gate_dropped  seeded 0.950 mm (moved C129): caught by DRC, check_actuators, pyro_probe
+pair Q121.9 -- R121.2 (B.Cu, 1.773 mm before)
+   seed              seeded 0.952 mm (moved R121): caught by DRC, pyro_probe
+   pad_override      seeded 0.952 mm (moved R121): caught by check_r9 LC-1, pyro_probe
+   min_lowered       seeded 0.952 mm (moved R121): caught by check_actuators, pyro_probe
+   deleted           seeded 0.952 mm (moved R121): caught by check_actuators, pyro_probe
+   moved_first       seeded 0.952 mm (moved R121): caught by DRC, check_actuators, pyro_probe
+   narrowed          seeded 0.952 mm (moved R121): caught by check_actuators, pyro_probe
+   raw_dropped       seeded 0.952 mm (moved R121): caught by check_actuators, pyro_probe
+   act_gate_dropped  seeded 0.952 mm (moved R121): caught by DRC, check_actuators, pyro_probe
+rule H seeded-fault suite: OK

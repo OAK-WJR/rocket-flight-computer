@@ -1,0 +1,844 @@
+{
+  "length_mm": 5.204603205848688,
+  "netnames": [
+    "HSE_IN",
+    "HSE_OUT",
+    "IMU_CS",
+    "QSPI_CLK",
+    "QSPI_IO0",
+    "QSPI_IO1",
+    "QSPI_IO2",
+    "QSPI_IO3",
+    "QSPI_NCS",
+    "SPI1_MISO",
+    "SPI1_MOSI",
+    "SPI1_SCK",
+    "SWCLK",
+    "USB_DM",
+    "USB_DP",
+    "USB_FAULT_N",
+    "USB_ILIM",
+    "USB_LIMITED",
+    "USB_OVLO"
+  ],
+  "nearest_F_critical": {
+    "HSE_IN": {
+      "clearance_mm": 4.319048,
+      "net": "HSE_IN",
+      "id": "eeb1f698-389d-4741-bc63-a6016d9b4ecd",
+      "class": "PCB_TRACK",
+      "xy": [
+        29.4,
+        36.0
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "HSE_OUT": {
+      "clearance_mm": 4.259773,
+      "net": "HSE_OUT",
+      "id": "600592c9-0293-4d6d-8615-df937ad53b8d",
+      "class": "PCB_TRACK",
+      "xy": [
+        29.4,
+        35.5
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "IMU_CS": {
+      "clearance_mm": 12.089655,
+      "net": "IMU_CS",
+      "id": "6365047b-8648-4c87-9be9-ac6e2cc91a55",
+      "class": "PCB_TRACK",
+      "xy": [
+        24.35,
+        43.05
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "QSPI_CLK": {
+      "clearance_mm": 12.949813,
+      "net": "QSPI_CLK",
+      "id": "0a9a1e55-f3e1-4510-9eff-2010aec8f735",
+      "class": "PCB_TRACK",
+      "xy": [
+        22.85,
+        27.95
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "QSPI_IO0": {
+      "clearance_mm": 19.472463,
+      "net": "QSPI_IO0",
+      "id": "0fd544b2-a90d-44ba-aaed-c1509bd6391b",
+      "class": "PCB_TRACK",
+      "xy": [
+        14.3,
+        33.0
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "QSPI_IO1": {
+      "clearance_mm": 12.997325,
+      "net": "QSPI_IO1",
+      "id": "793eab63-1fbe-48ac-8187-3dd1fbcc0e12",
+      "class": "PCB_VIA",
+      "xy": [
+        25.2,
+        24.9
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "QSPI_IO2": {
+      "clearance_mm": 6.561962,
+      "net": "QSPI_IO2",
+      "id": "72bd36e5-cf5f-538d-a03e-0ca48c3e7ddd",
+      "class": "PCB_VIA",
+      "xy": [
+        30.7,
+        41.5
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "QSPI_IO3": {
+      "clearance_mm": 16.317128,
+      "net": "QSPI_IO3",
+      "id": "8b176b67-7e2e-45d9-a01e-ea19693fb999",
+      "class": "PCB_VIA",
+      "xy": [
+        17.5,
+        31.7
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "QSPI_NCS": {
+      "clearance_mm": 10.046394,
+      "net": "QSPI_NCS",
+      "id": "66d246a3-921f-4e91-80e7-861112155b4b",
+      "class": "PCB_TRACK",
+      "xy": [
+        23.85,
+        43.05
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "SPI1_MISO": {
+      "clearance_mm": 13.286166,
+      "net": "SPI1_MISO",
+      "id": "9ca27ed8-200a-4efd-82f2-e44f4bf7298d",
+      "class": "PCB_TRACK",
+      "xy": [
+        22.85,
+        43.05
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "SPI1_MOSI": {
+      "clearance_mm": 12.880458,
+      "net": "SPI1_MOSI",
+      "id": "db78c6b3-69f0-4a4b-881c-4ba75cffc575",
+      "class": "PCB_TRACK",
+      "xy": [
+        23.35,
+        43.05
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "SPI1_SCK": {
+      "clearance_mm": 13.697954,
+      "net": "SPI1_SCK",
+      "id": "a4f1c181-39a2-4b1a-8589-f4f828ae4c82",
+      "class": "PCB_TRACK",
+      "xy": [
+        22.35,
+        43.05
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "SWCLK": {
+      "clearance_mm": 13.784923,
+      "net": "SWCLK",
+      "id": "96d812d7-168e-40a3-894f-72019d8c2121",
+      "class": "PCB_VIA",
+      "xy": [
+        19.7,
+        36.2
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "USB_DM": {
+      "clearance_mm": 19.713151,
+      "net": "USB_DM",
+      "id": "b0adf894-0246-4167-b20e-116ec1643623",
+      "class": "PCB_TRACK",
+      "xy": [
+        11.7,
+        39.0
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "USB_DP": {
+      "clearance_mm": 19.81383,
+      "net": "USB_DP",
+      "id": "60b6b7a9-2825-4a88-bcc0-e71a8e32f1a4",
+      "class": "PCB_TRACK",
+      "xy": [
+        12.9,
+        39.5
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "USB_FAULT_N": {
+      "clearance_mm": 12.983355,
+      "net": "USB_FAULT_N",
+      "id": "3c459b6f-83c3-4498-a2a7-dfb6baa37621",
+      "class": "PCB_VIA",
+      "xy": [
+        21.5135,
+        40.4191
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "USB_LIMITED": {
+      "clearance_mm": 13.015858,
+      "net": "USB_LIMITED",
+      "id": "49124d24-26d7-4aa4-86f5-198f07a30862",
+      "class": "PCB_VIA",
+      "xy": [
+        29.1,
+        22.55
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    "USB_OVLO": {
+      "clearance_mm": 15.548583,
+      "net": "USB_OVLO",
+      "id": "14a0ab65-d152-428e-9750-2403cdca8fe3",
+      "class": "PCB_TRACK",
+      "xy": [
+        29.4,
+        19.975
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    }
+  },
+  "nearest_gnd_copper": [
+    {
+      "clearance_mm": 0.0,
+      "net": "GND",
+      "id": "81c3b76e-b0f0-4c47-84f2-ea5f3752cd56",
+      "class": "PAD",
+      "xy": [
+        36.5,
+        35.65
+      ],
+      "layer": "F.Cu",
+      "ref": "D130"
+    },
+    {
+      "clearance_mm": 0.99687,
+      "net": "GND",
+      "id": "9a7da0d1-a98d-4722-993b-01d64b50bc7f",
+      "class": "PAD",
+      "xy": [
+        37.275,
+        38.0
+      ],
+      "layer": "F.Cu",
+      "ref": "C179"
+    },
+    {
+      "clearance_mm": 1.173043,
+      "net": "GND",
+      "id": "d8788993-c45a-4f11-96ef-fc1b331d77e7",
+      "class": "PAD",
+      "xy": [
+        40.1,
+        38.6
+      ],
+      "layer": "F.Cu",
+      "ref": "C11"
+    },
+    {
+      "clearance_mm": 1.336751,
+      "net": "GND",
+      "id": "0ff270fa-6d10-4f05-826f-a2437440689c",
+      "class": "PAD",
+      "xy": [
+        39.204056,
+        38.595944
+      ],
+      "layer": "F.Cu",
+      "ref": "R204"
+    },
+    {
+      "clearance_mm": 1.851422,
+      "net": "GND",
+      "id": "caecabd2-df00-4413-b54b-d000a8093ca1",
+      "class": "PAD",
+      "xy": [
+        41.375,
+        37.5
+      ],
+      "layer": "F.Cu",
+      "ref": "J130"
+    },
+    {
+      "clearance_mm": 1.967936,
+      "net": "GND",
+      "id": "9128eb68-8728-4695-8925-4dfcffdebc65",
+      "class": "PCB_VIA",
+      "xy": [
+        31.5,
+        35.5
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    {
+      "clearance_mm": 2.174061,
+      "net": "GND",
+      "id": "efadf5d5-9a8c-4ce2-bf15-41491b6b08bf",
+      "class": "PCB_VIA",
+      "xy": [
+        36.99,
+        38.9
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    {
+      "clearance_mm": 2.19387,
+      "net": "GND",
+      "id": "807264cd-7e9b-4b04-9de6-3a1e262a14ac",
+      "class": "PAD",
+      "xy": [
+        32.3,
+        37.7
+      ],
+      "layer": "F.Cu",
+      "ref": "C23"
+    },
+    {
+      "clearance_mm": 2.597001,
+      "net": "GND",
+      "id": "7c833208-c2ac-4288-add8-881594117d2e",
+      "class": "PAD",
+      "xy": [
+        34.0,
+        32.07
+      ],
+      "layer": "F.Cu",
+      "ref": "R203"
+    },
+    {
+      "clearance_mm": 3.483969,
+      "net": "GND",
+      "id": "f9b7ecb8-2eff-417e-bdd0-3f048f4212ad",
+      "class": "PCB_VIA",
+      "xy": [
+        41.1,
+        39.9
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    {
+      "clearance_mm": 3.514708,
+      "net": "GND",
+      "id": "700966e1-d4fc-42bd-bef4-38e9bcccf470",
+      "class": "PAD",
+      "xy": [
+        42.05,
+        34.55
+      ],
+      "layer": "F.Cu",
+      "ref": "U12"
+    },
+    {
+      "clearance_mm": 3.880012,
+      "net": "GND",
+      "id": "adb244f9-c5de-408e-aa87-455e5ee6b3a0",
+      "class": "PCB_VIA",
+      "xy": [
+        37.03,
+        40.9
+      ],
+      "layer": "F.Cu",
+      "ref": null
+    },
+    {
+      "clearance_mm": 3.940795,
+      "net": "GND",
+      "id": "5c1012ed-748b-485a-9d8f-e4be38ee8eb7",
+      "class": "PAD",
+      "xy": [
+        29.4,
+        37.0
+      ],
+      "layer": "F.Cu",
+      "ref": "U1"
+    },
+    {
+      "clearance_mm": 4.200821,
+      "net": "GND",
+      "id": "e4ca8a9b-1701-4482-8fe4-de982cc2adec",
+      "class": "PAD",
+      "xy": [
+        29.4,
+        36.48
+      ],
+      "layer": "F.Cu",
+      "ref": "C14"
+    },
+    {
+      "clearance_mm": 4.384611,
+      "net": "GND",
+      "id": "88cce2b1-0fec-4b6b-aa51-06f5ebd891dc",
+      "class": "PAD",
+      "xy": [
+        29.4,
+        32.5
+      ],
+      "layer": "F.Cu",
+      "ref": "U1"
+    }
+  ],
+  "plane": {
+    "outlines": 1,
+    "clearance_mm": 0.25,
+    "min_width_mm": 0.2
+  },
+  "gnd_islands": [],
+  "endpoint_radial_ground": [
+    {
+      "center": [
+        34,
+        35.2
+      ],
+      "rays": [
+        {
+          "angle": 119,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 124,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 129,
+          "start": 0.505,
+          "end": 3.2600000000000002,
+          "width": 2.755
+        },
+        {
+          "angle": 134,
+          "start": 0.505,
+          "end": 3.075,
+          "width": 2.57
+        },
+        {
+          "angle": 139,
+          "start": 0.505,
+          "end": 3.085,
+          "width": 2.58
+        },
+        {
+          "angle": 144,
+          "start": 0.505,
+          "end": 3.25,
+          "width": 2.745
+        },
+        {
+          "angle": 149,
+          "start": 0.505,
+          "end": 2.7600000000000002,
+          "width": 2.255
+        },
+        {
+          "angle": 154,
+          "start": 0.505,
+          "end": 2.64,
+          "width": 2.135
+        },
+        {
+          "angle": 159,
+          "start": 0.505,
+          "end": 2.65,
+          "width": 2.145
+        },
+        {
+          "angle": 164,
+          "start": 0.505,
+          "end": 2.83,
+          "width": 2.325
+        },
+        {
+          "angle": 169,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 174,
+          "start": 0.505,
+          "end": 2.835,
+          "width": 2.33
+        },
+        {
+          "angle": 179,
+          "start": 0.505,
+          "end": 2.67,
+          "width": 2.165
+        },
+        {
+          "angle": 184,
+          "start": 0.505,
+          "end": 2.455,
+          "width": 1.95
+        },
+        {
+          "angle": 189,
+          "start": 0.505,
+          "end": 2.205,
+          "width": 1.7
+        },
+        {
+          "angle": 194,
+          "start": 0.505,
+          "end": 2.145,
+          "width": 1.64
+        },
+        {
+          "angle": 199,
+          "start": 0.505,
+          "end": 2.17,
+          "width": 1.665
+        },
+        {
+          "angle": 204,
+          "start": 0.505,
+          "end": 2.3000000000000003,
+          "width": 1.795
+        },
+        {
+          "angle": 209,
+          "start": 0.505,
+          "end": 3.1750000000000003,
+          "width": 2.67
+        },
+        {
+          "angle": 214,
+          "start": 0.505,
+          "end": 3.35,
+          "width": 2.845
+        },
+        {
+          "angle": 219,
+          "start": 0.52,
+          "end": null,
+          "width": 3.48
+        },
+        {
+          "angle": 224,
+          "start": 1.035,
+          "end": 3.84,
+          "width": 2.805
+        },
+        {
+          "angle": 229,
+          "start": 1.195,
+          "end": 2.225,
+          "width": 1.03
+        },
+        {
+          "angle": 234,
+          "start": 1.31,
+          "end": 2.105,
+          "width": 0.795
+        },
+        {
+          "angle": 239,
+          "start": 1.395,
+          "end": 2.085,
+          "width": 0.69
+        },
+        {
+          "angle": 244,
+          "start": 1.455,
+          "end": 2.1550000000000002,
+          "width": 0.7
+        },
+        {
+          "angle": 249,
+          "start": 1.495,
+          "end": 2.4,
+          "width": 0.905
+        },
+        {
+          "angle": 254,
+          "start": 1.5150000000000001,
+          "end": 3.085,
+          "width": 1.57
+        },
+        {
+          "angle": 259,
+          "start": 1.5150000000000001,
+          "end": null,
+          "width": 2.485
+        },
+        {
+          "angle": 264,
+          "start": 1.495,
+          "end": null,
+          "width": 2.505
+        },
+        {
+          "angle": 269,
+          "start": 1.45,
+          "end": null,
+          "width": 2.55
+        },
+        {
+          "angle": 274,
+          "start": 1.385,
+          "end": null,
+          "width": 2.615
+        },
+        {
+          "angle": 279,
+          "start": 1.295,
+          "end": null,
+          "width": 2.705
+        }
+      ]
+    },
+    {
+      "center": [
+        38.58,
+        36.75
+      ],
+      "rays": [
+        {
+          "angle": -61,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -56,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -51,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -46,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -41,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -36,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -31,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -26,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -21,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -16,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -11,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -6,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": -1,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 4,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 9,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 14,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 19,
+          "start": 0.505,
+          "end": 3.415,
+          "width": 2.91
+        },
+        {
+          "angle": 24,
+          "start": 0.505,
+          "end": 2.745,
+          "width": 2.24
+        },
+        {
+          "angle": 29,
+          "start": 0.505,
+          "end": 2.66,
+          "width": 2.155
+        },
+        {
+          "angle": 34,
+          "start": 0.505,
+          "end": 2.715,
+          "width": 2.21
+        },
+        {
+          "angle": 39,
+          "start": 0.505,
+          "end": 3.475,
+          "width": 2.97
+        },
+        {
+          "angle": 44,
+          "start": 0.505,
+          "end": 3.535,
+          "width": 3.03
+        },
+        {
+          "angle": 49,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 54,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 59,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 64,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 69,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 74,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 79,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 84,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 89,
+          "start": 0.505,
+          "end": null,
+          "width": 3.495
+        },
+        {
+          "angle": 94,
+          "start": 0.505,
+          "end": 2.74,
+          "width": 2.235
+        },
+        {
+          "angle": 99,
+          "start": 0.505,
+          "end": 2.61,
+          "width": 2.105
+        }
+      ]
+    }
+  ]
+}

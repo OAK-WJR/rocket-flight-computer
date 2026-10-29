@@ -1,0 +1,48 @@
+{
+ "board": "m3_design/assembly_review/m3.kicad_pcb",
+ "violations": {
+  "via_dangling": 32,
+  "silk_edge_clearance": 3,
+  "silk_overlap": 68,
+  "silk_over_copper": 112
+ },
+ "via_dangling": [
+  "GND via (0.85, 48.15)",
+  "GND via (0.95, 44.57)",
+  "GND via (4.4, 45.9)",
+  "GND via (8.35, 45.5)",
+  "GND via (8.45, 51.7)",
+  "GND via (9.2, 49.5)",
+  "GND via (9.85, 52.8)",
+  "GND via (9.95, 34.1)",
+  "GND via (11.75, 49.1)",
+  "GND via (12.45, 44.0)",
+  "GND via (12.5, 40.8)",
+  "GND via (13.2, 50.05)",
+  "GND via (13.5, 54.6)",
+  "GND via (13.8, 45.4)",
+  "GND via (14.53, 49.95)",
+  "GND via (14.6, 47.4)",
+  "GND via (16.0, 50.6)",
+  "GND via (16.4, 38.8)",
+  "GND via (16.82, 55.3)",
+  "GND via (17.65, 45.85)",
+  "GND via (19.69, 45.75)",
+  "GND via (20.46, 55.35)",
+  "GND via (20.5, 39.5)",
+  "GND via (21.4, 53.3)",
+  "GND via (21.95, 47.0)",
+  "GND via (23.6, 42.7)",
+  "GND via (24.2, 47.7)",
+  "GND via (24.25, 40.65)",
+  "GND via (29.2, 47.75)",
+  "GND via (29.6, 23.9)",
+  "GND via (30.0, 36.9)",
+  "GND via (31.4, 73.6)"
+ ],
+ "unconnected_by_net": {
+  "GND": 112
+ },
+ "schematic_parity": 0,
+ "note": "silk_* classes are step 8 (r9_post.py); every via_dangling is a pending GND via (steps 5-7 PENDING lists, In1 GND in step 8); every unconnected item is GND (step 8 pours)"
+}

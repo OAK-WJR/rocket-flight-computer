@@ -1,0 +1,20 @@
+# r9_ground_aid.py --check on full build 3's stage-33 board (byte-identical to build 1's)
+  return: no legal spot within 1.5 mm of the 3V3 layer change (24.25, 38.5)
+  return: no legal spot within 1.5 mm of the CAM_5V layer change (40.75, 45.4)
+  return: no legal spot within 1.5 mm of the 3V3 layer change (24.2, 50.0)
+  return: no legal spot within 1.5 mm of the 3V3A layer change (22.0, 50.75)
+  return: no legal spot within 1.5 mm of the CAM_IO_3V3 layer change (35.45, 51.95)
+  return: no legal spot within 1.5 mm of the 3V3 layer change (15.2, 53.6)
+  return: no legal spot within 1.5 mm of the CAM_IO_3V3 layer change (34.6, 57.4)
+  island F.Cu (31.11, 73.31)-(31.70, 73.89), 0.27 mm2: fewer than two GND vias, no legal spot
+  island F.Cu (11.32, 45.79)-(14.75, 49.61), 6.03 mm2: fewer than two GND vias, no legal spot
+  island F.Cu (7.94, 33.40)-(10.54, 34.80), 2.82 mm2: fewer than two GND vias, no legal spot
+  island F.Cu (23.85, 14.25)-(24.85, 15.04), 0.71 mm2: fewer than two GND vias, no legal spot
+  island B.Cu (11.07, 48.79)-(12.22, 49.53), 0.78 mm2: fewer than two GND vias, no legal spot
+  island B.Cu (38.10, 36.30)-(42.76, 37.23), 3.51 mm2: fewer than two GND vias, no legal spot
+  island B.Cu (30.20, 73.28)-(32.60, 73.92), 0.88 mm2: fewer than two GND vias, no legal spot
+  island B.Cu (29.54, 52.20)-(32.77, 58.00), 7.71 mm2: fewer than two GND vias, no legal spot
+  reach: P9 3.501 mm -> via (31.05, 51.25) (26 points)
+  reach: P9 3.456 mm -> via (38.75, 79.55) (6 points)
+r9_ground_aid: 187 rows {'return': 11, 'pad': 3, 'grid': 89, 'cover': 36, 'island': 14, 'patch': 27, 'strap': 5, 'reach': 2}
+frozen table reproduced

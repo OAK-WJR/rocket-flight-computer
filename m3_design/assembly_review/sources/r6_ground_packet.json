@@ -1,0 +1,154 @@
+{
+  "description": "Ground stitches for C122.2, C10.2, and shared D130.2/C179.2 island; 0.25 mm tracks and 0.5/0.3 mm vias. C179 GND via (36.99,38.9) is outside its SMD copper and clear of reserved M1 via (37.1,36.9). No existing copper or component altered.",
+  "base_sha256": "c7669c5896dc139a8b4dc3edb308541620d87aa7edaee1b60dd3f4cff5222868",
+  "candidate_sha256": "7f48cb6e5fbbf2f07fc0ab91413536000c766a874a0b68dfd2edcd95162b26fc",
+  "removed_tracks_guard": [],
+  "added_tracks": [
+    {
+      "uuid": "01a97480-22a2-40ab-8474-d6eb56e6965a",
+      "type": "PCB_TRACK",
+      "net": "GND",
+      "locked": false,
+      "layer": "F.Cu",
+      "start": [
+        37.275,
+        38.0
+      ],
+      "end": [
+        37.275,
+        38.615
+      ],
+      "width_mm": 0.25
+    },
+    {
+      "uuid": "08332360-fc6b-4832-add9-095c616a45a5",
+      "type": "PCB_TRACK",
+      "net": "GND",
+      "locked": false,
+      "layer": "F.Cu",
+      "start": [
+        37.275,
+        38.615
+      ],
+      "end": [
+        36.99,
+        38.9
+      ],
+      "width_mm": 0.25
+    },
+    {
+      "uuid": "1d4f55ab-64a3-47ed-9305-2de495c622c6",
+      "type": "PCB_VIA",
+      "net": "GND",
+      "locked": false,
+      "position": [
+        38.95,
+        27.6
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "77a6aecc-7b6b-4f0c-9aa4-f81d97f5db35",
+      "type": "PCB_TRACK",
+      "net": "GND",
+      "locked": false,
+      "layer": "F.Cu",
+      "start": [
+        13.75,
+        50.8
+      ],
+      "end": [
+        13.75,
+        51.7
+      ],
+      "width_mm": 0.25
+    },
+    {
+      "uuid": "9b9b68e9-76f9-412f-b85f-333629aa0a96",
+      "type": "PCB_TRACK",
+      "net": "GND",
+      "locked": false,
+      "layer": "B.Cu",
+      "start": [
+        40.1,
+        27.4
+      ],
+      "end": [
+        39.15,
+        27.4
+      ],
+      "width_mm": 0.25
+    },
+    {
+      "uuid": "d6fd250b-ce73-4610-963b-6f03f45c4d36",
+      "type": "PCB_TRACK",
+      "net": "GND",
+      "locked": false,
+      "layer": "B.Cu",
+      "start": [
+        39.15,
+        27.4
+      ],
+      "end": [
+        38.95,
+        27.6
+      ],
+      "width_mm": 0.25
+    },
+    {
+      "uuid": "e7963311-bb1b-4408-8959-3d0bd2949bc1",
+      "type": "PCB_VIA",
+      "net": "GND",
+      "locked": false,
+      "position": [
+        13.75,
+        51.7
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "fc68fefc-7d23-4f77-b35e-398dae51daca",
+      "type": "PCB_VIA",
+      "net": "GND",
+      "locked": false,
+      "position": [
+        36.99,
+        38.9
+      ],
+      "diameter_mm": 0.5,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    }
+  ],
+  "pad_changes": [],
+  "validation": {
+    "native_candidate": "<scratch>/r6-gnd-two-mgz1has2/three-drc.json",
+    "hard_drc": 0,
+    "via_dangling": 11,
+    "track_dangling": 5,
+    "unconnected_before": 20,
+    "unconnected_after": 17,
+    "new_check_r6_issues": [],
+    "existing_tracks_edited": [],
+    "pad_group_regressions": [],
+    "pad_group_changes": {
+      "GND": [
+        5,
+        2
+      ]
+    }
+  }
+}

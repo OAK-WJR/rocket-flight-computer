@@ -1,0 +1,2459 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_r10")
+	(uuid 05a85211-bc24-59d4-a8a4-ff7347ee84fc)
+	(paper "A1")
+	(title_block (title "15 | External GPS and radio UART ports") (date "2026-10-26") (rev "M3-ASSY-R10"))
+	(lib_symbols
+		(symbol "M3:C"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762)
+						(xy 2.032 0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -2.032 -0.762)
+						(xy 2.032 -0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:CameraTerminal"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "CameraTerminal_0_1"
+				(rectangle
+					(start -22.86 6.35)
+					(end 22.86 -6.35)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "CameraTerminal_1_1"
+				(pin passive line
+					(at -27.939999999999998 3.8099999999999996 0)
+					(length 5.08)
+					(name "5V OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -27.939999999999998 1.2699999999999996 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -27.939999999999998 -1.2700000000000005 0)
+					(length 5.08)
+					(name "RX FROM CAMERA TX"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -27.939999999999998 -3.8100000000000005 0)
+					(length 5.08)
+					(name "TX TO CAMERA RX"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:CameraUART"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "CameraUART_0_1"
+				(rectangle
+					(start -22.86 6.35)
+					(end 22.86 -6.35)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "CameraUART_1_1"
+				(pin input line
+					(at -27.939999999999998 3.8099999999999996 0)
+					(length 5.08)
+					(name "A1 TX INPUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin tri_state line
+					(at -27.939999999999998 1.2699999999999996 0)
+					(length 5.08)
+					(name "A2Y RX OUTPUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -27.939999999999998 -1.2700000000000005 0)
+					(length 5.08)
+					(name "OE"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -27.939999999999998 -3.8100000000000005 0)
+					(length 5.08)
+					(name "VCCA MCU"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 27.939999999999998 3.8099999999999996 180)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin tri_state line
+					(at 27.939999999999998 1.2699999999999996 180)
+					(length 5.08)
+					(name "B1Y TO CAMERA"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "8"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at 27.939999999999998 -1.2700000000000005 180)
+					(length 5.08)
+					(name "B2 FROM CAMERA"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 27.939999999999998 -3.8100000000000005 180)
+					(length 5.08)
+					(name "VCCB CAMERA"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "7"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_TXU0202_DCU"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:ESD_Bidir"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 1.016)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "ESD_Bidir"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Bidirectional low-capacitance ESD protection diode (RF line)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "diode TVS thyrector"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "ESD_Bidir_0_1"
+				(polyline
+					(pts
+						(xy -2.54 1.27)
+						(xy -2.54 -1.27)
+						(xy 2.54 1.27)
+						(xy 2.54 -1.27)
+						(xy -2.54 1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 0.508 1.27)
+						(xy 0 1.27)
+						(xy 0 -1.27)
+						(xy -0.508 -1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 1.27 0)
+						(xy -1.27 0))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "ESD_Bidir_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "A1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A2"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TSLP_2_20"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+	)
+	(symbol
+		(lib_id "M3:CameraTerminal")
+		(at 86.36 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e9385389-e8da-5eee-90dc-572023b6cd48)
+		(property "Reference" "J410"
+			(at 88.9 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "GPS 4V8/GND/TX/RX"
+			(at 88.9 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GH_BM04B_GHS_TBT"
+			(at 86.36 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 86.36 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C161692"
+			(at 86.36 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "JST"
+			(at 86.36 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "BM04B-GHS-TBT(LF)(SN)"
+			(at 86.36 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "J410")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 58.42 85.09)
+			(xy 53.34 85.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ef65a165-4f87-5feb-a3a4-b8c798488b21))
+	(global_label "GPS_4V8"
+		(shape passive)
+		(at 53.34 85.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 28b93024-b5e7-54dd-89cc-51a72eabb887))
+	(wire
+		(pts
+			(xy 58.42 87.63)
+			(xy 53.34 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ace02bc4-b746-5485-8ca0-9f479bc576bb))
+	(global_label "GND"
+		(shape passive)
+		(at 53.34 87.63 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6b8cd66b-41fc-5807-a342-df1843876fa6))
+	(wire
+		(pts
+			(xy 58.42 90.17)
+			(xy 53.34 90.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3687ccfa-a773-5fcb-8580-058e5a0c6213))
+	(global_label "GPS_TX_WIRE"
+		(shape passive)
+		(at 53.34 90.17 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a1f89da4-a1f8-5916-9be1-a8d43e6e3005))
+	(wire
+		(pts
+			(xy 58.42 92.71)
+			(xy 53.34 92.71))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 429c540b-0f79-59c9-981e-f0e7553944b1))
+	(global_label "GPS_RX_WIRE"
+		(shape passive)
+		(at 53.34 92.71 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid dc2653c5-acc8-5613-831c-33f819afdf20))
+	(symbol
+		(lib_id "M3:CameraUART")
+		(at 226.06 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f7d6e69b-50a0-5e0e-a59f-b4ea02ac1525)
+		(property "Reference" "U411"
+			(at 228.6 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "TXU0202DCUR"
+			(at 228.6 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TXU0202_DCU"
+			(at 226.06 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 226.06 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C5186957"
+			(at 226.06 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Texas Instruments"
+			(at 226.06 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "TXU0202DCUR"
+			(at 226.06 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "U411")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 254 90.17)
+			(xy 259.08 90.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 276470a6-0d68-586a-9e54-d2823e1a1714))
+	(global_label "GPS_RX_BUFFER"
+		(shape passive)
+		(at 259.08 90.17 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 37f01d70-c439-5d2d-999c-a148d4a35f9a))
+	(wire
+		(pts
+			(xy 254 85.09)
+			(xy 259.08 85.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 220bfa73-3374-5905-b94d-5d5e33d74777))
+	(global_label "GND"
+		(shape passive)
+		(at 259.08 85.09 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 4160397f-74c7-5cd1-a852-4b1623e44887))
+	(wire
+		(pts
+			(xy 198.12 92.71)
+			(xy 193.04 92.71))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 539d329d-77ba-56ad-9138-c1547de8c3c5))
+	(global_label "3V3"
+		(shape passive)
+		(at 193.04 92.71 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d61091b9-dcf6-53b7-b66e-7c4cdf79f76d))
+	(wire
+		(pts
+			(xy 198.12 87.63)
+			(xy 193.04 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid cb78f449-fb34-5373-a588-02cc70fa10ec))
+	(global_label "GPS_RX_MCU"
+		(shape passive)
+		(at 193.04 87.63 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9c3d1a0b-37fc-5186-8f63-ab4d7d4ac3e0))
+	(wire
+		(pts
+			(xy 198.12 85.09)
+			(xy 193.04 85.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid dfb4315d-c76f-5834-bbbc-bb711e50d9b2))
+	(global_label "GPS_TX_MCU"
+		(shape passive)
+		(at 193.04 85.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid be72fef9-1a5f-5ee3-adae-bfa90dfc9d09))
+	(wire
+		(pts
+			(xy 198.12 90.17)
+			(xy 193.04 90.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6df2ee0b-819c-54bb-bda5-805deefc8ca8))
+	(global_label "GPS_UART_OE"
+		(shape passive)
+		(at 193.04 90.17 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8109ef2d-3e40-5992-ac46-2b399910e4cf))
+	(wire
+		(pts
+			(xy 254 92.71)
+			(xy 259.08 92.71))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4a252368-406a-57aa-83b3-492db5662b66))
+	(global_label "3V3"
+		(shape passive)
+		(at 259.08 92.71 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 6eaa1d94-adbc-506b-8413-0015c33ca684))
+	(wire
+		(pts
+			(xy 254 87.63)
+			(xy 259.08 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7d4beab6-ef49-5b25-843c-52770e3bb24c))
+	(global_label "GPS_TX_BUFFER"
+		(shape passive)
+		(at 259.08 87.63 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid bb2e6f22-e6bb-594a-9a15-dc54d22f1e67))
+	(symbol
+		(lib_id "M3:R")
+		(at 365.76 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6087322c-6447-5798-a63a-706bd05b77ed)
+		(property "Reference" "R440"
+			(at 368.3 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 1%"
+			(at 368.3 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 365.76 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 365.76 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 365.76 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 365.76 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 365.76 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "R440")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 365.76 85.09)
+			(xy 365.76 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 11c81bc8-972b-5b62-ac80-f09176c61c64))
+	(global_label "GPS_RX_WIRE"
+		(shape passive)
+		(at 365.76 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8ce9be1f-3237-5dba-b56a-49ab78a04e5d))
+	(wire
+		(pts
+			(xy 365.76 92.71)
+			(xy 365.76 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid dd52fbc4-0aba-5320-ad72-303fc3f947b3))
+	(global_label "GPS_RX_BUFFER"
+		(shape passive)
+		(at 365.76 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 93157beb-e400-5cb3-a70c-4bbc08540058))
+	(symbol
+		(lib_id "M3:R")
+		(at 505.46 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid b7e233f5-9eda-5d58-b29c-19de45f042bf)
+		(property "Reference" "R441"
+			(at 508 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 1%"
+			(at 508 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 505.46 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 505.46 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 505.46 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 505.46 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 505.46 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "R441")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 505.46 85.09)
+			(xy 505.46 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 297fdb0c-88db-58c9-825c-5a6797541ef4))
+	(global_label "GPS_TX_BUFFER"
+		(shape passive)
+		(at 505.46 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c9aab0a9-c0d8-5472-837a-620033d26c9e))
+	(wire
+		(pts
+			(xy 505.46 92.71)
+			(xy 505.46 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 05f88a91-fc2d-52e5-887b-b001d116753e))
+	(global_label "GPS_TX_WIRE"
+		(shape passive)
+		(at 505.46 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5bef222a-7f39-54e3-93b4-4e5654a3ec3f))
+	(symbol
+		(lib_id "M3:R")
+		(at 645.16 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 3fb7d05f-aa5e-52be-abd4-acfa8e6a077a)
+		(property "Reference" "R442"
+			(at 647.7 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 1%"
+			(at 647.7 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 645.16 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 645.16 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25804"
+			(at 645.16 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 645.16 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1002T5E"
+			(at 645.16 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "R442")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 645.16 85.09)
+			(xy 645.16 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 80d629dd-a5d0-5519-945b-0c3310f60c1d))
+	(global_label "GPS_UART_OE"
+		(shape passive)
+		(at 645.16 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7fddf7f2-d909-5b5f-98e9-ec491261772f))
+	(wire
+		(pts
+			(xy 645.16 92.71)
+			(xy 645.16 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 39e79200-1f6f-58e2-a678-ba70b22d9199))
+	(global_label "GND"
+		(shape passive)
+		(at 645.16 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 734727ba-c004-5dbf-b1ec-4d5388dc7e46))
+	(symbol
+		(lib_id "M3:C")
+		(at 86.36 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6fd79681-0332-5467-ba36-bc8c7b5c79ae)
+		(property "Reference" "C440"
+			(at 88.9 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 88.9 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 86.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 86.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14663"
+			(at 86.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 86.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
+			(at 86.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "C440")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 86.36 133.35)
+			(xy 86.36 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 09580353-781d-5b0f-80de-9b4ac4506375))
+	(global_label "3V3"
+		(shape passive)
+		(at 86.36 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fe0c3a2f-bdb8-5212-adab-9aa443f5f3bb))
+	(wire
+		(pts
+			(xy 86.36 140.97)
+			(xy 86.36 146.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1a3a33dc-3362-5503-b8f2-564122c1a365))
+	(global_label "GND"
+		(shape passive)
+		(at 86.36 146.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8520c5fb-388e-523f-a2ba-a9660b2f0d9d))
+	(symbol
+		(lib_id "M3:C")
+		(at 226.06 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 66fc3cd8-3064-586d-b06f-0e8acf700048)
+		(property "Reference" "C443"
+			(at 228.6 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 228.6 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 226.06 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 226.06 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14663"
+			(at 226.06 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 226.06 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
+			(at 226.06 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "C443")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 226.06 133.35)
+			(xy 226.06 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d9b88f0e-ce10-5d8f-a008-81c5954864ac))
+	(global_label "3V3"
+		(shape passive)
+		(at 226.06 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8f71b78b-d669-5839-a448-f489d471e4fd))
+	(wire
+		(pts
+			(xy 226.06 140.97)
+			(xy 226.06 146.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0a86a897-94f5-554a-ae76-5ddf68fe8aa8))
+	(global_label "GND"
+		(shape passive)
+		(at 226.06 146.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bb7359c9-38a1-54a3-a15c-078cd0f2cd21))
+	(symbol
+		(lib_id "M3:ESD_Bidir")
+		(at 365.76 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 14b64419-7b53-5ab8-b4df-d30fa83d3756)
+		(property "Reference" "D410"
+			(at 363.22 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "ESD103-B1-02EL"
+			(at 363.22 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TSLP_2_20"
+			(at 365.76 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146"
+			(at 365.76 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C535146"
+			(at 365.76 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Infineon Technologies"
+			(at 365.76 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "ESD103-B1-02EL E6327"
+			(at 365.76 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "D410")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 361.95 137.16)
+			(xy 356.87 137.16))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 26835473-cd2e-5b13-bce9-951c701ca2fb))
+	(global_label "GPS_TX_WIRE"
+		(shape passive)
+		(at 356.87 137.16 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f57b4a5e-cec4-5335-beb8-ec7f6640b6b0))
+	(wire
+		(pts
+			(xy 369.57 137.16)
+			(xy 374.65 137.16))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 24ab5b66-0bd1-5e85-90f1-f9d0e6d0db2c))
+	(global_label "GND"
+		(shape passive)
+		(at 374.65 137.16 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 540ce472-598c-5035-bbab-e940d6d7cd99))
+	(symbol
+		(lib_id "M3:ESD_Bidir")
+		(at 505.46 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 77bfb2cd-0237-5344-bdd9-9ee06fc5fdd6)
+		(property "Reference" "D411"
+			(at 502.92 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "ESD103-B1-02EL"
+			(at 502.92 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TSLP_2_20"
+			(at 505.46 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146"
+			(at 505.46 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C535146"
+			(at 505.46 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Infineon Technologies"
+			(at 505.46 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "ESD103-B1-02EL E6327"
+			(at 505.46 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "D411")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 501.65 137.16)
+			(xy 496.57 137.16))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3bdfff14-c8eb-50ff-b869-cce8c1cb052e))
+	(global_label "GPS_RX_WIRE"
+		(shape passive)
+		(at 496.57 137.16 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0daea02a-e950-5f3c-9660-d5f5e4712b84))
+	(wire
+		(pts
+			(xy 509.27 137.16)
+			(xy 514.35 137.16))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a9a2632b-5228-5028-b984-49b5f06e14fc))
+	(global_label "GND"
+		(shape passive)
+		(at 514.35 137.16 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid b9a7fe78-92ed-5403-9030-c88da8d369b6))
+	(symbol
+		(lib_id "M3:CameraTerminal")
+		(at 645.16 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 97192e4d-0904-5ecf-b85e-67fb2fe86f2b)
+		(property "Reference" "J420"
+			(at 647.7 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "RADIO 4V8/GND/TX/RX"
+			(at 647.7 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GH_BM04B_GHS_TBT"
+			(at 645.16 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 645.16 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C161692"
+			(at 645.16 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "JST"
+			(at 645.16 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "BM04B-GHS-TBT(LF)(SN)"
+			(at 645.16 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "J420")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 617.22 133.35)
+			(xy 612.14 133.35))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5ebd5e6f-97eb-55b9-94c6-245fd8af0d79))
+	(global_label "RADIO_4V8"
+		(shape passive)
+		(at 612.14 133.35 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 70e7fce3-816e-5198-8db6-8d443473249e))
+	(wire
+		(pts
+			(xy 617.22 135.89)
+			(xy 612.14 135.89))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a22cc258-67f8-57d0-9ecf-50cdcae0ccd2))
+	(global_label "GND"
+		(shape passive)
+		(at 612.14 135.89 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d935d795-9080-574c-91e5-7a97636ac8b6))
+	(wire
+		(pts
+			(xy 617.22 138.43)
+			(xy 612.14 138.43))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 290fbd1a-ac59-5e85-a2e1-75b9520883d6))
+	(global_label "RADIO_TX_WIRE"
+		(shape passive)
+		(at 612.14 138.43 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1afa5876-31c7-591b-a75b-c39cfcf6397e))
+	(wire
+		(pts
+			(xy 617.22 140.97)
+			(xy 612.14 140.97))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 22faaa0a-52db-5468-9ba3-64c04207084b))
+	(global_label "RADIO_RX_WIRE"
+		(shape passive)
+		(at 612.14 140.97 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0269b63b-3524-5b13-8f99-1dd4accaaaff))
+	(symbol
+		(lib_id "M3:CameraUART")
+		(at 86.36 185.42 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e9418db9-e79d-5e23-affd-5220e00a8241)
+		(property "Reference" "U421"
+			(at 88.9 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "TXU0202DCUR"
+			(at 88.9 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TXU0202_DCU"
+			(at 86.36 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 86.36 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C5186957"
+			(at 86.36 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Texas Instruments"
+			(at 86.36 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "TXU0202DCUR"
+			(at 86.36 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "U421")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 114.3 186.69)
+			(xy 119.38 186.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 014c43f9-69de-59f4-9d4b-fc600692502f))
+	(global_label "RADIO_RX_BUFFER"
+		(shape passive)
+		(at 119.38 186.69 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 0a3d7e6e-e84a-5131-91dc-061ea84008d0))
+	(wire
+		(pts
+			(xy 114.3 181.61)
+			(xy 119.38 181.61))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 87960df3-3ead-55b5-a26d-b9df9cdbfd02))
+	(global_label "GND"
+		(shape passive)
+		(at 119.38 181.61 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 8a27b258-c78a-5fed-a2a5-20acb425824e))
+	(wire
+		(pts
+			(xy 58.42 189.23)
+			(xy 53.34 189.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d3089c77-d9af-5277-82b4-3fbe6ef30c2c))
+	(global_label "3V3"
+		(shape passive)
+		(at 53.34 189.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 479363b7-e8a7-5f9b-995a-14c126cdc57a))
+	(wire
+		(pts
+			(xy 58.42 184.15)
+			(xy 53.34 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid eee6a6bc-aa7f-5e3a-96b3-8ce6e8f736c5))
+	(global_label "RADIO_RX_MCU"
+		(shape passive)
+		(at 53.34 184.15 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 30e854d8-3714-51be-bd2f-978bbff983be))
+	(wire
+		(pts
+			(xy 58.42 181.61)
+			(xy 53.34 181.61))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 055c7052-a9f4-5f03-85a3-dbe2001fce25))
+	(global_label "RADIO_TX_MCU"
+		(shape passive)
+		(at 53.34 181.61 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e1346d6d-9c97-58f6-ad27-88644544fa96))
+	(wire
+		(pts
+			(xy 58.42 186.69)
+			(xy 53.34 186.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 56be2ac4-f208-503e-94ae-cbacba07c575))
+	(global_label "RADIO_UART_OE"
+		(shape passive)
+		(at 53.34 186.69 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 93ce9d49-90ec-59b4-a2ac-9187a2569242))
+	(wire
+		(pts
+			(xy 114.3 189.23)
+			(xy 119.38 189.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 579282f6-2894-5da7-b3b0-27504adfb9c4))
+	(global_label "3V3"
+		(shape passive)
+		(at 119.38 189.23 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid c7fe903a-669d-5fef-823f-a955c8f87079))
+	(wire
+		(pts
+			(xy 114.3 184.15)
+			(xy 119.38 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 603278ac-ff53-5edd-a855-52e2adbefb88))
+	(global_label "RADIO_TX_BUFFER"
+		(shape passive)
+		(at 119.38 184.15 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 22d3d251-2376-5d0c-8cdc-f45c9bd77a2e))
+	(symbol
+		(lib_id "M3:R")
+		(at 226.06 185.42 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f0459903-c137-5ac3-b3ff-1753aae5741b)
+		(property "Reference" "R450"
+			(at 228.6 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 1%"
+			(at 228.6 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 226.06 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 226.06 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 226.06 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 226.06 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 226.06 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "R450")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 226.06 181.61)
+			(xy 226.06 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 15042ab9-cda9-515b-9df5-c2da7af77fbd))
+	(global_label "RADIO_RX_WIRE"
+		(shape passive)
+		(at 226.06 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 349eb08e-284f-5775-bbb1-d6fa853fafe4))
+	(wire
+		(pts
+			(xy 226.06 189.23)
+			(xy 226.06 194.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 34bd14a6-51f2-53d7-9ca0-6c39cd65f220))
+	(global_label "RADIO_RX_BUFFER"
+		(shape passive)
+		(at 226.06 194.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0684594c-74bb-57d8-822c-377fa5a80365))
+	(symbol
+		(lib_id "M3:R")
+		(at 365.76 185.42 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6c9e94ae-4ea0-5296-a5bc-568ba5c07217)
+		(property "Reference" "R451"
+			(at 368.3 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 1%"
+			(at 368.3 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 365.76 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 365.76 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 365.76 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 365.76 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 365.76 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "R451")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 365.76 181.61)
+			(xy 365.76 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 51cea66d-227e-539f-b34c-da2403bbdd92))
+	(global_label "RADIO_TX_BUFFER"
+		(shape passive)
+		(at 365.76 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3b17e2dd-9abd-57eb-9baa-4771af700709))
+	(wire
+		(pts
+			(xy 365.76 189.23)
+			(xy 365.76 194.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ec28d5d2-2823-5127-8fab-2eeaef94c8ea))
+	(global_label "RADIO_TX_WIRE"
+		(shape passive)
+		(at 365.76 194.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8fd312cf-f2b1-566b-98a4-f33a96817641))
+	(symbol
+		(lib_id "M3:R")
+		(at 505.46 185.42 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d8b7eea1-e3dc-5f9c-a4c0-a80f8496fa02)
+		(property "Reference" "R452"
+			(at 508 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 1%"
+			(at 508 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 505.46 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 505.46 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25804"
+			(at 505.46 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 505.46 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1002T5E"
+			(at 505.46 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "R452")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 505.46 181.61)
+			(xy 505.46 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c691eb62-13a4-5f66-b8ca-c7e9e936a07d))
+	(global_label "RADIO_UART_OE"
+		(shape passive)
+		(at 505.46 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fcd7b84a-8a28-5b42-b34c-756aa0e4347a))
+	(wire
+		(pts
+			(xy 505.46 189.23)
+			(xy 505.46 194.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0cde345f-4637-5df3-afef-578b01b6ffc2))
+	(global_label "GND"
+		(shape passive)
+		(at 505.46 194.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 773fbfa7-fc52-5379-b96d-48857929ef3d))
+	(symbol
+		(lib_id "M3:C")
+		(at 645.16 185.42 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid fe979599-489d-5343-8902-0a4bfc007fd0)
+		(property "Reference" "C450"
+			(at 647.7 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 647.7 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 645.16 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 645.16 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14663"
+			(at 645.16 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 645.16 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
+			(at 645.16 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "C450")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 645.16 181.61)
+			(xy 645.16 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid dff3e690-9908-5d19-946c-6645479ec5d8))
+	(global_label "3V3"
+		(shape passive)
+		(at 645.16 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 17d2baee-9e57-583a-b1b5-4a656141a2ad))
+	(wire
+		(pts
+			(xy 645.16 189.23)
+			(xy 645.16 194.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9ee22926-55b3-53b9-af46-979b161403f8))
+	(global_label "GND"
+		(shape passive)
+		(at 645.16 194.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9793d3d9-fb7b-50bc-80d3-cc444df92a5d))
+	(symbol
+		(lib_id "M3:C")
+		(at 86.36 233.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f2eb30b0-6f4c-5343-b4d6-6e85fba220d8)
+		(property "Reference" "C453"
+			(at 88.9 232.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 88.9 234.95 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 86.36 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 86.36 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14663"
+			(at 86.36 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 86.36 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
+			(at 86.36 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "C453")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 86.36 229.87)
+			(xy 86.36 224.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 555d687f-9110-56cc-b1ad-d235132a91be))
+	(global_label "3V3"
+		(shape passive)
+		(at 86.36 224.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3b315a53-361e-5b21-81da-7f56f57a0bc5))
+	(wire
+		(pts
+			(xy 86.36 237.49)
+			(xy 86.36 242.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 248a0ab0-9a71-5ad3-a84a-b554265a658f))
+	(global_label "GND"
+		(shape passive)
+		(at 86.36 242.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 901331d6-7bfa-5acc-bb3a-f5a47c2b42c2))
+	(symbol
+		(lib_id "M3:ESD_Bidir")
+		(at 226.06 233.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4b934e54-0d92-58d3-adf3-25ff1d777c63)
+		(property "Reference" "D420"
+			(at 223.52 229.87 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "ESD103-B1-02EL"
+			(at 223.52 237.49 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TSLP_2_20"
+			(at 226.06 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146"
+			(at 226.06 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C535146"
+			(at 226.06 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Infineon Technologies"
+			(at 226.06 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "ESD103-B1-02EL E6327"
+			(at 226.06 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "D420")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 222.25 233.68)
+			(xy 217.17 233.68))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 64ee7ebc-0b59-5c58-b8f1-faebde6e6ca4))
+	(global_label "RADIO_TX_WIRE"
+		(shape passive)
+		(at 217.17 233.68 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6eb99079-d515-55e3-be63-0f700f303621))
+	(wire
+		(pts
+			(xy 229.87 233.68)
+			(xy 234.95 233.68))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a7ba0125-bc96-5de9-8e06-6196912c0d3f))
+	(global_label "GND"
+		(shape passive)
+		(at 234.95 233.68 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid c6b9e758-3a0a-5e51-bd39-c862426c86d3))
+	(symbol
+		(lib_id "M3:ESD_Bidir")
+		(at 365.76 233.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 165e240d-a0eb-5580-97e9-75de08191470)
+		(property "Reference" "D421"
+			(at 363.22 229.87 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "ESD103-B1-02EL"
+			(at 363.22 237.49 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TSLP_2_20"
+			(at 365.76 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146"
+			(at 365.76 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C535146"
+			(at 365.76 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Infineon Technologies"
+			(at 365.76 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "ESD103-B1-02EL E6327"
+			(at 365.76 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc"
+					(reference "D421")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 361.95 233.68)
+			(xy 356.87 233.68))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b1429539-743c-5a9f-a580-def2adac302e))
+	(global_label "RADIO_RX_WIRE"
+		(shape passive)
+		(at 356.87 233.68 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 68473bc7-9eba-5e35-abf0-ddb0686564f5))
+	(wire
+		(pts
+			(xy 369.57 233.68)
+			(xy 374.65 233.68))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bd8cf4a7-874a-57f4-80eb-395a8c938495))
+	(global_label "GND"
+		(shape passive)
+		(at 374.65 233.68 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 42ceaf5a-356c-51bb-9777-3f6b57b57749))
+	(text "R10: external GPS J410 and radio J420. GH4 pins 1 supply, 2 GND, 3 board TX, 4 board RX; harness crosses TX to endpoint RX."
+		(at 20.32 15.24 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 26a75c96-ffbc-5db5-aa06-c6ec09e73f5d))
+	(text "GPS USART6 PC6 TX / PC7 RX AF7 (DS12110 Rev10 Table12 p91); radio UART5 PB13 TX / PB12 RX AF14 (Table11 p90)."
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 579bbb63-3f35-524b-a20a-edbe58a56b0b))
+	(text "TXU0202 VCCA and VCCB = main 3V3; C440/C450 and retained C443/C453 bypass the two supplies. OE has 10k pull-down. 1k UART series resistors and ground-only ESD clamps remain."
+		(at 20.32 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid b29f844e-939c-5f1e-9c83-cdba205f1cad))
+	(text "Reset / boot / port off: EN=0 and OE=0. Startup: EN, stable downstream supply, UART idle-high configuration, then OE. Shutdown: OE low before EN low. Incorrect OE while port off may feed a few mA through 1k; accepted."
+		(at 20.32 30.48 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid e585120a-9377-5b71-9019-6369e791c15a))
+	(text "Radio USB-powered with board off: TXU partial-power-down isolation protects MCU; power-pin reverse/transient qualification remains a separate bench gate."
+		(at 20.32 35.56 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid be0c0a4b-896e-5082-9364-863c245f8e08))
+	(text "Radio messages may never arm/fire; no port signal reaches pyro, arming or actuator nets. LR900-F band 890-915MHz: use channels 12-25 (902-915MHz) or a maker-confirmed FHSS set."
+		(at 20.32 40.64 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 8adb2d79-26cc-5a61-a047-68c1ff583350))
+	(sheet_instances (path "/" (page "15"))))

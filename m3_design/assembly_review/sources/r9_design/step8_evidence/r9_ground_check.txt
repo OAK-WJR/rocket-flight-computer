@@ -1,0 +1,14 @@
+table      OK
+drc        OK
+route      OK
+stitch     OK
+in2        OK
+xtal       OK
+islands    OK
+reach      OK
+reference  OK
+pyro       OK
+contract   OK
+actuators  OK
+reach {'points': 18544, 'p95': 3.45, 'max': 7.32, 'max_at': (31.25, 91.25), 'over_3p5': 897} P7 9 reference {'samples': 31359, 'unreferenced': 3206, 'r6b': 0.1022, 'own_sides': {'QSPI_IO2 (12.5, 42.07) F.Cu': 121, 'QSPI_IO2 (12.5, 42.07) B.Cu': 119, 'HSE_IN (17.0, 50.6) F.Cu': 121, 'HSE_IN (17.0, 50.6) B.Cu': 119, 'HSE_OUT (19.69, 47.0) F.Cu': 122, 'HSE_OUT (19.69, 47.0) B.Cu': 241, 'QSPI_CLK (22.75, 42.07) F.Cu': 122, 'QSPI_CLK (22.75, 42.07) B.Cu': 119, 'QSPI_IO0 (21.13, 40.05) F.Cu': 119, 'QSPI_IO0 (21.13, 40.05) B.Cu': 119, 'QSPI_IO1 (20.0, 38.9) F.Cu': 119, 'QSPI_IO1 (20.0, 38.9) B.Cu': 119, 'QSPI_IO3 (22.75, 43.33) F.Cu': 121, 'QSPI_IO3 (22.75, 43.33) B.Cu': 119, 'SPI1_SCK (11.7, 44.6) F.Cu': 121, 'SPI1_SCK (11.7, 44.6) B.Cu': 129, 'SPI1_MISO (12.55, 45.0) F.Cu': 125, 'SPI1_MISO (12.55, 45.0) B.Cu': 124, 'SPI1_MOSI (12.55, 45.75) F.Cu': 133, 'SPI1_MOSI (12.55, 45.75) B.Cu': 119, 'QSPI_NCS (14.57, 45.4) F.Cu': 121, 'QSPI_NCS (14.57, 45.4) B.Cu': 242, 'IMU_CS (9.0, 46.4) F.Cu': 119, 'IMU_CS (9.0, 46.4) B.Cu': 172}, 'outside_own': 1, 'extended_own': 3930, 'extended_outside_own': 1, 'recorded_stray': 1}
+R9 ground gate: OK

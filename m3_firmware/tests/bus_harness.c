@@ -13,6 +13,7 @@ RCC_TypeDef rcc;
 DBG_TypeDef dbg;
 uint32_t uid[3],SystemCoreClock=64000000;
 static unsigned ticks,imu_rx,flash_rx,sda_pos,sda_size;
+static unsigned pe1_inputs,pe3_guards;
 static uint8_t imu_value=0xe9;
 static uint32_t flash_value=0xef4018;
 static int sda_bits[512],scl_stuck,active;
@@ -28,6 +29,12 @@ void HAL_Init(void){}
 void bench_adc_sample(BenchADC *a){memset(a,0,sizeof(*a));} /* not exercised by this bus test */
 void SystemCoreClockUpdate(void){}
 void HAL_GPIO_Init(GPIO_TypeDef *p,GPIO_InitTypeDef *g){
+    if(p==GPIOE && (g->Pin&GPIO_PIN_1)){
+        assert(g->Mode==GPIO_MODE_INPUT && g->Pull==GPIO_NOPULL);++pe1_inputs;
+    }
+    if(p==GPIOE && (g->Pin&GPIO_PIN_3)){
+        assert(g->Mode==GPIO_MODE_OUTPUT_PP && !(p->output&GPIO_PIN_3));++pe3_guards;
+    }
     if(p==GPIOB && (g->Pin==GPIO_PIN_8 || g->Pin==GPIO_PIN_9)) assert(g->Mode==GPIO_MODE_OUTPUT_OD);
 }
 void HAL_GPIO_TogglePin(GPIO_TypeDef *p,uint16_t pin){p->output^=pin;}
@@ -69,7 +76,8 @@ static void reset_mock(void){
     memset(frame,0,sizeof(frame));gb.output=gd.output=ge.output=0;
     imu_rx=flash_rx=sda_pos=sda_size=out_count=tx_count=0;active=0;scl_stuck=0;ticks=0;
     memset(spi_n,0,sizeof(spi_n));memset(spi_count,0,sizeof(spi_count));memset(spi_acc,0,sizeof(spi_acc));
-    setup_gpio();active=0;tx_count=0;
+    pe1_inputs=pe3_guards=0;setup_gpio();
+    assert(pe1_inputs==1 && pe3_guards==1);active=0;tx_count=0;
 }
 static void push(int bit){assert(sda_size<512);sda_bits[sda_size++]=bit;}
 static void promscript(const uint16_t p[8]){

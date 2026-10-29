@@ -1,0 +1,110 @@
+(footprint "M3_SMA_KH_KE8_EDGE"
+	(version 20260206)
+	(generator "m3_r7_parts")
+	(layer "F.Cu")
+	(descr "Kinghelm KH-SMA-KE8-G (C530661) 50 ohm edge-launch SMA jack for a 1.6 mm board; same land: BAT WIRELESS BWSMA-KE-P001 (C496550). Centre pad 5 and legs 1/2 on F.Cu, legs 3/4 on B.Cu, 1.2 x 4.2 mm from 0.2 to 4.4 mm inside the edge (local y = 0). NO paste: fitted by hand in JLC through-hole step after reflow. Body overhangs the edge 9.5 mm (flange 1.5 + thread 8)")
+	(attr smd)
+	(property "Reference" "REF**"
+		(at 0 6.2 0)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15))))
+	(property "Value" "M3_SMA_KH_KE8_EDGE"
+		(at 0 7.5 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15))))
+	(pad "1" smd rect
+		(at -2.55 2.3)
+		(size 1.2 4.2)
+		(layers "F.Cu" "F.Mask"))
+	(pad "2" smd rect
+		(at 2.55 2.3)
+		(size 1.2 4.2)
+		(layers "F.Cu" "F.Mask"))
+	(pad "3" smd rect
+		(at -2.55 2.3)
+		(size 1.2 4.2)
+		(layers "B.Cu" "B.Mask"))
+	(pad "4" smd rect
+		(at 2.55 2.3)
+		(size 1.2 4.2)
+		(layers "B.Cu" "B.Mask"))
+	(pad "5" smd rect
+		(at 0 2.3)
+		(size 1.2 4.2)
+		(layers "F.Cu" "F.Mask"))
+	(fp_rect
+		(start -3.25 -1.5)
+		(end 3.25 0)
+		(stroke
+			(width 0.1)
+			(type solid))
+		(fill none)
+		(layer "F.Fab"))
+	(fp_rect
+		(start -3.175 -9.5)
+		(end 3.175 -1.5)
+		(stroke
+			(width 0.1)
+			(type solid))
+		(fill none)
+		(layer "F.Fab"))
+	(fp_line
+		(start -4 0)
+		(end 4 0)
+		(stroke
+			(width 0.1)
+			(type solid))
+		(layer "F.Fab"))
+	(fp_rect
+		(start -3 0)
+		(end -2.1 4)
+		(stroke
+			(width 0.05)
+			(type solid))
+		(fill none)
+		(layer "F.Fab"))
+	(fp_rect
+		(start -0.45 0)
+		(end 0.45 4)
+		(stroke
+			(width 0.05)
+			(type solid))
+		(fill none)
+		(layer "F.Fab"))
+	(fp_rect
+		(start 2.1 0)
+		(end 3 4)
+		(stroke
+			(width 0.05)
+			(type solid))
+		(fill none)
+		(layer "F.Fab"))
+	(fp_rect
+		(start -3.5 -9.75)
+		(end 3.5 4.65)
+		(stroke
+			(width 0.05)
+			(type solid))
+		(fill none)
+		(layer "F.CrtYd"))
+	(fp_rect
+		(start -3.5 -9.75)
+		(end 3.5 4.65)
+		(stroke
+			(width 0.05)
+			(type solid))
+		(fill none)
+		(layer "B.CrtYd"))
+	(model "${KIPRJMOD}/kilib/rocket.3dshapes/M3_SMA_KH_KE8_EDGE.wrl"
+		(offset
+			(xyz 0 0 0))
+		(scale
+			(xyz 1 1 1))
+		(rotate
+			(xyz 0 0 0))))

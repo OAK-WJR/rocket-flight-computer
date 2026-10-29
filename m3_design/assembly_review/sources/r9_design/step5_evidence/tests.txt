@@ -1,0 +1,24 @@
+test_check_shell: Ran 2 tests in 1.890s OK 
+test_dc_solve: Ran 3 tests in 0.008s OK 
+test_fab_validation: Ran 23 tests in 8.630s OK 
+test_fit_check: Ran 23 tests in 0.028s OK 
+test_maze_clearances: Ran 10 tests in 0.123s OK 
+test_paste_check: Ran 5 tests in 0.005s OK 
+test_procurement: Ran 15 tests in 0.027s OK 
+test_r5_repair: Ran 13 tests in 1.237s OK 
+test_r6_check: Ran 17 tests in 0.010s OK 
+test_r7_check: Ran 35 tests in 0.412s OK 
+test_r8_check: Ran 23 tests in 1.557s OK 
+test_r8_ground: Ran 11 tests in 9.611s OK 
+test_r8_place: Ran 13 tests in 2.828s OK 
+test_r8_power: Ran 7 tests in 9.415s OK 
+test_r8_route: Ran 12 tests in 3.311s OK 
+test_r9_check: Ran 52 tests in 140.342s OK 
+test_r9_place: Ran 18 tests in 1.070s OK 
+test_r9_pyro: Ran 19 tests in 6.045s OK 
+test_r9_rf: Ran 16 tests in 16.101s OK 
+test_r9_sch: Ran 21 tests in 1.332s OK 
+test_reference_audit: Ran 3 tests in 2.077s OK 
+test_route_check: Ran 57 tests in 1.865s OK 
+quality_audit: Ran 21 tests in 0.119s OK (python3); Ran 21 tests in 0.114s OK (KiCad python3)
+audit_artifacts on the built board: exit 0

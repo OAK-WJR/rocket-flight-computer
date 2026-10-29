@@ -9,8 +9,11 @@ from collections import Counter
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
+import shutil
 import subprocess
+import sys
 import tempfile
 
 from audit_artifacts import audit
@@ -55,7 +58,37 @@ def erc_findings(report):
     return sum(len(s['violations']) for s in report['sheets'])
 
 
-def verify(board, cli, evidence, builder=None, timeout=60):
+def native_refill_python(cli):
+    """Find KiCad's Python for macOS CLI builds whose GUI refill needs a screen."""
+    configured = os.environ.get('KICAD_PY')
+    if configured:
+        return Path(configured)
+    if sys.platform == 'darwin':
+        bundled = (cli.resolve().parent.parent / 'Frameworks' / 'Python.framework' /
+                   'Versions' / 'Current' / 'bin' / 'python3')
+        if bundled.is_file():
+            return bundled
+    return None
+
+
+def refill_snapshot(board, directory, python, result, timeout):
+    """Fill an isolated native project; never substitute its previously saved fill."""
+    project = directory / 'project'
+    shutil.copytree(board.parent, project,
+                    ignore=shutil.ignore_patterns('fab', '__pycache__', '*.lck', '*.kicad_prl'))
+    snapshot = project / board.name
+    command = [str(python), '-I', str(Path(__file__).with_name('refill_zones.py')), str(snapshot)]
+    proc = subprocess.run(command, capture_output=True, text=True, timeout=timeout)
+    result['refill'] = {'method': 'native pcbnew.ZONE_FILLER on isolated project',
+                        'command': command, 'returncode': proc.returncode,
+                        'stdout': proc.stdout, 'stderr': proc.stderr}
+    if proc.returncode != 0 or 'Native zone fill complete' not in proc.stdout:
+        raise ValueError('Native zone fill failed; saved fill is not accepted')
+    result['refill']['board_sha256'] = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    return snapshot
+
+
+def verify(board, cli, evidence, builder=None, timeout=60, refill_python=None):
     if evidence.exists():
         raise ValueError('Evidence already exists; use a fresh filename')
     before = input_hashes(board)
@@ -68,6 +101,8 @@ def verify(board, cli, evidence, builder=None, timeout=60):
     try:
         metadata = audit(board)
         result['metadata'] = metadata
+        if metadata['missing_required_part_fields']:
+            issues.append('Missing required fitted-part identity fields')
         if metadata['conflicting_part_fields']:
             issues.append('Conflicting distributor part fields')
         if any(m['exists'] is not True for m in metadata['models']):
@@ -84,15 +119,20 @@ def verify(board, cli, evidence, builder=None, timeout=60):
             [str(cli), '--version'], check=True, text=True,
             capture_output=True, timeout=10).stdout.strip()
         with tempfile.TemporaryDirectory(prefix='pcb_drc_') as temp:
+            refill_python = refill_python or native_refill_python(cli)
+            checked_board = (refill_snapshot(board, Path(temp), refill_python, result, timeout)
+                             if refill_python else board)
             report_path = Path(temp) / 'drc.json'
             command = [str(cli), 'pcb', 'drc', '--format', 'json',
-                       '--severity-all', '--all-track-errors', '--refill-zones',
+                       '--severity-all', '--all-track-errors',
                        '--exit-code-violations', '--output', str(report_path)]
+            if not refill_python:
+                command.append('--refill-zones')
             has_schematic = board.with_suffix('.kicad_sch').is_file()
             if has_schematic:
                 command.append('--schematic-parity')
             result['schematic_parity_requested'] = has_schematic
-            command.append(str(board))
+            command.append(str(checked_board))
             result['command'] = command
             proc = subprocess.run(command, capture_output=True, text=True, timeout=timeout)
             result.update(returncode=proc.returncode, stdout=proc.stdout, stderr=proc.stderr)
@@ -148,9 +188,11 @@ def main():
     parser.add_argument('--cli', type=Path, default=Path(
         '/Applications/KiCad.app/Contents/MacOS/kicad-cli'))
     parser.add_argument('--timeout', type=int, default=60)
+    parser.add_argument('--refill-python', type=Path,
+                        help='KiCad Python: refill an isolated project before native CLI DRC')
     args = parser.parse_args()
     result = verify(args.board.resolve(), args.cli, args.output,
-                    args.builder.resolve() if args.builder else None, args.timeout)
+                    args.builder.resolve() if args.builder else None, args.timeout, args.refill_python)
     print(args.board.name, 'PASS' if result['ok'] else 'BLOCKED', result.get('counts', {}))
     for issue in result['issues']:
         print(' -', issue)

@@ -1,0 +1,101 @@
+{
+ "tool": "m3_design/assembly_review/sources/r8_design/step9/requalify.py (the scorecard requalify.json: Z1 rows)",
+ "board_sha256": "a6454f788c5bb7bc20c39b949d5d8a7595671574fda789318b49e2ee337b1828",
+ "pyro_rules": {
+  "A RAW_ACT to pyro control 0.5": {
+   "minimum": 0.5,
+   "closest": {
+    "mm": 0.82,
+    "margin": 0.32,
+    "a": "J122.11 (RAW_ACT)",
+    "b": "track (28.53, 75.64) (ARM1_SENSE)",
+    "layer": "F.Cu"
+   },
+   "within_0p1_of_minimum": 0
+  },
+  "B bus/ign/drain to gate 0.5": {
+   "minimum": 0.5,
+   "closest": {
+    "mm": 0.82,
+    "margin": 0.32,
+    "a": "Q124.5 (PYRO1_OUT)",
+    "b": "track (9.125, 61.955) (PYRO1_GATE)",
+    "layer": "F.Cu"
+   },
+   "within_0p1_of_minimum": 0
+  },
+  "C bus/ign/drain to sense 0.3": {
+   "minimum": 0.3,
+   "closest": {
+    "mm": 0.577,
+    "margin": 0.277,
+    "a": "R131.1 (PYRO1_OUT)",
+    "b": "track (15.43, 67.66) (PYRO1_COLD)",
+    "layer": "F.Cu"
+   },
+   "within_0p1_of_minimum": 0
+  },
+  "D GND to bus/ign/drain 0.5": {
+   "minimum": 0.5,
+   "closest": {
+    "mm": 0.77,
+    "margin": 0.27,
+    "a": "track (10.425, 63.05) (GND)",
+    "b": "Q124.5 (PYRO1_OUT)",
+    "layer": "F.Cu"
+   },
+   "within_0p1_of_minimum": 0
+  },
+  "E RAW_ACT to bus/ign 1.0": {
+   "minimum": 1.0,
+   "closest": null,
+   "within_0p1_of_minimum": 0
+  },
+  "F bus/ign/drain to other live 0.5": {
+   "minimum": 0.5,
+   "closest": null,
+   "within_0p1_of_minimum": 0
+  },
+  "G gate nets in the block to other live 0.3": {
+   "minimum": 0.3,
+   "closest": {
+    "mm": 0.57,
+    "margin": 0.27,
+    "a": "track (8.72, 57.63) (PYRO1_GATE_N)",
+    "b": "U1.2 (unconnected-(U1-PE3-Pad2))",
+    "layer": "F.Cu"
+   },
+   "within_0p1_of_minimum": 0
+  },
+  "A2 RAW_ACT to RAW_ACT_SENSE 0.3": {
+   "minimum": 0.3,
+   "closest": null,
+   "within_0p1_of_minimum": 0
+  },
+  "H live pads to sense/gate pads 1.0": {
+   "minimum": 1.0,
+   "closest": {
+    "mm": 1.225,
+    "margin": 0.225,
+    "a": "Q124.5 (PYRO1_OUT)",
+    "b": "R129.2 (PYRO1_CONT)",
+    "layer": "F.Cu"
+   },
+   "within_0p1_of_minimum": 0
+  }
+ },
+ "a8": {
+  "pad": "TP122.1 (PYRO1_GATE)",
+  "face": "B",
+  "at": [
+   7.58,
+   63.5
+  ],
+  "pad_diameter": 1.5,
+  "vias": [],
+  "nearest_foreign_copper": {
+   "mm": 1.816,
+   "item": "via (10.425, 62.45) (GND)"
+  }
+ }
+}

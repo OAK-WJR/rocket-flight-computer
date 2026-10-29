@@ -4,11 +4,78 @@
 	(uuid dc323f8a-d7b3-5898-95f2-b312f6a8b363)
 	(paper "A2")
 	(title_block
-		(title "12 | Pyro channels, arming and continuity")
+		(title "12 | Single pyro CH1, arming and continuity")
 		(date "2026-09-25")
-		(rev "M3-ASSY-R2")
+		(rev "M3-ASSY-R10")
 		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
 	(lib_symbols
+		(symbol "M3:Conn_1x2"
+		(pin_names
+			(offset 0.508))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "J"
+			(at 0 5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "Conn_1x2"
+			(at 0 -5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "2-position connector"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "Conn_1x2_0_1"
+			(rectangle
+				(start -2.54 2.54)
+				(end 2.54 -2.54)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "Conn_1x2_1_1"
+			(pin passive line
+				(at -7.62 1.27 0)
+				(length 5.08)
+				(name "1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -7.62 -1.27 0)
+				(length 5.08)
+				(name "2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
 		(symbol "M3:BAT54A"
 		(pin_names
 			(offset 0.508))
@@ -88,112 +155,112 @@
 							(size 1.05 1.05))))))
 		(embedded_fonts no))
 			(symbol "M3:C"
-		(pin_numbers
-			(hide yes))
-		(pin_names
-			(offset 0.254))
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(duplicate_pin_numbers_are_jumpers no)
-		(property "Reference" "C"
-			(at 0.635 2.54 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "C"
-			(at 0.635 -2.54 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" ""
-			(at 0.9652 -3.81 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Description" "Unpolarized capacitor"
-			(at 0 0 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "ki_keywords" "cap capacitor"
-			(at 0 0 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(symbol "C_0_1"
-			(polyline
-				(pts
-					(xy -2.032 0.762)
-					(xy 2.032 0.762))
-				(stroke
-					(width 0.508)
-					(type default))
-				(fill
-					(type none)))
-			(polyline
-				(pts
-					(xy -2.032 -0.762)
-					(xy 2.032 -0.762))
-				(stroke
-					(width 0.508)
-					(type default))
-				(fill
-					(type none))))
-		(symbol "C_1_1"
-			(pin passive line
-				(at 0 3.81 270)
-				(length 2.794)
-				(name ""
-					(effects
-						(font
-							(size 1.27 1.27))))
-				(number "1"
-					(effects
-						(font
-							(size 1.27 1.27)))))
-			(pin passive line
-				(at 0 -3.81 90)
-				(length 2.794)
-				(name ""
-					(effects
-						(font
-							(size 1.27 1.27))))
-				(number "2"
-					(effects
-						(font
-							(size 1.27 1.27))))))
-		(embedded_fonts no)
-		(property "ki_fp_filters" "C0402 C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
-			(at 0 0 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(hide yes))))
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762)
+						(xy 2.032 0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -2.032 -0.762)
+						(xy 2.032 -0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
 		(symbol "M3:Conn_1x4"
 		(pin_names
 			(offset 0.508))
@@ -472,7 +539,7 @@
 						(font
 							(size 1.27 1.27))))))
 		(embedded_fonts no)
-		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512"
+		(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
 			(at 0 0 0)
 			(effects
 				(font
@@ -704,6 +771,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0805W8F2200T5E"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
@@ -779,6 +858,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1001TCE"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
@@ -849,6 +940,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C25744"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
 			(at 215.9 50.8 0)
 			(hide yes)
 			(effects
@@ -992,7 +1095,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k"
+		(property "Value" "5.1k"
 			(at 336.55 59.69 0)
 			(effects
 				(font
@@ -1010,7 +1113,19 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
+		(property "LCSC" "C25905"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF5101TCE"
 			(at 332.74 50.8 0)
 			(hide yes)
 			(effects
@@ -1029,7 +1144,7 @@
 			(width 0)
 			(type default))
 		(uuid 76fcd644-4f30-5978-912f-46c4cfb70d83))
-	(global_label "PYRO1_OUT"
+	(global_label "PYRO1_CONT_MID"
 		(shape passive)
 		(at 332.74 41.91 90)
 		(effects
@@ -1067,7 +1182,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1k"
+		(property "Value" "2k"
 			(at 394.97 59.69 0)
 			(effects
 				(font
@@ -1085,7 +1200,19 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C11702"
+		(property "LCSC" "C4109"
+			(at 391.16 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 391.16 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF2001TCE"
 			(at 391.16 50.8 0)
 			(hide yes)
 			(effects
@@ -1142,7 +1269,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10nF"
+		(property "Value" "10nF 50V X7R 10%"
 			(at 453.39 59.69 0)
 			(effects
 				(font
@@ -1161,6 +1288,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C57112"
+			(at 449.58 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "FH (Guangdong Fenghua Advanced Tech)"
+			(at 449.58 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0603B103K500NT"
 			(at 449.58 50.8 0)
 			(hide yes)
 			(effects
@@ -1235,19 +1374,19 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C1591"
+		(property "LCSC" "C161115"
 			(at 40.64 114.3 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
+		(property "Manufacturer" "Murata"
 			(at 40.64 114.3 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10B104KB8NNNC"
+		(property "Manufacturer Part" "GCJ188R71H104KA12D"
 			(at 40.64 114.3 0)
 			(hide yes)
 			(effects
@@ -1328,6 +1467,18 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
@@ -1367,263 +1518,6 @@
 		(uuid 50b8a66f-fca3-5846-8101-a3e01290d56d))
 	(symbol
 		(lib_id "M3:R")
-		(at 157.48 114.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid d40390ad-b5bb-5b7e-a716-6a571a133158)
-		(property "Reference" "R132"
-			(at 161.29 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k"
-			(at 161.29 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
-			(at 157.48 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R132")
-					(unit 1)))))
-	(symbol
-		(lib_id "M3:R")
-		(at 340.36 279.4 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 3e965335-f19a-4f0c-90fe-a4a33a7c1534)
-		(property "Reference" "R134"
-			(at 344.17 270.51 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "2R 1% 2W pulse"
-			(at 344.17 288.29 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R2512"
-			(at 340.36 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 340.36 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C3013496"
-			(at 340.36 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Bourns"
-			(at 340.36 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CRM2512-FX-2R00ELF"
-			(at 340.36 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R134")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 340.36 275.59)
-			(xy 340.36 270.51))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c39544a1-5398-4085-9689-5ef04a72243e))
-	(global_label "PYRO1_IGN"
-		(shape passive)
-		(at 340.36 270.51 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 61f5d879-6c31-42fa-9307-1c688c35e602))
-	(wire
-		(pts
-			(xy 340.36 283.21)
-			(xy 340.36 288.29))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid a3858caf-5780-4fe4-a75a-1bb1dda5c2fe))
-	(global_label "PYRO1_BUS"
-		(shape passive)
-		(at 340.36 288.29 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 394b0807-0478-46f6-ad96-b9e80de08046))
-	(symbol
-		(lib_id "M3:R")
-		(at 360.68 279.4 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid e8222041-91ab-4ecb-9804-9b3f1e3dc796)
-		(property "Reference" "R135"
-			(at 364.49 270.51 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "2R 1% 2W pulse"
-			(at 364.49 288.29 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R2512"
-			(at 360.68 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 360.68 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C3013496"
-			(at 360.68 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Bourns"
-			(at 360.68 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CRM2512-FX-2R00ELF"
-			(at 360.68 279.4 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R135")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 360.68 275.59)
-			(xy 360.68 270.51))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 81ddf6fc-f50e-44d7-a5b2-6ea228ad9688))
-	(global_label "PYRO2_IGN"
-		(shape passive)
-		(at 360.68 270.51 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid a93a6b2a-3dd3-4376-9bc9-e59080265881))
-	(wire
-		(pts
-			(xy 360.68 283.21)
-			(xy 360.68 288.29))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid f1803ddc-9ec1-4468-a444-b447d2f5e747))
-	(global_label "PYRO2_BUS"
-		(shape passive)
-		(at 360.68 288.29 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 38690315-fe31-4fb7-af2b-1d26bc886b8f))
-	(text "R134/R135: 2 ohm 2 W pulse-rated (Bourns CRM2512, 90 W for 10 ms).\nLimit a shorted igniter to ~4 A so BAT_IN, the MCU and the other\nchannel survive (m3_design/sim_r2/FINDINGS.md 1). Firmware fire pulse <= 20 ms."
-		(exclude_from_sim no)
-		(at 330.2 313.69 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left bottom))
-		(uuid 7eab5604-a24a-4189-b4aa-11eb60c8834d))
-	(wire
-		(pts
-			(xy 157.48 110.49)
-			(xy 157.48 105.41))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid a2c102a4-87f5-5e99-b24b-ac81bb08dd53))
-	(global_label "PYRO1_BUS"
-		(shape passive)
-		(at 157.48 105.41 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 641979a1-262e-5070-9e0c-e731d0e99cfb))
-	(wire
-		(pts
-			(xy 157.48 118.11)
-			(xy 157.48 123.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c979d8b4-4018-5ce1-914b-aae8d3b74a3b))
-	(global_label "ARM1_SENSE"
-		(shape passive)
-		(at 157.48 123.19 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 2cfd5efd-4bd8-58ed-b568-978430188b07))
-	(symbol
-		(lib_id "M3:R")
 		(at 215.9 114.3 0)
 		(unit 1)
 		(in_bom yes)
@@ -1636,7 +1530,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1k"
+		(property "Value" "2k"
 			(at 219.71 123.19 0)
 			(effects
 				(font
@@ -1654,7 +1548,19 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "LCSC" "C11702"
+		(property "LCSC" "C4109"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF2001TCE"
 			(at 215.9 114.3 0)
 			(hide yes)
 			(effects
@@ -1711,7 +1617,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10nF"
+		(property "Value" "10nF 50V X7R 10%"
 			(at 278.13 123.19 0)
 			(effects
 				(font
@@ -1730,6 +1636,18 @@
 				(font
 					(size 1.27 1.27))))
 		(property "LCSC" "C57112"
+			(at 274.32 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "FH (Guangdong Fenghua Advanced Tech)"
+			(at 274.32 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0603B103K500NT"
 			(at 274.32 114.3 0)
 			(hide yes)
 			(effects
@@ -1832,1092 +1750,6 @@
 			(justify right))
 		(uuid 459ba9e6-7929-5946-9a04-b8b6655a5e03))
 	(symbol
-		(lib_id "M3:NMOS_DFN8EP")
-		(at 391.16 114.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid ed381caf-4169-5f1a-803f-fefc7cce3a24)
-		(property "Reference" "Q125"
-			(at 394.97 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "AON7524"
-			(at 394.97 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:M3_AON7524_DFN3x3A"
-			(at 391.16 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 391.16 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C431195"
-			(at 391.16 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Alpha & Omega Semicon"
-			(at 391.16 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "AON7524"
-			(at 391.16 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "Q125")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 381 114.3)
-			(xy 375.92 114.3))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid d15e66a1-b932-5f03-b373-5a171584d5b8))
-	(global_label "PYRO2_GATE"
-		(shape passive)
-		(at 375.92 114.3 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a5b5d058-9e18-5517-aafd-bf5fc7e7fa97))
-	(wire
-		(pts
-			(xy 391.16 124.46)
-			(xy 391.16 129.54))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid f781691b-0423-52b3-aa5a-e1fb5a5d028e))
-	(global_label "GND"
-		(shape passive)
-		(at 391.16 129.54 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid aaa16945-e084-5229-90ff-53b9c7cfc931))
-	(wire
-		(pts
-			(xy 391.16 104.14)
-			(xy 391.16 99.06))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid dc2a4068-a9d0-5e7f-afd9-e29e9b786517))
-	(global_label "PYRO2_OUT"
-		(shape passive)
-		(at 391.16 99.06 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 53c765f3-b0e8-5a3b-a7a0-5cdd4bae8289))
-	(symbol
-		(lib_id "M3:R")
-		(at 449.58 114.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid a6c8f958-bbec-54ee-ad01-39d02833340d)
-		(property "Reference" "R138"
-			(at 453.39 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "220R"
-			(at 453.39 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0805"
-			(at 449.58 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 449.58 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C17557"
-			(at 449.58 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R138")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 449.58 110.49)
-			(xy 449.58 105.41))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 92796a4b-749b-5104-9fbc-161c9a18a67e))
-	(global_label "PYRO2_GATE_N"
-		(shape passive)
-		(at 449.58 105.41 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 91e91c93-a216-5b6c-bf9b-038ac0f8bcc5))
-	(wire
-		(pts
-			(xy 449.58 118.11)
-			(xy 449.58 123.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid a7a8d587-7c6b-5cf4-8641-d2b3e9806e57))
-	(global_label "PYRO2_GATE"
-		(shape passive)
-		(at 449.58 123.19 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid de914e1d-b6aa-5a24-8e0e-0371fa287e8a))
-	(symbol
-		(lib_id "M3:R")
-		(at 40.64 177.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 189da726-6b38-5d5b-a3d9-2bde6f80c410)
-		(property "Reference" "R139"
-			(at 44.45 168.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "1k"
-			(at 44.45 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 40.64 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 40.64 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C11702"
-			(at 40.64 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R139")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 40.64 173.99)
-			(xy 40.64 168.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid cc2f1a1e-4c4f-57e4-bc49-b53f51819b4d))
-	(global_label "PYRO2_GATE_N"
-		(shape passive)
-		(at 40.64 168.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 4334541a-5131-5fd2-827d-b511b644af16))
-	(wire
-		(pts
-			(xy 40.64 181.61)
-			(xy 40.64 186.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 211f5afd-3e1f-5249-9d65-8c32fb171505))
-	(global_label "GND"
-		(shape passive)
-		(at 40.64 186.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 492921ed-ded9-536c-9941-777249f80d9e))
-	(symbol
-		(lib_id "M3:R")
-		(at 99.06 177.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid e82cb0c2-f868-54ec-b5dc-e0f39fef77ae)
-		(property "Reference" "R140"
-			(at 102.87 168.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k"
-			(at 102.87 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 99.06 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 99.06 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
-			(at 99.06 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R140")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 99.06 173.99)
-			(xy 99.06 168.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid e5036c3e-7e0a-5718-8767-9f895507381d))
-	(global_label "PYRO2_GATE"
-		(shape passive)
-		(at 99.06 168.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 090b376e-7508-59f0-952b-f9ac089c02a2))
-	(wire
-		(pts
-			(xy 99.06 181.61)
-			(xy 99.06 186.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 23eecc3a-2636-591a-9965-5f0a9d6e9b75))
-	(global_label "GND"
-		(shape passive)
-		(at 99.06 186.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a567a9ff-996e-532c-b9e3-526fdad890c9))
-	(symbol
-		(lib_id "M3:C")
-		(at 157.48 177.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 93e74549-74f4-512c-a7c6-d34a601ea163)
-		(property "Reference" "C138"
-			(at 161.29 168.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "220nF 25V X7R"
-			(at 161.29 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:C0603"
-			(at 157.48 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 157.48 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C21120"
-			(at 157.48 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 157.48 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10B224KA8NNNC"
-			(at 157.48 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "C138")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 157.48 173.99)
-			(xy 157.48 168.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 3d74570a-0fcc-5a37-a920-719b15dc14ff))
-	(global_label "PYRO2_GATE"
-		(shape passive)
-		(at 157.48 168.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid edd4f087-f97f-55b8-8c9c-ab468bddbc6b))
-	(wire
-		(pts
-			(xy 157.48 181.61)
-			(xy 157.48 186.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 80cb3e73-6b3c-52bd-a18d-8ba8f3251d02))
-	(global_label "GND"
-		(shape passive)
-		(at 157.48 186.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 8eb6d765-3095-52b2-9a07-c62c23128497))
-	(symbol
-		(lib_id "M3:R")
-		(at 215.9 177.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid dbfefc46-ddd9-50ad-9fa0-1d30c0f1320f)
-		(property "Reference" "R141"
-			(at 219.71 168.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k"
-			(at 219.71 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 215.9 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 215.9 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
-			(at 215.9 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R141")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 215.9 173.99)
-			(xy 215.9 168.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 0d09eb3a-b33b-5295-91d8-2fbc71d73828))
-	(global_label "PYRO2_OUT"
-		(shape passive)
-		(at 215.9 168.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid e84a4f07-3470-502d-942c-3b8a0343fc90))
-	(wire
-		(pts
-			(xy 215.9 181.61)
-			(xy 215.9 186.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 8b1e95fd-88d7-51ee-84e2-32b3bfc56fdd))
-	(global_label "PYRO2_CONT"
-		(shape passive)
-		(at 215.9 186.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 3f789392-c23a-5e88-9be6-2b99101c1464))
-	(symbol
-		(lib_id "M3:R")
-		(at 274.32 177.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid f30eaa7e-b618-5b46-b756-2796d714cb64)
-		(property "Reference" "R142"
-			(at 278.13 168.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "1k"
-			(at 278.13 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 274.32 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 274.32 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C11702"
-			(at 274.32 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R142")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 274.32 173.99)
-			(xy 274.32 168.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid d8d9df88-5000-5a54-888f-5d967ce8fa73))
-	(global_label "PYRO2_CONT"
-		(shape passive)
-		(at 274.32 168.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 621e66bd-f090-5ffb-a73d-e4d33d9ab747))
-	(wire
-		(pts
-			(xy 274.32 181.61)
-			(xy 274.32 186.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 52a6f4bd-adc8-5aac-877d-38a381c46069))
-	(global_label "GND"
-		(shape passive)
-		(at 274.32 186.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 17c49428-8af7-5a29-943a-208559ee582b))
-	(symbol
-		(lib_id "M3:C")
-		(at 332.74 177.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 017d95b9-4d49-5251-a15a-7937d4fcedcf)
-		(property "Reference" "C139"
-			(at 336.55 168.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10nF"
-			(at 336.55 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:C0603"
-			(at 332.74 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 332.74 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C57112"
-			(at 332.74 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "C139")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 332.74 173.99)
-			(xy 332.74 168.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c56aec83-dd2f-54c8-a41d-bdabba4b2bcc))
-	(global_label "PYRO2_CONT"
-		(shape passive)
-		(at 332.74 168.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 9e81357b-1b72-5ca6-974d-e96cdaeb9916))
-	(wire
-		(pts
-			(xy 332.74 181.61)
-			(xy 332.74 186.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 30a1874f-6771-5caf-84a9-c4df7e7293f7))
-	(global_label "GND"
-		(shape passive)
-		(at 332.74 186.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 73abbff0-da62-5676-bba1-36a05c85ede0))
-	(symbol
-		(lib_id "M3:C")
-		(at 391.16 177.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 2e95425a-1c62-578e-bf43-f196a2294f16)
-		(property "Reference" "C140"
-			(at 394.97 168.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "100nF 50V X7R 10%"
-			(at 394.97 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:C_0603_1608Metric"
-			(at 391.16 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 391.16 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C1591"
-			(at 391.16 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 391.16 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "CL10B104KB8NNNC"
-			(at 391.16 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "C140")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 391.16 173.99)
-			(xy 391.16 168.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 15e72a9a-ca36-5ad1-acf4-46145cfed4a5))
-	(global_label "PYRO2_OUT"
-		(shape passive)
-		(at 391.16 168.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 4e46f670-30b2-55ad-9b2e-0a537bbd772f))
-	(wire
-		(pts
-			(xy 391.16 181.61)
-			(xy 391.16 186.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid a03bad9e-e610-56bb-b984-739ff6a16312))
-	(global_label "GND"
-		(shape passive)
-		(at 391.16 186.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 99e5524a-7d54-503a-9b0f-a2d4802694b3))
-	(symbol
-		(lib_id "M3:R")
-		(at 449.58 177.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 730dbbd2-54a2-52fb-95cf-386c81e0a734)
-		(property "Reference" "R143"
-			(at 453.39 168.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k"
-			(at 453.39 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 449.58 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 449.58 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
-			(at 449.58 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R143")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 449.58 173.99)
-			(xy 449.58 168.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 581fb548-d2d7-5011-b551-7aebfb8a1e37))
-	(global_label "PYRO2_OUT"
-		(shape passive)
-		(at 449.58 168.91 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid d3b65c22-7dc1-56f7-8696-de02ffa8bd3a))
-	(wire
-		(pts
-			(xy 449.58 181.61)
-			(xy 449.58 186.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 33421e3e-554f-5dce-9b07-e7ccbde99656))
-	(global_label "PYRO2_COLD"
-		(shape passive)
-		(at 449.58 186.69 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid e2c2378e-91b0-5cc8-a3c2-66df8545cc31))
-	(symbol
-		(lib_id "M3:R")
-		(at 40.64 241.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid baaf8454-097d-5cbe-976c-487074e4923a)
-		(property "Reference" "R144"
-			(at 44.45 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k"
-			(at 44.45 250.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 40.64 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 40.64 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C25744"
-			(at 40.64 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R144")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 40.64 237.49)
-			(xy 40.64 232.41))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid a29ace5b-1286-525b-acf1-25c31d7cda73))
-	(global_label "PYRO2_BUS"
-		(shape passive)
-		(at 40.64 232.41 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid b9a42a7f-5d79-5960-b670-5ae8a33083ee))
-	(wire
-		(pts
-			(xy 40.64 245.11)
-			(xy 40.64 250.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 1c2e8688-d83a-56b4-888a-50ffd5d350a1))
-	(global_label "ARM2_SENSE"
-		(shape passive)
-		(at 40.64 250.19 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid d98d62ce-f7fc-5251-bc67-ed5832c494a3))
-	(symbol
-		(lib_id "M3:R")
-		(at 99.06 241.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 6ad93ee4-2bc7-5072-91d4-a64fae2731f7)
-		(property "Reference" "R145"
-			(at 102.87 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "1k"
-			(at 102.87 250.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 99.06 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 99.06 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C11702"
-			(at 99.06 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "R145")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 99.06 237.49)
-			(xy 99.06 232.41))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b161da9d-917c-596f-9eed-dba82eab95f4))
-	(global_label "ARM2_SENSE"
-		(shape passive)
-		(at 99.06 232.41 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 6daaf9dc-4e3a-5b0f-b5b7-b2d4d225e59b))
-	(wire
-		(pts
-			(xy 99.06 245.11)
-			(xy 99.06 250.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c1f12e03-1a9e-5c5d-82d6-83ef6675e754))
-	(global_label "GND"
-		(shape passive)
-		(at 99.06 250.19 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 0a8e38b8-bed5-55f8-a884-44249a574f56))
-	(symbol
-		(lib_id "M3:C")
-		(at 157.48 241.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 14da661f-1873-5716-8b4a-51b112318db1)
-		(property "Reference" "C141"
-			(at 161.29 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10nF"
-			(at 161.29 250.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:C0603"
-			(at 157.48 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 157.48 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C57112"
-			(at 157.48 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "C141")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 157.48 237.49)
-			(xy 157.48 232.41))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4d62f0df-da1a-5feb-a3c6-16671b13f80c))
-	(global_label "ARM2_SENSE"
-		(shape passive)
-		(at 157.48 232.41 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid bab23942-8fcc-51d1-a8a1-d1a408b6c61e))
-	(wire
-		(pts
-			(xy 157.48 245.11)
-			(xy 157.48 250.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid aa4f67fe-3a1e-50e8-8ce5-20db177b577f))
-	(global_label "GND"
-		(shape passive)
-		(at 157.48 250.19 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 0b8161e0-b896-55d8-b1a6-5f356ce7ec35))
-	(symbol
-		(lib_id "M3:TestPoint")
-		(at 215.9 241.3 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid 4a739087-f889-5cad-94d3-2c4f510b4de6)
-		(property "Reference" "TP123"
-			(at 219.71 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "PYRO2_GATE"
-			(at 219.71 250.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 215.9 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 215.9 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 215.9 241.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "TP123")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 215.9 241.3)
-			(xy 215.9 246.38))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b1a67237-3ae8-5cb4-b8bf-5a0043f3d66a))
-	(global_label "PYRO2_GATE"
-		(shape passive)
-		(at 215.9 246.38 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid da632add-78a4-5c3d-9444-14c930e66667))
-	(symbol
 		(lib_id "M3:BAT54A")
 		(at 274.32 241.3 0)
 		(unit 1)
@@ -2990,22 +1822,6 @@
 		(uuid 0bbe726a-e510-5ca3-8d03-3026faeb40b4))
 	(wire
 		(pts
-			(xy 281.94 241.3)
-			(xy 287.02 241.3))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 74c6c692-abda-5e1d-8fc7-1695672f8cec))
-	(global_label "PYRO2_COLD"
-		(shape passive)
-		(at 287.02 241.3 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid d6a9704b-a327-5b2e-9fc8-c21ec60b85f4))
-	(wire
-		(pts
 			(xy 274.32 248.92)
 			(xy 274.32 254))
 		(stroke
@@ -3021,150 +1837,431 @@
 			(justify right))
 		(uuid dd8f1cfc-be93-5758-8847-08fae97e90ae))
 	(symbol
-		(lib_id "M3:Conn_1x4")
-		(at 332.74 241.3 0)
+		(lib_id "M3:R")
+		(at 66.04 205.74 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid d4c8231c-fe2b-56db-aac3-03cf4a1970fe)
-		(property "Reference" "J120"
-			(at 336.55 232.41 0)
+		(uuid 5d7dda8f-0559-5482-9e8a-f8cbfc14dcbd)
+		(property "Reference" "R173"
+			(at 68.58 204.47 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "ARM: RAW / BUS2 / BUS1 / RAW"
-			(at 336.55 250.19 0)
+		(property "Value" "5.1k"
+			(at 68.58 207.01 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_DB128V_4P"
-			(at 332.74 241.3 0)
+		(property "Footprint" "rocket:R0402"
+			(at 66.04 205.74 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
+					(size 1.27 1.27))
+				(justify left)))
 		(property "Datasheet" ""
-			(at 332.74 241.3 0)
+			(at 66.04 205.74 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C2915641"
-			(at 332.74 241.3 0)
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 66.04 205.74 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 66.04 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF5101TCE"
+			(at 66.04 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "J120")
+					(reference "R173")
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 325.12 237.49)
-			(xy 320.04 237.49))
+			(xy 66.04 201.93)
+			(xy 58.42 201.93))
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 0109f80e-43a6-50f0-bb5e-dfdcb20dc7e5))
-	(global_label "RAW_ACT"
+		(uuid bcfbfabd-4504-58c1-972d-fb8c4b4c5f64))
+	(global_label "PYRO1_OUT"
 		(shape passive)
-		(at 320.04 237.49 180)
+		(at 58.42 201.93 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
-		(uuid 4bbe6017-1b60-5f4f-b16f-fcd172703a03))
+		(uuid 1a8c52da-d797-561a-9e8d-65a122847f0f))
 	(wire
 		(pts
-			(xy 325.12 240.03)
-			(xy 320.04 240.03))
+			(xy 66.04 209.55)
+			(xy 58.42 209.55))
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 9ec899f1-0edc-5d35-95e4-0cc6b9902014))
-	(global_label "PYRO2_BUS"
+		(uuid 00154e46-f91a-55b5-b7b3-a0ce369e716c))
+	(global_label "PYRO1_CONT_MID"
 		(shape passive)
-		(at 320.04 240.03 180)
+		(at 58.42 209.55 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
-		(uuid 4d48f62e-4539-5dd9-9129-cf065bce5d1c))
-	(wire
-		(pts
-			(xy 325.12 242.57)
-			(xy 320.04 242.57))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 63f6845b-dab5-5977-9242-acfbaa6251e5))
-	(global_label "PYRO1_BUS"
-		(shape passive)
-		(at 320.04 242.57 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 8c441bbd-2fcf-54e8-a685-b167de68c991))
-	(wire
-		(pts
-			(xy 325.12 245.11)
-			(xy 320.04 245.11))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 55926cd8-3319-546f-bca2-c7c350eca951))
-	(global_label "RAW_ACT"
-		(shape passive)
-		(at 320.04 245.11 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 4f454ff5-5edc-5db3-891a-2e8530b065fa))
+		(uuid 4f72cd0f-e27b-5c57-b069-a574ac78b695))
 	(symbol
-		(lib_id "M3:Conn_1x4")
-		(at 391.16 241.3 0)
+		(lib_id "M3:R")
+		(at 137.16 205.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid eb816301-8a70-5846-a40f-ad5b33d3725d)
+		(property "Reference" "R175"
+			(at 139.7 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "5.1k"
+			(at 139.7 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 137.16 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 137.16 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 137.16 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 137.16 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF5101TCE"
+			(at 137.16 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R175")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 137.16 201.93)
+			(xy 129.54 201.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a024030d-51e2-5961-a7b2-ec8b9f3ca4ee))
+	(global_label "ARM1_SENSE_MID"
+		(shape passive)
+		(at 129.54 201.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 701d13db-3b23-5ef4-8a71-0fb34e08ece7))
+	(wire
+		(pts
+			(xy 137.16 209.55)
+			(xy 129.54 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1603bc90-79aa-5c40-80cf-9478abe66690))
+	(global_label "ARM1_SENSE"
+		(shape passive)
+		(at 129.54 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 855b3524-ecf1-5718-9345-5af7ea1cafdc))
+	(symbol
+		(lib_id "M3:R")
+		(at 208.28 205.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 739a73f8-4542-5bd9-a9c7-eaa58e80cf4f)
+		(property "Reference" "R178"
+			(at 210.82 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 210.82 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 208.28 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 208.28 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 208.28 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 208.28 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF2001TCE"
+			(at 208.28 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R178")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 208.28 201.93)
+			(xy 200.66 201.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a2fa121c-e337-5900-b708-a865ede928bc))
+	(global_label "PYRO1_CONT"
+		(shape passive)
+		(at 200.66 201.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9c8dfd09-e266-5d05-8a3b-7e80bcdd0155))
+	(wire
+		(pts
+			(xy 208.28 209.55)
+			(xy 200.66 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4dbf338d-1859-5bad-86f2-07942d483a82))
+	(global_label "GND"
+		(shape passive)
+		(at 200.66 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 13e1e42b-1344-5122-828e-01586d062be4))
+	(symbol
+		(lib_id "M3:R")
+		(at 279.4 205.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 44a0b234-41d3-5992-bed6-89e7ada525af)
+		(property "Reference" "R180"
+			(at 281.94 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 281.94 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 279.4 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 279.4 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 279.4 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 279.4 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF2001TCE"
+			(at 279.4 205.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R180")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 279.4 201.93)
+			(xy 271.78 201.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 99805726-ec1a-54b8-90f6-95d044e3ee2c))
+	(global_label "ARM1_SENSE"
+		(shape passive)
+		(at 271.78 201.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4d9f43c7-4536-51fa-97a8-35ce038c4580))
+	(wire
+		(pts
+			(xy 279.4 209.55)
+			(xy 271.78 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d6c7b8cc-2791-5aa5-8c7b-93f445b04ef2))
+	(global_label "GND"
+		(shape passive)
+		(at 271.78 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cad1fd0f-32e5-55c5-9713-379cbf5c8a42))
+	(no_connect
+		(at 281.94 241.3)
+		(uuid eb528d46-42b6-54a8-855c-b7d98bf857c9))
+	(symbol
+		(lib_id "M3:Conn_1x2")
+		(at 391.16 238.76 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 312be4d5-4e6a-5856-bf8a-17dc1102db31)
 		(property "Reference" "J121"
-			(at 394.97 232.41 0)
+			(at 393.7 237.49 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "E1- / E1+ / E2+ / E2-"
-			(at 394.97 250.19 0)
+		(property "Value" "DB125-3.5-2P-BK-S"
+			(at 393.7 240.03 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_DB128V_4P"
-			(at 391.16 241.3 0)
+		(property "Footprint" "rocket:M3_DB125_2P_BK"
+			(at 391.16 238.76 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 391.16 241.3 0)
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+			(at 391.16 238.76 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C2915641"
-			(at 391.16 241.3 0)
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C52993880"
+			(at 391.16 238.76 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "DORABO"
+			(at 391.16 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "DB125-3.5-2P-BK-S"
+			(at 391.16 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
@@ -3177,15 +2274,15 @@
 		(stroke
 			(width 0)
 			(type default))
-		(uuid c258a65a-cafb-545a-9ff5-b372349d20bf))
+		(uuid 90a8edb2-756b-5fe6-8c56-3891d270c6f3))
 	(global_label "PYRO1_OUT"
 		(shape passive)
-		(at 378.46 237.49 180)
+		(at 378.46 237.49 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
-		(uuid 45d2539c-c90d-55e8-904d-6738d729c16b))
+		(uuid eca1eebb-7d4d-554f-a1a7-319b5e816238))
 	(wire
 		(pts
 			(xy 383.54 240.03)
@@ -3193,162 +2290,227 @@
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 190a45b5-36d7-533a-996b-1656538be9f3))
+		(uuid 74dfeea3-e4db-5d51-b1ad-f8a8a1387d7e))
 	(global_label "PYRO1_IGN"
 		(shape passive)
-		(at 378.46 240.03 180)
+		(at 378.46 240.03 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
-		(uuid 1c38e41e-f8ca-541e-9adf-bb5e0e66a48a))
-	(wire
-		(pts
-			(xy 383.54 242.57)
-			(xy 378.46 242.57))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 7c5219b1-a97a-5f64-bf95-5e2ef993ee8c))
-	(global_label "PYRO2_IGN"
-		(shape passive)
-		(at 378.46 242.57 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid e71dc90a-35d5-5d55-b82c-5edfd2285d87))
-	(wire
-		(pts
-			(xy 383.54 245.11)
-			(xy 378.46 245.11))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 3a0a5f92-87f3-5dc9-befa-a6ebf9e34906))
-	(global_label "PYRO2_OUT"
-		(shape passive)
-		(at 378.46 245.11 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid c4af4b73-488d-5c90-8bef-5af6c3c54175))
+		(uuid 00807ae1-f7ad-58ff-ad06-130a3a88767b))
 	(symbol
-		(lib_id "M3:TestPoint")
-		(at 449.58 241.3 0)
+		(lib_id "M3:R")
+		(at 157.48 114.3 0)
 		(unit 1)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid 261b5473-cb7e-5ef3-9e10-2279eed4c5a2)
-		(property "Reference" "TP124"
-			(at 453.39 232.41 0)
+		(uuid d40390ad-b5bb-5b7e-a716-6a571a133158)
+		(property "Reference" "R132"
+			(at 160.02 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "GND"
-			(at 453.39 250.19 0)
+		(property "Value" "5.1k"
+			(at 160.02 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 449.58 241.3 0)
+		(property "Footprint" "rocket:R0402"
+			(at 157.48 114.3 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
+					(size 1.27 1.27))
+				(justify left)))
 		(property "Datasheet" ""
-			(at 449.58 241.3 0)
+			(at 157.48 114.3 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 449.58 241.3 0)
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 157.48 114.3 0)
 			(hide yes)
 			(effects
 				(font
-					(size 1.27 1.27))))
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF5101TCE"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
 		(instances
 			(project "m3"
 				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
-					(reference "TP124")
+					(reference "R132")
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 449.58 241.3)
-			(xy 449.58 246.38))
+			(xy 157.48 110.49)
+			(xy 157.48 105.41))
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 5fe7208d-3237-5baa-bcd3-410ac51c5af5))
-	(global_label "GND"
+		(uuid 8af4858b-89b0-5ed2-8dd8-3f2e5808bed7))
+	(global_label "RAW_ACT"
 		(shape passive)
-		(at 449.58 246.38 270)
+		(at 157.48 105.41 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
-		(uuid 438877b1-d726-5812-9e39-ec9c965d2528))
-	(text "12 | Pyro channels, arming and continuity"
+		(uuid 9a96ebbe-d0ec-549b-990d-b767c5082d30))
+	(wire
+		(pts
+			(xy 157.48 118.11)
+			(xy 157.48 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a25b0e56-08e7-5896-8b09-b7c920daca15))
+	(global_label "ARM1_SENSE_MID"
+		(shape passive)
+		(at 157.48 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 49de4c79-f84f-57cf-96b8-e508b8143b1e))
+	(symbol
+		(lib_id "M3:R")
+		(at 340.36 279.4 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 3e965335-f19a-4f0c-90fe-a4a33a7c1534)
+		(property "Reference" "R134"
+			(at 342.9 278.13 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2R 1% 2W pulse"
+			(at 342.9 280.67 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R2512"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C3013496"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Bourns"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CRM2512-FX-2R00ELF"
+			(at 340.36 279.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930"
+					(reference "R134")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 340.36 275.59)
+			(xy 340.36 270.51))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5fbe24d1-90de-53af-9e4d-48104398cbd1))
+	(global_label "PYRO1_IGN"
+		(shape passive)
+		(at 340.36 270.51 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f26d0caf-fb2c-566b-af49-0da757750250))
+	(wire
+		(pts
+			(xy 340.36 283.21)
+			(xy 340.36 288.29))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 59a84eff-c386-5b2a-a697-e545bb1f7c4a))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 340.36 288.29 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 814b372f-3c23-557a-8f07-e1ead7335eef))
+	(text "R10 single screw switch: RAW_ACT directly feeds R134.2 and R132.1 behind Q120/Q121; no separate ARM terminal or PYRO1_BUS net. J121.2 IGN, J121.1 OUT."
+		(at 20.32 15.24 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 9ac29cee-a930-5480-8e40-e6153d0063a3))
+	(text "Power switch on last, off first; the pyro channel is live whenever the board is on. No firing before accelerometer and barometer launch detection; bench USB or e-match disconnected."
 		(at 20.32 20.32 0)
 		(effects
 			(font
-				(size 2.54 2.54))
+				(size 1.05 1.05))
 			(justify left))
-		(uuid 727abb5b-7667-5982-897d-07d2f9c504cb))
-	(text "Two independent channels (FMEA H-5). ARM plug = 4-wire, 2-fuse link: J120.4->F1 5A FAST->J120.3 (BUS1), J120.1->F2 5A FAST->J120.2 (BUS2)."
-		(at 20.32 330 0)
+		(uuid b582dff2-5e14-56cd-86b4-89f83422ccf8))
+	(text "R10 uses default board clearance; accepted loss of R9 single-defect spacing margins does not waive functional reset, gate or divider safety."
+		(at 20.32 25.4 0)
 		(effects
 			(font
-				(size 1.27 1.27))
+				(size 1.05 1.05))
 			(justify left))
-		(uuid bad85868-df48-5625-9786-5945a78f27c2))
-	(text "With the plug out NOTHING connects RAW_ACT to PYRO1_BUS or PYRO2_BUS (AGENTS.md safety rule 1). No test point on BUS/OUT."
-		(at 20.32 337.62 0)
+		(uuid 84d49b35-a87d-5fca-9999-f2f86fcf1da9))
+	(text "Ground bus/continuity checks refuse firing; in flight readings only log/annunciate and never veto a fire. Refresh 960-cycle IWDG immediately before PE4 rises; never refresh while fire is active. Normal physical current <=20 ms; fault physical current <=36 ms; complete SAFETY and refresh <=5 ms after current off. Bench required."
+		(at 20.32 30.48 0)
 		(effects
 			(font
-				(size 1.27 1.27))
+				(size 1.05 1.05))
 			(justify left))
-		(uuid 20f879dc-af7e-5240-9108-073154f04d2c))
-	(text "Igniter 1 across J121.1-2, igniter 2 across J121.3-4. Both terminal pin orders are reversal-symmetric."
-		(at 20.32 345.24 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 8ed85766-b8f6-5093-8118-1fa3f48dbd2a))
-	(text "Gate: MCU -> 220R -> gate; 1k pull-down on MCU side; 10k + 220nF gate-source (P0-1/P0-2). Off in reset/unpowered."
-		(at 20.32 352.86 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 2c5c599a-2813-5ee4-9d27-f9b056fe43ca))
-	(text "PE3 (pin 2) and PE6 (pin 5) are sentinels with no net: firmware drives them low. Never enable TRACE on PE2-PE6."
-		(at 20.32 360.48 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 23b571db-5945-56d5-ae80-b3030e357aad))
-	(text "CONT = 10k/1k from drain (open detector only, CIRCUIT_REVIEW 2.9). ARMn_SENSE = 10k/1k from each fused bus."
-		(at 20.32 368.1 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 3e1e8e8a-3b08-5551-a4fd-878c6260a1f4))
-	(text "D120 + 47k: cold pull-up of both drains (FMEA H-1) for plug-out FET-short detection. In flight: log only, never veto (F-10)."
-		(at 20.32 375.72 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 8de6969f-e2ce-515d-881e-a9dec42e2b6b))
+		(uuid c7f3c433-f684-58f5-b970-0351ea26c2e7))
 	(sheet_instances
 		(path "/"
 			(page "12"))))

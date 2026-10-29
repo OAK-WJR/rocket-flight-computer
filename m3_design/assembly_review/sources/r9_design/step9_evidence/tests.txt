@@ -1,0 +1,30 @@
+Tool suites on the finished board fc3d5b34... (session 2; KiCad python3 -B -m unittest per suite in tools/, kicad-cli DRC through the headless shim / wrapper, D-S6-14 / D-S9-06), after r9_fab.sh made the R9 fab package
+test_check_shell: 2 tests
+test_dc_solve: 3 tests
+test_fab_validation: 23 tests
+test_fit_check: 23 tests
+test_maze_clearances: 10 tests
+test_paste_check: 5 tests
+test_procurement: 15 tests
+test_r5_repair: 13 tests
+test_r6_check: 17 tests
+test_r7_check: 35 tests
+test_r8_check: 23 tests
+test_r8_ground: 11 tests
+test_r8_place: 13 tests
+test_r8_power: 7 tests
+test_r8_route: 12 tests
+test_r9_check: 52 tests
+test_r9_ground: 18 tests
+test_r9_place: 21 tests
+test_r9_post: 13 tests
+test_r9_power: 21 tests
+test_r9_pyro: 19 tests
+test_r9_rf: 16 tests
+test_r9_route: 21 tests
+test_r9_sch: 21 tests
+test_reference_audit: 3 tests
+test_route_check: 57 tests
+Ran 474 tests in 26 suites: 26 suites OK, 0 failing, none skipped
+quality_audit: Ran 21 tests OK (python3); Ran 21 tests OK (KiCad python3)
+audit_artifacts on the finished board: exit 0 (249 footprints, 0 conflicting part fields, 0 missing models, 0 absolute model paths, 0 without courtyard, 0 missing fitted part identities)

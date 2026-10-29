@@ -1,0 +1,4303 @@
+{
+  "schema": 2,
+  "board_sha256": "407d1d8408330849526dbd31cf70ec94b9f012b23ff5c8324eb8a7b1f98bed05",
+  "electrical_sha256": "b6e47dd44606af01877d710e56702e2d0d0a6428a99b09049d73cb9c736d09c4",
+  "parts": {
+    "C10": {
+      "value": "22uF",
+      "footprint": "C0805",
+      "fields": {
+        "LCSC": "C45783",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL21A226MAQNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3A",
+          "xy": [
+            16.5,
+            54.1
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            18.5,
+            54.1
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C100": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            34.78,
+            36.599999
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            35.62,
+            36.599999
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C11": {
+      "value": "22uF",
+      "footprint": "C0805",
+      "fields": {
+        "LCSC": "C45783",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL21A226MAQNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3A",
+          "xy": [
+            16.5,
+            52.1
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            18.5,
+            52.1
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C120": {
+      "value": "2.2uF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C23630",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10A225KO8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "ACT_FET_S",
+          "xy": [
+            17.1,
+            70.9
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "ACT_GATE",
+          "xy": [
+            17.1,
+            72.3
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C122": {
+      "value": "10nF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C57112",
+        "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
+        "Manufacturer Part": "0603B103K500NT"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "RAW_ACT_SENSE",
+          "xy": [
+            26.0,
+            64.0
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            26.0,
+            65.4
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C126": {
+      "value": "220nF 25V X7R",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C21120",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10B224KA8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PYRO1_GATE",
+          "xy": [
+            16.7,
+            56.975
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            16.7,
+            58.375
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C127": {
+      "value": "10nF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C57112",
+        "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
+        "Manufacturer Part": "0603B103K500NT"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PYRO1_CONT",
+          "xy": [
+            20.5,
+            56.15
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            20.5,
+            57.55
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C128": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C161115",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GCJ188R71H104KA12D"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PYRO1_OUT",
+          "xy": [
+            11.225,
+            59.5
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            12.775,
+            59.5
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C129": {
+      "value": "10nF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C57112",
+        "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
+        "Manufacturer Part": "0603B103K500NT"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "ARM1_SENSE",
+          "xy": [
+            26.0,
+            58.75
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            26.0,
+            60.15
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C13": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            14.85,
+            49.68
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            14.85,
+            50.52
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C14": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            20.98,
+            52.1
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            21.82,
+            52.1
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C15": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            29.2,
+            47.82
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            29.2,
+            46.98
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C16": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            28.52,
+            36.62
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            27.68,
+            36.62
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C160": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PULLPIN",
+          "xy": [
+            12.0,
+            13.58
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            12.0,
+            14.42
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C17": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            17.0,
+            37.48
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            17.0,
+            38.32
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C18": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            18.72,
+            49.15
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            17.88,
+            49.15
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C19": {
+      "value": "2.2uF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C23630",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10A225KO8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "VCAP1",
+          "xy": [
+            28.35,
+            37.75
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            28.35,
+            39.15
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C20": {
+      "value": "2.2uF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C23630",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10A225KO8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "VCAP2",
+          "xy": [
+            19.1,
+            37.3
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            20.5,
+            37.3
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C21": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3A",
+          "xy": [
+            27.68,
+            49.25
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            28.52,
+            49.25
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C22": {
+      "value": "1uF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C15849",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10A105KB8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3A",
+          "xy": [
+            27.0,
+            48.0
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            27.0,
+            46.6
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C23": {
+      "value": "4.7uF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C19666",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10A475KO8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            28.5,
+            35.3
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            27.1,
+            35.3
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C24": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "NRST",
+          "xy": [
+            25.33,
+            49.1
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            26.17,
+            49.1
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C25": {
+      "value": "10pF",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C32949",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05C100JB5NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "HSE_IN",
+          "xy": [
+            20.37,
+            47.7
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            19.53,
+            47.7
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C26": {
+      "value": "10pF",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C32949",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05C100JB5NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "HSE_OUT",
+          "xy": [
+            25.33,
+            45.5
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            26.17,
+            45.5
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C28": {
+      "value": "4.7uF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C19666",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10A475KO8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "VBUS",
+          "xy": [
+            12.35,
+            24.9
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            13.75,
+            24.9
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C29": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            28.0,
+            43.1
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            28.0,
+            43.94
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C30": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3A",
+          "xy": [
+            17.05,
+            48.31
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            17.05,
+            49.15
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C31": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3A",
+          "xy": [
+            14.7,
+            46.65
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            14.7,
+            47.49
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C32": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3A",
+          "xy": [
+            8.72,
+            46.27
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            8.72,
+            45.43
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C400": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "RAW_PROTECTED",
+          "xy": [
+            14.1,
+            5.55
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            11.1,
+            5.55
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C401": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "RAW_PROTECTED",
+          "xy": [
+            15.85,
+            9.0
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            18.85,
+            9.0
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C402": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PORT_BST",
+          "xy": [
+            19.6,
+            4.0
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "PORT_SW",
+          "xy": [
+            19.6,
+            5.55
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C403": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PORT_5V3",
+          "xy": [
+            28.6,
+            3.6
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            31.6,
+            3.6
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C404": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PORT_5V3",
+          "xy": [
+            28.6,
+            7.0
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            31.6,
+            7.0
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C405": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PORT_5V3",
+          "xy": [
+            25.9,
+            10.3
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            22.9,
+            10.3
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C406": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PORT_4V8",
+          "xy": [
+            32.2,
+            12.9
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            32.2,
+            15.9
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C407": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PORT_4V8",
+          "xy": [
+            31.7,
+            20.6
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            31.7,
+            17.6
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C408": {
+      "value": "10nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C15195",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B103KB5NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PORT_LDO_SS",
+          "xy": [
+            25.22,
+            13.6
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            24.38,
+            13.6
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C410": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PORT_4V8",
+          "xy": [
+            30.225,
+            10.5
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            31.775,
+            10.5
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C411": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPS_4V8",
+          "xy": [
+            41.4,
+            10.2
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            44.4,
+            10.2
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C420": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PORT_4V8",
+          "xy": [
+            30.225,
+            22.5
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            31.775,
+            22.5
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C421": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "RADIO_4V8",
+          "xy": [
+            41.4,
+            22.2
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            44.4,
+            22.2
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C430": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "PORT_5V3",
+          "xy": [
+            40.525,
+            40.9
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            42.075,
+            40.9
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C431": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "CAM_5V",
+          "xy": [
+            41.4,
+            34.2
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            44.4,
+            34.2
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C440": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            34.425,
+            12.0
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            35.975,
+            12.0
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C441": {
+      "value": "1uF 50V X7R 10%",
+      "footprint": "C_1206_3216Metric",
+      "fields": {
+        "LCSC": "C1848",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL31B105KBHNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPS_4V8",
+          "xy": [
+            40.675,
+            19.1
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            43.625,
+            19.1
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C442": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPS_IO_3V3",
+          "xy": [
+            34.2,
+            23.0
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            37.2,
+            23.0
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C443": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPS_IO_3V3",
+          "xy": [
+            34.675,
+            18.45
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            34.675,
+            16.9
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C450": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            34.425,
+            24.0
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            35.975,
+            24.0
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C451": {
+      "value": "1uF 50V X7R 10%",
+      "footprint": "C_1206_3216Metric",
+      "fields": {
+        "LCSC": "C1848",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL31B105KBHNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "RADIO_4V8",
+          "xy": [
+            40.675,
+            31.1
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            43.625,
+            31.1
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C452": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "RADIO_IO_3V3",
+          "xy": [
+            34.2,
+            35.0
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            37.2,
+            35.0
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C453": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "RADIO_IO_3V3",
+          "xy": [
+            34.675,
+            30.45
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            34.675,
+            28.9
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C5": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "SW_NODE",
+          "xy": [
+            29.78,
+            68.43
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "BST",
+          "xy": [
+            30.62,
+            68.43
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C6": {
+      "value": "22uF",
+      "footprint": "C0805",
+      "fields": {
+        "LCSC": "C45783",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL21A226MAQNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "VLOGIC",
+          "xy": [
+            35.75,
+            65.75
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            35.75,
+            67.75
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C60": {
+      "value": "10nF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C57112",
+        "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
+        "Manufacturer Part": "0603B103K500NT"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "VLOGIC_SENSE",
+          "xy": [
+            38.66,
+            49.5
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            40.06,
+            49.5
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C7": {
+      "value": "22uF",
+      "footprint": "C0805",
+      "fields": {
+        "LCSC": "C45783",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL21A226MAQNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "VLOGIC",
+          "xy": [
+            36.3,
+            69.8
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            36.3,
+            71.8
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C8": {
+      "value": "22uF",
+      "footprint": "C0805",
+      "fields": {
+        "LCSC": "C45783",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL21A226MAQNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            33.4,
+            75.28
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            35.4,
+            75.28
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C80": {
+      "value": "10uF 50V X5R 10%",
+      "footprint": "C_1206_3216Metric",
+      "fields": {
+        "LCSC": "C13585",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL31A106KBHNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_IN",
+          "xy": [
+            27.525,
+            67.4
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            30.475,
+            67.4
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C81": {
+      "value": "4.7nF 50V C0G 5%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C85980",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM1885C1H472JA01D"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_DVDT",
+          "xy": [
+            41.325,
+            78.1
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            42.875,
+            78.1
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C82": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "RAW_PROTECTED",
+          "xy": [
+            33.9,
+            67.4
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            33.9,
+            64.4
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C83": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "VBUS",
+          "xy": [
+            9.425,
+            24.9
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            10.975,
+            24.9
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C84": {
+      "value": "470uF 25V polymer",
+      "footprint": "M3_MA_8x10",
+      "fields": {
+        "LCSC": "C46550466",
+        "Manufacturer": "jieerrui",
+        "Manufacturer Part": "MA25V470M8x10"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "VLOGIC",
+          "xy": [
+            38.5,
+            77.25
+          ],
+          "size": [
+            3.5,
+            1.7
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            38.5,
+            70.75
+          ],
+          "size": [
+            3.5,
+            1.7
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C85": {
+      "value": "470nF 25V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C1623",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10B474KA8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "LOGIC_SS",
+          "xy": [
+            35.125,
+            62.724999
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            36.675,
+            62.724999
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C86": {
+      "value": "1uF 25V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C29936",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10B105KA8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "USB_LIMITED",
+          "xy": [
+            15.95,
+            28.9
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            17.5,
+            28.9
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C87": {
+      "value": "2.2uF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C23630",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10A225KO8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_ENABLE",
+          "xy": [
+            19.1,
+            87.6
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            20.5,
+            87.6
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C88": {
+      "value": "100nF 50V",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_IN",
+          "xy": [
+            39.9,
+            82.37
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            39.9,
+            81.53
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C89": {
+      "value": "22uF 25V X5R 10%",
+      "footprint": "C_1206_3216Metric",
+      "fields": {
+        "LCSC": "C12891",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL31A226KAHNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_IN",
+          "xy": [
+            27.525,
+            72.6
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "BAT_DAMP",
+          "xy": [
+            30.475,
+            72.6
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C9": {
+      "value": "22uF",
+      "footprint": "C0805",
+      "fields": {
+        "LCSC": "C45783",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL21A226MAQNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            33.4,
+            77.24
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            35.4,
+            77.24
+          ],
+          "size": [
+            1.41,
+            1.35
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C90": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3",
+          "xy": [
+            36.725,
+            46.5
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            38.275,
+            46.5
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C91": {
+      "value": "1uF 50V X7R 10%",
+      "footprint": "C_1206_3216Metric",
+      "fields": {
+        "LCSC": "C1848",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL31B105KBHNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "CAM_5V",
+          "xy": [
+            40.675,
+            43.099999
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            43.625,
+            43.099999
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C92": {
+      "value": "22uF 25V X7R 10%",
+      "footprint": "M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "CAM_IO_3V3",
+          "xy": [
+            35.45,
+            46.019999
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            35.45,
+            49.019999
+          ],
+          "size": [
+            1.0,
+            2.3
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C93": {
+      "value": "100nF 50V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "CAM_IO_3V3",
+          "xy": [
+            34.675,
+            42.45
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            34.675,
+            40.9
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C94": {
+      "value": "10nF",
+      "footprint": "C0603",
+      "fields": {
+        "LCSC": "C57112",
+        "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
+        "Manufacturer Part": "0603B103K500NT"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "CAM_5V_SENSE",
+          "xy": [
+            39.57,
+            50.8
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            39.57,
+            52.2
+          ],
+          "size": [
+            0.8,
+            0.9
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C95": {
+      "value": "22uF 25V X5R 10%",
+      "footprint": "C_1206_3216Metric",
+      "fields": {
+        "LCSC": "C12891",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL31A226KAHNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_IN",
+          "xy": [
+            27.525,
+            75.2
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "BAT_DAMP",
+          "xy": [
+            30.475,
+            75.2
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C96": {
+      "value": "10uF 50V X5R 10%",
+      "footprint": "C_1206_3216Metric",
+      "fields": {
+        "LCSC": "C13585",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL31A106KBHNNNE"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_IN",
+          "xy": [
+            27.525,
+            70.0
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            30.475,
+            70.0
+          ],
+          "size": [
+            1.15,
+            1.8
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C97": {
+      "value": "1uF 25V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C29936",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10B105KA8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "RAW_PROTECTED",
+          "xy": [
+            32.299999,
+            62.175
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            32.299999,
+            60.625
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "C98": {
+      "value": "1uF 25V X7R 10%",
+      "footprint": "C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C29936",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10B105KA8NNNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "USB_LIMITED",
+          "xy": [
+            33.05,
+            59.2
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            31.5,
+            59.2
+          ],
+          "size": [
+            0.9,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "C99": {
+      "value": "100nF 50V",
+      "footprint": "C0402",
+      "fields": {
+        "LCSC": "C307331",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B104KB54PNC"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "VLOGIC",
+          "xy": [
+            33.0,
+            63.9
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            33.84,
+            63.9
+          ],
+          "size": [
+            0.5,
+            0.54
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "D8": {
+      "value": "SMBJ12CA",
+      "footprint": "D_SMB",
+      "fields": {
+        "LCSC": "C83849",
+        "Manufacturer": "Littelfuse",
+        "Manufacturer Part": "SMBJ12CA"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_IN",
+          "xy": [
+            19.85,
+            74.5
+          ],
+          "size": [
+            2.5,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            24.15,
+            74.5
+          ],
+          "size": [
+            2.5,
+            2.3
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "J1": {
+      "value": "DB125-3.5-2P-GN-S",
+      "footprint": "M3_DB125_2P_GN",
+      "fields": {
+        "LCSC": "C466970",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-2P-GN-S"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_IN",
+          "xy": [
+            7.0,
+            74.1
+          ],
+          "size": [
+            1.9,
+            1.9
+          ],
+          "layers": [
+            0,
+            4,
+            6,
+            8,
+            10,
+            12,
+            14,
+            16,
+            18,
+            20,
+            22,
+            24,
+            26,
+            28,
+            30,
+            32,
+            34,
+            36,
+            38,
+            40,
+            42,
+            44,
+            46,
+            48,
+            50,
+            52,
+            54,
+            56,
+            58,
+            60,
+            62,
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            7.0,
+            77.6
+          ],
+          "size": [
+            1.9,
+            1.9
+          ],
+          "layers": [
+            0,
+            4,
+            6,
+            8,
+            10,
+            12,
+            14,
+            16,
+            18,
+            20,
+            22,
+            24,
+            26,
+            28,
+            30,
+            32,
+            34,
+            36,
+            38,
+            40,
+            42,
+            44,
+            46,
+            48,
+            50,
+            52,
+            54,
+            56,
+            58,
+            60,
+            62,
+            2
+          ]
+        }
+      ]
+    },
+    "Q120": {
+      "value": "AON6403",
+      "footprint": "PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL",
+      "fields": {
+        "LCSC": "C2760089",
+        "Manufacturer": "Alpha & Omega Semicon",
+        "Manufacturer Part": "AON6403"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "ACT_FET_S",
+          "xy": [
+            11.59,
+            72.7
+          ],
+          "size": [
+            0.58,
+            1.079
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "ACT_FET_S",
+          "xy": [
+            12.86,
+            72.7
+          ],
+          "size": [
+            0.58,
+            1.079
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "3",
+          "net": "ACT_FET_S",
+          "xy": [
+            14.13,
+            72.7
+          ],
+          "size": [
+            0.58,
+            1.079
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "4",
+          "net": "ACT_GATE",
+          "xy": [
+            15.4,
+            72.7
+          ],
+          "size": [
+            0.58,
+            1.079
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "5",
+          "net": "BAT_IN",
+          "xy": [
+            15.41,
+            78.5
+          ],
+          "size": [
+            0.58,
+            1.08
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "6",
+          "net": "BAT_IN",
+          "xy": [
+            14.14,
+            78.5
+          ],
+          "size": [
+            0.58,
+            1.08
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "7",
+          "net": "BAT_IN",
+          "xy": [
+            12.87,
+            78.5
+          ],
+          "size": [
+            0.58,
+            1.08
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "8",
+          "net": "BAT_IN",
+          "xy": [
+            11.6,
+            78.5
+          ],
+          "size": [
+            0.58,
+            1.08
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "9",
+          "net": "BAT_IN",
+          "xy": [
+            13.5,
+            76.29
+          ],
+          "size": [
+            4.6,
+            4.1
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "R166": {
+      "value": "0.33R 1% 2512",
+      "footprint": "M3_R2512_UR",
+      "fields": {
+        "LCSC": "C25468",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "25121WF330LT4E"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_DAMP",
+          "xy": [
+            36.0,
+            80.725
+          ],
+          "size": [
+            1.6,
+            3.3
+          ],
+          "layers": [
+            0
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            36.0,
+            87.325
+          ],
+          "size": [
+            1.6,
+            3.3
+          ],
+          "layers": [
+            0
+          ]
+        }
+      ]
+    },
+    "R167": {
+      "value": "10k 1%",
+      "footprint": "R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_IN",
+          "xy": [
+            29.825,
+            85.4
+          ],
+          "size": [
+            0.8,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            31.475,
+            85.4
+          ],
+          "size": [
+            0.8,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "R92": {
+      "value": "10k 1%",
+      "footprint": "R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "RAW_PROTECTED",
+          "xy": [
+            39.25,
+            76.725
+          ],
+          "size": [
+            0.8,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "xy": [
+            39.25,
+            75.075
+          ],
+          "size": [
+            0.8,
+            0.95
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    },
+    "U9": {
+      "value": "TPS259470LRPWR",
+      "footprint": "M3_TPS25947_RPW",
+      "fields": {
+        "LCSC": "C3662793",
+        "Manufacturer": "Texas Instruments",
+        "Manufacturer Part": "TPS259470LRPWR"
+      },
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT_ENABLE",
+          "xy": [
+            38.1,
+            80.3
+          ],
+          "size": [
+            0.6,
+            0.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "1",
+          "net": "BAT_ENABLE",
+          "xy": [
+            38.275,
+            80.475
+          ],
+          "size": [
+            0.25,
+            0.65
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "2",
+          "net": "BAT_OVLO",
+          "xy": [
+            38.1,
+            79.825
+          ],
+          "size": [
+            0.6,
+            0.25
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "3",
+          "net": "unconnected-(U9-AUXOFF-Pad3)",
+          "xy": [
+            38.1,
+            79.375
+          ],
+          "size": [
+            0.6,
+            0.25
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "4",
+          "net": "BAT_FAULT_N",
+          "xy": [
+            38.1,
+            78.9
+          ],
+          "size": [
+            0.6,
+            0.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "4",
+          "net": "BAT_FAULT_N",
+          "xy": [
+            38.275,
+            78.725
+          ],
+          "size": [
+            0.25,
+            0.65
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "5",
+          "net": "BAT_IN",
+          "xy": [
+            38.75,
+            79.6
+          ],
+          "size": [
+            0.3,
+            2.4
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "6",
+          "net": "RAW_PROTECTED",
+          "xy": [
+            39.25,
+            79.6
+          ],
+          "size": [
+            0.3,
+            2.4
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "7",
+          "net": "BAT_DVDT",
+          "xy": [
+            39.725,
+            78.725
+          ],
+          "size": [
+            0.25,
+            0.65
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "7",
+          "net": "BAT_DVDT",
+          "xy": [
+            39.9,
+            78.9
+          ],
+          "size": [
+            0.6,
+            0.3
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "8",
+          "net": "GND",
+          "xy": [
+            39.9,
+            79.375
+          ],
+          "size": [
+            0.6,
+            0.25
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "9",
+          "net": "BAT_ILIM",
+          "xy": [
+            39.9,
+            79.825
+          ],
+          "size": [
+            0.6,
+            0.25
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "10",
+          "net": "unconnected-(U9-ITIMER-Pad10)",
+          "xy": [
+            39.725,
+            80.475
+          ],
+          "size": [
+            0.25,
+            0.65
+          ],
+          "layers": [
+            2
+          ]
+        },
+        {
+          "number": "10",
+          "net": "unconnected-(U9-ITIMER-Pad10)",
+          "xy": [
+            39.9,
+            80.3
+          ],
+          "size": [
+            0.6,
+            0.3
+          ],
+          "layers": [
+            2
+          ]
+        }
+      ]
+    }
+  },
+  "stackup": {
+    "F.Cu": [
+      0.035,
+      0.0175
+    ],
+    "In1.Cu": [
+      0.03,
+      0.253
+    ],
+    "In2.Cu": [
+      0.03,
+      1.313
+    ],
+    "B.Cu": [
+      0.035,
+      1.5485000000000002
+    ]
+  },
+  "edges": [
+    {
+      "a": "C89.2",
+      "b": "C95.2",
+      "R_ohm": 0.0031942857142857246,
+      "L_near_nH": 0.8480703385615784,
+      "L_gnd_nH": 0.8480703385615784,
+      "pieces": [
+        {
+          "layer": "F.Cu",
+          "width_mm": 0.4,
+          "length_mm": 2.6000000000000085,
+          "start_mm": [
+            30.475,
+            72.6
+          ],
+          "end_mm": [
+            30.475,
+            75.2
+          ]
+        }
+      ],
+      "length_mm": 2.6000000000000085
+    },
+    {
+      "a": "C95.2",
+      "b": "R166.1",
+      "R_ohm": 0.009599479630879652,
+      "L_near_nH": 2.5486242211102588,
+      "L_gnd_nH": 2.5486242211102588,
+      "pieces": [
+        {
+          "layer": "F.Cu",
+          "width_mm": 0.4,
+          "length_mm": 7.8135299321113445,
+          "start_mm": [
+            30.475,
+            75.2
+          ],
+          "end_mm": [
+            36.0,
+            80.725
+          ]
+        }
+      ],
+      "length_mm": 7.8135299321113445
+    },
+    {
+      "a": "junction_0",
+      "b": "R167.1",
+      "R_ohm": 0.0014742857142857001,
+      "L_near_nH": 0.3914170793361084,
+      "L_gnd_nH": 0.7823661424760975,
+      "pieces": [
+        {
+          "layer": "B.Cu",
+          "width_mm": 0.4,
+          "length_mm": 1.1999999999999886,
+          "start_mm": [
+            29.825,
+            86.6
+          ],
+          "end_mm": [
+            29.825,
+            85.4
+          ]
+        }
+      ],
+      "length_mm": 1.1999999999999886
+    },
+    {
+      "a": "junction_1",
+      "b": "C88.1",
+      "R_ohm": 0.001412857142857141,
+      "L_near_nH": 0.3751080343637737,
+      "L_gnd_nH": 0.7497675532062662,
+      "pieces": [
+        {
+          "layer": "B.Cu",
+          "width_mm": 0.4,
+          "length_mm": 1.1499999999999986,
+          "start_mm": [
+            38.75,
+            82.37
+          ],
+          "end_mm": [
+            39.9,
+            82.37
+          ]
+        }
+      ],
+      "length_mm": 1.1499999999999986
+    },
+    {
+      "a": "D8.1",
+      "b": "junction_2",
+      "R_ohm": 0.0012285714285714285,
+      "L_near_nH": 0.46238419676711434,
+      "L_gnd_nH": 0.46238419676711434,
+      "pieces": [
+        {
+          "layer": "F.Cu",
+          "width_mm": 1.0,
+          "length_mm": 2.5,
+          "start_mm": [
+            19.85,
+            74.5
+          ],
+          "end_mm": [
+            19.85,
+            77.0
+          ]
+        }
+      ],
+      "length_mm": 2.5
+    },
+    {
+      "a": "C96.1",
+      "b": "C80.1",
+      "R_ohm": 0.0012777142857142829,
+      "L_near_nH": 0.4808795646377978,
+      "L_gnd_nH": 0.4808795646377978,
+      "pieces": [
+        {
+          "layer": "F.Cu",
+          "width_mm": 1.0,
+          "length_mm": 2.5999999999999943,
+          "start_mm": [
+            27.525,
+            70.0
+          ],
+          "end_mm": [
+            27.525,
+            67.4
+          ]
+        }
+      ],
+      "length_mm": 2.5999999999999943
+    },
+    {
+      "a": "C89.1",
+      "b": "C96.1",
+      "R_ohm": 0.0012777142857142829,
+      "L_near_nH": 0.4808795646377978,
+      "L_gnd_nH": 0.4808795646377978,
+      "pieces": [
+        {
+          "layer": "F.Cu",
+          "width_mm": 1.0,
+          "length_mm": 2.5999999999999943,
+          "start_mm": [
+            27.525,
+            72.6
+          ],
+          "end_mm": [
+            27.525,
+            70.0
+          ]
+        }
+      ],
+      "length_mm": 2.5999999999999943
+    },
+    {
+      "a": "C95.1",
+      "b": "C89.1",
+      "R_ohm": 0.0012777142857142898,
+      "L_near_nH": 0.48087956463780046,
+      "L_gnd_nH": 0.48087956463780046,
+      "pieces": [
+        {
+          "layer": "F.Cu",
+          "width_mm": 1.0,
+          "length_mm": 2.6000000000000085,
+          "start_mm": [
+            27.525,
+            75.2
+          ],
+          "end_mm": [
+            27.525,
+            72.6
+          ]
+        }
+      ],
+      "length_mm": 2.6000000000000085
+    },
+    {
+      "a": "U9.5",
+      "b": "junction_1",
+      "pieces": [
+        {
+          "layer": "B.Cu",
+          "width_mm": 0.3,
+          "length_mm": 1.8000000000000114,
+          "start_mm": [
+            38.75,
+            81.4
+          ],
+          "end_mm": [
+            38.75,
+            79.6
+          ]
+        },
+        {
+          "layer": "B.Cu",
+          "width_mm": 1.0,
+          "length_mm": 0.9699999999999991,
+          "start_mm": [
+            38.75,
+            82.37
+          ],
+          "end_mm": [
+            38.75,
+            81.4
+          ]
+        }
+      ],
+      "R_ohm": 0.003425257142857161,
+      "L_near_nH": 0.8583662335109485,
+      "L_gnd_nH": 1.7342511751939966,
+      "length_mm": 2.7700000000000102
+    },
+    {
+      "a": "junction_1",
+      "b": "junction_0",
+      "pieces": [
+        {
+          "layer": "B.Cu",
+          "width_mm": 1.0,
+          "length_mm": 4.22999999999999,
+          "start_mm": [
+            38.75,
+            86.6
+          ],
+          "end_mm": [
+            38.75,
+            82.37
+          ]
+        },
+        {
+          "layer": "B.Cu",
+          "width_mm": 1.0,
+          "length_mm": 6.900000000000001,
+          "start_mm": [
+            29.825,
+            86.6
+          ],
+          "end_mm": [
+            36.725,
+            86.6
+          ]
+        },
+        {
+          "layer": "B.Cu",
+          "width_mm": 1.0,
+          "length_mm": 2.0249999999999986,
+          "start_mm": [
+            36.725,
+            86.6
+          ],
+          "end_mm": [
+            38.75,
+            86.6
+          ]
+        }
+      ],
+      "R_ohm": 0.006464742857142851,
+      "L_near_nH": 2.4330656433885554,
+      "L_gnd_nH": 6.204998845605313,
+      "length_mm": 13.15499999999999
+    },
+    {
+      "a": "junction_2",
+      "b": "C95.1",
+      "pieces": [
+        {
+          "layer": "F.Cu",
+          "width_mm": 1.0,
+          "length_mm": 7.674999999999999,
+          "start_mm": [
+            19.85,
+            77.0
+          ],
+          "end_mm": [
+            27.525,
+            77.0
+          ]
+        },
+        {
+          "layer": "F.Cu",
+          "width_mm": 1.0,
+          "length_mm": 1.7999999999999972,
+          "start_mm": [
+            27.525,
+            77.0
+          ],
+          "end_mm": [
+            27.525,
+            75.2
+          ]
+        }
+      ],
+      "R_ohm": 0.004656285714285713,
+      "L_near_nH": 1.7524361057473627,
+      "L_gnd_nH": 1.7524361057473627,
+      "length_mm": 9.474999999999996
+    },
+    {
+      "a": "junction_2",
+      "b": "J1.1",
+      "pieces": [
+        {
+          "layer": "F.Cu",
+          "width_mm": 1.0,
+          "length_mm": 6.05,
+          "start_mm": [
+            13.8,
+            77.0
+          ],
+          "end_mm": [
+            19.85,
+            77.0
+          ]
+        },
+        {
+          "layer": "F.Cu",
+          "width_mm": 1.0,
+          "length_mm": 4.10121933088198,
+          "start_mm": [
+            7.0,
+            74.1
+          ],
+          "end_mm": [
+            9.9,
+            77.0
+          ]
+        },
+        {
+          "layer": "F.Cu",
+          "width_mm": 1.0,
+          "length_mm": 3.900000000000001,
+          "start_mm": [
+            9.9,
+            77.0
+          ],
+          "end_mm": [
+            13.8,
+            77.0
+          ]
+        }
+      ],
+      "R_ohm": 0.006905170642604859,
+      "L_near_nH": 2.5988247055633655,
+      "L_gnd_nH": 2.5988247055633655,
+      "length_mm": 14.05121933088198
+    },
+    {
+      "a": "junction_0",
+      "b": "J1.1",
+      "pieces": [
+        {
+          "layer": "B.Cu",
+          "width_mm": 1.0,
+          "length_mm": 12.474999999999998,
+          "start_mm": [
+            17.35,
+            86.6
+          ],
+          "end_mm": [
+            29.825,
+            86.6
+          ]
+        },
+        {
+          "layer": "B.Cu",
+          "width_mm": 1.0,
+          "length_mm": 4.480000000000002,
+          "start_mm": [
+            12.87,
+            86.6
+          ],
+          "end_mm": [
+            17.35,
+            86.6
+          ]
+        },
+        {
+          "layer": "B.Cu",
+          "width_mm": 1.0,
+          "length_mm": 8.099999999999994,
+          "start_mm": [
+            12.87,
+            78.5
+          ],
+          "end_mm": [
+            12.87,
+            86.6
+          ]
+        },
+        {
+          "layer": "B.Cu",
+          "width_mm": 1.0,
+          "length_mm": 3.5999999999999996,
+          "start_mm": [
+            7.0,
+            74.1
+          ],
+          "end_mm": [
+            10.6,
+            74.1
+          ]
+        },
+        {
+          "layer": "B.Cu",
+          "width_mm": 1.0,
+          "length_mm": 1.979898987322337,
+          "start_mm": [
+            10.6,
+            74.1
+          ],
+          "end_mm": [
+            12.0,
+            75.5
+          ]
+        }
+      ],
+      "R_ohm": 0.015054864645198403,
+      "L_near_nH": 5.666037264517892,
+      "L_gnd_nH": 14.44998197275337,
+      "length_mm": 30.63489898732233
+    }
+  ],
+  "terminals": {
+    "C80.1": "C80.1",
+    "C88.1": "C88.1",
+    "C89.1": "C89.1",
+    "C89.2": "C89.2",
+    "C95.1": "C95.1",
+    "C95.2": "C95.2",
+    "C96.1": "C96.1",
+    "D8.1": "D8.1",
+    "J1.1": "J1.1",
+    "R166.1": "R166.1",
+    "R167.1": "R167.1",
+    "U9.5": "U9.5"
+  },
+  "note": "Inference: trace R at 20 C; microstrip L with nearest plane / In1 GND brackets; ideal pad copper and ground."
+}

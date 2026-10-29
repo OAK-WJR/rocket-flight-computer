@@ -1,0 +1,348 @@
+{
+  "first": {
+    "applied": true,
+    "added": [
+      "b0c3e96d-bccc-59ba-99c8-caa934e8db15",
+      "a906979f-faf6-5bf6-92c3-b5f1edc9c94d",
+      "71c67ab2-425c-5225-94cd-4a25106187de",
+      "504a0ba3-2043-5aa3-9ebb-bfbc58bc9b80",
+      "1ef66478-586b-5bb6-a688-440d2eb16149",
+      "6e5cc936-265c-5b3c-ac2d-95c31d90ad6b",
+      "d5a6bf83-2899-56fd-9fff-ac4622038631",
+      "1e1272df-6a37-5bd1-9b54-99b3eaa99de4",
+      "015a2934-e33e-5ee1-8004-3549ad57816d",
+      "c49bd023-776f-5ce0-8570-8fb577c8668e",
+      "ba26c75d-5da2-57fc-b9f7-4d1b765346b2",
+      "1c453238-2c39-56c9-b713-bedaad716a0b",
+      "fb65ffa5-d387-5ea5-a921-c433c26d031a",
+      "c593cc8d-7c1b-5e9e-ab43-9cf183885645",
+      "b0cd2688-452e-5ce5-8564-c258d23211cb",
+      "6162f340-6ccb-536b-ae07-06ae7fd8cb6a",
+      "9b4238f3-3511-5854-90be-4e7828c6957e",
+      "f2953a39-e55a-5f76-bb4b-1a8803fe8285",
+      "40577d4e-4e9a-503f-9416-df5ddaf16c53",
+      "69dd3c51-ab57-51bc-8977-1254641407d0"
+    ],
+    "zones_require_refill": true,
+    "native_drc_required": true
+  },
+  "second": {
+    "applied": false,
+    "added": [],
+    "zones_require_refill": false,
+    "native_drc_required": true,
+    "skipped": "already applied"
+  },
+  "source_sha": "85211df4e37ff122ac716847c068b70b85d03e20cd2fed3e60b8ca7909990448",
+  "candidate_sha": "88098ff62cad76acce81fa955578ed7c355b4ce2f0ee210bad33cace688db7e5",
+  "reviewed_geometry_identical": true,
+  "old_copper_unchanged": true,
+  "old_pad_splits": [],
+  "idempotent_reload": true,
+  "atomic_rejections": [
+    "changed own",
+    "partial own",
+    "changed anchor",
+    "changed endpoint"
+  ],
+  "project_sha": "3730b060a94ebbd8f5f5ad179927549cb0cda8f475801e0e85b4c559fecaa7bf",
+  "added_copper": [
+    {
+      "uuid": "40577d4e-4e9a-503f-9416-df5ddaf16c53",
+      "net": "3V3",
+      "kind": "track",
+      "layer": 6,
+      "start": [
+        18.7,
+        33.9
+      ],
+      "end": [
+        19.0,
+        33.6
+      ],
+      "width": 0.25
+    },
+    {
+      "uuid": "69dd3c51-ab57-51bc-8977-1254641407d0",
+      "net": "3V3",
+      "kind": "track",
+      "layer": 6,
+      "start": [
+        19.0,
+        33.6
+      ],
+      "end": [
+        19.6,
+        33.6
+      ],
+      "width": 0.25
+    },
+    {
+      "uuid": "1c453238-2c39-56c9-b713-bedaad716a0b",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        27.6,
+        33.8
+      ],
+      "end": [
+        27.2,
+        34.2
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "1ef66478-586b-5bb6-a688-440d2eb16149",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        34.0,
+        35.2
+      ],
+      "end": [
+        33.9,
+        35.2
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "6e5cc936-265c-5b3c-ac2d-95c31d90ad6b",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        33.9,
+        35.2
+      ],
+      "end": [
+        33.1,
+        34.4
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "9b4238f3-3511-5854-90be-4e7828c6957e",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        18.6,
+        33.2
+      ],
+      "end": [
+        17.5,
+        34.3
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "c593cc8d-7c1b-5e9e-ab43-9cf183885645",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        24.2,
+        34.2
+      ],
+      "end": [
+        21.4,
+        31.4
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "d5a6bf83-2899-56fd-9fff-ac4622038631",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        33.1,
+        34.4
+      ],
+      "end": [
+        33.1,
+        33.9
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "f2953a39-e55a-5f76-bb4b-1a8803fe8285",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        17.5,
+        34.3
+      ],
+      "end": [
+        17.5,
+        34.9
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "fb65ffa5-d387-5ea5-a921-c433c26d031a",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        27.2,
+        34.2
+      ],
+      "end": [
+        24.2,
+        34.2
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "504a0ba3-2043-5aa3-9ebb-bfbc58bc9b80",
+      "net": "RADIO_RX_MCU",
+      "kind": "via",
+      "at": [
+        18.6,
+        33.2
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    },
+    {
+      "uuid": "71c67ab2-425c-5225-94cd-4a25106187de",
+      "net": "RADIO_RX_MCU",
+      "kind": "via",
+      "at": [
+        21.4,
+        31.4
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    },
+    {
+      "uuid": "a906979f-faf6-5bf6-92c3-b5f1edc9c94d",
+      "net": "RADIO_RX_MCU",
+      "kind": "via",
+      "at": [
+        27.6,
+        33.8
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    },
+    {
+      "uuid": "b0c3e96d-bccc-59ba-99c8-caa934e8db15",
+      "net": "RADIO_RX_MCU",
+      "kind": "via",
+      "at": [
+        33.1,
+        33.9
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    },
+    {
+      "uuid": "015a2934-e33e-5ee1-8004-3549ad57816d",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 4,
+      "start": [
+        31.1,
+        33.9
+      ],
+      "end": [
+        30.9,
+        34.1
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "1e1272df-6a37-5bd1-9b54-99b3eaa99de4",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 4,
+      "start": [
+        33.1,
+        33.9
+      ],
+      "end": [
+        31.1,
+        33.9
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "ba26c75d-5da2-57fc-b9f7-4d1b765346b2",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 4,
+      "start": [
+        27.9,
+        34.1
+      ],
+      "end": [
+        27.6,
+        33.8
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "c49bd023-776f-5ce0-8570-8fb577c8668e",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 4,
+      "start": [
+        30.9,
+        34.1
+      ],
+      "end": [
+        27.9,
+        34.1
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "6162f340-6ccb-536b-ae07-06ae7fd8cb6a",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 6,
+      "start": [
+        19.6,
+        33.2
+      ],
+      "end": [
+        18.6,
+        33.2
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "b0cd2688-452e-5ce5-8564-c258d23211cb",
+      "net": "RADIO_RX_MCU",
+      "kind": "track",
+      "layer": 6,
+      "start": [
+        21.4,
+        31.4
+      ],
+      "end": [
+        19.6,
+        33.2
+      ],
+      "width": 0.15
+    }
+  ],
+  "removed_copper": [],
+  "native_drc": {
+    "hard": 0,
+    "warnings": 14,
+    "unconnected": 7,
+    "parity": 0
+  },
+  "baseline_native_drc": {
+    "hard": 0,
+    "warnings": 14,
+    "unconnected": 8,
+    "parity": 0
+  }
+}

@@ -1,0 +1,266 @@
+{
+ "board": "m3.kicad_pcb",
+ "board_sha256": "cc044ea0922ff826df19af9d9726d92c096ab2b127025b55d123d8772e5fb4a7",
+ "seed_gap": 0.95,
+ "pairs": [
+  {
+   "pair": "Q124.5 -- R129.2",
+   "layer": "F.Cu",
+   "gap_before": 1.025,
+   "variants": {
+    "seed": {
+     "moved": "R129",
+     "seeded_gap": 0.951,
+     "caught_by": [
+      "DRC",
+      "pyro_probe"
+     ]
+    },
+    "pad_override": {
+     "moved": "R129",
+     "seeded_gap": 0.951,
+     "caught_by": [
+      "check_r9 LC-1",
+      "pyro_probe"
+     ]
+    },
+    "min_lowered": {
+     "moved": "R129",
+     "seeded_gap": 0.951,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "deleted": {
+     "moved": "R129",
+     "seeded_gap": 0.951,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "moved_first": {
+     "moved": "R129",
+     "seeded_gap": 0.951,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "narrowed": {
+     "moved": "R129",
+     "seeded_gap": 0.951,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "raw_dropped": {
+     "moved": "R129",
+     "seeded_gap": 0.951,
+     "caught_by": [
+      "DRC",
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "act_gate_dropped": {
+     "moved": "R129",
+     "seeded_gap": 0.951,
+     "caught_by": [
+      "DRC",
+      "check_actuators",
+      "pyro_probe"
+     ]
+    }
+   },
+   "control_drc_hits": 0
+  },
+  {
+   "pair": "R134.2 -- R126.2",
+   "layer": "F.Cu",
+   "gap_before": 1.027,
+   "variants": {
+    "seed": {
+     "moved": "R126",
+     "seeded_gap": 0.952,
+     "caught_by": [
+      "DRC",
+      "pyro_probe"
+     ]
+    },
+    "pad_override": {
+     "moved": "R126",
+     "seeded_gap": 0.952,
+     "caught_by": [
+      "check_r9 LC-1",
+      "pyro_probe"
+     ]
+    },
+    "min_lowered": {
+     "moved": "R126",
+     "seeded_gap": 0.952,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "deleted": {
+     "moved": "R126",
+     "seeded_gap": 0.952,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "moved_first": {
+     "moved": "R126",
+     "seeded_gap": 0.952,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "narrowed": {
+     "moved": "R126",
+     "seeded_gap": 0.952,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "raw_dropped": {
+     "moved": "R126",
+     "seeded_gap": 0.952,
+     "caught_by": [
+      "DRC",
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "act_gate_dropped": {
+     "moved": "R126",
+     "seeded_gap": 0.952,
+     "caught_by": [
+      "DRC",
+      "check_actuators",
+      "pyro_probe"
+     ]
+    }
+   },
+   "control_drc_hits": 0
+  },
+  {
+   "pair": "Q124.5 -- R130.1",
+   "layer": "F.Cu",
+   "gap_before": 1.028,
+   "variants": {
+    "seed": {
+     "moved": "R130",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "DRC",
+      "pyro_probe"
+     ]
+    },
+    "pad_override": {
+     "moved": "R130",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_r9 LC-1",
+      "pyro_probe"
+     ]
+    },
+    "min_lowered": {
+     "moved": "R130",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "deleted": {
+     "moved": "R130",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "moved_first": {
+     "moved": "R130",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "narrowed": {
+     "moved": "R130",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "raw_dropped": {
+     "moved": "R130",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "DRC",
+      "check_actuators",
+      "pyro_probe"
+     ]
+    },
+    "act_gate_dropped": {
+     "moved": "R130",
+     "seeded_gap": 0.95,
+     "caught_by": [
+      "DRC",
+      "check_actuators",
+      "pyro_probe"
+     ]
+    }
+   },
+   "control_drc_hits": 0
+  }
+ ],
+ "baseline": {
+  "check_actuators": [
+   "one PYRO_BLOCK rule area on F.Cu/In1/In2/B.Cu, one outline, restricting nothing, covering the CH1 block (courtyards + 1 mm, internal-net copper, exit copper to 3 mm); not covered: ['D120 courtyard + 1.0 mm', 'D120.1 (PYRO1_COLD)', 'J124 courtyard + 1.0 mm', 'J121 courtyard + 1.0 mm']"
+  ],
+  "lc1": [
+   "LC-1: pad J122.11 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad J122.2 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad J122.5 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad J122.8 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad J124.2 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP120.1 (RAW_ACT) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP121.1 (ACT_GATE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP122.1 (PYRO1_GATE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP30.1 (GNSS_SAFEBOOT_N) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP70.1 (RAW_PROTECTED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP71.1 (CAM_INPUT_LIMITED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP72.1 (CAM_5V) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP73.1 (CAM_ILIM) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP74.1 (GND) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP75.1 (CAM_RX_WIRE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP76.1 (CAM_TX_WIRE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP80.1 (BAT_IN) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP81.1 (RAW_PROTECTED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP82.1 (USB_LIMITED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP83.1 (VLOGIC) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP84.1 (BAT_ENABLE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP85.1 (BAT_FAULT_N) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP86.1 (USB_FAULT_N) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP87.1 (LOGIC_SOURCE_ST) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP88.1 (GND) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP89.1 (BAT_ILIM) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP90.1 (CAM_IO_3V3) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP91.1 (CAM_UART_OE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+   "LC-1: pad TP92.1 (VBUS_SENSE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)"
+  ]
+ },
+ "issues": []
+}

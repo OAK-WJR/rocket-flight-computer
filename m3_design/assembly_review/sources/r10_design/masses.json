@@ -1,0 +1,31 @@
+{
+  "profile": "r10",
+  "basis": "Inference: conservative engineering mass allowances, not maker or measured masses. Body and mated-plug allowances are separate additive lumped masses. Validate by weighing the actual populated board and supported harness. Connector/capacitor dimensions: parts_qualification.md; GH drawings eGH.pdf pp2-3; DB125 drawing T0-1; MA drawing p2. No inherited R9 RF or SMA masses.",
+  "masses_g": {
+    "J1": 3.0,
+    "J121": 3.0,
+    "J122": 2.0,
+    "C84": 3.0,
+    "LS120": 0.3,
+    "J3": 1.0,
+    "J9": 0.7,
+    "J400": 0.5,
+    "J410": 0.7,
+    "J420": 0.7,
+    "J1 mated": 1.0,
+    "J121 mated": 1.0,
+    "J122 mated": 4.0,
+    "J9 mated": 1.5,
+    "J400 mated": 1.0,
+    "J410 mated": 1.5,
+    "J420 mated": 1.5
+  },
+  "placement": "tools/plate_model.py --profile r10 places every key: on its own fit-report row's model box, or, for 'X mated' with no row of its own (J1 / J121: the DB125 terminals' wire and ferrule allowance, no mated envelope in fit_check), on its parent X's model box; any other key is refused (R3-MEC-01)",
+  "removed_bench_only": {
+    "J2": "TC2030 Tag-Connect: a bare land (fit_check board feature), no body on the board",
+    "J2 mated": "the TC2030 cable is a bench programming tool, never fitted in flight",
+    "J3 mated": "the USB-C plug is a bench / ground tool, never fitted in flight (J3's body mass stays)"
+  },
+  "physical_mass_verified": false,
+  "harness_rule": "Strain relief carries cable mass beyond the modelled plug/local-wire envelope; unrestrained long leads invalidate these allowances."
+}

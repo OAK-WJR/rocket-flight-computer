@@ -1,0 +1,62 @@
+ref	x	y	rot	side	basis
+J410	42.7	14	-90	F	GH mouth at east edge; 12mm connector pitch
+U410	31	10.5	0	B	R10 port-local placement; explicit routing lanes
+R410	34.8	10.5	0	B	R10 port-local placement; explicit routing lanes
+R411	32	7.7	0	B	R10 port-local placement; explicit routing lanes
+R412	29.5	5.5	0	B	R10 port-local placement; explicit routing lanes
+C410	31	10.5	0	F	R10 port-local placement; explicit routing lanes
+C411	42.9	10.2	0	B	R10 port-local placement; explicit routing lanes
+U411	35.2	15.35	-90	F	R10 port-local placement; explicit routing lanes
+U412	37.6	19.4	180	B	R10 port-local placement; explicit routing lanes
+R440	37.5	12.975	-90	F	R10 port-local placement; explicit routing lanes
+R441	37.5	17.725	-90	F	R10 port-local placement; explicit routing lanes
+R442	32.5	19.4	-90	F	R10 port-local placement; explicit routing lanes
+R443	42	17.2	0	B	R10 port-local placement; explicit routing lanes
+C440	35.2	12	0	F	R10 port-local placement; explicit routing lanes
+C441	42.15	19.1	0	B	R10 port-local placement; explicit routing lanes
+C442	35.7	21	0	F	R10 port-local placement; explicit routing lanes
+C443	34.675	17.675	90	B	R10 port-local placement; explicit routing lanes
+D410	38.8	14.45	90	F	R10 port-local placement; explicit routing lanes
+D411	38.8	15.95	90	F	R10 port-local placement; explicit routing lanes
+J420	42.7	26	-90	F	GH mouth at east edge; 12mm connector pitch
+U420	31	22.5	0	B	R10 port-local placement; explicit routing lanes
+R420	34.8	22.5	0	B	R10 port-local placement; explicit routing lanes
+R421	32	19.7	0	B	R10 port-local placement; explicit routing lanes
+R422	29.5	17.5	0	F	R10 port-local placement; explicit routing lanes
+C420	31	22.5	0	F	R10 port-local placement; explicit routing lanes
+C421	42.9	22.2	0	B	R10 port-local placement; explicit routing lanes
+U421	35.2	27.35	-90	F	R10 port-local placement; explicit routing lanes
+U422	37.6	31.4	180	B	R10 port-local placement; explicit routing lanes
+R450	37.5	24.975	-90	F	R10 port-local placement; explicit routing lanes
+R451	37.5	29.725	-90	F	R10 port-local placement; explicit routing lanes
+R452	32.5	31.4	-90	F	R10 port-local placement; explicit routing lanes
+R453	42	29.2	0	B	R10 port-local placement; explicit routing lanes
+C450	35.2	24	0	F	R10 port-local placement; explicit routing lanes
+C451	42.15	31.1	0	B	R10 port-local placement; explicit routing lanes
+C452	35.7	33	0	F	R10 port-local placement; explicit routing lanes
+C453	34.675	29.675	90	B	R10 port-local placement; explicit routing lanes
+D420	38.8	26.45	90	F	R10 port-local placement; explicit routing lanes
+D421	38.8	27.95	90	F	R10 port-local placement; explicit routing lanes
+J9	42.7	38	-90	F	R9 local camera geometry translated -10.2mm y
+U12	35.2	39.35	-90	F	R9 local camera geometry translated -10.2mm y
+U13	37.6	43.4	180	B	R9 local camera geometry translated -10.2mm y
+R100	37.5	36.975	-90	F	R9 local camera geometry translated -10.2mm y
+R101	37.5	41.725	-90	F	R9 local camera geometry translated -10.2mm y
+R102	34.95	43.4	-90	F	R9 local camera geometry translated -10.2mm y
+C91	42.15	43.1	0	B	R9 local camera geometry translated -10.2mm y
+C92	35.45	47.52	-90	B	R9 local camera geometry translated -10.2mm y
+C93	34.675	41.675	90	B	R9 local camera geometry translated -10.2mm y
+C100	35.2	36.6	0	F	R9 local camera geometry translated -10.2mm y
+C90	37.5	46.5	0	F	R10 port-local placement; explicit routing lanes
+R103	41.8	46.3	0	B	R10 port-local placement; explicit routing lanes
+R104	40	47.8	180	F	R10 port-local placement; explicit routing lanes
+R105	40	49.5	180	F	R10 port-local placement; explicit routing lanes
+C94	42.3	48.5	90	F	R10 port-local placement; explicit routing lanes
+D400	38.8	39.95	90	F	R10 port-local placement; explicit routing lanes
+D401	38.8	38.45	90	F	R10 port-local placement; explicit routing lanes
+U402	37	60	0	F	R10 port-local placement; explicit routing lanes
+R430	40	61.1	90	F	R10 port-local placement; explicit routing lanes
+R431	34	56.8	0	F	R10 port-local placement; explicit routing lanes
+R432	37	54.5	0	F	R10 port-local placement; explicit routing lanes
+C430	37	56.8	0	F	R10 port-local placement; explicit routing lanes
+C431	42.9	34.2	0	B	R10 port-local placement; explicit routing lanes

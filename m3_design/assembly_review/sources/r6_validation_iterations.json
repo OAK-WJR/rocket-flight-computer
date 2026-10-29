@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "reviews": [
+    {
+      "checked_utc": "2026-10-13T21:42:55.024511+00:00",
+      "stage": "post-import repair-tool and mechanical review",
+      "findings": [
+        {
+          "severity": "Major",
+          "issue": "Router tested rule-area track centerline without the full copper envelope",
+          "resolution": "r5_maze.Grid expands forbidden track areas by half-width, clearance margin and half grid diagonal",
+          "validation": "Native regression fixture reproduces and rejects overlapping copper; valid J2 escape remains available"
+        },
+        {
+          "severity": "Major",
+          "issue": "Same-net CONN pads did not exclude via placement",
+          "resolution": "Both via-placement paths include CONN pads",
+          "validation": "Native regression fixture rejects via on Tag-Connect contact"
+        },
+        {
+          "severity": "Major",
+          "issue": "R204 pad 2 starved ground thermal",
+          "resolution": "Set thermal spoke angle to 45 degrees without changing relief gap or spoke width",
+          "status": "validated on temporary board; actual application pending routing completion",
+          "validation": "Native DRC removes sole starved-thermal finding with no added violations or opens"
+        }
+      ],
+      "tests": {
+        "maze_clearances": 8,
+        "r6_contract_regressions": 13,
+        "mechanical_fit_regressions": 21,
+        "procurement_regressions": 13,
+        "check_shell_regressions": 2
+      },
+      "remaining_work": "Finish connections, apply thermal repair, remove weak joints, regenerate legends, rerun independent full checks, DC and fabrication export."
+    },
+    {
+      "stage": "independent schematic and assembly-data review",
+      "critical": 0,
+      "major": 0,
+      "evidence": [
+        "r6_electrical_preflight.json",
+        "r6_orientation_preflight.json"
+      ],
+      "scope": "Fresh native netlist, actual component/footprint identities, planned numbered silkscreen legends, supplier footprint pad matching",
+      "limits": [
+        "Routing and fabrication outputs not final during this review",
+        "GPS maximum current and stock harness cavity mapping unverified",
+        "Power transients and physical qualification require measurements"
+      ]
+    },
+    {
+      "checked_utc": "2026-10-13T22:52:22.674985+00:00",
+      "stage": "GPS and ground integration with independent plane review",
+      "board_sha256": "6409bd2df132feecc9bfeb938997b7b8e29b4833b29a238c938374fefaec8d33",
+      "native_drc": {
+        "hard_violations": 0,
+        "dangling_violations": 16,
+        "unconnected": 16
+      },
+      "evidence": [
+        "r6_16_open_integration_drc.json",
+        "r6_ground_packet.json",
+        "r6_gps-nrst-plane-review.json",
+        "r6_bat-in-dc-comparison.json"
+      ],
+      "findings": [
+        {
+          "severity": "Major",
+          "issue": "Warm DSN export used route tokens interpreted as USER_FIXED by the installed router",
+          "resolution": "Warm export uses normal for movable copper and retains fix/protect for protected copper",
+          "validation": "Installed Freerouting parser directly verified; anchor-preserving routing trial ongoing"
+        },
+        {
+          "severity": "Major",
+          "issue": "Thirteen overlap-only joints remain on current board",
+          "resolution": "Temporary r6_joints repair resolves all thirteen, preserves connected pad groups and introduces no hard native DRC; integration deferred until signal routing completes"
+        }
+      ],
+      "remaining_work": "Complete 16 open connections; integrate final joint and dangling cleanup; regenerate legends and fab; repeat full independent validation."
+    },
+    {
+      "checked_utc": "2026-10-13T22:59:54.560932+00:00",
+      "stage": "independent fabrication and procurement pipeline review",
+      "critical": 0,
+      "major": 0,
+      "scope": "Export/procurement tools and fresh temporary R6 export, not final PCB routing or live order availability",
+      "resolved_findings": [
+        {
+          "severity": "Major",
+          "issue": "Five-board cost report could be combined with one-board stock report and falsely pass release inventory",
+          "resolution": "Both reports require positive integer board quantities and identical order sizes",
+          "validation": "Independent original reproduction now rejected; fifteen procurement regression tests pass"
+        }
+      ],
+      "tests": {
+        "procurement": 15,
+        "fresh_temporary_fabrication": 18,
+        "cpl_rows": 222,
+        "supplier_pad_matches": 214,
+        "placement_only_rows": 8,
+        "cpl_errors": 0
+      },
+      "fabrication_evidence": {
+        "manifest_outputs_verified": 5,
+        "gerber_files": 11,
+        "drill_files": [
+          "PTH",
+          "NPTH"
+        ],
+        "layers": 4,
+        "thickness_mm": 1.6,
+        "copper_mm": 0.035
+      },
+      "limits": [
+        "Authoritative fab package still awaits final zero-open CAD",
+        "Final supplier snapshot and placement preview remain required"
+      ]
+    },
+    {
+      "checked_utc": "2026-10-13T23:03:59.203406+00:00",
+      "stage": "radio local routing integration",
+      "board_sha256": "54828764f1de3a157051bb2287021a752a442b7ea677ffa2236068e1ae367eed",
+      "native_drc": {
+        "hard_violations": 0,
+        "dangling_violations": 16,
+        "unconnected": 13
+      },
+      "evidence": [
+        "r6_13_open_integration_drc.json",
+        "r6_radio_tx_repair.json",
+        "r6_final_ground_packet.json"
+      ],
+      "changes": [
+        "Final D131 ground island tied to the main ground plane",
+        "Radio M1 local connection and explicit D130 ground lead",
+        "Radio TX local connection with low-current 3V3 stitch detour, feed widths retained"
+      ],
+      "remaining_work": "Thirteen open signal connections, overlap-only joint repairs and final fabrication release checks."
+    },
+    {
+      "checked_utc": "2026-10-13T23:21:54.446183+00:00",
+      "stage": "battery switch return and radio pulldown integration",
+      "board_sha256": "9e7293c4d5218270f696b893acb46eb4f7e37b79d1e7835661eba845d4421834",
+      "native_drc": {
+        "hard_violations": 0,
+        "dangling_violations": 16,
+        "unconnected": 11
+      },
+      "evidence": [
+        "r6_12_open_integration_drc.json",
+        "r6_battery_switch_return_packet.json",
+        "r6_11_open_integration_drc.json",
+        "r6_pulldown_placement_repair.json"
+      ],
+      "changes": [
+        "Battery switch return routed with native connectivity preservation",
+        "R204 moved to (38.9,38.9),45 degrees and connected to M1 with minimum-size through via; ground remains connected"
+      ],
+      "remaining_work": "Eleven unconnected items; local crossing geometry under review. Final joint cleanup, silkscreen, validation and fabrication regeneration pending."
+    },
+    {
+      "checked_utc": "2026-10-13T23:32:14.209217+00:00",
+      "stage": "radio RX and battery switch source integration",
+      "board_sha256": "6214ae41de291bd6cffb37515e7cbca82321705f4a18962b9fce9d0f3d50da3d",
+      "native_drc": {
+        "hard_violations": 0,
+        "dangling_violations": 16,
+        "unconnected": 9
+      },
+      "evidence": [
+        "r6_10_open_integration_drc.json",
+        "r6_radio_rx_repair.json",
+        "r6_radio_rx_plane_review.json",
+        "r6_9_open_integration_drc.json",
+        "r6_battery_source_packet.json",
+        "r6_battery_source_helper_proof.json"
+      ],
+      "changes": [
+        "Radio RX local branch connected through reviewed 5.205 mm In1 crossover with at least 0.5 mm local ground bypass",
+        "Battery switch source completed using a 3.670 mm camera TX crossover between existing vias; original pad groups and critical return reference preserved",
+        "Router edge clearance corrected to use physical outline instead of drawing stroke bounds; ten native maze regression tests pass"
+      ],
+      "independent_routing_review": {
+        "critical": 0,
+        "major": 0,
+        "scope": "These added routing slices only; 104193 critical-reference samples compared per slice."
+      },
+      "remaining_work": "Nine unconnected items. SWD and IMU candidates require final composition; cleanup, full validation and fabrication regeneration remain pending."
+    },
+    {
+      "checked_utc": "2026-10-14T00:15:30.290249+00:00",
+      "stage": "overlap-only joint repair integration",
+      "board_sha256": "814357ada2f8572d27bebe69af76689f1ea47a617e22d018832374f1572ad796",
+      "native_drc": {
+        "hard_violations": 0,
+        "unconnected": 7,
+        "dangling_violations": 17
+      },
+      "resolved": {
+        "overlap_only_joints": 13,
+        "pruned_redundant_stubs": 3,
+        "centerline_bridges": 10
+      },
+      "old_pad_group_splits": 0,
+      "existing_critical_reference_samples": 104193,
+      "new_reference_losses": 0,
+      "review_scope": "Root verification following prior independent validation; final independent review remains pending",
+      "remaining_work": "Seven open connections, dangling cleanup, final legends/checks/fabrication and independent review",
+      "evidence": [
+        "r6_joint_integration.json",
+        "r6_joint_integration_drc.json",
+        "r6_joint_plane_review.json"
+      ]
+    },
+    {
+      "checked_utc": "2026-10-14T00:19:23.896844+00:00",
+      "stage": "PB12 enable reassignment and route integration",
+      "board_sha256": "86adfcc08797f33320bd24f7126e8dfd7784d7a5f9a88c6fba414b9755344065",
+      "native_drc": {
+        "hard_violations": 0,
+        "unconnected": 6,
+        "dangling_violations": 15,
+        "parity": 0,
+        "erc": 0
+      },
+      "pin_change": "TLM_PWR_EN U1.98 PE1 -> U1.51 PB12; PE1 now NC; fault remains PE0",
+      "reset_basis": {
+        "source": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+        "document": "DS12110 Rev 11",
+        "sections": "3.8 p32; Table9 p74",
+        "reason": "PB12 is a non-debug GPIO, analog after reset; existing R193 10k enable pull-down remains unchanged"
+      },
+      "checks": [
+        "Native netlist differs only at U1.51/U1.98",
+        "Schematic transform migration is idempotent",
+        "Actuator safety contract OK",
+        "13 R6 geometry regressions pass",
+        "104241 existing critical reference samples, zero additional lost coverage; zero front-trace reference loss"
+      ],
+      "remaining_work": "Six opens, dangling cleanup, J9 legend corrections, final checks/fab and independent review"
+    },
+    {
+      "checked_utc": "2026-10-14T00:21:56.036036+00:00",
+      "stage": "Connector legends and assembly references regenerated",
+      "board_sha256": "7d6fe6b3f0ad541dbf3dce88a8f10642055270725de8dc686ee50a0d43972ffd",
+      "copper_unchanged": true,
+      "required_labels_placed": 40,
+      "optional_silk_references_hidden": 97,
+      "hidden_references_retained_on_fab": true,
+      "native_hard_drc": 0,
+      "unconnected": 6,
+      "r6_contract": "OK",
+      "actuator_contract": "OK at previous identical-copper stage",
+      "fit": "OK, 46x100mm; 80\u201390mm target not met",
+      "silk_outside_outline_stroke_points": 0
+    },
+    {
+      "checked_utc": "2026-10-14T00:25:08.132822+00:00",
+      "stage": "Full check.sh checkpoint",
+      "board_sha256": "7d6fe6b3f0ad541dbf3dce88a8f10642055270725de8dc686ee50a0d43972ffd",
+      "exit_code": 1,
+      "drc": {
+        "hard": 0,
+        "via_dangling": 10,
+        "track_dangling": 5,
+        "unconnected": 6,
+        "parity": 0,
+        "erc": 0
+      },
+      "evidence": [
+        "r6_checkpoint_drc.json",
+        "r6_checkpoint_erc.json"
+      ],
+      "independent_review": "Previously errored existing review agents resumed successfully; review pending."
+    }
+  ],
+  "checkpoints": [
+    {
+      "checkpoint": "2026-10-13 SWCLK crossover adopted",
+      "pcb_sha256": "3c2525af6720fb123a95393b0885d20c43defba78d9c2f1fee6bf054149777a9",
+      "unconnected": 5,
+      "hard_drc": 0,
+      "independent_review": {
+        "critical": 0,
+        "major": 0,
+        "minor": 1
+      },
+      "detail": "71 new copper items replace 5 old MCU escape items; local B crossover restores original transverse MCU ground return. R128.2 thermal angle22.5deg; minimum thermal dimensions unchanged. Fault and IMU candidates remain unadopted."
+    },
+    {
+      "time": "2026-10-14T01:15:55.775046+00:00",
+      "pcb_sha256": "5e6baad9382c240ac5573769c70d34c53e89774eb5a3366515bc3fae4c6deedc",
+      "adopted": [
+        "PA7 port fault",
+        "radio M1",
+        "PE1 polled IMU status"
+      ],
+      "opens": 2,
+      "dangling": 13,
+      "hard_drc": 0,
+      "erc": 0,
+      "parity": 0,
+      "actuator_contract": "OK",
+      "r6_contract": "OK",
+      "firmware_host_tests": 42,
+      "release": false
+    },
+    {
+      "time": "2026-10-14T01:32:36.560208+00:00",
+      "candidate": "<scratch>/r6-final-cleanup-v0kq3iak/m3.kicad_pcb",
+      "pcb_sha256": "364d61369267c6f14f55768a91a2462dd3d37849fb83e8c61499dc27ca9be475",
+      "full_check": "PASS",
+      "report_directory": "<scratch>/tmp.4EtxN0AG3Q",
+      "adopted": false,
+      "major_findings": [
+        "AUX MCU east ground barrier",
+        "AUX MCU middle ground barrier",
+        "U12 VCCA bypass C100 too remote"
+      ],
+      "status": "repairing; automated pass alone insufficient"
+    },
+    {
+      "time": "2026-10-14T01:43:51.688382+00:00",
+      "pcb_sha256": "2041de7b205e02711d80c5bc75ec6678830f44ca844a56eab2c775fd331f73c8",
+      "adopted": "AUX complete with reviewed ground repairs",
+      "opens": 0,
+      "dangling": 13,
+      "hard_drc": 0,
+      "critical_reference_samples_preserved": 104241,
+      "remaining_major": [
+        "U12 VCCA bypass C100 remote"
+      ],
+      "release": false
+    },
+    {
+      "utc": "2026-10-14T02:04:26.463006+00:00",
+      "pcb_sha256": "184a87e84e67576341244c82517de3e9f55f5c1c22995dfad83631d48c856680",
+      "stage": "final_CAD_and_fabrication_closeout",
+      "DRC": 0,
+      "unconnected": 0,
+      "parity": 0,
+      "ERC": 0,
+      "Critical": 0,
+      "Major": 0,
+      "cad_complete": true,
+      "fab_current": true,
+      "release_ready": false,
+      "procurement_hold": [
+        "C26633007 U4 stock 0 < 5"
+      ],
+      "report": "r6_final_validation.json"
+    }
+  ]
+}

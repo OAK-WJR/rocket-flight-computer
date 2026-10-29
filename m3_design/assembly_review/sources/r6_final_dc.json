@@ -1,0 +1,78 @@
+{
+  "checked_utc": "2026-10-14T01:57:10.524956+00:00",
+  "pcb_sha256": "184a87e84e67576341244c82517de3e9f55f5c1c22995dfad83631d48c856680",
+  "solver_sha256": "fe90d85942b9b2047b9b3171bb855135bb493c51ba46c8bbd48f2a78b4d24ebc",
+  "assumptions": {
+    "copper_um": 35,
+    "via_plating_um": 20,
+    "temperature_C": 20,
+    "amps": 7.7,
+    "grid_mm": 0.1,
+    "includes_component_contact_resistance": false
+  },
+  "nets": {
+    "RAW_ACT": {
+      "command": [
+        "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3",
+        "-I",
+        "/Users/trasomi/dev/rocket/rocket-pcb/rocket-flight-computer-r6/tools/dc_solve.py",
+        "/private/tmp/r6-final-cleanup-o_2gq19w/m3.kicad_pcb",
+        "--net",
+        "RAW_ACT",
+        "--source",
+        "Q121:5,6,7,8,9",
+        "--sink",
+        "J122:2,5,8,11",
+        "--amps",
+        "7.7",
+        "--grid",
+        "0.1"
+      ],
+      "exit_code": 0,
+      "stdout": "RAW_ACT: Q121:5,6,7,8,9 -> J122:2,5,8,11, grid 0.1 mm, 40057 free cells, CG 2305 iterations, residual 1e-10\n  R = 3.96 mOhm; at 7.7 A: drop 30.5 mV, copper loss 0.235 W\n  F.Cu   carries  100 % at mid-path; peak 5.75 A/mm at (19.15, 66.52)\n  In2.Cu carries    0 % at mid-path; peak 0.00 A/mm at (13.05, 62.72)\n  B.Cu   carries    0 % at mid-path; peak 2.80 A/mm at (6.65, 86.52)\n",
+      "stderr": "./src/common/stdpbase.cpp(59): assert \"\"traits\"\" failed in Get(): create wxApp before calling this\n"
+    },
+    "BAT_IN": {
+      "command": [
+        "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3",
+        "-I",
+        "/Users/trasomi/dev/rocket/rocket-pcb/rocket-flight-computer-r6/tools/dc_solve.py",
+        "/private/tmp/r6-final-cleanup-o_2gq19w/m3.kicad_pcb",
+        "--net",
+        "BAT_IN",
+        "--source",
+        "J1:1",
+        "--sink",
+        "Q120:5,6,7,8,9",
+        "--amps",
+        "7.7",
+        "--grid",
+        "0.1"
+      ],
+      "exit_code": 0,
+      "stdout": "BAT_IN: J1:1 -> Q120:5,6,7,8,9, grid 0.1 mm, 139172 free cells, CG 4339 iterations, residual 9.9e-11\n  R = 3.91 mOhm; at 7.7 A: drop 30.1 mV, copper loss 0.232 W\n  F.Cu   carries    0 % at mid-path; peak 0.00 A/mm at (6.35, 14.15)\n  In2.Cu carries  100 % at mid-path; peak 6.37 A/mm at (25.05, 90.75)\n  B.Cu   carries    0 % at mid-path; peak 4.19 A/mm at (6.65, 72.95)\n",
+      "stderr": "./src/common/stdpbase.cpp(59): assert \"\"traits\"\" failed in Get(): create wxApp before calling this\n"
+    },
+    "ACT_FET_S": {
+      "command": [
+        "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3",
+        "-I",
+        "/Users/trasomi/dev/rocket/rocket-pcb/rocket-flight-computer-r6/tools/dc_solve.py",
+        "/private/tmp/r6-final-cleanup-o_2gq19w/m3.kicad_pcb",
+        "--net",
+        "ACT_FET_S",
+        "--source",
+        "Q120:1,2,3",
+        "--sink",
+        "Q121:1,2,3",
+        "--amps",
+        "7.7",
+        "--grid",
+        "0.1"
+      ],
+      "exit_code": 0,
+      "stdout": "ACT_FET_S: Q120:1,2,3 -> Q121:1,2,3, grid 0.1 mm, 3437 free cells, CG 332 iterations, residual 8.6e-11\n  R = 1.36 mOhm; at 7.7 A: drop 10.5 mV, copper loss 0.081 W\n  B.Cu   carries  100 % at mid-path; peak 6.14 A/mm at (3.45, 81.35)\n",
+      "stderr": "./src/common/stdpbase.cpp(59): assert \"\"traits\"\" failed in Get(): create wxApp before calling this\n"
+    }
+  }
+}

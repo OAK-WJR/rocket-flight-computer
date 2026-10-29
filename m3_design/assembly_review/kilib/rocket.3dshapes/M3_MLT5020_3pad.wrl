@@ -1,0 +1,4 @@
+#VRML V2.0 utf8
+# Conservative MLT-5020 assembly envelope, not a vendor solid model.
+# 5.3 mm square from 5.0 +/-0.3 drawing; 2.5 mm conservative catalog height.
+Shape { appearance Appearance { material Material { diffuseColor 0.07 0.07 0.07 } } geometry IndexedFaceSet { solid TRUE coord Coordinate { point [ -1.043307087 -1.043307087 0.000000000,1.043307087 -1.043307087 0.000000000,1.043307087 1.043307087 0.000000000,-1.043307087 1.043307087 0.000000000,-1.043307087 -1.043307087 0.984251969,1.043307087 -1.043307087 0.984251969,1.043307087 1.043307087 0.984251969,-1.043307087 1.043307087 0.984251969 ] } coordIndex [ 0,3,2,-1,0,2,1,-1,4,5,6,-1,4,6,7,-1,0,1,5,-1,0,5,4,-1,1,2,6,-1,1,6,5,-1,2,3,7,-1,2,7,6,-1,3,0,4,-1,3,4,7,-1 ] } }
