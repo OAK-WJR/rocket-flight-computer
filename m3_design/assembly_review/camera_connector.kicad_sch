@@ -68,7 +68,7 @@
 						(effects
 							(font
 								(size 1.05 1.05))))))
-			(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT"
+			(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT M3_DB125_4P_GN"
 				(at 0 0 0)
 				(effects
 					(font
@@ -160,130 +160,6 @@
 						(size 1.27 1.27))
 					(hide yes)))))
 	(symbol
-		(lib_id "M3:CameraTerminal")
-		(at 76.2 88.9 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid de97252f-36d4-5832-b733-dc798db304e1)
-		(property "Reference" "J9"
-			(at 76.2 77.47 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "CAMERA 5V/GND/RX/TX"
-			(at 76.2 81.28 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:M3_GH_BM04B_GHS_TBT"
-			(at 76.2 88.9 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 76.2 88.9 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C161692"
-			(at 76.2 88.9 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "JST"
-			(at 76.2 88.9 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "BM04B-GHS-TBT(LF)(SN)"
-			(at 76.2 88.9 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
-					(reference "J9")
-					(unit 1))))		(property "LCSC Part" "C161692"
-			(at 0 0 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-)
-	(wire
-		(pts
-			(xy 48.26 85.09)
-			(xy 43.18 85.09))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 5a353511-3dc1-597c-b36d-cf3dd719c024))
-	(global_label "CAM_5V"
-		(shape passive)
-		(at 43.18 85.09 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid fb44e988-88ea-5b56-8ee9-53807c36f107))
-	(wire
-		(pts
-			(xy 48.26 87.63)
-			(xy 43.18 87.63))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 5149975d-e2a9-55ea-84e4-182b00503fb3))
-	(global_label "GND"
-		(shape passive)
-		(at 43.18 87.63 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 116eacbd-570b-510e-89d3-d32336646416))
-	(wire
-		(pts
-			(xy 48.26 90.17)
-			(xy 43.18 90.17))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b7747c12-992a-5eb1-89cd-48684e45a4d4))
-	(global_label "CAM_RX_WIRE"
-		(shape passive)
-		(at 43.18 90.17 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f8d6eb09-7372-5a94-abc9-aec530dc8c4f))
-	(wire
-		(pts
-			(xy 48.26 92.71)
-			(xy 43.18 92.71))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 072ae790-4dbe-5106-9ce5-c688aa0d3647))
-	(global_label "CAM_TX_WIRE"
-		(shape passive)
-		(at 43.18 92.71 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f4fee09a-b55f-5ac0-8582-1a9092809040))
-	(symbol
 		(lib_id "M3:TestPoint")
 		(at 170.18 88.9 0)
 		(unit 1)
@@ -340,20 +216,151 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 2aecc2cf-6104-5935-b702-97ded790c010))
-	(text "R10 camera GH port: regulated switched supply, GND, camera RX and camera TX. UART isolation remains on sheet09."
+	(symbol
+		(lib_id "M3:CameraTerminal")
+		(at 76.2 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid de97252f-36d4-5832-b733-dc798db304e1)
+		(property "Reference" "J9"
+			(at 78.74 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "DB125-3.5-4P-GN-S"
+			(at 78.74 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_DB125_4P_GN"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C2757925"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "DORABO"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "DB125-3.5-4P-GN-S"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
+					(reference "J9")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 48.26 85.09)
+			(xy 43.18 85.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5fe76507-e3d6-590f-8c6d-8b3622477967))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 43.18 85.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid eddf47fc-46bd-5b95-bf19-ac0b1351b5f8))
+	(wire
+		(pts
+			(xy 48.26 87.63)
+			(xy 43.18 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bad93347-25b6-536a-a972-ea62859ada62))
+	(global_label "GND"
+		(shape passive)
+		(at 43.18 87.63 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ace720a2-7455-527f-87c4-7ee77035c74e))
+	(wire
+		(pts
+			(xy 48.26 90.17)
+			(xy 43.18 90.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ea5c70c0-29e9-5bf2-be40-be90ad3ed420))
+	(global_label "CAM_RX_WIRE"
+		(shape passive)
+		(at 43.18 90.17 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 943d75ac-cfeb-51f3-a071-4617dcf71d99))
+	(wire
+		(pts
+			(xy 48.26 92.71)
+			(xy 43.18 92.71))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a795eb21-5bf1-5ec3-b124-7a9ba01e79fd))
+	(global_label "CAM_TX_WIRE"
+		(shape passive)
+		(at 43.18 92.71 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 59e3517e-d161-5cf2-9f7f-0eca08154c36))
+	(text "R10 owner screw terminals: J9 DB1253.5mm4pos; pin1 CAM_5V,pin2GND,pin3CAM_RX_WIRE(boardRX),pin4CAM_TX_WIRE(boardTX). CameraU12/U13isolation andU402switch retained."
 		(at 20.32 15.24 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 5586ba24-10dc-578b-9b7a-f8d2c933cc8c))
-	(text "The5 redundant camera characterization pads were removed; probe the connector or fitted circuitry. No pyro/arming test pads changed."
+	(text "No physical portkeying: labelallfourpins, verifyharness end-to-end andpolarity beforepower. DB125 accepts28-16AWG; qualifiedferrules/splices forthinnermoduleleads. Current/loopresistance limits stay."
 		(at 20.32 20.32 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 89f9d89c-21e5-5d71-a602-20d1665dd0ac))
+	(text "Redundantcamera testpads removed; probeconnector/fittedcircuit. Insert/removemicroSD onlywithboardoff/outofbay."
+		(at 20.32 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 83d28bc0-fc10-5036-b6cb-96de2b452466))
 	(sheet_instances
 		(path "/"
 			(page "6"))))

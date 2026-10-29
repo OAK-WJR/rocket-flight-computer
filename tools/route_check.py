@@ -13,15 +13,16 @@ aware baseline (D10) kept so that RADIO_TXEN's maker-forced loop round U31 is ju
 r10 (M3-ASSY-R10, the R10 gate in tools/check.sh): cloned from r9 with ALLOWLIST, LEFTOVERS and ROUTE_FIGURES empty and
 no RF part (no U31 body or U30 / U31 keep-out obstacles, no RF or radio-SPI net classes: R10 has no on-board RF, O1 /
 O2) and no pyro-specific clearance (r10_plan section 2 item 1: the board default). Its critical signal nets
-(R10_CLASSES): pyro and arming (PYRO1_*, ARM1_*, RAW_ACT_SENSE*, and the pyro-bus load-switch drive ACT_GATE /
-ACT_DRV / ACT_EN), crystal (HSE_*), USB data (USB_DP / USB_DM), SPI / QSPI / IMU chip select (QSPI_*, SPI1_*, IMU_CS),
-the external-port UART nets (uart: GPS / RADIO / CAM _TX / _RX on the _MCU, _BUFFER and _WIRE segments, CAM_MCU_TX /
-_RX) and port control nets (portctl: _PWR_EN, _FAULT_N, _UART_OE), the last two from critical_reference's one
+(R10_CLASSES): pyro and arming (PYRO1_*, ARM1_* without the deleted ADC _MCU tails, and the pyro-bus load-switch drive
+ACT_GATE / ACT_DRV / ACT_EN), crystal (HSE_*), USB data (USB_DP / USB_DM), SPI / QSPI / IMU chip select and microSD
+(QSPI_*, SPI1_*, IMU_CS, SD_SCK / SD_MOSI / SD_MISO / SD_CS / SD_DAT1 / SD_DAT2), the external-port UART nets
+(GPS/radio MCU and wire segments; camera buffer/wire/MCU segments), and retained camera controls, from one
 definition (R3-RTE-01); the power rails and GND as before, with the R10 port rails (PORT_*, *_4V8, CAM_5V, the port IO
 rails). Profile r10 also fails every arc track (arc_segment) and, on the critical signal nets, every needless layer hop
 (extra_vias, hop=True: below). AUD-2 excludes only critical_reference.R10_SLOW_RETURN_NETS from companion-GND-via
 checks; all critical hygiene classes remain. AUD-10 counts exact collinear nodes, duplicate segments and segments
 inside pads for review without blocking R10. Partial overlaps, crossings and every other gated category stay blocking.
+Audit 2 item 7 leaves noncritical LEFTOVERS records informational; critical exceptions retain measured/redraw checks.
 
 Copper is grouped per (layer, net). Track end points within 1 µm form a node. A node is "plain" when exactly two
 track ends meet there and it holds no pad, via or T (another track's body); a chain is a run of segments through
@@ -215,10 +216,10 @@ CLASSES = [
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import critical_reference as _cr                                    # noqa: E402 (tools/, after the path insert)
 R10_CLASSES = [
-    ('pyro', r'^(PYRO1_|ARM1_|RAW_ACT_SENSE|ACT_(GATE|DRV|EN)$|ACT_EN_MCU$)'),
+    ('pyro', r'^(?!(?:PYRO1_CONT|ARM1_SENSE)_MCU$)(PYRO1_|ARM1_|ACT_(GATE|DRV|EN)$|ACT_EN_MCU$)'),
     ('crystal', r'^HSE_'),
     ('usb', r'^USB_D[PM]$'),
-    ('spi', r'^(QSPI_|SPI1_|IMU_CS$)'),
+    ('spi', r'^(QSPI_|SPI1_|IMU_CS$)|' + _cr.R10_SD_SIGNAL.pattern),
     ('uart', _cr.R10_PORT_UART.pattern),
     ('portctl', _cr.R10_PORT_CONTROL.pattern),
     ('power', r'^PORT_'),
@@ -2972,19 +2973,21 @@ def main():
         print('FAIL allowlisted critical_via_no_gnd has a legal GND via spot:', d['net'], (d['x'], d['y']),
               f'{dia} mm via at {spot}, {dist_:.3f} mm')
     recorded, missing, stale_left = leftover_check(inst)
+    bookkeeping = PROFILE != 'r10'  # audit 2 item 7: R10 noncritical records remain informational.
     for d in missing:
-        print('FAIL non-critical leftover without a recorded reason (LEFTOVERS):', d['cat'], d['net'], d['layer'],
+        print(('FAIL' if bookkeeping else 'INFO') + ' non-critical leftover without a recorded reason (LEFTOVERS):', d['cat'], d['net'], d['layer'],
               (d['x'], d['y']))
     for e in stale_left:
-        print('FAIL stale LEFTOVERS entry (matches nothing):', e[:4])
-    figures = measured_check(allowed + recorded)
+        print(('FAIL' if bookkeeping else 'INFO') + ' stale LEFTOVERS entry (matches nothing):', e[:4])
+    checked_entries = allowed + recorded if bookkeeping else allowed
+    figures = measured_check(checked_entries)
     for d, why in figures:
         print('FAIL out-of-date measured figures:', d['cat'], d['net'], (d['x'], d['y']), why)
-    alt = alt_audit(board, allowed + recorded)
+    alt = alt_audit(board, checked_entries)
     for d, pts in alt:
         print('FAIL', 'allowlisted' if d in allowed else 'recorded', d['cat'], d['net'], d['layer'], (d['x'], d['y']),
               'is removable: clean redraw' if pts else 'cannot be re-measured (window not found)', pts or '')
-    bad = failures or stale or audit or missing or stale_left or figures or alt
+    bad = failures or stale or audit or figures or alt or (bookkeeping and (missing or stale_left))
     print(f'routing hygiene: {len(failures)} failing, {len(allowed)} allowlisted, {len(stale)} stale allowlist entries, '
           f'{len(audit)} out-of-date no-GND reasons, {len(recorded)} leftovers recorded ({len(missing)} unrecorded, '
           f'{len(stale_left)} stale), {len(figures)} out-of-date route figures, {len(alt)} removable jog / staircase / '
@@ -2998,6 +3001,7 @@ def main():
                                                nognd_audit=[dict(d, spot=list(sp), via=dia, dist=dd)
                                                             for d, (sp, dia, dd) in audit],
                                                leftovers=recorded, leftovers_missing=missing,
+                                               leftovers_informational=not bookkeeping,
                                                leftovers_stale=[list(e) for e in stale_left],
                                                measured_check=[dict(d, problem=w) for d, w in figures],
                                                alt_audit=[dict(d, candidate=p) for d, p in alt]), indent=1) + '\n')

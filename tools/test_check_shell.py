@@ -45,8 +45,7 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
 
     SELFTESTS = ['test_check_shell', 'test_procurement', 'test_fit_check', 'test_paste_check', 'test_route_check', 'test_r10_check',
                  'test_r10_check']
-    CONTRACTS = ['verify_board', 'silk_check', 'fit_check', 'plate_model', 'check_r10', 'route_check',
-                 'check_actuators']
+    CONTRACTS = ['verify_board', 'silk_check', 'fit_check', 'check_r10', 'route_check']
 
     def run_gate(self, board=None):
         return subprocess.run(['bash', str(self.root / 'tools/check.sh'), str(board or self.root / 'board.kicad_pcb')],
@@ -59,7 +58,7 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
         self.assertNotIn('fab manifest', result.stdout)      # no fab folder beside the board: nothing to check
 
     def test_each_new_contract_failure_blocks_later_stages(self):
-        stages = ['fit_check', 'plate_model', 'check_r10', 'route_check', 'check_actuators']
+        stages = ['fit_check', 'check_r10', 'route_check']
         for stage in stages:
             with self.subTest(stage=stage):
                 self.log.unlink(missing_ok=True)

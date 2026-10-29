@@ -60,7 +60,7 @@ def V(x, y):
     return pcbnew.VECTOR2I(MM(x), MM(y))
 
 
-def read_place(path):
+def read_place(path, tie_count=2):
     """(rows, features): rows ref -> (x, y, rotation, side); features: dict(outline=(W, L), supports=[(x, y)],
     ties=[(x, y)]) from the '@OUTLINE', '@M3' and '@TIE' rows (tab separated; '#' rows are comments)."""
     rows, feat = {}, dict(outline=None, supports=[], ties=[])
@@ -82,8 +82,8 @@ def read_place(path):
             assert ref not in rows, f'{ref} twice in {path}'
             assert r['side'] in ('F', 'B'), r
             rows[ref] = (x, y, float(r['rot']), r['side'])
-    assert feat['outline'] and len(feat['supports']) == 5 and len(feat['ties']) == 2, \
-        f'{path}: one @OUTLINE, five @M3 and two @TIE rows required'
+    assert feat['outline'] and len(feat['supports']) == 5 and len(feat['ties']) == tie_count, \
+        f'{path}: one @OUTLINE, five @M3 and {tie_count} @TIE rows required'
     return rows, feat
 
 

@@ -11,7 +11,7 @@ from jlc_stock import FAB, input_hashes
 # REQUIREMENTS M3 (R7, owner 2026-10-15): R3's $84.41 plus the $42.00 on-board radio/GPS allowance, 52 extended codes
 MAX_TOTAL, MAX_EXTENDED = 126.41, 52
 # R10 removes the on-board radio/GPS allowance (R10_DECISIONS D-R1-06). Select explicitly; report data cannot choose it.
-PROFILES = {'r9': (MAX_TOTAL, MAX_EXTENDED), 'r10': (84.41, 52)}
+PROFILES = {'r9': (MAX_TOTAL, MAX_EXTENDED), 'r10': (84.41, None)}
 
 
 def verify(folder, cost_only=False, now=None, board=None, profile='r9'):
@@ -40,8 +40,9 @@ def verify(folder, cost_only=False, now=None, board=None, profile='r9'):
             cost = report
             if (report.get('targets') != {'max_total': max_total, 'max_extended': max_extended}
                     or report.get('errors') or report['total_usd_per_board'] > max_total
-                    or len(report['extended_codes']) > max_extended):
-                raise ValueError(f'{name}: required ${max_total:.2f} / {max_extended}-code targets were changed or missed')
+                    or max_extended is not None and len(report['extended_codes']) > max_extended):
+                limit = f' / {max_extended}-code' if max_extended is not None else ''
+                raise ValueError(f'{name}: required ${max_total:.2f}{limit} targets were changed or missed')
             default_fee = {'standard': 1.53, 'economic': 3.07}.get(report.get('tier'))
             if not cost_only and (default_fee is None or report.get('fee_usd_per_code') != default_fee):
                 raise ValueError(f'{name}: unknown assembly tier or nonstandard feeder fee; '

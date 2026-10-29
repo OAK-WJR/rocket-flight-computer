@@ -1,16 +1,10 @@
-"""R10 power copper: the inner planes and the hand-routed supply nets (AGENTS 3), explicit pad-referenced polylines.
+"""R10 hand-routed supply copper and inner planes (AGENTS 3).
 
-In1 is solid GND. In2 is split by rail (R10_DECISIONS D-R2-03, D-R2-05, D-R2-06): RAW_PROTECTED wraps the board (the
-forward area, an east strip and an aft band that reaches the 5.3 V buck's input), PORT_5V3 is a band aft of U410
-(y 4.7-6.8) and a column x 35.2-39.7 from the buck output to the camera switch (y <= 42.5), PORT_4V8 the LDO output
-block x 28.3-32.4 with U410's cell, and 3V3 is the rest: a strip x 32.7-34.9 under the port buffers, the area east of
-U1 forward of the camera switch, and a forward finger for the 3V3 buck's output, D120 and the servo clamp. Fast
-interfaces retain adjacent reference copper; the slow port/ACT/ADC controls are exempt (AUD-2).
-Two In2 GND zones take priority over the rail regions (R10_DECISIONS D-R3-01, D-R3-05): IN2_GND_CH1 under the whole CH1
-column (J121, R134, Q124 and its gate network, TP122 and their pyro copper), so that no rail plane lies near a
-pyro barrel; and IN2_GND_Y1, R9's crystal plane (R9_DECISIONS D-S8-20) translated by CORE_SHIFT, with R9's In2 track
-keep-out over it.
-The outer GND pours are drawn by the ground family. Zones are filled at the end of the build.
+In1 is solid GND. In2 carries RAW_PROTECTED around the board, the port buck's PORT_5V3 output to the retained
+camera switch, the LDO's PORT_4V8 region for always-on GPS/radio, and 3V3 under the core and low-voltage cells.
+Fast interfaces retain adjacent reference copper; AUD-2 exempts only its named slow controls.
+The higher-priority CH1 GND region preserves the pyro-barrel exclusion, and the translated R9 crystal GND island
+retains its In2 track keepout. The ground family draws outer GND pours; the final build fills all zones.
 """
 import pcbnew
 
@@ -20,27 +14,20 @@ PAD_W = 0.3                            # U9's IN / OUT bars entered at their ful
 BYPASS_W = 0.7                         # C88 feed/exit carry U9's full input current (OQ-2 completion)
 
 IN1_GND = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7)]
-# D-R3-xx: retained rail-region boundaries from the original port-control layout; AUD-2 removes the slow-control
-# reference requirement. The fast UART interfaces retain their reference copper; the regions are 0.3 mm apart:
-# - GPS: PORT_4V8 takes U410's whole cell (its north pin row, R411.1 and both control runs, x 28.3-33.6 from y 7.1),
-#   so the PORT_5V3 band moves aft of it to y 4.7-6.8 (RAW_PROTECTED's aft band then ends at y 4.4 east of x 24.2):
-#   1.5 mm at its narrowest, beside R411.2's GND via (30.3, 6.6); the 3V3 strip starts at y 9.9. A notch (x 27.85 /
-#   28.15, y 8.7-10.5) keeps PORT_4V8 under GPS_PWR_EN's 45 deg run off its via (28.1, 9.8).
-# - Radio: PORT_4V8 reaches x 32.75 at y 24.4-26.0 (the 3V3 strip x 33.05 there) under RADIO_FAULT_N's run to U420.4.
-# - Camera: PORT_5V3 reaches west of the column under CAM_FAULT_N's run (x >= 34.2, y 36.35-39.44) and CAM_PWR_EN's
-#   (R431 and its run from the via (33.15, 41.5): x >= 33.1 below the 45 deg edge x + y = 73.64, which keeps 3V3 under
-#   CAM_MCU_RX's B.Cu hop (33.65, 39.2)-(32.5, 40.35)-(32.5, 43.7), >= 0.15 mm beyond its copper edges).
+# Rail regions remain 0.3mm apart. PORT_4V8 includes the removed translator strip for the new GPS tap;
+# fast radio B.Cu crossings stay west of that region. The camera notch retains 3V3 under its RX crossover.
 IN2_RAW = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7), (0.3, 58.0), (17.5, 58.0), (17.5, 62.0), (21.8, 62.0),
            (21.8, 76.0), (32.0, 76.0), (32.0, 58.0), (40.0, 58.0), (40.0, 4.4), (24.2, 4.4), (24.2, 7.0), (18.0, 7.0),
            (18.0, 10.5), (9.0, 10.5), (9.0, 7.0), (0.3, 7.0)]
 IN2_PORT = [(24.5, 4.7), (39.7, 4.7), (39.7, 42.5), (33.1, 42.5), (33.1, 40.64), (33.95, 39.79), (33.95, 38.4), (34.2, 38.4),
-            (34.2, 36.35), (35.2, 36.35), (35.2, 9.6), (33.9, 9.6), (33.9, 6.55), (28.0, 6.55), (28.0, 8.7), (27.85, 8.7), (27.85, 10.5),
+            (34.2, 36.35), (35.2, 36.35), (35.2, 7.7), (33.9, 7.7), (33.9, 6.55), (28.0, 6.55), (28.0, 8.7), (27.85, 8.7), (27.85, 10.5),
             (28.0, 10.5), (28.0, 15.5), (24.5, 15.5)]
-IN2_4V8 = [(28.3, 6.85), (33.6, 6.85), (33.6, 9.6), (32.4, 9.6), (32.4, 24.4), (33.05, 24.4), (33.05, 26.0), (32.4, 26.0),
-           (32.4, 29.0), (28.3, 29.0), (28.3, 10.2), (28.15, 10.2), (28.15, 9.0), (28.3, 9.0)]
+# Circuit pass: the always-on port taps need the former translator strip; fast B.Cu UART hops remain south of y29.3.
+IN2_4V8 = [(28.3, 6.85), (33.6, 6.85), (33.6, 8.0), (34.9, 8.0), (34.9, 29.0),
+           (28.3, 29.0), (28.3, 10.2), (28.15, 10.2), (28.15, 9.0), (28.3, 9.0)]
+
 IN2_3V3 = [(0.3, 7.3), (8.7, 7.3), (8.7, 10.8), (18.3, 10.8), (18.3, 7.3), (24.2, 7.3), (24.2, 15.8), (28.0, 15.8),
-           (28.0, 29.3), (32.7, 29.3), (32.7, 26.3), (33.35, 26.3), (33.35, 24.1), (32.7, 24.1), (32.7, 9.9),
-           (34.9, 9.9), (34.9, 36.05), (33.9, 36.05), (33.9, 38.1), (33.65, 38.1), (33.65, 39.9), (32.8, 40.75), (32.8, 42.8), (39.7, 42.8),
+           (28.0, 29.3), (34.9, 29.3), (34.9, 36.05), (33.9, 36.05), (33.9, 38.1), (33.65, 38.1), (33.65, 39.9), (32.8, 40.75), (32.8, 42.8), (39.7, 42.8),
            (39.7, 57.7), (31.7, 57.7), (31.7, 75.7), (22.1, 75.7), (22.1, 61.7), (17.8, 61.7), (17.8, 57.7), (0.3, 57.7)]
 # AUD-2: remove the three filtered-ADC arms and Q121 control-gate bay. The base still covers the fire path and
 # all S-8 barrels; the R13 notch and D120's 3V3 corridor stay. Fast interfaces keep their reference rules.
@@ -91,51 +78,55 @@ def planes(d):
 def battery(d):
     t, p, via = d.track, d.pad, d.via
     # F.Cu: J1.1 -> one bar along y 76.8 -> the protection column (C95 / C89 / C96 / C80 on x 27.52), D8 tapped.
-    t('BAT_IN', 'F', BAT, [p('J1.1'), (9.7, 76.8), (27.525, 76.8), p('C95.1')])
+    t('BAT_IN', 'F', BAT, [p('J1.1'), (9.7, 76.8), (13.8, 76.8), (27.525, 76.8), p('C95.1')])
     t('BAT_IN', 'F', BAT, [p('C95.1'), p('C89.1')])
     t('BAT_IN', 'F', BAT, [p('C89.1'), p('C96.1')])
     t('BAT_IN', 'F', BAT, [p('C96.1'), p('C80.1')])
     t('BAT_IN', 'F', BAT, [p('D8.1'), (19.85, 76.8)])
-    t('BAT_IN', 'F', W, [(13.8, 76.8), p('TP80.1')])
-    # B.Cu: J1.1 -> Q120's drain; its branch west of the tie hole ends at the R80 switch feed.
+    # B.Cu: J1.1 -> Q120's drain remains a separate pyro-load-switch feed.
     t('BAT_IN', 'B', BAT, [p('J1.1'), (12.0, 74.1), p('Q120.9')])
-    t('BAT_IN', 'B', BAT, [p('Q120.8'), (12.525, 86.6), (17.35, 86.6)])
-    via('BAT_IN', (17.35, 86.6))
-    t('BAT_IN', 'F', W, [(17.35, 86.6), (16.625, 86.6)])                 # into R80.1's pad (R80's battery side)
+    # R80's low-current branch stays on F.Cu above the new forward terminal bank.
+    t('BAT_IN', 'F', W, [(18.825, 76.8), p('R80.1')])
     # OQ-2: U9 takes its feed from the protection-column node, removing the independent J1 -> U9 branch.
-    # The 1.0 mm F.Cu feed goes north/east of J122's east tie hole, then through one 1.0 / 0.5 mm via (JLC plug limit).
-    # The via at x 34.7 also clears J122's existing harness legend (OQ-2 completion).
+    # The 1.0 mm F.Cu feed clears the new J122 ground barrel through a 1.0 / 0.5 mm via at (36,84).
     # The existing U9 bar entry stays 0.3 mm wide, with the 1.0 mm run ending 0.6 mm short (D-R3-03).
-    feed = (34.7, 84.0)
-    t('BAT_IN', 'F', BAT, [(27.525, 76.8), (33.45, 76.8), (33.45, 82.75), feed])
+    feed = (36.0, 84.0)
+    t('BAT_IN', 'F', BAT, [(27.525, 76.8), (33.45, 76.8), (33.45, 81.45), feed])
     via('BAT_IN', feed, size=(1.0, 0.5))
-    t('BAT_IN', 'B', BAT, [feed, (34.7, 86.6)])
+    t('BAT_IN', 'B', BAT, [feed, (36.0, 86.6)])
     # Feed C88's input pad first; U9 is a dead end beyond that local bypass, never an independently driven spur.
     # The 0.7 mm, 0.8 mm-long entry clears C88.2; the diagonal stays clear of U9's downstream bar.
-    t('BAT_IN', 'B', BAT, [(29.825, 86.6), (34.7, 86.6), (36.725, 86.6), (38.75, 86.6),
+    t('BAT_IN', 'B', BAT, [(36.0, 86.6), (38.75, 86.6),
                          (38.75, 84.32), (39.9, 83.17)])
     t('BAT_IN', 'B', BYPASS_W, [(39.9, 83.17), p('C88.1')])
-    t('BAT_IN', 'B', W, [(36.725, 86.6), p('R82.1')])
+    t('BAT_IN', 'B', W, [feed, p('R82.1')])
     t('BAT_IN', 'B', BYPASS_W, [p('C88.1'), (38.75, 82.37), (38.75, 81.4)])
     t('BAT_IN', 'B', PAD_W, [(38.75, 81.4), p('U9.5')])            # pad-entry neck: 0.6 mm to the bar's tip
-    t('BAT_IN', 'B', W, [(29.825, 86.6), p('R167.1')])
+    t('BAT_IN', 'B', W, [(36.0, 86.6), (28.975, 86.6), p('R167.1')])
 
 
 def control(d):
     t, p, via = d.track, d.pad, d.via
-    # Damper (C89 / C95 -> R166) on F.Cu, clear of J122's tie hole (30.8, 79.5) by >= 1.85 mm.
-    t('BAT_DAMP', 'F', W, [p('C89.2'), p('C95.2')])
-    t('BAT_DAMP', 'F', W, [p('C95.2'), (33.475, 75.2), (36.0, 77.725), p('R166.1')])  # clear of the OQ-2 input feed
-    # External switch J400 (GH 2-pin): SW_SOURCE to R80, SW_RETURN to R165 (7 uA contact current).
-    t('BAT_SW_SOURCE', 'F', 0.2, [p('J400.1'), (9.875, 86.3), (14.275, 86.3), p('R80.2')])
-    t('BAT_SW_RETURN', 'F', 0.2, [p('J400.2'), (12.075, 88.4), p('R165.1')])
-    # BAT_ENABLE: R165 -> C87 -> R81 pull-down, east below J122's GND row and down to U9.1 (AUD-5).
-    t('BAT_ENABLE', 'F', 0.2, [p('R165.2'), (17.225, 87.6), p('C87.1')])
-    t('BAT_ENABLE', 'F', 0.2, [p('C87.1'), (20.9, 85.8), (28.175, 85.8), (37.3, 85.8), (37.7, 85.4)])
-    t('BAT_ENABLE', 'F', 0.2, [(28.175, 85.8), p('R81.1')])
-    via('BAT_ENABLE', (37.7, 85.4))
-    t('BAT_ENABLE', 'B', 0.2, [(37.7, 85.4), (37.7, 80.7), p('U9.1', at=(38.1, 80.3))])
-
+    # R166 parks above the new 5-position servo terminal; the qualified damper parts are unchanged.
+    t('BAT_DAMP', 'F', W, [p('C95.2'), p('C89.2')])
+    t('BAT_DAMP', 'F', W, [p('C89.2'), (35.25, 67.825), p('R166.1')])
+    t('GND', 'F', W, [p('R166.2'), (35.25, 59.4)])
+    via('GND', (35.25, 59.4))
+    # The DB125 external screw-switch contacts still carry about 7 uA through the 470k pair.
+    t('BAT_SW_SOURCE', 'F', 0.2, [p('J400.1'), (10.95, 79.3), (11.45, 78.8), p('R80.2')])
+    t('BAT_SW_RETURN', 'F', 0.2, [p('J400.2'), (14.45, 84.3), (19.95, 78.8), p('R165.1')])
+    t('BAT_ENABLE', 'F', 0.2, [p('R165.2'), (24.3, 78.8), p('R81.1')])
+    t('BAT_ENABLE', 'F', 0.2, [(24.3, 78.8), p('C87.1')])
+    t('BAT_ENABLE', 'F', 0.2, [p('R81.1'), (27.675, 80.5), (27.975, 80.8), (32.3, 80.8)])
+    t('BAT_ENABLE', 'B', 0.2, [(32.3, 80.8), (34.9, 80.8)])
+    t('BAT_ENABLE', 'F', 0.2, [(34.9, 80.8), (37.6, 80.8)])
+    for at in ((32.3, 80.8), (34.9, 80.8), (37.6, 80.8)):
+        via('BAT_ENABLE', at)
+    t('BAT_ENABLE', 'B', 0.2, [(37.6, 80.8), p('U9.1', at=(38.1, 80.3))])
+    t('GND', 'F', 0.2, [p('C87.2'), (25.7, 80.6)])
+    via('GND', (25.7, 80.6))
+    t('GND', 'F', 0.2, [p('R81.2'), (29.325, 77.7)])
+    via('GND', (29.325, 77.7))
 
 def efuse(d):
     t, p, via = d.track, d.pad, d.via
@@ -165,7 +156,7 @@ def efuse(d):
     t('BAT_ILIM', 'B', 0.2, [p('U9.9'), p('R84.1')])
     t('BAT_DVDT', 'B', 0.2, [(39.9, 78.9), (40.7, 78.1), p('C81.1')])
     t('BAT_OVLO', 'B', 0.2, [p('U9.2'), p('R83.1')])
-    t('BAT_OVLO', 'B', 0.2, [p('R83.1'), p('R82.2')])
+    t('BAT_OVLO', 'B', 0.2, [p('R83.1'), (36.725, 80.975), p('R82.2')])
     # The 5.3 V buck's input on the aft band: C400 to U400's two IN pins; C401 south of U400 spanning pin 3 (VIN,
     # straight down 2.5 mm) and pin 4 (GND, 2.5 mm up to pin 4's fan-out via), Diodes DS41326 p.15 layout item 4 /
     # Figure 25 (D-R3-04).
@@ -217,29 +208,24 @@ def ports(d):
     t('PORT_4V8', 'F', W, [(29.75, 12.6), p('R402.1')])
     t('PORT_LDO_FB', 'F', 0.2, [(29.75, 13.6), (32.225, 13.6)])
     t('PORT_LDO_FB', 'F', 0.2, [p('R402.2'), (32.225, 13.6), p('R403.1')])
-    # PORT_4V8 taps: each pad on its own via into the In2 PORT_4V8 region.
-    t('PORT_4V8', 'B', W, [p('U410.1'), (29.3, 10.95)])
-    via('PORT_4V8', (29.3, 10.95))
-    t('PORT_4V8', 'F', W, [(29.3, 10.95), (29.75, 10.5), p('C410.1')])
-    for pad, at in (('C407.1', (31.7, 21.6)), ('R405.1', (29.0, 19.4)),
-                    ('U420.1', (28.7, 27.35))):
+    # GPS is parked on the east edge; radio is on the west edge to retain the existing camera cell.
+    t('PORT_4V8', 'B', W, [p('C411.1'), (35.1, 8.8), (34.3, 8.8)])
+    via('PORT_4V8', (34.3, 8.8))
+    t('PORT_4V8', 'B', W, [p('C411.1'), (39.0, 12.7), (39.0, 20.75), p('J410.1')])
+    t('GND', 'B', W, [p('C411.2'), (32.975, 11.7)])
+    t('GND', 'F', W, [p('C410.2'), (32.975, 11.7)])
+    via('GND', (32.975, 11.7))
+    t('PORT_4V8', 'F', W, [(29.75, 12.6), (27.9, 10.75), p('J420.1')])
+    t('PORT_4V8', 'B', W, [p('J420.1'), (13.0, 10.75), p('C421.1')])
+    t('GND', 'B', W, [p('C421.2'), (10.0, 14.2)])
+    via('GND', (10.0, 14.2))
+    for pad, at in (('C407.1', (34.0, 24.3)), ('R405.1', (34.5, 16.775))):
         t('PORT_4V8', 'B', W, [p(pad), at])
         via('PORT_4V8', at)
-    via('PORT_4V8', (31.0, 23.5))                 # south-east of C420, clear of the GPS UART pair (D-R2-07)
-    t('PORT_4V8', 'F', W, [p('C420.1'), (30.225, 22.725), (31.0, 23.5)])
-    # Port rails east to their cells (B.Cu), the GH connector pin through one via each.
-    # Each port's connector pin 1 takes its rail through one via 0.3 mm aft of the pad (hole and ring clear of the pad's
-    # mask and paste) on the cell's B.Cu spine at x 40.05, clear of the ESD return vias at x 39.4 (D-R2-11).
-    # AUD-8: only the port supply capacitor and connector remain on the switched rail; IO LDO cells are removed.
-    t('GPS_4V8', 'B', W, [p('U410.6'), (40.05, 10.95), (40.65, 10.95), p('C411.1')])
-    t('GPS_4V8', 'B', W, [(40.05, 10.95), (40.05, 11.45)])
-    via('GPS_4V8', (40.05, 11.45))
-    t('GPS_4V8', 'F', W, [(40.05, 11.45), (40.725, 12.125)])
-    # The radio supply crosses above the RX wire's B.Cu hop (x38.8,y24.15–28.95).
-    t('RADIO_4V8', 'B', W, [p('U420.6'), (36.9, 27.35), (36.9, 23.5), (40.05, 23.5),
-                            (40.05, 22.2), p('C421.1')])
-    via('RADIO_4V8', (40.05, 23.5))
-    t('RADIO_4V8', 'F', W, [(40.05, 23.5), (40.675, 24.125)])
+    t('PORT_4V8', 'F', W, [p('C420.1'), (33.725, 26.5)])
+    via('PORT_4V8', (33.725, 26.5))
+    t('GND', 'F', W, [p('C420.2'), (36.3, 25.5)])
+    via('GND', (36.3, 25.5))
     t('CAM_5V', 'B', W, [p('U402.6'), p('U13.1')])
     t('CAM_5V', 'B', W, [p('U13.1'), (40.43, 42.45)])
     t('CAM_5V', 'B', W, [(40.43, 42.45), (40.43, 44.6)])          # through C91.1's pad
@@ -249,24 +235,13 @@ def ports(d):
     # change is a 0.45 mm drill via (1.5 x a 0.3 mm via's barrel). U402.1's PORT_5V3 via moves 0.05 mm west, its hole
     # 0.15 mm from the pad's opening (R3-MFG-03) and 0.15 mm from CAM_UART_OE's F.Cu lead at x 34.95; R431.1, C93.2, U402.2 and U12's pins leave no spot for a second (D-R3-06).
     t('CAM_5V', 'B', W, [p('U402.6'), (42.9, 40.05), (42.9, 35.7), p('C431.1')])
-    via('CAM_5V', (42.9, 35.7), size=(0.8, 0.45))                 # at the B.Cu corner, clear of R430's designator
-    t('CAM_5V', 'F', W, [(42.9, 35.7), (42.475, 36.125), p('J9.1')])
+    t('CAM_5V', 'B', W, [(42.9, 40.05), (44.6, 41.75), (44.6, 61.65), p('J9.1')])
     t('PORT_5V3', 'B', W, [p('U402.1'), (35.45, 40.05)])
     via('PORT_5V3', (35.45, 40.05))
     t('PORT_5V3', 'B', W, [(39.6, 41.25), (39.95, 40.9), p('C430.1')])
     via('PORT_5V3', (39.6, 41.25))
-    # Each port buffer's 3V3 pin joins its decoupling capacitor, whose own via reaches the In2 3V3 strip (D-R2-06).
-    t('3V3', 'F', 0.2, [p('U411.3'), (34.95, 12.9), (34.425, 12.375), p('C440.1')])
-    t('3V3', 'F', 0.2, [p('U421.3'), (34.95, 25.35), (34.425, 24.825)])
-    t('3V3', 'F', 0.3, [p('C450.1'), (34.425, 24.825)])
-    via('3V3', (34.425, 24.825))
     t('3V3', 'F', 0.2, [p('U12.3'), (34.95, 36.77), p('C100.1')])
-    # Switch control (local): ILIM resistors, EN pull-downs.
-    t('GPS_ILIM', 'B', 0.2, [p('U410.5'), p('R410.1')])
-    t('RADIO_ILIM', 'B', 0.2, [p('U420.5'), p('R420.1')])
     t('CAM_ILIM', 'B', 0.2, [p('U402.5'), p('R430.1')])
-    t('GPS_PWR_EN', 'B', 0.2, [p('R411.1'), p('U410.3')])
-    t('RADIO_PWR_EN', 'B', 0.2, [p('R421.1'), p('U420.3')])
 
 
 def logic(d):
@@ -283,7 +258,7 @@ def logic(d):
     t('VLOGIC', 'B', W, [(37.8, 69.8), (37.8, 75.15)])
     via('VLOGIC', (37.8, 75.15))                                    # 0.35 mm aft of C84.1's pad, not in it (D-R2-11)
     t('VLOGIC', 'F', W, [(37.8, 75.15), (37.8, 76.6)])
-    t('VLOGIC', 'B', W, [(37.8, 67.0), p('TP83.1')])
+    # TP83 now overlaps this VLOGIC spine, without a redundant in-pad branch.
     t('LOGIC_ILIM', 'B', 0.2, [p('U11.10'), p('R86.1')])
     t('LOGIC_SS', 'B', 0.2, [p('U11.11'), (34.15, 61.75), p('C85.1')])
     t('USB_OVLO', 'B', 0.2, [p('U11.5'), p('R87.2')])
@@ -304,9 +279,11 @@ def joins(d):
     """Rail pads the fan-out aid finds no clear spot for, joined by hand (R10_DECISIONS D-R2-06)."""
     t, p, via = d.track, d.pad, d.via
     t('3V3', 'B', 0.2, [p('R62.1'), (21.28, 52.4), p('C14.1')])            # onto C14's 3V3 pad and its via
-    # GAP-2: relocated R92 reuses C82's old RAW/GND plane feeds.
-    t('RAW_PROTECTED', 'F', W, [p('R92.1'), (33.1, 66.6)])
-    via('RAW_PROTECTED', (33.1, 66.6))
+    # Circuit pass: R92 clears the required damper/terminal positions; same bleed value and source node.
+    t('RAW_PROTECTED', 'F', W, [p('R92.1'), (34.425, 58.6)])
+    via('RAW_PROTECTED', (34.425, 58.6))
+    t('GND', 'F', W, [p('R92.2'), (36.075, 58.2)])
+    via('GND', (36.075, 58.2))
     # U1.74 (VSS): south on F.Cu between pin 75's 3V3 via and pin 73's VCAP2 via (TP82 forbids a via north of it), to a
     # via that also takes C17's GND pad.
     # (into the core table's GND via (17.5, 39.3), off C17.2's pad and paste: D-R2-11)

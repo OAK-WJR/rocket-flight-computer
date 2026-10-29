@@ -57,12 +57,18 @@ def build(project, table):
     r6_pcb.PROJECT = project
     added, changed = r6_pcb.synchronize(board, project / 'schematic.net.xml')
     r9_lib.clear_overrides(board)
+    # TP footprints have one contact, so the saved foreign-copper floor is also a safe native-fill override.
+    # J2's foreign-only rule cannot be a blanket override: its own contacts and locating holes are closer.
+    for footprint in board.GetFootprints():
+        ref = footprint.GetReference()
+        if ref.startswith('TP'):
+            footprint.SetLocalClearance(pcbnew.FromMM(1.0))
     # J122's GND row: R9's solid zone connection was for the 7.7 A servo return; R10 carries no designed servo current
     # through the board (O6), so the four pads take thermal relief like the board's other GND pads (D-R3-08).
     for p in board.FindFootprintByReference('J122').Pads():
         if p.GetNetname() == 'GND':
             p.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_THERMAL)
-    rows, features = r9_pcb.read_place(table)
+    rows, features = r9_pcb.read_place(table, tie_count=0)
     r9_pcb.outline(board, features)
     r9_pcb.place(board, rows)
     import r10_post                     # footprint silkscreen from the project library (R3-MFG-01 / -02, D-R3-D1)

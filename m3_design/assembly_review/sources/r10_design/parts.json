@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "status": "component contract; board, harness and transient validation pending",
+  "status": "Historical initial R10 selection worksheet; superseded by circuit.json and pin_table.tsv on2026-10-28; not read by generators/gates",
   "parts": {
     "U400": {
       "lib": "M3:CameraBuck",
@@ -895,5 +895,6 @@
       },
       "kind": "fit"
     }
-  }
+  },
+  "superseded_by": "circuit.json"
 }

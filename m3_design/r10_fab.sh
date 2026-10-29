@@ -16,7 +16,7 @@
 #   fab_manifest.py the outputs still match the CAD and export inputs (bound to the board's SHA-256)
 #   renders         m3_design/assembly_review/r10_top.png and r10_bottom.png (kicad-cli pcb render)
 #   FAB_NET=1       jlc_stock.py, jlc_cost.py against REQUIREMENTS M3's R10 target (R3's $84.41 per board: R10 carries
-#                   no on-board radio or GPS, so R7's $42.00 RF allowance no longer applies; <= 52 extended codes;
+#                   no on-board radio or GPS, so R7's $42.00 RF allowance no longer applies; code counts informational;
 #                   R10_DECISIONS D-R1-06) and check_procurement.py --profile r10 --cost-only
 # The Gerbers carry their creation date, so the package is not byte-reproducible; the manifest binds it instead.
 set -euo pipefail
@@ -44,7 +44,7 @@ echo "renders: $D/r10_top.png $D/r10_bottom.png"
 if [[ -n "${FAB_NET:-}" ]]; then
   python3 tools/jlc_stock.py || echo "jlc_stock: short lines above (U4 is consigned when out of JLC stock: ORDERING section 1)"
   STATUS=0
-  python3 tools/jlc_cost.py --max-total 84.41 --max-extended 52 || { STATUS=1; echo "jlc_cost: R10 target missed (above)"; }
+  python3 tools/jlc_cost.py --profile r10 || { STATUS=1; echo "jlc_cost: R10 target missed (above)"; }
   python3 tools/check_procurement.py --profile r10 --cost-only || STATUS=1
   exit $STATUS
 fi

@@ -41,7 +41,7 @@ class ProcurementValidation(unittest.TestCase):
     def reports(self, max_total=84.41, total=84.40):
         item = dict(self.item, componentPrices=[dict(startNumber=1, endNumber=-1,
                                                     productPrice=(total - 1.53 / 5) / 3)])
-        cost = jlc_cost.cost_report(self.parts(), 5, 'standard', 2, max_total=max_total, fetch=lambda _: item)
+        cost = jlc_cost.cost_report(self.parts(), 5, 'standard', 2, max_total=max_total, max_extended=None if max_total == 84.41 else 52, fetch=lambda _: item)
         stock = jlc_stock.stock_report(self.parts(), 5, lambda _: item)
         for name, report in (('cost_check.json', cost), ('stock_check.json', stock)):
             report.update(checked_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
@@ -172,26 +172,36 @@ class ProcurementValidation(unittest.TestCase):
         cost = self.reports()
         self.assertTrue(cost['ok'])
         self.assertEqual(cost['total_usd_per_board'], 84.40)
-        self.assertEqual(cost['targets'], {'max_total': 84.41, 'max_extended': 52})
+        self.assertEqual(cost['targets'], {'max_total': 84.41, 'max_extended': None})
         with patch.object(check_procurement, 'verify_manifest') as manifest:
             for cost_only in (True, False):
                 with self.subTest(cost_only=cost_only):
                     self.assertEqual(check_procurement.verify(self.folder, cost_only=cost_only, profile='r10'), cost)
             manifest.assert_called_once()
 
-    def test_r10_profile_rejects_legacy_targets_over_budget_and_extra_codes(self):
+    def test_r10_profile_rejects_legacy_targets_and_over_budget(self):
         original = self.reports()
         path = self.folder / 'cost_check.json'
         for change in ({'targets': {'max_total': 126.41, 'max_extended': 52}},
                        {'total_usd_per_board': 84.42},
-                       {'targets': {'max_total': 84.41, 'max_extended': 53}},
-                       {'extended_codes': [f'C{i}' for i in range(53)]}):
+                       {'targets': {'max_total': 84.41, 'max_extended': 53}}):
             path.write_text(json.dumps(dict(original, **change)))  # Even a forged ok=true cannot select a higher cap.
             for cost_only in (True, False):
                 with self.subTest(change=change, cost_only=cost_only), \
                         patch.object(check_procurement, 'verify_manifest'), \
-                        self.assertRaisesRegex(ValueError, r'required \$84\.41 / 52-code'):
+                        self.assertRaisesRegex(ValueError, r'required \$84\.41'):
                     check_procurement.verify(self.folder, cost_only=cost_only, profile='r10')
+
+    def test_r10_extended_count_is_informational(self):
+        original = self.reports()
+        original['extended_codes'] = [f'C{i}' for i in range(60)]
+        (self.folder / 'cost_check.json').write_text(json.dumps(original))
+        self.assertEqual(check_procurement.verify(self.folder, cost_only=True, profile='r10'), original)
+        parts = [dict(p, lcsc=f'C{i}') for i, p in enumerate(self.parts() * 53)]
+        report = jlc_cost.cost_report(parts, 100, 'standard', 2, max_total=84.41,
+                                     max_extended=None, fetch=lambda _: dict(self.item, componentPrices=[dict(startNumber=1, endNumber=-1, productPrice=.01)]))
+        self.assertTrue(report['ok'])
+        self.assertEqual(len(report['extended_codes']), 53)
 
     def test_legacy_default_keeps_r9_limits_and_profile_is_explicit(self):
         self.reports(max_total=126.41, total=100)

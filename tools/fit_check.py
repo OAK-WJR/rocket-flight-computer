@@ -59,13 +59,16 @@ MATED = {
         'refs': ('J123',), 'box': (-3.0, -1.75, 3.0, 2.85, 0.0, 9.5),
         'basis': 'R5 engineering allocation: JST PH plug and wire; physical fit unverified'},
 }
-# R10: explicit reference coverage, including both new port plugs and the split switch.
-# GH geometry: JST eGH.pdf pp.2–3; 3 mm wire allocation remains an inference.
-R10_MATED = {k: dict(v) for k, v in MATED.items() if k not in ('M3_SMA_KH_KE8_EDGE', 'M3_JST_PH_B2B_2P')}
-R10_MATED['M3_GH_BM04B_GHS_TBT'] = dict(MATED['M3_GH_BM04B_GHS_TBT'], refs=('J9', 'J410', 'J420'))
-R10_MATED['M3_GH_BM02B_GHS_TBT'] = dict(
-    MATED['M3_GH_BM04B_GHS_TBT'], refs=('J400',), box=(-2.875, -2.5, 2.875, 1.75, 0.0, 10.3))  # AUD-4.
-R10_MATED_REFS = {'J9', 'J122', 'J400', 'J410', 'J420'}
+# R10 screw-terminal amendment: every wired connection uses DB125 clamps; there are no port or servo plugs.
+# Terminal bodies are read from their models. Wire/ferrule bend and screwdriver access require physical qualification.
+R10_MATED = {'M3_MICROSD_MOLEX_472192001': dict(
+    refs=('J430',), box=(-7., -9.5, 7., 6., 0., 2.1),
+    basis='Molex SD-47219-001 Rev G: closed socket body x +/-6.8 mm, y -9.35..5.15 mm, height <=2.05 mm. '
+          'Inference: combined locked socket/card allocation x +/-7.0, y -9.5..6.0, height 2.1 mm; '
+          'card seating, hinge locking and retention under 100 g/vibration require physical qualification. '
+          'Open/insertion envelope is bench-only with the board out of the bay and unpowered',
+    source='https://cdn.promelec.ru/upload/items/2020/09/01/472192001_sd.pdf')}
+R10_MATED_REFS = {'J430'}
 REQUIRED_MATED = {'M3_GH_BM04B_GHS_TBT', 'M3_SMA_KH_KE8_EDGE'}
 # These are bare board features, not an escape hatch for missing fitted-part geometry.
 BOARD_FEATURES = {'M3_TestPad_1.5': r'TP\d+', 'M3_ToolingHole_JLC': r'TH[123]',
@@ -193,12 +196,14 @@ TIE_PAST = (1.0, 4.0)     # mm a tie hole's centre lies past J122's courtyard en
 TIE_LATERAL = 6.0         # mm: a hole further off J122's long axis is not a tie-hole candidate
 
 
-def retention_holes(b, holes=None, with_info=False):
+def retention_holes(b, holes=None, with_info=False, profile='r9'):
     """The two J122 tie holes, derived from J122 instead of R7's coordinates (R9 gate M-3; survey_constraints.md 10):
     one Ø3.2 hole beyond each end of J122 (centre TIE_PAST mm past the courtyard end along the plug row), with the
     hole-to-hole line crossing each plug's centre line within the plug's length (its three pins +- half a pitch).
     Returns the two hole centres (RETENTION_HOLES when J122 is absent, the R7 / R8 constants); with_info also the
     problems found and the measured geometry."""
+    if profile == 'r10':
+        return ([], [], {'required': False, 'basis': 'J122 is a five-contact screw terminal'}) if with_info else []
     f = next((g for g in b.GetFootprints() if g.GetReference() == 'J122'), None)
     if holes is None:
         holes = board_geometry(b)[0]
@@ -402,13 +407,16 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
             mb = footprint_box(f, spec['box'])
             rows.append((margin(mb, radius, axis_x, tol), ref + ' mated', side, mb))
             mating.append((ref, mb))
+            # The locked microSD card is a rigid flight body; its allocation must also clear support hardware.
+            if profile == 'r10' and ref == 'J430':
+                (bottom if f.IsFlipped() else top_bodies).append((ref + ' mated', mb))
         elif fp_name(f) in REQUIRED_MATED or (ref in required_refs
                                              and not fp_name(f).startswith('M3_DB128')):
             issues.append(f'{ref}: mated housing/wire envelope has not been reviewed')
     if profile == 'r10':
         missing = required_refs - {ref for ref, box in mating}
         issues.extend(f'{ref}: required R10 mated envelope missing' for ref in sorted(missing))
-        _, tie_issues, _ = retention_holes(b, with_info=True)
+        _, tie_issues, _ = retention_holes(b, with_info=True, profile=profile)
         issues.extend(tie_issues)
     for index, (ref, box) in enumerate(mating):
         for other, body in bodies:
@@ -424,7 +432,7 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
     if length > 120.01:
         issues.append(f'board length {length:g} mm exceeds the P1 120 mm maximum (outline only; the SMA overhang '
                       'and mated plugs count in the bay stack)')
-    supports, nearest, support_issues = support_check(holes, outline, bottom, retention_holes(b, holes))
+    supports, nearest, support_issues = support_check(holes, outline, bottom, retention_holes(b, holes, profile=profile))
     issues.extend(support_issues)
     nearest_top, top_issues = top_support_check(supports, top_bodies, top_pads)
     issues.extend(top_issues)

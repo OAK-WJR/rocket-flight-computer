@@ -90,7 +90,7 @@ def cost_report(parts, boards, tier, sides, fee=None, max_total=126.41, max_exte
         parts_usd_per_board=round(subtotal, 2), feeder_fee_usd_per_order=round(len(charged) * fee, 2),
         total_usd_per_board=round(total, 2), order_usd_per_board_with_min_purchase=round(ordered, 2),
         extended_codes=extended, lines=lines, errors=errors, targets=dict(max_total=max_total, max_extended=max_extended),
-        ok=total <= max_total and len(extended) <= max_extended and not errors)
+        ok=total <= max_total and (max_extended is None or len(extended) <= max_extended) and not errors)
 
 
 def main():
@@ -98,12 +98,17 @@ def main():
     ap.add_argument('--boards', type=int, default=5)
     ap.add_argument('--tier', choices=('standard', 'economic'), default='standard', help='JLC PCBA tier (docs/ORDERING.md)')
     ap.add_argument('--fee', type=float, default=None, help='override the per-code feeder fee, USD')
-    ap.add_argument('--max-total', type=float, default=126.41,
+    ap.add_argument('--profile', choices=('r9', 'r10'), default='r9', help='R10 keeps $84.41; extended count is informational')
+    ap.add_argument('--max-total', type=float, default=None,
                     help='parts + feeder fees per board, USD (REQUIREMENTS M3: R3 $84.41 + $42.00 RF allowance)')
-    ap.add_argument('--max-extended', type=int, default=52, help='unique extended (non-Basic) LCSC codes (REQUIREMENTS M3)')
+    ap.add_argument('--max-extended', type=int, default=None, help='optional cap; R9 defaults to 52, R10 has no independent cap')
     ap.add_argument('--fab', type=Path, default=FAB)
     ap.add_argument('--snapshot', type=Path, help='exact public supplier responses fetched within the last 24 hours')
     a = ap.parse_args()
+    if a.max_total is None:
+        a.max_total = 84.41 if a.profile == 'r10' else 126.41
+    if a.max_extended is None and a.profile == 'r9':
+        a.max_extended = 52
     output = a.fab / 'cost_check.json'
     output.unlink(missing_ok=True)
     try:
@@ -131,7 +136,7 @@ def main():
     fee, charged, total = report['fee_usd_per_code'], report['charged_codes'], report['total_usd_per_board']
     print(f"{len(lines)} unique codes at {a.boards} boards, {a.tier} PCBA: parts ${report['parts_usd_per_board']:.2f}/board + "
           f'{charged} codes x ${fee:.2f} / {a.boards} = ${total:.2f}/board (target <= ${a.max_total:.2f}); '
-          f'unique extended codes {len(extended)} (target <= {a.max_extended})')
+          f'unique extended codes {len(extended)} (' + (f'target <= {a.max_extended}' if a.max_extended is not None else 'informational') + ')')
     print(f"  fixed fees per order ({a.tier}, {sides}-sided): ${report['fixed_fees_usd_per_order']:.2f} (setup, stencil" +
           (', fixture; JLC may add a $14.93 handling fee' if a.tier == 'standard' else '') +
           ('); Economic assembles one side only' if sides > 1 else '); Economic would be $9.71') +

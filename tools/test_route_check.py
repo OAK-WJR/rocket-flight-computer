@@ -891,8 +891,9 @@ class R10AuditScope(unittest.TestCase):
         rc.set_profile('r10'); self.addCleanup(rc.set_profile, 'r8')
 
     def test_aud2_return_exclusions_keep_other_critical_checks(self):
-        slow = ('ARM1_SENSE_MID', 'RAW_ACT_SENSE_MCU', 'ACT_GATE', 'ACT_DRV', 'ACT_EN_MCU', 'GPS_PWR_EN', 'CAM_UART_OE')
-        fast = ('USB_DP', 'HSE_IN', 'QSPI_CLK', 'SPI1_SCK', 'IMU_CS', 'GPS_TX_WIRE', 'PYRO1_GATE_N', 'PYRO1_COLD')
+        slow = ('ARM1_SENSE_MID', 'ARM1_SENSE', 'ACT_GATE', 'ACT_DRV', 'ACT_EN_MCU', 'CAM_PWR_EN', 'CAM_UART_OE')
+        fast = ('USB_DP', 'HSE_IN', 'QSPI_CLK', 'SPI1_SCK', 'IMU_CS', 'GPS_TX_WIRE', 'PYRO1_GATE_N', 'PYRO1_COLD',
+                'SD_SCK', 'SD_MISO', 'SD_MOSI', 'SD_CS', 'SD_DAT1', 'SD_DAT2')
         for net in slow + fast:
             if not self.board.FindNet(net): self.board.Add(pcbnew.NETINFO_ITEM(self.board, net))
             self.helper.track((0, 0), (5, 0), net, layer=pcbnew.F_Cu)
@@ -909,6 +910,42 @@ class R10AuditScope(unittest.TestCase):
         self.assertTrue(rc.return_required('RAW_ACT'))
         rc.set_profile('r9')
         self.assertTrue(rc.return_required('ACT_GATE'))
+
+    def test_noncritical_metadata_is_informational_but_critical_faults_still_block(self):
+        from contextlib import redirect_stdout
+        import io
+        from unittest.mock import patch
+        noncritical = [dict(cat='detour', net='SIGNAL', cls='other', layer='net', x=1., y=1., len_mm=20., vias=2),
+                       dict(cat='tiny_jog', net='OTHER', cls='other', layer='F.Cu', x=2., y=2.)]
+        records = [('detour', 'SIGNAL', 'net', (1., 1.), 'stale figures are informational', dict(len_mm=1., vias=0)),
+                   ('tiny_jog', 'GONE', 'F.Cu', (9., 9.), 'stale coordinate is informational')]
+        fault = dict(cat='off_angle', net='QSPI_CLK', cls='spi', layer='F.Cu', x=3., y=3.)
+
+        def run(profile, instances):
+            rc.set_profile(profile)
+            output = io.StringIO()
+            with patch.object(sys, 'argv', ['route_check.py', 'unused.kicad_pcb', '--profile', profile]), \
+                    patch.object(rc, 'set_profile'), patch.object(rc.pcbnew, 'LoadBoard', return_value=self.board), \
+                    patch.object(rc, 'scan', return_value=list(instances)), \
+                    patch.object(rc, 'bump_audit', return_value=([], 0)), \
+                    patch.object(rc, 'LEFTOVERS', records), \
+                    patch.object(rc, 'measured_check', wraps=rc.measured_check) as measured, \
+                    patch.object(rc, 'alt_audit', return_value=[]) as alternative, redirect_stdout(output):
+                result = rc.main()
+                if profile == 'r10':
+                    measured.assert_called_once_with([])
+                    alternative.assert_called_once_with(self.board, [])
+            return result, output.getvalue()
+
+        result, output = run('r10', noncritical)
+        self.assertEqual(result, 0, output)
+        self.assertIn('INFO non-critical leftover', output)
+        self.assertIn('INFO stale LEFTOVERS', output)
+        result, output = run('r10', noncritical + [fault])
+        self.assertEqual(result, 1, output)
+        self.assertIn('FAIL off_angle', output)
+        result, output = run('r9', noncritical)
+        self.assertEqual(result, 1, output)  # Legacy bookkeeping still blocks.
 
     def test_aud10_exact_representations_count_without_leftover_but_real_overlaps_block(self):
         self.helper.two_pads('3V3')

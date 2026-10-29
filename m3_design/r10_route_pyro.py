@@ -3,7 +3,7 @@
 Fire feed on B.Cu at 0.5 mm (AUD-6): Q121 drain (RAW_ACT) -> R134 (2 ohm shorted-igniter limit) -> J121.2 (IGN);
 J121.1 (OUT) -> Q124's drain on F.Cu. Pulse at most 4.2 A for 20 ms (8.4 V / 2 ohm; firmware ends every pulse by
 20 ms); no steady current. The external power switch is the pad arming device (owner, 2026-10-28); Q120 / Q121
-remain the independent load switch ahead of R134, and both bus-sense dividers tap RAW_ACT.
+remain the independent load switch ahead of R134, and ARM1_SENSE is the sole bus reading.
 Fire-gate and OUT layer changes retain their GND partners; filtered ADC and ACT controls are exempt (AUD-2).
 Pad positions are asserted by Draw.pad: a moved part stops the build.
 """
@@ -56,28 +56,23 @@ def draw(d):
     t('PYRO1_GATE', 'F', P, [(16.0, 55.395), (16.0, 56.275), d.pad('C126.1')])
     link('PYRO1_GATE', 'F', P, 'C126.1', 'R128.1')
 
-    # Continuity: R173 / R129 / R130 / R178 divider (bottom), C127 filter, R168 at U1.15.
+    # Continuity: R173 / R129 / R130 / R178 divider (bottom), C127 filter, directly to U1.15 (audit 2: single-resistor fault protection retained).
     link('PYRO1_CONT_MID', 'B', S, 'R173.2', 'R129.1')
     link('PYRO1_CONT', 'B', S, 'R129.2', 'R130.1')
     link('PYRO1_CONT', 'B', S, 'R130.1', 'R178.1')
     link('PYRO1_CONT', 'B', S, 'R178.1', 'C127.1', ((19.85, 56.8),))
     t('PYRO1_CONT', 'B', S, [d.pad('C127.1'), (21.65, 55.0), (24.0, 55.0)])
     via('PYRO1_CONT', (24.0, 55.0))
-    t('PYRO1_CONT', 'F', S, [(24.0, 55.0), d.pad('R168.1')])
-    link('PYRO1_CONT_MCU', 'F', S, 'R168.2', 'U1.15')
+    t('PYRO1_CONT', 'F', S, [(24.0, 55.0), d.pad('U1.15')])
 
-    # Bus sense (ARM1_SENSE signal names retained): RAW_ACT -> R132 / R175 -> divider -> R170 -> U1.33 (PC5).
+    # Bus sense (ARM1_SENSE signal names retained): RAW_ACT -> R132 / R175 -> filtered divider directly to U1.33 (PC5).
     t('RAW_ACT', 'B', S, [d.pad('Q121.8'), (19.0, 61.58), (19.0, 59.32), d.pad('R132.1')])
     link('ARM1_SENSE_MID', 'B', S, 'R132.2', 'R175.1')
     link('ARM1_SENSE', 'B', S, 'R175.2', 'R133.1')
     link('ARM1_SENSE', 'B', S, 'R133.1', 'R180.1')
     link('ARM1_SENSE', 'B', S, 'R180.1', 'C129.1')
-    t('ARM1_SENSE', 'B', S, [d.pad('C129.1'), (27.2, 58.75)])
-    via('ARM1_SENSE', (27.2, 58.75))
-    # F.Cu (R10_DECISIONS D-R2-09): one 45 deg run parallel to the servo lanes, north as the inner sense lane x 34.4
-    # (outside the status-line vias at U1's east pins), west into R170 beside U1.33.
-    t('ARM1_SENSE', 'F', S, [(27.2, 58.75), (34.4, 51.55), (34.4, 46.2), d.pad('R170.1')])
-    link('ARM1_SENSE_MCU', 'F', S, 'R170.2', 'U1.33', ((31.43, 45.5),))
+    # C129.1 -> U1.33 (the B.Cu lead, via and F.Cu lane) is drawn by the signals family beside the status lanes it must
+    # pass: with no resistor left beside U1.33 the lane's detour round their vias only reads as needed once they exist.
 
     # AUD-3: compact facing-source DFN3x3 pair. The source bridge retains the qualified 0.4 mm pulse width;
     # no series via. The gates use F.Cu to cross the bridge, separate from the two MCU controls.
@@ -98,22 +93,12 @@ def draw(d):
     t('ACT_GATE', 'F', P, [(11.8, 69.0), (11.8, 70.4), (13.7, 72.3), d.pad('R121.1')])
     t('ACT_GATE', 'F', P, [d.pad('R121.1'), (16.2, 72.3)])
     link('ACT_DRV', 'F', P, 'Q122.3', 'R121.2', ((15.8, 70.14),))
-    # PC1 controls the load switch independently of PE4's fire gate. F.Cu stays east of R168 / its GND via, then
+    # PC1 controls the load switch independently of PE4's fire gate. F.Cu leaves the ADC lane to its east, then
     # parallels SERVO1's diagonal on its inner side; no layer change. R123 holds Q122 off while PC1 floats at reset.
     t('ACT_EN_MCU', 'F', S, [d.pad('U1.16'), (24.5, 51.6), (26.6, 53.7), (26.6, 54.6),
                             (19.6, 61.6), d.pad('R122.1')])
     link('ACT_EN', 'F', S, 'Q122.1', 'R122.2', ((19.08, 70.75),))
     link('ACT_EN', 'F', S, 'R122.2', 'R123.1')
 
-    # RAW_ACT: Q121's drain to TP120 and the retained second bus-sense divider top R177.
+    # Retained load-switch drain probe; duplicate six-part bus divider removed.
     t('RAW_ACT', 'B', RAWW, [d.pad('Q121.9'), d.pad('TP120.1', at=(18.0, 67.6))])
-    t('RAW_ACT', 'B', S, [d.pad('TP120.1'), (18.0, 65.57), d.pad('R177.1')])
-    link('RAW_ACT_SENSE_MID', 'B', S, 'R177.2', 'R124.1')
-    link('RAW_ACT_SENSE', 'B', S, 'R124.2', 'R125.1')
-    link('RAW_ACT_SENSE', 'B', S, 'R125.1', 'R182.1')
-    link('RAW_ACT_SENSE', 'B', S, 'R182.1', 'C122.1')
-    t('RAW_ACT_SENSE', 'B', S, [d.pad('C122.1'), (27.2, 64.0)])
-    via('RAW_ACT_SENSE', (27.2, 64.0))
-    # F.Cu (D-R2-09): a 45 deg run parallel to ARM1_SENSE, north as the outer sense lane x 35.1, west into R172 beside U1.34.
-    t('RAW_ACT_SENSE', 'F', S, [(27.2, 64.0), (35.1, 56.1), (35.1, 45.25), d.pad('R172.1')])
-    link('RAW_ACT_SENSE_MCU', 'F', S, 'R172.2', 'U1.34', ((31.88, 45.0),))

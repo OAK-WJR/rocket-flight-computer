@@ -498,190 +498,119 @@
 					(effects
 						(font
 							(size 1.05 1.05))))))
-		(embedded_fonts no)))
-	(symbol
-		(lib_id "M3:Conn_3x4")
-		(at 40.64 50.8 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 91e60751-8f2e-5a17-bb30-10efcf7de97b)
-		(property "Reference" "J122"
-			(at 44.45 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "SERVO 3x4"
-			(at 44.45 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C32713291"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "hanxia"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "HX PZ2.54-3x4P ZZ"
-			(at 40.64 50.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
-					(reference "J122")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 33.02 36.83)
-			(xy 27.94 36.83))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b7bf5d2a-9873-5885-9cdd-7616cfc4f55d))
-	(global_label "SERVO1_OUT"
-		(shape passive)
-		(at 27.94 36.83 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid cddc78de-4e61-5529-9ddf-95fe1694231d))
-	(wire
-		(pts
-			(xy 33.02 41.91)
-			(xy 27.94 41.91))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b812df91-5026-54c4-93a9-c213832f5fa6))
-	(global_label "GND"
-		(shape passive)
-		(at 27.94 41.91 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 46a6c6e0-bc67-5c1e-9239-9fcc00c81f4a))
-	(wire
-		(pts
-			(xy 33.02 44.45)
-			(xy 27.94 44.45))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 43b30d6a-fb1a-514e-a989-eb0297cf2bf4))
-	(global_label "SERVO2_OUT"
-		(shape passive)
-		(at 27.94 44.45 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 236e22f5-afc7-5de8-a670-c2f11ac557dc))
-	(wire
-		(pts
-			(xy 33.02 49.53)
-			(xy 27.94 49.53))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 2af8e83a-aa29-5828-9cf7-1a37c3fa51ec))
-	(global_label "GND"
-		(shape passive)
-		(at 27.94 49.53 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 3eb2e440-3511-5550-9535-34a862b6cb40))
-	(wire
-		(pts
-			(xy 33.02 52.07)
-			(xy 27.94 52.07))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c3d7ceb7-36d7-53e7-bff7-6604eaa82ad9))
-	(global_label "SERVO3_OUT"
-		(shape passive)
-		(at 27.94 52.07 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 30c66191-bede-5050-9db5-38fb1ad13133))
-	(wire
-		(pts
-			(xy 33.02 57.15)
-			(xy 27.94 57.15))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 140b7d1b-eb88-57ca-9228-cba9ac285074))
-	(global_label "GND"
-		(shape passive)
-		(at 27.94 57.15 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 9480c129-24cd-576b-883b-ae7110a7f653))
-	(wire
-		(pts
-			(xy 33.02 59.69)
-			(xy 27.94 59.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 8ea5ae2b-85c2-5f69-a4f8-d0a73f829531))
-	(global_label "SERVO4_OUT"
-		(shape passive)
-		(at 27.94 59.69 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a863961c-fc79-5c48-9f5f-5f76a5ba9438))
-	(wire
-		(pts
-			(xy 33.02 64.77)
-			(xy 27.94 64.77))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 3b8e8ff4-9c56-5f59-b4ec-176a78dea517))
-	(global_label "GND"
-		(shape passive)
-		(at 27.94 64.77 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid cfbf39c3-205d-5266-a339-bd6bfa9766b9))
+		(embedded_fonts no))		(symbol "M3:ServoTerminal"
+			(pin_names
+				(offset 1.016))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "ServoTerminal"
+				(at 0 -12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "DORABO DB1253.5mm5pos; four servo signals and GND only"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "servo terminal"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_fp_filters" "M3_DB125_5P_GN"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "ServoTerminal_0_1"
+				(rectangle
+					(start -10.16 10.16)
+					(end 10.16 -10.16)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "ServoTerminal_1_1"
+				(pin passive line
+					(at -15.24 5.08 0)
+					(length 5.08)
+					(name "SERVO1"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 2.54 0)
+					(length 5.08)
+					(name "SERVO2"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 0 0)
+					(length 5.08)
+					(name "SERVO3"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -2.54 0)
+					(length 5.08)
+					(name "SERVO4"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -5.08 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+)
 	(symbol
 		(lib_id "M3:R")
 		(at 157.48 50.8 0)
@@ -1549,40 +1478,168 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 1e2ef9f0-fb22-5acd-9a6c-5b4894831dbc))
-	(no_connect
-		(at 33.02 39.37)
-		(uuid e2eef0a2-029a-5324-b146-93539cec1e5e))
-	(no_connect
-		(at 33.02 46.99)
-		(uuid 3beadd15-cc32-53d4-b3f1-9f19bbae2049))
-	(no_connect
-		(at 33.02 54.61)
-		(uuid e3cc3e78-e74b-5373-8ce9-dc3c35e9fe76))
-	(no_connect
-		(at 33.02 62.23)
-		(uuid d509a585-d31a-56a6-a572-3587fd2ce685))
-	(text "R10 O3/O6: J122 signal pins1/4/7/10; pins3/6/9/12 board GND for signal reference only; pins2/5/8/11 have NO BOARD CONNECTION."
+	(symbol
+		(lib_id "M3:ServoTerminal")
+		(at 40.64 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 91e60751-8f2e-5a17-bb30-10efcf7de97b)
+		(property "Reference" "J122"
+			(at 43.18 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "DB125-3.5-5P-GN-S"
+			(at 43.18 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_DB125_5P_GN"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C3646874"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "DORABO"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "DB125-3.5-5P-GN-S"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "J122")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 25.4 45.72)
+			(xy 20.32 45.72))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0b16d315-0b18-5ae7-b184-f22b0c50c798))
+	(global_label "SERVO1_OUT"
+		(shape passive)
+		(at 20.32 45.72 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a877dcd6-d39b-591a-ab0b-e276309b28c9))
+	(wire
+		(pts
+			(xy 25.4 48.26)
+			(xy 20.32 48.26))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b2d7a022-9f40-5b62-ac8d-b55e460f28be))
+	(global_label "SERVO2_OUT"
+		(shape passive)
+		(at 20.32 48.26 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7157c3ab-ccf9-5493-a89f-5b9623d5d0dc))
+	(wire
+		(pts
+			(xy 25.4 50.8)
+			(xy 20.32 50.8))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8e191751-f6b6-5be5-a1ef-15ced7b0d0f8))
+	(global_label "SERVO3_OUT"
+		(shape passive)
+		(at 20.32 50.8 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0b6e9ba0-b6a0-566f-9be4-aceba8e1a151))
+	(wire
+		(pts
+			(xy 25.4 53.34)
+			(xy 20.32 53.34))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 27dbb376-7c8e-5239-98f2-47dc58fd9479))
+	(global_label "SERVO4_OUT"
+		(shape passive)
+		(at 20.32 53.34 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 353d4a2c-c57d-50cf-8e20-ca49ea9e08b4))
+	(wire
+		(pts
+			(xy 25.4 55.88)
+			(xy 20.32 55.88))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0fdd4742-6339-56b1-9082-09750e67b2f3))
+	(global_label "GND"
+		(shape passive)
+		(at 20.32 55.88 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6dd2e64a-5753-5793-9ef4-d8648eacac28))
+	(text "R10 owner screw terminals: J122 pins1/2/3/4 SERVO1/2/3/4_OUT, pin5 GND signal reference. No servo positive connection on board."
 		(at 20.32 15.24 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 034afce4-2663-5697-8ca4-16faaad32e0f))
-	(text "Each servo power AND return run directly to the pack in the harness. Parallel residual board-return current must satisfy the documented harness calculation."
+	(text "Each servo power AND motor return run directly to the pack in the harness. Board GND is signal reference; residual shared return must satisfy the harness calculation."
 		(at 20.32 20.32 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid ff683912-b0cc-56c1-a4c0-4ec29bf9c282))
-	(text "The board cannot disconnect servo power. Servo neutral/failsafe during reset is a harness and servo qualification requirement."
+	(text "Keep four1k series resistors,10k pull-downs andSRV05-4 clamp. Board cannot cut servo power. Command neutral<=50ms after reset; bench servo/harness failsafe."
 		(at 20.32 25.4 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 5b80fd05-489b-5c3a-9bf1-324ebc99cf26))
-	(text "AUD-7: four 1k 100mW 0603 series resistors, 10k MCU-side pull-downs and SRV05-4 clamp; command neutral within 50 ms, without assuming a jam unloads."
+	(text "J122 DORABO DB1253.5mm5posgreenC3646874; bodycount andfullpinlegends distinguish from greenbattery. Clamp leads28-16AWG; qualifiedferrules/splices forthinnerleads; no solder-tinned strandedwire. Removeobsolete servo-plug tieholes."
 		(at 20.32 30.48 0)
 		(effects
 			(font

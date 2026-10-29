@@ -3060,487 +3060,55 @@
 			(justify right))
 		(uuid 854be9b9-f9e9-5d82-be1a-be8326dea477))
 	(symbol
-		(lib_id "M3:USBCurrentLimit")
-		(at 505.46 281.94 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 0d358d9e-fca3-5e72-800b-100440eab2e1)
-		(property "Reference" "U410"
-			(at 508 280.67 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "TPS2553DBVR"
-			(at 508 283.21 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:M3_TPS2553_DBV"
-			(at 505.46 281.94 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/tps2553.pdf"
-			(at 505.46 281.94 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C55266"
-			(at 505.46 281.94 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "Texas Instruments"
-			(at 505.46 281.94 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "TPS2553DBVR"
-			(at 505.46 281.94 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
-					(reference "U410")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 480.06 279.4)
-			(xy 474.98 279.4))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 34a8ed9a-a168-5c29-8c2d-a00e0cc9527e))
-	(global_label "PORT_4V8"
-		(shape passive)
-		(at 474.98 279.4 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 4161ae0f-8992-5473-882a-b354a1d819f2))
-	(wire
-		(pts
-			(xy 480.06 284.48)
-			(xy 474.98 284.48))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 141f9c61-0c29-585c-89a9-f455682b4c0a))
-	(global_label "GND"
-		(shape passive)
-		(at 474.98 284.48 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a8997e66-243a-58e4-8445-4c696bf7b02a))
-	(wire
-		(pts
-			(xy 480.06 281.94)
-			(xy 474.98 281.94))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4d7218fe-19aa-5fa9-9296-a62a902a94c0))
-	(global_label "GPS_PWR_EN"
-		(shape passive)
-		(at 474.98 281.94 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f220bccc-6d08-53e2-8b9f-73143514637b))
-	(wire
-		(pts
-			(xy 530.86 284.48)
-			(xy 535.94 284.48))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 95fe2fb3-7e24-5098-badf-e7a6a41ea3df))
-	(global_label "GPS_FAULT_N"
-		(shape passive)
-		(at 535.94 284.48 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 24dedab3-2787-5f9b-897c-19467f9dcea0))
-	(wire
-		(pts
-			(xy 530.86 281.94)
-			(xy 535.94 281.94))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid abf912ca-1fc1-59ed-bc70-bcc3d05aaac3))
-	(global_label "GPS_ILIM"
-		(shape passive)
-		(at 535.94 281.94 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 13799606-469e-5474-acc0-23c0e365d121))
-	(wire
-		(pts
-			(xy 530.86 279.4)
-			(xy 535.94 279.4))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 894dada6-9afb-559b-aa78-048177279f7b))
-	(global_label "GPS_4V8"
-		(shape passive)
-		(at 535.94 279.4 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 267499c4-103a-50c9-a8aa-29f554d67a3b))
-	(symbol
-		(lib_id "M3:R")
-		(at 645.16 281.94 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 58ebf78b-c9f6-5c33-a96b-48c9aaf236ad)
-		(property "Reference" "R410"
-			(at 647.7 280.67 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "100k 1%"
-			(at 647.7 283.21 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R_0603_1608Metric"
-			(at 645.16 281.94 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/product-detail/C14675.html"
-			(at 645.16 281.94 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C14675"
-			(at 645.16 281.94 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "YAGEO"
-			(at 645.16 281.94 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "RC0603FR-07100KL"
-			(at 645.16 281.94 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
-					(reference "R410")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 645.16 278.13)
-			(xy 645.16 273.05))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 1ccd16a0-2ccc-5096-933a-5e4f4c992627))
-	(global_label "GPS_ILIM"
-		(shape passive)
-		(at 645.16 273.05 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a1535042-a15b-5a6b-b344-69b233f2c192))
-	(wire
-		(pts
-			(xy 645.16 285.75)
-			(xy 645.16 290.83))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 2b40ab74-f6f8-5561-b01b-9f7a0b0cb399))
-	(global_label "GND"
-		(shape passive)
-		(at 645.16 290.83 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 7fe2442a-0709-5bd6-844a-915b4a18564d))
-	(symbol
-		(lib_id "M3:R")
-		(at 86.36 330.2 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid af40198b-e1b0-5af9-bb36-7f04c35ed03c)
-		(property "Reference" "R411"
-			(at 88.9 328.93 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "100k 1%"
-			(at 88.9 331.47 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R_0603_1608Metric"
-			(at 86.36 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/product-detail/C14675.html"
-			(at 86.36 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C14675"
-			(at 86.36 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "YAGEO"
-			(at 86.36 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "RC0603FR-07100KL"
-			(at 86.36 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
-					(reference "R411")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 86.36 326.39)
-			(xy 86.36 321.31))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 00e63594-1cfb-512c-9a77-d11ea82df234))
-	(global_label "GPS_PWR_EN"
-		(shape passive)
-		(at 86.36 321.31 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid aaf1501e-fde2-5f63-b84b-bd21a3c893e8))
-	(wire
-		(pts
-			(xy 86.36 334.01)
-			(xy 86.36 339.09))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4dd456c4-d88a-5222-a9f7-f8aceb864421))
-	(global_label "GND"
-		(shape passive)
-		(at 86.36 339.09 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 5617dc0d-d258-5d52-8826-2190d61c8a0c))
-	(symbol
-		(lib_id "M3:R")
-		(at 226.06 330.2 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid ff4e87eb-6aad-5a0d-a73d-1b7f0bc477b5)
-		(property "Reference" "R412"
-			(at 228.6 328.93 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k 1%"
-			(at 228.6 331.47 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 226.06 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
-			(at 226.06 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C25744"
-			(at 226.06 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 226.06 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 226.06 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
-					(reference "R412")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 226.06 326.39)
-			(xy 226.06 321.31))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 739e566f-0018-5b77-b4c6-37988f5a2ee5))
-	(global_label "GPS_FAULT_N"
-		(shape passive)
-		(at 226.06 321.31 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 8b7c5eb6-ab97-5ecf-9a56-e4a486b201af))
-	(wire
-		(pts
-			(xy 226.06 334.01)
-			(xy 226.06 339.09))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 8f2f1631-92cd-5b18-9cc9-eae7a413050a))
-	(global_label "3V3"
-		(shape passive)
-		(at 226.06 339.09 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 58dd3165-76d2-555f-99d1-b154e950cbcb))
-	(symbol
 		(lib_id "M3:C")
-		(at 365.76 330.2 0)
+		(at 505.46 281.94 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 9c4f7dc0-c828-5379-8f87-f954338eff06)
 		(property "Reference" "C410"
-			(at 368.3 328.93 0)
+			(at 508 280.67 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "100nF 50V X7R 10%"
-			(at 368.3 331.47 0)
+			(at 508 283.21 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:C_0603_1608Metric"
-			(at 365.76 330.2 0)
+			(at 505.46 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/product-detail/C14663.html"
-			(at 365.76 330.2 0)
+			(at 505.46 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C14663"
-			(at 365.76 330.2 0)
+			(at 505.46 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "YAGEO"
-			(at 365.76 330.2 0)
+			(at 505.46 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "CC0603KRX7R9BB104"
-			(at 365.76 330.2 0)
+			(at 505.46 281.94 0)
 			(hide yes)
 			(effects
 				(font
@@ -3553,15 +3121,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 365.76 326.39)
-			(xy 365.76 321.31))
+			(xy 505.46 278.13)
+			(xy 505.46 273.05))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid d86d60d6-6adc-52ed-b67a-70f1f5f87c19))
 	(global_label "PORT_4V8"
 		(shape passive)
-		(at 365.76 321.31 0)
+		(at 505.46 273.05 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -3569,15 +3137,15 @@
 		(uuid b6e9354d-3b6a-51c8-8493-1cd19a8b9fee))
 	(wire
 		(pts
-			(xy 365.76 334.01)
-			(xy 365.76 339.09))
+			(xy 505.46 285.75)
+			(xy 505.46 290.83))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid bdae056e-c742-5d08-b1c6-1cea767d7b3b))
 	(global_label "GND"
 		(shape passive)
-		(at 365.76 339.09 0)
+		(at 505.46 290.83 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -3585,54 +3153,54 @@
 		(uuid 33d2cbec-51a9-5533-8cc4-88d2dc40b0f5))
 	(symbol
 		(lib_id "M3:C")
-		(at 505.46 330.2 0)
+		(at 645.16 281.94 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid fb77e7e3-e3ea-5425-9447-d9b310d5fd07)
 		(property "Reference" "C411"
-			(at 508 328.93 0)
+			(at 647.7 280.67 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "22uF 25V X7R 10%"
-			(at 508 331.47 0)
+			(at 647.7 283.21 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:M3_GRM32_1210"
-			(at 505.46 330.2 0)
+			(at 645.16 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
-			(at 505.46 330.2 0)
+			(at 645.16 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C21397"
-			(at 505.46 330.2 0)
+			(at 645.16 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Murata"
-			(at 505.46 330.2 0)
+			(at 645.16 281.94 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "GRM32ER71E226KE15L"
-			(at 505.46 330.2 0)
+			(at 645.16 281.94 0)
 			(hide yes)
 			(effects
 				(font
@@ -3645,15 +3213,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 505.46 326.39)
-			(xy 505.46 321.31))
+			(xy 645.16 278.13)
+			(xy 645.16 273.05))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 96709eb0-da6e-5261-8563-1f628456d288))
-	(global_label "GPS_4V8"
+	(global_label "PORT_4V8"
 		(shape passive)
-		(at 505.46 321.31 0)
+		(at 645.16 273.05 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -3661,502 +3229,70 @@
 		(uuid 6d076b9f-8ece-5b6d-8554-2708b3f364e1))
 	(wire
 		(pts
-			(xy 505.46 334.01)
-			(xy 505.46 339.09))
+			(xy 645.16 285.75)
+			(xy 645.16 290.83))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid ca5ba86b-0e5d-5eec-8ba1-ece49f29a2bf))
 	(global_label "GND"
 		(shape passive)
-		(at 505.46 339.09 0)
+		(at 645.16 290.83 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
 		(uuid a2f2916c-f09e-5bc2-b735-2042c5b27081))
 	(symbol
-		(lib_id "M3:USBCurrentLimit")
-		(at 645.16 330.2 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid a09c8d33-2160-5744-a550-b9b63f6aa704)
-		(property "Reference" "U420"
-			(at 647.7 328.93 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "TPS2553DBVR"
-			(at 647.7 331.47 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:M3_TPS2553_DBV"
-			(at 645.16 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/tps2553.pdf"
-			(at 645.16 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C55266"
-			(at 645.16 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "Texas Instruments"
-			(at 645.16 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "TPS2553DBVR"
-			(at 645.16 330.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
-					(reference "U420")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 619.76 327.66)
-			(xy 614.68 327.66))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 381433e3-3956-55b6-bf1a-3118c5f32cc9))
-	(global_label "PORT_4V8"
-		(shape passive)
-		(at 614.68 327.66 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 8901f857-e97e-5a0b-a4f9-b76a197b429e))
-	(wire
-		(pts
-			(xy 619.76 332.74)
-			(xy 614.68 332.74))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b1f8ea02-c66e-5ce4-8bef-1f0f2880d5f2))
-	(global_label "GND"
-		(shape passive)
-		(at 614.68 332.74 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid b52cbdf3-bbb8-5ff6-a6f0-aea23bd60d96))
-	(wire
-		(pts
-			(xy 619.76 330.2)
-			(xy 614.68 330.2))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 929f48b8-f7a1-57a4-8336-692665ff4661))
-	(global_label "RADIO_PWR_EN"
-		(shape passive)
-		(at 614.68 330.2 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 10146625-306d-5d55-ae87-4870f577c883))
-	(wire
-		(pts
-			(xy 670.56 332.74)
-			(xy 675.64 332.74))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid d53687d3-ecb4-54c9-9e36-e0c98ff5bf4a))
-	(global_label "RADIO_FAULT_N"
-		(shape passive)
-		(at 675.64 332.74 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid e9a1b5f9-a4c1-5ebb-887d-7e695674bca1))
-	(wire
-		(pts
-			(xy 670.56 330.2)
-			(xy 675.64 330.2))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 18ec8817-be3f-58d5-b8df-ba1f72565482))
-	(global_label "RADIO_ILIM"
-		(shape passive)
-		(at 675.64 330.2 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 009e631b-3f54-559c-975e-653c32e279d9))
-	(wire
-		(pts
-			(xy 670.56 327.66)
-			(xy 675.64 327.66))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 706f409c-10f9-5d48-83bf-a2d4399588bf))
-	(global_label "RADIO_4V8"
-		(shape passive)
-		(at 675.64 327.66 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 2fda3a6e-b00d-556d-9823-0488416aa1d7))
-	(symbol
-		(lib_id "M3:R")
-		(at 86.36 378.46 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid d2f9c5f6-28b8-529a-ae1d-004ec5f6e186)
-		(property "Reference" "R420"
-			(at 88.9 377.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "66.5k 1%"
-			(at 88.9 379.73 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R_0603_1608Metric"
-			(at 86.36 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/product-detail/C137691.html"
-			(at 86.36 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C137691"
-			(at 86.36 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "YAGEO"
-			(at 86.36 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "RC0603FR-0766K5L"
-			(at 86.36 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
-					(reference "R420")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 86.36 374.65)
-			(xy 86.36 369.57))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 2610730c-6a71-5467-b6e3-e3d93148409e))
-	(global_label "RADIO_ILIM"
-		(shape passive)
-		(at 86.36 369.57 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a7e64167-2427-59af-a915-28af58a302a6))
-	(wire
-		(pts
-			(xy 86.36 382.27)
-			(xy 86.36 387.35))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 29d14adf-c50b-54b2-b48f-300e72038fb9))
-	(global_label "GND"
-		(shape passive)
-		(at 86.36 387.35 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 2c037562-9a9e-5921-b8a5-4686141c3996))
-	(symbol
-		(lib_id "M3:R")
-		(at 226.06 378.46 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid da97daf8-797d-5236-ad7a-e6978ef8828f)
-		(property "Reference" "R421"
-			(at 228.6 377.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "100k 1%"
-			(at 228.6 379.73 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R_0603_1608Metric"
-			(at 226.06 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/product-detail/C14675.html"
-			(at 226.06 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C14675"
-			(at 226.06 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "YAGEO"
-			(at 226.06 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "RC0603FR-07100KL"
-			(at 226.06 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
-					(reference "R421")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 226.06 374.65)
-			(xy 226.06 369.57))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c4b73b19-534a-5ad7-86bd-569af2148e6d))
-	(global_label "RADIO_PWR_EN"
-		(shape passive)
-		(at 226.06 369.57 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f4830960-adf9-56d9-8134-842eb8225b41))
-	(wire
-		(pts
-			(xy 226.06 382.27)
-			(xy 226.06 387.35))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4e99d72d-0107-5aea-ab49-b22cd0e92861))
-	(global_label "GND"
-		(shape passive)
-		(at 226.06 387.35 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a9ab27e6-b926-5e7b-9f7e-8a3c80cbc730))
-	(symbol
-		(lib_id "M3:R")
-		(at 365.76 378.46 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid f1ae616d-ea64-556b-85a2-33a991d61004)
-		(property "Reference" "R422"
-			(at 368.3 377.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k 1%"
-			(at 368.3 379.73 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 365.76 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
-			(at 365.76 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C25744"
-			(at 365.76 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 365.76 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 365.76 378.46 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
-					(reference "R422")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 365.76 374.65)
-			(xy 365.76 369.57))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b09fed29-d02f-58f8-9ecb-628d94d87be7))
-	(global_label "RADIO_FAULT_N"
-		(shape passive)
-		(at 365.76 369.57 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid d0c1a3b1-38c4-5853-adfe-025faba7ae9c))
-	(wire
-		(pts
-			(xy 365.76 382.27)
-			(xy 365.76 387.35))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid ee14bcbd-9788-5dd9-b40c-586f1b397351))
-	(global_label "3V3"
-		(shape passive)
-		(at 365.76 387.35 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 88b0c64c-425a-525d-a412-574e1d8a1907))
-	(symbol
 		(lib_id "M3:C")
-		(at 505.46 378.46 0)
+		(at 86.36 330.2 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid f36a35d9-41c9-5042-8f56-276c1d489899)
 		(property "Reference" "C420"
-			(at 508 377.19 0)
+			(at 88.9 328.93 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "100nF 50V X7R 10%"
-			(at 508 379.73 0)
+			(at 88.9 331.47 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:C_0603_1608Metric"
-			(at 505.46 378.46 0)
+			(at 86.36 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/product-detail/C14663.html"
-			(at 505.46 378.46 0)
+			(at 86.36 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C14663"
-			(at 505.46 378.46 0)
+			(at 86.36 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "YAGEO"
-			(at 505.46 378.46 0)
+			(at 86.36 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "CC0603KRX7R9BB104"
-			(at 505.46 378.46 0)
+			(at 86.36 330.2 0)
 			(hide yes)
 			(effects
 				(font
@@ -4169,15 +3305,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 505.46 374.65)
-			(xy 505.46 369.57))
+			(xy 86.36 326.39)
+			(xy 86.36 321.31))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 9c9c4d91-196e-56b9-9ebd-694077cd38c4))
 	(global_label "PORT_4V8"
 		(shape passive)
-		(at 505.46 369.57 0)
+		(at 86.36 321.31 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -4185,15 +3321,15 @@
 		(uuid 34e0bc93-7f93-5534-a726-57788f9cd2f9))
 	(wire
 		(pts
-			(xy 505.46 382.27)
-			(xy 505.46 387.35))
+			(xy 86.36 334.01)
+			(xy 86.36 339.09))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 3637c72f-04f1-5a13-81d7-5897d43860e7))
 	(global_label "GND"
 		(shape passive)
-		(at 505.46 387.35 0)
+		(at 86.36 339.09 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -4201,54 +3337,54 @@
 		(uuid 14197b50-e1a1-5dba-8992-a1204f119a8a))
 	(symbol
 		(lib_id "M3:C")
-		(at 645.16 378.46 0)
+		(at 226.06 330.2 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 712ef58b-08e8-50bc-9a50-f6ea27d1a8cf)
 		(property "Reference" "C421"
-			(at 647.7 377.19 0)
+			(at 228.6 328.93 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "22uF 25V X7R 10%"
-			(at 647.7 379.73 0)
+			(at 228.6 331.47 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:M3_GRM32_1210"
-			(at 645.16 378.46 0)
+			(at 226.06 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
-			(at 645.16 378.46 0)
+			(at 226.06 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C21397"
-			(at 645.16 378.46 0)
+			(at 226.06 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Murata"
-			(at 645.16 378.46 0)
+			(at 226.06 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "GRM32ER71E226KE15L"
-			(at 645.16 378.46 0)
+			(at 226.06 330.2 0)
 			(hide yes)
 			(effects
 				(font
@@ -4261,15 +3397,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 645.16 374.65)
-			(xy 645.16 369.57))
+			(xy 226.06 326.39)
+			(xy 226.06 321.31))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid e9f0986c-fe8d-541e-bd74-7dd4d8a78888))
-	(global_label "RADIO_4V8"
+	(global_label "PORT_4V8"
 		(shape passive)
-		(at 645.16 369.57 0)
+		(at 226.06 321.31 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -4277,15 +3413,15 @@
 		(uuid 6aad553f-ae46-5286-9cdb-eca72f7904fe))
 	(wire
 		(pts
-			(xy 645.16 382.27)
-			(xy 645.16 387.35))
+			(xy 226.06 334.01)
+			(xy 226.06 339.09))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid e876a096-8a24-57c6-9197-7f6a1691f794))
 	(global_label "GND"
 		(shape passive)
-		(at 645.16 387.35 0)
+		(at 226.06 339.09 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -4293,54 +3429,54 @@
 		(uuid fd93780e-f124-5433-a869-bbcb89646b93))
 	(symbol
 		(lib_id "M3:R")
-		(at 86.36 426.72 0)
+		(at 365.76 330.2 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 221a49d2-7539-5f6f-bf54-8ac3c2a710ff)
 		(property "Reference" "R405"
-			(at 88.9 425.45 0)
+			(at 368.3 328.93 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "820R 1%"
-			(at 88.9 427.99 0)
+			(at 368.3 331.47 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R_0603_1608Metric"
-			(at 86.36 426.72 0)
+			(at 365.76 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/product-detail/C23253.html"
-			(at 86.36 426.72 0)
+			(at 365.76 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C23253"
-			(at 86.36 426.72 0)
+			(at 365.76 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL"
-			(at 86.36 426.72 0)
+			(at 365.76 330.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0603WAF8200T5E"
-			(at 86.36 426.72 0)
+			(at 365.76 330.2 0)
 			(hide yes)
 			(effects
 				(font
@@ -4353,15 +3489,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 86.36 422.91)
-			(xy 86.36 417.83))
+			(xy 365.76 326.39)
+			(xy 365.76 321.31))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid bc70eb49-7b79-5cd2-83ca-eff5f4e498e3))
 	(global_label "PORT_4V8"
 		(shape passive)
-		(at 86.36 417.83 0)
+		(at 365.76 321.31 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -4369,42 +3505,42 @@
 		(uuid 91be0825-4270-5802-a2c3-d08fb47d5ba4))
 	(wire
 		(pts
-			(xy 86.36 430.53)
-			(xy 86.36 435.61))
+			(xy 365.76 334.01)
+			(xy 365.76 339.09))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid dc88e074-e39e-5269-b723-d9c447117ca1))
 	(global_label "GND"
 		(shape passive)
-		(at 86.36 435.61 0)
+		(at 365.76 339.09 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
 		(uuid f82fd7fe-1376-55cd-9b1e-62898abce50f))
-	(text "R10 O5: RAW_PROTECTED -> AP63201 5.456V -> camera limiter; TPS7A91 4.792V -> separate GPS and radio limiters."
+	(text "R10 owner always-on ports: RAW_PROTECTED -> AP63201 5.456V -> retained camera TPS2553; TPS7A91 4.792V directly feeds J410 GPS and J420 radio."
 		(at 20.32 15.24 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 253b1320-acec-55d9-8cdc-2e7acc132aa9))
-	(text "All three TPS2553 enables have 100k pull-downs; fault pull-ups use main 3V3 only. R405 sets the LDO minimum load."
+	(text "Camera U402 remains: its disabled reverse blocking separates CAM_5V from PORT_5V3. Enabled reverse blocking has a threshold and delay; no self-powered camera when the e-match is connected."
 		(at 20.32 20.32 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 2ba75920-67bd-5285-98cb-da128c83589a))
-	(text "Switch current limits and endpoint-voltage budgets: sources/r10_design/parts_qualification.md. Bench transient/inrush verification remains required."
+	(text "GPS/radio switches and translators are removed. The shared LDO current limit/thermal shutdown protect a cable short; no individual fault or power-cycle GPIO remains. R405 sets the LDO minimum load."
 		(at 20.32 25.4 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 5932a333-be27-53af-811f-fae85fa8d05d))
-	(text "Firmware: disable UART OE before port power; hold all EN/OE low throughout reset, boot and load shedding. FAULT delay is not battery-drop detection."
+	(text "F6: GPS/radio loads cannot be shed by firmware. Stop SD/QSPI writes and UART activity, disable camera OE/EN, lower MCU clock, extinguish LEDs/buzzer; retain sensors, state and safety. Ports-on hold-up is conditional, not guaranteed."
 		(at 20.32 30.48 0)
 		(effects
 			(font

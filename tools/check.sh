@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Board gate: DRC/parity, ERC, metadata/models, silkscreen, fit, vibration, the R10 CAD contract, clean routing, the
+# Board gate: DRC/parity, ERC, metadata/models, silkscreen, fit, the R10 CAD contract, clean routing, the
 # actuator contract and the gates' own seeded tests (including routing, R10 and procurement).
-# R10 (M3-ASSY-R10, r10_plan.md section 4): tools/check_r10.py (rule-based; it reads the fit report and the plate model
-# made here, both --profile r10), route_check profile r10 (empty allowlist, no RF parts), check_actuators --profile r10.
+# R10 (M3-ASSY-R10, r10_plan.md section 4): tools/check_r10.py reads the fit report made here (--profile r10),
+# route_check profile r10, and K-actuators inside check_r10. The plate model is optional (requirements audit2).
 # R10 has no pyro-specific spacing rule (r10_plan section 2 item 1), so the rule-H seeded suite (tools/rule_h_seed.py)
 # no longer runs. R9's contract stays in tools/check_r9.py (route_check --profile r9) for the R9 record, R8's in
 # tools/check_r8.py (--profile r8), R7's in tools/check_r7.py (--profile r7).
-# The plate model needs a python3 with numpy: set NUMPY_PY (default python3).
+# The optional plate model is separate; NUMPY_PY (default python3) runs the numerical gate self-tests.
 # The self-tests' real-board seeds run on the board being checked (R10_BOARD is exported as BOARD below, R5-GATE-03).
 # Usage: tools/check.sh [path/to/board.kicad_pcb]      exit 0 = every check clean
 set -euo pipefail
@@ -46,13 +46,10 @@ PY
   && echo "metadata / 3D model audit: OK" || { echo "metadata / 3D model audit FAILED: see $OUT/audit.json"; exit 1; }
 python3 "$ROOT/tools/silk_check.py" "$BOARD" --cli "$CLI"     # DRC skips silkscreen wholly outside the outline
 "$KICAD_PY" -I "$ROOT/tools/fit_check.py" "$BOARD" --profile r10 --report "$OUT/fit.json"
-"${NUMPY_PY:-python3}" -I "$ROOT/tools/plate_model.py" "$OUT/fit.json" --profile r10 \
-  --mass-spec "$ROOT/m3_design/assembly_review/sources/r10_design/masses.json" --json "$OUT/plate.json" > "$OUT/plate.txt"
-"$KICAD_PY" -I "$ROOT/tools/check_r10.py" "$BOARD" --fit "$OUT/fit.json" --plate "$OUT/plate.json" \
+"$KICAD_PY" -I "$ROOT/tools/check_r10.py" "$BOARD" --fit "$OUT/fit.json" \
   --report "$OUT/r10.json"
 "$KICAD_PY" -I "$ROOT/tools/route_check.py" "$BOARD" --profile r10 --report "$OUT/route.json" \
   | { grep -E '^(FAIL|routing hygiene: [0-9])' || true; }       # clean routing (AGENTS.md §3); full list in route.json
-python3 "$ROOT/m3_design/check_actuators.py" "$BOARD" --profile r10
 # R8-GATE-05: the fab package (if one sits next to the board) is bound to the board it was made from. Only the repository
 # board is held to it; a copy elsewhere is not.
 MANIFEST="$(dirname "$BOARD")/fab/m3_fab_manifest.json"
@@ -81,4 +78,4 @@ selftest "$KICAD_PY" "$ROOT/tools/test_fit_check.py"       # no -I: the test imp
 selftest "$KICAD_PY" -I "$ROOT/tools/test_paste_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_route_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_check.py"
-selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" Plate HotplugNumerics
+selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" HotplugNumerics

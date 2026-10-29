@@ -10,10 +10,9 @@
 #   r10_sch.py        the 15 sheets, schematic.net.xml (kicad-cli export), m3.kicad_dru (board-default clearance, no
 #                     pyro / RF spacing rule: r10_plan section 2 item 1), m3.kicad_pro, the PortLDO symbol
 #   gate              r10_sch_check.py: every pin and fitted part against circuit.json / pin_table.tsv, the safety and
-#                     UART-isolation contracts, strict ERC, a fresh netlist export, deterministic regeneration and twenty-two
-#                     seeded contract faults (in memory)
+#                     always-on port / retained camera-isolation contracts, strict ERC, a fresh netlist export, deterministic regeneration and seeded contract faults (in memory)
 #   r10_pcb.py        the placement board from r10_place.tsv on R9's netlist importer: 46 x 90 mm outline, five M3
-#                     supports, J122's two tie holes, every part placed, no inherited copper
+#                     supports, no servo-plug tie holes, every part placed, no inherited copper
 #   r10_route.py F    the copper, one family per run (core: R9's MCU / QSPI / HSE / IMU / barometer tables translated;
 #                     usb; pyro; power: In2's four rail regions, BAT_IN, the buck / LDO supplies, hand joins; signals:
 #                     every remaining signal hand-drawn, D-R2-08; ground: F.Cu / B.Cu GND pours, the frozen plane-via
@@ -24,8 +23,8 @@
 #   r10_post.py       the silkscreen, pin-1 dots, designators by the R4 rule, Fab references, the title block and the
 #                     final zone fill (no copper, zone or pad change: asserted)
 #   gate              tools/check.sh, the full gate on the finished board: DRC every severity (silkscreen included)
-#                     with schematic parity, ERC, metadata / 3D models, silkscreen outline, fit, plate model,
-#                     check_r10, route_check r10, check_actuators
+#                     with schematic parity, ERC, metadata / 3D models, silkscreen outline, fit,
+#                     check_r10 (including K-actuators), route_check r10
 #   record            r10_sch_check.py --binding-note: sources/r10_design/r10_binding_note.json with the board's
 #                     SHA-256, U1's pin map read from the board and U4's position / rotation (firmware evidence only)
 # It overwrites the sheets, schematic.net.xml, m3.kicad_dru, m3.kicad_pro, kilib/m3.kicad_sym and m3.kicad_pcb in

@@ -8,6 +8,13 @@ The completed schema-3 model passes all 2304 required corners on the round-9 fix
 label expansion changes the input identity bytes, not the modeled capacitances or input copper. Physical
 qualification remains open.
 
+**2026-10-29 note (circuit-pass board `6e73b6ebe7e25d7a8c810493887fbaa7cce34f6fe1d379828dc67017e14235aa`, electrical
+signature `6446a957…`):** the model, re-extracted from this board's actual feed by `m3_design/r10_build.sh`, passes
+**2304 / 2304** cases. R166 moved to (35.25, 64), north-south, and R82 shifted slightly for DB125 clearance, so the
+feed copper differs from `b337fe63…`'s; the model was re-run on the moved feed and still passes. Simulation /
+Inference only: no pin waveform, damper durability or bench result exists. Any further move of the J1 / U9 / R166
+battery feed needs the model to pass again (it runs inside `r10_build.sh`).
+
 ## Why the distance gate was insufficient
 
 R8's `step9/hotplug_feed.py` is a constant-capacitance, two-node comparison. Its protection capacitors, damper and TVS

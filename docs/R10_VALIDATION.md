@@ -1,6 +1,31 @@
 # R10 validation and adversarial review
 
-> **Current completion, 2026-10-28:** full rounds 9 and 10 are clean: **0 Critical / 0 Major / 21 Minor** on
+> **Current circuit pass, owner/supervisor2026-10-28:** always-on GPS/radio,
+> retained camera switch/isolation, SPI3 hinged microSD, sole bus sense/direct
+> ADC inputs, all wired DB125 terminals and requirements audit2. This pass proves
+> circuit/CAD integration only. The separate layout agent owns the AVA pass,
+> full reviews beginning11 and the final board-bound deviation list. No clean
+> round is credited to this changed board. The older acceptance inventory and
+> rounds9/10 below apply only to b337fe63…; they must be refreshed after layout.
+> Evidence/hand-over: `sources/r10_review/circuit_pass/`. No physical/firmware
+> qualification, owner acceptance or order is claimed.
+>
+> **Circuit-pass board (2026-10-29):** SHA-256
+> `6e73b6ebe7e25d7a8c810493887fbaa7cce34f6fe1d379828dc67017e14235aa` (electrical signature `6446a957…`),
+> 46 × 90 mm, 2,244,550 bytes, 209 footprints / 887 track segments / 303 vias. Software / CAD: two complete
+> `m3_design/r10_build.sh` runs gave the identical SHA-256; both pass every stage and the full `tools/check.sh`
+> (DRC 0 / unconnected 0 / parity 0 / ERC 0, metadata, silkscreen, fit, every `check_r10` rule incl. K-reference,
+> S-1 … S-9, F9-1 and K-actuators, route_check profile r10 0 failing, all gate self-tests). Simulation / Inference: the
+> hot-plug model re-extracted from this board's actual feed (R166 moved) passes 2304 / 2304 cases. Fabrication:
+> package regenerated and bound (manifest OK), 82 BOM codes (46 extended / 36 basic), 199 placed parts, CPL 72 top +
+> 115 bottom rows plus 12 placement-only checks; live JLC 2026-10-29 $82.59 per board vs $84.41 (met), R430 and U4
+> short (preliminary evidence, not a release pass). **No review round has been run on this board.** The deviation
+> list at the end of this file and every count in it (including OQ-3's $84.43) are `b337fe63…`'s; a refreshed
+> inventory is due after the layout pass and fresh rounds from 11. Firmware, SD latency / power loss, harness and
+> DB125 fit and the e-match lot's 20 ms firing are unverified.
+
+
+> **Historical completion before the circuit changes, 2026-10-28:** full rounds 9 and 10 are clean: **0 Critical / 0 Major / 21 Minor** on
 > `877d0199…`, then **0 / 0 / 8** (four new / four carried) on committed`b337fe63…` /`619db7e`. The round-9 fix
 > pass was committed after two identical builds and gate0. Round10 covers every changed CAD byte; final fixes
 > affect gates/records only. The completed current-board deviation list below awaits owner acceptance, including

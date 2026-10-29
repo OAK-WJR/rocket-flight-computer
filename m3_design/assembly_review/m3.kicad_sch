@@ -3191,7 +3191,7 @@
 		(fill
 			(color 0 0 0 0))
 		(uuid 05a85211-bc24-59d4-a8a4-ff7347ee84fc)
-		(property "Sheetname" "15 | External GPS and radio UART ports"
+		(property "Sheetname" "15 | Always-on GPS / radio UARTs and microSD log"
 			(at 294.64 229.87 0)
 			(effects
 				(font

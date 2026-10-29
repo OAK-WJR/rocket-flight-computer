@@ -18,7 +18,6 @@
     "C26": "10pF 50V C0G 5%",
     "C60": "10nF 50V X7R 10%",
     "C94": "10nF 50V X7R 10%",
-    "C122": "10nF 50V X7R 10%",
     "C127": "10nF 50V X7R 10%",
     "C129": "10nF 50V X7R 10%",
     "C88": "100nF 50V X7R 10%",
@@ -27,41 +26,19 @@
   "parts": {
     "J410": {
       "lib": "M3:CameraTerminal",
-      "value": "GPS 4V8/GND/TX/RX",
-      "footprint": "rocket:M3_GH_BM04B_GHS_TBT",
+      "value": "DB125-3.5-4P-GN-S",
+      "footprint": "rocket:M3_DB125_4P_GN",
       "fields": {
-        "LCSC": "C161692",
-        "Manufacturer": "JST",
-        "Manufacturer Part": "BM04B-GHS-TBT(LF)(SN)",
-        "Datasheet": ""
+        "LCSC": "C2757925",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-4P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
       },
       "nets": {
-        "1": "GPS_4V8",
+        "1": "PORT_4V8",
         "2": "GND",
         "3": "GPS_TX_WIRE",
         "4": "GPS_RX_WIRE"
-      },
-      "kind": "fit"
-    },
-    "U411": {
-      "lib": "M3:CameraUART",
-      "value": "TXU0202DCUR",
-      "footprint": "rocket:M3_TXU0202_DCU",
-      "fields": {
-        "LCSC": "C5186957",
-        "Manufacturer": "Texas Instruments",
-        "Manufacturer Part": "TXU0202DCUR",
-        "Datasheet": ""
-      },
-      "nets": {
-        "1": "GPS_RX_BUFFER",
-        "2": "GND",
-        "3": "3V3",
-        "4": "GPS_RX_MCU",
-        "5": "GPS_TX_MCU",
-        "6": "GPS_UART_OE",
-        "7": "3V3",
-        "8": "GPS_TX_BUFFER"
       },
       "kind": "fit"
     },
@@ -77,7 +54,7 @@
       },
       "nets": {
         "1": "GPS_RX_WIRE",
-        "2": "GPS_RX_BUFFER"
+        "2": "GPS_RX_MCU"
       },
       "kind": "fit"
     },
@@ -92,56 +69,8 @@
         "Datasheet": ""
       },
       "nets": {
-        "1": "GPS_TX_BUFFER",
+        "1": "GPS_TX_MCU",
         "2": "GPS_TX_WIRE"
-      },
-      "kind": "fit"
-    },
-    "R442": {
-      "lib": "M3:R",
-      "value": "10k 1%",
-      "footprint": "rocket:R_0603_1608Metric",
-      "fields": {
-        "LCSC": "C25804",
-        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
-        "Manufacturer Part": "0603WAF1002T5E",
-        "Datasheet": ""
-      },
-      "nets": {
-        "1": "GPS_UART_OE",
-        "2": "GND"
-      },
-      "kind": "fit"
-    },
-    "C440": {
-      "lib": "M3:C",
-      "value": "100nF 50V X7R 10%",
-      "footprint": "rocket:C_0603_1608Metric",
-      "fields": {
-        "LCSC": "C14663",
-        "Manufacturer": "YAGEO",
-        "Manufacturer Part": "CC0603KRX7R9BB104",
-        "Datasheet": ""
-      },
-      "nets": {
-        "1": "3V3",
-        "2": "GND"
-      },
-      "kind": "fit"
-    },
-    "C443": {
-      "lib": "M3:C",
-      "value": "100nF 50V X7R 10%",
-      "footprint": "rocket:C_0603_1608Metric",
-      "fields": {
-        "LCSC": "C14663",
-        "Manufacturer": "YAGEO",
-        "Manufacturer Part": "CC0603KRX7R9BB104",
-        "Datasheet": ""
-      },
-      "nets": {
-        "1": "3V3",
-        "2": "GND"
       },
       "kind": "fit"
     },
@@ -179,41 +108,19 @@
     },
     "J420": {
       "lib": "M3:CameraTerminal",
-      "value": "RADIO 4V8/GND/TX/RX",
-      "footprint": "rocket:M3_GH_BM04B_GHS_TBT",
+      "value": "DB125-3.5-4P-GN-S",
+      "footprint": "rocket:M3_DB125_4P_GN",
       "fields": {
-        "LCSC": "C161692",
-        "Manufacturer": "JST",
-        "Manufacturer Part": "BM04B-GHS-TBT(LF)(SN)",
-        "Datasheet": ""
+        "LCSC": "C2757925",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-4P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
       },
       "nets": {
-        "1": "RADIO_4V8",
+        "1": "PORT_4V8",
         "2": "GND",
         "3": "RADIO_TX_WIRE",
         "4": "RADIO_RX_WIRE"
-      },
-      "kind": "fit"
-    },
-    "U421": {
-      "lib": "M3:CameraUART",
-      "value": "TXU0202DCUR",
-      "footprint": "rocket:M3_TXU0202_DCU",
-      "fields": {
-        "LCSC": "C5186957",
-        "Manufacturer": "Texas Instruments",
-        "Manufacturer Part": "TXU0202DCUR",
-        "Datasheet": ""
-      },
-      "nets": {
-        "1": "RADIO_RX_BUFFER",
-        "2": "GND",
-        "3": "3V3",
-        "4": "RADIO_RX_MCU",
-        "5": "RADIO_TX_MCU",
-        "6": "RADIO_UART_OE",
-        "7": "3V3",
-        "8": "RADIO_TX_BUFFER"
       },
       "kind": "fit"
     },
@@ -229,7 +136,7 @@
       },
       "nets": {
         "1": "RADIO_RX_WIRE",
-        "2": "RADIO_RX_BUFFER"
+        "2": "RADIO_RX_MCU"
       },
       "kind": "fit"
     },
@@ -244,56 +151,8 @@
         "Datasheet": ""
       },
       "nets": {
-        "1": "RADIO_TX_BUFFER",
+        "1": "RADIO_TX_MCU",
         "2": "RADIO_TX_WIRE"
-      },
-      "kind": "fit"
-    },
-    "R452": {
-      "lib": "M3:R",
-      "value": "10k 1%",
-      "footprint": "rocket:R_0603_1608Metric",
-      "fields": {
-        "LCSC": "C25804",
-        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
-        "Manufacturer Part": "0603WAF1002T5E",
-        "Datasheet": ""
-      },
-      "nets": {
-        "1": "RADIO_UART_OE",
-        "2": "GND"
-      },
-      "kind": "fit"
-    },
-    "C450": {
-      "lib": "M3:C",
-      "value": "100nF 50V X7R 10%",
-      "footprint": "rocket:C_0603_1608Metric",
-      "fields": {
-        "LCSC": "C14663",
-        "Manufacturer": "YAGEO",
-        "Manufacturer Part": "CC0603KRX7R9BB104",
-        "Datasheet": ""
-      },
-      "nets": {
-        "1": "3V3",
-        "2": "GND"
-      },
-      "kind": "fit"
-    },
-    "C453": {
-      "lib": "M3:C",
-      "value": "100nF 50V X7R 10%",
-      "footprint": "rocket:C_0603_1608Metric",
-      "fields": {
-        "LCSC": "C14663",
-        "Manufacturer": "YAGEO",
-        "Manufacturer Part": "CC0603KRX7R9BB104",
-        "Datasheet": ""
-      },
-      "nets": {
-        "1": "3V3",
-        "2": "GND"
       },
       "kind": "fit"
     },
@@ -746,74 +605,6 @@
       },
       "kind": "fit"
     },
-    "U410": {
-      "lib": "M3:USBCurrentLimit",
-      "value": "TPS2553DBVR",
-      "footprint": "rocket:M3_TPS2553_DBV",
-      "fields": {
-        "LCSC": "C55266",
-        "Manufacturer": "Texas Instruments",
-        "Manufacturer Part": "TPS2553DBVR",
-        "Datasheet": "https://www.ti.com/lit/ds/symlink/tps2553.pdf"
-      },
-      "nets": {
-        "1": "PORT_4V8",
-        "2": "GND",
-        "3": "GPS_PWR_EN",
-        "4": "GPS_FAULT_N",
-        "5": "GPS_ILIM",
-        "6": "GPS_4V8"
-      },
-      "kind": "fit"
-    },
-    "R410": {
-      "lib": "M3:R",
-      "value": "100k 1%",
-      "footprint": "rocket:R_0603_1608Metric",
-      "fields": {
-        "LCSC": "C14675",
-        "Manufacturer": "YAGEO",
-        "Manufacturer Part": "RC0603FR-07100KL",
-        "Datasheet": "https://www.lcsc.com/product-detail/C14675.html"
-      },
-      "nets": {
-        "1": "GPS_ILIM",
-        "2": "GND"
-      },
-      "kind": "fit"
-    },
-    "R411": {
-      "lib": "M3:R",
-      "value": "100k 1%",
-      "footprint": "rocket:R_0603_1608Metric",
-      "fields": {
-        "LCSC": "C14675",
-        "Manufacturer": "YAGEO",
-        "Manufacturer Part": "RC0603FR-07100KL",
-        "Datasheet": "https://www.lcsc.com/product-detail/C14675.html"
-      },
-      "nets": {
-        "1": "GPS_PWR_EN",
-        "2": "GND"
-      },
-      "kind": "fit"
-    },
-    "R412": {
-      "lib": "M3:R",
-      "value": "10k 1%",
-      "footprint": "rocket:R0402",
-      "fields": {
-        "LCSC": "C25744",
-        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
-        "Manufacturer Part": "0402WGF1002TCE",
-        "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
-      },
-      "nets": {
-        "1": "GPS_FAULT_N",
-        "2": "3V3"
-      },
-      "kind": "fit"
-    },
     "C410": {
       "lib": "M3:C",
       "value": "100nF 50V X7R 10%",
@@ -841,76 +632,8 @@
         "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
       },
       "nets": {
-        "1": "GPS_4V8",
-        "2": "GND"
-      },
-      "kind": "fit"
-    },
-    "U420": {
-      "lib": "M3:USBCurrentLimit",
-      "value": "TPS2553DBVR",
-      "footprint": "rocket:M3_TPS2553_DBV",
-      "fields": {
-        "LCSC": "C55266",
-        "Manufacturer": "Texas Instruments",
-        "Manufacturer Part": "TPS2553DBVR",
-        "Datasheet": "https://www.ti.com/lit/ds/symlink/tps2553.pdf"
-      },
-      "nets": {
         "1": "PORT_4V8",
-        "2": "GND",
-        "3": "RADIO_PWR_EN",
-        "4": "RADIO_FAULT_N",
-        "5": "RADIO_ILIM",
-        "6": "RADIO_4V8"
-      },
-      "kind": "fit"
-    },
-    "R420": {
-      "lib": "M3:R",
-      "value": "66.5k 1%",
-      "footprint": "rocket:R_0603_1608Metric",
-      "fields": {
-        "LCSC": "C137691",
-        "Manufacturer": "YAGEO",
-        "Manufacturer Part": "RC0603FR-0766K5L",
-        "Datasheet": "https://www.lcsc.com/product-detail/C137691.html"
-      },
-      "nets": {
-        "1": "RADIO_ILIM",
         "2": "GND"
-      },
-      "kind": "fit"
-    },
-    "R421": {
-      "lib": "M3:R",
-      "value": "100k 1%",
-      "footprint": "rocket:R_0603_1608Metric",
-      "fields": {
-        "LCSC": "C14675",
-        "Manufacturer": "YAGEO",
-        "Manufacturer Part": "RC0603FR-07100KL",
-        "Datasheet": "https://www.lcsc.com/product-detail/C14675.html"
-      },
-      "nets": {
-        "1": "RADIO_PWR_EN",
-        "2": "GND"
-      },
-      "kind": "fit"
-    },
-    "R422": {
-      "lib": "M3:R",
-      "value": "10k 1%",
-      "footprint": "rocket:R0402",
-      "fields": {
-        "LCSC": "C25744",
-        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
-        "Manufacturer Part": "0402WGF1002TCE",
-        "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
-      },
-      "nets": {
-        "1": "RADIO_FAULT_N",
-        "2": "3V3"
       },
       "kind": "fit"
     },
@@ -941,20 +664,20 @@
         "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
       },
       "nets": {
-        "1": "RADIO_4V8",
+        "1": "PORT_4V8",
         "2": "GND"
       },
       "kind": "fit"
     },
     "J400": {
       "lib": "M3:Conn_1x2",
-      "value": "BM02B-GHS-TBT(LF)(SN)",
-      "footprint": "rocket:M3_GH_BM02B_GHS_TBT",
+      "value": "DB125-3.5-2P-GN-S",
+      "footprint": "rocket:M3_DB125_2P_GN",
       "fields": {
-        "LCSC": "C161690",
-        "Manufacturer": "JST",
-        "Manufacturer Part": "BM02B-GHS-TBT(LF)(SN)",
-        "Datasheet": "https://www.jst-mfg.com/product/pdf/eng/eGH.pdf"
+        "LCSC": "C466970",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-2P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
       },
       "nets": {
         "1": "BAT_SW_SOURCE",
@@ -974,6 +697,144 @@
       },
       "nets": {
         "1": "PORT_4V8",
+        "2": "GND"
+      },
+      "kind": "fit"
+    },
+    "J430": {
+      "lib": "M3:MicroSD_Hinge",
+      "value": "472192001",
+      "footprint": "rocket:M3_MICROSD_MOLEX_472192001",
+      "fields": {
+        "LCSC": "C164170",
+        "Manufacturer": "MOLEX",
+        "Manufacturer Part": "472192001",
+        "Datasheet": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf"
+      },
+      "nets": {
+        "1": "SD_DAT2",
+        "2": "SD_CS",
+        "3": "SD_MOSI",
+        "4": "3V3",
+        "5": "SD_SCK",
+        "6": "GND",
+        "7": "SD_MISO",
+        "8": "SD_DAT1",
+        "9": "GND",
+        "10": "GND",
+        "11": "GND",
+        "12": "GND"
+      },
+      "kind": "fit"
+    },
+    "R460": {
+      "lib": "M3:R",
+      "value": "10k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E",
+        "Datasheet": "https://www.lcsc.com/product-detail/C25804.html"
+      },
+      "nets": {
+        "1": "SD_CS",
+        "2": "3V3"
+      },
+      "kind": "fit"
+    },
+    "R461": {
+      "lib": "M3:R",
+      "value": "10k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E",
+        "Datasheet": "https://www.lcsc.com/product-detail/C25804.html"
+      },
+      "nets": {
+        "1": "SD_MOSI",
+        "2": "3V3"
+      },
+      "kind": "fit"
+    },
+    "R462": {
+      "lib": "M3:R",
+      "value": "10k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E",
+        "Datasheet": "https://www.lcsc.com/product-detail/C25804.html"
+      },
+      "nets": {
+        "1": "SD_MISO",
+        "2": "3V3"
+      },
+      "kind": "fit"
+    },
+    "R463": {
+      "lib": "M3:R",
+      "value": "10k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E",
+        "Datasheet": "https://www.lcsc.com/product-detail/C25804.html"
+      },
+      "nets": {
+        "1": "SD_DAT1",
+        "2": "3V3"
+      },
+      "kind": "fit"
+    },
+    "R464": {
+      "lib": "M3:R",
+      "value": "10k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E",
+        "Datasheet": "https://www.lcsc.com/product-detail/C25804.html"
+      },
+      "nets": {
+        "1": "SD_DAT2",
+        "2": "3V3"
+      },
+      "kind": "fit"
+    },
+    "C460": {
+      "lib": "M3:C",
+      "value": "100nF 50V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104",
+        "Datasheet": "https://www.lcsc.com/product-detail/C14663.html"
+      },
+      "nets": {
+        "1": "3V3",
+        "2": "GND"
+      },
+      "kind": "fit"
+    },
+    "C461": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "3V3",
         "2": "GND"
       },
       "kind": "fit"
@@ -1293,25 +1154,54 @@
         "2": "SERVO4_OUT"
       },
       "kind": "fit"
+    },
+    "J9": {
+      "lib": "M3:CameraTerminal",
+      "value": "DB125-3.5-4P-GN-S",
+      "footprint": "rocket:M3_DB125_4P_GN",
+      "fields": {
+        "LCSC": "C2757925",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-4P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+      },
+      "nets": {
+        "1": "CAM_5V",
+        "2": "GND",
+        "3": "CAM_RX_WIRE",
+        "4": "CAM_TX_WIRE"
+      },
+      "kind": "fit"
+    },
+    "J122": {
+      "lib": "M3:ServoTerminal",
+      "value": "DB125-3.5-5P-GN-S",
+      "footprint": "rocket:M3_DB125_5P_GN",
+      "fields": {
+        "LCSC": "C3646874",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-5P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+      },
+      "nets": {
+        "1": "SERVO1_OUT",
+        "2": "SERVO2_OUT",
+        "3": "SERVO3_OUT",
+        "4": "SERVO4_OUT",
+        "5": "GND"
+      },
+      "kind": "fit"
     }
   },
   "sheets": {
     "J410": "telemetry",
-    "U411": "telemetry",
     "R440": "telemetry",
     "R441": "telemetry",
-    "R442": "telemetry",
-    "C440": "telemetry",
-    "C443": "telemetry",
     "D410": "telemetry",
     "D411": "telemetry",
     "J420": "telemetry",
-    "U421": "telemetry",
     "R450": "telemetry",
     "R451": "telemetry",
-    "R452": "telemetry",
-    "C450": "telemetry",
-    "C453": "telemetry",
     "D420": "telemetry",
     "D421": "telemetry",
     "D400": "camera_uart",
@@ -1339,23 +1229,24 @@
     "R432": "power",
     "C430": "power",
     "C431": "power",
-    "U410": "power",
-    "R410": "power",
-    "R411": "power",
-    "R412": "power",
     "C410": "power",
     "C411": "power",
-    "U420": "power",
-    "R420": "power",
-    "R421": "power",
-    "R422": "power",
     "C420": "power",
     "C421": "power",
     "J400": "battery_entry",
-    "R405": "power"
+    "R405": "power",
+    "J430": "telemetry",
+    "R460": "telemetry",
+    "R461": "telemetry",
+    "R462": "telemetry",
+    "R463": "telemetry",
+    "R464": "telemetry",
+    "C460": "telemetry",
+    "C461": "telemetry"
   },
   "removed_refs": [
     "C121",
+    "C122",
     "C150",
     "C151",
     "C160",
@@ -1370,10 +1261,14 @@
     "C312",
     "C313",
     "C314",
+    "C440",
     "C441",
     "C442",
+    "C443",
+    "C450",
     "C451",
     "C452",
+    "C453",
     "C70",
     "C71",
     "C72",
@@ -1396,8 +1291,15 @@
     "Q30",
     "Q31",
     "Q32",
+    "R124",
+    "R125",
     "R160",
     "R161",
+    "R168",
+    "R170",
+    "R172",
+    "R177",
+    "R182",
     "R300",
     "R301",
     "R302",
@@ -1413,7 +1315,15 @@
     "R314",
     "R315",
     "R316",
+    "R410",
+    "R411",
+    "R412",
+    "R420",
+    "R421",
+    "R422",
+    "R442",
     "R443",
+    "R452",
     "R453",
     "R70",
     "R71",
@@ -1440,54 +1350,63 @@
     "TP92",
     "U30",
     "U31",
+    "U410",
+    "U411",
     "U412",
+    "U420",
+    "U421",
     "U422",
     "U7",
     "U8"
   ],
   "titles": {
     "power": "05 | Regulated camera, radio and GPS port supplies",
-    "telemetry": "15 | External GPS and radio UART ports",
+    "telemetry": "15 | Always-on GPS / radio UARTs and microSD log",
     "pullpin_buzzer": "14 | Buzzer"
   },
   "notes": {
     "power": [
-      "R10 O5: RAW_PROTECTED -> AP63201 5.456V -> camera limiter; TPS7A91 4.792V -> separate GPS and radio limiters.",
-      "All three TPS2553 enables have 100k pull-downs; fault pull-ups use main 3V3 only. R405 sets the LDO minimum load.",
-      "Switch current limits and endpoint-voltage budgets: sources/r10_design/parts_qualification.md. Bench transient/inrush verification remains required.",
-      "Firmware: disable UART OE before port power; hold all EN/OE low throughout reset, boot and load shedding. FAULT delay is not battery-drop detection."
+      "R10 owner always-on ports: RAW_PROTECTED -> AP63201 5.456V -> retained camera TPS2553; TPS7A91 4.792V directly feeds J410 GPS and J420 radio.",
+      "Camera U402 remains: its disabled reverse blocking separates CAM_5V from PORT_5V3. Enabled reverse blocking has a threshold and delay; no self-powered camera when the e-match is connected.",
+      "GPS/radio switches and translators are removed. The shared LDO current limit/thermal shutdown protect a cable short; no individual fault or power-cycle GPIO remains. R405 sets the LDO minimum load.",
+      "F6: GPS/radio loads cannot be shed by firmware. Stop SD/QSPI writes and UART activity, disable camera OE/EN, lower MCU clock, extinguish LEDs/buzzer; retain sensors, state and safety. Ports-on hold-up is conditional, not guaranteed."
     ],
     "telemetry": [
-      "R10: external GPS J410 and radio J420. GH4 pins 1 supply, 2 GND, 3 board TX, 4 board RX; harness crosses TX to endpoint RX.",
-      "GPS USART6 PC6 TX / PC7 RX AF7 (DS12110 Rev10 Table12 p91); radio UART5 PB13 TX / PB12 RX AF14 (Table11 p90).",
-      "TXU0202 VCCA and VCCB = main 3V3; C440/C450 and retained C443/C453 bypass the two supplies. OE has 10k pull-down. 1k UART series resistors and ground-only ESD clamps remain.",
-      "Reset / boot / port off: EN=0 and OE=0. Startup: EN, stable downstream supply, UART idle-high configuration, then OE. Shutdown: OE low before EN low. Incorrect OE while port off may feed a few mA through 1k; accepted.",
-      "Radio USB-powered with board off: TXU partial-power-down isolation protects MCU; power-pin reverse/transient qualification remains a separate bench gate.",
-      "Radio messages may never arm/fire; no port signal reaches pyro, arming or actuator nets. LR900-F band 890-915MHz: use channels 12-25 (902-915MHz) or a maker-confirmed FHSS set."
+      "R10: always-on GPS J410 and radio J420. DB1254pos pins1 PORT_4V8,2 GND,3 board TX,4 board RX; harness crosses TX to endpoint RX.",
+      "GPS USART6 PC6 TX / PC7 RX AF7; radio UART5 PB13 TX / PB12 RX AF14 (ST DS12110 Rev11 Tables11/12 pp90-92). Direct MCU UART through1k and ground-only ESD; no EN/OE/FAULT GPIOs.",
+      "RX GPIOs are FT_h / FT_u with digital5V tolerance subject to DS12110 Table109. Disable analog mode/pulls for5V input. External UARTs must stay within0..5V. Board off: self-powered modules are forbidden;1k is not galvanic or powered-off isolation.",
+      "J430 Molex472192001 is a locking hinged microSD socket, no eject spring or card-detect switch. SPI3 PC10/11/12 AF6, PD0 software CS with10k pull-up. QSPI remains the crash-safe primary log.",
+      "Card pins1 DAT2,2 CS,3 MOSI/CMD,4 3V3,5 SCK,6 GND,7 MISO/DAT0,8 DAT1; four shield tabs to GND. R460-R46410k pull-ups on CS/CMD/DAT0/DAT1/DAT2; C460100nF plus C46122uF at card supply; no SCK pull.",
+      "Power-up SD: CS high, MOSI high, >=74 clocks at100-400kHz; enter SPI with CMD0. Limit run clock<=25MHz, card write<=200mA and idle<=30mA as bench-qualified allocations. No blocking card operation in flight; card removal only with board off.",
+      "ROM loader drives PC11 SPI3_MISO while CS stays high throughR460; card must remain deselected. Disable synchronous trace because PC12 can be TRACED3. CS high before AF6 configuration.",
+      "Radio messages may never arm/fire. LR900-F band890-915MHz: use channels12-25(902-915MHz) or maker-confirmed FHSS set. Bench-qualify installed RF immunity.",
+      "J410/J420 are unkeyedgreenDB1253.5mm4posC2757925. Labelpower/GND/TX/RXperpin; clamp28-16AWGqualifiedferrules/splices, verifypolarity andharnesscrossing beforepower. Thinnermoduleleadsmustnotbeclampeddirectly."
     ],
     "servos": [
-      "R10 O3/O6: J122 signal pins1/4/7/10; pins3/6/9/12 board GND for signal reference only; pins2/5/8/11 have NO BOARD CONNECTION.",
-      "Each servo power AND return run directly to the pack in the harness. Parallel residual board-return current must satisfy the documented harness calculation.",
-      "The board cannot disconnect servo power. Servo neutral/failsafe during reset is a harness and servo qualification requirement.",
-      "AUD-7: four 1k 100mW 0603 series resistors, 10k MCU-side pull-downs and SRV05-4 clamp; command neutral within 50 ms, without assuming a jam unloads."
+      "R10 owner screw terminals: J122 pins1/2/3/4 SERVO1/2/3/4_OUT, pin5 GND signal reference. No servo positive connection on board.",
+      "Each servo power AND motor return run directly to the pack in the harness. Board GND is signal reference; residual shared return must satisfy the harness calculation.",
+      "Keep four1k series resistors,10k pull-downs andSRV05-4 clamp. Board cannot cut servo power. Command neutral<=50ms after reset; bench servo/harness failsafe.",
+      "J122 DORABO DB1253.5mm5posgreenC3646874; bodycount andfullpinlegends distinguish from greenbattery. Clamp leads28-16AWG; qualifiedferrules/splices forthinnerleads; no solder-tinned strandedwire. Removeobsolete servo-plug tieholes."
     ],
     "actuator_power": [
       "R10 single screw switch (owner 2026-10-28): J400 powers and arms the board; J124 is removed. Q120/Q121 remain the pyro-bus load switch feeding RAW_ACT.",
       "PC1 (U1.16) drives ACT_EN_MCU through R122 1k to Q122; R123 100k holds Q122 off in reset or unpowered. Q124 uses a separate MCU fire pin and its retained gate network.",
       "D-SS-04: hold PC1 and PE4 low for passive cold screening; after prior enable wait >=1 s and verify RAW_ACT discharged / ACT_GATE off. Qualify passive fault bands and refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks.",
       "AUD-3: Q120/Q121 AONR21357, C120 1uF 25V X7R. Hot resistance and turn-on SOA remain bench qualifications.",
-      "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and both retained bus-sense dividers; no feed directly from BAT_IN or RAW_PROTECTED.",
+      "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and the sole ARM1_SENSE bus divider; no feed directly from BAT_IN or RAW_PROTECTED.",
       "R134 limits a shorted igniter; normal physical fire current <=20 ms. Firmware timing and pulse qualification: sources/r10_design/parts_qualification.md; no firmware implemented."
     ],
     "pyro": [
       "R10 single screw switch: RAW_ACT directly feeds R134.2 and R132.1 behind Q120/Q121; no separate ARM terminal or PYRO1_BUS net. J121.2 IGN, J121.1 OUT.",
       "Power switch on last, off first; the pyro channel is live whenever the board is on. No firing before accelerometer and barometer launch detection; bench USB or e-match disconnected.",
       "R10 uses default board clearance; accepted loss of R9 single-defect spacing margins does not waive functional reset, gate or divider safety.",
-      "Ground bus/continuity checks refuse firing; in flight readings only log/annunciate and never veto a fire. Refresh 960-cycle IWDG immediately before PE4 rises; never refresh while fire is active. Normal physical current <=20 ms; fault physical current <=36 ms; complete SAFETY and refresh <=5 ms after current off. Bench required."
+      "Ground bus/continuity checks refuse firing; in flight readings only log/annunciate and never veto a fire. Refresh 960-cycle IWDG immediately before PE4 rises; never refresh while fire is active. Normal physical current <=20 ms; fault physical current <=36 ms; complete SAFETY and refresh <=5 ms after current off. Bench required.",
+      "AVA follow-up: ARM1_SENSE onPC5 is the sole RAW_ACT bus reading. R177/R124/R125/R182/R172/C122 and RAW_ACT_SENSE are removed; PB0 is NC/analog. Continuity divider and both split-divider fault ratios stay. Audit2 removes R168/R170 and _MCU tails: filtered PYRO1_CONT and ARM1_SENSE directly feedPC0/PC5; each single-resistor fault stays<=3.342V at19.9V clamp, below4V ADC absolute limit."
     ],
     "camera_connector": [
-      "R10 camera GH port: regulated switched supply, GND, camera RX and camera TX. UART isolation remains on sheet09.",
-      "The5 redundant camera characterization pads were removed; probe the connector or fitted circuitry. No pyro/arming test pads changed."
+      "R10 owner screw terminals: J9 DB1253.5mm4pos; pin1 CAM_5V,pin2GND,pin3CAM_RX_WIRE(boardRX),pin4CAM_TX_WIRE(boardTX). CameraU12/U13isolation andU402switch retained.",
+      "No physical portkeying: labelallfourpins, verifyharness end-to-end andpolarity beforepower. DB125 accepts28-16AWG; qualifiedferrules/splices forthinnermoduleleads. Current/loopresistance limits stay.",
+      "Redundantcamera testpads removed; probeconnector/fittedcircuit. Insert/removemicroSD onlywithboardoff/outofbay."
     ],
     "pullpin_buzzer": [
       "14 | Buzzer; AUD-4 removes J123, R160/R161, C160 and D122. PC13 U1.7 is NC/analog, with no pull-pin or EXTI13.",

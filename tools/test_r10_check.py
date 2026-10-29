@@ -1,7 +1,8 @@
 """Seeded R10 safety/profile regressions (tools/check_r10.py, route_check r10): synthetic boards for every new or
 changed rule, and seeded faults on a temporary copy of a real R10 board (R10_BOARD, else the repository board when it
-is M3-ASSY-R10). No git, no writes beside the source board, no headless DRC.
-Run with KiCad's Python: python3 -I tools/test_r10_check.py  (R10_BOARD=path/to/m3.kicad_pcb for the real-board seeds)"""
+is M3-ASSY-R10). No git or writes beside the source board; real DRC mutations use temporary projects.
+Run with KiCad's Python: python3 -I tools/test_r10_check.py (R10_BOARD=path/to/m3.kicad_pcb for real-board seeds;
+KICAD_CLI selects the same actual CLI/environment as tools/check.sh for the real DRC mutations)."""
 import json
 import math
 from pathlib import Path
@@ -46,39 +47,60 @@ class Assembly(unittest.TestCase):
         self.assertEqual(gate.assembly_population('Designator,Qty\n"R127,R128",2\nR134,1\n', {'R127', 'R128', 'R134'}), [])
         self.assertTrue(gate.assembly_population('Designator,Qty\nR127,1\n', {'R134'}))
 
-    def test_uart_isolation_and_bias_seeds(self):
+    def circuit_pins(self):
         import json
         contract = json.loads((gate.ROOT / 'm3_design/assembly_review/sources/r10_design/circuit.json').read_text())
         pins, values, codes = {}, {}, {}
         for ref, part in contract['parts'].items():
             values[ref] = part['value']; codes[ref] = part['fields']['LCSC']
             pins.update({f'{ref}.{p}': n for p, n in part['nets'].items()})
+        pins.update({f'U1.{p}': n for p, n in gate.mcu_pin_table().items() if n != 'NC'})
+        return pins, values, codes
+
+    def test_direct_uart_series_esd_and_obsolete_parts_seeds(self):
+        pins, values, codes = self.circuit_pins()
         self.assertEqual(gate.uart_ports(pins, values, codes), [])
-        for pin, net in (('U411.7', 'GPS_4V8'), ('U421.6', '3V3'), ('R442.2', '3V3'),
-                         ('U422.1', 'PORT_4V8'), ('R450.2', 'RADIO_RX_MCU'), ('D410.2', '3V3')):
+        for pin, net in (('R440.2', 'GPS_RX_WIRE'), ('R450.2', 'RADIO_RX_WIRE'), ('D410.2', '3V3'),
+                         ('J410.1', '3V3'), ('C421.1', 'CAM_5V'), ('U1.64', 'GPS_TX_MCU'),
+                         ('U411.1', 'GPS_RX_MCU'), ('R412.1', '3V3')):
             with self.subTest(pin=pin):
                 mutant = dict(pins); mutant[pin] = net
                 self.assertTrue(gate.uart_ports(mutant, values, codes))
+        for ref in ('R440', 'R441', 'R450', 'R451'):
+            mutant = dict(values); mutant[ref] = '0R'
+            self.assertTrue(gate.uart_ports(pins, mutant, codes))
 
     def test_port_supply_enable_fault_and_limit_seeds(self):
-        import json
-        contract = json.loads((gate.ROOT / 'm3_design/assembly_review/sources/r10_design/circuit.json').read_text())
-        pins, values, codes = {}, {}, {}
-        for ref, part in contract['parts'].items():
-            values[ref] = part['value']; codes[ref] = part['fields']['LCSC']
-            pins.update({f'{ref}.{p}': n for p, n in part['nets'].items()})
-        pins.update({f'U1.{p}': n for p, n in gate.MCU.items()})
-        pins.update({'U1.41': 'CAM_PWR_EN', 'U1.42': 'CAM_FAULT_N'})          # D-R2-07 pin swap
+        pins, values, codes = self.circuit_pins()
         self.assertEqual(gate.port_power(pins, values, codes), [])
-        for pin, net in (('U410.1', '3V3'), ('U420.6', 'CAM_5V'), ('U401.9', 'RAW_PROTECTED'),
-                         ('R431.2', '3V3'), ('R412.2', 'GPS_4V8'), ('R420.2', 'RADIO_FAULT_N')):
+        for pin, net in (('U400.3', '3V3'), ('U402.6', 'PORT_4V8'), ('U401.9', 'RAW_PROTECTED'),
+                         ('R431.2', '3V3'), ('R432.2', 'PORT_4V8'), ('R430.2', 'CAM_FAULT_N')):
             with self.subTest(pin=pin):
                 mutant = dict(pins); mutant[pin] = net
                 self.assertTrue(gate.port_power(mutant, values, codes))
         mutant = dict(values); mutant['R430'] = '1k 1%'
         self.assertTrue(gate.port_power(pins, mutant, codes))
-        mutant = dict(pins); mutant['J420.5'] = 'RADIO_PWR_EN'
+        mutant = dict(pins); mutant['J9.5'] = 'CAM_PWR_EN'
         self.assertTrue(gate.port_power(mutant, values, codes))
+
+    def test_micro_sd_pinout_supply_pullups_and_retention_part_seeds(self):
+        pins, values, codes = self.circuit_pins()
+        self.assertEqual(gate.micro_sd(pins, values, codes), [])
+        for pin, net in (('J430.1', None), ('J430.2', 'SD_SCK'), ('J430.4', 'PORT_4V8'),
+                         ('J430.6', '3V3'), ('J430.9', None), ('U1.79', 'SD_MOSI'),
+                         ('R460.2', 'GND'), ('R462.1', 'SD_SCK'), ('C460.2', '3V3'),
+                         ('U1.82', 'SD_DAT1')):
+            with self.subTest(pin=pin):
+                mutant = dict(pins); mutant[pin] = net
+                self.assertTrue(gate.micro_sd(mutant, values, codes))
+        for ref in ('R460', 'R461', 'R462', 'R463', 'R464'):
+            mutant = dict(values); mutant[ref] = '100R'
+            self.assertTrue(gate.micro_sd(pins, mutant, codes))
+        mutant = dict(codes); mutant['J430'] = 'push-push socket'
+        self.assertTrue(gate.micro_sd(pins, values, mutant))
+        for ref in ('J430', 'R460', 'R464', 'C460', 'C461'):
+            self.assertIn(ref, gate.REQUIRED_FITTED)
+            self.assertTrue(gate.population('(kicad_pcb)', {ref}))
 
 
 class RuleSelection(unittest.TestCase):
@@ -204,9 +226,10 @@ class SchematicContract(unittest.TestCase):
         self.assertIn('No IWDG refresh from prefire', timing['refresh_contract'])
         self.assertIn('until physical firing current has ended (including tail)', timing['refresh_contract'])
         states = note['port_states']
-        self.assertIn('isolation requires OE low', states['off_external_uart_active'])
-        self.assertIn('main 3V3 itself is off', states['off_external_uart_active'])
-        self.assertIn('Camera VCCB retains U13', states['off_external_uart_active'])
+        self.assertIn('GPS/radio no longer have powered-off isolation', states['off_external_uart_active'])
+        self.assertIn('no self-powered GPS/radio with the board off', states['off_external_uart_active'])
+        self.assertIn('SD card remains on main3V3', states['off_external_uart_active'])
+        self.assertIn('Camera EN100k/OE10k pulldowns', states['reset_boot'])
         self.assertIn('no state sensor', states['port_device_backfeed'])
         self.assertNotIn('when the power switch opens', obligations)
 
@@ -613,16 +636,14 @@ class Synthetic(SyntheticBase):
     def test_s1_s2_multinet_part_bridge(self):
         """R5-SAF-01: a part with more than MAX_PART_NETS nets joining a RAW-side and an armed-side net fails S-1 and S-2."""
         self.load_switch()
-        for n in ('RAW_ACT_SENSE_MCU', 'ARM1_SENSE_MCU', 'RAW_ACT_SENSE'):
-            self.board.Add(pcbnew.NETINFO_ITEM(self.board, n))
-        for raw, armed in (('RAW_ACT_SENSE_MCU', 'ARM1_SENSE_MCU'), ('RAW_ACT_SENSE', 'ARM1_SENSE')):
+        for raw, armed in (('ACT_EN_MCU', 'ARM1_SENSE'), ('ACT_GATE', 'PYRO1_CONT')):
             with self.subTest(raw=raw):
                 u = self.part('U12', [('1', 0, 0, raw), ('2', 1, 0, armed), ('3', 2, 0, 'GND'), ('4', 3, 0, '3V3'),
                                       ('5', 4, 0, 'GPS_TX_MCU')], at=(30, 30))
                 for fn, rid in ((gate.s1, 'S-1'), (gate.s2, 'S-2')):
                     self.assertTrue(any('bypasses the named pyro / sense chain' in i for i in fn(self.ctx())[0]), (rid, fn(self.ctx())[0]))
                 self.board.Remove(u)
-        u = self.part('U12', [('1', 0, 0, 'RAW_ACT_SENSE_MCU'), ('2', 1, 0, 'GND'), ('3', 2, 0, '3V3'),
+        u = self.part('U12', [('1', 0, 0, 'ACT_EN_MCU'), ('2', 1, 0, 'GND'), ('3', 2, 0, '3V3'),
                               ('4', 3, 0, 'GPS_TX_MCU'), ('5', 4, 0, 'ACT_DRV')], at=(30, 30))   # one side only: fine
         self.assertFalse(any('bridges' in i for i in gate.s1(self.ctx())[0] + gate.s2(self.ctx())[0]))
 
@@ -770,7 +791,7 @@ class Synthetic(SyntheticBase):
         self.assertTrue(gate.board_population(self.board, {'R127'}))
         self.assertTrue(gate.SAFETY_FITTED <= gate.REQUIRED_FITTED)
         for ref in ('R134', 'R126', 'R127', 'R128', 'C126', 'Q124', 'Q120', 'Q121', 'R120', 'C120', 'J400', 'R80', 'R165', 'R122', 'R123', 'J121',
-                    'R129', 'R130', 'R131', 'R132', 'R133', 'R173', 'R175', 'R178', 'R180', 'R168', 'R170', 'C128'):
+                    'R129', 'R130', 'R131', 'R132', 'R133', 'R173', 'R175', 'R178', 'R180', 'C128'):
             self.assertIn(ref, gate.SAFETY_FITTED)
 
     # --- S-5 single screw switch -------------------------------------------------------------------------------
@@ -816,31 +837,26 @@ class Synthetic(SyntheticBase):
         self.assertFalse(any('U1 joins' in i for i in gate.s6(self.ctx())[0]))
 
     # --- S-7 J122 -------------------------------------------------------------------------------------------------
-    def servo_header(self):
-        pads = []
-        for i in range(4):
-            pads += [(str(3 * i + 1), 2.54 * i, 0, 'SERVO1_OUT' if i == 0 else None), (str(3 * i + 2), 2.54 * i, 2.54, None),
-                     (str(3 * i + 3), 2.54 * i, 5.08, 'GND')]
-        for n in ('SERVO2_OUT', 'SERVO3_OUT', 'SERVO4_OUT'):
-            self.board.Add(pcbnew.NETINFO_ITEM(self.board, n))
-        f = self.part('J122', pads, at=(15, 80), tht=True, size=1.7)
-        for i in (2, 3, 4):
-            f.FindPadByNumber(str(3 * i - 2)).SetNet(self.board.FindNet(f'SERVO{i}_OUT'))
-        return f
+    def servo_terminal(self):
+        for net in ('SERVO2_OUT', 'SERVO3_OUT', 'SERVO4_OUT'):
+            self.board.Add(pcbnew.NETINFO_ITEM(self.board, net))
+        return self.part('J122', [(str(i), 3.5 * (i - 1), 0, net)
+                                 for i, net in enumerate(gate.SERVO_TERMINAL, 1)], at=(15, 80), tht=True, size=1.9)
 
-    def test_s7_servo_plus_row(self):
-        f = self.servo_header()
+    def test_s7_five_signal_reference_contacts(self):
+        f = self.servo_terminal()
         self.assertEqual(gate.s7(self.ctx())[0], [])
         f.FindPadByNumber('2').SetNet(self.board.FindNet('RAW_ACT'))
-        self.assertTrue(any('J122.2 (servo + row) carries RAW_ACT' in i for i in gate.s7(self.ctx())[0]))
-        f.FindPadByNumber('2').SetNet(self.board.FindNet(''))
-        self.track((15, 82.54), (15, 86), 'BAT_IN', pcbnew.B_Cu)
-        self.assertTrue(any('touches J122.2' in i for i in gate.s7(self.ctx())[0]))
+        self.assertTrue(any('J122.2 must be SERVO2_OUT' in i for i in gate.s7(self.ctx())[0]))
+        f.FindPadByNumber('2').SetNet(self.board.FindNet('SERVO2_OUT'))
+        extra = pcbnew.Cast_to_PAD(f.FindPadByNumber('5').Duplicate())
+        extra.SetNumber('6'); f.Add(extra)
+        self.assertTrue(any('exactly five' in i for i in gate.s7(self.ctx())[0]))
 
-    def test_s7_ground_row(self):
-        f = self.servo_header()
-        f.FindPadByNumber('6').SetNet(self.board.FindNet('BAT_IN'))
-        self.assertTrue(any('J122.6 (ground row)' in i for i in gate.s7(self.ctx())[0]))
+    def test_s7_common_signal_reference(self):
+        f = self.servo_terminal()
+        f.FindPadByNumber('5').SetNet(self.board.FindNet('BAT_IN'))
+        self.assertTrue(any('J122.5 must be GND' in i for i in gate.s7(self.ctx())[0]))
 
     # --- M-1 outline ----------------------------------------------------------------------------------------------
     def test_m1_outline(self):
@@ -871,8 +887,7 @@ class Synthetic(SyntheticBase):
         self.addCleanup(rc.set_profile, 'r8')
         rc.set_profile('r10')
         self.assertEqual((rc.ALLOWLIST, rc.LEFTOVERS, rc.ROUTE_FIGURES), ([], [], {}))
-        expect = {'PYRO1_GATE': 'pyro', 'PYRO1_BUS': 'pyro', 'ARM1_SENSE_MCU': 'pyro', 'RAW_ACT_SENSE': 'pyro',
-                  'RAW_ACT_SENSE_MCU': 'pyro', 'HSE_IN': 'crystal', 'USB_DP': 'usb', 'USB_DM': 'usb',
+        expect = {'PYRO1_GATE': 'pyro', 'PYRO1_BUS': 'pyro', 'ARM1_SENSE': 'pyro', 'HSE_IN': 'crystal', 'USB_DP': 'usb', 'USB_DM': 'usb',
                   'QSPI_CLK': 'spi', 'SPI1_SCK': 'spi', 'IMU_CS': 'spi', 'GPS_TX_MCU': 'uart', 'RADIO_RX_MCU': 'uart',
                   'GND': 'power', '3V3': 'power', 'RAW_ACT': 'power', 'PORT_5V3': 'power', 'GPS_4V8': 'power',
                   'RADIO_4V8': 'power', 'CAM_5V': 'power', 'GPS_IO_3V3': 'power', 'SERVO1_OUT': 'actuator'}
@@ -882,9 +897,9 @@ class Synthetic(SyntheticBase):
             if expect[net] not in ('power', 'actuator'):
                 self.assertIn(rc.net_class(net), rc.SIGNAL_CRITICAL, net)
         # R3-RTE-01 / R3-SAF-03: every external-port signal and the pyro-bus load-switch drive are critical
-        for net, cls in (('GPS_PWR_EN', 'portctl'), ('RADIO_FAULT_N', 'portctl'), ('CAM_UART_OE', 'portctl'),
+        for net, cls in (('CAM_PWR_EN', 'portctl'), ('CAM_FAULT_N', 'portctl'), ('CAM_UART_OE', 'portctl'),
                          ('CAM_MCU_TX', 'uart'), ('CAM_MCU_RX', 'uart'), ('GPS_TX_WIRE', 'uart'),
-                         ('RADIO_RX_BUFFER', 'uart'), ('CAM_TX_WIRE', 'uart'), ('ACT_GATE', 'pyro'),
+                         ('RADIO_RX_MCU', 'uart'), ('CAM_TX_WIRE', 'uart'), ('ACT_GATE', 'pyro'),
                          ('ACT_DRV', 'pyro'), ('ACT_EN', 'pyro')):
             self.assertEqual(rc.net_class(net), cls, net)
             self.assertIn(rc.net_class(net), rc.SIGNAL_CRITICAL, net)
@@ -909,6 +924,27 @@ class Synthetic(SyntheticBase):
         names |= {'CAM_MCU_TX', 'CAM_MCU_RX'}
         self.assertEqual({n for n in names if rc.net_class(n) in ('uart', 'portctl')},
                          {n for n in names if n in cr.R10_PORT_NETS})
+
+    def test_spi3_sd_nets_keep_critical_returns_and_qspi(self):
+        import critical_reference as cr
+        import route_check as rc
+        self.addCleanup(rc.set_profile, 'r8'); rc.set_profile('r10')
+        for net in cr.R10_SD_NETS:
+            self.assertEqual(rc.net_class(net), 'spi')
+            self.assertTrue(rc.return_required(net))
+            self.assertFalse(cr.r10_slow_return_net(net))
+        self.assertEqual(rc.net_class('QSPI_CLK'), 'spi')
+        self.assertEqual(rc.net_class('SPI1_SCK'), 'spi')
+
+    def test_direct_adc_contract_has_no_series_tail_or_mandatory_plate(self):
+        pins = gate.mcu_pin_table()
+        self.assertEqual((pins['15'], pins['33'], pins['34']), ('PYRO1_CONT', 'ARM1_SENSE', 'NC'))
+        for ref in ('R168', 'R170', 'R172', 'R177', 'R124', 'R125', 'R182', 'C122'):
+            self.assertNotIn(ref, gate.REQUIRED_FITTED)
+            self.assertIn(ref, gate.REMOVED)
+        self.assertNotIn('P-8', gate.STAGES['full'])
+        self.assertNotIn('M-2', gate.STAGES['full'])
+
 
     def test_rule_list_and_stages(self):
         ids = [rid for rid, _, _ in gate.RULES]
@@ -960,6 +996,18 @@ class R4Synthetic(SyntheticBase):
         self.assertTrue(issues and 'PYRO1_GATE B.Cu' in ev['by_net_layer'], (issues, ev))
         with patch.object(cr, 'fills', return_value={pcbnew.B_Cu: gnd}):
             self.assertEqual(gate.references(self.board)[0], [])
+
+    def test_sd_returns_cannot_use_the_slow_control_exemption(self):
+        import critical_reference as cr
+        for index, net in enumerate(cr.R10_SD_NETS):
+            self.board.Add(pcbnew.NETINFO_ITEM(self.board, net))
+            self.track((20, 25 + index), (22, 25 + index), net, pcbnew.B_Cu)
+        with patch.object(cr, 'fills', return_value={pcbnew.B_Cu: pcbnew.SHAPE_POLY_SET()}):
+            issues, evidence = gate.references(self.board)
+        self.assertTrue(issues)
+        self.assertTrue(all(net + ' B.Cu' in evidence['by_net_layer'] for net in cr.R10_SD_NETS))
+        issues, evidence = gate.region_issues(self.board)
+        self.assertTrue(all(any(net + ' ' in issue for issue in issues) for net in cr.R10_SD_NETS))
 
     def test_k_region_one_plane_per_run(self):
         self.plane('GND', 10, 10, 30, 40)
@@ -1210,7 +1258,7 @@ class R4Synthetic(SyntheticBase):
 # ======================================================================================================================
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
 class R3Synthetic(SyntheticBase):
-    MORE = ('PYRO1_OUT', 'PYRO1_GATE', '3V3', 'USB_DP', 'SPI1_SCK', 'GPS_PWR_EN', 'CAM_UART_OE', 'BUZZ_DRV',
+    MORE = ('PYRO1_OUT', 'PYRO1_GATE', '3V3', 'USB_DP', 'SPI1_SCK', 'CAM_PWR_EN', 'CAM_UART_OE', 'BUZZ_DRV',
             'SERVO2_OUT')
 
     def setUp(self):
@@ -1267,7 +1315,7 @@ class R3Synthetic(SyntheticBase):
     def test_needless_hop(self):
         import route_check as rc
         rc.set_profile('r10')
-        self.hop('GPS_PWR_EN')
+        self.hop('CAM_PWR_EN')
         self.via(23, 31.2, 'GND'); self.via(27, 31.2, 'GND')
         hops = [d for d in rc.scan(self.board) if d['cat'] == 'extra_vias' and d.get('hop')]
         self.assertEqual(len(hops), 1, hops)
@@ -1405,6 +1453,111 @@ class R3Synthetic(SyntheticBase):
 
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
+class Audit2(SyntheticBase):
+    def setUp(self):
+        super().setUp()
+        import route_check as rc
+        rc.set_profile('r10'); self.addCleanup(rc.set_profile, 'r8')
+
+    def test_only_named_resistor_dead_ends_get_the_015_width_and_no_length_cap(self):
+        self.part('J1', [('1', 0, 0, 'BAT_IN')], at=(5, 10))
+        self.part('Q120', [('9', 0, 0, 'BAT_IN')], at=(25, 10))
+        self.part('R80', [('1', 0, 0, 'BAT_IN'), ('2', 1, 0, 'BAT_SW_SOURCE')], at=(10, 25))
+        self.track((5, 10), (10, 10), 'BAT_IN', width=1.)
+        feed = self.track((10, 10), (25, 10), 'BAT_IN', width=1.)
+        tap = self.track((10, 25), (10, 10), 'BAT_IN', width=.15)
+        self.assertEqual(gate.k_width(self.board)[0], [])
+        qualified, evidence = gate.resistor_tap_tracks(self.board)
+        self.assertIn(tap.m_Uuid.AsString(), qualified)
+        self.assertNotIn(feed.m_Uuid.AsString(), qualified)
+        self.assertEqual(evidence['R80.1']['length_mm'], 15.)
+        feed.SetWidth(pcbnew.FromMM(.15))
+        self.assertTrue(any('minimum 0.3 mm' in i for i in gate.k_width(self.board)[0]))
+        feed.SetWidth(pcbnew.FromMM(1.)); tap.SetWidth(pcbnew.FromMM(.14))
+        self.assertTrue(any('minimum 0.15 mm' in i for i in gate.k_width(self.board)[0]))
+
+    def test_a_tap_exemption_does_not_continue_through_a_capacitor_feed(self):
+        self.part('J1', [('1', 0, 0, 'BAT_IN')], at=(5, 10))
+        self.part('Q120', [('9', 0, 0, 'BAT_IN')], at=(25, 10))
+        self.part('R80', [('1', 0, 0, 'BAT_IN'), ('2', 1, 0, 'BAT_SW_SOURCE')], at=(10, 25))
+        self.part('C80', [('1', 0, 0, 'BAT_IN'), ('2', 1, 0, 'GND')], at=(10, 20))
+        self.track((5, 10), (10, 10), 'BAT_IN', width=1.)
+        self.track((10, 10), (25, 10), 'BAT_IN', width=1.)
+        tap = self.track((10, 25), (10, 20), 'BAT_IN', width=.15)
+        cap_feed = self.track((10, 20), (10, 10), 'BAT_IN', width=.15)
+        qualified, _ = gate.resistor_tap_tracks(self.board)
+        self.assertIn(tap.m_Uuid.AsString(), qualified)
+        self.assertNotIn(cap_feed.m_Uuid.AsString(), qualified)
+        self.assertTrue(gate.k_width(self.board)[0])
+        cap_feed.SetWidth(pcbnew.FromMM(.5))
+        self.assertEqual(gate.k_width(self.board)[0], [])
+
+    def test_source_path_05_passes_below_floor_fails_and_battery_stays_10(self):
+        self.part('Q120', [('1', 0, 0, 'ACT_FET_S')], at=(5, 30))
+        self.part('Q121', [('1', 0, 0, 'ACT_FET_S')], at=(25, 30))
+        track = self.track((5, 30), (25, 30), 'ACT_FET_S', width=.5)
+        terminals = {'ACT_FET_S': ({'Q120': ('1',)}, {'Q121': ('1',)})}
+        with patch.object(gate, 'FIRE_TERMINALS', terminals):
+            self.assertEqual(gate.s9(self.ctx(), narrow=[])[0], [])
+            track.SetWidth(pcbnew.FromMM(.49))
+            self.assertTrue(any('minimum 0.5 mm' in i for i in gate.s9(self.ctx(), narrow=[])[0]))
+        self.assertNotIn('BAT_IN', gate.FIRE_ONLY)
+        self.assertEqual(len(gate.FIRE_NARROW), 7)
+
+    def test_in1_only_ground_and_in2_only_power_are_kept(self):
+        self.track((10, 10), (20, 10), 'GND', pcbnew.In1_Cu)
+        self.track((10, 12), (20, 12), '3V3', pcbnew.In2_Cu)
+        self.assertEqual(gate.k_inner_signal(self.ctx())[0], [])
+        bad = self.track((10, 14), (20, 14), '3V3', pcbnew.In1_Cu)
+        self.assertTrue(any('In1.Cu track of 3V3' in i for i in gate.k_inner_signal(self.ctx())[0]))
+        bad.SetLayer(pcbnew.In2_Cu); bad.SetNet(self.board.FindNet('GPS_TX_MCU'))
+        self.assertTrue(any('In2.Cu track of GPS_TX_MCU' in i for i in gate.k_inner_signal(self.ctx())[0]))
+
+    def test_clearance_overrides_cannot_lower_probe_debug_or_board_floors(self):
+        import check_r9 as r9
+        for ref, minimum in (('J2', .508), ('TP988', 1.), ('X988', .15)):
+            with self.subTest(ref=ref):
+                f = self.part(ref, [('1', 0, 0, 'GND')], at=(35, 70))
+                p = f.FindPadByNumber('1')
+                f.SetLocalClearance(pcbnew.FromMM(minimum)); p.SetLocalClearance(pcbnew.FromMM(minimum))
+                self.assertEqual(gate.lc1(self.board)[0], [])
+                self.assertTrue(r9.lc1(self.board)[0])  # Legacy R9 still rejects every local override.
+                f.SetLocalClearance(pcbnew.FromMM(minimum - .01))
+                self.assertTrue(any(ref in i for i in gate.lc1(self.board)[0]))
+                f.SetLocalClearance(pcbnew.FromMM(minimum)); p.SetLocalClearance(pcbnew.FromMM(minimum - .01))
+                self.assertTrue(any(ref + '.1' in i for i in gate.lc1(self.board)[0]))
+                p.SetLocalClearance(pcbnew.FromMM(minimum + .1))
+                self.assertEqual(gate.lc1(self.board)[0], [])
+
+    def test_direct_adc_inputs_are_the_only_named_mcu_supply_ties(self):
+        u1 = self.part('U1', [('15', 0, 0, 'PYRO1_CONT'), ('33', 1, 0, 'ARM1_SENSE'),
+                              ('50', 2, 0, '3V3'), ('51', 3, 0, 'GND')], at=(30, 70))
+        self.assertFalse([r for r in gate.supply_ties(self.board) if r[0] == 'U1'])
+        u1.FindPadByNumber('50').SetNet(self.board.FindNet('ARM1_SENSE'))
+        self.assertTrue(any('ARM1_SENSE' in i for i in gate.mcu_side_issues(self.board)))
+        u1.FindPadByNumber('50').SetNet(self.board.FindNet('RAW_ACT'))
+        self.assertTrue(any(r[0] == 'U1' and r[1] == 'RAW_ACT' for r in gate.supply_ties(self.board)))
+
+    def test_pin_table_is_complete_and_optional_plate_has_no_release_threshold(self):
+        import csv
+        import io
+        import tempfile
+        with gate.R10_PIN_TABLE.open() as source:
+            rows = list(csv.DictReader(source, delimiter='\t'))
+        self.assertEqual(len(gate.mcu_pin_table()), 100)
+        for mutant in (rows[:-1], rows[:-1] + [dict(rows[0])], [dict(r, r10_net='') if i == 0 else r
+                                                               for i, r in enumerate(rows)]):
+            out = io.StringIO(); writer = csv.DictWriter(out, fieldnames=list(rows[0]), delimiter='\t')
+            writer.writeheader(); writer.writerows(mutant)
+            with tempfile.NamedTemporaryFile(mode='w+', suffix='.tsv') as path:
+                path.write(out.getvalue()); path.flush()
+                with self.assertRaises(ValueError):
+                    gate.mcu_pin_table(path.name)
+        self.assertEqual(gate.m2(Mock(plate=None))[0], [])
+        self.assertEqual(gate.m2(Mock(plate={'f1': 1, 'board_sha256': 'stale'}))[0], [])
+
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
 class AuditScope(SyntheticBase):
     plane = R4Synthetic.plane
 
@@ -1415,8 +1568,9 @@ class AuditScope(SyntheticBase):
 
     def test_aud2_exact_whitelist_and_fast_reference_boundary(self):
         import critical_reference as cr
-        self.assertTrue({'ARM1_SENSE_MID', 'RAW_ACT_SENSE_MCU', 'ACT_EN_MCU', 'CAM_UART_OE'} <= cr.R10_SLOW_RETURN_NETS)
-        for net in ('RAW_ACT', 'PYRO1_GATE', 'PYRO1_GATE_N', 'PYRO1_COLD', 'GPS_TX_MCU', 'ACT_EN_EXTRA', 'ARM1_SENSE_EXTRA'):
+        self.assertTrue({'ARM1_SENSE_MID', 'ARM1_SENSE', 'ACT_EN_MCU', 'CAM_UART_OE'} <= cr.R10_SLOW_RETURN_NETS)
+        for net in ('RAW_ACT', 'RAW_ACT_SENSE_MCU', 'PYRO1_GATE', 'PYRO1_GATE_N', 'PYRO1_COLD', 'GPS_TX_MCU',
+                    'ACT_EN_EXTRA', 'ARM1_SENSE_EXTRA', 'SD_SCK', 'SD_MISO', 'SD_MOSI', 'SD_CS', 'SD_DAT1', 'SD_DAT2'):
             self.assertFalse(cr.r10_slow_return_net(net), net)
         self.track((12, 30), (38, 30), 'ARM1_SENSE', pcbnew.B_Cu)
         self.track((20, 15), (22, 15), 'GPS_TX_MCU', pcbnew.F_Cu)
@@ -1455,7 +1609,7 @@ class AuditScope(SyntheticBase):
                 for ref, names in gate.PORT_LEGENDS_R10.items()}
         text(gate.SERVO_HARNESS_NOTE)
         self.assertEqual(gate.port_legends(self.board), [])
-        for ref in ('J410', 'J420', 'J122'):
+        for ref in ('J2',):
             row, original = rows[ref], rows[ref].GetText()
             for pin, name in enumerate(gate.PORT_LEGENDS_R10[ref], 1):
                 for replacement in ('', f'{pin}:WRONG'):
@@ -1500,7 +1654,7 @@ class AuditScope(SyntheticBase):
         f.Flip(f.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT); f.SetOrientationDegrees(180)
         f.FindPadByNumber('11').SetNet(self.board.FindNet('GND'))
         vias = []
-        for x, y in gate.VIPPO_CENTRES:
+        for x, y in gate.vippo_centres(f):
             v = self.via(x, y, 'GND', d=.5, drill=.3)
             v.SetFillingMode(pcbnew.FILLING_MODE_FILLED); v.SetCappingMode(pcbnew.CAPPING_MODE_CAPPED); vias.append(v)
         return f, vias
@@ -1524,6 +1678,29 @@ class AuditScope(SyntheticBase):
         layers = pcbnew.LSET(); layers.AddLayer(pcbnew.F_Cu); layers.AddLayer(pcbnew.F_Mask); p.SetLayerSet(layers)
         self.via(35, 55, 'GND')
         self.assertTrue(any('X9.1' in i for i in gate.k_copper(ctx)[0]))
+
+    def test_gap3_rigid_pose_preserves_only_the_maker_local_exception(self):
+        f, vias = self.vippo()
+        f.SetPosition(self.P(31.2, 17.8)); f.SetOrientationDegrees(90.)
+        for via, point in zip(vias, gate.vippo_centres(f)):
+            via.SetPosition(self.P(*point))
+        issues, evidence, allowed = gate.thermal_vias(self.board)
+        self.assertEqual(issues, [], evidence)
+        self.assertEqual(len(allowed), 2)
+        vias[0].Move(self.P(.002, 0))
+        self.assertTrue(gate.thermal_vias(self.board)[0])
+
+    def test_micro_sd_local_bypass_missing_or_remote_fails(self):
+        self.part('J430', [('4', 0, 0, '3V3')], at=(20, 30))
+        c100 = self.part('C460', [('1', 0, 0, '3V3'), ('2', 0, 1, 'GND')], at=(22, 30))
+        bulk = self.part('C461', [('1', 0, 0, '3V3'), ('2', 0, 1, 'GND')], at=(25, 30))
+        self.assertEqual(gate.sd_bypass(self.board)[0], [])
+        c100.Move(self.P(1.1, 0))
+        self.assertTrue(any('C460' in i for i in gate.sd_bypass(self.board)[0]))
+        c100.Move(self.P(-1.1, 0)); bulk.Move(self.P(1.1, 0))
+        self.assertTrue(any('C461' in i for i in gate.sd_bypass(self.board)[0]))
+        self.board.Delete(c100)
+        self.assertTrue(any('C460' in i for i in gate.sd_bypass(self.board)[0]))
 
     def test_gap3_wrong_net_extra_moved_size_pad_or_unfilled_is_rejected(self):
         mutations = (
@@ -1584,20 +1761,20 @@ class AuditScope(SyntheticBase):
                                                   parts['U9'].FindPadByNumber('8')))
 
 
-@unittest.skipUnless(plate, 'NumPy required (run under a python3 with numpy)')
+@unittest.skipUnless(plate, 'optional plate diagnostic: NumPy unavailable')
 class Plate(unittest.TestCase):
     """R3-MEC-01: every R10 mass key is placed (own row, or a mated allowance on its parent's box) or refused."""
     def setUp(self):
         self.spec = json.loads((Path(__file__).resolve().parents[1] /
                                 'm3_design/assembly_review/sources/r10_design/masses.json').read_text())
-        refs = ['J1', 'J121', 'J122', 'C84', 'LS120', 'J3', 'J9', 'J400', 'J410', 'J420',
-                'J9 mated', 'J400 mated', 'J410 mated', 'J420 mated', 'J122 mated']
+        refs = ['J1', 'J121', 'J122', 'C84', 'LS120', 'J3', 'J9', 'J400', 'J410', 'J420', 'J430',
+                'J430 mated']
         self.fit = dict(profile='r10', outline=[0, 0, 46, 84], supports=[[4, 4], [42, 4], [4, 80], [42, 80], [42, 42]],
                         rows=[(1, ref, 'F', [20 + i, 40, 22 + i, 42, 0, 2]) for i, ref in enumerate(refs)])
 
     def test_mated_allowance_on_parent_and_unmatched_key_refused(self):
         _, masses, _ = plate.build(self.fit, 5, False, 'r10_mated', 'r10', self.spec)
-        for ref in ('J1', 'J121'):
+        for ref in ('J1', 'J121', 'J122', 'J9', 'J400', 'J410', 'J420'):
             self.assertIn(f'{ref} mated', masses)
             self.assertEqual(masses[f'{ref} mated'][1:3], masses[ref][1:3])
         for key in ('J2', 'J5 mated', 'U77'):
@@ -1618,7 +1795,8 @@ class FabScript(unittest.TestCase):
 
     def test_r10_fab_selects_the_r10_procurement_limits(self):
         text = (gate.ROOT / 'm3_design/r10_fab.sh').read_text()
-        self.assertIn('python3 tools/jlc_cost.py --max-total 84.41 --max-extended 52', text)
+        self.assertIn('python3 tools/jlc_cost.py --profile r10', text)
+        self.assertNotIn('--max-extended', text)
         self.assertIn('python3 tools/check_procurement.py --profile r10 --cost-only || STATUS=1', text)
 
 
@@ -1677,9 +1855,20 @@ class RealBoardSeeds(unittest.TestCase):
     def load(self):
         return pcbnew.LoadBoard(str(real_project() / 'm3.kicad_pcb'))
 
+    # Rules that read the saved board file's text (the s-expression netlist), not the loaded board object.
+    TEXT_RULES = frozenset({'K-contract', 'K-actuators'})
+
+    def saved_text(self, board):
+        """The board as KiCad would save it: a seed made on the loaded object must reach a text-reading rule."""
+        import tempfile
+        with tempfile.TemporaryDirectory(prefix='r10_text_') as name:
+            pcbnew.SaveBoard(str(Path(name) / 'm3.kicad_pcb'), board)
+            return (Path(name) / 'm3.kicad_pcb').read_text()
+
     def run_rule(self, rid, board, path=None):
         folder = real_project()
-        rep = gate.check_board(board, folder, path or folder / 'm3.kicad_pcb', only={rid})
+        text = self.saved_text(board) if rid in self.TEXT_RULES and path is None else None
+        rep = gate.check_board(board, folder, path or folder / 'm3.kicad_pcb', only={rid}, text=text)
         return set(rep['rules'][rid]['issues'])
 
     def seeded(self, rid, seed, word, path=None):
@@ -1692,6 +1881,99 @@ class RealBoardSeeds(unittest.TestCase):
 
     def pad(self, board, ref, num):
         return board.FindFootprintByReference(ref).FindPadByNumber(num)
+
+    def copper_clear(self, board, layer, start, end, width, netcode, clearance=.25):
+        """True when a track from start to end on `layer` lies >= `clearance` mm from every pad, track, via and zone
+        fill of another net (the contact under test included)."""
+        shape = pcbnew.SHAPE_SEGMENT(start, end, width)
+        margin = pcbnew.FromMM(clearance)
+        for f in board.GetFootprints():
+            for p in f.Pads():
+                if p.IsOnLayer(layer) and p.GetNetCode() != netcode \
+                        and p.GetEffectiveShape(layer).Collide(shape, margin):
+                    return False
+        for t in board.GetTracks():
+            if t.IsOnLayer(layer) and t.GetNetCode() != netcode and t.GetEffectiveShape(layer).Collide(shape, margin):
+                return False
+        for z in board.Zones():
+            if z.IsOnLayer(layer) and z.GetNetCode() != netcode and not z.GetIsRuleArea() \
+                    and z.HasFilledPolysForLayer(layer) and z.GetFilledPolysList(layer).Collide(shape, margin):
+                return False
+        return True
+
+    def test_drc_debug_and_probe_clearance_survive_the_duplicate_walk_removal(self):
+        """The surviving real DRC rules, not an unrelated failing check, reject each new track's UUID."""
+        import os
+        import shutil
+        import subprocess
+        import tempfile
+        cli = os.environ.get('KICAD_CLI') or shutil.which('kicad-cli')
+        if not cli:
+            cli = next((p for p in ('/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli',
+                                    '/Applications/KiCad.app/Contents/MacOS/kicad-cli') if Path(p).is_file()), None)
+        self.assertTrue(cli, 'real KiCad CLI required for surviving J2/TP DRC mutation tests')
+        source = real_project()
+        with tempfile.TemporaryDirectory(prefix='r10_contact_drc_') as name:
+            folder = Path(name)
+            for path in source.iterdir():
+                if path.is_file():
+                    shutil.copyfile(path, folder / path.name)
+            (folder / 'kilib').symlink_to((source / 'kilib').resolve())
+            board_path, report_path = folder / 'm3.kicad_pcb', folder / 'drc.json'
+
+            def drc(board):
+                pcbnew.SaveBoard(str(board_path), board)
+                result = subprocess.run([str(cli), 'pcb', 'drc', '--severity-all', '--schematic-parity',
+                    '--format', 'json', '-o', str(report_path), str(board_path)], capture_output=True, text=True,
+                    timeout=120)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertTrue(report_path.is_file(), result.stdout + result.stderr)
+                return json.loads(report_path.read_text())
+
+            baseline = drc(self.load())
+            self.assertEqual(baseline['violations'], [], 'unseeded board must be DRC-clean')
+            self.assertEqual(baseline['unconnected_items'], [], 'unseeded board must be connected')
+            self.assertEqual(baseline.get('schematic_parity', []), [], 'unseeded board must match its schematic')
+            for ref, number, gap, expected_rule in (
+                    ('J2', '1', .30, 'Tag-Connect contact to foreign copper'),
+                    ('TP122', '1', .60, 'R9 bare test pads to foreign copper')):
+                with self.subTest(ref=ref):
+                    board = self.load(); pad = self.pad(board, ref, number)
+                    # Prove the saved custom rule independently of equal floor overrides used by zone filling.
+                    footprint = pad.GetParentFootprint(); footprint.SetLocalClearance(None)
+                    for contact in footprint.Pads():
+                        contact.SetLocalClearance(None)
+                    # The gap exceeds default 0.15 mm but violates this contact's surviving custom rule. The seeded
+                    # track stands `gap` mm (copper edge to pad box) from a contact of the part, on the first side
+                    # (right, left, below, above) of the named pad, then of its sibling pads, where the track is
+                    # >= 0.25 mm (the board's copper-to-hole clearance, above the 0.15 mm default) from all copper
+                    # and holes of another net: the finding is this contact's rule, not a short or a neighbour's.
+                    reach, half = pcbnew.FromMM(gap + .1), pcbnew.FromMM(.025)
+                    found = None
+                    for contact in [pad] + [q for q in footprint.Pads() if q.GetNumber() not in ('', number)]:
+                        layer = pcbnew.F_Cu if contact.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
+                        box, centre = contact.GetEffectiveShape(layer).BBox(), contact.GetPosition()
+                        net = board.FindNet('GND' if contact.GetNetname() != 'GND' else '3V3')
+                        sides = ((box.GetRight() + reach, centre.y, 0, half), (box.GetLeft() - reach, centre.y, 0, half),
+                                 (centre.x, box.GetBottom() + reach, half, 0), (centre.x, box.GetTop() - reach, half, 0))
+                        for x, y, hx, hy in sides:
+                            start, end = pcbnew.VECTOR2I(x - hx, y - hy), pcbnew.VECTOR2I(x + hx, y + hy)
+                            if self.copper_clear(board, layer, start, end, pcbnew.FromMM(.2), net.GetNetCode()):
+                                found = layer, net, start, end
+                                break
+                        if found:
+                            break
+                    self.assertTrue(found, f'{ref}: no side of any contact leaves the seeded track clear of other copper')
+                    layer, net, start, end = found
+                    track = pcbnew.PCB_TRACK(board); track.SetLayer(layer); track.SetWidth(pcbnew.FromMM(.2))
+                    track.SetStart(start); track.SetEnd(end)
+                    track.SetNet(net); board.Add(track)
+                    uuid = track.m_Uuid.AsString()
+                    violations = drc(board)['violations']
+                    hits = [v for v in violations if uuid in json.dumps(v) and expected_rule in json.dumps(v)
+                            and v['type'] == 'clearance']
+                    self.assertTrue(hits, f'{ref}: no {expected_rule!r} clearance violation for seeded track {uuid}; '
+                                    + json.dumps([v for v in violations if uuid in json.dumps(v)], indent=1))
 
     def test_gap2_real_output_detour_and_absent_return(self):
         b = self.load()
@@ -1728,7 +2010,7 @@ class RealBoardSeeds(unittest.TestCase):
         via.SetNet(b.FindNet('RAW_PROTECTED'))
         self.assertTrue(gate.thermal_vias(b)[0])
         b = self.load()
-        via = pcbnew.PCB_VIA(b); via.SetPosition(self.P(27.6, 13.6)); via.SetNet(b.FindNet('GND'))
+        via = pcbnew.PCB_VIA(b); via.SetPosition(b.FindFootprintByReference('U401').GetPosition()); via.SetNet(b.FindNet('GND'))
         via.SetWidth(pcbnew.FromMM(.5)); via.SetDrill(pcbnew.FromMM(.3)); b.Add(via)
         self.assertTrue(any('exactly two' in i for i in gate.thermal_vias(b)[0]))
 
@@ -1750,6 +2032,21 @@ class RealBoardSeeds(unittest.TestCase):
             f = pcbnew.Cast_to_FOOTPRINT(b.FindFootprintByReference('J121').Duplicate(False))
             f.SetReference('J124'); b.Add(f)
         self.seeded('S-1', old_terminal, 'obsolete J124')
+
+    def test_micro_sd_topology_and_local_bypass_seeds(self):
+        self.seeded('K-contract', lambda b: self.pad(b, 'J430', '4').SetNet(b.FindNet('PORT_4V8')), 'J430')
+        self.seeded('K-contract', lambda b: b.FindFootprintByReference('R460').SetValue('100R'), 'R460')
+        self.seeded('K-contract', lambda b: self.pad(b, 'U1', '79').SetNet(b.FindNet('SD_MOSI')), 'U1.79')
+        self.seeded('K-contract', lambda b: b.FindFootprintByReference('J430').SetValue('push-push'), 'microSD')
+        self.seeded('K-retained', lambda b: b.FindFootprintByReference('C460').Move(self.P(10, 0)), 'C460')
+        self.seeded('S-4', lambda b: b.Delete(b.FindFootprintByReference('R464')), 'R464')
+
+    def test_ava_removed_duplicate_bus_and_freed_pin_seeds(self):
+        self.seeded('K-contract', lambda b: self.pad(b, 'U1', '34').SetNet(b.FindNet('ARM1_SENSE')), 'U1.34')
+        def restored(b):
+            f = pcbnew.Cast_to_FOOTPRINT(b.FindFootprintByReference('R132').Duplicate(False))
+            f.SetReference('R177'); f.Move(self.P(0, 5)); b.Add(f)
+        self.seeded('K-contract', restored, 'R177: removed R10 component')
 
     def test_screw_switch_contacts_and_protection(self):
         self.seeded('S-5', lambda b: self.pad(b, 'J400', '1').SetNet(b.FindNet('BAT_IN')), 'J400.1 must be')
@@ -1789,10 +2086,10 @@ class RealBoardSeeds(unittest.TestCase):
 
     def test_j122_middle_pin_given_a_net(self):
         self.seeded('S-7', lambda b: self.pad(b, 'J122', '2').SetNet(b.FindNet('RAW_ACT')), 'J122.2')
-        self.seeded('S-7', lambda b: self.pad(b, 'J122', '3').SetNet(b.FindNet('3V3')), 'J122.3')
+        self.seeded('S-7', lambda b: self.pad(b, 'J122', '5').SetNet(b.FindNet('3V3')), 'J122.5')
 
     def test_raw_act_fed_from_raw_protected(self):
-        self.seeded('S-2', lambda b: self.pad(b, 'R177', '2').SetNet(b.FindNet('RAW_PROTECTED')), 'RAW_PROTECTED')
+        self.seeded('S-2', lambda b: self.pad(b, 'R132', '2').SetNet(b.FindNet('RAW_PROTECTED')), 'RAW_PROTECTED')
         self.seeded('S-2', lambda b: self.pad(b, 'Q121', '5').SetNet(b.FindNet('BAT_IN')), 'Q121')
 
     def test_gate_pull_down_moved(self):
@@ -1953,15 +2250,21 @@ class RealBoardSeeds(unittest.TestCase):
                 self.seeded('S-8', seed, 'J121.1')
 
     def test_conflicting_silkscreen_textboxes(self):
-        for value, word in (('J420 3:RXI', 'J420.3'), ('J420 3:TXO', 'J420.3'),
+        # 'J420 3:...' is a combined table beside individual pin legends; the bare '2:RXI' (no terminal has that word)
+        # lies nearest J420.2, which reads 2:GND, so it would give that pin a second name.
+        for value, word in (('J420 3:RXI', 'J420.3'), ('J420 3:TXO', 'J420.3'), ('2:RXI', 'J420.2'),
                             ('SERVO + FROM BOARD', 'J122:'), (gate.SERVO_HARNESS_NOTE, 'J122:')):
             with self.subTest(text=value):
                 def seed(b):
+                    # A free top-side spot (no pad mask opening): only the legend's content can be the finding.
                     item = pcbnew.PCB_TEXTBOX(b); item.SetText(value); item.SetLayer(pcbnew.F_SilkS)
-                    item.SetStart(self.P(2, 10)); item.SetEnd(self.P(14, 12))
+                    item.SetStart(self.P(9, 12)); item.SetEnd(self.P(21, 14))
                     item.SetTextSize(self.P(1, 1)); item.SetTextThickness(pcbnew.FromMM(0.15))
                     item.SetBorderEnabled(False); b.Add(item)
                 self.seeded('K-legends', seed, word)
+                board = self.load(); seed(board)
+                self.assertEqual(gate.silk_mask_overlaps(board), gate.silk_mask_overlaps(self.load()),
+                                 'the seed text box must sit clear of every solder mask opening')
 
     def test_copper_text_and_multi_net_part_bridge(self):
         """R3-GATE-02: copper text bypassing R134; U1 (> 4 nets) on both RAW_ACT and PYRO1_IGN."""
@@ -2031,16 +2334,20 @@ class RealBoardSeeds(unittest.TestCase):
 
     def test_external_port_and_servo_legend_faults(self):
         self.assertEqual(self.run_rule('K-legends', self.load()), set())
-        for original, wrong, marker in (('J410 2:GND', 'J410 2:3V3', 'J410.2'),
-                ('J420 3:TXO', 'J420 3:RXI', 'J420.3'),
-                ('J122 1:S 2:NC 3:GND', 'J122 1:S 2:NC 3:NC', 'J122.3'),
-                (gate.SERVO_HARNESS_NOTE, 'SERVO + FROM BOARD', 'J122:')):
-            def seed(b, original=original, wrong=wrong):
+        for ref, number, old, wrong in (('J410', '2', 'GND', '3V3'), ('J420', '3', 'TXO', 'RXI'),
+                                       ('J122', '5', 'GND', 'NC')):
+            def seed(b, ref=ref, number=number, old=old, wrong=wrong):
+                point = self.pad(b, ref, number).GetPosition()
                 matches = [d for d in b.GetDrawings() if isinstance(d, pcbnew.PCB_TEXT)
-                           and d.GetText() == original]
-                self.assertEqual(len(matches), 1, original)
-                matches[0].SetText(wrong)
-            self.seeded('K-legends', seed, marker)
+                           and d.GetText() == number + ':' + old]
+                self.assertTrue(matches, (ref, number, old))
+                closest = min(matches, key=lambda d: (d.GetPosition() - point).EuclideanNorm())
+                closest.SetText(number + ':' + wrong)
+            self.seeded('K-legends', seed, ref + '.' + number)
+        def note(b):
+            next(d for d in b.GetDrawings() if isinstance(d, pcbnew.PCB_TEXT)
+                 and d.GetText() == gate.SERVO_HARNESS_NOTE).SetText('SERVO + FROM BOARD')
+        self.seeded('K-legends', note, 'J122:')
 
     def test_r8_gate_text_hidden_width(self):
         """R8-GATE-02 / 03 / 04: pinned legends, shown safety references, BAT_IN / RAW_PROTECTED width floor."""
@@ -2130,16 +2437,16 @@ class RealBoardSeeds(unittest.TestCase):
                 pads = [p for p in u.Pads() if p.GetNetname() not in ('GND', '3V3')]
                 pads[0].SetNet(b.FindNet(raw)); pads[1].SetNet(b.FindNet(armed))
             return seed
-        for raw, armed in (('RAW_ACT_SENSE_MCU', 'ARM1_SENSE_MCU'), ('RAW_ACT_SENSE', 'ARM1_SENSE')):
+        for raw, armed in (('ACT_EN_MCU', 'ARM1_SENSE'), ('ACT_GATE', 'PYRO1_CONT')):
             for rid in ('S-1', 'S-2'):
                 self.seeded(rid, bridge(raw, armed), 'bypasses the named pyro / sense chain')
 
     def test_supply_ties_seeds(self):
         """R4-SAF-02 / R4-GATE-03: RAW_ACT -> 3V3 resistor chain (two parts), a U9 pad on RAW_ACT."""
         def chain(b):
-            self.pad(b, 'R132', '1').SetNet(b.FindNet('3V3'))
-            self.pad(b, 'R177', '2').SetNet(b.FindNet('3V3'))
-        self.seeded('S-1', chain, 'not a named tie')
+            self.pad(b, 'R175', '2').SetNet(b.FindNet('3V3'))
+        self.seeded('S-2', chain, 'not a named tie')
+        self.seeded('S-1', lambda b: self.pad(b, 'R132', '2').SetNet(b.FindNet('3V3')), 'not a named tie')
         self.seeded('S-1', lambda b: self.pad(b, 'U9', '1').SetNet(b.FindNet('RAW_ACT')), 'U9 has pads on')
 
     def test_imu_pad1_offset_and_lever_arm(self):
@@ -2249,7 +2556,7 @@ class RealBoardSeeds(unittest.TestCase):
                     if p.GetNetname() == 'PYRO1_COLD':
                         p.SetNet(b.FindNet('PYRO1_COLD_MCU'))
         self.seeded('S-1', seed, 'PYRO1_COLD_MCU')
-        self.seeded('S-1', lambda b: self.pad(b, 'R168', '1').SetNet(b.FindNet('GND')) if self.pad(b, 'R168', '1').GetNetname() == 'PYRO1_CONT_MCU' else self.pad(b, 'R168', '2').SetNet(b.FindNet('GND')), 'PYRO1_CONT')
+        self.seeded('S-1', lambda b: self.pad(b, 'U1', '33').SetNet(b.FindNet('PYRO1_CONT')), 'PYRO1_CONT')
 
     def test_cli_end_to_end_on_a_saved_seed(self):
         """A seeded board saved in a temporary copy: the CLI prints a named line per rule and exits non-zero."""

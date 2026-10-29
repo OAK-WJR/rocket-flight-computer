@@ -3257,41 +3257,41 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "BM02B-GHS-TBT(LF)(SN)"
+		(property "Value" "DB125-3.5-2P-GN-S"
 			(at 332.74 240.03 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_GH_BM02B_GHS_TBT"
+		(property "Footprint" "rocket:M3_DB125_2P_GN"
 			(at 330.2 238.76 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.jst-mfg.com/product/pdf/eng/eGH.pdf"
+		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
 			(at 330.2 238.76 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C161690"
+		(property "LCSC" "C466970"
 			(at 330.2 238.76 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "JST"
+		(property "Manufacturer" "DORABO"
 			(at 330.2 238.76 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "BM02B-GHS-TBT(LF)(SN)"
+		(property "Manufacturer Part" "DB125-3.5-2P-GN-S"
 			(at 330.2 238.76 0)
 			(hide yes)
 			(effects

@@ -1,6 +1,8 @@
 # R10 plan: a leaner board, informed by BPS.space AVA
 
-**Current completion (2026-10-28):** full rounds 9/10 are clean on the original and Minor-fix targets; final PCB`b337fe63…` is frozen. R10_VALIDATION contains the complete current deviation list; owner acceptance/OQ-3, procurement, process and physical/firmware qualifications remain pending. The single-switch/AUD/GAP amendments below supersede original hardware descriptions.
+**Historical completion before the new circuit changes (2026-10-28):** full rounds 9/10 are clean on the original and Minor-fix targets; final PCB`b337fe63…` is frozen. R10_VALIDATION contains the complete current deviation list; owner acceptance/OQ-3, procurement, process and physical/firmware qualifications remain pending. The single-switch/AUD/GAP amendments below supersede original hardware descriptions.
+
+**Current board (2026-10-29):** the circuit-pass candidate, SHA-256 `6e73b6ebe7e25d7a8c810493887fbaa7cce34f6fe1d379828dc67017e14235aa` (46 × 90 mm; all wired connectors DB125 screw terminals, always-on GPS / radio ports, microSD J430, one RAW_ACT sense chain, MJG J-Tek e-match). Two complete `m3_design/r10_build.sh` runs are byte-identical and pass the full `tools/check.sh`; hot-plug 2304 / 2304 (simulation / Inference); fab package regenerated and bound ($82.59 per board live, 2026-10-29; R430 / U4 short). **No review round has been run on it** (rounds 9/10 are `b337fe63…` only); the layout pass and rounds from 11 are pending. Hardware descriptions in §§1–8 below that mention GH ports with translators and switches, the GH-2 switch, the 3 × 4 servo header, tie holes or duplicate bus sense are superseded by `R10_DECISIONS.md` (D-CIR-01 … D-CIR-04 and the always-on-ports / screw-terminal sections).
 
 Historical starting plan: owner direction of 2026-10-26. Nothing here changes R9: M3-ASSY-R9 (board `4f841a0e…`, branch
 `m3-assy-r9`, commit `ac9ebba`, owner-accepted 2026-10-25) stays the current board and the fallback until R10 exists and
@@ -163,3 +165,17 @@ require filled/capped planar VIPPO; C84 is manually fitted after both reflows. T
 review-only drawing scopes cite AUD-2 / AUD-10; fast-return and electrical/manufacturing checks remain blocking.
 No preparation pass earns full-round credit. Rebuild, check to zero, prove byte equality, export and bind the fab
 package, request a supervisor commit, then start ten fresh independent lenses in round 9.
+
+
+## Current circuit-only pass and hand-over (supervisor Steers1–2,2026-10-28)
+
+Implement always-on GPS/radio, retained switched/isolated camera, SPI3 hinged
+microSD alongside QSPI, sole RAW_ACT divider/direct PC0/PC5 ADCs, and DB125 for
+all wired connections. R10_DECISIONS "Requirements audit2" narrows the inherited
+gates/margins and selects MJG J-Tek with1.125 A current qualification floor.
+No safety§2 change. Generate a connected DRC-clean board through the generators,
+prove check.sh0 and byte reproducibility, request supervisor commit, then stop.
+The separate layout agent owns the ten AVA follow-up changes, symmetry/cleanup,
+then fresh full rounds starting11 until two consecutive clean on the same committed
+board, and the final current-board deviation inventory. Rounds9/10 are historical;
+this circuit pass earns no review credit. Every commit still requires check.sh0.

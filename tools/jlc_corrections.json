@@ -198,38 +198,6 @@
    "pads_matched": 2,
    "status": "OK"
   },
-  "C161690|M3_GH_BM02B_GHS_TBT": {
-   "footprint": "M3_GH_BM02B_GHS_TBT",
-   "easyeda": "CONN-SMD_2P-P1.25_BM02B-GHS-TBT-LF-SN",
-   "easyeda_proxy": null,
-   "theta": 180,
-   "offset": [
-    -0.0,
-    0.275
-   ],
-   "residual_mm": 0.0,
-   "next_best_mm": 4.226,
-   "pads_ours": 4,
-   "pads_easyeda": 4,
-   "pads_matched": 4,
-   "status": "OK"
-  },
-  "C161692|M3_GH_BM04B_GHS_TBT": {
-   "footprint": "M3_GH_BM04B_GHS_TBT",
-   "easyeda": "CONN-SMD_4P-P1.25_BM04B-GHS-TBT-LF-SN",
-   "easyeda_proxy": null,
-   "theta": 180,
-   "offset": [
-    0.0,
-    0.275
-   ],
-   "residual_mm": 0.0,
-   "next_best_mm": 5.776,
-   "pads_ours": 6,
-   "pads_easyeda": 6,
-   "pads_matched": 6,
-   "status": "OK"
-  },
   "C1623|C_0603_1608Metric": {
    "footprint": "C_0603_1608Metric",
    "easyeda": "C0603",
@@ -244,6 +212,22 @@
    "pads_ours": 2,
    "pads_easyeda": 2,
    "pads_matched": 2,
+   "status": "OK"
+  },
+  "C164170|M3_MICROSD_MOLEX_472192001": {
+   "footprint": "M3_MICROSD_MOLEX_472192001",
+   "easyeda": "TF-SMD_472192001",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    1.55
+   ],
+   "residual_mm": 0.005,
+   "next_best_mm": 11.362,
+   "pads_ours": 12,
+   "pads_easyeda": 12,
+   "pads_matched": 12,
    "status": "OK"
   },
   "C165948|USB-C_SMD-TYPE-C-31-M-12_1": {
@@ -453,7 +437,7 @@
    "pads_easyeda": 2,
    "pads_matched": 2,
    "status": "OK",
-   "via": "same footprint as C23178 (EasyEDA has no entry for C21190)"
+   "via": "same footprint as C137691 (EasyEDA has no entry for C21190)"
   },
   "C21397|M3_GRM32_1210": {
    "footprint": "M3_GRM32_1210",
@@ -711,6 +695,22 @@
    "pads_matched": 14,
    "status": "OK"
   },
+  "C2757925|M3_DB125_4P_GN": {
+   "footprint": "M3_DB125_4P_GN",
+   "easyeda": "CONN-TH_DB125-3.5-4P-GN",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 7.425,
+   "pads_ours": 4,
+   "pads_easyeda": 4,
+   "pads_matched": 4,
+   "status": "OK"
+  },
   "C2878140|M3_TPS7A91_DSK10": {
    "footprint": "M3_TPS7A91_DSK10",
    "easyeda": "SON-10_L2.5-W2.5-P0.50-TL-EP",
@@ -775,22 +775,6 @@
    "pads_matched": 2,
    "status": "OK"
   },
-  "C32713291|HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR": {
-   "footprint": "HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR",
-   "easyeda": "HDR-TH_12P-P2.54-V-M-R3-C4-S2.54",
-   "easyeda_proxy": null,
-   "theta": 0,
-   "offset": [
-    0.0,
-    0.0
-   ],
-   "residual_mm": 0.0,
-   "next_best_mm": 6.476,
-   "pads_ours": 12,
-   "pads_easyeda": 12,
-   "pads_matched": 12,
-   "status": "OK"
-  },
   "C32949|C0402": {
    "footprint": "C0402",
    "easyeda": "C0402",
@@ -805,6 +789,22 @@
    "pads_ours": 2,
    "pads_easyeda": 2,
    "pads_matched": 2,
+   "status": "OK"
+  },
+  "C3646874|M3_DB125_5P_GN": {
+   "footprint": "M3_DB125_5P_GN",
+   "easyeda": "CONN-TH_5P-P3.50_DORABO_DB125-3.5-5P-GN-S",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    -0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 9.899,
+   "pads_ours": 5,
+   "pads_easyeda": 5,
+   "pads_matched": 5,
    "status": "OK"
   },
   "C3662793|M3_TPS25947_RPW": {

@@ -47,6 +47,7 @@ POWER = ('PYRO1_BUS', 'PYRO1_IGN', 'PYRO1_OUT')
 SENSE = ('ARM1_SENSE', 'PYRO1_CONT', 'PYRO1_COLD')
 MIDS = ('PYRO1_CONT_MID', 'ARM1_SENSE_MID')   # pass 11: split divider tops
 GATES = ('PYRO1_GATE', 'PYRO1_GATE_N')
+R10_REMOVED_BUS_SENSE = frozenset({'R177', 'R124', 'R125', 'R182', 'C122', 'R172'})
 # m3.kicad_dru rule name -> (minimum clearance mm, nets its condition must name); pass 3 checks content, not only names
 PYRO_RULES = {'Pyro A: RAW_ACT to pyro control': (0.5, ('RAW_ACT',) + GATES + SENSE + MIDS),
               'Pyro B: bus, igniter and drain to gate': (0.5, POWER + GATES),
@@ -350,6 +351,11 @@ def check(text, dru=None, profile="r9"):
         req(not (obsolete & val.keys()), 'AUD-4 / AUD-5: removed pull-pin or test pad remains')
         req('PULLPIN' not in members and (pin.get('U1.7') is None or pin.get('U1.7', '').startswith('unconnected-')),
             'AUD-4: PC13 must be NC; no PULLPIN net')
+        req(not (R10_REMOVED_BUS_SENSE & val.keys()), 'R10 AVA: duplicate RAW_ACT bus-sense parts must be removed')
+        req(not any(n.startswith('RAW_ACT_SENSE') for n in members),
+            'R10 AVA: only ARM1_SENSE may read RAW_ACT; no RAW_ACT_SENSE net')
+        req(pin.get('U1.34') is None or pin.get('U1.34', '').startswith('unconnected-'),
+            'R10 AVA: PB0 U1.34 must be NC/analog')
     removed = ['C138',
      'C139',
      'C140',
@@ -438,13 +444,18 @@ def check(text, dru=None, profile="r9"):
                  'R178', 'C127', 'R168', mcu_cont, f'PYRO{ch}_OUT'),
                 (f'ARM{ch}_SENSE', 'R132', 'R175', 'R133',
                  'R180', 'C129', 'R170', mcu_arm, 'RAW_ACT' if r10 else f'PYRO{ch}_BUS')):
-            req(members.get(node) == {f'{tb}.2', f'{bot}.1', f'{bot2}.1', f'{cap}.1', f'{ser}.1'},
-                f'{node} must be only {tb}, {bot}, {bot2}, {cap} and {ser}')
+            tail = mcu if r10 else f'{ser}.1'
+            req(members.get(node) == {f'{tb}.2', f'{bot}.1', f'{bot2}.1', f'{cap}.1', tail},
+                f'{node} must be only {tb}, {bot}, {bot2}, {cap} and {tail}')
             req(members.get(f'{node}_MID') == {f'{ta}.2', f'{tb}.1'} and pin.get(f'{ta}.1') == src,
                 f'{node}_MID must be only {ta}.2 and {tb}.1, with {ta}.1 on {src} (split top, pass 11)')
             req(val.get(ta) == '5.1k' and val.get(tb) == '5.1k', f'{ta} and {tb} must be 5.1k')
-            req(members.get(f'{node}_MCU') == {f'{ser}.2', mcu} and val.get(ser) == '4.7k',
-                f'{ser} (4.7k) must be the only part between {node} and {mcu} ({node}_MCU)')
+            if r10:
+                req(ser not in val and f'{node}_MCU' not in members,
+                    f'R10 audit2: {mcu} reads {node} directly; {ser} and its _MCU tail are removed')
+            else:
+                req(members.get(f'{node}_MCU') == {f'{ser}.2', mcu} and val.get(ser) == '4.7k',
+                    f'{ser} (4.7k) must be the only part between {node} and {mcu} ({node}_MCU)')
             for bt in (bot, bot2):
                 req({pin.get(f'{bt}.1'), pin.get(f'{bt}.2')} == {node, 'GND'} and val.get(bt) == '2k', f'{bt} must be 2k from {node} to GND')
         # cold pull-up: R131 from the drain to the COLD node, which only D120 feeds
@@ -457,19 +468,20 @@ def check(text, dru=None, profile="r9"):
         # 6c (pass 5): every capacitor of the channel returns to GND (a drain capacitor on 3V3 or RAW_ACT passed)
         for c in (cd, 'C127', 'C129'):
             req(pin.get(f'{c}.2') == 'GND', f'{c}.2 must be GND')
-    req(members.get('RAW_ACT_SENSE') == {'R124.2', 'R125.1', 'R182.1', 'C122.1', 'R172.1'} and val.get('R125') == '2k'
-        and val.get('R182') == '2k' and pin.get('R125.2') == 'GND' and pin.get('R182.2') == 'GND',
-        'RAW_ACT_SENSE must be R124 over R125 + R182 (2 x 2k) to GND, with C122 and R172')
-    req(members.get('RAW_ACT_SENSE_MID') == {'R177.2', 'R124.1'} and pin.get('R177.1') == 'RAW_ACT'
-        and val.get('R177') == '5.1k' and val.get('R124') == '5.1k', 'RAW_ACT_SENSE top must be R177 + R124, 2 x 5.1k (pass 11)')
-    # pass 10: PB0 behind its own 4.7k too (a shorted R124 put stiff RAW_ACT on it, also armed under FMEA H-6(b))
-    req(members.get('RAW_ACT_SENSE_MCU') == {'R172.2', 'U1.34'} and val.get('R172') == '4.7k',
-        'R172 (4.7k) must be the only part between RAW_ACT_SENSE and U1.34 (RAW_ACT_SENSE_MCU)')
+    if not r10:  # R10's AVA follow-up retains ARM1_SENSE as the sole RAW_ACT bus reading.
+        req(members.get('RAW_ACT_SENSE') == {'R124.2', 'R125.1', 'R182.1', 'C122.1', 'R172.1'} and val.get('R125') == '2k'
+            and val.get('R182') == '2k' and pin.get('R125.2') == 'GND' and pin.get('R182.2') == 'GND',
+            'RAW_ACT_SENSE must be R124 over R125 + R182 (2 x 2k) to GND, with C122 and R172')
+        req(members.get('RAW_ACT_SENSE_MID') == {'R177.2', 'R124.1'} and pin.get('R177.1') == 'RAW_ACT'
+            and val.get('R177') == '5.1k' and val.get('R124') == '5.1k', 'RAW_ACT_SENSE top must be R177 + R124, 2 x 5.1k (pass 11)')
+        req(members.get('RAW_ACT_SENSE_MCU') == {'R172.2', 'U1.34'} and val.get('R172') == '4.7k',
+            'R172 (4.7k) must be the only part between RAW_ACT_SENSE and U1.34 (RAW_ACT_SENSE_MCU)')
     # 7. servo chain order: MCU -> pull-down + clamp -> 1k series -> header
     for i, pa in enumerate(('22', '23', '24', '25'), start=1):
         m, o = f'SERVO{i}_MCU', f'SERVO{i}_OUT'
         req(f'U1.{pa}' in members.get(m, set()), f'{m} on U1.{pa}')
-        req(members.get(o) == {f'J122.{1 + 3 * (i - 1)}', f'R{149 + i}.2'}, f'{o} only header + series R')
+        terminal_pin = i if r10 else 1 + 3 * (i - 1)
+        req(members.get(o) == {f'J122.{terminal_pin}', f'R{149 + i}.2'}, f'{o} only terminal + series R')
         req(pin.get(f'R{149 + i}.1') == m, f'R{149 + i}.1 must be on {m} (pass 9)')
         ref = f'R{149 + i}'
         req(val.get(ref) == ('1k 0603' if r10 else '1k 0805'), f'{ref} must be 1k {"0603 100mW (AUD-7)" if r10 else "0805"}')
@@ -479,11 +491,12 @@ def check(text, dru=None, profile="r9"):
         req({pin.get(f'R{153 + i}.1'), pin.get(f'R{153 + i}.2')} == {m, 'GND'} and val.get(f'R{153 + i}') == '10k',
             f'R{153 + i} must be a 10k pull-down from {m} to GND')
     if r10:
-        req(all(pin.get(f'J122.{k}') is None or pin.get(f'J122.{k}', '').startswith('unconnected-')
-                for k in (2, 5, 8, 11)), 'R10 servo + row must have no board net')
+        req({p for p in pin if p.startswith('J122.')} == {f'J122.{k}' for k in range(1, 6)}
+            and pin.get('J122.5') == 'GND' and fpname.get('J122') == 'rocket:M3_DB125_5P_GN',
+            'R10 J122 must be five-position screw terminal: signals1-4, GND5; no servo power')
     else:
         req(all(pin.get(f'J122.{k}') == 'RAW_ACT' for k in (2, 5, 8, 11)), 'servo + row on RAW_ACT')
-    req(all(pin.get(f'J122.{k}') == 'GND' for k in (3, 6, 9, 12)), 'servo - row on GND')
+        req(all(pin.get(f'J122.{k}') == 'GND' for k in (3, 6, 9, 12)), 'servo - row on GND')
     # 7c (pass 2): the SRV05-4 clamp's rails, so a servo-lead transient goes to 3V3/GND, not into a power rail
     req(pin.get('D121.2') == 'GND' and pin.get('D121.5') == '3V3', 'D121 SRV05-4: pin 2 GND, pin 5 3V3')
     req([pin.get(f'D121.{k}') for k in (1, 3, 4, 6)] == ['SERVO1_MCU', 'SERVO2_MCU', 'SERVO3_MCU', 'SERVO4_MCU'],
@@ -501,7 +514,7 @@ def check(text, dru=None, profile="r9"):
     # 8a (pass 9, actuators F3): every load-switch net exactly, Q122's source and the enable divider's foot on GND
     for n, want in ACT_NETS.items():
         if r10 and n == 'RAW_ACT':
-            want = (want - {'C121.1', 'C150.1', 'C151.1', 'J122.2', 'J122.5', 'J122.8', 'J122.11', 'J124.2'}) | {'R134.2', 'R132.1'}
+            want = (want - {'C121.1', 'C150.1', 'C151.1', 'J122.2', 'J122.5', 'J122.8', 'J122.11', 'J124.2', 'R177.1'}) | {'R134.2', 'R132.1'}
         req(members.get(n) == want, f'{n} must be exactly {sorted(want)} (is {sorted(members.get(n, ()))})')
     req(pin.get('Q122.2') == 'GND' and pin.get('R123.2') == 'GND', 'Q122 source and R123 foot on GND')
     # 8b (pass 2): C120 sits gate-to-source on Q120/Q121, so a shorted C120 turns the switch off (never on)
@@ -605,6 +618,10 @@ def check(text, dru=None, profile="r9"):
     req(pin.get('J2.6') is None or pin.get('J2.6', '').startswith('unconnected-'), 'J2.6 SWO is NC; no BOOT0 harness')
     # 16 (pass 3, actuators F3 / system m7): pinned parts (protection values, pyro parts, terminals)
     for ref, code in PINNED.items():
+        if r10 and ref in R10_REMOVED_BUS_SENSE | {'R168', 'R170'}:
+            continue
+        if r10 and ref == 'J9':
+            code = 'C2757925'  # Owner screw terminals; preserved camera pin convention.
         if r10 and ref == 'R166':
             code = 'C168925'  # OQ-2: qualified 0.36 ohm damper on the existing UNI-ROYAL 2512 land.
         if r10 and ref == 'R122':

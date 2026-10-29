@@ -109,9 +109,9 @@ def build(fit, D, clamp, case, profile='r9', mass_spec=None):
         if len(fit['supports']) != 5:
             raise ValueError('R10 plate requires five effective supports')
         if case != 'r10_mated':
-            raise ValueError('R10 plate must include the allocated mated plugs')
+            raise ValueError('R10 plate must include the allocated local leads and retained microSD card')
         names = {row[1] for row in fit['rows']}
-        required = {'J1', 'J121', 'J122', 'C84', 'J3', 'J9', 'J400', 'J410', 'J420'}  # AUD-4: no pull-pin body/plug.
+        required = {'J1', 'J121', 'J122', 'C84', 'J3', 'J9', 'J400', 'J410', 'J420', 'J430'}
         required |= {name for name in names if name.endswith(' mated')}
         if required - names or required - mass_spec.get('masses_g', {}).keys():
             raise ValueError('R10 missing explicit body/plug masses: ' + str(sorted(

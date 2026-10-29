@@ -11,11 +11,11 @@ footprint whose silkscreen differs from the project library (kilib/rocket.pretty
 outlines 0.15 mm off their pad openings and removed Q120 / Q121's stray EasyEDA arc) gets the library's silkscreen
 graphics (sync_silk; nothing else in a footprint may differ, asserted with KiCad's own library comparison). Every
 board-level silkscreen item is deleted and every footprint field hidden, then, in this order:
-  1. J122's plug numbers 1-4 (west to east, the _MIR numbering) in one row across the plugs (r9_post.put_plug_row);
+  1. Connector subject legends; wired DB125 contacts use individual terminal-pin legends;
      then the legends about one part, each at the free spot nearest that part's courtyard within LEGEND_REACH (6 mm,
      AGENTS.md; check_r7.legend_subjects gates it): the connector words (check_r10.WORD_LEGENDS_R10: IGN, BAT, CAM,
      SWD, SERVO, GPS, RADIO; and SWITCH for J400), top face first; the port pin tables (PORTS: J9 in the board-side
-     convention with its supply, J2, J410 and J420), J122's row table and harness note (O3 / O6), the port tables and the
+     convention with its supply, J2, J410 and J420), J122's five-pin table and harness note (O3 / O6), the port tables and the
      notes also with their subject the nearest connector to the legend's centre by SUBJECT_MARGIN (put_subject), J2's
      rows by 0 mm where they can (else beside J2 by label_near, listed in the evidence);
   2. the terminal pin legends (check_r10.TERMINAL_PINS_R10: J121 1:E1- 2:E1+, J1 1:BAT+ 2:GND,
@@ -75,22 +75,16 @@ SILKS = (pcbnew.F_SilkS, pcbnew.B_SilkS)
 # directions, TXO = the board transmits on this pin, RXI = the board receives on it (J9 pin 3 CAM_RX_WIRE, pin 4
 # CAM_TX_WIRE; CAM_5V from PORT_5V3, 5.456 V nominal, through TPS2553 U402). AUD-8 frees room for the GPS/radio tables;
 # AUD-10 treats the 6 mm subject distance as a review finding while preserving text, clearance and ownership rules.
-PORTS = {
-    'J9': ('CAM', ('5V4', 'GND', 'RXI', 'TXO')),
-    'J2': ('SWD', ('3V3', 'SWDIO', 'NRST', 'SWCLK', 'GND', 'NC')),
-    'J410': ('GPS', ('4V8', 'GND', 'TXO', 'RXI')),
-    'J420': ('RADIO', ('4V8', 'GND', 'TXO', 'RXI')),
-}
-SUBJECT_PORTS = ('J9', 'J410', 'J420')  # port tables held to the nearest-subject rule; J2's rows by 0 where they
-                                # can (J3 sits 1.1 mm north of J2 and a support 2.9 mm south: R3-MFG-05), else beside J2
+PORTS = {'J2': ('SWD', check_r10.PORT_LEGENDS_R10['J2'])}
+SUBJECT_PORTS = ()  # Every wired terminal uses the individually checked TERMINAL_PINS contract.
 NO_ROOM_PORTS = {}
 WORDS = tuple((ref, word) for word, ref in check_r10.WORD_LEGENDS_R10.items()) + (('J400', 'SWITCH'),)
 # Owner, 2026-10-28: the external power switch arms the board; the separate ARM terminal and fuse notes are removed.
-NOTES = (('J122', 'J122 1:S 2:NC 3:GND'), ('J122', 'SERVO + FROM HARNESS'))
+NOTES = (('J122', 'SERVO + FROM HARNESS'),)
 NOTE_PLACE = {'SERVO + FROM HARNESS': (('F', 'B'), None)}          # the plugs mate on the top (R3-REQ-06(b))
 SUBJECT_MARGIN = 1.0            # mm: a note / port table centre is this much nearer its connector's courtyard than any other
 # J122's top-side key (R3-REQ-06(b)): the plugs mate on the top, where only SERVO was; row labels beside the rows
-J122_TOP_ROWS = (('S', ('1', '4', '7', '10')), ('NC', ('2', '5', '8', '11')), ('GND', ('3', '6', '9', '12')))
+J122_TOP_ROWS = ()  # Five screw contacts have individual S1-S4/GND legends, no header rows.
 TERMINAL_PINS = check_r10.TERMINAL_PINS_R10
 ORDER_MARK = r8_post.ORDER_MARK
 PIN_REACH = r9_post.PIN_REACH
@@ -151,9 +145,9 @@ def sync_silk(b, lib):
 # ----------------------------------------------------------------------------------------------------------------------
 # placement rules
 def supports(b):
-    """The five M3 support centres: the Ø3.2 holes less J122's tie holes (fit_check's own split)."""
+    """The five M3 support centres; R10 has no servo-plug tie holes."""
     holes, _ = fit_check.board_geometry(b)
-    ties = fit_check.retention_holes(b, holes)
+    ties = fit_check.retention_holes(b, holes, profile='r10')
     return [h for h in holes if all(math.dist(h, t) >= 0.02 for t in ties)]
 
 
@@ -586,13 +580,7 @@ def finish(b, lib):
             missing.append(f'{text} (within {LEGEND_REACH} mm of {ref}, nearest it by {SUBJECT_MARGIN} mm)')
         return result
 
-    # 1. J122's plug numbers, then the legends about one part
-    with check_r10.patched(r9_post, PLUG_ROWS=r9_post.PLUG_ROWS):
-        row = r9_post.put_plug_row(b, silks, pads)
-    for plug, _ in r9_post.PLUG_ROWS:
-        placed[f'J122 plug {plug}'] = None if row is None else list(row[plug])
-    if row is None:
-        missing.append('J122 plug numbers 1-4 (one row)')
+    # 1. Connector names and the sole SWD table; every wired connector has individual pin legends.
     for ref, word in WORDS:
         put_near(word, ref, sides=('F', 'B'))
     fallback = []

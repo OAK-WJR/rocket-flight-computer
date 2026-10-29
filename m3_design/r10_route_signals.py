@@ -1,9 +1,8 @@
 """R10 signal copper, all hand-drawn: the external-port UARTs and IO rails, then every non-critical signal.
 
-Hand-routed (AGENTS 3 critical nets, r10 route_check classes 'uart' and 'power'): GPS_*_MCU and RADIO_*_MCU from U1's
-north edge to the port buffers U411 / U421, their local 3V3 bypasses and the retained camera IO supply. The radio pair
-crosses once (PB12 / PB13 order against U421's pin order):
-RADIO_TX_MCU hops under RADIO_RX_MCU on B.Cu, a GND via within 1.5 mm of each layer change (AGENTS 3).
+Hand-routed (AGENTS 3): GPS and radio connect directly through 1k resistors and ESD clamps to their always-on
+external terminals. The radio crosses the GPS lanes on B.Cu and its reversed terminal order by a second local
+TX hop, with a GND via within 1.5 mm of each UART layer change. Camera isolation and IO supply remain local.
 AUD-2: fast UART layer changes retain their GND partners. Slow EN / FAULT / OE controls keep their copper but no
 longer require partner vias or one In2 region per chain; the redundant partners are removed.
 
@@ -17,31 +16,27 @@ PORT_CONTROL_GND = ((25.7, 30.6),)
 
 def uarts(d):
     t, p, via = d.track, d.pad, d.via
-    # GPS (USART6): two parallel lanes north from U1.64 / U1.63, one 45 deg diagonal each, into U411's west pins.
-    t('GPS_RX_MCU', 'F', S, [p('U1.64'), (22.5, 28.1), (33.2, 17.4), (33.2, 15.05), p('U411.4')])
-    t('GPS_TX_MCU', 'F', S, [p('U1.63'), (23.0, 28.35), p('U411.5')])
-    # Radio (UART5): RX (PB12, U1.51, east pin) on F.Cu into U421.4 from the west; TX (PB13, U1.52) hops under it.
-    t('RADIO_RX_MCU', 'F', S, [p('U1.51'), (29.0, 34.4), (30.0, 33.4), (30.0, 29.35), (33.55, 25.8), p('U421.4')])
-    t('RADIO_TX_MCU', 'F', S, [p('U1.52'), (28.5, 32.4)])
-    t('RADIO_TX_MCU', 'B', S, [(28.5, 32.4), (30.95, 32.4)])
-    t('RADIO_TX_MCU', 'F', S, [(30.95, 32.4), p('U421.5')])
-    for at in ((28.5, 32.4), (30.95, 32.4)):
-        via('RADIO_TX_MCU', at)
-    for at in ((28.5, 31.5), (31.85, 32.4)):          # 0.9 mm from each RADIO_TX_MCU layer change
+    t('GPS_RX_MCU', 'F', S, [p('U1.64'), (22.5, 28.1), (33.2, 17.4), (33.2, 13.2), p('R440.2')])
+    t('GPS_TX_MCU', 'F', S, [p('U1.63'), (23.0, 28.35), (33.7, 17.65), (33.7, 14.55), p('R441.1')])
+    t('RADIO_RX_MCU', 'F', S, [p('U1.51'), (29.0, 33.5), (24.7, 29.2), (23.6, 29.2)])
+    t('RADIO_TX_MCU', 'F', S, [p('U1.52'), (28.5, 33.8), (24.6, 29.9), (23.6, 29.9)])
+    for net, y in (('RADIO_RX_MCU', 29.2), ('RADIO_TX_MCU', 29.9)):
+        x = 21.8 if net == 'RADIO_RX_MCU' else 21.5
+        t(net, 'B', S, [(23.6, y), (x, y)])
+        via(net, (23.6, y)); via(net, (x, y))
+    t('RADIO_RX_MCU', 'F', S, [(21.8, 29.2), (18.8, 26.2), (18.8, 25.0), (15.05, 21.25), p('R450.2')])
+    # R451 sits on B.Cu where the second forced hop (under the USB / RX lanes) lands, so the MCU net keeps three vias
+    # (its pads are on both layers) and the wire net one.
+    t('RADIO_TX_MCU', 'F', S, [(21.5, 29.9), (19.2, 27.6), (18.1, 27.6)])
+    t('RADIO_TX_MCU', 'B', S, [(18.1, 27.6), p('R451.1')])
+    via('RADIO_TX_MCU', (18.1, 27.6))
+    t('RADIO_TX_WIRE', 'B', S, [p('R451.2'), (11.9, 18.5)])
+    via('RADIO_TX_WIRE', (11.9, 18.5))
+    for at in ((21.6, 28.1), (22.0, 30.5), (24.0, 28.6), (18.1, 28.5), (10.9, 19.0)):
         via('GND', at)
-
 
 def io_rails(d):
     t, p, via = d.track, d.pad, d.via
-    # AUD-8: both TXU supplies use main 3V3. Retain C443 / C453 as local VCCB bypasses (TI TXU0202 section 12.1).
-    for cap, buf, dy in (('C443', 'U411', 0.0), ('C453', 'U421', 12.0)):
-        p(f'{buf}.7', at=(35.45, 16.9 + dy))
-        t('3V3', 'F', S, [p(f'{buf}.7'), (35.45, 17.8 + dy)])
-        via('3V3', (35.45, 17.8 + dy))
-        t('3V3', 'B', IO, [(35.45, 17.8 + dy), (35.45, 18.45 + dy), p(f'{cap}.1')])
-        # The VCCB-side via is east of the main In2 3V3 strip. Cross OE on B.Cu to a via inside that strip.
-        t('3V3', 'B', IO, [p(f'{cap}.1'), (33.7, 18.45 + dy)])
-        via('3V3', (33.7, 18.45 + dy))
     # Camera: U13 -> C93 -> C92 -> R103 on B.Cu, U12's VCCB through a via under it.
     net = 'CAM_IO_3V3'
     t(net, 'B', IO, [p('U13.5'), (35.6, 42.45), p('C93.1')])        # node at the VCCB via: C93 is U12.7's bypass (D-R2-11)
@@ -51,27 +46,16 @@ def io_rails(d):
     via(net, (35.6, 41.9))
     t(net, 'B', IO, [(35.6, 41.9), (35.6, 42.45)])
 
-
 def port_wires(d):
-    """GPS / radio connector side: the buffer orders RX above TX, the connector TX above RX, so the wires cross once.
-    RX runs under the cell on B.Cu (x 38.8) between two vias (under the TX wire's ESD diode D410 / D420 and its run to
-    J410.3 / J420.3); TX stays on F.Cu west of the ESD diodes (x 38.25)."""
     t, p, via = d.track, d.pad, d.via
-    for pre, r_rx, r_tx, d_tx, d_rx, j, dy in (('GPS', 'R440', 'R441', 'D410', 'D411', 'J410', 0.0),
-                                               ('RADIO', 'R450', 'R451', 'D420', 'D421', 'J420', 12.0)):
-        tx, rx = f'{pre}_TX_WIRE', f'{pre}_RX_WIRE'
-        # the diode (0.15 mm north of R4's spot, R5-RTE-03) has its pad 1 on J's pin-3 centre line: the run leaves the
-        # pad straight on its axis, and the 45 deg run in ends on the pad's centre
-        t(tx, 'F', S, [p(f'{r_tx}.2'), (38.25, 18.55 + dy), (38.25, 15.175 + dy), p(f'{d_tx}.1')])
-        t(tx, 'F', S, [p(f'{d_tx}.1'), p(f'{j}.3')])
-        t(rx, 'F', S, [p(f'{r_rx}.1'), (38.8, 12.15 + dy)])
-        t(rx, 'B', S, [(38.8, 12.15 + dy), (38.8, 16.95 + dy)])
-        t(rx, 'F', S, [(38.8, 16.95 + dy), p(f'{d_rx}.1')])
-        t(rx, 'F', S, [p(f'{d_rx}.1'), (40.35, 16.275 + dy), p(f'{j}.4')])
-        for at in ((38.8, 12.15 + dy), (38.8, 16.95 + dy)):
-            via(rx, at)
-        via('GND', (39.45, 12.45 + dy))       # 0.67 mm from the north hop via (the south one has D411.2's / D421.2's)
-
+    t('GPS_RX_WIRE', 'F', S, [p('R440.1'), p('D411.1'), p('J410.4')])
+    t('GPS_TX_WIRE', 'F', S, [p('R441.2'), (35.3, 14.6), (35.3, 13.75), p('D410.1'), p('J410.3')])
+    t('RADIO_RX_WIRE', 'F', S, [p('R450.1'), p('D421.1'), p('J420.4')])
+    t('RADIO_TX_WIRE', 'F', S, [(11.9, 18.5), (11.9, 17.75), p('D420.1'), p('J420.3')])
+    for diode, at in (('D410', (35.85, 13.1)), ('D411', (36.5, 8.9)),
+                      ('D420', (10.0, 16.0)), ('D421', (10.0, 19.8))):
+        t('GND', 'F', S, [p(f'{diode}.2'), at])
+        via('GND', at)
 
 def camera_control(d):
     """U1's east pins to the camera buffer U12 and switch U402 (R10_DECISIONS D-R3-B2). U1 orders FAULT_N, PWR_EN, OE,
@@ -101,30 +85,22 @@ def camera_control(d):
     via('CAM_FAULT_N', (33.9, 36.825))
     t('CAM_FAULT_N', 'B', S, [(33.9, 36.825), (37.575, 36.825), p('U402.4')])
 
-
 def gps_oe(d):
-    """GPS_UART_OE (PD15, U1.62) in the strip south-east of the GPS UART lanes, under C420 to the pull-down R442."""
-    t, p = d.track, d.pad
-    t('GPS_UART_OE', 'F', S, [p('U1.62'), (23.5, 28.65), (28.1, 24.05), (31.6, 24.05), (32.8, 22.85), (32.8, 20.725),
-                               p('R442.1')])
-    t('GPS_UART_OE', 'F', S, [p('U411.6'), p('R442.1')])
-
+    """No GPS translator or OE remains after the always-on-port decision."""
+    pass
 
 def gnd_joins(d):
     """GND pads the signal copper boxes in, joined by hand (the fan-out aid runs after this family)."""
     t, p, via = d.track, d.pad, d.via
     t('GND', 'B', S, [(21.28, 53.65), (21.82, 53.65)])           # R63's GND pad onto C14's GND strap (core table)
-    t('GND', 'F', S, [p('U1.49'), (28.75, 37.5)])                # west between pin 50's / 48's vias into the pour
+    # Circuit pass: U1.49's former 1.8 mm GND stub into the F.Cu pour is gone (the fill no longer reaches it; the pad joins
+    # the pour directly).
     t('GND', 'F', S, [p('U12.2'), (35.45, 36.6)])                # into C100's GND pad (its own via)
     # C93 (U13's output capacitor) returns straight to U13's GND pin: a short strap between the two pads, east under
     # U12 and down the gap between U13's pin columns (its pad is boxed in on three sides, D-R2-09).
     t('GND', 'B', IO, [p('C93.2'), (37.0, 40.9), (37.6, 41.5), (37.6, 43.4), p('U13.2')])
     # AUD-1: small C92 returns to the existing UART GND partner, without another via.
     t('GND', 'B', IO, [p('C92.2'), (33.2, 44.9), (33.2, 43.85)])
-    for d_gnd, y in (('D411.2', 15.625), ('D421.2', 27.625)):     # ESD returns boxed in by the port wires
-        t('GND', 'F', S, [p(d_gnd), (39.45, y)])           # hole >= 0.1 mm off the pad's mask, ring off its paste (D-R2-11)
-        via('GND', (39.45, y))
-
 
 def servo_lanes(d):
     """SERVO1-4_MCU (U1.22-25, PA0-PA3) as one F.Cu bundle (R10_DECISIONS D-R2-09): straight south from the pins,
@@ -165,6 +141,16 @@ def servo_cell(d):
     via('3V3', (25.05, 71.6))
 
 
+def arm_sense(d):
+    t, p, via = d.track, d.pad, d.via
+    t('ARM1_SENSE', 'B', S, [p('C129.1'), (27.2, 58.75)])
+    via('ARM1_SENSE', (27.2, 58.75))
+    # F.Cu (R10_DECISIONS D-R2-09): one 45 deg run parallel to the servo lanes, north as the inner sense lane x 34.4
+    # (outside the status-line vias at U1's east pins), west directly into U1.33.
+    t('ARM1_SENSE', 'F', S, [(27.2, 58.75), (34.4, 51.55), (34.4, 46.2), (32.13, 46.2), (31.43, 45.5), p('U1.33')])
+
+
+
 def east_lanes(d):
     """U1's east-side status and supply-sense lines (R10_DECISIONS D-R2-09). The pyro sense lanes (pyro family) leave
     U1.33 / U1.34 through R170 / R172 and run south at x 34.4 / 35.1. The three lines from U1.28-30 escape straight
@@ -186,8 +172,8 @@ def east_lanes(d):
     via('BAT_FAULT_N', (33.6, 47.9))
     t('BAT_FAULT_N', 'B', S, [(33.6, 47.9), (37.0, 47.9)])
     via('BAT_FAULT_N', (37.0, 47.9))
-    t('BAT_FAULT_N', 'F', S, [(37.0, 47.9), p('R89.2')])
-    t('BAT_FAULT_N', 'F', S, [p('R89.2'), (37.0, 74.0)])
+    t('BAT_FAULT_N', 'F', S, [(37.0, 47.9), (37.0, 53.8), (38.0, 54.8), (38.0, 68.2), (37.0, 69.2), (37.0, 74.0)])
+    t('BAT_FAULT_N', 'F', S, [(37.0, 53.8), (35.875, 53.8), p('R89.2')])
     via('BAT_FAULT_N', (37.0, 74.0))
     t('BAT_FAULT_N', 'B', S, [(37.0, 74.0), (37.0, 78.9), (38.1, 78.9)])
     # LOGIC_SOURCE_ST (PA4)
@@ -218,105 +204,69 @@ def south_sense(d):
 
 
 def port_links(d):
-    """Port buffer to series-resistor links (one straight pad-to-pad run each) and the camera wire side: the buffer
-    orders RX above TX, J9 TX above RX, so CAM_RX_WIRE steps east above D401 and CAM_TX_WIRE runs west of D400."""
-    t, p = d.track, d.pad
-    for net, a, b in (('GPS_RX_BUFFER', 'R440.2', 'U411.1'), ('GPS_TX_BUFFER', 'R441.1', 'U411.8'),
-                      ('RADIO_RX_BUFFER', 'U421.1', 'R450.2'), ('RADIO_TX_BUFFER', 'U421.8', 'R451.1'),
-                      ('CAM_RX_BUFFER', 'U12.1', 'R100.2'), ('CAM_TX_BUFFER', 'R101.1', 'U12.8')):
-        t(net, 'F', S, [p(a), p(b)])
-    t('CAM_RX_WIRE', 'F', S, [p('R100.1'), (39.4, 36.15), (39.4, 38.625), p('J9.3')])
-    t('CAM_RX_WIRE', 'F', S, [p('D401.1'), (39.4, 38.625)])
+    t, p, via = d.track, d.pad, d.via
+    t('CAM_RX_BUFFER', 'F', S, [p('U12.1'), p('R100.2')])
+    t('CAM_TX_BUFFER', 'F', S, [p('R101.1'), p('U12.8')])
+    t('CAM_RX_WIRE', 'F', S, [p('R100.1'), (39.4, 36.15), (42.0, 36.15), (43.0, 37.15), (43.0, 57.75), p('J9.3')])
+    t('CAM_RX_WIRE', 'F', S, [p('D401.1'), (43.0, 38.625)])
     t('CAM_TX_WIRE', 'F', S, [p('R101.2'), (38.8, 42.55), p('D400.1')])
-    t('CAM_TX_WIRE', 'F', S, [p('D400.1'), (40.35, 40.275), p('J9.4')])
-
+    t('CAM_TX_WIRE', 'F', S, [p('D400.1'), (42.0, 40.275), (42.0, 53.75), p('J9.4')])
 
 def port_control(d):
-    """GPS / radio power-switch enables and fault flags from U1's north edge (pins 55 / 56 / 57 / 61) and the radio
-    UART OE from its east edge (R10_DECISIONS D-R3-B3). AUD-2 removes the slow-control GND-partner and In2-region
-    obligations; the signal paths still avoid foreign copper.
-    Radio: RADIO_FAULT_N north through its pull-up R422 and one 45 deg run to a via over U420.4; RADIO_PWR_EN (U1.55
-    is west of U1.56 while U420.3 is west of U420.4, so the pair crosses once) runs a parallel 45 deg F.Cu lane between
-    RADIO_FAULT_N's and RADIO_RX_MCU's to one via between U420's pin columns and reaches U420.3 from the east on B.Cu,
-    wholly over the In2 PORT_4V8 region (no In2 split crossed).
-    GPS: the pair crosses under the GPS UART lanes (U1.62-64 are west of U1.57 / U1.61, U411 east of U410) on B.Cu
-    lanes x 24.5 / 26.9 over In2 3V3, surfaces on F.Cu north of the lanes inside the 3V3 region (y >= 15.8), crosses
-    over U401's bottom cell (U401.8-10, C408, PORT_5V3 / PORT_LDO_SS copper) on F.Cu and drops beside U410: three
-    vias each, every hop crossing other copper (the lanes; U401's cell).
-    K-reference (D-R3-xx): each F.Cu lane keeps >= 0.55 mm (centre) from other nets' vias, so their In1 antipads
-    (r 0.40) clear its copper edge: RADIO_PWR_EN x 27.95 beside RADIO_TX_MCU's via (28.5, 32.4), RADIO_FAULT_N x 27.45
-    (into R422.1 0.05 mm east of its centre) beside GPS_FAULT_N's via (26.9, 31.0); each B.Cu run lies wholly over one
-    In2 region (r10_route_power)."""
-    t, p, via = d.track, d.pad, d.via
-    # radio
-    t('RADIO_FAULT_N', 'F', S, [p('U1.56'), (26.5, 34.15), (27.45, 33.2), p('R422.1')])
-    t('RADIO_FAULT_N', 'F', S, [p('R422.1'), (28.795, 28.03), (32.3, 24.525)])
-    via('RADIO_FAULT_N', (32.3, 24.525))
-    t('RADIO_FAULT_N', 'B', S, [(32.3, 24.525), p('U420.4')])
-    t('RADIO_PWR_EN', 'F', S, [p('U1.55'), (27.0, 34.35), (27.95, 33.4), (27.95, 30.65), (31.25, 27.35)])
-    via('RADIO_PWR_EN', (31.25, 27.35))
-    t('RADIO_PWR_EN', 'B', S, [(31.25, 27.35), (31.25, 25.45), p('U420.3')])
-    t('RADIO_UART_OE', 'F', S, [p('U421.6'), p('R452.1')])
-    t('RADIO_UART_OE', 'F', S, [p('R452.1'), (31.75, 33.775), (31.75, 39.5), p('U1.45')])
-    # GPS
-    t('GPS_FAULT_N', 'F', S, [p('R412.1'), (26.0, 33.425)])  # axial entry clears the opposite 0402 pad
-    t('GPS_FAULT_N', 'F', S, [p('U1.57'), (26.0, 33.425), (26.5, 33.425), (26.9, 33.025), (26.9, 31.0)])
-    via('GPS_FAULT_N', (26.9, 31.0))
-    t('GPS_FAULT_N', 'B', S, [(26.9, 31.0), (26.9, 15.825)])
-    via('GPS_FAULT_N', (26.9, 15.825))
-    # GAP-3: skirt U401's exposed pad and the two filled/capped thermal vias on F.Cu.
-    t('GPS_FAULT_N', 'F', S, [(26.9, 15.825), (28.5, 15.825), (29.1, 15.225), (29.1, 11.65), (31.6, 11.65)])
-    via('GPS_FAULT_N', (31.6, 11.65))
-    t('GPS_FAULT_N', 'B', S, [(31.6, 11.65), (31.6, 9.05), p('U410.4')])
-    t('GPS_PWR_EN', 'F', S, [p('U1.61'), (24.0, 33.45), (24.5, 32.95), (24.5, 31.0)])
-    via('GPS_PWR_EN', (24.5, 31.0))
-    t('GPS_PWR_EN', 'B', S, [(24.5, 31.0), (24.5, 16.3)])
-    via('GPS_PWR_EN', (24.5, 16.3))
-    t('GPS_PWR_EN', 'F', S, [(24.5, 16.3), (24.5, 14.85), (28.1, 11.25), (28.1, 9.8)])
-    via('GPS_PWR_EN', (28.1, 9.8))
-    t('GPS_PWR_EN', 'B', S, [(28.1, 9.8), (28.85, 9.05), p('U410.3')])
-    for at in PORT_CONTROL_GND:
-        via('GND', at)
-
+    """GPS/radio power switches, fault flags and translator enables were removed."""
+    pass
 
 def leds(d):
-    """Status LEDs west of U1: each series resistor straight to its LED, U1's pins to the resistors by one bend."""
+    """Local status cell clears the SPI3/SWD escapes and retained IMU supply vias."""
     t, p = d.track, d.pad
-    t('LED_RED_A', 'F', S, [p('R32.2'), (11.9, 39.65), p('LED1.2')])
-    t('LED_YEL_A', 'F', S, [p('LED2.1'), p('R33.2')])
-    t('LED_RED', 'F', S, [p('R32.1'), (14.0, 40.75), (14.0, 42.0), p('U1.86')])
-    t('LED_YEL', 'F', S, [p('U1.88'), (14.3, 43.0), p('R33.1')])
+    t('LED_RED', 'F', S, [p('U1.86'), (13.7, 42.0), p('R32.1')])
+    t('LED_RED_A', 'F', S, [p('R32.2'), (10.3, 42.6), p('LED1.2')])
+    t('LED_YEL', 'F', S, [p('U1.88'), (14.4, 43.0), (14.1, 42.7),
+                         (12.4, 42.7), (11.6, 43.5), (11.6, 43.9), p('R33.1')])
+    t('LED_YEL_A', 'F', S, [p('R33.2'), (9.9, 45.0), p('LED2.1')])
+    # Reuse the existing C32 GND via; it is already connected to the solid In1 plane.
+    t('GND', 'F', S, [p('LED1.1'), (8.1, 44.18), (8.72, 44.8)])
+    t('GND', 'F', S, [p('LED2.2'), (6.5, 46.5)])
+    d.via('GND', (6.5, 46.5))
 
 
 def buzzer(d):
-    """Buzzer: BUZZ_DRV (PC14, U1.8, south edge) north under U1 on F.Cu, across USB_LIMITED by one F.Cu run beside
-    the USB pair, then straight north on B.Cu to the gate resistor R162. BUZZ_OUT (D-R2-09: Q123 shifted 0.25 mm east
-    so its drain lines up under LS120.2) is one via under LS120.2 on Q123's drain column, the clamp D123 tapped by one
-    45 deg run."""
-    t, p, via = d.track, d.pad, d.via
-    t('BUZZ_DRV', 'F', S, [p('U1.8'), (20.5, 48.75), (21.8, 47.45), (21.8, 37.95), (23.1, 36.65)])
-    via('BUZZ_DRV', (23.1, 36.65))
-    t('BUZZ_DRV', 'B', S, [(23.1, 36.65), (20.3, 33.85)])
-    via('BUZZ_DRV', (20.3, 33.85))
-    t('BUZZ_DRV', 'F', S, [(20.3, 33.85), (20.3, 33.05), (17.8, 30.55)])
-    via('BUZZ_DRV', (17.8, 30.55))
-    t('BUZZ_DRV', 'B', S, [(17.8, 30.55), (16.8, 29.55), (16.8, 18.85), p('R162.1')])
-    # R163's pull-down lead enters R162.2 on its axis from the north and ends at its centre; Q123's gate lead runs
-    # straight west on Q123.1's axis and tees onto it (R10_DECISIONS D-R3-B5).
-    t('BUZZ_G', 'B', S, [p('R163.1'), (18.1, 17.23), p('R162.2')])
-    t('BUZZ_G', 'B', S, [p('Q123.1'), (18.1, 17.95)])
-    t('BUZZ_OUT', 'F', S, [p('LS120.2'), (21.85, 17.95)])
-    via('BUZZ_OUT', (21.85, 17.95))
-    t('BUZZ_OUT', 'B', S, [p('Q123.3'), (21.85, 17.95), (21.85, 18.78), p('D123.2')])
+    """The driver passes the SPI3 fan, USB supply and UART bundles by explicit hops."""
+    t,p,via=d.track,d.pad,d.via
+    t('BUZZ_DRV','F',S,[p('U1.8'),(20.5,48.75),(21.8,47.45),(21.8,37.95),(23.1,36.65)])
+    via('BUZZ_DRV',(23.1,36.65))
+    # Two hops carry the driver over the USB_LIMITED B.Cu run (y 33.45) between the U1 pad row and that run.
+    t('BUZZ_DRV','B',S,[(23.1,36.65),(25.7,34.05),(26.5,34.05)]);via('BUZZ_DRV',(26.5,34.05))
+    t('BUZZ_DRV','F',S,[(26.5,34.05),(26.5,32.6)]);via('BUZZ_DRV',(26.5,32.6))
+    t('BUZZ_DRV','B',S,[(26.5,32.6),(26.5,28.0)]);via('BUZZ_DRV',(26.5,28.0))
+    t('BUZZ_DRV','F',S,[(26.5,28.0),(27.95,26.55),(27.95,25.5)]);via('BUZZ_DRV',(27.95,25.5))
+    t('BUZZ_DRV','B',S,[(27.95,25.5),(27.95,21.9)]);via('BUZZ_DRV',(27.95,21.9))
+    t('BUZZ_DRV','F',S,[(27.95,21.9),(27.95,17.8),(14.2,17.8)]);via('BUZZ_DRV',(14.2,17.8))
+    t('BUZZ_DRV','B',S,[(14.2,17.8),(14.2,15.8),p('R162.1')])
+    t('BUZZ_G','B',S,[p('R163.1'),(17.0,13.63),p('R162.2')])
+    t('GND','B',S,[p('R163.2'),(17.6,11.4)]);via('GND',(17.6,11.4))
+    t('BUZZ_G','B',S,[p('R162.2'),(17.0,15.3),(18.65,16.95),p('Q123.1')])
+    t('BUZZ_OUT','F',S,[p('LS120.2'),(21.85,20.6)]);via('BUZZ_OUT',(21.85,20.6))
+    t('BUZZ_OUT','B',S,[p('Q123.3'),(21.85,20.6)])
+    t('BUZZ_OUT','B',S,[p('Q123.3'),(22.6,16.0),(22.8,15.8)]);via('BUZZ_OUT',(22.8,15.8))
+    t('BUZZ_OUT','F',S,[(22.8,15.8),(25.5,15.8),(26.3,15.0),p('D123.2')])
+    t('3V3','F',S,[p('D123.1'),(24.0,15.0),(23.0,14.0)]);via('3V3',(23.0,14.0))
+    t('3V3','B',S,[(23.0,14.0),(23.0,14.775),p('R461.2')])
+    via('GND',(22.3,13.5))
 
 
 def servo_out(d):
-    """Series resistors R150-R153 straight up into J122's signal row (2.54 mm pitch, one column each)."""
-    for i, pin in ((1, 1), (2, 4), (3, 7), (4, 10)):
-        d.track(f'SERVO{i}_OUT', 'B', S, [d.pad(f'J122.{pin}'), d.pad(f'R{149 + i}.2')])
+    """Four protected signal outputs to the five-position screw terminal; motor power stays in the harness."""
+    for i in range(1, 5):
+        start, end = d.pad(f'R{149+i}.2'), d.pad(f'J122.{i}')
+        # Distinct terminal pitch is legalized by one 45-degree fan-out followed by a straight pin entry.
+        turn = (end[0], start[1] + abs(end[0] - start[0]))
+        d.track(f'SERVO{i}_OUT', 'B', S, [start, turn, end])
 
 
 def draw(d):
+    import r10_route_sd
+    r10_route_sd.draw(d)
     uarts(d)
     io_rails(d)
     port_wires(d)
@@ -325,6 +275,7 @@ def draw(d):
     servo_lanes(d)
     servo_cell(d)
     east_lanes(d)
+    arm_sense(d)
     south_sense(d)
     cam_sense(d)
     port_links(d)

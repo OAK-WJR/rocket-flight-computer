@@ -15,9 +15,10 @@ if pcbnew:
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
 class FitValidation(unittest.TestCase):
-    def test_aud4_r10_omits_pull_pin_plug_and_preserves_other_required_plugs(self):
-        self.assertEqual(fit.R10_MATED_REFS, {'J9', 'J122', 'J400', 'J410', 'J420'})
-        self.assertEqual(fit.R10_MATED['M3_GH_BM02B_GHS_TBT']['refs'], ('J400',))
+    def test_r10_screw_terminals_have_no_plug_envelopes_but_sd_card_is_required(self):
+        self.assertEqual(fit.R10_MATED_REFS, {'J430'})
+        self.assertNotIn('M3_GH_BM02B_GHS_TBT', fit.R10_MATED)
+        self.assertNotIn('HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR', fit.R10_MATED)
         self.assertEqual(fit.MATED['M3_JST_PH_B2B_2P']['refs'], ('J123',))  # Legacy fit policy stays intact.
 
     def setUp(self):
@@ -75,6 +76,18 @@ class FitValidation(unittest.TestCase):
 
     def test_five_supports_and_valid_models_pass(self):
         self.assertTrue(self.report()['ok'], self.report()['issues'])
+
+    def test_micro_sd_locked_card_has_a_required_envelope_and_clears_hardware(self):
+        socket = self.add_part('J430', 12, 17, footprint='M3_MICROSD_MOLEX_472192001')
+        report = fit.check_board(self.board, self.folder, profile='r10')
+        self.assertIn('J430 mated', {row[1] for row in report['rows']})
+        self.assertTrue(any('J430 mated top body' in issue for issue in report['issues']))
+        socket.Move(self.point(0, .2))
+        report = fit.check_board(self.board, self.folder, profile='r10')
+        self.assertFalse(any('J430 mated top body' in issue for issue in report['issues']))
+        socket.SetFPIDAsString('rocket:unreviewed_socket')
+        report = fit.check_board(self.board, self.folder, profile='r10')
+        self.assertTrue(any('J430: required R10 mated envelope missing' in issue for issue in report['issues']))
 
     def test_width_and_length_are_measured_from_outline(self):
         for drawing in self.board.GetDrawings():

@@ -6,6 +6,7 @@ Run with KiCad Python; --check verifies deterministic files and actual parsed pa
 The PortLDO symbol is exposed for the schematic generator, not written here.
 """
 import argparse
+import itertools
 import json
 import math
 import sys
@@ -42,21 +43,24 @@ def gh2():
     return make_fp(name, body, -4, 'JST BM02B-GHS-TBT; eGH p2 top-entry maker land; unnamed mechanical tabs')
 
 
-def terminal(color):
-    name = 'M3_DB125_2P_' + color
-    body = _rect((-3.5, -3.9), (3.5, 3.5), 'F.Fab', .1)
-    body += _rect((-3.9, -4.3), (3.9, 3.9), 'F.CrtYd', .05)
-    body += _rect((-3.65, -4.05), (3.65, 3.65), 'F.SilkS', .15)
+def terminal(color, positions=2):
+    name = f'M3_DB125_{positions}P_' + color
+    half = positions * 3.5 / 2
+    body = _rect((-half, -3.9), (half, 3.5), 'F.Fab', .1)
+    courtyard_half = half + (.75 if positions > 2 else .4)
+    body += _rect((-courtyard_half, -4.3), (courtyard_half, 3.9), 'F.CrtYd', .05)
+    body += _rect((-half-.15, -4.05), (half+.15, 3.65), 'F.SilkS', .15)
     # Positive-y face is the wire-entry face in this local frame. A fabrication
     # arrow under the housing prevents silently inheriting the old pad aliases.
     body += _line((0, 1.5), (0, 3), 'F.Fab', .15)
     body += _line((0, 3), (-.5, 2.5), 'F.Fab', .15)
     body += _line((0, 3), (.5, 2.5), 'F.Fab', .15)
-    for n, x in [('1', -1.75), ('2', 1.75)]:
+    for number in range(1, positions+1):
+        n, x = str(number), (number-(positions+1)/2)*3.5
         body += (f'(pad "{n}" thru_hole circle (at {x} 0) (size 1.9 1.9) '
                  '(drill 1.3) (layers "*.Cu" "*.Mask"))\n')
     return make_fp(name, body, -5,
-                   'DORABO DB125-3.5-2P; drawing T0-1; 1.3mm finished drill, 1.9mm copper; wire entry +y', True)
+                   f'DORABO DB125-3.5-{positions}P; drawing T0-1; 1.3mm finished drill, 1.9mm copper; wire entry +y', True)
 
 
 def ldo():
@@ -114,17 +118,44 @@ def load_switch():
                    'AOS AONR21357; PO-00047 rev I maker land; S1-3 G4 D5-8 and common exposed drain9')
 
 
+def microsd():
+    name = 'M3_MICROSD_MOLEX_472192001'
+    # Molex SD-47219-001 rev G, recommended PCB layout, top view. Origin:
+    # midpoint of the two shell-pad columns, on the eight signal-pad centres.
+    # G1..G4 use numeric aliases12/9/10/11 (supplier numbering) in the electrical symbol/assembly table.
+    body = _rect((-6.8, -9.35), (6.8, 5.15), 'F.Fab', .1)
+    body += _rect((-7.85, -9.85), (7.85, 5.65), 'F.CrtYd', .05)
+    body += _line((-6.8, -9.5), (6.8, -9.5), 'F.SilkS', .15)
+    body += _circle((3.205, 1.12), .12, 'F.SilkS', .15)
+    for number in range(1, 9):
+        body += _pad(str(number), round(3.205 - (number - 1) * 1.1, 5), 0,
+                     .8, 1.5, ('F.Cu', 'F.Paste', 'F.Mask'))
+    for number, x, y in ((12, 6.875, 2.6), (9, 6.875, -5.7),
+                         (10, -6.875, -5.7), (11, -6.875, 2.6)):
+        body += _pad(str(number), x, y, 1.45, 2., ('F.Cu', 'F.Paste', 'F.Mask'))
+    return make_fp(name, body, 6.5,
+                   'Molex 472192001 hinged microSD; SD-47219-001 revG maker land; shell G1-G4=12/9/10/11; 0.10/0.12mm stencil, 100% aperture')
+
+
 FOOTPRINTS = {'M3_GH_BM02B_GHS_TBT': gh2, 'M3_DB125_2P_BK': lambda: terminal('BK'),
               'M3_DB125_2P_GN': lambda: terminal('GN'), 'M3_TPS7A91_DSK10': ldo,
-              'M3_MA_8x10': polymer, 'M3_AONR21357_DFN3x3A_EP1': load_switch}
+              'M3_MA_8x10': polymer, 'M3_AONR21357_DFN3x3A_EP1': load_switch,
+              'M3_MICROSD_MOLEX_472192001': microsd,
+              'M3_DB125_4P_GN': lambda: terminal('GN', 4),
+              'M3_DB125_5P_GN': lambda: terminal('GN', 5)}
 # Boxes use millimetres, KiCad VRML scale .1in handled by r7_parts._box.
 MODELS = {
     'M3_GH_BM02B_GHS_TBT': (0, -.375, 0, 5.75, 4.25, 7.3, '.85 .85 .8'),
     'M3_DB125_2P_BK': (0, -.2, 0, 7.3, 7.7, 8.9, '.12 .12 .12'),
     'M3_DB125_2P_GN': (0, -.2, 0, 7.3, 7.7, 8.9, '.1 .55 .2'),
+    'M3_DB125_4P_GN': (0, -.2, 0, 15.0, 7.7, 8.9, '.1 .55 .2'),
+    'M3_DB125_5P_GN': (0, -.2, 0, 18.5, 7.7, 8.9, '.1 .55 .2'),
     'M3_TPS7A91_DSK10': (0, 0, 0, 2.6, 2.6, .8, '.12 .12 .12'),
     'M3_MA_8x10': (0, 0, 0, 8.5, 8.5, 10.8, '.65 .65 .68'),
     'M3_AONR21357_DFN3x3A_EP1': (0, 0, 0, 3.3, 3.3, .9, '.12 .12 .12'),
+    # Conservative closed socket/card union; card centring is an inference,
+    # maker body is 13.60 x14.50 x1.90 mm at (0,-2.10), +/-0.15 mm.
+    'M3_MICROSD_MOLEX_472192001': (0, -1.75, 0, 14., 15.5, 2.1, '.45 .45 .48'),
 }
 
 
@@ -137,6 +168,25 @@ def port_ldo_symbol():
                          [(7.62, '1', 'OUT', 'power_out'), (5.08, '2', 'OUT', 'passive'),
                           (2.54, '3', 'FB', 'input'), (0, '8', 'NR_SS', 'passive'),
                           (-2.54, '5', 'PG', 'open_collector')])
+
+
+def microsd_symbol():
+    return module_symbol('MicroSD_Hinge', 'J', 'Molex 472192001 locking hinged microSD; no card detect; G1-G4=12/9/10/11',
+                         'microSD socket', 'M3_MICROSD_MOLEX_472192001', 10.16, 12.7,
+                         [(10.16, '1', 'DAT2', 'passive'), (7.62, '2', 'CD_DAT3_CS', 'passive'),
+                          (5.08, '3', 'CMD_DI', 'passive'), (2.54, '4', 'VDD', 'power_in'),
+                          (0, '5', 'CLK', 'passive'), (-2.54, '6', 'VSS', 'power_in')],
+                         [(10.16, '7', 'DAT0_DO', 'passive'), (7.62, '8', 'DAT1', 'passive'),
+                          (5.08, '9', 'G2', 'passive'), (2.54, '10', 'G3', 'passive'),
+                          (0, '11', 'G4', 'passive'), (-2.54, '12', 'G1', 'passive')])
+
+
+def servo_terminal_symbol():
+    return module_symbol('ServoTerminal', 'J', 'DORABO DB1253.5mm5pos; four servo signals and GND only',
+                         'servo terminal', 'M3_DB125_5P_GN', 10.16, 10.16,
+                         [(5.08, '1', 'SERVO1', 'passive'), (2.54, '2', 'SERVO2', 'passive'),
+                          (0, '3', 'SERVO3', 'passive'), (-2.54, '4', 'SERVO4', 'passive'),
+                          (-5.08, '5', 'GND', 'passive')], [])
 
 
 def generated():
@@ -168,6 +218,11 @@ def geometry_checks():
         p = result[name]
         assert p['2'][0] - p['1'][0] - (p['1'][2] + p['2'][2]) / 2 >= 1.5
         assert p['1'] == [-1.75, 0, 1.9, 1.9]
+    for positions in (4, 5):
+        p = result[f'M3_DB125_{positions}P_GN']
+        assert len(p) == positions
+        assert p['1'] == [-(positions-1)*1.75, 0, 1.9, 1.9]
+        assert p[str(positions)] == [(positions-1)*1.75, 0, 1.9, 1.9]
     assert result['M3_GH_BM02B_GHS_TBT']['1'] == [-.625, 1.95, .6, 1.7]
     assert result['M3_TPS7A91_DSK10']['11'] == [0, 0, 1.2, 2]
     assert len(result['M3_TPS7A91_DSK10']) == 11
@@ -175,7 +230,43 @@ def geometry_checks():
     fet = result['M3_AONR21357_DFN3x3A_EP1']
     assert len(fet) == 9 and fet['1'] == [-.975, 1.4, .35, .5]
     assert fet['4'] == [.975, 1.4, .35, .5] and fet['8'] == [-.975, -1.495, .4, .31]
+    sd = result['M3_MICROSD_MOLEX_472192001']
+    assert len(sd) == 12 and sd['1'] == [3.205, 0, .8, 1.5]
+    assert sd['8'] == [-4.495, 0, .8, 1.5]
+    assert sd['12'] == [6.875, 2.6, 1.45, 2.] and sd['10'] == [-6.875, -5.7, 1.45, 2.]
     return result
+
+
+def passive_cold_screen():
+    """Two retained dividers, PC1/PE4 low; illustrative zero-leakage bands only."""
+    def sense(v, vf, pull, cont_top, cont_bottom, bus_top, bus_bottom, match):
+        cont, bus, link = cont_top + cont_bottom, bus_top + bus_bottom, match + 2.
+        g11, g22, g12 = 1/pull + 1/cont + 1/link, 1/bus + 1/link, -1/link
+        determinant = g11*g22-g12*g12
+        out = (v-vf)/pull*g22/determinant
+        raw = -(v-vf)/pull*g12/determinant
+        return out*cont_bottom/cont, raw*bus_bottom/bus
+    nominal = sense(3.3, .2, 10000, 10200, 1000, 10200, 1000, 1.5)
+    tolerance = .0145
+    bands = [sense(v, vf, 10000*p, 10200*ct, 1000*cb, 10200*bt, 1000*bb, m)
+             for v, vf, p, ct, cb, bt, bb, m in itertools.product(
+                 (3.135, 3.465), (0., .32), *([(1-tolerance, 1+tolerance)]*5), (1., 2.))]
+    open_cont = [(v-vf)*1000*bottom/(10000*pull+10200*top+1000*bottom)
+                 for v,vf,pull,top,bottom in itertools.product(
+                     (3.135,3.465),(0.,.32),*([(1-tolerance,1+tolerance)]*3))]
+    common_r = 1/(1/10000+2/11200)
+    return dict(status='Calc / Inference; no firmware thresholds or measured fault discrimination',
+                topology='R13110k pull-up; one11.2k OUT divider and one11.2k RAW_ACT divider, linked by2R R134 and1-2R ematch',
+                healthy_cont_bus_nominal_mV=[x*1000 for x in nominal],
+                healthy_cont_bus_band_mV=[[min(row[n] for row in bands)*1000,
+                                           max(row[n] for row in bands)*1000] for n in (0,1)],
+                open_cont_nominal_mV=(3.3-.2)*1000/(10000+11200)*1000,
+                open_cont_band_mV=[min(open_cont)*1000,max(open_cont)*1000],
+                open_bus_nominal_mV=0,
+                correlated_10uA_leak_each_node_healthy_shift_mV=common_r*20e-6/11.2*1000,
+                open_10uA_leak_cont_shift_mV=(1/(1/10000+1/11200))*10e-6/11.2*1000,
+                open_10uA_leak_bus_shift_mV=11200*10e-6/11.2*1000,
+                assumptions='3V3 +/-5%, Vf0..0.32V inference from25C BAT54A table, resistor+/-1.45%; zero leakage/ADC offset/reference error; bench all ground refusal bands before firmware')
 
 
 def power_budget():
@@ -187,11 +278,14 @@ def power_budget():
     ldo_min = .792 * (1 + 49900 * (1-thin) / (10000 * (1+thin))) - 100e-9 * 49900 * (1+thin)
     ldo_max = .808 * (1 + 49900 * (1+thin) / (10000 * (1-thin))) + 100e-9 * 49900 * (1+thin)
     # TI SLVS841F eq. 1 p. 15 (IOSmin / IOSmax, RILIM in kOhm, mA); R +/-2 % (1 % initial + 100 ppm/K x 100 K).
-    # R410 is 100 kOhm (R10_DECISIONS D-R3-01: the board's value, sharing the 100 kOhm BOM line, C14675).
+    # GPS/radio limiters are removed by the always-on ports owner decision; only camera R430 remains.
     limits = {port: [25230 / (r * (1+thick)) ** 1.016 / 1000,
                      22980 / (r * (1-thick)) ** .94 / 1000]
-              for port, r in [('camera', 22.6), ('radio', 66.5), ('gps', 100)]}
-    all_shorts = sum(v[1] for v in limits.values()) + .011
+              for port, r in [('camera', 22.6)]}
+    # TPS7A91 SBVS282A p5 current limit1.5..1.9A; hard-short foldback1.45A is typical only.
+    # Shared shorts are a prospective demand, not a continuous operating point of the2A buck.
+    ldo_short_max = 1.9
+    all_shorts = limits['camera'][1] + ldo_short_max + .011
     # AP63201 (Diodes DS41326 Rev 3-2): 2 A continuous (p. 1), HS peak current limit 2.5 A min (p. 5), fSW 500 kHz
     # typ with +/-6 % spread spectrum (p. 5: 470 kHz taken as the low edge, Inference), ripple dI = Vo (Vi - Vo) /
     # (Vi L fSW) (p. 13); L400 6.8 uH -20 % (Bourns SRP5030T). Inputs: 8.4 V (2S full, F9) and 9.97 V (U9's OVLO trip,
@@ -200,14 +294,19 @@ def power_budget():
         return max(all_shorts + vo * (vin - vo) / (vin * lmin * f) / 2 for vo in (buck_min, buck_max))
     # Battery-lead-break ride-through (REQUIREMENTS F6, R3-PWR-02): C84 on VLOGIC back-feeds RAW_PROTECTED through
     # U11 (TPS2121 reverse blocking only above IRCB 0.2 / 1 / 2 A, SLVSEA3F section 7.5 p. 8), so it also carries the
-    # port buck U400 (EN tied to VIN; port switch turn-off up to 3 ms, SLVS841F section 7.5 p. 7). Constant-power
+    # port buck U400 (EN tied to VIN; GPS/radio always on, camera turn-off up to3ms). Constant-power
     # loads from 7.4 V; no credit for RAW_PROTECTED / C6 / C7 capacitance or for U11 blocking (Calc / Inference).
     ports_w = [buck_min * 1.461 / .85, buck_max * 1.461 / .80]     # camera 1 A + radio .3 A + GPS .15 A + 11 mA
     # D-OA-05: account explicitly for R92 (3.3 kohm) while C84 can feed RAW_PROTECTED through U11.
     # Hold its worst loss at the 7.4 V launch floor constant as voltage falls; no credit for any old envelope allowance.
     r92_bleed_w = 7.4 ** 2 / (3300 * (1-thick))
-    loads_w = dict(a_ports_off_logic_shed=[.62 + .1] * 2, b_ports_off_no_shed=[.6 + .1, 1.4 + .1],
-                   c_camera_radio_gps_on=[ports_w[0] + .6, ports_w[1] + 1.4])
+    sd_write_w = [3.3*.2/.85, 3.3*.2/.80]
+    sd_idle_w = [3.3*.03/.85, 3.3*.03/.80]
+    loads_w = dict(a_ports_off_logic_shed=[.62 + .1 + sd_idle_w[0], .62 + .1 + sd_idle_w[1]],
+                   b_ports_off_no_shed=[.6 + .1 + sd_write_w[0], 1.4 + .1 + sd_write_w[1]],
+                   c_camera_radio_gps_on=[ports_w[0] + .6 + sd_write_w[0], ports_w[1] + 1.4 + sd_write_w[1]],
+                   d_gps_radio_on_camera_off_logic_shed=[buck_min*.461/.85+.62+sd_idle_w[0],
+                                                        buck_max*.461/.80+.62+sd_idle_w[1]])
     loads_w = {case: [w + r92_bleed_w for w in watts] for case, watts in loads_w.items()}
     def ride(c, v_end, w):
         return .5 * c * (7.4 ** 2 - v_end ** 2) / w * 1000
@@ -223,12 +322,12 @@ def power_budget():
     def ride_en(c, v_end, w_all, w_logic, v_off=voff[0]):  # lowest VOFF: ports drain C84 longest
         return (.5 * c * (7.4 ** 2 - v_off ** 2) / w_all + .5 * c * (v_off ** 2 - v_end ** 2) / w_logic) * 1000
     ride_through_en = {f'{case}_C{int(round(c * 1e7)) / 10:g}uF_to_{v}V': ride_en(c, v, wa, wl)
-                       for case, wa, wl in (('ports_on_then_logic_shed', loads_w['c_camera_radio_gps_on'][1], .72+r92_bleed_w),
-                                            ('ports_on_then_logic_no_shed', loads_w['c_camera_radio_gps_on'][1], 1.5+r92_bleed_w))
+                       for case, wa, wl in (('ports_on_then_logic_shed', loads_w['c_camera_radio_gps_on'][1], .72+sd_idle_w[1]+r92_bleed_w),
+                                            ('ports_on_then_logic_no_shed', loads_w['c_camera_radio_gps_on'][1], 1.5+sd_write_w[1]+r92_bleed_w))
                        for c in (300.8e-6, 470e-6) for v in (3.5, 3.8)}
     # Equation roots include input power as constant power, not a guessed current.
     def loaded_pack(open_v, servos):
-        r, logic, power, efficiency = .15, .5, 5.456 * 1.46, .8
+        r, logic, power, efficiency = .15, .5+3.3*.2/(.8*6), 5.456 * 1.46, .8
         a = open_v - r * (servos + logic)
         return (a + (a*a - 4*r*power/efficiency)**.5) / 2
     # GAP-1: final AUD/GAP CAD path lengths; rho=1.72e-8 ohm m, nominal 35 um outer copper at 20 C.
@@ -281,14 +380,21 @@ def power_budget():
         radio_gps_harness_copper_loop_max_ohm=.2,
         transient_allowance_V=.05,
         camera_module_min_V=buck_min-.135-.15-.05,
-        radio_module_min_V=ldo_min-.3*(.135+.2)-.05,
-        gps_module_min_V=ldo_min-.15*(.135+.2)-.05,
+        radio_module_min_V=ldo_min-.3*.2-.05,
+        gps_module_min_V=ldo_min-.15*.2-.05,
         radio_gps_module_max_V=ldo_max+.05,
         ldo_headroom_min_V=buck_min-.05-ldo_max,
         switch_limit_A=limits,
+        gps_radio_always_on=True,
+        ldo_shared_current_limit_A=[1.5,1.9],
+        ldo_hard_short_foldback_typical_A=1.45,
+        gps_or_radio_short_camera_normal_prospective_buck_A=ldo_short_max+1+.011,
+        port_short_note='GPS/radio share the LDO current/thermal limit; one cable short may remove both and cause U400 current limit/hiccup with camera on. No guarantee of continuous fault operation; bench logic/flight retention.',
+        microsd_current_allocation_A=dict(write=.2,idle=.03,status='selected card qualification required; allocations, not measured maxima'),
+        microsd_input_write_W=sd_write_w, microsd_input_idle_W=sd_idle_w,
         buck_all_shorts_A=all_shorts,
         buck_all_shorts_over_2A_continuous_pct=(all_shorts / 2 - 1) * 100,
-        buck_all_shorts_peak_inductor_A={'8V4_470kHz': peak(8.4, 470e3), '8V4_500kHz': peak(8.4, 500e3),
+        buck_prospective_all_shorts_peak_inductor_without_limiting_A={'8V4_470kHz': peak(8.4, 470e3), '8V4_500kHz': peak(8.4, 500e3),
                                          '9V97_470kHz': peak(9.97, 470e3), '9V97_500kHz': peak(9.97, 500e3)},
         buck_peak_current_limit_min_A=2.5,
         buck_camera_short_radio_gps_normal_A=limits['camera'][1]+.3+.15+.011,
@@ -305,18 +411,32 @@ def power_budget():
         pack_7V4_four_stall_loaded_V=loaded_pack(7.4,7.68),
         pack_6V0_four_stall_loaded_V=loaded_pack(6,7.68),
         servo_star_board_return_max_A=4*7.68*.001/.05,
-        u9_input_at_all_port_shorts_inference_A=(buck_max*all_shorts/(.8*5.8))+.5,
+        u9_prospective_input_without_buck_limiting_A=(buck_max*all_shorts/(.8*5.8))+.5+sd_write_w[1]/5.8,
+        # DS41326 p5 high-side peak limit max3.1A bounds the instantaneous
+        # gated input demand; use the whole pulse, no duty/hiccup reduction.
+        u9_port_fault_peak_bound_inference_A=3.1+(1.4+sd_write_w[1])/3.5+9.97/(3300*(1-thick))+.005,
+        u9_port_fault_peak_bound_basis='AP63201 max3.1A HS peak current plus(1.4W logic+0.825W SDwrite)/3.5V, R92 at9.97V and5mA allowance; excludes threshold overshoot/parasitic dips; bench required',
         u9_current_limit_min_A=3.96,
         r92_ohm=3300,
         battery_break_r92_bleed_bound_W=r92_bleed_w,
         battery_break_load_W=loads_w,
         battery_break_ride_through_ms=ride_through,
         battery_break_ride_through_note=('[shortest, longest] ms; Calc / Inference: constant-power loads at the '
-                                         'AP63203 / AP63201 inputs from 7.4 V; a: 0.62 W retained logic + 0.1 W idle '
+                                         'AP63203 / AP63201 inputs from7.4V; microSD additional3.3V*0.2A write or0.03A idle divided by80-85% efficiency; a:0.62W retained logic+0.1W idle '
                                          'port chain; b: 0.6-1.4 W unshed logic (pass1_electrical 4.4, no RF) + 0.1 W; '
-                                         'c: ports at 1.461 A, 80-85 % buck efficiency, + unshed logic; no credit for '
+                                         'c:ports at1.461A+unshed logic+SDwrite; d:GPS/radio always on at0.461A,camera off,logic shed+SDidle; a/b require physically absent port loads, not software switches. No credit for '
                                          'RAW_PROTECTED capacitance or U11 reverse blocking; each case additionally '
                                          'includes the 3.3 kohm R92 loss at 7.4 V and minimum resistance'),
+        passive_cold_screen_sole_bus=passive_cold_screen(),
+        divider_audit2=dict(top_series_ohm=[5100,5100], bottom_parallel_ohm=[2000,2000],
+                           direct_ADC_filtered_nodes=['PYRO1_CONT','ARM1_SENSE'],
+                           extra_pin_series_resistors='R168/R170 removed; no _MCU tails',
+                           normal_8V4_pin_V=8.4/11.2,
+                           clamp_19V9_one_top_short_or_bottom_open_pin_max_V=19.9*1014.5/(5026.05+1014.5),
+                           one_top_short_8V4_divider_max_A=8.4/(5026.05+985.5),
+                           nominal_source_ohm=1/(1/10200+1/1000),
+                           nominal_filter_RC_us=(1/(1/10200+1/1000))*10e-9*1e6,
+                           basis='1% plus100ppm/K to70C; ST DS12110 Table109 4V analog absolute max; double-fault pin damage remains possible; bench transitions/ADC classification'),
         camera_io_C92=dict(code='C19666', nominal_uF=4.7, max_bias_V=3.4,
                            typical_bias_retained=.6832757,
                            effective_uF_inference=4.7*.6832757*.9*.85*.9,
@@ -334,7 +454,11 @@ def power_budget():
                              time_to_4V5_max_ms=-enable_tau*math.log(1-4.5/enable_vgs)*1000,
                              enable_settle_min_ms=100,
                              note='Hot R, effective C, Miller and actual board SOA are conditional inferences; bench required'),
-        fire_current_GAP1=dict(status='Final AUD/GAP CAD path calculation; material, hot FET and harness conditions unmeasured',
+        fire_current_GAP1=dict(status='Circuit-pass CAD path calculation; material, hot FET, source and harness conditions unmeasured',
+                              selected_ematch='MJG J-Tek LEAD-FREE standard24AWG',
+                              maker_all_fire_A=.75, current_margin=1.5, required_fire_current_A=1.125,
+                              maker_source='https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF',
+                              maker_all_fire_test_s=.5, physical_pulse_qualification='<=20ms including tail; lot bench qualification pending',
                               pack_R_ohm=.15, open_equivalent_at_fire_V=7.4,
                               other_converter_load_W=other_w, servo_stall_A=1.92,
                               R134_hot_max_ohm=r134_hot, ematch_max_ohm=2,
@@ -349,7 +473,7 @@ def power_budget():
                               historical_4R533_fixed_other_1p5A_fire_A=(7.4-.15*1.5)/4.533,
                               historical_4R533_fixed_other_5p34A_fire_A=(7.4-.15*(1.5+3.84))/4.533,
                               note='7.4V equivalent must remain at fire after pad/flight drain; neutral does not unload a jam. '
-                                   'Compatible all-fire current is a derived limit, not adoption of a new e-match.'),
+                                   'Selected MJG J-Tek all-fire0.75A times1.5=1.125A; <=20ms lot firing test still required.'),
         pyro_fault_GAP5=dict(watchdog_prescaler=4, watchdog_reload=239, watchdog_LSI_cycles=960,
                             watchdog_nominal_ms=30, LSI_qualified_Hz=[29400,33600],
                             watchdog_actual_ms=watchdog_ms, prefire_sync_max_ms=.2,
@@ -368,7 +492,7 @@ def power_budget():
                             note='Refresh immediately before PE4 rises; no refresh during fire; normal abort includes gate tail. '
                                  'All timing/actual-current and hot pulse limits need bench tests; no firmware implemented. '
                                  '0.4V off criterion and hot gate-charge extrapolation are inferences, not a hot off guarantee.'),
-        option_oq5_status='Not adopted: owner 2026-10-28 retained firmware shedding without a hardware cutoff',
+        option_oq5_status='Historical alternative, not adopted: hardware U400 cutoff absent; GPS/radio now always on. Hypothetical cutoff values do not qualify the board',
         option_oq5_en_divider_ohm=[en_r5, en_r6],
         option_oq5_voff_V=voff, option_oq5_von_V=von,
         option_oq5_ride_through_ms=ride_through_en)
@@ -379,17 +503,13 @@ def power_budget():
     assert results['ldo_headroom_min_V'] > .2
     assert results['ldo_bleeder_min_A'] > .005
     assert results['buck_camera_short_radio_gps_normal_A'] < 2
-    # All three ports shorted (three faults) exceed AP63201's 2 A continuous rating by about 1 %. The criterion is
-    # that the inductor's peak current stays below the 2.5 A minimum cycle-by-cycle limit (else the buck hiccups,
-    # DS41326 p. 11: ports lose supply, VLOGIC / 3V3 are a separate path): met at 8.4 V; at the 9.97 V OVLO corner it
-    # holds at the 500 kHz nominal frequency and misses by <= 0.01 A at the -6 % spread-spectrum edge (recorded).
-    pk = results['buck_all_shorts_peak_inductor_A']
-    assert 2 < all_shorts < 2.03
-    assert pk['8V4_470kHz'] < 2.41 < 2.5 and pk['9V97_500kHz'] < 2.5
-    assert pk['9V97_470kHz'] < 2.51
-    assert results['u9_input_at_all_port_shorts_inference_A'] < 2.95 < results['u9_current_limit_min_A']
-    assert fire_primary['pack_7V4_by_stall_count']['0']['fire_A'] >= 1.5
-    assert fire_primary['pack_7V4_by_stall_count']['2']['fire_A'] < 1.5
+    # Removing individual GPS/radio limiters raises prospective short demand above
+    # the buck's2A continuous rating. Current limit/hiccup/thermal response is the
+    # intended fault state, not qualification of this prospective current as safe.
+    assert all_shorts > 3.1 and results['gps_or_radio_short_camera_normal_prospective_buck_A'] > 2
+    assert results['u9_port_fault_peak_bound_inference_A'] < results['u9_current_limit_min_A']
+    assert all(case['fire_A'] >= results['fire_current_GAP1']['required_fire_current_A']
+               for case in fire_primary['pack_7V4_by_stall_count'].values())
     assert results['camera_io_C92']['effective_uF_inference'] > 1.5
     assert results['pyro_fault_GAP5']['physical_fault_bound_ms'] < 36
     assert .2+20+5 < watchdog_ms[0] and enable_vgs > 4.5

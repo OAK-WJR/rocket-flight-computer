@@ -247,6 +247,11 @@ def build(out, netlist=True):
     if '(symbol \"PortLDO\"' not in library:
         library = library.rstrip()[:-1] + r10_parts.port_ldo_symbol() + '\n)\n'
         library = library.replace('M3_OSCON_F12 CAP-SMD_BD8.0*', 'M3_OSCON_F12 CAP-SMD_BD8.0* M3_MA_8x10')
+    if '(symbol "MicroSD_Hinge"' not in library:
+        library = library.rstrip()[:-1] + r10_parts.microsd_symbol() + '\n)\n'
+    if '(symbol "ServoTerminal"' not in library:
+        library = library.rstrip()[:-1] + r10_parts.servo_terminal_symbol() + '\n)\n'
+    library = library.replace('(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT"', '(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT M3_DB125_4P_GN"')
     library_path.write_text(library)
     sch.NS = NS
     pins.NS = NS
@@ -284,12 +289,11 @@ def build(out, netlist=True):
                 read, patch, _ = sch._reader()
                 t = patch(t, [(n.start, n.end, '') for n in read(t).children('text')
                               if 'radio SPI2' in n.items[1].atom or 'R8 EXTI:' in n.items[1].atom
-                              or 'pull-pin' in n.items[1].atom.lower() or 'PULLPIN' in n.items[1].atom])
-                t = sch.insert(t, sch.note('R10: USART6 PC6/PC7 AF7 GPS; UART5 PB13/PB12 AF14 radio. Port EN and OE default low. EXTI10 GPS_FAULT_N; EXTI9 RADIO_FAULT_N; EXTI12 CAM_FAULT_N; EXTI4 LOGIC_SOURCE_ST (PA4), EXTI5 BAT_FAULT_N (PA5); VLOGIC_SENSE ADC on PA6 (D-R2-09). EXTI1 PE1 IMU_INT1 data-ready (R6-MCU-01).', 20.32, 259.08, 'mcu:r10:ports'))
+                              or 'pull-pin' in n.items[1].atom.lower() or 'PULLPIN' in n.items[1].atom
+                              or 'CH1 sense:' in n.items[1].atom])
+                t = sch.insert(t, sch.note('R10: USART6 PC6/PC7 AF7 GPS; UART5 PB13/PB12 AF14 radio, direct1k UARTs on always-on PORT_4V8. Camera EN/OE default low; EXTI12 CAM_FAULT_N; EXTI4 LOGIC_SOURCE_ST (PA4), EXTI5 BAT_FAULT_N (PA5); VLOGIC_SENSE ADC on PA6. EXTI1 PE1 IMU_INT1 data-ready. SPI3 PC10/11/12 AF6 SD_SCK/MISO/MOSI; PD0 SD_CS high at reset via10k. No SD card-detect.', 20.32, 259.08, 'mcu:r10:ports'))
                 t = sch.insert(t, sch.note('Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise PC1 and PE4 low before output mode. R123 100k holds the load switch off at reset. Both low for passive cold screening; after prior enable wait >=1 s and verify bus discharge. Refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks (D-SS-04). Disable synchronous trace; lock/read back both gate GPIO configurations. AUD-4: PC13 U1.7 is NC/analog; no pull-pin.', 20.32, 269.24, 'mcu:r10:load-switch'))
-            if file.name == 'servos.kicad_sch':
-                for pin in ('2', '5', '8', '11'):
-                    t = change_pin(t, 'J122', pin, None, library)
+                t = sch.insert(t, sch.note('CH1 sense: filtered PYRO1_CONT -> PC0 ADC123_INP10; filtered ARM1_SENSE -> PC5 ADC12_INP8, the sole RAW_ACT bus reading (historical ARM1_SENSE name). Split divider safety retained; audit2 removes R168/R170 and _MCU tails (single-resistor fault maximum3.342V at19.9V clamp). AVA follow-up removes the duplicate six-part RAW_ACT_SENSE chain; PB0 U1.34 is NC/analog, never driven. Ground bus/continuity readings are hard refusals; in flight they never veto fire.', 20.32, 279.4, 'mcu:r10:sense'))
             if file.name == 'battery_entry.kicad_sch':
                 t = add(t, library, 'J400', changed['J400'], 330.2, 238.76)
             if file.name == 'camera_uart.kicad_sch':
@@ -308,6 +312,7 @@ def build(out, netlist=True):
             t = t.replace('05 | Camera branch protection and regulator', data['titles']['power'])
             t = t.replace('15 | GNSS and telemetry radio (R7)', data['titles']['telemetry'])
         t = sch.refresh_embedded(t, library, 'PolarCap')
+        t = sch.refresh_embedded(t, library, 'CameraTerminal')
         t = re.sub(r'\n(?:\s*\n)+', '\n', t)
         assert t.count(f'(rev "{REV}")') == 1, file.name
         (out / file.name).write_text(t)

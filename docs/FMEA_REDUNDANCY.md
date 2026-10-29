@@ -1,5 +1,32 @@
 # Rocket Flight Computer v1 — Redundancy Architecture and Fault-Tolerance Ruling (REDUNDANCY-1, 2026-09-03)
 
+> **R10 circuit amendment (owner2026-10-28; requirements audit2):** PC5 ARM1_SENSE
+> is the sole RAW_ACT divider; PC0 PYRO1_CONT is retained, PB0 NC. Both filtered
+> nodes connect directly to the MCU: R168/R170 and duplicate bank are removed.
+> Two5.1 kΩ tops/two parallel2 kΩ bottoms and10 nF remain; one-resistor-fault
+> ceiling3.342171 V at19.9 V clamp. The historical double-fault9.4 mA limit is
+> withdrawn; double faults can damage the MCU. Qualify new cold bands (healthy
+> CONT/BUS99.369/99.338 mV,open146.23/0 mV before leakage/ADC error) and keep
+> ground hard refusals/in-flight logging only. One external J400 screw switch,
+> on-rail/on-last/off-first, PC1 load-enable and separate PE4 fire control stay.
+> GPS/radio always powered, no translators/EN/OE/fault isolation; no self-powered
+> module with board off and no back-feed source when connecting the e-match.
+> Camera U402/U12/U13 stays. Every wired terminal is unkeyed DB125: pin/polarity
+> verification and externally supported leads are essential.
+>
+> **Selected match:** MJG J-Tek LEAD-FREE,shroud retained,standard24 AWG. [Maker
+> technical sheet p1](https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF)
+> gives0.75 A all-fire under0.5 s,0.30 A no-fire/40 mA maximum test. Keep one1.5×
+> margin=1.125 A, replacing an unnamed1 A match's1.5 A criterion. Coupled hot-loop
+> calculation with SD/ports gives1.546/1.481/1.284 A at0/1/4 persistent stalls
+> (7.4 V equivalent source,Calc/Inference). Neutral does not clear a jam. R1342 Ω
+> and normal20 ms/fault36 ms physical limits remain; selected-lot20 ms/charge
+> qualification is unmeasured and is not proved by the maker's0.5 s rating.
+>
+> Earlier revision rows below are historical where they name removed ARM links,
+> channel2,port switches/translators,servo headers or the old ADC tails.
+
+
 ## R10 applicability: one screw switch (owner decision, 2026-10-28)
 
 Current R10 supersedes the ARM-link procedures below. J124, its removable ARM link and its 5 A fuse are removed; the former PYRO1_BUS joins canonical RAW_ACT behind Q120 / Q121. One external screw switch on J400 (U9 EN) powers and arms the board: switch on only on the pad / rail, on last and off first. The pyro channel is live whenever the board is on; there is no separate physical break while powered.

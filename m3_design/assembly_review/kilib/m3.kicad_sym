@@ -3611,7 +3611,7 @@
 					(effects
 						(font
 							(size 1.05 1.05))))))
-		(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT"
+		(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT M3_DB125_4P_GN"
 			(at 0 0 0)
 			(effects
 				(font
@@ -7066,6 +7066,309 @@
 				(at 15.24 -2.54 180)
 				(length 5.08)
 				(name "PG"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+
+	(symbol "MicroSD_Hinge"
+		(pin_names
+			(offset 1.016))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "J"
+			(at 0 15.24 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "MicroSD_Hinge"
+			(at 0 -15.24 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Molex 472192001 locking hinged microSD; no card detect; G1-G4=12/9/10/11"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "microSD socket"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_fp_filters" "M3_MICROSD_MOLEX_472192001"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "MicroSD_Hinge_0_1"
+			(rectangle
+				(start -10.16 12.7)
+				(end 10.16 -12.7)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "MicroSD_Hinge_1_1"
+			(pin passive line
+				(at -15.24 10.16 0)
+				(length 5.08)
+				(name "DAT2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 7.62 0)
+				(length 5.08)
+				(name "CD_DAT3_CS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 5.08 0)
+				(length 5.08)
+				(name "CMD_DI"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -15.24 2.54 0)
+				(length 5.08)
+				(name "VDD"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 0 0)
+				(length 5.08)
+				(name "CLK"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -15.24 -2.54 0)
+				(length 5.08)
+				(name "VSS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 10.16 180)
+				(length 5.08)
+				(name "DAT0_DO"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "7"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 7.62 180)
+				(length 5.08)
+				(name "DAT1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "8"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 5.08 180)
+				(length 5.08)
+				(name "G2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "9"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 2.54 180)
+				(length 5.08)
+				(name "G3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "10"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 0 180)
+				(length 5.08)
+				(name "G4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "11"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 -2.54 180)
+				(length 5.08)
+				(name "G1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "12"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+
+	(symbol "ServoTerminal"
+		(pin_names
+			(offset 1.016))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "J"
+			(at 0 12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "ServoTerminal"
+			(at 0 -12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "DORABO DB1253.5mm5pos; four servo signals and GND only"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "servo terminal"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_fp_filters" "M3_DB125_5P_GN"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "ServoTerminal_0_1"
+			(rectangle
+				(start -10.16 10.16)
+				(end 10.16 -10.16)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "ServoTerminal_1_1"
+			(pin passive line
+				(at -15.24 5.08 0)
+				(length 5.08)
+				(name "SERVO1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 2.54 0)
+				(length 5.08)
+				(name "SERVO2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 0 0)
+				(length 5.08)
+				(name "SERVO3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 -2.54 0)
+				(length 5.08)
+				(name "SERVO4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 -5.08 0)
+				(length 5.08)
+				(name "GND"
 					(effects
 						(font
 							(size 1.05 1.05))))

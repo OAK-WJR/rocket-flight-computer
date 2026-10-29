@@ -2,7 +2,7 @@
 """Check the R10 schematic against the R9 source and explicit circuit contract.
 
 Usage: python3 -B m3_design/r10_sch_check.py --project DIR [--json FILE]
-Checks every pin and fitted component, retained functional safety, UART isolation,
+Checks every pin and fitted component, retained functional safety, camera isolation,
 strict ERC, a fresh netlist export and deterministic sheet regeneration. Seeded
 contract mutations run in memory and never modify the checked project.
 This is a schematic gate; it makes no routing, thermal or bench qualification claim.
@@ -66,8 +66,6 @@ def expected():
         pins.update({(ref, pin): net for pin, net in spec['nets'].items()})
     for ref, value in data['value_overrides'].items():
         parts[ref].find('value').text = value
-    for pin in ('2', '5', '8', '11'):
-        pins['J122', pin] = None
     with (gen.SOURCE / 'pin_table.tsv').open() as table:
         for row in csv.DictReader(table, delimiter='\t'):
             pins['U1', row['pin']] = None if row['r10_net'] == 'NC' else row['r10_net']
@@ -78,19 +76,32 @@ def contract(actual_parts, actual_pins):
     want_parts, want_pins = expected()
     issues = assembly_groups(actual_parts)
     removed = {'J123', 'R160', 'R161', 'C160', 'D122', 'TP84', 'TP85', 'TP86', 'TP87', 'TP89', 'TP92',
-               'U412', 'U422', 'R443', 'R453', 'C441', 'C442', 'C451', 'C452'}
+               'U412', 'U422', 'R443', 'R453', 'C441', 'C442', 'C451', 'C452',
+               'U410', 'U420', 'U411', 'U421', 'R410', 'R411', 'R412', 'R420', 'R421', 'R422',
+               'R442', 'R452', 'C440', 'C443', 'C450', 'C453', 'R177', 'R124', 'R125', 'R182', 'R172', 'C122', 'R168', 'R170'}
     if removed & actual_parts.keys():
         issues.append(f'AUD-4 / AUD-5 / AUD-8: obsolete parts remain: {sorted(removed & actual_parts.keys())}')
     if 'J124' in actual_parts:
         issues.append('single screw switch: obsolete J124 ARM terminal remains')
     if 'PYRO1_BUS' in actual_pins.values():
         issues.append('single screw switch: PYRO1_BUS must be merged into RAW_ACT')
+    if any(str(net).startswith('RAW_ACT_SENSE') for net in actual_pins.values()):
+        issues.append('AVA: ARM1_SENSE is the sole RAW_ACT bus divider; duplicate RAW_ACT_SENSE remains')
     safety_pins = {('R134', '2'): 'RAW_ACT', ('R132', '1'): 'RAW_ACT', ('U1', '16'): 'ACT_EN_MCU',
                    ('R122', '1'): 'ACT_EN_MCU', ('R122', '2'): 'ACT_EN', ('R123', '1'): 'ACT_EN',
                    ('R123', '2'): 'GND', ('Q122', '1'): 'ACT_EN', ('Q122', '2'): 'GND'}
     for key, net in safety_pins.items():
         if actual_pins.get(key) != net:
             issues.append(f'single screw switch: {key[0]}.{key[1]} must be {net}')
+    interface_pins = {('J410', '1'): 'PORT_4V8', ('J420', '1'): 'PORT_4V8',
+                      ('R440', '2'): 'GPS_RX_MCU', ('R441', '1'): 'GPS_TX_MCU',
+                      ('R450', '2'): 'RADIO_RX_MCU', ('R451', '1'): 'RADIO_TX_MCU',
+                      ('U1', '33'): 'ARM1_SENSE', ('U1', '34'): None,
+                      ('U1', '78'): 'SD_SCK', ('U1', '79'): 'SD_MISO',
+                      ('U1', '80'): 'SD_MOSI', ('U1', '81'): 'SD_CS'}
+    for key, net in interface_pins.items():
+        if actual_pins.get(key) != net:
+            issues.append(f'AVA port / SD contract: {key[0]}.{key[1]} must be {net}')
     if set(actual_parts) != set(want_parts):
         issues.append(f'component set: missing {sorted(set(want_parts)-set(actual_parts))}; extra {sorted(set(actual_parts)-set(want_parts))}')
     for key in sorted(set(want_pins) | set(actual_pins)):
@@ -126,8 +137,12 @@ def seeds(parts, pins):
         'AUD-4 pull-pin restored': lambda p, n: p.update({'J123': gen.baseline()[0]['J123']}),
         'AUD-4 pull-pin MCU net restored': lambda p, n: n.update({('U1', '7'): 'PULLPIN'}),
         'AUD-5 removed test pad restored': lambda p, n: p.update({'TP92': gen.baseline()[0]['TP84']}),
-        'AUD-8 translator B supply from port': lambda p, n: n.update({('U411', '7'): 'GPS_4V8'}),
-        'AUD-8 VCCB bypass removed': lambda p, n: p.pop('C443'),
+        'AVA obsolete GPS translator restored': lambda p, n: p.update({'U411': copy.deepcopy(p['U12'])}),
+        'AVA obsolete radio switch restored': lambda p, n: p.update({'U420': copy.deepcopy(p['U402'])}),
+        'AVA duplicate bus divider restored': lambda p, n: p.update({'R124': gen.baseline()[0]['R124']}),
+        'audit2 CONT pin resistor restored': lambda p, n: p.update({'R168': gen.baseline()[0]['R168']}),
+        'audit2 bus ADC tail restored': lambda p, n: n.update({('U1', '33'): 'ARM1_SENSE_MCU'}),
+        'AVA duplicate bus ADC restored': lambda p, n: n.update({('U1', '34'): 'RAW_ACT_SENSE_MCU'}),
         'obsolete ARM terminal restored': lambda p, n: p.update({'J124': gen.baseline()[0]['J124']}),
         'obsolete separate pyro bus': lambda p, n: n.update({('R134', '2'): 'PYRO1_BUS'}),
         'pyro feed directly from pack': lambda p, n: n.update({('R134', '2'): 'BAT_IN'}),
@@ -135,14 +150,22 @@ def seeds(parts, pins):
         'load switch follows logic rail': lambda p, n: n.update({('R122', '1'): 'RAW_PROTECTED'}),
         'load switch enable pull-down missing': lambda p, n: p.pop('R123'),
         'independent load switch MCU pin missing': lambda p, n: n.update({('U1', '16'): None}),
-        'servo middle row powered': lambda p, n: n.update({('J122', '2'): 'RAW_ACT'}),
+        'servo signal terminal powered': lambda p, n: n.update({('J122', '2'): 'RAW_ACT'}),
         'radio USB injection bypass': lambda p, n: n.update({('U1', '51'): 'RADIO_RX_WIRE'}),
-        'GPS OE pulldown missing': lambda p, n: p.pop('R442'),
-        'radio enable bias missing': lambda p, n: p.pop('R421'),
+        'GPS always-on feed split': lambda p, n: n.update({('J410', '1'): 'GPS_4V8'}),
+        'radio TX series bypass': lambda p, n: n.update({('U1', '52'): 'RADIO_TX_WIRE'}),
+        'retained camera isolation removed': lambda p, n: p.pop('U12'),
+        'retained camera switch removed': lambda p, n: p.pop('U402'),
         'pyro load switch removed': lambda p, n: p.pop('Q120'),
         'pyro gate capacitor excluded': lambda p, n: ET.SubElement(p['C126'], 'property', name='exclude_from_bom'),
         'shorted igniter limiter DNP': lambda p, n: ET.SubElement(p['R134'], 'property', name='dnp'),
-        'GPS FAULT pullup externally powered': lambda p, n: n.update({('R412', '2'): 'GPS_4V8'}),
+        'microSD socket removed': lambda p, n: p.pop('J430'),
+        'microSD CS reset pullup removed': lambda p, n: p.pop('R460'),
+        'microSD MOSI MISO swapped': lambda p, n: n.update({('J430', '3'): 'SD_MISO', ('J430', '7'): 'SD_MOSI'}),
+        'microSD shield floating': lambda p, n: n.update({('J430', '9'): None}),
+        'microSD supplied by port LDO': lambda p, n: n.update({('J430', '4'): 'PORT_4V8'}),
+        'microSD unused DAT2 floating': lambda p, n: p.pop('R464'),
+        'QSPI primary logger removed': lambda p, n: p.pop('U3'),
     }
     for label, mutate in mutations.items():
         p, n = copy.deepcopy(parts), dict(pins)
@@ -209,20 +232,19 @@ def binding_note(project, board=None):
             'mcu_reference': 'https://www.st.com/resource/en/reference_manual/rm0433-stm32h742-stm32h743753-and-stm32h750-value-line-advanced-armbased-32bit-mcus-stmicroelectronics.pdf',
             'mcu_cmsis': 'https://raw.githubusercontent.com/STMicroelectronics/cmsis-device-h7/master/Include/stm32h743xx.h',
             'translator': 'https://www.ti.com/lit/ds/symlink/txu0202.pdf',
-            'switch': 'https://www.ti.com/lit/ds/symlink/tps2553.pdf'},
+            'switch': 'https://www.ti.com/lit/ds/symlink/tps2553.pdf',
+            'microsd_socket': 'https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf',
+            'sd_physical_layer': 'https://www.sdcard.org/downloads/pls/'},
         'port_states': {
-            'reset_boot': '100k EN and 10k OE pulldowns hold each external port disabled; fault pullups only to main 3V3. AUD-8: GPS/radio TXU supplies A/B both use 3V3, with a local 100nF at each supply pin; camera B retains its IO LDO.',
-            'off_external_uart_active': 'AUD-8: with main 3V3 on, both GPS/radio TXU supply sides stay powered when a port switch is off; isolation requires OE low. Partial-power-down isolation applies when main 3V3 itself is off. Camera VCCB retains U13 and its separate CAM_IO_3V3 rail. Ground-only ESD clamps stay; test both UART lines and independently powered radio USB. Accepted: mis-set OE can feed an unpowered GPS/radio a few mA through 1k; keep OE low whenever its port switch is off.',
-            'startup': 'EN high, wait for verified rail settling, configure UART idle-high, then OE high; no GPIO alternate function before safe port state.',
-            'shutdown_shedding': 'OE low before EN low; stop UART activity. Do not infer immediate loss of supply from delayed FAULT.',
-            'usb_radio_vcc_backfeed': 'Separately qualify TPS2553 reverse current and up-to-7ms reverse-trip transition; UART isolation alone does not qualify the power pin.',
-            'port_device_backfeed': ('An ENABLED TPS2553 blocks reverse current only above 95-190 mV / 135 mOhm, about 0.7 A, after 3-7 ms '
-                                     '(SLVS841G section 6.5 p7): a self- or USB-powered GPS, radio or camera can back-feed PORT_4V8 / PORT_5V3, '
-                                     'then RAW_PROTECTED (U401 / U400 body paths, Inference) and VLOGIC with the power switch open. '
-                                     'R122 now comes from PC1, so the logic rail does not directly assert ACT_EN. J400 has no state '
-                                     'sensor; back-feed can hide contact opening, so automatic shutdown on that event cannot be '
-                                     'credited. Keep the no-back-feed/e-match operating restriction. ORDERING R10 bench step '
-                                     '(R3-SAF-02 / D-SS-02 / AUD-8).')},
+            'reset_boot': 'GPS/radio powered directly by PORT_4V8; their UARTs reach FT digital MCU pins through1k and ground ESD. Configure digital UART inputs with no pulls for any5V source. Camera EN100k/OE10k pulldowns retain power/isolation default-off.',
+            'off_external_uart_active': 'GPS/radio no longer have powered-off isolation. An externally powered module can inject through the kept1k into an unpowered MCU; no self-powered GPS/radio with the board off. The SD card remains on main3V3, CS high by10k at reset.',
+            'startup': 'GPS/radio UART TX idle-high before alternate-function operation. Camera: EN high, verified rail settling, RX pull-up and TX idle-high, then OE high. SD_CS high before SPI3 AF6 configuration.',
+            'shutdown_shedding': 'GPS/radio supply cannot be switched or power-cycled by firmware. Stop UARTs and SD/QSPI writes, disable camera OE then EN, lower MCU clock, extinguish LEDs/buzzer. Faulted cards must not block safety/flight tasks.',
+            'port_device_backfeed': ('Always-on GPS/radio power pins directly back-feed PORT_4V8; U401/U400 can then feed RAW_PROTECTED/VLOGIC (Inference). '
+                                     'The retained camera TPS2553 blocks reverse current when disabled, but an enabled part trips only beyond95-190mV after3-7ms '
+                                     '(TI SLVS841G section6.5p7); UART isolation does not qualify its power pin. '
+                                     'J400 has no state sensor, so back-feed can hide switch opening. Connect the e-match only with no USB/self-powered port source attached; '
+                                     'bench USB with pack disconnected or e-match disconnected. No firmware mitigation replaces this restriction.')},
         'arming_policy': {
             'decision': 'owner single screw switch, 2026-10-28; J124 and its ARM-link fuse removed',
             'hardware': 'J400 is the pad power/arming device, connected to U9 EN with no switch-state sensor. Q120/Q121 feed RAW_ACT directly to R134 and R132. PC1 independently enables Q122 through R122; PE4 separately drives Q124. Both MCU controls default off in reset.',
@@ -241,30 +263,34 @@ def binding_note(project, board=None):
             'Build a new reviewed binding through the assembly_binding design process; never substitute a board hash into the R1 chain.',
             'GPS USART6 PC6 TX/PC7 RX AF7 (DS12110 Rev10 Table12 p91); radio UART5 PB13 TX/PB12 RX AF14 (Table11 p90).',
             'Camera UART7 PE8 TX/PE7 RX AF7 without flow control. UART5/USART6 are separate from the loader USART interfaces (AN2606 Rev64 Table119 pp277-280: no UART5, PB12 or PB13).',
-            'Re-mapped loader pins (AN2606 Rev64 Table119 pp279-280; pin_table an2606_t119_loader_role): PA4 / PA5 / PA6 are SPI1 NSS / SCK / MISO and PE11 / PE12 SPI4 NSS / SCK. In the ROM loader PA6 is driven push-pull into the VLOGIC_SENSE divider only (<= 0.36 mA) and PE11 is an input that R431 holds low (camera port off); before a loader jump drive every port EN and OE low as well as PE4.',
-            'EXTI10 GPS_FAULT_N (PD10), EXTI9 RADIO_FAULT_N (PD9), EXTI12 CAM_FAULT_N (PE12); EXTI4 LOGIC_SOURCE_ST (PA4) and EXTI5 BAT_FAULT_N (PA5), swapped for routing (D-R2-09); EXTI6 USB_FAULT_N (PD6), EXTI8 VBUS_SENSE (PC8). AUD-4 removes PULLPIN; PC13 is NC. One port per EXTI line; lines 5/6/8/9 share EXTI9_5 and 10/12 share EXTI15_10, so each handler checks its pending bit. PE1 IMU_INT1 is on EXTI1 (free on R10; R6-MCU-01): configure PE1 as an input with the internal pull-down and take the roll-loop data-ready interrupt on it; LSM6DSV320X INT1 is push-pull and active high by default (Inference: DS14623 not re-read here), so no pull-up is wanted. EXTI1 has its own vector.',
+            'Re-mapped loader pins (AN2606 Rev64 Table119 pp279-280; pin_table an2606_t119_loader_role): PA4 / PA5 / PA6 are SPI1 NSS / SCK / MISO and PE11 / PE12 SPI4 NSS / SCK. In the ROM loader PA6 is driven push-pull into the VLOGIC_SENSE divider only (<= 0.36 mA) and PE11 is an input that R431 holds low (camera port off); before a loader jump drive camera EN/OE low, PC1/PE4 low and SD_CS high. PC11 is loader SPI3_MISO output; R460 keeps the card deselected.',
+            'Always-on GPS/radio have no FAULT/EN/OE GPIOs; PD8/PD9/PD10/PD14/PD15/PE15 are NC/analog. EXTI12 CAM_FAULT_N (PE12); EXTI4 LOGIC_SOURCE_ST (PA4) and EXTI5 BAT_FAULT_N (PA5), swapped for routing (D-R2-09); EXTI6 USB_FAULT_N (PD6), EXTI8 VBUS_SENSE (PC8). AUD-4 removes PULLPIN; PC13 is NC. One port per EXTI line; lines5/6/8 share EXTI9_5 and line12 uses EXTI15_10, so each handler checks its pending bit. PE1 IMU_INT1 is on EXTI1 (free on R10; R6-MCU-01): configure PE1 as an input with the internal pull-down and take the roll-loop data-ready interrupt on it; LSM6DSV320X INT1 is push-pull and active high by default (Inference: DS14623 not re-read here), so no pull-up is wanted. EXTI1 has its own vector.',
             'PC1 ACT_EN_MCU and PE4 pyro gate low before GPIO configuration, port shutdown, ROM-loader entry or reset. PC1 is the independent Q120/Q121 enable through R122, not a sentinel. Keep sentinel pins PE3/PE5/PE6/PC4 without nets and in analog mode (their reset state), never driven: every no-net pin, the sentinels included, stays analog (R5-MCU-03). PA15 is the one no-net pin whose reset state is NOT analog (R7-MCU-01): it resets to JTDI with the internal pull-up (STM32H743 debug-pin reset state, DS12110 / RM0433 as the reviewer read it, not re-read here: Inference), so set PA15 to analog mode with no pull explicitly at start-up; "reset state" wording applies only to the other no-net pins.',
             'GAP-5: keep the independent safety task and IWDG divide-by-4 (PR register 0) / RLR 239 (960 LSI cycles): 30ms nominal, 28.571-32.653ms at LSI 33.6-29.4kHz (DS12110 Rev11 Table136 through 125C). Never refresh from prefire through firing until physical firing current has ended (including tail); require the postfire SAFETY pass and refeed within 5ms. Limit NORMAL PHYSICAL igniter current, including the actual gate-discharge tail, to 20ms; a 20ms GPIO-high command alone is insufficient. Worst-fault physical current is bounded by 32.653ms watchdog +0.2ms prefire/synchronization +0.5ms reset HiZ +1.5ms actual gate-current tail =34.853ms, within the 36ms contract. These are firmware and bench obligations, not implemented. Never fire before launch is detected using accelerometer and barometer. On the ground continuity / bus readings are hard refusals; in flight they are logged and annunciated and never veto a fire. The screw switch is the pad arming device; no separate ARM plug or ARM-link state exists.',
             'F6 / FMEA F-1: the first SERVO1-4 output after reset is neutral 1520us, with a command within 50ms. GAP-5 uses the 960-LSI-cycle IWDG period specified above; only the SAFETY task may refresh it, subject to the no-refresh firing interval. A ROM-loader jump is allowed only before IWDG starts: it cannot be stopped afterward; keep both firing controls low.',
             'D-SS-04 / AUD-3: hold BOTH PC1 ACT_EN_MCU and PE4 low for passive cold screening. After a prior load-switch enable, wait at least 1s and verify RAW_ACT discharged / ACT_GATE off before classifying readings. Bench-qualify passive low/healthy/open bands, leakage and unexpected powered-bus readings using parts_qualification.md; any ground fault is a hard refusal BEFORE PC1 enable, especially a failed-short Q124. Only after a valid passive check may PC1 go high, with PE4 still low for at least 100ms before powered-bus checks or any permitted fire. This settling wait is not the no-refresh firing interval; in-flight sense readings never veto fire.',
-            'Servo positive and motor return direct to pack. Board cannot cut servo power; qualify neutral-on-reset with the chosen servo and harness.',
+            'J122 DB1255pos pins1-4SERVO1-4_OUT,pin5GND signal reference; servo positive and motor return direct to pack. Board cannot cut servo power; qualify neutral-on-reset and measured shared return. J400 DB1252pos is power/arming switch; J9/J410/J420 DB1254pos unkeyed, explicit per-pin power/GND/UART legends and end-to-end harness check; clamps28-16AWG with qualified ferrules/splices for thinner module leads.',
             'Maximum normal-flight MCU clock200MHz for the retained-load budget. Firmware not implemented.',
-            'F6 battery-break response (OQ-5, owner 2026-10-28): C84 plus firmware load shedding, with no hardware port-buck cutoff (U400 EN stays tied to VIN). Use the PA6 (ADC12_INP3, moved from PC2_C, D-R2-09) VLOGIC_SENSE analog watchdog on ADC1 or ADC2, not delayed port FAULT. Ports-on ride-through is only 0.55-1.0 ms (Calc / Inference; parts_budget.json). Firmware must specify and bench-verify the watchdog threshold, maximum detection-to-OE/EN-low latency, actual port-current decay (TPS2553 turn-off up to 3 ms) and retained-load envelope. Do not credit the 8.7-13.6 ms ports-off, logic-shed estimate before the port load is removed; continued operation through a loaded battery break is not guaranteed.',
-            'On shedding disable all three UART OEs and port switches, pause flash writes, lower MCU clock, extinguish LEDs/buzzer; retain IMU/barometer/flight state and safety timing.',
-            'R9-PWR-02: TPS2553 overcurrent FAULT deglitch is 3-11ms (TI SLVS841G p7, revision history p27), not a 10ms maximum. Budget 11ms plus firmware detection/handling latency and actual switch turn-off/current-decay time for fault shutdown. FAULT is not battery-break detection; current-limit and rail budgets are unchanged.',
-            'On detected VLOGIC undervoltage or firmware shutdown, drop every port enable and UART OE. J400 has no state sensor and back-feed can hide its opening, so no automatic switch-open response is guaranteed. Port back-feed through an enabled TPS2553 is not blocked below about 0.7 A (R3-SAF-02); retain the no-back-feed/e-match operating restriction.',
+            'F6 battery-break response (always-on port owner decision2026-10-28): C84 plus firmware shedding, no hardware U400 cutoff and no GPS/radio switches. Use PA6 ADC12_INP3 watchdog on ADC1/2. Ports-on ride-through includes the always-on GPS/radio and card allocation; no software power cutoff can be credited. Bench-verify detection latency, selected-card current, camera current decay and retained load. Loaded battery-break continuity is not guaranteed.',
+            'On shedding stop SD and QSPI writes immediately without a blocking flush, stop UARTs, lower camera OE then EN, lower MCU clock, extinguish LEDs/buzzer; retain IMU/barometer/flight state and safety. The SD card may stay busy and powered after host clocks stop; budget its<=200mA write allocation until its actual current falls. No in-flight wait for filesystem/card completion.',
+            'Camera TPS2553 FAULT deglitch is3-11ms, turn-off up to3ms (TI SLVS841G p7). FAULT is not battery-break detection. GPS/radio rely on shared LDO/buck current and thermal limits; a short can remove both modules, with no independent fault flag or firmware recovery power-cycle.',
+            'On VLOGIC undervoltage/shutdown drop camera EN/OE; GPS/radio are always powered. J400 has no state sensor; retain the no-self-powered-port/e-match restriction. Direct GPS/radio UARTs are FT digital inputs only, within0..5V, pulls disabled above4V; no powered-off isolation or positive injected current allowance.',
             'PC14 drives the buzzer gate through R162 1 kOhm: VBAT-domain PC13/PC14/PC15 are characterised at +/-3 mA only (DS12110 Rev10 Table62 p141); GPIO speed low (2 MHz limit, Table63 note 2).',
             'Preserve >=150ms switch-bounce immunity separately from battery-lead-break ride-through. Resume flight state from live evidence after reset.',
             'Radio uplink cannot arm or fire; LR900-F band is 890-915 MHz: use manual channels 12-25 (902-915 MHz) or a maker-confirmed FHSS set inside 902-928 MHz; qualify installed maximum-power radio/GPS immunity.',
-            'PC14 buzzer GPIO-toggled; PC13, PE10 and PE0 remain NC (AUD-4 removes the pull-pin). Retained safety ADC dividers and sensor functions unchanged.',
-            'Port UART start-up (R4-MCU-01): while U1 is in reset the TXU0202 A side floats and the OE pull-downs hold the translators off. Before any translator OE goes high, enable the internal pull-ups on the three MCU receive pins GPS_RX_MCU (PC7), RADIO_RX_MCU (PB12) and CAM_MCU_RX (PE7), and drive the three TX pins (PC6, PB13, PE8) idle-high; only then raise OE.',
-            'Per-sense ADC instance and channel (R4-MCU-02; verified against DS12110 Rev10 Table 9 in review round 5, no longer an Inference): PC0 PYRO1_CONT_MCU ADC123_INP10, PA6 VLOGIC_SENSE ADC12_INP3, PC5 ARM1_SENSE_MCU ADC12_INP8, PB0 RAW_ACT_SENSE_MCU ADC12_INP9, PB1 CAM_5V_SENSE ADC12_INP5, PC3_C V3V3_SENSE ADC3_INP1 (ADC3 only). The F6 analog watchdog on PA6 must therefore run on ADC1 or ADC2, not ADC3; V3V3_SENSE is read on ADC3.',
+            'PC14 buzzer GPIO-toggled; PC13, PE10 and PE0 remain NC (AUD-4 removes the pull-pin). Audit2: PC0 PYRO1_CONT and PC5 ARM1_SENSE directly read their retained split dividers and10nF filters, withoutR168/R170 tails; duplicate bus bank/PB0 removed. Sensor functions unchanged.',
+            'UART start-up: camera retains U12 isolation and OE pull-down; before camera OE goes high, RX PE7 pull-up and TX PE8 idle-high. GPS/radio connect through1k directly; PC7/PB12 are digital AF inputs with pulls disabled for5V compatibility, PC6/PB13 idle-high. Never connect self-powered GPS/radio with the board off; measure endpoint TX levels.',
+            'Per-sense ADC instances: PC0 PYRO1_CONT ADC123_INP10, PA6 VLOGIC_SENSE ADC12_INP3, PC5 ARM1_SENSE ADC12_INP8 (sole RAW_ACT bus reading), PB1 CAM_5V_SENSE ADC12_INP5, PC3_C V3V3_SENSE ADC3_INP1. PB0 is NC/analog; delete duplicate RAW_ACT_SENSE readings and thresholds. Ground continuity and sole bus readings remain hard refusals; in flight neither vetoes fire. PA6 watchdog uses ADC1/2; V3V3_SENSE uses ADC3.',
+            'microSD J430 locking hinge, no card-detect: SPI3 AF6 PC10 SCK/PC11 MISO/PC12 MOSI, PD0 software CS. CS high before GPIO/AF setup; >=74 clocks with CS/MOSI high at100-400kHz then CMD0; run<=25MHz. R460-R46410k pullups and3V3 bypass are physical. Select and bench-qualify a card with<=200mA write and<=30mA idle; keep locked during flight, insert/remove only off with board out.',
+            'F5: nominal whole-flight storage spans retained QSPI plus secondary removable microSD, with adequate bounded buffering and at least25% measured throughput margin. No requirement that a whole flight fit16MB QSPI alone. A missing/faulted/full/slow card or corrupt filesystem never delays control, safety, watchdog or fire. Use nonblocking bounded transfers and preallocated files; drop secondary SD records only as fault/overload fallback, not the normal capacity plan. Power loss may corrupt the card; no blocking flush during F6 or firing.',
+            'Audit2 item16: keep both LEDs dark from arming to landing until the installed opaque U5 cover passes LED-toggle/ambient-light checkout; the CAD cannot certify the cover.',
+            'Selected MJG J-Tek LEAD-FREE maker all-fire0.75A times1.5 gives1.125A current criterion; the maker0.5s test does not certify20ms. Retain R1342ohm, normal physical20ms/fault36ms and qualify selected-lot20ms firing/source/harness/charge before flight.',
             'No-net U1 pins (R4-MCU-04): every U1 pin with no net stays in analog mode (the reset state) and is never configured as an output; the K-loader no-net pins (pin_table an2606_t119_loader_role) are never outputs, so a ROM-loader drive or a stray configuration cannot reach copper.',
             'LSE (R5-MCU-02): keep RCC_BDCR.LSEON = 0 and never set up the backup domain for the LSE: PC14 is OSC32_IN and drives BUZZ_DRV through R162, and VBAT is tied to 3V3, so a stray LSEON persists across NRST.',
             'VBUS_SENSE (R5-MCU-05): PC8 = VBUS / 2 (R9 1 kOhm / R110 1 kOhm); at 4.4 V VBUS the node is 2.20 V, below VIH = 0.7 x VDD = 2.31 V, so VBUS detection needs VBUS >= 4.62 V at VDD 3.3 V. A low PC8 is not proof of no USB: never use it as the sole input to a safety decision.',
-            'Sense pins without a 4.7 kOhm pin resistor (R5-MCU-04): PA6 VLOGIC_SENSE (shorted R60 puts VLOGIC on an FT_a pin; ADC-mode VIN maximum 4.0 V, positive injection allowance 0 mA (DS12110 Rev11 Table109 pp207-208 notes3-5). The digital FT ceiling is min(min(relevant supplies)+4.0 V,6.0 V), or 6.0 V with all relevant supplies at 3.3 V; pulls must be disabled above 4.0 V) and PB1 CAM_5V_SENSE (open R105 puts CAM_5V on a TT_a pin through R104 10 kOhm, limit 4.0 V); single-fault pin-damage cases recorded in parts_qualification.md, no firmware mitigation.',
+            'Audit2 direct PC0/PC5 filtered ADCs retain single-resistor protection; duplicate PB0 bank andR168/R170 tails are removed. Other unprotected sense faults (R5-MCU-04): PA6 VLOGIC_SENSE (shorted R60 puts VLOGIC on an FT_a pin; ADC-mode VIN maximum 4.0 V, positive injection allowance 0 mA (DS12110 Rev11 Table109 pp207-208 notes3-5). The digital FT ceiling is min(min(relevant supplies)+4.0 V,6.0 V), or 6.0 V with all relevant supplies at 3.3 V; pulls must be disabled above 4.0 V) and PB1 CAM_5V_SENSE (open R105 puts CAM_5V on a TT_a pin through R104 10 kOhm, limit 4.0 V); single-fault pin-damage cases recorded in parts_qualification.md, no firmware mitigation.',
             'Trace (R6-MCU-03): never enable synchronous trace (PE2 TRACECLK, PC1 TRACED0, PE4 TRACED1) in any debug configuration: PC1 enables the load switch and PE4 is the pyro gate (PYRO1_GATE); trace would drive both firing controls. After PC1 and PE4 are configured as low outputs, lock PC1 with GPIOC_LCKR and PE4 with GPIOE_LCKR (the locks hold until the next reset), then read both registers back: bit 16 (LCKK) and the pin lock bit (PC1 bit 1, PE4 bit 4) must read 1, and the firmware refuses to arm otherwise (D-SS-02 / R7-MCU-02). A locked pin\'s output data can still be written, its configuration cannot: in a loader-jump sequence PC1 and PE4 stay locked low outputs, because GPIOC / GPIOE resets (RCC_AHB4RSTR) clear the locks and only R123 / R127 then hold the controls off. R10 locks PC1 and PE4: PE3 / PE5 / PE6 are analog sentinels, PE12 is the CAM_FAULT_N input and PE13 / PE14 are NC. Disconnect the e-match before connecting a trace-capable debugger session: whether the DBGMCU trace pin assignment overrides the GPIO configuration (and the lock) on the H743 is not checked (Inference; R7-SAF-03).',
-            'UART break storm (R8-MCU-01): with a port OE high and its device unplugged or unpowered, the TXU0202 5 MOhm input pull-down drives the MCU RX pin low, a continuous break (Inference: from the pull-down, not measured). Firmware receives each port by DMA / IDLE-line, masks the per-frame FE / NE / ORE interrupts and drops that port OE after N consecutive framing errors (obligation; N open).',
+            'UART break storm: camera retains the TXU0202 input pull-down and can report a continuous break if enabled while unplugged. Direct GPS/radio can float/noise when unplugged. Receive by DMA/IDLE with bounded error handling; mask FE/NE/ORE per-frame storms and disable the affected UART after a bounded error threshold. GPS/radio cannot be isolated or power-cycled in software; camera OE may be lowered.',
             'Trace override bench step (R8-SAF-01 / R9-MCU-01): no e-match connected. Use a debugger-supported STM32H743 synchronous 4-bit ETM setup; RM0433 Rev8 pp3209/543 uses DBGMCU_CR at 0x5C001004 bit20 TRACECLKEN (CMSIS DBGMCU_CR_DBG_TRACECKEN), not TRACE_IOEN or TRACE_MODE. With QSPI idle, set PE2 AF0 TRACECLK; keep PC1 and PE4 locked low GPIO outputs, not trace alternate functions. Read back both GPIOC_LCKR and GPIOE_LCKR: LCKK bit16 plus PC1 bit1 / PE4 bit4 must remain set. Verify the debugger did not reset GPIOC/GPIOE or clear either lock. Observe a running PE2 trace clock before quiet PC1 / PE4 / TP122 counts as evidence; absent clock or lost lock invalidates the test. If either control toggles with valid clock/locks, enforce trace-clock disable and readback before arming and report it (override behavior remains Inference until measured).',
             'W25Q128JV (R6-MCU-04): set the QE bit in status register 2 before QSPI quad mode is used; no blocking flash erase in flight: pre-erase before flight or use erase-suspend, so that the GAP-5 28.571ms minimum IWDG period holds (W25Q128JV Rev I AC characteristics, read in round 7: 4 KB sector erase 45 ms typical / 400 ms maximum, 32 KB block 120 / 1,600 ms, 64 KB block 150 / 2,000 ms, erase-suspend latency tSUS 20 us). The pad ring buffer must be erased in erase-suspend slices or sized for a single pre-erase before arming; erase time is added to the F5 timing-margin statement. This is an open firmware design obligation (R7-MCU-04).',
             'LSM6DSV320X (R6-MCU-05): IMU SPI clock <= 10 MHz (DS14623, as the reviewer read it, not re-read here); ignore gyro data for 40 ms after an IMU power-up (Ton, same source).'

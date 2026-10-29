@@ -1512,3 +1512,167 @@ OQ-3 remains $84.43 vs $84.41, R430 / U4 short; owner acceptance is pending. Not
 simulation / Inference and physical / firmware evidence remain distinct. No change to AGENTS §2. Computer Use
 approval review rejected Preview launch without a further reason; native geometry and generated renders supplied
 visual evidence without bypassing GUI control approval. No push, other-worktree edit or Git index mutation.
+
+## AVA layout comparison follow-up (owner decision, 2026-10-28)
+
+A read-only part-by-part comparison with BPS.space AVA (gpt-6-astra, 2026-10-28) found that AVA has a bridging ARM
+terminal beside its power switch (Joe Barnard, "The AVA Flight Computer", 2:07 and 3:15), correcting the earlier
+inference that AVA arms by its power switch alone. The owner keeps the single screw switch anyway ("Keep one switch"):
+commercial altimeters arm by one switch, and R10 still needs two MCU-driven FETs in series to fire.
+- **Duplicate bus sense removed:** with J124 gone, RAW_ACT_SENSE and ARM1_SENSE divide the same RAW_ACT node; keep one
+  six-part chain (the one whose ADC pin and binding are simpler), delete the other, and update the sense contract, ground
+  refusals and firmware binding to the one reading. Continuity sense (PYRO1_CONT) and its single-fault ratios stay.
+- **Layout changes adopted** (comparison §6, ranks 1-10): compact the battery / protection cell at J1; make the three
+  port cells local and identical in pattern; repeated compact sense-divider cells near their ADC pins; buzzer cell next
+  to its MCU pin; remove obsolete In2 notches; align ordinary bottom R / C in rows; re-escape flash / translator nets to
+  drop two-via hops; full pin tables beside connectors; GND stitching grouped per cell; probe pads beside their
+  subjects. Not adopted: a 45 deg U1, microSD, or any deletion of C84 / U10 / U11 / U401 / UART isolation / R134.
+
+## Always-on ports and a microSD slot (owner decisions, 2026-10-28)
+
+- **Port switches and GPS / radio translators removed** (owner: "Yes, cut them"; revises O5's "each port with its own
+  switch"). U410 / U420 / U402 (TPS2553) and the GPS / radio TXU0202 cells (U411 / U421 and their support) go; the GPS
+  and radio UARTs reach the MCU through the kept 1 kOhm series resistors and ESD, ports powered whenever the board is
+  on, as AVA (Inference). Physics: a shorted port cable is already limited by the port LDO / buck current limits; the
+  switches could not shed load inside the 0.55-1.0 ms ports-on hold-up (TPS2553 turn-off up to 3 ms), so F6's
+  ports-on ride-through is unchanged and the firmware shedding requirement drops the port switches. Accepted: no
+  firmware power-cycle of a hung GPS / radio (reset by the board's power switch); a self-powered GPS / radio can
+  back-feed a powered-off MCU pin through 1 kOhm (limited to a few mA; ground rule: no self-powered module on the
+  ports with the board off). **The camera keeps its isolation (U12 / U13) and its switch** if removing the switch would
+  let a self-powered camera back-feed CAM_5V into the board (F9 back-feed); otherwise apply the same cut and record why.
+- **microSD slot added alongside the QSPI flash:** QSPI stays the crash-safe primary log; the card is the large,
+  removable log. SPI mode on SPI3 (PC10 SCK, PC11 MISO, PC12 MOSI, a free GPIO CS; all NC today), or 4-bit SDMMC1 if
+  VBUS_SENSE moves off PC8 cleanly; on 3V3 with local bypass and pull-ups per the SD physical layer spec. The socket
+  must retain the card under the flight's shock and vibration: hinged or push-pull, not push-push, JLC-stocked; card
+  insertion reachable with the board out of the bay.
+
+## Connectors: screw terminals for every wired connection (owner decision, 2026-10-28)
+
+Owner: "actually can we do screw terminals for the servos?" (after the comparison of pin header, JST GH and DB125).
+- **Servos:** J122's 3 x 4 pin header is replaced by one 5-position DORABO DB125 3.5 mm screw terminal: SERVO1-4 signal
+  plus one shared GND (servo power and return stay on the harness, O3 / O6). Keep the 1 kOhm series resistors,
+  pull-downs and the SRV05-4 clamp at the terminal. Use a colour other than the battery's green and the igniter's black
+  if JLC stocks one (otherwise the 5-position body and the SERVO / pin legends tell it apart, F8). Physics: a clamped
+  wire cannot vibrate off under boost (a friction-fit servo plug can, freezing the tab); every servo lead is reworked
+  anyway because the board's + pin was dead. Cost ~+60 mm2 over the header (Inference). The servo-plug tie holes
+  become unnecessary: remove them if nothing else uses them.
+- **Power / arm switch J400:** JST GH-2 -> a 2-position DB125 (the J1 / J121 body; colour per F8 legends). Physics: the
+  loop carries ~7 uA, below tin GH contacts' reliable wetting current (Inference); a screw clamp's contact force is
+  better for a dry circuit, and the GH-2 part code goes away.
+- Result: DB125 screw terminals for the battery, igniter, switch and servos (as AVA's power / pyro rows); JST GH-4 only
+  for the three ports; plus USB-C and the microSD socket.
+
+### Connector amendment and circuit-only hand-off (Steer 1, 2026-10-28)
+
+Owner: "switch everything to screw terminals". J410, J420 and J9 also become 4-position DORABO DB125 3.5 mm
+terminals. Preserve the existing pin convention: supply, GND, TX, RX on GPS/radio; supply, GND, RX, TX on camera.
+Every position is labelled, with unmistakable supply/GND legends because physical keying is lost. DB125 accepts
+28–16 AWG: port leads must be at least 28 AWG at the clamp, with suitable ferrules or splices for thinner module leads.
+The servo and switch changes above stand. USB-C and the hinged microSD socket are the remaining connector types.
+
+The supervisor assigns re-placement, the AVA-layout pass and subsequent full review rounds to a separate layout
+agent. This pass finishes the circuit, contracts, firmware evidence and records; makes only the placement/routing
+changes needed for a complete connected DRC-clean board; proves reproducibility and check.sh zero; requests a
+supervisor commit; then stops with a layout hand-over. Rounds 9/10 remain evidence of the previous board only.
+Exploratory unqualified AVA sense/buzzer moves are withdrawn from production source; the duplicate sense chain
+is still deleted as directed. The original battery cell is retained for this circuit-only pass unless a required
+connector interferes with it. Any subsequent battery move requires a fresh actual-feed hot-plug qualification.
+
+
+## Requirements audit 2 (owner direction, 2026-10-28)
+
+Owner direction: keep only what physics or the project needs; relax oversized margins to the physics value and
+remove redundancy. Supervisor Steer 2 adopts audit items 1–13 and 15, and item 16 only after the installed opaque
+U5 cover passes its light check. Item 14 retains check.sh zero before every commit; the PR carries a concise
+summary/evidence link, STATUS changes once per reviewed change, and an electrical/axis firmware review is required
+when those facts change. Cosmetic board changes still require refreshed reviewed hash provenance. AGENTS §2 is unchanged.
+
+| Item | Applied scope and measured basis (Calc / Inference unless maker-cited) |
+|---|---|
+| 1 | Delete R177/R124/R125/R182/R172/C122 and PB0 bus input. ARM1_SENSE PC5 is the sole RAW_ACT bank; PC0 continuity remains. Saves 0.75 mA / 6.30 mW at 8.4 V. |
+| 2 | Delete R168/R170 and their separate ADC-tail nets. Keep two 5.1 kΩ tops, two parallel 2 kΩ bottoms and each 10 nF filter. At the 19.9 V clamp, one top-short or bottom-open gives ≤3.342171 V versus the 4.0 V analog absolute maximum (ST DS12110 tables 109–110). Double-fault MCU damage remains possible; no double-fault current guarantee. Local source 910.714 Ω, nominal RC 9.107 µs. |
+| 3 | ACT_FET_S fire-current floor 0.5 mm, retaining the seven qualified 0.4 mm source-pin bridges. At 4.262 A / 36 ms, 35 µm hot copper rises about 13.04 K; 28 µm sensitivity 20.61 K within the 25 K pulse allocation. BAT_IN remains ≥1 mm. |
+| 4 | Only resistor dead-end taps R80.1/R82.1/R167.1/R92.1 to first junction may use 0.15 mm without a length cap. At rounded 10 mA, a 10 mm / 35 µm / 70 °C tap loses 0.393 mV / 3.93 µW. No load feed is exempt. |
+| 5 | In1 may contain GND tracks joined to its plane; no foreign-net tracks. Reference continuity and actual fill gates remain. |
+| 6 | Delete the inherited 209 Hz release floor and mandatory/stale plate-report failures. The optional plate calculation is not vibration qualification. Five supports, actual fit, retention/staking and physical assembly checks remain. |
+| 7 | Count and locate noncritical routing leftovers once in final review; per-instance measured paperwork and stale coordinates do not block. Actual routing rules, critical exceptions, their measured validation and AUD-10 scopes remain. |
+| 8 | NRST leakage ≥250 kΩ, powered reading ≥0.90×3V3 using a 10 MΩ meter, after coating and before each flight. Worst 50 kΩ pull-up needs 116.7 kΩ for guaranteed 0.7×VDD; the meter criterion implies ≥277.5 kΩ even with 30 kΩ pull-up. |
+| 9 | Remove the independent ≤52 Extended-code cap for R10. Actual count remains informational; $84.41/board, quote, stock and pre-order checks remain. |
+| 10 | Remove duplicate population, bare-contact and standalone actuator walks; retain native fitted population plus schematic/BOM/CPL checks, full KiCad DRC's J2/TP rules and K-actuators. Standalone check_r10 does not certify the DRC contact clearances. |
+| 11 | The reviewed r10_net column in pin_table.tsv is the sole complete MCU map; bootloader, connector, control-role and binding checks remain separate. |
+| 12 | Remove only the redundant 13 mm IMU-offset ceiling; actual −6.0±0.05 mm and pin-1/axis binding remain. At 4000°/s the current 6 mm offset adds 2.98 g centripetal acceleration. |
+| 13 | Local overrides are legal only at/above the applicable clearance: J2 0.508 mm, TP footprints 1.0 mm, ordinary pads/footprints 0.15 mm. Actual DRC remains. |
+| 15 | Always-on GPS/radio have no EN/FAULT/OE/isolation or shedding promises. Camera retains U402/U12/U13 because the reverse path would otherwise back-feed. QSPI stays; whole-flight storage is shared with microSD and verified by actual latency/power-loss tests. |
+| 16 | LEDs may remain active in flight only after the installed opaque U5 cover passes LED-toggle/ambient-light testing during barometer checkout. No assembly exists to verify here, so retain the dark-in-flight firmware restriction until that test passes. |
+
+### D-CIR-01. Select the real e-match before choosing the all-fire margin
+
+No project e-match model was previously selected. Choose **MJG J-Tek LEAD-FREE**, standard 24 AWG leads,
+with its protective shroud retained. Maker [technical sheet p1](https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF)
+gives minimum all-fire 0.75 A (a 0.5 s test at 1.5 V), recommended minimum 1.00 A / nominal 1.25 A, average
+bridgewire 1 Ω (standard deviation 0.09 Ω), maximum test 40 mA, no-fire 0.30 A and minimum all-fire energy 4 mJ.
+Keep one current margin, **1.5×0.75 = 1.125 A**, replacing the inherited 1.5 A derived from an unnamed 1 A part.
+Retain the conservative 2 Ω match/0.3 Ω external-lead loop bounds; R134 stays 2 Ω and its short/brownout qualification
+is unchanged. With the new SD/always-on normal allocation the present loop calculation gives 1.546041 A idle,
+1.481042 A one persistent stall and 1.284404 A four stalls at the 7.4 V equivalent fire-time source floor: all exceed
+1.125 A (Calc / Inference). Neutral commands do not clear a jam. The maker's 0.5 s all-fire test does not certify
+our ≤20 ms physical pulse; lot-specific 20 ms firing qualification, source/harness measurement and charge testing
+remain required before flight. Current margin alone is not a firing reliability claim.
+
+### D-CIR-02. Switched camera pad energy
+
+GPS/radio are always powered; camera U402 is off on the pad unless recording. The adopted two-hour pad model
+retains the previous 1.76 Ah estimate including up to 30 minutes of 1 A camera recording and continuous radio,
+plus up to 0.275 Ah for continuous allocated SD writes at the conservative 6.0 V / 80% converter corner: about
+2.04 Ah before reserve. Choose **≥2.6 Ah** for that maximum case, with at least 20% capacity reserve, and verify
+7.4 V equivalent source reserve at firing. Camera recording throughout two hours adds about 1.155 Ah to the
+30-minute case: approximately 3.19 Ah before reserve / **≥4 Ah** with the same reserve (Inference). Actual device
+duty, temperature, aged capacity and pack/servo/harness load need measurement and physical battery-bay fit. A 2 Ah pack is not qualified for
+the new worst continuous-write case. This is a capacity choice, not new protection hardware.
+
+### D-CIR-03. Circuit-pass placement and routing (minimum for a connected DRC-clean board)
+
+Board `6e73b6ebe7e25d7a8c810493887fbaa7cce34f6fe1d379828dc67017e14235aa`. Scope per the Steer 1 hand-off: only what is
+needed for a connected, DRC-clean, reproducible board; the layout agent re-arranges the identical terminals into
+AVA-like rows afterwards. U1, the core block, U4 (bottom, rotation 180, roll = −gyro_Y, lever x −6.0 mm), the pyro FETs,
+J121 and J1 are unchanged.
+
+| Choice | Reason (constraint, not preference) |
+|---|---|
+| J410 on the east edge at (41.5, 15.5) rot 90; J9 on the east edge at (41.5, 59.5) rot 90 | Terminal rows face the east edge as J9 did in R9; DB125 courtyards (about 3.5 mm pitch, 4 positions) leave room for only these two plus the camera cell. |
+| J420 **parked on the west edge** at (5, 16) rot −90 | The east edge holds J410 and the camera cell, and a second 4-position DB125 does not fit there without moving the camera cell. West is a stop-gap: the layout agent will re-arrange the identical terminals, so J420's final position is not a decision. Consequence: the radio lanes cross the USB / SD corridor (signal integrity of those lanes is unmeasured). |
+| J400 at (12.7, 85); J122 (5-position, no tie holes) at (27, 84.8); J430 on the bottom at (24, 24.3) | Forward-edge terminal row; the screw terminal clamps wires, so the servo-plug tie holes have no function (D-CIR terminal decision). J430 sits near U1's SPI3 pins 78–81 and the QSPI flash. |
+| SPI3 escape from U1 pins 78–81 fanned south-west with 45° steps, every via ≥ 0.6 mm from other critical centrelines | K-reference counts the In1 antipad of a via at radius 0.4 mm. Pin pitch is 0.5 mm, so parallel lanes with vias at pitch always failed; the fan opens the via-to-foreign-critical-centreline distance to ≥ 0.6 mm. |
+| SWCLK lane y 36.6, SWDIO y 36.1, NRST a **single via** at (14.2, 37.3) on the same one-via leg | The west bundle (SWDIO / SWCLK / NRST / SD) is crowded; NRST keeps exactly one via per D-R2-09 (one reference region, one layer change), so the neighbours move rather than NRST gaining a hop. USB_FAULT_N runs on B.Cu at y 41.2. |
+| USB_LIMITED uses an F.Cu overpass over the four B.Cu SD lanes (two vias); BUZZ_DRV hop pair over USB_LIMITED | The USB corridor (x 16–22, y 26–34) is boxed by VBUS_SENSE, USB_LIMITED and USB_DM; the SD lanes occupy B.Cu there, so USB_LIMITED must cross them on F.Cu. BUZZ_DRV crosses USB_LIMITED by the same two-via hop. |
+| Radio TX series resistor R451 on B.Cu at the forced hop | The hop is forced by the J420 west park; putting R451 on B.Cu keeps the net within route_check's extra-vias limit (pads + 2) instead of adding a third via. |
+| R85 / R90 / R110 / C86 / R464 / C460 moved locally | Clearance to the new DB125 / J430 courtyards and the SPI3 fan; each stays inside its own cell, no net change. |
+| R166 to (35.25, 64) north-south; R82 shifted slightly | DB125 J9 / J122 courtyard clearance on the battery-feed side. R166 is in the hot-plug damper path, so the move is qualified only by the re-run actual-feed model: **2304 / 2304 pass** (simulation / Inference; `hotplug.md`, 2026-10-29). The model runs inside `r10_build.sh`, so any later feed move is re-gated automatically. |
+| Four pour-only keep-outs R8_POUR_TRIM_C1–C4 | Unfillable pour slivers between the new terminals; they are fill-trim areas only (no copper, no net), and route_check recognises the `R8_POUR_TRIM` prefix. |
+
+No hand editing of the production board; every item is generated by `r10_pcb.py` / `r10_route_*.py` with
+`r10_place.tsv` and `r10_fanout.tsv`. `r10_fanout.tsv` carries hand edits for this pass, so re-running
+`r10_fanout_aid.py` would drop them. Verified: two complete builds byte-identical, full `tools/check.sh` zero (software
+/ CAD). Not verified: any bench or physical routing effect (UART signal integrity on the long west radio lanes is an
+Inference).
+
+### D-CIR-04. Gate fixes
+
+Three gate / test fixes, none weakening a rule: each corrects a gap in the check or its fixture, not the design.
+
+1. **K-contract seeds (`tools/test_r10_check.py`):** the seeded fixtures did not feed the seeded board text to the
+   text-based rules, so the rule read the unmodified text and the seed proved nothing. Root cause: fixture, not rule.
+   The seeds now pass the seeded text; each seeded fault is caught again.
+2. **`terminal_legend_conflicts()` in `check_r10` K-legends:** the terminals are now labelled by individual `n:NAME`
+   legends, and nothing examined a second, contradicting legend: a combined `Jnn n:NAME` table (text or text box) or a
+   bare `n:NAME` that is not one of the terminal words. The old seed only appeared to pass because its text box sat on
+   J420.1's mask opening after J420 moved. Root cause: gate gap plus a stale fixture. The new function names the
+   conflicting pin (for example `J420.3`); the seed text box moved to a free spot and asserts that it adds no mask
+   overlap. The existing legend, distance and text rules are unchanged.
+3. **Probe-clearance seeds (J2 / TP122):** a fixed offset placed TP122's seeded track on a PYRO1_GATE via, so DRC
+   reported a short rather than the custom-rule clearance under test. The seed now picks the first side (or sibling
+   contact) whose seeded track is at least 0.25 mm from all other copper and holes, with the same gap and expected rule.
+   Root cause: fixture.
+
+Result: the full `tools/check.sh` passes at zero on `6e73b6eb…` in both builds; the self-test counts and every threshold
+are otherwise unchanged. AGENTS §2 is unchanged.

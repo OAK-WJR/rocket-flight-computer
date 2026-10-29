@@ -2511,6 +2511,13 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid c7f3c433-f684-58f5-b970-0351ea26c2e7))
+	(text "AVA follow-up: ARM1_SENSE onPC5 is the sole RAW_ACT bus reading. R177/R124/R125/R182/R172/C122 and RAW_ACT_SENSE are removed; PB0 is NC/analog. Continuity divider and both split-divider fault ratios stay. Audit2 removes R168/R170 and _MCU tails: filtered PYRO1_CONT and ARM1_SENSE directly feedPC0/PC5; each single-resistor fault stays<=3.342V at19.9V clamp, below4V ADC absolute limit."
+		(at 20.32 35.56 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 8b967feb-82aa-51c4-b55f-20262baecf4d))
 	(sheet_instances
 		(path "/"
 			(page "12"))))
