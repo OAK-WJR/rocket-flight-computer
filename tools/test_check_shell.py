@@ -32,6 +32,8 @@ with open(os.environ['GATE_LOG'], 'a') as log:
     log.write(stage + '\\n')
 if stage == 'r10_parts' and ('--check' not in sys.argv or '--board' not in sys.argv):
     sys.exit(17)
+if stage == 'fab_manifest' and not (pathlib.Path(sys.argv[1]).parent / 'fab/m3_fab_manifest.json').is_file():
+    sys.exit(19)
 sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
 '''
         for path in ('quality_audit/verify_board.py', 'tools/silk_check.py', 'tools/fit_check.py',
@@ -44,6 +46,7 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
         self.log = self.root / 'gate.log'
         self.env = dict(os.environ, KICAD_CLI=str(self.cli), KICAD_PY=sys.executable, NUMPY_PY=sys.executable,
                         GATE_LOG=str(self.log), TMPDIR=str(self.root))
+        self.env.pop('R10_SKIP_FAB_MANIFEST', None)
 
     SELFTESTS = ['test_check_shell', 'test_procurement', 'test_fit_check', 'test_paste_check', 'test_r10_parts', 'test_route_check', 'test_r10_check',
                  'test_r10_check']
@@ -99,12 +102,43 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
         self.assertIn('fab manifest: not checked (board copy)', result.stdout)
         self.assertNotIn('fab_manifest', self.log.read_text())
         self.log.unlink()
+        (copy.parent / 'fab/m3_fab_manifest.json').unlink()
+        result = self.run_gate(copy)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertNotIn('fab manifest', result.stdout)
+        self.assertEqual(self.log.read_text().splitlines(), self.CONTRACTS + self.SELFTESTS)
+        self.log.unlink()
         self.assertEqual(self.run_gate(repo).returncode, 0)
         self.assertIn('fab_manifest', self.log.read_text().splitlines())
         self.env['FAIL_STAGE'] = 'fab_manifest'
         result = self.run_gate(repo)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('fab package bound to a different board: run m3_design/r10_fab.sh', result.stdout)
+
+    def test_canonical_manifest_is_required(self):
+        """R17-GATE-01: a missing repository manifest must reach its verifier and stop the gate."""
+        repo = self.root / 'm3_design/assembly_review/m3.kicad_pcb'
+        repo.parent.mkdir(parents=True)
+        result = self.run_gate(repo)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.log.read_text().splitlines(), self.CONTRACTS + ['fab_manifest'])
+        self.assertIn('fab package bound to a different board: run m3_design/r10_fab.sh', result.stdout)
+
+    def test_explicit_build_stage_skips_manifest_only(self):
+        """The documented build mode still runs every native contract and self-test."""
+        repo = self.root / 'm3_design/assembly_review/m3.kicad_pcb'
+        manifest = repo.parent / 'fab/m3_fab_manifest.json'
+        manifest.parent.mkdir(parents=True)
+        self.env.update(R10_SKIP_FAB_MANIFEST='1', FAIL_STAGE='fab_manifest')
+        for present in (False, True):
+            with self.subTest(manifest_present=present):
+                if present:
+                    manifest.write_text('{}')
+                self.log.unlink(missing_ok=True)
+                result = self.run_gate(repo)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertIn('fab manifest: not checked (build stage:', result.stdout)
+                self.assertEqual(self.log.read_text().splitlines(), self.CONTRACTS + self.SELFTESTS)
 
 
 if __name__ == '__main__':

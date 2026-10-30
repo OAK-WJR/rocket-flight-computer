@@ -58,7 +58,7 @@ datasheet calculation, **Bench** = measured on a built board, **Flight**.
 | F7 | One CH1 recovery output, independent of the isolated Blue Jay. Pyro load switch Q120/Q121 is fed by BAT_IN and provides canonical RAW_ACT before R1342 Ω and J121.2; never feed the pyro bus directly from the pack. PC1 ACT_EN_MCU and PE4 fire control are independent and default off through reset/unpowered. Selected e-match **MJG J-Tek LEAD-FREE**: maker all-fire0.75 A (0.5 s test), one1.5× current margin gives **≥1.125 A**. Preserve7.4 V equivalent source reserve at firing after pad/flight drain,Rpack≤0.15 Ω,match≤2 Ω,external lead/harness≤0.3 Ω; solve converter+servo sag with final hot copper/FETs. Current native-board allocation (`632a9ad3…`, `parts_budget.json`) predicts1.544 A idle,1.479 A one persistent stall,1.283 A four stalls (Calc/Inference), all above1.125 A; a neutral command/200 ms wait does not clear a jam. R134 remains2 Ω: shorted igniter must not brown out logic, normal physical pulse≤20 ms incl.tail, intact-hardware fault guard≤36 ms. BAT_IN fire feed≥1 mm, ACT_FET_S/RAW_ACT/IGN/OUT≥0.5 mm except seven qualified0.4 mm source-pin bridges; sense/control branches are not fire paths. Qualify actual source/harness resistance, chosen-lot20 ms firing and charge deployment on the bench; maker0.5 s data alone do not prove20 ms reliability. Previous1.5 A thresholds and pre-single-switch loop calculations are historical. | CAD, Calc, Bench |
 | F8 | One external screw switch on DB125 J400 is both power and pad arming device; on only on the pad/rail, on last/off first. Treat the pyro channel as live whenever the board is powered. Firmware never fires before accelerometer+barometer launch detection; bus/continuity readings hard-refuse on the ground and only log/annunciate in flight, never veto fire (AGENTS§2). No J124/ARM link/fuse/pull-pin. PC1 independently enables Q120/Q121 after the passive cold screen; PE4 separately drives Q124. Gate pull-down, series resistor and gate-source capacitor stay. Sole bus ADC ARM1_SENSE PC5 and continuity PYRO1_CONT PC0 directly read filtered10.2 kΩ/1 kΩ dividers (two5.1 kΩ series tops,two2 kΩ parallel bottoms,10 nF). Delete duplicate RAW_ACT_SENSE/PB0 and R168/R1704.7 kΩ tails. One top short or bottom open gives≤3.342171 V at19.9 V clamp versus4.0 V analog absolute max; one top-short current≤1.397 mA at8.4 V. Double faults can damage the MCU; no double-fault current guarantee. Passive cold screen with PC1/PE4 low,≥1 s after prior enable-off and verified bus discharge; only then enable PC1,PE4 stays low,wait≥100 ms before powered checks. Healthy two-bank cold CONT/BUS≈99.369/99.338 mV; open CONT≈146.23 mV/BUS≈0; qualify temperature/leakage/ADC bands before thresholds. No prelaunch firing self-test with e-match. All wired connectors are unkeyed DB125: J121 black2pos IGN, J1 green2pos BAT,J400 green2pos SWITCH,J122 green5pos SERVO,J9/J410/J420 green4pos CAM/GPS/RADIO; every pin labelled. Ordinary0.15 mm board clearance applies, S-8 barrel isolation and mandatory coating remain. Connect e-match only without USB/self-powered back-feed source; USB bench work uses pack or e-match disconnected. | CAD, Bench |
 | F9 | 2S input reverse-polarity/wrong-3S/current-limit protection remains U9 TPS25947; U10 USB limiter/U11 source selection and C84 hold-up stay. J1/J400 are separately labelled2pos DB125 terminals, with no keying: verify harness polarity/pin identity; all DB125 clamps28–16 AWG, thinner module leads need suitable ferrule/splice to≥28 AWG. Qualify dry-circuit screw switch/J400 at≈7 µA with vibration. U9 downstream limit calculation3.946–4.857 A (R84 tolerance/TCR over100 K, Inference) and R134 do not protect the unfused pack-to-U9/Q120 lead/copper/TVS/caps (OQ-6): strain relief,no chafe points,crimped/soldered leads. OQ-2 hot-plug model must use final actual BAT_IN/C88/U9/damper paths, unfused harnessR≥0.03 Ω/L0.1–2 µH, exactR923.3 kΩ/R1660.36 Ω and capacitor inventory. C88 before U9; deleting its node must disconnect U9 from every other modeled terminal. Re-extract after geometry changes; pass2304 cases/refinements/local sensitivities. This is simulation/Inference; below−10°C measure bothU9 IN and OUT against IN≥max(−15 V,OUT−21 V),falling≤10 V/µs,rising≤100 V/µs; repeated damper pulse durability remains open. Pack change:e-match/USB/self-powered sources disconnected,switch open,wait≥2 s after unplug and confirmTP80<1 V before reconnecting. GPS/radio supplies are always-on PORT_4V8, UARTs direct through1 kΩ/ESD; powered digital levels0–5 V subject to ST FT limits,direct RX pulls always disabled; operating pull-off condition relevant I/O supply+0.3 V (separate4 V absolute-stress note),zero positive injection. No self-powered module with board off; powered-off isolation is absent. Camera U402/U12/U13 retains switch/translator isolation; enabled paths can still back-feed. Port cable short may collapse bothGPS/radio or hiccup U400; qualify logic survival/flight state at worst camera+SD load. No software GPS/radio fault flags,power cycling or shedding promise. | CAD, Calc, Bench |
-| F10 | No on-board RF (O1/O2). HGLRC M100 Mini external GPS (M10,L1 only;L5 lost) on DB1254pos J410, MicoAir LR900-F external radio on DB1254pos J420; board pin order1:4V8,2:GND,3:TXO,4:RXI. GPS USART6 PC6/PC7; radio UART5 PB13/PB12,each1 kΩ plus ground-only ESD, no translators or port switches. Camera DB1254pos J9 keeps RunCam protocol/UART7 PE8TX/PE7RX via U12/U13 and U402;1:5V4,2:GND,3:RXI,4:TXO are **board** directions, unchanged. AP63201→PORT_5V3 nominal5.456 V→camera switch; TPS7A91→PORT_4V8 nominal4.792 V→GPS/radio directly. Confirm external UART levels and endpoint supply corners, shared-short thermal/current behavior and back-feed. LR900-F maker1 W maximum average,890–915 MHz,manual channels0–25: only12–25 (902–915 MHz) in intended US band; keep manual12–25 or obtain maker FHSS set before flight. No uplink command may arm/fire. Installed full-power RF immunity with dummy load remains mandatory. R10 EXTI:1IMU PE1,4source PA4,5BATfault PA5,6USBfault PD6,8VBUS PC8,12CAMfault PE12; former GPS/radio fault pins NC. Check each pending bit in shared vectors. Never synchronous trace:PE2 TRACECLK,PC1 TRACED0,PE4 TRACED1; lock/read back PC1/PE4 low before loader/debug transitions, keep trace disabled. Firmware and installed RF behavior are unverified; R7–R9 RF/loader maps are archival. | CAD, Calc, Bench |
+| F10 | No on-board RF (O1/O2). HGLRC M100 Mini external GPS (M10,L1 only;L5 lost) on DB1254pos J410, MicoAir LR900-F external radio on DB1254pos J420; board pin order1:4V8,2:GND,3:TXO,4:RXI. GPS USART6 PC6/PC7; radio UART5 PB13/PB12,each1 kΩ plus ground-only ESD, no translators or port switches. Camera DB1254pos J9 keeps RunCam protocol/UART7 PE8TX/PE7RX via U12/U13 and U402;1:5V4,2:GND,3:RXI,4:TXO are **board** directions, unchanged. AP63201→PORT_5V3 nominal5.456 V→camera switch; TPS7A91→PORT_4V8 nominal4.792 V→GPS/radio directly. Confirm external UART levels and endpoint supply corners, shared-short thermal/current behavior and back-feed. LR900-F maker1 W maximum average,890–915 MHz,manual channels0–25: only12–25 (902–915 MHz) in intended US band; keep manual12–25 or obtain maker FHSS set before flight. No uplink command may arm/fire. Installed full-power RF immunity with dummy load remains mandatory. R10 EXTI:1IMU PE1,4source PA4,5BATfault PA5,6USBfault PD6,8VBUS PC8,12CAMfault PE12; former GPS/radio fault pins NC. Check each pending bit in shared vectors. Future programming acceptance must record/read back intended user-flash BOOT_ADD0 and relevant boot settings, then verify reset reaches the bound application with e-match disconnected. BOOT0 low selects BOOT_ADD0 and can still enter ROM at0x1FF0; PA2 then drives loader USART2_TX/servo3. No actual programming/readback exists here. Never synchronous trace:PE2 TRACECLK,PC1 TRACED0,PE4 TRACED1; lock/read back PC1/PE4 low before loader/debug transitions, keep trace disabled. Firmware and installed RF behavior are unverified; R7–R9 RF/loader maps are archival. | CAD, Calc, Bench |
 
 ## Physical
 
@@ -81,7 +81,7 @@ datasheet calculation, **Bench** = measured on a built board, **Flight**.
 | Item | Assumption | Why the board needs it |
 |---|---|---|
 | Pack | 2S LiPo (not LiHV), ≥ 1.0 Ah for flight 1 and ≥ 1.5 Ah for flight 2 (≥ 2 Ah if the radio transmits continuously on the pad; pad-time row), ≥ 7.4 V resting at launch after the pad wait, ≤ 0.15 Ω source resistance at the coldest pack temperature, including leads and connector (and the battery-lead fuse on R7–R9) | Four stalled servos must leave BAT_IN above U9's turn-off corner. **R10 calculation:** 4.778 V at 25°C resistor temperature; including the fitted resistors' ±100 ppm/K drift gives 4.811 V at 70°C (also the same absolute temperature excursion at −20°C). Local resistor temperature, gradients, leakage and transients remain unqualified. The separate 125°C sensitivity is 4.851 V, outside the bay operating assumption; see [R15 power evidence](../m3_design/assembly_review/sources/r10_review/round15_power.md). The servos are rated to 8.4 V. The on-board GPS and radio add 0.15–0.17 A at 3V3 while transmitting (about 0.19 A with the antenna shorted at the limiter), about 0.1 A at the pack: negligible beside the servo load (pass1_electrical §4.2–4.3). **R10:** no on-board GPS or radio; the external LR900-F draws up to 1 W average (maker) and the GPS about 0.05 A, both through the port LDO and buck: about 1.7 W, 0.23 A at a 7.4 V pack (Inference, 85 % buck efficiency); servo stall current flows through the harness, not the board (F4) |
-| Pad time | R10 camera U402 off unless recording. Two-hour maximum case: previous1.76 Ah estimate including continuous LR900-F/GPS and up to30 min at1 A camera, plus allocated SD write0.825 W/6.0 V×2 h=0.275 Ah:≈2.04 Ah before reserve (Inference). Select≥2.6 Ah for≥20% reserve and verify aged/cold capacity,fire-time7.4 V equivalent source and bay fit. Camera1 A throughout2 h adds0.77 A×1.5 h=1.155 Ah:≈3.19 Ah before reserve,≥4 Ah for same reserve. Measure actual recording/transmit/write/servo duty;2 Ah is not qualified for the continuous-SD maximum. Switch off promptly after landing. | Capacity,source resistance and physical fit before flight |
+| Pad time | Camera U402 off unless recording. D-R17-01 and `round17_pad_energy.json` use the explicit upper board allocations: port5.546269302559 V,GPS/radio/quiescent0.461 A,logic1.4 W,SD write0.825 W,R92 loss0.016933 W,allocated80% converter efficiency and6 V charge conversion. Two-hour board charge at camera0/0.5/2 h is1.812657/2.390393/4.123602 Ah; board-only capacities leaving20% unused are2.265821/2.987991/5.154503 Ah. These are Calculation/Inference, excluding motors,flight and recovery. Require C_tested_Ah >= (Q_pad_board + Q_pad_motors + Q_flight_all + Q_recovery)/0.8; independently verify aged/cold capacity,fire-time7.4 V equivalent source/source resistance,transients and bay fit. No pack is selected or qualified by these examples; old2.6/4 Ah sizing is retired. Switch off promptly after landing. | Capacity,source resistance and physical fit before flight |
 | Igniters | MJG J-Tek LEAD-FREE,shroud retained,standard24 AWG. Maker0.75 A all-fire/0.5 s,0.30 A no-fire,40 mA maximum test. F7 uses one1.5× margin=1.125 A; retain conservative≤2 Ω match/≤0.3 Ω leads. Qualify actual chosen-lot≤20 ms physical pulse and charge before flight; neither old1 A/1.5 A thresholds nor the obsolete double-fault9.4 mA claim apply. | F7,F8,ORDERING |
 | Pad arming | **R6–R9:** one CH1 2-wire ARM link with a 5 A fast-acting fuse at the board end (ORDERING §7). **R10:** no J124 / ARM link / ARM-link fuse; one external screw switch on J400, reachable on the rail, on last and off first. E-match connection requires no USB or self-powered back-feed source; GPS / telemetry / IMU checks are on-rail (ORDERING §8) | F7, F8 |
 | Board position | **R9:** aft edge at joint ≥ +80…+83 mm with the coax loops on the side away from the camera shroud, or ≥ +91…+95 mm with the loops entirely forward of the shroud; **R10 (no coax):** aft edge at about joint + 79–83 mm from VEHICLE.md's stack (−44.6 mm bulkplate top + about 80 mm battery bay + about 44–48 mm lead zone; M3_R10 "Camera-shroud window", ORDERING §8.4), and in any case wholly forward of joint + 47 mm (joint = the booster/main joint, parent VEHICLE.md: battery bay top +35.4, shroud +4…+47). **R10 placement selected in OQ-7 (2026-10-28); physical stack and harness fit remain unverified.** R9's position remains open until its shroud geometry is measured | Where the board sits in the stack. R7 fits the coupler bore along its whole length (P1, P2 CAD envelopes), so the bore no longer limits the position; the coax loop zone aft of the board and the camera shroud do. Allocate about 44–48 mm for that zone: jack 9.5 + straight plug about 16–20 + RG316 loops at 13 mm bend radius, axially staggered by at least one cable OD (two equal U-turns otherwise cross under the board), or right-angle plugs. Choose the plug and coax and cite the plug's drawing (the CAD's 16 mm plug envelope has none). The former "aft edge about 70 mm below the coupler's forward end" (joint +50) is superseded: it put the mated plugs inside the battery bay (`sources/r7_review/pass2_mechanical.md` MECHANICAL-03/04, `pass1_layout.md` L3). **R10:** no SMA jacks or coax loop zone: the "no conflict as drawn" statement (about 32 mm of margin to joint + 47 mm, M3_R10) uses R9's battery-lead + coax zone, which R10 shrinks, the owner has selected that forward-of-joint + 47 mm placement (OQ-7), but the stack arithmetic remains an Inference (VEHICLE.md not re-read here); the position is set by the camera shroud and the terminal harness bends (P2), with the external GPS and radio placed in the vehicle per their own antenna needs. **The R10 board (aft edge plus the sled's axial tolerance) must sit wholly forward of joint + 47 mm in any roll orientation (OQ-7; P2 "Camera shroud"); R10's freed length is not for moving the board aft. No shroud-clocking decision remains; physical fit is unverified** |
@@ -153,44 +153,54 @@ The 2026-10-28 answers resolve OQ-1 (4.95 mm wire room, fit pending), OQ-2 (actu
 still apply. **OQ-3 cost acceptance remains pending; it does not block a clean review round.** JLC must accept the
 aft-edge tab and rail before ordering.
 
-**Full R16 and gate follow-up (2026-10-30):** unchanged PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
-46×90×1.6mm,2,256,162 bytes;209 footprints,951 segments,296 vias(168 GND),
-1788.675665mm track. All1942 committed files stayed byte-identical through ten
-full R16 lenses on `b1b8658`/`632a9ad3`:0Critical/0Major/11Minor groups from17raw
-observations(5new/6carried). Full R17 on this same PCB is pending; no final pair,
-owner acceptance or order is claimed. Full R16's original scope was119D IDs/
-22owner mandates. Current amendments total122D IDs throughD-R16-03/23mandates;
-these additions do not rewrite the sealed review's source scope.
-**Software/CAD:** one new R16 integrated build/check exits0:DRC/unconnected/
-parity/ERC0,all32R10rules including K-binding,180R10tests,31fit,16paste,5parts
-and67route. All four native NumPy skips are separately resolved with supplied
-NumPy. Orientation,618paste geometries and five-output manifest pass. Its42
-generated files exactly match both complete R15 build snapshots on this same
-PCB. Those two R15 executions retain their original31-rule/176R10/60route
-scope; this is one new R16 build, not a second new-build pair. Assembly-page
-rasters match the b1b8658 pages despite PDF metadata-byte changes. The separate
-final standalone check also exits0 with the same32rules/test counts and all
-four native NumPy skips separately resolved.
-**Simulation/Inference:** fresh R16 actual-feed2304required+60local hot-plug
-cases pass. The optional181.1Hz pinnedD5/70.5g estimated plate result retains
-its R15 calculation scope. No physical qualification is inferred.
-**Procurement:** exact supplier2026-10-30T15:30:06.601825..15:30:40.008183Z:
-$79.5232 placed/feeder share and$81.3254 with minimum purchases,both below$84.41
-before fixed/process/PCB/shipping. Cost-only procurement passes; stock release
-fails at R43017<3610 and U4zero<5. U9stock123/minimum1. Quote/process and owner
-cost/deviation acceptance remain pending; nothing ordered.
-**Retained Minors, latest supervisor steer (2026-10-30):** no PCB,placement,
-routing or circuit-generator change for Minors. The SD_MOSI alternative saving
-1.994603mm/two segments is retained as a measured owner-acceptance deviation;
-its queued adoption is cancelled. Under-body IMU_CS/SPI1_MISO/IMU_INT1/3V3A
-paths remain a measured TN1383 stress-guidance departure with rejected bounded
-prototypes. Commit R16,then full R17 on the same632a9ad3; if also0Critical/
-0Major,finalize deviations/status/AGENTS,commit and report. PCB changes require
-a confirmed Critical or Major; no complete TN1383 compliance is claimed.
-**Not verified:** DB125 insertion/fabricated S-8 allocation,VCAP combined C/ESR/
-process,R10 firmware,SD/e-match lot20ms firing,electrical/thermal/transient/
-endurance,installedRF/ESD,harness/retention,tool/card access,physical bore/stack/
-flight and first-article/process. AGENTS section2 is unchanged; R9 stays accepted.
+**Full R16/R17 pair complete (2026-10-30):** PCB
+`632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
+46 x 90 x 1.6 mm, 2,256,162 bytes; 209 footprints, 951 segments, 296 vias
+(168 GND), 1788.675665 mm track. Full R16 on `b1b8658` found
+0 Critical / 0 Major / 11 Minor groups from 17 raw observations (5 new/6 carried),
+with all 1,942 files frozen. Full R17 on `ac483f4` found
+0 Critical / 0 Major / 13 Minor groups from 23 raw observations (4 new/9 carried),
+with all 1,966 files frozen through ten complete lenses. The same-PCB clean pair
+is earned; original reports remain immutable. R16 reviewed 119 D IDs/22 owner
+mandates; R17 reviewed 122/23. The final record index has **126 D IDs through
+D-R17-04 and 23 mandates**; later record/check amendments do not enlarge either
+sealed review's scope.
+
+**Software/CAD:** two complete R15 builds/check0 reproduced 42 generated files
+on this PCB; one complete R16 build/check0 matched both snapshots. There is no
+new R17 full build. R15 retains its 31-rule/176-R10-test/60-route-test scope;
+R16 passed 32 rules, 180 R10/31 fit/16 paste/5 parts/67 route tests, with all four
+native NumPy skips separately resolved. Orientation, all 618 paste geometries
+and the five-output manifest passed in that execution. R17 corrections affect
+docs/checks and text-only pin-table/binding provenance. The refreshed binding
+changes only pin_table_sha256; electrical assignments/axes and the other41
+recorded generated files stay unchanged. The manifest-gate fix has7 shell
+regressions. **Final post-R17 canonical check: exit0.** All32rules,7shell/180R10/31fit/16paste/5parts/67route tests and five-output manifest pass; all4native NumPy skips separately resolved. Evidence: round17_fix_validation.json.
+
+**Simulation/Inference:** the R16 actual-feed 2304 required +60 local hot-plug
+cases passed. The optional 181.1 Hz pinned-D5/70.5 g plate result remains the
+R15 calculation on this same PCB. No physical qualification follows.
+
+**Procurement:** original supplier queries 2026-10-30T17:15:34.705395..
+17:15:45.842149Z give $79.5232 placed/feeder share and $81.8636 with minimum
+purchases, below $84.41 before fixed/process/PCB/shipping costs. R430 17<3610
+and U4 0<5 still fail stock release; U9 has 83 available/minimum7 for five fitted.
+Quote/process and owner cost/deviation acceptance remain pending; nothing ordered.
+
+**Retained Minors:** no PCB, placement, routing or circuit-generator change for
+Minors (D-R16-03). SD_MOSI's measured 1.994603 mm/two-segment alternative remains
+a deviation; no adoption is queued. MEMS signal/supply stress guidance, L400 land,
+DB125 insertion/S-8 process allocation, VCAP conditions, M2/returns, courtyard
+graphics and the separate vehicle mirror remain measured deviations with open
+qualification limits.
+The four new R17 groups receive record/check corrections; no physical or owner
+acceptance is inferred. Only a confirmed Critical/Major permits a board change.
+
+**Not verified:** R10 firmware/boot configuration, physical safety timing and
+selected-lot 20 ms firing, SD latency/power loss, electrical/thermal/transient/
+endurance, installed RF/ESD, harness/switch/retention, tool/card access, physical
+bore/stack/flight and first-article/process. AGENTS section2 is unchanged.
+R9 remains accepted; R10 remains unaccepted and unordered.
 [Review evidence](R10_VALIDATION.md).
 
 

@@ -1,44 +1,54 @@
 # R10 AVA layout hand-off
 
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
-**Full R16 and gate follow-up (2026-10-30):** unchanged PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
-46×90×1.6mm,2,256,162 bytes;209 footprints,951 segments,296 vias(168 GND),
-1788.675665mm track. All1942 committed files stayed byte-identical through ten
-full R16 lenses on `b1b8658`/`632a9ad3`:0Critical/0Major/11Minor groups from17raw
-observations(5new/6carried). Full R17 on this same PCB is pending; no final pair,
-owner acceptance or order is claimed. Full R16's original scope was119D IDs/
-22owner mandates. Current amendments total122D IDs throughD-R16-03/23mandates;
-these additions do not rewrite the sealed review's source scope.
-**Software/CAD:** one new R16 integrated build/check exits0:DRC/unconnected/
-parity/ERC0,all32R10rules including K-binding,180R10tests,31fit,16paste,5parts
-and67route. All four native NumPy skips are separately resolved with supplied
-NumPy. Orientation,618paste geometries and five-output manifest pass. Its42
-generated files exactly match both complete R15 build snapshots on this same
-PCB. Those two R15 executions retain their original31-rule/176R10/60route
-scope; this is one new R16 build, not a second new-build pair. Assembly-page
-rasters match the b1b8658 pages despite PDF metadata-byte changes. The separate
-final standalone check also exits0 with the same32rules/test counts and all
-four native NumPy skips separately resolved.
-**Simulation/Inference:** fresh R16 actual-feed2304required+60local hot-plug
-cases pass. The optional181.1Hz pinnedD5/70.5g estimated plate result retains
-its R15 calculation scope. No physical qualification is inferred.
-**Procurement:** exact supplier2026-10-30T15:30:06.601825..15:30:40.008183Z:
-$79.5232 placed/feeder share and$81.3254 with minimum purchases,both below$84.41
-before fixed/process/PCB/shipping. Cost-only procurement passes; stock release
-fails at R43017<3610 and U4zero<5. U9stock123/minimum1. Quote/process and owner
-cost/deviation acceptance remain pending; nothing ordered.
-**Retained Minors, latest supervisor steer (2026-10-30):** no PCB,placement,
-routing or circuit-generator change for Minors. The SD_MOSI alternative saving
-1.994603mm/two segments is retained as a measured owner-acceptance deviation;
-its queued adoption is cancelled. Under-body IMU_CS/SPI1_MISO/IMU_INT1/3V3A
-paths remain a measured TN1383 stress-guidance departure with rejected bounded
-prototypes. Commit R16,then full R17 on the same632a9ad3; if also0Critical/
-0Major,finalize deviations/status/AGENTS,commit and report. PCB changes require
-a confirmed Critical or Major; no complete TN1383 compliance is claimed.
-**Not verified:** DB125 insertion/fabricated S-8 allocation,VCAP combined C/ESR/
-process,R10 firmware,SD/e-match lot20ms firing,electrical/thermal/transient/
-endurance,installedRF/ESD,harness/retention,tool/card access,physical bore/stack/
-flight and first-article/process. AGENTS section2 is unchanged; R9 stays accepted.
+**Full R16/R17 pair complete (2026-10-30):** PCB
+`632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
+46 x 90 x 1.6 mm, 2,256,162 bytes; 209 footprints, 951 segments, 296 vias
+(168 GND), 1788.675665 mm track. Full R16 on `b1b8658` found
+0 Critical / 0 Major / 11 Minor groups from 17 raw observations (5 new/6 carried),
+with all 1,942 files frozen. Full R17 on `ac483f4` found
+0 Critical / 0 Major / 13 Minor groups from 23 raw observations (4 new/9 carried),
+with all 1,966 files frozen through ten complete lenses. The same-PCB clean pair
+is earned; original reports remain immutable. R16 reviewed 119 D IDs/22 owner
+mandates; R17 reviewed 122/23. The final record index has **126 D IDs through
+D-R17-04 and 23 mandates**; later record/check amendments do not enlarge either
+sealed review's scope.
+
+**Software/CAD:** two complete R15 builds/check0 reproduced 42 generated files
+on this PCB; one complete R16 build/check0 matched both snapshots. There is no
+new R17 full build. R15 retains its 31-rule/176-R10-test/60-route-test scope;
+R16 passed 32 rules, 180 R10/31 fit/16 paste/5 parts/67 route tests, with all four
+native NumPy skips separately resolved. Orientation, all 618 paste geometries
+and the five-output manifest passed in that execution. R17 corrections affect
+docs/checks and text-only pin-table/binding provenance. The refreshed binding
+changes only pin_table_sha256; electrical assignments/axes and the other41
+recorded generated files stay unchanged. The manifest-gate fix has7 shell
+regressions. **Final post-R17 canonical check: exit0.** All32rules,7shell/180R10/31fit/16paste/5parts/67route tests and five-output manifest pass; all4native NumPy skips separately resolved. Evidence: round17_fix_validation.json.
+
+**Simulation/Inference:** the R16 actual-feed 2304 required +60 local hot-plug
+cases passed. The optional 181.1 Hz pinned-D5/70.5 g plate result remains the
+R15 calculation on this same PCB. No physical qualification follows.
+
+**Procurement:** original supplier queries 2026-10-30T17:15:34.705395..
+17:15:45.842149Z give $79.5232 placed/feeder share and $81.8636 with minimum
+purchases, below $84.41 before fixed/process/PCB/shipping costs. R430 17<3610
+and U4 0<5 still fail stock release; U9 has 83 available/minimum7 for five fitted.
+Quote/process and owner cost/deviation acceptance remain pending; nothing ordered.
+
+**Retained Minors:** no PCB, placement, routing or circuit-generator change for
+Minors (D-R16-03). SD_MOSI's measured 1.994603 mm/two-segment alternative remains
+a deviation; no adoption is queued. MEMS signal/supply stress guidance, L400 land,
+DB125 insertion/S-8 process allocation, VCAP conditions, M2/returns, courtyard
+graphics and the separate vehicle mirror remain measured deviations with open
+qualification limits.
+The four new R17 groups receive record/check corrections; no physical or owner
+acceptance is inferred. Only a confirmed Critical/Major permits a board change.
+
+**Not verified:** R10 firmware/boot configuration, physical safety timing and
+selected-lot 20 ms firing, SD latency/power loss, electrical/thermal/transient/
+endurance, installed RF/ESD, harness/switch/retention, tool/card access, physical
+bore/stack/flight and first-article/process. AGENTS section2 is unchanged.
+R9 remains accepted; R10 remains unaccepted and unordered.
 Current integration scope: [R10_VALIDATION](../../../../docs/R10_VALIDATION.md), round16.
 
 Round11 found one confirmed Major/16Minor groups on the hand-off board and
@@ -310,11 +320,22 @@ copper,part,pose,pin or axis. One integrated R16 build/check exits0 with32rules,
 files exactly match both R15snapshots, with no second new-build pair claimed.
 Full R16 onb1b8658/
 632a9ad3 is0C/0M/11Minor groups from17raw(5new/6carried),all1942files unchanged;
-fullR17 on this same PCB is pending. The separate final standalone check exits0
+full R17 on ac483f4/632a9ad3 is complete:0C/0M/13Minor groups from23raw(4new/9carried),all1966files unchanged. The same-PCB pair is earned. The text-only R17 binding provenance is refreshed; final post-R17 canonical check exits0; no new R17 full build is claimed. R16's separate standalone check exited0
 with the same32rules/180R10/67route and all four native NumPy skips resolved.
 The latest supervisor steer cancels queued SD_MOSI adoption: retain the measured
 1.994603mm/two-segment saving for owner acceptance. No PCB,placement,routing or
 circuit-generator changes for Minors; only confirmed Critical/Major changes
-warrant CAD edits. Current122D IDs throughD-R16-03/23owner scopes are indexed in
+warrant CAD edits. Current126D IDs throughD-R17-04/23owner scopes are indexed in
 the final ledger; fullR16's sealed original scope remains119/22. D-R16-03
 supersedes D-R16-02's former post-pair adoption plan without erasing that history.
+
+
+## Round17 record completion (unchanged PCB)
+
+The opening record states the completed same-PCB R16/R17 pair. The four new
+R17 groups receive pad-energy,boot-address,U5 source-label and manifest-gate
+corrections; courtyard stroke metrics are corrected in R10_VALIDATION without
+changing the16 graphic pairs or physical geometry. Retain all measured M2,
+SD/MEMS/L400/DB125/VCAP/process/vehicle qualifications and no queued Minor CAD
+adoption. Current D-R17-01..04 are record/check amendments after R17's122-ID
+review; they do not enlarge its sealed scope. Final canonical check exits0. No new R17 full build or physical/FW/owner acceptance is claimed.

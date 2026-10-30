@@ -2476,3 +2476,99 @@ is also clean, finalize records/deviations and report; no subsequent Minor CAD
 cleanup is planned. Any confirmed Critical/Major still requires fresh
 verification and correction before qualifying completion. This changes no
 AGENTS section2 rule, physics requirement, cost cap or owner acceptance state.
+
+## D-R17-01. Use one explicit pad-energy basis
+
+R17-PWR-02 demonstrates that D-CIR-02's retained 1.76Ah subtotal and camera
+increment mix operating points. Preserve that dated decision as history; its
+2.04/3.19Ah totals and generic 2.6/4Ah selections are superseded for current
+planning. Do not add a repaired camera increment to the unreproduced subtotal.
+
+Use the unchanged native upper allocations: port buck5.546269302559V,
+camera1A when recording, GPS/radio/quiescent0.461A, unshed logic1.4W and SD
+write3.3V*0.2A/0.8=0.825W. Preserve the existing conservative R92 loss allocation
+7.4V squared/(3300ohm*0.98)=0.016933W. At the allocated80% converter efficiency,
+camera input is6.932837W and the remaining board input5.437970W. Divide pad
+energy by6V for the conditional capacity worksheet. Neither efficiency nor
+device duty is a measured or maker-guaranteed bound.
+
+| Two-hour board operation | Camera on | Board charge at6V | Board-only capacity leaving20% unused |
+|---|---:|---:|---:|
+| Continuous GPS/radio/unshed logic/allocated SD write | 0h | 1.812657Ah | 2.265821Ah |
+| Same | 0.5h | 2.390393Ah | 2.987991Ah |
+| Same | 2h | 4.123602Ah | 5.154503Ah |
+
+These rows exclude motors, flight and recovery. Select tested usable capacity
+with C_Ah >= (Q_pad_board + Q_pad_motors + Q_flight_all + Q_recovery)/0.8.
+Independently satisfy aged/cold capacity, fire-time7.4V-equivalent source and
+source resistance, transients and real bay fit. Keep camera off on the pad
+unless recording. At nominal5.456V,6V/80%, the extra1.5h camera term is1.705Ah;
+0.77A/1.155Ah is not the current common-corner calculation. No pack is released
+by this worksheet. Source: unchanged r10_parts.py load/divider allocations,
+Diodes AP63201 DS41326 Rev3-2 pp5/13, and round17_pad_energy.json. This is
+Calculation/Inference, with no PCB, circuit-generator or AGENTS section2 change.
+
+## D-R17-02. Qualify the boot address as well as BOOT0
+
+Correct R17-MCU-02's active PA2 table and checker explanations. R5's10k pull-down
+fixes BOOT0's sampled level; it does not fix BOOT_ADD0. ST [AN2606 Rev70
+Table2 Pattern10 p35](https://www.st.com/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf)
+permits ROM entry with BOOT0=0 and BOOT_ADD0=0x1FF0. The H74x/75x Table135 p321
+identifies PA2 as loader USART2_TX; R152's1k and R156's10k do not hold a driven
+servo3 output low. No actual option bytes or R10 firmware were programmed/read
+here, and this does not demonstrate unexpected ROM entry on a qualified board.
+
+Future R10 programming acceptance must record and read back the intended
+user-flash BOOT_ADD0 and relevant boot settings, then verify reset enters the
+bound application with the e-match disconnected. Retain serviced-ROM entry only
+before IWDG starts, PC1/PE4 locked low, camera EN/OE low and SD_CS high, using
+dummy loads. PC1/PE4 are not loader pins. Preserve all pin assignments and gate
+predicates; refresh only table/binding provenance and the explanatory strings.
+The current primary text was inspected; unavailable current PDF rasters are
+not claimed as visual evidence. R10 evidence remains record-only and the R1
+executable binding remains unqualified for R10. No circuit or safety-rule change.
+
+## D-R17-03. Correct mechanical source labels while retaining allocations
+
+For R17-MEC-04, retain the conservative1.1mm U5 model/cover allocation and its
+2.9mm gap under a nominal4mm sled plane. Label it as engineering allocation.
+[TE MS5611-01BA03 06/2017 p15 Fig18](https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=MS5611-01BA03&DocType=Data+Sheet&PartCntxt=MS561101BA03-50)
+specifies1.0mm +0/-0.10 package height; the native triangulated model measures
+1.100074mm. Package-only clearance3.0mm does not qualify solder seating, foam,
+adhesive, compression, venting or barometer response. No model/CAD change.
+
+For R17-MEC-03/MFG-02, retain all16 courtyard graphic pairs, positions, separate
+collision polygons and nominal body gaps. Correct active graphic penetration
+to actual half-stroke sum0.050mm minus polygon gap0.010..0.040mm, giving
+0.010..0.040mm penetration. Prior active cells used0.060mm and were0.010mm high.
+The minimum nominal body gap is0.499938mm; no physical collision is established.
+Keep assembler/owner first-article acceptance. Earlier report bytes/metrics
+remain source-scoped history. No placement, routing or circuit-generator change.
+
+## D-R17-04. Require canonical fabrication binding evidence
+
+R17-GATE-01 establishes a prospective complete-gate gap: genuine copied-project
+positive and only-manifest-deletion negative both exit0. The actual target's
+five-output package is present and correct. Require its manifest during a
+canonical repository-board full check; absence must fail. Preserve the explicit
+documented build-stage mode and external-board-copy behavior. Add missing-file
+sequence regression and validate an actual native copied-project negative,
+then the complete canonical positive. Existing native checks and self-tests
+remain required. This changes a checker, not PCB or circuit generators.
+
+Full rounds16/17 have no confirmed Critical or Major on the identical committed
+632a9ad3 PCB. Follow D-R16-03: retain measured SD/MEMS/L400/DB125/VCAP/M2 and
+other CAD/process Minors. Finish records and the deviation ledger; no further
+Minor CAD adoption is queued. Refresh procurement from the original17:15:34..
+17:15:45UTC exact-code snapshot:79.5232USD placed/feeder,81.8636USD including
+minimums; R43017<3610/U4zero<5 stock blocks, U9stock83/minimum7. Fixed/process/
+PCB/shipping remain additional. Owner cost/deviation/process acceptance and
+quote/order remain pending. AGENTS section2 stays byte-identical; no physical,
+firmware or flight qualification is inferred.
+
+**Supervisor handover, received before the final request (2026-10-30):** commit
+completed round17 and its clean-round deviations/STATUS/AGENTS records through
+`.supervisor/request.txt`, then stop and report. Do not start round18 or a new
+board change. This reaffirms D-R16-03's closing boundary and adds no hardware
+choice; it is attached as an amendment to the existing consolidated supervisor
+mandate. The final index remains126 D-* IDs/23 mandate records.

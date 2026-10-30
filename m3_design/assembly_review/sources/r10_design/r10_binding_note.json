@@ -3,7 +3,7 @@
   "status": "record only; R1 binding invalid; no R10 firmware or flight approval",
   "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
   "netlist_sha256": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
-  "pin_table_sha256": "d4c460c8bdb47ebca22d88363ad71a83d14738576d2f98f9bab59c5c3ea6aecd",
+  "pin_table_sha256": "56b7734ae4f05ff3a6d88023b87416f5658b40e0e0fca4e21080d86f9f5c6f34",
   "circuit_sha256": "ef67b3f1d4c71433f6969b4ad4b6bcb4bff8e72da647888e16ed1ce8a087ec09",
   "u1_pins": {
     "1": {

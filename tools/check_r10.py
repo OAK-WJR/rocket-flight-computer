@@ -919,7 +919,8 @@ LOADER_R10 = {
     'PA2': ('SERVO3_MCU', {'R152.1': '1k 0603', 'R156.1': '10k', 'D121.4': 'SRV05-4'},
             "USART2_TX drives the servo-3 signal through R152 1k: R8's allowance (frozen 3.2; a servo never sends 0x7F); "
             'servo power is off the board (O3), so a byte at most twitches an unpowered or harness-powered servo on the '
-            'bench (BOOT0 is a bench-only state)'),
+            'servicing bench. BOOT0 low also enters ROM when BOOT_ADD0=0x1FF0 (AN2606 Rev70 Table2 Pattern10); '
+            'record/read back the intended user-flash boot configuration before flight'),
     'PA3': ('SERVO4_MCU', {'R153.1': '1k 0603', 'R157.1': '10k', 'D121.6': 'SRV05-4'},
             'USART2_RX: an input (AN2606 p. 278 lists both no pull and pull-up), never driven; the line is held by '
             'R157 10k and driven only by U1 itself in flight'),
@@ -946,7 +947,7 @@ LOADER_R10 = {
     'PC11': ('SD_MISO', {'J430.7': '472192001', 'R462.1': '10k 1%'},
              'SPI3_MISO is driven by the loader only during a host transfer; PD0 SD_CS is independent of the '
              'loader SPI3_NSS PA15 and is held high by R460 10k, so the card data output stays high impedance. '
-             'R462 draws at most 3.3V/10k=0.33mA if PC11 drives low; bench BOOT0 use only'),
+             'R462 draws at most 3.3V/10k=0.33mA if PC11 drives low; serviced ROM use only, with intended user-flash BOOT_ADD0 readback before flight'),
     'PC12': ('SD_MOSI', {'J430.3': '472192001', 'R461.1': '10k 1%'},
              'SPI3_MOSI is a loader slave input, never driven; J430.3 is the card command input and R461 10k '
              'holds it high while the card stays deselected by SD_CS'),
@@ -2868,7 +2869,7 @@ RULES = [
     ('S-9', 'fire/source copper >= 0.5 mm; BAT_IN >= 1.0 mm (AUD-6 / audit 2)', lambda c, s: s9(c)),
     ('K-contract', 'R10 netlist contract', lambda c, s: k_contract(c)),
     ('K-binding', 'saved record-only binding evidence matches native board', lambda c, s: k_binding(c)),
-    ('K-loader', 'ROM-loader pins (AN2606 Table 119, R3-MCU-01)', lambda c, s: k_loader(c)),
+    ('K-loader', 'ROM-loader pins (AN2606 Rev70 Table135; R3-MCU-01/R17-MCU-02)', lambda c, s: k_loader(c)),
     ('K-actuators', 'check_actuators --profile r10', lambda c, s: k_actuators(c)),
     ('LC-1', 'local overrides respect the applicable floors', lambda c, s: lc1(c.board)),
     ('M-1', 'outline 46 mm wide, length <= 120 mm', lambda c, s: m1(c)),

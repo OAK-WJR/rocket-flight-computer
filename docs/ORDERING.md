@@ -221,45 +221,55 @@ inspection and depaneling procedures only where restated here. R10 has one exter
 wired terminals, external GPS/radio, a hinged microSD socket, one bus-sense bank and no servo-power copper.
 There are no GH connectors, servo headers, servo tie holes, ARM link, pull-pin, on-board RF modules or SMA jacks.
 
-**Full R16 and gate follow-up (2026-10-30):** unchanged PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
-46×90×1.6mm,2,256,162 bytes;209 footprints,951 segments,296 vias(168 GND),
-1788.675665mm track. All1942 committed files stayed byte-identical through ten
-full R16 lenses on `b1b8658`/`632a9ad3`:0Critical/0Major/11Minor groups from17raw
-observations(5new/6carried). Full R17 on this same PCB is pending; no final pair,
-owner acceptance or order is claimed. Full R16's original scope was119D IDs/
-22owner mandates. Current amendments total122D IDs throughD-R16-03/23mandates;
-these additions do not rewrite the sealed review's source scope.
-**Software/CAD:** one new R16 integrated build/check exits0:DRC/unconnected/
-parity/ERC0,all32R10rules including K-binding,180R10tests,31fit,16paste,5parts
-and67route. All four native NumPy skips are separately resolved with supplied
-NumPy. Orientation,618paste geometries and five-output manifest pass. Its42
-generated files exactly match both complete R15 build snapshots on this same
-PCB. Those two R15 executions retain their original31-rule/176R10/60route
-scope; this is one new R16 build, not a second new-build pair. Assembly-page
-rasters match the b1b8658 pages despite PDF metadata-byte changes. The separate
-final standalone check also exits0 with the same32rules/test counts and all
-four native NumPy skips separately resolved.
-**Simulation/Inference:** fresh R16 actual-feed2304required+60local hot-plug
-cases pass. The optional181.1Hz pinnedD5/70.5g estimated plate result retains
-its R15 calculation scope. No physical qualification is inferred.
-**Procurement:** exact supplier2026-10-30T15:30:06.601825..15:30:40.008183Z:
-$79.5232 placed/feeder share and$81.3254 with minimum purchases,both below$84.41
-before fixed/process/PCB/shipping. Cost-only procurement passes; stock release
-fails at R43017<3610 and U4zero<5. U9stock123/minimum1. Quote/process and owner
-cost/deviation acceptance remain pending; nothing ordered.
-**Retained Minors, latest supervisor steer (2026-10-30):** no PCB,placement,
-routing or circuit-generator change for Minors. The SD_MOSI alternative saving
-1.994603mm/two segments is retained as a measured owner-acceptance deviation;
-its queued adoption is cancelled. Under-body IMU_CS/SPI1_MISO/IMU_INT1/3V3A
-paths remain a measured TN1383 stress-guidance departure with rejected bounded
-prototypes. Commit R16,then full R17 on the same632a9ad3; if also0Critical/
-0Major,finalize deviations/status/AGENTS,commit and report. PCB changes require
-a confirmed Critical or Major; no complete TN1383 compliance is claimed.
-**Not verified:** DB125 insertion/fabricated S-8 allocation,VCAP combined C/ESR/
-process,R10 firmware,SD/e-match lot20ms firing,electrical/thermal/transient/
-endurance,installedRF/ESD,harness/retention,tool/card access,physical bore/stack/
-flight and first-article/process. AGENTS section2 is unchanged; R9 stays accepted.
-See [R10_VALIDATION](R10_VALIDATION.md), round16 reconciliation and current integration.
+**Full R16/R17 pair complete (2026-10-30):** PCB
+`632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
+46 x 90 x 1.6 mm, 2,256,162 bytes; 209 footprints, 951 segments, 296 vias
+(168 GND), 1788.675665 mm track. Full R16 on `b1b8658` found
+0 Critical / 0 Major / 11 Minor groups from 17 raw observations (5 new/6 carried),
+with all 1,942 files frozen. Full R17 on `ac483f4` found
+0 Critical / 0 Major / 13 Minor groups from 23 raw observations (4 new/9 carried),
+with all 1,966 files frozen through ten complete lenses. The same-PCB clean pair
+is earned; original reports remain immutable. R16 reviewed 119 D IDs/22 owner
+mandates; R17 reviewed 122/23. The final record index has **126 D IDs through
+D-R17-04 and 23 mandates**; later record/check amendments do not enlarge either
+sealed review's scope.
+
+**Software/CAD:** two complete R15 builds/check0 reproduced 42 generated files
+on this PCB; one complete R16 build/check0 matched both snapshots. There is no
+new R17 full build. R15 retains its 31-rule/176-R10-test/60-route-test scope;
+R16 passed 32 rules, 180 R10/31 fit/16 paste/5 parts/67 route tests, with all four
+native NumPy skips separately resolved. Orientation, all 618 paste geometries
+and the five-output manifest passed in that execution. R17 corrections affect
+docs/checks and text-only pin-table/binding provenance. The refreshed binding
+changes only pin_table_sha256; electrical assignments/axes and the other41
+recorded generated files stay unchanged. The manifest-gate fix has7 shell
+regressions. **Final post-R17 canonical check: exit0.** All32rules,7shell/180R10/31fit/16paste/5parts/67route tests and five-output manifest pass; all4native NumPy skips separately resolved. Evidence: round17_fix_validation.json.
+
+**Simulation/Inference:** the R16 actual-feed 2304 required +60 local hot-plug
+cases passed. The optional 181.1 Hz pinned-D5/70.5 g plate result remains the
+R15 calculation on this same PCB. No physical qualification follows.
+
+**Procurement:** original supplier queries 2026-10-30T17:15:34.705395..
+17:15:45.842149Z give $79.5232 placed/feeder share and $81.8636 with minimum
+purchases, below $84.41 before fixed/process/PCB/shipping costs. R430 17<3610
+and U4 0<5 still fail stock release; U9 has 83 available/minimum7 for five fitted.
+Quote/process and owner cost/deviation acceptance remain pending; nothing ordered.
+
+**Retained Minors:** no PCB, placement, routing or circuit-generator change for
+Minors (D-R16-03). SD_MOSI's measured 1.994603 mm/two-segment alternative remains
+a deviation; no adoption is queued. MEMS signal/supply stress guidance, L400 land,
+DB125 insertion/S-8 process allocation, VCAP conditions, M2/returns, courtyard
+graphics and the separate vehicle mirror remain measured deviations with open
+qualification limits.
+The four new R17 groups receive record/check corrections; no physical or owner
+acceptance is inferred. Only a confirmed Critical/Major permits a board change.
+
+**Not verified:** R10 firmware/boot configuration, physical safety timing and
+selected-lot 20 ms firing, SD latency/power loss, electrical/thermal/transient/
+endurance, installed RF/ESD, harness/switch/retention, tool/card access, physical
+bore/stack/flight and first-article/process. AGENTS section2 is unchanged.
+R9 remains accepted; R10 remains unaccepted and unordered.
+See [R10_VALIDATION](R10_VALIDATION.md), round17 reconciliation and final record/check integration.
 
 
 Coordinates are KiCad millimetres, x=0 west, y=0 aft, y=90 forward; Gerber Y is −KiCad y.
@@ -277,7 +287,7 @@ this is not a flight release.
 | Panel | JLC tab-routed rails, no V-cut. OQ-4 retains an aft-edge tab and aft rail/frame supporting the aft-east corner. Obtain JLC acceptance of the actual rail/tab plan and confirm every span against T-1 and the mouse-bite clearances in §3. Do not enlarge or relocate tabs without checking the final board. |
 | Vias | Ordinary vias plugged only where JLC's 0.35 mm clearance/size rules permit; otherwise tent/mask-cover them without adding openings. Preserve the large BAT_IN via's supplied covering. **Only the two U401.11 vias below use VIPPO.** Preserve the supplied covering set; changed covering requires renewed DFM/paste checks. |
 | Uploads | Final `m3_gerber.zip`, `m3_bom_jlc.csv`, `m3_cpl_jlc.csv`; both assembly PDFs are inspection aids. `m3_fab_manifest.json` must bind all five outputs to the final CAD/export inputs. Cost/stock files are evidence, not uploads. |
-| Acceptance | Two qualifying independent review rounds and owner acceptance of the refreshed board-bound deviations remain required. Two complete R15 builds/check0 and the42-file reproducibility comparison pass on this PCB; one new R16 integrated build/check0 matches both R15 snapshots. Factory process acceptance and stock/quote resolution remain required before ordering. FullR16 is clean; fullR17 on the same PCB remains pending. The measured SD_MOSI1.994603mm/two-segment alternative remains an owner-acceptance deviation; latest steer cancels its adoption and forbids PCB changes for Minors. |
+| Acceptance | The two qualifying independent review rounds are complete; owner acceptance of the refreshed board-bound deviations remains required. Two complete R15 builds/check0 and the42-file reproducibility comparison pass on this PCB; one new R16 integrated build/check0 matches both R15 snapshots. Factory process acceptance and stock/quote resolution remain required before ordering. The full R16/R17 same-PCB clean pair is complete. Binding provenance is refreshed; final post-R17 canonical check exits0; no new R17 full build is claimed. The measured SD_MOSI1.994603mm/two-segment alternative remains an owner-acceptance deviation; latest steer cancels its adoption and forbids PCB changes for Minors. |
 
 Use `m3_design/r10_fab.sh` for the R10 export/check sequence; `FAB_NET=1` also performs the supplier checks.
 For separate supplier checks, use the explicit R10 profile:
@@ -290,12 +300,12 @@ python3 tools/check_procurement.py --profile r10
 
 R10's placed-part/feeder target is **$84.41 per board**; Extended-code count is informational.
 
-**Current supplier snapshot:** all82 exact codes queried2026-10-30T15:30:06.601825Z
-through **15:30:40.008183Z**, rebound without changing those supplier times. The final-BOM/CPL-bound
+**Current supplier snapshot:** all82 exact codes queried2026-10-30T17:15:34.705395Z
+through **17:15:45.842149Z**, rebound without changing those supplier times. The final-BOM/CPL-bound
 [cost](../m3_design/assembly_review/fab/cost_check.json) and
 [stock](../m3_design/assembly_review/fab/stock_check.json) preserve those supplier times.
 At5 boards, parts$54.4312/board plus feeder share$25.092/board gives**$79.5232/board**;
-minimum purchases give**$81.3254/board** including that share. Both pass the$84.41
+minimum purchases give**$81.8636/board** including that share. Both pass the$84.41
 component/feeder target before$83.96/order fixed fees,possible$14.93 handling,
 PCB/rails/joints,VIPPO,manual C84,consignment,attrition,shipping and tax.
 R430/U4 stock, owner cost/quote/deviation and factory process acceptance remain
@@ -305,8 +315,33 @@ pending; nothing ordered. Refresh exact-code supplier evidence within24h of orde
 |---|---|
 | R430 C185349,22.6kohm |17available against3610minimum purchase; stock fails. Confirm quantity/quote; the unadopted22kohm fallback needs a fresh camera/shared-port budget. |
 | U4 C26633007 |0available against5fitted; secure stock or consign with attrition spares. Do not plan to hand-fit this bottom LGA. |
-| U9 C3662793 |123available,minimum1; five fitted need no minimum-purchase uplift in this dated snapshot. |
+| U9 C3662793 |83available,minimum7 for five fitted; the minimum-purchase uplift is included above. Refresh before ordering. |
 | Other codes |No thin line/model mismatch in this snapshot; refresh all final-BOM/CPL-bound evidence within24h of ordering. |
+
+### 8.1.1 Pad-energy worksheet (D-R17-01; Calculation/Inference)
+
+Keep the camera off on the pad unless recording. Use one operating point:
+PORT_5V3 upper allocation5.546269302559 V; GPS/radio/quiescent0.461 A;
+unshed logic1.4 W; SD write3.3 V x0.2 A/0.8=0.825 W; and retained conservative
+R92 loss7.4 V squared/(3300 ohm x0.98)=0.016933 W. At allocated80% converter
+efficiency, camera input is6.932837 W and remaining board input5.437970 W.
+Convert charge at6 V. Efficiency and device duty are project allocations,
+not maker-guaranteed bounds or measurements.
+
+| Two-hour board operation | Camera on | Board charge at6 V | Board-only capacity leaving20% unused |
+|---|---:|---:|---:|
+| GPS/radio,unshed logic and allocated continuous SD write |0 h|1.812657 Ah|2.265821 Ah|
+| Same |0.5 h|2.390393 Ah|2.987991 Ah|
+| Same |2 h|4.123602 Ah|5.154503 Ah|
+
+These examples exclude all motor, flight and recovery charge. Select measured
+usable capacity using **C_tested_Ah >= (Q_pad_board + Q_pad_motors + Q_flight_all
++ Q_recovery)/0.8**. Independently verify aged/cold capacity, fire-time>=7.4 V
+equivalent source and required source resistance, source/harness transients and
+physical bay fit. No example is a selected or qualified pack. Retire the old
+mixed-basis1.76/2.04/3.19 Ah subtotals and generic2.6/4 Ah sizing; do not add a
+repaired camera increment to them. The nominal5.456 V,6 V/80% extra1.5 h camera
+term is1.705 Ah. Evidence: [pad-energy calculation](../m3_design/assembly_review/sources/r10_review/round17_pad_energy.json).
 
 ### 8.2 Assembly, order remarks and placement preview
 
@@ -498,6 +533,17 @@ thermal and sensor tests apply using the contacts above and the current circuit:
   disabled; qualify the documented debugger-override experiment with a dummy load. No trace/debugger test with an e-match.
   Normal physical current ends≤20 ms including tail; intact-hardware watchdog-fault guard≤36 ms. Qualify IWDG timing,
   physical tail, hot dummy-load pulses, source/harness resistance and selected MJG J-Tek lot/charge20 ms firing.
+- **Future programming/boot acceptance (D-R17-02):** with e-match disconnected,
+  record and read back the intended user-flash BOOT_ADD0 and relevant boot settings,
+  then verify reset reaches the bound application. BOOT0's10k pull-down selects
+  BOOT_ADD0; it does not constrain that option byte. [ST AN2606 Rev70 Table2
+  Pattern10 p35 and Table135 p321](https://www.st.com/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf)
+  permits BOOT0=0/BOOT_ADD0=0x1FF0 ROM entry; PA2 can drive USART2_TX onto servo3
+  despite R152/R156. No option bytes were programmed/read here and no R10 firmware
+  exists. Deliberate ROM service uses dummy loads/no e-match, only before IWDG
+  starts, with PC1/PE4 locked low,camera EN/OE low and SD_CS high. PC1/PE4 are not
+  loader pins. The current primary text was checked; current PDF raster inspection
+  is not claimed.
 - **Port faults/back-feed:** GPS/radio stay powered and have no EN/OE/FAULT or individual power-cycle facility.
   Their digital UARTs require powered-board FT setup, internal RX pulls always off and0–5 V endpoints; the operating pull-off threshold is relevant I/O supply+0.3 V, separate from the4 V absolute-stress note; no self-powered module
   with the board off. Short each port with worst camera/SD load and observe logic/flight-state survival.
@@ -538,11 +584,11 @@ thermal and sensor tests apply using the contacts above and the current circuit:
 | Servo harness | DB125 J122 pins1–4 signals, pin5 shared signal-reference GND only. Motor power **and motor return** run directly in the pack-star harness; preserve O6's≥50 mΩ reference branches and≤1 mΩ star transfer resistance and qualify the inferred≤0.62 A board share with a1 A allowance. No + row/header plug/tie holes remain. Per-servo fault containment and hinge loads remain physical qualifications. |
 | External modules | HGLRC M100 Mini GPS on J410 and MicoAir LR900-F on J420; camera on J9. All use DB125 leads; no on-board antennas/coax/SMA procedure. Supply/GND then board TXO/RXI on GPS/radio; camera RXI/TXO differs. Mount/support modules and keep radio/harness away from the CH1 cell; qualify installed RF immunity. |
 | microSD access | Board off, pack/USB/self-powered sources disconnected, and assembly out of the bay before opening/inserting/removing. **Unbolt/remove the PCB from a continuous sled first**, or use a deliberately designed hinge-access window whose actual lid sweep, fingers/tools, card retention and structural clearances have been qualified. Merely taking the sled out of the bay does not establish bottom-hinge access. Never force the hinge against the sled. |
-| Board position | OQ-7: the PCB aft edge plus axial mounting tolerance is wholly forward of booster/main joint+47 mm in every roll orientation; do not use freed PCB/coax length to move it aft into the shroud. Physically integrate the actual≥2.6/4 Ah pack, lead zone, external modules and full harness; prior bay/lead-zone arithmetic is not a fit test. |
+| Board position | OQ-7: the PCB aft edge plus axial mounting tolerance is wholly forward of booster/main joint+47 mm in every roll orientation; do not use freed PCB/coax length to move it aft into the shroud. Select tested capacity using section8.1.1 including motor/flight/recovery charge, then physically integrate that actual pack, lead zone, external modules and full harness; prior bay/lead-zone arithmetic is not a fit test. |
 | Sled/supports | Top PCB face on bore axis, horizontal/vertical centring each±0.3 mm; usable bore radius24.9 mm after0.5 mm wall allowance. Exactly five M3 supports: **(4,4),(42,4),(4,44.3),(3.7,86),(42,86)**. Nonconductive sled/insulation under the whole bottom face; no sixth support or servo tie channel. Deepest bottom part is **L1 B(25,74.6),3.015825 mm below the bottom face** (model-derived, Inference). Minimum standoffs3.5 mm; use measured **4.0 mm standoffs and plate≤1.0 mm** by default. At4 mm the nominal L1/plate gap is0.984175 mm; dynamic deflection/installed fit remain unqualified. |
 | Hardware limits | M3 nylon screws/nuts, measured washer OD≤7.0 mm, standoff≤5.5 mm across flats/≤Ø6.4 mm. Screw head top/nut sled side; no over-torque. Let h=standoff height and t=plate thickness. Under the retained6.35 mm across-corners/2.4 mm nut,0.4 mm screw projection and both±0.3 mm centring assumptions, keep **h+t<6.0 mm** at x4/42 and **<5.3 mm** at x3.7. The plate-only6.88 mm bound is insufficient; nut/screw geometry governs. Recalculate for actual maximum hardware dimensions/tolerances and hole eccentricity before release. |
 | Support/board checks | Current hash-bound fit gate confirms nearest bottom obstacle C32.2,4.536177 mm from(4,44.3), and nearest top exposed pad LED2.2,3.807887 mm from that support. These are CAD measurements; actual hardware/washer eccentricity and installed fit remain unverified. Keep whole-face insulation even over masked copper. |
-| U5 cover | Opaque open-cell cover capped at U5 outline+1 mm, kept off U4 with no port pressure. At4 mm standoffs, maker-max1.1 mm U5 height leaves2.9 mm for the cover geometry. Qualify compression/venting and LED/ambient-light rejection on the installed assembly; no adhesive/staking load near U4. |
+| U5 cover | Opaque open-cell cover capped at U5 outline+1 mm, kept off U4 with no port pressure. At4 mm standoffs, the conservative1.1 mm engineering model/cover allocation leaves2.9 mm. TE MS5611-01BA03 06/2017 p15 Fig18 specifies package height1.0 mm +0/-0.10; its package-only3.0 mm gap excludes seating/foam/adhesive tolerances. The native triangulated model is1.100074 mm and is retained. Qualify compression/venting and LED/ambient-light rejection on the installed assembly; no adhesive/staking load near U4. |
 
 Five-times100 g retention remains an open qualification assertion for all seven terminals, C84, LS120, J3 and the
 closed socket/card; see the refreshed mass worksheet in M3_R10. The optional plate model and any historical frequency

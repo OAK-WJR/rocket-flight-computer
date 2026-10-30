@@ -1,0 +1,150 @@
+{
+  "schema": 1,
+  "finding": "R17-GATE-01",
+  "status": "fixed_checks_only; final canonical integration pending root",
+  "prepared_utc": "2026-10-30T18:06:06.358289+00:00",
+  "review_target_commit": "ac483f40d38db6e0424227bd32d2a5d5f9f60c3e",
+  "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "owned_production_files": [
+    "tools/check.sh",
+    "tools/test_check_shell.py",
+    "m3_design/assembly_review/sources/r10_review/round17_gate_fix.json"
+  ],
+  "change": {
+    "check.sh": "Canonical board full checks always invoke the actual fabrication verifier, including when its manifest is absent. The explicit build-stage skip is checked first; noncanonical copies retain existing present/absent semantics.",
+    "test_check_shell.py": "Add absent-manifest verifier behavior to the sequence fixture; require verifier invocation and failure propagation for absent canonical manifest. Add explicit build-skip controls with and without manifest; extend external-copy coverage to no manifest. Clear an inherited skip from fixture defaults.",
+    "all_other_native_stages_unchanged": true,
+    "selftest_sequence_unchanged": true,
+    "PCB_placement_routing_circuit_generators_changed": false
+  },
+  "file_sha256": {
+    "tools/check.sh": {
+      "before": "3edcd2f63f51999fde57d45d171e5cc0cf939bd578e34c980aac1825f839cea1",
+      "after": "f39d20eb09490394496eb34bfcab95a1afff3c1b8ce528ffa86b2297c18cbca0"
+    },
+    "tools/test_check_shell.py": {
+      "before": "0a6e38c51ee035783e7886bd544a2e1da6200c78622d92cc9687f0edac9c7ff3",
+      "after": "2f2221f6839b8a1a3248a39a3d273d1db1ce3902c696841618700d45799fea5b"
+    }
+  },
+  "immutable_full_review": {
+    "totals": {
+      "Critical": 0,
+      "Major": 0,
+      "Minor": 1
+    },
+    "original_reports_unchanged": {
+      "m3_design/assembly_review/sources/r10_review/round17_gate.md": "ccd5fb4ecf94d31f01fdd815cf1af14a89d2f0fc6ffb98ac2a4099290087cb5b",
+      "m3_design/assembly_review/sources/r10_review/round17_gate.json": "692c7f405f3e053d2a525ccb89cf66514a1cd7c921dd42f0b67b2a5300dd47e2"
+    },
+    "unchanged_genuine_complete_positive": {
+      "exit": 0,
+      "manifest_outputs_verified": 5,
+      "log_sha256": "1d91ae1798d3d343dbbe9fe963c057743151b7371cb550fd9bcfc06eb2a8ba07"
+    },
+    "old_genuine_complete_missing_manifest_seed": {
+      "exit": 0,
+      "only_change": [
+        "m3_design/assembly_review/fab/m3_fab_manifest.json"
+      ],
+      "log_sha256": "8d04c2792abde99f2e6555e951d7959dc0ac8653f81127df3150b97293d23dcc"
+    },
+    "native_CLI": "10.0.7",
+    "native_Python_API": "10.0.6",
+    "not_reclassified_as_hardware_failure": true
+  },
+  "unit_sequence_controls": {
+    "baseline": {
+      "exit": 0,
+      "log_sha256": "0ec2117cfccb50c1111a51c5e606d5b56d3cff1a9dde05123e0fccc3a55dc1bf",
+      "tests": 5,
+      "result": "OK"
+    },
+    "current": {
+      "exit": 0,
+      "log_sha256": "8ca1639a422ae483041b8b0bd884bc7e6ef63df09ba4a7924327b1d4d1b0ed5f",
+      "tests": 7,
+      "result": "OK"
+    },
+    "old_control": {
+      "exit": 1,
+      "log_sha256": "022081802df969f02e7a853072450f67fb64c243a1e6e76e10294611e0094b83",
+      "tests": 1,
+      "result": "FAILED (failures=1)"
+    }
+  },
+  "unit_scope": {
+    "baseline_tests": 5,
+    "current_tests": 7,
+    "old_checker_negative_control": "The new canonical-absence test fails on old checker because its missing-manifest invocation exits0.",
+    "current_controls": [
+      "all native contracts and every self-test invoked",
+      "contract failures propagate",
+      "native parts budget checks without regeneration",
+      "each self-test failure propagates",
+      "canonical present manifest invokes verifier and propagates verifier failure",
+      "canonical absent manifest invokes verifier and stops before self-tests",
+      "external copy with manifest skips verifier with its existing message",
+      "external copy without manifest preserves no-verifier/no-message success",
+      "explicit build skip with present manifest preserves every contract/self-test",
+      "explicit build skip with absent manifest preserves every contract/self-test"
+    ],
+    "fixture_warning": "Sequence tests intentionally stub external stages; they are not real-board DRC evidence."
+  },
+  "corrected_genuine_copied_project_negative": {
+    "command": "env -u R10_SKIP_FAB_MANIFEST KICAD_CLI=<verified vendor10.0.7> KICAD_PY=<native10.0.6> NUMPY_PY=<supplied NumPy> bash .supervisor/r17_gate_probe/project/tools/check.sh",
+    "copied_baseline_files": 1966,
+    "copied_target_commit": "ac483f40d38db6e0424227bd32d2a5d5f9f60c3e",
+    "project_rules_libraries_complete": true,
+    "canonical_ROOT_BOARD_condition_preserved": true,
+    "patched_copied_files": [
+      "tools/check.sh"
+    ],
+    "seed_removed_files": [
+      "m3_design/assembly_review/fab/m3_fab_manifest.json"
+    ],
+    "all_other_1964_files_equal_frozen_inputs": true,
+    "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+    "exit": 1,
+    "failure_stage": "actual tools/fab_manifest.py: required canonical manifest absent",
+    "diagnostic": "Fab manifest: FAIL: [Errno 2] No such file or directory: <copied project>/m3_design/assembly_review/fab/m3_fab_manifest.json",
+    "earlier_DRC_unconnected_parity_ERC": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "included_severities": [
+      "error",
+      "warning",
+      "exclusion"
+    ],
+    "ignored_checks": [],
+    "kicad_cli_version": "10.0.7",
+    "metadata_models_silkscreen_native_parts_fit": "pass",
+    "R10_rules": 32,
+    "all_R10_rules_pass": true,
+    "route_failures": 0,
+    "selftests_reached": false,
+    "selftests_not_reached_reason": "Required manifest failure correctly stops the complete invocation before the later suites.",
+    "log_sha256": "a22bba6ab7bb595479b7e5654493b356616b05840df10ba3bcbbff69bb987e30",
+    "report_sha256": {
+      "audit.json": "29f303336e9a4fe5681f61f0dec585f1fe3d09ae3e8906f1b6c07a6eabae6b1a",
+      "drc.json": "ab9befa8d105e65c7e2f7c9d5bc440529ac5f0f2f32355492837833fca2a04d5",
+      "erc.json": "c67e592d60fbd95106d0333e267b4bd7291484dd8af31dcfebb4adcd4a097628",
+      "fit.json": "06a35d1ec26080d506de8d59049008d34ca54f91d0444bec8c0e63a32ec5fc47",
+      "r10.json": "cb413d20273397f66acef0b05874a67288e3ca86c5ef98691a7bb0dc9689b376",
+      "route.json": "30195a919b0891c2e3e3048de1439b32c9c7786a84c6d6c418f01e26cc936153"
+    },
+    "restoration": "Original manifest restored after evidence capture; all1966copied files match the frozen inputs except the corrected check.sh.",
+    "no_fake_CLI_no_gate_skip_no_source_substitute": true
+  },
+  "limits": [
+    "No canonical fullcheck or r10_build.sh run by this task; root owns final integration. No new corrected real full positive is claimed.",
+    "No PCB, placement, routing, circuit-generator, docs, binding, supplier or other canonical edits by this task.",
+    "No new C/M or physical/firmware/manufacturing qualification claim. Original full review remains immutable.",
+    "Only the corrected complete missing-manifest invocation used the granted CLI reservation; reservation released after its exit1."
+  ],
+  "evidence_directory": ".supervisor/r17_gate_probe/"
+}

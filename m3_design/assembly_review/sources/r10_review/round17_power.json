@@ -1,0 +1,1546 @@
+{
+  "schema": 1,
+  "review": "Round17 full independent lens3 power/electrical",
+  "prepared_utc": "2026-10-30T17:20:08.637571+00:00",
+  "target_commit": "ac483f40d38db6e0424227bd32d2a5d5f9f60c3e",
+  "target_commit_authority": "root target packet and frozen inventory; no git command executed",
+  "board_path": "m3_design/assembly_review/m3.kicad_pcb",
+  "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "new_carried_counts": {
+    "new": 1,
+    "carried": 1
+  },
+  "findings": [
+    {
+      "id": "R17-PWR-01",
+      "severity": "Minor",
+      "status": "carried",
+      "lifecycle": "active",
+      "title": "L400 retains a reduced heel land",
+      "carried_from": [
+        "R16-PWR-01",
+        "R15-PWR-02",
+        "R14-PWR-01",
+        "R13-BOM-01",
+        "R13-MFG-02"
+      ],
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "reference": "L400",
+          "coordinates_mm": [
+            24.2,
+            5.55
+          ],
+          "layer": "F.Cu",
+          "rotation_deg": 0,
+          "footprint": "rocket:M3_SRP5030TA",
+          "part": "Bourns SRP5030T-6R8M",
+          "LCSC": "C1329837",
+          "pad_centres_mm": [
+            [
+              21.85,
+              5.55
+            ],
+            [
+              26.55,
+              5.55
+            ]
+          ],
+          "pad_sizes_mm": [
+            [
+              1.8,
+              2.5
+            ],
+            [
+              1.8,
+              2.5
+            ]
+          ],
+          "inner_gap_mm": 2.9,
+          "outer_span_mm": 6.5
+        },
+        {
+          "source_url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+          "maker_page": 1,
+          "source_sha256": "c52004cbb76ccf3275e5a94ca6c437fc5a0b81ca8c3643abf1fee902f83741d2",
+          "maker_recommended_pad_mm": [
+            2.0,
+            1.8
+          ],
+          "maker_recommended_inner_gap_mm": 2.5,
+          "contact_inner_edge_corner_calculation": "(5.7-0.3)/2-(1.1+0.3)",
+          "contact_inner_edge_corner_mm": 1.3,
+          "native_inner_edge_mm": 1.45,
+          "possible_uncovered_heel_mm": 0.15
+        }
+      ],
+      "impact": "Bounded land/assembly departure. Nominal coverage remains; no electrical failure or physical solder defect is demonstrated.",
+      "concrete_fix": "Under D-R16-03, retain the exact measured departure for owner/assembler acceptance and inspect first-article seating, contact coverage and fillets. Do not alter CAD for this Minor. If qualification demonstrates a required-function failure, separately qualify a maker-land correction with DRC, routing, paste, orientation and provenance."
+    },
+    {
+      "id": "R17-PWR-02",
+      "severity": "Minor",
+      "status": "new",
+      "lifecycle": "active",
+      "title": "Pad-capacity examples mix battery voltage and converter efficiency operating points",
+      "evidence": [
+        {
+          "file": "docs/REQUIREMENTS.md",
+          "line": 84,
+          "section": "Operating assumptions / Pad time",
+          "camera_output_A": 1.0,
+          "documented_camera_battery_increment_A": 0.77,
+          "extra_recording_hours": 1.5,
+          "documented_extra_Ah": 1.155,
+          "documented_continuous_case_Ah": 3.19,
+          "documented_capacity_Ah": 4.0
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+          "line": 1624,
+          "section": "D-CIR-02",
+          "named_battery_V": 6.0,
+          "named_efficiency": 0.8,
+          "retained_prior_base_Ah": 1.76,
+          "new_SD_2h_Ah": 0.275,
+          "note": "6 V/80% is explicit for the SD addition; the carried camera increment lacks a consistent current-board voltage/efficiency derivation."
+        },
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "references": [
+            "U400",
+            "R400",
+            "R404",
+            "R401"
+          ],
+          "coordinates_mm": {
+            "U400": [
+              16.9,
+              5.55
+            ],
+            "R400": [
+              19.9,
+              1.8
+            ],
+            "R404": [
+              16.625,
+              1.8
+            ],
+            "R401": [
+              13,
+              1.8
+            ]
+          },
+          "native_divider_ohm": [
+            56200,
+            2000,
+            10000
+          ],
+          "buck_min_nom_max_V": [
+            5.366681973094171,
+            5.456,
+            5.546269302558957
+          ],
+          "source_url": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf",
+          "maker_document": "DS41326 Rev3-2 November2024",
+          "maker_pages": [
+            5,
+            13
+          ],
+          "calculation": "Ipack_camera = Vbuck * 1A / (6V * 0.80); extra charge = Ipack_camera * 1.5h",
+          "result": {
+            "status": "Calculation/Inference; conditional duty allocation, no installed pack failure",
+            "camera_nominal_W": 5.456,
+            "buck_min_nom_max_V": [
+              5.366681973094171,
+              5.456,
+              5.546269302558957
+            ],
+            "camera_pack_min_nom_max_A_at6V_eta80pct": [
+              1.1180587443946188,
+              1.1366666666666665,
+              1.1554727713664492
+            ],
+            "camera_extra_min_nom_max_Ah": [
+              1.6770881165919282,
+              1.7049999999999996,
+              1.7332091570496737
+            ],
+            "camera_pack_A_at7p4V_eta80pct": 0.9216216216216215,
+            "camera_pack_A_at6V_eta80pct": 1.1366666666666665,
+            "camera_extra_1p5h_Ah": 1.7049999999999996,
+            "documented_extra_Ah": 1.155,
+            "extra_1p5h_nominal_difference_Ah": 0.5499999999999996,
+            "old_subtotal_Ah": 1.76,
+            "old_subtotal_contains_camera_hours": 0.5,
+            "old_camera_and_noncamera_operating_basis": "Unspecified in the retained1.76Ah subtotal; the0.5h camera term must also be rebased. Adding a corrected1.5h increment to that old subtotal is not a complete common-corner energy calculation.",
+            "current_allocation_30min_camera_2h_SD_Wh": 14.342358867735154,
+            "current_allocation_continuous_camera_2h_SD_Wh": 24.741613810033197,
+            "current_allocation_30min_camera_2h_SD_Ah_at6V": 2.3903931446225255,
+            "current_allocation_continuous_camera_2h_SD_Ah_at6V": 4.123602301672199,
+            "current_allocation_30min_required_capacity_Ah": 2.9879914307781568,
+            "current_allocation_continuous_required_capacity_Ah": 5.154502877090248,
+            "note": "Fresh current-allocation examples rebase the whole camera duty and all upper normal logic/GPS/radio/SD allocations at uniform6V/80pct and the buck high corner; no servo motor charge. Actual measured duty can be lower; source reserve and bay fit remain separate."
+          }
+        }
+      ],
+      "impact": "Documentation/calculation gap at a stated conservative budgeting corner. Actual measured duty may be lower and no installed pack is released or demonstrated inadequate. Capacity/source reserve and bay fit remain unqualified.",
+      "concrete_fix": "Add a current-board duty/energy worksheet with explicit battery voltage, efficiency, camera/radio/GPS/logic/SD states and servo charge; correct active capacity examples and mark illustrative selections separately from qualification. Preserve the dated D-CIR-02 basis through a new amendment. No CAD change is warranted."
+    }
+  ],
+  "rejected_or_closed_candidates": [
+    {
+      "candidate": "Post-load-switch feed bypass, reset-on gates or loss of separate controls",
+      "severity_if_demonstrated": "Critical",
+      "status": "rejected_on_current_native_evidence",
+      "evidence": "S-1..S-5 pass; source-facing Q120/Q121 feed RAW_ACT, independent PC1/PE4 have required external gate networks; 258 native pad rows agree with XML. This is topology/bias evidence, not firmware or measured reset behavior."
+    },
+    {
+      "candidate": "Insufficient selected e-match current",
+      "severity_if_demonstrated": "Major",
+      "status": "rejected_under_stated_allocation",
+      "evidence": {
+        "fire_by_stalls": [
+          {
+            "stalls": 0,
+            "loaded_pack_V": 6.899390756727756,
+            "fire_A": 1.5443660716989063,
+            "pass_1p125A": true
+          },
+          {
+            "stalls": 1,
+            "loaded_pack_V": 6.609326364555884,
+            "fire_A": 1.4794377872063396,
+            "pass_1p125A": true
+          },
+          {
+            "stalls": 2,
+            "loaded_pack_V": 6.318164198837923,
+            "fire_A": 1.4142637760577872,
+            "pass_1p125A": true
+          },
+          {
+            "stalls": 3,
+            "loaded_pack_V": 6.025729657046817,
+            "fire_A": 1.348804955060497,
+            "pass_1p125A": true
+          },
+          {
+            "stalls": 4,
+            "loaded_pack_V": 5.7318070272281405,
+            "fire_A": 1.2830130390490941,
+            "pass_1p125A": true
+          }
+        ],
+        "required_A": 1.125,
+        "loop_ohm": 4.617458126128065,
+        "other_load_W": 12.370806905016599
+      },
+      "limit": "7.4V equivalent source at fire, Rpack<=0.15ohm, stated harness/hot-FET/copper allocation. MJG0.75A datum is0.5s, so actual20ms lot/charge remains unqualified."
+    },
+    {
+      "candidate": "Shorted igniter necessarily browns out logic at required source reserve",
+      "severity_if_demonstrated": "Major",
+      "status": "rejected_as_static_failure",
+      "evidence": {
+        "zero_fire_copper_FET_harness_credit_pack_V": 5.492178948307261,
+        "resistor_corner_UVLO70C_V": 4.811062,
+        "conditional_short_with_fire_path": {
+          "branch_ohm": 2.409458126128065,
+          "loaded_pack_V": 5.568100531153589,
+          "fire_A": 2.310934757808544,
+          "pfet_Vgs_min_inference": 4.8689000721112965,
+          "U9_IN_minus_4p811062_UVLO_V": 0.7570385311535892
+        }
+      },
+      "limit": "No switching/transient or physical logic-survival test is inferred."
+    },
+    {
+      "candidate": "Required hot-plug corner or C88 feed-first topology fails",
+      "severity_if_demonstrated": "Major",
+      "status": "rejected_in_reviewed_model_domain",
+      "evidence": {
+        "cases": 2304,
+        "local_cases": 60,
+        "extrema": {
+          "minimum_V": -14.80737323571109,
+          "falling_V_per_us": 8.991477108041046,
+          "rising_V_per_us": 5.091052576178257,
+          "damper_peak_W": 579.0491465812015,
+          "damper_energy_J": 0.0029793590770987436
+        },
+        "graph_cut": {
+          "positive_reachable": [
+            [
+              "U9.5"
+            ],
+            []
+          ],
+          "negative_bypass_reachable": [
+            [
+              "C80.1",
+              "C89.1",
+              "C95.1",
+              "C96.1",
+              "D8.1",
+              "J1.1",
+              "R167.1",
+              "U9.5",
+              "junction_0"
+            ],
+            [
+              "C80.1",
+              "C89.1",
+              "C95.1",
+              "C96.1",
+              "D8.1",
+              "J1.1",
+              "R167.1"
+            ]
+          ]
+        },
+        "mismatch_cases": 64,
+        "mismatch_passed": true
+      },
+      "limit": "Required harness>=0.03ohm/0.1..2uH;14 lower-R sensitivity failing metrics are outside that domain. Typical curves, ideal pads/ground and estimated parasitics do not bound real waveforms."
+    },
+    {
+      "candidate": "Shared port short must trip U9 or constitutes an unallowed continuously operating point",
+      "severity_if_demonstrated": "Major",
+      "status": "not_demonstrated",
+      "evidence": {
+        "prospective_buck_A": 3.1604980434153074,
+        "buck_continuous_A": 2,
+        "U9_fault_allocation_A": 3.7437971552257268,
+        "U9_min_A": 3.9461883408071747,
+        "threshold_margin_A": 0.20239118558144797
+      },
+      "limit": "Ports may collapse/hiccup; no ideal2A clamp, continuous fault or transient-selectivity guarantee is claimed."
+    },
+    {
+      "candidate": "R134 exceeds its conditional normal/watchdog pulse envelope",
+      "severity_if_demonstrated": "Major",
+      "status": "not_demonstrated_for_stated_70C_allocation",
+      "evidence": {
+        "min70C_ohm": 1.97109,
+        "fault_power_W": 35.79745217113374,
+        "energy20ms_J": 0.7159490434226748,
+        "energy36ms_J": 1.2887082781608146,
+        "curve20ms_W_inference": 61.20385393838324,
+        "curve36ms_W_inference": 44.13366936349395,
+        "36ms_ratio_70C_inference": 1.2328718019513787
+      },
+      "watchdog_total_ms": 34.8530612244898,
+      "limit": "Curve interpolation, reference-board heating and actual20/36ms current tails remain unqualified. Repeated/hot-board pulses or85C behavior are not certified."
+    },
+    {
+      "candidate": "Documented pad-capacity arithmetic proves installed pack failure",
+      "severity_if_demonstrated": "Major",
+      "status": "narrowed_to_R17-PWR-02_Minor",
+      "evidence": {
+        "status": "Calculation/Inference; conditional duty allocation, no installed pack failure",
+        "camera_nominal_W": 5.456,
+        "buck_min_nom_max_V": [
+          5.366681973094171,
+          5.456,
+          5.546269302558957
+        ],
+        "camera_pack_min_nom_max_A_at6V_eta80pct": [
+          1.1180587443946188,
+          1.1366666666666665,
+          1.1554727713664492
+        ],
+        "camera_extra_min_nom_max_Ah": [
+          1.6770881165919282,
+          1.7049999999999996,
+          1.7332091570496737
+        ],
+        "camera_pack_A_at7p4V_eta80pct": 0.9216216216216215,
+        "camera_pack_A_at6V_eta80pct": 1.1366666666666665,
+        "camera_extra_1p5h_Ah": 1.7049999999999996,
+        "documented_extra_Ah": 1.155,
+        "extra_1p5h_nominal_difference_Ah": 0.5499999999999996,
+        "old_subtotal_Ah": 1.76,
+        "old_subtotal_contains_camera_hours": 0.5,
+        "old_camera_and_noncamera_operating_basis": "Unspecified in the retained1.76Ah subtotal; the0.5h camera term must also be rebased. Adding a corrected1.5h increment to that old subtotal is not a complete common-corner energy calculation.",
+        "current_allocation_30min_camera_2h_SD_Wh": 14.342358867735154,
+        "current_allocation_continuous_camera_2h_SD_Wh": 24.741613810033197,
+        "current_allocation_30min_camera_2h_SD_Ah_at6V": 2.3903931446225255,
+        "current_allocation_continuous_camera_2h_SD_Ah_at6V": 4.123602301672199,
+        "current_allocation_30min_required_capacity_Ah": 2.9879914307781568,
+        "current_allocation_continuous_required_capacity_Ah": 5.154502877090248,
+        "note": "Fresh current-allocation examples rebase the whole camera duty and all upper normal logic/GPS/radio/SD allocations at uniform6V/80pct and the buck high corner; no servo motor charge. Actual measured duty can be lower; source reserve and bay fit remain separate."
+      },
+      "limit": "No installed pack/qualified duty is supplied. The demonstrated issue is the conditional document calculation, not measured endurance failure."
+    },
+    {
+      "candidate": "Disclosed VCAP joint-condition, physical/FW, back-feed or thermal uncertainty alone is a demonstrated required-function failure",
+      "severity_if_demonstrated": "Major",
+      "status": "not_demonstrated",
+      "evidence": "C19/C20 exact nominal parts remain2.2uF+/-10%; combined operating C/ESR/modes/process/aging are explicitly unqualified. Direct ports lack powered-off isolation and are governed by the no-self-powered-source/e-match policy. U401 thermal coefficient, U400 loaded dropout, R166 durability, firmware timing and actual source/harness remain stated obligations."
+    }
+  ],
+  "frozen_inventory": {
+    "files": 1966,
+    "before_mismatches": [],
+    "after_mismatches": [],
+    "passed": true
+  },
+  "scope": {
+    "full_assigned_lens": true,
+    "decision_ids": [
+      "D-AUD-01",
+      "D-AUD-01a",
+      "D-AUD-02",
+      "D-AUD-03",
+      "D-AUD-03a",
+      "D-AUD-03b",
+      "D-AUD-03c",
+      "D-AUD-04",
+      "D-AUD-05",
+      "D-AUD-06",
+      "D-AUD-07",
+      "D-AUD-08",
+      "D-AUD-09",
+      "D-AUD-10",
+      "D-AVA-01",
+      "D-AVA-02",
+      "D-CIR-01",
+      "D-CIR-02",
+      "D-CIR-03",
+      "D-CIR-04",
+      "D-GAP-01",
+      "D-GAP-01a",
+      "D-GAP-02",
+      "D-GAP-02a",
+      "D-GAP-02b",
+      "D-GAP-03",
+      "D-GAP-04",
+      "D-GAP-05",
+      "D-OA-01",
+      "D-OA-02",
+      "D-OA-03",
+      "D-OA-04",
+      "D-OA-05",
+      "D-OA-06",
+      "D-OA-07",
+      "D-OA-08",
+      "D-OA-09",
+      "D-R1-01",
+      "D-R1-02",
+      "D-R1-03",
+      "D-R1-04",
+      "D-R1-05",
+      "D-R1-06",
+      "D-R1-07",
+      "D-R10-01",
+      "D-R10-02",
+      "D-R10-03",
+      "D-R11-01",
+      "D-R11-02",
+      "D-R11-03",
+      "D-R11-04",
+      "D-R11-05",
+      "D-R12-01",
+      "D-R12-02",
+      "D-R12-03",
+      "D-R13-01",
+      "D-R13-02",
+      "D-R13-03",
+      "D-R14-01",
+      "D-R14-02",
+      "D-R14-03",
+      "D-R15-01",
+      "D-R15-02",
+      "D-R15-03",
+      "D-R16-01",
+      "D-R16-02",
+      "D-R16-03",
+      "D-R2-01",
+      "D-R2-02",
+      "D-R2-03",
+      "D-R2-04",
+      "D-R2-05",
+      "D-R2-06",
+      "D-R2-07",
+      "D-R2-08",
+      "D-R2-09",
+      "D-R2-10",
+      "D-R2-11",
+      "D-R2-12",
+      "D-R2-13",
+      "D-R2-14",
+      "D-R2-15",
+      "D-R2-16",
+      "D-R3-01",
+      "D-R3-02",
+      "D-R3-03",
+      "D-R3-04",
+      "D-R3-05",
+      "D-R3-06",
+      "D-R3-07",
+      "D-R3-08",
+      "D-R3-09",
+      "D-R3-10",
+      "D-R3-11",
+      "D-R3-12",
+      "D-R3-13",
+      "D-R4-01",
+      "D-R4-02",
+      "D-R4-03",
+      "D-R4-04",
+      "D-R5-01",
+      "D-R5-02",
+      "D-R5-03",
+      "D-R5-04",
+      "D-R6-01",
+      "D-R6-02",
+      "D-R6-03",
+      "D-R7-01",
+      "D-R7-02",
+      "D-R8-01",
+      "D-R8-02",
+      "D-R8-03",
+      "D-R9-01",
+      "D-R9-02",
+      "D-R9-03",
+      "D-R9-04",
+      "D-R9-05",
+      "D-R9-06",
+      "D-SS-01",
+      "D-SS-02",
+      "D-SS-03",
+      "D-SS-04"
+    ],
+    "decision_count": 122,
+    "decision_ids_equal_frozen_scope": true,
+    "owner_mandates": 23,
+    "latest_steer": "D-R16-03: no PCB/placement/routing/circuit-generator changes for Minors",
+    "mandatory_sources": {
+      "AGENTS.md": {
+        "sha256": "c02a8aad64f7cd305c1faacdcfa542dd68f93742ec0751ca0c8a111a7d4ba73e",
+        "lines": 107
+      },
+      ".supervisor/r17_target_packet.md": {
+        "sha256": "824dca42fb362111c74454d9d3341e2d60cf1a067e1ae5d3c77c75518f8a5478",
+        "lines": 13
+      },
+      ".supervisor/r10_review_packet.md": {
+        "sha256": "c173b9f0a45236954d5ccbc3b6d6c97a9d40286bc8fa7887d1d65b49ad30a8d3",
+        "lines": 23
+      },
+      "docs/REQUIREMENTS.md": {
+        "sha256": "f5f827d49e746142e0fc10f680714c27d16339d7e5ea117bcc5fbab2d5779664",
+        "lines": 213
+      },
+      "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": {
+        "sha256": "79deffd07861a1048cf317854cd64a1ace3039698d0361f39ae1592ff7b9041d",
+        "lines": 2478
+      },
+      "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": {
+        "sha256": "514f8b12c48c07c43682c573b70e2e34fb6a2a2606e0dec436e020f5b5f45109",
+        "lines": 320
+      },
+      "docs/M3_R10.md": {
+        "sha256": "855b7a2c1e3bf4712a5e2a244b19242c28a1d3498222b377e13af8b3e2bd26d5",
+        "lines": 542
+      },
+      "docs/R10_VALIDATION.md": {
+        "sha256": "f2a3a375f8f365e9fda4307fa40cc413b4d56589763f3b04c95a1052a2ccbb75",
+        "lines": 2021
+      },
+      "docs/R9_VALIDATION.md": {
+        "sha256": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+        "lines": 422
+      },
+      "../../docs/VEHICLE.md": {
+        "sha256": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+        "lines": 70
+      },
+      "docs/R10_VEHICLE_HANDOFF.md": {
+        "sha256": "f75cec52ea9862f787f293755b71709e6c35554647fb0b7259272ca5b781665b",
+        "lines": 118
+      },
+      "docs/ORDERING.md": {
+        "sha256": "7461ca98b1e5821984c0a2b5e24e3c06c2ac5416a8fd5a89fd8ca48cef40be6b",
+        "lines": 565
+      },
+      "m3_design/assembly_review/sources/r10_design/parts_qualification.md": {
+        "sha256": "5abf61ee2608e4486300a7bce0d1807f752ed5c318f8a9865d7dc94914cf707e",
+        "lines": 989
+      },
+      "m3_design/assembly_review/sources/r10_design/r10_plan.md": {
+        "sha256": "a414e6b33a8a586080a9796ed4deee712f84d67907bff778757a5ad0cae8a5c4",
+        "lines": 196
+      }
+    },
+    "current_round_peer_evidence_read": false,
+    "prior_context": "Prior round16_power was read for carried status after fresh topology and budget work; prior reports are not proof of present results."
+  },
+  "checks_actually_executed": [
+    {
+      "id": "freeze_before_after",
+      "method": "Python SHA256 over all1966 paths in root freeze inventory",
+      "result": "pass",
+      "board_bytes": 2256162
+    },
+    {
+      "id": "native_power_parity",
+      "method": "KiCad native API LoadBoard; compare selected physical pad nets with native XML; no CAD writes",
+      "result": "pass",
+      "physical_pad_rows": 258,
+      "unique_reference_pin_pairs": 254,
+      "missing_xml": [],
+      "native_xml_mismatches": [],
+      "reviewed_references": 82
+    },
+    {
+      "id": "scoped_native_rules",
+      "method": "direct check_r10.check_board native API, with actual production BOM/CPL",
+      "result": "pass",
+      "count": 16,
+      "rules": [
+        "S-1",
+        "S-2",
+        "S-3",
+        "S-4",
+        "S-5",
+        "S-6",
+        "S-7",
+        "S-8",
+        "S-9",
+        "K-contract",
+        "F9-1",
+        "F9-2",
+        "K-copper",
+        "K-inner",
+        "K-width",
+        "K-retained"
+      ],
+      "issues": [],
+      "complete_gate": false
+    },
+    {
+      "id": "native_budget_regeneration",
+      "method": "r10_parts.power_budget(board) in memory and exact JSON comparison",
+      "result": "pass",
+      "exactly_matches_saved": true
+    },
+    {
+      "id": "independent_scalar_and_native_path_arithmetic",
+      "method": "Own segment selection/sums and scalar equations; no production budget function imported",
+      "result": "pass_with_two_reported_Minors",
+      "values": {
+        "native_fire_paths": {
+          "BAT_IN": {
+            "length_mm": 6.3071067811865476,
+            "width_mm": 1.0,
+            "segments": [
+              {
+                "class": "PCB_TRACK",
+                "layer": "B.Cu",
+                "a": [
+                  7.4,
+                  74.1
+                ],
+                "b": [
+                  13.0,
+                  74.1
+                ],
+                "width": 1.0
+              },
+              {
+                "class": "PCB_TRACK",
+                "layer": "B.Cu",
+                "a": [
+                  13.0,
+                  74.1
+                ],
+                "b": [
+                  13.5,
+                  73.6
+                ],
+                "width": 1.0
+              }
+            ]
+          },
+          "ACT_FET_S": {
+            "length_mm": 2.200000000000003,
+            "width_mm": 0.4,
+            "segments": [
+              {
+                "class": "PCB_TRACK",
+                "layer": "B.Cu",
+                "a": [
+                  13.825,
+                  72.2
+                ],
+                "b": [
+                  13.825,
+                  71.1
+                ],
+                "width": 0.4
+              },
+              {
+                "class": "PCB_TRACK",
+                "layer": "B.Cu",
+                "a": [
+                  13.825,
+                  70.0
+                ],
+                "b": [
+                  13.825,
+                  71.1
+                ],
+                "width": 0.4
+              }
+            ]
+          },
+          "RAW_ACT": {
+            "length_mm": 5.886133111168463,
+            "width_mm": 0.5,
+            "segments": [
+              {
+                "class": "PCB_TRACK",
+                "layer": "B.Cu",
+                "a": [
+                  14.475,
+                  67.105
+                ],
+                "b": [
+                  17.58,
+                  64.0
+                ],
+                "width": 0.5
+              },
+              {
+                "class": "PCB_TRACK",
+                "layer": "B.Cu",
+                "a": [
+                  17.58,
+                  64.0
+                ],
+                "b": [
+                  19.075,
+                  64.0
+                ],
+                "width": 0.5
+              }
+            ]
+          },
+          "PYRO1_IGN": {
+            "length_mm": 10.230382386916236,
+            "width_mm": 0.5,
+            "segments": [
+              {
+                "class": "PCB_TRACK",
+                "layer": "B.Cu",
+                "a": [
+                  7.4,
+                  57.6
+                ],
+                "b": [
+                  7.4,
+                  59.4
+                ],
+                "width": 0.5
+              },
+              {
+                "class": "PCB_TRACK",
+                "layer": "B.Cu",
+                "a": [
+                  7.4,
+                  59.4
+                ],
+                "b": [
+                  12.0,
+                  64.0
+                ],
+                "width": 0.5
+              },
+              {
+                "class": "PCB_TRACK",
+                "layer": "B.Cu",
+                "a": [
+                  12.0,
+                  64.0
+                ],
+                "b": [
+                  13.925,
+                  64.0
+                ],
+                "width": 0.5
+              }
+            ]
+          },
+          "PYRO1_OUT": {
+            "length_mm": 7.8544783489600185,
+            "width_mm": 0.5,
+            "segments": [
+              {
+                "class": "PCB_TRACK",
+                "layer": "F.Cu",
+                "a": [
+                  10.63,
+                  54.1
+                ],
+                "b": [
+                  11.63,
+                  55.1
+                ],
+                "width": 0.5
+              },
+              {
+                "class": "PCB_TRACK",
+                "layer": "F.Cu",
+                "a": [
+                  11.63,
+                  55.1
+                ],
+                "b": [
+                  13.9,
+                  57.37
+                ],
+                "width": 0.5
+              },
+              {
+                "class": "PCB_TRACK",
+                "layer": "F.Cu",
+                "a": [
+                  7.4,
+                  54.1
+                ],
+                "b": [
+                  10.63,
+                  54.1
+                ],
+                "width": 0.5
+              }
+            ]
+          }
+        },
+        "copper_20C_ohm": 0.029362412142135627,
+        "copper_70C_ohm": 0.03513212612806527,
+        "buck_V": [
+          5.366681973094171,
+          5.546269302558957
+        ],
+        "ldo_V": [
+          4.711504463251122,
+          4.873250033991471
+        ],
+        "camera_min_V": 5.031681973094171,
+        "radio_min_V": 4.601504463251122,
+        "gps_min_V": 4.6315044632511215,
+        "port_max_V": 4.92325003399147,
+        "ldo_min_headroom_V": 0.44343193910270085,
+        "switch_limit_A": {
+          "22.6": [
+            1.0408911159585674,
+            1.2494980434153073
+          ],
+          "66.5": [
+            0.34769038777999106,
+            0.4530489900670699
+          ]
+        },
+        "normal_all_load_W": [
+          10.617782429677817,
+          12.370806905016599
+        ],
+        "camera_off_shed_W": [
+          3.664038931919968,
+          3.9567202768179044
+        ],
+        "hold_up_ms": {
+          "300.8": {
+            "all_on": [
+              0.4901966417033703,
+              0.5711294274640745
+            ],
+            "camera_off_logic_shed_card_idle": [
+              1.5326147859198496,
+              1.655039182900379
+            ]
+          },
+          "470": {
+            "all_on": [
+              0.7659322526615161,
+              0.8923897304126163
+            ],
+            "camera_off_logic_shed_card_idle": [
+              2.394710602999765,
+              2.585998723281842
+            ]
+          }
+        },
+        "O6_board_return_A": 0.6144,
+        "USB_attach_charge_mC": 2.41627,
+        "USB_no_load_ms": [
+          5.333352579910382,
+          6.9494874892225935
+        ],
+        "U9_minmax_A": [
+          3.9461883408071747,
+          4.856999498243853
+        ],
+        "U9_port_fault_A": 3.7437971552257268,
+        "U9_coordination_margin_A": 0.20239118558144797,
+        "shared_short_buck_A": 3.1604980434153074,
+        "fire_branch_ohm": 4.467458126128065,
+        "fire_by_stalls": [
+          {
+            "stalls": 0,
+            "loaded_pack_V": 6.899390756727756,
+            "fire_A": 1.5443660716989063,
+            "pass_1p125A": true
+          },
+          {
+            "stalls": 1,
+            "loaded_pack_V": 6.609326364555884,
+            "fire_A": 1.4794377872063396,
+            "pass_1p125A": true
+          },
+          {
+            "stalls": 2,
+            "loaded_pack_V": 6.318164198837923,
+            "fire_A": 1.4142637760577872,
+            "pass_1p125A": true
+          },
+          {
+            "stalls": 3,
+            "loaded_pack_V": 6.025729657046817,
+            "fire_A": 1.348804955060497,
+            "pass_1p125A": true
+          },
+          {
+            "stalls": 4,
+            "loaded_pack_V": 5.7318070272281405,
+            "fire_A": 1.2830130390490941,
+            "pass_1p125A": true
+          }
+        ],
+        "shorted_igniter_four_stalls": {
+          "branch_ohm": 2.409458126128065,
+          "loaded_pack_V": 5.568100531153589,
+          "fire_A": 2.310934757808544,
+          "pfet_Vgs_min_inference": 4.8689000721112965,
+          "U9_IN_minus_4p811062_UVLO_V": 0.7570385311535892
+        },
+        "watchdog_ms": [
+          28.57142857142857,
+          32.6530612244898
+        ],
+        "watchdog_total_ms": 34.8530612244898,
+        "R134": {
+          "min70C_ohm": 1.97109,
+          "fault_power_W": 35.79745217113374,
+          "energy20ms_J": 0.7159490434226748,
+          "energy36ms_J": 1.2887082781608146,
+          "curve20ms_W_inference": 61.20385393838324,
+          "curve36ms_W_inference": 44.13366936349395,
+          "36ms_ratio_70C_inference": 1.2328718019513787
+        },
+        "short_neck_IPC2152_inference_C": {
+          "0.3": {
+            "1": 9.134379127472906,
+            "2": 36.537516509891624,
+            "3": 82.20941214725615,
+            "4.2": 161.13044780862208
+          },
+          "0.4": {
+            "1": 6.561444900069061,
+            "2": 26.245779600276244,
+            "3": 59.05300410062155,
+            "4.2": 115.74388803721823
+          },
+          "0.5": {
+            "1": 5.076366520715148,
+            "2": 20.30546608286059,
+            "3": 45.68729868643633,
+            "4.2": 89.5471054254152
+          },
+          "1": {
+            "1": 2.287538837588329,
+            "2": 9.150155350353316,
+            "3": 20.58784953829496,
+            "4.2": 40.352185095058125
+          }
+        },
+        "pulse_20ms_adiabatic_C_inference": {
+          "0.4": 8.973913043478262,
+          "0.5": 5.743304347826087,
+          "1": 1.4358260869565218
+        },
+        "switch_bounce": {
+          "R81_ohm": 295650.0,
+          "initial_EN_V": 1.7286884677974514,
+          "current_nominal_uA": 5.967741935483872,
+          "effective_C_for_150ms_uF": 1.1842423672083824,
+          "note": "Capacitance/bias/aging, real contacts and leakage remain unmeasured"
+        },
+        "pad_energy": {
+          "status": "Calculation/Inference; conditional duty allocation, no installed pack failure",
+          "camera_nominal_W": 5.456,
+          "buck_min_nom_max_V": [
+            5.366681973094171,
+            5.456,
+            5.546269302558957
+          ],
+          "camera_pack_min_nom_max_A_at6V_eta80pct": [
+            1.1180587443946188,
+            1.1366666666666665,
+            1.1554727713664492
+          ],
+          "camera_extra_min_nom_max_Ah": [
+            1.6770881165919282,
+            1.7049999999999996,
+            1.7332091570496737
+          ],
+          "camera_pack_A_at7p4V_eta80pct": 0.9216216216216215,
+          "camera_pack_A_at6V_eta80pct": 1.1366666666666665,
+          "camera_extra_1p5h_Ah": 1.7049999999999996,
+          "documented_extra_Ah": 1.155,
+          "extra_1p5h_nominal_difference_Ah": 0.5499999999999996,
+          "old_subtotal_Ah": 1.76,
+          "old_subtotal_contains_camera_hours": 0.5,
+          "old_camera_and_noncamera_operating_basis": "Unspecified in the retained1.76Ah subtotal; the0.5h camera term must also be rebased. Adding a corrected1.5h increment to that old subtotal is not a complete common-corner energy calculation.",
+          "current_allocation_30min_camera_2h_SD_Wh": 14.342358867735154,
+          "current_allocation_continuous_camera_2h_SD_Wh": 24.741613810033197,
+          "current_allocation_30min_camera_2h_SD_Ah_at6V": 2.3903931446225255,
+          "current_allocation_continuous_camera_2h_SD_Ah_at6V": 4.123602301672199,
+          "current_allocation_30min_required_capacity_Ah": 2.9879914307781568,
+          "current_allocation_continuous_required_capacity_Ah": 5.154502877090248,
+          "note": "Fresh current-allocation examples rebase the whole camera duty and all upper normal logic/GPS/radio/SD allocations at uniform6V/80pct and the buck high corner; no servo motor charge. Actual measured duty can be lower; source reserve and bay fit remain separate."
+        },
+        "L400_heel": {
+          "native_inner_edge_mm": 1.4500000000000002,
+          "native_outer_edge_mm": 3.25,
+          "native_gap_mm": 2.9000000000000004,
+          "maker_recommended_gap_mm": 2.5,
+          "conditional_contact_inner_edge_mm": 1.3,
+          "uncovered_corner_mm": 0.15000000000000013
+        },
+        "canonical_comparisons": [
+          {
+            "name": "buck",
+            "maximum_abs_delta": 0.0,
+            "matches": true
+          },
+          {
+            "name": "ldo",
+            "maximum_abs_delta": 0.0,
+            "matches": true
+          },
+          {
+            "name": "normalload",
+            "maximum_abs_delta": 0.0,
+            "matches": true
+          },
+          {
+            "name": "copper20",
+            "maximum_abs_delta": 3.469446951953614e-18,
+            "matches": true
+          },
+          {
+            "name": "U9",
+            "maximum_abs_delta": 0.0,
+            "matches": true
+          }
+        ],
+        "zero_fire_copper_FET_harness_credit_short_pack_V": 5.492178948307261,
+        "Q124_gate_min_drive_V_inference": 2.8057539603367783,
+        "pfet_settled_Vgs_four_stall_4p2A_drop_V_inference": 4.9487346457334365
+      }
+    },
+    {
+      "id": "hotplug_fresh_extract_and_full_sweep",
+      "method": "Native actual-feed extraction to own inputs; NumPy/production C solver2304 required,60local,refinements,retained-OUT,no-clamp and lower-R controls",
+      "result": "pass_in_required_domain",
+      "summary": {
+        "inputs_exactly_match_canonical": true,
+        "results_exactly_match_canonical": true,
+        "pass": true,
+        "cases": 2304,
+        "local_cases": 60,
+        "full_duration_us": 150.0,
+        "local_duration_us": 0.5,
+        "extrema": {
+          "minimum_V": -14.80737323571109,
+          "falling_V_per_us": 8.991477108041046,
+          "rising_V_per_us": 5.091052576178257,
+          "damper_peak_W": 579.0491465812015,
+          "damper_energy_J": 0.0029793590770987436
+        },
+        "convergence": {
+          "minimum_V": 3.4453867382211456e-05,
+          "maximum_V": 0.0,
+          "falling_V_per_us": 0.0007242633062194415,
+          "rising_V_per_us": 0.0005811151160273198
+        },
+        "local_convergence": {
+          "minimum_V": 1.6991308531277838e-06,
+          "maximum_V": 0.0,
+          "falling_V_per_us": 8.839539250793393e-06,
+          "rising_V_per_us": 4.020073163246707e-07
+        },
+        "local_pass": true,
+        "no_clamp_failures": [],
+        "lower_R_failures": 14,
+        "C88_cut": {
+          "positive_reachable": [
+            [
+              "U9.5"
+            ],
+            []
+          ],
+          "negative_bypass_reachable": [
+            [
+              "C80.1",
+              "C89.1",
+              "C95.1",
+              "C96.1",
+              "D8.1",
+              "J1.1",
+              "R167.1",
+              "U9.5",
+              "junction_0"
+            ],
+            [
+              "C80.1",
+              "C89.1",
+              "C95.1",
+              "C96.1",
+              "D8.1",
+              "J1.1",
+              "R167.1"
+            ]
+          ]
+        },
+        "independent_graph_paths": {
+          "J1.1 -> C88.1": {
+            "length_mm": 30.27081175238027,
+            "R_ohm": 0.0151787070343287,
+            "L_near_nH": 6.440196938601125,
+            "L_gnd_nH": 7.526248155659678
+          },
+          "C88.1 -> U9.5": {
+            "length_mm": 3.920000000000009,
+            "R_ohm": 0.00443689795918369,
+            "L_near_nH": 1.1766945032234364,
+            "L_gnd_nH": 2.4240482438361113
+          },
+          "J1.1 -> C80.1": {
+            "length_mm": 9.997792206135786,
+            "R_ohm": 0.004913200741301015,
+            "L_near_nH": 1.8491284474714447,
+            "L_gnd_nH": 1.8491284474714447
+          },
+          "J1.1 -> D8.1": {
+            "length_mm": 6.322792206135789,
+            "R_ohm": 0.0031072007413010163,
+            "L_near_nH": 1.169423678223787,
+            "L_gnd_nH": 1.169423678223787
+          },
+          "C89.2 -> R166.1": {
+            "length_mm": 5.387741699796949,
+            "R_ohm": 0.006619225516893394,
+            "L_near_nH": 1.7573784336265836,
+            "L_gnd_nH": 1.7573784336265836
+          }
+        },
+        "retained_output": {
+          "capacitance_F": 0.0016161237136,
+          "inventory_F": {
+            "C10": 3.0359999999999997e-05,
+            "C100": 1.38e-07,
+            "C11": 3.0359999999999997e-05,
+            "C120": 1.38e-06,
+            "C126": 3.036e-07,
+            "C127": 1.38e-08,
+            "C128": 1.38e-07,
+            "C129": 1.38e-08,
+            "C13": 1.38e-07,
+            "C14": 1.38e-07,
+            "C15": 1.38e-07,
+            "C16": 1.38e-07,
+            "C17": 1.38e-07,
+            "C18": 1.38e-07,
+            "C19": 3.036e-06,
+            "C20": 3.036e-06,
+            "C21": 1.38e-07,
+            "C22": 1.38e-06,
+            "C23": 6.485999999999999e-06,
+            "C24": 1.38e-07,
+            "C25": 1.3799999999999999e-11,
+            "C26": 1.3799999999999999e-11,
+            "C28": 6.485999999999999e-06,
+            "C29": 1.38e-07,
+            "C30": 1.38e-07,
+            "C31": 1.38e-07,
+            "C32": 1.38e-07,
+            "C400": 3.0359999999999997e-05,
+            "C401": 3.0359999999999997e-05,
+            "C402": 1.38e-07,
+            "C403": 3.0359999999999997e-05,
+            "C404": 3.0359999999999997e-05,
+            "C405": 3.0359999999999997e-05,
+            "C406": 3.0359999999999997e-05,
+            "C407": 3.0359999999999997e-05,
+            "C408": 1.38e-08,
+            "C410": 1.38e-07,
+            "C411": 3.0359999999999997e-05,
+            "C420": 1.38e-07,
+            "C421": 3.0359999999999997e-05,
+            "C430": 1.38e-07,
+            "C431": 3.0359999999999997e-05,
+            "C460": 1.38e-07,
+            "C461": 3.0359999999999997e-05,
+            "C5": 1.38e-07,
+            "C6": 3.0359999999999997e-05,
+            "C60": 1.38e-08,
+            "C7": 3.0359999999999997e-05,
+            "C8": 3.0359999999999997e-05,
+            "C80": 1.3799999999999998e-05,
+            "C81": 6.486e-09,
+            "C82": 3.0359999999999997e-05,
+            "C83": 1.38e-07,
+            "C84": 0.00094,
+            "C85": 6.486e-07,
+            "C86": 1.38e-06,
+            "C87": 3.036e-06,
+            "C88": 1.38e-07,
+            "C89": 3.0359999999999997e-05,
+            "C9": 3.0359999999999997e-05,
+            "C90": 1.38e-07,
+            "C91": 1.38e-06,
+            "C92": 6.485999999999999e-06,
+            "C93": 1.38e-07,
+            "C94": 1.38e-08,
+            "C95": 3.0359999999999997e-05,
+            "C96": 1.3799999999999998e-05,
+            "C97": 1.38e-06,
+            "C98": 1.38e-06,
+            "C99": 1.38e-07
+          },
+          "R92_max_ohm": 3354.6645,
+          "initial_V": 8.5,
+          "time_s": 2.0,
+          "output_bound_V": 5.877715488614672,
+          "cold_input_minimum_V": -15.0,
+          "inference": "All board capacitors share one 8.5V node: C84 twice nominal, others +20% tolerance and +15% temperature. No operating-load or divider-discharge credit; no U11 reverse-blocking credit. Capacitor sharing and the doubled C84 envelope are inference, requiring bench verification."
+        }
+      }
+    },
+    {
+      "id": "independent_C88_graph_cut",
+      "method": "Own graph traversal on fresh extracted inputs; removeC88 node; positive and added-bypass negative control",
+      "result": "pass",
+      "evidence": {
+        "positive_reachable": [
+          [
+            "U9.5"
+          ],
+          []
+        ],
+        "negative_bypass_reachable": [
+          [
+            "C80.1",
+            "C89.1",
+            "C95.1",
+            "C96.1",
+            "D8.1",
+            "J1.1",
+            "R167.1",
+            "U9.5",
+            "junction_0"
+          ],
+          [
+            "C80.1",
+            "C89.1",
+            "C95.1",
+            "C96.1",
+            "D8.1",
+            "J1.1",
+            "R167.1"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "hotplug_numerical_and_evidence_tests",
+      "command": ".supervisor/venv/bin/python -I -B tools/test_r10_check.py HotplugNumerics HotplugEvidence",
+      "result": "pass",
+      "tests": 9,
+      "exit_code": 0,
+      "scope": "Includes independent Python constant-C MNA against compiled charge solver and real failing baseline; not a second independent full nonlinear model"
+    },
+    {
+      "id": "bounded_independent_capacitor_mismatch",
+      "method": "Own ctypes wrapper of unchanged production C kernel;64 per-capacitor low/high cases at selected0.1/2uH corners plus refined extrema",
+      "result": "pass",
+      "cases": 64,
+      "failures": [],
+      "refinement_deltas": {
+        "minimum_V": 3.4453867382211456e-05,
+        "maximum_V": 0.0,
+        "falling_V_per_us": 0.0007242633062194415,
+        "rising_V_per_us": 0.00035292946076737053
+      },
+      "scope": "64 local cases; independent low/high per C80/C96/C89/C95/C88; L0.1/2uH, R0.03, gnd reference, copperR0.75, knee15.6; rdamp high atL0.1 and low atL2; same production C kernel, not an independent nonlinear solver"
+    },
+    {
+      "id": "primary_maker_review",
+      "method": "Official web pages and exact named cached PDFs; pdftotext plus complete-page visual review of L400 recommended land, R134 pulse chart, AONR SOA",
+      "result": "completed",
+      "rendered_pages": [
+        {
+          "maker": "Bourns SRP5030T",
+          "page": 1
+        },
+        {
+          "maker": "Bourns CRM2512",
+          "page": 3
+        },
+        {
+          "maker": "AOS AONR21357 Rev2.1",
+          "page": 4
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+      "document": "SLVSFC9C May2026",
+      "pages": [
+        7,
+        8,
+        9,
+        32,
+        60,
+        62,
+        63
+      ],
+      "use": "Absolute and recommended limits, current limit, derived-pin reverse current, output protection and layout"
+    },
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+      "document": "SLVS841G October2026",
+      "pages": [
+        6,
+        7,
+        17
+      ],
+      "use": "RON, limit formula, fault delays, reverse blocking"
+    },
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+      "document": "SLVSEA3F August2020",
+      "pages": [
+        7,
+        8,
+        15
+      ],
+      "use": "Mux current and reverse-current thresholds; no ideal blocking credit"
+    },
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+      "document": "SBVS282A September2026",
+      "pages": [
+        4,
+        5,
+        6,
+        17
+      ],
+      "use": "Accuracy, leakage, dropout, shared limit, effective capacitance and thermal assumptions"
+    },
+    {
+      "url": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf",
+      "document": "DS41326 Rev3-2 November2024",
+      "pages": [
+        4,
+        5,
+        11,
+        13,
+        14,
+        15
+      ],
+      "use": "Buck pinout, ratings, reference, current limit, hiccup, divider and layout"
+    },
+    {
+      "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+      "pages": [
+        1
+      ],
+      "use": "L400 recommended land, terminal tolerances, current/DCR"
+    },
+    {
+      "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "use": "R134 identity/TCR/derating and visually read pulse curve"
+    },
+    {
+      "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+      "document": "Rev2.1 November2023",
+      "pages": [
+        1,
+        2,
+        4
+      ],
+      "use": "PFET pins, gate/rating/resistance, reference-case SOA"
+    },
+    {
+      "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf",
+      "document": "Rev1.1 October2023",
+      "pages": [
+        1,
+        2
+      ],
+      "use": "Fire FET gate/resistance/charge"
+    },
+    {
+      "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+      "pages": [
+        1
+      ],
+      "use": "Selected e-match limits and all-fire test duration"
+    },
+    {
+      "url": "https://micoair.com/en/docs/telemetry/lr900/lr900-telemetry",
+      "document": "updated2026-10-25",
+      "section": "Specifications/interfaces",
+      "use": "4.5..5V,3.3VLVTTL,1W maximum average; peaks remain unqualified"
+    },
+    {
+      "url": "https://www.hglrc.com/products/hglrc-m100_mini-gps",
+      "section": "Specification",
+      "use": "3.3..5V operating input; no assumed published maximum supply current"
+    },
+    {
+      "url": "https://www.runcam.com/download/split4k/RC_Split_4k_Manual_EN.pdf",
+      "pages": [
+        1
+      ],
+      "use": "Regulated5..20V input and battery-surge prohibition; engineering1A allocation is conservative and distinct from listed450mA working current"
+    },
+    {
+      "url": "https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf",
+      "document": "SMD-SP-001 V10 July2025",
+      "pages": [
+        4,
+        5,
+        6
+      ],
+      "use": "R166 ordinary1W/800ppm per K,5s overload; no microsecond endurance curve"
+    },
+    {
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+      "pages": [
+        1,
+        4
+      ],
+      "use": "C84 nominal/tolerance/endurance/ESR; no inferred cold ESR or reflow qualification"
+    }
+  ],
+  "coverage_limits": [
+    "No KiCad CLI invocation, DRC, canonical/full/copied build or full check.sh; selected native checks do not substitute for those gates.",
+    "No current-round peer evidence/probes, subagent, git action, GUI retry, external message or order.",
+    "No firmware implementation or executable R10 binding, physical electrical/transient/thermal, source/harness, pulse-tail, selected-lot firing, SD power-loss/busy, actual capacitance/ESR, endurance, RF/ESD, process, retention, bore/stack or flight qualification.",
+    "Native stack nominal copper, pad/ground ideals, typical capacitor curves, conditional hot FETs, exact source/harness/load bounds and thetaJA assumptions remain inferences.",
+    "Initial native inventory emitted layer-unspecified PCB_VIA.GetWidth diagnostics; final explicit via measurements use top-layer width. Native wx/image-handler diagnostics did not prevent successful API results.",
+    "PDF review used the PDF skill; complete relevant drawing/curve pages were visually inspected. Temporary extracted texts/rasters were deleted after their values/source hashes were recorded.",
+    "One bounded full pass and64-case supplemental mismatch test; no optimization or design implementation."
+  ],
+  "probe_evidence": [
+    {
+      "path": ".supervisor/r17_power_probe/before.json",
+      "sha256": "6b912eb19aa973dfc893eb3687ff81797826253508bfd16480a570ede0cbdf7b"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/after.json",
+      "sha256": "6b912eb19aa973dfc893eb3687ff81797826253508bfd16480a570ede0cbdf7b"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/scope_review.json",
+      "sha256": "64deac181ffba0cd78477f93397fcf2434f47222fb9aa4c47fe18cfd97759dfd"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/native.py",
+      "sha256": "4a217c89ac392991e3ac50e32e291b4d8abaa6a5181caa381703918942d9d681"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/native.json",
+      "sha256": "95a4ca2de7408299e1e3cd9b0adf2c80f1c186d52f8711bf5ad7c5a93fc948af"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/parity_summary.json",
+      "sha256": "1879e83be335a3af41c5602e40361216b0c425fd84555a62a25e723858fa16eb"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/native_checks.py",
+      "sha256": "6cb0595490b8d776cb5fcf49a1a0b9343a9cc4fcf5e234019e8f792565089f43"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/native_checks.json",
+      "sha256": "e87d41d8392447b24d2c8e5ca7a785479059b49aeac9c2089ab69922e7799179"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/native_vias.json",
+      "sha256": "1d3ef3a694c60a0efe9d0f1c4baa17854b841c224a28b349c379b4956878dd56"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/budget_regenerated.json",
+      "sha256": "c5fb1337b9561be9f88243145d3e8aa071822116533a70805acfb9f52a42a7ea"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/calculations.py",
+      "sha256": "246d724fa3a267c96f56f3d9e8755076f7e3bda96d10ed01ad24f55e7970f56b"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/calculations.json",
+      "sha256": "4f1e63858003428efb3b9d3a5952d170ca0a293a6ac69ae7a1d0cf0f3e1cf9a5"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/hotplug_inputs.json",
+      "sha256": "f965302694ba339a4d3566548f0343ccb14c2e96e9b4b7175f28c3af6bdddaef"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/hotplug_results.json",
+      "sha256": "a3d21d692dbaa9d613c90725f76d73d6cb508d8fd33f539a2c82ad8c2631140f"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/model_controls.py",
+      "sha256": "05d68bf6982df7578989e7d83aba55a0165a1523fca78f855a14cdbbdd7fc44d"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/model_controls.json",
+      "sha256": "173dd5d08ef7187aee1aab94ec2892c3733d2141d8045ba042f32e72a07f59c5"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/mismatch.py",
+      "sha256": "b23c3a85fd25507b0ce7ce194d4d3c4fca7bda77e57778b4b41f812599989935"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/mismatch.json",
+      "sha256": "aaad75e09628eac386b8924f7cb86a1505a41f26d222f3dfe02a5edc3caae490"
+    },
+    {
+      "path": ".supervisor/r17_power_probe/maker_cache.json",
+      "sha256": "45a270c5ffe5ca1be26fcbb343c865416849df39ac9b778a6d6d78f323af319b"
+    }
+  ],
+  "markdown_sha256": "de8e63bb20a32d2c8195b947480322462336b7159e4e16b3b1a4e8d672bcac53",
+  "immutable_after_handoff": true
+}

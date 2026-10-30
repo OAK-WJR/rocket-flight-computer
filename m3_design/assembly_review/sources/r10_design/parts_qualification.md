@@ -8,47 +8,57 @@ DS41326, SLVS841F, SLVSEA3F, SBVS282A, SCES942A and the LR900 manual. No physica
 tests were performed. The current always-on ports, screw terminals, microSD and sole-bus-sense amendment below supersedes the earlier port-switch/translator, header, duplicated sense and ride-through records. AUD/GAP amendments still apply where not explicitly superseded; dated review records remain historical.
 
 
-## Current circuit amendment and R16 follow-up (owner decisions 2026-10-28)
+## Current circuit amendment and completed R16/R17 review pair
 
-**Full R16 and gate follow-up (2026-10-30):** unchanged PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
-46×90×1.6mm,2,256,162 bytes;209 footprints,951 segments,296 vias(168 GND),
-1788.675665mm track. All1942 committed files stayed byte-identical through ten
-full R16 lenses on `b1b8658`/`632a9ad3`:0Critical/0Major/11Minor groups from17raw
-observations(5new/6carried). Full R17 on this same PCB is pending; no final pair,
-owner acceptance or order is claimed. Full R16's original scope was119D IDs/
-22owner mandates. Current amendments total122D IDs throughD-R16-03/23mandates;
-these additions do not rewrite the sealed review's source scope.
-**Software/CAD:** one new R16 integrated build/check exits0:DRC/unconnected/
-parity/ERC0,all32R10rules including K-binding,180R10tests,31fit,16paste,5parts
-and67route. All four native NumPy skips are separately resolved with supplied
-NumPy. Orientation,618paste geometries and five-output manifest pass. Its42
-generated files exactly match both complete R15 build snapshots on this same
-PCB. Those two R15 executions retain their original31-rule/176R10/60route
-scope; this is one new R16 build, not a second new-build pair. Assembly-page
-rasters match the b1b8658 pages despite PDF metadata-byte changes. The separate
-final standalone check also exits0 with the same32rules/test counts and all
-four native NumPy skips separately resolved.
-**Simulation/Inference:** fresh R16 actual-feed2304required+60local hot-plug
-cases pass. The optional181.1Hz pinnedD5/70.5g estimated plate result retains
-its R15 calculation scope. No physical qualification is inferred.
-**Procurement:** exact supplier2026-10-30T15:30:06.601825..15:30:40.008183Z:
-$79.5232 placed/feeder share and$81.3254 with minimum purchases,both below$84.41
-before fixed/process/PCB/shipping. Cost-only procurement passes; stock release
-fails at R43017<3610 and U4zero<5. U9stock123/minimum1. Quote/process and owner
-cost/deviation acceptance remain pending; nothing ordered.
-**Retained Minors, latest supervisor steer (2026-10-30):** no PCB,placement,
-routing or circuit-generator change for Minors. The SD_MOSI alternative saving
-1.994603mm/two segments is retained as a measured owner-acceptance deviation;
-its queued adoption is cancelled. Under-body IMU_CS/SPI1_MISO/IMU_INT1/3V3A
-paths remain a measured TN1383 stress-guidance departure with rejected bounded
-prototypes. Commit R16,then full R17 on the same632a9ad3; if also0Critical/
-0Major,finalize deviations/status/AGENTS,commit and report. PCB changes require
-a confirmed Critical or Major; no complete TN1383 compliance is claimed.
-**Not verified:** DB125 insertion/fabricated S-8 allocation,VCAP combined C/ESR/
-process,R10 firmware,SD/e-match lot20ms firing,electrical/thermal/transient/
-endurance,installedRF/ESD,harness/retention,tool/card access,physical bore/stack/
-flight and first-article/process. AGENTS section2 is unchanged; R9 stays accepted.
-See [R10 validation](../../../../docs/R10_VALIDATION.md), round16 reconciliation and current integration.
+**Full R16/R17 pair complete (2026-10-30):** PCB
+`632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
+46 x 90 x 1.6 mm, 2,256,162 bytes; 209 footprints, 951 segments, 296 vias
+(168 GND), 1788.675665 mm track. Full R16 on `b1b8658` found
+0 Critical / 0 Major / 11 Minor groups from 17 raw observations (5 new/6 carried),
+with all 1,942 files frozen. Full R17 on `ac483f4` found
+0 Critical / 0 Major / 13 Minor groups from 23 raw observations (4 new/9 carried),
+with all 1,966 files frozen through ten complete lenses. The same-PCB clean pair
+is earned; original reports remain immutable. R16 reviewed 119 D IDs/22 owner
+mandates; R17 reviewed 122/23. The final record index has **126 D IDs through
+D-R17-04 and 23 mandates**; later record/check amendments do not enlarge either
+sealed review's scope.
+
+**Software/CAD:** two complete R15 builds/check0 reproduced 42 generated files
+on this PCB; one complete R16 build/check0 matched both snapshots. There is no
+new R17 full build. R15 retains its 31-rule/176-R10-test/60-route-test scope;
+R16 passed 32 rules, 180 R10/31 fit/16 paste/5 parts/67 route tests, with all four
+native NumPy skips separately resolved. Orientation, all 618 paste geometries
+and the five-output manifest passed in that execution. R17 corrections affect
+docs/checks and text-only pin-table/binding provenance. The refreshed binding
+changes only pin_table_sha256; electrical assignments/axes and the other41
+recorded generated files stay unchanged. The manifest-gate fix has7 shell
+regressions. **Final post-R17 canonical check: exit0.** All32rules,7shell/180R10/31fit/16paste/5parts/67route tests and five-output manifest pass; all4native NumPy skips separately resolved. Evidence: round17_fix_validation.json.
+
+**Simulation/Inference:** the R16 actual-feed 2304 required +60 local hot-plug
+cases passed. The optional 181.1 Hz pinned-D5/70.5 g plate result remains the
+R15 calculation on this same PCB. No physical qualification follows.
+
+**Procurement:** original supplier queries 2026-10-30T17:15:34.705395..
+17:15:45.842149Z give $79.5232 placed/feeder share and $81.8636 with minimum
+purchases, below $84.41 before fixed/process/PCB/shipping costs. R430 17<3610
+and U4 0<5 still fail stock release; U9 has 83 available/minimum7 for five fitted.
+Quote/process and owner cost/deviation acceptance remain pending; nothing ordered.
+
+**Retained Minors:** no PCB, placement, routing or circuit-generator change for
+Minors (D-R16-03). SD_MOSI's measured 1.994603 mm/two-segment alternative remains
+a deviation; no adoption is queued. MEMS signal/supply stress guidance, L400 land,
+DB125 insertion/S-8 process allocation, VCAP conditions, M2/returns, courtyard
+graphics and the separate vehicle mirror remain measured deviations with open
+qualification limits.
+The four new R17 groups receive record/check corrections; no physical or owner
+acceptance is inferred. Only a confirmed Critical/Major permits a board change.
+
+**Not verified:** R10 firmware/boot configuration, physical safety timing and
+selected-lot 20 ms firing, SD latency/power loss, electrical/thermal/transient/
+endurance, installed RF/ESD, harness/switch/retention, tool/card access, physical
+bore/stack/flight and first-article/process. AGENTS section2 is unchanged.
+R9 remains accepted; R10 remains unaccepted and unordered.
+See [R10 validation](../../../../docs/R10_VALIDATION.md), round17 reconciliation and final record/check integration.
 
 **R16 retained MEMS stress deviation (R16-MEC-01, Minor):** component-side B.Cu
 still crosses U4's nominal body outside its lands: IMU_CS 0.7596+0.0918 mm,
@@ -64,6 +74,32 @@ or full PCB/CLI/gate qualification of that MEMS recipe. Retain first-article
 bias/temperature/vibration qualification. [Prototype evidence](../r10_review/round16_minor_prototypes.json)
 and R16-MEC-01/D-R16-02 preserve the limits; no offset error or physical failure
 is demonstrated.
+
+**R17 record amendments (D-R17-01..03).** Pad sizing uses the explicit
+upper-load6 V/80% [worksheet](../../../../docs/ORDERING.md#811-pad-energy-worksheet-d-r17-01-calculationinference)
+and [calculation](../r10_review/round17_pad_energy.json): two-hour board charge
+1.812657/2.390393/4.123602 Ah for camera0/0.5/2 h; board-only20%-unused capacities
+2.265821/2.987991/5.154503 Ah. Add all motor,flight and recovery charge before
+dividing by0.8. Efficiency/duty are allocations, not maker guarantees; no pack
+is selected/qualified. Camera off unless recording; source reserve/resistance,
+aged/cold capacity,transients and bay fit remain required. The old mixed-basis
+capacity examples are superseded without changing dated D-CIR-02.
+
+Future programming acceptance records/readbacks intended user-flash BOOT_ADD0
+and relevant boot settings, then verifies reset reaches the bound application
+with the e-match disconnected. BOOT0 low alone selects BOOT_ADD0 and can enter
+ROM at0x1FF0; PA2 then drives loader USART2_TX/servo3 ([ST AN2606 Rev70 Table2
+Pattern10 p35,Table135 p321](https://www.st.com/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf)).
+No option-byte programming/readback or R10 firmware exists here. Deliberate
+service remains before IWDG,PC1/PE4 locked low,camera EN/OE low,SD_CS high,
+dummy loads/no e-match. Current PDF raster inspection is not claimed.
+
+U5's1.1 mm model/cover height is a conservative engineering allocation
+(native model1.100074 mm), not maker maximum. [TE MS5611-01BA03 06/2017
+p15 Fig18](https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=MS5611-01BA03&DocType=Data+Sheet&PartCntxt=MS561101BA03-50)
+specifies1.0 mm +0/-0.10; at nominal4 mm standoffs the package-only gap is3.0 mm,
+allocated cover gap2.9 mm. Seating/foam/adhesive/compression/venting and barometer
+behavior remain unqualified; no model/CAD change.
 
 **Always-on GPS/radio.** J410/J420 pin1 directly joins PORT_4V8. Delete U410/U420,
 R410–412/R420–422, U411/U421, R442/R452 and C440/C443/C450/C453. Keep the four

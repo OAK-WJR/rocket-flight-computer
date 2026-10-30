@@ -51,18 +51,16 @@ python3 "$ROOT/tools/silk_check.py" "$BOARD" --cli "$CLI"     # DRC skips silksc
   --report "$OUT/r10.json"
 "$KICAD_PY" -I "$ROOT/tools/route_check.py" "$BOARD" --profile r10 --report "$OUT/route.json" \
   | { grep -E '^(FAIL|routing hygiene: [0-9])' || true; }       # clean routing (AGENTS.md §3); full list in route.json
-# R8-GATE-05: the fab package (if one sits next to the board) is bound to the board it was made from. Only the repository
-# board is held to it; a copy elsewhere is not.
+# R17-GATE-01: the repository board requires its bound fab package; absence must fail too.
+# A board copy elsewhere is not held to a package, and the explicit build-stage skip remains available.
 MANIFEST="$(dirname "$BOARD")/fab/m3_fab_manifest.json"
 if [[ "${R10_SKIP_FAB_MANIFEST:-0}" == 1 ]]; then   # m3_design/r10_build.sh: the package is rebuilt after the board
   echo "fab manifest: not checked (build stage: run m3_design/r10_fab.sh, then tools/check.sh)"
+elif [[ "$BOARD" == "$ROOT/m3_design/assembly_review/m3.kicad_pcb" ]]; then
+  python3 "$ROOT/tools/fab_manifest.py" "$BOARD" \
+    || { echo "fab package bound to a different board: run m3_design/r10_fab.sh"; exit 1; }
 elif [[ -f "$MANIFEST" ]]; then
-  if [[ "$BOARD" == "$ROOT/m3_design/assembly_review/m3.kicad_pcb" ]]; then
-    python3 "$ROOT/tools/fab_manifest.py" "$BOARD" \
-      || { echo "fab package bound to a different board: run m3_design/r10_fab.sh"; exit 1; }
-  else
-    echo "fab manifest: not checked (board copy)"
-  fi
+  echo "fab manifest: not checked (board copy)"
 fi
 # Gate self-tests (R4-GATE-02): a weakened gate fails here. Seeded faults on synthetic boards and on a temporary copy of
 # the R10 board (R10_BOARD, set here to the checked board); about 2 minutes.

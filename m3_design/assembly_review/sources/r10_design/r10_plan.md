@@ -2,22 +2,62 @@
 
 **Historical completion before the new circuit changes (2026-10-28):** full rounds 9/10 are clean on the original and Minor-fix targets; final PCB`b337fe63…` is frozen. R10_VALIDATION contains the complete current deviation list; owner acceptance/OQ-3, procurement, process and physical/firmware qualifications remain pending. The single-switch/AUD/GAP amendments below supersede original hardware descriptions.
 
-**Current review status (2026-10-30):** full R16 on committed b1b8658 completed
-0Critical/0Major/11consolidatedMinor groups from17raw observations(5new/6carried).
-PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
-46x90mm,951segments/296vias,remains unchanged through the gate/record fixes.
-The two complete R15 builds/check0 reproduced42 generated files on this PCB;
-new R16 integration evidence is recorded separately in round16_fix_validation.json.
-Fresh full17 on this same committed PCB must complete the clean pair. The
-newest supervisor steer/D-R16-03 forbids PCB,placement,routing and circuit-
-generator changes for Minors. Retain the measured SD/MEMS and other CAD Minors
-in the acceptance list; no post-pair cleanup is planned. If R17 is also0C0M,
-finalize the deviation/status/AGENTS records,commit and report. The complete
-ledger indexes122 unique agent decisions through D-R16-03 and23 owner scopes.
-Historical hardware below is superseded by newest owner and D-CIR/D-AVA/D-R11
-through D-R16-03 records. Stock,quote/process,physical/firmware and owner acceptance
-remain pending; R10 is not accepted or ordered.
+**Full R16/R17 pair complete (2026-10-30):** PCB
+`632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
+46 x 90 x 1.6 mm, 2,256,162 bytes; 209 footprints, 951 segments, 296 vias
+(168 GND), 1788.675665 mm track. Full R16 on `b1b8658` found
+0 Critical / 0 Major / 11 Minor groups from 17 raw observations (5 new/6 carried),
+with all 1,942 files frozen. Full R17 on `ac483f4` found
+0 Critical / 0 Major / 13 Minor groups from 23 raw observations (4 new/9 carried),
+with all 1,966 files frozen through ten complete lenses. The same-PCB clean pair
+is earned; original reports remain immutable. R16 reviewed 119 D IDs/22 owner
+mandates; R17 reviewed 122/23. The final record index has **126 D IDs through
+D-R17-04 and 23 mandates**; later record/check amendments do not enlarge either
+sealed review's scope.
 
+**Software/CAD:** two complete R15 builds/check0 reproduced 42 generated files
+on this PCB; one complete R16 build/check0 matched both snapshots. There is no
+new R17 full build. R15 retains its 31-rule/176-R10-test/60-route-test scope;
+R16 passed 32 rules, 180 R10/31 fit/16 paste/5 parts/67 route tests, with all four
+native NumPy skips separately resolved. Orientation, all 618 paste geometries
+and the five-output manifest passed in that execution. R17 corrections affect
+docs/checks and text-only pin-table/binding provenance. The refreshed binding
+changes only pin_table_sha256; electrical assignments/axes and the other41
+recorded generated files stay unchanged. The manifest-gate fix has7 shell
+regressions. **Final post-R17 canonical check: exit0.** All32rules,7shell/180R10/31fit/16paste/5parts/67route tests and five-output manifest pass; all4native NumPy skips separately resolved. Evidence: round17_fix_validation.json.
+
+**Simulation/Inference:** the R16 actual-feed 2304 required +60 local hot-plug
+cases passed. The optional 181.1 Hz pinned-D5/70.5 g plate result remains the
+R15 calculation on this same PCB. No physical qualification follows.
+
+**Procurement:** original supplier queries 2026-10-30T17:15:34.705395..
+17:15:45.842149Z give $79.5232 placed/feeder share and $81.8636 with minimum
+purchases, below $84.41 before fixed/process/PCB/shipping costs. R430 17<3610
+and U4 0<5 still fail stock release; U9 has 83 available/minimum7 for five fitted.
+Quote/process and owner cost/deviation acceptance remain pending; nothing ordered.
+
+**Retained Minors:** no PCB, placement, routing or circuit-generator change for
+Minors (D-R16-03). SD_MOSI's measured 1.994603 mm/two-segment alternative remains
+a deviation; no adoption is queued. MEMS signal/supply stress guidance, L400 land,
+DB125 insertion/S-8 process allocation, VCAP conditions, M2/returns, courtyard
+graphics and the separate vehicle mirror remain measured deviations with open
+qualification limits.
+The four new R17 groups receive record/check corrections; no physical or owner
+acceptance is inferred. Only a confirmed Critical/Major permits a board change.
+
+**Not verified:** R10 firmware/boot configuration, physical safety timing and
+selected-lot 20 ms firing, SD latency/power loss, electrical/thermal/transient/
+endurance, installed RF/ESD, harness/switch/retention, tool/card access, physical
+bore/stack/flight and first-article/process. AGENTS section2 is unchanged.
+R9 remains accepted; R10 remains unaccepted and unordered.
+
+Current D-R17-01 uses the explicit pad-energy worksheet and full-charge formula;
+the old generic2.6/4 Ah examples are retired. D-R17-02 requires future user-flash
+BOOT_ADD0/boot-setting readback and reset-entry acceptance with no e-match;
+BOOT0 low alone does not exclude ROM. No option bytes or R10 firmware were
+programmed/read here. D-R17-03 retains1.1 mm U5 model/cover engineering allocation
+while correcting the maker package height to1.0 mm +0/-0.10; D-R17-04 requires
+canonical fabrication-manifest evidence. No CAD,model or circuit-generator change.
 
 Historical starting plan: owner direction of 2026-10-26. Nothing here changes R9: M3-ASSY-R9 (board `4f841a0e…`, branch
 `m3-assy-r9`, commit `ac9ebba`, owner-accepted 2026-10-25) stays the current board and the fallback until R10 exists and
