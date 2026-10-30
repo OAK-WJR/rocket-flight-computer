@@ -2,7 +2,17 @@
 
 **Historical completion before the new circuit changes (2026-10-28):** full rounds 9/10 are clean on the original and Minor-fix targets; final PCB`b337fe63…` is frozen. R10_VALIDATION contains the complete current deviation list; owner acceptance/OQ-3, procurement, process and physical/firmware qualifications remain pending. The single-switch/AUD/GAP amendments below supersede original hardware descriptions.
 
-**Current board (2026-10-29):** the circuit-pass candidate, SHA-256 `6e73b6ebe7e25d7a8c810493887fbaa7cce34f6fe1d379828dc67017e14235aa` (46 × 90 mm; all wired connectors DB125 screw terminals, always-on GPS / radio ports, microSD J430, one RAW_ACT sense chain, MJG J-Tek e-match). Two complete `m3_design/r10_build.sh` runs are byte-identical and pass the full `tools/check.sh`; hot-plug 2304 / 2304 (simulation / Inference); fab package regenerated and bound ($82.59 per board live, 2026-10-29; R430 / U4 short). **No review round has been run on it** (rounds 9/10 are `b337fe63…` only); the layout pass and rounds from 11 are pending. Hardware descriptions in §§1–8 below that mention GH ports with translators and switches, the GH-2 switch, the 3 × 4 servo header, tie holes or duplicate bus sense are superseded by `R10_DECISIONS.md` (D-CIR-01 … D-CIR-04 and the always-on-ports / screw-terminal sections).
+**AVA review baseline (2026-10-29):** committed`21bc3b2`, PCB SHA-256
+`0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8`,46×90mm.
+The completed AVA rows/cells supersede the circuit-pass placement; its two reproducible
+builds/check0 and2304-case hot-plug evidence are in`AVA_LAYOUT.md`. All10 independent
+round11 lenses are complete; one freshly confirmed Major concerns the DB125 maximum
+envelope/wire-room floor. Generator fixes and new build/review evidence are pending;
+rounds9/10 remain credit only for`b337fe63…`. See`docs/R10_VALIDATION.md`.
+Hardware descriptions in §§1–8 mentioning GH ports/switches/translators, the servo
+header/tie holes or duplicate bus sense are historical, superseded by the newest
+owner decisions and D-CIR-01…04, D-AVA-01…02 and D-R11 decisions.
+
 
 Historical starting plan: owner direction of 2026-10-26. Nothing here changes R9: M3-ASSY-R9 (board `4f841a0e…`, branch
 `m3-assy-r9`, commit `ac9ebba`, owner-accepted 2026-10-25) stays the current board and the fallback until R10 exists and

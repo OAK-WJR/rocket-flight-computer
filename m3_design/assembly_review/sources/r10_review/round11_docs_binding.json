@@ -1,0 +1,1169 @@
+{
+  "round": 11,
+  "lens": 10,
+  "scope": "Documentation and firmware binding consistency",
+  "target_commit": "21bc3b2",
+  "board_sha256": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+  "four_binding_hashes": {
+    "board_sha256": {
+      "recorded": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+      "actual": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+      "match": true
+    },
+    "netlist_sha256": {
+      "recorded": "8382c140f77dd8a0d3fefc0b7fc7125a84db282e5c06870fc744d1c5c89598f5",
+      "actual": "8382c140f77dd8a0d3fefc0b7fc7125a84db282e5c06870fc744d1c5c89598f5",
+      "match": true
+    },
+    "pin_table_sha256": {
+      "recorded": "038917b7400a3758ae29ae3d624197f063c6d4435271f6903f5944bd55092cbb",
+      "actual": "038917b7400a3758ae29ae3d624197f063c6d4435271f6903f5944bd55092cbb",
+      "match": true
+    },
+    "circuit_sha256": {
+      "recorded": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f",
+      "actual": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f",
+      "match": true
+    }
+  },
+  "u1_pins_compared": 100,
+  "pin_map_mismatches": [],
+  "binding_regeneration_equal": true,
+  "imu": {
+    "x_mm": 17,
+    "y_mm": 45.9,
+    "rotation_deg": 180,
+    "side": "bottom",
+    "lever_arm_x_mm": -6,
+    "lever_arm_z_mm": -2.06,
+    "lever_arm_z_basis": "Inference: centre of the U4 3D model box, not measured",
+    "lever_arm_frame": "board frame: x east (+x toward the x = 46 edge), y forward, z up from the top face; lever_arm_x_mm and lever_arm_z_mm are the sensor position relative to the roll axis in that frame; in the IMU frame (+X_imu = -x, +Y_imu = -y, +Z_imu = -z) the lever arm is (+6.0, ., +2.06) mm",
+    "bench_sign_check": "required",
+    "axis_basis": "same signed frame as R9: bottom180",
+    "roll_about_forward_axis": "-gyro_Y",
+    "forward_thrust": "-a_Y"
+  },
+  "native_metrics": {
+    "footprints": 209,
+    "tracks": 981,
+    "vias": 294,
+    "track_length_mm": 1818.769511310815,
+    "GND_vias": 166,
+    "shown_references": 122,
+    "hidden_references": 87
+  },
+  "native_poses": {
+    "J1": {
+      "xy_mm": [
+        7,
+        75.85
+      ],
+      "rotation_deg": -90,
+      "side": "top"
+    },
+    "J121": {
+      "xy_mm": [
+        7,
+        55.85
+      ],
+      "rotation_deg": -90,
+      "side": "top"
+    },
+    "J400": {
+      "xy_mm": [
+        7,
+        65.849999
+      ],
+      "rotation_deg": -90,
+      "side": "top"
+    },
+    "J410": {
+      "xy_mm": [
+        39,
+        15.5
+      ],
+      "rotation_deg": 90,
+      "side": "top"
+    },
+    "J420": {
+      "xy_mm": [
+        39,
+        31.5
+      ],
+      "rotation_deg": 90,
+      "side": "top"
+    },
+    "J9": {
+      "xy_mm": [
+        39,
+        47.5
+      ],
+      "rotation_deg": 90,
+      "side": "top"
+    },
+    "J122": {
+      "xy_mm": [
+        39,
+        71.5
+      ],
+      "rotation_deg": 90,
+      "side": "top"
+    },
+    "U4": {
+      "xy_mm": [
+        17,
+        45.9
+      ],
+      "rotation_deg": 180,
+      "side": "bottom"
+    },
+    "C24": {
+      "xy_mm": [
+        25.45,
+        49
+      ],
+      "rotation_deg": 90,
+      "side": "bottom"
+    },
+    "C84": {
+      "xy_mm": [
+        27.5,
+        78.5
+      ],
+      "rotation_deg": 90,
+      "side": "top"
+    },
+    "R166": {
+      "xy_mm": [
+        23.5,
+        86.3
+      ],
+      "rotation_deg": 0,
+      "side": "top"
+    },
+    "Q120": {
+      "xy_mm": [
+        13.5,
+        73.6
+      ],
+      "rotation_deg": 0,
+      "side": "bottom"
+    },
+    "Q121": {
+      "xy_mm": [
+        13.5,
+        68.6
+      ],
+      "rotation_deg": 180,
+      "side": "bottom"
+    },
+    "U9": {
+      "xy_mm": [
+        18.5,
+        81.6
+      ],
+      "rotation_deg": 0,
+      "side": "bottom"
+    },
+    "C82": {
+      "xy_mm": [
+        19.3,
+        76.75
+      ],
+      "rotation_deg": 90,
+      "side": "bottom"
+    },
+    "D9": {
+      "xy_mm": [
+        15,
+        79.3
+      ],
+      "rotation_deg": -90,
+      "side": "bottom"
+    },
+    "LS120": {
+      "xy_mm": [
+        23,
+        58.5
+      ],
+      "rotation_deg": 0,
+      "side": "top"
+    }
+  },
+  "r1_chain": {
+    "missing_import_files": [
+      "m3_design/check_assembly.py",
+      "m3_design/check_uart.py",
+      "m3_design/check_status.py",
+      "m3_design/check_gnss.py",
+      "m3_design/check_usb.py"
+    ]
+  },
+  "validation_keys": [
+    "board_sha256",
+    "baseline_commit",
+    "baseline_sha256",
+    "completed_builds",
+    "check_sh_exit",
+    "closure",
+    "cad_rules",
+    "wire_room",
+    "output_loops",
+    "input_feed_mm",
+    "hotplug_cases",
+    "hotplug_failures",
+    "physical_qualification",
+    "independent_review_rounds",
+    "tests",
+    "reproducibility"
+  ],
+  "metrics_record_match": true,
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "method": "Read-only native pcbnew parsing, XML/table/hash comparison, in-memory binding regeneration; no CLI, gate, build or supervisor request.",
+  "fresh_gate_status": "Not run by this reviewer; root owns pending supervisor baseline. ava_layout_validation.json is historical two-build evidence only.",
+  "generated_file_hashes": {
+    "checked": 23,
+    "mismatches": []
+  },
+  "fab_output_hashes": {
+    "checked": 5,
+    "mismatches": []
+  },
+  "legacy_bindings": {
+    "checked": 25,
+    "target_R10_matches": 0,
+    "profiles": [
+      "M3-ASSY-R1",
+      "M3-GNSS-R1",
+      "M3-PDIAG-R1",
+      "M3-PWR-R3",
+      "M3-UART-R1",
+      "M3-USB-R1"
+    ],
+    "verification_assembly_board_sha256": "e432d3436d5029de0a74a4b0ebcd02ec092dedf6d4252ce310f7be301558627f",
+    "verification_matches_R10": false,
+    "guard_evidence": "assembly_binding.py imports absent check_assembly/check_uart before invocation; retained proof hash mismatches target, and build.py checks protocol profile and exact board hash before output creation. No builder executed."
+  },
+  "fire_budget_probe": {
+    "source": "m3_design/r10_parts.py:333-354",
+    "old_hot_copper_ohm": 0.030123110155949817,
+    "new_conservative_hot_copper_ohm": 0.03567976686568644,
+    "new_conservative_total_loop_ohm": 4.618005766865687,
+    "new_conservative_fire_A_by_stalls": [
+      1.544183169176791,
+      1.479262595872749,
+      1.4140963262945678,
+      1.348645282113405,
+      1.2828611841827346
+    ],
+    "geometry_convention": "Full routed centreline BAT_IN includes the 0.707107 mm segment inside the Q120 drain polygon. External conductor alone is 6.0 mm, as root notes; neither convention matches stored 7.121320 mm. ACT_FET_S uses one aligned 2.2 mm source-leg path, without parallel credit, preserving old conservative convention. Values are Calc/Inference using existing material/thermal/source assumptions, not physical DC qualification.",
+    "new_length_width_mm": {
+      "BAT_IN": [
+        6.707106781186548,
+        1
+      ],
+      "ACT_FET_S": [
+        2.2,
+        0.4
+      ],
+      "RAW_ACT": [
+        5.88613311116846,
+        0.5
+      ],
+      "PYRO1_IGN": [
+        10.396067811865477,
+        0.5
+      ],
+      "PYRO1_OUT": [
+        7.954478348960021,
+        0.5
+      ]
+    },
+    "native_tracks": {
+      "BAT_IN": [
+        {
+          "width": 1,
+          "length": 2.250013777735594,
+          "start": [
+            12.525,
+            87.3
+          ],
+          "end": [
+            14.116,
+            88.891
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 4.45477272147525,
+          "start": [
+            13.35,
+            75
+          ],
+          "end": [
+            10.2,
+            71.85
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 2.625,
+          "start": [
+            10.2,
+            70.2
+          ],
+          "end": [
+            12.825,
+            70.2
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 1.825,
+          "start": [
+            11.625,
+            83.8
+          ],
+          "end": [
+            9.8,
+            83.8
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 1.65,
+          "start": [
+            10.2,
+            71.85
+          ],
+          "end": [
+            10.2,
+            70.2
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 1,
+          "length": 2.6,
+          "start": [
+            12.525,
+            82.1
+          ],
+          "end": [
+            12.525,
+            84.7
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 1,
+          "length": 1.2727922061357857,
+          "start": [
+            8.9,
+            74.1
+          ],
+          "end": [
+            9.8,
+            75
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 1,
+          "length": 1.591,
+          "start": [
+            17.5,
+            88.891
+          ],
+          "end": [
+            17.5,
+            87.3
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 1.2727922061357857,
+          "start": [
+            12.525,
+            84.7
+          ],
+          "end": [
+            11.625,
+            83.8
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 1.4142135623730951,
+          "start": [
+            12.825,
+            70.2
+          ],
+          "end": [
+            13.825,
+            69.2
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 1,
+          "length": 3.384,
+          "start": [
+            14.116,
+            88.891
+          ],
+          "end": [
+            17.5,
+            88.891
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 1,
+          "length": 1.9,
+          "start": [
+            7,
+            74.1
+          ],
+          "end": [
+            8.9,
+            74.1
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 1,
+          "length": 3.675,
+          "start": [
+            12.525,
+            75.825
+          ],
+          "end": [
+            12.525,
+            79.5
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 1,
+          "length": 2.6,
+          "start": [
+            12.525,
+            84.7
+          ],
+          "end": [
+            12.525,
+            87.3
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 1,
+          "length": 2.6,
+          "start": [
+            12.525,
+            79.5
+          ],
+          "end": [
+            12.525,
+            82.1
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 1,
+          "length": 1.1667261889578033,
+          "start": [
+            13.35,
+            75
+          ],
+          "end": [
+            12.525,
+            75.825
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 1,
+          "length": 3.55,
+          "start": [
+            9.8,
+            75
+          ],
+          "end": [
+            13.35,
+            75
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 1,
+          "length": 6,
+          "start": [
+            7,
+            74.1
+          ],
+          "end": [
+            13,
+            74.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.7,
+          "length": 1.15,
+          "start": [
+            19.4,
+            84.37
+          ],
+          "end": [
+            18.25,
+            84.37
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 3.4,
+          "start": [
+            15.5,
+            87.3
+          ],
+          "end": [
+            15.5,
+            83.9
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 1.575,
+          "start": [
+            15.5,
+            83.9
+          ],
+          "end": [
+            13.925,
+            83.9
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.7,
+          "length": 1.03,
+          "start": [
+            19.4,
+            85.4
+          ],
+          "end": [
+            19.4,
+            84.37
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 1,
+          "length": 2.687005768508881,
+          "start": [
+            17.5,
+            87.3
+          ],
+          "end": [
+            19.4,
+            85.4
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 0.14142135623730953,
+          "start": [
+            13.925,
+            83.9
+          ],
+          "end": [
+            13.825,
+            83.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 1,
+          "length": 0.7071067811865476,
+          "start": [
+            13,
+            74.1
+          ],
+          "end": [
+            13.5,
+            73.6
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.3,
+          "length": 1.8,
+          "start": [
+            18.25,
+            83.4
+          ],
+          "end": [
+            18.25,
+            81.6
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.7,
+          "length": 0.97,
+          "start": [
+            18.25,
+            84.37
+          ],
+          "end": [
+            18.25,
+            83.4
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 2,
+          "start": [
+            17.5,
+            87.3
+          ],
+          "end": [
+            15.5,
+            87.3
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "ACT_FET_S": [
+        {
+          "width": 0.3,
+          "length": 0.98,
+          "start": [
+            17.52,
+            72.17
+          ],
+          "end": [
+            18.5,
+            72.17
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 1.1,
+          "start": [
+            13.825,
+            72.2
+          ],
+          "end": [
+            13.825,
+            71.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.3,
+          "length": 1.975,
+          "start": [
+            14.475,
+            71.1
+          ],
+          "end": [
+            16.45,
+            71.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 1.1,
+          "start": [
+            13.825,
+            70
+          ],
+          "end": [
+            13.825,
+            71.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 1.1,
+          "start": [
+            13.175,
+            70
+          ],
+          "end": [
+            13.175,
+            71.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 1.1,
+          "start": [
+            12.525,
+            72.2
+          ],
+          "end": [
+            12.525,
+            71.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.3,
+          "length": 0.5939696961966999,
+          "start": [
+            17.1,
+            71.75
+          ],
+          "end": [
+            17.52,
+            72.17
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.3,
+          "length": 0.9192388155425119,
+          "start": [
+            16.45,
+            71.1
+          ],
+          "end": [
+            17.1,
+            71.75
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 1.1,
+          "start": [
+            13.175,
+            72.2
+          ],
+          "end": [
+            13.175,
+            71.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 1.1,
+          "start": [
+            14.475,
+            71.1
+          ],
+          "end": [
+            14.475,
+            70
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 1.95,
+          "start": [
+            12.525,
+            71.1
+          ],
+          "end": [
+            14.475,
+            71.1
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "RAW_ACT": [
+        {
+          "width": 0.2,
+          "length": 3.6,
+          "start": [
+            19.2,
+            63.875
+          ],
+          "end": [
+            22.8,
+            63.875
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 2.475,
+          "start": [
+            22.8,
+            63.875
+          ],
+          "end": [
+            22.8,
+            61.4
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.5,
+          "length": 4.39113311116846,
+          "start": [
+            14.475,
+            67.105
+          ],
+          "end": [
+            17.58,
+            64
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 1.83,
+          "start": [
+            26.17,
+            58.03
+          ],
+          "end": [
+            28,
+            58.03
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 4.765899705197331,
+          "start": [
+            22.8,
+            61.4
+          ],
+          "end": [
+            26.17,
+            58.03
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.5,
+          "length": 1.495,
+          "start": [
+            17.58,
+            64
+          ],
+          "end": [
+            19.075,
+            64
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 0.1767766952966369,
+          "start": [
+            19.075,
+            64
+          ],
+          "end": [
+            19.2,
+            63.875
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.4,
+          "length": 4.5,
+          "start": [
+            13.5,
+            68.6
+          ],
+          "end": [
+            18,
+            68.6
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "PYRO1_IGN": [
+        {
+          "width": 0.5,
+          "length": 1.4,
+          "start": [
+            7,
+            57.6
+          ],
+          "end": [
+            7,
+            59
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.5,
+          "length": 7.071067811865476,
+          "start": [
+            7,
+            59
+          ],
+          "end": [
+            12,
+            64
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.5,
+          "length": 1.925,
+          "start": [
+            12,
+            64
+          ],
+          "end": [
+            13.925,
+            64
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "PYRO1_OUT": [
+        {
+          "width": 0.5,
+          "length": 1.4142135623730951,
+          "start": [
+            10.33,
+            54.1
+          ],
+          "end": [
+            11.33,
+            55.1
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 0.5,
+          "length": 3.210264786586926,
+          "start": [
+            11.33,
+            55.1
+          ],
+          "end": [
+            13.6,
+            57.37
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 0.5,
+          "length": 3.33,
+          "start": [
+            7,
+            54.1
+          ],
+          "end": [
+            10.33,
+            54.1
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 0.54,
+          "start": [
+            10.37,
+            56.06
+          ],
+          "end": [
+            10.37,
+            56.6
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 3.83,
+          "start": [
+            17,
+            61.8
+          ],
+          "end": [
+            20.83,
+            61.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 1.3576450198781713,
+          "start": [
+            11.33,
+            55.1
+          ],
+          "end": [
+            10.37,
+            56.06
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 3.068843430349616,
+          "start": [
+            20.83,
+            61.8
+          ],
+          "end": [
+            23,
+            59.63
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 3.65,
+          "start": [
+            10.37,
+            57.5
+          ],
+          "end": [
+            10.37,
+            61.15
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 3.7,
+          "start": [
+            17,
+            58.1
+          ],
+          "end": [
+            17,
+            61.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 0.9,
+          "start": [
+            10.37,
+            56.6
+          ],
+          "end": [
+            10.37,
+            57.5
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 5.13,
+          "start": [
+            10.37,
+            56.6
+          ],
+          "end": [
+            15.5,
+            56.6
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 0.855,
+          "start": [
+            10.37,
+            57.5
+          ],
+          "end": [
+            11.225,
+            57.5
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "width": 0.2,
+          "length": 2.121320343559643,
+          "start": [
+            15.5,
+            56.6
+          ],
+          "end": [
+            17,
+            58.1
+          ],
+          "layer": "B.Cu"
+        }
+      ]
+    }
+  },
+  "findings": [
+    {
+      "id": "R11-DOC-01",
+      "severity": "Minor",
+      "title": "Active fire-current calculation retains pre-AVA copper geometry",
+      "files": [
+        "m3_design/r10_parts.py:333",
+        "m3_design/assembly_review/sources/r10_design/parts_budget.json:275",
+        "docs/M3_R10.md:146",
+        "docs/REQUIREMENTS.md:58"
+      ],
+      "evidence": "IGN now 10.396068 mm instead of4.85; RAW_ACT5.886133 instead of6.5; BAT_IN routed6.707107 instead of7.121320. Source hardcodes older lengths and emits4.612449ohm total. Conservative full-centreline refresh gives4.618006ohm and four-stall1.282861A, still above1.125A.",
+      "fix": "Extract final native fire paths with an explicit pad-entry convention, regenerate budget and refresh active current/resistance prose; preserve older results only under named historical baseline.",
+      "source": "Native board and explicit R10 routing generators; geometry finding, maker page N/A."
+    },
+    {
+      "id": "R11-DOC-02",
+      "severity": "Minor",
+      "title": "Unqualified R10 body prose still describes the circuit-pass/older connector layout",
+      "files": [
+        "docs/M3_R10.md:120",
+        "docs/M3_R10.md:374",
+        "docs/M3_R10.md:380",
+        "docs/ORDERING.md:219"
+      ],
+      "evidence": "Placement still says radio west and separate AVA pass will arrange rows; retention table still calls J1223x4 header with twelve pins/tie holes, J9/J410/J420GH-4, J400GH-2 and not staked. Native has all seven DB125s outward on long edges, J1225pos at(39,71.5), J4002pos at(7,65.85); REQUIREMENTS P3 says stake all DB125s. Current ordering amendment supersedes old hardware but has not been refreshed to AVA stage.",
+      "fix": "Update active M3_R10 placement/retention/process prose for current seven-terminal geometry, or move obsolete narrative into a clearly scoped historical section; make ordering amendment refer to completed AVA hand-off. Keep historical snapshots preserved.",
+      "source": "Native board, AVA_LAYOUT.md, R10_DECISIONS D-AVA-01, REQUIREMENTS P3; maker page N/A."
+    }
+  ],
+  "carried_not_new_findings": [
+    {
+      "file": "../../docs/VEHICLE.md:39",
+      "status": "Read-only parent mirror still has ARM terminal, GH ports/GH2, old switch pose; already acknowledged in M3_R10 open items. Separate parent-repository update remains required; no edit made."
+    }
+  ],
+  "coverage": {
+    "read_first": [
+      "AGENTS.md",
+      "docs/REQUIREMENTS.md",
+      "R10_DECISIONS.md",
+      "AVA_LAYOUT.md",
+      "docs/M3_R10.md",
+      "docs/R10_VALIDATION.md",
+      "docs/R9_VALIDATION.md severity precedent"
+    ],
+    "decisions": "O1-O6, OQ1-OQ7, single-switch, AUD1-10/GAP1-5, later always-on ports/microSD/all-terminal/audit2 and D-AVA01/02 reviewed in their chronological precedence. No adopted owner architecture reclassified as a new Major.",
+    "contracts": "PC1/PE4 default low; passive screen before enable;1s discharge/100ms settle;20ms normal/36ms fault;in-flight sense-never-veto;neutral-first50ms;PA6 shedding;EXTI/ADC maps;LSE/PA15/trace;QSPI/SD bounded latency;port backfeed;LED restriction;U4 signed-map consistency.",
+    "excluded": "No new maker electrical/AF/IMU-sign qualification, firmware execution, electrical tests, physical fit, independent DRC or repeat build. Current-round other lens reports not read."
+  }
+}
+

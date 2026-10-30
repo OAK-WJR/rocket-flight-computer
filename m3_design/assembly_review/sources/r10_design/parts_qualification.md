@@ -8,17 +8,27 @@ DS41326, SLVS841F, SLVSEA3F, SBVS282A, SCES942A and the LR900 manual. No physica
 tests were performed. The current always-on ports, screw terminals, microSD and sole-bus-sense amendment below supersedes the earlier port-switch/translator, header, duplicated sense and ride-through records. AUD/GAP amendments still apply where not explicitly superseded; dated review records remain historical.
 
 
-## Current circuit-only amendment (owner decisions 2026-10-28)
+## Current circuit amendment (owner decisions 2026-10-28; round-11 records)
 
 No physical tests or firmware qualification are claimed. The actual source contract is
 `circuit.json` plus `pin_table.tsv`; the earlier `parts.json` is a historical selection worksheet.
+The native-path record below is bound to the round-11 fix-pass target PCB
+`0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d`.
+The budget and hot-plug results are regenerated for this exact target. Two complete
+builds exited 0, each including full `tools/check.sh`: DRC, unconnected, parity and
+ERC are zero; all 31 R10 rules and fabrication checks pass. All 42 recorded generated
+file hashes and board metrics match exactly. The two NumPy numerical cases pass in
+each full gate, and the separate Plate regression passes. Evidence:
+[round-11 fix validation](../r10_review/round11_fix_validation.json). Positions and envelope
+snapshots in the dated records below are historical
+where the current circuit/layout amendment supersedes them.
 
 **Always-on GPS/radio.** J410/J420 pin1 directly joins PORT_4V8. Delete U410/U420,
 R410–412/R420–422, U411/U421, R442/R452 and C440/C443/C450/C453. Keep the four
 1k series resistors and ground-only ESD, and C410/C411/C420/C421 as local supply
 bypass. R440/R450 connect RX_WIRE to RX_MCU; R441/R451 connect TX_MCU to TX_WIRE.
 No firmware port power-cycle, individual FAULT or OE remains. PC6/PC7 are FT_h;
-PB12/PB13 are FT_u in [ST DS12110 Rev11 Table9 pp74–79 and Tables11/12 pp90–92](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf).
+PB12/PB13 are FT_u in [ST DS12110 Rev11 Table9 pp74–79 and Table10 pp91–92](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf).
 The digital FT input ceiling is min(min(relevant supplies)+4V,6V), with pulls disabled
 above4V and zero positive-injection allowance (Table109 pp207–208). Restrict external
 UART levels to0…5V with the board powered and digital inputs configured; confirm module
@@ -64,7 +74,10 @@ Shell G1/G2/G3/G4 use supplier numeric aliases12/9/10/11 at
 all GND. Maker body13.60×14.50×1.90mm,±0.15mm general tolerance. The generated
 14.0×15.5×2.1mm closed card/socket envelope is conservative **Inference** because
 card seating is not dimensioned; check actual card and lid access. Board must be out
-of the bay and off for card insertion/removal. Maker stencil is0.10or0.12mm with100%
+of the bay and off for card insertion/removal. Remove the board from the continuous
+sled before opening the bottom hinge, unless a physical access window has been
+qualified; the closed-card envelope does not allocate lid-opening space.
+Maker stencil is0.10or0.12mm with100%
 apertures;0.08mm is not recommended. Supplier pad evidence is from
 [JLCEDA/EasyEDA Official Library](https://easyeda.com/api/products/C164170/components)
 ([library](https://easyeda.com/), [JLCEDA](https://lceda.cn/)); after origin translation the
@@ -101,8 +114,20 @@ covers2–24positions and verifies3.5mm pitch, N×3.5 body length,7.4mm depth,8.
 height,0.50×0.85mm pins,1.20mm maker holes and28–16AWG solid/stranded clamp range.
 The existing conservative1.30mm finished drill/1.90mm copper land remains, with
 1.60mm nominal interpad gap. Four-position x–5.25/–1.75/+1.75/+5.25; five-position
-x–7/–3.5/0/+3.5/+7mm. Nominal body/courtyard spans14.0/15.5 and17.5/19.0mm;
-model maxima15.0and18.5mm include±0.5mm width tolerance and0.42mm interlock tab.
+x–7/–3.5/0/+3.5/+7mm. Round11 corrected the envelope from the maker's
+independent end datum, interlock and dimensional tolerances (D-R11-01):
+
+| Positions | Maximum local x union, mm | Maximum local y union, mm | Height, mm |
+|---|---|---|---|
+| 2 | −4.62…+3.70 | −4.10…+4.00 | 8.90 |
+| 4 | −8.32…+7.20 | −4.10…+4.00 | 8.90 |
+| 5 | −10.07…+8.95 | −4.10…+4.00 | 8.90 |
+
+The wire face can reach7.70−3.70=+4.00mm; repeated3.90mm annotations name
+one rear datum. These unions enclose different permitted tolerance corners, not
+an individual8.10mm-deep body. Courtyards add0.20mm around the entire union.
+The16mm port pitch retains at least0.48mm between maximum body unions; this
+does not qualify screwdriver, wire or staking access.
 The current [JLCEDA/EasyEDA Official Library](https://lceda.cn/api/products/C2757925/components)
 ([five-position](https://lceda.cn/api/products/C3646874/components)) pads were fetched and
 matched numerically: both terminal rotations0°, zero origin offset and<0.001mm worst
@@ -113,7 +138,7 @@ These are library/CPL geometry checks, not JLC preview or assembled-board eviden
 J122 pins1–4 areSERVO1–4_OUT, pin5GND signal reference; no servo power on the board.
 The1k resistors, pull-downs andSRV05-4 stay. J400 pins1/2 remainBAT_SW_SOURCE/RETURN.
 Ports retain their prior signal convention: GPS/radio pins1supply,2GND,3boardTX,
-4boardRX; camera pins1CAM_5V,2GND,3CAM_RX_WIRE(boardTX),4CAM_TX_WIRE(boardRX).
+4boardRX; camera pins1CAM_5V,2GND,3CAM_RX_WIRE(boardRX),4CAM_TX_WIRE(boardTX).
 DB125 leads at clamps must be≥28AWG,≤16AWG; use qualified ferrules/splices for thinner
 module leads, verify clamp retention under vibration, avoid solder-tinned stranded ends.
 Keep existing camera≤0.15Ω and GPS/radio≤0.20Ω copper-loop allowances; verify actual
@@ -266,11 +291,21 @@ after pad/flight drain, Rpack≤0.15 Ω, servo stall1.92 A each. Solve
 (1+Rpack/Rfire)V²−(Voc−Rpack×Iservo)V+Rpack×Pother=0 using its high root;
 Ifire=V/Rfire. Retain conservative2 Ω e-match and≤0.3 Ω external leads/harness,
 R134 tolerance/hot corner2.02909 Ω, hot FETs,5 mΩ ground/10 mΩ contact allowances.
-The final recorded CAD tracks bound copper at20°C: BAT_IN3.49962, ACT_FET_S2.70286,
-RAW_ACT6.38857,IGN4.76686,OUT7.81812 mΩ, total25.17602 mΩ; at70°C30.12311 mΩ
-(TCR0.00393/K). Re-measure when the load-switch/fire paths change. With the primary
-40 mΩ/FET ceiling, total loop4.612449 Ω and fire currents for0/1/2/3/4 persistent
-stalls1.546041/1.481042/1.415797/1.350267/1.284404 A; all exceed1.125 A.
+The round-11 `parts_budget.json` is regenerated and bound to PCB
+`0ad0135c…` instead of carrying circuit-pass length literals. Native fire-path pruning
+gives BAT_IN6.307107mm/1.0mm, RAW_ACT5.886133mm, IGN10.230382mm and
+OUT7.854478mm at0.5mm, plus one aligned2.2mm/0.4mm source path. BAT_IN includes
+the additional0.707107mm routed entry inside Q120's common drain pad; dead sense
+branches are excluded, no parallel-source credit is taken and no fire path has a
+series via. Copper is29.362412mΩ at20°C/35.132126mΩ at70°C (TCR0.00393/K).
+With the primary40mΩ/FET ceiling, total loop4.617458126Ω gives0/1/2/3/4-stall
+currents1.544366072/1.479437787/1.414263776/1.348804955/1.283013039A;
+all exceed1.125A. D-R11-03 binds the generator to native geometry. The regenerated
+budget SHA-256 is `55b84df3de5d75373a515b6e41584004bc6f3245382e3c9eda5daf9a68edaf3a`.
+The intermediate `419a8f49…` board had the same fire-path lengths/current estimates;
+the new budget binds the later target independently.
+The earlier `0c50b9fd…` review calculation (4.618006Ω,1.544183A idle/1.282861A
+four stalls) remains historical and does not bind the changed board.
 These are conditional calculations, not measured guarantees. Neutral/200 ms wait
 cannot clear a jam. R134 stays2 Ω; its normal20 ms/fault36 ms pulse bounds stay.
 Maker0.5 s all-fire does not qualify our20 ms pulse: selected-lot20 ms firing,
@@ -307,6 +342,24 @@ useful margin; the85°C condition is unqualified. Scope watchdog refresh, PE4,
 TP122, NRST and dummy-load current for early/late CPU starvation, normal abort,
 postfire refresh, reset/unpowered gate tails and hot R134 pulses; record resistor
 drift and actual physical20/36 ms limits across supply and temperature.
+
+**Final-target local output paths (GAP-2, native CAD / Inference):** on `0ad0135c…`,
+U9 is B(18.5,81.6), C82 is B(19.3,76.75),90°, and D9 is B(15.0,79.3),−90°.
+The saved-copper API gives:
+
+| Part | OUT route (mm) | Local GND route (mm) | Total loop (mm) | Projected area (mm²) |
+|---|---:|---:|---:|---:|
+| C82 | 3.577817459 | 9.426345597 | 13.004163056 | 6.591562500 |
+| D9 | 6.585533906 | 8.176345597 | 14.761879503 | 7.012187500 |
+
+The GND measurement uses the saved fill on a0.05mm grid and full-thickness via
+penalties; the projected area is geometry, not an inductance or transient measurement.
+Both paths fit the existing GAP-2 bounds without widening them. U9 OUT reaches
+RAW_PROTECTED through exactly two local0.5mm-pad/0.3mm-drill vias at
+(20.3,79.1)/(21.1,79.1), joined by a0.8mm-long0.4mm B.Cu track. The former
+four-via ladder is historical. Current sharing, local heating and collapse waveforms
+on this two-via path remain unmeasured. C126 remains220nF at F(16.85,57.675),−90°;
+the gate timing and physical-tail obligations above are unchanged.
 
 ## Supply contract and sources
 
@@ -501,15 +554,20 @@ behaviors (D-SS-01).
 The camera back-feed prohibition (REQUIREMENTS
 "Camera") extends to J410 and J420.
 
-**Port UART ESD (R3-MCU-05).** D400/D401, D410/D411, D420/D421 are ESD103-B1-02EL
+**Port UART ESD (R3-MCU-05; current direct-port amendment).** D400/D401, D410/D411, D420/D421 are ESD103-B1-02EL
 (shared code with R9's RF clamps): ±15 V working, clamping at about20/36/48 V at
 1/8/16 A TLP (Infineon ESD103-B1-02 datasheet; R3 review read rev 1.3 Tables 3/5
 p6, R7 pass 2 v2.0 Tables 2/4/6). That clamp is far above a 3.3–5 V I/O, so the
-diode only limits the surge; the port pin is protected by the 1 kΩ series resistor
-into TXU0202's B-side cell, rated ±2500 V HBM (TI SCES942A §7.2 p5), and the
-MCU sits behind the translator's A side. Accepted as a handling-level protection
-(Inference: no system-level IEC 61000-4-2 rating is claimed); connect port
-harnesses with the board unpowered on an ESD-safe bench.
+diode limits the surge without establishing a safe receiving-pin voltage.
+Only the camera retains 1 kΩ resistors into TXU0202 U12's B side, with the MCU
+behind its A side (TI SCES942A §7.2 p5 gives ±2500 V component HBM).
+GPS/radio instead connect directly through R440/R441/R450/R451 to PC7/PC6/
+PB12/PB13. There is no translator or additional rail clamp on those four paths.
+Neither the resistor nor a component HBM rating demonstrates installed cable
+ESD survival or compliance with ST's pin/injection limits. Handling protection
+is an Inference; installed waveform/ESD qualification remains open and no
+system-level IEC 61000-4-2 rating is claimed. Connect unpowered harnesses on an
+ESD-safe bench, with no independent module power.
 
 **Camera supply loop split (R3-PWR-08; harness specification).** The camera's
 ≥5.03 V at 1 A rests on a ≤150 mΩ supply-plus-return loop (table above). Of it,
@@ -730,7 +788,7 @@ statements in the historical sections below are superseded for current R10. This
   input pull-down holds the MCU RX low, a continuous break (Inference from the pull-down, not measured): the firmware
   obligation is in the binding note and M3_R10 "Firmware".
 
-## R92 discharge change before the fresh round 9 (2026-10-28)
+## Historical R92 discharge change before round 9 (2026-10-28)
 
 OQ-2's requalification must include U9 OUT as well as IN: below -10 C, TPS25947's input limit is
 `max(-15 V, VOUT - 21 V)` (TI SLVSFC9C p. 7). R92 changes from 10 kohm to **3.3 kohm, 1%, 0603** on the same land
@@ -752,13 +810,13 @@ credited. These are CAD estimates, not a guarantee of C84's unprovided capacitan
 of arbitrary converter reverse-energy behavior. The existing simultaneous U9 IN / OUT reverse-plug bench
 qualification remains mandatory.
 
-## R166 damper change before the fresh round 9 (2026-10-28)
+## Historical R166 damper change before round 9 (2026-10-28)
 
 OQ-2's model selects **0.36 Ω, 1%, UNI-ROYAL 25121WF360LT4E / C168925** in place of 0.33 Ω. The preliminary
 feed with 0.33 Ω reaches -15.100485 V at the cold/tolerance corner; 0.36 Ω passed that model's 2304 cases.
 The preliminary local-shunt approximation is superseded by D-OA-07: C88 is now fed before U9 and its actual
-trace path stays in the model. Final qualification comes from the production-bound model results in
-`hotplug_results.json`: all 2304 required cases pass on board `3b960b46…`, with -14.497874 V minimum and
+trace path stays in the model. The historical production-bound model results at that stage recorded
+all 2304 required cases passing on board `3b960b46…`, with -14.497874 V minimum and
 8.525257 V/µs maximum falling slew. Its assumptions in `hotplug.md` remain simulation inferences.
 [LCSC's exact-part page](https://item.szlcsc.com/180309.html) confirms the identity and 2512 package.
 [UNI-ROYAL SMD-SP-001 V10, pp. 4–6](https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf)
@@ -769,8 +827,18 @@ value, order code and maker part without changing nets or footprint. Refresh BOM
 
 **Pulse qualification remains open.** The maker's ordinary thick-film specification gives a five-second overload
 test at 2.5 times sqrt(P×R), or 1.5 V for this value at the 1 W rating; it supplies no microsecond pulse curve.
-The absolute 200 V family ceiling is not the low-value resistor's allowable continuous voltage. The final sweep
+The absolute 200 V family ceiling is not the low-value resistor's allowable continuous voltage. That historical sweep
 gives 504.292318 W peak and 2.888490051 mJ over 150 µs in different corners; separate half-step checks give
 504.293235 W and 2.888489824 mJ. A low energy alone does not prove survival. Obtain maker confirmation for
 that waveform or test repeated hot/cold insertions and resistance drift. This is a component-data/model update,
 not a claim of measured pulse durability or board acceptance.
+
+The final round-11 target PCB `0ad0135c…` has a separately bound 2304-case
+sweep: R166 stress reaches579.049147 W and2.979359077 mJ in different corners;
+the retained-output common-node estimate is5.877715489 V after two seconds with
+1616.123714 µF. `hotplug.md` records that exact board, electrical/input/model hashes
+and its native feed. These replace the older stresses only for that named board.
+The historical intermediate `419a8f49…` run had the same stress figures under its
+own binding; the target was re-extracted and the full sweep rerun. Both complete
+builds/full gates pass with all 42 recorded generated file hashes matching. Neither calculation
+qualifies pulse durability.

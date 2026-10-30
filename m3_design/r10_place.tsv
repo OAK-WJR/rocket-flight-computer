@@ -9,7 +9,7 @@ C10	17.5	54.1	0	B	D-AVA-01: explicit cell placement; electrical contract unchang
 C100	28.85	39.97	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C11	17.5	52.1	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C120	17.1	72.525	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-C126	16.7	57.675	-90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+C126	16.85	57.675	-90	F	D-R11-01: clear moved Q124 courtyard; electrical contract unchanged
 C127	23.65	53.2	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C128	12	57.5	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C129	28.25	51.6	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -42,17 +42,17 @@ C406	29.9	8.6	0	B	D-AVA-01: explicit cell placement; electrical contract unchang
 C407	31.8	19.5	90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 C408	24.8	13.6	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C410	34.5	18.2	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-C411	34.2	20.75	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+C411	34.2	22.75	90	B	D-R11-01: retain 1.5 mm THT floor and clear microSD courtyard/return via
 C420	34.5	34.2	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-C421	34.2	36.75	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+C421	33.8	36.75	180	B	D-R11-01: retain 1.5 mm bottom-part clearance after terminal-row correction
 C430	30.7	61.8	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-C431	34.3	55	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+C431	39.3	57.75	90	B	D-R11-01: retain 1.5 mm THT floor and local camera input-bypass pocket
 C5	22.2	71.43	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C6	27.75	69.75	-90.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-C60	33.77	56.2	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+C60	33.2	56.8	90	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 C7	28.3	73.8	-90.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C8	26.4	78.28	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-C80	14	79.5	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+C80	14.05	79.5	0	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 C81	21.6	80.1	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C82	19.3	76.75	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C83	10.2	24.9	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -64,10 +64,10 @@ C88	19.4	83.95	90	B	D-AVA-01: explicit cell placement; electrical contract uncha
 C89	14	84.7	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 C9	26.4	80.24	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C90	25.6	31.3	90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-C91	35.35	50.8	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-C92	32.6	52.5	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+C91	34.95	53.9	-90	B	D-R11-01: retain 1.5 mm THT floor and local U13 input bypass
+C92	32.35	52.5	0	B	D-R11-01: clear C91 courtyard; pad 1 centres on existing CAM_IO trunk
 C93	33.4	39.275	90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-C94	33.77	51	90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+C94	33.47	51	90	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 C95	14	87.3	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 C96	14	82.1	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 C97	24.3	64.4	90.0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -77,23 +77,23 @@ D120	14.7	60.2	180	B	D-AVA-01: explicit cell placement; electrical contract unch
 D121	31.5	71.5	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 D123	21.7	63	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 D4	9.95	30.6	-90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-D400	35.95	43.1	-90.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-D401	35.95	46.6	-90.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-D410	35.95	14.6	-90.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-D411	35.95	11.1	-90.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-D420	35.95	30.6	-90.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-D421	35.95	27.1	-90.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+D400	35.75	43.7	-90.0	B	D-R11-01: retain 1.5 mm THT floor and resistor courtyard clearance
+D401	35.75	47.2	-90.0	B	D-R11-01: retain 1.5 mm THT floor and resistor courtyard clearance
+D410	35.75	12.3	-90.0	B	D-R11-01: retain 1.5 mm THT floor and resistor courtyard clearance
+D411	35.75	8.7	-90.0	B	D-R11-01: retain 1.5 mm THT floor and resistor courtyard clearance
+D420	35.75	31.2	-90.0	B	D-R11-01: retain 1.5 mm THT floor and resistor courtyard clearance
+D421	35.75	27.7	-90.0	B	D-R11-01: retain 1.5 mm THT floor and resistor courtyard clearance
 D8	15.5	75	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 D9	15	79.3	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-J1	7	75.85	-90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-J121	7	55.85	-90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-J122	39	71.5	90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+J1	7.4	75.85	-90	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
+J121	7.4	55.85	-90	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
+J122	38.6	71.5	90	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 J2	5	39.4	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 J3	4.6	30.799999999999997	-90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-J400	7	65.85	-90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-J410	39	15.5	90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-J420	39	31.5	90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-J9	39	47.5	90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+J400	7.4	65.85	-90	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
+J410	38.6	15.5	90	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
+J420	38.6	31.5	90	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
+J9	38.6	47.5	90	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 L1	25	74.6	-90.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 L400	24.2	5.55	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 LED1	8.95	42.6	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -103,14 +103,14 @@ Q120	13.5	73.6	0	B	D-AVA-01: explicit cell placement; electrical contract unchan
 Q121	13.5	68.6	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 Q122	16.8	69.8	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 Q123	19.5	60.25	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-Q124	13.6	57.37	90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+Q124	13.9	57.37	90	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 R10	20.0	44.69	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R100	34	45.75	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R101	34	42.25	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R102	35.5	39.8	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+R102	35.4	39.7	0	B	D-R11-01: retain 1.5 mm THT floor and U12 courtyard clearance
 R103	31.2	54.8	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R104	33.5	46.5	180	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-R105	33.5	48.6	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+R104	33.2	46.5	180	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
+R105	33.2	48.6	0	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 R11	14.2	43.75	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R110	10.775	25.0	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 R12	7	49.37	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -122,16 +122,16 @@ R126	17	54.24	180	F	D-AVA-01: explicit cell placement; electrical contract uncha
 R127	19.8	54.24	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 R128	18.3	57.405	-90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 R129	23	57.4	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R13	9.97	52.55	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+R13	10.25	52.55	-90	B	D-R11-01: retain 1.5 mm THT floor and clearance to R64
 R130	23.43	55.85	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R131	10.8	61.15	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R132	28	57.6	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R133	28.43	54.25	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R134	16.5	64	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R150	35	75.31	0.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R151	35	72.77	0.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R152	35	70.23	0.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R153	35	67.69	0.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+R150	34.6	75.9	0.0	B	D-R11-01: retain THT clearance and align the MCU entry below the shared return
+R151	34.7	72.77	0.0	B	D-R11-01: retain 1.5 mm THT floor and D121 pin-1 silk clearance
+R152	34.7	70.23	0.0	B	D-R11-01: retain 1.5 mm THT floor and clear the clamp courtyard
+R153	34.6	68.0	0.0	B	D-R11-01: retain THT clearance with one straight terminal lead
 R154	32.45	74.53	270	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R155	30.55	74.53	270	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R156	30.55	68.4	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -139,7 +139,7 @@ R157	32.45	68.4	90	B	D-AVA-01: explicit cell placement; electrical contract unch
 R162	19.5	57.7	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R163	21.8	59.3	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R164	17.325	55.9	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R165	13	67	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+R165	13.25	67	0	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 R166	23.5	86.3	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 R167	13	83.8	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R173	23	59.2	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -162,14 +162,14 @@ R441	34	13.75	0	B	D-AVA-01: explicit cell placement; electrical contract unchang
 R450	34	26.25	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R451	34	29.75	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R5	13	45.17	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R60	33.5	58.3	180	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-R61	33.5	54	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+R60	33.2	58.6	180	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
+R61	33.2	54	0	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 R62	25.5	55.7	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R63	25.5	56.7	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R64	11.23	52.28	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R7	9	28.9	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R8	9	32.5	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R80	13	69.2	180	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+R80	13.25	69.2	180	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 R81	20.5	65	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 R82	16.325	83.9	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R83	10	81.8	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged

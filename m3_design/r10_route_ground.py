@@ -38,7 +38,7 @@ STITCH = (
     (8.0, 3.0), (18.0, 3.0), (25.0, 2.5), (38.0, 3.0), (43.5, 8.0), (10.5, 9.0), (16.5, 12.5),
     # Circuit pass: (36,54.5)/(16.5,78.5)/(22,23) removed for moved R89.1/R80.2/C461.2 pads.
     (7.0, 22.0), (43.0, 65.0),
-    (6.5, 83.0), (33.5, 88.0), (34.9, 44.5),
+    (6.5, 83.0), (33.5, 88.0),  # D400's moved return replaces the former (34.9,44.5) stitch.
 )
 
 
@@ -79,19 +79,26 @@ def draw(d):
         rows = csv.DictReader((line for line in fh if not line.startswith('#')), delimiter='\t')
         for r in rows:
             at = (float(r['x']), float(r['y']))
-            d.track(r['net'], r['layer'], 0.3, [d.pad(r['pad'], net=r['net']), at])
+            pts = [d.pad(r['pad'], net=r['net']), at]
+            if r['pad'] == 'U1.49':
+                # Exit the MCU pads before turning; C421's moved bottom land excludes the old via.
+                pts.insert(1, (at[0], pts[0][1]))
+            d.track(r['net'], r['layer'], 0.3, pts)
             d.via(r['net'], at)
-    # R405 shares D410's existing ESD return; the start lies inside its GND pad.
+    # R405 keeps its local return after the ESD clamp moves to the other legal pocket.
     d.track('GND','B',.3,[(35.475,16.1),(35.95,15.625)])
-    # C60 shares C431's return; the 0.17 mm offset stays inside its GND pad.
-    d.track('GND','F',.3,[(34.3,56.2),(34.3,55.0)])
+    d.via('GND',(35.95,15.625))
+    # C60 and R103 share a local return; the moved C431 has its own return in the fanout table.
+    d.track('GND','F',.3,[d.pad('C60.2'),(33.2,55.0)]);d.via('GND',(33.2,55.0))
     # The camera divider and filter each have a short local return, clear of the supply via.
     d.track('GND','F',.2,[d.pad('C94.2'),(34.45,50.3),(34.85,50.7)]);d.via('GND',(34.85,50.7))
-    d.track('GND','F',.2,[d.pad('R105.2'),(33.93,47.5)]);d.via('GND',(33.93,47.5))
+    d.track('GND','F',.2,[d.pad('R105.2'),(33.63,47.5)]);d.via('GND',(33.63,47.5))
     # Adjacent core bypasses share C23's existing return, clear of the QSPI fan.
     d.track('GND','B',.2,[d.pad('C16.2'),(26.18,36.22),d.pad('C23.2')])
-    d.track('GND','B',.3,[d.pad('C91.2'),(36.175,53.1),(37,53.1)]);d.via('GND',(37,53.1))
-    d.track('GND','B',.3,[d.pad('C92.2'),(33.3,52.1),(32.8,51.6)]);d.via('GND',(32.8,51.6))
+    d.track('GND','B',.3,[d.pad('C91.2'),(36.65,55.375)]);d.via('GND',(36.65,55.375))
+    d.track('GND','B',.3,[(32.8,52.5),(32.8,53.3)]);d.via('GND',(32.8,53.3))
+    # Explicit dogleg keeps the U402 return clear of the moved VLOGIC divider.
+    d.track('GND','B',.3,[d.pad('U402.2'),(31.8,59.0),(32.3,59.5)]);d.via('GND',(32.3,59.5))
     for at in STITCH:
         d.via('GND', at)
     if not d.dry:

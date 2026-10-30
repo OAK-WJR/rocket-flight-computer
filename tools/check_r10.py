@@ -132,6 +132,18 @@ REQUIRED_FITTED = (set(actuators.PINNED) - {'C121', 'J124'} - BUS_SENSE_REMOVED)
          ('R', range(460, 465)), ('C', (460, 461)),
          ('D', (400, 401, 410, 411, 420, 421)), ('R', (430, 431, 432)),
          ('R', range(400, 405)), ('C', range(400, 409)), ('L', (400,))) for n in numbers}
+# Retained functional parts and their support, in addition to the safety/new-port set above. This closes the
+# final native/schematic/BOM/CPL population invariant without another complete schematic-contract walk.
+REQUIRED_FITTED |= {
+    'U1', 'U2', 'U3', 'U4', 'U5', 'U10', 'L1', 'Y1', 'J3', 'J122', 'D4', 'D9',
+    'Q123', 'D123', 'LS120', 'LED1', 'LED2',
+    'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C13', 'C14', 'C15', 'C16', 'C17', 'C18',
+    'C19', 'C20', 'C21', 'C22', 'C23', 'C24', 'C25', 'C26', 'C28', 'C30', 'C31', 'C32',
+    'C60', 'C81', 'C82', 'C83', 'C85', 'C86', 'C88', 'C90', 'C94', 'C97', 'C98', 'C99',
+    'C430', 'C431',
+    'R5', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R32', 'R33', 'R60', 'R61', 'R62',
+    'R63', 'R64', 'R85', 'R86', 'R87', 'R88', 'R89', 'R90', 'R91', 'R92', 'R104', 'R105',
+    'R110', 'R162', 'R163', 'R164', 'R405'}
 CONNECTORS = {
     'J1': ('BAT_IN', 'GND'), 'J400': ('BAT_SW_SOURCE', 'BAT_SW_RETURN'),
     'J410': ('PORT_4V8', 'GND', 'GPS_TX_WIRE', 'GPS_RX_WIRE'),
@@ -1890,7 +1902,11 @@ def p11(ctx):
         ev[ref] = dict(entry=d)
         if d != want:
             issues.append(f'P-11: {ref} wires enter from {d}; R10 sets {want} (r10_plan section 2 item 2)')
-        face, box = r9.entry_face(ctx, f, d)
+        try:
+            face, box = r9.entry_face(ctx, f, d)
+        except ValueError as error:
+            issues.append(f'P-11: {error}')
+            continue
         if d in ('-x', '+x'):
             room = r9.wire_room(face)
             ev[ref].update(wire_room_mm=round(room, 3), r8_floor_mm=WIRE_ROOM, r10_accepted_floor_mm=WIRE_ROOM_R10,
@@ -2282,49 +2298,66 @@ PORT_LEGENDS_R10 = {'J2': ('3V3', 'SWDIO', 'NRST', 'SWCLK', 'GND', 'NC')}
 SERVO_HARNESS_NOTE = 'SERVO + FROM HARNESS'
 
 
-def terminal_legend_conflicts(board, items, terminals=None):
-    """Wired terminals are labelled by individual 'n:NAME' legends beside each pin (TERMINAL_PINS_R10; r8's
-    terminal_legends counts the exact words, each once, at the nearest pad). Text it cannot see is rejected here, for
-    board texts and text boxes alike: a combined 'Jnn n:NAME' table naming a terminal's pin is a second, conflicting
-    legend of that pin; a bare 'n:NAME' that is none of the terminal words is named after the terminal pin nearest it
-    (pad centre to the legend's box), which would read two names."""
+def legend_items(board):
+    items = list(board.GetDrawings())
+    for fp in board.GetFootprints():
+        items += list(fp.GraphicalItems()) + list(fp.GetFields())
+    return items
+
+
+def terminal_legends(board, items=None, terminals=None):
+    """R10 individual terminal labels: every exact word once, strictly nearest its own connector pin. Text boxes
+    and footprint text have the same policy as board text. Combined tables conflict with the individual labels."""
     import pcbnew
     terminals = dict(TERMINAL_PINS_R10 if terminals is None else terminals)
-    words = {f'{n}:{name}' for pins in terminals.values() for n, name in pins}
-    expected = {(ref, n): name for ref, pins in terminals.items() for n, name in pins}
+    expected = {(ref, n): f'{n}:{name}' for ref, pins in terminals.items() for n, name in pins}
     pads = [(f.GetReference(), p.GetNumber(), p.GetPosition()) for f in board.GetFootprints()
-            if f.GetReference() in terminals for p in f.Pads() if p.GetNumber()]
-    issues = []
-    for item in items:
+            if re.fullmatch(r'J\d+', f.GetReference()) for p in f.Pads() if p.GetNumber()]
+    found, issues, evidence = {}, [], {}
+    for item in legend_items(board) if items is None else items:
         if (not isinstance(item, (pcbnew.PCB_TEXT, pcbnew.PCB_TEXTBOX))
                 or item.GetLayer() not in (pcbnew.F_SilkS, pcbnew.B_SilkS)
                 or (hasattr(item, 'IsVisible') and not item.IsVisible())):
             continue
         text = item.GetText().strip()
-        m = re.fullmatch(r'(J\d+)\s+(\d+:[A-Z0-9]+(?:\s+\d+:[A-Z0-9]+)*)', text)
+        m = re.fullmatch(r'(J\d+)\s+(.+)', text)
         if m and m[1] in terminals:
-            for pin, name in re.findall(r'(\d+):([A-Z0-9]+)', m[2]):
-                issues.append(f'{m[1]}.{pin}: conflicting silkscreen pin legend {text!r}: this terminal is labelled by '
-                              f'its individual "{pin}:{expected.get((m[1], pin), "?")}" legend, not a combined table')
-        elif re.fullmatch(r'\d+:[A-Z0-9]+', text) and text not in words and pads:
-            bb = item.GetBoundingBox()
+            for pin, name in re.findall(r'(\d+):(\S+)', m[2]):
+                issues.append(f'{m[1]}.{pin}: conflicting silkscreen pin legend {text!r}: this terminal uses '
+                              f'individual "{expected.get((m[1], pin), "?")}" labels, not a combined table')
+            continue
+        if not re.fullmatch(r'\d+:\S+', text):
+            continue
+        if not pads:
+            issues.append(f'terminal pin legend {text!r}: no connector pin on the board')
+            continue
+        bb = item.GetBoundingBox()
 
-            def gap(c):
-                return math.hypot(max(bb.GetLeft() - c.x, c.x - bb.GetRight(), 0),
-                                  max(bb.GetTop() - c.y, c.y - bb.GetBottom(), 0))
-            _, ref, pin = min((gap(c), ref, num) for ref, num, c in pads)
-            issues.append(f'{ref}.{pin}: conflicting silkscreen pin legend {text!r}: the nearest terminal pin is '
-                          f'labelled "{pin}:{expected[(ref, pin)]}"')
-    return issues
+        def gap(c):
+            return math.hypot(max(bb.GetLeft() - c.x, c.x - bb.GetRight(), 0),
+                              max(bb.GetTop() - c.y, c.y - bb.GetBottom(), 0))
+        ranked = sorted((gap(c), ref, num) for ref, num, c in pads)
+        d0, ref, pin = ranked[0]
+        d1 = ranked[1][0] if len(ranked) > 1 else math.inf
+        key = (ref, pin)
+        evidence[f'{text} ({pcbnew.ToMM(bb.GetLeft()):.3f}, {pcbnew.ToMM(bb.GetTop()):.3f})'] = (
+            f'{ref}.{pin}', round(pcbnew.ToMM(d0), 3))
+        if text != expected.get(key) or d1 - d0 <= pcbnew.FromMM(.01):
+            issues.append(f'{ref}.{pin}: conflicting silkscreen pin legend {text!r}: its strictly nearest connector '
+                          f'pin must be labelled "{expected.get(key, "not a terminal pin")}"')
+        else:
+            found[key] = found.get(key, 0) + 1
+    for (ref, pin), word in expected.items():
+        if board.FindFootprintByReference(ref) is not None and found.get((ref, pin), 0) != 1:
+            issues.append(f'{ref}.{pin}: {found.get((ref, pin), 0)} legends "{word}" nearest it, expected one')
+    return issues, evidence
 
 
-def port_legends(board, required=PORT_LEGENDS_R10):
+def port_legends(board, required=PORT_LEGENDS_R10, terminal_evidence=None):
     """R10 port / servo tables and harness note: every pin and note appears exactly once, without conflicting text."""
     import pcbnew
     seen, texts, issues = {}, [], []
-    items = list(board.GetDrawings())
-    for fp in board.GetFootprints():
-        items += list(fp.GraphicalItems()) + list(fp.GetFields())
+    items = legend_items(board)
     for item in items:
         if (not isinstance(item, (pcbnew.PCB_TEXT, pcbnew.PCB_TEXTBOX))
                 or item.GetLayer() not in (pcbnew.F_SilkS, pcbnew.B_SilkS)
@@ -2345,7 +2378,10 @@ def port_legends(board, required=PORT_LEGENDS_R10):
                if seen.get((ref, i)) != [name]]
     issues += [f'{ref}.{pin}: unexpected silkscreen pin legend (R10 port table)' for ref, pin in seen
                if pin not in range(1, len(required[ref]) + 1)]
-    issues += terminal_legend_conflicts(board, items)
+    found, evidence = terminal_legends(board, items)
+    issues += found
+    if terminal_evidence is not None:
+        terminal_evidence.update(evidence)
     if texts.count(SERVO_HARNESS_NOTE) != 1:
         issues.append(f'J122: silkscreen must identify {SERVO_HARNESS_NOTE!r} exactly once')
     issues += [f'J122: conflicting servo harness legend {text!r}' for text in texts
@@ -2519,12 +2555,11 @@ def k_width(board, floor=HC_MIN_W, max_len=HC_NARROW_MAX_LEN):
 
 def k_legends(ctx):
     import check_r7 as r7
-    import check_r8 as r8
-    review = []
-    with patched(r7, WORD_LEGENDS=WORD_LEGENDS_R10), patched(r8, TERMINAL_PINS=TERMINAL_PINS_R10):
-        issues = list(r7.duplicate_ids(ctx.board)) + port_legends(ctx.board) + \
+    review, ev = [], {}
+    with patched(r7, WORD_LEGENDS=WORD_LEGENDS_R10):
+        issues = list(r7.duplicate_ids(ctx.board)) + port_legends(ctx.board, terminal_evidence=ev) + \
             list(r7.legend_subjects(ctx.board, distance_review=review))  # AUD-10: distance only, names still block.
-        found, ev = r8.terminal_legends(ctx.board)
+    found = []
     overlaps = silk_mask_overlaps(ctx.board)
     found += [f'K-legends: silkscreen {s} overlaps the solder mask opening of {p} by {d:.3f} mm (R3-MFG-01)'
               for s, p, d in overlaps]

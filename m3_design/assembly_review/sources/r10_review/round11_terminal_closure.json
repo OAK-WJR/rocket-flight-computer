@@ -1,0 +1,202 @@
+{
+  "mode": "slice_fix_validation",
+  "transcribed_by": "coordinator from fresh read-only validator handback",
+  "finding_ids": [
+    "R11-BOM-01",
+    "R11-MEC-01"
+  ],
+  "verdict": "PASS",
+  "critical": 0,
+  "major": 0,
+  "board_sha256_before": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "board_sha256_after": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "native_api_version": "10.0.6",
+  "maker_source_url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+  "maker_source_page": 1,
+  "maker_maximum_local_bounds_mm": {
+    "2P": [
+      -4.62,
+      -4.1,
+      3.7,
+      4.0,
+      0,
+      8.9
+    ],
+    "4P": [
+      -8.32,
+      -4.1,
+      7.2,
+      4.0,
+      0,
+      8.9
+    ],
+    "5P": [
+      -10.07,
+      -4.1,
+      8.95,
+      4.0,
+      0,
+      8.9
+    ]
+  },
+  "all_seven_terminals": {
+    "wire_room_mm_each": 5.003011866,
+    "accepted_floor_mm": 4.95,
+    "floor_margin_mm_each": 0.053011866,
+    "body_bore_margin_mm_each": 2.976268566,
+    "courtyard_body_allowance_mm": 0.2,
+    "model_union_match_tolerance_mm": 1e-05,
+    "model_union_mismatches": [],
+    "handedness_mismatches": []
+  },
+  "terminal_geometry": {
+    "body_collision_pairs": [],
+    "top_courtyard_pair_checks": 483,
+    "positive_courtyard_stroke_overlap_pairs": [],
+    "adjacent_4P_body_gap_mm": 0.48,
+    "adjacent_4P_courtyard_line_gap_mm": 0.08,
+    "adjacent_4P_courtyard_stroke_gap_mm": 0.03,
+    "Q124_C126_courtyard_line_gap_mm": 0.1,
+    "Q124_C126_courtyard_stroke_gap_mm": 0.05
+  },
+  "checks": {
+    "sha256_before_after": "PASS",
+    "native_model_placement_body_courtyard_inspection": "PASS",
+    "fit_check_check_board_profile_r10": [],
+    "check_r10_p11": [],
+    "check_r10_m6": [],
+    "D_R11_01_source_placements_checked": 35,
+    "source_placement_mismatches": []
+  },
+  "repaired_bottom_nearest_tht_pad_gaps_mm": [
+    [
+      "C411",
+      "J410.1",
+      1.855
+    ],
+    [
+      "C421",
+      "J420.1",
+      1.605
+    ],
+    [
+      "C431",
+      "J9.1",
+      1.805
+    ],
+    [
+      "C91",
+      "J9.1",
+      1.555
+    ],
+    [
+      "C92",
+      "J9.1",
+      3.955
+    ],
+    [
+      "D400",
+      "J9.4",
+      1.586
+    ],
+    [
+      "D401",
+      "J9.3",
+      1.586
+    ],
+    [
+      "D410",
+      "J410.3",
+      1.586
+    ],
+    [
+      "D411",
+      "J410.4",
+      1.62
+    ],
+    [
+      "D420",
+      "J420.3",
+      1.586
+    ],
+    [
+      "D421",
+      "J420.4",
+      1.586
+    ],
+    [
+      "R102",
+      "J9.4",
+      1.561
+    ],
+    [
+      "R13",
+      "J121.1",
+      1.58
+    ],
+    [
+      "R150",
+      "J122.2",
+      1.581
+    ],
+    [
+      "R151",
+      "J122.3",
+      1.536
+    ],
+    [
+      "R152",
+      "J122.3",
+      1.536
+    ],
+    [
+      "R153",
+      "J122.4",
+      1.575
+    ]
+  ],
+  "repaired_bottom_neighbors": {
+    "body_pair_checks": 2227,
+    "body_collision_pairs": [],
+    "courtyard_pair_checks": 2346,
+    "graphic_stroke_residuals": [
+      {
+        "pair": [
+          "C421",
+          "U12"
+        ],
+        "courtyard_line_gap_mm": 0,
+        "stroke_overlap_mm": 0.05,
+        "native_polygon_intersection": false,
+        "body_gap_mm": 0.5
+      },
+      {
+        "pair": [
+          "R151",
+          "D121"
+        ],
+        "courtyard_line_gap_mm": 0.01,
+        "stroke_overlap_mm": 0.04,
+        "native_polygon_intersection": false,
+        "body_gap_mm": 0.949914
+      },
+      {
+        "pair": [
+          "R152",
+          "D121"
+        ],
+        "courtyard_line_gap_mm": 0.01,
+        "stroke_overlap_mm": 0.04,
+        "native_polygon_intersection": false,
+        "body_gap_mm": 0.949914
+      }
+    ]
+  },
+  "not_claimed": [
+    "full gate pass",
+    "fabrication validation",
+    "reproducibility",
+    "clean review round",
+    "physical harness, screwdriver or bore/stack qualification"
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "round": 11,
+  "stage": "fresh fix verification; not a new full round",
+  "review_target_board_sha256": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+  "verifier": "r11_fix_geometry, fresh context; root transcribed because validator cannot write",
+  "canonical_PCB_saved": false,
+  "source_files_sha256": {
+    "m3_design/r10_parts.py": "488ad4fc848dabf9f7f43aebb4a9d0908839fd20b51fb75e58f27cf0c19a2ec9",
+    "m3_design/r10_pcb.py": "de47a662fbb03bde8a57524a1c1c00865f137304f07ac806af6337171046586a",
+    "m3_design/r10_place.tsv": "746116eedd7183ba8e756bb1e99c3bb608aa5b9e09f4866a06b6cffb41b956e8",
+    "m3_design/r10_fanout.tsv": "411ed4afe2c97bb9fde017553070b37d1540e5a959a9ca18106cf3eb079b92c2",
+    "m3_design/r10_route_pyro.py": "3834d8c02c6ca186bf6a44cf86f1fb95df11e42d00f47480a211defff70db0da",
+    "m3_design/r10_route_power.py": "b5f129673c54a1d3c8c12371db7326c82cc17fb6ff63c3aa3b1a15cf77e5b116",
+    "m3_design/r10_route_signals.py": "410aa050740b3f05b6b9b53943e23d1126f0c8ea2bcbfba2fc26c262e49c3df5",
+    "m3_design/r10_route_usb.py": "31690a973565b55c9a22023bf497cc255f746e21a3f6dd92316c55587992f0c7",
+    "m3_design/r10_route_ground.py": "ace956b8277c8de96f414a2360b6811a85b9c86600cc1b3e59d145bf97b65f0e",
+    "m3_design/r10_post.py": "c084a24768c59949790d65768e654f2737aee58a74ff141a1aa9b4fc569bdbb0"
+  },
+  "initial_source_prototype_defects": [
+    "C92 GNDvia32.8,51.6collides movedC94.1/sense trace",
+    "U402GNDvia32.3,59collides movedR60.2",
+    "CAM_PWR_ENvia33.7,57.6/branch collide U402.4/CAM_FAULT_N",
+    "ShiftedIGNdiag collidesR131.1",
+    "Q124GNDviax15.75enters moved sourcepad mask/paste"
+  ],
+  "passing_alternative": {
+    "C60": {
+      "position_mm": [
+        33.2,
+        56.8
+      ],
+      "rotation_deg": 90,
+      "side": "F"
+    },
+    "C92_GNDvia_mm": [
+      32.8,
+      53.25
+    ],
+    "U402_GNDvia_mm": [
+      32.3,
+      59.5
+    ],
+    "CAM_PWR_ENvia_mm": [
+      34.4,
+      57.4
+    ],
+    "Q124_GNDvia_x_mm": 15.85,
+    "IGN_diagonal_mm": [
+      [
+        7.4,
+        59.4
+      ],
+      [
+        12.0,
+        64.0
+      ]
+    ],
+    "sense_west_lane_x_mm": 32.3
+  },
+  "reported_checks": {
+    "in_memory_tracks": 977,
+    "vias": 294,
+    "effective_copper_shapes": 2309,
+    "nearby_foreign_net_pairs": 532,
+    "foreign_net_clearance_failures": 0,
+    "K_copper_findings": 0,
+    "soldered_pad_checks": 613,
+    "via_paste_pairs": 763,
+    "acute_offangle_arc_findings": 0,
+    "required_partner_findings": 0,
+    "S8_findings": 0,
+    "protected_barrels": 4,
+    "terminal_courtyard_intersections_including_stroke": 0,
+    "fit_findings": 0,
+    "P11_wire_room_each_mm": 5.003012,
+    "minimum_terminal_bore_margin_mm": 2.976269,
+    "J122_Fab_ink_drill_gap_mm": 0.094831
+  },
+  "retained_own_net_ring_webs_in_prototype": [
+    {
+      "via_mm": [
+        15.85,
+        57.695
+      ],
+      "ring_web_mm_approx": 0.05,
+      "hole_gap_mm_approx": 0.15,
+      "subject": "Q124.2"
+    },
+    {
+      "via_mm": [
+        15.85,
+        58.345
+      ],
+      "ring_web_mm_approx": 0.05,
+      "hole_gap_mm_approx": 0.15,
+      "subject": "Q124.1"
+    },
+    {
+      "via_mm": [
+        32.8,
+        53.25
+      ],
+      "ring_web_mm_approx": 0.066,
+      "hole_gap_mm_approx": 0.166,
+      "subject": "C92.2"
+    }
+  ],
+  "retention_reason": "Q124 viax16.05 would leave only0.035376mm to B OUTdiagonal; chosenx15.85passes0.176802mm and ordinary hole/paste rules. C92via clears moved sense/filter while keeping hole outside opening. Full final same-net web inventory still needs regenerated board.",
+  "not_verified": [
+    "full native DRC",
+    "whole-board connectivity",
+    "complete reference/region rules",
+    "actual-feed hot-plug",
+    "fab exports/binding",
+    "firmware binding refresh",
+    "byte reproducibility",
+    "physical/electrical/firmware performance"
+  ],
+  "supervisor_state": "check request remains unconsumed; no official build or new board hash",
+  "root_dry_source_counts": {
+    "core": 154,
+    "usb": 112,
+    "pyro": 103,
+    "power": 208,
+    "signals": 313,
+    "ground": 87
+  },
+  "post_apply_source_match": {
+    "result": "pass",
+    "affected_segments_matched": 25,
+    "replacement_vias_matched": 5,
+    "obsolete_vias_absent": true,
+    "scope": "fresh verifier comparison to actual dry generator output; no CAD save/DRC"
+  }
+}

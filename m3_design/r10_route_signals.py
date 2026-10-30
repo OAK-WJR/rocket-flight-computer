@@ -28,8 +28,24 @@ def port_wires(d):
     for net,res,dio,jack in [('GPS_RX_WIRE','R440.1','D411','J410.4'),('GPS_TX_WIRE','R441.2','D410','J410.3'),
                             ('RADIO_RX_WIRE','R450.1','D421','J420.4'),('RADIO_TX_WIRE','R451.2','D420','J420.3'),
                             ('CAM_RX_WIRE','R100.1','D401','J9.3'),('CAM_TX_WIRE','R101.2','D400','J9.4')]:
-        a=p(res);t(net,'B',S,[a,p(jack)]);t(net,'B',S,[(p(dio+'.1')[0],a[1]),p(dio+'.1')])
-        a=p(dio+'.2');at=(37.3,a[1]) if dio in ('D400','D401') else (a[0],a[1]+.7);t('GND','B',S,[a,at]);v('GND',at)
+        a=p(res)
+        if dio in ('D410','D411'):
+            branch=(37.1,a[1])
+            t(net,'B',S,[a,branch,p(jack)])
+            t(net,'B',S,[branch,(37.1,p(dio+'.1')[1]),p(dio+'.1')])
+        else:
+            t(net,'B',S,[a,p(jack)])
+            t(net,'B',S,[(p(dio+'.1')[0],a[1]),p(dio+'.1')])
+        a=p(dio+'.2')
+        if dio in ('D410','D411'):
+            at=(36.45,a[1]);t('GND','B',S,[a,at])
+        elif dio in ('D400','D401'):
+            # Keep both returns west of the three F.Cu camera control/supply lanes.
+            at=(34.95,a[1]);t('GND','B',S,[a,at])
+        else:
+            at=(a[0],a[1]+.7)
+            t('GND','B',S,[a,at])
+        v('GND',at)
 
 
 def camera_local(d):
@@ -40,7 +56,7 @@ def camera_local(d):
     t('3V3','B',S,[(29.25,39.55),p('C100.1')])
     t('GND','B',S,[p('C100.2'),(28.85,40.95),(28.6,41.2)])
     t('CAM_IO_3V3','B',IO,[p('U13.5'),(31.65,49.85),(31.65,52.5),(31.65,53.525),p('R103.1')])
-    t('GND','B',S,[p('R103.2'),(32.175,55.625),p('C431.2')])
+    t('GND','B',S,[p('R103.2'),(32.575,55.625),(33.2,55.0)])
 
 
 def camera(d):
@@ -52,8 +68,9 @@ def camera(d):
     t('CAM_MCU_TX','B',S,[(32.2,42.85),(31.6,42.25),(31.6,39.05),p('U12.5')])
     v('GND',(33.1,43.65))
     t('GND','B',S,[p('U12.2'),(29.27,40.05),(28.85,40.47)])
-    t('CAM_UART_OE','B',S,[p('U12.6'),(34.425,39.55),p('R102.1')])
-    t('CAM_UART_OE','B',S,[p('R102.1'),(34,40.475),(34,42)]);v('CAM_UART_OE',(34,42))
+    # Both joins end within R102.1; avoid needless diagonal tails inside its land.
+    t('CAM_UART_OE','B',S,[p('U12.6'),(34.575,39.55)])
+    t('CAM_UART_OE','B',S,[p('R102.1'),(34,40.275),(34,42)]);v('CAM_UART_OE',(34,42))
     t('CAM_UART_OE','F',S,[p('U1.39'),(31.75,42.5),(32.25,42),(34,42)])
     t('CAM_IO_3V3','B',S,[p('U12.7'),(32.2,40.05)]);v('CAM_IO_3V3',(32.2,40.05))
     t('GND','F',S,[p('C93.2'),(34.3,38.5)]);v('GND',(34.3,38.5))
@@ -61,14 +78,14 @@ def camera(d):
     v('CAM_IO_3V3',(36.55,48.18))
     t('CAM_IO_3V3','B',S,[(36.55,48.18),(32.32,48.18),(31.75,48.75),p('U13.5')])
     # Parallel control trunks: the higher MCU pin takes the outer lane.
-    t('CAM_PWR_EN','F',S,[p('U1.41'),(35.5,41.5),(35.5,57.3),(35.5,60.425),p('R431.1')])
-    t('CAM_PWR_EN','F',S,[(35.5,57.3),(33.7,57.3)]);v('CAM_PWR_EN',(33.7,57.3))
-    t('CAM_PWR_EN','B',S,[(33.7,57.3),(31.45,57.3),p('U402.3')])
+    t('CAM_PWR_EN','F',S,[p('U1.41'),(35.5,41.5),(35.5,57.4),(35.5,60.425),p('R431.1')])
+    t('CAM_PWR_EN','F',S,[(35.5,57.4),(34.4,57.4)]);v('CAM_PWR_EN',(34.4,57.4))
+    t('CAM_PWR_EN','B',S,[(34.4,57.4),(31.35,57.4),p('U402.3')])
     t('CAM_FAULT_N','F',S,[p('U1.42'),(36,41),(36,56.3),(36.5,56.8)]);v('CAM_FAULT_N',(36.5,56.8))
     t('CAM_FAULT_N','B',S,[(36.5,56.8),(35.27,56.8),p('R432.1'),(35.02,58.05),p('U402.4')])
     t('3V3','B',S,[p('R432.2'),(36.13,58.8)]);v('3V3',(36.13,58.8))
-    t('CAM_5V_SENSE','F',S,[p('U1.35'),(31.7,44.5),(33.07,45.87),p('R104.2'),p('R105.1'),(33.07,51.0),p('C94.1')])
-    t('CAM_5V','F',S,[p('R104.1'),(34.8,47.37),(34.8,48.675),(34.15,49.325)]);v('CAM_5V',(34.15,49.325))
+    t('CAM_5V_SENSE','F',S,[p('U1.35'),(31.7,44.5),(32.77,45.57),p('R104.2'),p('R105.1'),(32.77,51.0),p('C94.1')])
+    t('CAM_5V','F',S,[p('R104.1'),(34.2,47.07),(34.2,49.325)]);v('CAM_5V',(34.2,49.325))
     # Control and ADC trunks are completed after the cell/fast-signal routes.
 
 
@@ -77,15 +94,19 @@ def servos_local(d):
     # Four pull-downs face their clamp pins in two aligned rows.
     for i,pin,res in [(1,1,154),(2,3,155),(3,4,156),(4,6,157)]:
         d.link(f'SERVO{i}_MCU','B',S,f'D121.{pin}',f'R{res}.1')
-    t('SERVO1_MCU','B',S,[p('R154.1'),(33,74.1),(34.21,75.31),p('R150.1')])
-    t('SERVO2_MCU','B',S,[p('D121.3'),(30.55,71.65),(33.6,71.65),(34.175,72.225),p('R151.1')])
-    t('SERVO3_MCU','B',S,[p('D121.4'),(30.55,71.2),(33.205,71.2),p('R152.1')])
-    t('SERVO4_MCU','B',S,[p('R157.1'),(32.82,68.83),(33.96,67.69),p('R153.1')])
+    # The entries end inside the series lands, clear of the shared GND return.
+    t('SERVO1_MCU','B',S,[p('R154.1'),(33.5,74.1),(34,74.6),(34,75.6)])
+    t('SERVO2_MCU','B',S,[p('D121.3'),(30.55,71.85),(32.955,71.85),p('R151.1')])
+    t('SERVO3_MCU','B',S,[p('D121.4'),(30.55,71.2),(32.905,71.2),p('R152.1')])
+    t('SERVO4_MCU','B',S,[p('R157.1'),(32.945,68.83),p('R153.1')])
     t('GND','B',IO,[p('D121.2'),(31.5,73.6)]);v('GND',(31.5,73.6))
     t('3V3','B',IO,[p('D121.5'),(31.5,69.4)]);v('3V3',(31.5,69.4))
     for i in range(1,5):
-        a=p(f'R{149+i}.2');b=p(f'J122.{i}');turn=(a[0]+abs(b[1]-a[1]),b[1])
-        t(f'SERVO{i}_OUT','B',S,[a,turn,b])
+        a=p(f'R{149+i}.2');b=p(f'J122.{i}');turn=(round(a[0]+abs(b[1]-a[1]),4),b[1])
+        # Turn beside the first two resistors for centred terminal entries without in-pad tails.
+        if i in (1,2): turn=(round(b[0]-abs(b[1]-a[1]),4),a[1])
+        pts=[a,b] if a == turn or turn == b else [a,turn,b]
+        t(f'SERVO{i}_OUT','B',S,pts)
 
 
 def servos(d):
@@ -96,18 +117,19 @@ def servos(d):
         a=p('U1.'+str(21+i));end=ends[i-1];turn=end[1]-(end[0]-x)
         t(f'SERVO{i}_MCU','F',S,[a,(a[0],52),(x,52+x-a[0]),(x,turn),end])
         v(f'SERVO{i}_MCU',end)
-    t('SERVO1_MCU','B',S,[(33,75.9),(33.585,75.9),p('R150.1')])
-    t('SERVO2_MCU','B',S,[(34.325,73.8),(34.175,73.65),p('R151.1')])
-    t('SERVO3_MCU','B',S,[(33.675,69.05),(34.175,69.55),p('R152.1')])
-    t('SERVO4_MCU','B',S,[(34,66.5),(34.175,66.675),p('R153.1')])
+    t('SERVO1_MCU','B',S,[(33,75.9),p('R150.1')])
+    t('SERVO2_MCU','B',S,[(34.325,73.8),(33.875,73.35),p('R151.1')])
+    t('SERVO3_MCU','B',S,[(33.675,69.05),(33.675,70.23)])
+    t('SERVO4_MCU','B',S,[(34,66.5),(34,68)])
 
 
 def status(d):
     t,p,v=d.track,d.pad,d.via
-    t('VLOGIC_SENSE','F',S,[p('U1.30'),(32.05,47),(32.05,52.98),p('R61.1'),p('C60.1'),p('R60.2')])
-    t('LOGIC_SOURCE_ST','F',S,[p('U1.28'),(31.65,48),(31.65,51.15),(31,51.8)])
-    v('LOGIC_SOURCE_ST',(31,51.8))
-    t('LOGIC_SOURCE_ST','B',S,[(31,51.8),(31,52.95),(29.8,54.15),(29.8,59.125),p('R91.2')])
+    t('VLOGIC_SENSE','F',S,[p('U1.30'),(32.05,47),(32.05,53.28),p('R61.1'),
+                             (32.3,54.47),(32.3,56.6),p('C60.1'),(32.77,57.93),p('R60.2')])
+    t('LOGIC_SOURCE_ST','F',S,[p('U1.28'),(31.65,48),(31.65,51.0),(30.85,51.8)])
+    v('LOGIC_SOURCE_ST',(30.85,51.8))
+    t('LOGIC_SOURCE_ST','B',S,[(30.85,51.8),(30.85,53.1),(29.8,54.15),(29.8,59.125),p('R91.2')])
     t('LOGIC_SOURCE_ST','B',S,[p('R91.2'),(27.675,61.25),(27.675,61.875),p('U11.9')])
     t('BAT_FAULT_N','F',S,[p('U1.29'),(28.2,47.5)]);v('BAT_FAULT_N',(28.2,47.5))
     t('BAT_FAULT_N','B',S,[(28.2,47.5),(28,47.3),(26,47.3),(26,48.75),(26.4,48.75),(26.4,51.95),(26.9,52.45)])
@@ -148,8 +170,8 @@ def leds(d):
     t, p = d.track, d.pad
     t('LED_RED', 'F', S, [p('U1.86'), (13.7, 42.0), p('R32.1')])
     t('LED_RED_A', 'F', S, [p('R32.2'), (10.3, 42.6), p('LED1.2')])
-    t('LED_YEL', 'F', S, [p('U1.88'), (14.4, 43.0), (14.1, 42.7),
-                         (12.4, 42.7), (11.6, 43.5), (11.6, 43.9), p('R33.1')])
+    t('LED_YEL', 'F', S, [p('U1.88'), (14.4, 43.0), (14.0464, 42.6464),
+                         (12.3, 42.6464), p('R33.1')])
     t('LED_YEL_A', 'F', S, [p('R33.2'), (9.9, 45.0), p('LED2.1')])
     # Reuse the existing C32 GND via; it is already connected to the solid In1 plane.
     t('GND', 'F', S, [p('LED1.1'), (8.1, 44.18), (8.72, 44.8)])

@@ -127,29 +127,43 @@ def _rot(p, rx, ry, rz):
 
 
 def model_box(f, prj):
-    """(x0, y0, x1, y1, z0, z1) in board mm for footprint f, or None when it has no readable model."""
+    """Board-mm envelope, or None without a readable model; invalid visible geometry raises ValueError."""
     pts = []
     for m in f.Models():
         if not m.m_Show:
             continue
+        scale = (m.m_Scale.x, m.m_Scale.y, m.m_Scale.z)
+        transform = scale + (m.m_Offset.x, m.m_Offset.y, m.m_Offset.z,
+                             m.m_Rotation.x, m.m_Rotation.y, m.m_Rotation.z)
+        if not all(math.isfinite(v) for v in transform) or any(v <= 0 for v in scale):
+            raise ValueError(f'{f.GetReference()}: invalid model transform; finite values and positive scales required')
         p = Path(m.m_Filename.replace('${KIPRJMOD}', str(prj)))
         if not p.is_absolute():
             p = prj / p
         if not p.is_file():
             continue
         raw = wrl_points(p) if p.suffix.lower() == '.wrl' else step_points(p) if p.suffix.lower() in ('.step', '.stp') else []
-        if not raw or not all(math.isfinite(value) for point in raw for value in point):
+        if not raw:
             continue
+        if not all(math.isfinite(value) for point in raw for value in point):
+            raise ValueError(f'{f.GetReference()}: nonfinite model vertices')
         xs, ys, zs = zip(*raw)                       # STEP files carry construction points: box of all of them
+        if any(min(axis) >= max(axis) for axis in (xs, ys, zs)):
+            raise ValueError(f'{f.GetReference()}: degenerate model envelope')
         corners = [(x, y, z) for x in (min(xs), max(xs)) for y in (min(ys), max(ys)) for z in (min(zs), max(zs))]
         for c in corners:
             q = (c[0] * m.m_Scale.x, c[1] * m.m_Scale.y, c[2] * m.m_Scale.z)
             q = _rot(q, m.m_Rotation.x, m.m_Rotation.y, m.m_Rotation.z)
             q = (q[0] + m.m_Offset.x, q[1] + m.m_Offset.y, q[2] + m.m_Offset.z)
+            if not all(math.isfinite(v) for v in q):
+                raise ValueError(f'{f.GetReference()}: nonfinite transformed model envelope')
             pts.append(q)
     if not pts:
         return None
-    return footprint_points_box(f, [(x, -y, z) for x, y, z in pts])
+    box = footprint_points_box(f, [(x, -y, z) for x, y, z in pts])
+    if not all(math.isfinite(v) for v in box) or any(box[lo] >= box[hi] for lo, hi in ((0, 2), (1, 3), (4, 5))):
+        raise ValueError(f'{f.GetReference()}: nonfinite or degenerate transformed model envelope')
+    return box
 
 
 def footprint_points_box(f, points):
@@ -386,7 +400,11 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
                           and p.IsOnLayer(pcbnew.B_Cu) and p.IsOnLayer(pcbnew.B_Mask)
                           and not p.IsTented(pcbnew.B_Cu))
             continue
-        box = model_box(f, prj)
+        try:
+            box = model_box(f, prj)
+        except ValueError as error:
+            issues.append(str(error))
+            continue
         if box is None:
             issues.append(f'{ref}: no readable model (only explicit bare board features/DNP are excluded)')
             continue

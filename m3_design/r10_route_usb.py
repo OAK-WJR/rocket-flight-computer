@@ -48,8 +48,8 @@ def draw(d, feed=False):
     # Retain the qualified inward MCU escape, then pass below SPI3's source vias on B.Cu.
     d.track('USB_FAULT_N', 'F', .2, [d.pad('U1.87'), (16.7, 42.5), (16.7, 39.05)])
     d.via('USB_FAULT_N', (16.7, 39.05))
-    d.track('USB_FAULT_N', 'B', .2, [(16.7, 39.05), (16.7, 41.2), (9.3, 41.2),
-                                   (9.3, 35.5), (9.3, 34.1), (12.6, 30.8), (12.6, 26.55), d.pad('U10.4')])
+    d.track('USB_FAULT_N', 'B', .2, [(16.7, 39.05), (15.0383, 40.7117), (9.3, 40.7117),
+                                   (9.3, 34.1), (12.6, 30.8), (12.6, 26.55), d.pad('U10.4')])
     # D-AVA-01: the fault pull-up joins the limiter cell, freeing J2's pin-legend band.
     d.track('USB_FAULT_N', 'B', .2, [d.pad('U10.4'),(13.05,25.7),(13.05,24.1),(12.25,23.3),(8.625,23.3)])
     d.track('3V3', 'B', .2, [d.pad('R90.1'),(6.2,23.1)])

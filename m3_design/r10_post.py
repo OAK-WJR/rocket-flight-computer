@@ -665,6 +665,8 @@ def finish(b, lib):
         raise RuntimeError(f'designators below 1.0 mm text (REQUIREMENTS M2): {small}')
     # 6. Fab references, title block
     silk.fab_refs(b)
+    # Keep the assembly reference clear of the five terminal drills.
+    silk._fab_ref(silk.fp_of(b, 'J122')).SetPosition(silk.P(36.5, 71.5))
     fab_moved = r9_post.fab_clear(b)
     b.GetTitleBlock().SetRevision(REV)
     distance_review = []

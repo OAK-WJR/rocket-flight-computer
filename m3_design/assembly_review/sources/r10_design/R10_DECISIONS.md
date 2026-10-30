@@ -1741,3 +1741,229 @@ now nearest J410.3, and the width seeds select a real long terminal-to-FET path 
 coordinates. They still inject and detect the same faults. No safety, width, reference, thermal or clearance limit
 is reduced. The full build regenerates the fabrication package before check.sh so its manifest is checked without
 an override. Rendering uses an optional local output directory; no machine-specific path is stored in the project.
+
+## D-R11-01. Maximum DB125 envelopes and row clearance (2026-10-29)
+
+Round11 parts and mechanics independently found an understated terminal envelope;
+a fresh verifier confirmed R11-BOM-01 as Major against P2 and OQ-1. The maker's
+[T0-1 sheet1](https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf)
+gives a maximum wire face of7.70−3.70=+4.00mm from the pad row. The repeated3.90mm
+dimension names one rear datum. Include that datum, length tolerances and the
+interlock: local x unions are[−4.62,+3.70]/[−8.32,+7.20]/[−10.07,+8.95]mm for
+2/4/5positions, local y[−4.10,+4.00], height8.90mm. These are unions of permitted
+tolerance corners, not dimensions of one individual body. Tail length is
+3.50±0.30mm;3.90mm is not the tail dimension.
+
+Retain the accepted4.95mm wire-room floor. The old row centres7/39mm give only
+4.603012mm with the corrected envelope. Move west to7.4 and east to38.6mm,
+preserving axial pitch, outward orientation, supports, pins and IMU pose. Native
+in-memory calculations then give5.003012mm at all seven terminals. They are CAD
+calculations, not harness or screwdriver qualification.
+
+Courtyards enclose the full tolerance union with0.20mm assembly margin. This
+leaves0.48mm between maximum4P body unions at16mm pitch;0.25mm courtyards would
+overlap by0.02mm before stroke. No maker or project rule mandates0.25mm here;
+the additional0.20mm outside the complete maximum insulating body is a placement
+allowance, not an electrical spacing reduction. Actual assembly/tool access stays
+unverified. Shift Q124 0.30 mm east, R80/R165 0.25 mm east, C80 0.05 mm east,
+and the east ADC resistor column/C94 0.30 mm west. Move C60 to F(33.2,56.8), rotation90, and
+R60 to F(33.2,58.6), with the camera-enable branch/via at y=57.4 mm.
+This keeps C60 clear of both the terminal courtyard and the servo-signal lane.
+The prototype shows no terminal/body or courtyard intersection. Keep C80's
+straight copper bus0.05mm off its moved pad centre, well inside the pad, rather
+than creating a needless tiny jog. Redraw affected power/pyro/sense paths and the
+OUT via's GND partner through generators only.
+
+Also adopt the six low-risk R11-RTE-01 route simplifications (four bumps, switch
+and VLOGIC monotone branches), explicit thermal relief on every DB125 GND contact,
+and a drill-clear J122 Fab reference. None changes a circuit connection or limit.
+**Status when proposed:** generator changes in progress; full supervised build, DRC, actual-feed
+hot-plug, fabrication, binding, reproducibility and subsequent reviews are pending.
+AGENTS§2 is unchanged. Do not label the prototype as a rebuilt/checked board.
+
+## D-R11-02. Close the demonstrated gate gaps
+
+R11-GATE-01…03 concern prospective faults, not faults present on the review board.
+Use one R10 terminal-label walk for board/footprint text and text boxes: exact
+nearest connector pin, exactly one individual label, polarity characters included.
+Keep R8's archived behavior and AUD-10's distance-only treatment unchanged.
+Extend the existing required-fitted invariant to all199 reviewed functional parts
+and support components across native CAD, schematic and BOM/CPL. Reuse the current
+walks; add no redundant full schematic walk. Reject nonfinite/nonpositive model
+transforms and degenerate envelopes; make both fit and P-11 fail on invalid
+geometry while preserving valid positive unit-conversion scales.
+
+The draft's focused/native tests pass139 unique cases and its new seeds expose20
+failed subtests against the old code. That evidence is not a full build/DRC pass.
+The patch is applied for the next supervised build; final integrated counts follow
+in the validation record. No safety/clearance/population limit is weakened.
+
+## D-R11-03. Bind electrical calculations to native firing copper
+
+R11-PWR-01/REQ-01/DOC-01 found circuit-pass length literals after AVA rerouting.
+Use native retained firing paths, pruning dead sense branches. Include routed
+copper inside a terminal pad when it joins a retained endpoint to the pad anchor:
+BAT_IN has6.000000mm external trace plus0.707107mm routed drain-pad entry on the
+review target. Do not count the dead RAW_ACT sense stub within R134.2. Use only
+the aligned Q120.2→Q121.3 source path,2.2mm at0.4mm, with no parallel-leg credit.
+Mixed widths or series layer changes must stop extraction until their resistance
+model is reviewed; never silently ignore a via.
+
+At the existing35µm/20°C resistivity and hot material assumptions, the review
+target gives29.820114/35.679767mΩ at20/70°C, loop4.618006Ω and fire current
+1.544183/1.479263/1.414096/1.348645/1.282861A for0…4stalls. All remain above the
+selected1.125A criterion. These are conditional calculations, not measured source,
+pad, FET, copper, harness or e-match performance. Re-extract after row/route fixes.
+
+Generate library assets before the schematic and the native-bound budget after
+the final PCB; check both deterministically in the final gate. Bind the budget
+to its board SHA, without a fab-manifest dependency cycle. Preserve all existing
+load, temperature, pulse, contact, source and harness assumptions. The full
+actual-feed hot-plug sweep and final output-path measurements must also be
+refreshed after the geometry changes; old named-board results remain historical.
+
+## D-R11-04. Current assembly records and retained qualification limits
+
+Correct active GH/header/parked-radio prose, J9 board RX/TX parentheticals, Rev11
+AF citations and PC1 analog-reset terminology. Refresh coating/probes/staking
+from current parts and copper, preserving the full U4/U5 exclusions and sole
+controlled TP122 brush exception. All seven terminals, including J400, require
+staking and externally supported leads. The closed microSD envelope does not
+allocate lid travel: remove the board from the continuous sled, or qualify a
+physical access window, before opening it off/out of the bay.
+
+Do not claim translator protection on direct GPS/radio UARTs. Their1k/ground-ESD
+architecture is the owner's decision; pin/injection limits and installed ESD,
+back-feed and radio-immunity tests remain open. Retain the measured C98 remote
+return Minor:13.497mm pad-to-stitch and31.812mm diagnostic device loop. A partial
+via option halves the geometric loop but does not establish a local return or
+transient performance; no fully checked local alternative is proved. Preserve
+the noncritical-return/pad-entry inventory for owner acceptance and bench tests.
+
+The parent VEHICLE mirror is stale, but this task forbids another-worktree edits.
+Record the exact required update in the in-worktree review handoff; do not edit it
+or invent owner acceptance. Procurement remains preliminary: fresh review lookup
+is$82.61 placed-parts/feeder share versus$84.41, but minimum purchases give$84.95
+before fixed/process/PCB/shipping costs; R430/U4 are short and U9's minimum is7
+against5 needed. Refresh within24h of any order and obtain the process quote.
+No order, firmware, physical qualification or AGENTS§2 change is authorized here.
+
+
+### D-R11-01 verification addendum
+
+The fresh fix verifier caught and corrected five initial source-prototype
+clearance groups before any CAD save: both C92/U402 return sites, camera enable,
+IGN's shifted diagonal and Q124 source-via/paste entry. Apply the exact passing
+alternatives recorded in`round11_fix_geometry.json` under the review directory.
+The source dry runs total977segments/294vias; this is not an official build.
+The in-memory alternative passes the listed shape/angle/partner/fit/S-8 checks,
+but all full build, connectivity, reference/region, model, fabrication and
+reproducibility checks remain pending through the supervisor.
+
+Retain the prototype's three measured same-net ring webs (≈0.050mm at the two
+Q124 returns;≈0.066mm at C92.2). Hole gaps≈0.150/0.166mm pass ordinary rules; no
+hole/paste entry is waived. Q124's farther x16.05 via would give only0.035376mm
+to the B.Cu OUTdiagonal; selected x15.85 gives0.176802mm. Recount all mask/web
+residuals on the actual rebuilt board and list them for owner acceptance.
+
+## D-R11-05. Use the vendor's headless DRC fix
+
+The supervisor withdrew its build service and authorized direct CLI builds on
+2026-10-29. Writable preference/cache/document folders did not cure the installed
+KiCad 10.0.6 failure: the first staged PCB DRC aborted, and normal, clean-config
+and terminal probes reported `SwiftNativeNSArray` array-index failure. No DRC or
+full-gate pass is inferred from those attempts.
+
+Upstream [issue25413](https://gitlab.com/kicad/code/kicad/-/issues/25413) and
+[fix f0ca3b0](https://github.com/KiCad/kicad-source-mirror/commit/f0ca3b0510c3bcccd76223a06447eecfc7ebe0eb)
+identify the headless commit's GUI cursor query. The first stable release with
+the guard is 10.0.7. Use the [official vendor package](https://kicad-downloads.s3.cern.ch/osx/stable/kicad-unified-universal-10.0.7.dmg) in a temporary directory,
+verify its published SHA-256 before execution, and rerun the unchanged stages
+and full gate. Do not patch KiCad, skip a gate, or infer a pass from a crash.
+The package SHA-256 is
+`fbc27419b841a9a2a8b143b5875a87b8bd943ffcf487d53c78a8fb6d24c59e27`.
+Tool versions and final results belong in the round11 fix-validation record.
+Commit requests still use the supervisor; no safety or design limit changes.
+
+### D-R11-01 integrated-check corrections
+
+The first real complete-board DRC with the updated CLI found Q124's moved
+courtyard overlapping C126 by 0.05 mm. Move C126 east by 0.15 mm to (16.85,
+57.675), retaining its pose and connections; adjust its 45-degree gate entry
+and GND stitch together. The un-stroked courtyard gap is then 0.10 mm.
+
+The staged routing gate also rejected the moved camera-sense supply branch's
+removable bump. Use R104.1 → (34.2,47.07) → (34.2,49.325), with the same via
+centre explicit in the bottom C91/U13 branch. This removes one segment and
+keeps 0.187 mm copper clearance from R105.2. No allowlist or rule change is
+needed. Both corrections require the final build and full-gate evidence below.
+
+### D-R11-01 bottom-cell integration
+
+The first complete gate also found sixteen bottom parts inside the unchanged
+1.5 mm through-hole assembly floor and two camera wire references escaping
+their permitted pad voids. Correct the local cells rather than weaken either
+rule. Actual rebuilt courtyard polygons and real DRC supersede the earlier
+position-only API prototype, whose courtyard caches were stale.
+
+Keep the servo clamp and pull-down poses. Move R150–R153 to B(34.6,75.9),
+B(34.7,72.77), B(34.7,70.23) and B(34.6,68), respectively. Move the shared R154
+return stitch to (33.4,74.96), preserving the via count. It is 1.021567/1.483653 mm
+from the first two PWM transitions. Turn the first two output routes beside
+their resistors so the terminals retain centred entries without redundant
+in-pad tails. The servo receipt records 49 segments/10 vias, minimum M-6 gap
+1.536 mm and actual courtyard gap 0.020 mm. The existing third PWM companion
+distance of 1.747413 mm remains outside the critical-signal rule's scope and
+stays a review deviation; this is no electrical-return qualification.
+
+The port cells must also clear the microSD socket, ADC trunks, solder-paste
+apertures and terminal barrels. Their exact poses and stitches are in
+`sources/r10_review/round11_m6_fix.json`. C411 moves below the SD return;
+C431 uses the pocket below the camera terminal. Keep U13 fixed and place C91
+at B(34.95,53.9), rotation −90°, with C92 at B(32.35,52.5). This compact pocket
+keeps the input bypass 4.092 mm directly/5.036 mm by its drawn 0.4 mm supply
+route from U13. It is longer than the original 2.300/2.775 mm connection and
+remains a measured return/transient qualification item. The conservative C91/C92
+courtyard-envelope gap is 0.010 mm (native collision-polygon gap 0.110 mm);
+the conservative C91 courtyard-envelope-to-terminal-pad gap is 1.505 mm.
+Do not infer a measured transient response from those CAD distances.
+
+Move both camera clamp returns west of the front control lanes, retain the
+GPS shared return that clears R405, and move the LOGIC_SOURCE_ST transition
+to (30.85,51.8) to clear C92. R13 moves east 0.28 mm, not 0.40 mm, to preserve
+R64 clearance. The integrated build, full gate, binding and reproducibility
+receipts determine final closure; isolated worker prototypes are scoped
+implementation evidence only. Circuit connections, pins, supports, axes,
+clearance limits, allowlists and AGENTS §2 are unchanged.
+
+### D-R11-01 completed fix validation
+
+The final PCB is `0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d`.
+Two complete direct native builds exit zero and reproduce all 42 recorded
+CAD/library/model, electrical-evidence and binding files byte for byte. Both
+full gates pass DRC/unconnected/parity/ERC zero, all 31 R10 rules, routing and
+current fabrication checks. The fresh terminal verifier closes the Major with
+5.003011866 mm wire room at all seven contacts, preserving the 4.95 mm floor.
+The sixteen bottom keep-outs and two camera-reference failures in the earlier
+intermediate attempt are corrected without weakening a gate. Exact receipts,
+remaining graphics/return/entry inventory and limitations are in
+`sources/r10_review/round11_fix_validation.json` and the scoped receipts it links.
+
+The final native fire loop is 4.617458126 Ω, giving 1.544366072 A idle and
+1.283013039 A at four persistent stalls under the stated source/material/harness
+conditions; selected-lot 20 ms firing remains unqualified. Actual-feed hot-plug
+2304 required cases and 60 local sensitivities pass as Simulation / Inference.
+The optional current plate calculation is 181.3 Hz pinned D5 / 70.3 g estimated
+mass, replacing the former connector population's 280.9 Hz / 45.5 g record.
+None is a bench or flight result. The current bare-barrel S-8 minimum is 1.103 mm;
+the unchanged 1.0 mm floor remains blocking.
+
+The final-CPL public supplier snapshot at 2026-10-30 05:00 UTC supersedes the
+preliminary $82.61/$84.95 figures above: $79.53 placed parts plus feeder share,
+approximately $81.87 with minimum purchases, against $84.41. Fixed fees,
+possible handling, PCB, rails, joints, consignment, process and shipping are
+additional. R430 17<3610 and U4 0<5 remain stock blockers; U9 has a 7-piece
+minimum for five needed. No quote, process/deviation acceptance or order is
+inferred. Fresh complete rounds 12+ must still earn two consecutive clean rounds
+on the committed PCB; round 11 remains 0 Critical / 1 Major / 16 Minor groups.
+AGENTS §2 and all owner decisions remain authoritative and unchanged.

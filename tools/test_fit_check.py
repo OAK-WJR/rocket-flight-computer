@@ -126,6 +126,38 @@ class FitValidation(unittest.TestCase):
         self.model.unlink()
         self.assertFalse(self.report()['ok'])
 
+    def test_invalid_model_transforms_fail_without_nonfinite_rows(self):
+        self.assertTrue(self.report()['ok'])
+        for field in ('m_Scale', 'm_Offset', 'm_Rotation'):
+            for axis in ('x', 'y', 'z'):
+                values = (float('nan'), float('inf'), -float('inf'))
+                if field == 'm_Scale':
+                    values += (0., -1.)
+                for value in values:
+                    with self.subTest(field=field, axis=axis, value=value):
+                        vector = getattr(self.part.Models()[0], field)
+                        original = getattr(vector, axis)
+                        setattr(vector, axis, value)
+                        report = self.report()
+                        self.assertFalse(report['ok'])
+                        self.assertIn('U1: invalid model transform', '\n'.join(report['issues']))
+                        self.assertNotIn('U1', {row[1] for row in report['rows']})
+                        setattr(vector, axis, original)
+
+    def test_degenerate_or_overflowed_model_geometry_fails(self):
+        self.model.write_text("#1=CARTESIAN_POINT('',(-1,-1,0));\n#2=CARTESIAN_POINT('',(1,1,0));\n")
+        self.assertIn('degenerate model envelope', '\n'.join(self.report()['issues']))
+        self.model.write_text("#1=CARTESIAN_POINT('',(-2,-2,0));\n#2=CARTESIAN_POINT('',(2,2,1));\n")
+        self.part.Models()[0].m_Scale.x = 1e308
+        self.assertIn('nonfinite transformed model envelope', '\n'.join(self.report()['issues']))
+
+    def test_positive_unit_conversions_and_rigid_transforms_remain_valid(self):
+        model = self.part.Models()[0]
+        model.m_Scale.x = 2.54; model.m_Scale.y = .5; model.m_Scale.z = .001
+        model.m_Offset.x = .2; model.m_Offset.y = -.2; model.m_Offset.z = .3
+        model.m_Rotation.x = 10; model.m_Rotation.y = 20; model.m_Rotation.z = 30
+        self.assertTrue(self.report()['ok'], self.report()['issues'])
+
     def test_missing_midspan_support_fails(self):
         self.board.Delete(self.holes[4])
         issues = '\n'.join(self.report()['issues'])

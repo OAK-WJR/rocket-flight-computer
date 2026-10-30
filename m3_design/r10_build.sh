@@ -39,6 +39,7 @@ D=m3_design/assembly_review
 T=$(mktemp -d)
 trap 'echo "build reports: $T"' EXIT
 quiet() { grep -v 'Debug: Adding duplicate\|create wxApp\|Fontconfig' || true; }
+"$KICAD_PY" -I -B m3_design/r10_parts.py --library-only
 python3 -B m3_design/r10_sch.py --out "$D"
 PYTHONUNBUFFERED=1 "$KICAD_PY" -I -B m3_design/r10_sch_check.py --project "$D" --json "$T/sch_check.json" \
   > "$T/sch_check.txt" 2>&1 || { echo "r10_sch_check: FAIL (see $T/sch_check.json)"; exit 1; }
@@ -50,6 +51,8 @@ for FAMILY in core usb pyro power signals ground; do
 done
 PYTHONUNBUFFERED=1 "$KICAD_PY" -I -B m3_design/r10_post.py --report "$T/post.json" 2>&1 | quiet
 shasum -a 256 "$D/m3.kicad_pcb"
+# D-R11-03: the electrical budget must use the finished native copper, never the previous board.
+"$KICAD_PY" -I -B m3_design/r10_parts.py --budget-only --board "$D/m3.kicad_pcb"
 # OQ-2: qualify the generated input feed before the full board gate.
 "$KICAD_PY" -I -B tools/r10_hotplug.py --extract "$D/m3.kicad_pcb"
 "$NUMPY_PY" -I -B tools/r10_hotplug.py

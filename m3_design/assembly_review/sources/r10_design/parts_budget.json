@@ -257,7 +257,8 @@
     "note": "Hot R, effective C, Miller and actual board SOA are conditional inferences; bench required"
   },
   "fire_current_GAP1": {
-    "status": "Circuit-pass CAD path calculation; material, hot FET, source and harness conditions unmeasured",
+    "status": "Native-board CAD path calculation; material, hot FET, source and harness conditions unmeasured",
+    "board_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
     "selected_ematch": "MJG J-Tek LEAD-FREE standard24AWG",
     "maker_all_fire_A": 0.75,
     "current_margin": 1.5,
@@ -273,105 +274,113 @@
     "ematch_max_ohm": 2,
     "external_leads_harness_max_ohm": 0.3,
     "CAD_track_length_width_mm": {
-      "BAT_IN": [
-        7.121320343559643,
-        1.0
+      "PYRO1_IGN": [
+        10.230382386916238,
+        0.5
+      ],
+      "PYRO1_OUT": [
+        7.85447834896002,
+        0.5
+      ],
+      "RAW_ACT": [
+        5.88613311116846,
+        0.5
       ],
       "ACT_FET_S": [
         2.2,
         0.4
       ],
-      "RAW_ACT": [
-        6.5,
-        0.5
-      ],
-      "PYRO1_IGN": [
-        4.85,
-        0.5
-      ],
-      "PYRO1_OUT": [
-        7.954478348960021,
-        0.5
+      "BAT_IN": [
+        6.3071067811865476,
+        1.0
       ]
     },
-    "copper_20C_by_net_ohm": {
-      "BAT_IN": 0.0034996202831207393,
-      "ACT_FET_S": 0.002702857142857143,
-      "RAW_ACT": 0.006388571428571429,
-      "PYRO1_IGN": 0.004766857142857143,
-      "PYRO1_OUT": 0.00781811586297785
+    "CAD_inside_pad_entry_length_mm": {
+      "PYRO1_IGN": 0,
+      "PYRO1_OUT": 0,
+      "RAW_ACT": 0,
+      "ACT_FET_S": 0,
+      "BAT_IN": 0.7071067811865476
     },
-    "copper_20C_ohm": 0.025176021860384305,
+    "CAD_path_basis": "Native fire_path pruning; ACT_FET_S uses Q120.2 to Q121.3 without parallel credit; routed current entries to terminal-pad anchors included, dead sense branches excluded; no series firing via",
+    "copper_20C_by_net_ohm": {
+      "PYRO1_IGN": 0.010055004403140532,
+      "PYRO1_OUT": 0.0077198301486921354,
+      "RAW_ACT": 0.005785227972119859,
+      "ACT_FET_S": 0.002702857142857143,
+      "BAT_IN": 0.003099492475325961
+    },
+    "copper_20C_ohm": 0.02936241214213563,
     "copper_TCR_per_K": 0.00393,
-    "copper_70C_ohm": 0.030123110155949817,
+    "copper_70C_ohm": 0.03513212612806528,
     "ground_return_allowance_ohm": 0.005,
     "terminal_allowance_ohm": 0.01,
     "Q124_hot_R_inference_ohm": 0.008235999999999999,
     "primary_40mohm_FETs": {
-      "fire_branch_without_pack_ohm": 4.46244911015595,
-      "total_loop_ohm": 4.61244911015595,
+      "fire_branch_without_pack_ohm": 4.467458126128065,
+      "total_loop_ohm": 4.617458126128065,
       "pack_7V4_by_stall_count": {
         "0": {
-          "loaded_pack_V": 6.899129324521614,
-          "fire_A": 1.546041008920438,
-          "other_A": 1.7930968276021395
+          "loaded_pack_V": 6.899390756727756,
+          "fire_A": 1.5443660716989063,
+          "other_A": 1.7930288834493882
         },
         "1": {
-          "loaded_pack_V": 6.609075039896609,
-          "fire_A": 1.4810421086607397,
-          "other_A": 3.791790958695201
+          "loaded_pack_V": 6.609326364555884,
+          "fire_A": 1.4794377872063396,
+          "other_A": 3.7917197824211026
         },
         "2": {
-          "loaded_pack_V": 6.317922970952618,
-          "fire_A": 1.4157972035073416,
-          "other_A": 5.798049656808545
+          "loaded_pack_V": 6.318164198837923,
+          "fire_A": 1.4142637760577872,
+          "other_A": 5.797974898356063
         },
         "3": {
-          "loaded_pack_V": 6.0254985121547975,
-          "fire_A": 1.3502671657233138,
-          "other_A": 7.813076086578044
+          "loaded_pack_V": 6.025729657046817,
+          "fire_A": 1.348804955060497,
+          "other_A": 7.812997331294062
         },
         "4": {
-          "loaded_pack_V": 5.731585947433767,
-          "fire_A": 1.2844036550219537,
-          "other_A": 9.838356695419606
+          "loaded_pack_V": 5.7318070272281405,
+          "fire_A": 1.2830130390490941,
+          "other_A": 9.838273446096636
         }
       },
-      "two_stall_compatible_all_fire_A": 0.9438648023382278,
-      "two_stall_open_equivalent_V_for_1A_all_fire": 7.77189378807773
+      "two_stall_compatible_all_fire_A": 0.9428425173718581,
+      "two_stall_open_equivalent_V_for_1A_all_fire": 7.779096486509639
     },
     "secondary_typical_hot_curve_FETs": {
-      "fire_branch_without_pack_ohm": 4.4168891101559495,
-      "total_loop_ohm": 4.56688911015595,
+      "fire_branch_without_pack_ohm": 4.421898126128065,
+      "total_loop_ohm": 4.571898126128065,
       "pack_7V4_by_stall_count": {
         "0": {
-          "loaded_pack_V": 6.896725110453867,
-          "fire_A": 1.5614440250709307,
-          "other_A": 1.7937219052366271
+          "loaded_pack_V": 6.896991782244507,
+          "fire_A": 1.5597355672876394,
+          "other_A": 1.7936525510823114
         },
         "1": {
-          "loaded_pack_V": 6.606763777799517,
-          "fire_A": 1.4957957089319476,
-          "other_A": 3.7924457724046072
+          "loaded_pack_V": 6.607020139521074,
+          "fire_A": 1.4941592843312204,
+          "other_A": 3.7923731188616183
         },
         "2": {
-          "loaded_pack_V": 6.3157045617100955,
-          "fire_A": 1.4298988279302995,
-          "other_A": 5.798737427335735
+          "loaded_pack_V": 6.315950624360386,
+          "fire_A": 1.4283347205673427,
+          "other_A": 5.798661117030089
         },
         "3": {
-          "loaded_pack_V": 6.023372828976523,
-          "fire_A": 1.3637138444627723,
-          "other_A": 7.813800629027078
+          "loaded_pack_V": 6.023608606624165,
+          "fire_A": 1.3622223838744567,
+          "other_A": 7.813720238631111
         },
         "4": {
-          "loaded_pack_V": 5.7295528256677395,
-          "fire_A": 1.297191911042893,
-          "other_A": 9.839122584505514
+          "loaded_pack_V": 5.729778336582624,
+          "fire_A": 1.2957734830494103,
+          "other_A": 9.839037606399769
         }
       },
-      "two_stall_compatible_all_fire_A": 0.9532658852868664,
-      "two_stall_open_equivalent_V_for_1A_all_fire": 7.706413300390982
+      "two_stall_compatible_all_fire_A": 0.9522231470448951,
+      "two_stall_open_equivalent_V_for_1A_all_fire": 7.7136095571200265
     },
     "historical_4R533_fixed_other_1p5A_fire_A": 1.5828369733068608,
     "historical_4R533_fixed_other_5p34A_fire_A": 1.455768806529892,

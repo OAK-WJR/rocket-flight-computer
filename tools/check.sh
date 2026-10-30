@@ -45,6 +45,7 @@ PY
 (cd "$ROOT/quality_audit" && python3 verify_board.py "$BOARD" --cli "$CLI" --output "$OUT/audit.json" >/dev/null) \
   && echo "metadata / 3D model audit: OK" || { echo "metadata / 3D model audit FAILED: see $OUT/audit.json"; exit 1; }
 python3 "$ROOT/tools/silk_check.py" "$BOARD" --cli "$CLI"     # DRC skips silkscreen wholly outside the outline
+"$KICAD_PY" -I "$ROOT/m3_design/r10_parts.py" --check --board "$BOARD"   # D-R11-03: libraries and native fire budget
 "$KICAD_PY" -I "$ROOT/tools/fit_check.py" "$BOARD" --profile r10 --report "$OUT/fit.json"
 "$KICAD_PY" -I "$ROOT/tools/check_r10.py" "$BOARD" --fit "$OUT/fit.json" \
   --report "$OUT/r10.json"
@@ -76,6 +77,7 @@ selftest python3 "$ROOT/tools/test_check_shell.py"       # check.sh itself fails
 selftest python3 "$ROOT/tools/test_procurement.py"       # required R9 / R10 limits cannot be weakened by report data
 selftest "$KICAD_PY" "$ROOT/tools/test_fit_check.py"       # no -I: the test imports fit_check from its own folder
 selftest "$KICAD_PY" -I "$ROOT/tools/test_paste_check.py"
+selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_parts.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_route_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_check.py"
 selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" HotplugNumerics

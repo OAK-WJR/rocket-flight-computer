@@ -16,7 +16,16 @@ C32_R9 = {('3V3A', ((3.72, 48.15), (2.42, 48.15))), ('GND', ((1.58, 48.15), (0.8
 
 
 class CoreTable(Translated):
+    def pad(self, ref, number, net=None, at=None):
+        if ref == 'R13' and at is not None:
+            at = (at[0] + .28, at[1])
+        return super().pad(ref, number, net, at)
+
     def track(self, net, layer, width, points):
+        if net == 'I2C1_SDA' and layer == 'B' and points == [(4.97,53.0),(4.97,53.62)]:
+            points = [(4.97,53.0),(5.25,53.28),(5.25,53.62)]
+        if net == '3V3' and layer == 'B' and points == [(4.97,54.48),(4.2,54.48)]:
+            points = [(5.25,54.48),(4.2,54.48)]
         if net == '3V3' and layer == 'B' and points == [(24.25,38.5),(23.87,38.12),(23.52,38.12)]:
             points = [(24.25,38.5),(24.25,37.7),(23.52,37.7),(22.44,37.7),(22.02,38.12)]
         if net == '3V3' and points == [(23.52,36.8),(23.52,38.12)]:

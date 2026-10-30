@@ -1,0 +1,1680 @@
+{
+  "round": 11,
+  "review_target_commit": "21bc3b2",
+  "review_target_board_sha256": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+  "scope": "Frozen-board full round11 findings with final generator-fix validation; not a clean round or owner acceptance.",
+  "totals": {
+    "Critical": 0,
+    "Major": 1,
+    "Minor": 16
+  },
+  "consecutive_clean_rounds": 0,
+  "major": {
+    "id": "R11-BOM-01",
+    "duplicate": "R11-MEC-01",
+    "fresh_verification": "round11_terminal_verification.md",
+    "status": "fixed_and_freshly_verified_on_0ad0135c; full subsequent review rounds required",
+    "reason": "Maximum DB125 wire face4.00mm vs model3.65: true4.603012mm room below accepted4.95. Correct models/rows/neighbours/routes; prototype5.003012mm is not a rebuild.",
+    "final_closure": "round11_terminal_closure.json",
+    "final_reason": "Correct maximum tolerance unions, inward0.40mm rows and repaired neighbours yield5.003011866mm room at all7; accepted4.95floor unchanged."
+  },
+  "minor_groups": [
+    {
+      "id": "R11-m01",
+      "source_findings": [
+        "R11-REQ-01",
+        "R11-PWR-01",
+        "R11-DOC-01",
+        "R11-SAF-01 fire portion"
+      ],
+      "heading": "Native electrical evidence",
+      "status": "native_budget_model_output_loops_regenerated_and_verified",
+      "measured_reason_and_fix": "r10_parts.py native extraction; D-R11-03. Review-target full routed BAT6.707107/RAW5.886133/IGN10.396068/OUT7.954478/source2.2mm; loop4.618006ohm, worst1.282861A>1.125A.",
+      "status_at_proposal": "source_patch_pending_supervised_budget_and_model_regeneration"
+    },
+    {
+      "id": "R11-m02",
+      "source_findings": [
+        "R11-REQ-02",
+        "R11-DOC-02 layout portion",
+        "R11-BOM-02"
+      ],
+      "heading": "Connector/layout prose",
+      "status": "active_records_corrected",
+      "measured_reason_and_fix": "M3_R10/r10_plan/REQUIREMENTS/parts_qualification now use DB125 rows and correct J9 pin3 boardRX, pin4 boardTX; old named boards remain historical.",
+      "status_at_proposal": "records_corrected_pending_final_board_consistency"
+    },
+    {
+      "id": "R11-m03",
+      "source_findings": [
+        "R11-REQ-03"
+      ],
+      "heading": "Parent vehicle mirror",
+      "status": "external_worktree_followup_retained",
+      "measured_reason_and_fix": "Exact handoff text is in round11_requirements.md. Parent repository remains untouched by task constraint.",
+      "status_at_proposal": "external_worktree_followup_retained"
+    },
+    {
+      "id": "R11-m04",
+      "source_findings": [
+        "R11-SAF-01 assembly portion",
+        "R11-MEC-02",
+        "R11-DOC-02 retention portion"
+      ],
+      "heading": "Assembly/coating/probes/retention",
+      "status": "current_assembly_records_refreshed; physical_qualification_retained",
+      "measured_reason_and_fix": "ORDERING section8 uses current refs/copper, bottom TP121, all7 terminal staking, actual probe coordinates and final hash-bound worksheet; no guessed coat rectangle.",
+      "status_at_proposal": "records_corrected_pending_final_board_measurements"
+    },
+    {
+      "id": "R11-m05",
+      "source_findings": [
+        "R11-MCU-01"
+      ],
+      "heading": "Direct UART ESD rationale",
+      "status": "rationale_corrected; installed_qualification_retained",
+      "measured_reason_and_fix": "Camera alone has TXU0202; GPS/radio direct1k/ground-only ESD do not demonstrate installed ESD survival or ST pin limits.",
+      "status_at_proposal": "records_corrected_qualification_retained"
+    },
+    {
+      "id": "R11-m06",
+      "source_findings": [
+        "R11-MCU-02"
+      ],
+      "heading": "MCU maker citations/reset",
+      "status": "maker_citations_and_reset_words_corrected; binding_regenerated",
+      "measured_reason_and_fix": "Seven Rev11 AF sources Table10pp91-92; PC1 analog reset. No electrical assignment/IMU axis changed.",
+      "status_at_proposal": "source_record_corrected_pending_binding_regeneration"
+    },
+    {
+      "id": "R11-m07",
+      "source_findings": [
+        "R11-MEC-03"
+      ],
+      "heading": "MicroSD service access",
+      "status": "service_access_record_corrected; physical_qualification_retained",
+      "measured_reason_and_fix": "Opening the bottom hinge requires PCB removal from continuous sled or a qualified physical access window, off/out of bay.",
+      "status_at_proposal": "records_corrected_qualification_retained"
+    },
+    {
+      "id": "R11-m08",
+      "source_findings": [
+        "R11-RTE-01"
+      ],
+      "heading": "Routing simplifications",
+      "status": "six_low_risk_routes_redrawn; full_gate_passes",
+      "measured_reason_and_fix": "Four bumps and two monotone source/VLOGIC branch shortcuts adopted; no native DRC or model pass for edited board yet.",
+      "status_at_proposal": "generator_patch_pending_supervised_build"
+    },
+    {
+      "id": "R11-m09",
+      "source_findings": [
+        "R11-RTE-02"
+      ],
+      "heading": "C98 local return",
+      "status": "measured_C98_return_deviation_retained",
+      "measured_reason_and_fix": "Review-target C98.2 GND island20.552mm2, sole stitch30.15,52;13.497mm pad-to-stitch/31.812mm diagnostic device loop. A partial via is not a proved full local path; no transient failure demonstrated.",
+      "status_at_proposal": "measured_minor_retained"
+    },
+    {
+      "id": "R11-m10",
+      "source_findings": [
+        "R11-RTE-03"
+      ],
+      "heading": "Noncritical return companions",
+      "status": "noncritical_return_inventory_retained",
+      "measured_reason_and_fix": "NRST max3.679674mm, BOOT01.662077mm, I2C1_SDA2.232543mm. Not in named numerical critical partner set; qualify actual reset/I2C behavior.",
+      "status_at_proposal": "measured_minor_retained"
+    },
+    {
+      "id": "R11-m11",
+      "source_findings": [
+        "R11-RTE-04"
+      ],
+      "heading": "Pad entries/between-pad lanes",
+      "status": "pad_entry_inventory_retained",
+      "measured_reason_and_fix": "IMU MOSI entry offset0.05mm; four between-pad routes min gaps0.200041mm or greater; seven native edge endpoints. Full locations in round11_routing.json; remeasure changed rows.",
+      "status_at_proposal": "measured_minor_retained_pending_new_inventory"
+    },
+    {
+      "id": "R11-m12",
+      "source_findings": [
+        "R11-MFG-01"
+      ],
+      "heading": "THT ground thermals",
+      "status": "all5contacts_explicit_thermals_and_filled_spokes_verified; first_article_pending",
+      "measured_reason_and_fix": "All5 terminal GND pads explicitly thermal; frozen board4solidIn1contacts. Need final fill, DRC and first-article hole-fill checks.",
+      "status_at_proposal": "generator_patch_pending_native_refill"
+    },
+    {
+      "id": "R11-m13",
+      "source_findings": [
+        "R11-MFG-02"
+      ],
+      "heading": "Assembly drawing reference",
+      "status": "Fab_reference_corrected_and_package_regenerated",
+      "measured_reason_and_fix": "J122 Fabreference moved away from centre drill; full regenerated drawing/package and visual QA pending.",
+      "status_at_proposal": "generator_patch_pending_drawing_regeneration"
+    },
+    {
+      "id": "R11-m14",
+      "source_findings": [
+        "R11-GATE-01"
+      ],
+      "heading": "Terminal label gate",
+      "status": "terminal_label_gate_hardened_and_seeded_tests_pass",
+      "measured_reason_and_fix": "Unified exact nearest-pin individual text/textbox/footprint walk incl polarity and duplicates; R8 behavior preserved.",
+      "status_at_proposal": "patch_applied_focused_tests_pass_full_gate_pending"
+    },
+    {
+      "id": "R11-m15",
+      "source_findings": [
+        "R11-GATE-02"
+      ],
+      "heading": "Fitted population gate",
+      "status": "all199_required_fitted_gate_hardened_and_seeded_tests_pass",
+      "measured_reason_and_fix": "Existing native/schematic/BOM/CPL invariant now all199reviewed fitted refs; current core present; no full old-gate mutant survival claim.",
+      "status_at_proposal": "patch_applied_focused_tests_pass_full_gate_pending"
+    },
+    {
+      "id": "R11-m16",
+      "source_findings": [
+        "R11-GATE-03"
+      ],
+      "heading": "Model transform gate",
+      "status": "model_transforms_validated_and_seeded_tests_pass",
+      "measured_reason_and_fix": "Reject nonfinite/nonpositive transforms and degenerate body envelopes in fit/P11; preserve valid positive unit conversions.",
+      "status_at_proposal": "patch_applied_focused_tests_pass_full_gate_pending"
+    }
+  ],
+  "decision_count": 107,
+  "decisions": [
+    {
+      "id": "D-R1-01",
+      "title": "Review the plan before changing CAD",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:6",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R1-01",
+        "title": "Review the plan before changing CAD",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:6",
+        "status": "process_or_environment_record",
+        "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R1-02",
+      "title": "O1 needs a voltage decision",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:17",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R1-02",
+        "title": "O1 needs a voltage decision",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:17",
+        "status": "resolved_by_owner_O5",
+        "coverage": "GPS/radio use PORT_4V8 after LDO, not existing3V3 power."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R1-03",
+      "title": "Separate camera and radio voltage budgets",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:34",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R1-03",
+        "title": "Separate camera and radio voltage budgets",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:34",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R1-04",
+      "title": "Review concurrency limit",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:53",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R1-04",
+        "title": "Review concurrency limit",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:53",
+        "status": "process_or_environment_record",
+        "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R1-05",
+      "title": "Baseline environment",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:61",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R1-05",
+        "title": "Baseline environment",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:61",
+        "status": "process_or_environment_record",
+        "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R1-06",
+      "title": "Close round 1 at the owner-decision boundary",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:70",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R1-06",
+        "title": "Close round 1 at the owner-decision boundary",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:70",
+        "status": "process_or_environment_record",
+        "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R1-07",
+      "title": "Implement O5 and O6",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:92",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R1-07",
+        "title": "Implement O5 and O6",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:92",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-01",
+      "title": "Placement legalised by moves, not rebuilt",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:116",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-01",
+        "title": "Placement legalised by moves, not rebuilt",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:116",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-02",
+      "title": "Pyro channel and USB / SWD routing redrawn from the pads",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:127",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-02",
+        "title": "Pyro channel and USB / SWD routing redrawn from the pads",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:127",
+        "status": "retained_as_amended",
+        "coverage": "D-SS replaces J124/ARM-gap with merged RAW_ACT behind Q120/Q121; AUD-6 fire-only width0.5 mm; functional/reset/S-8/required fitting remain."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-03",
+      "title": "Port supply re-planned for routability",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:136",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-03",
+        "title": "Port supply re-planned for routability",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:136",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-04",
+      "title": "Hand-routing kept for critical nets (owner, 2026-10-26)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:153",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-04",
+        "title": "Hand-routing kept for critical nets (owner, 2026-10-26)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:153",
+        "status": "superseded_by_D_R2_08",
+        "coverage": "Every signal hand-drawn; old router aid output historical only."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-05",
+      "title": "U9 cell moved; In2 split into four rails",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:159",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-05",
+        "title": "U9 cell moved; In2 split into four rails",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:159",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-06",
+      "title": "Rail fan-out finished; radio UART on UART5 (PB12 / PB13)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:195",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-06",
+        "title": "Rail fan-out finished; radio UART on UART5 (PB12 / PB13)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:195",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-07",
+      "title": "Signal routing: pin re-map, re-placements, hand-routed escapes and a frozen router table",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:225",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-07",
+        "title": "Signal routing: pin re-map, re-placements, hand-routed escapes and a frozen router table",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:225",
+        "status": "retained_as_amended",
+        "coverage": "False none-loader-pin premise corrected D-R3-10; pin map correct except AUD-4 deletes PULLPIN; PC1 added D-SS."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-08",
+      "title": "Owner: hand-route every signal (2026-10-27)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:276",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-08",
+        "title": "Owner: hand-route every signal (2026-10-27)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:276",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-09",
+      "title": "Placement relieved south and east of U1; three status pins re-mapped",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:284",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-09",
+        "title": "Placement relieved south and east of U1; three status pins re-mapped",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:284",
+        "status": "retained_as_amended",
+        "coverage": "False none-loader-pin premise corrected D-R3-10; pin map correct except AUD-4 deletes PULLPIN; PC1 added D-SS."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-10",
+      "title": "K-reference re-derived on R10's planes; via inner pads removed",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:338",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-10",
+        "title": "K-reference re-derived on R10's planes; via inner pads removed",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:338",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-11",
+      "title": "Copper fixes for K-copper, K-retained and schematic parity",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:359",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-11",
+        "title": "Copper fixes for K-copper, K-retained and schematic parity",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:359",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-12",
+      "title": "Placement relief for the supports, J122's pins and the tie channel",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:377",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-12",
+        "title": "Placement relief for the supports, J122's pins and the tie channel",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:377",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-13",
+      "title": "T-1 re-derived for R10",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:392",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-13",
+        "title": "T-1 re-derived for R10",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:392",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-14",
+      "title": "P-11 and F9-1: owner questions, R10 figures held meanwhile",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:402",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-14",
+        "title": "P-11 and F9-1: owner questions, R10 figures held meanwhile",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:402",
+        "status": "resolved_by_OQ_1_OQ_2",
+        "coverage": "4.95 mm accepted; distance premise replaced with board-bound schema3 actual-feed2304-case model; physical qualification remains."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-15",
+      "title": "Build and fab scripts",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:413",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-15",
+        "title": "Build and fab scripts",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:413",
+        "status": "process_or_environment_record",
+        "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R2-16",
+      "title": "Silkscreen",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:421",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R2-16",
+        "title": "Silkscreen",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:421",
+        "status": "retained_as_amended",
+        "coverage": "D-SS/AUD-4 remove ARM/PULL legends; AUD-10 distance-only/counting scope; R9-03 pins correct unique complete current connector tables.144 shown/81 hidden/38 legends current root inventory."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-01",
+      "title": "R410 (GPS ILIM) stays 100 k\u03a9; the port budget re-derived on it",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:435",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-01",
+        "title": "R410 (GPS ILIM) stays 100 k\u03a9; the port budget re-derived on it",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:435",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-02",
+      "title": "In2 is GND under the CH1 pyro column (R3-SAF-01)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:445",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-02",
+        "title": "In2 is GND under the CH1 pyro column (R3-SAF-01)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:445",
+        "status": "retained_as_amended",
+        "coverage": "D-SS replaces J124/ARM-gap with merged RAW_ACT behind Q120/Q121; AUD-6 fire-only width0.5 mm; functional/reset/S-8/required fitting remain."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-03",
+      "title": "U9's power path widened (R3-PWR-01)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:456",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-03",
+        "title": "U9's power path widened (R3-PWR-01)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:456",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-04",
+      "title": "In2 regions re-cut for the port control nets (R3-RTE-01, R3-PWR-04)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:465",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-04",
+        "title": "In2 regions re-cut for the port control nets (R3-RTE-01, R3-PWR-04)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:465",
+        "status": "retained_as_amended",
+        "coverage": "AUD-2 explicitly removes only named slow-net partner-via/reference/region rules; fast set/hygiene/S-8 stay. Former slow In2 arms/partners removed."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-05",
+      "title": "Buck input loop (R3-PWR-05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:475",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-05",
+        "title": "Buck input loop (R3-PWR-05)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:475",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-06",
+      "title": "Crystal In2 GND restored (R3-RTE-02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:480",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-06",
+        "title": "Crystal In2 GND restored (R3-RTE-02)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:480",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-07",
+      "title": "Camera supply vias, ACT_GATE partner, J122 relief",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:486",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-07",
+        "title": "Camera supply vias, ACT_GATE partner, J122 relief",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:486",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-08",
+      "title": "GND stitching (R3-RTE-05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:493",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-08",
+        "title": "GND stitching (R3-RTE-05)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:493",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-09",
+      "title": "Port-signal layer changes and hops (R3-RTE-01, -03, -04, -06, -07)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:499",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-09",
+        "title": "Port-signal layer changes and hops (R3-RTE-01, -03, -04, -06, -07)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:499",
+        "status": "retained_as_amended",
+        "coverage": "AUD-2 explicitly removes only named slow-net partner-via/reference/region rules; fast set/hygiene/S-8 stay. Former slow In2 arms/partners removed."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-10",
+      "title": "Gates",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:508",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-10",
+        "title": "Gates",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:508",
+        "status": "retained_as_amended",
+        "coverage": "D-SS replaces J124/ARM-gap with merged RAW_ACT behind Q120/Q121; AUD-6 fire-only width0.5 mm; functional/reset/S-8/required fitting remain."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-11",
+      "title": "Silkscreen and footprint graphics",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:523",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-11",
+        "title": "Silkscreen and footprint graphics",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:523",
+        "status": "retained_as_amended",
+        "coverage": "D-SS/AUD-4 remove ARM/PULL legends; AUD-10 distance-only/counting scope; R9-03 pins correct unique complete current connector tables.144 shown/81 hidden/38 legends current root inventory."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-12",
+      "title": "R162 1 k\u03a9 (PC14's 3 mA)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:534",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-12",
+        "title": "R162 1 k\u03a9 (PC14's 3 mA)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:534",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R3-13",
+      "title": "Records",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:539",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R3-13",
+        "title": "Records",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:539",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R4-01",
+      "title": "In2 under the CH1 sense runs re-cut to one region (R4-RTE-01)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:559",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R4-01",
+        "title": "In2 under the CH1 sense runs re-cut to one region (R4-RTE-01)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:559",
+        "status": "retained_as_amended",
+        "coverage": "AUD-2 explicitly removes only named slow-net partner-via/reference/region rules; fast set/hygiene/S-8 stay. Former slow In2 arms/partners removed."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R4-02",
+      "title": "Pad entries straightened (R4-RTE-05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:574",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R4-02",
+        "title": "Pad entries straightened (R4-RTE-05)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:574",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R4-03",
+      "title": "Gates (R4-RTE-01/-02, R4-GATE-01 \u2026 -06, R4-SAF-01/-02, R4-MEC-05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:584",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R4-03",
+        "title": "Gates (R4-RTE-01/-02, R4-GATE-01 \u2026 -06, R4-SAF-01/-02, R4-MEC-05)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:584",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R4-04",
+      "title": "Records (R4-REQ-01 \u2026 -06, R4-MEC-01 \u2026 -04, R4-PWR-01/-02, R4-BOM-01 \u2026 -03, R4-MCU-01 \u2026 -04, R4-DOC-*)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:607",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R4-04",
+        "title": "Records (R4-REQ-01 \u2026 -06, R4-MEC-01 \u2026 -04, R4-PWR-01/-02, R4-BOM-01 \u2026 -03, R4-MCU-01 \u2026 -04, R4-DOC-*)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:607",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R5-01",
+      "title": "In2 edges re-cut for pads, margins and chains (R5-RTE-01 / -02 / -06)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:626",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R5-01",
+        "title": "In2 edges re-cut for pads, margins and chains (R5-RTE-01 / -02 / -06)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:626",
+        "status": "retained_as_amended",
+        "coverage": "AUD-2 explicitly removes only named slow-net partner-via/reference/region rules; fast set/hygiene/S-8 stay. Former slow In2 arms/partners removed."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R5-02",
+      "title": "Pad entries, stubs and silkscreen edge margin (R5-RTE-03 / -04 / -07, R5-MFG-02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:639",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R5-02",
+        "title": "Pad entries, stubs and silkscreen edge margin (R5-RTE-03 / -04 / -07, R5-MFG-02)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:639",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R5-03",
+      "title": "Gates (R5-RTE-01 / -02 / -05 / -06, R5-SAF-01 / -02, R5-GATE-01 \u2026 -03)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:653",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R5-03",
+        "title": "Gates (R5-RTE-01 / -02 / -05 / -06, R5-SAF-01 / -02, R5-GATE-01 \u2026 -03)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:653",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R5-04",
+      "title": "Records (R5-MFG-01, R5-REQ-01 \u2026 -04, R5-PWR-01 \u2026 -04, R5-MCU-01 \u2026 -05, R5-MEC-01 \u2026 -05, R5-DOC-01 / -02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:670",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R5-04",
+        "title": "Records (R5-MFG-01, R5-REQ-01 \u2026 -04, R5-PWR-01 \u2026 -04, R5-MCU-01 \u2026 -05, R5-MEC-01 \u2026 -05, R5-DOC-01 / -02)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:670",
+        "status": "retained_as_amended",
+        "coverage": "Current documents supersede old ARM/pullpin/C120/trace/watchdog/plate-stack wording; physical qualification not inferred. D-R9-05 nut-inclusive h+t<6.0/<5.3 mm."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R6-01",
+      "title": "CH1 In2 GND arms widened round the sense vias (R6-RTE-01)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:688",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R6-01",
+        "title": "CH1 In2 GND arms widened round the sense vias (R6-RTE-01)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:688",
+        "status": "retained_as_amended",
+        "coverage": "AUD-2 explicitly removes only named slow-net partner-via/reference/region rules; fast set/hygiene/S-8 stay. Former slow In2 arms/partners removed."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R6-02",
+      "title": "Gates and the fit tool (R6-RTE-02, R6-SAF-01 / -02, R6-GATE-01 \u2026 -08, R6-MEC-04 / -05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:698",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R6-02",
+        "title": "Gates and the fit tool (R6-RTE-02, R6-SAF-01 / -02, R6-GATE-01 \u2026 -08, R6-MEC-04 / -05)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:698",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R6-03",
+      "title": "Records (R6-MEC-01 \u2026 -06, R6-REQ-01 \u2026 -08, R6-PWR-01 \u2026 -03, R6-MCU-01 \u2026 -05, R6-SAF-03 / -04, R6-MFG-02, R6-RTE-03)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:713",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R6-03",
+        "title": "Records (R6-MEC-01 \u2026 -06, R6-REQ-01 \u2026 -08, R6-PWR-01 \u2026 -03, R6-MCU-01 \u2026 -05, R6-SAF-03 / -04, R6-MFG-02, R6-RTE-03)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:713",
+        "status": "retained_as_amended",
+        "coverage": "Current documents supersede old ARM/pullpin/C120/trace/watchdog/plate-stack wording; physical qualification not inferred. D-R9-05 nut-inclusive h+t<6.0/<5.3 mm."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R7-01",
+      "title": "Gates (R7-GATE-01 \u2026 -04, R7-SAF-01 / -02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:733",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R7-01",
+        "title": "Gates (R7-GATE-01 \u2026 -04, R7-SAF-01 / -02)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:733",
+        "status": "retained_as_amended",
+        "coverage": "D-SS replaces J124/ARM-gap with merged RAW_ACT behind Q120/Q121; AUD-6 fire-only width0.5 mm; functional/reset/S-8/required fitting remain."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R7-02",
+      "title": "Records (R7-REQ-01 / -02, R7-PWR-02, R7-SAF-03, R7-MCU-01 \u2026 -04, R7-MEC-01 \u2026 -07, R7-MFG-01 \u2026 -04, R7-BOM-03, R7-DOC-01 / -02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:743",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R7-02",
+        "title": "Records (R7-REQ-01 / -02, R7-PWR-02, R7-SAF-03, R7-MCU-01 \u2026 -04, R7-MEC-01 \u2026 -07, R7-MFG-01 \u2026 -04, R7-BOM-03, R7-DOC-01 / -02)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:743",
+        "status": "retained_as_amended",
+        "coverage": "Current documents supersede old ARM/pullpin/C120/trace/watchdog/plate-stack wording; physical qualification not inferred. D-R9-05 nut-inclusive h+t<6.0/<5.3 mm."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R8-01",
+      "title": "Copper clean-ups (R7-RTE-01 / -02 / -03, R8-RTE-03)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:762",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R8-01",
+        "title": "Copper clean-ups (R7-RTE-01 / -02 / -03, R8-RTE-03)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:762",
+        "status": "retained_as_amended",
+        "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R8-02",
+      "title": "Gates (R8-GATE-01 \u2026 -05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:771",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R8-02",
+        "title": "Gates (R8-GATE-01 \u2026 -05)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:771",
+        "status": "retained_as_amended",
+        "coverage": "D-SS/AUD-4 remove ARM/PULL legends; AUD-10 distance-only/counting scope; R9-03 pins correct unique complete current connector tables.144 shown/81 hidden/38 legends current root inventory."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R8-03",
+      "title": "Records (R8-MEC-01, R8-MFG-01 / -02 / -03, R8-REQ-01 \u2026 -04, R8-SAF-01, R8-MCU-01 / -02, R8-MEC-02 \u2026 -05, R8-RTE-01 / -02, R8-DOC-01 / -02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:781",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R8-03",
+        "title": "Records (R8-MEC-01, R8-MFG-01 / -02 / -03, R8-REQ-01 \u2026 -04, R8-SAF-01, R8-MCU-01 / -02, R8-MEC-02 \u2026 -05, R8-RTE-01 / -02, R8-DOC-01 / -02)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:781",
+        "status": "retained_as_amended",
+        "coverage": "Current documents supersede old ARM/pullpin/C120/trace/watchdog/plate-stack wording; physical qualification not inferred. D-R9-05 nut-inclusive h+t<6.0/<5.3 mm."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-OA-01",
+      "title": "Harness, fit and assembly records (OQ-1 / -4 / -6 / -7)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:838",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-OA-01",
+        "title": "Harness, fit and assembly records (OQ-1 / -4 / -6 / -7)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:838",
+        "status": "retained_as_amended",
+        "coverage": "Current documents supersede old ARM/pullpin/C120/trace/watchdog/plate-stack wording; physical qualification not inferred. D-R9-05 nut-inclusive h+t<6.0/<5.3 mm."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-OA-02",
+      "title": "Firmware shedding and thermal estimate (OQ-5 / R9-PWR-01)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:851",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-OA-02",
+        "title": "Firmware shedding and thermal estimate (OQ-5 / R9-PWR-01)",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:851",
+        "status": "retained_as_amended",
+        "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-OA-03",
+      "title": "Historical routing aids",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:863",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-OA-03",
+        "title": "Historical routing aids",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:863",
+        "status": "retained_as_amended",
+        "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-OA-04",
+      "title": "OQ-2 failure confirmation",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:869",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-OA-04",
+        "title": "OQ-2 failure confirmation",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:869",
+        "status": "retained_as_amended",
+        "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-OA-05",
+      "title": "Retained U9 output voltage",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:877",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-OA-05",
+        "title": "Retained U9 output voltage",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:877",
+        "status": "retained_as_amended",
+        "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-OA-06",
+      "title": "Input feed and damper requalification",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:894",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-OA-06",
+        "title": "Input feed and damper requalification",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:894",
+        "status": "retained_as_amended",
+        "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-OA-07",
+      "title": "C88 intercepts the feed; local copper remains in the model",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:914",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-OA-07",
+        "title": "C88 intercepts the feed; local copper remains in the model",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:914",
+        "status": "retained_as_amended",
+        "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-OA-08",
+      "title": "Record corrections before the fresh full round 9",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:938",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-OA-08",
+        "title": "Record corrections before the fresh full round 9",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:938",
+        "status": "retained_as_amended",
+        "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-OA-09",
+      "title": "Complete the interrupted pass before audit implementation",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:954",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-OA-09",
+        "title": "Complete the interrupted pass before audit implementation",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:954",
+        "status": "process_or_environment_record",
+        "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-SS-01",
+      "title": "Implement the two independent MCU controls in the recorded decision",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1044",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-SS-01",
+        "title": "Implement the two independent MCU controls in the recorded decision",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1044",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-SS-02",
+      "title": "One named post-switch net and a shorter fire path",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1063",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-SS-02",
+        "title": "One named post-switch net and a shorter fire path",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1063",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-SS-03",
+      "title": "Keep required assembly references visible",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1073",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-SS-03",
+        "title": "Keep required assembly references visible",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1073",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-01",
+      "title": "Size the surviving IO-LDO capacitor for its electrical load",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1090",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-01",
+        "title": "Size the surviving IO-LDO capacitor for its electrical load",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1090",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-02",
+      "title": "Keep fast returns constrained; simplify slow returns by explicit name",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1099",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-02",
+        "title": "Keep fast returns constrained; simplify slow returns by explicit name",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1099",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-03",
+      "title": "Use a qualified smaller post-switch pair",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1109",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-03",
+        "title": "Use a qualified smaller post-switch pair",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1109",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-04",
+      "title": "Delete the advisory pull-pin as a complete function",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1124",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-04",
+        "title": "Delete the advisory pull-pin as a complete function",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1124",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-05",
+      "title": "Remove redundant probe branches",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1132",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-05",
+        "title": "Remove redundant probe branches",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1132",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-06",
+      "title": "Size fire-only copper for bounded pulse energy",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1139",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-06",
+        "title": "Size fire-only copper for bounded pulse energy",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1139",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-07",
+      "title": "Use ordinary digital pull-ups and fault-rated servo resistors",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1148",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-07",
+        "title": "Use ordinary digital pull-ups and fault-rated servo resistors",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1148",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-08",
+      "title": "Share 3V3 for GPS / radio UART IO; retain local bypasses",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1156",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-08",
+        "title": "Share 3V3 for GPS / radio UART IO; retain local bypasses",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1156",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-09",
+      "title": "Keep USB-only programming and log download",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1166",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-09",
+        "title": "Keep USB-only programming and log download",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1166",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-10",
+      "title": "Report harmless drawing artifacts without blocking the electrical gate",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1172",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-10",
+        "title": "Report harmless drawing artifacts without blocking the electrical gate",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1172",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-GAP-01",
+      "title": "Superpose all pack loads at the fire instant",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1181",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-GAP-01",
+        "title": "Superpose all pack loads at the fire instant",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1181",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-GAP-02",
+      "title": "Make U9's output-protection loop local",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1192",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-GAP-02",
+        "title": "Make U9's output-protection loop local",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1192",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-GAP-03",
+      "title": "Add two explicitly manufactured U401 thermal vias",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1200",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-GAP-03",
+        "title": "Add two explicitly manufactured U401 thermal vias",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1200",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-GAP-04",
+      "title": "Fit C84 after all reflow",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1211",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-GAP-04",
+        "title": "Fit C84 after all reflow",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1211",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-GAP-05",
+      "title": "One physical-current duration contract",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1221",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-GAP-05",
+        "title": "One physical-current duration contract",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1221",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-03a",
+      "title": "Correct the retained gate-slew capacitor's voltage rating",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1248",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-03a",
+        "title": "Correct the retained gate-slew capacitor's voltage rating",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1248",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-03b",
+      "title": "Verify new assembly orientation against the supplier",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1261",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-03b",
+        "title": "Verify new assembly orientation against the supplier",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1261",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-SS-04",
+      "title": "Recalculate passive cold readings before enabling the merged bus",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1269",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-SS-04",
+        "title": "Recalculate passive cold readings before enabling the merged bus",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1269",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-GAP-01a",
+      "title": "Final track-based conservative fire envelope",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1281",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-GAP-01a",
+        "title": "Final track-based conservative fire envelope",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1281",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-GAP-02a",
+      "title": "Reject the nearer diode position on measured clearance",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1296",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-GAP-02a",
+        "title": "Reject the nearer diode position on measured clearance",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1296",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-03c",
+      "title": "Match orientation by distinct fingers, not an arbitrary EP anchor",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1304",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-03c",
+        "title": "Match orientation by distinct fingers, not an arbitrary EP anchor",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1304",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-GAP-02b",
+      "title": "Freeze the actual output and return paths",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1320",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-GAP-02b",
+        "title": "Freeze the actual output and return paths",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1320",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AUD-01a",
+      "title": "Keep one assembly land per supplier code",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1333",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-AUD-01a",
+        "title": "Keep one assembly land per supplier code",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1333",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R9-01",
+      "title": "Complete existing capacitor labels and use the current fault-delay bound",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1361",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R9-01",
+        "title": "Complete existing capacitor labels and use the current fault-delay bound",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1361",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R9-02",
+      "title": "Put the cold screen before enabling the bus",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1377",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R9-02",
+        "title": "Put the cold screen before enabling the bus",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1377",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R9-03",
+      "title": "Reject unmeasured gate exceptions and select R10 procurement explicitly",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1396",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R9-03",
+        "title": "Reject unmeasured gate exceptions and select R10 procurement explicitly",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1396",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R9-04",
+      "title": "Remove demonstrated detours and align three supply entries",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1412",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R9-04",
+        "title": "Remove demonstrated detours and align three supply entries",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1412",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R9-05",
+      "title": "Include both transverse sled tolerances",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1429",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R9-05",
+        "title": "Include both transverse sled tolerances",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1429",
+        "status": "retained_as_amended",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R9-06",
+      "title": "Cover the Minor fix pass in the fresh round 10",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1444",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R9-06",
+        "title": "Cover the Minor fix pass in the fresh round 10",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1444",
+        "status": "process_or_environment_record",
+        "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R10-01",
+      "title": "Close two representation gaps without changing CAD",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1468",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R10-01",
+        "title": "Close two representation gaps without changing CAD",
+        "status": "retained; owner acceptance pending",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R10-02",
+      "title": "Correct PA6 limits and preserve the barometer coating exclusion",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1478",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R10-02",
+        "title": "Correct PA6 limits and preserve the barometer coating exclusion",
+        "status": "retained; owner acceptance pending",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R10-03",
+      "title": "Freeze the reviewed board and finish the complete acceptance inventory",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1493",
+      "review_state": "covered_by_round11_requirements_review",
+      "historical_round10_disposition": {
+        "id": "D-R10-03",
+        "title": "Freeze the reviewed board and finish the complete acceptance inventory",
+        "status": "retained; owner acceptance pending",
+        "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+      },
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-CIR-01",
+      "title": "Select the real e-match before choosing the all-fire margin",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1608",
+      "review_state": "covered_by_round11_requirements_review",
+      "current_scope": "Current circuit/AVA record; use newest owner amendments and named-board scope, not historical round10 coverage.",
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-CIR-02",
+      "title": "Switched camera pad energy",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1622",
+      "review_state": "covered_by_round11_requirements_review",
+      "current_scope": "Current circuit/AVA record; use newest owner amendments and named-board scope, not historical round10 coverage.",
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-CIR-03",
+      "title": "Circuit-pass placement and routing (minimum for a connected DRC-clean board)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1633",
+      "review_state": "covered_by_round11_requirements_review",
+      "current_scope": "Current circuit/AVA record; use newest owner amendments and named-board scope, not historical round10 coverage.",
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-CIR-04",
+      "title": "Gate fixes",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1659",
+      "review_state": "covered_by_round11_requirements_review",
+      "current_scope": "Current circuit/AVA record; use newest owner amendments and named-board scope, not historical round10 coverage.",
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AVA-01",
+      "title": "AVA terminal rows and local cells (2026-10-29; CAD layout complete)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1681",
+      "review_state": "covered_by_round11_requirements_review",
+      "current_scope": "Current circuit/AVA record; use newest owner amendments and named-board scope, not historical round10 coverage.",
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-AVA-02",
+      "title": "Gates and reproducibility support",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1735",
+      "review_state": "covered_by_round11_requirements_review",
+      "current_scope": "Current circuit/AVA record; use newest owner amendments and named-board scope, not historical round10 coverage.",
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R11-01",
+      "title": "Maximum DB125 envelopes and row clearance (2026-10-29)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1745",
+      "review_state": "post_round11_fix_decision; implemented_and_validated; fresh_full_round12_pending",
+      "current_scope": "Current circuit/AVA record; use newest owner amendments and named-board scope, not historical round10 coverage.",
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R11-02",
+      "title": "Close the demonstrated gate gaps",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1784",
+      "review_state": "post_round11_fix_decision; implemented_and_validated; fresh_full_round12_pending",
+      "current_scope": "Current circuit/AVA record; use newest owner amendments and named-board scope, not historical round10 coverage.",
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R11-03",
+      "title": "Bind electrical calculations to native firing copper",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1801",
+      "review_state": "post_round11_fix_decision; implemented_and_validated; fresh_full_round12_pending",
+      "current_scope": "Current circuit/AVA record; use newest owner amendments and named-board scope, not historical round10 coverage.",
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R11-04",
+      "title": "Current assembly records and retained qualification limits",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1825",
+      "review_state": "post_round11_fix_decision; implemented_and_validated; fresh_full_round12_pending",
+      "current_scope": "Current circuit/AVA record; use newest owner amendments and named-board scope, not historical round10 coverage.",
+      "R10_candidate_deviation_acceptance": "pending; explicit owner directions in the source remain authoritative"
+    },
+    {
+      "id": "D-R11-05",
+      "title": "Use the vendor's headless DRC fix",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1869",
+      "review_state": "post_round11_fix_decision; implemented_and_validated; fresh_full_round12_pending"
+    }
+  ],
+  "historical_inventory": {
+    "source": "round10_deviations.json",
+    "historical_rows": 229,
+    "groups": 46,
+    "status": "Must refresh against final rebuilt board; do not copy old GH/header/translator/3bank/copper/cost/pose claims as current"
+  },
+  "owner_items": {
+    "cost_per_board_usd": 79.53,
+    "target_usd": 84.41,
+    "minimum_purchase_and_feeder_usd": 81.87,
+    "supplier_checked_utc": "2026-10-30T05:00:14Z",
+    "R430": "stock17 below3610minimum",
+    "U4": "stock0 below5needed; consign or awaitstock",
+    "U9": "min7 vs5needed",
+    "process_quote_and_deviation_acceptance": "pending",
+    "order": false
+  },
+  "service": {
+    "build": "withdrawn by supervisor; direct real CLI builds authorized",
+    "commit": "unchanged supervisor request protocol",
+    "stale_build_files": "ignored"
+  },
+  "remaining_work": [
+    "Fresh complete independent rounds12+ until two consecutive clean on the same committed PCB",
+    "Current complete owner-deviation inventory, STATUS and AGENTS completion commit",
+    "Owner cost/stock/process/deviation acceptance and physical/firmware qualification"
+  ],
+  "physical_firmware_verified": false,
+  "source_fix_verification": "Fresh independent in-memory alternative passes named checks; actual generators match25affectedsegments/5replacementvias. Evidence round11_fix_geometry.json; full supervised rebuild still required.",
+  "focused_test_evidence": {
+    "canonical_fit_suite": {
+      "tests": 28,
+      "result": "pass"
+    },
+    "canonical_native_budget_suite": {
+      "tests": 5,
+      "result": "pass"
+    },
+    "canonical_shell_gate_suite_stub_cli_only": {
+      "tests": 5,
+      "result": "pass"
+    },
+    "canonical_R10_selected_API_suites": {
+      "tests": 105,
+      "result": "pass with1optionalNumPyPlate skip"
+    },
+    "NumPy_hotplug_controls_and_optional_plate": {
+      "tests": 3,
+      "result": "pass; resolves optionalPlate skip"
+    },
+    "five_edited_route_family_dry_angles": "pass, not clearance/DRC proof"
+  },
+  "prototype_additional_manufacturing_inventory": "Three permissible same-net ring webs approx0.050/0.050/0.066mm at Q124source returns/C92.2, holegapsapprox0.150/0.150/0.166mm. Recount after official rebuild; no hole/paste waiver.",
+  "final_fix_validation": "round11_fix_validation.json",
+  "withdrawn_build_service_history": {
+    "request": "check",
+    "requested_local": "2026-10-29T17:07:38-07:00",
+    "state": "unconsumed as of2026-10-29T18:25-07:00; result/log dated16:53 remain historical; no commit request pending",
+    "no_commit_request": true
+  }
+}

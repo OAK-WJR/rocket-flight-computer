@@ -1,14 +1,70 @@
 # R10 reverse hot-plug re-model (OQ-2, 2026-10-28)
 
+**Round-11 fix-pass target, 2026-10-29:** the completed inputs/results bind
+PCB `0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d`,
+electrical signature `5c069037842d5af804e1642e3ebd63754ce7dd552e4322053960dbddd49b61fc`.
+The full 2304-case sweep has completed; the numerical summary is recorded below.
+Two complete builds exited 0, each including full `tools/check.sh`: DRC,
+unconnected, parity and ERC are zero; all 31 R10 rules and fabrication checks pass.
+All 42 recorded generated file hashes and board metrics match exactly between
+builds. The two NumPy numerical cases pass in each full gate, and the separate
+Plate regression passes. Evidence: [round-11 fix validation](../r10_review/round11_fix_validation.json).
+These are CAD/software and simulation results, not board acceptance.
+No pin waveform, actual harness, capacitor temperature behavior or damper durability is measured.
+
+The result binds input digest `7528385758d3e4db4a0225cefd9a096d2322cd2c42bb6b6a6889402a0693f9db`
+and model digest `a7079e1a3ce189031ab28f8538a8c02b4bd8adcdf4cfc45877a0405935656883`.
+All 2304 cases pass with zero component/topology issues; half-step convergence,
+the cold retained-OUT limit and all 60 local-path sensitivities pass. Required and
+half-step extrema are IN minimum **−14.807373236 V**, maximum **+2 V**, falling
+**8.991477109 V/µs** and rising **5.091052577 V/µs**. R166 reaches **579.049147 W**
+and **2.979359077 mJ** in different corners. The retained-OUT common-node estimate
+uses **1616.123714 µF** and gives **5.877715489 V** after two seconds. These are
+simulation / Inference, with the unchanged limitations below.
+
+The extracted final-target feed gives:
+
+| Path | Track/via centreline length (mm) | R at 20 °C (mΩ) | Near / In1 L estimate (nH) |
+|---|---:|---:|---:|
+| J1.1 → C88.1 | 30.270812 | 15.178707 | 6.440197 / 7.526248 |
+| C88.1 → U9.5 | 3.920000 | 4.436898 | 1.176695 / 2.424048 |
+| J1.1 → C80.1 | 9.997792 | 4.913201 | 1.849128 / 1.849128 |
+| J1.1 → D8.1 | 6.322792 | 3.107201 | 1.169424 / 1.169424 |
+| C89.2 → R166.1 | 5.387742 | 6.619226 | 1.757378 / 1.757378 |
+
+The feed via is at (17.5,87.3), 1.0 mm copper / 0.5 mm drill. Pad copper and
+ground remain ideal in this model; the route and inductance figures are not
+measured parasitic bounds. A new board hash requires re-extraction and a matching
+complete sweep even if these feed paths remain unchanged.
+
+**Historical round-11 intermediate:** PCB `419a8f49f39ea748a1622ecb5858ba060d1eb2fac7df7e3cca37a72dc6d8fd15`,
+electrical signature `68761313464e6fb49f4d23622d2e523cf5c3c23a2318e96e24591ecd6a4b319a`,
+input digest `141875a839e3ddcc7755bb51c742c3678e450a7a989b58c4a26ebed6ba9d942e`,
+passed its own 2304-case sweep with the same feed lengths and extrema above.
+The later layout corrections changed the board/electrical/input hashes; the final-target
+sweep was rerun and bound separately. The intermediate pass does not replace that run.
+
+**Historical AVA review baseline, 2026-10-29:** the inputs/results at that stage bound
+PCB`0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8`,
+electrical signature`84814409193955d81b1c24aafa8bce861f2c04aec092ea58c0f6491ccb5fb15c`.
+That full-build sweep passed2304/2304 cases (simulation/Inference):
+IN minimum−14.798507843V, maximum falling8.959750934V/µs, rising5.068601567V/µs.
+R166 maxima are577.218700W and2.977159763mJ in different corners; retained OUT
+maximum5.877715489V. These replace older extrema only for this named board.
+Round-11 fixes move J1/C80 and redraw copper; these baseline extrema do not qualify
+that changed feed. Pin waveforms, ideal-ground assumptions, actual harness and
+damper durability remain unqualified.
+
 This is a **simulation / Inference**, not a bench result. The model uses the saved board's copper and maker capacitor
-curves. No R4 qualification result is transferred to R10. `hotplug_inputs.json` and `hotplug_results.json` are the
-current-board evidence; `hotplug_baseline_inputs.json` records the original split feed on board `407d1d84…`.
-The completed schema-3 model passes all 2304 required corners on the round-9 fix board `b337fe63…`
+curves. No R4 qualification result is transferred to R10. `hotplug_inputs.json` and `hotplug_results.json` qualify
+only the exact board/input/model hashes they bind; a later board needs fresh binding and checks.
+`hotplug_baseline_inputs.json` records the original split feed on board `407d1d84…`.
+The historical schema-3 model passed all 2304 required corners on the round-9 fix board `b337fe63…`
 (electrical signature `c424a714…`); it retains the C88 path and checks the feed-first topology. The round-9
 label expansion changes the input identity bytes, not the modeled capacitances or input copper. Physical
 qualification remains open.
 
-**2026-10-29 note (circuit-pass board `6e73b6ebe7e25d7a8c810493887fbaa7cce34f6fe1d379828dc67017e14235aa`, electrical
+**Historical 2026-10-29 note (circuit-pass board `6e73b6ebe7e25d7a8c810493887fbaa7cce34f6fe1d379828dc67017e14235aa`, electrical
 signature `6446a957…`):** the model, re-extracted from this board's actual feed by `m3_design/r10_build.sh`, passes
 **2304 / 2304** cases. R166 moved to (35.25, 64), north-south, and R82 shifted slightly for DB125 clearance, so the
 feed copper differs from `b337fe63…`'s; the model was re-run on the moved feed and still passes. Simulation /
@@ -166,7 +222,7 @@ edge; the separate Python constant-C MNA calculation reached about 13.60 V/µs n
 Neither parasitic is a maker limit, so this does not prove a physical failure. It does show that the old local-shunt
 approximation cannot qualify that mode. D-OA-07 supersedes it with the feed-first topology and uncontracted model.
 
-### Feed-first implementation
+### Historical owner-answer feed-first implementation
 
 The new 1.0 mm feed via is at (34.7, 84.0), with a 0.5 mm drill; its F.Cu approach clears the existing J122 harness
 legend. The B.Cu feed enters C88.1 through a 0.7 mm × 0.8 mm neck. Its exit to U9 is 0.7 mm over 1.15 + 0.97 mm,
@@ -187,11 +243,11 @@ at 25 ps versus 4.792413154 from the compiled solver; at 12.5 ps the two give 4.
 This checks the finite-edge integration independently of the production solver. All local edges remain;
 seeding a feed that bypasses C88 fails the topology check.
 
-### Current round-9 fix sweep (CAD simulation, 2026-10-28)
+### Historical round-9 fix sweep (CAD simulation, 2026-10-28)
 
 The generated board SHA-256 is `b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9`, with electrical
-signature `c424a714ef94e2e03b9148aeab28beefcc3460cd8999d3c6702721118ce90d66`. `hotplug_results.json` binds its
-2304 cases and model-source hash to those inputs; `validate()` reports no issue. Required and half-step extrema are:
+signature `c424a714ef94e2e03b9148aeab28beefcc3460cd8999d3c6702721118ce90d66`. The saved results at that stage bound
+2304 cases and the model-source hash to those inputs; `validate()` reported no issue. Required and half-step extrema were:
 
 | Metric | Result | Limit |
 |---|---:|---:|

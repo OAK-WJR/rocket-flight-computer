@@ -1,0 +1,93 @@
+{
+  "label": "",
+  "profile": "r10",
+  "mass_spec": {
+    "profile": "r10",
+    "basis": "Inference: conservative engineering mass allowances, except J430 socket maker mass 0.434 g (Molex 472192001 product record). The J430 mated card allowance 0.5 g is an inference. DB125 terminal body allowances scale the existing 3 g two-contact allowance by pole count: 3 g two-contact, 6 g four-contact, 7.5 g five-contact. Terminal keys ending in 'mated' are separate local wire/ferrule allowances, not mating plugs: 1 g per two contacts, 2 g per four, 2.5 g per five. Validate by weighing the actual populated board and supported harness. Connector/capacitor dimensions: parts_qualification.md; DB125 drawing T0-1; MA drawing p2. No inherited R9 RF, SMA, GH or servo-plug masses.",
+    "masses_g": {
+      "J1": 3.0,
+      "J121": 3.0,
+      "J122": 7.5,
+      "C84": 3.0,
+      "LS120": 0.3,
+      "J3": 1.0,
+      "J9": 6.0,
+      "J400": 3.0,
+      "J410": 6.0,
+      "J420": 6.0,
+      "J430": 0.434,
+      "J1 mated": 1.0,
+      "J121 mated": 1.0,
+      "J122 mated": 2.5,
+      "J9 mated": 2.0,
+      "J400 mated": 1.0,
+      "J410 mated": 2.0,
+      "J420 mated": 2.0,
+      "J430 mated": 0.5
+    },
+    "placement": "tools/plate_model.py --profile r10 places every key: on its own fit-report row's model box, or, for 'X mated' with no row of its own (DB125 terminals' local wire/ferrule allowance, no mated plug envelope in fit_check), on its parent X's model box; any other key is refused (R3-MEC-01)",
+    "removed_bench_only": {
+      "J2": "TC2030 Tag-Connect: a bare land (fit_check board feature), no body on the board",
+      "J2 mated": "the TC2030 cable is a bench programming tool, never fitted in flight",
+      "J3 mated": "the USB-C plug is a bench / ground tool, never fitted in flight (J3's body mass stays)"
+    },
+    "physical_mass_verified": false,
+    "harness_rule": "Strain relief carries cable mass beyond the modelled plug/local-wire envelope; unrestrained long leads invalidate these allowances."
+  },
+  "board_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "supports": [
+    [
+      3.7,
+      86.0
+    ],
+    [
+      4.0,
+      4.0
+    ],
+    [
+      4.0,
+      44.3
+    ],
+    [
+      42.0,
+      4.0
+    ],
+    [
+      42.0,
+      86.0
+    ]
+  ],
+  "f1": {
+    "r10_mated": {
+      "pinned_D5": 181.3,
+      "pinned_D10": 256.4,
+      "clamped_D5": 288.1,
+      "clamped_D10": 407.5,
+      "board_mass_g": 70.3
+    }
+  },
+  "static": {
+    "r10_mated": {
+      "max_deflection_mm": 1.24,
+      "at": [
+        46.0,
+        45.0
+      ],
+      "strain_ue": {
+        "U4": 471,
+        "U1": 989,
+        "J121": 1029,
+        "C84": 1339,
+        "U5": 731,
+        "J1": 1082,
+        "J122": 1485
+      }
+    }
+  },
+  "evidence_type": "Calculation / Inference; optional diagnostic, not physical qualification or an active release floor",
+  "inputs_sha256": {
+    "tools/plate_model.py": "ec9c3e49f498d21c845cdc89ed7efae93ea5e0b45a2ce708d577330eb149c201",
+    "m3_design/assembly_review/sources/r10_design/masses.json": "b6f15a1746315bd6de45c3aa522c30b423b66626ca345cd5ba1dcd86305c4366"
+  },
+  "fit_report_source": "First successful round11 build full-gate fit.json; board_sha256 checked"
+}

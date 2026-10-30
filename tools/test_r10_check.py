@@ -47,6 +47,19 @@ class Assembly(unittest.TestCase):
         self.assertEqual(gate.assembly_population('Designator,Qty\n"R127,R128",2\nR134,1\n', {'R127', 'R128', 'R134'}), [])
         self.assertTrue(gate.assembly_population('Designator,Qty\nR127,1\n', {'R134'}))
 
+    def test_reviewed_fitted_population_includes_core_and_support(self):
+        import r10_sch_check as sch
+        parts, _ = sch.read_netlist(gate.ROOT / 'm3_design/assembly_review/schematic.net.xml')
+        expected = {ref for ref, part in parts.items()
+                    if not ({p.get('name') for p in part.findall('property')} &
+                            {'dnp', 'exclude_from_bom', 'exclude_from_board'})}
+        self.assertEqual(gate.REQUIRED_FITTED, expected)
+        full = 'Designator\n' + '\n'.join(sorted(expected)) + '\n'
+        self.assertEqual(gate.assembly_population(full), [])
+        for ref in ('U1', 'U2', 'L1', 'U3', 'U4', 'U5', 'Y1', 'C13', 'C25', 'C6', 'R5'):
+            with self.subTest(ref=ref):
+                self.assertTrue(any(ref + ':' in i for i in gate.assembly_population(full.replace(ref + '\n', ''))))
+
     def circuit_pins(self):
         import json
         contract = json.loads((gate.ROOT / 'm3_design/assembly_review/sources/r10_design/circuit.json').read_text())
@@ -101,6 +114,54 @@ class Assembly(unittest.TestCase):
         for ref in ('J430', 'R460', 'R464', 'C460', 'C461'):
             self.assertIn(ref, gate.REQUIRED_FITTED)
             self.assertTrue(gate.population('(kicad_pcb)', {ref}))
+
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class TerminalLegends(unittest.TestCase):
+    def setUp(self):
+        self.board = pcbnew.BOARD()
+        self.connector = pcbnew.FOOTPRINT(self.board); self.connector.SetReference('J1')
+        self.board.Add(self.connector)
+        for number, x in (('1', 10), ('2', 16)):
+            pad = pcbnew.PAD(self.connector); pad.SetNumber(number)
+            pad.SetPosition(self.P(x, 10)); self.connector.Add(pad)
+
+    def P(self, x, y):
+        return pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y))
+
+    def label(self, value, x, textbox=False, footprint=False):
+        owner = self.connector if footprint else self.board
+        item = (pcbnew.PCB_TEXTBOX if textbox else pcbnew.PCB_TEXT)(owner)
+        item.SetText(value); item.SetLayer(pcbnew.F_SilkS); item.SetTextSize(self.P(1, 1))
+        item.SetTextThickness(pcbnew.FromMM(.15))
+        if textbox:
+            item.SetStart(self.P(x - 2.5, 6)); item.SetEnd(self.P(x + 2.5, 8)); item.SetBorderEnabled(False)
+        else:
+            item.SetPosition(self.P(x, 7))
+        owner.Add(item)
+        return item
+
+    def test_correct_individual_labels_support_every_representation(self):
+        for textbox, footprint in ((False, False), (True, False), (False, True), (True, True)):
+            with self.subTest(textbox=textbox, footprint=footprint):
+                items = [self.label('1:BAT+', 10, textbox, footprint), self.label('2:GND', 16, textbox, footprint)]
+                self.assertEqual(gate.terminal_legends(self.board)[0], [])
+                for item in items:
+                    (self.connector if footprint else self.board).Remove(item)
+
+    def test_wrong_duplicate_missing_or_ambiguous_pin_labels_fail(self):
+        first = self.label('1:BAT+', 10); self.label('2:GND', 16)
+        self.assertEqual(gate.terminal_legends(self.board)[0], [])
+        for word in ('1:BAT+', '1:BAT-', '1:E1+', 'J1 1:BAT-', 'J1 1:BAT+'):
+            for footprint in (False, True):
+                with self.subTest(word=word, footprint=footprint):
+                    item = self.label(word, 10, textbox=True, footprint=footprint)
+                    self.assertTrue(any('J1.1:' in i for i in gate.terminal_legends(self.board)[0]))
+                    (self.connector if footprint else self.board).Remove(item)
+        first.SetPosition(self.P(13, 7))
+        self.assertTrue(gate.terminal_legends(self.board)[0])
+        self.board.Remove(first)
+        self.assertTrue(any('J1.1: 0 legends' in i for i in gate.terminal_legends(self.board)[0]))
 
 
 class RuleSelection(unittest.TestCase):
@@ -2073,6 +2134,55 @@ class RealBoardSeeds(unittest.TestCase):
         with self.subTest(ref='R180 removed'):
             self.seeded('S-4', lambda b: b.Delete(b.FindFootprintByReference('R180')), 'R180')
 
+    def test_functional_core_native_dnp_and_export_omission_seeds(self):
+        import csv
+        import io
+        self.assertEqual(gate.board_population(self.load()), [])
+        for ref in ('U1', 'U2', 'L1', 'U3', 'U4', 'U5', 'Y1', 'C13', 'C25', 'C6', 'R5'):
+            with self.subTest(ref=ref):
+                board = self.load(); part = board.FindFootprintByReference(ref)
+                part.SetAttributes(part.GetAttributes() | pcbnew.FP_DNP)
+                self.assertTrue(any(ref + ':' in i for i in gate.board_population(board)))
+        for name in ('m3_bom_jlc.csv', 'm3_cpl_jlc.csv'):
+            with (r10_board().parent / 'fab' / name).open() as source:
+                rows = list(csv.DictReader(source))
+            fields = list(rows[0])
+            for ref in ('U1', 'U3', 'U4'):
+                with self.subTest(file=name, ref=ref):
+                    out = io.StringIO(); writer = csv.DictWriter(out, fieldnames=fields); writer.writeheader()
+                    for row in rows:
+                        row = dict(row); members = [r.strip() for r in row['Designator'].split(',') if r.strip() != ref]
+                        if members:
+                            row['Designator'] = ','.join(members); writer.writerow(row)
+                    self.assertTrue(any(ref + ':' in i for i in gate.assembly_population(out.getvalue())))
+
+    def test_individual_terminal_textbox_conflicts_and_duplicates(self):
+        self.assertEqual(self.run_rule('K-legends', self.load()), set())
+        for word, expected in (('4:TXO', 'J410.4'), ('J1 1:BAT-', 'J1.1')):
+            with self.subTest(word=word):
+                board = self.load(); item = pcbnew.PCB_TEXTBOX(board)
+                item.SetText(word); item.SetLayer(pcbnew.F_SilkS)
+                item.SetStart(self.P(29, 10)); item.SetEnd(self.P(34, 12))
+                item.SetTextSize(self.P(1, 1)); item.SetTextThickness(pcbnew.FromMM(.15))
+                item.SetBorderEnabled(False); board.Add(item)
+                self.assertEqual(gate.silk_mask_overlaps(board), [])
+                self.assertTrue(any(expected in i for i in self.run_rule('K-legends', board)))
+
+    def test_invalid_models_fail_fit_and_p11(self):
+        import fit_check as fit
+        self.assertTrue(fit.check_board(self.load(), real_project(), profile='r10')['ok'])
+        board = self.load(); part = board.FindFootprintByReference('J410'); part.Move(self.P(1, 0))
+        self.assertTrue(any('wire room' in i for i in self.run_rule('P-11', board)))
+        for axis in ('x', 'y', 'z'):
+            setattr(part.Models()[0].m_Scale, axis, 0.)
+        self.assertTrue(any('J410: invalid model transform' in i for i in self.run_rule('P-11', board)))
+        self.assertFalse(fit.check_board(board, real_project(), profile='r10')['ok'])
+        board = self.load(); board.FindFootprintByReference('J430').Models()[0].m_Scale.x = float('nan')
+        report = fit.check_board(board, real_project(), profile='r10')
+        self.assertFalse(report['ok'])
+        self.assertTrue(any('J430: invalid model transform' in i for i in report['issues']))
+        self.assertNotIn('J430', {row[1] for row in report['rows']})
+
     def test_gps_net_next_to_pyro_bus(self):
         def seed(b):
             p = self.pad(b, 'R134', '2')
@@ -2251,8 +2361,8 @@ class RealBoardSeeds(unittest.TestCase):
 
     def test_conflicting_silkscreen_textboxes(self):
         # 'J420 3:...' is a combined table beside individual pin legends; the bare '2:RXI' (no terminal has that word)
-        # lies nearest J410.3 after D-AVA-01; its 3:TXO legend must reject the conflicting number and role.
-        for value, word in (('J420 3:RXI', 'J420.3'), ('J420 3:TXO', 'J420.3'), ('2:RXI', 'J410.3'),
+        # is nearest J430.11, a nonterminal connector contact. All individual labels use the same nearest-pin rule.
+        for value, word in (('J420 3:RXI', 'J420.3'), ('J420 3:TXO', 'J420.3'), ('2:RXI', 'J430.11'),
                             ('SERVO + FROM BOARD', 'J122:'), (gate.SERVO_HARNESS_NOTE, 'J122:')):
             with self.subTest(text=value):
                 def seed(b):

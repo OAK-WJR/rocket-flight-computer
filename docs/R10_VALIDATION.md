@@ -1,17 +1,27 @@
 # R10 validation and adversarial review
 
-**AVA layout candidate (2026-10-29):** PCB `0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8`, 46 × 90 mm,
-209 footprints / 981 segments / 294 vias / 1818.770 mm of track. All seven DB125s form outward-facing long-edge
-rows; J420 is in the east port row, repeated port/sense cells are local, and battery/buzzer wiring is shorter.
-Circuit, pin map, supports, IMU pose and AGENTS §2 are unchanged. **Software / CAD:** DRC 0 / unconnected 0 /
-parity 0 / ERC 0, all 31 R10 rules, routing, legends and fit pass. **Simulation / Inference:** actual-feed hot-plug
-2304/2304 pass. **Fabrication:** package regenerated and bound; orientation, paste and manifest pass.
-Two complete `m3_design/r10_build.sh` runs, including full `tools/check.sh` with
-`NUMPY_PY=.supervisor/venv/bin/python`, exited 0. The PCB and all 23 recorded generated
-CAD, binding and model files are byte-identical between builds.
-**Not verified:** independent review rounds, firmware, SD latency/power loss, e-match lot firing, electrical/
-thermal behavior, harness, DB125 screwdriver access and physical bore/stack fit. R9 remains accepted; R10 is
-not accepted or ordered. Fresh reviews begin at round 11 with the separate review agent.
+**Round 11 fix pass (2026-10-29):** PCB `0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d`, 46 × 90 mm,
+2,263,730 bytes; 209 footprints / 973 segments / 295 vias / 1809.709 mm of track.
+All seven outward-facing DB125s retain 5.003 mm calculated wire room against the accepted 4.95 mm floor.
+The circuit, pin map, supports, IMU pose and AGENTS §2 are unchanged.
+**Software / CAD:** two complete `m3_design/r10_build.sh` runs exit 0; all 42 recorded generated CAD,
+library/model, electrical-evidence and binding files are byte-identical. Full `tools/check.sh` exits 0:
+DRC / unconnected / parity / ERC 0; all 31 R10 rules, routing, legends and fit pass.
+Gate self-tests pass; the three NumPy-dependent cases also pass with the supplied NumPy interpreter.
+**Simulation / Inference:** actual-feed hot-plug 2304/2304 pass; optional plate diagnostic 181.3 Hz
+pinned at D=5 N m with 70.3 g estimated board/local-wire mass. Neither is physical qualification.
+**Fabrication:** package regenerated and bound; orientation, paste and five-output manifest pass.
+**Procurement:** fresh public supplier evidence (2026-10-30 05:00 UTC) gives $79.53 per board
+against $84.41; about $81.87 including minimum purchases and feeder share, before fixed/process/PCB/shipping.
+R430 has 17 pieces against a 3,610-piece minimum; U4 is out of stock. Cost passes, stock fails;
+this is preliminary evidence, with quote, process and owner acceptance pending.
+**Reviews:** round 11 reviewed the earlier AVA hand-off PCB `0c50b9fd…`: 0 Critical / 1 confirmed Major /
+16 consolidated Minor groups. The maximum-terminal-envelope Major is fixed and freshly verified on this PCB.
+No clean round is yet credited; full rounds 12+ follow the fix commit.
+**Not verified:** firmware, SD latency/power loss, e-match lot firing, electrical/thermal behavior,
+harness, screwdriver access and physical bore/stack fit. R9 remains accepted; R10 is not accepted or ordered.
+Evidence: `m3_design/assembly_review/sources/r10_review/round11_fix_validation.json`;
+see `docs/R10_VALIDATION.md`, round 11.
 
 Evidence: [AVA layout hand-off](../m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md) and its metrics, validation and review-item JSON files.
 
@@ -901,6 +911,7 @@ qualification remain unverified. Round 10 freshly reviews the committed fix pass
 | 8 | `b242ab8e…` | 0 / 3 / 22 | D-R8-01 … D-R8-03 → `407d1d84…` |
 | 9 (full; prelude excluded) | `877d0199…`, `8bccb07` | **0 / 0 / 21 (17 new, 4 carried; clean)** | D-R9-01 … D-R9-06 → `b337fe63…`; full round 10 covers the Minor fix pass |
 | 10 | `b337fe63…`, `619db7e` | **0 / 0 / 8 (4 new, 4 carried; clean)** | D-R10-01…03, gates/records only; PCB unchanged |
+| 11 | `0c50b9fd…`, `21bc3b2` | **0 / 1 / 16; not clean** | D-R11-01…05 → `0ad0135c…`; two full passing builds / 42 identical generated files; fresh full rounds follow |
 
 ## Round 10: full independent review of `b337fe63…` (commit `619db7e`)
 
@@ -963,7 +974,119 @@ independent reviews, selected seed/geometry evidence and complete reconciliation
 its stale-status/current-USB-range/readability/test-count corrections are included. AGENTS §2 is byte-unchanged.
 The completed deviation list below remains pending owner acceptance; no ordering/push/other-worktree edit.
 
-## R10 deviations for owner acceptance
+## Round11: full AVA-board review (2026-10-29)
+
+Target: committed`21bc3b2`, PCB SHA-256
+`0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8`,46×90mm,
+2,245,484bytes,209footprints/981straightsegments/294vias/1818.769511mm track.
+Ten independent lenses ran in batches of at most three, without reading each
+other's current-round reports. Native CAD remained byte-unchanged throughout
+review. The terminal Major received a separate fresh verifier. The source-fix/decision index is
+`sources/r10_review/round11_reconciliation.json` (all107 decisions; not final acceptance). Consolidated
+result: **0 Critical,1 confirmed Major,16 Minor groups. Consecutive-clean count0.**
+
+| Lens | Reported Critical/Major/Minor | Evidence under`sources/r10_review/` |
+|---|---|---|
+| Requirements/all owner decisions | 0/0/3 | `round11_requirements.md` |
+| Safety/AGENTS§2 | 0/0/1 | `round11_safety.md` |
+| Power/electrical | 0/0/1 | `round11_power.md`,`.json` |
+| Parts/BOM/lands/stock/orientation | 0/1/1 | `round11_parts.md`,`.json` |
+| MCU/pins/back-feed/ESD | 0/0/2 | `round11_mcu.md`,`.json` |
+| Placement/mechanics | 0/0/3 | `round11_mechanics.md`,`.json` |
+| Routing/AVA/planes/returns | 0/0/4 | `round11_routing.md`,`.json` |
+| Manufacturing/silk/fab | 0/0/2 | `round11_manufacturing.md`,`.json` |
+| Gate adversary | 0/0/3 | `round11_gate.md`,`.json` |
+| Docs/firmware binding | 0/0/2 | `round11_docs_binding.md`,`.json` |
+| Fresh Major verifier (not an eleventh lens) | 0/1/0 | `round11_terminal_verification.md` |
+
+### Confirmed Major
+
+**R11-BOM-01, also R11-MEC-01:** DORABO T0-1 p1 permits a wire face4.00mm
+from the pin row: maximum depth7.70 minus minimum rear datum3.70. The generated
+model used3.65mm. Correcting the full asymmetric envelope gives4.603012mm wire
+room at all seven terminals versus the accepted4.95mm floor. The fresh verifier
+confirmed an acceptance-bound Major, not an observed physical collision. Keep
+the floor: correct the models/courtyards, move each row inward0.40mm, clear local
+neighbours and redraw affected routes through the generators (D-R11-01).
+The generator fix, DRC/fit/hot-plug/fab/binding and 42-file reproducibility
+now pass; see the fix-validation receipt below. Fresh full review rounds remain
+required. AGENTS §2 is unchanged.
+
+### Consolidated Minor ledger
+
+| ID | Source findings | Concrete disposition |
+|---|---|---|
+| R11-m01 | REQ-01,PWR-01,DOC-01; SAF-01 fire portion | Bind fire-copper calculation to native paths; refresh final hot-plug/output-path/U9 ladder records (D-R11-03). Old IGN4.85mm is actually10.396068mm on this target. Conditional firing margin remains above1.125A. |
+| R11-m02 | REQ-02,DOC-02; BOM-02 | Correct active parked-radio/future-AVA/GH/header wording and J9 pin3 boardRX/pin4 boardTX. |
+| R11-m03 | REQ-03 | Parent VEHICLE still describes older connectors. Record the in-worktree handoff; leave the separately owned worktree untouched. |
+| R11-m04 | SAF-01 assembly portion,MEC-02,DOC-02 retention portion | Refresh coating/probes/staking/hardware worksheet; TP121 is bottom(10.5,71.5), retained ARMbank reachesx28.86, all seven DB125s require retention. |
+| R11-m05 | MCU-01 | Scope translator ESD rationale to camera; GPS/radio are direct1k/ESD and installed survival remains unqualified. |
+| R11-m06 | MCU-02 | Correct seven Rev11 AF citations to Table10 and PC1 analog reset wording; regenerate binding provenance without changing pins. |
+| R11-m07 | MEC-03 | Require board removal from continuous sled or a qualified access window before opening bottom SD hinge. |
+| R11-m08 | RTE-01 | Redraw four proved bumps and two checked monotone shortcuts through generator tables; full DRC still required. |
+| R11-m09 | RTE-02 | Retain measured C98 remote-return deviation pending a fully checked local path:13.497mm pad-to-stitch/31.812mm diagnostic device loop. No transient failure demonstrated. |
+| R11-m10 | RTE-03 (carried) | Record actual NRST/BOOT0/I2C noncritical companion gaps; maximum3.679674mm at NRST(14.2,37.3). No scope expansion. |
+| R11-m11 | RTE-04 (carried) | Record actual IMU0.05mm entry offset, four between-pad routes and current pad-edge entries; no open circuit demonstrated. |
+| R11-m12 | MFG-01 | Set explicit thermals on all five terminal GND contacts, including four currently solid on In1; refill/DRC/hole-fill qualification. |
+| R11-m13 | MFG-02 | Move J122 Fab reference clear of centre drill and regenerate drawing/package. |
+| R11-m14 | GATE-01 | Validate individual text/textbox/footprint terminal words against their exact nearest pin, including+/− and duplicates; preserve AUD-10 scope. |
+| R11-m15 | GATE-02 | Extend existing final required-fitted invariant to all199 reviewed functional parts/support; add native DNP/list omission regressions. |
+| R11-m16 | GATE-03 | Reject nonfinite/nonpositive/degenerate model transforms/envelopes in fit and P-11; seed invalid and valid conversion cases. |
+
+Reported duplicates are counted once in this ledger; the mechanics lens's
+terminal Minor is consolidated into the freshly confirmed Major. All remaining
+architecture/process/qualification deviations from older rounds need a new
+current-board inventory after fixes, rather than automatic credit from round10.
+
+### Round 11 fix validation
+
+The supervisor withdrew its build service on 2026-10-29. Direct native builds
+use the verified official KiCad 10.0.7 CLI to avoid the upstream 10.0.6 headless
+DRC failure (D-R11-05); generators use the project's KiCad 10.0.6 Python API.
+All native-board DRCs use the unmodified vendor CLI; shell regression fixtures
+stub external commands only to test failure handling. No real-board gate is skipped. Stale supervisor build
+files are ignored. Commits still use the supervisor request service.
+
+Two complete `m3_design/r10_build.sh` runs exit 0 on PCB
+`0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d`: 46 × 90 mm, 2,263,730 bytes,
+209 footprints / 973 segments / 295 vias (167 GND) / 1809.708732 mm track.
+All **42** recorded generated CAD, library/model, native-budget, hot-plug and
+binding files match byte for byte. Each build includes the unskipped full gate:
+DRC / unconnected / parity / ERC **0 / 0 / 0 / 0**, metadata/models, silk, fit,
+all **31** R10 rules, route hygiene and current five-output fab manifest pass.
+Gate suites pass; the two NumPy numerical cases and optional plate regression
+were also run successfully, resolving all three native-interpreter skips.
+
+The earlier complete-board attempt (`419a8f49…`) had sixteen M-6 assembly
+keep-outs and two camera K-region failures. Real regenerated courtyards also
+exposed collisions missed by stale-cache position-only prototypes. The final
+port/servo/core changes preserve the floors and allowlists; final native DRC,
+M-6, K-region and routing all pass. The full implementation and reproducibility
+receipt is `sources/r10_review/round11_fix_validation.json`;
+`round11_m6_fix.*` and `round11_servo_fix.*` retain scoped prototype evidence.
+
+The fresh final-target verifier closes R11-BOM-01 / R11-MEC-01:
+all seven wire rooms **5.003011866 mm**, minimum repaired-part THT gap
+**1.536 mm**, no terminal/body collision, 483 terminal/top-courtyard pairs
+clear. See `round11_terminal_closure.*`. Three nonblocking bottom courtyard
+graphics residuals and the longer C91 bypass remain measured review inventory.
+No AGENTS §2 change occurred. The original round-11 result stays **0 Critical /
+1 confirmed Major / 16 Minor groups** and earns **zero clean rounds**; fixes
+are not a second full independent round.
+
+Fresh actual-feed hot-plug gives **2304/2304 required cases** and 60 local
+sensitivity cases passing (Simulation / Inference). The native-bound fire
+budget, output loops and two-via U9 ladder are refreshed in `parts_qualification.md`.
+The optional current plate diagnostic is **181.3 Hz** pinned D5, **70.3 g**
+estimated mass, with **1.24 mm** modeled 100 g transverse deflection;
+`round11_plate.json` states the assumptions. The old 280.9 Hz/45.5 g figures
+belong to the earlier connector population. Fresh procurement evidence (`round11_procurement.json`, supplier 2026-10-30 05:00 UTC)
+meets cost at $79.53/$84.41, or about $81.87 with minimum purchases and feeder share
+before fixed/process/PCB/shipping. Stock fails: R430 17<3610 minimum, U4 0<5;
+U9 minimum 7 versus 5 required. No quote or order is accepted. Physical and firmware
+qualification, procurement/process acceptance and the final current deviation inventory remain open.
+
+## Historical round10 deviations for owner acceptance
 
 **Current board only:** `b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9`,
 46 × 90 mm, 2,366,509 bytes, reviewed at `619db7e`. This replaces the obsolete skeleton; J124, its ARM-link fuse,

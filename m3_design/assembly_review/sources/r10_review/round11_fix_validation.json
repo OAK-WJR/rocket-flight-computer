@@ -1,0 +1,317 @@
+{
+  "round": 11,
+  "scope": "Generator fix validation after the non-clean full round11. Does not earn a clean review round or owner acceptance.",
+  "review_target_commit": "21bc3b2",
+  "review_target_board_sha256": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+  "review_totals": {
+    "Critical": 0,
+    "Major": 1,
+    "Minor": 16
+  },
+  "fixed_board": {
+    "sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "bytes": 2263730,
+    "footprints": 209,
+    "segments": 973,
+    "vias": 295,
+    "gnd_vias": 167,
+    "track_length_mm": 1809.7087323596263,
+    "size_mm": [
+      46,
+      90
+    ]
+  },
+  "builds": [
+    {
+      "build": "r11_build2",
+      "exit_code": 0,
+      "check_sh_exit_code": 0,
+      "counts": {
+        "drc": 0,
+        "unconnected": 0,
+        "schematic_parity": 0,
+        "erc": 0
+      },
+      "r10_rule_count": 31,
+      "r10_all_rules_pass": true,
+      "route_blockers": 0,
+      "route_allowlisted": 0,
+      "noncritical_informational_leftovers": 9,
+      "fit_pass": true,
+      "report_basenames": [
+        "drc.json",
+        "erc.json",
+        "audit.json",
+        "fit.json",
+        "r10.json",
+        "route.json"
+      ]
+    },
+    {
+      "build": "r11_build3",
+      "exit_code": 0,
+      "check_sh_exit_code": 0,
+      "counts": {
+        "drc": 0,
+        "unconnected": 0,
+        "schematic_parity": 0,
+        "erc": 0
+      },
+      "r10_rule_count": 31,
+      "r10_all_rules_pass": true,
+      "route_blockers": 0,
+      "route_allowlisted": 0,
+      "noncritical_informational_leftovers": 9,
+      "fit_pass": true,
+      "report_basenames": [
+        "drc.json",
+        "erc.json",
+        "audit.json",
+        "fit.json",
+        "r10.json",
+        "route.json"
+      ]
+    }
+  ],
+  "reproducible_generated_file_count": 42,
+  "reproducible_generated_sha256": {
+    "m3_design/assembly_review/actuator_power.kicad_sch": "54ed8859d0d0d77f05724df8052962258eb240fcbdf38910e2d7ef2bf0e5d6bc",
+    "m3_design/assembly_review/battery_entry.kicad_sch": "984d524d93f87852803f524b7041d3c1d9eadca4f775a717e1cb2241da0fec69",
+    "m3_design/assembly_review/camera_connector.kicad_sch": "84069d1f115d9a3c331e38ec5e0c73733b6f00432c79ea42d95e616dbf48f162",
+    "m3_design/assembly_review/camera_power.kicad_sch": "cd8a5a352bea9a9c80211d511b9d78c3aafd2816bec6a6db9c1a9beb53ba15d0",
+    "m3_design/assembly_review/camera_uart.kicad_sch": "8f64fb78ed2f9b76023ace78df25557ee44908e973494356720db6b85e0a50a6",
+    "m3_design/assembly_review/diagnostics.kicad_sch": "6e1ad47f47ee0003a9e595431a5ddcb279d3a4c587d8730248c5376f7c75b71d",
+    "m3_design/assembly_review/kilib/m3.kicad_sym": "eae1338782216a005145b430e198f7cb19fa61cf92e1d906e1d68fd8c5b00664",
+    "m3_design/assembly_review/kilib/rocket.3dshapes/M3_AONR21357_DFN3x3A_EP1.wrl": "93e8ba4cae28023b19542d8f6b9e4194da6fdabc4bd3071e791a74620ed953f3",
+    "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_2P_BK.wrl": "efab17f431f377ab6318d1cc151901eda5c070e525bd79a23448963f43aa53d0",
+    "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_2P_GN.wrl": "949835401190a4182f9cb7d9268d42cc6d59886a4ad246b27d085055678e507c",
+    "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_4P_GN.wrl": "ff19ffd9b2c61765b655e3f885fad407f3445c38a5cc797daa8d840166d27f17",
+    "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_5P_GN.wrl": "4123f68eb0c390da876c64c2d764ffffa9ceffb3e433450c7e2dbed7348f608d",
+    "m3_design/assembly_review/kilib/rocket.3dshapes/M3_GH_BM02B_GHS_TBT.wrl": "f27ad581dcbb5ca4ad16a3bc34481a689d6198301463486288b8eea5fb76805f",
+    "m3_design/assembly_review/kilib/rocket.3dshapes/M3_MA_8x10.wrl": "8969c393340692a96a03cd804c70720747d9adc62146d0757f266fe5a2a12902",
+    "m3_design/assembly_review/kilib/rocket.3dshapes/M3_MICROSD_MOLEX_472192001.wrl": "b42294e799c534e0e628109596c34a816745ddf6ae14cb993d1a99d62f9085de",
+    "m3_design/assembly_review/kilib/rocket.3dshapes/M3_TPS7A91_DSK10.wrl": "70bf43d3dc6293d6b658ff8e0dd38f8526a70fc243421c11834c41f2608b0f80",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_AONR21357_DFN3x3A_EP1.kicad_mod": "98b34fd0b10c91fc0da1b4c3d45d92d8b8bb3ae4f6823ec7a751e82986fccc59",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_2P_BK.kicad_mod": "7cb3c1e4e590fab8abe7ea0191aace6c4078952205f14214880b3c8df8135dd0",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_2P_GN.kicad_mod": "e7cd78cfa9f62841ec4d2035c56b2e679a08eb3d41b3d1a9cbc116b0b5eb2317",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_4P_GN.kicad_mod": "747446dd144e6eaeefc8268d60e286510cf72af60f2268e2f405fc192874439b",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_5P_GN.kicad_mod": "ca2aada63759dc14a4f130b89c3f264a28159c535bf0f4e5967a952782c07b5b",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_GH_BM02B_GHS_TBT.kicad_mod": "0d8a27c223081d11ad282328b59e57fc34b37501bc8425b6bc72223c140a650a",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_MA_8x10.kicad_mod": "f11bd91ea91f130a2b974ed82ddb6b425710359341b5c2a454df2adda5e9fce0",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_MICROSD_MOLEX_472192001.kicad_mod": "ff60b0babf97df08f58030a70b4f929976b469ea4f131455be6c8d2cf310a97d",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_TPS7A91_DSK10.kicad_mod": "4d4f03f099a74f3a576cce028c3ff91cbe698e7bd22c2d573ca73d072321629d",
+    "m3_design/assembly_review/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
+    "m3_design/assembly_review/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+    "m3_design/assembly_review/m3.kicad_pcb": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "m3_design/assembly_review/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
+    "m3_design/assembly_review/m3.kicad_sch": "4c3cd068b22c171d198a022adc3dd8f3a16ed2dd2b3e15f8cf99793443c8f89b",
+    "m3_design/assembly_review/mcu.kicad_sch": "03f3a7007ed196a1a0770523f193f90a9c7a1e9b9d32783dd2bfcd285af207bf",
+    "m3_design/assembly_review/pullpin_buzzer.kicad_sch": "6251166ef5e36bd43d48060c3085437fd637df326d82dd7709f9836d9282e1e7",
+    "m3_design/assembly_review/pyro.kicad_sch": "d3a6fde39e5a5df3a93a7a2c60bd7e90c24b28de1fe281a9bcfa03babc35e056",
+    "m3_design/assembly_review/schematic.net.xml": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+    "m3_design/assembly_review/sensors.kicad_sch": "bc81013b62caf9c9093acac15a3fd8cfce56a6b0c922f4899906e745d5af8ece",
+    "m3_design/assembly_review/servos.kicad_sch": "c9d0d4661e6d30337fb9fa094219678f38a8a8b0c3dc48fa35e392ab2c1c1e0f",
+    "m3_design/assembly_review/sources/r10_design/hotplug_inputs.json": "d2f3de57b0a756febf0f14a87f340178083beef781da824b841a175e19c125d4",
+    "m3_design/assembly_review/sources/r10_design/hotplug_results.json": "623d1e082f6f448a549717f06f081f0a25fd2dfa06e870b91405628490aad2f1",
+    "m3_design/assembly_review/sources/r10_design/parts_budget.json": "55b84df3de5d75373a515b6e41584004bc6f3245382e3c9eda5daf9a68edaf3a",
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "44060d6ad866d1361cc6e7424078f7edbdd44dc1e22d428cda96dae5e2f97ff3",
+    "m3_design/assembly_review/telemetry.kicad_sch": "16145d6f1b32a8cc90356996d7a5d364d05bc7c99501e7f6809f5eea7ce711f8",
+    "m3_design/assembly_review/usb_sense.kicad_sch": "1ce87ca1ed4f2e09f2289c8af29069a094162bf5e6f58e50e66138b9f37ae865"
+  },
+  "byte_identical_between_two_complete_successful_builds": true,
+  "toolchain": {
+    "native_parser_generator": "KiCad Python10.0.6",
+    "real_cli": "official KiCad10.0.7",
+    "vendor_package_sha256": "fbc27419b841a9a2a8b143b5875a87b8bd943ffcf487d53c78a8fb6d24c59e27",
+    "vendor_fix": "D-R11-05",
+    "binary_patch_or_gate_skip": false
+  },
+  "fresh_major_closure": "round11_terminal_closure.json",
+  "implementation_receipts": [
+    "round11_fix_geometry.json",
+    "round11_m6_fix.json",
+    "round11_servo_fix.json"
+  ],
+  "integration_history": [
+    {
+      "board_sha_prefix": "419a8f49",
+      "full_gate_failures": {
+        "M-6": 16,
+        "K-region": 2
+      },
+      "disposition": "Corrected through generators, no weakened floor or allowlist; final complete gates pass."
+    }
+  ],
+  "self_tests": {
+    "shell_cases": 5,
+    "procurement_program": "passed",
+    "fit_cases": 28,
+    "paste_cases": 5,
+    "native_parts_budget_cases": 5,
+    "routing_cases": 60,
+    "R10_native_suite_cases": 166,
+    "native_interpreter_NumPy_skips": 3,
+    "NumPy_numerical_cases_passed": 2,
+    "NumPy_plate_case_passed": 1,
+    "unresolved_skips": 0
+  },
+  "hotplug": {
+    "required_cases": 2304,
+    "required_failures": 0,
+    "local_sensitivity_cases": 60,
+    "scope": "Simulation / Inference; current native feed extracted and bound independently in each complete build"
+  },
+  "native_fire_budget": {
+    "status": "Native-board CAD path calculation; material, hot FET, source and harness conditions unmeasured",
+    "board_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "selected_ematch": "MJG J-Tek LEAD-FREE standard24AWG",
+    "maker_all_fire_A": 0.75,
+    "current_margin": 1.5,
+    "required_fire_current_A": 1.125,
+    "maker_source": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+    "maker_all_fire_test_s": 0.5,
+    "physical_pulse_qualification": "<=20ms including tail; lot bench qualification pending",
+    "pack_R_ohm": 0.15,
+    "open_equivalent_at_fire_V": 7.4,
+    "other_converter_load_W": 12.370806905016599,
+    "servo_stall_A": 1.92,
+    "R134_hot_max_ohm": 2.02909,
+    "ematch_max_ohm": 2,
+    "external_leads_harness_max_ohm": 0.3,
+    "CAD_track_length_width_mm": {
+      "PYRO1_IGN": [
+        10.230382386916238,
+        0.5
+      ],
+      "PYRO1_OUT": [
+        7.85447834896002,
+        0.5
+      ],
+      "RAW_ACT": [
+        5.88613311116846,
+        0.5
+      ],
+      "ACT_FET_S": [
+        2.2,
+        0.4
+      ],
+      "BAT_IN": [
+        6.3071067811865476,
+        1.0
+      ]
+    },
+    "CAD_inside_pad_entry_length_mm": {
+      "PYRO1_IGN": 0,
+      "PYRO1_OUT": 0,
+      "RAW_ACT": 0,
+      "ACT_FET_S": 0,
+      "BAT_IN": 0.7071067811865476
+    },
+    "CAD_path_basis": "Native fire_path pruning; ACT_FET_S uses Q120.2 to Q121.3 without parallel credit; routed current entries to terminal-pad anchors included, dead sense branches excluded; no series firing via",
+    "copper_20C_by_net_ohm": {
+      "PYRO1_IGN": 0.010055004403140532,
+      "PYRO1_OUT": 0.0077198301486921354,
+      "RAW_ACT": 0.005785227972119859,
+      "ACT_FET_S": 0.002702857142857143,
+      "BAT_IN": 0.003099492475325961
+    },
+    "copper_20C_ohm": 0.02936241214213563,
+    "copper_TCR_per_K": 0.00393,
+    "copper_70C_ohm": 0.03513212612806528,
+    "ground_return_allowance_ohm": 0.005,
+    "terminal_allowance_ohm": 0.01,
+    "Q124_hot_R_inference_ohm": 0.008235999999999999,
+    "primary_40mohm_FETs": {
+      "fire_branch_without_pack_ohm": 4.467458126128065,
+      "total_loop_ohm": 4.617458126128065,
+      "pack_7V4_by_stall_count": {
+        "0": {
+          "loaded_pack_V": 6.899390756727756,
+          "fire_A": 1.5443660716989063,
+          "other_A": 1.7930288834493882
+        },
+        "1": {
+          "loaded_pack_V": 6.609326364555884,
+          "fire_A": 1.4794377872063396,
+          "other_A": 3.7917197824211026
+        },
+        "2": {
+          "loaded_pack_V": 6.318164198837923,
+          "fire_A": 1.4142637760577872,
+          "other_A": 5.797974898356063
+        },
+        "3": {
+          "loaded_pack_V": 6.025729657046817,
+          "fire_A": 1.348804955060497,
+          "other_A": 7.812997331294062
+        },
+        "4": {
+          "loaded_pack_V": 5.7318070272281405,
+          "fire_A": 1.2830130390490941,
+          "other_A": 9.838273446096636
+        }
+      },
+      "two_stall_compatible_all_fire_A": 0.9428425173718581,
+      "two_stall_open_equivalent_V_for_1A_all_fire": 7.779096486509639
+    },
+    "secondary_typical_hot_curve_FETs": {
+      "fire_branch_without_pack_ohm": 4.421898126128065,
+      "total_loop_ohm": 4.571898126128065,
+      "pack_7V4_by_stall_count": {
+        "0": {
+          "loaded_pack_V": 6.896991782244507,
+          "fire_A": 1.5597355672876394,
+          "other_A": 1.7936525510823114
+        },
+        "1": {
+          "loaded_pack_V": 6.607020139521074,
+          "fire_A": 1.4941592843312204,
+          "other_A": 3.7923731188616183
+        },
+        "2": {
+          "loaded_pack_V": 6.315950624360386,
+          "fire_A": 1.4283347205673427,
+          "other_A": 5.798661117030089
+        },
+        "3": {
+          "loaded_pack_V": 6.023608606624165,
+          "fire_A": 1.3622223838744567,
+          "other_A": 7.813720238631111
+        },
+        "4": {
+          "loaded_pack_V": 5.729778336582624,
+          "fire_A": 1.2957734830494103,
+          "other_A": 9.839037606399769
+        }
+      },
+      "two_stall_compatible_all_fire_A": 0.9522231470448951,
+      "two_stall_open_equivalent_V_for_1A_all_fire": 7.7136095571200265
+    },
+    "historical_4R533_fixed_other_1p5A_fire_A": 1.5828369733068608,
+    "historical_4R533_fixed_other_5p34A_fire_A": 1.455768806529892,
+    "note": "7.4V equivalent must remain at fire after pad/flight drain; neutral does not unload a jam. Selected MJG J-Tek all-fire0.75A times1.5=1.125A; <=20ms lot firing test still required."
+  },
+  "optional_plate_receipt": "round11_plate.json",
+  "fab": {
+    "manifest_outputs": 5,
+    "orientation": "PASS",
+    "paste_flashes_F": 245,
+    "paste_flashes_B": 373,
+    "CPL_top_rows": 66,
+    "CPL_bottom_rows": 121,
+    "placement_only_checks": 12,
+    "BOM_unique_codes": 82,
+    "placed_parts": 199,
+    "physical_process_acceptance": false
+  },
+  "procurement_receipt": "round11_procurement.json",
+  "section2_exactly_unchanged_from_start": true,
+  "section2_sha256": "c8db94fceb840fbc1dd24df9b2206a8c021ed1d62ab4bb064c97bb8edd873c7a",
+  "commit_method": "supervisor request; never direct git commit",
+  "remaining": [
+    "Fresh complete independent rounds12+ until two consecutive clean on the same committed PCB",
+    "Current complete owner-deviation inventory, STATUS and AGENTS completion commit",
+    "Owner cost/stock/process/deviation acceptance and physical/firmware qualification"
+  ],
+  "physical_or_firmware_verified": false
+}

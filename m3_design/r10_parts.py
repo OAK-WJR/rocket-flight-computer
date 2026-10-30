@@ -6,6 +6,7 @@ Run with KiCad Python; --check verifies deterministic files and actual parsed pa
 The PortLDO symbol is exposed for the schematic generator, not written here.
 """
 import argparse
+import hashlib
 import itertools
 import json
 import math
@@ -47,8 +48,10 @@ def terminal(color, positions=2):
     name = f'M3_DB125_{positions}P_' + color
     half = positions * 3.5 / 2
     body = _rect((-half, -3.9), (half, 3.5), 'F.Fab', .1)
-    courtyard_half = half + (.75 if positions > 2 else .4)
-    body += _rect((-courtyard_half, -4.3), (courtyard_half, 3.9), 'F.CrtYd', .05)
+    # T0-1 p1: tolerance union includes the asymmetric interlock and end datum.
+    # A 0.20 mm courtyard margin preserves the 16 mm port pitch (D-R11-01).
+    x0, x1 = TERMINAL_X[positions]
+    body += _rect((x0-.2, -4.3), (x1+.2, 4.2), 'F.CrtYd', .05)
     body += _rect((-half-.15, -4.05), (half+.15, 3.65), 'F.SilkS', .15)
     # Positive-y face is the wire-entry face in this local frame. A fabrication
     # arrow under the housing prevents silently inheriting the old pad aliases.
@@ -137,6 +140,8 @@ def microsd():
                    'Molex 472192001 hinged microSD; SD-47219-001 revG maker land; shell G1-G4=12/9/10/11; 0.10/0.12mm stencil, 100% aperture')
 
 
+TERMINAL_X = {2: (-4.62, 3.70), 4: (-8.32, 7.20), 5: (-10.07, 8.95)}
+
 FOOTPRINTS = {'M3_GH_BM02B_GHS_TBT': gh2, 'M3_DB125_2P_BK': lambda: terminal('BK'),
               'M3_DB125_2P_GN': lambda: terminal('GN'), 'M3_TPS7A91_DSK10': ldo,
               'M3_MA_8x10': polymer, 'M3_AONR21357_DFN3x3A_EP1': load_switch,
@@ -146,10 +151,12 @@ FOOTPRINTS = {'M3_GH_BM02B_GHS_TBT': gh2, 'M3_DB125_2P_BK': lambda: terminal('BK
 # Boxes use millimetres, KiCad VRML scale .1in handled by r7_parts._box.
 MODELS = {
     'M3_GH_BM02B_GHS_TBT': (0, -.375, 0, 5.75, 4.25, 7.3, '.85 .85 .8'),
-    'M3_DB125_2P_BK': (0, -.2, 0, 7.3, 7.7, 8.9, '.12 .12 .12'),
-    'M3_DB125_2P_GN': (0, -.2, 0, 7.3, 7.7, 8.9, '.1 .55 .2'),
-    'M3_DB125_4P_GN': (0, -.2, 0, 15.0, 7.7, 8.9, '.1 .55 .2'),
-    'M3_DB125_5P_GN': (0, -.2, 0, 18.5, 7.7, 8.9, '.1 .55 .2'),
+    # Maximum-tolerance unions, not individual body dimensions (T0-1 p1).
+    # Wire face: 7.70 total depth - 3.70 rear datum = +4.00 mm.
+    'M3_DB125_2P_BK': (-.46, -.05, 0, 8.32, 8.10, 8.9, '.12 .12 .12'),
+    'M3_DB125_2P_GN': (-.46, -.05, 0, 8.32, 8.10, 8.9, '.1 .55 .2'),
+    'M3_DB125_4P_GN': (-.56, -.05, 0, 15.52, 8.10, 8.9, '.1 .55 .2'),
+    'M3_DB125_5P_GN': (-.56, -.05, 0, 19.02, 8.10, 8.9, '.1 .55 .2'),
     'M3_TPS7A91_DSK10': (0, 0, 0, 2.6, 2.6, .8, '.12 .12 .12'),
     'M3_MA_8x10': (0, 0, 0, 8.5, 8.5, 10.8, '.65 .65 .68'),
     'M3_AONR21357_DFN3x3A_EP1': (0, 0, 0, 3.3, 3.3, .9, '.12 .12 .12'),
@@ -269,8 +276,55 @@ def passive_cold_screen():
                 assumptions='3V3 +/-5%, Vf0..0.32V inference from25C BAT54A table, resistor+/-1.45%; zero leakage/ADC offset/reference error; bench all ground refusal bands before firmware')
 
 
-def power_budget():
+def native_fire_copper(board):
+    """Series fire tracks, including routed terminal-pad entries (D-R11-03)."""
+    import pcbnew
+    sys.path.insert(0, str(HERE.parent / 'tools'))
+    from check_r10 import FIRE_TERMINALS, fire_path
+    fps = {f.GetReference(): f for f in board.GetFootprints()}
+    terminals = {**FIRE_TERMINALS, 'ACT_FET_S': ({'Q120': ('2',)}, {'Q121': ('3',)})}
+    paths, pad_entries = {}, {}
+    for net, groups in terminals.items():
+        tracks, joined, _ = fire_path(board, net, groups)
+        if not joined or not tracks:
+            raise ValueError(f'{net}: no native fire path')
+        chosen = {t.m_Uuid.AsString(): t for t in tracks}
+        ends = {(t.GetLayer(), q.x, q.y) for t in tracks for q in (t.GetStart(), t.GetEnd())}
+        pads = [fps[ref].FindPadByNumber(num) for group in groups for ref, nums in group.items() for num in nums]
+        entries = {}
+        for t in board.GetTracks():
+            if t.GetClass() != 'PCB_TRACK' or t.GetNetname() != net:
+                continue
+            for pad in pads:
+                if pad is None or not pad.IsOnLayer(t.GetLayer()):
+                    continue
+                anchor, a, b = pad.GetPosition(), t.GetStart(), t.GetEnd()
+                # fire_path collapses copper inside a pad. Count only an entry from a retained current
+                # endpoint to that pad's anchor, not another branch leaving the anchor for a sense tap.
+                if pad.HitTest(a) and pad.HitTest(b) and ((a == anchor and (t.GetLayer(), b.x, b.y) in ends)
+                        or (b == anchor and (t.GetLayer(), a.x, a.y) in ends)):
+                    key = t.m_Uuid.AsString()
+                    if key not in chosen:
+                        entries[key] = t
+        chosen.update(entries)
+        if len({t.GetLayer() for t in chosen.values()}) != 1:
+            raise ValueError(f'{net}: series layer change requires a via-resistance model')
+        widths = {t.GetWidth() for t in chosen.values()}
+        if len(widths) != 1:
+            raise ValueError(f'{net}: mixed fire widths require a series-resistance model')
+        paths[net] = [sum(pcbnew.ToMM(t.GetLength()) for t in chosen.values()), pcbnew.ToMM(widths.pop())]
+        pad_entries[net] = sum(pcbnew.ToMM(t.GetLength()) for t in entries.values())
+    return paths, pad_entries
+
+
+def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
     """Worst component tolerances plus explicit, unmeasured harness/thermal limits."""
+    import pcbnew
+    board_path = Path(board_path)
+    board_bytes = board_path.read_bytes()
+    copper_paths, pad_entries = native_fire_copper(pcbnew.LoadBoard(str(board_path)))
+    if board_path.read_bytes() != board_bytes:
+        raise ValueError('board changed during native fire-path extraction')
     thin = .001 + 25e-6 * 100
     thick = .01 + 100e-6 * 100
     buck_min = .792 * (1 + (56200 * (1-thin) + 2000 * (1-thick)) / (10000 * (1+thin)))
@@ -330,11 +384,9 @@ def power_budget():
         r, logic, power, efficiency = .15, .5+3.3*.2/(.8*6), 5.456 * 1.46, .8
         a = open_v - r * (servos + logic)
         return (a + (a*a - 4*r*power/efficiency)**.5) / 2
-    # GAP-1: final AUD/GAP CAD path lengths; rho=1.72e-8 ohm m, nominal 35 um outer copper at 20 C.
-    # Use one aligned 2.2 mm source-to-source path, taking no parallel-source-leg credit.
-    # These are geometry / material inferences; actual copper thickness and resistance need qualification.
-    copper_paths = dict(BAT_IN=[7.121320343559643,1.0], ACT_FET_S=[2.2,.4],
-                        RAW_ACT=[6.5,.5], PYRO1_IGN=[4.85,.5], PYRO1_OUT=[7.954478348960021,.5])
+    # GAP-1 / D-R11-03: current native paths; rho=1.72e-8 ohm m, nominal 35 um outer copper at 20 C.
+    # One aligned source path takes no parallel-leg credit. Routed pad entries are included conservatively;
+    # actual copper thickness, pad resistance and device/harness limits still need physical qualification.
     copper_by_net = {net: length/width * (1.72e-8/35e-6) for net,(length,width) in copper_paths.items()}
     copper_20c = sum(copper_by_net.values())
     copper_70c = copper_20c * (1 + .00393 * (70 - 20))
@@ -454,7 +506,8 @@ def power_budget():
                              time_to_4V5_max_ms=-enable_tau*math.log(1-4.5/enable_vgs)*1000,
                              enable_settle_min_ms=100,
                              note='Hot R, effective C, Miller and actual board SOA are conditional inferences; bench required'),
-        fire_current_GAP1=dict(status='Circuit-pass CAD path calculation; material, hot FET, source and harness conditions unmeasured',
+        fire_current_GAP1=dict(status='Native-board CAD path calculation; material, hot FET, source and harness conditions unmeasured',
+                              board_sha256=hashlib.sha256(board_bytes).hexdigest(),
                               selected_ematch='MJG J-Tek LEAD-FREE standard24AWG',
                               maker_all_fire_A=.75, current_margin=1.5, required_fire_current_A=1.125,
                               maker_source='https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF',
@@ -464,6 +517,9 @@ def power_budget():
                               R134_hot_max_ohm=r134_hot, ematch_max_ohm=2,
                               external_leads_harness_max_ohm=.3,
                               CAD_track_length_width_mm=copper_paths,
+                              CAD_inside_pad_entry_length_mm=pad_entries,
+                              CAD_path_basis='Native fire_path pruning; ACT_FET_S uses Q120.2 to Q121.3 without parallel credit; '
+                                             'routed current entries to terminal-pad anchors included, dead sense branches excluded; no series firing via',
                               copper_20C_by_net_ohm=copper_by_net,
                               copper_20C_ohm=copper_20c, copper_TCR_per_K=.00393,
                               copper_70C_ohm=copper_70c,
@@ -519,9 +575,14 @@ def power_budget():
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--check', action='store_true')
+    ap.add_argument('--board', type=Path, default=PROJECT / 'm3.kicad_pcb')
+    scope = ap.add_mutually_exclusive_group()
+    scope.add_argument('--library-only', action='store_true', help='generate local lands/models before schematic generation')
+    scope.add_argument('--budget-only', action='store_true', help='bind the power budget after the final PCB is generated')
     args = ap.parse_args()
-    files = generated()
-    files[NOTES / 'parts_budget.json'] = json.dumps(power_budget(), indent=2) + '\n'
+    files = {} if args.budget_only else generated()
+    if not args.library_only:
+        files[NOTES / 'parts_budget.json'] = json.dumps(power_budget(args.board), indent=2) + '\n'
     changed = [p for p, t in files.items() if not p.exists() or p.read_text() != t]
     if args.check and changed:
         print('r10_parts: stale:', ', '.join(p.name for p in changed))
@@ -529,8 +590,11 @@ def main():
     if not args.check:
         for p in changed:
             p.write_text(files[p])
-    rows = geometry_checks()
-    print(f'r10_parts: {len(rows)} footprints parsed; terminal copper gap 1.600mm; generated files current')
+    if not args.budget_only:
+        rows = geometry_checks()
+        print(f'r10_parts: {len(rows)} footprints parsed; terminal copper gap 1.600mm; generated files current')
+    if not args.library_only:
+        print('r10_parts: native-board power budget current')
     return 0
 
 

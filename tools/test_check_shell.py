@@ -30,22 +30,24 @@ import os, pathlib, sys
 stage = pathlib.Path(__file__).stem
 with open(os.environ['GATE_LOG'], 'a') as log:
     log.write(stage + '\\n')
+if stage == 'r10_parts' and ('--check' not in sys.argv or '--board' not in sys.argv):
+    sys.exit(17)
 sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
 '''
         for path in ('quality_audit/verify_board.py', 'tools/silk_check.py', 'tools/fit_check.py',
                      'tools/plate_model.py', 'tools/check_r10.py', 'tools/route_check.py',
-                     'm3_design/check_actuators.py'):
+                     'm3_design/check_actuators.py', 'm3_design/r10_parts.py'):
             (self.root / path).write_text(stub)
         for path in ('tools/fab_manifest.py', 'tools/test_check_shell.py', 'tools/test_procurement.py', 'tools/test_fit_check.py',
-                     'tools/test_paste_check.py', 'tools/test_route_check.py', 'tools/test_r10_check.py'):
+                     'tools/test_paste_check.py', 'tools/test_r10_parts.py', 'tools/test_route_check.py', 'tools/test_r10_check.py'):
             (self.root / path).write_text(stub)
         self.log = self.root / 'gate.log'
         self.env = dict(os.environ, KICAD_CLI=str(self.cli), KICAD_PY=sys.executable, NUMPY_PY=sys.executable,
                         GATE_LOG=str(self.log), TMPDIR=str(self.root))
 
-    SELFTESTS = ['test_check_shell', 'test_procurement', 'test_fit_check', 'test_paste_check', 'test_route_check', 'test_r10_check',
+    SELFTESTS = ['test_check_shell', 'test_procurement', 'test_fit_check', 'test_paste_check', 'test_r10_parts', 'test_route_check', 'test_r10_check',
                  'test_r10_check']
-    CONTRACTS = ['verify_board', 'silk_check', 'fit_check', 'check_r10', 'route_check']
+    CONTRACTS = ['verify_board', 'silk_check', 'r10_parts', 'fit_check', 'check_r10', 'route_check']
 
     def run_gate(self, board=None):
         return subprocess.run(['bash', str(self.root / 'tools/check.sh'), str(board or self.root / 'board.kicad_pcb')],
@@ -58,7 +60,7 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
         self.assertNotIn('fab manifest', result.stdout)      # no fab folder beside the board: nothing to check
 
     def test_each_new_contract_failure_blocks_later_stages(self):
-        stages = ['fit_check', 'check_r10', 'route_check']
+        stages = ['r10_parts', 'fit_check', 'check_r10', 'route_check']
         for stage in stages:
             with self.subTest(stage=stage):
                 self.log.unlink(missing_ok=True)
@@ -66,6 +68,13 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
                 result = self.run_gate()
                 self.assertEqual(result.returncode, 13, result.stdout + result.stderr)
                 self.assertEqual(self.log.read_text().splitlines()[-1], stage)
+
+    def test_parts_budget_stage_must_check_without_regenerating(self):
+        script = self.root / 'tools/check.sh'
+        script.write_text(script.read_text().replace('--check --board', '--board'))
+        result = self.run_gate()
+        self.assertEqual(result.returncode, 17, result.stdout + result.stderr)
+        self.assertEqual(self.log.read_text().splitlines()[-1], 'r10_parts')
 
     def test_each_selftest_failure_fails_the_gate(self):
         """R8-GATE-01: a failing gate self-test makes check.sh exit non-zero and later self-tests do not run."""

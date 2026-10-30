@@ -63,11 +63,12 @@ def build(project, table):
         ref = footprint.GetReference()
         if ref.startswith('TP'):
             footprint.SetLocalClearance(pcbnew.FromMM(1.0))
-    # J122's GND row: R9's solid zone connection was for the 7.7 A servo return; R10 carries no designed servo current
-    # through the board (O6), so the four pads take thermal relief like the board's other GND pads (D-R3-08).
-    for p in board.FindFootprintByReference('J122').Pads():
-        if p.GetNetname() == 'GND':
-            p.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_THERMAL)
+    # R10 signal/logic returns need solderable THT thermals on every plane,
+    # including In1's otherwise solid GND connection (R11-MFG-01).
+    for ref in ('J1', 'J9', 'J122', 'J410', 'J420'):
+        for p in board.FindFootprintByReference(ref).Pads():
+            if p.GetNetname() == 'GND':
+                p.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_THERMAL)
     rows, features = r9_pcb.read_place(table, tie_count=0)
     r9_pcb.outline(board, features)
     r9_pcb.place(board, rows)

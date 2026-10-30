@@ -60,7 +60,9 @@ S=.2
 def battery(d):
     t,p,v=d.track,d.pad,d.via
     t('BAT_IN','F',BAT,[p('J1.1'),(8.9,74.1),(9.8,75),p('D8.1')])
-    t('BAT_IN','F',BAT,[p('D8.1'),(12.525,75.825),p('C80.1'),p('C96.1'),p('C89.1'),p('C95.1')])
+    # C80 moves 0.05 mm for the maximum DB125 courtyard; keep the straight
+    # capacitor bus within its pad rather than introducing a tiny diagonal.
+    t('BAT_IN','F',BAT,[p('D8.1'),(12.525,75.825),(12.525,79.5),p('C96.1'),p('C89.1'),p('C95.1')])
     t('BAT_IN','B',BAT,[p('J1.1'),(13.0,74.1),p('Q120.9')])
     feed=(17.5,87.3)
     t('BAT_IN','F',BAT,[p('C95.1'),(14.116,88.891),(17.5,88.891),feed]);v('BAT_IN',feed,size=(1.,.5))
@@ -69,7 +71,7 @@ def battery(d):
     t('BAT_IN','B',PAD_W,[(18.25,83.4),p('U9.5')])
     t('BAT_IN','B',W,[feed,(15.5,87.3),p('R82.1')])
     t('BAT_IN','B',W,[p('R82.1'),(13.925,83.9),p('R167.1')])
-    t('BAT_IN','F',S,[p('D8.1'),(10.2,71.85),(10.2,70.2),(12.825,70.2),p('R80.1')])
+    t('BAT_IN','F',S,[p('D8.1'),(10.2,71.85),(10.2,70.2),(13.075,70.2),p('R80.1')])
     t('BAT_IN','F',W,[p('C89.1'),(11.625,83.8),p('TP80.1')])
     t('BAT_DAMP','F',W,[p('C95.2'),p('C89.2'),(18.6,84.7),p('R166.1')])
     t('GND','F',W,[p('R166.2'),(29,86.3)]);v('GND',(29,86.3))
@@ -77,14 +79,14 @@ def battery(d):
 
 def control(d):
     t,p,v=d.track,d.pad,d.via
-    t('BAT_SW_SOURCE','B',S,[p('J400.1'),(10.8,64.1),(10.8,69.2)]);v('BAT_SW_SOURCE',(10.8,69.2))
+    t('BAT_SW_SOURCE','B',S,[p('J400.1'),(10.8,67.5),(10.8,69.2)]);v('BAT_SW_SOURCE',(10.8,69.2))
     t('BAT_SW_SOURCE','F',S,[(10.8,69.2),p('R80.2')])
-    t('BAT_SW_RETURN','F',S,[p('J400.2'),(11.575,67.6),p('R165.1')])
+    t('BAT_SW_RETURN','F',S,[p('J400.2'),(11.825,67.6),p('R165.1')])
     t('BAT_ENABLE','F',S,[p('R165.2'),(16.3,67.0),(16.3,66.0),(19.675,66.0),p('R81.1')])
     t('BAT_ENABLE','F',S,[(16.3,66.0),p('C87.1')])
     t('BAT_ENABLE','F',S,[(19.675,66.0),(19.675,66.4)]);v('BAT_ENABLE',(19.675,66.4))
     t('BAT_ENABLE','B',S,[(19.675,66.4),(21,66.4),(21,68.6),(21.3,68.9)]);v('BAT_ENABLE',(21.3,68.9))
-    t('BAT_ENABLE','F',S,[(21.3,68.9),(21.3,71.5),(22.6,72.8),(22.6,79.5),(22.1,80),(19.9,80),(17.1,82.8)])
+    t('BAT_ENABLE','F',S,[(21.3,68.9),(21.3,75.2),(18.2,78.3),(19.9,80),(17.1,82.8)])
     v('BAT_ENABLE',(17.1,82.8));t('BAT_ENABLE','B',S,[(17.1,82.8),p('U9.1')])
 
 
@@ -100,7 +102,7 @@ def efuse(d):
     t(rp,'B',W,[(20.3,79.1),(21.1,79.1)])
     t('GND','B',W,[p('C82.2'),(20.45,76.4),(20.85,76.4)]);v('GND',(20.85,76.4))
     t('GND','B',W,[p('D9.2'),(16.4,79.9),(17.2,79.9)]);v('GND',(17.2,79.9))
-    t('GND','F',W,[p('C96.2'),p('C80.2'),(15.875,79.9),(17.2,79.9)])
+    t('GND','F',W,[p('C96.2'),(15.475,79.5),(15.875,79.9),(17.2,79.9)])
     t('BAT_ILIM','B',S,[p('U9.9'),p('R84.1')])
     t('BAT_DVDT','B',S,[p('U9.7'),(19.85,80.1),p('C81.1')])
     t('BAT_OVLO','B',S,[p('U9.2'),(16.9,81.825),(16.4,82.325),(16.4,83.0)])
@@ -146,19 +148,25 @@ def port_supply(d):
     t('PORT_4V8','B',W,[p('C406.1'),(28.4,10.2),(29.75,11.55),(29.75,12.6)])
     t('PORT_4V8','F',W,[p('C407.1'),(31.1,20.3),(30.3,20.3)]);v('PORT_4V8',(30.3,20.3))
     t('PORT_4V8','B',S,[p('R405.1'),(33.725,16.35),(33.725,17.3)])
-    # Identical always-on port bypass cells and direct terminal feeds.
+    # Always-on port bypass cells and terminal feeds.
     for cap,small,jack in [('C411','C410','J410'),('C421','C420','J420')]:
-        a=p(cap+'.1');t('PORT_4V8','B',W,[a,p(jack+'.1')])
-        at=(a[0],a[1]-1.5);t('PORT_4V8','B',W,[a,at]);v('PORT_4V8',at)
+        a=p(cap+'.1')
+        if cap=='C411':
+            # The plane via lies on the direct diagonal, clear of the cap land; terminal entry is centred.
+            at=(36.0,23.35)
+            t('PORT_4V8','B',W,[(35.1,24.25),at,p(jack+'.1')]);v('PORT_4V8',at)
+        else:
+            t('PORT_4V8','B',W,[a,p(jack+'.1')])
+            at=(a[0],a[1]-1.5);t('PORT_4V8','B',W,[a,at]);v('PORT_4V8',at)
         a=p(small+'.1');at=(a[0],a[1]-.9);t('PORT_4V8','B',W,[a,at]);v('PORT_4V8',at)
     # Camera input bypass is local to IN; the quiet rail arrives along the bottom of the cell.
     t('PORT_5V3','B',W,[p('U402.1'),(30.7,61.025),p('C430.1'),(42.0,61.8)])
     v('PORT_5V3',(42.0,61.8))
-    t('CAM_5V','B',W,[p('U402.6'),(34.55,61.2),(38.0,61.2),(38.0,57.2),p('C431.1')])
-    t('CAM_5V','B',W,[p('C431.1'),(34.1,53.3),(34.1,50.575),p('C91.1')]
-    )
-    t('CAM_5V','B',W,[p('C91.1'),(34.15,49.325),(34.15,48.75),p('U13.1')])
-    t('CAM_5V','B',W,[p('C431.1'),(36.75,55.0),p('J9.1')])
+    t('CAM_5V','B',W,[p('U402.6'),(34.2,60.85),(37.7,60.85),p('C431.1')])
+    # Pass west of the rotated cap's return land and the TP74 keep-out.
+    t('CAM_5V','B',W,[(39.3,59.0),(37.75,57.45),(37.75,53.6),p('J9.1')])
+    t('CAM_5V','B',W,[p('J9.1'),(34.95,52.75)])
+    t('CAM_5V','B',W,[p('C91.1'),(34.2,51.675),(34.2,49.325),(34.2,48.75),p('U13.1')])
     t('CAM_ILIM','B',S,[p('U402.5'),(34.175,59.0),p('R430.1')])
 
 
@@ -166,13 +174,13 @@ def logic(d):
     t,p,v=d.track,d.pad,d.via
     # Mux, input capacitors and 3V3 buck retain their maker-derived relative geometry.
     t('VLOGIC','B',W,[p('U11.8'),p('U11.1'),p('C99.1'),p('U2.2'),p('U2.3'),(27.75,68.6),(29.8,68.6)])
-    t('VLOGIC','B',W,[(29.8,68.6),(29.8,70.0),(29.8,72.8),p('C7.1')])
+    t('VLOGIC','B',W,[(29.8,68.6),(29.8,72.8),p('C7.1')])
     t('VLOGIC','B',W,[(29.8,72.8),(29.8,81.75),(29.5,82.05)]);v('VLOGIC',(29.5,82.05))
     t('VLOGIC','F',W,[(29.5,82.05),(29.2,81.75),p('C84.1')])
     # Probe and divider share a direct trunk above the mux, kept out of the switch node.
     t('VLOGIC','B',W,[(29.8,81.75),(34.25,81.75),p('TP83.1')])
-    t('VLOGIC','B',S,[(29.8,68.6),(29.8,64),(33.5,64),(34.5,63)])
-    v('VLOGIC',(34.5,63));t('VLOGIC','F',S,[(34.5,63),(34.5,58.87),p('R60.1')])
+    t('VLOGIC','B',S,[(29.8,68.6),(29.8,67.7),(34.5,63)])
+    v('VLOGIC',(34.5,63));t('VLOGIC','F',S,[(34.5,63),(34.5,59.47),p('R60.1')])
     d.link('LOGIC_ILIM','B',S,'U11.10','R86.1')
     t('LOGIC_SS','B',S,[p('U11.11'),(26.15,64.75),p('C85.1')])
     t('USB_OVLO','B',S,[p('R87.2'),(22.5,64.25),p('U11.5')]);t('USB_OVLO','B',S,[p('R87.2'),p('R88.1')])
