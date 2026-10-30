@@ -1,3 +1,3 @@
 #VRML V2.0 utf8
 # R10 fit envelope, not maker model. See parts_qualification.md.
-Transform { translation 0.000000 0.688976 0.413386 children [ Shape { appearance Appearance { material Material { diffuseColor .45 .45 .48 } } geometry Box { size 5.511811 6.102362 0.826772 } } ] }
+Transform { translation 0.000000 0.728346 0.413386 children [ Shape { appearance Appearance { material Material { diffuseColor .45 .45 .48 } } geometry Box { size 5.925197 6.181102 0.826772 } } ] }

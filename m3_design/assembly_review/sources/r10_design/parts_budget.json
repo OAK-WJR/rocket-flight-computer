@@ -91,7 +91,9 @@
   "u9_prospective_input_without_buck_limiting_A": 4.420037344610338,
   "u9_port_fault_peak_bound_inference_A": 3.7437971552257268,
   "u9_port_fault_peak_bound_basis": "AP63201 max3.1A HS peak current plus(1.4W logic+0.825W SDwrite)/3.5V, R92 at9.97V and5mA allowance; excludes threshold overshoot/parasitic dips; bench required",
-  "u9_current_limit_min_A": 3.96,
+  "u9_current_limit_min_A": 3.9461883408071747,
+  "u9_current_limit_max_A": 4.856999498243853,
+  "u9_current_limit_basis": "Calc/Inference: exact750ohm TI table3.96..4.84A scaled inversely with R84 +/-0.35% (0.1% initial +25ppm/K x100K); not a new TI characterization or transient guarantee",
   "r92_ohm": 3300,
   "battery_break_r92_bleed_bound_W": 0.016932591218305506,
   "battery_break_load_W": {
@@ -258,7 +260,7 @@
   },
   "fire_current_GAP1": {
     "status": "Native-board CAD path calculation; material, hot FET, source and harness conditions unmeasured",
-    "board_sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+    "board_sha256": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
     "selected_ematch": "MJG J-Tek LEAD-FREE standard24AWG",
     "maker_all_fire_A": 0.75,
     "current_margin": 1.5,

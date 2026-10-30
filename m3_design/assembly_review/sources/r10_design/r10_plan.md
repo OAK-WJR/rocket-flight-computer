@@ -2,16 +2,15 @@
 
 **Historical completion before the new circuit changes (2026-10-28):** full rounds 9/10 are clean on the original and Minor-fix targets; final PCB`b337fe63…` is frozen. R10_VALIDATION contains the complete current deviation list; owner acceptance/OQ-3, procurement, process and physical/firmware qualifications remain pending. The single-switch/AUD/GAP amendments below supersede original hardware descriptions.
 
-**Current review status (2026-10-30):** full round12 on committed0ad0135c/
-d57b216 completed0Critical/0Major/12consolidatedMinor groups. The low-risk fix
-PCB is `7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c`,46x90mm,
-973segments/296vias. Two complete direct native builds/check0 reproduce42
-recorded generated files; all31 rules, routing and current fabrication/binding
-checks pass. Fresh full rounds13/14 on this committed result must supply the
-final same-board pair. No earlier clean pair transfers to a changed board.
+**Current review status (2026-10-30):** full R13 on7355/fa897c8 completed
+0Critical/0Major/17consolidatedMinor groups. Low-risk fix PCB `e0e3ad84…`,46x90mm,
+966segments/296vias,passes two complete native builds/check0 and42-file
+byte equality. All31 rules,routing and fabrication/binding checks pass. Fresh
+complete14/15 on the committed result must earn the final same-board pair;
+no earlier pair transfers. Full proof is round13_fix_validation.json.
 Hardware descriptions in sections1-8 mentioning GH/switches/translators, servo
 header/tie holes or duplicate bus sense are historical and superseded by the
-newest owner decisions and D-CIR/D-AVA/D-R11/D-R12 records. All acceptance,
+newest owner decisions and D-CIR/D-AVA/D-R11/D-R12/D-R13 records. All acceptance,
 stock/cost/process, physical and firmware obligations remain; no order exists.
 
 

@@ -1,0 +1,165 @@
+{
+  "label": "",
+  "profile": "r10",
+  "mass_spec": {
+    "profile": "r10",
+    "basis": "Inference: conservative engineering mass allowances, except J430 socket maker mass 0.434 g (Molex 472192001 product record). The J430 mated card allowance 0.5 g is an inference. DB125 terminal body allowances scale the existing 3 g two-contact allowance by pole count: 3 g two-contact, 6 g four-contact, 7.5 g five-contact. Terminal keys ending in 'mated' are separate local wire/ferrule allowances, not mating plugs: 1 g per two contacts, 2 g per four, 2.5 g per five. Validate by weighing the actual populated board and supported harness. Connector/capacitor dimensions: parts_qualification.md; DB125 drawing T0-1; MA drawing p2. No inherited R9 RF, SMA, GH or servo-plug masses.",
+    "masses_g": {
+      "J1": 3.0,
+      "J121": 3.0,
+      "J122": 7.5,
+      "C84": 3.0,
+      "LS120": 0.3,
+      "J3": 1.0,
+      "J9": 6.0,
+      "J400": 3.0,
+      "J410": 6.0,
+      "J420": 6.0,
+      "J430": 0.434,
+      "J1 mated": 1.0,
+      "J121 mated": 1.0,
+      "J122 mated": 2.5,
+      "J9 mated": 2.0,
+      "J400 mated": 1.0,
+      "J410 mated": 2.0,
+      "J420 mated": 2.0,
+      "J430 mated": 0.5
+    },
+    "placement": "tools/plate_model.py --profile r10 places every key: on its own fit-report row's model box, or, for 'X mated' with no row of its own (DB125 terminals' local wire/ferrule allowance, no mated plug envelope in fit_check), on its parent X's model box; any other key is refused (R3-MEC-01)",
+    "removed_bench_only": {
+      "J2": "TC2030 Tag-Connect: a bare land (fit_check board feature), no body on the board",
+      "J2 mated": "the TC2030 cable is a bench programming tool, never fitted in flight",
+      "J3 mated": "the USB-C plug is a bench / ground tool, never fitted in flight (J3's body mass stays)"
+    },
+    "physical_mass_verified": false,
+    "harness_rule": "Strain relief carries cable mass beyond the modelled plug/local-wire envelope; unrestrained long leads invalidate these allowances."
+  },
+  "board_sha256": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "supports": [
+    [
+      3.7,
+      86.0
+    ],
+    [
+      4.0,
+      4.0
+    ],
+    [
+      4.0,
+      44.3
+    ],
+    [
+      42.0,
+      4.0
+    ],
+    [
+      42.0,
+      86.0
+    ]
+  ],
+  "f1": {
+    "r10_mated": {
+      "pinned_D5": 181.3,
+      "pinned_D10": 256.4,
+      "clamped_D5": 288.1,
+      "clamped_D10": 407.5,
+      "board_mass_g": 70.3
+    }
+  },
+  "static": {
+    "r10_mated": {
+      "max_deflection_mm": 1.24,
+      "at": [
+        46.0,
+        45.0
+      ],
+      "strain_ue": {
+        "U4": 471,
+        "U1": 989,
+        "J121": 1029,
+        "C84": 1339,
+        "U5": 731,
+        "J1": 1082,
+        "J122": 1486
+      }
+    }
+  },
+  "calculation_basis": "Simulation/Inference: existing explicit connector masses include metal pins;23 fit collision-tail boxes are not additional assembled parts and are excluded from plate mass. No measured mass,stiffness,sled or boundary condition.",
+  "mass_bookkeeping_regression": {
+    "old_code_estimated_g": 70.84559684604363,
+    "corrected_estimated_g": 70.2975988460437,
+    "spurious_addition_g": 0.5479979999999385,
+    "old_code_adds23_collision_rows": true,
+    "current_code_retains_all_explicit_mass_keys": true,
+    "regression_tests_with_NumPy": 4,
+    "log_sha256": "27216caf8f87bd77ce8ac2bb9e15dc1af82c5bdd6846060933b93cb2fee5a427"
+  },
+  "local_sled_clearance": {
+    "method": "0.25mm raster including exact envelope endpoints; rigid sled; absolute100g/pinnedD5 deflection",
+    "minima": [
+      {
+        "name": "C431",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 1.0256367657544305,
+        "gap_h4_mm": 0.2743632418455695,
+        "gap_h3_5_mm": -0.22563675815443052
+      },
+      {
+        "name": "C421",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 0.9518709545586613,
+        "gap_h4_mm": 0.3481290530413387,
+        "gap_h3_5_mm": -0.15187094695866132
+      },
+      {
+        "name": "L1",
+        "hang_mm": 3.015825312,
+        "max_100g_D5_deflection_mm": 0.45954335483418834,
+        "gap_h4_mm": 0.5246313331658117,
+        "gap_h3_5_mm": 0.02463133316581162
+      },
+      {
+        "name": "C411",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 0.7118139526345966,
+        "gap_h4_mm": 0.5881860549654034,
+        "gap_h3_5_mm": 0.08818605496540344
+      },
+      {
+        "name": "C82",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 0.34281505645230453,
+        "gap_h4_mm": 0.9571849511476955,
+        "gap_h3_5_mm": 0.4571849511476955
+      },
+      {
+        "name": "C405",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 0.2597686153992237,
+        "gap_h4_mm": 1.0402313922007762,
+        "gap_h3_5_mm": 0.5402313922007763
+      },
+      {
+        "name": "C406",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 0.23763463348110142,
+        "gap_h4_mm": 1.0623653741188985,
+        "gap_h3_5_mm": 0.5623653741188985
+      },
+      {
+        "name": "J430",
+        "hang_mm": 2.10000088,
+        "max_100g_D5_deflection_mm": 0.805442769057435,
+        "gap_h4_mm": 1.094556350942565,
+        "gap_h3_5_mm": 0.594556350942565
+      }
+    ],
+    "physical_or_shock_qualified": false
+  },
+  "source_sha256": {
+    "tools/plate_model.py": "889a8aa9b6f69c4e78d3ecf7053149cee24c203cce3c135c5f8c043b48d698ef",
+    "tools/test_r10_check.py": "ce24f8ab80e12403971c50a247402840ed3e726ef0147f679c9639718044f083",
+    "m3_design/assembly_review/sources/r10_design/masses.json": "b6f15a1746315bd6de45c3aa522c30b423b66626ca345cd5ba1dcd86305c4366"
+  },
+  "build_scope": "Root discovered this optional-calculator-only bookkeeping issue after buildA; corrected before buildB full gate. CAD generators and42 generated artifact inputs are unaffected. BuildA172/3native skips; buildB173/4native skips expected, all resolved by supplied-interpreter4case run. Final standalone full gate required."
+}

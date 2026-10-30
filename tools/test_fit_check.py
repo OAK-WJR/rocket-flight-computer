@@ -80,18 +80,38 @@ class FitValidation(unittest.TestCase):
     def test_micro_sd_locked_card_has_a_required_envelope_and_clears_hardware(self):
         socket = self.add_part('J430', 12, 17, footprint='M3_MICROSD_MOLEX_472192001')
         model = self.folder / 'closed_sd.step'
-        model.write_text("#1=CARTESIAN_POINT('',(-7,-6,0));\n#2=CARTESIAN_POINT('',(7,9.5,2.1));\n")
+        model.write_text("#1=CARTESIAN_POINT('',(-7.525,-6,0));\n#2=CARTESIAN_POINT('',(7.525,9.7,2.1));\n")
         socket.Models()[0].m_Filename = '${KIPRJMOD}/closed_sd.step'
 
         report = fit.check_board(self.board, self.folder, profile='r10')
         self.assertIn('J430 mated', {row[1] for row in report['rows']})
         self.assertTrue(any('J430 mated top body' in issue for issue in report['issues']))
-        socket.Move(self.point(0, .2))
+        socket.Move(self.point(0, .5))
         report = fit.check_board(self.board, self.folder, profile='r10')
         self.assertFalse(any('J430 mated top body' in issue for issue in report['issues']))
         socket.SetFPIDAsString('rocket:unreviewed_socket')
         report = fit.check_board(self.board, self.folder, profile='r10')
         self.assertTrue(any('J430: required R10 mated envelope missing' in issue for issue in report['issues']))
+
+    def test_r10_terminal_tail_detects_a_bottom_body_collision(self):
+        terminal = self.add_part('J1', 23, 40, footprint='M3_DB125_2P_GN')
+        model = self.folder / 'terminal.step'
+        model.write_text("#1=CARTESIAN_POINT('',(-4.62,-4,0));\n#2=CARTESIAN_POINT('',(3.7,4.1,8.9));\n")
+        terminal.Models()[0].m_Filename = '${KIPRJMOD}/terminal.step'
+        pin = pcbnew.PAD(terminal)
+        pin.SetNumber('1'); pin.SetAttribute(pcbnew.PAD_ATTRIB_PTH)
+        pin.SetSize(self.point(1.9, 1.9)); pin.SetShape(pcbnew.PAD_SHAPE_CIRCLE)
+        pin.SetLayerSet(pcbnew.LSET.AllCuMask())
+        terminal.Add(pin); pin.SetPosition(self.point(23, 40))
+        part = self.add_part('U2', 30, 40)
+        part.Flip(part.GetPosition(), False)
+        report = fit.check_board(self.board, self.folder, profile='r10')
+        self.assertFalse(any('terminal tail intersects' in issue for issue in report['issues']))
+        part.Move(self.point(-7, 0))
+        report = fit.check_board(self.board, self.folder, profile='r10')
+        self.assertIn('J1.1 terminal tail intersects U2 model box', report['issues'])
+        self.assertEqual(report['terminal_tails']['count'], 1)
+        self.assertAlmostEqual(report['terminal_tails']['nominal_4mm_standoff_plate_clearance_mm'], 1.8)
 
     def test_width_and_length_are_measured_from_outline(self):
         for drawing in self.board.GetDrawings():

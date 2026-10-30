@@ -53,7 +53,7 @@
     "cad/kilib/rocket.3dshapes/M3_LQG15_0402.wrl": "dce600ef4a0605f7d416ab0bd36703f8d037511c0593c327a9ac6ca356461554",
     "cad/kilib/rocket.3dshapes/M3_MAX_F10S_ENVELOPE.wrl": "b94c381b5b18bb1a779f13349e78ef779bbedc5005020a9c5dac3a3101b7b5a5",
     "cad/kilib/rocket.3dshapes/M3_MA_8x10.wrl": "8969c393340692a96a03cd804c70720747d9adc62146d0757f266fe5a2a12902",
-    "cad/kilib/rocket.3dshapes/M3_MICROSD_MOLEX_472192001.wrl": "b42294e799c534e0e628109596c34a816745ddf6ae14cb993d1a99d62f9085de",
+    "cad/kilib/rocket.3dshapes/M3_MICROSD_MOLEX_472192001.wrl": "9a074b83b2f579d4aeb38b5c3a4e557e184cd93aea4a38acde6f4ef7c59f1e30",
     "cad/kilib/rocket.3dshapes/M3_MLT5020_3pad.wrl": "c8412cc0b59804da416b02d13c80bd3c37f86963de80590f7549256011075a8c",
     "cad/kilib/rocket.3dshapes/M3_NCD0805R1_K1.wrl": "50f35703e0a36e01a0ed2cf5c666e21c8465d8f06cf3ea01dd22a3f16af8017e",
     "cad/kilib/rocket.3dshapes/M3_OSCON_F12.wrl": "cbdb3b03479700173a82964fb243f60af24166bb4115c8bc17e42526053a6956",
@@ -176,7 +176,7 @@
     "cad/kilib/rocket.pretty/USB-C_SMD-TYPE-C-31-M-12_1.kicad_mod": "f77f08eb642c6ec21933dc0cf3e2e4866e5b54717d8f1c237a4159bbdc6e8ce6",
     "cad/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
     "cad/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
-    "cad/m3.kicad_pcb": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+    "cad/m3.kicad_pcb": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
     "cad/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
     "cad/m3.kicad_sch": "4c3cd068b22c171d198a022adc3dd8f3a16ed2dd2b3e15f8cf99793443c8f89b",
     "cad/mcu.kicad_sch": "03f3a7007ed196a1a0770523f193f90a9c7a1e9b9d32783dd2bfcd285af207bf",
@@ -195,11 +195,11 @@
     "tools/jlc_orient.py": "75b36799b732384eac5ac0f0d4e5ae3a9a2e8b2b1d230421ff791e76e77619ae"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "2fd91e43d69e62fc4b9686408a14a0d355aded3ad941c11e213515181ac110c8",
-    "m3_assembly_top.pdf": "ac5a4330fdb1d6b74644ad7d670528a88f5aaf792c2d2f1c10c06a23bca9b031",
+    "m3_assembly_bottom.pdf": "1b21eca6d0e043f02a3b02c2768c52ad455bfaca0559696d618c53d84867e8f6",
+    "m3_assembly_top.pdf": "123e841c39a6221d0eb30d1e2f1a44d70efd461a511105fb74168fd3ec629f11",
     "m3_bom_jlc.csv": "d04fed383a7df9981b1f459b86c0292d09833b6fa34dcadac890aeb65325f081",
     "m3_cpl_jlc.csv": "75ae408d078701f84e87e28ed35fcc1327801a9bf0142a8a859da82074f9f3d7",
-    "m3_gerber.zip": "41769182d935b090214f3033453a530b5190f4a45fc1b4d074c0538493b0fa73"
+    "m3_gerber.zip": "90966328ca7339095590a4397545f418c6fa407f4f25e0964e53e7aaac9f2007"
   },
   "schema": 1
 }

@@ -550,6 +550,99 @@ def fab_reference_details(b):
         text.SetPosition(f.GetPosition() + silk.P(dx, dy))
 
 
+# R13-MFG-01: measured per-reference Fab ink clearances. Keep all other labels unchanged.
+# This table is derived offline; the production stage performs no placement search here.
+FAB_REFERENCE_CLEARANCES_R13 = {
+    'C10': (0.0, 0.1, 1.0),
+    'C100': (-0.05, 0.0, 0.4),
+    'C13': (-0.05, 0.0, 0.4),
+    'C14': (0.0, -0.05, 0.4),
+    'C15': (0.1, 0.0, 0.4),
+    'C16': (0.0, -0.05, 0.4),
+    'C17': (-0.05, 0.0, 0.4),
+    'C18': (0.0, -0.05, 0.4),
+    'C21': (0.0, 0.1, 0.4),
+    'C24': (0.1, -0.1, 0.4),
+    'C25': (0.0, -0.05, 0.4),
+    'C26': (0.0, 0.1, 0.4),
+    'C30': (-0.05, 0.0, 0.4),
+    'C31': (-0.05, 0.0, 0.4),
+    'C32': (0.1, 0.0, 0.4),
+    'C407': (0.0, 0.0, 0.6),
+    'C408': (0.0, -0.05, 0.4),
+    'C411': (0.0, 0.0, 0.7),
+    'C461': (0.0, 0.0, 0.7),
+    'C88': (0.1, 0.0, 0.4),
+    'C99': (0.0, 0.1, 0.4),
+    'D400': (0.15, 1.1, 0.8),
+    'D401': (0.0, 1.1, 0.8),
+    'D410': (0.05, -1.0, 0.8),
+    'D411': (0.0, -1.0, 0.8),
+    'D420': (0.0, 1.1, 0.8),
+    'D421': (0.15, 1.1, 0.8),
+    'LED1': (-1.45, 0.0, 0.6),
+    'LED2': (-1.45, 0.0, 0.6),
+    'LS120': (0.0, 1.2, 0.8),
+    'Q120': (0.0, 0.0, 0.7),
+    'Q121': (0.0, 0.0, 0.7),
+    'R104': (0.0, 0.15, 0.4),
+    'R105': (0.0, -0.05, 0.4),
+    'R11': (0.1, 0.0, 0.4),
+    'R12': (0.1, 0.0, 0.4),
+    'R120': (-0.05, 0.0, 0.4),
+    'R121': (-0.05, 0.0, 0.4),
+    'R122': (0.1, 0.0, 0.4),
+    'R123': (0.1, 0.0, 0.4),
+    'R127': (0.0, -0.05, 0.4),
+    'R128': (0.1, 0.0, 0.4),
+    'R129': (0.1, 0.0, 0.4),
+    'R13': (-0.05, 0.0, 0.4),
+    'R130': (0.0, 0.1, 0.4),
+    'R131': (0.0, 0.1, 0.4),
+    'R132': (0.1, 0.0, 0.4),
+    'R133': (0.0, 0.1, 0.4),
+    'R154': (-0.05, 0.0, 0.4),
+    'R155': (-0.05, 0.0, 0.4),
+    'R156': (0.1, 0.0, 0.4),
+    'R157': (0.1, 0.0, 0.4),
+    'R163': (-0.05, 0.0, 0.4),
+    'R173': (0.1, 0.0, 0.4),
+    'R175': (0.1, 0.0, 0.4),
+    'R178': (0.0, 0.1, 0.4),
+    'R180': (0.0, 0.1, 0.4),
+    'R432': (0.0, 0.15, 0.4),
+    'R60': (0.0, 0.1, 0.4),
+    'R61': (0.0, -0.05, 0.4),
+    'R62': (0.0, 0.1, 0.4),
+    'R63': (0.0, -0.05, 0.4),
+    'R64': (-0.05, 0.0, 0.4),
+    'TP120': (0.0, -1.15, 0.6),
+    'TP121': (0.0, -1.15, 0.6),
+    'TP122': (0.0, -1.15, 0.6),
+    'TP74': (0.0, -1.15, 0.6),
+    'TP80': (0.0, -1.15, 0.6),
+    'TP81': (0.0, -1.15, 0.6),
+    'TP82': (0.0, -1.15, 0.6),
+    'TP83': (0.0, -1.15, 0.6),
+    'TP88': (0.0, -1.15, 0.6),
+    'U10': (0.0, 0.0, 0.5),
+    'U11': (0.0, 0.0, 0.7),
+    'U12': (0.0, 0.0, 0.7),
+    'U13': (0.0, 0.0, 0.5),
+    'U400': (0.0, 0.0, 0.4),
+}
+
+
+def fab_reference_clearances(b):
+    """Clear the reviewed Fab borders/polarity marks; small labels require vector zoom."""
+    for ref, (dx, dy, size) in FAB_REFERENCE_CLEARANCES_R13.items():
+        f = silk.fp_of(b, ref)
+        text = silk._fab_ref(f)
+        text.SetTextSize(silk.P(size, size))
+        text.SetTextThickness(silk.MM(round(size * 0.15, 6)))
+        text.SetPosition(f.GetPosition() + silk.P(dx, dy))
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 def finish(b, lib):
     """Place every legend, the designators and the Fab references; return the placement evidence."""
@@ -679,6 +772,7 @@ def finish(b, lib):
     silk._fab_ref(silk.fp_of(b, 'J122')).SetPosition(silk.P(36.5, 71.5))
     fab_reference_details(b)
     fab_moved = r9_post.fab_clear(b)
+    fab_reference_clearances(b)
     b.GetTitleBlock().SetRevision(REV)
     distance_review = []
     with check_r10.patched(check_r7, WORD_LEGENDS=check_r10.WORD_LEGENDS_R10), \

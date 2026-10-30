@@ -222,18 +222,17 @@ wired terminals, external GPS/radio, a hinged microSD socket, one bus-sense bank
 There are no GH connectors, servo headers, servo tie holes, ARM link, pull-pin, on-board RF modules or SMA jacks.
 
 **Board/evidence state,2026-10-30UTC:** native PCB
-`7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c`:
-209 footprints,973 segments,296 vias,2,264,839bytes. Two complete direct
-native builds exit0, each including full tools/check.sh: DRC/unconnected/parity/
-ERC0, all31 R10 rules, routing, legends, fit, orientation, paste and five-output
-manifest pass. All42 recorded generated-file hashes/metrics match exactly.
-Actual-feed hot-plug2304 required+60 local cases pass (Simulation/Inference).
-R12 reviewed the prior0ad PCB with0Critical/0Major/12Minor groups; this fix needs
-fresh full same-board rounds13/14. No owner/process/physical acceptance follows.
-See [R10_VALIDATION](R10_VALIDATION.md).
+`e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`:
+209footprints,966segments,296vias,2,259,597bytes. Two complete direct
+native builds/check0 reproduce42 generated files. DRC/unconnected/parity/ERC0,
+all31 R10 rules,routing,legends,fit,orientation,paste geometry and five-output
+manifest pass. Actual-feed2304 required+60 local hot-plug cases pass as
+Simulation/Inference. Full R13 on7355/fa897c8 is0Critical/0Major/17Minor groups;
+these changes require fresh full14/15 on the committed result. No owner,
+process,physical or firmware acceptance follows. See [R10_VALIDATION](R10_VALIDATION.md).
 
 Coordinates are KiCad millimetres, x=0 west, y=0 aft, y=90 forward; Gerber Y is −KiCad y.
-F/B mean top/bottom. Positions below describe the current `7355ae1a…` native board and placement source,
+F/B mean top/bottom. Positions below describe the current `e0e3ad84…` native board and placement source,
 including west/east terminal rows at x=7.4/38.6 mm and the repaired bottom port/servo cells. Recheck every probe,
 coat mask and harness against its hash-bound assembly drawing before work. R10 remains unaccepted and unordered;
 this is not a flight release.
@@ -260,17 +259,17 @@ python3 tools/check_procurement.py --profile r10
 
 R10's placed-part/feeder target is **$84.41 per board**; Extended-code count is informational.
 
-**Current supplier snapshot:** all82 exact codes were queried at
-**2026-10-30T06:11:29Z**. Final-BOM/CPL-bound [cost](../m3_design/assembly_review/fab/cost_check.json)
-and [stock](../m3_design/assembly_review/fab/stock_check.json) reports were refreshed
-at07:21:07UTC. At five Standard PCBA boards, parts$57.5554 plus feeder
-share$25.092 gives**$82.65/board**, passing the$84.41 placed-part target.
-Minimum purchases raise parts to$59.8958 and total to**$84.99/board** ($0.58 over),
-before$83.96/order fixed fees, possible$14.93 handling, PCB/rails/joints, VIPPO,
-C84 manual operation, consignment and shipping. Owner cost/quote acceptance,
-R430/U4 stock and factory process acceptance remain pending; no order is made.
-Earlier05:00UTC$79.53/$81.87 and R11 preliminary$82.61/$84.95 are dated historical
-snapshots. Refresh all supplier evidence within24h of ordering.
+**Current supplier snapshot:** all82 exact codes queried2026-10-30T08:38:42Z
+through **08:38:52.797802Z**. The final-BOM/CPL-bound
+[cost](../m3_design/assembly_review/fab/cost_check.json) and
+[stock](../m3_design/assembly_review/fab/stock_check.json) records retain that
+supplier time. At five Standard PCBA boards, parts$57.5538 plus feeder share
+$25.092 gives**$82.6458/board**, passing the$84.41 placed-part target. Minimum
+purchases raise parts to$59.8942 and total**$84.9862/board** ($0.58 over),before
+$83.96/order fixed fees,possible$14.93 handling,PCB/rails/joints,VIPPO,manual
+C84,consignment and shipping. Owner cost/quote acceptance,R430/U4 stock and
+factory process acceptance remain pending; nothing ordered. Earlier supplier
+snapshots are historical; refresh all supplier evidence within24h of ordering.
 
 | Part | Snapshot / required action |
 |---|---|
@@ -281,7 +280,7 @@ snapshots. Refresh all supplier evidence within24h of ordering.
 
 ### 8.2 Assembly, order remarks and placement preview
 
-**Standard PCBA, both sides, including all seven THT terminals.** The current `7355ae1a…` package has
+**Standard PCBA, both sides, including all seven THT terminals.** The current `e0e3ad84…` package has
 82 BOM codes and 199 fitted parts, all included in the BOM/CPL. Its 199 CPL rows are 67 top +132 bottom;
 independent pad reconstruction checks cover 66 top +121 bottom, plus 12 placement-only nonpolar-resistor checks.
 Orientation passes, with worst reconstructed-pad residual0.491 mm. Paste passes at245 top +373 bottom flashes,
@@ -372,7 +371,7 @@ Record the final board/firmware hashes. After coating/rework or any firmware cha
 J2 F(5,39.4) must be programmed before fitting the adjacent (4,44.3) support, or with that support removed:
 the TC2030 nose cannot seat with its hardware in place.
 
-**Current probe worksheet** (read-only native contact positions on `7355ae1a…`):
+**Current probe worksheet** (read-only native contact positions on `e0e3ad84…`):
 
 | Probe / role | Face and exact contact centre (mm) | Use |
 |---|---|---|
@@ -451,7 +450,7 @@ thermal and sensor tests apply using the contacts above and the current circuit:
   Normal physical current ends≤20 ms including tail; intact-hardware watchdog-fault guard≤36 ms. Qualify IWDG timing,
   physical tail, hot dummy-load pulses, source/harness resistance and selected MJG J-Tek lot/charge20 ms firing.
 - **Port faults/back-feed:** GPS/radio stay powered and have no EN/OE/FAULT or individual power-cycle facility.
-  Their digital UARTs require powered-board FT setup, pulls off above4 V and0–5 V endpoints; no self-powered module
+  Their digital UARTs require powered-board FT setup, internal RX pulls always off and0–5 V endpoints; the operating pull-off threshold is relevant I/O supply+0.3 V, separate from the4 V absolute-stress note; no self-powered module
   with the board off. Short each port with worst camera/SD load and observe logic/flight-state survival.
   Camera alone retains U402/U12/U13: test OE-before-EN disable and all allowed source transitions.
   With no e-match, characterize separately powered-port reverse current and rail decay; back-feed may hide J400 opening.
@@ -508,6 +507,6 @@ are not vibration-release criteria. Physical fit, heat, coating process, clamp/h
 Earlier R7–R9 instructions, including RF modules/SMA, GH mates, ARM link/fuses, servo headers/ties, old coating rectangles
 and old thermal/modal/copper/stock counts, do not become current through a designator substitution.
 Historical details remain in M3_R10, R10_VALIDATION and R10_DECISIONS. The current software/CAD and fabrication
-results above belong to `7355ae1a…`, reproduced by two complete successful builds with all42 generated-file hashes
+results above belong to `e0e3ad84…`, reproduced by two complete successful builds with all42 generated-file hashes
 and board metrics identical. Resolve stock/quote requirements before any order. Factory approval, first-article processes, firmware, bench/thermal/e-match, coating, harness/tool/card
 access and installed mechanical qualification remain open.

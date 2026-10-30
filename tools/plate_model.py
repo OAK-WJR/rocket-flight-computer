@@ -137,7 +137,10 @@ def build(fit, D, clamp, case, profile='r9', mass_spec=None):
     a, b = (x1 - x0) / 1e3, (y1 - y0) / 1e3
     p = Plate(a, b, D, NU, RHO_H)
     masses = {}
-    rows = list(fit['rows'])
+    # R13: terminal tails are collision allocations for the already massed DB125,
+    # not extra components. The connector's explicit lump includes its metal pins.
+    rows = [row for row in fit['rows']
+            if not (profile == 'r10' and row[1].endswith(' terminal tail'))]
     if profile == 'r10':
         boxes = {row[1]: row for row in fit['rows']}
         rows += [(boxes[parent][0], key, boxes[parent][2], boxes[parent][3]) for key, parent in sorted(parents.items())]

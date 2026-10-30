@@ -56,6 +56,19 @@ class Assembly(unittest.TestCase):
         self.assertIn('Qty column required for BOM',
                       gate.assembly_population('Designator\nU1\n', {'U1'}, require_qty=True))
 
+    def test_assembly_designators_may_not_recur_on_another_row(self):
+        for header, first, second in (('Designator,Qty,Manufacturer Part', 'R134,1,2R00', 'R134,1,20R0'),
+                                      ('Designator,Qty', '"R127,R134",2', '"R134,R128",2'),
+                                      ('Designator', 'R134', ' R134 ')):
+            with self.subTest(header=header):
+                text = f'{header}\n{first}\n{second}\n'
+                self.assertIn('line 3: R134 already appears on line 2',
+                              gate.assembly_population(text, {'R134'}, require_qty='Qty' in header))
+        # Distinct-within-row Qty semantics and quantity-free CPL remain valid.
+        self.assertEqual(gate.assembly_population('Designator,Qty\n"R134,R134",1\nR127,1\n',
+                                                 {'R127', 'R134'}, require_qty=True), [])
+        self.assertEqual(gate.assembly_population('Designator\nR134\nR127\n', {'R127', 'R134'}), [])
+
     def test_reviewed_fitted_population_includes_core_and_support(self):
         import r10_sch_check as sch
         parts, _ = sch.read_netlist(gate.ROOT / 'm3_design/assembly_review/schematic.net.xml')
@@ -1851,6 +1864,14 @@ class Plate(unittest.TestCase):
             mutant = dict(self.spec, masses_g=dict(self.spec['masses_g'], **{key: 1.0}))
             with self.assertRaises(ValueError):
                 plate.build(self.fit, 5, False, 'r10_mated', 'r10', mutant)
+
+    def test_terminal_tail_collision_rows_do_not_add_connector_mass(self):
+        _, baseline, total = plate.build(self.fit, 5, False, 'r10_mated', 'r10', self.spec)
+        extra = (1, 'J1.1 terminal tail', 'B', [6.45, 74, 8.35, 76, -3.8, -1.6])
+        fit = dict(self.fit, rows=self.fit['rows'] + [extra])
+        _, masses, actual = plate.build(fit, 5, False, 'r10_mated', 'r10', self.spec)
+        self.assertEqual(masses, baseline)
+        self.assertEqual(actual, total)
 
 
 class FabScript(unittest.TestCase):

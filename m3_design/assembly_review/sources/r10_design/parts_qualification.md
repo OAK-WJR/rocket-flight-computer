@@ -12,18 +12,18 @@ tests were performed. The current always-on ports, screw terminals, microSD and 
 
 No physical tests or firmware qualification are claimed. The actual source contract is
 `circuit.json` plus `pin_table.tsv`; the earlier `parts.json` is a historical selection worksheet.
-The current native-path record is bound to the round12 fix PCB
-`7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c`. Two complete direct builds exit0,
-including full tools/check.sh: DRC/unconnected/parity/ERC0, all31 rules and fab
-checks pass;42 recorded generated files match byte for byte. All171 R10 cases
-are covered, resolving the three native NumPy skips;29fit cases pass. See
-[round12 fix validation](../r10_review/round12_fix_validation.json). This is not
-full-round or physical qualification. Dated records below remain historical
-where this circuit/layout amendment supersedes them. R12 native comparison
-proves all original part poses, pad lands/nets, GND tracks and via geometry
-unchanged; BAT_ENABLE loses1.408326mm, the ordinary C98 stitch is added, and five
-Fab labels are corrected. C98's saved-copper return is7.345584mm at0.05mm grid,
-versus31.812237mm before; no transient behavior is inferred.
+The current native-path record is bound to round13 fix PCB
+`e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`. Two complete direct native builds/check0
+reproduce42 generated files. All31 R10 rules and fab checks pass; R10173/
+fit30 tests pass,including separate resolution of all native NumPy skips.
+See [round13 fix validation](../r10_review/round13_fix_validation.json). This is
+integration evidence,not independent full-round or physical qualification.
+Dated records below remain historical where superseded. Native comparison
+preserves all part poses,pad lands/nets,vias and GND tracks; bounded same-layer
+signal redraws and77 Fab references change. SD model nails/tolerances and23
+separately calculated terminal tails are now covered by current fit. C98 return
+remains7.345584mm at0.05mm grid,versus31.812237mm before R12; no transient
+behavior is inferred. Fresh complete14/15 must review the committed result.
 
 **Always-on GPS/radio.** J410/J420 pin1 directly joins PORT_4V8. Delete U410/U420,
 R410–412/R420–422, U411/U421, R442/R452 and C440/C443/C450/C453. Keep the four
@@ -31,8 +31,11 @@ R410–412/R420–422, U411/U421, R442/R452 and C440/C443/C450/C453. Keep the fo
 bypass. R440/R450 connect RX_WIRE to RX_MCU; R441/R451 connect TX_MCU to TX_WIRE.
 No firmware port power-cycle, individual FAULT or OE remains. PC6/PC7 are FT_h;
 PB12/PB13 are FT_u in [ST DS12110 Rev11 Table9 pp74–79 and Table10 pp91–92](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf).
-The digital FT input ceiling is min(min(relevant supplies)+4V,6V), with pulls disabled
-above4V and zero positive-injection allowance (Table109 pp207–208). Restrict external
+The digital FT absolute ceiling is min(min(relevant supplies)+4V,6V), with zero
+positive-injection allowance (Table109 pp207–208). Keep direct UART RX internal
+pulls disabled throughout operation: Table112 note3 p210/Table147 note6 p242
+requires pulls off above the relevant I/O supply+0.3V; the4V absolute-stress
+condition does not replace that operating rule. Restrict external
 UART levels to0…5V with the board powered and digital inputs configured; confirm module
 levels on the bench. A1k resistor does not give powered-off isolation: no self-powered
 GPS/radio with the board off. Direct power pins can also back-feed the shared LDO/buck
@@ -68,7 +71,11 @@ allowed to remove the ports; continuous fault operation is not qualified.
 [AP63201 DS41326 Rev3-2 p5](https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf)
 gives3.1A maximum high-side peak limit. Conservatively using the whole input pulse
 without duty/hiccup reduction, add(1.4W core+0.825W SDwrite)/3.5V,3.083mA R92 bleed
-and5mA allowance: **3.743797A**, below U9's3.96A minimum by0.216203A. This is a
+and5mA allowance: **3.743797A**, below the calculated U9 minimum3.946188A
+by0.202391A. TI TPS25947 RevC p9/eq7 p32 gives3.96–4.84A at exact750ohm.
+Inverse-R sensitivity for R84 RT0603BRD07750RL0.1%/25ppm/K over100K
+(+/-0.35%) gives3.946188–4.856999A (Calculation/Inference, not new TI
+characterization). This is a
 threshold-based inference excluding comparator overshoot and parasitic rail dips;
 bench a short on either port with camera and SD writing while observing logic/flight
 state. No ideal2A clamp is assumed. Normal minimum endpoint estimates improve to
@@ -89,8 +96,12 @@ x3.205/2.105/1.005/–0.095/–1.195/–2.295/–3.395/–4.495,y0mm; pads0.80×
 Shell G1/G2/G3/G4 use supplier numeric aliases12/9/10/11 at
 (+6.875,+2.6)/(+6.875,–5.7)/(–6.875,–5.7)/(–6.875,+2.6), pads1.45×2.00mm,
 all GND. Maker body13.60×14.50×1.90mm,±0.15mm general tolerance. The generated
-14.0×15.5×2.1mm closed card/socket envelope is conservative **Inference** because
-card seating is not dimensioned; check actual card and lid access. Board must be out
+15.05×15.70×2.10mm closed card/socket allocation includes the nails and general
+tolerances: width=(13.60+0.15)+2×(0.50+0.15)=15.05mm. Socket extent is
+y−9.70…+5.35mm; retain the inferred card front at+6.00mm and height2.10mm.
+Common seating/centring and the card front remain **Inference**, not a maker-
+certified maximum assembled envelope. Check actual card, solder seating and lid
+access. Board must be out
 of the bay and off for card insertion/removal. Remove the board from the continuous
 sled before opening the bottom hinge, unless a physical access window has been
 qualified; the closed-card envelope does not allocate lid-opening space.
@@ -309,7 +320,7 @@ after pad/flight drain, Rpack≤0.15 Ω, servo stall1.92 A each. Solve
 Ifire=V/Rfire. Retain conservative2 Ω e-match and≤0.3 Ω external leads/harness,
 R134 tolerance/hot corner2.02909 Ω, hot FETs,5 mΩ ground/10 mΩ contact allowances.
 The current `parts_budget.json` is regenerated and bound to PCB
-`7355ae1a…` instead of carrying circuit-pass length literals. Native fire-path pruning
+`e0e3ad84…` instead of carrying circuit-pass length literals. Native fire-path pruning
 gives BAT_IN6.307107mm/1.0mm, RAW_ACT5.886133mm, IGN10.230382mm and
 OUT7.854478mm at0.5mm, plus one aligned2.2mm/0.4mm source path. BAT_IN includes
 the additional0.707107mm routed entry inside Q120's common drain pad; dead sense
@@ -318,7 +329,7 @@ series via. Copper is29.362412mΩ at20°C/35.132126mΩ at70°C (TCR0.00393/K).
 With the primary40mΩ/FET ceiling, total loop4.617458126Ω gives0/1/2/3/4-stall
 currents1.544366072/1.479437787/1.414263776/1.348804955/1.283013039A;
 all exceed1.125A. D-R11-03 binds the generator to native geometry. The regenerated
-budget SHA-256 is `398a68f5732818fbb2d788bc05e5d2d2e4e2e590ee464bbf5a2c4f7d3f61f0d5`.
+budget SHA-256 is `e46603e498b2b534df7bf607f80a2254929e30e3acd70e76d78190660b7725ba`.
 The intermediate `419a8f49…` board had the same fire-path lengths/current estimates;
 the new budget binds the later target independently.
 The earlier `0c50b9fd…` review calculation (4.618006Ω,1.544183A idle/1.282861A
@@ -360,7 +371,7 @@ TP122, NRST and dummy-load current for early/late CPU starvation, normal abort,
 postfire refresh, reset/unpowered gate tails and hot R134 pulses; record resistor
 drift and actual physical20/36 ms limits across supply and temperature.
 
-**Current local output paths (GAP-2, native CAD / Inference):** on `7355ae1a…`; original paths preserved by exact native comparison,
+**Current local output paths (GAP-2, native CAD / Inference):** on `e0e3ad84…`; original paths preserved by exact native comparison,
 U9 is B(18.5,81.6), C82 is B(19.3,76.75),90°, and D9 is B(15.0,79.3),−90°.
 The saved-copper API gives:
 

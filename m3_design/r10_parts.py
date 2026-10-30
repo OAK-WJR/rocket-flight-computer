@@ -160,9 +160,10 @@ MODELS = {
     'M3_TPS7A91_DSK10': (0, 0, 0, 2.6, 2.6, .8, '.12 .12 .12'),
     'M3_MA_8x10': (0, 0, 0, 8.5, 8.5, 10.8, '.65 .65 .68'),
     'M3_AONR21357_DFN3x3A_EP1': (0, 0, 0, 3.3, 3.3, .9, '.12 .12 .12'),
-    # Conservative closed socket/card union; card centring is an inference,
-    # maker body is 13.60 x14.50 x1.90 mm at (0,-2.10), +/-0.15 mm.
-    'M3_MICROSD_MOLEX_472192001': (0, -1.75, 0, 14., 15.5, 2.1, '.45 .45 .48'),
+    # SD-47219-001G sheet1: include fitting nails and independent dimension
+    # tolerances; centred seating/card-front allocation remains an inference.
+    # Local union x +/-7.525, y -9.70..6.00, z0..2.10 (R13-BOM-02).
+    'M3_MICROSD_MOLEX_472192001': (0, -1.85, 0, 15.05, 15.7, 2.1, '.45 .45 .48'),
 }
 
 
@@ -468,7 +469,11 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
         # gated input demand; use the whole pulse, no duty/hiccup reduction.
         u9_port_fault_peak_bound_inference_A=3.1+(1.4+sd_write_w[1])/3.5+9.97/(3300*(1-thick))+.005,
         u9_port_fault_peak_bound_basis='AP63201 max3.1A HS peak current plus(1.4W logic+0.825W SDwrite)/3.5V, R92 at9.97V and5mA allowance; excludes threshold overshoot/parasitic dips; bench required',
-        u9_current_limit_min_A=3.96,
+        # TI TPS25947 RevC p9/eq7 p32 at exact750ohm, scaled inversely
+        # for R84 RT0603BRD07750RL0.1%/25ppm/K over the stated100K excursion.
+        u9_current_limit_min_A=3.96/(1+thin),
+        u9_current_limit_max_A=4.84/(1-thin),
+        u9_current_limit_basis='Calc/Inference: exact750ohm TI table3.96..4.84A scaled inversely with R84 +/-0.35% (0.1% initial +25ppm/K x100K); not a new TI characterization or transient guarantee',
         r92_ohm=3300,
         battery_break_r92_bleed_bound_W=r92_bleed_w,
         battery_break_load_W=loads_w,

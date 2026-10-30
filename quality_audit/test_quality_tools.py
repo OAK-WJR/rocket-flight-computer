@@ -262,6 +262,21 @@ class PartIdentityTools(unittest.TestCase):
         board.write_text(self.board.replace('"LCSC" "C11702"', '"LCSC" ""'))
         self.assertIn('LCSC', audit(board)['missing_required_part_fields'][0]['fields'])
 
+    def test_redundant_part_identity_aliases_must_agree(self):
+        complete, _ = fill(self.board, self.catalog)
+        board = self.root / 'm3.kicad_pcb'
+        aliases = [('MPN', '0402WGF1001TCE'), ('Manufacturer Part Number', '0402WGF1001TCE'),
+                   ('mfr_part_no', '0402WGF1001TCE'), ('PartNumber', '0402WGF1001TCE'),
+                   ('LCSC Part #', 'C11702'), ('lcsc_part_number', 'C11702')]
+        for name, value in aliases:
+            for added, conflict in ((value, False), (' ' + value + ' ', False), ('wrong-part', True), ('', False)):
+                with self.subTest(name=name, value=added):
+                    source = complete.replace('(pad "1"', f'(property "{name}" "{added}") (pad "1"')
+                    board.write_text(source)
+                    result = audit(board)
+                    self.assertEqual(bool(result['conflicting_part_fields']), conflict)
+                    self.assertEqual(result['missing_required_part_fields'], [])
+
     def test_schematic_library_and_unfitted_symbols_remain_unchanged(self):
         result, changes = fill(self.schematic, self.catalog, {'R9'})
         self.assertEqual(len(changes), 2)

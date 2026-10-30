@@ -62,12 +62,13 @@ MATED = {
 # R10 screw-terminal amendment: every wired connection uses DB125 clamps; there are no port or servo plugs.
 # Terminal bodies are read from their models. Wire/ferrule bend and screwdriver access require physical qualification.
 R10_MATED = {'M3_MICROSD_MOLEX_472192001': dict(
-    refs=('J430',), box=(-7., -9.5, 7., 6., 0., 2.1),
-    basis='Molex SD-47219-001 Rev G: closed socket body x +/-6.8 mm, y -9.35..5.15 mm, height <=2.05 mm. '
-          'Inference: combined locked socket/card allocation x +/-7.0, y -9.5..6.0, height 2.1 mm; '
+    refs=('J430',), box=(-7.525, -9.7, 7.525, 6., 0., 2.1),
+    basis='Molex SD-47219-001G sheet1: width(13.60+0.15)+2x(0.50+0.15)=15.05mm including fitting nails; '
+          'independent y-datum stack -9.70..5.35mm and closed height<=2.05mm. '
+          'Inference: common centred datum, zero seating offset and retained card-front+6.00mm/height2.10mm; '
           'card seating, hinge locking and retention under 100 g/vibration require physical qualification. '
           'Open/insertion envelope is bench-only with the board out of the bay and unpowered',
-    source='https://cdn.promelec.ru/upload/items/2020/09/01/472192001_sd.pdf')}
+    source='https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf')}
 # R12-GATE-01: normalized maximum envelopes, in footprint-local KiCad x/y and
 # component-side z (mm), before placement/flip. D-R11-01 / T0-1 p1 for DB125;
 # the SD entry is the existing conservative closed socket/card union above.
@@ -80,6 +81,7 @@ R10_MODEL_BOXES = {
     'M3_MICROSD_MOLEX_472192001': R10_MATED['M3_MICROSD_MOLEX_472192001']['box'],
 }
 R10_MODEL_TOL = 2e-5  # mm; six-decimal VRML endpoint error <=1.905e-6 mm, with a numeric guard
+R10_TERMINAL_TAIL_MM = 3.8  # DORABO T0-1 sheet1:3.50+/-0.30mm below seating plane
 R10_MATED_REFS = {'J430'}
 REQUIRED_MATED = {'M3_GH_BM04B_GHS_TBT', 'M3_SMA_KH_KE8_EDGE'}
 # These are bare board features, not an escape hatch for missing fitted-part geometry.
@@ -394,12 +396,20 @@ def pad_box(p):
     return mm(bounds.GetX()), mm(bounds.GetY()), mm(bounds.GetRight()), mm(bounds.GetBottom()), -BOARD_T, 0.0
 
 
+def terminal_tail_box(f, p):
+    # Inference: use the whole native copper-pad AABB transversely, larger
+    # than the metal pin; solder/seating/bent-lead tolerances need inspection.
+    z = (0., R10_TERMINAL_TAIL_MM-BOARD_T) if f.IsFlipped() else (-R10_TERMINAL_TAIL_MM, -BOARD_T)
+    return (*pad_box(p)[:4], *z)
+
+
 def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
     if profile not in ('r9', 'r10'):
         raise ValueError(f'unknown fit profile {profile!r}')
     mated = R10_MATED if profile == 'r10' else MATED
     required_refs = R10_MATED_REFS if profile == 'r10' else {'J9', 'J122', 'J123', 'J30', 'J31'}
     rows, bodies, mating, bottom, issues, excluded = [], [], [], [], [], []
+    tails = []
     top_bodies, top_pads = [], []
     if not all(math.isfinite(value) for value in (radius, axis_x, tol)) or radius <= 0 or tol < 0:
         raise ValueError('finite positive bore radius, finite axis and nonnegative sled tolerance required')
@@ -430,6 +440,15 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
             continue
         rows.append((margin(box, radius, axis_x, tol), ref, side, box))
         bodies.append((ref, box))
+        if profile == 'r10' and fp_name(f).startswith('M3_DB125_'):
+            for p in f.Pads():
+                if p.GetAttribute() != pcbnew.PAD_ATTRIB_PTH:
+                    continue
+                tail = terminal_tail_box(f, p)
+                label = ref + '.' + p.GetNumber() + ' terminal tail'
+                tails.append((ref, label, tail))
+                rows.append((margin(tail, radius, axis_x, tol), label, 'F' if f.IsFlipped() else 'B', tail))
+                (top_bodies if f.IsFlipped() else bottom).append((label, tail))
         if f.IsFlipped():
             bottom.append((ref, box))
             bottom.extend((ref + '.' + p.GetNumber(), pad_box(p)) for p in f.Pads() if p.IsOnLayer(pcbnew.B_Cu))
@@ -456,6 +475,10 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
         issues.extend(f'{ref}: required R10 mated envelope missing' for ref in sorted(missing))
         _, tie_issues, _ = retention_holes(b, with_info=True, profile=profile)
         issues.extend(tie_issues)
+    for ref, label, tail in tails:
+        for other, body in bodies:
+            if other != ref and box_overlap(tail, body):
+                issues.append(f'{label} intersects {other} model box')
     for index, (ref, box) in enumerate(mating):
         for other, body in bodies:
             if other != ref and box_overlap(box, body):
@@ -477,7 +500,14 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
     issues.extend(f'{ref}: outside bore by {-mgn:.3f} mm' for mgn, ref, _, _ in rows if mgn < 0)
     return dict(profile=profile, rows=sorted(rows), issues=issues, supports=supports, nearest_support=nearest,
                 nearest_top_support=nearest_top, top_hardware_radius_mm=TOP_HARDWARE_RADIUS,
-                outline=outline, width_mm=width, length_mm=length, excluded=sorted(excluded), ok=not issues)
+                outline=outline, width_mm=width, length_mm=length, excluded=sorted(excluded),
+                terminal_tails=dict(count=len(tails), max_below_seating_mm=R10_TERMINAL_TAIL_MM,
+                                    transverse_allocation='Inference: native copper-pad AABB, not a pin/solder model',
+                                    minimum_bore_margin_mm=min((margin(box, radius, axis_x, tol) for _, _, box in tails), default=None),
+                                    max_projection_below_board_mm=R10_TERMINAL_TAIL_MM-BOARD_T,
+                                    nominal_4mm_standoff_plate_clearance_mm=4-(R10_TERMINAL_TAIL_MM-BOARD_T),
+                                    source='https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf'),
+                ok=not issues)
 
 
 def margin(box, radius, axis_x, tol):

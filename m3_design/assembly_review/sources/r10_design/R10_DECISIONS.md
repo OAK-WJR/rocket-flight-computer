@@ -2061,3 +2061,121 @@ Test zero, malformed and mismatched counts. These are prospective gate gaps;
 the frozen mutants also hit existing stale-binding checks, so no whole-gate
 escape was established. Test receipts and complete integration checks record
 the actual closure; no physical or firmware qualification is inferred.
+
+## D-R13-01. Allocate actual tails and socket nails; clear Fab references
+
+Round13 found no Critical or Major on committed7355ae1a/fa897c8. Correct the
+mechanical evidence without moving parts, lands, supports or the IMU. The
+DORABO T0-1 drawing gives3.50+/-0.30mm terminal tails below seating. Body-only
+VRML boxes are not tail coverage. Allocate all23 tails separately in fit_check:
+use each native copper-pad XY box as a conservative transverse Inference and
+3.80mm below seating. Projection below the1.60mm PCB is2.20mm; nominal4mm
+standoffs leave1.80mm to the plate. The current calculated minimum tail/bore
+clearance is7.558359mm. Real seating, solder fillets, bent leads and loaded sled
+clearance remain inspection/physical obligations, not model facts.
+
+The optional plate calculator must not add those23 collision-only rows as new
+component masses: the explicit DB125 lump already includes the connector's
+metal pins. A focused old-code control adds a spurious0.547998g; exclude only
+the named tail collision rows while preserving all explicit mass keys. The new
+positive/negative regression and supplied-interpreter numerical controls pass.
+The final native-fit diagnostic remains181.3Hz pinnedD5/70.3g estimated mass;
+C431's100g rigid-sled gap is0.274363mm at h4 and negative at h3.5. This source-
+only optional-calculation correction was found after buildA and is included in
+buildB's full gate; it cannot change the42 generated CAD/binding artifacts.
+Round13_plate records exact inputs and scope. No physical mass,stiffness,
+shock or vibration qualification is inferred.
+
+[Molex SD-47219-001G sheet1](https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf)
+includes fitting nails and general tolerances outside the previous14mm model.
+Use width(13.60+0.15)+2(0.50+0.15)=15.05mm, socket y-9.70..+5.35mm,
+and the existing inferred card-front+6.00mm/height2.10mm. The resulting closed
+allocation is15.05x15.70x2.10mm, centred at local(0,-1.85). Common seating,
+centring and undimensioned card projection remain Inference; this is not a
+maker-certified assembled maximum. Native fit remains clear, including0.575mm
+to C23's courtyard and15.210798mm to the bore. Keep unpowered off-sled card
+service or qualify a real hinge window; no open-hinge fit is inferred.
+
+Apply77 measured Fab-reference-only offsets/sizes to remove border, pin1-dot
+and polarity-text intersections. Preserve132 other references, all non-reference
+objects and silkscreen rules. Use the fixed source table, never a runtime search.
+All209 references/722 rendered characters are checked, including37 drill-cutout
+polygons; clearance survives0.025mm glyph inflation. Small Fab labels still
+need vector zoom and first-article identification. The detailed source and
+visual receipts are round13_fab_fix. Delete the two unreferenced circuit-pass
+r10_top/r10_bottom PNG previews; current assembly PDFs and their native manifest
+supply board-bound drawings. No electrical or physical qualification follows.
+
+## D-R13-02. Reject contradictory identities, duplicate BOM rows and wrong paste
+
+Close three prospective adversarial gaps while preserving actual design limits.
+Recognize normalized alternate part-number fields, including MPN, and reject
+contradiction with the canonical Manufacturer Part/LCSC identity; matching or
+blank aliases remain valid. Reject a designator appearing in more than one
+production BOM/CPL row, preserving positive integer BOM quantities and
+quantity-free CPL semantics. Compare the actual Gerber aperture polygons with
+native plotted paste geometry within1micrometre, including native margins,
+rotations and reviewed split exposed-pad windows. Do not invent a universal
+paste-coverage percentage or stencil-volume qualification. Unsupported geometry
+operations fail closed. Current618 apertures pass; the contradictory R134MPN,
+duplicate R134 row and0.001mm aperture seeds now reject. Earlier broader stale
+bindings also rejected those mutants; no original whole-gate escape is claimed.
+The focused regressions, old-code failures and native positive controls are
+recorded in round13_gate_fix. Full integrated gates remain required. No owner
+rule, physical acceptance or AGENTS section2 constraint is weakened.
+
+## D-R13-03. Correct operating evidence and adopt only qualified local redraws
+
+R84 is RT0603BRD07750RL,0.1%/25ppm/K. TI TPS25947 RevC p9/eq7 p32's exact750ohm
+3.96..4.84A range does not include that resistor's full tolerance. Apply inverse-R
+sensitivity over100K, +/-0.35%:3.946188..4.856999A (Calculation/Inference, not new
+TI characterization). The3.743797A conservative fault allocation retains
+0.202391A margin to the lower result. Comparator overshoot, parasitic dips,
+continuous fault operation and hot-plug/endurance remain unmeasured; no circuit
+change or higher load allowance is justified by this correction.
+
+DS12110 Rev11 Table112 note3 p210/Table147 note6 p242 require internal pulls off
+when an input exceeds its relevant I/O supply+0.3V. This is separate from
+Table109 note4 p208's4V absolute-stress condition. Keep the direct GPS/radio RX
+pulls disabled throughout operation; retain no-self-powered-port-with-board-off
+and no-back-feed-while-connecting-match rules. Correct source notes, schematic
+checks and binding evidence without moving any of the100 MCU pins. The R10
+evidence JSON is not an executable firmware binding: assembly_binding.py and
+v0.8.1/diagnostics remain R1-bound and cannot qualify this PCB.
+
+Replace CAM_RX_BUFFER's local B.Cu detour with the checked U12.1 to R100.2
+vertical/45degree path through(30.05,42.625), saving1.156928mm and two segments.
+Bounded additional same-layer signal sketches may be adopted only after native
+all-severity/parity DRC and unchanged reference/critical-hygiene rules pass;
+round13_routing_fix enumerates the actual adopted source paths and rejected or
+unqualified sketches. Do not change pads, vias, planes, layers, power/pyro or
+fast-interface cells merely to lower an information count. Remaining M2 choices,
+remote noncritical return companions and L400's possible0.15mm uncovered heel
+remain measured deviations for owner/assembler and bench qualification, not
+claims that all alternatives are impossible.
+
+The bounded qualification adopts all12 named source paths in that receipt:
+CAM_RX_BUFFER,LED_YEL,BUZZ_DRV,V3V3_SENSE,LOGIC_SOURCE_ST,RADIO_TX_MCU,
+VBUS_SENSE,CAM_PWR_EN,CAM_FAULT_N,GPS_TX_WIRE,GPS_RX_WIRE and NRST. Genuine
+individual and combined all-severity/parity DRC and unchanged reference/hygiene
+controls pass. The canonical native comparison saves6.175186mm and seven
+segments; all pads,nets,poses,vias and GND tracks are identical. LED_YEL's
+0.150000..0.150001mm clearance meets native0.15mm but is below the supplemental
+search's0.16mm reserve; disclose this numerical scope rather than claiming the
+search proves no alternative. Final inventory is140 actual information items:
+110 ordinary+22 inside-pad+8 noncritical leftovers,54 all-net bump windows.
+The11 slow AUD-2 observations are5 runs,5 pads and1 connected-chain observation,
+not11 distinct nets. All these M2 compromises still await owner acceptance.
+
+Correct O6's signal-reference-branch wording, actual R432.1 endpoint name, stale
+PREPARATION/final-binding ledger states and the active flight's estimated
+Mach1.9 harness statement. Parent VEHICLE remains a separately owned stale
+mirror; the in-worktree handoff records current geometry without editing that
+worktree. Preserve each older review at its exact board hash. The fresh public
+supplier snapshot2026-10-30T08:38:52.797802Z gives82.6458USD placed/feeder share
+and84.9862USD including minimum purchases, before fixed/process/PCB/shipping.
+R43017<3610 and U4 0<5 remain stock blockers; U9 minimum7 for5 fitted. No quote,
+order or owner cost/process/deviation acceptance is inferred. Rebuild twice,
+check0, refresh all native provenance and commit; because these fixes change the
+PCB, fresh complete rounds14/15 must earn the final same-board clean pair.
+AGENTS section2 is unchanged.

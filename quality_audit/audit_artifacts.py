@@ -25,6 +25,25 @@ def is_fitted_footprint(fp):
         attrs & {'dnp', 'exclude_from_bom'})
 
 
+# AGENTS section3: redundant identity fields may agree, but must not contradict.
+IDENTITY_ALIASES = {
+    'LCSC': {'lcsc', 'lcscpart', 'lcscpartnumber', 'lcscpartno'},
+    'Manufacturer Part': {'manufacturerpart', 'manufacturerpartnumber', 'manufacturerpartno',
+                          'mpn', 'partnumber', 'partno', 'mfrpart', 'mfrpartnumber', 'mfrpartno',
+                          'mfgpart', 'mfgpartnumber', 'mfgpartno', 'mfrpn', 'mfgpn', 'manufacturerpn'},
+}
+
+
+def conflicting_identities(fields):
+    conflicts = []
+    for aliases in IDENTITY_ALIASES.values():
+        names = {name: value.strip() for name, value in fields.items()
+                 if re.sub(r'[^a-z0-9]', '', name.casefold()) in aliases and value.strip()}
+        if len(set(names.values())) > 1:
+            conflicts.append(names)
+    return conflicts
+
+
 def audit(board):
     data = board.read_bytes()
     root = parse(data.decode('utf-8'))
@@ -41,9 +60,8 @@ def audit(board):
             if absent:
                 missing_required.append({'ref': ref, 'fields': absent})
         a, b = fields.get('LCSC', '').strip(), fields.get('LCSC Part', '').strip()
-        if a and b and a != b:
-            conflicts.append({'ref': ref, 'value': fields.get('Value'),
-                              'LCSC': a, 'LCSC Part': b})
+        conflicts.extend(dict(ref=ref, value=fields.get('Value'), **names)
+                         for names in conflicting_identities(fields))
         if not a and not b:
             missing_fields.append(ref)
         if not any(isinstance(x, list) and any(

@@ -34,16 +34,14 @@ def draw(d, feed=False):
 
     d.track('USB_DM', 'F', .2, [d.pad('D4.6'), (15.85, 29.65), (19.5, 33.3), d.pad('U1.70')])
     d.track('USB_DP', 'F', .2, [d.pad('D4.4'), (16.75, 31.55), (19, 33.8), d.pad('U1.71')])
-    # VBUS_SENSE: R9.2 on B.Cu, one via onto F.Cu, then a B.Cu hop under the USB_LIMITED feed (x 16.0) and the C86 pads,
-    # and onto F.Cu again, running outside USB_LIMITED's diagonal into U1.65.  The F.Cu approach (x + y = 38.6) keeps
-    # 0.6 mm from C28.2's GND via.
+    # VBUS_SENSE retains the B.Cu hop under USB_LIMITED, then uses a direct
+    # 45-degree F.Cu approach followed by the U1.65 axis.
     d.track('VBUS_SENSE', 'B', .2, [d.pad('R9.2'), (9.95, 27.7)])
     d.track('VBUS_SENSE', 'F', .2, [(9.95, 27.7), (10.9, 27.7), (15.15, 23.45)])
     d.via('VBUS_SENSE', (15.15, 23.45))
     d.track('VBUS_SENSE', 'B', .2, [(15.15, 23.45), (18.45, 26.75)])
     d.via('VBUS_SENSE', (18.45, 26.75))
-    d.track('VBUS_SENSE', 'F', .2, [(18.45, 26.75), (17.3, 26.75), (17.3, 28.5),
-                                   (22.0, 33.2), d.pad('U1.65')])
+    d.track('VBUS_SENSE', 'F', .2, [(18.45, 26.75), (22.0, 30.3), d.pad('U1.65')])
     d.track('VBUS_SENSE', 'F', .2, [(9.95, 27.7), d.pad('R110.1')])
     # Retain the qualified inward MCU escape, then pass below SPI3's source vias on B.Cu.
     d.track('USB_FAULT_N', 'F', .2, [d.pad('U1.87'), (16.7, 42.5), (16.7, 39.05)])
@@ -66,8 +64,7 @@ def draw(d, feed=False):
     d.track('NRST', 'F', .2, [(5.0, 40.35), (6.2021, 41.5521), (8.2479, 41.5521),
                              (9.5, 40.3), (9.5, 38.3), (10.5, 37.3), (14.2, 37.3)])
     d.via('NRST', (14.2, 37.3))
-    d.track('NRST', 'B', .2, [(14.2, 37.3), (15.6, 35.9), (21.9, 35.9),
-                             (22.54, 36.54), core.move(old.V_NRST)])
+    d.track('NRST', 'B', .2, [(14.2, 37.3), (15.2607,36.2393), (22.54,36.2393), core.move(old.V_NRST)])
     d.via('NRST', core.move(old.V_NRST))
     for net, x in [('3V3', 3.73), ('GND', 6.27)]:
         d.track(net, 'F', .2, [(x, 40.35), (x, 40.8)])

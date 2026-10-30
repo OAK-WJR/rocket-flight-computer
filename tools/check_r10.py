@@ -213,11 +213,16 @@ def assembly_population(text, required=REQUIRED_FITTED, *, require_qty=False):
     reader = csv.DictReader(io.StringIO(text))
     rows = list(reader)
     has_qty = 'Qty' in (reader.fieldnames or [])
-    refs, issues = set(), []
+    refs, issues, first_row = set(), [], {}
     if require_qty and not has_qty:
         issues.append('Qty column required for BOM')
     for line, row in enumerate(rows, 2):
         members = {ref.strip() for ref in (row.get('Designator') or '').split(',') if ref.strip()}
+        for ref in sorted(members):
+            if ref in first_row:
+                issues.append(f'line {line}: {ref} already appears on line {first_row[ref]}')
+            else:
+                first_row[ref] = line
         refs.update(members)
         if has_qty:
             value = (row.get('Qty') or '').strip()

@@ -1,0 +1,282 @@
+{
+  "schema": 1,
+  "status": "implemented and frozen for root integration; scoped checks pass",
+  "target_commit": "fa897c81abac3026e75ca5cc88bef0c2659a7130",
+  "board_sha256_before": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "board_sha256_after": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "authorization": "Root explicitly released the canonical freeze after all10 full R13 lens handoffs and authorized exactly these6 checker/test files plus this fix receipt.",
+  "changed_sources": [
+    {
+      "path": "quality_audit/audit_artifacts.py",
+      "sha256_before": "8a4a314159df086cc5825cb1782f4ff364ff8633f83e6b6e0f905f6d67f01dbc",
+      "sha256_after": "2bdd5d1a7b4d915c9dc9c764836a42871bf8e084907e15b8b1b2160f9004676d"
+    },
+    {
+      "path": "quality_audit/test_quality_tools.py",
+      "sha256_before": "bcde6809a2a4f02f54f9223a7672f9dc5cd755c13c7d0b57c2a003de41569ccb",
+      "sha256_after": "fe453d9ec1d307d32989cb5aac88aa4727c1376941ed766246b7da5291621902"
+    },
+    {
+      "path": "tools/check_r10.py",
+      "sha256_before": "b129c1b06dbedeb6bdfcea1f17f662a35e796ce00d63c0eb1ba3760c16804856",
+      "sha256_after": "55c69e8d21d807725a01706fb696c4184f663f325f99d859da62f19cf056db1f"
+    },
+    {
+      "path": "tools/test_r10_check.py",
+      "sha256_before": "35b2cbd731fc7818fe688e8934504109713fc8564455fdd66e1157a4c028597d",
+      "sha256_after": "ad3be44171c383a0fcbe9c978e1e491f14d32848d8aae0f40cd748fde84d04a7"
+    },
+    {
+      "path": "tools/paste_check.py",
+      "sha256_before": "2f2712dad50555eb6aa04b5011cfaf9a4d8c7f533964523c51a2b84432a3bbcd",
+      "sha256_after": "c13ebf135a233b4d678d15fb61cc4cdf0d24dea93e3576732a71ef2854f059f2"
+    },
+    {
+      "path": "tools/test_paste_check.py",
+      "sha256_before": "6dd73a9dbe35ef65405e2a3e5099b9042f7b4420942de73b1dd4199f2944d6fb",
+      "sha256_after": "69086e5cb4b7f05a320cc82cc91bf6964c2deabf374876b35bbdd2956d6d5c83"
+    }
+  ],
+  "prepared_patch_sha256": "6e44827bcfff7cd93a43fa4db2069942e1d3ca5ad56f3ecbb02169b3090e4ccf",
+  "original_full_review_reports_unchanged": {
+    "round13_gate.md": "bcd3e4dfe1963c0ee677af32b9b18f6ff1ca33932df46ce4b334f916da9aa4c2",
+    "round13_gate.json": "59a05f5b367a6b003048ffd07a5de8c51e1396dabcbe56db01a315713554d2d9"
+  },
+  "fixes": [
+    {
+      "id": "R13-GATE-01",
+      "severity": "Minor",
+      "status": "implemented_scoped_verified",
+      "change": "Normalize known LCSC and manufacturer-part-number field aliases; reject conflicting nonblank identities while matching or whitespace-equivalent aliases remain valid. Canonical required fields remain required; no manufacturer-company-name equivalence rule is added.",
+      "actual_seed_result": {
+        "label": "extra_MPN_fault",
+        "issues": [
+          {
+            "ref": "R134",
+            "value": "2R 1% 2W pulse",
+            "Manufacturer Part": "CRM2512-FX-2R00ELF",
+            "MPN": "CRM2512-FX-20R0ELF"
+          }
+        ],
+        "missing": []
+      },
+      "control_result": {
+        "label": "identity_control",
+        "issues": [],
+        "missing": []
+      },
+      "limits": "This checks identity consistency, not supplier authenticity or catalog qualification."
+    },
+    {
+      "id": "R13-GATE-02",
+      "severity": "Minor",
+      "status": "implemented_scoped_verified",
+      "change": "Record first-row ownership of each assembly designator and reject any later row reusing it. Preserve within-row distinct Qty semantics and quantity-free CPL.",
+      "actual_seed_result": {
+        "label": "crossrow_BOM_fault",
+        "issues": [
+          "S-4: BOM: line 84: R134 already appears on line 60"
+        ],
+        "required": 199
+      },
+      "control_result": {
+        "label": "production_BOM_control",
+        "issues": [],
+        "required": 199
+      },
+      "limits": "Required fitted population remains199; no BOM/CPL data or exporter behavior changes."
+    },
+    {
+      "id": "R13-GATE-03",
+      "severity": "Minor",
+      "status": "implemented_scoped_verified",
+      "change": "Parse exported C/R/O and KiCad macro circle/outline/vector geometry and compare each flash against native expected paste polygons, preserving margins and split exposed-pad windows.",
+      "actual_seed_result": {
+        "label": "tiny_aperture_fault",
+        "issues": [
+          "F_Paste: R104.1 aperture D28 differs from native paste geometry (rule 5)",
+          "F_Paste: R104.2 aperture D28 differs from native paste geometry (rule 5)",
+          "F_Paste: R61.1 aperture D28 differs from native paste geometry (rule 5)",
+          "F_Paste: R61.2 aperture D28 differs from native paste geometry (rule 5)",
+          "F_Paste: R127.1 aperture D28 differs from native paste geometry (rule 5)",
+          "F_Paste: R127.2 aperture D28 differs from native paste geometry (rule 5)",
+          "F_Paste: R105.1 aperture D28 differs from native paste geometry (rule 5)",
+          "F_Paste: R105.2 aperture D28 differs from native paste geometry (rule 5)",
+          "F_Paste: R60.1 aperture D28 differs from native paste geometry (rule 5)",
+          "F_Paste: R60.2 aperture D28 differs from native paste geometry (rule 5)"
+        ],
+        "evidence": {
+          "F_Paste": {
+            "flashes": 245,
+            "pads_with_paste": 245,
+            "geometry_matched": 235,
+            "components": 60
+          },
+          "B_Paste": {
+            "flashes": 373,
+            "pads_with_paste": 373,
+            "geometry_matched": 373,
+            "components": 132
+          },
+          "dry_pads": []
+        }
+      },
+      "control_result": {
+        "label": "actual_paste_control",
+        "issues": [],
+        "evidence": {
+          "F_Paste": {
+            "flashes": 245,
+            "pads_with_paste": 245,
+            "geometry_matched": 245,
+            "components": 60
+          },
+          "B_Paste": {
+            "flashes": 373,
+            "pads_with_paste": 373,
+            "geometry_matched": 373,
+            "components": 132
+          },
+          "dry_pads": []
+        }
+      },
+      "limits": {
+        "position_tolerance_nm": 1000,
+        "geometry_boundary_tolerance_nm": 1000,
+        "curve_polygon_error_nm": 100,
+        "custom_pad_polygonization": "Board-native plot precision before paste margin application; current m_MaxError5000nm reproduces Q124 custom deflation exactly.",
+        "geometry_scope": "C/R/O plus macro primitives1/4/20, dark/clear exposure, arithmetic and primitive rotation. Unsupported apertures/image transforms/repeats/blocks fail closed.",
+        "manufacturing_semantics": "Native ordinary-lead margins, maker split/window patterns and explicitly reviewed native dry/manual-process policy remain authoritative. No universal copper-coverage percentage, stencil-thickness requirement, solder-volume claim or reference-name paste exemption is introduced."
+      }
+    }
+  ],
+  "checks_executed": [
+    {
+      "command": "python3 quality_audit/test_quality_tools.py",
+      "tests": 22,
+      "returncode": 0,
+      "log": ".supervisor/r13_gate_fix_apply/quality_tests.txt",
+      "log_sha256": "4943948d6c897281ec83fd90f3e1d77245eef25019bb66bd340296772aba197c"
+    },
+    {
+      "command": "KiCad Python -I -B tools/test_r10_check.py Assembly",
+      "tests": 9,
+      "returncode": 0,
+      "log": ".supervisor/r13_gate_fix_apply/assembly_tests.txt",
+      "log_sha256": "f9fd52ad1ff09651c49285b6e7e5150e81914830dccc08a31e4bc415681bbcbb"
+    },
+    {
+      "command": "KiCad Python -I -B tools/test_paste_check.py",
+      "tests": 11,
+      "returncode": 0,
+      "log": ".supervisor/r13_gate_fix_apply/paste_tests.txt",
+      "log_sha256": "3919c8a4b2eb02074334a49498b33e2ace9483823ebeaddb7da759b98656585b"
+    }
+  ],
+  "real_original_seed_controls": [
+    {
+      "label": "identity_control",
+      "issues": [],
+      "missing": []
+    },
+    {
+      "label": "extra_MPN_fault",
+      "issues": [
+        {
+          "ref": "R134",
+          "value": "2R 1% 2W pulse",
+          "Manufacturer Part": "CRM2512-FX-2R00ELF",
+          "MPN": "CRM2512-FX-20R0ELF"
+        }
+      ],
+      "missing": []
+    },
+    {
+      "label": "production_BOM_control",
+      "issues": [],
+      "required": 199
+    },
+    {
+      "label": "crossrow_BOM_fault",
+      "issues": [
+        "S-4: BOM: line 84: R134 already appears on line 60"
+      ],
+      "required": 199
+    },
+    {
+      "label": "actual_paste_control",
+      "issues": [],
+      "evidence": {
+        "F_Paste": {
+          "flashes": 245,
+          "pads_with_paste": 245,
+          "geometry_matched": 245,
+          "components": 60
+        },
+        "B_Paste": {
+          "flashes": 373,
+          "pads_with_paste": 373,
+          "geometry_matched": 373,
+          "components": 132
+        },
+        "dry_pads": []
+      }
+    },
+    {
+      "label": "tiny_aperture_fault",
+      "issues": [
+        "F_Paste: R104.1 aperture D28 differs from native paste geometry (rule 5)",
+        "F_Paste: R104.2 aperture D28 differs from native paste geometry (rule 5)",
+        "F_Paste: R61.1 aperture D28 differs from native paste geometry (rule 5)",
+        "F_Paste: R61.2 aperture D28 differs from native paste geometry (rule 5)",
+        "F_Paste: R127.1 aperture D28 differs from native paste geometry (rule 5)",
+        "F_Paste: R127.2 aperture D28 differs from native paste geometry (rule 5)",
+        "F_Paste: R105.1 aperture D28 differs from native paste geometry (rule 5)",
+        "F_Paste: R105.2 aperture D28 differs from native paste geometry (rule 5)",
+        "F_Paste: R60.1 aperture D28 differs from native paste geometry (rule 5)",
+        "F_Paste: R60.2 aperture D28 differs from native paste geometry (rule 5)"
+      ],
+      "evidence": {
+        "F_Paste": {
+          "flashes": 245,
+          "pads_with_paste": 245,
+          "geometry_matched": 235,
+          "components": 60
+        },
+        "B_Paste": {
+          "flashes": 373,
+          "pads_with_paste": 373,
+          "geometry_matched": 373,
+          "components": 132
+        },
+        "dry_pads": []
+      }
+    }
+  ],
+  "preparation_regression_evidence": {
+    "source": ".supervisor/r13_gate_fix_prepare/validation.json",
+    "sha256": "4cfe4daf84560ff53bdf0cf1e4087fdbccbb691f23c957ea2e689f71fc7e8b49",
+    "result": "New regression cases fail against the unchanged original implementations and pass against prepared implementations; full copied QA22/Assembly9/paste11 also passed before application."
+  },
+  "primary_technical_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/KiCad/kicad-source-mirror/10.0.7/pcbnew/plot_board_layers.cpp",
+      "scope": "PlotStandardLayer/plotPadLayer native paste-margin and custom polygonization semantics"
+    },
+    {
+      "url": "https://www.ucamco.com/files/downloads/file_en/456/gerber-layer-format-specification-revision-2024-05_en.pdf",
+      "scope": "Sections4.4-4.5 standard apertures and macro primitives1/4/20/exposure/rotation"
+    },
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+      "scope": "DSK0010A maker stencil split-window pattern retained by the native U401 footprint; regression uses1.13x0.89mm windows and1.2x2mm copper EP"
+    }
+  ],
+  "broader_binding_distinction": "The original faults were prospective local checker gaps on otherwise-correct current data. Original CAD/package edits were separately rejected by unchanged manifest/native-budget bindings as recorded in immutable round13_gate. This fix demonstrates direct local rejection and preserves that broader-catch distinction; no whole-gate escape is claimed.",
+  "coverage_limits": [
+    "No native CLI invoked during preparation or application; current manufacturing CLI reservation was untouched. Quality verification mocks operate only on synthetic fixtures, never on a real-board CLI result.",
+    "No full build/check, fabrication regeneration, canonical CAD save, GUI, git mutation or other-worktree edit was performed by this slice. Root owns integrated build/fab/gate/binding and documentation updates.",
+    "No electrical, firmware, physical solder/process, thermal/transient, harness/fit, selected e-match/card or flight qualification follows. AGENTS section2 and existing safety/electrical limits are unchanged.",
+    "Original full-round R13 reports remain immutable. This is a scoped fix-validation receipt, not another full review round."
+  ]
+}

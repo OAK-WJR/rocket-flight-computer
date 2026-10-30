@@ -1,0 +1,4124 @@
+{
+  "target_commit": "fa897c81abac3026e75ca5cc88bef0c2659a7130",
+  "board_sha256_before": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "board_sha256_after": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 1
+  },
+  "counting": "Open new/carried defects only; closed prior findings and correctly disclosed qualification limits excluded. No Critical/Major candidate.",
+  "findings": [
+    {
+      "id": "R13-MCU-01",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Active UART pull guidance states the absolute threshold without the stricter operating condition",
+      "evidence": {
+        "files": [
+          "docs/REQUIREMENTS.md:60",
+          "docs/ORDERING.md:454",
+          "m3_design/assembly_review/sources/r10_design/pin_table.tsv:52",
+          "m3_design/assembly_review/sources/r10_design/pin_table.tsv:53",
+          "m3_design/assembly_review/sources/r10_design/pin_table.tsv:64",
+          "m3_design/assembly_review/sources/r10_design/pin_table.tsv:65",
+          "m3_design/assembly_review/sources/r10_design/parts_qualification.md:34",
+          "m3_design/assembly_review/sources/r10_design/r10_binding_note.json:582"
+        ],
+        "coordinates_mm": {
+          "U1.51_PB12": [
+            29,
+            35.45
+          ],
+          "U1.64_PC7": [
+            22.5,
+            35.45
+          ]
+        },
+        "maker": {
+          "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "revision": "DS12110 Rev11 January2026",
+          "locations": [
+            "Table109 note4 p208 (absolute stress)",
+            "Table112 note3 p210 (operating)",
+            "Table147 note6 p242 (FT_u)"
+          ]
+        },
+        "observation": "Active UART summaries use pulls-disabled-above4V while allowing0..5V endpoints. Table112 operating conditions require pulls disabled whenever VIN exceeds the relevant supply+0.3V. At3.3V this is3.6V (3.57V at3.27V), leaving3.6..4.0V outside the stated operating condition if a reader treats4V as the configuration threshold. Example3.8V is inside the documented0..5V envelope but above3.6V. Native RX paths are J420.4/R4501k/U1.51 and J410.4/R4401k/U1.64, with no external pull or translator.",
+        "severity_basis": "Bounded documentation inconsistency, not a demonstrated electrical failure. The separate binding startup obligation already sets direct UART RX to no pulls; the selected radio is3.3V LVTTL and GPS levels remain explicitly unqualified. A true operating requirement should accompany, rather than be inferred from, an absolute stress condition."
+      },
+      "fix": "State that GPS/radio digital RX pulls remain disabled throughout use, and distinguish the operating relevant-supply+0.3V condition from Table109 absolute limits in current requirements, ordering, pin/qualification text and generated obligations. Regenerate binding provenance if its source/table changes; no MCU pin or circuit change is established as necessary."
+    },
+    {
+      "id": "R12-MCU-01",
+      "severity": "Minor",
+      "status": "closed",
+      "evidence": {
+        "files": [
+          "m3_design/assembly_review/sources/r10_design/pin_table.tsv:9",
+          "m3_design/assembly_review/sources/r10_design/parts_qualification.md:55"
+        ],
+        "coordinate_mm": [
+          20.5,
+          50.55
+        ],
+        "maker": {
+          "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "location": "Table149 p244; Table150 note2 p246"
+        },
+        "observation": "Current PC14 source explicitly withdraws the2.9mA proof, gives3.3mA nominal/3.363636mA initial-tolerance resistor-only bounds and about0.306mA steady current, and leaves driver/gate dynamics unmeasured. Native R162 remains1k and R16310k; the current table hash matches the binding."
+      },
+      "fix": "Completed record correction; retain4kHz, LSE-off and actual edge/current qualification."
+    },
+    {
+      "id": "R11-MCU-01",
+      "severity": "Minor",
+      "status": "closed",
+      "evidence": {
+        "files": [
+          "m3_design/assembly_review/sources/r10_design/parts_qualification.md:574"
+        ],
+        "observation": "Current ESD rationale correctly separates direct GPS/radio1k/ground-ESD paths from camera U12. Native path membership independently agrees; no removed translator protection is credited."
+      },
+      "fix": "Completed; installed cable/ESD and unpowered behavior remain qualification limits."
+    },
+    {
+      "id": "R11-MCU-02",
+      "severity": "Minor",
+      "status": "closed",
+      "evidence": {
+        "files": [
+          "m3_design/assembly_review/sources/r10_design/pin_table.tsv:17",
+          "m3_design/assembly_review/sources/r10_design/pin_table.tsv:52",
+          "m3_design/assembly_review/sources/r10_design/pin_table.tsv:79"
+        ],
+        "maker": {
+          "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "locations": [
+            "section3.8 p32",
+            "Table10 pp91-92"
+          ]
+        },
+        "observation": "Current affected Rev11 AF citations name Table10 and PC1 is described as analog at reset. The complete package/AF comparisons pass independently."
+      },
+      "fix": "Completed citation/reset-language corrections; no pin change required."
+    }
+  ],
+  "checks_executed": [
+    {
+      "check": "Target binding",
+      "result": "before/after PCB SHA256 exact match; 100PCB/XML/table/binding nets agree; all4 note hashes match actual files"
+    },
+    {
+      "check": "Independent native schematic walk",
+      "result": "Embedded U1 symbol plus wire/global-label/no-connect traversal reconstructs100 pins;100/100 agree with XML and PCB"
+    },
+    {
+      "check": "Original maker physical pin map",
+      "result": "100/100 table and embedded symbol pin names agree with independently transcribed ST Figure5 p55"
+    },
+    {
+      "check": "Assigned alternate functions",
+      "result": "28/28 selected AF columns agree with ST Table10 pp89-94; no physical allocation conflict"
+    },
+    {
+      "check": "No-net copper",
+      "result": "32 NC pins each have1 pad and0 tracks/vias/zones;68 pins connected"
+    },
+    {
+      "check": "ADC and EXTI allocation",
+      "result": "5 ADC assignments verified against Table9;6 distinct external-interrupt lines1,4,5,6,8,12 with5/6/8 sharing EXTI9_5"
+    },
+    {
+      "check": "ROM-loader exposure",
+      "result": "ST AN2606 Rev70 Table135 pp320-323:26 package pins,14 connected/12NC; PC1/PE4, UART5 PB12/13 and USART6 PC6/7 absent; every connected loader net inspected"
+    },
+    {
+      "check": "Reset and output bias",
+      "result": "Native PC1/R122/Q122/R123 and PE4/R126/R127/Q124/R128/C126 networks distinct and present; BOOT0 R5, NRST C24,4 PWM pulls and SD_CS R460 present"
+    },
+    {
+      "check": "Power and clock pins",
+      "result": "All5VDD andVBAT on3V3; VDDA/VREF+ on3V3A; allVSS/VSSA GND; VCAP1/2 each only U1 plus its own2.2uF;25MHz HSE and PC14 GPIO/LSE restriction retained"
+    },
+    {
+      "check": "Direct and camera UART topology",
+      "result": "4 direct GPS/radio1k+ground-ESD paths; U12 all8 pins/U13 all5/U402 all6 checked for direction, supplies and default OE/EN/fault pulls; both GPS/radio pin1 directly PORT_4V8"
+    },
+    {
+      "check": "Electrical source review",
+      "result": "Fresh maker web reads: DS12110 Rev11; AN2606 Rev70 via official CD00167594 URL; RM0433 Rev8 selected lock/trace excerpts and official H743 CMSIS; TI TXU0202/TPS709/TPS2553; MicoAir and HGLRC; exact Infineon EL page"
+    },
+    {
+      "check": "Fresh numerical spot checks",
+      "result": "Single-resistor pyro divider bound19.9V*2029/(10052.1+2029)=3.342171V; PC14 resistor-only3.33/990=3.363636mA; default-rail and diagnostic divider ratios inspected; these are calculations"
+    }
+  ],
+  "coverage_limits": [
+    "No native CLI, DRC/ERC, full gate, build, generator, GUI, git mutation or CAD edit executed by this lens. Selected native API reads and pure schematic parsing only.",
+    "No current-round peer report read or finding shared with a peer; prior R11/R12 MCU reports were context and closure items, not current-property proof.",
+    "Local ST PDF transfers failed or stalled and were stopped; web PDF screenshot was unavailable. Official text extraction and maker table excerpts were used; no full local-page render verification is claimed.",
+    "RM0433 selected official maker excerpts and CMSIS were inspected, not the whole3353-page manual. No physical proof of GPIO lock versus trace override exists.",
+    "No firmware, boot/loader/trace execution, current waveform, threshold/accuracy, back-feed current, startup timing, UART edge, cable ESD/RF, thermal or physical test performed.",
+    "Correctly disclosed owner choices and CAD-stage qualifications are retained below, not counted as new demonstrated hardware failures. An actual AGENTS section2 violation would remain blocking; none was demonstrated in this lens."
+  ],
+  "primary_sources": {
+    "ST_DS12110": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+    "ST_AN2606": "https://www.st.com/resource/en/application_note/cd00167594-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf",
+    "ST_RM0433": "https://www.st.com/resource/en/reference_manual/rm0433-stm32h742-stm32h743-753-and-stm32h750-value-line-advanced-armbased-32bit-mcus-stmicroelectronics.pdf",
+    "ST_H743_CMSIS": "https://raw.githubusercontent.com/STMicroelectronics/cmsis-device-h7/master/Include/stm32h743xx.h",
+    "TI_TXU0202": "https://www.ti.com/lit/ds/symlink/txu0202.pdf",
+    "TI_TPS709": "https://www.ti.com/lit/ds/symlink/tps709.pdf",
+    "TI_TPS2553": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+    "MicoAir": "https://micoair.com/en/docs/telemetry/lr900/lr900-telemetry",
+    "HGLRC": "https://www.hglrc.com/products/hglrc-m100_mini-gps",
+    "Infineon_EL": "https://www.infineon.com/part/ESD103-B1-02EL"
+  },
+  "native": {
+    "u1_rows": [
+      {
+        "pin": 1,
+        "port": "PE2",
+        "net": "QSPI_IO2",
+        "mode": "AF9 QUADSPI_BK1_IO2",
+        "xy_mm": [
+          17.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 2,
+        "port": "PE3",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          17.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 3,
+        "port": "PE4",
+        "net": "PYRO1_GATE_N",
+        "mode": "GPIO out",
+        "xy_mm": [
+          18.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 4,
+        "port": "PE5",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          18.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 5,
+        "port": "PE6",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          19.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 6,
+        "port": "VBAT",
+        "net": "3V3",
+        "mode": "VBAT",
+        "xy_mm": [
+          19.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 7,
+        "port": "PC13",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          20.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 8,
+        "port": "PC14",
+        "net": "BUZZ_DRV",
+        "mode": "GPIO out",
+        "xy_mm": [
+          20.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 9,
+        "port": "PC15",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          21.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 10,
+        "port": "VSS",
+        "net": "GND",
+        "mode": "VSS",
+        "xy_mm": [
+          21.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 11,
+        "port": "VDD",
+        "net": "3V3",
+        "mode": "VDD",
+        "xy_mm": [
+          22.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 12,
+        "port": "PH0",
+        "net": "HSE_IN",
+        "mode": "HSE",
+        "xy_mm": [
+          22.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 13,
+        "port": "PH1",
+        "net": "HSE_OUT",
+        "mode": "HSE",
+        "xy_mm": [
+          23.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 14,
+        "port": "NRST",
+        "net": "NRST",
+        "mode": "NRST",
+        "xy_mm": [
+          23.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 15,
+        "port": "PC0",
+        "net": "PYRO1_CONT",
+        "mode": "ADC",
+        "xy_mm": [
+          24.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 16,
+        "port": "PC1",
+        "net": "ACT_EN_MCU",
+        "mode": "GPIO out (push-pull; initialise low before output mode)",
+        "xy_mm": [
+          24.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 17,
+        "port": "PC2_C",
+        "net": "NC",
+        "mode": "NC (firmware: analog)",
+        "xy_mm": [
+          25.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 18,
+        "port": "PC3_C",
+        "net": "V3V3_SENSE",
+        "mode": "ADC",
+        "xy_mm": [
+          25.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 19,
+        "port": "VSSA",
+        "net": "GND",
+        "mode": "VSSA",
+        "xy_mm": [
+          26.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 20,
+        "port": "VREF+",
+        "net": "3V3A",
+        "mode": "VREF+",
+        "xy_mm": [
+          26.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 21,
+        "port": "VDDA",
+        "net": "3V3A",
+        "mode": "VDDA",
+        "xy_mm": [
+          27.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 22,
+        "port": "PA0",
+        "net": "SERVO1_MCU",
+        "mode": "AF2 TIM5_CH1",
+        "xy_mm": [
+          27.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 23,
+        "port": "PA1",
+        "net": "SERVO2_MCU",
+        "mode": "AF2 TIM5_CH2",
+        "xy_mm": [
+          28.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 24,
+        "port": "PA2",
+        "net": "SERVO3_MCU",
+        "mode": "AF2 TIM5_CH3",
+        "xy_mm": [
+          28.5,
+          50.55
+        ]
+      },
+      {
+        "pin": 25,
+        "port": "PA3",
+        "net": "SERVO4_MCU",
+        "mode": "AF2 TIM5_CH4",
+        "xy_mm": [
+          29.0,
+          50.55
+        ]
+      },
+      {
+        "pin": 26,
+        "port": "VSS",
+        "net": "GND",
+        "mode": "VSS",
+        "xy_mm": [
+          30.55,
+          49.0
+        ]
+      },
+      {
+        "pin": 27,
+        "port": "VDD",
+        "net": "3V3",
+        "mode": "VDD",
+        "xy_mm": [
+          30.55,
+          48.5
+        ]
+      },
+      {
+        "pin": 28,
+        "port": "PA4",
+        "net": "LOGIC_SOURCE_ST",
+        "mode": "GPIO in",
+        "xy_mm": [
+          30.55,
+          48.0
+        ]
+      },
+      {
+        "pin": 29,
+        "port": "PA5",
+        "net": "BAT_FAULT_N",
+        "mode": "GPIO in",
+        "xy_mm": [
+          30.55,
+          47.5
+        ]
+      },
+      {
+        "pin": 30,
+        "port": "PA6",
+        "net": "VLOGIC_SENSE",
+        "mode": "ADC (ADC12_INP3)",
+        "xy_mm": [
+          30.55,
+          47.0
+        ]
+      },
+      {
+        "pin": 31,
+        "port": "PA7",
+        "net": "NC",
+        "mode": "NC (firmware: analog)",
+        "xy_mm": [
+          30.55,
+          46.5
+        ]
+      },
+      {
+        "pin": 32,
+        "port": "PC4",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          46.0
+        ]
+      },
+      {
+        "pin": 33,
+        "port": "PC5",
+        "net": "ARM1_SENSE",
+        "mode": "ADC",
+        "xy_mm": [
+          30.55,
+          45.5
+        ]
+      },
+      {
+        "pin": 34,
+        "port": "PB0",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          45.0
+        ]
+      },
+      {
+        "pin": 35,
+        "port": "PB1",
+        "net": "CAM_5V_SENSE",
+        "mode": "ADC",
+        "xy_mm": [
+          30.55,
+          44.5
+        ]
+      },
+      {
+        "pin": 36,
+        "port": "PB2",
+        "net": "QSPI_CLK",
+        "mode": "AF9 QUADSPI_CLK",
+        "xy_mm": [
+          30.55,
+          44.0
+        ]
+      },
+      {
+        "pin": 37,
+        "port": "PE7",
+        "net": "CAM_MCU_RX",
+        "mode": "AF7 UART7_RX",
+        "xy_mm": [
+          30.55,
+          43.5
+        ]
+      },
+      {
+        "pin": 38,
+        "port": "PE8",
+        "net": "CAM_MCU_TX",
+        "mode": "AF7 UART7_TX",
+        "xy_mm": [
+          30.55,
+          43.0
+        ]
+      },
+      {
+        "pin": 39,
+        "port": "PE9",
+        "net": "CAM_UART_OE",
+        "mode": "GPIO out",
+        "xy_mm": [
+          30.55,
+          42.5
+        ]
+      },
+      {
+        "pin": 40,
+        "port": "PE10",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          42.0
+        ]
+      },
+      {
+        "pin": 41,
+        "port": "PE11",
+        "net": "CAM_PWR_EN",
+        "mode": "GPIO out",
+        "xy_mm": [
+          30.55,
+          41.5
+        ]
+      },
+      {
+        "pin": 42,
+        "port": "PE12",
+        "net": "CAM_FAULT_N",
+        "mode": "GPIO in",
+        "xy_mm": [
+          30.55,
+          41.0
+        ]
+      },
+      {
+        "pin": 43,
+        "port": "PE13",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          40.5
+        ]
+      },
+      {
+        "pin": 44,
+        "port": "PE14",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          40.0
+        ]
+      },
+      {
+        "pin": 45,
+        "port": "PE15",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          39.5
+        ]
+      },
+      {
+        "pin": 46,
+        "port": "PB10",
+        "net": "NC",
+        "mode": "NC",
+        "xy_mm": [
+          30.55,
+          39.0
+        ]
+      },
+      {
+        "pin": 47,
+        "port": "PB11",
+        "net": "NC",
+        "mode": "NC",
+        "xy_mm": [
+          30.55,
+          38.5
+        ]
+      },
+      {
+        "pin": 48,
+        "port": "VCAP",
+        "net": "VCAP1",
+        "mode": "VCAP",
+        "xy_mm": [
+          30.55,
+          38.0
+        ]
+      },
+      {
+        "pin": 49,
+        "port": "VSS",
+        "net": "GND",
+        "mode": "VSS",
+        "xy_mm": [
+          30.55,
+          37.5
+        ]
+      },
+      {
+        "pin": 50,
+        "port": "VDD",
+        "net": "3V3",
+        "mode": "VDD",
+        "xy_mm": [
+          30.55,
+          37.0
+        ]
+      },
+      {
+        "pin": 51,
+        "port": "PB12",
+        "net": "RADIO_RX_MCU",
+        "mode": "AF14 UART5_RX",
+        "xy_mm": [
+          29.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 52,
+        "port": "PB13",
+        "net": "RADIO_TX_MCU",
+        "mode": "AF14 UART5_TX",
+        "xy_mm": [
+          28.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 53,
+        "port": "PB14",
+        "net": "NC",
+        "mode": "NC",
+        "xy_mm": [
+          28.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 54,
+        "port": "PB15",
+        "net": "NC",
+        "mode": "NC",
+        "xy_mm": [
+          27.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 55,
+        "port": "PD8",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          27.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 56,
+        "port": "PD9",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          26.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 57,
+        "port": "PD10",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          26.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 58,
+        "port": "PD11",
+        "net": "QSPI_IO0",
+        "mode": "AF9 QUADSPI_BK1_IO0",
+        "xy_mm": [
+          25.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 59,
+        "port": "PD12",
+        "net": "QSPI_IO1",
+        "mode": "AF9 QUADSPI_BK1_IO1",
+        "xy_mm": [
+          25.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 60,
+        "port": "PD13",
+        "net": "QSPI_IO3",
+        "mode": "AF9 QUADSPI_BK1_IO3",
+        "xy_mm": [
+          24.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 61,
+        "port": "PD14",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          24.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 62,
+        "port": "PD15",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          23.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 63,
+        "port": "PC6",
+        "net": "GPS_TX_MCU",
+        "mode": "AF7 USART6_TX",
+        "xy_mm": [
+          23.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 64,
+        "port": "PC7",
+        "net": "GPS_RX_MCU",
+        "mode": "AF7 USART6_RX",
+        "xy_mm": [
+          22.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 65,
+        "port": "PC8",
+        "net": "VBUS_SENSE",
+        "mode": "GPIO in",
+        "xy_mm": [
+          22.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 66,
+        "port": "PC9",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          21.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 67,
+        "port": "PA8",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          21.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 68,
+        "port": "PA9",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          20.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 69,
+        "port": "PA10",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          20.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 70,
+        "port": "PA11",
+        "net": "USB_DM",
+        "mode": "AF10 OTG_FS_DM",
+        "xy_mm": [
+          19.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 71,
+        "port": "PA12",
+        "net": "USB_DP",
+        "mode": "AF10 OTG_FS_DP",
+        "xy_mm": [
+          19.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 72,
+        "port": "PA13",
+        "net": "SWDIO",
+        "mode": "AF0 SWDIO",
+        "xy_mm": [
+          18.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 73,
+        "port": "VCAP",
+        "net": "VCAP2",
+        "mode": "VCAP",
+        "xy_mm": [
+          18.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 74,
+        "port": "VSS",
+        "net": "GND",
+        "mode": "VSS",
+        "xy_mm": [
+          17.5,
+          35.45
+        ]
+      },
+      {
+        "pin": 75,
+        "port": "VDD",
+        "net": "3V3",
+        "mode": "VDD",
+        "xy_mm": [
+          17.0,
+          35.45
+        ]
+      },
+      {
+        "pin": 76,
+        "port": "PA14",
+        "net": "SWCLK",
+        "mode": "AF0 SWCLK",
+        "xy_mm": [
+          15.45,
+          37.0
+        ]
+      },
+      {
+        "pin": 77,
+        "port": "PA15",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          15.45,
+          37.5
+        ]
+      },
+      {
+        "pin": 78,
+        "port": "PC10",
+        "net": "SD_SCK",
+        "mode": "AF6 SPI3_SCK",
+        "xy_mm": [
+          15.45,
+          38.0
+        ]
+      },
+      {
+        "pin": 79,
+        "port": "PC11",
+        "net": "SD_MISO",
+        "mode": "AF6 SPI3_MISO",
+        "xy_mm": [
+          15.45,
+          38.5
+        ]
+      },
+      {
+        "pin": 80,
+        "port": "PC12",
+        "net": "SD_MOSI",
+        "mode": "AF6 SPI3_MOSI",
+        "xy_mm": [
+          15.45,
+          39.0
+        ]
+      },
+      {
+        "pin": 81,
+        "port": "PD0",
+        "net": "SD_CS",
+        "mode": "GPIO output push-pull; initialise high before output mode",
+        "xy_mm": [
+          15.45,
+          39.5
+        ]
+      },
+      {
+        "pin": 82,
+        "port": "PD1",
+        "net": "NC",
+        "mode": "NC (firmware: analog)",
+        "xy_mm": [
+          15.45,
+          40.0
+        ]
+      },
+      {
+        "pin": 83,
+        "port": "PD2",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          15.45,
+          40.5
+        ]
+      },
+      {
+        "pin": 84,
+        "port": "PD3",
+        "net": "NC",
+        "mode": "NC (firmware: analog)",
+        "xy_mm": [
+          15.45,
+          41.0
+        ]
+      },
+      {
+        "pin": 85,
+        "port": "PD4",
+        "net": "NC",
+        "mode": "NC (firmware: analog)",
+        "xy_mm": [
+          15.45,
+          41.5
+        ]
+      },
+      {
+        "pin": 86,
+        "port": "PD5",
+        "net": "LED_RED",
+        "mode": "GPIO out",
+        "xy_mm": [
+          15.45,
+          42.0
+        ]
+      },
+      {
+        "pin": 87,
+        "port": "PD6",
+        "net": "USB_FAULT_N",
+        "mode": "GPIO in",
+        "xy_mm": [
+          15.45,
+          42.5
+        ]
+      },
+      {
+        "pin": 88,
+        "port": "PD7",
+        "net": "LED_YEL",
+        "mode": "GPIO out",
+        "xy_mm": [
+          15.45,
+          43.0
+        ]
+      },
+      {
+        "pin": 89,
+        "port": "PB3",
+        "net": "SPI1_SCK",
+        "mode": "AF5 SPI1_SCK",
+        "xy_mm": [
+          15.45,
+          43.5
+        ]
+      },
+      {
+        "pin": 90,
+        "port": "PB4",
+        "net": "SPI1_MISO",
+        "mode": "AF5 SPI1_MISO",
+        "xy_mm": [
+          15.45,
+          44.0
+        ]
+      },
+      {
+        "pin": 91,
+        "port": "PB5",
+        "net": "SPI1_MOSI",
+        "mode": "AF5 SPI1_MOSI",
+        "xy_mm": [
+          15.45,
+          44.5
+        ]
+      },
+      {
+        "pin": 92,
+        "port": "PB6",
+        "net": "QSPI_NCS",
+        "mode": "AF10 QUADSPI_BK1_NCS",
+        "xy_mm": [
+          15.45,
+          45.0
+        ]
+      },
+      {
+        "pin": 93,
+        "port": "PB7",
+        "net": "IMU_CS",
+        "mode": "GPIO out",
+        "xy_mm": [
+          15.45,
+          45.5
+        ]
+      },
+      {
+        "pin": 94,
+        "port": "BOOT0",
+        "net": "BOOT0",
+        "mode": "BOOT0",
+        "xy_mm": [
+          15.45,
+          46.0
+        ]
+      },
+      {
+        "pin": 95,
+        "port": "PB8",
+        "net": "I2C1_SCL",
+        "mode": "AF4 I2C1_SCL",
+        "xy_mm": [
+          15.45,
+          46.5
+        ]
+      },
+      {
+        "pin": 96,
+        "port": "PB9",
+        "net": "I2C1_SDA",
+        "mode": "AF4 I2C1_SDA",
+        "xy_mm": [
+          15.45,
+          47.0
+        ]
+      },
+      {
+        "pin": 97,
+        "port": "PE0",
+        "net": "NC",
+        "mode": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          15.45,
+          47.5
+        ]
+      },
+      {
+        "pin": 98,
+        "port": "PE1",
+        "net": "IMU_INT1",
+        "mode": "GPIO in, internal pull-down, EXTI1 data-ready interrupt (LSM6DSV320X INT1 push-pull, active high by default)",
+        "xy_mm": [
+          15.45,
+          48.0
+        ]
+      },
+      {
+        "pin": 99,
+        "port": "VSS",
+        "net": "GND",
+        "mode": "VSS",
+        "xy_mm": [
+          15.45,
+          48.5
+        ]
+      },
+      {
+        "pin": 100,
+        "port": "VDD",
+        "net": "3V3",
+        "mode": "VDD",
+        "xy_mm": [
+          15.45,
+          49.0
+        ]
+      }
+    ],
+    "schematic_pins": {
+      "1": {
+        "name": "PE2",
+        "net": "QSPI_IO2",
+        "schematic_xy_mm": [
+          63.5,
+          69.85
+        ]
+      },
+      "2": {
+        "name": "PE3",
+        "net": "NC",
+        "schematic_xy_mm": [
+          63.5,
+          72.39
+        ]
+      },
+      "6": {
+        "name": "VBAT",
+        "net": "3V3",
+        "schematic_xy_mm": [
+          63.5,
+          74.93
+        ]
+      },
+      "7": {
+        "name": "PC13",
+        "net": "NC",
+        "schematic_xy_mm": [
+          63.5,
+          77.47
+        ]
+      },
+      "10": {
+        "name": "VSS",
+        "net": "GND",
+        "schematic_xy_mm": [
+          63.5,
+          80.01
+        ]
+      },
+      "11": {
+        "name": "VDD",
+        "net": "3V3",
+        "schematic_xy_mm": [
+          63.5,
+          82.55
+        ]
+      },
+      "12": {
+        "name": "PH0",
+        "net": "HSE_IN",
+        "schematic_xy_mm": [
+          63.5,
+          85.09
+        ]
+      },
+      "13": {
+        "name": "PH1",
+        "net": "HSE_OUT",
+        "schematic_xy_mm": [
+          63.5,
+          87.63
+        ]
+      },
+      "14": {
+        "name": "NRST",
+        "net": "NRST",
+        "schematic_xy_mm": [
+          63.5,
+          90.17
+        ]
+      },
+      "17": {
+        "name": "PC2_C",
+        "net": "NC",
+        "schematic_xy_mm": [
+          63.5,
+          92.71
+        ]
+      },
+      "18": {
+        "name": "PC3_C",
+        "net": "V3V3_SENSE",
+        "schematic_xy_mm": [
+          63.5,
+          95.25
+        ]
+      },
+      "19": {
+        "name": "VSSA",
+        "net": "GND",
+        "schematic_xy_mm": [
+          63.5,
+          97.79
+        ]
+      },
+      "20": {
+        "name": "VREF+",
+        "net": "3V3A",
+        "schematic_xy_mm": [
+          63.5,
+          100.33
+        ]
+      },
+      "21": {
+        "name": "VDDA",
+        "net": "3V3A",
+        "schematic_xy_mm": [
+          63.5,
+          102.87
+        ]
+      },
+      "26": {
+        "name": "VSS",
+        "net": "GND",
+        "schematic_xy_mm": [
+          63.5,
+          105.41
+        ]
+      },
+      "27": {
+        "name": "VDD",
+        "net": "3V3",
+        "schematic_xy_mm": [
+          63.5,
+          107.95
+        ]
+      },
+      "36": {
+        "name": "PB2",
+        "net": "QSPI_CLK",
+        "schematic_xy_mm": [
+          63.5,
+          110.49
+        ]
+      },
+      "37": {
+        "name": "PE7",
+        "net": "CAM_MCU_RX",
+        "schematic_xy_mm": [
+          63.5,
+          113.03
+        ]
+      },
+      "40": {
+        "name": "PE10",
+        "net": "NC",
+        "schematic_xy_mm": [
+          63.5,
+          115.57
+        ]
+      },
+      "46": {
+        "name": "PB10",
+        "net": "NC",
+        "schematic_xy_mm": [
+          63.5,
+          118.11
+        ]
+      },
+      "47": {
+        "name": "PB11",
+        "net": "NC",
+        "schematic_xy_mm": [
+          63.5,
+          120.65
+        ]
+      },
+      "48": {
+        "name": "VCAP",
+        "net": "VCAP1",
+        "schematic_xy_mm": [
+          63.5,
+          123.19
+        ]
+      },
+      "49": {
+        "name": "VSS",
+        "net": "GND",
+        "schematic_xy_mm": [
+          63.5,
+          125.73
+        ]
+      },
+      "50": {
+        "name": "VDD",
+        "net": "3V3",
+        "schematic_xy_mm": [
+          63.5,
+          128.27
+        ]
+      },
+      "58": {
+        "name": "PD11",
+        "net": "QSPI_IO0",
+        "schematic_xy_mm": [
+          63.5,
+          130.81
+        ]
+      },
+      "59": {
+        "name": "PD12",
+        "net": "QSPI_IO1",
+        "schematic_xy_mm": [
+          63.5,
+          133.35
+        ]
+      },
+      "60": {
+        "name": "PD13",
+        "net": "QSPI_IO3",
+        "schematic_xy_mm": [
+          63.5,
+          135.89
+        ]
+      },
+      "62": {
+        "name": "PD15",
+        "net": "NC",
+        "schematic_xy_mm": [
+          63.5,
+          138.43
+        ]
+      },
+      "63": {
+        "name": "PC6",
+        "net": "GPS_TX_MCU",
+        "schematic_xy_mm": [
+          63.5,
+          140.97
+        ]
+      },
+      "64": {
+        "name": "PC7",
+        "net": "GPS_RX_MCU",
+        "schematic_xy_mm": [
+          63.5,
+          143.51
+        ]
+      },
+      "70": {
+        "name": "PA11",
+        "net": "USB_DM",
+        "schematic_xy_mm": [
+          63.5,
+          146.05
+        ]
+      },
+      "71": {
+        "name": "PA12",
+        "net": "USB_DP",
+        "schematic_xy_mm": [
+          63.5,
+          148.59
+        ]
+      },
+      "72": {
+        "name": "PA13",
+        "net": "SWDIO",
+        "schematic_xy_mm": [
+          63.5,
+          151.13
+        ]
+      },
+      "73": {
+        "name": "VCAP",
+        "net": "VCAP2",
+        "schematic_xy_mm": [
+          63.5,
+          153.67
+        ]
+      },
+      "74": {
+        "name": "VSS",
+        "net": "GND",
+        "schematic_xy_mm": [
+          63.5,
+          156.21
+        ]
+      },
+      "75": {
+        "name": "VDD",
+        "net": "3V3",
+        "schematic_xy_mm": [
+          63.5,
+          158.75
+        ]
+      },
+      "76": {
+        "name": "PA14",
+        "net": "SWCLK",
+        "schematic_xy_mm": [
+          63.5,
+          161.29
+        ]
+      },
+      "84": {
+        "name": "PD3",
+        "net": "NC",
+        "schematic_xy_mm": [
+          63.5,
+          163.83
+        ]
+      },
+      "85": {
+        "name": "PD4",
+        "net": "NC",
+        "schematic_xy_mm": [
+          63.5,
+          166.37
+        ]
+      },
+      "89": {
+        "name": "PB3",
+        "net": "SPI1_SCK",
+        "schematic_xy_mm": [
+          63.5,
+          168.91
+        ]
+      },
+      "90": {
+        "name": "PB4",
+        "net": "SPI1_MISO",
+        "schematic_xy_mm": [
+          63.5,
+          171.45
+        ]
+      },
+      "91": {
+        "name": "PB5",
+        "net": "SPI1_MOSI",
+        "schematic_xy_mm": [
+          63.5,
+          173.99
+        ]
+      },
+      "92": {
+        "name": "PB6",
+        "net": "QSPI_NCS",
+        "schematic_xy_mm": [
+          63.5,
+          176.53
+        ]
+      },
+      "93": {
+        "name": "PB7",
+        "net": "IMU_CS",
+        "schematic_xy_mm": [
+          63.5,
+          179.07
+        ]
+      },
+      "94": {
+        "name": "BOOT0",
+        "net": "BOOT0",
+        "schematic_xy_mm": [
+          63.5,
+          181.61
+        ]
+      },
+      "95": {
+        "name": "PB8",
+        "net": "I2C1_SCL",
+        "schematic_xy_mm": [
+          63.5,
+          184.15
+        ]
+      },
+      "96": {
+        "name": "PB9",
+        "net": "I2C1_SDA",
+        "schematic_xy_mm": [
+          63.5,
+          186.69
+        ]
+      },
+      "99": {
+        "name": "VSS",
+        "net": "GND",
+        "schematic_xy_mm": [
+          63.5,
+          189.23
+        ]
+      },
+      "100": {
+        "name": "VDD",
+        "net": "3V3",
+        "schematic_xy_mm": [
+          63.5,
+          191.77
+        ]
+      },
+      "3": {
+        "name": "PE4",
+        "net": "PYRO1_GATE_N",
+        "schematic_xy_mm": [
+          63.5,
+          194.31
+        ]
+      },
+      "4": {
+        "name": "PE5",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          69.85
+        ]
+      },
+      "5": {
+        "name": "PE6",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          72.39
+        ]
+      },
+      "8": {
+        "name": "PC14",
+        "net": "BUZZ_DRV",
+        "schematic_xy_mm": [
+          119.38,
+          74.93
+        ]
+      },
+      "9": {
+        "name": "PC15",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          77.47
+        ]
+      },
+      "15": {
+        "name": "PC0",
+        "net": "PYRO1_CONT",
+        "schematic_xy_mm": [
+          119.38,
+          80.01
+        ]
+      },
+      "16": {
+        "name": "PC1",
+        "net": "ACT_EN_MCU",
+        "schematic_xy_mm": [
+          119.38,
+          82.55
+        ]
+      },
+      "22": {
+        "name": "PA0",
+        "net": "SERVO1_MCU",
+        "schematic_xy_mm": [
+          119.38,
+          85.09
+        ]
+      },
+      "23": {
+        "name": "PA1",
+        "net": "SERVO2_MCU",
+        "schematic_xy_mm": [
+          119.38,
+          87.63
+        ]
+      },
+      "24": {
+        "name": "PA2",
+        "net": "SERVO3_MCU",
+        "schematic_xy_mm": [
+          119.38,
+          90.17
+        ]
+      },
+      "25": {
+        "name": "PA3",
+        "net": "SERVO4_MCU",
+        "schematic_xy_mm": [
+          119.38,
+          92.71
+        ]
+      },
+      "28": {
+        "name": "PA4",
+        "net": "LOGIC_SOURCE_ST",
+        "schematic_xy_mm": [
+          119.38,
+          95.25
+        ]
+      },
+      "29": {
+        "name": "PA5",
+        "net": "BAT_FAULT_N",
+        "schematic_xy_mm": [
+          119.38,
+          97.79
+        ]
+      },
+      "30": {
+        "name": "PA6",
+        "net": "VLOGIC_SENSE",
+        "schematic_xy_mm": [
+          119.38,
+          100.33
+        ]
+      },
+      "31": {
+        "name": "PA7",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          102.87
+        ]
+      },
+      "32": {
+        "name": "PC4",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          105.41
+        ]
+      },
+      "33": {
+        "name": "PC5",
+        "net": "ARM1_SENSE",
+        "schematic_xy_mm": [
+          119.38,
+          107.95
+        ]
+      },
+      "34": {
+        "name": "PB0",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          110.49
+        ]
+      },
+      "35": {
+        "name": "PB1",
+        "net": "CAM_5V_SENSE",
+        "schematic_xy_mm": [
+          119.38,
+          113.03
+        ]
+      },
+      "38": {
+        "name": "PE8",
+        "net": "CAM_MCU_TX",
+        "schematic_xy_mm": [
+          119.38,
+          115.57
+        ]
+      },
+      "39": {
+        "name": "PE9",
+        "net": "CAM_UART_OE",
+        "schematic_xy_mm": [
+          119.38,
+          118.11
+        ]
+      },
+      "41": {
+        "name": "PE11",
+        "net": "CAM_PWR_EN",
+        "schematic_xy_mm": [
+          119.38,
+          120.65
+        ]
+      },
+      "42": {
+        "name": "PE12",
+        "net": "CAM_FAULT_N",
+        "schematic_xy_mm": [
+          119.38,
+          123.19
+        ]
+      },
+      "43": {
+        "name": "PE13",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          125.73
+        ]
+      },
+      "44": {
+        "name": "PE14",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          128.27
+        ]
+      },
+      "45": {
+        "name": "PE15",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          130.81
+        ]
+      },
+      "51": {
+        "name": "PB12",
+        "net": "RADIO_RX_MCU",
+        "schematic_xy_mm": [
+          119.38,
+          133.35
+        ]
+      },
+      "52": {
+        "name": "PB13",
+        "net": "RADIO_TX_MCU",
+        "schematic_xy_mm": [
+          119.38,
+          135.89
+        ]
+      },
+      "53": {
+        "name": "PB14",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          138.43
+        ]
+      },
+      "54": {
+        "name": "PB15",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          140.97
+        ]
+      },
+      "55": {
+        "name": "PD8",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          143.51
+        ]
+      },
+      "56": {
+        "name": "PD9",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          146.05
+        ]
+      },
+      "57": {
+        "name": "PD10",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          148.59
+        ]
+      },
+      "61": {
+        "name": "PD14",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          151.13
+        ]
+      },
+      "65": {
+        "name": "PC8",
+        "net": "VBUS_SENSE",
+        "schematic_xy_mm": [
+          119.38,
+          153.67
+        ]
+      },
+      "66": {
+        "name": "PC9",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          156.21
+        ]
+      },
+      "67": {
+        "name": "PA8",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          158.75
+        ]
+      },
+      "68": {
+        "name": "PA9",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          161.29
+        ]
+      },
+      "69": {
+        "name": "PA10",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          163.83
+        ]
+      },
+      "77": {
+        "name": "PA15",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          166.37
+        ]
+      },
+      "78": {
+        "name": "PC10",
+        "net": "SD_SCK",
+        "schematic_xy_mm": [
+          119.38,
+          168.91
+        ]
+      },
+      "79": {
+        "name": "PC11",
+        "net": "SD_MISO",
+        "schematic_xy_mm": [
+          119.38,
+          171.45
+        ]
+      },
+      "80": {
+        "name": "PC12",
+        "net": "SD_MOSI",
+        "schematic_xy_mm": [
+          119.38,
+          173.99
+        ]
+      },
+      "81": {
+        "name": "PD0",
+        "net": "SD_CS",
+        "schematic_xy_mm": [
+          119.38,
+          176.53
+        ]
+      },
+      "82": {
+        "name": "PD1",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          179.07
+        ]
+      },
+      "83": {
+        "name": "PD2",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          181.61
+        ]
+      },
+      "86": {
+        "name": "PD5",
+        "net": "LED_RED",
+        "schematic_xy_mm": [
+          119.38,
+          184.15
+        ]
+      },
+      "87": {
+        "name": "PD6",
+        "net": "USB_FAULT_N",
+        "schematic_xy_mm": [
+          119.38,
+          186.69
+        ]
+      },
+      "88": {
+        "name": "PD7",
+        "net": "LED_YEL",
+        "schematic_xy_mm": [
+          119.38,
+          189.23
+        ]
+      },
+      "97": {
+        "name": "PE0",
+        "net": "NC",
+        "schematic_xy_mm": [
+          119.38,
+          191.77
+        ]
+      },
+      "98": {
+        "name": "PE1",
+        "net": "IMU_INT1",
+        "schematic_xy_mm": [
+          119.38,
+          194.31
+        ]
+      }
+    },
+    "AFs": [
+      {
+        "pin": 1,
+        "port": "PE2",
+        "af": 9,
+        "function": "QUADSPI_BK1_IO2",
+        "datasheet_page": 94,
+        "pass": true
+      },
+      {
+        "pin": 22,
+        "port": "PA0",
+        "af": 2,
+        "function": "TIM5_CH1",
+        "datasheet_page": 89,
+        "pass": true
+      },
+      {
+        "pin": 23,
+        "port": "PA1",
+        "af": 2,
+        "function": "TIM5_CH2",
+        "datasheet_page": 89,
+        "pass": true
+      },
+      {
+        "pin": 24,
+        "port": "PA2",
+        "af": 2,
+        "function": "TIM5_CH3",
+        "datasheet_page": 89,
+        "pass": true
+      },
+      {
+        "pin": 25,
+        "port": "PA3",
+        "af": 2,
+        "function": "TIM5_CH4",
+        "datasheet_page": 89,
+        "pass": true
+      },
+      {
+        "pin": 36,
+        "port": "PB2",
+        "af": 9,
+        "function": "QUADSPI_CLK",
+        "datasheet_page": 90,
+        "pass": true
+      },
+      {
+        "pin": 37,
+        "port": "PE7",
+        "af": 7,
+        "function": "UART7_RX",
+        "datasheet_page": 94,
+        "pass": true
+      },
+      {
+        "pin": 38,
+        "port": "PE8",
+        "af": 7,
+        "function": "UART7_TX",
+        "datasheet_page": 94,
+        "pass": true
+      },
+      {
+        "pin": 51,
+        "port": "PB12",
+        "af": 14,
+        "function": "UART5_RX",
+        "datasheet_page": 91,
+        "pass": true
+      },
+      {
+        "pin": 52,
+        "port": "PB13",
+        "af": 14,
+        "function": "UART5_TX",
+        "datasheet_page": 91,
+        "pass": true
+      },
+      {
+        "pin": 58,
+        "port": "PD11",
+        "af": 9,
+        "function": "QUADSPI_BK1_IO0",
+        "datasheet_page": 93,
+        "pass": true
+      },
+      {
+        "pin": 59,
+        "port": "PD12",
+        "af": 9,
+        "function": "QUADSPI_BK1_IO1",
+        "datasheet_page": 93,
+        "pass": true
+      },
+      {
+        "pin": 60,
+        "port": "PD13",
+        "af": 9,
+        "function": "QUADSPI_BK1_IO3",
+        "datasheet_page": 93,
+        "pass": true
+      },
+      {
+        "pin": 63,
+        "port": "PC6",
+        "af": 7,
+        "function": "USART6_TX",
+        "datasheet_page": 92,
+        "pass": true
+      },
+      {
+        "pin": 64,
+        "port": "PC7",
+        "af": 7,
+        "function": "USART6_RX",
+        "datasheet_page": 92,
+        "pass": true
+      },
+      {
+        "pin": 70,
+        "port": "PA11",
+        "af": 10,
+        "function": "OTG_FS_DM",
+        "datasheet_page": 89,
+        "pass": true
+      },
+      {
+        "pin": 71,
+        "port": "PA12",
+        "af": 10,
+        "function": "OTG_FS_DP",
+        "datasheet_page": 90,
+        "pass": true
+      },
+      {
+        "pin": 72,
+        "port": "PA13",
+        "af": 0,
+        "function": "SWDIO",
+        "datasheet_page": 90,
+        "pass": true
+      },
+      {
+        "pin": 76,
+        "port": "PA14",
+        "af": 0,
+        "function": "SWCLK",
+        "datasheet_page": 90,
+        "pass": true
+      },
+      {
+        "pin": 78,
+        "port": "PC10",
+        "af": 6,
+        "function": "SPI3_SCK",
+        "datasheet_page": 92,
+        "pass": true
+      },
+      {
+        "pin": 79,
+        "port": "PC11",
+        "af": 6,
+        "function": "SPI3_MISO",
+        "datasheet_page": 92,
+        "pass": true
+      },
+      {
+        "pin": 80,
+        "port": "PC12",
+        "af": 6,
+        "function": "SPI3_MOSI",
+        "datasheet_page": 92,
+        "pass": true
+      },
+      {
+        "pin": 89,
+        "port": "PB3",
+        "af": 5,
+        "function": "SPI1_SCK",
+        "datasheet_page": 90,
+        "pass": true
+      },
+      {
+        "pin": 90,
+        "port": "PB4",
+        "af": 5,
+        "function": "SPI1_MISO",
+        "datasheet_page": 90,
+        "pass": true
+      },
+      {
+        "pin": 91,
+        "port": "PB5",
+        "af": 5,
+        "function": "SPI1_MOSI",
+        "datasheet_page": 90,
+        "pass": true
+      },
+      {
+        "pin": 92,
+        "port": "PB6",
+        "af": 10,
+        "function": "QUADSPI_BK1_NCS",
+        "datasheet_page": 90,
+        "pass": true
+      },
+      {
+        "pin": 95,
+        "port": "PB8",
+        "af": 4,
+        "function": "I2C1_SCL",
+        "datasheet_page": 90,
+        "pass": true
+      },
+      {
+        "pin": 96,
+        "port": "PB9",
+        "af": 4,
+        "function": "I2C1_SDA",
+        "datasheet_page": 90,
+        "pass": true
+      }
+    ],
+    "NC": [
+      {
+        "pin": 2,
+        "port": "PE3",
+        "members": [
+          "U1.2"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 4,
+        "port": "PE5",
+        "members": [
+          "U1.4"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 5,
+        "port": "PE6",
+        "members": [
+          "U1.5"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 7,
+        "port": "PC13",
+        "members": [
+          "U1.7"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 9,
+        "port": "PC15",
+        "members": [
+          "U1.9"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 17,
+        "port": "PC2_C",
+        "members": [
+          "U1.17"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 31,
+        "port": "PA7",
+        "members": [
+          "U1.31"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 32,
+        "port": "PC4",
+        "members": [
+          "U1.32"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 34,
+        "port": "PB0",
+        "members": [
+          "U1.34"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 40,
+        "port": "PE10",
+        "members": [
+          "U1.40"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 43,
+        "port": "PE13",
+        "members": [
+          "U1.43"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 44,
+        "port": "PE14",
+        "members": [
+          "U1.44"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 45,
+        "port": "PE15",
+        "members": [
+          "U1.45"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 46,
+        "port": "PB10",
+        "members": [
+          "U1.46"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 47,
+        "port": "PB11",
+        "members": [
+          "U1.47"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 53,
+        "port": "PB14",
+        "members": [
+          "U1.53"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 54,
+        "port": "PB15",
+        "members": [
+          "U1.54"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 55,
+        "port": "PD8",
+        "members": [
+          "U1.55"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 56,
+        "port": "PD9",
+        "members": [
+          "U1.56"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 57,
+        "port": "PD10",
+        "members": [
+          "U1.57"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 61,
+        "port": "PD14",
+        "members": [
+          "U1.61"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 62,
+        "port": "PD15",
+        "members": [
+          "U1.62"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 66,
+        "port": "PC9",
+        "members": [
+          "U1.66"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 67,
+        "port": "PA8",
+        "members": [
+          "U1.67"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 68,
+        "port": "PA9",
+        "members": [
+          "U1.68"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 69,
+        "port": "PA10",
+        "members": [
+          "U1.69"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 77,
+        "port": "PA15",
+        "members": [
+          "U1.77"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 82,
+        "port": "PD1",
+        "members": [
+          "U1.82"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 83,
+        "port": "PD2",
+        "members": [
+          "U1.83"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 84,
+        "port": "PD3",
+        "members": [
+          "U1.84"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 85,
+        "port": "PD4",
+        "members": [
+          "U1.85"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 97,
+        "port": "PE0",
+        "members": [
+          "U1.97"
+        ],
+        "tracks_vias": 0,
+        "zones": 0
+      }
+    ],
+    "loader": [
+      {
+        "pin": 24,
+        "port": "PA2",
+        "loader": "USART2_TX",
+        "net": "SERVO3_MCU"
+      },
+      {
+        "pin": 25,
+        "port": "PA3",
+        "loader": "USART2_RX",
+        "net": "SERVO4_MCU"
+      },
+      {
+        "pin": 28,
+        "port": "PA4",
+        "loader": "SPI1_NSS",
+        "net": "LOGIC_SOURCE_ST"
+      },
+      {
+        "pin": 29,
+        "port": "PA5",
+        "loader": "SPI1_SCK",
+        "net": "BAT_FAULT_N"
+      },
+      {
+        "pin": 30,
+        "port": "PA6",
+        "loader": "SPI1_MISO",
+        "net": "VLOGIC_SENSE"
+      },
+      {
+        "pin": 31,
+        "port": "PA7",
+        "loader": "SPI1_MOSI",
+        "net": "NC"
+      },
+      {
+        "pin": 41,
+        "port": "PE11",
+        "loader": "SPI4_NSS",
+        "net": "CAM_PWR_EN"
+      },
+      {
+        "pin": 42,
+        "port": "PE12",
+        "loader": "SPI4_SCK",
+        "net": "CAM_FAULT_N"
+      },
+      {
+        "pin": 43,
+        "port": "PE13",
+        "loader": "SPI4_MISO",
+        "net": "NC"
+      },
+      {
+        "pin": 44,
+        "port": "PE14",
+        "loader": "SPI4_MOSI",
+        "net": "NC"
+      },
+      {
+        "pin": 46,
+        "port": "PB10",
+        "loader": "USART3_TX",
+        "net": "NC"
+      },
+      {
+        "pin": 47,
+        "port": "PB11",
+        "loader": "USART3_RX",
+        "net": "NC"
+      },
+      {
+        "pin": 53,
+        "port": "PB14",
+        "loader": "USART1_TX",
+        "net": "NC"
+      },
+      {
+        "pin": 54,
+        "port": "PB15",
+        "loader": "USART1_RX",
+        "net": "NC"
+      },
+      {
+        "pin": 66,
+        "port": "PC9",
+        "loader": "I2C3_SDA",
+        "net": "NC"
+      },
+      {
+        "pin": 67,
+        "port": "PA8",
+        "loader": "I2C3_SCL",
+        "net": "NC"
+      },
+      {
+        "pin": 68,
+        "port": "PA9",
+        "loader": "USART1_TX",
+        "net": "NC"
+      },
+      {
+        "pin": 69,
+        "port": "PA10",
+        "loader": "USART1_RX",
+        "net": "NC"
+      },
+      {
+        "pin": 70,
+        "port": "PA11",
+        "loader": "USB_DM",
+        "net": "USB_DM"
+      },
+      {
+        "pin": 71,
+        "port": "PA12",
+        "loader": "USB_DP",
+        "net": "USB_DP"
+      },
+      {
+        "pin": 77,
+        "port": "PA15",
+        "loader": "SPI3_NSS",
+        "net": "NC"
+      },
+      {
+        "pin": 78,
+        "port": "PC10",
+        "loader": "SPI3_SCK",
+        "net": "SD_SCK"
+      },
+      {
+        "pin": 79,
+        "port": "PC11",
+        "loader": "SPI3_MISO",
+        "net": "SD_MISO"
+      },
+      {
+        "pin": 80,
+        "port": "PC12",
+        "loader": "SPI3_MOSI",
+        "net": "SD_MOSI"
+      },
+      {
+        "pin": 92,
+        "port": "PB6",
+        "loader": "I2C1_SCL",
+        "net": "QSPI_NCS"
+      },
+      {
+        "pin": 96,
+        "port": "PB9",
+        "loader": "I2C1_SDA",
+        "net": "I2C1_SDA"
+      }
+    ],
+    "components": {
+      "U1": {
+        "value": "STM32H743VIT6",
+        "xy_mm": [
+          23.0,
+          43.0
+        ],
+        "side": "F.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "QSPI_IO2",
+          "2": "NC",
+          "3": "PYRO1_GATE_N",
+          "4": "NC",
+          "5": "NC",
+          "6": "3V3",
+          "7": "NC",
+          "8": "BUZZ_DRV",
+          "9": "NC",
+          "10": "GND",
+          "11": "3V3",
+          "12": "HSE_IN",
+          "13": "HSE_OUT",
+          "14": "NRST",
+          "15": "PYRO1_CONT",
+          "16": "ACT_EN_MCU",
+          "17": "NC",
+          "18": "V3V3_SENSE",
+          "19": "GND",
+          "20": "3V3A",
+          "21": "3V3A",
+          "22": "SERVO1_MCU",
+          "23": "SERVO2_MCU",
+          "24": "SERVO3_MCU",
+          "25": "SERVO4_MCU",
+          "26": "GND",
+          "27": "3V3",
+          "28": "LOGIC_SOURCE_ST",
+          "29": "BAT_FAULT_N",
+          "30": "VLOGIC_SENSE",
+          "31": "NC",
+          "32": "NC",
+          "33": "ARM1_SENSE",
+          "34": "NC",
+          "35": "CAM_5V_SENSE",
+          "36": "QSPI_CLK",
+          "37": "CAM_MCU_RX",
+          "38": "CAM_MCU_TX",
+          "39": "CAM_UART_OE",
+          "40": "NC",
+          "41": "CAM_PWR_EN",
+          "42": "CAM_FAULT_N",
+          "43": "NC",
+          "44": "NC",
+          "45": "NC",
+          "46": "NC",
+          "47": "NC",
+          "48": "VCAP1",
+          "49": "GND",
+          "50": "3V3",
+          "51": "RADIO_RX_MCU",
+          "52": "RADIO_TX_MCU",
+          "53": "NC",
+          "54": "NC",
+          "55": "NC",
+          "56": "NC",
+          "57": "NC",
+          "58": "QSPI_IO0",
+          "59": "QSPI_IO1",
+          "60": "QSPI_IO3",
+          "61": "NC",
+          "62": "NC",
+          "63": "GPS_TX_MCU",
+          "64": "GPS_RX_MCU",
+          "65": "VBUS_SENSE",
+          "66": "NC",
+          "67": "NC",
+          "68": "NC",
+          "69": "NC",
+          "70": "USB_DM",
+          "71": "USB_DP",
+          "72": "SWDIO",
+          "73": "VCAP2",
+          "74": "GND",
+          "75": "3V3",
+          "76": "SWCLK",
+          "77": "NC",
+          "78": "SD_SCK",
+          "79": "SD_MISO",
+          "80": "SD_MOSI",
+          "81": "SD_CS",
+          "82": "NC",
+          "83": "NC",
+          "84": "NC",
+          "85": "NC",
+          "86": "LED_RED",
+          "87": "USB_FAULT_N",
+          "88": "LED_YEL",
+          "89": "SPI1_SCK",
+          "90": "SPI1_MISO",
+          "91": "SPI1_MOSI",
+          "92": "QSPI_NCS",
+          "93": "IMU_CS",
+          "94": "BOOT0",
+          "95": "I2C1_SCL",
+          "96": "I2C1_SDA",
+          "97": "NC",
+          "98": "IMU_INT1",
+          "99": "GND",
+          "100": "3V3"
+        }
+      },
+      "J2": {
+        "value": "TC2030-IDC-NL SWD",
+        "xy_mm": [
+          5.0,
+          39.4
+        ],
+        "side": "F.Cu",
+        "rot": 0.0,
+        "pads": {
+          "": "NC",
+          "1": "3V3",
+          "2": "SWDIO",
+          "3": "NRST",
+          "4": "SWCLK",
+          "5": "GND",
+          "6": "NC"
+        }
+      },
+      "J3": {
+        "value": "USB-C 2.0",
+        "xy_mm": [
+          4.6,
+          30.799999
+        ],
+        "side": "F.Cu",
+        "rot": -90.0,
+        "pads": {
+          "": "NC",
+          "1": "GND",
+          "2": "GND",
+          "3": "GND",
+          "4": "GND",
+          "A1B12": "GND",
+          "A4B9": "VBUS",
+          "A5": "CC1",
+          "A6": "USB_DP",
+          "A7": "USB_DM",
+          "A8": "NC",
+          "B1A12": "GND",
+          "B4A9": "VBUS",
+          "B5": "CC2",
+          "B6": "USB_DP",
+          "B7": "USB_DM",
+          "B8": "NC"
+        }
+      },
+      "U12": {
+        "value": "TXU0202DCUR",
+        "xy_mm": [
+          31.6,
+          39.8
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "CAM_RX_BUFFER",
+          "2": "GND",
+          "3": "3V3",
+          "4": "CAM_MCU_RX",
+          "5": "CAM_MCU_TX",
+          "6": "CAM_UART_OE",
+          "7": "CAM_IO_3V3",
+          "8": "CAM_TX_BUFFER"
+        }
+      },
+      "U13": {
+        "value": "TPS70933DBVR",
+        "xy_mm": [
+          31.85,
+          49.7
+        ],
+        "side": "B.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "CAM_5V",
+          "2": "GND",
+          "3": "NC",
+          "4": "NC",
+          "5": "CAM_IO_3V3"
+        }
+      },
+      "U402": {
+        "value": "TPS2553DBVR",
+        "xy_mm": [
+          32.0,
+          59.0
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "PORT_5V3",
+          "2": "GND",
+          "3": "CAM_PWR_EN",
+          "4": "CAM_FAULT_N",
+          "5": "CAM_ILIM",
+          "6": "CAM_5V"
+        }
+      },
+      "J410": {
+        "value": "DB125-3.5-4P-GN-S",
+        "xy_mm": [
+          38.6,
+          15.5
+        ],
+        "side": "F.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "PORT_4V8",
+          "2": "GND",
+          "3": "GPS_TX_WIRE",
+          "4": "GPS_RX_WIRE"
+        }
+      },
+      "J420": {
+        "value": "DB125-3.5-4P-GN-S",
+        "xy_mm": [
+          38.6,
+          31.5
+        ],
+        "side": "F.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "PORT_4V8",
+          "2": "GND",
+          "3": "RADIO_TX_WIRE",
+          "4": "RADIO_RX_WIRE"
+        }
+      },
+      "J9": {
+        "value": "DB125-3.5-4P-GN-S",
+        "xy_mm": [
+          38.6,
+          47.5
+        ],
+        "side": "F.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "CAM_5V",
+          "2": "GND",
+          "3": "CAM_RX_WIRE",
+          "4": "CAM_TX_WIRE"
+        }
+      },
+      "J122": {
+        "value": "DB125-3.5-5P-GN-S",
+        "xy_mm": [
+          38.6,
+          71.5
+        ],
+        "side": "F.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "SERVO1_OUT",
+          "2": "SERVO2_OUT",
+          "3": "SERVO3_OUT",
+          "4": "SERVO4_OUT",
+          "5": "GND"
+        }
+      },
+      "J430": {
+        "value": "472192001",
+        "xy_mm": [
+          24.0,
+          24.3
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "SD_DAT2",
+          "2": "SD_CS",
+          "3": "SD_MOSI",
+          "4": "3V3",
+          "5": "SD_SCK",
+          "6": "GND",
+          "7": "SD_MISO",
+          "8": "SD_DAT1",
+          "9": "GND",
+          "10": "GND",
+          "11": "GND",
+          "12": "GND"
+        }
+      },
+      "R440": {
+        "value": "1k 1%",
+        "xy_mm": [
+          34.0,
+          10.25
+        ],
+        "side": "B.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "GPS_RX_WIRE",
+          "2": "GPS_RX_MCU"
+        }
+      },
+      "R441": {
+        "value": "1k 1%",
+        "xy_mm": [
+          34.0,
+          13.75
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "GPS_TX_MCU",
+          "2": "GPS_TX_WIRE"
+        }
+      },
+      "R450": {
+        "value": "1k 1%",
+        "xy_mm": [
+          34.0,
+          26.25
+        ],
+        "side": "B.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "RADIO_RX_WIRE",
+          "2": "RADIO_RX_MCU"
+        }
+      },
+      "R451": {
+        "value": "1k 1%",
+        "xy_mm": [
+          34.0,
+          29.75
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "RADIO_TX_MCU",
+          "2": "RADIO_TX_WIRE"
+        }
+      },
+      "D410": {
+        "value": "ESD103-B1-02EL",
+        "xy_mm": [
+          35.75,
+          12.3
+        ],
+        "side": "B.Cu",
+        "rot": -90.0,
+        "pads": {
+          "": "NC",
+          "1": "GPS_TX_WIRE",
+          "2": "GND"
+        }
+      },
+      "D411": {
+        "value": "ESD103-B1-02EL",
+        "xy_mm": [
+          35.75,
+          8.7
+        ],
+        "side": "B.Cu",
+        "rot": -90.0,
+        "pads": {
+          "": "NC",
+          "1": "GPS_RX_WIRE",
+          "2": "GND"
+        }
+      },
+      "D420": {
+        "value": "ESD103-B1-02EL",
+        "xy_mm": [
+          35.75,
+          31.2
+        ],
+        "side": "B.Cu",
+        "rot": -90.0,
+        "pads": {
+          "": "NC",
+          "1": "RADIO_TX_WIRE",
+          "2": "GND"
+        }
+      },
+      "D421": {
+        "value": "ESD103-B1-02EL",
+        "xy_mm": [
+          35.75,
+          27.7
+        ],
+        "side": "B.Cu",
+        "rot": -90.0,
+        "pads": {
+          "": "NC",
+          "1": "RADIO_RX_WIRE",
+          "2": "GND"
+        }
+      },
+      "D400": {
+        "value": "ESD103-B1-02EL",
+        "xy_mm": [
+          35.75,
+          43.7
+        ],
+        "side": "B.Cu",
+        "rot": -90.0,
+        "pads": {
+          "": "NC",
+          "1": "CAM_TX_WIRE",
+          "2": "GND"
+        }
+      },
+      "D401": {
+        "value": "ESD103-B1-02EL",
+        "xy_mm": [
+          35.75,
+          47.2
+        ],
+        "side": "B.Cu",
+        "rot": -90.0,
+        "pads": {
+          "": "NC",
+          "1": "CAM_RX_WIRE",
+          "2": "GND"
+        }
+      },
+      "R100": {
+        "value": "1k 1%",
+        "xy_mm": [
+          34.0,
+          45.75
+        ],
+        "side": "B.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "CAM_RX_WIRE",
+          "2": "CAM_RX_BUFFER"
+        }
+      },
+      "R101": {
+        "value": "1k 1%",
+        "xy_mm": [
+          34.0,
+          42.25
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "CAM_TX_BUFFER",
+          "2": "CAM_TX_WIRE"
+        }
+      },
+      "R102": {
+        "value": "10k 1%",
+        "xy_mm": [
+          35.4,
+          39.7
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "CAM_UART_OE",
+          "2": "GND"
+        }
+      },
+      "R103": {
+        "value": "1k 1%",
+        "xy_mm": [
+          31.2,
+          54.8
+        ],
+        "side": "B.Cu",
+        "rot": -90.0,
+        "pads": {
+          "1": "CAM_IO_3V3",
+          "2": "GND"
+        }
+      },
+      "R104": {
+        "value": "10k",
+        "xy_mm": [
+          33.2,
+          46.5
+        ],
+        "side": "F.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "CAM_5V",
+          "2": "CAM_5V_SENSE"
+        }
+      },
+      "R105": {
+        "value": "1k",
+        "xy_mm": [
+          33.2,
+          48.6
+        ],
+        "side": "F.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "CAM_5V_SENSE",
+          "2": "GND"
+        }
+      },
+      "R60": {
+        "value": "100k",
+        "xy_mm": [
+          33.2,
+          58.6
+        ],
+        "side": "F.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "VLOGIC",
+          "2": "VLOGIC_SENSE"
+        }
+      },
+      "R61": {
+        "value": "10k",
+        "xy_mm": [
+          33.2,
+          54.0
+        ],
+        "side": "F.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "VLOGIC_SENSE",
+          "2": "GND"
+        }
+      },
+      "R62": {
+        "value": "10k",
+        "xy_mm": [
+          25.5,
+          55.7
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "3V3",
+          "2": "V3V3_SENSE"
+        }
+      },
+      "R63": {
+        "value": "10k",
+        "xy_mm": [
+          25.5,
+          56.7
+        ],
+        "side": "B.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "V3V3_SENSE",
+          "2": "GND"
+        }
+      },
+      "R64": {
+        "value": "10k",
+        "xy_mm": [
+          11.23,
+          52.28
+        ],
+        "side": "B.Cu",
+        "rot": -90.0,
+        "pads": {
+          "1": "BARO_SDO",
+          "2": "GND"
+        }
+      },
+      "R9": {
+        "value": "1k",
+        "xy_mm": [
+          9.95,
+          28.9
+        ],
+        "side": "B.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "VBUS",
+          "2": "VBUS_SENSE"
+        }
+      },
+      "R110": {
+        "value": "1k 1%",
+        "xy_mm": [
+          10.775,
+          25.0
+        ],
+        "side": "F.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "VBUS_SENSE",
+          "2": "GND"
+        }
+      },
+      "R5": {
+        "value": "10k",
+        "xy_mm": [
+          13.0,
+          45.17
+        ],
+        "side": "B.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "BOOT0",
+          "2": "GND"
+        }
+      },
+      "R8": {
+        "value": "5.1k",
+        "xy_mm": [
+          9.0,
+          32.5
+        ],
+        "side": "B.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "CC2",
+          "2": "GND"
+        }
+      },
+      "R10": {
+        "value": "10k",
+        "xy_mm": [
+          20.0,
+          44.69
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "QSPI_NCS",
+          "2": "3V3"
+        }
+      },
+      "R32": {
+        "value": "220R",
+        "xy_mm": [
+          12.3,
+          41.6
+        ],
+        "side": "F.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "LED_RED",
+          "2": "LED_RED_A"
+        }
+      },
+      "R33": {
+        "value": "220R",
+        "xy_mm": [
+          11.3,
+          44.6
+        ],
+        "side": "F.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "LED_YEL",
+          "2": "LED_YEL_A"
+        }
+      },
+      "R122": {
+        "value": "1k",
+        "xy_mm": [
+          19.6,
+          69.8
+        ],
+        "side": "F.Cu",
+        "rot": -90.0,
+        "pads": {
+          "1": "ACT_EN_MCU",
+          "2": "ACT_EN"
+        }
+      },
+      "R123": {
+        "value": "100k",
+        "xy_mm": [
+          20.6,
+          70.66
+        ],
+        "side": "F.Cu",
+        "rot": -90.0,
+        "pads": {
+          "1": "ACT_EN",
+          "2": "GND"
+        }
+      },
+      "R126": {
+        "value": "220R",
+        "xy_mm": [
+          17.0,
+          54.24
+        ],
+        "side": "F.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "PYRO1_GATE_N",
+          "2": "PYRO1_GATE"
+        }
+      },
+      "R127": {
+        "value": "1k",
+        "xy_mm": [
+          19.8,
+          54.24
+        ],
+        "side": "F.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "PYRO1_GATE_N",
+          "2": "GND"
+        }
+      },
+      "R128": {
+        "value": "10k",
+        "xy_mm": [
+          18.3,
+          57.405
+        ],
+        "side": "F.Cu",
+        "rot": -90.0,
+        "pads": {
+          "1": "PYRO1_GATE",
+          "2": "GND"
+        }
+      },
+      "C126": {
+        "value": "220nF 25V X7R",
+        "xy_mm": [
+          16.85,
+          57.675
+        ],
+        "side": "F.Cu",
+        "rot": -90.0,
+        "pads": {
+          "1": "PYRO1_GATE",
+          "2": "GND"
+        }
+      },
+      "C14": {
+        "value": "100nF 50V X7R 10%",
+        "xy_mm": [
+          21.4,
+          52.15
+        ],
+        "side": "B.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "3V3",
+          "2": "GND"
+        }
+      },
+      "C15": {
+        "value": "100nF 50V X7R 10%",
+        "xy_mm": [
+          29.05,
+          47.4
+        ],
+        "side": "B.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "3V3",
+          "2": "GND"
+        }
+      },
+      "C16": {
+        "value": "100nF 50V X7R 10%",
+        "xy_mm": [
+          26.6,
+          36.62
+        ],
+        "side": "B.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "3V3",
+          "2": "GND"
+        }
+      },
+      "C17": {
+        "value": "100nF 50V X7R 10%",
+        "xy_mm": [
+          17.0,
+          37.9
+        ],
+        "side": "B.Cu",
+        "rot": -90.0,
+        "pads": {
+          "1": "3V3",
+          "2": "GND"
+        }
+      },
+      "C18": {
+        "value": "100nF 50V X7R 10%",
+        "xy_mm": [
+          18.3,
+          49.15
+        ],
+        "side": "B.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "3V3",
+          "2": "GND"
+        }
+      },
+      "C19": {
+        "value": "2.2uF 16V X5R 10%",
+        "xy_mm": [
+          28.35,
+          37.65
+        ],
+        "side": "B.Cu",
+        "rot": -90.0,
+        "pads": {
+          "1": "VCAP1",
+          "2": "GND"
+        }
+      },
+      "C20": {
+        "value": "2.2uF 16V X5R 10%",
+        "xy_mm": [
+          19.8,
+          37.3
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "VCAP2",
+          "2": "GND"
+        }
+      },
+      "C21": {
+        "value": "100nF 50V X7R 10%",
+        "xy_mm": [
+          28.1,
+          49.25
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "3V3A",
+          "2": "GND"
+        }
+      },
+      "C22": {
+        "value": "1uF 50V X5R 10%",
+        "xy_mm": [
+          27.0,
+          47.3
+        ],
+        "side": "B.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "3V3A",
+          "2": "GND"
+        }
+      },
+      "C23": {
+        "value": "4.7uF 16V X5R 10%",
+        "xy_mm": [
+          27.8,
+          35.3
+        ],
+        "side": "B.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "3V3",
+          "2": "GND"
+        }
+      },
+      "C24": {
+        "value": "100nF 50V X7R 10%",
+        "xy_mm": [
+          25.45,
+          49.0
+        ],
+        "side": "B.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "NRST",
+          "2": "GND"
+        }
+      },
+      "C25": {
+        "value": "10pF 50V C0G 5%",
+        "xy_mm": [
+          19.95,
+          47.7
+        ],
+        "side": "B.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "HSE_IN",
+          "2": "GND"
+        }
+      },
+      "C26": {
+        "value": "10pF 50V C0G 5%",
+        "xy_mm": [
+          25.75,
+          45.5
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "HSE_OUT",
+          "2": "GND"
+        }
+      },
+      "Y1": {
+        "value": "25MHz CL8pF",
+        "xy_mm": [
+          22.85,
+          46.6
+        ],
+        "side": "B.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "HSE_IN",
+          "2": "GND",
+          "3": "HSE_OUT",
+          "4": "GND"
+        }
+      },
+      "R162": {
+        "value": "1k 0805",
+        "xy_mm": [
+          19.5,
+          57.7
+        ],
+        "side": "B.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "BUZZ_DRV",
+          "2": "BUZZ_G"
+        }
+      },
+      "R163": {
+        "value": "10k",
+        "xy_mm": [
+          21.8,
+          59.3
+        ],
+        "side": "B.Cu",
+        "rot": -90.0,
+        "pads": {
+          "1": "BUZZ_G",
+          "2": "GND"
+        }
+      },
+      "Q123": {
+        "value": "AO3400A",
+        "xy_mm": [
+          19.5,
+          60.25
+        ],
+        "side": "B.Cu",
+        "rot": 180.0,
+        "pads": {
+          "1": "BUZZ_G",
+          "2": "GND",
+          "3": "BUZZ_OUT"
+        }
+      },
+      "Q122": {
+        "value": "AO3400A",
+        "xy_mm": [
+          16.8,
+          69.8
+        ],
+        "side": "F.Cu",
+        "rot": 0.0,
+        "pads": {
+          "1": "ACT_EN",
+          "2": "GND",
+          "3": "ACT_DRV"
+        }
+      },
+      "Q124": {
+        "value": "AON7524",
+        "xy_mm": [
+          13.9,
+          57.37
+        ],
+        "side": "F.Cu",
+        "rot": 90.0,
+        "pads": {
+          "1": "GND",
+          "2": "GND",
+          "3": "GND",
+          "4": "PYRO1_GATE",
+          "5": "PYRO1_OUT"
+        }
+      }
+    },
+    "extra_component_values": {
+      "R431": "100k 1%",
+      "R432": "10k 1%",
+      "R150": "1k 0603",
+      "R151": "1k 0603",
+      "R152": "1k 0603",
+      "R153": "1k 0603",
+      "R154": "10k",
+      "R155": "10k",
+      "R156": "10k",
+      "R157": "10k",
+      "R460": "10k 1%",
+      "R461": "10k 1%",
+      "R462": "10k 1%",
+      "R463": "10k 1%",
+      "R464": "10k 1%",
+      "C430": "100nF 50V X7R 10%",
+      "C431": "22uF 25V X7R 10%",
+      "C100": "100nF 50V X7R 10%",
+      "C93": "100nF 50V X7R 10%",
+      "R129": "5.1k",
+      "R173": "5.1k",
+      "R130": "2k",
+      "R178": "2k",
+      "R132": "5.1k",
+      "R175": "5.1k",
+      "R133": "2k",
+      "R180": "2k"
+    },
+    "relevant_net_members": {
+      "ACT_DRV": [
+        "Q122.3",
+        "R121.2"
+      ],
+      "ACT_EN": [
+        "Q122.1",
+        "R122.2",
+        "R123.1"
+      ],
+      "ACT_EN_MCU": [
+        "R122.1",
+        "U1.16"
+      ],
+      "ACT_FET_S": [
+        "C120.1",
+        "Q120.1",
+        "Q120.2",
+        "Q120.3",
+        "Q121.1",
+        "Q121.2",
+        "Q121.3",
+        "R120.1"
+      ],
+      "ACT_GATE": [
+        "C120.2",
+        "Q120.4",
+        "Q121.4",
+        "R120.2",
+        "R121.1",
+        "TP121.1"
+      ],
+      "ARM1_SENSE": [
+        "C129.1",
+        "R133.1",
+        "R175.2",
+        "R180.1",
+        "U1.33"
+      ],
+      "ARM1_SENSE_MID": [
+        "R132.2",
+        "R175.1"
+      ],
+      "BAT_FAULT_N": [
+        "R89.2",
+        "U1.29",
+        "U9.4",
+        "U9.4"
+      ],
+      "BOOT0": [
+        "R5.1",
+        "U1.94"
+      ],
+      "BUZZ_DRV": [
+        "R162.1",
+        "U1.8"
+      ],
+      "CAM_5V": [
+        "C431.1",
+        "C91.1",
+        "J9.1",
+        "R104.1",
+        "U13.1",
+        "U402.6"
+      ],
+      "CAM_5V_SENSE": [
+        "C94.1",
+        "R104.2",
+        "R105.1",
+        "U1.35"
+      ],
+      "CAM_FAULT_N": [
+        "R432.1",
+        "U1.42",
+        "U402.4"
+      ],
+      "CAM_ILIM": [
+        "R430.1",
+        "U402.5"
+      ],
+      "CAM_IO_3V3": [
+        "C92.1",
+        "C93.1",
+        "R103.1",
+        "U12.7",
+        "U13.5"
+      ],
+      "CAM_MCU_RX": [
+        "U1.37",
+        "U12.4"
+      ],
+      "CAM_MCU_TX": [
+        "U1.38",
+        "U12.5"
+      ],
+      "CAM_PWR_EN": [
+        "R431.1",
+        "U1.41",
+        "U402.3"
+      ],
+      "CAM_RX_BUFFER": [
+        "R100.2",
+        "U12.1"
+      ],
+      "CAM_RX_WIRE": [
+        "D401.1",
+        "J9.3",
+        "R100.1"
+      ],
+      "CAM_TX_BUFFER": [
+        "R101.1",
+        "U12.8"
+      ],
+      "CAM_TX_WIRE": [
+        "D400.1",
+        "J9.4",
+        "R101.2"
+      ],
+      "CAM_UART_OE": [
+        "R102.1",
+        "U1.39",
+        "U12.6"
+      ],
+      "GPS_RX_MCU": [
+        "R440.2",
+        "U1.64"
+      ],
+      "GPS_RX_WIRE": [
+        "D411.1",
+        "J410.4",
+        "R440.1"
+      ],
+      "GPS_TX_MCU": [
+        "R441.1",
+        "U1.63"
+      ],
+      "GPS_TX_WIRE": [
+        "D410.1",
+        "J410.3",
+        "R441.2"
+      ],
+      "HSE_IN": [
+        "C25.1",
+        "U1.12",
+        "Y1.1"
+      ],
+      "HSE_OUT": [
+        "C26.1",
+        "U1.13",
+        "Y1.3"
+      ],
+      "I2C1_SCL": [
+        "R12.1",
+        "U1.95",
+        "U5.8",
+        "U5.8"
+      ],
+      "I2C1_SDA": [
+        "R13.1",
+        "U1.96",
+        "U5.7",
+        "U5.7"
+      ],
+      "IMU_CS": [
+        "R11.1",
+        "U1.93",
+        "U4.12"
+      ],
+      "IMU_INT1": [
+        "U1.98",
+        "U4.4"
+      ],
+      "LED_RED": [
+        "R32.1",
+        "U1.86"
+      ],
+      "LED_YEL": [
+        "R33.1",
+        "U1.88"
+      ],
+      "LOGIC_SOURCE_ST": [
+        "R91.2",
+        "U1.28",
+        "U11.9"
+      ],
+      "NRST": [
+        "C24.1",
+        "J2.3",
+        "U1.14"
+      ],
+      "PYRO1_COLD": [
+        "D120.1",
+        "R131.2"
+      ],
+      "PYRO1_CONT": [
+        "C127.1",
+        "R129.2",
+        "R130.1",
+        "R178.1",
+        "U1.15"
+      ],
+      "PYRO1_CONT_MID": [
+        "R129.1",
+        "R173.2"
+      ],
+      "PYRO1_GATE": [
+        "C126.1",
+        "Q124.4",
+        "R126.2",
+        "R128.1",
+        "TP122.1"
+      ],
+      "PYRO1_GATE_N": [
+        "R126.1",
+        "R127.1",
+        "U1.3"
+      ],
+      "PYRO1_IGN": [
+        "J121.2",
+        "R134.1"
+      ],
+      "PYRO1_OUT": [
+        "C128.1",
+        "J121.1",
+        "Q124.5",
+        "R131.1",
+        "R173.1"
+      ],
+      "QSPI_CLK": [
+        "U1.36",
+        "U3.6"
+      ],
+      "QSPI_IO0": [
+        "U1.58",
+        "U3.5"
+      ],
+      "QSPI_IO1": [
+        "U1.59",
+        "U3.2"
+      ],
+      "QSPI_IO2": [
+        "U1.1",
+        "U3.3"
+      ],
+      "QSPI_IO3": [
+        "U1.60",
+        "U3.7"
+      ],
+      "QSPI_NCS": [
+        "R10.1",
+        "U1.92",
+        "U3.1"
+      ],
+      "RADIO_RX_MCU": [
+        "R450.2",
+        "U1.51"
+      ],
+      "RADIO_RX_WIRE": [
+        "D421.1",
+        "J420.4",
+        "R450.1"
+      ],
+      "RADIO_TX_MCU": [
+        "R451.1",
+        "U1.52"
+      ],
+      "RADIO_TX_WIRE": [
+        "D420.1",
+        "J420.3",
+        "R451.2"
+      ],
+      "SD_CS": [
+        "J430.2",
+        "R460.1",
+        "U1.81"
+      ],
+      "SD_DAT1": [
+        "J430.8",
+        "R463.1"
+      ],
+      "SD_DAT2": [
+        "J430.1",
+        "R464.1"
+      ],
+      "SD_MISO": [
+        "J430.7",
+        "R462.1",
+        "U1.79"
+      ],
+      "SD_MOSI": [
+        "J430.3",
+        "R461.1",
+        "U1.80"
+      ],
+      "SD_SCK": [
+        "J430.5",
+        "U1.78"
+      ],
+      "SERVO1_MCU": [
+        "D121.1",
+        "R150.1",
+        "R154.1",
+        "U1.22"
+      ],
+      "SERVO2_MCU": [
+        "D121.3",
+        "R151.1",
+        "R155.1",
+        "U1.23"
+      ],
+      "SERVO3_MCU": [
+        "D121.4",
+        "R152.1",
+        "R156.1",
+        "U1.24"
+      ],
+      "SERVO4_MCU": [
+        "D121.6",
+        "R153.1",
+        "R157.1",
+        "U1.25"
+      ],
+      "SPI1_MISO": [
+        "U1.90",
+        "U4.1"
+      ],
+      "SPI1_MOSI": [
+        "U1.91",
+        "U4.14"
+      ],
+      "SPI1_SCK": [
+        "U1.89",
+        "U4.13"
+      ],
+      "SWCLK": [
+        "J2.4",
+        "U1.76"
+      ],
+      "SWDIO": [
+        "J2.2",
+        "U1.72"
+      ],
+      "USB_DM": [
+        "D4.1",
+        "D4.6",
+        "J3.A7",
+        "J3.B7",
+        "U1.70"
+      ],
+      "USB_DP": [
+        "D4.3",
+        "D4.4",
+        "J3.A6",
+        "J3.B6",
+        "U1.71"
+      ],
+      "USB_FAULT_N": [
+        "R90.2",
+        "U1.87",
+        "U10.4"
+      ],
+      "V3V3_SENSE": [
+        "R62.2",
+        "R63.1",
+        "U1.18"
+      ],
+      "VBUS_SENSE": [
+        "R110.1",
+        "R9.2",
+        "U1.65"
+      ],
+      "VCAP1": [
+        "C19.1",
+        "U1.48"
+      ],
+      "VCAP2": [
+        "C20.1",
+        "U1.73"
+      ],
+      "VLOGIC_SENSE": [
+        "C60.1",
+        "R60.2",
+        "R61.1",
+        "U1.30"
+      ]
+    },
+    "binding_hashes": {
+      "board_sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+      "netlist_sha256": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+      "pin_table_sha256": "430d94a0642eee87ceaa2c383ce2ea0421cf1cf2b6ce9c40e1db406fc6cd1196",
+      "circuit_sha256": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f"
+    },
+    "all_hashes_match": true,
+    "pin_errors": [],
+    "maker_name_errors": [],
+    "AF_errors": [],
+    "schematic_errors": []
+  },
+  "retained_residuals_and_qualifications": [
+    {
+      "id": "Direct-port architecture",
+      "status": "carried qualification",
+      "evidence": "J410/J420 pin1=PORT_4V8; four MCU UART paths use only1k and ground ESD, with no powered-off isolation. No-self-powered-port/board-off and no-back-feed-source/e-match rules remain necessary.",
+      "closure": "Measure all power states, endpoint levels, installed edges/ESD/RF and shared-short logic survival; enforce the documented harness/use restrictions."
+    },
+    {
+      "id": "PA6/PB1 diagnostic single faults",
+      "status": "carried disclosed residual",
+      "evidence": "Native PA6 has100k/10k; PB1 has10k/1k. A shorted PA6 top or open PB1 bottom can exceed the analog4V absolute limit. These ordinary diagnostic banks have no pyro-style single-resistor-fault guarantee; the owner single-string scope remains explicit.",
+      "closure": "Retain deviation and actual fault/bench qualification; no firmware pin-protection claim. PC0/PC5 split-top/parallel-bottom banks remain distinct."
+    },
+    {
+      "id": "Loader/debug and output state",
+      "status": "carried qualification",
+      "evidence": "14 connected loader nets have inspected containment. PA2 may drive servo3 in bench loader mode; PA6 reaches only its divider; PC11 can drive but PD0/R460 deselects the card. Neither firing-control pin is a loader resource. PC1/PE4 trace aliases and PE2 TRACECLK remain forbidden in flight use.",
+      "closure": "Implement and dummy-load-test pre-enable cold screen, both low-output locks/readback, no synchronous trace, loader only before IWDG and with stated preparation; qualify resets and neutral-first PWM."
+    },
+    {
+      "id": "ESD and camera",
+      "status": "carried qualification",
+      "evidence": "Exact EL maker page specifies15V working and48V typical clamp at16A; this is not a safe MCU-pin voltage. Camera alone has TXU0202 partial-power isolation and a TPS2553 with finite enabled reverse threshold/delay.",
+      "closure": "Retain OE-before-EN sequencing and installed cable/back-feed/ESD tests; never credit diode clamp or component HBM as system survival."
+    }
+  ],
+  "context_read": [
+    "AGENTS.md",
+    ".supervisor/r10_review_packet.md",
+    ".supervisor/r13_target_packet.md",
+    "docs/REQUIREMENTS.md",
+    "sources/r10_design/R10_DECISIONS.md (all110 D IDs, newest D-R12-01/02/03, owner amendments)",
+    "sources/r10_design/AVA_LAYOUT.md",
+    "sources/r10_design/r10_plan.md",
+    "docs/M3_R10.md",
+    "docs/R10_VALIDATION.md",
+    "docs/R9_VALIDATION.md severity precedents",
+    "read-only ../../docs/VEHICLE.md",
+    "docs/ORDERING.md relevant current section8",
+    "sources/r10_design/pin_table.tsv",
+    "sources/r10_design/parts_qualification.md",
+    "sources/r10_design/r10_binding_note.json",
+    "prior round11_mcu and round12_mcu only"
+  ]
+}

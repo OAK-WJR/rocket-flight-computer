@@ -6,41 +6,37 @@ Last updated 2026-10-30 (R10 candidate section below; the rest as of 2026-10-25)
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
-**Round12 fix pass (2026-10-30):** PCB `7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c`,46 x90mm,
-2,264,839bytes;209 footprints/973 segments/296 vias/1808.300406mm track.
-All seven maximum DB125 envelopes retain5.003012mm calculated bare-bore wire
-room against the accepted4.95mm floor. Circuit, pin map, supports, IMU pose and
-AGENTS section2 are unchanged. BAT_ENABLE is1.408326mm shorter; one ordinary
-GND stitch reduces C98's geometric return31.812237->7.345584mm; five Fab labels
-are corrected. The C98 in-fill annotation and small-Fab zoom limit remain deviations.
-**Software/CAD:** two complete direct native builds exit0 and reproduce all42
-recorded generated CAD/library/model/electrical-evidence/binding files byte for
-byte. Full tools/check.sh exits0: DRC/unconnected/parity/ERC0, all31 R10 rules,
-routing, legends, fit, orientation, paste and five-output manifest pass. All171
-R10 tests and29 fit tests pass; the three native NumPy skips are resolved with
-the supplied interpreter. No gate limit or AGENTS section2 rule is weakened.
-**Simulation/Inference:** actual-feed hot-plug2304/2304 plus60 local cases pass;
+**Round13 fix pass (2026-10-30):** PCB `e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`,
+46x90x1.6mm,2,259,597bytes;209 footprints/966segments/296vias/
+1802.125220mm track. Circuit,pin map,supports,IMU pose and AGENTS
+section2 are unchanged. Qualified local signal routes and77 Fab references are
+corrected; SD nails/tolerances and23 terminal tails now have explicit fit allocations.
+**Software/CAD:** two complete direct native builds/check0 reproduce42 generated
+CAD/library/model/electrical-evidence/binding files byte for byte. DRC/unconnected/
+parity/ERC0; all31 R10 rules,routing,legends,fit,orientation,paste geometry and
+five-output manifest pass. Tests: R10 173, fit 30, routing 60;
+all native NumPy skips are separately resolved. No gate/section2 limit is weakened.
+**Simulation/Inference:** actual-feed2304 required+60 local hot-plug cases pass;
 optional plate181.3Hz pinnedD5/70.3g estimated mass. These are not physical tests.
-**Procurement:** supplier snapshot2026-10-30T06:11:29Z gives$82.65 placed/feeder
-share against$84.41; minimum purchases give$84.99 ($0.58 over), before fixed/
-process/PCB/shipping. R430 17<3610 and U4 0<5 remain stock blockers; U9 minimum7
-for5 fitted. Quote, process and owner deviation/cost acceptance remain pending.
-**Reviews:** R11 on0c50b9fd was0Critical/1Major/16Minor groups, with the Major
-fixed and freshly closed. Full R12 on committed0ad0135c/d57b216 was0Critical/
-0Major/12consolidatedMinor groups. This fix changes the PCB: fresh full rounds13/14
-on this committed result must supply the final two-clean same-board pair.
-**Not verified:** firmware, SD latency/power loss, selected e-match lot firing,
-electrical/thermal/transient/endurance, installed RF/ESD, harness/retention,
-screwdriver/card access, physical bore/stack/flight and first-article/process.
+**Procurement:** public supplier2026-10-30T08:38:52.797802Z:$82.6458 placed/feeder
+share versus$84.41;$84.9862 including minimum purchases ($0.58 over),before fixed/
+process/PCB/shipping. R430 has17<3610 and U4 has0<5; stock remains short; U9 minimum7 for5 fitted.
+Quote,process and owner cost/deviation acceptance remain pending; no order.
+**Reviews:** full R13 on7355ae1a/fa897c8 is0Critical/0Major/17consolidatedMinor
+(24active raw). These fixes change the PCB; fresh full14/15 on the committed
+result must supply the final same-board clean pair. Earlier pairs do not transfer.
+**Not verified:** R10 firmware,SD latency/power loss,e-match lot20ms firing,
+electrical/thermal/transient/endurance,installed RF/ESD,harness/retention,
+screwdriver/card access,physical bore/stack/flight and first-article/process.
 R9 remains accepted; R10 is not accepted or ordered. Evidence:
-`m3_design/assembly_review/sources/r10_review/round12_fix_validation.json` and
-`docs/R10_VALIDATION.md`,round12.
+`m3_design/assembly_review/sources/r10_review/round13_fix_validation.json` and
+`docs/R10_VALIDATION.md`,round13.
 
 Layout measurements, §6 disposition and review items: [m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md](m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md).
 
 Record: [docs/M3_R10.md](docs/M3_R10.md); validation, review rounds, owner questions and the deviation list:
 [docs/R10_VALIDATION.md](docs/R10_VALIDATION.md); plan and decisions: `m3_design/assembly_review/sources/r10_design/`
-(r10_plan.md, R10_DECISIONS.md, all recorded agent decisions through D-R12-03; adopted single-switch/AUD/GAP amendments).
+(r10_plan.md, R10_DECISIONS.md, all recorded agent decisions through D-R13-03; adopted single-switch/AUD/GAP amendments).
 - **Circuit-pass baseline (2026-10-29; owner Steers 1–2; CAD / software / simulation / fabrication evidence only):** board SHA-256 **`6e73b6ebe7e25d7a8c810493887fbaa7cce34f6fe1d379828dc67017e14235aa`** (electrical signature `6446a957…`), 46 × 90 mm, 2,244,550 bytes, 209 footprints / 887 track segments / 303 vias. What changed from `b337fe63…`: every wired connector is a DORABO DB125 3.5 mm screw terminal (J1 battery 2P, J121 IGN 2P, J400 switch 2P, J410 GPS 4P, J420 radio 4P, J9 camera 4P, J122 servos 5P: SERVO1–4 plus one shared GND), servo tie holes removed; GPS / radio ports always on (port switches U410 / U420 and TXU0202 translators removed, direct UART through 1 kΩ and ESD); the camera keeps U402 and the U12 / U13 isolation; microSD J430 (Molex 472192001, hinged) on SPI3 (U1 pins 78–81) beside the QSPI flash; the duplicate RAW_ACT sense chain is removed (ARM1_SENSE PC5 is the sole bus reading; PB0 / U1.34 freed) and R168 / R170 are removed (audit 2 item 2); MJG J-Tek e-match with a 1.125 A all-fire floor, R134 stays 2 Ω. Placement / routing was changed only as needed for a connected DRC-clean board (J410 east edge (41.5, 15.5), J9 east edge (41.5, 59.5), J420 parked on the west edge (5, 16), J400 (12.7, 85), J122 (27, 84.8), J430 bottom (24, 24.3), SPI3 fan-out, R166 moved to (35.25, 64) and R82 shifted); the completed AVA layout above supersedes those positions. **Verified (software / CAD):** two complete `m3_design/r10_build.sh` runs gave the identical SHA-256 and both pass every stage and the full `tools/check.sh` (DRC 0 / unconnected 0 / parity 0 / ERC 0, metadata, silkscreen, fit, every `check_r10` rule including K-reference, S-1 … S-9, F9-1 and K-actuators, route_check profile r10 0 failing, all gate self-tests); three gate / fixture fixes, nothing weakened (D-CIR-04). **Simulation / Inference:** the hot-plug model re-extracted from this board's actual feed (R166 moved) passes 2304 / 2304 cases. **Fabrication package and cost:** regenerated by `m3_design/r10_fab.sh` and bound to this board (manifest OK): 82 BOM codes (46 extended / 36 basic), 199 placed parts, CPL 72 top + 115 bottom rows rebuilt plus 12 placement-only checks, orientation / paste pass; live JLC data 2026-10-29 $82.59 per board against the $84.41 target (met; components + feeder fees at 5 boards, excluding fixed fees, PCB and shipping); R430 (C185349: stock 17 < 3610 minimum purchase, +$1.81 per board if bought at the minimum) and U4 (C26633007: stock 0, consign) are short; preliminary procurement evidence, not a release pass. Binding note `r10_binding_note.json` regenerated (firmware evidence only, not an approval). **Not done / unverified:** any review round on this board; firmware (not started); physical and bench results; microSD latency and power-loss behavior; harness and DB125 wire / screwdriver fit; the actual e-match lot's 20 ms firing; gate / sense behavior; hot-plug pin waveforms; JLC's acceptance of the aft-edge tab; owner acceptance of the refreshed deviation list and OQ-3.
 - **Historical round 9 and its Minor fix pass (2026-10-28; board `b337fe63…`, superseded by the circuit pass):** ten independent lenses reviewed `877d0199…` / `8bccb07`: **0 Critical / 0 Major / 21 Minor groups** (17 new, 4 carried), the first clean round. The interrupted fix pass is regenerated as **`b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9`**, 46 × 90 mm, 2,366,509 bytes, 225 footprints / 882 tracks / 323 vias. Two complete builds pass and reproduce all 21 CAD / binding files byte for byte. Software / CAD: all routing stages, DRC / parity / ERC, metadata, fit, plate, routing and actuator contracts pass; 2304 hot-plug cases pass as simulation / Inference. Fabrication checks and the final unskipped gate pass; fresh supplier evidence remains $84.43 vs $84.41, 46 Extended codes, R430 / U4 short; full round 10 reviewed every changed CAD byte and found 0 Critical / 0 Major / 8 Minor groups. The PCB is unchanged after review; narrow gates/records are corrected and the complete deviation list is in R10_VALIDATION. Firmware, gate timing, thermal / transient behavior, RF immunity, harness, physical fit and assembly qualification remain unverified. OQ-3 and the final deviation list still require owner acceptance.
 - **Historical AUD/GAP preparatory pass (2026-10-28; board `877d0199…`; CAD / software / fabrication verified):** advisory pull-pin and redundant probes / GPS-radio IO LDO cells removed; smaller AONR21357 load-switch pair, C120 voltage-rating correction, 0.5 mm fire-only tracks, local U9 output cell and two explicitly manufactured U401 VIPPO thermal vias. C84 is required-fitted manually after all reflow. Fast interfaces and safety contracts remain blocking; only the exact AUD-2 slow-return list and AUD-10 harmless representations / legend-distance scope are narrowed. Full GPS / radio pin tables fit. Board SHA-256 `877d01996a59e9dd5c6dbc367274bb9a323a13982d67960fe46df9b0ee53205d` (46 × 90 mm, 2,365,477 bytes), 225 footprints, 883 tracks, 323 vias. Two fresh complete builds pass and are byte-identical; the final unskipped gate including the current manifest passes. Current self-tests: shell 4, fit 24, paste 5, route 59, R10 131 (three NumPy cases separately passed); hot-plug 2304 required cases pass (simulation / Inference). Current fab checks pass: 215 CPL rows / 82 BOM codes, orientation / paste / five-output manifest. Live JLC cost is $84.43 vs $84.41 (46 Extended codes); minimum purchases give about $86.23 with feeder share before fixed fees. U4 and R430 remain short. Plate f1 280.9 Hz / modeled mass 45.5 g (Calc / Inference). Coupled fire budget passes the original idle-servo F7 envelope at 7.4 V; persistent stalls miss the conservative 1.5 A margin. Firmware, gate timing, thermal / transient behavior, physical fit and assembly qualification remain unverified. No clean-round credit; fresh round 9 follows the committed preparatory passes.

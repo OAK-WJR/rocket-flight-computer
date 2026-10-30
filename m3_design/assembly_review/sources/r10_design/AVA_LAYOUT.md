@@ -1,11 +1,11 @@
 # R10 AVA layout hand-off
 
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
-The current round12 fix PCB is
-`7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c`;
-its two full builds/check0,42-file byte equality, native comparison and current
-fabrication/binding proof are in `sources/r10_review/round12_fix_validation.json`.
-Fresh full rounds13/14 on the committed current PCB remain required.
+The current round13 fix PCB is
+`e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`; two complete native builds/check0,
+42-file byte equality,actual native comparison and package/binding proof are in
+`sources/r10_review/round13_fix_validation.json`. Fresh full14/15 on the
+committed result remain required; no earlier clean pair transfers.
 Round11 found one confirmed Major/16Minor groups on the hand-off board and
 fixed it as `0ad0135c…`; its named historical proof remains separate. The
 historical measurements below describe `0c50b9fd…`; fix deltas are at the end.
@@ -199,3 +199,16 @@ groups; fresh full rounds13/14 must review this committed result. Exact proof,
 scope and limits: `sources/r10_review/round12_fix_validation.json`. AGENTS
 section2, circuit/pins/axes/supports and owner decisions are unchanged. No
 firmware/physical qualification, acceptance or order is inferred.
+
+## Round13 fix-pass delta
+
+PCB `e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`:209footprints,
+966segments/296vias/1802.125220mm track. Exact native comparison
+preserves all parts/lands/nets,vias,GND tracks,supports and axes. Qualified
+same-layer signal redraws and77 Fab references change; the microSD model now
+includes maker nails/tolerances and fit separately allocates23 maximum terminal
+tails. No electrical,thermal,assembly,harness or physical qualification follows.
+The source receipts are round13_routing_fix,round13_fab_fix,round13_root_fix
+and round13_gate_fix; complete canonical integration is round13_fix_native and
+round13_fix_validation. Full R13 was0C/0M/17Minor groups on7355/fa897c8. Fresh
+complete14/15 on this committed result must earn the final clean pair.

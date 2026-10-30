@@ -39,7 +39,12 @@ Hardware maxima, eccentricity, solder tails, plate strength and shock clearance
 remain unqualified. The optional 100 g/D5 model leaves only 0.274 mm below C431
 at h4; h3.5 predicts overlap. This is an inference, not a physical result.
 
-Complete maximum DB125 bodies/tails are modeled. The bare-bore OQ-1 benchmark
+Maximum DB125 insulating bodies are in the VRML models. The fit checker separately
+allocates all 23 solder tails to their native pad XY boxes and 3.80 mm maximum
+length below the seating plane (conservative Inference, not a solder-joint model).
+Their minimum calculated bore clearance is 7.558359 mm; projection below the
+1.60 mm PCB is 2.20 mm, leaving 1.80 mm to a nominal 4 mm sled plane. Seating,
+solder fillets and bent tails still need inspection. The bare-bore OQ-1 benchmark
 is 5.003012 mm at every wire face against the accepted 4.95 mm floor, only
 0.053012 mm margin. It is not a ferrule/bend/tool-envelope qualification.
 DB125 accepts 28-16 AWG; verify actual leads, 4-5 mm strip, ferrules, screw
@@ -47,7 +52,9 @@ access and retention. Its maximum body height is 8.90 mm and tail is
 3.50 +/-0.30 mm. Stake all seven terminals, including J400.
 
 J430 is the bottom hinged Molex microSD socket at (24,24.3). The current fit
-check covers the closed socket/card allocation only. Open it unpowered with
+check covers a 15.05 x 15.70 x 2.10 mm closed socket/card allocation, including
+the maker's nails and general tolerances. Common seating and the undimensioned
+card front remain Inference; verify the actual assembly. Open it unpowered with
 the PCB removed/unbolted from a continuous sled, or qualify a lid-access window.
 The maker does not dimension the full open sweep. Card retention and selected-
 card latency, current and power-loss behavior remain unqualified.
