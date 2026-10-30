@@ -1060,6 +1060,47 @@ class R4Synthetic(SyntheticBase):
         pcbnew.ZONE_FILLER(self.board).Fill(self.board.Zones())
         return z
 
+    def test_k_fill_geometry_equivalence_and_difference_tolerance(self):
+        import tempfile
+        layer = pcbnew.In2_Cu
+        zone = self.plane('GND', 10, 10, 20, 20, layer)
+        zone.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_NEVER)
+        pcbnew.ZONE_FILLER(self.board).Fill(self.board.Zones())
+        original = pcbnew.SHAPE_POLY_SET(zone.GetFilledPolysList(layer))
+        self.assertEqual(original.OutlineCount(), 1)
+        self.assertEqual(original.HoleCount(0), 0)
+        chain = original.Outline(0)
+        points = [(chain.CPoint(i).x, chain.CPoint(i).y) for i in range(chain.PointCount())]
+        self.assertGreater(original.Area(), 0)
+
+        def polygon(vertices):
+            poly = pcbnew.SHAPE_POLY_SET(); poly.NewOutline()
+            for x, y in vertices:
+                poly.Append(x, y)
+            return poly
+
+        # A different vertex origin and an extra collinear node describe the same copper.
+        equivalent = points[1:] + points[:1]
+        a, b = equivalent[:2]
+        equivalent.insert(1, ((a[0] + b[0]) // 2, (a[1] + b[1]) // 2))
+        reshaped = polygon([(x + y - points[0][1], y) for x, y in points])  # area-preserving shear
+        self.assertEqual(reshaped.Area(), original.Area())
+        height = max(y for x, y in points) - min(y for x, y in points)
+        inside = int(gate.FILL_TOLERANCE * 1e12 / (2 * height))
+        cases = [('equivalent', polygon(equivalent), False), ('equal-area reshape', reshaped, True)]
+        for delta, reject in ((inside, False), (inside + 1, True)):
+            poly = pcbnew.SHAPE_POLY_SET(original); poly.Move(pcbnew.VECTOR2I(delta, 0))
+            self.assertEqual(poly.Area(), original.Area())
+            cases.append((f'translation {delta} nm', poly, reject))
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'm3.kicad_pcb'
+            for name, poly, reject in cases:
+                with self.subTest(name=name):
+                    zone.SetFilledPolysList(layer, poly)
+                    pcbnew.SaveBoard(str(path), self.board)
+                    issues, evidence = gate.fill_freshness(path)
+                    self.assertEqual(bool(issues), reject, (issues, evidence))
+
     def test_signal_critical_nets_share_route_check_definition(self):
         import route_check as rc
         got = gate.signal_critical_nets(self.board)
@@ -2216,25 +2257,69 @@ class RealBoardSeeds(unittest.TestCase):
                                 cpl=r10_board().parent / 'fab/m3_cpl_jlc.csv'))[0]
                 self.assertTrue(any('BOM:' in issue and 'Qty' in issue for issue in issues), issues)
 
+    def test_native_bom_identities_and_unexpected_designators_fail_s4(self):
+        import csv
+        import io
+        import tempfile
+        source = real_project()
+        rows = list(csv.DictReader((r10_board().parent / 'fab/m3_bom_jlc.csv').read_text().splitlines()))
+        columns = list(rows[0])
+        cpl = r10_board().parent / 'fab/m3_cpl_jlc.csv'
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'bom.csv'
+
+            def check(changed, fields=columns):
+                output = io.StringIO(); writer = csv.DictWriter(output, fields, extrasaction='ignore')
+                writer.writeheader(); writer.writerows(changed); path.write_text(output.getvalue())
+                return gate.s4(gate.make_ctx(self.load(), source, source / 'm3.kicad_pcb', bom=path, cpl=cpl))[0]
+
+            self.assertTrue(any(',' in row['Designator'] for row in rows))
+            self.assertEqual(check(rows), [])  # Real merged rows and the quantity-free CPL remain valid.
+            for column, wrong in (('LCSC Part #', 'C168925'), ('Manufacturer Part', '25121WF360LT4E'),
+                                  ('Footprint', 'R0402')):
+                for value in (wrong, ''):
+                    with self.subTest(column=column, value=value):
+                        changed = copy.deepcopy(rows)
+                        next(row for row in changed if row['Designator'] == 'R134')[column] = value
+                        self.assertTrue(any('R134' in issue and column in issue for issue in check(changed)))
+                with self.subTest(missing_column=column):
+                    self.assertTrue(any('R134' in issue and column in issue
+                                        for issue in check(rows, [key for key in columns if key != column])))
+            changed = copy.deepcopy(rows)
+            resistor = next(row for row in changed if row['Designator'] == 'R134')
+            alternate = next(row for row in changed if row['Designator'] == 'R166')
+            for column in ('LCSC Part #', 'Manufacturer Part', 'Footprint', 'Comment'):
+                resistor[column] = alternate[column]
+            self.assertTrue(any('R134' in issue and 'Manufacturer Part' in issue for issue in check(changed)))
+            changed = copy.deepcopy(rows)
+            row = next(row for row in changed if row['Designator'] == 'R134')
+            row['Designator'] = 'R134,J2'; row['Qty'] = '2'
+            self.assertTrue(any('J2' in issue and 'native fitted' in issue for issue in check(changed)))
+            # Every merged member is compared, even when the first member has the right identity.
+            row['Designator'] = 'R134,U1'
+            changed = [row for row in changed if row['Designator'] != 'U1']
+            self.assertTrue(any('U1' in issue and 'Manufacturer Part' in issue for issue in check(changed)))
+
     def test_reviewed_models_reject_positive_shrinkage_and_pose_drift(self):
         import fit_check as fit
-        for ref in (*gate.WIRE_ENTRY, 'J430'):
+        for ref in (*gate.WIRE_ENTRY, 'J430', 'C84'):
             for field, axis, value in (('m_Scale', 'x', .01), ('m_Scale', 'y', .99999),
-                                       ('m_Offset', 'y', .1), ('m_Offset', 'y', 3e-5), ('m_Rotation', 'z', 90.)):
+                                       ('m_Offset', 'y', .1), ('m_Offset', 'y', 3e-5),
+                                       ('m_Rotation', 'z', 45. if ref == 'C84' else 90.)):
                 with self.subTest(ref=ref, field=field):
                     board = self.load(); part = board.FindFootprintByReference(ref)
                     setattr(getattr(part.Models()[0], field), axis, value)
                     report = fit.check_board(board, real_project(), profile='r10')
                     self.assertTrue(any(ref + ': model envelope differs from reviewed dimensions/pose' in issue
                                         for issue in report['issues']), report['issues'])
-                    if ref != 'J430':
+                    if ref in gate.WIRE_ENTRY:
                         self.assertTrue(any(ref + ': model envelope differs from reviewed dimensions/pose' in issue
                                             for issue in self.run_rule('P-11', board)))
 
     def test_reviewed_models_allow_equivalent_metre_to_mm_conversion(self):
         import fit_check as fit
         import tempfile
-        for ref in (*gate.WIRE_ENTRY, 'J430'):
+        for ref in (*gate.WIRE_ENTRY, 'J430', 'C84'):
             with self.subTest(ref=ref), tempfile.TemporaryDirectory() as temp:
                 board = self.load(); part = board.FindFootprintByReference(ref); model = part.Models()[0]
                 original = fit.model_box(part, real_project())
@@ -2742,6 +2827,27 @@ class RealBoardSeeds(unittest.TestCase):
         pcbnew.SaveBoard(str(d / 'm3.kicad_pcb'), b)
         issues, ev = gate.fill_freshness(d / 'm3.kicad_pcb')
         self.assertTrue(issues, ev)
+
+    def test_equal_area_saved_fill_translation_rejects_then_native_refill_passes(self):
+        import shutil
+        import tempfile
+        board = self.load()
+        zone = next(z for z in board.Zones() if z.GetZoneName() == 'R10_GND_In2_CH1')
+        layer = pcbnew.In2_Cu
+        poly = pcbnew.SHAPE_POLY_SET(zone.GetFilledPolysList(layer))
+        area = poly.Area()
+        poly.Move(self.P(.1, 0)); zone.SetFilledPolysList(layer, poly)
+        self.assertEqual(poly.Area(), area)
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'm3.kicad_pcb'
+            for suffix in ('.kicad_pro', '.kicad_dru'):
+                shutil.copyfile(real_project() / ('m3' + suffix), path.with_suffix(suffix))
+            pcbnew.SaveBoard(str(path), board)
+            issues, evidence = gate.fill_freshness(path)
+            self.assertTrue(any('In2.Cu' in issue and 'geometry' in issue for issue in issues), evidence)
+            pcbnew.ZONE_FILLER(board).Fill(board.Zones())
+            pcbnew.SaveBoard(str(path), board)
+            self.assertEqual(gate.fill_freshness(path)[0], [])
 
     def test_j1_wire_entry(self):
         """R3-MEC-02: J1 turned away from the west face."""

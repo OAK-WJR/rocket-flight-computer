@@ -49,6 +49,24 @@ class CoreTable(Translated):
             return
         if net == '3V3' and points in ([(17.0,52.05),(17.0,52.95),(16.35,53.6),(15.2,53.6)], [(15.2,53.6),(15.98,53.6)]):
             return
+        # D-R15: shorten the analog branches without moving their pads or vias.
+        if net == '3V3A' and layer == 'B' and points == [(12.05,49.81),(12.5,49.81),(12.5,48.36)]:
+            points = [(12.05,49.81),(12.5,49.36),(12.5,48.36)]
+        if net == '3V3A' and layer == 'B' and points == [(10.79,48.15),(10.79,49.81),(11.5,49.81)]:
+            points = [(10.79,48.15),(10.79,49.1),(11.5,49.81)]
+        # TN1383: escape each ground pad outward, joining outside the MEMS body.
+        if net == 'GND' and layer == 'B' and points == [(11.5,48.36),(11.75,48.36),(12.0,48.36)]:
+            for x in (11.5,12.0):
+                super().track(net, layer, width, [(x,48.36),(x,48.85),r9_route_imu_baro.G['N67']])
+            return
+        if net == 'GND' and layer == 'B' and points == [(11.75,48.36),r9_route_imu_baro.G['N67']]:
+            return
+        if net == 'GND' and layer == 'B' and points == [(13.21,47.15),(13.21,47.4),(13.21,47.65)]:
+            for y in (47.15,47.65):
+                super().track(net, layer, width, [(13.21,y),(14.35,y),r9_route_imu_baro.G['E23']])
+            return
+        if net == 'GND' and layer == 'B' and points == [(13.21,47.4),r9_route_imu_baro.G['E23']]:
+            return
         if (net, tuple(tuple(p) for p in points)) in C32_R9:
             return
         super().track(net, layer, width, points)

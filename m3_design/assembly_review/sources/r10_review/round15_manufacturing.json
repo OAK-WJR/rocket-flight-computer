@@ -1,0 +1,1504 @@
+{
+  "schema": 1,
+  "round": 15,
+  "lens": 8,
+  "scope": "full independent manufacturing/DRC/silkscreen/fab package review",
+  "target_commit": "789f4d516251991bdf1518254d537ff7b41f65bb",
+  "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_bytes": 2257812,
+  "completed_utc": "2026-10-30T13:59:00.345606+00:00",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "new_findings": 0,
+  "carried_findings": 2,
+  "findings": [
+    {
+      "id": "R15-MFG-01",
+      "severity": "Minor",
+      "status": "carried",
+      "active": true,
+      "title": "L400 retains a possible0.15mm uncovered heel strip",
+      "prior_context": [
+        "R4-BOM-01",
+        "R12-BOM-01",
+        "R13-MFG-02",
+        "R14-MFG-01"
+      ],
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "reference": "L400",
+          "side": "F",
+          "coordinates_mm": [
+            24.2,
+            5.55
+          ],
+          "measured": {
+            "native_pad_centres_local_mm": [
+              -2.35,
+              2.35
+            ],
+            "native_pad_size_mm": [
+              1.8,
+              2.5
+            ],
+            "native_inner_gap_mm": 2.9,
+            "native_inner_edge_mm": 1.45
+          }
+        },
+        {
+          "file": "m3_design/assembly_review/kilib/rocket.pretty/M3_SRP5030TA.kicad_mod",
+          "maker_url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+          "maker_page": 1,
+          "maker_recommended_pad_size_mm": [
+            2.0,
+            1.8
+          ],
+          "maker_recommended_pad_centres_mm": [
+            -2.25,
+            2.25
+          ],
+          "maker_inner_gap_mm": 2.5,
+          "calculation": "Permitted heel=(5.7-0.3)/2-(1.1+0.3)=1.30mm; native inner edge1.45mm leaves a possible0.15mm uncovered strip."
+        }
+      ],
+      "assessment": "Bounded retained land discrepancy; nominal contact remains covered. No failed joint, retention failure or required-function failure has been demonstrated. Supplier placement residual does not qualify solder fillets.",
+      "concrete_fix": "Adopt the maker land through a covered generator/CAD revision, or retain this exact land deviation until owner/assembler acceptance and actual tolerance, seating, fillet and retention qualification of first articles."
+    },
+    {
+      "id": "R15-MFG-02",
+      "severity": "Minor",
+      "status": "carried",
+      "active": true,
+      "title": "Sixteen courtyard ink intersections remain as an assembly/drawing residual",
+      "prior_context": [
+        "D-R14-02",
+        "docs/R10_VALIDATION.md current deviation section7"
+      ],
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "measured": {
+            "pairs": 16,
+            "front": 6,
+            "back": 10,
+            "native_collision_polygon_gap_mm": [
+              0.01,
+              0.04
+            ],
+            "courtyard_line_width_mm": 0.05,
+            "actual_stroke_penetration_mm": [
+              0.02,
+              0.05
+            ]
+          },
+          "coordinates_and_values": [
+            {
+              "parts": [
+                "C97",
+                "D123"
+              ],
+              "side": "F",
+              "polygon_gap_mm": 0.03,
+              "stroke_penetration_mm": 0.029999999999997584,
+              "coordinate_mm": [
+                23.560000000000002,
+                63.31
+              ]
+            },
+            {
+              "parts": [
+                "L400",
+                "R400"
+              ],
+              "side": "F",
+              "polygon_gap_mm": 0.03,
+              "stroke_penetration_mm": 0.03000000000000025,
+              "coordinate_mm": [
+                21.04,
+                2.54
+              ]
+            },
+            {
+              "parts": [
+                "LED1",
+                "R32"
+              ],
+              "side": "F",
+              "polygon_gap_mm": 0.04,
+              "stroke_penetration_mm": 0.019999999999999574,
+              "coordinate_mm": [
+                10.465,
+                42.1199995
+              ]
+            },
+            {
+              "parts": [
+                "LED2",
+                "R33"
+              ],
+              "side": "F",
+              "polygon_gap_mm": 0.02,
+              "stroke_penetration_mm": 0.03999999999999915,
+              "coordinate_mm": [
+                10.065000000000001,
+                45.545
+              ]
+            },
+            {
+              "parts": [
+                "C60",
+                "R60"
+              ],
+              "side": "F",
+              "polygon_gap_mm": 0.04,
+              "stroke_penetration_mm": 0.01999999999999602,
+              "coordinate_mm": [
+                33.2,
+                58.165
+              ]
+            },
+            {
+              "parts": [
+                "D8",
+                "R121"
+              ],
+              "side": "F",
+              "polygon_gap_mm": 0.02,
+              "stroke_penetration_mm": 0.04000000000000625,
+              "coordinate_mm": [
+                14.5,
+                72.745
+              ]
+            },
+            {
+              "parts": [
+                "C85",
+                "R86"
+              ],
+              "side": "B",
+              "polygon_gap_mm": 0.024999,
+              "stroke_penetration_mm": 0.035000999999994065,
+              "coordinate_mm": [
+                27.8999995,
+                64.9874995
+              ]
+            },
+            {
+              "parts": [
+                "C421",
+                "U12"
+              ],
+              "side": "B",
+              "polygon_gap_mm": 0.01,
+              "stroke_penetration_mm": 0.04999999999999716,
+              "coordinate_mm": [
+                32.6875,
+                38.35
+              ]
+            },
+            {
+              "parts": [
+                "D121",
+                "R152"
+              ],
+              "side": "B",
+              "polygon_gap_mm": 0.02,
+              "stroke_penetration_mm": 0.03999999999999915,
+              "coordinate_mm": [
+                33.215,
+                70.25999999999999
+              ]
+            },
+            {
+              "parts": [
+                "R64",
+                "U5"
+              ],
+              "side": "B",
+              "polygon_gap_mm": 0.02,
+              "stroke_penetration_mm": 0.03999999999999915,
+              "coordinate_mm": [
+                11.23,
+                51.405
+              ]
+            },
+            {
+              "parts": [
+                "C31",
+                "U4"
+              ],
+              "side": "B",
+              "polygon_gap_mm": 0.04,
+              "stroke_penetration_mm": 0.019999999999999574,
+              "coordinate_mm": [
+                15.135,
+                46.8749995
+              ]
+            },
+            {
+              "parts": [
+                "D121",
+                "R151"
+              ],
+              "side": "B",
+              "polygon_gap_mm": 0.02,
+              "stroke_penetration_mm": 0.03999999999999915,
+              "coordinate_mm": [
+                33.215,
+                72.74000000000001
+              ]
+            },
+            {
+              "parts": [
+                "C22",
+                "C26"
+              ],
+              "side": "B",
+              "polygon_gap_mm": 0.04,
+              "stroke_penetration_mm": 0.020000000000003126,
+              "coordinate_mm": [
+                26.435,
+                45.935
+              ]
+            },
+            {
+              "parts": [
+                "C28",
+                "C83"
+              ],
+              "side": "B",
+              "polygon_gap_mm": 0.03,
+              "stroke_penetration_mm": 0.02999999999999936,
+              "coordinate_mm": [
+                11.690000000000001,
+                24.9
+              ]
+            },
+            {
+              "parts": [
+                "R10",
+                "Y1"
+              ],
+              "side": "B",
+              "polygon_gap_mm": 0.04,
+              "stroke_penetration_mm": 0.019999999999999574,
+              "coordinate_mm": [
+                20.884999999999998,
+                44.7049995
+              ]
+            },
+            {
+              "parts": [
+                "C18",
+                "C30"
+              ],
+              "side": "B",
+              "polygon_gap_mm": 0.02,
+              "stroke_penetration_mm": 0.0400000000000027,
+              "coordinate_mm": [
+                17.475,
+                49.14
+              ]
+            }
+          ],
+          "maker_page": "Not a maker dimensional limit. Native drawing geometry is compared with the project assembly/deviation policy."
+        }
+      ],
+      "assessment": "The actual drawn strokes intersect, while all sixteen native collision polygons remain separate. KiCad cached courtyard polygons are inset0.005mm from each raw line centre; penetration was measured from actual stroked polygon intersections, not by subtracting the cached gap from0.05mm. This is a bounded residual, not evidence of body collision or failed solder access.",
+      "concrete_fix": "Retain all sixteen measured pairs in the owner/assembler deviation inventory and inspect actual part tolerances, access and first articles. If removed, change deliberate source placement or genuine courtyard geometry through a covered native rebuild; do not shrink a required physical courtyard merely to suppress a counter."
+    }
+  ],
+  "checks": [
+    {
+      "name": "exact_target_and_full_source_freeze",
+      "result": "pass",
+      "target_commit": "789f4d516251991bdf1518254d537ff7b41f65bb",
+      "board_bytes": 2257812,
+      "tracked_count": 1909,
+      "changed": [],
+      "before_inventory_sha256": "2a41824b222a6bdf4bed2aeb18afb94f616562739104f2e75b00fce768997f44",
+      "after_inventory_sha256": "2a41824b222a6bdf4bed2aeb18afb94f616562739104f2e75b00fce768997f44",
+      "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783"
+    },
+    {
+      "name": "native_all_severity_all_track_parity_DRC",
+      "result": "pass",
+      "tool": "unmodified official KiCad10.0.7 CLI, exact supervisor pointer, root-reserved sequential execution",
+      "arguments": [
+        "pcb",
+        "drc",
+        "--format",
+        "json",
+        "--schematic-parity",
+        "--all-track-errors",
+        "--severity-all",
+        "--exit-code-violations"
+      ],
+      "exit_code": 0,
+      "counts": {
+        "ignored_checks": 0,
+        "included_severities": 3,
+        "schematic_parity": 0,
+        "unconnected_items": 0,
+        "violations": 0
+      },
+      "ignored_checks": 0,
+      "note": "A confirming run retained the explicit process exit status; both DRC JSONs contain zero violations/unconnected/parity. No full check.sh or canonical build was run by this lens."
+    },
+    {
+      "name": "independent_export_and_lineage",
+      "result": "pass",
+      "command": "KICAD_CLI=<reserved official CLI> python3 tools/export_fab.py m3_design/assembly_review/m3.kicad_pcb --out <own ignored directory>",
+      "exit_code": 0,
+      "outputs": "Five outputs; no owner BOM, no DNP placeholders,82 BOM lines/199 parts.",
+      "comparison": {
+        "zip_members": [
+          "m3-B_Cu.gbr",
+          "m3-B_Mask.gbr",
+          "m3-B_Paste.gbr",
+          "m3-B_Silkscreen.gbr",
+          "m3-Edge_Cuts.gbr",
+          "m3-F_Cu.gbr",
+          "m3-F_Mask.gbr",
+          "m3-F_Paste.gbr",
+          "m3-F_Silkscreen.gbr",
+          "m3-In1_Cu.gbr",
+          "m3-In2_Cu.gbr",
+          "m3-NPTH.drl",
+          "m3-PTH.drl",
+          "m3-job.gbrjob"
+        ],
+        "normalized_member_equality": {
+          "m3-B_Cu.gbr": true,
+          "m3-B_Mask.gbr": true,
+          "m3-B_Paste.gbr": true,
+          "m3-B_Silkscreen.gbr": true,
+          "m3-Edge_Cuts.gbr": true,
+          "m3-F_Cu.gbr": true,
+          "m3-F_Mask.gbr": true,
+          "m3-F_Paste.gbr": true,
+          "m3-F_Silkscreen.gbr": true,
+          "m3-In1_Cu.gbr": true,
+          "m3-In2_Cu.gbr": true,
+          "m3-NPTH.drl": true,
+          "m3-PTH.drl": true,
+          "m3-job.gbrjob": true
+        },
+        "top_raster_equal": true,
+        "top_raster_sha256": "a9f0fa4a69dacd011be0a6d05beb1740673d282ffed5f61ba8f7d98ff8aaa47b",
+        "bottom_raster_equal": true,
+        "bottom_raster_sha256": "d2d816d0b13613ce1a8fc5e8459e4769659aa4cfd7ecbb69a1045ff4a6794cdb",
+        "bom_byte_equal": true,
+        "cpl_byte_equal": true
+      },
+      "normalization": "Only exact creation-date records and human-readable creation-date comments removed from Gerber/drill; only Header.CreationDate removed from job JSON. All geometry, attributes, apertures, drill tools and coordinates preserved. PDFs compared by complete144dpi grayscale rasters, which are byte-identical."
+    },
+    {
+      "name": "production_manifest",
+      "result": "pass",
+      "command": "python3 tools/fab_manifest.py m3_design/assembly_review/m3.kicad_pcb",
+      "outputs": 5,
+      "inputs": 193,
+      "note": "Every canonical output and input hash matches."
+    },
+    {
+      "name": "native_BOM_CPL_population_and_identities",
+      "result": "pass",
+      "counts": {
+        "footprints": 209,
+        "fitted": 199,
+        "bom_codes": 82,
+        "bom_refs": 199,
+        "cpl": 199,
+        "pads": 682,
+        "holes": 37,
+        "silk_objects": 308,
+        "fab_references": 209,
+        "fab_shapes": 1020
+      },
+      "evidence": {
+        "bom_duplicates": [],
+        "bom_missing": [],
+        "bom_extra": [],
+        "identity_mismatches": [],
+        "cpl_missing": [],
+        "cpl_extra": []
+      },
+      "note": "BOM quantities equal distinct designators;199 fitted native placements equal199 BOM designators/CPL rows; every BOM LCSC/MPN equals native fields; no cross-row duplicate."
+    },
+    {
+      "name": "production_orientation",
+      "result": "pass",
+      "command": "KICAD_PY -I -B tools/jlc_orient.py tools/jlc_easyeda/pads.json m3_design/assembly_review/m3.kicad_pcb --out <own ignored corrections>; --verify-cpl current CPL",
+      "production_reconstructed": 187,
+      "production_placement_only": 12,
+      "production_top_reconstructed": 66,
+      "production_bottom_reconstructed": 121,
+      "worst_pad_residual_mm": 0.491,
+      "errors": 0,
+      "note": "Fresh correction derivation returned CHECK:none. Production retains its dated C21190 donor and L400 proxy; this result is distinguished from the exact-code supplement below."
+    },
+    {
+      "name": "supplemental_exact_code_orientation",
+      "result": "pass",
+      "exit_code": 0,
+      "completed_utc": "2026-10-30T13:56:11.666510+00:00",
+      "reconstructed": 199,
+      "top": 67,
+      "bottom": 132,
+      "placement_only": 0,
+      "errors": 0,
+      "worst_pad_residual_mm": 0.491,
+      "receipt": "fresh_supplier_maps_status.json",
+      "note": "Only C21190 and C1329837 overlays were changed in ignored memory/files; unchanged current production CPL was read. All other maps remain the production source. No canonical map, correction, CPL or board was changed. Factory preview remains required."
+    },
+    {
+      "name": "actual_paste_polygon_parity",
+      "result": "pass",
+      "command": "KICAD_PY -I -B tools/paste_check.py current PCB current Gerber zip --json <own ignored output>",
+      "front_flashes": 245,
+      "back_flashes": 373,
+      "total": 618,
+      "tolerance_mm": 0.001,
+      "missing_extra_dry_errors": 0,
+      "note": "Every aperture matches native paste geometry, including U401 split EP windows and J430100% native openings. No universal coverage percentage, stencil volume or solderability qualification is inferred."
+    },
+    {
+      "name": "native_independent_silk_and_Fab_geometry",
+      "result": "pass",
+      "native_python": "KiCad10.0.6 pcbnew; read-only API; polygon error0.0002mm",
+      "silk_objects": 308,
+      "shown_references": 118,
+      "hidden_references": [
+        "C10",
+        "C100",
+        "C11",
+        "C126",
+        "C127",
+        "C129",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23",
+        "C24",
+        "C25",
+        "C26",
+        "C30",
+        "C31",
+        "C32",
+        "C410",
+        "C411",
+        "C421",
+        "C6",
+        "C7",
+        "C81",
+        "C82",
+        "C85",
+        "C88",
+        "C92",
+        "C99",
+        "D121",
+        "D400",
+        "D401",
+        "D410",
+        "D420",
+        "D421",
+        "LED1",
+        "Q122",
+        "Q123",
+        "R10",
+        "R100",
+        "R101",
+        "R103",
+        "R104",
+        "R105",
+        "R120",
+        "R121",
+        "R122",
+        "R126",
+        "R127",
+        "R128",
+        "R129",
+        "R13",
+        "R130",
+        "R132",
+        "R133",
+        "R151",
+        "R152",
+        "R155",
+        "R162",
+        "R163",
+        "R164",
+        "R173",
+        "R175",
+        "R178",
+        "R180",
+        "R32",
+        "R403",
+        "R405",
+        "R432",
+        "R441",
+        "R450",
+        "R451",
+        "R5",
+        "R62",
+        "R63",
+        "R64",
+        "R87",
+        "R9",
+        "TP120",
+        "TP122",
+        "TP82",
+        "U11",
+        "U12",
+        "U2",
+        "U4",
+        "U402",
+        "U5",
+        "U9"
+      ],
+      "legends": 40,
+      "minimum_text_mm": 1.0,
+      "minimum_text_stroke_mm": 0.15,
+      "minimum_silk_to_mask_gap_mm": 0.15,
+      "minimum_pair": [
+        "U3",
+        "PCB_SHAPE",
+        "U3.1",
+        "B.Silkscreen"
+      ],
+      "silk_mask_errors": [],
+      "outside_board": [],
+      "Fab_references": 209,
+      "rendered_reference_characters": 722,
+      "Fab_shapes_and_polarity_texts": 1020,
+      "Fab_shape_intersections": [],
+      "Fab_reference_hole_intersections": [],
+      "drill_cutout_shapes_checked": 37,
+      "minimum_Fab_own_shape_gap_mm": 0.00548,
+      "minimum_Fab_own_shape_pair": [
+        "R167",
+        "R167",
+        "PCB_SHAPE"
+      ],
+      "minimum_Fab_hole_gap_mm": 0.094527,
+      "minimum_Fab_hole_pair": [
+        "J122",
+        "J122.3"
+      ],
+      "missing_Fab_references": [],
+      "Fab_text_size_range_mm": [
+        0.3,
+        1.0
+      ],
+      "note": "Circular/oval pad drills plus all five Edge.Cuts mounting circles checked. Fine Fab text requires vector zoom; the1mm silk limit is preserved."
+    },
+    {
+      "name": "complete_visual_inspection",
+      "result": "pass",
+      "artifacts": [
+        "current canonical top and bottom assembly PDFs",
+        "fresh independent top and bottom assembly PDFs"
+      ],
+      "method": "Poppler complete pages at1800px; fresh four aft/forward board details at600dpi; full relevant maker pages rendered/inspected. Canonical/fresh complete-page raster equality independently confirmed.",
+      "inspected_details": [
+        "battery/protection/manual C84 polarity worksheet",
+        "all seven DB125 roles and bodies",
+        "both opposed high-side FETs and pyro parts",
+        "MCU/core/SWD",
+        "all bottom Fab rows/sensors/SD",
+        "J122 drill clearance and all77 corrected Fab-reference locations"
+      ],
+      "limit": "Visual CAD and geometry checks; no GUI/physical or factory-preview qualification."
+    },
+    {
+      "name": "thermal_relief_and_VIPPO",
+      "result": "pass",
+      "terminal_GND_contacts": [
+        "J1.2",
+        "J9.2",
+        "J410.2",
+        "J420.2",
+        "J122.5"
+      ],
+      "terminal_override": 1,
+      "saved_fill_samples": [
+        {
+          "pad": "J1.2",
+          "layer": "F.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J1.2",
+          "layer": "In1.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J1.2",
+          "layer": "In2.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 0,
+          "filled_samples": 0,
+          "samples": 1800
+        },
+        {
+          "pad": "J1.2",
+          "layer": "B.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J9.2",
+          "layer": "F.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J9.2",
+          "layer": "In1.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J9.2",
+          "layer": "In2.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 0,
+          "filled_samples": 0,
+          "samples": 1800
+        },
+        {
+          "pad": "J9.2",
+          "layer": "B.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J410.2",
+          "layer": "F.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J410.2",
+          "layer": "In1.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J410.2",
+          "layer": "In2.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 0,
+          "filled_samples": 0,
+          "samples": 1800
+        },
+        {
+          "pad": "J410.2",
+          "layer": "B.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J420.2",
+          "layer": "F.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J420.2",
+          "layer": "In1.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J420.2",
+          "layer": "In2.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 0,
+          "filled_samples": 0,
+          "samples": 1800
+        },
+        {
+          "pad": "J420.2",
+          "layer": "B.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J122.5",
+          "layer": "F.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J122.5",
+          "layer": "In1.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        },
+        {
+          "pad": "J122.5",
+          "layer": "In2.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 0,
+          "filled_samples": 0,
+          "samples": 1800
+        },
+        {
+          "pad": "J122.5",
+          "layer": "B.Cu",
+          "radius_mm": 1.1,
+          "filled_arcs": 4,
+          "filled_samples": 316,
+          "samples": 1800
+        }
+      ],
+      "VIPPO_centres_mm": [
+        [
+          27.3,
+          13.6
+        ],
+        [
+          27.9,
+          13.6
+        ]
+      ],
+      "VIPPO_diameter_drill_mm": [
+        0.5,
+        0.3
+      ],
+      "VIPPO_net": "GND",
+      "VIPPO_pad": "U401.11",
+      "native_via_tenting_flags": "All296 ordinary native via objects have both tenting flags; the U401 exposed-pad opening still requires the specified filled/capped planar process. Flags do not prove manufactured covering.",
+      "note": "At1.1mm radius,1800 samples/contact/layer give four separated arcs on F/In1/B and zero GND fill on In2 for every terminal GND. Exactly two qualified SMD pad-via sites; no ordinary exception added."
+    },
+    {
+      "name": "selected_current_manufacturing_contracts",
+      "result": "pass",
+      "command": "KICAD_PY -I -B tools/check_r10.py current PCB --only S-4,K-legends,K-copper,T-1,M-6,K-rules --bom current BOM --cpl current CPL",
+      "rules": [
+        "S-4",
+        "K-legends",
+        "K-copper",
+        "T-1",
+        "M-6",
+        "K-rules"
+      ],
+      "selected_evidence": {
+        "S-4": {
+          "required": 199,
+          "safety": [
+            "C120",
+            "C126",
+            "C127",
+            "C128",
+            "C129",
+            "D120",
+            "J121",
+            "J400",
+            "Q120",
+            "Q121",
+            "Q122",
+            "Q124",
+            "R120",
+            "R121",
+            "R122",
+            "R123",
+            "R126",
+            "R127",
+            "R128",
+            "R129",
+            "R130",
+            "R131",
+            "R132",
+            "R133",
+            "R134",
+            "R165",
+            "R173",
+            "R175",
+            "R178",
+            "R180",
+            "R80"
+          ],
+          "schematic": "m3.kicad_sch",
+          "BOM": "m3_design/assembly_review/fab/m3_bom_jlc.csv",
+          "CPL": "m3_design/assembly_review/fab/m3_cpl_jlc.csv"
+        },
+        "M-6": {
+          "supports": [
+            [
+              3.7,
+              86.0
+            ],
+            [
+              4.0,
+              4.0
+            ],
+            [
+              4.0,
+              44.3
+            ],
+            [
+              42.0,
+              4.0
+            ],
+            [
+              42.0,
+              86.0
+            ]
+          ]
+        },
+        "T-1": {
+          "windows": {
+            "west": [
+              [
+                0.5,
+                23.25
+              ],
+              [
+                43.0,
+                89.5
+              ]
+            ],
+            "east": [
+              [
+                0.5,
+                89.5
+              ]
+            ],
+            "aft": [
+              [
+                0.5,
+                7.0
+              ],
+              [
+                37.0,
+                45.5
+              ]
+            ],
+            "forward": [
+              [
+                0.5,
+                6.75
+              ],
+              [
+                32.75,
+                45.5
+              ]
+            ]
+          },
+          "rule": "R10_DECISIONS D-R2-13"
+        },
+        "K-legends": {
+          "terminal_legends": {
+            "2:GND (2.937, 79.552)": [
+              "J1.2",
+              1.952
+            ],
+            "1:BAT+ (3.232, 70.552)": [
+              "J1.1",
+              1.852
+            ],
+            "2:E1+ (6.213, 59.552)": [
+              "J121.2",
+              1.952
+            ],
+            "3:S3 (30.908, 70.152)": [
+              "J122.3",
+              4.108
+            ],
+            "4:RXI (34.846, 6.702)": [
+              "J410.4",
+              1.852
+            ],
+            "5:GND (34.637, 60.952)": [
+              "J122.5",
+              1.852
+            ],
+            "1:5V4 (39.480, 54.702)": [
+              "J9.1",
+              2.141
+            ],
+            "1:SW (2.052, 61.413)": [
+              "J400.1",
+              3.652
+            ],
+            "2:SW (2.052, 65.613)": [
+              "J400.2",
+              3.652
+            ],
+            "1:E1- (7.952, 47.413)": [
+              "J121.1",
+              1.991
+            ],
+            "1:S1 (37.252, 80.408)": [
+              "J122.1",
+              1.908
+            ],
+            "1:4V8 (42.352, 18.830)": [
+              "J410.1",
+              3.752
+            ],
+            "4:RXI (42.352, 23.396)": [
+              "J420.4",
+              3.752
+            ],
+            "4:TXO (42.352, 38.330)": [
+              "J9.4",
+              3.752
+            ],
+            "1:4V8 (43.752, 35.130)": [
+              "J420.1",
+              5.152
+            ],
+            "2:S2 (39.508, 73.652)": [
+              "J122.2",
+              0.908
+            ],
+            "3:RXI (39.446, 44.402)": [
+              "J9.3",
+              0.846
+            ],
+            "3:TXO (39.480, 12.402)": [
+              "J410.3",
+              0.88
+            ],
+            "3:TXO (39.480, 28.402)": [
+              "J420.3",
+              0.88
+            ],
+            "2:GND (39.537, 15.902)": [
+              "J410.2",
+              0.937
+            ],
+            "2:GND (39.537, 31.902)": [
+              "J420.2",
+              0.937
+            ],
+            "2:GND (39.537, 47.902)": [
+              "J9.2",
+              0.937
+            ],
+            "4:S4 (39.552, 65.408)": [
+              "J122.4",
+              0.952
+            ]
+          },
+          "silk_mask_overlaps": 0,
+          "aud10_review": [],
+          "aud10_review_count": 0,
+          "hidden": [
+            "C10",
+            "C100",
+            "C11",
+            "C126",
+            "C127",
+            "C129",
+            "C13",
+            "C14",
+            "C15",
+            "C16",
+            "C19",
+            "C20",
+            "C21",
+            "C22",
+            "C23",
+            "C24",
+            "C25",
+            "C26",
+            "C30",
+            "C31",
+            "C32",
+            "C410",
+            "C411",
+            "C421",
+            "C6",
+            "C7",
+            "C81",
+            "C82",
+            "C85",
+            "C88",
+            "C92",
+            "C99",
+            "D121",
+            "D400",
+            "D401",
+            "D410",
+            "D420",
+            "D421",
+            "LED1",
+            "Q122",
+            "Q123",
+            "R10",
+            "R100",
+            "R101",
+            "R103",
+            "R104",
+            "R105",
+            "R120",
+            "R121",
+            "R122",
+            "R126",
+            "R127",
+            "R128",
+            "R129",
+            "R13",
+            "R130",
+            "R132",
+            "R133",
+            "R151",
+            "R152",
+            "R155",
+            "R162",
+            "R163",
+            "R164",
+            "R173",
+            "R175",
+            "R178",
+            "R180",
+            "R32",
+            "R403",
+            "R405",
+            "R432",
+            "R441",
+            "R450",
+            "R451",
+            "R5",
+            "R62",
+            "R63",
+            "R64",
+            "R87",
+            "R9",
+            "TP120",
+            "TP122",
+            "TP82",
+            "U11",
+            "U12",
+            "U2",
+            "U4",
+            "U402",
+            "U5",
+            "U9"
+          ],
+          "hidden_count": 91
+        },
+        "K-copper": {
+          "smd_pads_checked_for_via_holes": 613,
+          "track_endpoints_checked": 1914,
+          "small_ground_pads": 78,
+          "via_paste": {
+            "pairs_checked": 768,
+            "nearest_ring_mm": [
+              0.014,
+              "via (11.95, 30.6) (VBUS) and D4.5's paste (F)"
+            ]
+          },
+          "gap3": {
+            "centres_mm": [
+              [
+                27.900000000000002,
+                13.6
+              ],
+              [
+                27.3,
+                13.6
+              ]
+            ],
+            "local_centres_mm": [
+              [
+                -0.3,
+                0.0
+              ],
+              [
+                0.3,
+                0.0
+              ]
+            ],
+            "qualified": 2,
+            "local_exposed_pad_mm": [
+              -0.599999999999998,
+              -1.0,
+              0.6000000000000015,
+              1.0
+            ],
+            "local_paste_windows_mm": [
+              [
+                -0.5649999999999978,
+                -1.0,
+                0.5650000000000013,
+                -0.11000000000000114
+              ],
+              [
+                -0.5649999999999977,
+                0.10999999999999936,
+                0.5650000000000014,
+                1.0
+              ]
+            ],
+            "manufacturing_condition": "resin-filled, copper-capped, planar VIPPO; physical fabrication unverified"
+          }
+        },
+        "K-rules": {
+          "dru_sha256": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+          "dru_sha256_expected": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+          "pro_rules": {
+            "min_clearance": 0.15,
+            "min_track_width": 0.15,
+            "min_via_diameter": 0.5,
+            "min_via_annular_width": 0.1,
+            "min_through_hole_diameter": 0.3,
+            "min_hole_clearance": 0.2,
+            "min_hole_to_hole": 0.25,
+            "min_copper_edge_clearance": 0.5,
+            "min_microvia_diameter": 0.2,
+            "min_microvia_drill": 0.1
+          },
+          "netclass_clearance": {
+            "Default": 0.15
+          },
+          "ignored_severities": []
+        }
+      },
+      "note": "Read-only selected rules only; no full gate or build."
+    },
+    {
+      "name": "metadata_and_local_models",
+      "result": "pass",
+      "command": "python3 quality_audit/audit_artifacts.py current PCB --output <own ignored JSON>",
+      "footprints": 209,
+      "conflicting_part_fields": 0,
+      "missing_fitted_identities": 0,
+      "absolute_model_paths": 0,
+      "missing_models": 0,
+      "missing_courtyards": 0
+    },
+    {
+      "name": "process_worksheet_vs_primary_sources",
+      "result": "pass_with_explicit_open_qualification",
+      "file": "docs/ORDERING.md section8",
+      "verified_contracts": [
+        "Standard double-sided bottom-first/top-last profile240+/-5C",
+        "C84 manually fitted after both reflows; separately validated operation and electrical/polarity inspection pending",
+        "U5 no-clean/protected ports and two-pass acceptance pending",
+        "LS120 one top reflow within maker peak/time limits",
+        "0.10mm preferred stencil and unchanged supplied apertures; Molex0.10/0.12mm100% openings",
+        "all23 DB125 contacts hand/selective soldered, five GND thermals; hole fill pending",
+        "exact two resin-filled/copper-capped planar U401 vias; quote/inspection pending",
+        "aft tab/rail acceptance before ordering",
+        "C11/R13/R64 masked; body-plus-pad U5 exclusion and sole TP122 controlled brush exception",
+        "all seven terminals/C84/LS120/J3 staked and leads independently supported; no solder-tinned wire ends in screw clamps"
+      ],
+      "maker_geometry_checks": {
+        "U401_EP_mm": [
+          1.2,
+          2.0
+        ],
+        "U401_split_windows_mm": [
+          1.13,
+          0.89
+        ],
+        "U11_small_aperture_mm": [
+          0.2,
+          0.6
+        ],
+        "U11_rectangular_area_ratio_inference": {
+          "stencil_0_10mm": 0.75,
+          "stencil_0_12mm": 0.625
+        },
+        "DB125_pad_drill_mm": [
+          1.9,
+          1.3
+        ],
+        "DB125_maker_hole_mm": 1.2,
+        "DB125_pitch_mm": 3.5,
+        "DB125_contacts": 23
+      },
+      "note": "Geometry and written process alignment are verified. No accepted quote, actual reflow, stencil-volume, hole-fill, coating, solder-joint or first-article result is claimed."
+    }
+  ],
+  "rejected_or_closed_candidates": [
+    {
+      "candidate": "Stale/mismatched production manufacturing package (Major)",
+      "status": "rejected",
+      "evidence": "Five-output manifest193 inputs matches; fresh independent BOM/CPL bytes and all14 normalized archive members match; both complete assembly rasters equal."
+    },
+    {
+      "candidate": "Wrong bottom-side or safety-part placement (Major)",
+      "status": "rejected",
+      "evidence": "Fresh exact two-code overlay reconstructs all199 current CPL placements,0 errors. Complete seven-terminal body-facing convention still needs actual factory preview; numerical pad matching alone does not certify terminal body direction."
+    },
+    {
+      "candidate": "Unmanufactured ordinary via-in-pad exception (Major)",
+      "status": "rejected",
+      "evidence": "Exactly two U401.11 GND0.5/0.3mm sites and explicit resin-filled/copper-capped planar order remarks; K-copper passes. Factory acceptance remains pending and is not substituted with ink tenting."
+    },
+    {
+      "candidate": "C84 exposed to an unsupported reflow profile (Major)",
+      "status": "rejected",
+      "evidence": "Required-fitted BOM/CPL retains manual-after-all-reflow Assembly note; ORDERING8 explicitly removes C84 from both reflows and requires a separately validated operation. No reflow claim borrowed from OS-CON."
+    },
+    {
+      "candidate": "Barometer cleaning/coating instructions require damaging exposure (Major)",
+      "status": "rejected",
+      "evidence": "Current section8 repeats no washing/no-clean/whole-U5 protection and C11/R13/R64 masks, with body-plus-pad exclusion and separately bounded TP122 brush exception. Actual mask placement remains unqualified."
+    },
+    {
+      "candidate": "Fab reference is missing/hidden by outlines or drill (Major)",
+      "status": "rejected",
+      "evidence": "All209/722 characters present;0 own/foreign Fab-outline/polarity-text intersections and0 drill/cutout intersections. J122 nearest drill gap0.094527mm. Small text at0.3mm and R1675.48um own-shape gap need vector zoom, without a stated Fab1mm requirement."
+    },
+    {
+      "candidate": "Courtyard strokes prove part-body collision (Major)",
+      "status": "rejected",
+      "evidence": "Actual ink intersects at16 pairs, but native collision polygons are separated by0.010..0.040mm; no physical body collision is established. Residual is retained asR15-MFG-02."
+    },
+    {
+      "candidate": "L400 heel mismatch proves a required converter failure (Major)",
+      "status": "rejected",
+      "evidence": "Possible heel strip is0.15mm; nominal contact remains and no assembled joint/performance test exists. Retained asMinorR15-MFG-01."
+    },
+    {
+      "candidate": "THT grounds remain solid (historical R11-MFG-01)",
+      "status": "closed",
+      "evidence": "All five local overrides are thermal and each saved F/In1/B ring has four separated copper arcs; In2 does not connect at these pads."
+    },
+    {
+      "candidate": "J122/five/77 Fab reference collisions (historical R11-MFG-02/R12-MFG-01/R13-MFG-01)",
+      "status": "closed",
+      "evidence": "Full fresh native polygon/hole and visual inspection above; current209 references have no tested intersections."
+    }
+  ],
+  "primary_sources": [
+    {
+      "id": "bourns",
+      "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+      "document": "SRP5030T series, four-page maker PDF",
+      "pages_inspected": [
+        1
+      ],
+      "version_note": "No revision identifier printed on inspected p1; exact PDF identified by SHA-256.",
+      "sha256": "c52004cbb76ccf3275e5a94ca6c437fc5a0b81ca8c3643abf1fee902f83741d2"
+    },
+    {
+      "id": "molex",
+      "url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+      "document": "SD-47219-001G",
+      "pages_inspected": [
+        1
+      ],
+      "version_note": "Rev G; revised 2012-02-23; complete sheet inspected.",
+      "sha256": "793d191c35764f9e0dbde0d95a19418da8016b442c4b2716e787f808011faa1e"
+    },
+    {
+      "id": "db125",
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+      "document": "DORABO DB125-3.5-XXP-C-S customer drawing",
+      "pages_inspected": [
+        1
+      ],
+      "version_note": "T0-1, 2022-11-26; complete sheet inspected.",
+      "sha256": "76a55d0cbb4d30bf4d714401b8612365b6b35fedcd9660adae81c0e79d86ff7a"
+    },
+    {
+      "id": "c84",
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+      "document": "JIERRUI MA-series supplier sheet, four pages",
+      "pages_inspected": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "version_note": "No revision/date printed; pp2 and4 visually inspected, all text read. No soldering profile supplied.",
+      "sha256": "5ab3c478e90f1826a614a56af8164bb4bab3143affaae1ad7aa69fc0c1981997"
+    },
+    {
+      "id": "te_ms5611",
+      "url": "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=MS5611-01BA03&DocType=Data+Sheet&PartCntxt=MS561101BA03-50",
+      "document": "TE MS5611-01BA03",
+      "pages_inspected": [
+        2,
+        15,
+        16,
+        17
+      ],
+      "version_note": "06/2017; pp15 and17 visually inspected.",
+      "sha256": "d4cbbb0e4df8cc5c123a20da6697e60ef66d7120bfe6bedf11e29016e35bfc97"
+    },
+    {
+      "id": "buzzer",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598",
+      "document": "JIANGSU HUAWHA/Huaneng MLT-5020 maker sheet",
+      "pages_inspected": [
+        2,
+        3,
+        4
+      ],
+      "version_note": "P2 item9 nominal0.5g; p3 reflow graph250C maximum/10s maximum above245C; pp2/3 visually inspected.",
+      "sha256": "db73c860afd42abdf9a2e69c4a34ac915d68e07108a2188d6ee0a9c02f723be9"
+    },
+    {
+      "id": "tps7a91",
+      "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+      "document": "TI TPS7A91/DSK0010A stencil example",
+      "pages_inspected": [
+        35,
+        36
+      ],
+      "version_note": "Package drawing4218903/C09/2025; p36 visually inspected.",
+      "sha256": "1ab38416ceb4a3cd22b9e7665acc4409ac28f7c3a95c71ea195620f7d1ad7924"
+    },
+    {
+      "id": "jlc_capabilities",
+      "url": "https://jlcpcb.com/capabilities/pcb-capabilities",
+      "document": "JLCPCB current manufacturing capabilities",
+      "retrieved_date": "2026-10-30",
+      "supports": "0.15mm silk line/pad distance,1.0mm text,0.10mm green-mask bridge; ink plugging differs from filled/plated via-in-pad."
+    },
+    {
+      "id": "jlc_via_covering",
+      "url": "https://jlcpcb.com/help/article/pcb-via-covering",
+      "document": "JLCPCB via-covering guide",
+      "retrieved_date": "2026-10-30",
+      "supports": "Order/DFM confirmation for ordinary covered vias and the separately specified filled/capped pad vias."
+    }
+  ],
+  "supplemental_supplier_pad_maps": {
+    "scope": "Fresh exact-code supplement only; production sources frozen.",
+    "receipts": [
+      {
+        "code": "C21190",
+        "source_url": "https://easyeda.com/api/products/C21190/components",
+        "started_utc": "2026-10-30T13:53:22.011034+00:00",
+        "completed_utc": "2026-10-30T13:53:22.543154+00:00",
+        "curl_exit": 0,
+        "raw_response_sha256": "9c5782fcd9bede98dd00265c0d4cbcc8956e5794aa6aabc7d2ddfdf7d06e4067",
+        "normalized_geometry_sha256": "f991b50848ca3dbc3cda8cb6d7dfb59deb1bd346a046de11167a9dd309f4b183",
+        "pads": 2
+      },
+      {
+        "code": "C1329837",
+        "source_url": "https://easyeda.com/api/products/C1329837/components",
+        "started_utc": "2026-10-30T13:53:22.543859+00:00",
+        "completed_utc": "2026-10-30T13:53:22.840586+00:00",
+        "curl_exit": 0,
+        "raw_response_sha256": "37ce9b8c9810016a37bc0ab28e54027b69014fb574b9d817e85b40787f089ab2",
+        "normalized_geometry_sha256": "e3c71db6997c608ab036d9868316879b8566ae399f9e1d50d688a4e3c80b2f6b",
+        "pads": 2
+      }
+    ],
+    "normalized_maps": {
+      "C21190": {
+        "title": "R0603",
+        "head": [
+          4000.0,
+          3000.0
+        ],
+        "pads": [
+          "PAD~RECT~4002.966~3000~3.1751~3.4016~1~~2~0~4001.378 3001.7008 4001.378 2998.2992 4004.5531 2998.2992 4004.5531 3001.7008~0~gge1002~0~~Y~0~-393.7008~0.2000~4002.9655,3000",
+          "PAD~RECT~3997.034~3000~3.1751~3.4016~1~~1~0~3998.622 3001.7008 3998.622 2998.2992 3995.4469 2998.2992 3995.4469 3001.7008~0~gge1004~0~~Y~0~-393.7008~0.2000~3997.0345,3000"
+        ],
+        "source": "https://easyeda.com/api/products/C21190/components",
+        "retrieved_utc": "2026-10-30T13:53:22.543154+00:00"
+      },
+      "C1329837": {
+        "title": "IND-SMD_L5.7-W5.2",
+        "head": [
+          4000.0,
+          3000.0
+        ],
+        "pads": [
+          "PAD~RECT~3991.339~3000~7.0866~7.874~1~~1~0~3995.276 2996.4567 3995.276 3003.5433 3987.402 3003.5433 3987.402 2996.4567~270~gge5~0~~Y~0~0~0.2~3991.3386,3000",
+          "PAD~RECT~4008.661~3000~7.0866~7.874~1~~2~0~4012.598 2996.4567 4012.598 3003.5433 4004.724 3003.5433 4004.724 2996.4567~270~gge15~0~~Y~0~0~0.2~4008.6614,3000"
+        ],
+        "source": "https://easyeda.com/api/products/C1329837/components",
+        "retrieved_utc": "2026-10-30T13:53:22.840586+00:00"
+      }
+    },
+    "verification": {
+      "exit_code": 0,
+      "completed_utc": "2026-10-30T13:56:11.666510+00:00",
+      "reconstructed": 199,
+      "top": 67,
+      "bottom": 132,
+      "placement_only": 0,
+      "errors": 0,
+      "worst_pad_residual_mm": 0.491,
+      "receipt": "fresh_supplier_maps_status.json"
+    }
+  },
+  "coverage_limits": [
+    "No peer current-round15 report/probe was read; no current-round peer findings were shared. Prior-round reports were context only.",
+    "All116 D-* records through D-R14-03 and22 owner mandates were considered under their newest scope. No AGENTS section2 change or owner question was needed.",
+    "Only own new MD/JSON and ignored probes were written. No canonical build/full check/source/CAD/fab edit, git mutation, GUI retry/bypass, other worktree access, order or message to a supplier occurred.",
+    "Native DRC and manufacturing checks are CAD/software evidence. ERC, complete route/hot-plug/binding/reproducibility gates were not freshly rerun by this lens; current recorded build results remain context.",
+    "No physical soldering, stencil release/volume, via filling/capping, two U5 reflows, C84 manual operation, coating, thermal/endurance, actual hardware/harness/screwdriver/card fit, retention or factory preview was qualified.",
+    "No R10 firmware, SD power-loss, e-match lot firing, safety timing, installed RF/ESD or flight result exists in this review.",
+    "Current stock/cost/process/panel and owner deviation acceptance remain ordering obligations; no new82-code procurement snapshot was collected by this manufacturing lens."
+  ],
+  "evidence_sha256": {
+    ".supervisor/r15_manufacturing/drc_confirmed.json": "d1629db21c3a19acf4ca493f2e56f8dc0fdc9c8e671257430da6ef9048ebf799",
+    ".supervisor/r15_manufacturing/drc_status.json": "58bce7a503f87c625681a40d34a4aa6216c40c92fdd468942c7decac107cdb47",
+    ".supervisor/r15_manufacturing/export_status.json": "81c74337bc7c7e08e65e5f8ffee4aad0a17d693871fe6ea2e59f5119c69a1b3c",
+    ".supervisor/r15_manufacturing/lineage.json": "23e3bbc86178b9bc22c1286ffae4c7b1084ec46eb7f9d435517603868f18521c",
+    ".supervisor/r15_manufacturing/paste.json": "81839fa0d27179e5865cba3eea78ea46db68f4b21a51cef3c3e1adcd6b7c919d",
+    ".supervisor/r15_manufacturing/native_geometry.json": "ad8ddd2d40116ce3d1813e02e236661dc05059b0e67c94095db2c87c0d87fdb5",
+    ".supervisor/r15_manufacturing/courtyard_thermal.json": "6ef6a79e013a052099dc142607ae63ad52637109e89c9cdf00a414fa9f1f4bdb",
+    ".supervisor/r15_manufacturing/selected.json": "ff07b692642f9fe052dc10f974bce79a59e4862457e42247071131dcaf0c1dd3",
+    ".supervisor/r15_manufacturing/metadata.json": "ffa48482beb6eb4ec91cbb3ac3d3176a89290a1d1a94ab919630e6bea8cde3bf",
+    ".supervisor/r15_manufacturing/fresh_supplier_maps_status.json": "7ed37f9fc08e02bad1245962c4efff3993cedccea7c292a082fb1c826601e965",
+    ".supervisor/r15_manufacturing/fresh_maps.json": "8e74940405dc601d201130a4fd2a16817ae87a42dd0a6fd1d5fa8fb394885978",
+    ".supervisor/r15_manufacturing/fresh_orientation_status.json": "6fcfb1001ed7c3b1f5368c3a34a73a77d6c84c5fd5005cb6fe7dc31c9f304c1b",
+    ".supervisor/r15_manufacturing/fresh_orientation.log": "9566693c89bb36429f2b2ebd3b15fcd18756ac9d2df227e504a136db05800751",
+    ".supervisor/r15_manufacturing/freeze_after.json": "51efdc5802ef80752bccfef795b1c34e217059a003843b7524b10283463136bb",
+    ".supervisor/r15_manufacturing/native_review.py": "ba52cff7e11c3dec7952e91f5699e42a4231a20a1a56644418f26bdebf92f982"
+  },
+  "source_freeze": {
+    "tracked_count": 1909,
+    "changed": [],
+    "before_inventory_sha256": "2a41824b222a6bdf4bed2aeb18afb94f616562739104f2e75b00fce768997f44",
+    "after_inventory_sha256": "2a41824b222a6bdf4bed2aeb18afb94f616562739104f2e75b00fce768997f44",
+    "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783"
+  }
+}

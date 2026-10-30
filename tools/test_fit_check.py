@@ -206,6 +206,37 @@ class FitValidation(unittest.TestCase):
         for actual, expected in zip(fit.model_box(terminal, self.folder), original):
             self.assertAlmostEqual(actual, expected, places=6)
 
+    def test_c84_conservative_envelope_and_equivalent_units(self):
+        capacitor = self.add_part('C84', 27.5, 78.5, footprint='M3_MA_8x10')
+        model = self.folder / 'capacitor.step'
+        model.write_text("#1=CARTESIAN_POINT('',(-4.25,-4.25,0));\n#2=CARTESIAN_POINT('',(4.25,4.25,10.8));\n")
+        item = capacitor.Models()[0]; item.m_Filename = '${KIPRJMOD}/capacitor.step'
+        original = fit.model_box(capacitor, self.folder)
+        self.assertTrue(self.report()['ok'], self.report()['issues'])
+        for scale in (.01, .99999):
+            with self.subTest(scale=scale):
+                for axis in ('x', 'y', 'z'):
+                    setattr(item.m_Scale, axis, scale)
+                with self.assertRaisesRegex(ValueError, 'reviewed dimensions/pose'):
+                    fit.model_box(capacitor, self.folder)
+        for axis in ('x', 'y', 'z'):
+            setattr(item.m_Scale, axis, 1.)
+        for offset, reject in ((1.9e-5, False), (2.1e-5, True)):
+            with self.subTest(offset=offset):
+                item.m_Offset.z = offset
+                if reject:
+                    with self.assertRaisesRegex(ValueError, 'reviewed dimensions/pose'):
+                        fit.model_box(capacitor, self.folder)
+                else:
+                    self.assertIsNotNone(fit.model_box(capacitor, self.folder))
+        item.m_Offset.z = 0.
+        model.write_text("#1=CARTESIAN_POINT('',(-.00425,-.00425,0));\n#2=CARTESIAN_POINT('',(.00425,.00425,.0108));\n")
+        for axis in ('x', 'y', 'z'):
+            setattr(item.m_Scale, axis, 1000.)
+        for actual, expected in zip(fit.model_box(capacitor, self.folder), original):
+            self.assertAlmostEqual(actual, expected, places=6)
+        self.assertTrue(self.report()['ok'], self.report()['issues'])
+
     def test_missing_midspan_support_fails(self):
         self.board.Delete(self.holes[4])
         issues = '\n'.join(self.report()['issues'])

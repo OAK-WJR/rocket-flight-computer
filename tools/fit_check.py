@@ -72,6 +72,8 @@ R10_MATED = {'M3_MICROSD_MOLEX_472192001': dict(
 # R12-GATE-01: normalized maximum envelopes, in footprint-local KiCad x/y and
 # component-side z (mm), before placement/flip. D-R11-01 / T0-1 p1 for DB125;
 # the SD entry is the existing conservative closed socket/card union above.
+# C84: MA supplier sheet p2; retain the reviewed conservative 8.5 x 8.5 x 10.8 mm
+# allocation (base 8.3 +/- 0.2, height 10 +/- 0.5, plus inferred 0.3 mm projection).
 # Compare physical coordinates, not scale literals: equivalent unit conversions remain legal.
 R10_MODEL_BOXES = {
     'M3_DB125_2P_BK': (-4.62, -4.10, 3.70, 4.00, 0., 8.90),
@@ -79,6 +81,7 @@ R10_MODEL_BOXES = {
     'M3_DB125_4P_GN': (-8.32, -4.10, 7.20, 4.00, 0., 8.90),
     'M3_DB125_5P_GN': (-10.07, -4.10, 8.95, 4.00, 0., 8.90),
     'M3_MICROSD_MOLEX_472192001': R10_MATED['M3_MICROSD_MOLEX_472192001']['box'],
+    'M3_MA_8x10': (-4.25, -4.25, 4.25, 4.25, 0., 10.80),
 }
 R10_MODEL_TOL = 2e-5  # mm; six-decimal VRML endpoint error <=1.905e-6 mm, with a numeric guard
 R10_TERMINAL_TAIL_MM = 3.8  # DORABO T0-1 sheet1:3.50+/-0.30mm below seating plane

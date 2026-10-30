@@ -1,11 +1,12 @@
 # R10 AVA layout hand-off
 
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
-The current round14 fix PCB is `7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783`;
-two native builds/check0,42-file equality and exact native/package/binding proof
-are in `sources/r10_review/round14_fix_validation.json`. Full14 was0C/0M/14Minor
-groups onf5/e0. Fresh full15/16 on the committed successor remain required;
-no earlier pair transfers.
+The current round15 fix PCB is `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`.
+Two complete native builds/check0 reproduce42 generated files byte for byte.
+Current integration scope is in [R10_VALIDATION](../../../../docs/R10_VALIDATION.md), round15. Full R15 reviewed
+789f4d5/7866d6b8 with0C/0M/14Minor groups from20raw. These fixes change the PCB;
+fresh full16/17 on the committed result must earn the final same-board pair.
+No earlier pair or focused verification transfers full-review credit.
 Round11 found one confirmed Major/16Minor groups on the hand-off board and
 fixed it as `0ad0135c…`; its named historical proof remains separate. The
 historical measurements below describe `0c50b9fd…`; fix deltas are at the end.
@@ -223,3 +224,30 @@ retired. Native hot-plug is freshly extracted/swept; no physical result follows.
 Maker LS1200.5g,optional mass-key/paste-subset guards and current records are
 corrected. Full proof:round14_fix_native/round14_fix_validation; source decisions
 D-R14-01..03. Full15/16 on the committed successor are pending.
+
+
+## Round15 fix-pass delta
+
+PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`:
+209 footprints,951 segments,296 vias (168 GND),1788.675665mm track,2,256,162 bytes.
+Fifteen exact fixed-anchor route windows save10.008727mm/eight segments. U4's two
+shared pad-row GND straps are replaced by individual pad-axis/45degree escapes
+that join outside the nominal body at the same vias. This adds1.544214mm/two
+segments, giving net8.464513mm/six segments saved. All part poses,lands/nets,
+fields/models,vias,zone outlines and Fab references remain unchanged. GND tracks
+change; this is not complete TN1383 stress/process or sensor-performance qualification.
+
+Both complete native builds/check0 pass all31 rules,DRC/unconnected/parity/ERC0,routing,fit,
+orientation,618 paste geometries and five-output manifest. R10 suite176,fit31,
+paste16,routing60 and the four separately resolved native NumPy skips pass.
+All42 generated files reproduce byte for byte; final assembly-page rasters match
+and complete pages were inspected. Fresh optional plate estimates181.1Hz
+pinnedD5/70.497598846g (70.5g rounded),Calculation/Inference. Actual-feed2304+60
+hot-plug cases pass as Simulation/Inference. Current routing has140 information
+instances=111ordinary+23AUD-10 inside-pad+6noncritical hygiene leftovers,59off-centre
+entries and46all-net bump windows; blocking,allowed,stale and critical bumps are0.
+The new0.475mm CAM_5V B(33.625,48.75) segment inside U13.1 is AUD-10 information.
+These and other M2 compromises remain owner deviations; full native counts are in
+[round15_fix_native](../r10_review/round15_fix_native.json). Exact DB125 insertion/fabricated
+barrel allocation and C19/C20 operating C/ESR/process qualification are open.
+D-R15-01…03 records the changes; fresh complete16/17 must review the committed result.

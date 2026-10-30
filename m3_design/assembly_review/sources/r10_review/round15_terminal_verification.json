@@ -1,0 +1,400 @@
+{
+  "schema": 1,
+  "mode": "slice",
+  "scope": "Fresh focused independent verification of R15-BOM-02 DB125 insertion tolerance",
+  "prepared_utc": "2026-10-30T14:08:50.050934+00:00",
+  "target_commit": "789f4d516251991bdf1518254d537ff7b41f65bb",
+  "target_commit_basis": "Supplied root receipt; no git command executed",
+  "canonical_freeze_basis": "Root supplied 1909-file freeze; not independently asserted",
+  "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_bytes": 2257812,
+  "native_api_version": "10.0.7",
+  "verdict": {
+    "result": "PASS focused candidate classification and nominal CAD checks",
+    "candidate": "R15-BOM-02",
+    "severity": "Minor",
+    "status": "Confirmed and narrowed to unclosed maker/assembler insertion-process allocation",
+    "critical": 0,
+    "major": 0,
+    "minor": 1,
+    "demonstrated_insertion_failure": false,
+    "physical_fit_qualified": false,
+    "full_review_credit": false
+  },
+  "independence": {
+    "initial_maker_native_checks_preceded_assigned_parts_report": true,
+    "assigned_peer_files_read": [
+      "m3_design/assembly_review/sources/r10_review/round15_parts.md",
+      "m3_design/assembly_review/sources/r10_review/round15_parts.json"
+    ],
+    "other_current_peer_reports_or_probes_read": false,
+    "files_written": [],
+    "native_cli_used": false,
+    "git_commands_used": false,
+    "build_or_full_check_run": false,
+    "gui_validation_run": false,
+    "subagents_used": false
+  },
+  "sources": [
+    {
+      "id": "dorabo_t0_1",
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+      "page": "T0-1 sheet 1/1, 2022-11-26",
+      "sha256": "76a55d0cbb4d30bf4d714401b8612365b6b35fedcd9660adae81c0e79d86ff7a",
+      "bytes": 381230,
+      "fresh_fetch_matches_named_static_cache": true,
+      "fresh_full_page_render_inspected": true,
+      "render_method": "Poppler output captured and displayed in memory; no file written",
+      "pin_nominal_mm": [0.5, 0.85],
+      "pitch_nominal_mm": 3.5,
+      "pcb_hole_recommendation_mm": 1.2,
+      "linear_table_through_6mm_plus_minus_mm": 0.2,
+      "shape_limits": "Orthogonal projected dimensions and tapered tip; no complete insertion-section corner, burr or form envelope"
+    },
+    {
+      "id": "jlc_current_capabilities",
+      "url": "https://jlcpcb.com/capabilities/pcb-capabilities",
+      "page": "Drilling and Traces tables, freshly opened 2026-10-30",
+      "finished_pth_plus_mm": 0.13,
+      "finished_pth_minus_mm": 0.08,
+      "hole_position_plus_minus_mm": 0.075,
+      "multilayer_1oz_annulus_recommended_mm": 0.2,
+      "multilayer_1oz_annulus_absolute_minimum_mm": 0.15,
+      "separate_hole_pitch_correlation_guarantee_found": false,
+      "limits": "Position datum/radial interpretation, layer registration and maximum outer barrel envelope are not established by this table",
+      "older_search_snippet_position_mm": 0.05,
+      "selected_position_basis": "Fresh opened page takes precedence over older search snippet"
+    },
+    {
+      "id": "gbt_scope",
+      "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=D13DCBFC8E64A2B32F77B4CE9EBD4B92",
+      "page": "Official GB/T 14486-2008 record",
+      "scope": "Dimensional tolerances for moulded plastic parts",
+      "interpretation": "Metal-pin applicability of the drawing's general table needs clarification; neither automatic exclusion nor a guaranteed independent metal-pin stack is established"
+    },
+    {
+      "id": "jlc_assembly",
+      "url": "https://jlcpcb.com/blog/pcb-header-design",
+      "page": "Hole and Pad Accuracy; PCB Quality Control and Inspection",
+      "use": "Fabricator guidance distinguishes finished-hole, seating and solder-fill inspection from nominal footprint geometry"
+    }
+  ],
+  "terminal_common_native": {
+    "contact_count": 23,
+    "hole_shape": "circular",
+    "hole_diameter_mm": 1.3,
+    "copper_shape": "circular",
+    "copper_diameter_mm": 1.9,
+    "pitch_mm": 3.5,
+    "nominal_radial_annulus_mm": 0.3,
+    "nominal_adjacent_land_gap_mm": 1.6,
+    "datasheet_field_same_current_t0_1_for_all_seven": true
+  },
+  "terminal_inventory": [
+    {
+      "ref": "J1",
+      "mpn": "DB125-3.5-2P-GN-S",
+      "code": "C466970",
+      "origin_mm": [7.4, 75.85],
+      "rotation_deg": -90,
+      "pad_x_mm": 7.4,
+      "pads_number_y_net": [
+        ["1", 74.1, "BAT_IN"],
+        ["2", 77.6, "GND"]
+      ]
+    },
+    {
+      "ref": "J121",
+      "mpn": "DB125-3.5-2P-BK-S",
+      "code": "C52993880",
+      "origin_mm": [7.4, 55.85],
+      "rotation_deg": -90,
+      "pad_x_mm": 7.4,
+      "pads_number_y_net": [
+        ["1", 54.1, "PYRO1_OUT"],
+        ["2", 57.6, "PYRO1_IGN"]
+      ]
+    },
+    {
+      "ref": "J400",
+      "mpn": "DB125-3.5-2P-GN-S",
+      "code": "C466970",
+      "origin_mm": [7.4, 65.849999],
+      "rotation_deg": -90,
+      "pad_x_mm": 7.4,
+      "pads_number_y_net": [
+        ["1", 64.099999, "BAT_SW_SOURCE"],
+        ["2", 67.599999, "BAT_SW_RETURN"]
+      ]
+    },
+    {
+      "ref": "J410",
+      "mpn": "DB125-3.5-4P-GN-S",
+      "code": "C2757925",
+      "origin_mm": [38.6, 15.5],
+      "rotation_deg": 90,
+      "pad_x_mm": 38.6,
+      "pads_number_y_net": [
+        ["1", 20.75, "PORT_4V8"],
+        ["2", 17.25, "GND"],
+        ["3", 13.75, "GPS_TX_WIRE"],
+        ["4", 10.25, "GPS_RX_WIRE"]
+      ]
+    },
+    {
+      "ref": "J420",
+      "mpn": "DB125-3.5-4P-GN-S",
+      "code": "C2757925",
+      "origin_mm": [38.6, 31.5],
+      "rotation_deg": 90,
+      "pad_x_mm": 38.6,
+      "pads_number_y_net": [
+        ["1", 36.75, "PORT_4V8"],
+        ["2", 33.25, "GND"],
+        ["3", 29.75, "RADIO_TX_WIRE"],
+        ["4", 26.25, "RADIO_RX_WIRE"]
+      ]
+    },
+    {
+      "ref": "J9",
+      "mpn": "DB125-3.5-4P-GN-S",
+      "code": "C2757925",
+      "origin_mm": [38.6, 47.5],
+      "rotation_deg": 90,
+      "pad_x_mm": 38.6,
+      "pads_number_y_net": [
+        ["1", 52.75, "CAM_5V"],
+        ["2", 49.25, "GND"],
+        ["3", 45.75, "CAM_RX_WIRE"],
+        ["4", 42.25, "CAM_TX_WIRE"]
+      ]
+    },
+    {
+      "ref": "J122",
+      "mpn": "DB125-3.5-5P-GN-S",
+      "code": "C3646874",
+      "origin_mm": [38.6, 71.5],
+      "rotation_deg": 90,
+      "pad_x_mm": 38.6,
+      "pads_number_y_net": [
+        ["1", 78.5, "SERVO1_OUT"],
+        ["2", 75.0, "SERVO2_OUT"],
+        ["3", 71.5, "SERVO3_OUT"],
+        ["4", 68.0, "SERVO4_OUT"],
+        ["5", 64.5, "GND"]
+      ]
+    }
+  ],
+  "insertion_calculation": {
+    "classification": "Calculation/Inference",
+    "nominal_sharp_diagonal_mm": 0.9861541461658009,
+    "conditional_independent_sharp_max_section_mm": [0.7, 1.05],
+    "conditional_sharp_max_diagonal_mm": 1.2619429464123963,
+    "standard_min_finished_hole_mm": 1.22,
+    "nominal_section_diametral_allowance_mm": 0.2338458538341991,
+    "conditional_max_section_diametral_allowance_mm": -0.041942946412396376,
+    "conclusion": "Independent sharp-envelope calculation does not close. Actual manufactured insertion profile and combined pattern/form constraints remain unknown.",
+    "pitch_limits": "Do not accumulate per-pitch general tolerances independently on top of the dimensioned row span. Obtain relative pattern/form limits after permitted alignment and approved forming.",
+    "sufficient_allocation": "Dhole_min >= Dpin_circumscribed_max + 2*eresidual + positive assembly allowance",
+    "sufficient_allocation_limit": "Conservative geometric condition; residual error and approved compliance/forming must be explicitly defined"
+  },
+  "native_clearance": {
+    "copper_nodes_inspected": 2943,
+    "protected_barrels": 4,
+    "focused_s8_issues": [],
+    "minimum_s8_mm": 1.1025015761924428,
+    "minimum_s8_nominal_margin_mm": 0.1025015761924428,
+    "governing_barrel": "J121.1",
+    "barrel_net": "PYRO1_OUT",
+    "barrel_center_mm": [7.4, 54.1],
+    "foreign_copper": "3V3 fill on In2.Cu",
+    "nearest_fill_point_mm": [8.916706, 53.222011],
+    "nearest_fill_segment_mm": [
+      [8.962461, 53.274815],
+      [8.916706, 53.222011]
+    ],
+    "methods": [
+      "Native SHAPE.Collide distance search",
+      "Independent Euclidean point-to-polygon-boundary-segment distance minus 0.65 mm nominal hole radius"
+    ],
+    "all_terminal_nearest_foreign_fill_gap_mm": 0.2505,
+    "minimum_terminal_to_nonfill_foreign_copper_mm": 0.920001,
+    "minimum_nonfill_pair": "J121.1 to 3V3 via at (9.20,52.98)",
+    "fabrication_corner_illustration": {
+      "classification": "Conditional independent-envelope inference, not fabricated measurement",
+      "diametral_positive_hole_tolerance_mm": 0.13,
+      "radial_positive_hole_tolerance_mm": 0.065,
+      "assumed_motion_toward_foreign_copper_mm": 0.075,
+      "combined_radial_consumption_mm": 0.14,
+      "remaining_current_s8_mm": 0.9625015761924429,
+      "limits": "Hole-position datum/correlation, copper registration and outer barrel wall require fabricator allocation. Average plating is not a maximum. This does not constitute a nominal S-8 violation or measured manufactured failure."
+    }
+  },
+  "ground_thermals": {
+    "pads": ["J1.2", "J9.2", "J410.2", "J420.2", "J122.5"],
+    "all_local_zone_connect": 1,
+    "spoke_angle_deg": 45,
+    "zone_thermal_gap_mm": 0.25,
+    "zone_spoke_width_mm": 0.3,
+    "sampling_radius_mm": 1.075,
+    "angular_samples_per_pad_layer": 360,
+    "each_pad_results": {
+      "F.Cu": {"separated_contact_runs": 4, "samples_on_fill": 68},
+      "In1.Cu": {"separated_contact_runs": 4, "samples_on_fill": 68},
+      "In2.Cu": {"separated_contact_runs": 0, "samples_on_fill": 0},
+      "B.Cu": {"separated_contact_runs": 4, "samples_on_fill": 68}
+    },
+    "limits": "Confirms current native fill geometry only; solderability and physical hole fill remain unqualified"
+  },
+  "redesign_options": {
+    "status": "Calculations only; no candidate changed or qualified",
+    "columns": [
+      "hole_mm",
+      "land_mm",
+      "min_finished_hole_mm",
+      "conditional_sharp_size_only_allowance_mm",
+      "nominal_annulus_mm",
+      "nominal_adjacent_land_gap_mm",
+      "s8_with_existing_fill_mm",
+      "illustrative_annulus_with_max_finished_and_0p075_eccentricity_mm"
+    ],
+    "rows": [
+      [1.3, 1.9, 1.22, -0.0419429464, 0.3, 1.6, 1.1025015762, 0.16],
+      [1.35, 1.9, 1.27, 0.0080570536, 0.275, 1.6, 1.0775015762, 0.135],
+      [1.35, 1.95, 1.27, 0.0080570536, 0.3, 1.55, 1.0775015762, 0.16],
+      [1.4, 1.9, 1.32, 0.0580570536, 0.25, 1.6, 1.0525015762, 0.11],
+      [1.4, 2.0, 1.32, 0.0580570536, 0.3, 1.5, 1.0525015762, 0.16],
+      [1.5, 2.0, 1.42, 0.1580570536, 0.25, 1.5, 1.0025015762, 0.11]
+    ],
+    "limits": [
+      "Size-only allowance does not close position, pitch, pin-form or assembly allowance.",
+      "Illustrative annulus excludes etch, registration and outer barrel details; not a fabricator-approved guarantee.",
+      "Larger lands alter native copper and soldermask clearances and require refill.",
+      "S-8 must be reallocated and checked; unchanged-fill examples are not proposed production geometry.",
+      "Thermal topology and solder-volume/process consequences require renewed validation."
+    ]
+  },
+  "concrete_disposition": {
+    "retain_current_cad_candidate": true,
+    "approve_specific_drill_enlargement": false,
+    "required_closure": [
+      "Keep R15-BOM-02 Minor in owner/assembler qualification records.",
+      "Replace unbounded conservative-hole wording with nominal values and conditional limits.",
+      "Obtain exact maximum insertion profile, relative pin pattern/form limits and approved seating or forming method.",
+      "Agree finished-hole bounds, relative pattern error, annulus and protected barrel-to-inner-copper realization with fabricator.",
+      "Validate exact variants and all 23 contacts for seating, undamaged barrels/plating and solder fill on first articles.",
+      "Complete existing harness, staking and retention qualification."
+    ],
+    "if_allocation_fails": [
+      "Revise generated holes and lands together.",
+      "Adjust protected inner copper where required by the accepted fabrication allocation.",
+      "Preserve pitch, roles, orientation and footprint compatibility unless separately reviewed.",
+      "Run covered native DRC, S-8, fill, thermal, fab and reproducibility validation."
+    ]
+  },
+  "closed_or_rejected_candidates": [
+    {
+      "candidate": "Critical or Major actual insertion failure from 1.261943 mm versus 1.22 mm",
+      "verdict": "Rejected as demonstrated failure; retain Minor allocation gap",
+      "reason": "Requires unverified independent metal dimensional extremes and sharp insertion-section corners; actual pattern/form/compliance and maker fit allocation are absent."
+    },
+    {
+      "candidate": "Maker nominal recommendation alone guarantees current holes",
+      "verdict": "Rejected",
+      "reason": "Recommendation does not define the combined finished-hole, relative pattern and actual pin-envelope process stack."
+    },
+    {
+      "candidate": "Automatically enlarge all holes to 1.40 mm",
+      "verdict": "Rejected as qualified correction",
+      "reason": "Only size allowance improves; annulus and S-8 margins decrease, while pattern/form and solder process remain unclosed."
+    },
+    {
+      "candidate": "Native S-8 failure on frozen PCB",
+      "verdict": "Rejected",
+      "reason": "Focused native rule passes; independent minimum is 1.102501576 mm. Fabrication-corner illustration remains a process-allocation limit."
+    }
+  ],
+  "checks_actually_executed": [
+    {
+      "check": "Read AGENTS, requirements, current owner amendments, current assembly records and newest R10 decisions",
+      "result": "Completed"
+    },
+    {
+      "check": "Hash frozen native PCB before inspection",
+      "result": "Matches target SHA-256 and 2257812 bytes"
+    },
+    {
+      "check": "KiCad 10.0.7 read-only native pad/field inventory",
+      "result": "All seven identities and all 23 pad geometries/nets inspected"
+    },
+    {
+      "check": "Fresh urllib retrieval of exact current T0-1 PDF",
+      "result": "381230 bytes; current hash equals named static cache"
+    },
+    {
+      "check": "pdftoppm full-page render through stdin/stdout",
+      "result": "Exit zero; fresh complete drawing visually inspected; no file written"
+    },
+    {
+      "check": "Live primary JLC capabilities and official GB/T record",
+      "result": "Read; current position tolerance is 0.075 mm and combined allocation remains undefined"
+    },
+    {
+      "check": "Native copper_nodes, shape distance search and focused check_r10.s8",
+      "result": "Exit zero; 2943 copper nodes, four protected barrels, zero S-8 issues"
+    },
+    {
+      "check": "Independent point-to-native-polygon-segment distance",
+      "result": "Exit zero; governing S-8 distance 1.1025015761924428 mm"
+    },
+    {
+      "check": "Five GND contacts, 360 angular samples at 1.075 mm radius on each layer",
+      "result": "Exit zero; each has four separated contacts on F/In1/B and none on In2"
+    },
+    {
+      "check": "Independent diagonal, hole/land, annulus and unchanged-fill option calculations",
+      "result": "Exit zero; results recorded above"
+    },
+    {
+      "check": "Final native PCB and input hashes",
+      "result": "PCB unchanged; final input hashes recorded"
+    }
+  ],
+  "probe_failures_and_limits": [
+    "Early native API prototypes failed on unavailable GetProperties, UTF8 JSON serialization and optional thermal values. Corrected final read-only scripts exited zero.",
+    "Native API emitted a wx traits initialization diagnostic; final geometry operations completed. Attempted wx initialization lacked display access and was not retried.",
+    "One search referenced nonexistent r10_design/parts.py; actual native PCB, exact library lands and parts_qualification were subsequently inspected.",
+    "Web screenshot of supplier-hosted PDF had a cache miss; complete PDF was subsequently freshly fetched, hash-checked and rendered in memory.",
+    "Historical alternate maker PDF fetch returned HTTP 403 and was not used as current dimensional proof.",
+    "Direct supplier product-page opens were inaccessible through web; no live identity or stock assertion is based on those opens.",
+    "No physical insertion, force, solder, harness, retention or flight measurement was executed.",
+    "No full build, full DRC or whole-board acceptance claim is made."
+  ],
+  "input_sha256": {
+    "AGENTS.md": "7fb5d302b19aaa974a3019683077665b198b6bd8ea6e09c5f8eedabad72d80d3",
+    "docs/REQUIREMENTS.md": "bee999b80843d4e0f74248dbff596fbbddbe98643803e9401788789394043d59",
+    "docs/ORDERING.md": "2b29a562d6af2083674ee906289fdb8f633a99e7b887070a5d2d04596a3284fb",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "5f4893cde7faeb4dfbc96948eaed5873229491d2b4e2e27dc7d30da6861b1d14",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md": "ed83868a4054ec043b07d9d244dd2b1cbcf21d8ace83fcd16bf45bb7a6a56b6f",
+    "m3_design/assembly_review/m3.kicad_pcb": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+    "m3_design/assembly_review/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+    "tools/check_r10.py": "8ae9b668aeeefa9d7d6301faaff09d45c1045bb1e0286f3fad45023ef7cf9fb3",
+    "tools/check_r8.py": "aa83d56398de1d0f39f4ce6de7e6b20e0ab27cf289db5ccf3ad7c3eb13dc6d51",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_2P_GN.kicad_mod": "e7cd78cfa9f62841ec4d2035c56b2e679a08eb3d41b3d1a9cbc116b0b5eb2317",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_2P_BK.kicad_mod": "7cb3c1e4e590fab8abe7ea0191aace6c4078952205f14214880b3c8df8135dd0",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_4P_GN.kicad_mod": "747446dd144e6eaeefc8268d60e286510cf72af60f2268e2f405fc192874439b",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_5P_GN.kicad_mod": "ca2aada63759dc14a4f130b89c3f264a28159c535bf0f4e5967a952782c07b5b",
+    "m3_design/assembly_review/sources/r10_review/round15_parts.md": "c4ae42f6dcdf2c30b956197da3d1cab76e48a387f44262153280e2004975e02c",
+    "m3_design/assembly_review/sources/r10_review/round15_parts.json": "097f888298ae696c9806d443ca7ea1094e59007cdbef4106ed20ecc60ce1a2e1"
+  },
+  "residual_risks": [
+    "Actual insertion profile and relative pin-pattern limits",
+    "Fab hole/registration/outer-barrel correlation",
+    "Insertion force, seating and solderability",
+    "Wire, ferrule and screwdriver access",
+    "Harness support, staking and vibration retention",
+    "Whole-board physical, electrical, firmware and flight qualification"
+  ],
+  "stopped_after_final_hashes": true
+}

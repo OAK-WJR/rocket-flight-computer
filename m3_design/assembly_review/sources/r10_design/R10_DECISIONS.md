@@ -2266,3 +2266,106 @@ those lines as evidence. Preserve that method limit and use exact CLI pointer
 lookup in fresh rounds. No historical total or independence claim is rewritten.
 All changes require integrated check0; firmware/bench/physical and owner process
 qualification stay open. AGENTS section2 is unchanged.
+
+## D-R15-01. Shorten fixed-anchor routes and escape IMU grounds outward
+
+Full round15 reviewed committed789f4d5/PCB7866d6b8 with all1909 tracked files
+frozen:0Critical/0Major/14consolidated Minor groups from20raw observations.
+Adopt the fifteen exact fixed-anchor windows in round15_routing through the
+R10 generators, preserving pads,part poses,widths,layers and vias. The combined
+copy passes genuine DRC,reference,region and routing checks. It saves10.008727mm
+and eight segments, but has140 information annotations versus139 and six
+noncritical hygiene leftovers versus eight. Those counters are review evidence,
+not an optimization objective or proof of globally shortest routing. Window1's
+source-family label is corrected by root: its GND producer is pyro,not core;
+the original report remains immutable. Preserve its rejected branch-bypass
+sketch,copy-writer/probe failures and stated search limits.
+
+[ST TN1383 Rev1 pp7–9](https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf)
+recommends component-side escapes outside the MEMS package to reduce stress.
+Replace U4's two shared pad-row GND straps with individual outward escapes,
+joining only at the existing GND vias(19.6,45.9)/(16.75,47.6),outside the nominal
+body. Each escape follows its pad axis,then45degrees to its via. The initial
+rectangular joins produced four blocking tiny jogs in the ground-stage gate;
+reject that version and retain the actual routing rule. Keep all lands and the
+B180 pose. The revised source deliberately adds1.544214mm/two GND segments;
+it removes the under-body joins instead of trading sensor guidance for the
+shortest GND trace. The source-only exact multiset is951segments/296vias,net
+saving8.464513mm/six segments. Qualify the generated
+result with native DRC,reference,region,fill and complete gates. Neither this
+local correction nor M-7's narrower checks establishes complete TN1383 process
+compliance or measured bias/thermal/vibration performance.
+
+Refresh actual native budget,hot-plug,fab and record-only firmware provenance,
+rebuild twice and check0. Because copper changes,fresh full rounds16/17 on the
+committed result must earn the final same-board pair; earlier pairs do not
+transfer. AGENTS section2 is byte-identical.
+
+## D-R15-02. Retain bounded VCAP and terminal process qualifications
+
+Fresh independent verifiers retain R15-MCU-01/R15-BOM-02 as Minor qualification
+gaps,with no demonstrated required-limit failure. Their complete read-only
+authored reports are round15_vcap_verification and round15_terminal_verification;
+the authorized scribe persists the supplied bodies verbatim. Keep their actual
+native-interpreter and primary-source scopes separate from the production build.
+
+C19/C20 remain Samsung CL10A225KO8NNNC/C23630. Nominal2.2uF±10% meets nominal
+selection. [ST DS12110 Rev11 Table114 p211](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf)
+states2.2uF±20% and ESR<0.1ohm without resolving the relevant test conditions.
+The numerical1.76–2.64uF interpretation remains to be closed for actual regulator
+modes. Multiplying separate typical Samsung temperature/bias curves and initial
+tolerance gives1.716525uF at70C/1V; it is an Inference,not a guaranteed joint
+corner. The maker's biased-temperature example shows those factors need not
+separate; AC amplitude,process and aging also matter. Obtain supported combined
+bounds or qualify actual fitted parts,regulator modes,local temperature,aging,
+both capacitance limits,ESR and startup/load transients. No larger nominal part
+is prequalified:3.3uF±10% already exceeds2.64uF nominally. Retention is bounded
+to the unqualified CAD candidate,not a regulator-stability claim.
+
+Keep all23 DB125 contacts at nominal1.30mm holes/1.90mm lands. The maker's
+0.50x0.85mm nominal section and1.20mm recommended hole do not close insertion
+at all process corners. An independent sharp0.70x1.05mm envelope has diagonal
+1.261943mm versus1.22mm minimum finished hole under JLC's stated−0.08mm bound.
+The drawing's general-tolerance reference concerns moulded plastics; its metal
+pin applicability,corner/form and relative pattern limits need clarification.
+This is not a demonstrated insertion failure. Native S-8 minimum1.102501576mm
+is nominal CAD: finished diameter,position,registration and outer barrel need a
+fabricator allocation. Enlarging drills alone reduces annulus and S-8 reserve
+without closing pattern/form/solder constraints. Obtain maker/assembler profile
+and process allocation; validate all contacts on first articles. Revise generated
+drills/lands and protected inner copper only if that allocation requires it,
+with covered DRC/S-8/fill/thermal/fab/reproducibility checks. Primary sources and
+bounded options are in the fresh verifier and parts_qualification records.
+
+## D-R15-03. Bind BOM identity, model bounds and fill geometry; correct records
+
+Extend S-4's existing production BOM walk to each native fitted part's LCSC,
+canonical MPN and footprint. A correct population/quantity is insufficient when
+R134's row can name R166's0.36ohm order identity. Preserve valid merged rows and
+quantity-free CPL semantics. Add C84's reviewed normalized conservative model
+envelope to the existing model guard; retain equivalent-unit positives. Compare
+saved/refilled zone geometry using symmetric difference with the existing
+0.01mm2 tolerance rather than area alone. Complete test copies retain their
+project/rules. Native6 unchanged baseline difference is zero; native7's small
+refill difference remains below that same tolerance. No interpreter migration,
+fake CLI,actual rule relaxation or prior whole-gate escape is claimed. Genuine
+old-fault/new-reject and valid native controls belong to round15_gate_fix.
+
+Correct active decision/round/ledger pointers and completed integration states;
+do not leave a perpetual precommit status merely to avoid a self-referential
+commit hash. Bind current geometry by full PCB SHA and record known immutable
+review targets separately. Preserve every earlier review/supplier execution at
+its own source hash. Correct C431's current modeled h4 gap to0.270913mm.
+Pack UVLO4.778382V is the25C resistor corner; ±100ppm/K gives4.811062V at70C
+resistor temperature (the same absolute excursion at−20C). The125C4.851401V
+sensitivity is outside the bay assumption; gradients,leakage,contact bounce and
+transients remain unqualified. This changes no circuit or firmware threshold.
+
+The exact82-code public supplier snapshot2026-10-30T13:13:17.644478 through
+13:13:48.643735UTC gives79.5232USD placed/feeder share and81.3254USD including
+minimum purchases,before fixed/process/PCB/shipping. U9 is123available/minimum1;
+R43017<3610 and U4zero<5 remain stock blockers. Rebind original responses without
+requery or a new supplier timestamp. Full quote,process and owner cost/deviation
+acceptance remain pending; no order. Firmware,physical,thermal/transient,
+harness/retention and first-article qualification remain open. AGENTS section2
+is unchanged.

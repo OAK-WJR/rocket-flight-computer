@@ -1,0 +1,2723 @@
+{
+  "schema": 1,
+  "lens": "Round15 lens4 parts/BOM/lands/supplier/orientation",
+  "target_commit": "789f4d516251991bdf1518254d537ff7b41f65bb",
+  "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "prepared_utc": "2026-10-30T13:27:28.726024+00:00",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "findings": [
+    {
+      "id": "R15-BOM-01",
+      "severity": "Minor",
+      "status": "carried",
+      "active": true,
+      "prior_ids": [
+        "R12-BOM-01",
+        "R13-BOM-01"
+      ],
+      "title": "L400 retains the maker-land heel compromise",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "reference": "L400",
+          "side": "F",
+          "coordinate_mm": [
+            24.2,
+            5.55
+          ],
+          "measured": "Two 1.8x2.5mm lands at local x+/-2.35mm: inner edges+/-1.45mm, outer span6.50mm."
+        },
+        {
+          "source_url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+          "maker_page": "SRP5030T p1, Recommended Layout/Product Dimensions; no revision printed on inspected page",
+          "measured": "Maker recommendation2.0x1.8mm at+/-2.25mm. With body5.7+/-0.3 and terminal length1.1+/-0.3, an independent permitted corner has heel=5.4/2-1.4=1.30mm; native land begins1.45mm, leaving0.15mm possible heel strip."
+        }
+      ],
+      "reason": "Nominal termination contact remains covered; neither an open joint nor inadequate retention/current was demonstrated. This is a retained land/assembly qualification deviation, not a failed required function.",
+      "concrete_fix": "Qualify actual maximum-tolerance solder/heel coverage and retention with the assembler, or adopt the maker land in a separately covered generator revision and rerun the affected power/routing/fab checks."
+    },
+    {
+      "id": "R15-BOM-02",
+      "severity": "Minor",
+      "status": "new",
+      "active": true,
+      "title": "DB125 insertion-fit tolerance budget is not established by the nominal1.30mm hole",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "references": [
+            "J1",
+            "J121",
+            "J400",
+            "J9",
+            "J410",
+            "J420",
+            "J122"
+          ],
+          "coordinate_mm": [
+            [
+              7.4,
+              75.85
+            ],
+            [
+              7.4,
+              55.85
+            ],
+            [
+              7.4,
+              65.85
+            ],
+            [
+              38.6,
+              47.5
+            ],
+            [
+              38.6,
+              15.5
+            ],
+            [
+              38.6,
+              31.5
+            ],
+            [
+              38.6,
+              71.5
+            ]
+          ],
+          "measured": "All23 contacts:1.30mm native drill,1.90mm copper diameter,3.50mm pitch."
+        },
+        {
+          "source_url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+          "maker_page": "DORABO T0-1 sheet1/1,2022-11-26: pin dimensions and general tolerance table",
+          "measured": "Pin0.50x0.85mm, general untoleranced linear dimensions through6mm +/-0.20mm. A sharp-rectangle maximum is0.70x1.05mm, circumscribed diameter1.261942946mm. Maker separately recommends nominal1.20mm PCB holes."
+        },
+        {
+          "source_url": "https://jlcpcb.com/capabilities/pcb-capabilities",
+          "maker_page": "JLCPCB Drilling / Hole size Tolerance, accessed2026-10-30",
+          "measured": "Standard finished through-hole tolerance+0.13/-0.08mm permits1.22mm from1.30mm nominal. Sharp-corner size-only allowance1.22-1.261942946=-0.041942946mm before position/pitch allowance."
+        }
+      ],
+      "reason": "This is an explicit worst-corner insertion-budget gap. The calculation assumes independent general tolerances and rectangular sharp corners; actual corner radii, pin stamping tolerances, lead compliance and seating are unmeasured. The maker1.20mm recommendation also prevents treating this envelope calculation alone as proof of an insertion failure. No Major/function failure is established.",
+      "concrete_fix": "Obtain an authoritative maximum circumscribed pin/pitch specification and assembler finished-hole/position allocation; record positive insertion clearance. If the current drill cannot meet that allocation, revise the generated terminal drills/lands under a covered CAD change while preserving annulus,1.5mm copper gap and all neighbouring clearances. Carry this specific fit check into first article."
+    }
+  ],
+  "checks_actually_executed": [
+    {
+      "check": "Fresh native board/XML/BOM/CPL inventory",
+      "result": "pass",
+      "footprints": 209,
+      "fitted_parts": 199,
+      "bom_codes": 82,
+      "bom_refs": 199,
+      "cpl_rows": 199,
+      "numbered_physical_pads": 663,
+      "unique_reference_pin_mappings": 651,
+      "xml_nodes": 651,
+      "mismatches": 0,
+      "scope": "Every fitted canonical LCSC/Manufacturer/Manufacturer Part field compared to XML; every BOM identity, positive Qty/member set, CPL member, and all native numbered pad nets checked. Combined same-code Comment strings treated as a semicolon-separated value set."
+    },
+    {
+      "check": "All fitted native/library pad geometry",
+      "result": "pass",
+      "parts": 199,
+      "distinct_lands": 44,
+      "mismatches": 0,
+      "scope": "Normalized local pad numbers,centres,sizes,drills,shape and roundrect ratio; bottom y mirror removed. Physical copper custom polygons additionally inspected on AONR maker land."
+    },
+    {
+      "check": "Read-only metadata audit",
+      "result": "pass",
+      "conflicting_part_fields": 0,
+      "missing_fitted_identity": 0,
+      "missing_models": 0,
+      "absolute_model_paths": 0,
+      "missing_courtyards": 0
+    },
+    {
+      "check": "Fresh supplier correction generation to ignored file and CPL verification",
+      "result": "pass",
+      "reconstructed_top": 66,
+      "reconstructed_bottom": 121,
+      "placement_only_nonpolar_resistors": 12,
+      "maximum_residual_mm": 0.491,
+      "errors": 0,
+      "scope": "No factory-placement-preview or assembled orientation qualification. Eight numbered AONR fingers checked with fixed body origin; EP anchor excluded from its fit.",
+      "fresh_and_canonical_corrections_identical": true
+    },
+    {
+      "check": "Native fit API/checker with explicit ignored report",
+      "result": "pass",
+      "terminal_wire_room_min_mm": 5.003011866,
+      "terminal_body_bore_margin_mm": 2.976268386,
+      "terminal_tail_count": 23,
+      "terminal_tail_min_bore_mm": 7.558359,
+      "sd_closed_bore_mm": 15.210798,
+      "scope": "CAD envelopes only. No screwdriver,open hinge,wire/ferrule,staking,loaded sled or physical fit test."
+    },
+    {
+      "check": "r10_parts.py --check on exact board",
+      "result": "pass",
+      "local_generated_lands": 9,
+      "budget_current": true,
+      "scope": "Read-only deterministic source/native-budget comparison, not a full build or electrical measurement."
+    },
+    {
+      "check": "Primary-maker pages/drawings",
+      "result": "reviewed",
+      "scope": "Full relevant DB125,Molex,AONR land and Bourns p1 drawings raster-inspected; exact cached PDF versions identified. Other maker pin/package/passive-family data inspected as scoped in source inventory. Live ST Rev11 supersedes cached Rev8; Winbond current product metadata checked, current2025 PDF was not retrievable."
+    },
+    {
+      "check": "Fresh bounded public supplier query",
+      "result": "all82 exact identities matched",
+      "requests": 82,
+      "max_concurrency": 3,
+      "retries_used": 0,
+      "start_utc": "2026-10-30T13:13:17.644478+00:00",
+      "end_utc": "2026-10-30T13:13:48.643735+00:00",
+      "raw_snapshot_sha256": "4744889e218f852e2395e5efe0d6f9a3b1901bd8fbdfb594b52f864c58f841c3",
+      "scope": "Exact public JLC code objects; no account/order/reservation/write action. Raw objects,times and hashes remain ignored."
+    }
+  ],
+  "fresh_supplier_summary": {
+    "start_utc": "2026-10-30T13:13:17.644478+00:00",
+    "end_utc": "2026-10-30T13:13:48.643735+00:00",
+    "mpn_mismatch": [],
+    "short": [
+      [
+        "C185349",
+        "R430",
+        17,
+        5,
+        3610,
+        3610
+      ],
+      [
+        "C26633007",
+        "U4",
+        0,
+        5,
+        1,
+        5
+      ]
+    ],
+    "thin": [],
+    "codes": 82,
+    "base": 36,
+    "extended": 46,
+    "placed_parts_usd": 54.431200000000004,
+    "feeders_usd": 25.092000000000002,
+    "placed_plus_feeders_usd": 79.5232,
+    "minimum_parts_usd": 56.2334,
+    "minimum_plus_feeders_usd": 81.3254
+  },
+  "fitted_code_inventory": [
+    {
+      "code": "C11702",
+      "refs": [
+        "R105",
+        "R122",
+        "R127",
+        "R9"
+      ],
+      "qty_per_board": 4,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0402WGF1001TCE",
+      "land": "R0402",
+      "supplier_mpn": "0402WGF1001TCE",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 21630336,
+      "min_purchase": 1,
+      "order_qty_5_boards": 20,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0013,
+      "unit_usd_at_order_quantity": 0.0013,
+      "raw_response_sha256": "a862794ec53c3dd09cd797a2a600fcf359e8da5e15de027aad1683238e0197fa"
+    },
+    {
+      "code": "C12891",
+      "refs": [
+        "C89",
+        "C95"
+      ],
+      "qty_per_board": 2,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL31A226KAHNNNE",
+      "land": "C_1206_3216Metric",
+      "supplier_mpn": "CL31A226KAHNNNE",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 1780321,
+      "min_purchase": 1,
+      "order_qty_5_boards": 10,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.1161,
+      "unit_usd_at_order_quantity": 0.1161,
+      "raw_response_sha256": "549d08195be0116fc21b352948afe2fd4ddc2c2bb9a78c13112162d634094615"
+    },
+    {
+      "code": "C1329837",
+      "refs": [
+        "L400"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Bourns",
+      "mpn": "SRP5030T-6R8M",
+      "land": "M3_SRP5030TA",
+      "supplier_mpn": "SRP5030T-6R8M",
+      "supplier_maker": "BOURNS",
+      "identity_match": true,
+      "stock": 1541,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 1.4373,
+      "unit_usd_at_order_quantity": 1.4373,
+      "raw_response_sha256": "a7dfc35f732f6568249dc7add035219112ebb2e21dcd2fdfab74ac7d679c609e"
+    },
+    {
+      "code": "C13585",
+      "refs": [
+        "C80",
+        "C96"
+      ],
+      "qty_per_board": 2,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL31A106KBHNNNE",
+      "land": "C_1206_3216Metric",
+      "supplier_mpn": "CL31A106KBHNNNE",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 3135453,
+      "min_purchase": 1,
+      "order_qty_5_boards": 10,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.2431,
+      "unit_usd_at_order_quantity": 0.2431,
+      "raw_response_sha256": "0854d6a02cb7dbd78f6c74ea9dba6da04c86a611ef1e876f78d7f5b394997fb6"
+    },
+    {
+      "code": "C13612",
+      "refs": [
+        "D121"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "SEMTECH",
+      "mpn": "SRV05-4.TCT",
+      "land": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+      "supplier_mpn": "SRV05-4.TCT",
+      "supplier_maker": "SEMTECH",
+      "identity_match": true,
+      "stock": 97670,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.1629,
+      "unit_usd_at_order_quantity": 0.1629,
+      "raw_response_sha256": "a461ef0c5b6003147d6bdcc6d05f6d8094b9ad82a2f10646a56e2152b347ff4a"
+    },
+    {
+      "code": "C137691",
+      "refs": [
+        "R85"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Yageo",
+      "mpn": "RC0603FR-0766K5L",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "RC0603FR-0766K5L",
+      "supplier_maker": "YAGEO",
+      "identity_match": true,
+      "stock": 17902,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0032,
+      "unit_usd_at_order_quantity": 0.0032,
+      "raw_response_sha256": "0530728a0744c9c5f9cc57b5d3814074511ca2902088a5cd128df0c75a231369"
+    },
+    {
+      "code": "C14663",
+      "refs": [
+        "C402",
+        "C410",
+        "C420",
+        "C430",
+        "C460",
+        "C83",
+        "C90",
+        "C93"
+      ],
+      "qty_per_board": 8,
+      "manufacturer": "YAGEO",
+      "mpn": "CC0603KRX7R9BB104",
+      "land": "C_0603_1608Metric",
+      "supplier_mpn": "CC0603KRX7R9BB104",
+      "supplier_maker": "YAGEO",
+      "identity_match": true,
+      "stock": 37424767,
+      "min_purchase": 1,
+      "order_qty_5_boards": 40,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0086,
+      "unit_usd_at_order_quantity": 0.0086,
+      "raw_response_sha256": "728021d129a2f248a131799ac4ac85a73fbdcd0c28e2b2ee3eb68fd457df25a0"
+    },
+    {
+      "code": "C14675",
+      "refs": [
+        "R431"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "YAGEO",
+      "mpn": "RC0603FR-07100KL",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "RC0603FR-07100KL",
+      "supplier_maker": "YAGEO",
+      "identity_match": true,
+      "stock": 8742298,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0022,
+      "unit_usd_at_order_quantity": 0.0022,
+      "raw_response_sha256": "172e5c939bde674a1bc99f3c34c7a0ab6c0d3bf357dc393c803366ae8301b690"
+    },
+    {
+      "code": "C15195",
+      "refs": [
+        "C408"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL05B103KB5NNNC",
+      "land": "C0402",
+      "supplier_mpn": "CL05B103KB5NNNC",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 6137252,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0039,
+      "unit_usd_at_order_quantity": 0.0039,
+      "raw_response_sha256": "dd5ba3d70e5435fd75429af6fac954880faa386b03dc31dd2d14d4ce0eed473e"
+    },
+    {
+      "code": "C15639",
+      "refs": [
+        "U5"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "TE Connectivity",
+      "mpn": "MS561101BA03-50",
+      "land": "SENSORS-SMD_MS5611-01BA03",
+      "supplier_mpn": "MS561101BA03-50",
+      "supplier_maker": "TE Connectivity",
+      "identity_match": true,
+      "stock": 1970,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 6.4912,
+      "unit_usd_at_order_quantity": 6.4912,
+      "raw_response_sha256": "cfadbe9ffee2317b088acd34251209ad0bf4f4f25749ca8bf6df6f00ef9327ea"
+    },
+    {
+      "code": "C15849",
+      "refs": [
+        "C22"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL10A105KB8NNNC",
+      "land": "C0603",
+      "supplier_mpn": "CL10A105KB8NNNC",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 12319655,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0139,
+      "unit_usd_at_order_quantity": 0.0139,
+      "raw_response_sha256": "ff135a921cc605a055630249768f7cd1a07adc39c7a1bcbf947846dbce905dad"
+    },
+    {
+      "code": "C161115",
+      "refs": [
+        "C128"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Murata",
+      "mpn": "GCJ188R71H104KA12D",
+      "land": "C_0603_1608Metric",
+      "supplier_mpn": "GCJ188R71H104KA12D",
+      "supplier_maker": "Murata Electronics",
+      "identity_match": true,
+      "stock": 38233,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0554,
+      "unit_usd_at_order_quantity": 0.0554,
+      "raw_response_sha256": "446cd306294f74e6f03eb6b071eb17152d479ca4293eb597921f354f44219154"
+    },
+    {
+      "code": "C1623",
+      "refs": [
+        "C85"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL10B474KA8NNNC",
+      "land": "C_0603_1608Metric",
+      "supplier_mpn": "CL10B474KA8NNNC",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 682460,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.013,
+      "unit_usd_at_order_quantity": 0.013,
+      "raw_response_sha256": "e89f5fdd99d84951f87b4fb76a1c5aa42faa26e628ec6e89e741203a9ff500f6"
+    },
+    {
+      "code": "C164170",
+      "refs": [
+        "J430"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "MOLEX",
+      "mpn": "472192001",
+      "land": "M3_MICROSD_MOLEX_472192001",
+      "supplier_mpn": "472192001",
+      "supplier_maker": "MOLEX",
+      "identity_match": true,
+      "stock": 8664,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.7293,
+      "unit_usd_at_order_quantity": 0.7293,
+      "raw_response_sha256": "7d9745f6499537af068ada71b4bb4785860b4319f8c34d729ba440c3684d7c3e"
+    },
+    {
+      "code": "C165948",
+      "refs": [
+        "J3"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Korean Hroparts Elec",
+      "mpn": "TYPE-C-31-M-12",
+      "land": "USB-C_SMD-TYPE-C-31-M-12_1",
+      "supplier_mpn": "TYPE-C-31-M-12",
+      "supplier_maker": "Korean Hroparts Elec",
+      "identity_match": true,
+      "stock": 284166,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.1872,
+      "unit_usd_at_order_quantity": 0.1872,
+      "raw_response_sha256": "8b7ffa6a69ce5fe284d33339c0176673fdf7577c0cdb3fa6de22eedc5d9b5776"
+    },
+    {
+      "code": "C168925",
+      "refs": [
+        "R166"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "25121WF360LT4E",
+      "land": "M3_R2512_UR",
+      "supplier_mpn": "25121WF360LT4E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 1579,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0386,
+      "unit_usd_at_order_quantity": 0.0386,
+      "raw_response_sha256": "61ef6f663ded4bd85f2e4c2c205bee800950dcaed4a2386f3ee01123623fd53a"
+    },
+    {
+      "code": "C17513",
+      "refs": [
+        "R162"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0805W8F1001T5E",
+      "land": "R0805",
+      "supplier_mpn": "0805W8F1001T5E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 42193072,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0035,
+      "unit_usd_at_order_quantity": 0.0035,
+      "raw_response_sha256": "76873012cd28fdfe0aac18d3051157959020e51e995a5df3fa3f706e8902b811"
+    },
+    {
+      "code": "C17557",
+      "refs": [
+        "R126",
+        "R32",
+        "R33"
+      ],
+      "qty_per_board": 3,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0805W8F2200T5E",
+      "land": "R0805",
+      "supplier_mpn": "0805W8F2200T5E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 600085,
+      "min_purchase": 1,
+      "order_qty_5_boards": 15,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0046,
+      "unit_usd_at_order_quantity": 0.0046,
+      "raw_response_sha256": "1a29f83da3b0cd151bd9d14202fdef85f8af2f6bcd2415b0c9c007c963a7e9a7"
+    },
+    {
+      "code": "C1848",
+      "refs": [
+        "C91"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL31B105KBHNNNE",
+      "land": "C_1206_3216Metric",
+      "supplier_mpn": "CL31B105KBHNNNE",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 772658,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0622,
+      "unit_usd_at_order_quantity": 0.0622,
+      "raw_response_sha256": "aa24b636bec0b513e3ce2267c8a9d7a40b2b01cd29bcb5ce31db5c967936f0ac"
+    },
+    {
+      "code": "C185349",
+      "refs": [
+        "R430"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "YAGEO",
+      "mpn": "RC0603FR-0722K6L",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "RC0603FR-0722K6L",
+      "supplier_maker": "YAGEO",
+      "identity_match": true,
+      "stock": 17,
+      "min_purchase": 3610,
+      "order_qty_5_boards": 3610,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0028,
+      "unit_usd_at_order_quantity": 0.0025,
+      "raw_response_sha256": "b2c9ded8977c50bbae6db01e3e44e11efc1e1b2c237683712042497f3b831983"
+    },
+    {
+      "code": "C191023",
+      "refs": [
+        "D123"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Guangdong Hottech",
+      "mpn": "1N5819WS",
+      "land": "SOD-323_L1.8-W1.3-LS2.5-RD",
+      "supplier_mpn": "1N5819WS",
+      "supplier_maker": "Guangdong Hottech",
+      "identity_match": true,
+      "stock": 3591771,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0124,
+      "unit_usd_at_order_quantity": 0.0124,
+      "raw_response_sha256": "aedb6833c768f22f6680e4c9266bf9bd0f908373880f3cc3b769395e87f1b0f3"
+    },
+    {
+      "code": "C19666",
+      "refs": [
+        "C23",
+        "C28",
+        "C92"
+      ],
+      "qty_per_board": 3,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL10A475KO8NNNC",
+      "land": "C0603",
+      "supplier_mpn": "CL10A475KO8NNNC",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 4249888,
+      "min_purchase": 1,
+      "order_qty_5_boards": 15,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0169,
+      "unit_usd_at_order_quantity": 0.0169,
+      "raw_response_sha256": "b781a09434473f8afe6c084b2d58a5ff3f93e8e999c5d349cb193d99771d5123"
+    },
+    {
+      "code": "C1985619",
+      "refs": [
+        "Y1"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "NDK",
+      "mpn": "NX3225GA-25.000M-STD-CRG-2",
+      "land": "CRYSTAL-SMD_4P-L3.2-W2.5-BL",
+      "supplier_mpn": "NX3225GA-25.000M-STD-CRG-2",
+      "supplier_maker": "NDK",
+      "identity_match": true,
+      "stock": 5139,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.3911,
+      "unit_usd_at_order_quantity": 0.3911,
+      "raw_response_sha256": "b98037b735571d70409777781a0652510c4b6c41b39f085cfe80a581e5c6f540"
+    },
+    {
+      "code": "C2071044",
+      "refs": [
+        "U400"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Diodes Incorporated",
+      "mpn": "AP63201WU-7",
+      "land": "M3_AP63200_TSOT26",
+      "supplier_mpn": "AP63201WU-7",
+      "supplier_maker": "Diodes Incorporated",
+      "identity_match": true,
+      "stock": 5773,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 1.2242,
+      "unit_usd_at_order_quantity": 1.2242,
+      "raw_response_sha256": "aa37c380f031b5d5f2dd04ce2984405b26c63a5d5637a0aacf9195786f198ce5"
+    },
+    {
+      "code": "C20917",
+      "refs": [
+        "Q122",
+        "Q123"
+      ],
+      "qty_per_board": 2,
+      "manufacturer": "Alpha & Omega Semicon",
+      "mpn": "AO3400A",
+      "land": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+      "supplier_mpn": "AO3400A",
+      "supplier_maker": "Alpha & Omega Semicon",
+      "identity_match": true,
+      "stock": 1067883,
+      "min_purchase": 1,
+      "order_qty_5_boards": 10,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.089,
+      "unit_usd_at_order_quantity": 0.089,
+      "raw_response_sha256": "42fdf396f24da215487d369bc3ba207168a068b080873221fa37353f3b18841d"
+    },
+    {
+      "code": "C21120",
+      "refs": [
+        "C126"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL10B224KA8NNNC",
+      "land": "C0603",
+      "supplier_mpn": "CL10B224KA8NNNC",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 1012532,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0093,
+      "unit_usd_at_order_quantity": 0.0093,
+      "raw_response_sha256": "db57ebd089df5205c34d6f446334180fed7f0fbadda7fb0bd82ab755cef08f88"
+    },
+    {
+      "code": "C21190",
+      "refs": [
+        "R100",
+        "R101",
+        "R103",
+        "R110",
+        "R150",
+        "R151",
+        "R152",
+        "R153",
+        "R440",
+        "R441",
+        "R450",
+        "R451"
+      ],
+      "qty_per_board": 12,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0603WAF1001T5E",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "0603WAF1001T5E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 31303858,
+      "min_purchase": 1,
+      "order_qty_5_boards": 60,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0017,
+      "unit_usd_at_order_quantity": 0.0017,
+      "raw_response_sha256": "8c89f98e558c68b3924e5044f2c9f18a89fae508f4f20762d1c51990c98ebb83"
+    },
+    {
+      "code": "C21397",
+      "refs": [
+        "C400",
+        "C401",
+        "C403",
+        "C404",
+        "C405",
+        "C406",
+        "C407",
+        "C411",
+        "C421",
+        "C431",
+        "C461",
+        "C82"
+      ],
+      "qty_per_board": 12,
+      "manufacturer": "Murata",
+      "mpn": "GRM32ER71E226KE15L",
+      "land": "M3_GRM32_1210",
+      "supplier_mpn": "GRM32ER71E226KE15L",
+      "supplier_maker": "Murata Electronics",
+      "identity_match": true,
+      "stock": 74654,
+      "min_purchase": 1,
+      "order_qty_5_boards": 60,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.2704,
+      "unit_usd_at_order_quantity": 0.2704,
+      "raw_response_sha256": "ba73ce58a5a1fb3fec6e3988f5933dae6dc8535689b275b01973bc861ede28e1"
+    },
+    {
+      "code": "C22939",
+      "refs": [
+        "R164"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0603WAF220KT5E",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "0603WAF220KT5E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 282672,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0034,
+      "unit_usd_at_order_quantity": 0.0034,
+      "raw_response_sha256": "b8e974209d5c7d962f84309d20cf6b500150b8992a88abbc76adf6ded4a15cba"
+    },
+    {
+      "code": "C2296",
+      "refs": [
+        "LED2"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Hubei KENTO Elec",
+      "mpn": "KT-0805Y",
+      "land": "M3_KT0805Y_A1",
+      "supplier_mpn": "KT-0805Y",
+      "supplier_maker": "Hubei KENTO Elec",
+      "identity_match": true,
+      "stock": 642208,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0147,
+      "unit_usd_at_order_quantity": 0.0147,
+      "raw_response_sha256": "b59e298f1b68d756a2fc1ad1f6814726dd69d7ca1608d8cbc855461edb99ba70"
+    },
+    {
+      "code": "C22975",
+      "refs": [
+        "R404"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "UNI-ROYAL",
+      "mpn": "0603WAF2001T5E",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "0603WAF2001T5E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 9829911,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0024,
+      "unit_usd_at_order_quantity": 0.0024,
+      "raw_response_sha256": "71520ed4c22d6437f7c6893ef3addeae22ca90b19f5aa04095f0a436c43baab6"
+    },
+    {
+      "code": "C22978",
+      "refs": [
+        "R92"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0603WAF3301T5E",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "0603WAF3301T5E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 5215785,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0022,
+      "unit_usd_at_order_quantity": 0.0022,
+      "raw_response_sha256": "6b9f1c086c598c47ecf3f36effbe05eb1ac748cb46a0392c64c72216134431ac"
+    },
+    {
+      "code": "C23024",
+      "refs": [
+        "R81"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0603WAF3003T5E",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "0603WAF3003T5E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 541740,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0038,
+      "unit_usd_at_order_quantity": 0.0038,
+      "raw_response_sha256": "f3064a1c79b7d2f6803cdd54edb60a4d925b02b64b5043be0168f63f4abdc820"
+    },
+    {
+      "code": "C23178",
+      "refs": [
+        "R165",
+        "R80"
+      ],
+      "qty_per_board": 2,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0603WAF4703T5E",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "0603WAF4703T5E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 1041977,
+      "min_purchase": 1,
+      "order_qty_5_boards": 10,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.003,
+      "unit_usd_at_order_quantity": 0.003,
+      "raw_response_sha256": "9ea9c1aa6a4cd845eef2e71e8be26e9f954d42a268aef77e99e8f213f632105e"
+    },
+    {
+      "code": "C23253",
+      "refs": [
+        "R405"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "UNI-ROYAL",
+      "mpn": "0603WAF8200T5E",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "0603WAF8200T5E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 804490,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0015,
+      "unit_usd_at_order_quantity": 0.0015,
+      "raw_response_sha256": "0370878f36e7847bdd3456675747709811513cca6266dce3c6b63e24f6dbed42"
+    },
+    {
+      "code": "C23630",
+      "refs": [
+        "C19",
+        "C20",
+        "C87"
+      ],
+      "qty_per_board": 3,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL10A225KO8NNNC",
+      "land": "C0603",
+      "supplier_mpn": "CL10A225KO8NNNC",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 2849920,
+      "min_purchase": 1,
+      "order_qty_5_boards": 15,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0119,
+      "unit_usd_at_order_quantity": 0.0119,
+      "raw_response_sha256": "8e27e6bb3bd0199b561cde49b5bd6844e5a02effe275d763d23eb16ea8161a3a"
+    },
+    {
+      "code": "C25741",
+      "refs": [
+        "R120",
+        "R123",
+        "R60"
+      ],
+      "qty_per_board": 3,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0402WGF1003TCE",
+      "land": "R0402",
+      "supplier_mpn": "0402WGF1003TCE",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 8391593,
+      "min_purchase": 1,
+      "order_qty_5_boards": 15,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0012,
+      "unit_usd_at_order_quantity": 0.0012,
+      "raw_response_sha256": "b91963ed6d302e7c3722f5edfb30ca2924901224c69c03af8d5b5ae88b1c743d"
+    },
+    {
+      "code": "C25744",
+      "refs": [
+        "R10",
+        "R104",
+        "R11",
+        "R121",
+        "R128",
+        "R131",
+        "R154",
+        "R155",
+        "R156",
+        "R157",
+        "R163",
+        "R432",
+        "R5",
+        "R61",
+        "R62",
+        "R63",
+        "R64"
+      ],
+      "qty_per_board": 17,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0402WGF1002TCE",
+      "land": "R0402",
+      "supplier_mpn": "0402WGF1002TCE",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 16861564,
+      "min_purchase": 1,
+      "order_qty_5_boards": 85,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0024,
+      "unit_usd_at_order_quantity": 0.0024,
+      "raw_response_sha256": "f2aff918e979a305a747b14c9f2c2ca759fd2baac568cc8610bd617244042136"
+    },
+    {
+      "code": "C25804",
+      "refs": [
+        "R102",
+        "R167",
+        "R460",
+        "R461",
+        "R462",
+        "R463",
+        "R464",
+        "R88",
+        "R89",
+        "R90",
+        "R91"
+      ],
+      "qty_per_board": 11,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0603WAF1002T5E",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "0603WAF1002T5E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 40333380,
+      "min_purchase": 1,
+      "order_qty_5_boards": 55,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0022,
+      "unit_usd_at_order_quantity": 0.0022,
+      "raw_response_sha256": "d4ee9dc020d430fd98eb4c4ae03d188a0f15911d2f5538f174982bc801cc938b"
+    },
+    {
+      "code": "C25819",
+      "refs": [
+        "R87"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0603WAF4702T5E",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "0603WAF4702T5E",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 3122680,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0019,
+      "unit_usd_at_order_quantity": 0.0019,
+      "raw_response_sha256": "edec2cc7abaf6e795c50f27db9f6d8f33461643588174c757b5d7427d0098793"
+    },
+    {
+      "code": "C25900",
+      "refs": [
+        "R12",
+        "R13"
+      ],
+      "qty_per_board": 2,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0402WGF4701TCE",
+      "land": "R0402",
+      "supplier_mpn": "0402WGF4701TCE",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 14875451,
+      "min_purchase": 1,
+      "order_qty_5_boards": 10,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.002,
+      "unit_usd_at_order_quantity": 0.002,
+      "raw_response_sha256": "6f0a770c3b90f031f7d24b64c3ad51fbe0943cf6f0ed23c5f03169fe4cf652ab"
+    },
+    {
+      "code": "C25905",
+      "refs": [
+        "R129",
+        "R132",
+        "R173",
+        "R175",
+        "R7",
+        "R8"
+      ],
+      "qty_per_board": 6,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0402WGF5101TCE",
+      "land": "R0402",
+      "supplier_mpn": "0402WGF5101TCE",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 3784669,
+      "min_purchase": 1,
+      "order_qty_5_boards": 30,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0023,
+      "unit_usd_at_order_quantity": 0.0023,
+      "raw_response_sha256": "ac0c2b1a623d3bc7a2ca25b526eb6c146b8b4de2036327b86e8c0020f57cc467"
+    },
+    {
+      "code": "C26633007",
+      "refs": [
+        "U4"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "STMicroelectronics",
+      "mpn": "LSM6DSV320XTR",
+      "land": "LGA-14_L3.0-W2.5-P0.50-TL",
+      "supplier_mpn": "LSM6DSV320XTR",
+      "supplier_maker": "STMicroelectronics",
+      "identity_match": true,
+      "stock": 0,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 9.2723,
+      "unit_usd_at_order_quantity": 9.2723,
+      "raw_response_sha256": "6b631aa41556f66e4514486a917e2f86a286d8c9755be364aa21d2f1555ddabc"
+    },
+    {
+      "code": "C2757925",
+      "refs": [
+        "J410",
+        "J420",
+        "J9"
+      ],
+      "qty_per_board": 3,
+      "manufacturer": "DORABO",
+      "mpn": "DB125-3.5-4P-GN-S",
+      "land": "M3_DB125_4P_GN",
+      "supplier_mpn": "DB125-3.5-4P-GN-S",
+      "supplier_maker": "DORABO",
+      "identity_match": true,
+      "stock": 37835,
+      "min_purchase": 1,
+      "order_qty_5_boards": 15,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.4025,
+      "unit_usd_at_order_quantity": 0.4025,
+      "raw_response_sha256": "b071426dcb5babe9c4c65fe04c4d49079efbcf64746f48a3b894625445b64f60"
+    },
+    {
+      "code": "C2878140",
+      "refs": [
+        "U401"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Texas Instruments",
+      "mpn": "TPS7A9101DSKR",
+      "land": "M3_TPS7A91_DSK10",
+      "supplier_mpn": "TPS7A9101DSKR",
+      "supplier_maker": "Texas Instruments",
+      "identity_match": true,
+      "stock": 5509,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.8047,
+      "unit_usd_at_order_quantity": 0.8047,
+      "raw_response_sha256": "6dacfaadf9ea2e84249d05e9414cbdcfe8f98dda27553856c7be0300d3cebecd"
+    },
+    {
+      "code": "C29936",
+      "refs": [
+        "C120",
+        "C86",
+        "C97",
+        "C98"
+      ],
+      "qty_per_board": 4,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL10B105KA8NNNC",
+      "land": "C_0603_1608Metric",
+      "supplier_mpn": "CL10B105KA8NNNC",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 647091,
+      "min_purchase": 1,
+      "order_qty_5_boards": 20,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0177,
+      "unit_usd_at_order_quantity": 0.0177,
+      "raw_response_sha256": "0052b06103e9ad0e8d2d9fb6ac2a466d9fce24032bf0664bcc31c7d5b7a76afa"
+    },
+    {
+      "code": "C3013496",
+      "refs": [
+        "R134"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Bourns",
+      "mpn": "CRM2512-FX-2R00ELF",
+      "land": "R2512",
+      "supplier_mpn": "CRM2512-FX-2R00ELF",
+      "supplier_maker": "BOURNS",
+      "identity_match": true,
+      "stock": 2222,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.5572,
+      "unit_usd_at_order_quantity": 0.5572,
+      "raw_response_sha256": "e31ae1e379d5cf8f711440e67a857494f733df4fd9796565d6f0090ff84fe3ae"
+    },
+    {
+      "code": "C307331",
+      "refs": [
+        "C100",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18",
+        "C21",
+        "C24",
+        "C29",
+        "C30",
+        "C31",
+        "C32",
+        "C5",
+        "C88",
+        "C99"
+      ],
+      "qty_per_board": 16,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL05B104KB54PNC",
+      "land": "C0402",
+      "supplier_mpn": "CL05B104KB54PNC",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 20977209,
+      "min_purchase": 1,
+      "order_qty_5_boards": 80,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.009,
+      "unit_usd_at_order_quantity": 0.009,
+      "raw_response_sha256": "0442c9c6527ba9f612ab2b0563676ffdd26693d28d2b87720dc88338a0772274"
+    },
+    {
+      "code": "C32949",
+      "refs": [
+        "C25",
+        "C26"
+      ],
+      "qty_per_board": 2,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL05C100JB5NNNC",
+      "land": "C0402",
+      "supplier_mpn": "CL05C100JB5NNNC",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 2429317,
+      "min_purchase": 1,
+      "order_qty_5_boards": 10,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0061,
+      "unit_usd_at_order_quantity": 0.0061,
+      "raw_response_sha256": "4f065fc27c47db1854328e9390a7fd2f5d9c8025fa688aafa79ded9975779858"
+    },
+    {
+      "code": "C3646874",
+      "refs": [
+        "J122"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "DORABO",
+      "mpn": "DB125-3.5-5P-GN-S",
+      "land": "M3_DB125_5P_GN",
+      "supplier_mpn": "DB125-3.5-5P-GN-S",
+      "supplier_maker": "DORABO",
+      "identity_match": true,
+      "stock": 4169,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.4753,
+      "unit_usd_at_order_quantity": 0.4753,
+      "raw_response_sha256": "d1a78dfe76e40fae276e9ab3d3d09627f3eb1f038c16a922e9707fa087466676"
+    },
+    {
+      "code": "C3662793",
+      "refs": [
+        "U9"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Texas Instruments",
+      "mpn": "TPS259470LRPWR",
+      "land": "M3_TPS25947_RPW",
+      "supplier_mpn": "TPS259470LRPWR",
+      "supplier_maker": "Texas Instruments",
+      "identity_match": true,
+      "stock": 123,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 1.3455,
+      "unit_usd_at_order_quantity": 1.3455,
+      "raw_response_sha256": "59b820502ba747ae02091e9cab196ab49290edd64062a7383040fc65e5aef71d"
+    },
+    {
+      "code": "C4109",
+      "refs": [
+        "R130",
+        "R133",
+        "R178",
+        "R180"
+      ],
+      "qty_per_board": 4,
+      "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "mpn": "0402WGF2001TCE",
+      "land": "R0402",
+      "supplier_mpn": "0402WGF2001TCE",
+      "supplier_maker": "UNI-ROYAL(Uniroyal Elec)",
+      "identity_match": true,
+      "stock": 9999933,
+      "min_purchase": 1,
+      "order_qty_5_boards": 20,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0026,
+      "unit_usd_at_order_quantity": 0.0026,
+      "raw_response_sha256": "b10fd42afa44b024155ae28a76d21bef95d94ba3e56c4b506b876e97dc7686dd"
+    },
+    {
+      "code": "C4241878",
+      "refs": [
+        "R82"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Vishay Beyschlag",
+      "mpn": "MCT0603MD2004BP500",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "MCT0603MD2004BP500",
+      "supplier_maker": "Vishay Intertech",
+      "identity_match": true,
+      "stock": 1808,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.1002,
+      "unit_usd_at_order_quantity": 0.1002,
+      "raw_response_sha256": "b6c9f78c4134fcfea15f16ce3c52ee4db32f6f7ab6119d010fa3f16b4e77f51e"
+    },
+    {
+      "code": "C431195",
+      "refs": [
+        "Q124"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Alpha & Omega Semicon",
+      "mpn": "AON7524",
+      "land": "M3_AON7524_DFN3x3A",
+      "supplier_mpn": "AON7524",
+      "supplier_maker": "Alpha & Omega Semicon",
+      "identity_match": true,
+      "stock": 27310,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.3704,
+      "unit_usd_at_order_quantity": 0.3704,
+      "raw_response_sha256": "ebb4834a8d60c4a32d4636af01e1e2a86fdba80a5a341cf7278b4698d53620e2"
+    },
+    {
+      "code": "C431196",
+      "refs": [
+        "Q120",
+        "Q121"
+      ],
+      "qty_per_board": 2,
+      "manufacturer": "Alpha & Omega Semicon",
+      "mpn": "AONR21357",
+      "land": "M3_AONR21357_DFN3x3A_EP1",
+      "supplier_mpn": "AONR21357",
+      "supplier_maker": "Alpha & Omega Semicon",
+      "identity_match": true,
+      "stock": 51629,
+      "min_purchase": 1,
+      "order_qty_5_boards": 10,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.3548,
+      "unit_usd_at_order_quantity": 0.3548,
+      "raw_response_sha256": "9c362f75444b50887d2c55e7684abe77d616c0426f9383eb277e6827b86cf073"
+    },
+    {
+      "code": "C45783",
+      "refs": [
+        "C10",
+        "C11",
+        "C6",
+        "C7",
+        "C8",
+        "C9"
+      ],
+      "qty_per_board": 6,
+      "manufacturer": "Samsung Electro-Mechanics",
+      "mpn": "CL21A226MAQNNNE",
+      "land": "C0805",
+      "supplier_mpn": "CL21A226MAQNNNE",
+      "supplier_maker": "Samsung Electro-Mechanics",
+      "identity_match": true,
+      "stock": 3522990,
+      "min_purchase": 1,
+      "order_qty_5_boards": 30,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.192,
+      "unit_usd_at_order_quantity": 0.192,
+      "raw_response_sha256": "269e1ceb32f39e340e0280a72329a6a612bdfea17b1c16230435a92c10fc6b62"
+    },
+    {
+      "code": "C46550466",
+      "refs": [
+        "C84"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "jieerrui",
+      "mpn": "MA25V470M8x10",
+      "land": "M3_MA_8x10",
+      "supplier_mpn": "MA25V470M8x10",
+      "supplier_maker": "jieerrui",
+      "identity_match": true,
+      "stock": 111385,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.2814,
+      "unit_usd_at_order_quantity": 0.2814,
+      "raw_response_sha256": "1844d1f3192ef3bd30288c85b8652a5c0c534ec0b807ad029c5b9c6dc6cfe0a8"
+    },
+    {
+      "code": "C466970",
+      "refs": [
+        "J1",
+        "J400"
+      ],
+      "qty_per_board": 2,
+      "manufacturer": "DORABO",
+      "mpn": "DB125-3.5-2P-GN-S",
+      "land": "M3_DB125_2P_GN",
+      "supplier_mpn": "DB125-3.5-2P-GN-S",
+      "supplier_maker": "DORABO",
+      "identity_match": true,
+      "stock": 35556,
+      "min_purchase": 1,
+      "order_qty_5_boards": 10,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.1833,
+      "unit_usd_at_order_quantity": 0.1833,
+      "raw_response_sha256": "038a2f366d3d466bed9c29a230605aa35a3dbb1e0ffcb146f9d6f75212fdddcf"
+    },
+    {
+      "code": "C485916",
+      "refs": [
+        "U11"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Texas Instruments",
+      "mpn": "TPS2121RUXR",
+      "land": "M3_TPS2121_RUX",
+      "supplier_mpn": "TPS2121RUXR",
+      "supplier_maker": "Texas Instruments",
+      "identity_match": true,
+      "stock": 24544,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.9194,
+      "unit_usd_at_order_quantity": 0.9194,
+      "raw_response_sha256": "0a0ebeeb2a92e9b052f7352cd3beb2a8e5f8b35e1540fd4640f9613f2a5f8cba"
+    },
+    {
+      "code": "C5186957",
+      "refs": [
+        "U12"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Texas Instruments",
+      "mpn": "TXU0202DCUR",
+      "land": "M3_TXU0202_DCU",
+      "supplier_mpn": "TXU0202DCUR",
+      "supplier_maker": "Texas Instruments",
+      "identity_match": true,
+      "stock": 14583,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.862,
+      "unit_usd_at_order_quantity": 0.862,
+      "raw_response_sha256": "72b60c2b2d52aa82dac5f5a33674a0f819d98bdb27feda89b385843ec0316bbe"
+    },
+    {
+      "code": "C5271084",
+      "refs": [
+        "U1"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "STMicroelectronics",
+      "mpn": "STM32H743VIT6TR",
+      "land": "LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL",
+      "supplier_mpn": "STM32H743VIT6TR",
+      "supplier_maker": "STMicroelectronics",
+      "identity_match": true,
+      "stock": 812,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 12.5941,
+      "unit_usd_at_order_quantity": 12.5941,
+      "raw_response_sha256": "b180e1a06584648670ea12361f28fa6ca16bea8c37e8393a928984986358c3fd"
+    },
+    {
+      "code": "C52993880",
+      "refs": [
+        "J121"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "DORABO",
+      "mpn": "DB125-3.5-2P-BK-S",
+      "land": "M3_DB125_2P_BK",
+      "supplier_mpn": "DB125-3.5-2P-BK-S",
+      "supplier_maker": "DORABO",
+      "identity_match": true,
+      "stock": 346,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.1977,
+      "unit_usd_at_order_quantity": 0.1977,
+      "raw_response_sha256": "32012a62345f596312ae3919200824ac346b59ed48389986d5898fb18f255541"
+    },
+    {
+      "code": "C535146",
+      "refs": [
+        "D400",
+        "D401",
+        "D410",
+        "D411",
+        "D420",
+        "D421"
+      ],
+      "qty_per_board": 6,
+      "manufacturer": "Infineon Technologies",
+      "mpn": "ESD103-B1-02EL E6327",
+      "land": "M3_TSLP_2_20",
+      "supplier_mpn": "ESD103-B1-02EL E6327",
+      "supplier_maker": "Infineon Technologies",
+      "identity_match": true,
+      "stock": 201,
+      "min_purchase": 1,
+      "order_qty_5_boards": 30,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.2303,
+      "unit_usd_at_order_quantity": 0.2303,
+      "raw_response_sha256": "8261c32fb069366c4e0751f0d29119ef0b24588b53087e377b16e47db9110c76"
+    },
+    {
+      "code": "C55266",
+      "refs": [
+        "U10",
+        "U402"
+      ],
+      "qty_per_board": 2,
+      "manufacturer": "Texas Instruments",
+      "mpn": "TPS2553DBVR",
+      "land": "M3_TPS2553_DBV",
+      "supplier_mpn": "TPS2553DBVR",
+      "supplier_maker": "Texas Instruments",
+      "identity_match": true,
+      "stock": 46923,
+      "min_purchase": 1,
+      "order_qty_5_boards": 10,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.4491,
+      "unit_usd_at_order_quantity": 0.4491,
+      "raw_response_sha256": "ad3b9929b9eb4b2b07caae68cfd06c6b0fbdefa9d817ce959013c0761bdc0297"
+    },
+    {
+      "code": "C57112",
+      "refs": [
+        "C127",
+        "C129",
+        "C60",
+        "C94"
+      ],
+      "qty_per_board": 4,
+      "manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
+      "mpn": "0603B103K500NT",
+      "land": "C0603",
+      "supplier_mpn": "0603B103K500NT",
+      "supplier_maker": "FH (Guangdong Fenghua Advanced Tech)",
+      "identity_match": true,
+      "stock": 5644981,
+      "min_purchase": 1,
+      "order_qty_5_boards": 20,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0097,
+      "unit_usd_at_order_quantity": 0.0097,
+      "raw_response_sha256": "1aab6a570319c342e692c4a59f07b809c4b90d6e524de650c57daffef25d09b0"
+    },
+    {
+      "code": "C57269",
+      "refs": [
+        "L1"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Sunlord",
+      "mpn": "SWPA4030S4R7MT",
+      "land": "IND-SMD_L4.0-W4.0",
+      "supplier_mpn": "SWPA4030S4R7MT",
+      "supplier_maker": "Sunlord",
+      "identity_match": true,
+      "stock": 40765,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0604,
+      "unit_usd_at_order_quantity": 0.0604,
+      "raw_response_sha256": "79fd24e7b37d37f81ecb407480cd8ecabb6e3db79a3445a46d22f44de7ae2c90"
+    },
+    {
+      "code": "C705755",
+      "refs": [
+        "R83"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Yageo",
+      "mpn": "RT0603BRD07280KL",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "RT0603BRD07280KL",
+      "supplier_maker": "YAGEO",
+      "identity_match": true,
+      "stock": 5563,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0566,
+      "unit_usd_at_order_quantity": 0.0566,
+      "raw_response_sha256": "f8be175bbc9f386e95a5d2933406730872dfa0b270dec5e9fc107f4263d2ed45"
+    },
+    {
+      "code": "C705780",
+      "refs": [
+        "R402"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "YAGEO",
+      "mpn": "RT0603BRD0749K9L",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "RT0603BRD0749K9L",
+      "supplier_maker": "YAGEO",
+      "identity_match": true,
+      "stock": 178763,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0312,
+      "unit_usd_at_order_quantity": 0.0312,
+      "raw_response_sha256": "d1f4bd6f402ed1ebfd71fe89d60c3f93299b95642ae9462436d62443ad27c536"
+    },
+    {
+      "code": "C705784",
+      "refs": [
+        "R400"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "YAGEO",
+      "mpn": "RT0603BRD0756K2L",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "RT0603BRD0756K2L",
+      "supplier_maker": "YAGEO",
+      "identity_match": true,
+      "stock": 7905,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0354,
+      "unit_usd_at_order_quantity": 0.0354,
+      "raw_response_sha256": "cb33473cd4d0f537a0b12a39393a98832833f4b8bddd888a22d685a687491667"
+    },
+    {
+      "code": "C7519",
+      "refs": [
+        "D4"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "STMicroelectronics",
+      "mpn": "USBLC6-2SC6",
+      "land": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+      "supplier_mpn": "USBLC6-2SC6",
+      "supplier_maker": "STMicroelectronics",
+      "identity_match": true,
+      "stock": 34022,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.1799,
+      "unit_usd_at_order_quantity": 0.1799,
+      "raw_response_sha256": "cb03d3acfa95d4eb5e1a25b2dd701a27c2d8d1f627442c69de89605030684f93"
+    },
+    {
+      "code": "C780769",
+      "refs": [
+        "U2"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Diodes Incorporated",
+      "mpn": "AP63203WU-7",
+      "land": "TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL",
+      "supplier_mpn": "AP63203WU-7",
+      "supplier_maker": "Diodes Incorporated",
+      "identity_match": true,
+      "stock": 4190,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 1.2259,
+      "unit_usd_at_order_quantity": 1.2259,
+      "raw_response_sha256": "03b7ec2dafd1b87542f0a02fb7f9ce141c7681f307ea663788b34796b45a3ee6"
+    },
+    {
+      "code": "C83849",
+      "refs": [
+        "D8"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Littelfuse",
+      "mpn": "SMBJ12CA",
+      "land": "D_SMB",
+      "supplier_mpn": "SMBJ12CA",
+      "supplier_maker": "Littelfuse",
+      "identity_match": true,
+      "stock": 43067,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.1282,
+      "unit_usd_at_order_quantity": 0.1282,
+      "raw_response_sha256": "fe8809cd72ba51006b08f80362a222b3b0b0dfb6c8a67dd0d50e7892c8977f00"
+    },
+    {
+      "code": "C84256",
+      "refs": [
+        "LED1"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "NATIONSTAR",
+      "mpn": "NCD0805R1",
+      "land": "M3_NCD0805R1_K1",
+      "supplier_mpn": "NCD0805R1",
+      "supplier_maker": "Foshan NationStar Optoelectronics",
+      "identity_match": true,
+      "stock": 2604977,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 0.0135,
+      "unit_usd_at_order_quantity": 0.0135,
+      "raw_response_sha256": "3fcf67bdd61f51a8f981c3dda0c03e1e0f239e0b43d7676f0c39ce84baab2eeb"
+    },
+    {
+      "code": "C85098",
+      "refs": [
+        "D9"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Diodes Incorporated",
+      "mpn": "B340A-13-F",
+      "land": "D_SMA",
+      "supplier_mpn": "B340A-13-F",
+      "supplier_maker": "Diodes Incorporated",
+      "identity_match": true,
+      "stock": 79994,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0723,
+      "unit_usd_at_order_quantity": 0.0723,
+      "raw_response_sha256": "3da66b248e5d76ca19b83a166dd6b588527ced3a7b905fc2a6ebfc8f6a48d482"
+    },
+    {
+      "code": "C8591",
+      "refs": [
+        "D120"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "JSCJ",
+      "mpn": "BAT54A",
+      "land": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+      "supplier_mpn": "BAT54A",
+      "supplier_maker": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+      "identity_match": true,
+      "stock": 14480,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0245,
+      "unit_usd_at_order_quantity": 0.0245,
+      "raw_response_sha256": "6a5561ab9ef956b98c0ed8a6c5f269f29b66ad17fb23c4cac00a16e06785f0f6"
+    },
+    {
+      "code": "C85980",
+      "refs": [
+        "C81"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Murata",
+      "mpn": "GRM1885C1H472JA01D",
+      "land": "C_0603_1608Metric",
+      "supplier_mpn": "GRM1885C1H472JA01D",
+      "supplier_maker": "Murata Electronics",
+      "identity_match": true,
+      "stock": 36500,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0187,
+      "unit_usd_at_order_quantity": 0.0187,
+      "raw_response_sha256": "132194be9431186a390fd5081c8e09f4fe2054e102f36eee9f780113c69c1dae"
+    },
+    {
+      "code": "C861551",
+      "refs": [
+        "R84"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "YAGEO",
+      "mpn": "RT0603BRD07750RL",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "RT0603BRD07750RL",
+      "supplier_maker": "YAGEO",
+      "identity_match": true,
+      "stock": 1628,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0438,
+      "unit_usd_at_order_quantity": 0.0438,
+      "raw_response_sha256": "d8f454aff3f40dc49c74031717a60eba7ad90e61d13bd91455e6aa5778605d61"
+    },
+    {
+      "code": "C861568",
+      "refs": [
+        "R86"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "YAGEO",
+      "mpn": "RT0603BRD0780K6L",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "RT0603BRD0780K6L",
+      "supplier_maker": "YAGEO",
+      "identity_match": true,
+      "stock": 3741,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0413,
+      "unit_usd_at_order_quantity": 0.0413,
+      "raw_response_sha256": "95face185040d714fd8d718307b813c16965f411a2fc79b9d5b2ad541d361d68"
+    },
+    {
+      "code": "C89347",
+      "refs": [
+        "U13"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Texas Instruments",
+      "mpn": "TPS70933DBVR",
+      "land": "M3_TPS709_DBV",
+      "supplier_mpn": "TPS70933DBVR",
+      "supplier_maker": "Texas Instruments",
+      "identity_match": true,
+      "stock": 7327,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.3368,
+      "unit_usd_at_order_quantity": 0.3368,
+      "raw_response_sha256": "28ff8f031a0b682bf5b410914ccd39eb02863f23bf865ca55fe7553ea82200e9"
+    },
+    {
+      "code": "C94598",
+      "refs": [
+        "LS120"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Jiangsu Huaneng Elec",
+      "mpn": "MLT-5020",
+      "land": "M3_MLT5020_3pad",
+      "supplier_mpn": "MLT-5020",
+      "supplier_maker": "Jiangsu Huaneng Elec",
+      "identity_match": true,
+      "stock": 54787,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.4425,
+      "unit_usd_at_order_quantity": 0.4425,
+      "raw_response_sha256": "3e530472a459768a8764a2216ae16324ee13b0af89fe84883670d78a56e2a0c0"
+    },
+    {
+      "code": "C95204",
+      "refs": [
+        "R401",
+        "R403"
+      ],
+      "qty_per_board": 2,
+      "manufacturer": "YAGEO",
+      "mpn": "RT0603BRD0710KL",
+      "land": "R_0603_1608Metric",
+      "supplier_mpn": "RT0603BRD0710KL",
+      "supplier_maker": "YAGEO",
+      "identity_match": true,
+      "stock": 1817747,
+      "min_purchase": 1,
+      "order_qty_5_boards": 10,
+      "library": "expand",
+      "unit_usd_at_fitted_quantity": 0.0302,
+      "unit_usd_at_order_quantity": 0.0302,
+      "raw_response_sha256": "d3f26458724a7326c4469e97f1e2a16cefea53b1b559c580ec8bb06a43f67798"
+    },
+    {
+      "code": "C97521",
+      "refs": [
+        "U3"
+      ],
+      "qty_per_board": 1,
+      "manufacturer": "Winbond",
+      "mpn": "W25Q128JVSIQ",
+      "land": "SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL",
+      "supplier_mpn": "W25Q128JVSIQ",
+      "supplier_maker": "Winbond Elec",
+      "identity_match": true,
+      "stock": 73393,
+      "min_purchase": 1,
+      "order_qty_5_boards": 5,
+      "library": "base",
+      "unit_usd_at_fitted_quantity": 2.586,
+      "unit_usd_at_order_quantity": 2.586,
+      "raw_response_sha256": "24c9f9798ecfda3b8e9ba86b2488d135711cfb3b70d43bf4baf0c9b7ded7c4cc"
+    }
+  ],
+  "terminal_inventory": [
+    {
+      "ref": "J1",
+      "code": "C466970",
+      "xy_mm": [
+        7.4,
+        75.85
+      ],
+      "degrees": -90.0,
+      "positions": 2,
+      "pin_nets": {
+        "1": "BAT_IN",
+        "2": "GND"
+      },
+      "maximum_body_union_local_mm": [
+        -4.62,
+        -4.1,
+        3.7,
+        4.0,
+        0,
+        8.9
+      ],
+      "wire_entry": "west",
+      "wire_room_min_mm": 5.003011866037409,
+      "drill_mm": 1.3,
+      "copper_diameter_mm": 1.9,
+      "nominal_interpad_copper_gap_mm": 1.6
+    },
+    {
+      "ref": "J121",
+      "code": "C52993880",
+      "xy_mm": [
+        7.4,
+        55.85
+      ],
+      "degrees": -90.0,
+      "positions": 2,
+      "pin_nets": {
+        "1": "PYRO1_OUT",
+        "2": "PYRO1_IGN"
+      },
+      "maximum_body_union_local_mm": [
+        -4.62,
+        -4.1,
+        3.7,
+        4.0,
+        0,
+        8.9
+      ],
+      "wire_entry": "west",
+      "wire_room_min_mm": 5.003011866037409,
+      "drill_mm": 1.3,
+      "copper_diameter_mm": 1.9,
+      "nominal_interpad_copper_gap_mm": 1.6
+    },
+    {
+      "ref": "J400",
+      "code": "C466970",
+      "xy_mm": [
+        7.4,
+        65.849999
+      ],
+      "degrees": -90.0,
+      "positions": 2,
+      "pin_nets": {
+        "1": "BAT_SW_SOURCE",
+        "2": "BAT_SW_RETURN"
+      },
+      "maximum_body_union_local_mm": [
+        -4.62,
+        -4.1,
+        3.7,
+        4.0,
+        0,
+        8.9
+      ],
+      "wire_entry": "west",
+      "wire_room_min_mm": 5.003011866037409,
+      "drill_mm": 1.3,
+      "copper_diameter_mm": 1.9,
+      "nominal_interpad_copper_gap_mm": 1.6
+    },
+    {
+      "ref": "J410",
+      "code": "C2757925",
+      "xy_mm": [
+        38.6,
+        15.5
+      ],
+      "degrees": 90.0,
+      "positions": 4,
+      "pin_nets": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "GPS_TX_WIRE",
+        "4": "GPS_RX_WIRE"
+      },
+      "maximum_body_union_local_mm": [
+        -8.32,
+        -4.1,
+        7.2,
+        4.0,
+        0,
+        8.9
+      ],
+      "wire_entry": "east",
+      "wire_room_min_mm": 5.003011866037409,
+      "drill_mm": 1.3,
+      "copper_diameter_mm": 1.9,
+      "nominal_interpad_copper_gap_mm": 1.6
+    },
+    {
+      "ref": "J420",
+      "code": "C2757925",
+      "xy_mm": [
+        38.6,
+        31.5
+      ],
+      "degrees": 90.0,
+      "positions": 4,
+      "pin_nets": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "RADIO_TX_WIRE",
+        "4": "RADIO_RX_WIRE"
+      },
+      "maximum_body_union_local_mm": [
+        -8.32,
+        -4.1,
+        7.2,
+        4.0,
+        0,
+        8.9
+      ],
+      "wire_entry": "east",
+      "wire_room_min_mm": 5.003011866037409,
+      "drill_mm": 1.3,
+      "copper_diameter_mm": 1.9,
+      "nominal_interpad_copper_gap_mm": 1.6
+    },
+    {
+      "ref": "J9",
+      "code": "C2757925",
+      "xy_mm": [
+        38.6,
+        47.5
+      ],
+      "degrees": 90.0,
+      "positions": 4,
+      "pin_nets": {
+        "1": "CAM_5V",
+        "2": "GND",
+        "3": "CAM_RX_WIRE",
+        "4": "CAM_TX_WIRE"
+      },
+      "maximum_body_union_local_mm": [
+        -8.32,
+        -4.1,
+        7.2,
+        4.0,
+        0,
+        8.9
+      ],
+      "wire_entry": "east",
+      "wire_room_min_mm": 5.003011866037409,
+      "drill_mm": 1.3,
+      "copper_diameter_mm": 1.9,
+      "nominal_interpad_copper_gap_mm": 1.6
+    },
+    {
+      "ref": "J122",
+      "code": "C3646874",
+      "xy_mm": [
+        38.6,
+        71.5
+      ],
+      "degrees": 90.0,
+      "positions": 5,
+      "pin_nets": {
+        "1": "SERVO1_OUT",
+        "2": "SERVO2_OUT",
+        "3": "SERVO3_OUT",
+        "4": "SERVO4_OUT",
+        "5": "GND"
+      },
+      "maximum_body_union_local_mm": [
+        -10.07,
+        -4.1,
+        8.95,
+        4.0,
+        0,
+        8.9
+      ],
+      "wire_entry": "east",
+      "wire_room_min_mm": 5.003011866037409,
+      "drill_mm": 1.3,
+      "copper_diameter_mm": 1.9,
+      "nominal_interpad_copper_gap_mm": 1.6
+    }
+  ],
+  "sd": {
+    "reference": "J430",
+    "mpn": "472192001",
+    "code": "C164170",
+    "xy_mm": [
+      24,
+      24.3
+    ],
+    "side": "B",
+    "degrees": 0,
+    "maker_drawing": "SD-47219-001G,2012-01-20,sheet1/1",
+    "source_url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+    "signal_pads_mm": [
+      0.8,
+      1.5
+    ],
+    "signal_pitch_mm": 1.1,
+    "shell_pads_mm": [
+      1.45,
+      2.0
+    ],
+    "shell_numbers_to_maker": {
+      "12": "G1",
+      "9": "G2",
+      "10": "G3",
+      "11": "G4"
+    },
+    "closed_allocation_local_mm": [
+      -7.525,
+      -9.7,
+      7.525,
+      6.0,
+      0,
+      2.1
+    ],
+    "maker_max_width_calculation_mm": 15.05,
+    "card_front_mm": 6.0,
+    "card_and_common_seating_status": "Inference,not maker-certified assembled maximum",
+    "no_open_hinge_fit_claim": true,
+    "card_current_allocation_A": {
+      "write": 0.2,
+      "idle": 0.03
+    },
+    "scope": "0.5A/contact,100mOhm maximum contact resistance; selected200mA supply+return contact drop<=40mV by simple worst-resistance calculation,not a measured card-power guarantee. Native3V3/card transient qualification remains open."
+  },
+  "margins_reviewed": {
+    "C120_voltage_rating_V": 25,
+    "AONR_abs_gate_V": 25,
+    "recorded_gate_event_inference_V": 18,
+    "C84_rating_V": 25,
+    "C92_effective_inference_uF": 2.211046,
+    "C92_required_effective_uF": 1.5,
+    "servo_series_fault_W": 0.072,
+    "servo_series_rating_W_through70C": 0.1,
+    "U401_normal_loss_W": 0.406176903,
+    "U401_Tj_at70C_inference_C": [
+      102.494152,
+      114.679459
+    ],
+    "U401_Tj_recommended_max_C": 125,
+    "U9_fault_current_bound_inference_A": 3.743797155,
+    "U9_R84_tolerance_limit_A": [
+      3.946188341,
+      4.856999498
+    ],
+    "fire_current_four_stalls_inference_A": 1.283013039,
+    "selected_current_floor_A": 1.125,
+    "status": "Conditional calculations and maker limits crosschecked; no hot-board,cold/biased MLCC,SOA,source/harness or pulse-tail measurements."
+  },
+  "closed_or_rejected_candidates": [
+    {
+      "candidate": "R11 terminal wire-room Major",
+      "status": "closed_on_this_target",
+      "evidence": "Fresh native maximum bodies/rows give5.003011866mm at all7 vs4.95mm floor; old4.603mm does not transfer."
+    },
+    {
+      "candidate": "R13 missing SD fitting nails/tolerances",
+      "status": "closed_on_this_target",
+      "evidence": "Current15.05x15.70x2.10mm allocation encloses nails/tolerances; closed bore margin15.210798mm; card/front/seating/open hinge remain disclosed inferences."
+    },
+    {
+      "candidate": "L400 heel as a demonstrated Major",
+      "status": "rejected_major_retained_minor",
+      "evidence": "Worst permitted heel-strip calculation is real; no open joint/current/retention failure is established."
+    },
+    {
+      "candidate": "DB125 hole stack as a demonstrated Major",
+      "status": "rejected_major_retained_minor",
+      "evidence": "Sharp-rectangle/general-tolerance model is not proof of actual terminal insertion failure; authoritative pin shape/fit allocation is absent."
+    },
+    {
+      "candidate": "Known supplier shortages or cost/process obligations as CAD Major",
+      "status": "rejected",
+      "evidence": "R430/U4 shortages remain disclosed ordering blockers. Fresh component+feeder and minima estimates both below84.41; quote/process/owner release unaccepted."
+    },
+    {
+      "candidate": "Old16V C120 or unqualifiedC84 reflow",
+      "status": "closed_hardware_or_procedurally_contained",
+      "evidence": "Current C120 is C29936/25V. C84 remains required-fitted with explicit manual-after-both-reflows instruction; no oldOSCON profile credited."
+    }
+  ],
+  "primary_pdf_inventory": [
+    {
+      "name": "molex",
+      "sha256": "793d191c35764f9e0dbde0d95a19418da8016b442c4b2716e787f808011faa1e",
+      "pages": 1,
+      "version_lines": [],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "db125",
+      "sha256": "76a55d0cbb4d30bf4d714401b8612365b6b35fedcd9660adae81c0e79d86ff7a",
+      "pages": 1,
+      "version_lines": [],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "5819ws",
+      "sha256": "609a5bc2fcd5bbb36f47f802b11102f1e140eae519c74b067cb615b4d52d0a4f",
+      "pages": 4,
+      "version_lines": [],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "ao3400a",
+      "sha256": "9c60d0b6c1ddc7609a4b788a91181468d8ffe6c3e9ba425c3d8ffc5ba88c5033",
+      "pages": 5,
+      "version_lines": [
+        "Rev 3.1: July 2023                                                   www.aosmd.com                                          Page 1 of 5",
+        "Rev 3.1: July 2023                                           www.aosmd.com                                                             Page 2 of 5",
+        "Rev 3.1: July 2023                                                                         www.aosmd.com                                                                                             Page 3 of 5",
+        "Rev 3.1: July 2023                                                                        www.aosmd.com                                                                                             Page 4 of 5"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "aon7524",
+      "sha256": "f062570cdd7382ee0fb23cb77e4522e538a098918f4ac06d0d38521efd543547",
+      "pages": 6,
+      "version_lines": [
+        "Rev.1.1: October 2023                                          www.aosmd.com                                                       Page 1 of 6",
+        "Rev.1.1: October 2023                                        www.aosmd.com                                                          Page 2 of 6",
+        "Rev.1.1: October 2023                                                            www.aosmd.com                                                                                        Page 3 of 6",
+        "Rev.1.1: October 2023                                                                     www.aosmd.com                                                                               Page 4 of 6"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "aonr21357",
+      "sha256": "95786edcc78744297555a01e7ab21bf9d5443d9b063bf3204c4d600e8d05d516",
+      "pages": 6,
+      "version_lines": [
+        "Rev.2.1: November 2023                                        www.aosmd.com                                                       Page 1 of 6",
+        "Rev.2.1: November 2023                                         www.aosmd.com                                                                 Page 2 of 6",
+        "Rev.2.1: November 2023                                                                     www.aosmd.com                                                                                                       Page 3 of 6",
+        "Rev.2.1: November 2023                                                                  www.aosmd.com                                                                                          Page 4 of 6"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "aonr_land",
+      "sha256": "221c5d11af8ebfacef185ef2c498a3d2681cab856afbff2dd144fa5ccb41fde2",
+      "pages": 1,
+      "version_lines": [
+        "Document No.              PO-00047"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "ap6320",
+      "sha256": "ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722",
+      "pages": 18,
+      "version_lines": [
+        "Notes:    1. No purposely added lead. Fully EU Directive 2002/95/EC (RoHS), 2011/65/EU (RoHS 2) & 2015/863/EU (RoHS 3) compliant.",
+        "Document number: DS41326 Rev. 3 - 2                                    www.diodes.com                           © 2024 Copyright Diodes Incorporated. All Rights Reserved.",
+        "Document number: DS41326 Rev. 3 - 2                                 www.diodes.com                      © 2024 Copyright Diodes Incorporated. All Rights Reserved.",
+        "Document number: DS41326 Rev. 3 - 2                                 www.diodes.com                     © 2024 Copyright Diodes Incorporated. All Rights Reserved."
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "b340",
+      "sha256": "4eec579d89a9abbe71ac6bec7f94f6e9c19f86a9c033eef78952acbdf96cf66e",
+      "pages": 6,
+      "version_lines": [
+        "Notes:       1. EU Directive 2002/95/EC (RoHS) & 2011/65/EU (RoHS 2) compliant. All applicable RoHS exemptions applied.",
+        "Document number: DS30891 Rev. 17 - 2                                     www.diodes.com                                                            © Diodes Incorporated",
+        "Document number: DS30891 Rev. 17 - 2                                                                  www.diodes.com                                                                                                       © Diodes Incorporated",
+        "Document number: DS30891 Rev. 17 - 2                                                                                                 www.diodes.com                                                                                                                    © Diodes Incorporated"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "bat54",
+      "sha256": "23d8e056fa034c1cc3ed84079768de74870882c47a60e4ed39020ab9b8e72e4b",
+      "pages": 2,
+      "version_lines": [],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "bourns",
+      "sha256": "c52004cbb76ccf3275e5a94ca6c437fc5a0b81ca8c3643abf1fee902f83741d2",
+      "pages": 4,
+      "version_lines": [
+        "* RoHS Directive 2002/95/EC Jan. 27, 2003 including annex and RoHS Recast 2011/65/EU June 8, 2011.                                                             MM"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "bourns_crm",
+      "sha256": "dd72c578f48227dbc38ed5c531d965920166b267da3cf4d0494253143732a94d",
+      "pages": 5,
+      "version_lines": [
+        "*RoHS Directive 2015/863, Mar 31, 2015 and Annex.",
+        "Asia-Pacific: Tel: +886-2 2562-4117 • Email: asiacus@bourns.com",
+        "REV. 08/21"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "buzzer",
+      "sha256": "db73c860afd42abdf9a2e69c4a34ac915d68e07108a2188d6ee0a9c02f723be9",
+      "pages": 5,
+      "version_lines": [
+        "日         期 DATE：                          2021-5-27"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "c84",
+      "sha256": "5ab3c478e90f1826a614a56af8164bb4bab3143affaae1ad7aa69fc0c1981997",
+      "pages": 4,
+      "version_lines": [],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "fenghua",
+      "sha256": "705023d3be0454148a96fc2715d249a32d8ff442e70b64d1116d3490ed1d8136",
+      "pages": 30,
+      "version_lines": [
+        "13   修订履历 Revision History",
+        "■修订履历 Revision History",
+        "版本 Version                 日期 Date                      修订内容           Revision Content                      修订人 Reviser",
+        "A0001                  2024-1-15"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "infineon",
+      "sha256": "c727b3157320518323c58bd5041507b14c21d763ba8e7c44b1e001ffc128eb16",
+      "pages": 14,
+      "version_lines": [
+        "Revision 1.3, 2014-06-12",
+        "Edition 2014-06-12",
+        "Final Data Sheet                                                      4                                 Revision 1.3, 2014-06-12",
+        "Final Data Sheet                                               5                                                            Revision 1.3, 2014-06-12"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "led1",
+      "sha256": "3a6caf350b15816633bfee4b063cc7ad5a3f337d32b0366817f95e4b7b77eb76",
+      "pages": 2,
+      "version_lines": [],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "led2",
+      "sha256": "d8a2b8369f288161dcff4afa195ea47335d87a620086e1a2aa5c1f197573c972",
+      "pages": 11,
+      "version_lines": [
+        "发件日期(Issue date)：                      2018-12-06"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "murata",
+      "sha256": "a7f8679919885aceaee6c3789c2aceedc9284180af0eb4273a571e2033540700",
+      "pages": 31,
+      "version_lines": [],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "ndk",
+      "sha256": "91edc13c6f41134a3cdb47a05be0c831b31a18c1fde1a2bd66b32288f0e72817",
+      "pages": 1,
+      "version_lines": [
+        "Directive 2011/65/EU",
+        "Directive (EU) 2015/863"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "samsung",
+      "sha256": "96baebe4bd0ce363e87be28b5b003f511f1502e084a6fc4f02333ded56c808f6",
+      "pages": 84,
+      "version_lines": [
+        "Date             2013-10-25      2013-08-08        2012-08-03       2011-11-29      2011-11-29",
+        "Validity         ~2016-10-24     ~2016-08-07       ~2015-08-02      ~2014-11-28     ~2014-11-28",
+        "Date             2013-06-25      2013-06-25        2012-07-13       2012-04-17      2012-04-17",
+        "Validity         ~2016-06-24     ~2016-06-24       ~2015-07-12      ~2015-04-16     ~2015-04-16"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "smbj",
+      "sha256": "d7df155be4b1f612085401e8c946f065e284d65a0e7de22b9225a7b73946e51b",
+      "pages": 6,
+      "version_lines": [],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "srv05",
+      "sha256": "a164eb7954004c1b9d6c6fe5047dcca89db686b1270c8f534fc724e3e2764ec5",
+      "pages": 12,
+      "version_lines": [
+        "Revision 08/11/04                                           1                                          www.semtech.com"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "st_h743",
+      "sha256": "0c4f01690026f48f630b5e143b361902e38922f36a8c0649e33e045c5019cafc",
+      "pages": 359,
+      "version_lines": [
+        "April 2021                                                DS12110 Rev 8                                           1/357",
+        "2/357                                            DS12110 Rev 8",
+        "DS12110 Rev 8                                                               3/357",
+        "4/357                                               DS12110 Rev 8"
+      ],
+      "scope_note": "Cached DS12110 Rev8 identified and excluded from current electrical-limit/AF assertions; live maker Rev11 checked."
+    },
+    {
+      "name": "st_lsm",
+      "sha256": "1b3b1d497968a6dd54a8ce7875e84ff6579217733061617beb1f62a1ba7d9c1c",
+      "pages": 212,
+      "version_lines": [
+        "DS14623 - Rev 1 - March 2025                                                                                                            www.st.com",
+        "DS14623 - Rev 1                                                                                                              page 2/212",
+        "DS14623 - Rev 1                                                                                                             page 3/212",
+        "DS14623 - Rev 1                                                                                                           page 4/212"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "sunlord",
+      "sha256": "11a724088069e1fecf42943e5609b675cb1f8455afb09d433ea21f6e2bbb12d1",
+      "pages": 20,
+      "version_lines": [],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "te_ms5611",
+      "sha256": "d4cbbb0e4df8cc5c123a20da6697e60ef66d7120bfe6bedf11e29016e35bfc97",
+      "pages": 22,
+      "version_lines": [],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "tps2121",
+      "sha256": "b2f5950f596dc2c4ca33e4ebac27fd35e4dcc68ea63e173466123e1118e91a06",
+      "pages": 45,
+      "version_lines": [
+        "SLVSEA3F – AUGUST 2018 – REVISED   TPS2121",
+        "SLVSEA3F – AUGUST 2018 – REVISED AUGUST 2020",
+        "SLVSEA3F – AUGUST 2018 – REVISED AUGUST 2020                                                                                                                     www.ti.com",
+        "4 Revision History.............................................................. 2          10.4 Automatic Seamless Switchover with Priority"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "tps2553",
+      "sha256": "edd76d150b073ae8d4addbf85f6845b8c722fbd0b35ef025ac3c9e704a6a3385",
+      "pages": 46,
+      "version_lines": [
+        "TPS2552, TPS2552-1, TPS2553, TPS2553-1",
+        "SLVS841G – NOVEMBER 2008 – REVISED OCTOBER 2026",
+        "TPS2552/53",
+        "SLVS841G – NOVEMBER 2008 – REVISED OCTOBER 2026                                                                                                                  www.ti.com"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "tps25947",
+      "sha256": "8f96de389903091650d4f462dcfad3210071c3ae7093623a7978f34baf8a65b4",
+      "pages": 75,
+      "version_lines": [
+        "SLVSFC9C – OCTOBER 2020 – REVISED MAY 2026",
+        "•   IEC 62368-1 CB certified                                           The devices are available in a 2mm × 2mm, 10-",
+        "SLVSFC9C – OCTOBER 2020 – REVISED MAY 2026                                                                                                    www.ti.com",
+        "www.ti.com                                                                                                          SLVSFC9C – OCTOBER 2020 – REVISED MAY 2026"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "tps709",
+      "sha256": "8c14e3efae738a27b857b789aa87369de9037a8ef3616a9f71a423587cdc6949",
+      "pages": 43,
+      "version_lines": [
+        "SBVS186H – MARCH 2012 – REVISED JULY 2021",
+        "SBVS186H – MARCH 2012 – REVISED JULY 2021                                                                                                                        www.ti.com",
+        "4 Revision History.............................................................. 2        9 Power Supply Recommendations................................15",
+        "4 Revision History"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "tps7a91",
+      "sha256": "1ab38416ceb4a3cd22b9e7665acc4409ac28f7c3a95c71ea195620f7d1ad7924",
+      "pages": 37,
+      "version_lines": [
+        "SBVS282A – DECEMBER 2016 – REVISED SEPTEMBER 2026",
+        "ADC                   ADS4xxBxx",
+        "ADS5xJxx",
+        "ADS12Jxxxx"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "txu0202",
+      "sha256": "f8e3f51edcccf12c7e991bec54cf1747a7fd84dccd23b875f326a3e631241ef2",
+      "pages": 41,
+      "version_lines": [
+        "SCES942A – NOVEMBER 2021 – REVISED MARCH 2022",
+        "SCES942A – NOVEMBER 2021 – REVISED MARCH 2022                                                                                                                    www.ti.com",
+        "4 Revision History.............................................................. 2          9.3 Feature Description...................................................21",
+        "4 Revision History"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "uniroyal",
+      "sha256": "ffeb8a25d4c2ffa490a28e0e00f70107f2cb94575d7e03365efc252d911ecf0c",
+      "pages": 9,
+      "version_lines": [
+        "File No. SMD-SP-001"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "usbc",
+      "sha256": "6ae33d50ac47820114661138dc4e4659f40fdc5d4f485b46685dfec338da1a9e",
+      "pages": 1,
+      "version_lines": [],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "usblc6",
+      "sha256": "8ba7ab4ec1781b7f6052f5999a2304bd611c0ed2b5e8f36ffa5092552932a42e",
+      "pages": 14,
+      "version_lines": [
+        "October 2011                                  Doc ID 11265 Rev 5                                           1/14",
+        "2/14                                           Doc ID 11265 Rev 5",
+        "Doc ID 11265 Rev 5                                                                       3/14",
+        "4/14                                      Doc ID 11265 Rev 5"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "vishay",
+      "sha256": "b70b4abe5995f162f996eba7d9cb4a2d3ee139f2eb2c764d5a71f0ee9f2aaf2b",
+      "pages": 13,
+      "version_lines": [
+        "Revision: 02-Dec-2022                                        1                               Document Number: 28952",
+        "Revision: 02-Dec-2022                                         2                               Document Number: 28952",
+        "Revision: 02-Dec-2022                                          3                               Document Number: 28952",
+        "achieve the desired temperature coefficient. Specially                  • 2000/53/EC End-of-Life Vehicle Directive (ELV) and"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "winbond",
+      "sha256": "5e2f6a77e0225a5c61b8f4b5b9680b57e0e1fe68cfc011465e30f665fe282057",
+      "pages": 78,
+      "version_lines": [
+        "Revision G",
+        "-2-                                                 Revision G",
+        "12.   REVISION HISTORY ...................................................................................................................... 77",
+        "-4-                                           Revision G"
+      ],
+      "scope_note": "Cached RevG used for pin/package context only; maker current part page supplies2.7-3.6V,-40..85C,SOP8/208mil; current2025 datasheet download unavailable."
+    },
+    {
+      "name": "yageo_rc",
+      "sha256": "e7dbabb0611925227ccfc429c14c8833a7b1f2c755684444124446f20b22a229",
+      "pages": 11,
+      "version_lines": [
+        "1206/1210/1218/2010/2512",
+        "0075/0100/0201/0402/0603/0805/1206/1210/1218/2010/2512",
+        "REVISION HISTORY",
+        "REVISION                DATE                        CHANGE NOTIFICATION                                       DESCRIPTION"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    },
+    {
+      "name": "yageo_rt",
+      "sha256": "0a729d144519a7021c82a0ef242b064e467c70d44afcf9eabd6c7ffdc4b673a3",
+      "pages": 10,
+      "version_lines": [
+        "REVISION HISTORY",
+        "REVISION DATE                CHANGE NOTIFICATION   DESCRIPTION",
+        "sizes of 0201/0402/0603/0805/1206/1210/2010/2512, 1%, 0.5%, 0.25%,"
+      ],
+      "scope_note": "Exact named static primary PDF, inspected afresh; no claim that family typical curves are measured component bounds."
+    }
+  ],
+  "input_sha256": {
+    "AGENTS.md": "7fb5d302b19aaa974a3019683077665b198b6bd8ea6e09c5f8eedabad72d80d3",
+    "docs/REQUIREMENTS.md": "bee999b80843d4e0f74248dbff596fbbddbe98643803e9401788789394043d59",
+    "docs/M3_R10.md": "c0a0adf04792bc91cfb824852b1f890027069bfd01b6e6b4c2a3d82ed3c2aaa6",
+    "docs/R10_VALIDATION.md": "d6999285b2e1daaa06949d819aa74c1f25ce6213aeb75e0c0d6e90154c29eadc",
+    "docs/R9_VALIDATION.md": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+    "docs/R10_VEHICLE_HANDOFF.md": "f0f3ed2d5b22c78f65482b9e7a3d0807564fb4b7f5d7dadba91fa43246ffdba3",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "5f4893cde7faeb4dfbc96948eaed5873229491d2b4e2e27dc7d30da6861b1d14",
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": "0a88fb481d50e663e9a88f79fb3b361af04221c5f160ffd73486f24eb4f4ca55",
+    "m3_design/assembly_review/sources/r10_design/r10_plan.md": "05cee2ae6ef64d2991e95788a40aae30431440578f61532c0d22175ef37f24e4",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md": "ed83868a4054ec043b07d9d244dd2b1cbcf21d8ace83fcd16bf45bb7a6a56b6f",
+    "m3_design/assembly_review/sources/r10_design/circuit.json": "ef67b3f1d4c71433f6969b4ad4b6bcb4bff8e72da647888e16ed1ce8a087ec09",
+    "m3_design/assembly_review/sources/r10_design/pin_table.tsv": "d4c460c8bdb47ebca22d88363ad71a83d14738576d2f98f9bab59c5c3ea6aecd",
+    "m3_design/assembly_review/sources/r10_design/parts_budget.json": "fe9d114f46acc13f4666e2f18c3f95222bc09d15e125a8c9f7dc3f90d09aa084",
+    "m3_design/assembly_review/schematic.net.xml": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+    "m3_design/assembly_review/fab/m3_bom_jlc.csv": "d04fed383a7df9981b1f459b86c0292d09833b6fa34dcadac890aeb65325f081",
+    "m3_design/assembly_review/fab/m3_cpl_jlc.csv": "75ae408d078701f84e87e28ed35fcc1327801a9bf0142a8a859da82074f9f3d7",
+    "tools/jlc_easyeda/pads.json": "4ca1019f4928ddd84be118de801156b0cc9a7284e2876d04e46013d07e5a00ab",
+    "tools/jlc_corrections.json": "f93cc344a3fb751ef70694ba60ff148255ed961d062f7e9fc46427957d2e729c"
+  },
+  "coverage_limits": [
+    "No nativeCLI,DRC/ERC/fullcheck,canonicalbuild,GUI,simulation sweep,firmware or physical test was run by this lens.",
+    "Factory preview,actual selected-card currents/busy/powerloss,open hinge/sled access,terminal ferrules/tools,coating,retention and firstarticle remain unqualified.",
+    "Only exact assigned new report files and ignored own probes were written. No peer current-round reports/probes were read; no otherworktree or git mutation occurred.",
+    "Cached ST PDF was Rev8,not the Rev11 current source; live Rev11 was checked through maker web, direct fetch timed out. Winbond cachedRevG is explicitly scoped; maker index lists2025-01-08 current datasheet but public download remained unavailable. No latest flash timing qualification is claimed.",
+    "Pin/net parity and supplier pad reconstruction are CAD checks; primary family/part drawings and limits support review but do not qualify actual fabricated tolerances,capacitance-bias curves,thermal resistance,pulse endurance or installed interfaces.",
+    "Raw supplier objects include ephemeral signed media fields; they stay ignored. Committed compact evidence contains exact code/model/count/price/hash information only."
+  ],
+  "ignored_evidence": {
+    "supplier_manifest": ".supervisor/r15_parts/supplier_manifest.json",
+    "supplier_snapshot": ".supervisor/r15_parts/supplier_snapshot.json",
+    "supplier_summary": ".supervisor/r15_parts/supplier_summary.json",
+    "native_inventory": ".supervisor/r15_parts/native_inventory.json",
+    "library_comparison": ".supervisor/r15_parts/library_comparison.json",
+    "fit": ".supervisor/r15_parts/fit.json",
+    "metadata": ".supervisor/r15_parts/metadata.json",
+    "orientation_generated": ".supervisor/r15_parts/fresh_corrections.json",
+    "orientation_log": ".supervisor/r15_parts/orientation_generate.log",
+    "primary_pdf_inventory": ".supervisor/r15_parts/pdf_inventory.json"
+  }
+}

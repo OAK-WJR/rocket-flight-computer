@@ -1,0 +1,1197 @@
+{
+  "schema": 1,
+  "lens": "6 placement/mechanics adversary",
+  "target_commit": "789f4d516251991bdf1518254d537ff7b41f65bb",
+  "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 3
+  },
+  "totals_scope": "Active findings:2new,1carried. Closed/rejected rows and correctly disclosed physical/FW qualification obligations excluded.",
+  "findings": [
+    {
+      "id": "R15-MEC-01",
+      "severity": "Minor",
+      "status": "active-new",
+      "title": "U4 pad-to-pad GND straps under the package need a specific maker-guidance disposition",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "line": 50090,
+          "layer": "B.Cu",
+          "coordinates_mm": [
+            [
+              18.21,
+              45.65
+            ],
+            [
+              18.21,
+              45.9
+            ],
+            [
+              18.21,
+              46.15
+            ],
+            [
+              19.6,
+              45.9
+            ]
+          ],
+          "measured_value": "0.20mm GND strap connects U4.2/U4.3 along the pad row, with a midpoint branch to the GND via. At(18.21,45.9) it is inside the nominal3.00x2.50mm body but outside either0.575x0.350mm pad; the open land-to-land interval is0.150mm."
+        },
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "line": 50314,
+          "layer": "B.Cu",
+          "coordinates_mm": [
+            [
+              16.5,
+              46.86
+            ],
+            [
+              16.75,
+              46.86
+            ],
+            [
+              17,
+              46.86
+            ],
+            [
+              16.75,
+              47.6
+            ]
+          ],
+          "measured_value": "U4.6/U4.7 share another0.20mm strap under the nominal body between their lands."
+        },
+        {
+          "source": "ST TN1383 Rev1, August2023",
+          "pages": [
+            7,
+            8,
+            9
+          ],
+          "url": "https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf",
+          "measured_value": "Sections3.2-3.5 advise outward component-side escapes and no routing beneath the MEMS package, to reduce stress. Applying that guidance to the pad-row straps is a layout-guidance interpretation, not a measured sensor error.",
+          "figures": {
+            "page8": "Figure5",
+            "page9": "Figure7"
+          },
+          "source_wording": "p7: All traces should flow outside the component; p8: Never place any routing or via on the top side under the device",
+          "face_interpretation": "TN1383 illustrates top-mounted MEMS; for bottom-mounted U4 the component-side guidance applies to B.Cu."
+        },
+        {
+          "file": "tools/check_r10.py",
+          "line": 1883,
+          "measured_value": "M-7 passes. Its inherited MEMS exclusion checks vias/fill and an inset interior; it is not a certification that all component-side routing lies outside the package."
+        }
+      ],
+      "severity_basis": "A specific inherited routing-guidance residual, not demonstrated bias/function loss, an AGENTS section2 violation, or a new numerical design rule. General thermal/vibration qualification is already disclosed; this finding adds the actual unlisted geometry.",
+      "concrete_fix": "Record these exact GND straps as a retained stress-guidance deviation and include them in sensor zero/bias/temperature/vibration first-article evaluation. Alternatively, qualify generator-only outward pad escapes and join the GND pads outside the package, preserving lands, fast references and clearances; do not claim a DRC-clean alternative without actual checks. A GND-only outward redraw is not prequalified low risk: actual outer-copper availability, via-to-signal spacing, reference antipads and sensor stress must be checked. No such alternative was executed in this lens."
+    },
+    {
+      "id": "R15-MEC-02",
+      "severity": "Minor",
+      "status": "active-new",
+      "title": "Current vehicle handoff retains the pre-correction C431 plate-clearance value",
+      "evidence": [
+        {
+          "file": "docs/R10_VEHICLE_HANDOFF.md",
+          "line": 39,
+          "coordinates_mm": [
+            39.3,
+            57.75
+          ],
+          "measured_value": "Current handoff says0.274mm under C431 at h4; its paragraph is not scoped to the old0.3g LS120 model."
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/masses.json",
+          "measured_value": "Current maker-nominal LS120 mass is0.5g; fresh native-fit/D5/pinned100g solve gives total70.497598846g and C431 deflection1.029087336mm, leaving0.270912671mm at4mm standoffs."
+        },
+        {
+          "file": "docs/M3_R10.md",
+          "line": 343,
+          "measured_value": "Current mechanical record correctly states0.270913mm; docs/R10_VALIDATION.md line1564 agrees."
+        },
+        {
+          "source": "MLT-5020 maker specification,2021-05-27",
+          "page": 2,
+          "item": 9,
+          "url": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598",
+          "measured_value": "0.5g nominal mass, actual fitted mass unweighed."
+        }
+      ],
+      "severity_basis": "Bounded stale evidence, about3.1micrometres of overstatement versus the rounded handoff value. This optional model is not physical clearance qualification and both values remain positive.",
+      "concrete_fix": "Replace0.274mm in the current vehicle handoff with0.271mm(or0.270913mm) and retain its current0.5g mass, D5/pinned100g assumptions and physical-qualification caveat. Keep historical0.274363mm receipts at their old hashes."
+    },
+    {
+      "id": "R15-MEC-03",
+      "severity": "Minor",
+      "status": "active-carried",
+      "carried_from": [
+        "R14-MEC-02",
+        "R13-MEC-02"
+      ],
+      "title": "Separately owned vehicle candidate mirror still describes removed hardware",
+      "evidence": [
+        {
+          "file": "../../docs/VEHICLE.md",
+          "line": 40,
+          "measured_value": "R10 candidate text still names GH ports, an ARM terminal, GH2 J400 at(10.5,85.5), and0.03mm mated clearance."
+        },
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "coordinates_mm": [
+            7.4,
+            65.85
+          ],
+          "measured_value": "Native J400 is outward-west DB125-2 at(7.4,65.85),19.893026mm from the old centre. Seven DB125s provide23 contacts; J124/J123/GH/header/tie-hole hardware is absent."
+        },
+        {
+          "file": "docs/R10_VEHICLE_HANDOFF.md",
+          "line": 3,
+          "measured_value": "The in-worktree handoff explicitly warns that the parent mirror is stale and supplies the correct replacement facts, apart from R15-MEC-02."
+        }
+      ],
+      "severity_basis": "Carried, bounded integration-record mismatch. The current warning prevents treating the parent text as approved construction evidence; physical fit is not claimed.",
+      "concrete_fix": "In the separately authorized parent-document workflow, replace only its R10 candidate entry using the corrected current handoff, preserving accepted R9 history. No other-worktree edit in this review."
+    }
+  ],
+  "closed_rechecks": [
+    {
+      "id": "R11-BOM-01/R11-MEC-01",
+      "severity": "Major",
+      "status": "closed-rechecked",
+      "reason": "Original DORABO dimensions independently reconstruct the corrected maximum unions; all7 current bare-bore wire benchmarks are5.003012mm above4.95mm. No current acceptance-bound failure."
+    },
+    {
+      "id": "R13-MEC-01",
+      "severity": "Minor",
+      "status": "closed-rechecked",
+      "reason": "All23 tail allocations present;3.80mm below seating,2.20mm projection below PCB,7.558359mm minimum calculated bore clearance. Seating/solder/bent-lead physical qualification remains open."
+    },
+    {
+      "id": "R13-BOM-02",
+      "severity": "Minor",
+      "status": "closed-rechecked",
+      "reason": "Closed SD allocation includes nails/general tolerances.15.05x15.70x2.10mm union retained with labelled card datum/seating inference."
+    },
+    {
+      "id": "R11-MEC-03",
+      "severity": "Minor",
+      "status": "closed-rechecked",
+      "reason": "Current ORDERING8.4 requires removing/unbolting the unpowered PCB from a continuous sled, or a qualified hinge window. No lid-sweep qualification inferred."
+    },
+    {
+      "id": "R14-MEC-01",
+      "severity": "Minor",
+      "status": "closed-record-gap-residual-retained",
+      "reason": "All16 stroked-courtyard pairs now appear in current validation section7. Fresh native measurements reproduce all16. The drawing residual stays in the deviation inventory; missing-inventory complaint is closed, not counted again as a new physical collision."
+    }
+  ],
+  "rejected_or_narrowed_C_M_candidates": [
+    {
+      "candidate": "Terminal maximum-envelope/wire-floor failure",
+      "disposition": "rejected-current",
+      "evidence": "Fresh original drawing reconstruction/current native models give5.003012mm on all7 against4.95mm. The separate wall/tolerance diagnostic is not that bare-bore benchmark and no chosen-wire failure is demonstrated."
+    },
+    {
+      "candidate": "Closed SD or support/fastener body collision",
+      "disposition": "rejected-current",
+      "evidence": "Fit and full model-pair/tail screens pass; actual hinge access explicitly requires board removal or qualified window. Open sweep/real hardware are unqualified, not declared passing."
+    },
+    {
+      "candidate": "3.5mm standoffs cause demonstrated physical100g contact",
+      "disposition": "not-established",
+      "evidence": "Optional ideal plate predicts C431/C421 overlap at3.5mm; current default4mm gives positive modeled gaps. Stiffness/support/load/real sled are unmeasured, so this is sensitivity evidence, not physical failure."
+    },
+    {
+      "candidate": "MEMS routing guidance establishes required sensor failure",
+      "disposition": "not-established;R15-MEC-01 Minor only",
+      "evidence": "Actual GND strap departure is preserved; no measured bias,range loss,mechanical damage or AGENTS2 violation shown. M-7 passes its stated via/fill/interior scope."
+    },
+    {
+      "candidate": "IMU axis/sign mismatch",
+      "disposition": "rejected-current",
+      "evidence": "Native B180 and pad1(+1.21,-0.75) plus original/top/bottom maker diagrams agree with roll=-gyroY and forward thrust=-aY,lever x=-6mm,z model-centre-2.059994mm(Inference)."
+    }
+  ],
+  "retained_qualification_obligations": {
+    "terminal_wire_room": "All7 benchmark passes only; ferrules/wire stiffness,bends,tool shafts/hand access,seating/fillets/staking,28-16AWG clamps/torque and wire retention unqualified.",
+    "SD": "15.05x15.70x2.10mm closed allocation only; centring/seating/card-front inference,actual card/lid retention,open sweep/window/finger/tool access unqualified.",
+    "hardware": "5supports;4mm standoff/<=1mm plate default;actual nut/head/washer maxima,eccentricity,projection,deflection,insulation/strength and installed bore fit unqualified.",
+    "vehicle": "OQ7 whole board plus axial tolerance forward of joint+47mm;2.6/4Ah pack,external GPS/radio/antennas,harness,sled,recovery and camera shroud actual stack unverified.",
+    "sensors": "No vias/fill in maker-max U4 body in fresh sample/nativeM7; actual sign,bias,thermal/vibration,opacity/vent/foam/coating and U1-load coupling unqualified. Numerical coat boundaries are project judgments; TP122 remains sole controlled exception.",
+    "retention": "All19 explicit mass keys used;23collision-only tails add no mass. Maker LS1200.5g/socket0.434g do not qualify installed mass or5x100g clamp/joint/lid/staking capacity."
+  },
+  "checks_actually_executed": [
+    {
+      "check": "tools/fit_check.py --profile r10 --report OWN_PROBE/fit.json",
+      "result": "exit0",
+      "measured": {
+        "rows": 223,
+        "bodies": 199,
+        "terminal_tails": 23,
+        "closed_card_allocations": 1,
+        "nearest_bottom": [
+          4.536176804314399,
+          "C32.2",
+          [
+            4.0,
+            44.3
+          ]
+        ],
+        "nearest_top": [
+          3.807887,
+          "LED2.2 exposed top pad",
+          [
+            4.0,
+            44.3
+          ]
+        ]
+      }
+    },
+    {
+      "check": "Read-only native API full placement probe",
+      "result": "completed; board unchanged",
+      "measured": {
+        "footprints": 209,
+        "courtyards": 209,
+        "modeled_bodies": 199,
+        "model_AABB_overlaps": [],
+        "terminal_tail_body_overlaps": 0,
+        "terminal_wire_results": [
+          {
+            "ref": "J1",
+            "position_mm": [
+              7.4,
+              75.85
+            ],
+            "rotation_deg": -90.0,
+            "model_box_mm": [
+              3.40000038,
+              71.23000035,
+              11.49999942,
+              79.55000149,
+              1.2700000001775181e-06,
+              8.90000125
+            ],
+            "wire_face_mm": 3.40000038,
+            "bare_bore_wire_room_mm": 5.003012246037412,
+            "allowance_wire_room_at_z5_mm": 4.429406455775873,
+            "body_radial_margin_mm": 2.9762689106986144,
+            "pads": [
+              {
+                "number": "1",
+                "net": "BAT_IN",
+                "xy_mm": [
+                  7.4,
+                  74.1
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "2",
+                "net": "GND",
+                "xy_mm": [
+                  7.4,
+                  77.6
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              }
+            ]
+          },
+          {
+            "ref": "J121",
+            "position_mm": [
+              7.4,
+              55.85
+            ],
+            "rotation_deg": -90.0,
+            "model_box_mm": [
+              3.40000038,
+              51.23000035,
+              11.49999942,
+              59.55000149,
+              1.2700000001775181e-06,
+              8.90000125
+            ],
+            "wire_face_mm": 3.40000038,
+            "bare_bore_wire_room_mm": 5.003012246037412,
+            "allowance_wire_room_at_z5_mm": 4.429406455775873,
+            "body_radial_margin_mm": 2.9762689106986144,
+            "pads": [
+              {
+                "number": "1",
+                "net": "PYRO1_OUT",
+                "xy_mm": [
+                  7.4,
+                  54.1
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "2",
+                "net": "PYRO1_IGN",
+                "xy_mm": [
+                  7.4,
+                  57.6
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              }
+            ]
+          },
+          {
+            "ref": "J400",
+            "position_mm": [
+              7.4,
+              65.849999
+            ],
+            "rotation_deg": -90.0,
+            "model_box_mm": [
+              3.40000038,
+              61.22999935,
+              11.49999942,
+              69.55000049,
+              1.2700000001775181e-06,
+              8.90000125
+            ],
+            "wire_face_mm": 3.40000038,
+            "bare_bore_wire_room_mm": 5.003012246037412,
+            "allowance_wire_room_at_z5_mm": 4.429406455775873,
+            "body_radial_margin_mm": 2.9762689106986144,
+            "pads": [
+              {
+                "number": "1",
+                "net": "BAT_SW_SOURCE",
+                "xy_mm": [
+                  7.4,
+                  64.099999
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "2",
+                "net": "BAT_SW_RETURN",
+                "xy_mm": [
+                  7.4,
+                  67.599999
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              }
+            ]
+          },
+          {
+            "ref": "J410",
+            "position_mm": [
+              38.6,
+              15.5
+            ],
+            "rotation_deg": 90.0,
+            "model_box_mm": [
+              34.50000058,
+              8.29999916,
+              42.599999620000006,
+              23.819998599999998,
+              1.2700000001775181e-06,
+              8.90000125
+            ],
+            "wire_face_mm": 42.599999620000006,
+            "bare_bore_wire_room_mm": 5.003012246037405,
+            "allowance_wire_room_at_z5_mm": 4.429406455775866,
+            "body_radial_margin_mm": 2.9762689106986073,
+            "pads": [
+              {
+                "number": "1",
+                "net": "PORT_4V8",
+                "xy_mm": [
+                  38.6,
+                  20.75
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "2",
+                "net": "GND",
+                "xy_mm": [
+                  38.6,
+                  17.25
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "3",
+                "net": "GPS_TX_WIRE",
+                "xy_mm": [
+                  38.6,
+                  13.75
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "4",
+                "net": "GPS_RX_WIRE",
+                "xy_mm": [
+                  38.6,
+                  10.25
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              }
+            ]
+          },
+          {
+            "ref": "J420",
+            "position_mm": [
+              38.6,
+              31.5
+            ],
+            "rotation_deg": 90.0,
+            "model_box_mm": [
+              34.50000058,
+              24.29999916,
+              42.599999620000006,
+              39.8199986,
+              1.2700000001775181e-06,
+              8.90000125
+            ],
+            "wire_face_mm": 42.599999620000006,
+            "bare_bore_wire_room_mm": 5.003012246037405,
+            "allowance_wire_room_at_z5_mm": 4.429406455775866,
+            "body_radial_margin_mm": 2.9762689106986073,
+            "pads": [
+              {
+                "number": "1",
+                "net": "PORT_4V8",
+                "xy_mm": [
+                  38.6,
+                  36.75
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "2",
+                "net": "GND",
+                "xy_mm": [
+                  38.6,
+                  33.25
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "3",
+                "net": "RADIO_TX_WIRE",
+                "xy_mm": [
+                  38.6,
+                  29.75
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "4",
+                "net": "RADIO_RX_WIRE",
+                "xy_mm": [
+                  38.6,
+                  26.25
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              }
+            ]
+          },
+          {
+            "ref": "J9",
+            "position_mm": [
+              38.6,
+              47.5
+            ],
+            "rotation_deg": 90.0,
+            "model_box_mm": [
+              34.50000058,
+              40.29999916,
+              42.599999620000006,
+              55.8199986,
+              1.2700000001775181e-06,
+              8.90000125
+            ],
+            "wire_face_mm": 42.599999620000006,
+            "bare_bore_wire_room_mm": 5.003012246037405,
+            "allowance_wire_room_at_z5_mm": 4.429406455775866,
+            "body_radial_margin_mm": 2.9762689106986073,
+            "pads": [
+              {
+                "number": "1",
+                "net": "CAM_5V",
+                "xy_mm": [
+                  38.6,
+                  52.75
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "2",
+                "net": "GND",
+                "xy_mm": [
+                  38.6,
+                  49.25
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "3",
+                "net": "CAM_RX_WIRE",
+                "xy_mm": [
+                  38.6,
+                  45.75
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "4",
+                "net": "CAM_TX_WIRE",
+                "xy_mm": [
+                  38.6,
+                  42.25
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              }
+            ]
+          },
+          {
+            "ref": "J122",
+            "position_mm": [
+              38.6,
+              71.5
+            ],
+            "rotation_deg": 90.0,
+            "model_box_mm": [
+              34.50000058,
+              62.54999885,
+              42.599999620000006,
+              81.56999891,
+              1.2700000001775181e-06,
+              8.90000125
+            ],
+            "wire_face_mm": 42.599999620000006,
+            "bare_bore_wire_room_mm": 5.003012246037405,
+            "allowance_wire_room_at_z5_mm": 4.429406455775866,
+            "body_radial_margin_mm": 2.9762689106986073,
+            "pads": [
+              {
+                "number": "1",
+                "net": "SERVO1_OUT",
+                "xy_mm": [
+                  38.6,
+                  78.5
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "2",
+                "net": "SERVO2_OUT",
+                "xy_mm": [
+                  38.6,
+                  75.0
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "3",
+                "net": "SERVO3_OUT",
+                "xy_mm": [
+                  38.6,
+                  71.5
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "4",
+                "net": "SERVO4_OUT",
+                "xy_mm": [
+                  38.6,
+                  68.0
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              },
+              {
+                "number": "5",
+                "net": "GND",
+                "xy_mm": [
+                  38.6,
+                  64.5
+                ],
+                "diam_mm": 1.9,
+                "drill_mm": 1.3
+              }
+            ]
+          }
+        ],
+        "minimum_tail_margin_mm": 7.5583593625055165
+      }
+    },
+    {
+      "check": "tools/check_r10.py --only M-1,M-3,M-5,M-6,M-7,P-11 --report OWN_PROBE/contracts.json",
+      "result": "exit0; all6 selected rules pass",
+      "measured": {
+        "M-1": {
+          "ok": true,
+          "issues": []
+        },
+        "M-3": {
+          "ok": true,
+          "issues": []
+        },
+        "M-5": {
+          "ok": true,
+          "issues": []
+        },
+        "M-6": {
+          "ok": true,
+          "issues": []
+        },
+        "M-7": {
+          "ok": true,
+          "issues": []
+        },
+        "P-11": {
+          "ok": true,
+          "issues": []
+        }
+      }
+    },
+    {
+      "check": "All209 native courtyard collision polygons plus actual stroked perimeters",
+      "result": "16 stroke overlaps,6F/10B; positive collision-polygon gaps; no model-body overlap",
+      "measured": [
+        {
+          "a": "C97",
+          "b": "D123",
+          "gap_mm": 0.030001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.874882000000003,
+          "side": "F",
+          "raw_courtyard_stroke_penetration_mm": 0.03000000000000043
+        },
+        {
+          "a": "R400",
+          "b": "L400",
+          "gap_mm": 0.030001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.7810249675906648,
+          "side": "F",
+          "raw_courtyard_stroke_penetration_mm": 0.029999999999999985
+        },
+        {
+          "a": "R32",
+          "b": "LED1",
+          "gap_mm": 0.040001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 1.3000019994200027,
+          "side": "F",
+          "raw_courtyard_stroke_penetration_mm": 0.019999999999998866
+        },
+        {
+          "a": "LED2",
+          "b": "R33",
+          "gap_mm": 0.020001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.6485694267393709,
+          "side": "F",
+          "raw_courtyard_stroke_penetration_mm": 0.04000000000000199
+        },
+        {
+          "a": "C60",
+          "b": "R60",
+          "gap_mm": 0.040001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.7499640000000056,
+          "side": "F",
+          "raw_courtyard_stroke_penetration_mm": 0.019999999999998866
+        },
+        {
+          "a": "R121",
+          "b": "D8",
+          "gap_mm": 0.020001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.8548739999999952,
+          "side": "F",
+          "raw_courtyard_stroke_penetration_mm": 0.03999999999999489
+        },
+        {
+          "a": "C85",
+          "b": "R86",
+          "gap_mm": 0.025,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.6749989999999855,
+          "side": "B",
+          "raw_courtyard_stroke_penetration_mm": 0.03500099999999691
+        },
+        {
+          "a": "C421",
+          "b": "U12",
+          "gap_mm": 0.010001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.4999999999999929,
+          "side": "B",
+          "raw_courtyard_stroke_penetration_mm": 0.05
+        },
+        {
+          "a": "R152",
+          "b": "D121",
+          "gap_mm": 0.020001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.9499140000000068,
+          "side": "B",
+          "raw_courtyard_stroke_penetration_mm": 0.04000000000000199
+        },
+        {
+          "a": "R64",
+          "b": "U5",
+          "gap_mm": 0.020001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 1.1797499999999985,
+          "side": "B",
+          "raw_courtyard_stroke_penetration_mm": 0.04000000000000199
+        },
+        {
+          "a": "U4",
+          "b": "C31",
+          "gap_mm": 0.040001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.5501940000000012,
+          "side": "B",
+          "raw_courtyard_stroke_penetration_mm": 0.019999999999998866
+        },
+        {
+          "a": "D121",
+          "b": "R151",
+          "gap_mm": 0.020001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.9499140000000068,
+          "side": "B",
+          "raw_courtyard_stroke_penetration_mm": 0.04000000000000199
+        },
+        {
+          "a": "C22",
+          "b": "C26",
+          "gap_mm": 0.040001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.827540230002141,
+          "side": "B",
+          "raw_courtyard_stroke_penetration_mm": 0.019999999999998866
+        },
+        {
+          "a": "C83",
+          "b": "C28",
+          "gap_mm": 0.030001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 1.2499000000000002,
+          "side": "B",
+          "raw_courtyard_stroke_penetration_mm": 0.03000000000000043
+        },
+        {
+          "a": "Y1",
+          "b": "R10",
+          "gap_mm": 0.040001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 1.1015816708369837,
+          "side": "B",
+          "raw_courtyard_stroke_penetration_mm": 0.02000000000000242
+        },
+        {
+          "a": "C18",
+          "b": "C30",
+          "gap_mm": 0.020001,
+          "max_stroke_mm": 0.05,
+          "nominal_model_gap_mm": 0.49993799999999666,
+          "side": "B",
+          "raw_courtyard_stroke_penetration_mm": 0.03999999999999844
+        }
+      ]
+    },
+    {
+      "check": "Fresh optional plate, current native fit/current mass specification",
+      "result": "completed, finite outputs; Calculation/Inference only",
+      "measured": {
+        "label": "fresh round15 mechanics",
+        "profile": "r10",
+        "board_sha256": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+        "supports": [
+          [
+            3.7,
+            86.0
+          ],
+          [
+            4.0,
+            4.0
+          ],
+          [
+            4.0,
+            44.3
+          ],
+          [
+            42.0,
+            4.0
+          ],
+          [
+            42.0,
+            86.0
+          ]
+        ],
+        "f1": {
+          "r10_mated": {
+            "pinned_D5": 181.1,
+            "pinned_D10": 256.1,
+            "clamped_D5": 287.9,
+            "clamped_D10": 407.1,
+            "board_mass_g": 70.5
+          }
+        },
+        "static": {
+          "r10_mated": {
+            "max_deflection_mm": 1.24,
+            "at": [
+              46.0,
+              45.0
+            ],
+            "strain_ue": {
+              "U4": 473,
+              "U1": 994,
+              "J121": 1035,
+              "C84": 1343,
+              "U5": 732,
+              "J1": 1087,
+              "J122": 1490
+            }
+          }
+        },
+        "local_100g_rigid_sled_clearance_inference": [
+          {
+            "ref": "C431",
+            "max_board_deflection_mm": 1.0290873363001918,
+            "bottom_hang_mm": 2.6999999924,
+            "clearance_h4_mm": 0.2709126712998082,
+            "clearance_h3_5_mm": -0.22908732870019177
+          },
+          {
+            "ref": "C421",
+            "max_board_deflection_mm": 0.9546146466081655,
+            "bottom_hang_mm": 2.6999999924,
+            "clearance_h4_mm": 0.3453853609918345,
+            "clearance_h3_5_mm": -0.15461463900816552
+          },
+          {
+            "ref": "C411",
+            "max_board_deflection_mm": 0.713535570047402,
+            "bottom_hang_mm": 2.6999999924,
+            "clearance_h4_mm": 0.586464437552598,
+            "clearance_h3_5_mm": 0.08646443755259803
+          },
+          {
+            "ref": "L1",
+            "max_board_deflection_mm": 0.4610764026092444,
+            "bottom_hang_mm": 3.015825312,
+            "clearance_h4_mm": 0.5230982853907555,
+            "clearance_h3_5_mm": 0.02309828539075559
+          },
+          {
+            "ref": "U4",
+            "max_board_deflection_mm": 0.5017342161758603,
+            "bottom_hang_mm": 0.919988,
+            "clearance_h4_mm": 2.5782777838241397,
+            "clearance_h3_5_mm": 2.0782777838241397
+          },
+          {
+            "ref": "U5",
+            "max_board_deflection_mm": 0.34164953059067155,
+            "bottom_hang_mm": 1.1000739999999998,
+            "clearance_h4_mm": 2.5582764694093285,
+            "clearance_h3_5_mm": 2.0582764694093285
+          },
+          {
+            "ref": "J430",
+            "max_board_deflection_mm": 0.8070617901547259,
+            "bottom_hang_mm": 2.10000088,
+            "clearance_h4_mm": 1.092937329845274,
+            "clearance_h3_5_mm": 0.592937329845274
+          }
+        ],
+        "first_mode_sensor_relative_amplitude_inference": {
+          "U4": 0.33467746093220985,
+          "U5": 0.17399969345312544
+        },
+        "total_unrounded_g": 70.4975988460437
+      }
+    },
+    {
+      "check": "Independent hardware/shroud/sensor arithmetic and native probes",
+      "result": "completed; CAD/Inference",
+      "measured": {
+        "outline_mm": [
+          0.0,
+          0.0,
+          46.0,
+          90.0
+        ],
+        "supports_mm": [
+          [
+            3.7,
+            86.0
+          ],
+          [
+            4.0,
+            4.0
+          ],
+          [
+            4.0,
+            44.3
+          ],
+          [
+            42.0,
+            4.0
+          ],
+          [
+            42.0,
+            86.0
+          ]
+        ],
+        "hardware_h_plus_t_bound_mm": {
+          "4": 6.018412895573664,
+          "42": 6.018412895573664,
+          "3.7": 5.365255833807693
+        },
+        "masked_foreign_copper": [
+          {
+            "hole_mm": [
+              4,
+              44.3
+            ],
+            "layer": "F.Cu",
+            "copper": [
+              {
+                "net": "3V3",
+                "radius_mm": 3.410399,
+                "kind": "track"
+              },
+              {
+                "net": "3V3",
+                "radius_mm": 3.260399,
+                "kind": "via"
+              },
+              {
+                "net": "NRST",
+                "radius_mm": 3.421392,
+                "kind": "track"
+              },
+              {
+                "net": "NRST",
+                "radius_mm": 3.421392,
+                "kind": "track"
+              }
+            ]
+          },
+          {
+            "hole_mm": [
+              4,
+              44.3
+            ],
+            "layer": "B.Cu",
+            "copper": [
+              {
+                "net": "3V3",
+                "radius_mm": 3.260399,
+                "kind": "via"
+              }
+            ]
+          }
+        ],
+        "imu": {
+          "position_mm": [
+            17.0,
+            45.9
+          ],
+          "rotation_deg": 180.0,
+          "bottom": true,
+          "pad1_mm": [
+            18.21,
+            45.15
+          ],
+          "model_box_mm": [
+            15.50013,
+            44.650065999999995,
+            18.500124,
+            47.149934,
+            -2.519988,
+            -1.6
+          ],
+          "lever_x_mm": -6,
+          "lever_z_model_mm": -2.059994,
+          "via_ring_intersections": [],
+          "component_side_fill_samples": [],
+          "centripetal_g_at_4000dps": 2.9819838884352996
+        },
+        "sensor_nearest_support_mm": {
+          "U4": 13.098091464026353,
+          "U5": 8.160882305241268
+        },
+        "C431_h4_gap_mm": 0.2709126712998082,
+        "conditional_board_aft_joint_mm": [
+          79.4,
+          83.4
+        ],
+        "shroud_forward_joint_mm": 47,
+        "physical_stack_verified": false
+      }
+    },
+    {
+      "check": "Poppler full-page primary drawing and canonical assembly PDF QA",
+      "result": "Inspected DB125 p1,Molex p1,ST LSM Rev1 p9/p187,TE p15/p17,MA p2,buzzer p2,USB p1,Sunlord p1/p2,Murata p1; both current assembly PDF complete pages",
+      "measured": {
+        "assembly_top_sha256": "e41b04085b0263a9f784ff865b973f68915987abfe9c5bd9c6ce10aa9974818d",
+        "assembly_bottom_sha256": "1fea7f7ee5cabd1ae262975639e42f843cfdf9747f49decb31dc9e15b652b3fc"
+      }
+    },
+    {
+      "check": "Source/protocol review",
+      "result": "AGENTS first; target/review packets, requirements,all116decision IDs and22owner-mandate scopes,current AVA/M3/validation,ordering,vehicle source/handoff considered; prior reports context only; no current-round peer files/probes read",
+      "measured": {
+        "current_round_peer_exposure": false,
+        "native_kicad_cli_invocations": 0,
+        "canonical_builds": 0,
+        "git_mutations": 0,
+        "gui_invocations": 0
+      }
+    }
+  ],
+  "primary_sources": [
+    {
+      "id": "DORABO",
+      "version": "T0-1,2022-11-26",
+      "pages": [
+        1
+      ],
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+      "sha256": "76a55d0cbb4d30bf4d714401b8612365b6b35fedcd9660adae81c0e79d86ff7a"
+    },
+    {
+      "id": "Molex",
+      "version": "SD-47219-001G",
+      "pages": [
+        1
+      ],
+      "url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+      "sha256": "793d191c35764f9e0dbde0d95a19418da8016b442c4b2716e787f808011faa1e"
+    },
+    {
+      "id": "ST_LSM_visual",
+      "version": "DS14623Rev1,March2025",
+      "pages": [
+        9,
+        187
+      ],
+      "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+      "qualification": "Complete cached primary-maker figures inspected fresh. Official indexed Rev3 p9/210 and p185/210 crosschecked unchanged axes/pin diagram and package dimensions. Full current ST download failed; no claim of full Rev3 visual review.",
+      "sha256": "1b3b1d497968a6dd54a8ce7875e84ff6579217733061617beb1f62a1ba7d9c1c"
+    },
+    {
+      "id": "TE_MS5611",
+      "version": "06/2017",
+      "pages": [
+        15,
+        17
+      ],
+      "url": "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=MS5611-01BA03&DocType=Data+Sheet&PartCntxt=MS561101BA03-50",
+      "sha256": "d4cbbb0e4df8cc5c123a20da6697e60ef66d7120bfe6bedf11e29016e35bfc97"
+    },
+    {
+      "id": "JIERRUI_MA",
+      "version": "Supplier MA-series sheet, no revision/date printed on inspected drawing page",
+      "pages": [
+        2
+      ],
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+      "sha256": "5ab3c478e90f1826a614a56af8164bb4bab3143affaae1ad7aa69fc0c1981997"
+    },
+    {
+      "id": "MLT5020",
+      "version": "2021-05-27",
+      "pages": [
+        2
+      ],
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598",
+      "sha256": "db73c860afd42abdf9a2e69c4a34ac915d68e07108a2188d6ee0a9c02f723be9"
+    },
+    {
+      "id": "HROPARTS_USB",
+      "version": "TYPE-C-31-M-12 RevA,2020-12-08",
+      "pages": [
+        1
+      ],
+      "url": "https://datasheet.lcsc.com/lcsc/1903211732_Korean-Hroparts-Elec-TYPE-C-31-M-12_C165948.pdf",
+      "sha256": "6ae33d50ac47820114661138dc4e4659f40fdc5d4f485b46685dfec338da1a9e"
+    },
+    {
+      "id": "Sunlord",
+      "version": "SWPA catalogue,revised2025-05-08",
+      "pages": [
+        1,
+        2
+      ],
+      "url": "https://www.sunlordinc.com/uploads/files/20221122/SWPA%20series%20of%20SMD%20Power%20Inductor.pdf",
+      "qualification": "Cached supplier/maker catalogue identifies2025-05-08 on p1; p2 SWPA4030S gives4.0+/-0.2mm sides and3.0mm maximum height. Original-maker URL found independently; URL date is not treated as document revision.",
+      "sha256": "11a724088069e1fecf42943e5609b675cb1f8455afb09d433ea21f6e2bbb12d1"
+    },
+    {
+      "id": "Murata",
+      "version": "GRM32ER71E226KE15-04CA,2021-11-04",
+      "pages": [
+        1
+      ],
+      "url": "https://www.murata.com/en-us/products/productdetail?partno=GRM32ER71E226KE15%23",
+      "sha256": "a7f8679919885aceaee6c3789c2aceedc9284180af0eb4273a571e2033540700"
+    },
+    {
+      "id": "ST_TN1383",
+      "version": "Rev1,August2023",
+      "pages": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "url": "https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf",
+      "qualification": "Primary text inspected through web tool. HTTP2 fetch failed,HTTP1.1 timed out; no local PDF download or local drawing raster claimed. Web screenshot calls returned references, not inspectable image content in this runtime."
+    }
+  ],
+  "coverage_limits": [
+    "Read-only CAD/source review,not physical/firmware/process/flight qualification. No full build/check.sh,DRC/CLI,GUI or supplier/procurement run by this lens. Root owns those checks.",
+    "Model pairwise screen uses transformed AABBs; legacy general-part models are engineering envelopes,not certified complete tolerance assemblies. Max DB125 and closed-SD allocations were separately reconstructed from maker dimensions.",
+    "Read-only Python initial probe used an unavailable field API and a layerless via-width accessor; corrected final probes completed. Initial false wide-axis U4 AABB was corrected to the maker W3.00xL2.50 orientation before results were used. Native import wxApp diagnostic warnings did not prevent final exit0.",
+    "ST latest full PDF fetch failed; Rev1 original drawings visually inspected and current official Rev3 indexed p9/p185 dimensions/axes crosschecked. TN1383 primary text inspected; no full current-ST PDF visual review claimed.",
+    "All current-round peer reports/probes avoided; no accidental peer exposure. No hidden AVA copper or safety-performance inference."
+  ]
+}

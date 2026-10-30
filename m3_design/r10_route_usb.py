@@ -59,9 +59,9 @@ def draw(d, feed=False):
     # SWD from the TC2030 pads (J2: 2 SWDIO, 4 SWCLK, 3 NRST), clear of its three locating holes.
     # J2's F.Cu keep-out covers the strip between its pad rows: each track ends inside its pad, outside the strip.
     d.pad('J2.2', at=(3.73, 38.765)); d.pad('J2.4', at=(5.0, 38.765)); d.pad('J2.3', at=(5.0, 40.035))
-    d.track('SWDIO', 'F', .2, [(3.73, 38.45), (3.73, 36.1), (12.6, 36.1), (14.85, 33.85), (18.5, 33.85),
+    d.track('SWDIO', 'F', .2, [(3.73, 38.45), (6.08, 36.1), (12.6, 36.1), (14.85, 33.85), (18.5, 33.85),
                                d.pad('U1.72')])
-    d.track('SWCLK', 'F', .2, [(5.0, 38.45), (5.0, 38.0), (6.4, 36.6), (14.3, 36.6), (14.7, 37.0), d.pad('U1.76')])
+    d.track('SWCLK', 'F', .2, [(5.0, 38.45), (6.85, 36.6), (14.3, 36.6), (14.7, 37.0), d.pad('U1.76')])
     # NRST leaves J2.3 south on F.Cu (between J2's 3V3 / GND stub vias and R33), runs north west of R32 / R33 and east
     # over the bottom USB_FAULT_N run to one via, then enters V_NRST from the west on B.Cu (R10_DECISIONS D-R2-09: the
     # former B.Cu leg from J2 and its two hop vias are gone).

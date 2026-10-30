@@ -8,23 +8,27 @@ DS41326, SLVS841F, SLVSEA3F, SBVS282A, SCES942A and the LR900 manual. No physica
 tests were performed. The current always-on ports, screw terminals, microSD and sole-bus-sense amendment below supersedes the earlier port-switch/translator, header, duplicated sense and ride-through records. AUD/GAP amendments still apply where not explicitly superseded; dated review records remain historical.
 
 
-## Current circuit amendment (owner decisions 2026-10-28; round-11 records)
+## Current circuit amendment and R15 qualification (owner decisions 2026-10-28)
 
 No physical tests or firmware qualification are claimed. The actual source contract is
 `circuit.json` plus `pin_table.tsv`; the earlier `parts.json` is a historical selection worksheet.
-The current native-path record is bound to round14 fix PCB
-`7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783`. Two complete direct native builds/check0
-reproduce42 generated files. All31 R10 rules and fab checks pass; R10173/
-fit30 tests pass,including separate resolution of all native NumPy skips.
-See [round14 fix validation](../r10_review/round14_fix_validation.json). This is
-integration evidence,not independent full-round or physical qualification.
-Dated records below remain historical where superseded. Native comparison
-preserves all part poses,pad lands/nets,vias,GND tracks,zone definitions and
-Fab references; twelve qualified local route windows change. R13's77 Fab-reference
-corrections, SD nails/tolerances and23 separately calculated terminal tails remain
-covered by native preservation and current fit. C98 return
-remains7.345584mm at0.05mm grid,versus31.812237mm before R12; no transient
-behavior is inferred. Fresh complete15/16 must review the committed result.
+The current native-path record is bound to round15 fix PCB
+`632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`.
+Two complete native builds/check0 reproduce42 generated files byte for byte and
+pass all31 R10 rules and fab checks. R10 suite176 andfit31/paste16/routing60 pass;
+all four native NumPy skips are separately resolved.
+See [R10 validation](../../../../docs/R10_VALIDATION.md), round15. This is
+integration evidence, not independent full-round or physical qualification.
+Native comparison preserves all part poses, pad lands/nets, fields/models, vias,
+zone outlines and Fab references. Fifteen route windows save10.008727mm/eight
+segments; individual outside-body IMU GND escapes to the same vias add1.544214mm/
+two segments, giving951 segments/296 vias and net8.464513mm saved. GND tracks
+are changed; complete TN1383 stress/process qualification is not established.
+R13's77 Fab-reference corrections, SD nails/tolerances and23 separately calculated
+terminal tails remain covered. C98 return remains7.345584mm at0.05mm grid,
+versus31.812237mm before R12; no transient behavior is inferred. Full R15 reviewed
+789f4d5/7866d6b8 with0Critical/0Major/14Minor groups (20raw). Fresh complete16/17
+must review the committed successor. Dated records below retain their own scopes.
 
 **Always-on GPS/radio.** J410/J420 pin1 directly joins PORT_4V8. Delete U410/U420,
 R410–412/R420–422, U411/U421, R442/R452 and C440/C443/C450/C453. Keep the four
@@ -141,8 +145,9 @@ was returned. J121 remains black; body count and explicit function/pin legends d
 unkeyed green terminals. [Maker DB125 T0-1 drawing,2022-11-26](https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf)
 covers2–24positions and verifies3.5mm pitch, N×3.5 body length,7.4mm depth,8.6mm
 height,0.50×0.85mm pins,1.20mm maker holes and28–16AWG solid/stranded clamp range.
-The existing conservative1.30mm finished drill/1.90mm copper land remains, with
-1.60mm nominal interpad gap. Four-position x–5.25/–1.75/+1.75/+5.25; five-position
+All 23 contacts retain nominal Ø1.30mm holes/Ø1.90mm copper at 3.50mm pitch, with
+1.60mm nominal interpad gap; the insertion/process allocation remains open below.
+Four-position x–5.25/–1.75/+1.75/+5.25; five-position
 x–7/–3.5/0/+3.5/+7mm. Round11 corrected the envelope from the maker's
 independent end datum, interlock and dimensional tolerances (D-R11-01):
 
@@ -190,6 +195,82 @@ maker identities, nets and lands are unchanged. Source inventory:
 | C25/C26 | 10pF 50V C0G 5% | C32949, Samsung [CL05C100JB5NNNC](https://product.samsungsem.com/mlcc/CL05C100JB5NNN.do) |
 | C60/C94/C127/C129 (C122 later removed) | 10nF 50V X7R 10% | C57112, FH [0603B103K500NT](https://www.lcsc.com/product-detail/C57112.html) |
 | C88/C99 | 100nF 50V X7R 10% | C307331, Samsung [CL05B104KB54PNC](https://product.samsungsem.com/mlcc/CL05B104KB54PN.do) |
+
+
+## Round-15 component qualification (2026-10-30; R15-BOM-02 / R15-MCU-01)
+
+The fresh independent verifiers retain both items as Minor qualification gaps.
+Keep the current terminal holes and C19/C20 for the unqualified CAD candidate;
+no physical insertion failure, installed C/ESR violation or regulator failure
+has been demonstrated. Focused measurements below belong to the reviewed
+`7866d6b8…`; the R15 fix retains these terminal lands/holes and exact capacitors.
+
+**DB125 insertion and fabrication allocation.** All seven exact terminal variants
+have 23 contacts with nominal Ø1.30mm holes, Ø1.90mm lands and 3.50mm pitch.
+[DORABO T0-1, sheet1/1, 2022-11-26](https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf)
+shows nominal 0.50×0.85mm pins and recommends Ø1.20mm holes. Applying its ±0.20mm
+general table independently to both pin dimensions gives a **conditional sharp**
+0.70×1.05mm section, diagonal 1.261942946mm. [JLC's current drilling table](https://jlcpcb.com/capabilities/pcb-capabilities)
+allows +0.13/−0.08mm finished PTH size, giving 1.22mm minimum and a size-only
+allowance of −0.041942946mm under that model. Actual insertion-section corners,
+burrs, pin form and relative pattern limits are unresolved. The cited
+[GB/T14486-2008 record](https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=D13DCBFC8E64A2B32F77B4CE9EBD4B92)
+covers moulded plastic parts; clarify the drawing table's metal-pin applicability
+with the maker rather than assuming either its application or exclusion.
+
+Native S-8 passes at **1.102501576mm**, J121.1 nominal hole wall to In2 3V3 fill.
+That is CAD geometry. A conditional +0.13mm hole diameter and 0.075mm displacement
+toward that fill consume 0.140mm radially, leaving 0.962501576mm. This illustrative
+process corner is not a measured failure or nominal CAD violation: position
+datum/correlation, layer registration and maximum outer barrel need fabricator
+allocation. Present nominal annulus is 0.30mm. Enlarging holes alone reduces both
+annulus and S-8 reserve; **no enlarged drill is approved**.
+
+Before assembly, obtain maker/assembler maximum insertion profile, relative pin
+pattern/form limits and an approved seating/lead-form method. Agree finished-hole
+minimum/maximum, relative pattern error, annulus and protected barrel-to-inner-copper
+realization with the fabricator. A sufficient geometric allocation is
+`Dhole_min ≥ Dpin_circumscribed_max + 2×eresidual + positive assembly allowance`
+(Inference), with residual error after permitted alignment/forming; do not add
+per-pitch errors again on top of a dimensioned row-span tolerance. On first
+articles inspect all 23 contacts for full seating, undamaged barrels/plating and
+solder fill, then complete the existing clamp, harness, staking and retention
+checks. [JLC's assembly inspection guidance](https://jlcpcb.com/blog/pcb-header-design)
+distinguishes finished-hole, plating, seating and solder-fill checks. If allocation
+fails, review holes/lands and protected inner copper together before fabrication.
+Evidence: [terminal verification](../r10_review/round15_terminal_verification.md)
+and [measurements](../r10_review/round15_terminal_verification.json).
+
+**VCAP C19/C20 operating qualification.** Retain Samsung **CL10A225KO8NNNC /
+C23630**, 2.2µF 16V X5R ±10%, separately on VCAP1/U1.48 and VCAP2/U1.73.
+Initial 1.98–2.42µF complies with nominal selection. [ST DS12110 Rev11 Table114
+p211](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf) specifies 2.2µF
+typical with ±20% variation and ESR<0.1Ω. Its numerical 1.76–2.64µF window needs
+ST's measurement/interpretation resolved: the table does not specify frequency,
+AC amplitude or separate nominal selection from combined operating capacitance.
+
+The [exact Samsung specification, p2 and manual pp12–17](https://product.samsungsem.com/part/download.do?masterKey=CL10A225KO8NNN&type=specsheet)
+uses 1kHz±10%/1.0±0.2Vrms after 150°C/1h treatment and 24±2h recovery; X5R allows
+±15% temperature change. Its zero-bias initial-tolerance/TCC envelope is
+1.683–2.783µF (Calculation), not demonstrated simultaneous corners. Combining
+−10% initial tolerance with the separate [typical Samsung curves](https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do)
+at 70°C/1.0V gives **1.716525µF (Inference)**, not a guaranteed joint corner.
+Temperature/DC-bias dependence is not established as separable; the 8V biased-TCC
+example cannot qualify VCAP. Small-signal AC dependence and model-dependent aging
+add uncertainty; do not multiply another curve into that inference or treat typical
+ESR as an operating guarantee.
+
+Resolve ST's C/ESR test conditions; record fitted silicon revision and allowed
+startup/operating regulator modes, including VOS transitions. Obtain maker-supported
+combined bounds, or qualify the exact fitted parts after reflow/rework and defined
+aging over actual bias, local temperature and relevant frequency/ripple conditions.
+Check **both lower and upper capacitance, ESR, startup and load/clock transients**.
+The −20…+70°C bay scope does not establish capacitor temperature; keep its surface
+within the −55…+85°C part rating. A 3.3µF±10% substitution spans 2.97–3.63µF nominal,
+already above 2.64µF: larger nominal capacitance alone is not a correction. Any
+replacement needs exact identity, compatible lands/process and the same complete
+C/ESR qualification. Evidence: [VCAP verification](../r10_review/round15_vcap_verification.md)
+and [conditions/calculations](../r10_review/round15_vcap_verification.json).
 
 
 ## AUD/GAP component amendments (2026-10-28; CAD / Calc / Inference only)
@@ -321,7 +402,7 @@ after pad/flight drain, Rpack≤0.15 Ω, servo stall1.92 A each. Solve
 Ifire=V/Rfire. Retain conservative2 Ω e-match and≤0.3 Ω external leads/harness,
 R134 tolerance/hot corner2.02909 Ω, hot FETs,5 mΩ ground/10 mΩ contact allowances.
 The current `parts_budget.json` is regenerated and bound to PCB
-`7866d6b8…` instead of carrying circuit-pass length literals. Native fire-path pruning
+`632a9ad3…` instead of carrying circuit-pass length literals. Native fire-path pruning
 gives BAT_IN6.307107mm/1.0mm, RAW_ACT5.886133mm, IGN10.230382mm and
 OUT7.854478mm at0.5mm, plus one aligned2.2mm/0.4mm source path. BAT_IN includes
 the additional0.707107mm routed entry inside Q120's common drain pad; dead sense
@@ -330,7 +411,7 @@ series via. Copper is29.362412mΩ at20°C/35.132126mΩ at70°C (TCR0.00393/K).
 With the primary40mΩ/FET ceiling, total loop4.617458126Ω gives0/1/2/3/4-stall
 currents1.544366072/1.479437787/1.414263776/1.348804955/1.283013039A;
 all exceed1.125A. D-R11-03 binds the generator to native geometry. The regenerated
-budget SHA-256 is `e46603e498b2b534df7bf607f80a2254929e30e3acd70e76d78190660b7725ba`.
+budget SHA-256 is `c5fb1337b9561be9f88243145d3e8aa071822116533a70805acfb9f52a42a7ea`.
 The intermediate `419a8f49…` board had the same fire-path lengths/current estimates;
 the new budget binds the later target independently.
 The earlier `0c50b9fd…` review calculation (4.618006Ω,1.544183A idle/1.282861A
@@ -372,7 +453,7 @@ TP122, NRST and dummy-load current for early/late CPU starvation, normal abort,
 postfire refresh, reset/unpowered gate tails and hot R134 pulses; record resistor
 drift and actual physical20/36 ms limits across supply and temperature.
 
-**Current local output paths (GAP-2, native CAD / Inference):** on `7866d6b8…`; original paths preserved by exact native comparison,
+**Current local output paths (GAP-2, native CAD / Inference):** on `632a9ad3…`; original paths preserved by exact native comparison,
 U9 is B(18.5,81.6), C82 is B(19.3,76.75),90°, and D9 is B(15.0,79.3),−90°.
 The saved-copper API gives:
 
@@ -663,7 +744,7 @@ use `${KIPRJMOD}/kilib/rocket.3dshapes`. New lands have no clearance overrides.
 
 | Part | Source and local land | Qualification status |
 |---|---|---|
-| DB125 black C52993880; green C466970 | [DORABO supplier-linked T0-1 drawing](https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf):3.5 mm pitch,7.0×7.4×8.6 mm body,28–16 AWG,10 A UL/13.5 A IEC,0.2 N·m,4–5 mm strip. Pads±1.75 mm,Ø1.9 copper/Ø1.3 drill. Bodyy−3.9…3.5; wire-entry+y. | This T0-1 supplier drawing recommendsØ1.2 holes; the [older maker drawing](https://www.nbdibo.com/wp-content/uploads/2020/06/DB125-3.5-XXP-C-S.pdf) was reported as1.3 in round1.1.3 selected conservatively. Nominal copper gap1.6 mm and radial annulus0.3 mm are calculated, not actual manufactured measurements. Final board must hold≥1.5 mm including tracks; no role alias inherited from R9. Envelope7.3×7.7×8.9 includes general tolerance. J1 peak≈6 A is below10 A; validate installed wire/contact heating. |
+| DB125 black C52993880; green C466970 | [DORABO supplier-linked T0-1 drawing](https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf):3.5 mm pitch,7.0×7.4×8.6 mm body,28–16 AWG,10 A UL/13.5 A IEC,0.2 N·m,4–5 mm strip. Pads±1.75 mm,Ø1.9 copper/Ø1.3 drill. Bodyy−3.9…3.5; wire-entry+y. | T0-1 recommendsØ1.2 holes; the [older maker drawing](https://www.nbdibo.com/wp-content/uploads/2020/06/DB125-3.5-XXP-C-S.pdf) was reported as1.3 in round1. CurrentØ1.30mm nominal holes do not close insertion/process extremes; use the round15 allocation above. Nominal copper gap1.6 mm and radial annulus0.3 mm are calculated, not actual manufactured measurements. Final board must hold≥1.5 mm including tracks; no role alias inherited from R9. Envelope7.3×7.7×8.9 includes general tolerance. J1 peak≈6 A is below10 A; validate installed wire/contact heating. |
 | GH2 C161690 | [JST eGH pp2–3](https://www.jst-mfg.com/product/pdf/eng/eGH.pdf):1.25 mm pitch; pads0.6×1.7 atx±0.625,y1.95; tabs1×2.8 atx±2.475,y−1.4. | Same frame as GH4; mechanical pads unnamed. Body5.75×4.25, mated height7.3 mm, further3 mm wire allowance belongs to fit gate.1 A withAWG26; contact50 mΩ maximum after test. Harness allocation must include both supply and return contacts. |
 | GH4 C161692 | Existing M3_GH_BM04B_GHS_TBT land/model, same JST drawing. | Used for camera/GPS/radio; keyed connectors remain electrically different, require labels and harness pin check. |
 | TPS7A9101 C2878140 | TI DSK0010A:0.6×0.25 pads,0.5 pitch,row centres±1.15; pad11 1.2×2.0. | Maker land, thermal-pad paste split to the maker's84%. GAP-3 adds two 0.5/0.3 GND vias in pad11, resin-filled/copper-capped planar VIPPO; original paste windows unchanged (thermal estimate above). Body maximum2.6×2.6×0.8 mm. |

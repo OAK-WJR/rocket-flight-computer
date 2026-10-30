@@ -6,6 +6,10 @@ editing that worktree. Preserve the accepted R9 entry. The exact current PCB,
 review and build binding is in [R10_VALIDATION.md](R10_VALIDATION.md); R10 remains
 unaccepted and no physical fit is claimed.
 
+Current PCB is `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`.
+All part poses, lands, supports and models are preserved through R15. Complete
+Two complete builds/check0 reproduce42 generated files byte for byte. Full R15 reviewed
+789f4d5/7866d6b8; fresh full16/17 are required on the committed successor.
 All coordinates below are PCB millimetres, as in `m3_design/r10_place.tsv`.
 
 | Terminal | Centre / rotation | Outward entry | Contact order |
@@ -36,7 +40,7 @@ with the selected 4 mm standoffs, nut on sled side and head on top, measured
 nut-inclusive h+t below 6.0 mm at x4/42 and below 5.3 mm at x3.7. Program J2
 before installing the adjacent mid support, or remove it for programming.
 Hardware maxima, eccentricity, solder tails, plate strength and shock clearance
-remain unqualified. The optional 100 g/D5 model leaves only 0.274 mm below C431
+remain unqualified. The optional 100 g/D5 model leaves only 0.270913 mm below C431
 at h4; h3.5 predicts overlap. This is an inference, not a physical result.
 
 Maximum DB125 insulating bodies are in the VRML models. The fit checker separately
@@ -49,7 +53,13 @@ is 5.003012 mm at every wire face against the accepted 4.95 mm floor, only
 0.053012 mm margin. It is not a ferrule/bend/tool-envelope qualification.
 DB125 accepts 28-16 AWG; verify actual leads, 4-5 mm strip, ferrules, screw
 access and retention. Its maximum body height is 8.90 mm and tail is
-3.50 +/-0.30 mm. Stake all seven terminals, including J400.
+3.50 +/-0.30 mm. Stake all seven terminals, including J400. The nominal
+Ø1.30mm holes/Ø1.90mm lands do not establish pin insertion at all process corners.
+Obtain the maker/assembler insertion profile and fabricator hole/pattern/barrel
+allocation; inspect all23 contacts for seating, undamaged plating/barrels and solder
+fill. Nominal S-8 minimum1.102501576mm is not a fabricated-clearance qualification.
+Exact C19/C20 combined operating capacitance/ESR, process/rework/aging and actual
+regulator-mode/local-temperature qualification also remain open; see ORDERING §8.2.
 
 J430 is the bottom hinged Molex microSD socket at (24,24.3). The current fit
 check covers a 15.05 x 15.70 x 2.10 mm closed socket/card allocation, including
