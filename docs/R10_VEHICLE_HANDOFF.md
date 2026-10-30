@@ -6,10 +6,25 @@ editing that worktree. Preserve the accepted R9 entry. The exact current PCB,
 review and build binding is in [R10_VALIDATION.md](R10_VALIDATION.md); R10 remains
 unaccepted and no physical fit is claimed.
 
-Current PCB is `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`.
-All part poses, lands, supports and models are preserved through R15. Complete
-Two complete builds/check0 reproduce42 generated files byte for byte. Full R15 reviewed
-789f4d5/7866d6b8; fresh full16/17 are required on the committed successor.
+Current PCB is `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
+46x90x1.6mm,2,256,162bytes,951segments/296vias/1788.675665mm track.
+Full R16 onb1b8658/632a9ad3 completed0Critical/0Major/11Minor groups from17raw
+(5new/6carried); all1942committed files stayed unchanged. FullR17 on this same
+PCB is pending. The two R15 complete builds/check0 and42-file equality apply
+to it. One new R16 integrated build/check exits0:DRC/unconnected/parity/ERC0,
+all32rules including K-binding,180R10tests,31fit/16paste/5parts/67route. All four
+native NumPy skips are separately resolved. Its42generated files match both
+R15snapshots; orientation,618paste geometries and five-output manifest pass.
+Fresh2304+60local hot-plug cases pass as Simulation/Inference; assembly-page
+rasters match b1b8658 despite PDF metadata-byte changes. This is one new build,
+not a second new-build pair. The separate final standalone check also exits0
+with32rules/180R10tests/67route and all four native NumPy skips resolved.
+Full R16 originally covered119D IDs/22mandates; current amendments total122D IDs
+throughD-R16-03/23mandates. The latest supervisor steer forbids PCB,placement,
+routing or circuit-generator changes for Minors and cancels queued SD adoption.
+Retain its measured1.994603mm/two-segment saving for owner acceptance. Commit
+R16,then fullR17 on the same632a9ad3; if also0Critical/0Major,finalize the
+records,commit and report. Only a confirmed Critical or Major warrants PCB changes.
 All coordinates below are PCB millimetres, as in `m3_design/r10_place.tsv`.
 
 | Terminal | Centre / rotation | Outward entry | Contact order |
@@ -76,6 +91,26 @@ Fit the actual pack, external GPS/radio, antenna, harness, accessible switch,
 sled and camera shroud together. The conditional 2.6 Ah / 4 Ah pad-duty pack
 cases require installed capacity, voltage reserve, mass and dimensional checks;
 the previous approximately 80 mm pack description proves none of them.
+
+**R16 retained MEMS stress deviation (R16-MEC-01, Minor):** component-side B.Cu
+still crosses U4's nominal body outside its lands: IMU_CS 0.7596+0.0918 mm,
+SPI1_MISO 0.3257 mm,IMU_INT1 0.3250 mm and3V3A 0.3257 mm (0.001mm midpoint sampling;
+native body x15.50..18.50/y44.65..47.15). Signal widths are0.20mm; the0.25mm
+3V3A rail also departs from the same-width guidance. These specifically depart from
+[ST TN1383 Rev1 pp7–9](https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf)
+pad-axis/outside-body stress guidance. The R15 GND correction and passing M-7/P3
+checks are narrower than complete compliance. The bounded supply prototype
+has only0.106949mm clearance; the next combined recipe creates an acute45degree
+CS junction at B(14.2,44.7). Both are rejected, with no production copper change
+or full PCB/CLI/gate qualification of that MEMS recipe. Retain first-article
+bias/temperature/vibration qualification. [Prototype evidence](../m3_design/assembly_review/sources/r10_review/round16_minor_prototypes.json)
+and R16-MEC-01/D-R16-02 preserve the limits; no offset error or physical failure
+is demonstrated.
+
+The exact2026-10-30T15:30:06.601825..15:30:40.008183UTC supplier snapshot gives
+79.5232USD placed/81.3254USD minima before fixed/process/PCB/shipping. Cost-only
+procurement passes; R43017<3610/U4zero<5 keep stock release,quote/process and
+owner acceptance open. No physical fit,firmware or order is qualified.
 
 Current source/qualification details: [M3_R10.md](M3_R10.md),
 [ORDERING.md section 8](ORDERING.md),

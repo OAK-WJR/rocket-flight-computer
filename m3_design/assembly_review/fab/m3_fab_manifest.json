@@ -195,11 +195,11 @@
     "tools/jlc_orient.py": "75b36799b732384eac5ac0f0d4e5ae3a9a2e8b2b1d230421ff791e76e77619ae"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "d72db7013064932a123ff055158f88c46c02c2129261a81a9946854b3995020b",
-    "m3_assembly_top.pdf": "9a4bc4bf24f4272f87c3256410b96d9451d4a70d440724fd5623e864070a13d7",
+    "m3_assembly_bottom.pdf": "c84f1965ddcaa2095d9718e4b609f4e88646274f4d5c19a628031555c677cf05",
+    "m3_assembly_top.pdf": "97f1c6498d4c0f1c034348489581c016aae62f77765eef8b0d3c450342dfc2c8",
     "m3_bom_jlc.csv": "d04fed383a7df9981b1f459b86c0292d09833b6fa34dcadac890aeb65325f081",
     "m3_cpl_jlc.csv": "75ae408d078701f84e87e28ed35fcc1327801a9bf0142a8a859da82074f9f3d7",
-    "m3_gerber.zip": "22b1a208ebbb8d155f14e0208b7d59786d943dca40dea788983191e0071ba2f1"
+    "m3_gerber.zip": "64d363adb29375dc5ef60e218078aa298df7e10ee93ccacdfa20fba71be88dec"
   },
   "schema": 1
 }

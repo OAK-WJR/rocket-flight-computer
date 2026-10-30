@@ -2369,3 +2369,110 @@ requery or a new supplier timestamp. Full quote,process and owner cost/deviation
 acceptance remain pending; no order. Firmware,physical,thermal/transient,
 harness/retention and first-article qualification remain open. AGENTS section2
 is unchanged.
+
+## D-R16-01. Validate the saved binding and honor exact-duplicate review scope
+
+Full round16 on committed b1b8658/632a9ad3 found no Critical or Major. The
+current saved binding is correct, but a genuine complete copied-project
+check.sh also accepts a note with a zero board hash, wrong U1.3 net and reversed
+roll sign. Compare the saved record with fresh native board-derived generation
+without rewriting it. Reject missing, malformed or different evidence. The
+note remains firmware evidence, never an approval or executable R10 firmware.
+Generate it before the full build gate so that a newly generated PCB is checked
+against its own record; do not add a skip or regenerate inside the checker.
+
+Owner AUD-10 makes exact duplicate segments review annotations. A duplicate
+of the actual13.2mm GPS_RX_MCU segment leaves the copper union unchanged but
+incorrectly creates two blocking fold-backs and one loop. For R10 topology,
+path-length and loop analysis, use one representation only when integer native
+net, layer, unordered endpoints and width all match. Keep duplicate annotations
+and every partial overlap, different-width overlap, crossing, genuine cycle and
+connectivity rule. Regressions must evaluate the complete scan, with unchanged
+native positives and actual negative controls. This corrects a false rejection;
+it does not weaken physical copper requirements or other revision profiles.
+
+Correct the stale active plan header and refresh exact current evidence links.
+The82-code public supplier execution2026-10-30T15:30:06.601825 through
+15:30:40.008183UTC gives79.5232USD placed/feeder share and81.3254USD with
+minimum purchases. Rebind these original responses without changing their
+supplier timestamp. Cost is below84.41; R43017<3610 and U4zero<5 still block
+stock release. Quote, process and owner acceptance remain pending; no order.
+No circuit, pin map, pad, placement, axis or AGENTS section2 change is made.
+
+## D-R16-02. Preserve the same-board pair and cover the final bounded CAD delta
+
+All1942 committed files remained byte-identical through all ten independent
+round16 lenses. Consolidation gives0Critical/0Major/11Minor groups from17raw
+observations, five new and six carried. Correct gate/record Minors while
+retaining PCB632a9ad3 for the fresh full round17. No Critical or Major is
+deferred; the pair is earned only if the second complete round is also clean.
+
+The SD_MOSI fixed-anchor alternative saves1.994603mm/two segments with unchanged
+0.20mm width, layer, anchors and vias. Its genuine refilled native copy passes
+DRC, reference, region and routing. Keep this isolated cleanup queued until the
+same-board pair closes. Adoption must use the source generator, preserve its
+exact native diagonal, rebuild twice with42-file byte comparison, rebind
+electrical/fab/firmware evidence and pass the complete gate. Fresh independent
+delta verifiers must inspect the exact removed/added geometry and its affected
+interfaces and returns. The user's explicit final-board-change clause permits
+this coverage; record both the full-round PCB and final PCB, without claiming
+two full rounds on a changed successor. If a blocking change or incomplete
+coverage remains, run another full round instead.
+
+Round16 also identifies retained B.Cu component-side IMU_CS, SPI1_MISO, IMU_INT1
+and3V3A paths under U4 outside its lands: sampled centreline portions0.7596+
+0.0918,0.3257,0.3250 and0.3257mm respectively. This specifically departs from
+[ST TN1383 Rev1 pp7-9](https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf)
+pad-axis/outside-body stress guidance. Existing M-7/P3 passing is narrower;
+no sensor offset or flight failure has been measured. Assess only bounded
+outside-body escapes with unchanged pads, widths and vias; an initial supply
+sketch fails clearance and is rejected. Any adopted alternative needs the
+same exact-delta and build coverage. Otherwise retain these measured advisory
+departures and first-article bias/temperature/vibration qualification explicitly.
+No complete TN1383 or physical performance compliance is inferred. DB125
+insertion/S-8 process allocation, VCAP combined-condition/ESR, L400 heel, drawing
+residuals and the separately owned vehicle mirror remain bounded deviations.
+
+The bounded MEMS source exploration is complete: its first supply T has only
+0.106949mm copper clearance and is rejected. The revised combined sketch
+passes a local0.16mm screen but makes a45degree free IMU_CS branch at
+B(14.2,44.7); reject it without changing the angle rule. Retain the present
+signal/supply guidance departure explicitly. Exact interval lengths are0.760+
+0.091923882mm for CS and0.325mm each for MISO,INT1 and3V3A,distinct from the
+lens's0.001mm midpoint diagnostic. Neither is physical evidence. Different
+0.20mm signal/0.25mm supply widths also depart from equal-width guidance.
+The engineering task did not qualify refill, DRC, references or production
+builds for this rejected recipe. Its durable record is round16_minor_prototypes.
+
+## D-R16-03. Apply the supervisor's unchanged-board Minor disposition
+
+The new supervisor steer2026-10-30, received after full round16 and before its
+commit request, supersedes D-R16-02's queued post-pair CAD adoption:
+
+> From now on: **do not change the PCB (`m3.kicad_pcb`, placement, routing,
+> circuit generators) for Minors.** Fix round 16's Minors only where the fix is
+> docs / checks / evidence with the board byte-identical (632a9ad3…); record
+> every other Minor with its measured reason in "R10 deviations for owner
+> acceptance". Commit round 16, then run round 17 on that same board. If round
+> 17 is also 0 Critical / 0 Major, you are done: write the deviation list,
+> STATUS.md and AGENTS.md rows, commit and report. Change the board only for a
+> confirmed Critical or Major.
+
+Retain PCB632a9ad3 and its circuit/placement/routing generators unchanged.
+Cancel adoption of the qualified SD_MOSI alternative: its measured avoidable
+1.994603mm/two segments remains an explicit M2 Minor for owner acceptance.
+The retained MEMS signal/supply, L400 land, DB125 insertion/S-8 allocation,
+VCAP operating conditions, drawing/return and vehicle-mirror deviations keep
+their measured reasons. The rejected MEMS sketches and qualified ignored SD
+copy remain evidence of bounded exploration, not an authorization to alter CAD.
+
+The saved-binding gate, exact-duplicate checker semantics and record fixes are
+allowed without a PCB change. One new full native build/check0 and a separate
+standalone check0 reproduce the same42 generated files against both R15 builds;
+all32rules and180R10/31fit/16paste/67route tests pass, with all four NumPy skips
+resolved. Full R16 remains0Critical/0Major/11Minor groups on committedb1b8658.
+Commit these unchanged-board fixes, then fresh full R17 on the same PCB. If it
+is also clean, finalize records/deviations and report; no subsequent Minor CAD
+cleanup is planned. Any confirmed Critical/Major still requires fresh
+verification and correction before qualifying completion. This changes no
+AGENTS section2 rule, physics requirement, cost cap or owner acceptance state.

@@ -153,23 +153,46 @@ The 2026-10-28 answers resolve OQ-1 (4.95 mm wire room, fit pending), OQ-2 (actu
 still apply. **OQ-3 cost acceptance remains pending; it does not block a clean review round.** JLC must accept the
 aft-edge tab and rail before ordering.
 
-**Current review status (2026-10-30):** PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
-46×90mm,209 footprints/951 segments/296 vias,2,256,162 bytes. Two complete native
-builds/check0 reproduce42 generated files byte for byte; DRC/unconnected/parity/
-ERC0, all31 rules and fab/binding checks pass. All four native NumPy skips are
-separately resolved.
-Actual-feed2304 required+60 local hot-plug cases pass as Simulation/Inference.
-Full R15 on789f4d5/7866d6b8 found0Critical/0Major/14Minor groups (20raw;10new/
-4carried). These fixes change the PCB; fresh full16/17 on the committed result
-must earn the final same-board pair. AGENTS §2 is byte-identical. The frozen
-2026-10-30T13:13:17.644478…13:13:48.643735Z supplier snapshot gives$79.5232
-placed/feeder share or$81.3254 with minima, both below$84.41 before fixed/process/
-PCB/shipping. R430/U4 stock,quote/process and owner cost/deviation acceptance
-remain pending. DB125 insertion/process and fabricated S-8 allocation (nominal
-minimum1.102501576mm) and exact C19/C20 combined operating C/ESR/process remain
-unqualified. R10 is not accepted or ordered; firmware,SD/e-match lot,electrical/
-thermal/transient/harness,IMU stress/process and physical fit are unverified.
+**Full R16 and gate follow-up (2026-10-30):** unchanged PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
+46×90×1.6mm,2,256,162 bytes;209 footprints,951 segments,296 vias(168 GND),
+1788.675665mm track. All1942 committed files stayed byte-identical through ten
+full R16 lenses on `b1b8658`/`632a9ad3`:0Critical/0Major/11Minor groups from17raw
+observations(5new/6carried). Full R17 on this same PCB is pending; no final pair,
+owner acceptance or order is claimed. Full R16's original scope was119D IDs/
+22owner mandates. Current amendments total122D IDs throughD-R16-03/23mandates;
+these additions do not rewrite the sealed review's source scope.
+**Software/CAD:** one new R16 integrated build/check exits0:DRC/unconnected/
+parity/ERC0,all32R10rules including K-binding,180R10tests,31fit,16paste,5parts
+and67route. All four native NumPy skips are separately resolved with supplied
+NumPy. Orientation,618paste geometries and five-output manifest pass. Its42
+generated files exactly match both complete R15 build snapshots on this same
+PCB. Those two R15 executions retain their original31-rule/176R10/60route
+scope; this is one new R16 build, not a second new-build pair. Assembly-page
+rasters match the b1b8658 pages despite PDF metadata-byte changes. The separate
+final standalone check also exits0 with the same32rules/test counts and all
+four native NumPy skips separately resolved.
+**Simulation/Inference:** fresh R16 actual-feed2304required+60local hot-plug
+cases pass. The optional181.1Hz pinnedD5/70.5g estimated plate result retains
+its R15 calculation scope. No physical qualification is inferred.
+**Procurement:** exact supplier2026-10-30T15:30:06.601825..15:30:40.008183Z:
+$79.5232 placed/feeder share and$81.3254 with minimum purchases,both below$84.41
+before fixed/process/PCB/shipping. Cost-only procurement passes; stock release
+fails at R43017<3610 and U4zero<5. U9stock123/minimum1. Quote/process and owner
+cost/deviation acceptance remain pending; nothing ordered.
+**Retained Minors, latest supervisor steer (2026-10-30):** no PCB,placement,
+routing or circuit-generator change for Minors. The SD_MOSI alternative saving
+1.994603mm/two segments is retained as a measured owner-acceptance deviation;
+its queued adoption is cancelled. Under-body IMU_CS/SPI1_MISO/IMU_INT1/3V3A
+paths remain a measured TN1383 stress-guidance departure with rejected bounded
+prototypes. Commit R16,then full R17 on the same632a9ad3; if also0Critical/
+0Major,finalize deviations/status/AGENTS,commit and report. PCB changes require
+a confirmed Critical or Major; no complete TN1383 compliance is claimed.
+**Not verified:** DB125 insertion/fabricated S-8 allocation,VCAP combined C/ESR/
+process,R10 firmware,SD/e-match lot20ms firing,electrical/thermal/transient/
+endurance,installedRF/ESD,harness/retention,tool/card access,physical bore/stack/
+flight and first-article/process. AGENTS section2 is unchanged; R9 stays accepted.
 [Review evidence](R10_VALIDATION.md).
+
 
 **Historical review completion before the circuit changes (2026-10-28; `b337fe63…` only):** full rounds 9/10 found 0 Critical/ 0 Major/ 21 Minor and0 / 0 / 8 respectively; round 10 freshly reviewed the complete`619db7e` fix-pass board, SHA-256 `b337fe63…`. The PCB remains unchanged after review; only gates/regressions/records are corrected. The required clean pair and complete board-bound deviation inventory are done. Owner deviation/OQ-3 acceptance, M1 stock, fresh cost and assembler/process qualification remain pending; R10 is not accepted or ordered.
 

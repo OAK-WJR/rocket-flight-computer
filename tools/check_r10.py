@@ -69,6 +69,7 @@ Mechanical and placement (kept from check_r9 where they still apply, read from t
         tab or a legal tab on that end's short edge within its east third (tools/tab_windows.py's clearances)
 Kept contract and copper rules:
   K-contract   R10 netlist contract: pin map, connectors, port power / UART isolation, camera UART, parts, removed parts
+  K-binding    saved record-only firmware evidence equals native regeneration from the final board and reviewed tables
   K-actuators  m3_design/check_actuators.py --profile r10 in process (check.sh also runs it on its own)
   K-loader     R3-MCU-01: every U1 pin that the H74x ROM bootloader uses (AN2606 Rev 64 Table 119, pp. 277-280) and
                that carries a net is in LOADER_R10 with that net, its recorded members (every other pad on the net, with
@@ -116,6 +117,7 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+R10_BINDING_NOTE = Path('sources/r10_design/r10_binding_note.json')
 sys.path.insert(0, str(ROOT / 'm3_design'))
 sys.path.insert(0, str(ROOT / 'quality_audit'))
 sys.path.insert(0, str(ROOT / 'tools'))
@@ -2202,6 +2204,31 @@ def k_contract(ctx):
     return contract(ctx.text), {}
 
 
+def k_binding(ctx):
+    """Check the saved evidence without regenerating or approving a firmware binding."""
+    import r10_sch_check as sch
+    if ctx.board_path is None or not Path(ctx.board_path).is_file():
+        return ['K-binding: saved board path required for native binding-note validation'], {}
+    board = Path(ctx.board_path)
+    path = board.parent / R10_BINDING_NOTE
+    try:
+        saved = json.loads(path.read_text())
+    except (OSError, UnicodeError, ValueError) as error:
+        return [f'K-binding: saved binding note is missing or malformed: {error}'], {}
+    if not isinstance(saved, dict):
+        return ['K-binding: saved binding note must be a JSON object'], {}
+    expected = sch.binding_note(board.parent, board)
+    evidence = dict(note_sha256=file_sha(path), board_sha256=expected['board_sha256'],
+                    status=expected['status'], u1_board_map_checked=expected['u1_board_map_checked'])
+    issues = []
+    for key in sorted(saved.keys() | expected.keys()):
+        if key not in saved or key not in expected or (
+                json.dumps(saved[key], sort_keys=True, allow_nan=False) !=
+                json.dumps(expected[key], sort_keys=True, allow_nan=False)):
+            issues.append(f'K-binding: saved {key} differs from native binding-note regeneration')
+    return issues, evidence
+
+
 def k_actuators(ctx):
     path = ROOT / 'm3_design/check_actuators.py'
     sha = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
@@ -2840,6 +2867,7 @@ RULES = [
     ('S-8', 'In1 / In2 copper >= 1.0 mm from pyro barrels (R3-SAF-01)', lambda c, s: s8(c)),
     ('S-9', 'fire/source copper >= 0.5 mm; BAT_IN >= 1.0 mm (AUD-6 / audit 2)', lambda c, s: s9(c)),
     ('K-contract', 'R10 netlist contract', lambda c, s: k_contract(c)),
+    ('K-binding', 'saved record-only binding evidence matches native board', lambda c, s: k_binding(c)),
     ('K-loader', 'ROM-loader pins (AN2606 Table 119, R3-MCU-01)', lambda c, s: k_loader(c)),
     ('K-actuators', 'check_actuators --profile r10', lambda c, s: k_actuators(c)),
     ('LC-1', 'local overrides respect the applicable floors', lambda c, s: lc1(c.board)),
@@ -2956,6 +2984,7 @@ def main():
         r = fc.input_hashes(bp)
         for p in (bp.with_suffix('.kicad_dru'), bp.with_suffix('.kicad_pro'), bp.with_suffix('.kicad_sch')):
             r[p.name] = file_sha(p)
+        r[str(R10_BINDING_NOTE)] = file_sha(bp.parent / R10_BINDING_NOTE)
         return r
     before = inputs()
     sha = before[bp.name]
@@ -2974,7 +3003,7 @@ def main():
     if a.seed:
         report['seed_note'] = f'{a.seed} not read: R10 has no pyro rule H (r10_plan section 2 item 1)'
     if before != inputs():
-        report['issues'].append('board, model, rules or schematic changed during check')
+        report['issues'].append('board, model, rules, schematic or binding evidence changed during check')
         report['ok'] = False
     tables = {'r10_pin_table': R10_PIN_TABLE,
               'masses': ROOT / 'm3_design/assembly_review/sources/r10_design/masses.json'}

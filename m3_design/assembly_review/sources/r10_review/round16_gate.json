@@ -1,0 +1,4321 @@
+{
+  "schema": 1,
+  "round": 16,
+  "lens": "9 gate adversary",
+  "target_commit": "b1b8658d5bf541795b7e7636c09f2e886ea8c67a",
+  "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "findings": [
+    {
+      "id": "R16-GATE-01",
+      "severity": "Minor",
+      "status": "new",
+      "disposition": "open prospective evidence-validation defect",
+      "title": "Complete check.sh accepts a corrupted saved R10 binding note",
+      "evidence": {
+        "files": [
+          {
+            "path": "tools/check.sh",
+            "line": 47
+          },
+          {
+            "path": "tools/test_r10_check.py",
+            "line": 285
+          },
+          {
+            "path": "m3_design/r10_sch_check.py",
+            "line": 215
+          },
+          {
+            "path": "tools/fab_manifest.py",
+            "line": 14
+          },
+          {
+            "path": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+            "line": 4
+          }
+        ],
+        "seed": {
+          "seed": {
+            "board_sha256": {
+              "before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+              "after": "0000000000000000000000000000000000000000000000000000000000000000"
+            },
+            "u1_pins/3/net": {
+              "before": "PYRO1_GATE_N",
+              "after": "GND"
+            },
+            "imu/roll_about_forward_axis": {
+              "before": "-gyro_Y",
+              "after": "+gyro_Y"
+            }
+          },
+          "before_sha256": "35a72d796c7a6dd51eb1dc32f652c9c9f702f07121c466eb5d117e494ab392bf",
+          "after_sha256": "2cdacaf68d383f78645efa6e2c912a43a3f045be3718da775df818aa6a75dc62",
+          "board_unchanged": true
+        },
+        "unchanged_saved_note_equals_fresh_native_regeneration": true,
+        "complete_copied_gate_positive_returncode": 0,
+        "complete_copied_gate_negative_returncode": 0,
+        "copied_frozen_inputs": 1942,
+        "only_copied_frozen_input_changed": [
+          {
+            "path": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+            "expected": "35a72d796c7a6dd51eb1dc32f652c9c9f702f07121c466eb5d117e494ab392bf",
+            "actual": "2cdacaf68d383f78645efa6e2c912a43a3f045be3718da775df818aa6a75dc62"
+          }
+        ],
+        "unchanged_control_log_sha256": "a75c833eecb87bc10f9b215d4446b07c65a4a7594635025166927b94c3520279",
+        "negative_log_sha256": "06fc727b6056cfcfe655052700ba56f2f8e6d0e6300aeabf3ba3a89146a14e19",
+        "manifest_scope": "Both runs checked all five outputs at copied ROOT canonical-board path; no copy exemption.",
+        "scope": "Genuine full check.sh artifact escape. Source build was not run and would regenerate the note. No executable R10 firmware exists; the current saved note is correct."
+      },
+      "concrete_fix": "Compare the saved note with fresh r10_sch_check.binding_note(project, board) in the final gate. Independently seed missing/stale hash, wrong MCU net and wrong IMU sign. Preserve record-only status and current electrical/policy checks.",
+      "severity_rationale": "Prospective artifact-check defect; no current required-function failure or executed unsafe firmware is demonstrated."
+    },
+    {
+      "id": "R16-GATE-02",
+      "severity": "Minor",
+      "status": "new",
+      "disposition": "open prospective false rejection",
+      "title": "AUD-10 exact duplicate segments produce blocking fold_back and track_loop findings",
+      "evidence": {
+        "files": [
+          {
+            "path": "tools/route_check.py",
+            "line": 1894
+          },
+          {
+            "path": "tools/route_check.py",
+            "line": 2173
+          },
+          {
+            "path": "tools/route_check.py",
+            "line": 2202
+          },
+          {
+            "path": "tools/test_route_check.py",
+            "line": 955
+          }
+        ],
+        "authority": "D-AUD-10 / REQUIREMENTS M2: exact duplicate representations count for review; partial overlap, crossing and real routing defects remain blocking.",
+        "real_target_seed": {
+          "net": "GPS_RX_MCU",
+          "layer": "F.Cu",
+          "start_mm": [
+            28.8,
+            24.2
+          ],
+          "end_mm": [
+            28.8,
+            11.0
+          ],
+          "width_mm": 0.2,
+          "length_mm": 13.2,
+          "copper_union_unchanged": true
+        },
+        "positive_failure_count": 0,
+        "negative_failures": [
+          {
+            "cat": "fold_back",
+            "net": "GPS_RX_MCU",
+            "cls": "uart",
+            "layer": "F.Cu",
+            "x": 28.8,
+            "y": 24.2,
+            "at": "free"
+          },
+          {
+            "cat": "fold_back",
+            "net": "GPS_RX_MCU",
+            "cls": "uart",
+            "layer": "F.Cu",
+            "x": 28.8,
+            "y": 11.0,
+            "at": "free"
+          },
+          {
+            "cat": "track_loop",
+            "net": "GPS_RX_MCU",
+            "cls": "uart",
+            "layer": "F.Cu",
+            "x": 28.8,
+            "y": 17.6
+          }
+        ],
+        "synthetic_positive_failures": [],
+        "synthetic_duplicate_failures": [
+          {
+            "cat": "fold_back",
+            "net": "3V3",
+            "cls": "power",
+            "layer": "F.Cu",
+            "x": 0.0,
+            "y": 0.0,
+            "at": "pad/via"
+          },
+          {
+            "cat": "fold_back",
+            "net": "3V3",
+            "cls": "power",
+            "layer": "F.Cu",
+            "x": 5.0,
+            "y": 0.0,
+            "at": "free"
+          },
+          {
+            "cat": "track_loop",
+            "net": "3V3",
+            "cls": "power",
+            "layer": "F.Cu",
+            "x": 2.5,
+            "y": 0.0
+          }
+        ],
+        "partial_overlap_control_failures": [
+          {
+            "cat": "collinear_overlap",
+            "net": "3V3",
+            "cls": "power",
+            "layer": "F.Cu",
+            "x": 2.0,
+            "y": 0.0,
+            "end": [
+              8.0,
+              0.0
+            ],
+            "other": [
+              5.0,
+              0.0,
+              10.0,
+              0.0
+            ],
+            "overlap_mm": 3.0
+          },
+          {
+            "cat": "collinear_overlap",
+            "net": "3V3",
+            "cls": "power",
+            "layer": "F.Cu",
+            "x": 2.0,
+            "y": 0.0,
+            "end": [
+              8.0,
+              0.0
+            ],
+            "other": [
+              0.0,
+              0.0,
+              5.0,
+              0.0
+            ],
+            "overlap_mm": 3.0
+          },
+          {
+            "cat": "fold_back",
+            "net": "3V3",
+            "cls": "power",
+            "layer": "F.Cu",
+            "x": 2.0,
+            "y": 0.0,
+            "at": "free"
+          },
+          {
+            "cat": "fold_back",
+            "net": "3V3",
+            "cls": "power",
+            "layer": "F.Cu",
+            "x": 8.0,
+            "y": 0.0,
+            "at": "free"
+          },
+          {
+            "cat": "fold_back",
+            "net": "3V3",
+            "cls": "power",
+            "layer": "F.Cu",
+            "x": 5.0,
+            "y": 0.0,
+            "at": "free"
+          },
+          {
+            "cat": "track_loop",
+            "net": "3V3",
+            "cls": "power",
+            "layer": "F.Cu",
+            "x": 6.5,
+            "y": 0.0
+          },
+          {
+            "cat": "track_loop",
+            "net": "3V3",
+            "cls": "power",
+            "layer": "F.Cu",
+            "x": 3.5,
+            "y": 0.0
+          }
+        ],
+        "scope": "Native scan/evaluate on actual target and fresh synthetic geometry. Local false rejection, not whole-gate escape; no seeded-board DRC/full-gate claim."
+      },
+      "concrete_fix": "Canonicalize only identical net/layer/unordered-endpoints/width geometry for topology, length and loops while retaining duplicate review counts. Evaluate the complete scan in the AUD-10 regression; preserve partial overlaps, crossings and genuine loops.",
+      "severity_rationale": "The present board passes; this is a bounded prospective validation-policy defect, not a physical copper failure."
+    }
+  ],
+  "canonical_freeze": {
+    "tracked_files": 1942,
+    "changed_frozen_paths": [],
+    "inventory_path": ".supervisor/r16_freeze.json",
+    "inventory_sha256": "01e85e5457686f06ea9f7cf70cb6534607225dff09b7ac902d9049caf1179fd9"
+  },
+  "method": {
+    "complete_copy_files": 1942,
+    "complete_copy_bytes": 100739645,
+    "source_or_gate_mutations_in_copy": false,
+    "only_seeded_saved_artifact": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+    "native_cli_reservation": "Root granted two sequential complete copied-root gates; released after both exit0.",
+    "versions": {
+      "official_native_cli": "10.0.7",
+      "installed_native_API": "10.0.6",
+      "numerical_interpreter": "supplied NumPy environment"
+    },
+    "fake_CLI_or_executable_substitution": false,
+    "added_gate_skip": false,
+    "canonical_build_or_full_gate": false,
+    "peer_current_round_reads": false,
+    "git_operations": false,
+    "other_worktree_writes": false
+  },
+  "requirements_scope": {
+    "decision_count": 119,
+    "decision_ids_considered": [
+      "D-R1-01",
+      "D-R1-02",
+      "D-R1-03",
+      "D-R1-04",
+      "D-R1-05",
+      "D-R1-06",
+      "D-R1-07",
+      "D-R2-01",
+      "D-R2-02",
+      "D-R2-03",
+      "D-R2-04",
+      "D-R2-05",
+      "D-R2-06",
+      "D-R2-07",
+      "D-R2-08",
+      "D-R2-09",
+      "D-R2-10",
+      "D-R2-11",
+      "D-R2-12",
+      "D-R2-13",
+      "D-R2-14",
+      "D-R2-15",
+      "D-R2-16",
+      "D-R3-01",
+      "D-R3-02",
+      "D-R3-03",
+      "D-R3-04",
+      "D-R3-05",
+      "D-R3-06",
+      "D-R3-07",
+      "D-R3-08",
+      "D-R3-09",
+      "D-R3-10",
+      "D-R3-11",
+      "D-R3-12",
+      "D-R3-13",
+      "D-R4-01",
+      "D-R4-02",
+      "D-R4-03",
+      "D-R4-04",
+      "D-R5-01",
+      "D-R5-02",
+      "D-R5-03",
+      "D-R5-04",
+      "D-R6-01",
+      "D-R6-02",
+      "D-R6-03",
+      "D-R7-01",
+      "D-R7-02",
+      "D-R8-01",
+      "D-R8-02",
+      "D-R8-03",
+      "D-OA-01",
+      "D-OA-02",
+      "D-OA-03",
+      "D-OA-04",
+      "D-OA-05",
+      "D-OA-06",
+      "D-OA-07",
+      "D-OA-08",
+      "D-OA-09",
+      "D-SS-01",
+      "D-SS-02",
+      "D-SS-03",
+      "D-AUD-01",
+      "D-AUD-02",
+      "D-AUD-03",
+      "D-AUD-04",
+      "D-AUD-05",
+      "D-AUD-06",
+      "D-AUD-07",
+      "D-AUD-08",
+      "D-AUD-09",
+      "D-AUD-10",
+      "D-GAP-01",
+      "D-GAP-02",
+      "D-GAP-03",
+      "D-GAP-04",
+      "D-GAP-05",
+      "D-AUD-03a",
+      "D-AUD-03b",
+      "D-SS-04",
+      "D-GAP-01a",
+      "D-GAP-02a",
+      "D-AUD-03c",
+      "D-GAP-02b",
+      "D-AUD-01a",
+      "D-R9-01",
+      "D-R9-02",
+      "D-R9-03",
+      "D-R9-04",
+      "D-R9-05",
+      "D-R9-06",
+      "D-R10-01",
+      "D-R10-02",
+      "D-R10-03",
+      "D-CIR-01",
+      "D-CIR-02",
+      "D-CIR-03",
+      "D-CIR-04",
+      "D-AVA-01",
+      "D-AVA-02",
+      "D-R11-01",
+      "D-R11-02",
+      "D-R11-03",
+      "D-R11-04",
+      "D-R11-05",
+      "D-R12-01",
+      "D-R12-02",
+      "D-R12-03",
+      "D-R13-01",
+      "D-R13-02",
+      "D-R13-03",
+      "D-R14-01",
+      "D-R14-02",
+      "D-R14-03",
+      "D-R15-01",
+      "D-R15-02",
+      "D-R15-03"
+    ],
+    "owner_mandate_count": 22,
+    "owner_mandates_considered": [
+      "Initial plan items1-4",
+      "O1",
+      "O2",
+      "O3",
+      "O4",
+      "O5",
+      "O6",
+      "D-R2-04 then D-R2-08",
+      "OQ-1",
+      "OQ-2",
+      "OQ-3",
+      "OQ-4",
+      "OQ-5",
+      "OQ-6",
+      "OQ-7",
+      "Single switch and keep-one-switch reaffirmation",
+      "AUD-1..10 and GAP-1..5",
+      "AVA comparison10 layout items",
+      "Always-on ports plus microSD",
+      "All wired screw terminals / Steer1",
+      "Requirements audit2 items1-13,15",
+      "Requirements audit2 item14/16"
+    ],
+    "AUD2": "Explicit named slow return/region exemptions only; critical hygiene, fast interfaces and S-8 stay blocking.",
+    "AUD10": "Exact duplicate/collinear/inside-pad and6mm distance only; no blanket routing or label exemption.",
+    "GAP3": "Exactly two specified U401.11 GND0.5/0.3 filled/capped vias; ordinary rules elsewhere.",
+    "mandatory_sources_sha256": {
+      "AGENTS.md": "6240b9d22c47c2fcfb3acd0acccea1aa6cf52bcca653c31f20a27185d587fcdb",
+      "docs/REQUIREMENTS.md": "bcecf21944980a44ad49116ab4409d643f5660493d4e34d44646f68a42d45da5",
+      "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "09e9c7b3521b52bfa429955371253eef7dcc9201caed0dc7547836cad203db6b",
+      "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": "345c4bbe7d2bdc3a8341b2f93ae6d03217ad94f1a9c19bd9f021f2f7665dffa5",
+      "m3_design/assembly_review/sources/r10_design/r10_plan.md": "05cee2ae6ef64d2991e95788a40aae30431440578f61532c0d22175ef37f24e4",
+      "docs/M3_R10.md": "62bb9f2d28b3bdaad095cad55172f808441cc3e4417444c7e3e0c672895184d1",
+      "docs/R10_VALIDATION.md": "04650f8a18e3e8e6cacf8bda1e68d81c3a82b002f06d4fdfd309b56ace2a8366",
+      "docs/R9_VALIDATION.md": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+      "docs/R10_VEHICLE_HANDOFF.md": "708f74d29a0872ddafbb1f7bd50354b32b4691a1fe30c94412efe30a3b46b5d9",
+      "../../docs/VEHICLE.md": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+      "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json": "43866150e2b96dc8f2f112408980ad4d4c971930d536165dd6b4c50f5575eccc"
+    }
+  },
+  "checks_actually_executed": {
+    "full_check_sh_runs": {
+      "full_control": {
+        "log_sha256": "a75c833eecb87bc10f9b215d4446b07c65a4a7594635025166927b94c3520279",
+        "returncode": 0,
+        "audit_ok": true,
+        "native_cli_version": "10.0.7",
+        "drc_counts": {
+          "violations": 0,
+          "unconnected_items": 0,
+          "schematic_parity": 0
+        },
+        "erc_violations": 0,
+        "r10_rule_count": 31,
+        "r10_failing": [],
+        "r10_board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+        "fit_ok": true,
+        "route_failures": [],
+        "route_allowed": [],
+        "route_stale": [],
+        "manifest": [
+          "OK; 5 outputs match the current CAD and export inputs"
+        ],
+        "test_summaries": [
+          "Ran 5 tests in 11.770s",
+          "OK",
+          "Ran 31 tests in 0.038s",
+          "OK",
+          "Ran 16 tests in 0.014s",
+          "OK",
+          "Ran 5 tests in 0.748s",
+          "OK",
+          "Ran 60 tests in 1.931s",
+          "OK",
+          "Ran 176 tests in 196.829s",
+          "OK (skipped=4)",
+          "Ran 2 tests in 0.750s",
+          "OK"
+        ]
+      },
+      "full_binding_seed": {
+        "log_sha256": "06fc727b6056cfcfe655052700ba56f2f8e6d0e6300aeabf3ba3a89146a14e19",
+        "returncode": 0,
+        "audit_ok": true,
+        "native_cli_version": "10.0.7",
+        "drc_counts": {
+          "violations": 0,
+          "unconnected_items": 0,
+          "schematic_parity": 0
+        },
+        "erc_violations": 0,
+        "r10_rule_count": 31,
+        "r10_failing": [],
+        "r10_board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+        "fit_ok": true,
+        "route_failures": [],
+        "route_allowed": [],
+        "route_stale": [],
+        "manifest": [
+          "OK; 5 outputs match the current CAD and export inputs"
+        ],
+        "test_summaries": [
+          "Ran 5 tests in 11.832s",
+          "OK",
+          "Ran 31 tests in 0.038s",
+          "OK",
+          "Ran 16 tests in 0.015s",
+          "OK",
+          "Ran 5 tests in 0.748s",
+          "OK",
+          "Ran 60 tests in 1.937s",
+          "OK",
+          "Ran 176 tests in 197.376s",
+          "OK (skipped=4)",
+          "Ran 2 tests in 0.779s",
+          "OK"
+        ]
+      }
+    },
+    "native_boundary_controls_and_seeds": [
+      {
+        "label": "required gate capacitor cannot be DNP",
+        "control": [],
+        "expected": "S-4 rejects C126 DNP",
+        "detail": null,
+        "negative_count": 1,
+        "negative_examples": [
+          "S-4: C126: required fitted part excluded (dnp)"
+        ]
+      },
+      {
+        "label": "pyro gate bias cannot be 1G",
+        "control": [],
+        "expected": "S-3 rejects ineffective gate pull-down",
+        "detail": null,
+        "negative_count": 1,
+        "negative_examples": [
+          "S-3: pyro FET Q124: no a resistor from the gate (PYRO1_GATE) to the source (GND) of 1 k - 100 k"
+        ]
+      },
+      {
+        "label": "GAP-3 exact two-via boundary",
+        "control": [],
+        "expected": "third via fails",
+        "detail": {
+          "control_qualified": 2,
+          "negative_qualified": 2
+        },
+        "negative_count": 1,
+        "negative_examples": [
+          "GAP-3: U401.11 requires exactly two thermal vias (has 3)"
+        ]
+      },
+      {
+        "label": "S-8 checks actual inner graphic copper",
+        "control": [],
+        "expected": "0.5 mm hole-wall gap fails",
+        "detail": {
+          "barrel_xy_mm": [
+            7.4,
+            54.1
+          ],
+          "gap_mm": 0.5
+        },
+        "negative_count": 1,
+        "negative_examples": [
+          "S-8:  copper on In2.Cu is 0.500 mm from the J121.1 hole barrel of PYRO1_OUT (minimum 1.0 mm)"
+        ]
+      },
+      {
+        "label": "J410 positive model shrink",
+        "control": [],
+        "expected": "wrong 0.99 physical width fails",
+        "detail": null,
+        "negative_count": 1,
+        "negative_examples": [
+          "J410: model envelope differs from reviewed dimensions/pose of M3_DB125_4P_GN: (-8.236798614, -4.09999942, 7.1280008316, 3.99999962, 1.2700000001775181e-06, 8.90000125), expected (-8.32, -4.1, 7.2, 4.0, 0.0, 8.9) mm"
+        ]
+      },
+      {
+        "label": "J430 positive model shrink",
+        "control": [],
+        "expected": "wrong 0.99 physical width fails",
+        "detail": null,
+        "negative_count": 2,
+        "negative_examples": [
+          "J430: model envelope differs from reviewed dimensions/pose of M3_MICROSD_MOLEX_472192001: (-7.4497501881, -9.69999838, 7.4497501881, 6.0000007, 0.0, 2.10000088), expected (-7.525, -9.7, 7.525, 6.0, 0.0, 2.1) mm",
+          "J430: required R10 mated envelope missing"
+        ]
+      },
+      {
+        "label": "C84 positive model shrink",
+        "control": [],
+        "expected": "wrong 0.99 physical width fails",
+        "detail": null,
+        "negative_count": 1,
+        "negative_examples": [
+          "C84: model envelope differs from reviewed dimensions/pose of M3_MA_8x10: (-4.2075003861, -4.25000039, 4.2075003861, 4.25000039, -1.2700000001775181e-06, 10.799999990000002), expected (-4.25, -4.25, 4.25, 4.25, 0.0, 10.8) mm"
+        ]
+      },
+      {
+        "label": "alternate identity alias contradiction",
+        "control": [],
+        "expected": "contradictory MPN fails",
+        "detail": null,
+        "negative": [
+          {
+            "Manufacturer Part": "CRM2512-FX-2R00ELF",
+            "MPN": "25121WF360LT4E"
+          }
+        ]
+      },
+      {
+        "label": "production BOM exact ordering identity",
+        "control": [],
+        "expected": "R134 ordered as R166 fails",
+        "detail": null,
+        "negative_count": 2,
+        "negative_examples": [
+          "line 60: R134 LCSC Part # 'C168925' differs from native fitted part 'C3013496'",
+          "line 60: R134 Manufacturer Part '25121WF360LT4E' differs from native fitted part 'CRM2512-FX-2R00ELF'"
+        ]
+      },
+      {
+        "label": "paste aperture +10 micrometres",
+        "control": [],
+        "expected": "wrong native aperture geometry fails",
+        "detail": {
+          "control": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          },
+          "negative": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 237,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          },
+          "aperture": "11"
+        },
+        "negative_count": 8,
+        "negative_examples": [
+          "F_Paste: C403.1 aperture D11 differs from native paste geometry (rule 5)",
+          "F_Paste: C403.2 aperture D11 differs from native paste geometry (rule 5)",
+          "F_Paste: C404.1 aperture D11 differs from native paste geometry (rule 5)",
+          "F_Paste: C404.2 aperture D11 differs from native paste geometry (rule 5)",
+          "F_Paste: C400.1 aperture D11 differs from native paste geometry (rule 5)",
+          "F_Paste: C400.2 aperture D11 differs from native paste geometry (rule 5)",
+          "F_Paste: C401.1 aperture D11 differs from native paste geometry (rule 5)",
+          "F_Paste: C401.2 aperture D11 differs from native paste geometry (rule 5)"
+        ]
+      },
+      {
+        "label": "AUD-2 explicit return-only scope",
+        "control": {
+          "ACT_GATE": false,
+          "ARM1_SENSE": false,
+          "CAM_PWR_EN": false,
+          "PYRO1_GATE": true,
+          "GPS_RX_MCU": true,
+          "SD_SCK": true
+        },
+        "expected": "only the first three slow names are exempt; pyro gate/UART/SD remain required",
+        "detail": null,
+        "negative": null
+      },
+      {
+        "label": "AUD-10 category boundary",
+        "control": {
+          "duplicate_segment": false,
+          "collinear_unmerged": false,
+          "segment_inside_pad": false,
+          "collinear_overlap": true,
+          "crossing_without_node": true,
+          "off_angle": true,
+          "tiny_jog": true
+        },
+        "expected": "only exact duplicate/collinear/inside-pad are nonblocking among these categories",
+        "detail": null,
+        "negative": null
+      },
+      {
+        "label": "saved binding positive control",
+        "control": true,
+        "expected": "exact object equality with fresh native board binding",
+        "detail": {
+          "stored_sha256": "35a72d796c7a6dd51eb1dc32f652c9c9f702f07121c466eb5d117e494ab392bf"
+        },
+        "negative": null
+      }
+    ],
+    "native_electrical_controls_and_seeds": [
+      {
+        "name": "direct pack-to-pyro copper bypass",
+        "positive": [],
+        "seed": "new0.5mm B.Cu BAT_IN track fromJ1.1 toR134.2 RAW_ACT; both contacts onB.Cu",
+        "negative_count": 175,
+        "negative_examples": [
+          "S-2: RAW_ACT copper touches J1.1 (BAT_IN) through track BAT_IN (7.40, 74.10)"
+        ]
+      },
+      {
+        "name": "open screw-switch physical bypass",
+        "positive": [],
+        "seed": "new0.2mm F.Cu BAT_SW_SOURCE track betweenJ400.1/J400.2",
+        "negative_count": 337,
+        "negative_examples": [
+          "S-5: BAT_SW_SOURCE copper touches J400.2 (BAT_SW_RETURN) through track BAT_SW_SOURCE (7.40, 64.10): switch contact / resistor bypass",
+          "S-5: BAT_SW_RETURN copper touches J400.1 (BAT_SW_SOURCE) through track BAT_SW_SOURCE (7.40, 64.10): switch contact / resistor bypass"
+        ]
+      },
+      {
+        "name": "continuous power width degradation",
+        "positive": [],
+        "seed": {
+          "net": "RAW_PROTECTED",
+          "layer": "B.Cu",
+          "start_mm": [
+            18.75,
+            79.8
+          ],
+          "end_mm": [
+            16.25,
+            77.3
+          ],
+          "length_mm": 3.535533905932738,
+          "old_width_mm": 0.7,
+          "new_width_mm": 0.15
+        },
+        "negative_count": 1,
+        "negative_examples": [
+          "K-width: RAW_PROTECTED track 0.150 mm wide at (18.75, 79.80) on B.Cu; minimum 0.3 mm"
+        ]
+      },
+      {
+        "name": "actual-feed evidence invalidates on copper change",
+        "positive": [],
+        "seed": {
+          "net": "BAT_IN",
+          "layer": "B.Cu",
+          "start_mm": [
+            7.4,
+            74.1
+          ],
+          "end_mm": [
+            13.0,
+            74.1
+          ],
+          "old_width_mm": 1.0,
+          "new_width_mm": 0.9
+        },
+        "negative_count": 2,
+        "negative_examples": [
+          "F9-1: stale board-derived model inputs",
+          "F9-1: stale electrical inputs (BAT_IN/protection geometry or parts changed)"
+        ]
+      },
+      {
+        "name": "AUD-2 does not exempt fast UART return",
+        "positive": [
+          "GPS_RX_MCU",
+          [
+            32000000,
+            11000000
+          ],
+          0.9433972652075053
+        ],
+        "removed_GND_vias_mm": [
+          [
+            32.799999,
+            11.5
+          ]
+        ],
+        "threshold_mm": 1.5,
+        "negative": [
+          "GPS_RX_MCU",
+          [
+            32000000,
+            11000000
+          ],
+          2.563201123595259
+        ]
+      }
+    ],
+    "native_AUD10_controls_and_seeds": [
+      {
+        "label": "fresh synthetic straight route and exact duplicate",
+        "positive": {
+          "instances": [
+            {
+              "cat": "collinear_unmerged",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 5.0,
+              "y": 0.0,
+              "lens": [
+                5.0,
+                5.0
+              ]
+            }
+          ],
+          "failures": [],
+          "allowed": [],
+          "stale": []
+        },
+        "exact_duplicate": {
+          "instances": [
+            {
+              "cat": "duplicate_segment",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 0.0,
+              "y": 0.0,
+              "end": [
+                5.0,
+                0.0
+              ],
+              "other": [
+                0.0,
+                0.0,
+                5.0,
+                0.0
+              ],
+              "overlap_mm": 5.0
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 0.0,
+              "y": 0.0,
+              "at": "pad/via"
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 5.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "track_loop",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.5,
+              "y": 0.0
+            }
+          ],
+          "failures": [
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 0.0,
+              "y": 0.0,
+              "at": "pad/via"
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 5.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "track_loop",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.5,
+              "y": 0.0
+            }
+          ],
+          "allowed": [],
+          "stale": []
+        },
+        "representation_delta": "one extra 0,0 to5,0 F.Cu3V3 0.2mm track; copper union unchanged"
+      },
+      {
+        "label": "partial overlap remains harmful",
+        "result": {
+          "instances": [
+            {
+              "cat": "collinear_overlap",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.0,
+              "y": 0.0,
+              "end": [
+                8.0,
+                0.0
+              ],
+              "other": [
+                5.0,
+                0.0,
+                10.0,
+                0.0
+              ],
+              "overlap_mm": 3.0
+            },
+            {
+              "cat": "collinear_overlap",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.0,
+              "y": 0.0,
+              "end": [
+                8.0,
+                0.0
+              ],
+              "other": [
+                0.0,
+                0.0,
+                5.0,
+                0.0
+              ],
+              "overlap_mm": 3.0
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 8.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 5.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "track_loop",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 6.5,
+              "y": 0.0
+            },
+            {
+              "cat": "track_loop",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 3.5,
+              "y": 0.0
+            }
+          ],
+          "failures": [
+            {
+              "cat": "collinear_overlap",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.0,
+              "y": 0.0,
+              "end": [
+                8.0,
+                0.0
+              ],
+              "other": [
+                5.0,
+                0.0,
+                10.0,
+                0.0
+              ],
+              "overlap_mm": 3.0
+            },
+            {
+              "cat": "collinear_overlap",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.0,
+              "y": 0.0,
+              "end": [
+                8.0,
+                0.0
+              ],
+              "other": [
+                0.0,
+                0.0,
+                5.0,
+                0.0
+              ],
+              "overlap_mm": 3.0
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 8.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 5.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "track_loop",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 6.5,
+              "y": 0.0
+            },
+            {
+              "cat": "track_loop",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 3.5,
+              "y": 0.0
+            }
+          ],
+          "allowed": [],
+          "stale": []
+        }
+      },
+      {
+        "label": "real target exact duplicate",
+        "positive": {
+          "instances": [
+            {
+              "cat": "pad_end_offcentre",
+              "net": "USB_ILIM",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 14.325,
+              "y": 27.5,
+              "pad": "U10.5",
+              "off_mm": 0.425
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "USB_ILIM",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 14.325,
+              "y": 27.5,
+              "pad": "U10.5",
+              "off_mm": 0.425
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 15.875,
+              "y": 79.9,
+              "pad": "C80.2",
+              "off_mm": 0.5315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 15.875,
+              "y": 79.9,
+              "pad": "C80.2",
+              "off_mm": 0.5315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 6.27,
+              "y": 40.35,
+              "pad": "J2.5",
+              "off_mm": 0.315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 23.5,
+              "y": 62.5,
+              "pad": "C98.2",
+              "off_mm": 0.4243
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.35,
+              "y": 52.0,
+              "pad": "C129.2",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 23.5,
+              "y": 62.5,
+              "pad": "C98.2",
+              "off_mm": 0.4243
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.2,
+              "y": 46.83,
+              "pad": "C15.2",
+              "off_mm": 0.2121
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 32.8,
+              "y": 52.5,
+              "pad": "C92.2",
+              "off_mm": 0.25
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.2,
+              "y": 46.83,
+              "pad": "C15.2",
+              "off_mm": 0.2121
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.35,
+              "y": 52.0,
+              "pad": "C129.2",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 35.475,
+              "y": 16.1,
+              "pad": "R405.2",
+              "off_mm": 0.35
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 30.875,
+              "y": 22.4,
+              "pad": "J430.12",
+              "off_mm": 0.7
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 30.875,
+              "y": 22.4,
+              "pad": "J430.12",
+              "off_mm": 0.7
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 13.925,
+              "y": 83.9,
+              "pad": "R167.1",
+              "off_mm": 0.1414
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 13.925,
+              "y": 83.9,
+              "pad": "R167.1",
+              "off_mm": 0.1414
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "PORT_4V8",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.725,
+              "y": 16.35,
+              "pad": "R405.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "PORT_4V8",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.725,
+              "y": 16.35,
+              "pad": "R405.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 3.73,
+              "y": 40.35,
+              "pad": "J2.1",
+              "off_mm": 0.315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 28.625,
+              "y": 17.0,
+              "pad": "R460.2",
+              "off_mm": 0.2
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 25.0,
+              "y": 77.88,
+              "pad": "C8.1",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 14.85,
+              "y": 49.8,
+              "pad": "C13.1",
+              "off_mm": 0.12
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 25.0,
+              "y": 77.88,
+              "pad": "C8.1",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 28.625,
+              "y": 17.0,
+              "pad": "R460.2",
+              "off_mm": 0.2
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SWDIO",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 3.73,
+              "y": 38.45,
+              "pad": "J2.2",
+              "off_mm": 0.315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "NRST",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 5.0,
+              "y": 40.35,
+              "pad": "J2.3",
+              "off_mm": 0.315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SWCLK",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 5.0,
+              "y": 38.45,
+              "pad": "J2.4",
+              "off_mm": 0.315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SWCLK",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 14.7,
+              "y": 37.0,
+              "pad": "U1.76",
+              "off_mm": 0.75
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SWCLK",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 14.7,
+              "y": 37.0,
+              "pad": "U1.76",
+              "off_mm": 0.75
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "BUZZ_OUT",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 20.5,
+              "y": 60.5,
+              "pad": "Q123.3",
+              "off_mm": 0.25
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "BUZZ_OUT",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 20.5,
+              "y": 60.5,
+              "pad": "Q123.3",
+              "off_mm": 0.25
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "LED_RED",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 13.7,
+              "y": 42.0,
+              "pad": "R32.1",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "LED_RED",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 13.7,
+              "y": 42.0,
+              "pad": "R32.1",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "LED_YEL_A",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 9.9,
+              "y": 45.0,
+              "pad": "R33.2",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "LED_YEL_A",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 9.9,
+              "y": 45.0,
+              "pad": "R33.2",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "QSPI_IO2",
+              "cls": "spi",
+              "layer": "F.Cu",
+              "x": 17.0,
+              "y": 50.05,
+              "pad": "U1.1",
+              "off_mm": 0.5
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SERVO1_MCU",
+              "cls": "actuator",
+              "layer": "B.Cu",
+              "x": 34.0,
+              "y": 75.6,
+              "pad": "R150.1",
+              "off_mm": 0.375
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SERVO3_MCU",
+              "cls": "actuator",
+              "layer": "B.Cu",
+              "x": 33.675,
+              "y": 70.23,
+              "pad": "R152.1",
+              "off_mm": 0.2
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SERVO4_MCU",
+              "cls": "actuator",
+              "layer": "B.Cu",
+              "x": 34.0,
+              "y": 68.0,
+              "pad": "R153.1",
+              "off_mm": 0.225
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_UART_OE",
+              "cls": "portctl",
+              "layer": "B.Cu",
+              "x": 34.575,
+              "y": 39.55,
+              "pad": "R102.1",
+              "off_mm": 0.15
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_FAULT_N",
+              "cls": "portctl",
+              "layer": "B.Cu",
+              "x": 35.02,
+              "y": 58.05,
+              "pad": "R432.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_FAULT_N",
+              "cls": "portctl",
+              "layer": "B.Cu",
+              "x": 35.02,
+              "y": 58.05,
+              "pad": "R432.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VCAP1",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 28.35,
+              "y": 37.1,
+              "pad": "C19.1",
+              "off_mm": 0.15
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "USB_FAULT_N",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 8.625,
+              "y": 23.3,
+              "pad": "R90.2",
+              "off_mm": 0.2
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 7.45,
+              "y": 28.4,
+              "pad": "J3.A4B9",
+              "off_mm": 0.57
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 7.45,
+              "y": 28.4,
+              "pad": "J3.A4B9",
+              "off_mm": 0.57
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 9.3,
+              "y": 25.1,
+              "pad": "C83.1",
+              "off_mm": 0.2358
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_5V",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.625,
+              "y": 48.75,
+              "pad": "U13.1",
+              "off_mm": 0.475
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_5V",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 34.95,
+              "y": 52.75,
+              "pad": "C91.1",
+              "off_mm": 0.325
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_5V",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.625,
+              "y": 48.75,
+              "pad": "U13.1",
+              "off_mm": 0.475
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 11.025,
+              "y": 71.5,
+              "pad": "TP121.1",
+              "off_mm": 0.525
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 18.23,
+              "y": 73.3,
+              "pad": "R120.2",
+              "off_mm": 0.3818
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 11.025,
+              "y": 71.5,
+              "pad": "TP121.1",
+              "off_mm": 0.525
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 18.23,
+              "y": 73.3,
+              "pad": "R120.2",
+              "off_mm": 0.3818
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 27.75,
+              "y": 68.6,
+              "pad": "C6.1",
+              "off_mm": 0.15
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 34.25,
+              "y": 81.75,
+              "pad": "TP83.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 27.75,
+              "y": 68.6,
+              "pad": "C6.1",
+              "off_mm": 0.15
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 34.25,
+              "y": 81.75,
+              "pad": "TP83.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "USB_ILIM",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 14.325,
+              "y": 27.5,
+              "pad": "U10.5",
+              "len_mm": 0.425
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 15.475,
+              "y": 79.5,
+              "pad": "C80.2",
+              "len_mm": 0.566
+            },
+            {
+              "cat": "passes_through_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 15.3,
+              "y": 57.045,
+              "pad": "Q124.2"
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 23.8,
+              "y": 62.2,
+              "pad": "C98.2",
+              "len_mm": 0.424
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.05,
+              "y": 46.98,
+              "pad": "C15.2",
+              "len_mm": 0.212
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 28.95,
+              "y": 51.6,
+              "pad": "C129.2",
+              "len_mm": 0.566
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 30.875,
+              "y": 21.7,
+              "pad": "J430.12",
+              "len_mm": 0.7
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 13.35,
+              "y": 75.0,
+              "pad": "D8.1",
+              "len_mm": 1.167
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 13.0,
+              "y": 74.1,
+              "pad": "Q120.9",
+              "len_mm": 0.707
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "PORT_4V8",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.475,
+              "y": 16.1,
+              "pad": "R405.1",
+              "len_mm": 0.354
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "RAW_PROTECTED",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 19.3,
+              "y": 78.25,
+              "pad": "C82.1",
+              "len_mm": 1.0
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 27.0,
+              "y": 20.3,
+              "pad": "C461.1",
+              "len_mm": 0.395
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 25.0,
+              "y": 77.88,
+              "pad": "C8.1",
+              "len_mm": 0.566
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "SWCLK",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 14.7,
+              "y": 37.0,
+              "pad": "U1.76",
+              "len_mm": 0.75
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "BUZZ_OUT",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 24.85,
+              "y": 60.25,
+              "pad": "LS120.2",
+              "len_mm": 0.77
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "BUZZ_OUT",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 20.5,
+              "y": 60.5,
+              "pad": "Q123.3",
+              "len_mm": 0.25
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "LED_RED",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 13.7,
+              "y": 42.0,
+              "pad": "R32.1",
+              "len_mm": 0.566
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "LED_YEL_A",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 10.3,
+              "y": 44.6,
+              "pad": "R33.2",
+              "len_mm": 0.566
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "CAM_FAULT_N",
+              "cls": "portctl",
+              "layer": "B.Cu",
+              "x": 35.27,
+              "y": 57.8,
+              "pad": "R432.1",
+              "len_mm": 0.354
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 6.88,
+              "y": 28.4,
+              "pad": "J3.A4B9",
+              "len_mm": 0.57
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "CAM_5V",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.625,
+              "y": 48.75,
+              "pad": "U13.1",
+              "len_mm": 0.475
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 11.025,
+              "y": 71.5,
+              "pad": "TP121.1",
+              "len_mm": 0.525
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 18.23,
+              "y": 73.3,
+              "pad": "R120.2",
+              "len_mm": 0.382
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 34.25,
+              "y": 81.75,
+              "pad": "TP83.1",
+              "len_mm": 0.354
+            },
+            {
+              "cat": "short_segment",
+              "net": "BAT_OVLO",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 16.4,
+              "y": 83.0,
+              "len_mm": 0.15,
+              "width": 0.2,
+              "end": [
+                16.4,
+                83.15
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 17.5,
+              "y": 39.3,
+              "at": "via",
+              "widths": [
+                0.2,
+                0.3
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 19.4,
+              "y": 85.4,
+              "at": "free",
+              "widths": [
+                0.7,
+                1.0
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 17.5,
+              "y": 87.3,
+              "at": "via",
+              "widths": [
+                0.4,
+                1.0
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 18.25,
+              "y": 83.4,
+              "at": "free",
+              "widths": [
+                0.3,
+                0.7
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "PORT_4V8",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.725,
+              "y": 17.3,
+              "at": "via",
+              "widths": [
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "RAW_PROTECTED",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 18.75,
+              "y": 79.8,
+              "at": "T",
+              "widths": [
+                0.3,
+                0.7
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "RAW_PROTECTED",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 20.3,
+              "y": 79.1,
+              "at": "via",
+              "widths": [
+                0.4,
+                0.7
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 23.905,
+              "y": 23.0,
+              "at": "via",
+              "widths": [
+                0.2,
+                0.3
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 19.5,
+              "y": 49.15,
+              "at": "via",
+              "widths": [
+                0.2,
+                0.3
+              ]
+            },
+            {
+              "cat": "collinear_unmerged",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 27.725,
+              "y": 17.9,
+              "lens": [
+                1.273,
+                1.025
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.8,
+              "y": 68.6,
+              "at": "T",
+              "widths": [
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "ACT_FET_S",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 14.475,
+              "y": 71.1,
+              "at": "T",
+              "widths": [
+                0.3,
+                0.4
+              ]
+            },
+            {
+              "cat": "short_layer_hop",
+              "net": "PORT_5V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 26.8,
+              "y": 8.0,
+              "hop_mm": 0.8
+            },
+            {
+              "cat": "short_layer_hop",
+              "net": "RAW_PROTECTED",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 14.1,
+              "y": 7.6,
+              "hop_mm": 1.4
+            },
+            {
+              "cat": "short_layer_hop",
+              "net": "RAW_PROTECTED",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 20.3,
+              "y": 79.1,
+              "hop_mm": 0.8
+            },
+            {
+              "cat": "extra_bends",
+              "net": "SWDIO",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 3.73,
+              "y": 38.45,
+              "end": [
+                18.5,
+                33.85
+              ],
+              "seglens": [
+                3.323,
+                6.52,
+                3.182,
+                3.65
+              ]
+            },
+            {
+              "cat": "extra_bends",
+              "net": "SERVO1_MCU",
+              "cls": "actuator",
+              "layer": "F.Cu",
+              "x": 27.5,
+              "y": 50.55,
+              "end": [
+                33.0,
+                75.9
+              ],
+              "seglens": [
+                1.45,
+                3.96,
+                18.4,
+                3.818
+              ]
+            },
+            {
+              "cat": "extra_bends",
+              "net": "SERVO2_MCU",
+              "cls": "actuator",
+              "layer": "F.Cu",
+              "x": 28.0,
+              "y": 50.55,
+              "end": [
+                34.325,
+                73.8
+              ],
+              "seglens": [
+                1.45,
+                3.932,
+                15.475,
+                5.013
+              ]
+            },
+            {
+              "cat": "extra_bends",
+              "net": "SERVO3_MCU",
+              "cls": "actuator",
+              "layer": "F.Cu",
+              "x": 28.5,
+              "y": 50.55,
+              "end": [
+                33.675,
+                69.05
+              ],
+              "seglens": [
+                1.45,
+                3.903,
+                11.875,
+                3.415
+              ]
+            },
+            {
+              "cat": "extra_bends",
+              "net": "SERVO4_MCU",
+              "cls": "actuator",
+              "layer": "F.Cu",
+              "x": 29.0,
+              "y": 50.55,
+              "end": [
+                34.0,
+                66.5
+              ],
+              "seglens": [
+                1.45,
+                3.875,
+                9.5,
+                3.196
+              ]
+            },
+            {
+              "cat": "extra_bends",
+              "net": "LOGIC_SOURCE_ST",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 30.85,
+              "y": 51.8,
+              "end": [
+                28.925,
+                60.0
+              ],
+              "seglens": [
+                1.3,
+                1.485,
+                4.975,
+                1.237
+              ]
+            },
+            {
+              "cat": "u_turn",
+              "net": "BAT_FAULT_N",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 22.175,
+              "y": 70.0,
+              "path_mm": 19.741
+            },
+            {
+              "cat": "u_turn",
+              "net": "BAT_FAULT_N",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 28.2,
+              "y": 47.5,
+              "path_mm": 7.806
+            },
+            {
+              "cat": "u_turn",
+              "net": "USB_DM",
+              "cls": "usb",
+              "layer": "F.Cu",
+              "x": 6.88,
+              "y": 31.05,
+              "path_mm": 3.26
+            },
+            {
+              "cat": "u_turn",
+              "net": "USB_FAULT_N",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 16.7,
+              "y": 39.05,
+              "path_mm": 24.917
+            },
+            {
+              "cat": "extra_bends",
+              "net": "BAT_ENABLE",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 21.3,
+              "y": 68.9,
+              "end": [
+                17.1,
+                82.8
+              ],
+              "seglens": [
+                6.3,
+                4.634,
+                3.4,
+                1.306
+              ]
+            },
+            {
+              "cat": "tiny_jog",
+              "net": "BUZZ_DRV",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 20.5,
+              "y": 51.8,
+              "end": [
+                20.2,
+                52.1
+              ],
+              "mid_mm": 0.424,
+              "offset_mm": 0.3,
+              "at": "plain/via",
+              "via": true
+            },
+            {
+              "cat": "tiny_jog",
+              "net": "BAT_FAULT_N",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 28.2,
+              "y": 47.5,
+              "end": [
+                28.0,
+                47.3
+              ],
+              "mid_mm": 0.283,
+              "offset_mm": 0.2,
+              "at": "via/plain",
+              "via": true
+            },
+            {
+              "cat": "tiny_jog",
+              "net": "I2C1_SDA",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 9.97,
+              "y": 51.5,
+              "end": [
+                10.25,
+                51.78
+              ],
+              "mid_mm": 0.396,
+              "offset_mm": 0.28,
+              "at": "via/plain",
+              "via": false
+            },
+            {
+              "cat": "tiny_jog",
+              "net": "BAT_ENABLE",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 21.0,
+              "y": 68.6,
+              "end": [
+                21.3,
+                68.9
+              ],
+              "mid_mm": 0.424,
+              "offset_mm": 0.3,
+              "at": "plain/via",
+              "via": true
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "via",
+              "x": 17.5,
+              "y": 87.3,
+              "gnd_mm": 4.504,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "PORT_4V8",
+              "cls": "power",
+              "layer": "via",
+              "x": 29.75,
+              "y": 12.6,
+              "gnd_mm": 2.103,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "PORT_LDO_FB",
+              "cls": "power",
+              "layer": "via",
+              "x": 29.75,
+              "y": 13.6,
+              "gnd_mm": 1.834,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 15.45,
+              "y": 49.8,
+              "gnd_mm": 1.811,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 26.4,
+              "y": 79.26,
+              "gnd_mm": 2.277,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 15.7,
+              "y": 61.6,
+              "gnd_mm": 2.52,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 23.905,
+              "y": 23.0,
+              "gnd_mm": 2.209,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 29.25,
+              "y": 37.0,
+              "gnd_mm": 2.132,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 22.6,
+              "y": 52.15,
+              "gnd_mm": 1.825,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 17.0,
+              "y": 36.75,
+              "gnd_mm": 2.599,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3A",
+              "cls": "power",
+              "layer": "via",
+              "x": 16.0,
+              "y": 50.2,
+              "gnd_mm": 1.588,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3A",
+              "cls": "power",
+              "layer": "via",
+              "x": 27.0,
+              "y": 49.25,
+              "gnd_mm": 2.122,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VCAP1",
+              "cls": "power",
+              "layer": "via",
+              "x": 29.25,
+              "y": 38.0,
+              "gnd_mm": 1.687,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VCAP2",
+              "cls": "power",
+              "layer": "via",
+              "x": 18.0,
+              "y": 37.3,
+              "gnd_mm": 2.062,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "via",
+              "x": 11.95,
+              "y": 30.6,
+              "gnd_mm": 1.914,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "via",
+              "x": 8.0,
+              "y": 33.7,
+              "gnd_mm": 3.463,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "CAM_5V",
+              "cls": "power",
+              "layer": "via",
+              "x": 34.2,
+              "y": 49.325,
+              "gnd_mm": 1.521,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "USB_LIMITED",
+              "cls": "power",
+              "layer": "via",
+              "x": 25.6,
+              "y": 63.0,
+              "gnd_mm": 1.801,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "USB_LIMITED",
+              "cls": "power",
+              "layer": "via",
+              "x": 22.0,
+              "y": 62.25,
+              "gnd_mm": 1.931,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "USB_LIMITED",
+              "cls": "power",
+              "layer": "via",
+              "x": 16.0,
+              "y": 28.0,
+              "gnd_mm": 2.532,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "via",
+              "x": 29.5,
+              "y": 82.05,
+              "gnd_mm": 3.912,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "via",
+              "x": 34.5,
+              "y": 63.0,
+              "gnd_mm": 4.134,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "CAM_IO_3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 36.55,
+              "y": 48.18,
+              "gnd_mm": 1.729,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "CAM_IO_3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 32.2,
+              "y": 40.05,
+              "gnd_mm": 1.834,
+              "into_pad": false
+            },
+            {
+              "cat": "via_on_track_in_fill",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 23.8,
+              "y": 62.95,
+              "off_mm": 0.3,
+              "track": [
+                23.5,
+                62.5,
+                23.5,
+                63.75
+              ]
+            },
+            {
+              "cat": "detour",
+              "net": "USB_ILIM",
+              "cls": "other",
+              "layer": "net",
+              "x": 14.825,
+              "y": 27.2,
+              "pads": 2,
+              "first": "R85.1",
+              "len_mm": 3.33,
+              "mst_mm": 1.05,
+              "ratio": 3.18,
+              "vias": 1,
+              "need": 1
+            }
+          ],
+          "failures": [],
+          "allowed": [],
+          "stale": []
+        },
+        "exact_duplicate": {
+          "instances": [
+            {
+              "cat": "pad_end_offcentre",
+              "net": "USB_ILIM",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 14.325,
+              "y": 27.5,
+              "pad": "U10.5",
+              "off_mm": 0.425
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "USB_ILIM",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 14.325,
+              "y": 27.5,
+              "pad": "U10.5",
+              "off_mm": 0.425
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 15.875,
+              "y": 79.9,
+              "pad": "C80.2",
+              "off_mm": 0.5315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 15.875,
+              "y": 79.9,
+              "pad": "C80.2",
+              "off_mm": 0.5315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 6.27,
+              "y": 40.35,
+              "pad": "J2.5",
+              "off_mm": 0.315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 23.5,
+              "y": 62.5,
+              "pad": "C98.2",
+              "off_mm": 0.4243
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.35,
+              "y": 52.0,
+              "pad": "C129.2",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 23.5,
+              "y": 62.5,
+              "pad": "C98.2",
+              "off_mm": 0.4243
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.2,
+              "y": 46.83,
+              "pad": "C15.2",
+              "off_mm": 0.2121
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 32.8,
+              "y": 52.5,
+              "pad": "C92.2",
+              "off_mm": 0.25
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.2,
+              "y": 46.83,
+              "pad": "C15.2",
+              "off_mm": 0.2121
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.35,
+              "y": 52.0,
+              "pad": "C129.2",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 35.475,
+              "y": 16.1,
+              "pad": "R405.2",
+              "off_mm": 0.35
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 30.875,
+              "y": 22.4,
+              "pad": "J430.12",
+              "off_mm": 0.7
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 30.875,
+              "y": 22.4,
+              "pad": "J430.12",
+              "off_mm": 0.7
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 13.925,
+              "y": 83.9,
+              "pad": "R167.1",
+              "off_mm": 0.1414
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 13.925,
+              "y": 83.9,
+              "pad": "R167.1",
+              "off_mm": 0.1414
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "PORT_4V8",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.725,
+              "y": 16.35,
+              "pad": "R405.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "PORT_4V8",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.725,
+              "y": 16.35,
+              "pad": "R405.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 3.73,
+              "y": 40.35,
+              "pad": "J2.1",
+              "off_mm": 0.315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 28.625,
+              "y": 17.0,
+              "pad": "R460.2",
+              "off_mm": 0.2
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 25.0,
+              "y": 77.88,
+              "pad": "C8.1",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 14.85,
+              "y": 49.8,
+              "pad": "C13.1",
+              "off_mm": 0.12
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 25.0,
+              "y": 77.88,
+              "pad": "C8.1",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 28.625,
+              "y": 17.0,
+              "pad": "R460.2",
+              "off_mm": 0.2
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SWDIO",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 3.73,
+              "y": 38.45,
+              "pad": "J2.2",
+              "off_mm": 0.315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "NRST",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 5.0,
+              "y": 40.35,
+              "pad": "J2.3",
+              "off_mm": 0.315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SWCLK",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 5.0,
+              "y": 38.45,
+              "pad": "J2.4",
+              "off_mm": 0.315
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SWCLK",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 14.7,
+              "y": 37.0,
+              "pad": "U1.76",
+              "off_mm": 0.75
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SWCLK",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 14.7,
+              "y": 37.0,
+              "pad": "U1.76",
+              "off_mm": 0.75
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "BUZZ_OUT",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 20.5,
+              "y": 60.5,
+              "pad": "Q123.3",
+              "off_mm": 0.25
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "BUZZ_OUT",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 20.5,
+              "y": 60.5,
+              "pad": "Q123.3",
+              "off_mm": 0.25
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "LED_RED",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 13.7,
+              "y": 42.0,
+              "pad": "R32.1",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "LED_RED",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 13.7,
+              "y": 42.0,
+              "pad": "R32.1",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "LED_YEL_A",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 9.9,
+              "y": 45.0,
+              "pad": "R33.2",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "LED_YEL_A",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 9.9,
+              "y": 45.0,
+              "pad": "R33.2",
+              "off_mm": 0.5657
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "QSPI_IO2",
+              "cls": "spi",
+              "layer": "F.Cu",
+              "x": 17.0,
+              "y": 50.05,
+              "pad": "U1.1",
+              "off_mm": 0.5
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SERVO1_MCU",
+              "cls": "actuator",
+              "layer": "B.Cu",
+              "x": 34.0,
+              "y": 75.6,
+              "pad": "R150.1",
+              "off_mm": 0.375
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SERVO3_MCU",
+              "cls": "actuator",
+              "layer": "B.Cu",
+              "x": 33.675,
+              "y": 70.23,
+              "pad": "R152.1",
+              "off_mm": 0.2
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "SERVO4_MCU",
+              "cls": "actuator",
+              "layer": "B.Cu",
+              "x": 34.0,
+              "y": 68.0,
+              "pad": "R153.1",
+              "off_mm": 0.225
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_UART_OE",
+              "cls": "portctl",
+              "layer": "B.Cu",
+              "x": 34.575,
+              "y": 39.55,
+              "pad": "R102.1",
+              "off_mm": 0.15
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_FAULT_N",
+              "cls": "portctl",
+              "layer": "B.Cu",
+              "x": 35.02,
+              "y": 58.05,
+              "pad": "R432.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_FAULT_N",
+              "cls": "portctl",
+              "layer": "B.Cu",
+              "x": 35.02,
+              "y": 58.05,
+              "pad": "R432.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VCAP1",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 28.35,
+              "y": 37.1,
+              "pad": "C19.1",
+              "off_mm": 0.15
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "USB_FAULT_N",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 8.625,
+              "y": 23.3,
+              "pad": "R90.2",
+              "off_mm": 0.2
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 7.45,
+              "y": 28.4,
+              "pad": "J3.A4B9",
+              "off_mm": 0.57
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 7.45,
+              "y": 28.4,
+              "pad": "J3.A4B9",
+              "off_mm": 0.57
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 9.3,
+              "y": 25.1,
+              "pad": "C83.1",
+              "off_mm": 0.2358
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_5V",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.625,
+              "y": 48.75,
+              "pad": "U13.1",
+              "off_mm": 0.475
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_5V",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 34.95,
+              "y": 52.75,
+              "pad": "C91.1",
+              "off_mm": 0.325
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "CAM_5V",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.625,
+              "y": 48.75,
+              "pad": "U13.1",
+              "off_mm": 0.475
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 11.025,
+              "y": 71.5,
+              "pad": "TP121.1",
+              "off_mm": 0.525
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 18.23,
+              "y": 73.3,
+              "pad": "R120.2",
+              "off_mm": 0.3818
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 11.025,
+              "y": 71.5,
+              "pad": "TP121.1",
+              "off_mm": 0.525
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 18.23,
+              "y": 73.3,
+              "pad": "R120.2",
+              "off_mm": 0.3818
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 27.75,
+              "y": 68.6,
+              "pad": "C6.1",
+              "off_mm": 0.15
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 34.25,
+              "y": 81.75,
+              "pad": "TP83.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 27.75,
+              "y": 68.6,
+              "pad": "C6.1",
+              "off_mm": 0.15
+            },
+            {
+              "cat": "pad_end_offcentre",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 34.25,
+              "y": 81.75,
+              "pad": "TP83.1",
+              "off_mm": 0.3536
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "USB_ILIM",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 14.325,
+              "y": 27.5,
+              "pad": "U10.5",
+              "len_mm": 0.425
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 15.475,
+              "y": 79.5,
+              "pad": "C80.2",
+              "len_mm": 0.566
+            },
+            {
+              "cat": "passes_through_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 15.3,
+              "y": 57.045,
+              "pad": "Q124.2"
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 23.8,
+              "y": 62.2,
+              "pad": "C98.2",
+              "len_mm": 0.424
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.05,
+              "y": 46.98,
+              "pad": "C15.2",
+              "len_mm": 0.212
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 28.95,
+              "y": 51.6,
+              "pad": "C129.2",
+              "len_mm": 0.566
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 30.875,
+              "y": 21.7,
+              "pad": "J430.12",
+              "len_mm": 0.7
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 13.35,
+              "y": 75.0,
+              "pad": "D8.1",
+              "len_mm": 1.167
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 13.0,
+              "y": 74.1,
+              "pad": "Q120.9",
+              "len_mm": 0.707
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "PORT_4V8",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.475,
+              "y": 16.1,
+              "pad": "R405.1",
+              "len_mm": 0.354
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "RAW_PROTECTED",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 19.3,
+              "y": 78.25,
+              "pad": "C82.1",
+              "len_mm": 1.0
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 27.0,
+              "y": 20.3,
+              "pad": "C461.1",
+              "len_mm": 0.395
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 25.0,
+              "y": 77.88,
+              "pad": "C8.1",
+              "len_mm": 0.566
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "SWCLK",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 14.7,
+              "y": 37.0,
+              "pad": "U1.76",
+              "len_mm": 0.75
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "BUZZ_OUT",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 24.85,
+              "y": 60.25,
+              "pad": "LS120.2",
+              "len_mm": 0.77
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "BUZZ_OUT",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 20.5,
+              "y": 60.5,
+              "pad": "Q123.3",
+              "len_mm": 0.25
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "LED_RED",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 13.7,
+              "y": 42.0,
+              "pad": "R32.1",
+              "len_mm": 0.566
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "LED_YEL_A",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 10.3,
+              "y": 44.6,
+              "pad": "R33.2",
+              "len_mm": 0.566
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "CAM_FAULT_N",
+              "cls": "portctl",
+              "layer": "B.Cu",
+              "x": 35.27,
+              "y": 57.8,
+              "pad": "R432.1",
+              "len_mm": 0.354
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 6.88,
+              "y": 28.4,
+              "pad": "J3.A4B9",
+              "len_mm": 0.57
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "CAM_5V",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.625,
+              "y": 48.75,
+              "pad": "U13.1",
+              "len_mm": 0.475
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 11.025,
+              "y": 71.5,
+              "pad": "TP121.1",
+              "len_mm": 0.525
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "ACT_GATE",
+              "cls": "pyro",
+              "layer": "B.Cu",
+              "x": 18.23,
+              "y": 73.3,
+              "pad": "R120.2",
+              "len_mm": 0.382
+            },
+            {
+              "cat": "segment_inside_pad",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 34.25,
+              "y": 81.75,
+              "pad": "TP83.1",
+              "len_mm": 0.354
+            },
+            {
+              "cat": "short_segment",
+              "net": "BAT_OVLO",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 16.4,
+              "y": 83.0,
+              "len_mm": 0.15,
+              "width": 0.2,
+              "end": [
+                16.4,
+                83.15
+              ]
+            },
+            {
+              "cat": "duplicate_segment",
+              "net": "GPS_RX_MCU",
+              "cls": "uart",
+              "layer": "F.Cu",
+              "x": 28.8,
+              "y": 24.2,
+              "end": [
+                28.8,
+                11.0
+              ],
+              "other": [
+                28.8,
+                24.2,
+                28.8,
+                11.0
+              ],
+              "overlap_mm": 13.2
+            },
+            {
+              "cat": "fold_back",
+              "net": "GPS_RX_MCU",
+              "cls": "uart",
+              "layer": "F.Cu",
+              "x": 28.8,
+              "y": 24.2,
+              "at": "free"
+            },
+            {
+              "cat": "fold_back",
+              "net": "GPS_RX_MCU",
+              "cls": "uart",
+              "layer": "F.Cu",
+              "x": 28.8,
+              "y": 11.0,
+              "at": "free"
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 17.5,
+              "y": 39.3,
+              "at": "via",
+              "widths": [
+                0.2,
+                0.3
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 19.4,
+              "y": 85.4,
+              "at": "free",
+              "widths": [
+                0.7,
+                1.0
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 17.5,
+              "y": 87.3,
+              "at": "via",
+              "widths": [
+                0.4,
+                1.0
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 18.25,
+              "y": 83.4,
+              "at": "free",
+              "widths": [
+                0.3,
+                0.7
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "PORT_4V8",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 33.725,
+              "y": 17.3,
+              "at": "via",
+              "widths": [
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "RAW_PROTECTED",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 18.75,
+              "y": 79.8,
+              "at": "T",
+              "widths": [
+                0.3,
+                0.7
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "RAW_PROTECTED",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 20.3,
+              "y": 79.1,
+              "at": "via",
+              "widths": [
+                0.4,
+                0.7
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 23.905,
+              "y": 23.0,
+              "at": "via",
+              "widths": [
+                0.2,
+                0.3
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 19.5,
+              "y": 49.15,
+              "at": "via",
+              "widths": [
+                0.2,
+                0.3
+              ]
+            },
+            {
+              "cat": "collinear_unmerged",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 27.725,
+              "y": 17.9,
+              "lens": [
+                1.273,
+                1.025
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 29.8,
+              "y": 68.6,
+              "at": "T",
+              "widths": [
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "cat": "width_change_junction",
+              "net": "ACT_FET_S",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 14.475,
+              "y": 71.1,
+              "at": "T",
+              "widths": [
+                0.3,
+                0.4
+              ]
+            },
+            {
+              "cat": "short_layer_hop",
+              "net": "PORT_5V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 26.8,
+              "y": 8.0,
+              "hop_mm": 0.8
+            },
+            {
+              "cat": "short_layer_hop",
+              "net": "RAW_PROTECTED",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 14.1,
+              "y": 7.6,
+              "hop_mm": 1.4
+            },
+            {
+              "cat": "short_layer_hop",
+              "net": "RAW_PROTECTED",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 20.3,
+              "y": 79.1,
+              "hop_mm": 0.8
+            },
+            {
+              "cat": "extra_bends",
+              "net": "SWDIO",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 3.73,
+              "y": 38.45,
+              "end": [
+                18.5,
+                33.85
+              ],
+              "seglens": [
+                3.323,
+                6.52,
+                3.182,
+                3.65
+              ]
+            },
+            {
+              "cat": "extra_bends",
+              "net": "SERVO1_MCU",
+              "cls": "actuator",
+              "layer": "F.Cu",
+              "x": 27.5,
+              "y": 50.55,
+              "end": [
+                33.0,
+                75.9
+              ],
+              "seglens": [
+                1.45,
+                3.96,
+                18.4,
+                3.818
+              ]
+            },
+            {
+              "cat": "extra_bends",
+              "net": "SERVO2_MCU",
+              "cls": "actuator",
+              "layer": "F.Cu",
+              "x": 28.0,
+              "y": 50.55,
+              "end": [
+                34.325,
+                73.8
+              ],
+              "seglens": [
+                1.45,
+                3.932,
+                15.475,
+                5.013
+              ]
+            },
+            {
+              "cat": "extra_bends",
+              "net": "SERVO3_MCU",
+              "cls": "actuator",
+              "layer": "F.Cu",
+              "x": 28.5,
+              "y": 50.55,
+              "end": [
+                33.675,
+                69.05
+              ],
+              "seglens": [
+                1.45,
+                3.903,
+                11.875,
+                3.415
+              ]
+            },
+            {
+              "cat": "extra_bends",
+              "net": "SERVO4_MCU",
+              "cls": "actuator",
+              "layer": "F.Cu",
+              "x": 29.0,
+              "y": 50.55,
+              "end": [
+                34.0,
+                66.5
+              ],
+              "seglens": [
+                1.45,
+                3.875,
+                9.5,
+                3.196
+              ]
+            },
+            {
+              "cat": "extra_bends",
+              "net": "LOGIC_SOURCE_ST",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 30.85,
+              "y": 51.8,
+              "end": [
+                28.925,
+                60.0
+              ],
+              "seglens": [
+                1.3,
+                1.485,
+                4.975,
+                1.237
+              ]
+            },
+            {
+              "cat": "u_turn",
+              "net": "BAT_FAULT_N",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 22.175,
+              "y": 70.0,
+              "path_mm": 19.741
+            },
+            {
+              "cat": "u_turn",
+              "net": "BAT_FAULT_N",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 28.2,
+              "y": 47.5,
+              "path_mm": 7.806
+            },
+            {
+              "cat": "u_turn",
+              "net": "USB_DM",
+              "cls": "usb",
+              "layer": "F.Cu",
+              "x": 6.88,
+              "y": 31.05,
+              "path_mm": 3.26
+            },
+            {
+              "cat": "u_turn",
+              "net": "USB_FAULT_N",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 16.7,
+              "y": 39.05,
+              "path_mm": 24.917
+            },
+            {
+              "cat": "extra_bends",
+              "net": "BAT_ENABLE",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 21.3,
+              "y": 68.9,
+              "end": [
+                17.1,
+                82.8
+              ],
+              "seglens": [
+                6.3,
+                4.634,
+                3.4,
+                1.306
+              ]
+            },
+            {
+              "cat": "tiny_jog",
+              "net": "BUZZ_DRV",
+              "cls": "other",
+              "layer": "F.Cu",
+              "x": 20.5,
+              "y": 51.8,
+              "end": [
+                20.2,
+                52.1
+              ],
+              "mid_mm": 0.424,
+              "offset_mm": 0.3,
+              "at": "plain/via",
+              "via": true
+            },
+            {
+              "cat": "tiny_jog",
+              "net": "BAT_FAULT_N",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 28.2,
+              "y": 47.5,
+              "end": [
+                28.0,
+                47.3
+              ],
+              "mid_mm": 0.283,
+              "offset_mm": 0.2,
+              "at": "via/plain",
+              "via": true
+            },
+            {
+              "cat": "tiny_jog",
+              "net": "I2C1_SDA",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 9.97,
+              "y": 51.5,
+              "end": [
+                10.25,
+                51.78
+              ],
+              "mid_mm": 0.396,
+              "offset_mm": 0.28,
+              "at": "via/plain",
+              "via": false
+            },
+            {
+              "cat": "tiny_jog",
+              "net": "BAT_ENABLE",
+              "cls": "other",
+              "layer": "B.Cu",
+              "x": 21.0,
+              "y": 68.6,
+              "end": [
+                21.3,
+                68.9
+              ],
+              "mid_mm": 0.424,
+              "offset_mm": 0.3,
+              "at": "plain/via",
+              "via": true
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "BAT_IN",
+              "cls": "power",
+              "layer": "via",
+              "x": 17.5,
+              "y": 87.3,
+              "gnd_mm": 4.504,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "PORT_4V8",
+              "cls": "power",
+              "layer": "via",
+              "x": 29.75,
+              "y": 12.6,
+              "gnd_mm": 2.103,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "PORT_LDO_FB",
+              "cls": "power",
+              "layer": "via",
+              "x": 29.75,
+              "y": 13.6,
+              "gnd_mm": 1.834,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 15.45,
+              "y": 49.8,
+              "gnd_mm": 1.811,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 26.4,
+              "y": 79.26,
+              "gnd_mm": 2.277,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 15.7,
+              "y": 61.6,
+              "gnd_mm": 2.52,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 23.905,
+              "y": 23.0,
+              "gnd_mm": 2.209,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 29.25,
+              "y": 37.0,
+              "gnd_mm": 2.132,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 22.6,
+              "y": 52.15,
+              "gnd_mm": 1.825,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 17.0,
+              "y": 36.75,
+              "gnd_mm": 2.599,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3A",
+              "cls": "power",
+              "layer": "via",
+              "x": 16.0,
+              "y": 50.2,
+              "gnd_mm": 1.588,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "3V3A",
+              "cls": "power",
+              "layer": "via",
+              "x": 27.0,
+              "y": 49.25,
+              "gnd_mm": 2.122,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VCAP1",
+              "cls": "power",
+              "layer": "via",
+              "x": 29.25,
+              "y": 38.0,
+              "gnd_mm": 1.687,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VCAP2",
+              "cls": "power",
+              "layer": "via",
+              "x": 18.0,
+              "y": 37.3,
+              "gnd_mm": 2.062,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "via",
+              "x": 11.95,
+              "y": 30.6,
+              "gnd_mm": 1.914,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VBUS",
+              "cls": "power",
+              "layer": "via",
+              "x": 8.0,
+              "y": 33.7,
+              "gnd_mm": 3.463,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "CAM_5V",
+              "cls": "power",
+              "layer": "via",
+              "x": 34.2,
+              "y": 49.325,
+              "gnd_mm": 1.521,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "USB_LIMITED",
+              "cls": "power",
+              "layer": "via",
+              "x": 25.6,
+              "y": 63.0,
+              "gnd_mm": 1.801,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "USB_LIMITED",
+              "cls": "power",
+              "layer": "via",
+              "x": 22.0,
+              "y": 62.25,
+              "gnd_mm": 1.931,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "USB_LIMITED",
+              "cls": "power",
+              "layer": "via",
+              "x": 16.0,
+              "y": 28.0,
+              "gnd_mm": 2.532,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "via",
+              "x": 29.5,
+              "y": 82.05,
+              "gnd_mm": 3.912,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "VLOGIC",
+              "cls": "power",
+              "layer": "via",
+              "x": 34.5,
+              "y": 63.0,
+              "gnd_mm": 4.134,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "CAM_IO_3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 36.55,
+              "y": 48.18,
+              "gnd_mm": 1.729,
+              "into_pad": false
+            },
+            {
+              "cat": "power_via_no_gnd",
+              "net": "CAM_IO_3V3",
+              "cls": "power",
+              "layer": "via",
+              "x": 32.2,
+              "y": 40.05,
+              "gnd_mm": 1.834,
+              "into_pad": false
+            },
+            {
+              "cat": "via_on_track_in_fill",
+              "net": "GND",
+              "cls": "power",
+              "layer": "B.Cu",
+              "x": 23.8,
+              "y": 62.95,
+              "off_mm": 0.3,
+              "track": [
+                23.5,
+                62.5,
+                23.5,
+                63.75
+              ]
+            },
+            {
+              "cat": "track_loop",
+              "net": "GPS_RX_MCU",
+              "cls": "uart",
+              "layer": "F.Cu",
+              "x": 28.8,
+              "y": 17.6
+            },
+            {
+              "cat": "detour",
+              "net": "USB_ILIM",
+              "cls": "other",
+              "layer": "net",
+              "x": 14.825,
+              "y": 27.2,
+              "pads": 2,
+              "first": "R85.1",
+              "len_mm": 3.33,
+              "mst_mm": 1.05,
+              "ratio": 3.18,
+              "vias": 1,
+              "need": 1
+            }
+          ],
+          "failures": [
+            {
+              "cat": "fold_back",
+              "net": "GPS_RX_MCU",
+              "cls": "uart",
+              "layer": "F.Cu",
+              "x": 28.8,
+              "y": 24.2,
+              "at": "free"
+            },
+            {
+              "cat": "fold_back",
+              "net": "GPS_RX_MCU",
+              "cls": "uart",
+              "layer": "F.Cu",
+              "x": 28.8,
+              "y": 11.0,
+              "at": "free"
+            },
+            {
+              "cat": "track_loop",
+              "net": "GPS_RX_MCU",
+              "cls": "uart",
+              "layer": "F.Cu",
+              "x": 28.8,
+              "y": 17.6
+            }
+          ],
+          "allowed": [],
+          "stale": []
+        },
+        "seed": {
+          "net": "GPS_RX_MCU",
+          "layer": "F.Cu",
+          "start_mm": [
+            28.8,
+            24.2
+          ],
+          "end_mm": [
+            28.8,
+            11.0
+          ],
+          "width_mm": 0.2,
+          "length_mm": 13.2,
+          "copper_union_unchanged": true
+        }
+      }
+    ],
+    "supplied_NumPy_four_skips": {
+      "command": "supplied-NumPy-python -I -B tools/test_r10_check.py HotplugNumerics Plate",
+      "returncode": 0,
+      "tests": 4,
+      "elapsed_seconds": 0.978,
+      "log_sha256": "a7711ea27d1298805c460657b9fcc0de8651f103915896a67a73cf62fb7ea114"
+    },
+    "canonical_after_hash_walk": {
+      "files": 1942,
+      "changed": []
+    },
+    "native_API_version_query": {
+      "result": "10.0.6"
+    },
+    "external_source_attempt": {
+      "url": "https://www.ucamco.com/files/downloads/file_en/554/gerber-layer-format-specification-revision-2026-05_en.pdf",
+      "result": "web fetch timed out",
+      "used_as_evidence": false
+    }
+  },
+  "rejected_or_closed_CM_candidates": [
+    {
+      "candidate": "Saved binding corruption proves executed unsafe firmware",
+      "candidate_severity": "Critical/Major",
+      "status": "rejected",
+      "evidence": "Current saved note exactly equals native regeneration. No R10 executable firmware exists; the R1 binding cannot qualify R10. Only a Minor artifact-check defect is proved."
+    },
+    {
+      "candidate": "Direct pack-to-RAW_ACT copper bypass is missed",
+      "candidate_severity": "Critical",
+      "status": "closed by corrected genuine seed",
+      "evidence": "Initial F.Cu endpoint did not reach bottom-only R134.2. Correct B.Cu seed yields175 S-2 issues, explicitly RAW_ACT touching J1.1 BAT_IN; valid control0."
+    },
+    {
+      "candidate": "Required pyro gate bias/capacitor omission escapes",
+      "candidate_severity": "Critical/Major",
+      "status": "closed by negative controls",
+      "evidence": "C126 DNP fails S-4; R1281G fails S-3; unchanged controls0."
+    },
+    {
+      "candidate": "Inner drawing bypasses protected barrel isolation",
+      "candidate_severity": "Critical/Major",
+      "status": "closed by negative control",
+      "evidence": "Real In2 graphic0.500mm from J121.1 hole wall fails S-8 against1mm; unchanged control0."
+    }
+  ],
+  "method_corrections": [
+    "Initial optional pack-bypass sketch used F.Cu against B.Cu-only R134.2 and was not connected. Its empty S-2 result is not an escape. Initial receipt is preserved; corrected B.Cu seed is detected.",
+    "An inventory display initially treated integer owner-count as a sequence; corrected full1942-file hash walk passed. A draft JSON formatter initially treated a mixed measurement tuple as issue strings; corrected before any JSON report write. Neither changed a validation result."
+  ],
+  "coverage_limits": [
+    "No current required-function or AGENTS section2 violation is demonstrated. Pending physical/FW qualification alone is not counted as a failure.",
+    "Only the saved-binding negative received a complete copied-root check.sh run. Other probes are local checks, not whole-gate escapes.",
+    "The exact-duplicate mutant has native scan/evaluate evidence only; no seeded-board DRC/full-gate claim.",
+    "No source build, new fabrication export, full2304-case numerical rerun, firmware execution, physical/thermal/EMC/harness/flight test, supplier query/order or GUI bypass.",
+    "F9-1 validated current board-bound model evidence and rejected changed copper; this does not independently qualify numerical rows, model assumptions or physical hot-plug waveforms.",
+    "All4 native NumPy skips were separately executed successfully using supplied NumPy; all normal self-tests remained unchanged.",
+    "No new maker/process parameter claim. VCAP, DB125 insertion/fabricated barrel, retention, process, SD, RF and pulse-tail qualification remain disclosed obligations.",
+    "External Ucamco fetch failed and supports no finding."
+  ],
+  "probe_artifacts_sha256": {
+    ".supervisor/r16_gate_probe/boundary_probes.py": "73dfd97ed8e0f84ba4d5eca30f813c275ddfe6fe41d1bd8243e40572fffda05d",
+    ".supervisor/r16_gate_probe/boundary_results.json": "e2e4ae03f53c367d24493d12760f57e9282188d467e4f5f64ecd4204531aeb78",
+    ".supervisor/r16_gate_probe/electrical_probes.py": "669021ed15004ef661e190ef9397ef7f22bcbda279fe0ddbb301ff510bde88db",
+    ".supervisor/r16_gate_probe/electrical_results.json": "b34ca23bf38edc92eaa98616392cf3c660a598b7b26656d2498f5c994fefe64c",
+    ".supervisor/r16_gate_probe/initial_electrical_results.json": "d6f7da7447b6c9a8937a5d7ab3723ab30dfad7086871c0748c794b379a88a538",
+    ".supervisor/r16_gate_probe/aud10_probe.py": "03b34bbd7b3ae62f1206dd179d6d08e79ddc021536b172317267ca806bc31430",
+    ".supervisor/r16_gate_probe/aud10_results.json": "fd3429bc63b22ba12b827b85f053f8e88eab7f47644616d8ad1c55288ffc7524",
+    ".supervisor/r16_gate_probe/binding_seed.json": "49b0aaaa9347b9d1ed26bc3fba722a699b4e89cddda608b7f1fc3e2f530223ce",
+    ".supervisor/r16_gate_probe/full_run_summary.json": "78f242f7c0337873bcf9f0be21d920770c6080f938cc9ab64d27133d6d98127d",
+    ".supervisor/r16_gate_probe/full_control.log": "a75c833eecb87bc10f9b215d4446b07c65a4a7594635025166927b94c3520279",
+    ".supervisor/r16_gate_probe/full_binding_seed.log": "06fc727b6056cfcfe655052700ba56f2f8e6d0e6300aeabf3ba3a89146a14e19",
+    ".supervisor/r16_gate_probe/numpy_four.log": "a7711ea27d1298805c460657b9fcc0de8651f103915896a67a73cf62fb7ea114"
+  },
+  "markdown_report_sha256": "555e845d8f632a75d762aaa07c0f869aac7b04c0056c10094ec88e87f6820777",
+  "report_state": "Final immutable handoff; no implementation fix or canonical change performed."
+}

@@ -72,7 +72,7 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
     via_overlap           two same-net vias whose copper rings overlap (centres closer than the sum of the radii):
                           overlapping copper (fix pass 5)
     collinear_unmerged    a plain node at 180° between two segments of the same width (R10 AUD-10: counted review)
-    duplicate_segment     two segments with the same end points (R10 AUD-10: counted review)
+    duplicate_segment     two segments with the same end points (R10 AUD-10: exact endpoints and width, counted review)
     collinear_overlap     two collinear segments (centre lines within 1 µm) overlapping by more than 1 µm
     side_by_side_overlap  two parallel segments whose copper overlaps or leaves a same-net slit under 0.1 mm, along
                           more than half a track width
@@ -388,6 +388,26 @@ def P(p):
     return pcbnew.VECTOR2I(int(round(p[0])), int(round(p[1])))
 
 
+def _track_key(t):
+    return t['net'], t['lid'], min(t['a'], t['b']), max(t['a'], t['b']), t['w']
+
+
+def _route_tracks(tracks, skip=frozenset()):
+    """Indexed tracks for routing analysis. R10 AUD-10 counts exact straight-track geometry only once; annotation
+    scans keep every representation. Integer endpoints and width must match exactly, without the node tolerance.
+    Filter skipped objects first so another representation still preserves its physical connection."""
+    seen = set()
+    for i, t in enumerate(tracks):
+        if skip and id(t['obj']) in skip:
+            continue
+        if PROFILE == 'r10' and not t['arc']:
+            key = _track_key(t)
+            if key in seen:
+                continue
+            seen.add(key)
+        yield i, t
+
+
 # --- connectivity (KiCad anchor rule) --------------------------------------------------------------------------------
 
 class NetCopper:
@@ -416,7 +436,8 @@ def collect(board, nets=None):
                                     layers={l for l in CU4 if t.IsOnLayer(l)}, obj=t))
         elif t.GetClass() in ('PCB_TRACK', 'PCB_ARC'):
             a, b = t.GetStart(), t.GetEnd()
-            get(n).tracks.append(dict(lid=t.GetLayer(), a=(a.x, a.y), b=(b.x, b.y), w=t.GetWidth(), obj=t))
+            get(n).tracks.append(dict(net=n, lid=t.GetLayer(), a=(a.x, a.y), b=(b.x, b.y), w=t.GetWidth(),
+                                      arc=t.GetClass() == 'PCB_ARC', obj=t))
     for f in board.GetFootprints():
         for k, p in enumerate(f.Pads()):
             n = p.GetNetname()
@@ -491,7 +512,7 @@ def graph(nc, zones=True, skip=frozenset(), strict=False, island_nodes=False):
     out. strict=True joins a track end to another track only on its centre line (a T, within TOL), not anywhere in its
     copper: an overlap-only joint is then no joint. Returns (number of nodes, edges, node of each via (by index), node
     of each pad (by index))."""
-    tracks = [(i, t) for i, t in enumerate(nc.tracks) if id(t['obj']) not in skip]
+    tracks = list(_route_tracks(nc.tracks, skip))
     vias = [(i, v) for i, v in enumerate(nc.vias) if id(v['obj']) not in skip]
     edges = []
     n = [1]
@@ -833,6 +854,7 @@ def net_route(nc):
     (track copper, mm), mst (octilinear minimum spanning tree of the pad centres, mm), vias (vias carrying the net's
     tracks on two or more layers), need (0 when every pad shares a copper layer, else 1), at (centre of the first pad by
     name, nm), first (its name)). For a two-pad net, len / mst is the detour ratio of its one connection."""
+    tracks = [t for _, t in _route_tracks(nc.tracks)]
     pts = []
     for p in sorted(nc.pads, key=lambda q: q['key']):
         if not any(dist(p['pos'], q['pos']) < 0.1 / NM for q in pts):
@@ -854,10 +876,10 @@ def net_route(nc):
                 best[v] = min(best[v], octile(pts[u]['pos'], pts[v]['pos']))
     vias = 0
     for v in nc.vias:
-        if len({t['lid'] for t in nc.tracks if dist(t['a'], v['pos']) <= v['r'] or dist(t['b'], v['pos']) <= v['r']}) >= 2:
+        if len({t['lid'] for t in tracks if dist(t['a'], v['pos']) <= v['r'] or dist(t['b'], v['pos']) <= v['r']}) >= 2:
             vias += 1
     common = set.intersection(*[set(p['layers']) for p in pts]) if pts else set()
-    return dict(pads=n, len=sum(mm(dist(t['a'], t['b'])) for t in nc.tracks), mst=mst, vias=vias,
+    return dict(pads=n, len=sum(mm(dist(t['a'], t['b'])) for t in tracks), mst=mst, vias=vias,
                 need=0 if common else 1, at=pts[0]['pos'] if pts else (0, 0), first=pts[0]['name'] if pts else '')
 
 
@@ -1475,7 +1497,8 @@ def pours(board):
 # --- the scan --------------------------------------------------------------------------------------------------------
 
 class Copper:
-    """Tracks, vias, pads and pours of a board, grouped for the scan (nm coordinates)."""
+    """Tracks, vias, pads and pours of a board, grouped for routing analysis (nm coordinates). all_segs/all_by_ln
+    retain the drawing representations for segment and pair annotations (R10 AUD-10)."""
 
     def __init__(self, board):
         self.board = board
@@ -1493,6 +1516,8 @@ class Copper:
                                       arc=c == 'PCB_ARC', uid=t.m_Uuid.AsString()))
         for s in self.segs:
             s['len'] = mm(dist(s['a'], s['b']))
+        self.all_segs = self.segs
+        self.segs = [s for _, s in _route_tracks(self.all_segs)]
         for fp in board.GetFootprints():
             for p in fp.Pads():
                 if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH:
@@ -1510,6 +1535,9 @@ class Copper:
         self.by_ln = defaultdict(list)
         for s in self.segs:
             self.by_ln[(s['lid'], s['net'])].append(s)
+        self.all_by_ln = defaultdict(list)
+        for s in self.all_segs:
+            self.all_by_ln[(s['lid'], s['net'])].append(s)
         self.pads_by_net = defaultdict(list)
         for p in self.pads:
             self.pads_by_net[p['net']].append(p)
@@ -1797,7 +1825,7 @@ def scan(board, baseline_log=None):
                     add('pad_end_offcentre', s['net'], s['layer'], p, pad=pd['name'], off_mm=round(off, 4))
 
     # ---- segments ------------------------------------------------------------------------------------------------
-    for s in cu.segs:
+    for s in cu.all_segs:
         if s['len'] < MICRO:
             add('micro_segment', s['net'], s['layer'], s['a'], len_mm=round(s['len'], 4),
                 end=(round(mm(s['b'][0]), 4), round(mm(s['b'][1]), 4)))
@@ -1832,7 +1860,7 @@ def scan(board, baseline_log=None):
                 add('segment_inside_pad', s['net'], s['layer'], s['a'], pad=pd['name'], len_mm=round(s['len'], 3))
 
     # ---- pairs: duplicates, overlaps, crossings ------------------------------------------------------------------
-    for (lid, net), group in cu.by_ln.items():
+    for (lid, net), group in cu.all_by_ln.items():
         layer = board.GetLayerName(lid)
         for i, si in enumerate(group):
             ai, bi = si['a'], si['b']
@@ -1857,7 +1885,9 @@ def scan(board, baseline_log=None):
                     ov = min(Li, max(t1, t2)) - max(0, min(t1, t2))
                     other = (round(mm(aj[0]), 4), round(mm(aj[1]), 4), round(mm(bj[0]), 4), round(mm(bj[1]), 4))
                     if off <= TOL and ov > TOL:
-                        dup = (dist(ai, aj) <= TOL and dist(bi, bj) <= TOL) or (dist(ai, bj) <= TOL and dist(bi, aj) <= TOL)
+                        dup = (not (si['arc'] or sj['arc']) and _track_key(si) == _track_key(sj)) if PROFILE == 'r10' else \
+                            ((dist(ai, aj) <= TOL and dist(bi, bj) <= TOL) or
+                             (dist(ai, bj) <= TOL and dist(bi, aj) <= TOL))
                         add('duplicate_segment' if dup else 'collinear_overlap', net, layer, ai,
                             end=(round(mm(bi[0]), 4), round(mm(bi[1]), 4)), other=other, overlap_mm=round(mm(ov), 4))
                     elif TOL < off < (si['w'] + sj['w']) / 2 + SLIT / NM and ov > max(si['w'], sj['w']) / 2:

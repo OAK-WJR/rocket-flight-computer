@@ -317,6 +317,90 @@ class SchematicContract(unittest.TestCase):
         self.assertNotIn('when the power switch opens', obligations)
 
 
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class BindingEvidence(unittest.TestCase):
+    """Saved evidence faults on a native project copy; validation never repairs its inputs."""
+    def setUp(self):
+        import shutil
+        import tempfile
+        source = r10_board()
+        self.assertIsNotNone(source, 'no M3-ASSY-R10 board found')
+        self.originals = (source, source.parent / 'schematic.net.xml', source.parent / gate.R10_BINDING_NOTE)
+        temp = tempfile.TemporaryDirectory(prefix='r10_binding_')
+        self.addCleanup(temp.cleanup)
+        self.project = Path(temp.name)
+        self.board, self.note = self.project / 'm3.kicad_pcb', self.project / gate.R10_BINDING_NOTE
+        self.note.parent.mkdir(parents=True)
+        for src, dst in zip(self.originals, (self.board, self.project / 'schematic.net.xml', self.note)):
+            shutil.copyfile(src, dst)
+        self.saved = json.loads(self.note.read_text())
+
+    def snapshot(self):
+        return {str(p): p.read_bytes() for p in (*self.originals, *self.project.rglob('*')) if p.is_file()}
+
+    def check(self, ok=True, word=None):
+        before = self.snapshot()
+        report = gate.check_board(pcbnew.LoadBoard(str(self.board)), self.project, self.board, only={'K-binding'})
+        self.assertEqual(self.snapshot(), before, 'binding checker changed an artifact')
+        self.assertEqual(report['ok'], ok, report['issues'])
+        if word:
+            self.assertTrue(any(word in issue for issue in report['issues']), report['issues'])
+        return report['rules']['K-binding']['evidence']
+
+    def test_saved_native_note_and_reformatted_json_pass_without_mutation(self):
+        evidence = self.check()
+        self.assertEqual(evidence['board_sha256'], gate.file_sha(self.board))
+        self.assertEqual(evidence['status'], 'record only; R1 binding invalid; no R10 firmware or flight approval')
+        self.assertIs(evidence['u1_board_map_checked'], True)
+        self.note.write_text(json.dumps(self.saved, sort_keys=True))
+        self.check()
+
+    def test_missing_or_malformed_saved_note_fails_without_repair(self):
+        for contents in (None, '{', '[]', 'null'):
+            with self.subTest(contents=contents):
+                if contents is None:
+                    self.note.unlink()
+                else:
+                    self.note.write_text(contents)
+                self.check(False, 'binding note')
+
+    def test_saved_hash_pin_axis_and_record_status_faults_fail_independently(self):
+        mutant = dict(self.saved)
+        del mutant['board_sha256']
+        self.note.write_text(json.dumps(mutant))
+        self.check(False, 'board_sha256')
+        cases = [((name,), '0' * 64) for name in
+                 ('board_sha256', 'netlist_sha256', 'pin_table_sha256', 'circuit_sha256')]
+        cases += [(('u1_pins', '3', 'net'), 'GND'), (('imu', 'roll_about_forward_axis'), '+gyro_Y'),
+                  (('status',), 'approved'), (('u1_board_map_checked',), 1)]
+        for keys, value in cases:
+            with self.subTest(field=keys):
+                mutant = copy.deepcopy(self.saved)
+                member = mutant
+                for key in keys[:-1]:
+                    member = member[key]
+                member[keys[-1]] = value
+                self.note.write_text(json.dumps(mutant))
+                self.check(False, keys[0])
+
+    def test_native_board_hash_pin_and_axis_changes_invalidate_saved_evidence(self):
+        mutations = (
+            ('board_sha256', lambda b: b.GetTitleBlock().SetComment(0, 'binding regression'), False),
+            ('U1.3', lambda b: b.FindFootprintByReference('U1').FindPadByNumber('3').SetNet(b.FindNet('GND')), True),
+            ('imu', lambda b: b.FindFootprintByReference('U4').SetOrientationDegrees(0), True),
+        )
+        for word, mutate, rehash in mutations:
+            with self.subTest(field=word):
+                board = pcbnew.LoadBoard(str(self.originals[0]))
+                mutate(board)
+                pcbnew.SaveBoard(str(self.board), board)
+                note = dict(self.saved)
+                if rehash:
+                    note['board_sha256'] = gate.file_sha(self.board)
+                self.note.write_text(json.dumps(note))
+                self.check(False, word)
+
+
 class HotplugEvidence(unittest.TestCase):
     """Faults in model artifacts must fail even when their summary says pass."""
     def setUp(self):
@@ -1034,6 +1118,8 @@ class Synthetic(SyntheticBase):
         self.assertEqual(len(ids), len(set(ids)))
         self.assertTrue({'S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7'} <= gate.STAGES['functional'])
         self.assertTrue(gate.STAGES['functional'] < gate.STAGES['placement'] < gate.STAGES['full'])
+        self.assertIn('K-binding', gate.STAGES['full'])
+        self.assertNotIn('K-binding', gate.STAGES['placement'])
         for gone in ('P-0', 'P-1', 'P-3', 'P-4', 'P-5', 'P-6', 'P-7', 'K-power-pyro') + tuple(f'R-{i}' for i in range(1, 14)):
             self.assertNotIn(gone, ids)
 

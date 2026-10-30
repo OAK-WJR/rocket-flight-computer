@@ -22,11 +22,11 @@
 #                     ground none), route_check --profile r10 (failing only on pending nets; after ground none)
 #   r10_post.py       the silkscreen, pin-1 dots, designators by the R4 rule, Fab references, the title block and the
 #                     final zone fill (no copper, zone or pad change: asserted)
+#   record            r10_sch_check.py --binding-note: sources/r10_design/r10_binding_note.json with the finished board's
+#                     SHA-256, U1's pin map read from the board and U4's position / rotation (firmware evidence only)
 #   gate              tools/check.sh, the full gate on the finished board: DRC every severity (silkscreen included)
 #                     with schematic parity, ERC, metadata / 3D models, silkscreen outline, fit,
-#                     check_r10 (including K-actuators), route_check r10
-#   record            r10_sch_check.py --binding-note: sources/r10_design/r10_binding_note.json with the board's
-#                     SHA-256, U1's pin map read from the board and U4's position / rotation (firmware evidence only)
+#                     check_r10 (including K-actuators and saved binding evidence), route_check r10
 # It overwrites the sheets, schematic.net.xml, m3.kicad_dru, m3.kicad_pro, kilib/m3.kicad_sym and m3.kicad_pcb in
 # m3_design/assembly_review, and the binding note: commit your own changes first. A rebuild reproduces m3.kicad_pcb byte for byte.
 set -euo pipefail
@@ -58,8 +58,8 @@ shasum -a 256 "$D/m3.kicad_pcb"
 "$NUMPY_PY" -I -B tools/r10_hotplug.py
 # Rebind fabrication before the full gate; renders remain local working artifacts.
 R10_RENDER_DIR=.supervisor/r10_renders KICAD_PY="$KICAD_PY" m3_design/r10_fab.sh
-KICAD_PY="$KICAD_PY" NUMPY_PY="$NUMPY_PY" tools/check.sh
-# the firmware binding evidence record (never an approval: AGENTS.md section 3), bound to the board just checked
+# Generate the record-only firmware evidence before the full gate validates it (AGENTS.md section 3).
 PYTHONUNBUFFERED=1 "$KICAD_PY" -I -B m3_design/r10_sch_check.py --project "$D" --board "$D/m3.kicad_pcb" \
   --binding-note "$D/sources/r10_design/r10_binding_note.json" > "$T/binding.txt" 2>&1
 echo "binding note: $D/sources/r10_design/r10_binding_note.json"
+KICAD_PY="$KICAD_PY" NUMPY_PY="$NUMPY_PY" tools/check.sh

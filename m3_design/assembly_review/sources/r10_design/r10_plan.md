@@ -2,14 +2,21 @@
 
 **Historical completion before the new circuit changes (2026-10-28):** full rounds 9/10 are clean on the original and Minor-fix targets; final PCB`b337fe63…` is frozen. R10_VALIDATION contains the complete current deviation list; owner acceptance/OQ-3, procurement, process and physical/firmware qualifications remain pending. The single-switch/AUD/GAP amendments below supersede original hardware descriptions.
 
-**Current review status (2026-10-30):** full R14 onf5/e0 completed0Critical/
-0Major/14consolidatedMinor groups from20raw. Low-risk fix PCB `7866d6b8…`,46x90mm,
-957segments/296vias,passes two complete native builds/check0 and42-file
-byte equality. Fresh full15/16 on this committed result must earn the final
-same-board pair; no earlier pair transfers. Proof:round14_fix_validation.json.
-Historical hardware descriptions below are superseded by newest owner and
-D-CIR/D-AVA/D-R11..D-R14 records. Stock/cost/process,physical/firmware and owner
-acceptance obligations remain open; R10 is not accepted or ordered.
+**Current review status (2026-10-30):** full R16 on committed b1b8658 completed
+0Critical/0Major/11consolidatedMinor groups from17raw observations(5new/6carried).
+PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
+46x90mm,951segments/296vias,remains unchanged through the gate/record fixes.
+The two complete R15 builds/check0 reproduced42 generated files on this PCB;
+new R16 integration evidence is recorded separately in round16_fix_validation.json.
+Fresh full17 on this same committed PCB must complete the clean pair. The
+newest supervisor steer/D-R16-03 forbids PCB,placement,routing and circuit-
+generator changes for Minors. Retain the measured SD/MEMS and other CAD Minors
+in the acceptance list; no post-pair cleanup is planned. If R17 is also0C0M,
+finalize the deviation/status/AGENTS records,commit and report. The complete
+ledger indexes122 unique agent decisions through D-R16-03 and23 owner scopes.
+Historical hardware below is superseded by newest owner and D-CIR/D-AVA/D-R11
+through D-R16-03 records. Stock,quote/process,physical/firmware and owner acceptance
+remain pending; R10 is not accepted or ordered.
 
 
 Historical starting plan: owner direction of 2026-10-26. Nothing here changes R9: M3-ASSY-R9 (board `4f841a0e…`, branch

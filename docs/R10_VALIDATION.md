@@ -1,31 +1,39 @@
 # R10 validation and adversarial review
 
-**Round15 fix pass (2026-10-30):** PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
+**Round16 integration (2026-10-30):** unchanged PCB
+`632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
 46x90x1.6mm,2,256,162bytes;209footprints/951segments/296vias/
-1788.675665mm track. Fifteen local route redraws and outward IMU GND escapes
-save8.464513mm/six segments combined. All part poses,pad lands,nets,models,vias,
-zone outlines,supports,IMU pose and AGENTS section2 remain unchanged.
-**Software/CAD:** two complete native builds/check0 reproduce42 generated files
-byte for byte. DRC/unconnected/parity/ERC0; all31R10rules,routing,legends,fit,
-orientation,618paste geometries and five-output manifest pass. R10tests176,
-fit31,paste16,routing60; all four native NumPy skips separately resolved.
-**Simulation/Inference:** actual-feed2304required+60local hot-plug cases pass;
-optional plate181.1Hz pinnedD5/70.5g estimated mass. Neither is physical qualification.
-**Procurement:** public supplier2026-10-30T13:13:17.644478..13:13:48.643735Z:
-$79.5232 placed/feeder share versus$84.41;$81.3254 with minimum purchases,
-before fixed/process/PCB/shipping. R43017<3610 and U4 0<5 remain short;
-U9stock123/minimum1. Cost passes; stock release,quote,process and owner acceptance
-remain pending. No order.
-**Reviews:** fullR15 on789f4d5/7866d6b8 found0Critical/0Major/14consolidatedMinor
-groups(20raw;10new/4carried). These fixes change the PCB; fresh complete16/17 on
-the committed result must earn the final same-board clean pair. Earlier pairs
-do not transfer. DB125 process allocation and VCAP combined-condition/ESR
-qualification remain explicit Minors after fresh focused verification.
+1788.675665mm track. Full R16 on committed b1b8658 completed0Critical/
+0Major/11consolidatedMinor groups from17raw observations(5new/6carried),
+with all1942committed files frozen through all ten independent lenses.
+**Software/CAD:** saved binding validation and exact-duplicate topology semantics
+are corrected; active plan/status/ledger are refreshed. One new complete native
+build/check0 reproduces all42 generated files byte-for-byte against both R15
+builds on this same PCB. A new standalone check0 passes DRC/unconnected/parity/
+ERC0,all32R10rules,180R10tests,31fit,16paste,67route tests,orientation,
+618paste geometries and five-output manifest. All four native NumPy skips are
+separately resolved. No CAD bytes, circuit,pins,poses,pads,vias,axes or AGENTS
+section2 changed after the full review.
+**Simulation/Inference:** actual-feed2304required+60local hot-plug cases pass
+again. Optional plate181.1Hz pinnedD5/70.5g remains the named R15 same-PCB
+calculation; no new modal or physical qualification is claimed.
+**Procurement:** original exact-code public supplier2026-10-30T15:30:06.601825..
+15:30:40.008183UTC:$79.5232placed/feeder share versus$84.41;$81.3254with
+minimum purchases,before fixed/process/PCB/shipping. Cost passes; R43017<3610
+and U4zero<5 remain stock blockers. Quote,process and owner acceptance pending.
+**Review completion:** R16 is the first qualifying full round on this PCB;
+fresh full17 on the identical committed PCB is pending. Three Minor groups are
+corrected; eight are retained. The newest supervisor steer/D-R16-03 forbids
+PCB,placement,routing and circuit-generator changes for Minors. Retain the
+measured SD cleanup in the deviation list; no post-pair CAD cleanup is planned.
+If full R17 is also0C0M,finalize records,commit and report. The bounded MEMS redraw failed
+an acute junction and is rejected; its specific measured stress-guidance
+advisory departure remains a deviation.
 **Not verified:** R10firmware,SD latency/power loss,e-match lot20ms firing,
-electrical/thermal/transient/endurance,installedRF/ESD,harness/retention,
+electrical/thermal/transient/endurance,installedRF/ESD,harness/switch/retention,
 screwdriver/card access,physical bore/stack/flight and first-article/process.
 R9 remains accepted; R10 is not accepted or ordered. Evidence:
-`m3_design/assembly_review/sources/r10_review/round15_fix_validation.json`.
+`m3_design/assembly_review/sources/r10_review/round16_fix_validation.json`.
 
 Evidence: [AVA layout hand-off](../m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md) and its metrics, validation and review-item JSON files.
 
@@ -918,6 +926,9 @@ qualification remain unverified. Round 10 freshly reviews the committed fix pass
 | 11 | `0c50b9fd…`, `21bc3b2` | **0 / 1 / 16; not clean** | D-R11-01…05 → `0ad0135c…`; two full passing builds / 42 identical generated files; fresh full rounds follow |
 | 12 | `0ad0135c…`, `d57b216` | **0 / 0 / 12; clean for that PCB** | D-R12-01…03 → `7355ae1a…`; two complete builds/check0 and42-file equality; fresh full same-board13/14 required |
 | 13 | `7355ae1a…`, `fa897c8` | **0 / 0 / 17; clean for that PCB** | 24 active raw; three closed historical MCU entries excluded; source fixes require fresh14/15 on committed result |
+| 14 | `e0e3ad84…`, `f5e4a5a` | **0 / 0 / 14; clean for that PCB** |20raw; fixes require fresh15/16 on7866d6b8 |
+| 15 | `7866d6b8…`, `789f4d5` | **0 / 0 / 14; clean for that PCB** |20raw; source fixes produce632a9ad3, requiring full16/17 |
+| 16 | `632a9ad3…`, `b1b8658` | **0 / 0 / 11; first clean on this PCB** |17raw; gate/record fixes only,PCB unchanged; full17pending |
 
 ## Round 10: full independent review of `b337fe63…` (commit `619db7e`)
 
@@ -1354,6 +1365,65 @@ round15_gate_fix,round15_qualification_fix,round15_terminal_verification,
 round15_vcap_verification,round15_fix_native,round15_plate and
 round15_fix_validation under`sources/r10_review/`.
 
+## Round 16: full independent review of committed `b1b8658`
+
+Target PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`.
+Ten fresh full lenses ran in batches of at most3; all1942preexisting tracked
+files remained byte-identical through final handoff. Result:0Critical/0Major/
+11consolidatedMinor groups,17raw observations,5new/6carried. Exact original
+MD/JSON reports remain immutable. No unresolved Critical/Major candidate was
+reclassified or deferred; rejected hypotheses and execution limits remain in
+the authored evidence. Engineering prototypes do not supply full-round credit.
+
+| Lens | Critical / Major / Minor |
+|---|---|
+| Requirements |0/0/3|
+| Safety |0/0/0|
+| Power/electrical |0/0/1|
+| Parts/BOM |0/0/2|
+| MCU/signals |0/0/1|
+| Placement/mechanics |0/0/2|
+| Routing/AVA |0/0/2|
+| Manufacturing |0/0/2|
+| Gate adversary |0/0/2|
+| Docs/firmware binding |0/0/2|
+
+Three groups are corrected:the stale active plan header,saved binding evidence
+validation and collateral topology failures from exact duplicate tracks. A
+complete copied-project gate genuinely accepted only-corrupted binding evidence;
+the canonical note was correct. New native-derived K-binding rejects missing/
+malformed/hash/pin/axis differences without rewriting the saved file. Generation
+moves before the full build gate. R10 exact net/layer/native-endpoints/width
+track duplicates now have one topology representation while their review count
+remains. Partial overlaps,different widths,crossings,genuine loops and legacy
+profile behavior remain blocking. Native tests exercise complete scan/evaluate.
+
+Eight groups remain retained:parent VEHICLE mirror,M2/returns,L400
+heel,DB125 process allocation,VCAP combined-condition/ESR,MEMS signal/supply
+stress guidance,SD_MOSIcleanup and courtyard ink. The qualified SD copy saves
+1.994603mm/two segments; exact native source precision is proved separately.
+The new supervisor steer/D-R16-03 supersedes the queued adoption policy and
+forbids PCB,placement,routing and circuit-generator changes for Minors. Keep
+this measured SD cleanup as an explicit M2 deviation. If full R17 is also0C0M,
+finalize records,commit and report without any later Minor CAD change. Only
+confirmed Critical/Major permits a board change. The bounded MEMS recipe is rejected for a45degree free CS junction;
+its first supply attempt also violates clearance. Current geometry is retained
+with its actual guidance departure and first-article qualification obligation.
+
+One new complete native source build/check0 reproduces the same PCB and all42
+recorded generated files against both R15 builds. Standalone check0 passes
+DRC/unconnected/parity/ERC0,all32rules and the current five-output fab manifest.
+Native180R10/31fit/16paste/67route tests pass; all four NumPy skips separately
+pass. Hot-plug2304required+60local cases pass again. The optional plate result
+is the prior same-PCB calculation,not a new run. No physical or firmware
+qualification follows. The exact15:30supplier snapshot is rebound with its
+original query times:79.5232USDplaced/81.3254USDminimums; R430/U4still short.
+
+No native CAD file changed after the full review; AGENTS section2 is exact.
+Fresh full17 remains required. The current ledger maps122DIDs through D-R16-03 and23
+owner mandates; the full R16 target historically contained119DIDs/22scopes. Evidence:round16_reconciliation,round16_gate_fix,
+round16_minor_prototypes and round16_fix_validation under`sources/r10_review/`.
+
 ## R10 deviations for owner acceptance
 
 Current-board inventory for PCB
@@ -1362,7 +1432,7 @@ The integration and fresh full-review status is stated in the opening record;
 the final same-board clean pair remains pending until both full rounds finish.
 The [complete JSON ledger](../m3_design/assembly_review/sources/r10_review/r10_final_deviations.json)
 maps every remaining obligation,46 historical groups,229 prior finding rows,
-all119 agent-decision IDs and22 owner-mandate records. Earlier measurements
+all122 agent-decision IDs and23 owner-mandate records. Earlier measurements
 remain at their original hashes; exact native geometry comparison and current
 gate/budget/fit evidence state what carries to this PCB. This supersedes the
 historical round10 acceptance inventory without transferring its clean pair.
@@ -1511,10 +1581,15 @@ instances:111ordinary+23AUD-10 inside-pad+
 counts are zero. Location-only leftovers appear once in
 `r10_final_deviations.json#/routing_inventory/noncritical_leftovers_once`.
 The current exact partition and numerical reference/region scopes are in
-round15_fix_native. R14 manual near-entry/lane/slow-companion measurements
+round15_fix_native and the fresh full round16_routing report. The new exact-
+duplicate topology guard preserves the unchanged140 annotations and46window
+bump inventory; duplicate-only representations remain review information. R14 manual near-entry/lane/slow-companion measurements
 remain explicitly scoped historical observations; part/via identity transfers
 unchanged geometry only,not an unexecuted current copper search. Supplemental
-search sketches do not add actual instances or prove global optimality.
+search sketches do not add actual instances or prove global optimality. The
+qualified ignored SD_MOSI alternative saves1.994603mm/two segments with unchanged
+0.20mm width,anchors,layer and vias. Retain it as an avoidable M2 Minor per the
+new supervisor steer/D-R16-03; PCB/generator changes for Minors are forbidden.
 
 Fifteen bounded fixed-anchor redraws were adopted through generators; the
 separate outward IMU GND escapes implement the recorded stress-guidance choice
@@ -1618,6 +1693,20 @@ deflection. No modal release floor or vibration test is inferred. Qualify
 axial tolerance, every roll orientation, external module/antenna/harness volume
 and actual bore/stack. Selected4 mm standoffs give0.270913 mm modeled100 g gap under C431; the3.5 mm sensitivity overlaps C431/C421. This is a local D5 calculation, not physical shock/clearance proof. Freed PCB length stays slack under OQ-7.
 
+The specific remaining U4 B.Cu component-side paths depart from ST TN1383
+Rev1pp7-9 pad-axis/outside-body stress guidance. Lens0.001mm midpoint sampling
+records IMU_CS0.7596+0.0918mm,MISO0.3257mm,INT1 0.3250mm and3V3A0.3257mm
+under the nominal body outside lands. Exact interval engineering gives0.760+
+0.091923882,0.325,0.325,0.325mm respectively; these different diagnostics
+are not physical measurements. Signal/supply widths0.20/0.25mm also differ.
+A bounded supply sketch has only0.106949mm clearance and is rejected; the
+revised combined alternative passes its local0.16mm screen but creates a
+45degree free IMU_CS junction at B(14.2,44.7),so it too is rejected. No full
+native refill/DRC/reference or build qualification is credited to that sketch.
+Retain this explicit advisory departure with first-article bias/temperature/
+vibration and process qualification; M-7/P3 passing is narrower than complete
+TN1383 compliance. Sources:round16_mechanics and round16_minor_prototypes.
+
 ### 9. Parts, lands and fabrication process
 
 | Item | Measured reason retained | Required closure |
@@ -1635,7 +1724,7 @@ and actual bore/stack. Selected4 mm standoffs give0.270913 mm modeled100 g gap u
 
 ### 10. Cost, stock and owner items
 
-The2026-10-30T13:13:17.644478..13:13:48.643735UTC exact-code snapshot gives
+The2026-10-30T15:30:06.601825..15:30:40.008183UTC exact-code snapshot gives
 $79.5232/board placed/feeder share against$84.41. Minimum purchases bring
 the modeled total to$81.3254. Owner cost/quote acceptance remains pending;
 fixed83.96/order,possible
@@ -1664,8 +1753,8 @@ support/hardware and integration limits. No other worktree may be edited.
 
 ### 12. Every agent decision
 
-The JSON indexes all119 unique D-* IDs, including suffixes through D-R15-03,
-by ID/title/current applicability/reason, and all22 owner-mandate records/amendments.
+The JSON indexes all122 unique D-* IDs, including suffixes through D-R16-03,
+by ID/title/current applicability/reason, and all23 owner-mandate records/amendments.
 Review-process decisions do not infer owner acceptance of an electrical or
 mechanical tradeoff. Any later adopted decision must be added before finalization; the current decision-source hash is recorded.
 

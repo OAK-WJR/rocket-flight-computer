@@ -1,12 +1,46 @@
 # R10 AVA layout hand-off
 
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
-The current round15 fix PCB is `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`.
-Two complete native builds/check0 reproduce42 generated files byte for byte.
-Current integration scope is in [R10_VALIDATION](../../../../docs/R10_VALIDATION.md), round15. Full R15 reviewed
-789f4d5/7866d6b8 with0C/0M/14Minor groups from20raw. These fixes change the PCB;
-fresh full16/17 on the committed result must earn the final same-board pair.
-No earlier pair or focused verification transfers full-review credit.
+**Full R16 and gate follow-up (2026-10-30):** unchanged PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
+46×90×1.6mm,2,256,162 bytes;209 footprints,951 segments,296 vias(168 GND),
+1788.675665mm track. All1942 committed files stayed byte-identical through ten
+full R16 lenses on `b1b8658`/`632a9ad3`:0Critical/0Major/11Minor groups from17raw
+observations(5new/6carried). Full R17 on this same PCB is pending; no final pair,
+owner acceptance or order is claimed. Full R16's original scope was119D IDs/
+22owner mandates. Current amendments total122D IDs throughD-R16-03/23mandates;
+these additions do not rewrite the sealed review's source scope.
+**Software/CAD:** one new R16 integrated build/check exits0:DRC/unconnected/
+parity/ERC0,all32R10rules including K-binding,180R10tests,31fit,16paste,5parts
+and67route. All four native NumPy skips are separately resolved with supplied
+NumPy. Orientation,618paste geometries and five-output manifest pass. Its42
+generated files exactly match both complete R15 build snapshots on this same
+PCB. Those two R15 executions retain their original31-rule/176R10/60route
+scope; this is one new R16 build, not a second new-build pair. Assembly-page
+rasters match the b1b8658 pages despite PDF metadata-byte changes. The separate
+final standalone check also exits0 with the same32rules/test counts and all
+four native NumPy skips separately resolved.
+**Simulation/Inference:** fresh R16 actual-feed2304required+60local hot-plug
+cases pass. The optional181.1Hz pinnedD5/70.5g estimated plate result retains
+its R15 calculation scope. No physical qualification is inferred.
+**Procurement:** exact supplier2026-10-30T15:30:06.601825..15:30:40.008183Z:
+$79.5232 placed/feeder share and$81.3254 with minimum purchases,both below$84.41
+before fixed/process/PCB/shipping. Cost-only procurement passes; stock release
+fails at R43017<3610 and U4zero<5. U9stock123/minimum1. Quote/process and owner
+cost/deviation acceptance remain pending; nothing ordered.
+**Retained Minors, latest supervisor steer (2026-10-30):** no PCB,placement,
+routing or circuit-generator change for Minors. The SD_MOSI alternative saving
+1.994603mm/two segments is retained as a measured owner-acceptance deviation;
+its queued adoption is cancelled. Under-body IMU_CS/SPI1_MISO/IMU_INT1/3V3A
+paths remain a measured TN1383 stress-guidance departure with rejected bounded
+prototypes. Commit R16,then full R17 on the same632a9ad3; if also0Critical/
+0Major,finalize deviations/status/AGENTS,commit and report. PCB changes require
+a confirmed Critical or Major; no complete TN1383 compliance is claimed.
+**Not verified:** DB125 insertion/fabricated S-8 allocation,VCAP combined C/ESR/
+process,R10 firmware,SD/e-match lot20ms firing,electrical/thermal/transient/
+endurance,installedRF/ESD,harness/retention,tool/card access,physical bore/stack/
+flight and first-article/process. AGENTS section2 is unchanged; R9 stays accepted.
+Current integration scope: [R10_VALIDATION](../../../../docs/R10_VALIDATION.md), round16.
+
 Round11 found one confirmed Major/16Minor groups on the hand-off board and
 fixed it as `0ad0135c…`; its named historical proof remains separate. The
 historical measurements below describe `0c50b9fd…`; fix deltas are at the end.
@@ -250,4 +284,37 @@ The new0.475mm CAM_5V B(33.625,48.75) segment inside U13.1 is AUD-10 information
 These and other M2 compromises remain owner deviations; full native counts are in
 [round15_fix_native](../r10_review/round15_fix_native.json). Exact DB125 insertion/fabricated
 barrel allocation and C19/C20 operating C/ESR/process qualification are open.
-D-R15-01…03 records the changes; fresh complete16/17 must review the committed result.
+D-R15-01…03 records those changes. Full R16 has now reviewed632a9ad3;
+current pair/gate status is in the opening record and the follow-up below.
+
+## Round16 records and gate follow-up (unchanged PCB)
+
+**R16 retained MEMS stress deviation (R16-MEC-01, Minor):** component-side B.Cu
+still crosses U4's nominal body outside its lands: IMU_CS 0.7596+0.0918 mm,
+SPI1_MISO 0.3257 mm,IMU_INT1 0.3250 mm and3V3A 0.3257 mm (0.001mm midpoint sampling;
+native body x15.50..18.50/y44.65..47.15). Signal widths are0.20mm; the0.25mm
+3V3A rail also departs from the same-width guidance. These specifically depart from
+[ST TN1383 Rev1 pp7–9](https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf)
+pad-axis/outside-body stress guidance. The R15 GND correction and passing M-7/P3
+checks are narrower than complete compliance. The bounded supply prototype
+has only0.106949mm clearance; the next combined recipe creates an acute45degree
+CS junction at B(14.2,44.7). Both are rejected, with no production copper change
+or full PCB/CLI/gate qualification of that MEMS recipe. Retain first-article
+bias/temperature/vibration qualification. [Prototype evidence](../r10_review/round16_minor_prototypes.json)
+and R16-MEC-01/D-R16-02 preserve the limits; no offset error or physical failure
+is demonstrated.
+
+The exact-duplicate and saved-binding gate corrections change no production
+copper,part,pose,pin or axis. One integrated R16 build/check exits0 with32rules,
+180R10tests/67route; all four native NumPy skips are separately resolved. Its42
+files exactly match both R15snapshots, with no second new-build pair claimed.
+Full R16 onb1b8658/
+632a9ad3 is0C/0M/11Minor groups from17raw(5new/6carried),all1942files unchanged;
+fullR17 on this same PCB is pending. The separate final standalone check exits0
+with the same32rules/180R10/67route and all four native NumPy skips resolved.
+The latest supervisor steer cancels queued SD_MOSI adoption: retain the measured
+1.994603mm/two-segment saving for owner acceptance. No PCB,placement,routing or
+circuit-generator changes for Minors; only confirmed Critical/Major changes
+warrant CAD edits. Current122D IDs throughD-R16-03/23owner scopes are indexed in
+the final ledger; fullR16's sealed original scope remains119/22. D-R16-03
+supersedes D-R16-02's former post-pair adoption plan without erasing that history.

@@ -954,11 +954,12 @@ class R10AuditScope(unittest.TestCase):
         instances = rc.scan(self.board)
         review = [d for d in instances if d['cat'] in rc.R10_REVIEW]
         self.assertTrue(any(d['cat'] == 'duplicate_segment' for d in review))
-        self.assertFalse(rc.evaluate(review, [])[0])
+        self.assertEqual(rc.evaluate(instances, [])[0], [])
         self.assertEqual(rc.leftover_check([dict(d, cls='other') for d in review], []), ([], [], []))
         self.helper.track((2, 0), (8, 0), '3V3')
         self.helper.track((4, -3), (4, 3), '3V3')
-        harmful = [d for d in rc.scan(self.board) if d['cat'] in ('collinear_overlap', 'crossing_without_node')]
+        failures, _, _ = rc.evaluate(rc.scan(self.board), [])
+        harmful = [d for d in failures if d['cat'] in ('collinear_overlap', 'crossing_without_node')]
         self.assertEqual({d['cat'] for d in harmful}, {'collinear_overlap', 'crossing_without_node'})
         self.assertTrue(all(rc.gated(d) for d in harmful))
         for category in ('collinear_overlap', 'crossing_without_node', 'overlap_only_joint', 'via_on_track'):
@@ -966,6 +967,114 @@ class R10AuditScope(unittest.TestCase):
             self.assertTrue(rc.evaluate([fault], [])[0], category)
         rc.set_profile('r9')
         self.assertTrue(rc.evaluate(review, [])[0])
+
+    def straight_route(self):
+        self.helper.setUp()
+        self.board = self.helper.board
+        self.board.SetCopperLayerCount(4)
+        self.helper.two_pads('QSPI_CLK')
+        self.helper.track((0, 0), (10, 0), 'QSPI_CLK')
+
+    def test_aud10_exact_duplicate_and_reverse_preserve_routes_and_connectivity(self):
+        for a, b in (((0, 0), (10, 0)), ((10, 0), (0, 0))):
+            with self.subTest(a=a, b=b):
+                self.straight_route()
+                baseline = rc.pad_groups(rc.collect(self.board)['QSPI_CLK'])
+                self.assertEqual(rc.evaluate(rc.scan(self.board), [])[0], [])
+                self.helper.track(a, b, 'QSPI_CLK')
+                self.helper.track(b, a, 'QSPI_CLK')
+                instances = rc.scan(self.board)
+                self.assertEqual(rc.evaluate(instances, [])[0], [])
+                self.assertEqual(sum(d['cat'] == 'duplicate_segment' for d in instances), 3)
+                nc = rc.collect(self.board)['QSPI_CLK']
+                self.assertEqual(rc.net_route(nc)['len'], 10.)
+                self.assertEqual(rc.pad_groups(nc), baseline)
+                # Removing one representation leaves the same physical connection; removing all does not.
+                self.assertEqual(rc.pad_groups(nc, skip={id(nc.tracks[0]['obj'])}), baseline)
+                self.assertNotEqual(rc.pad_groups(nc, skip={id(t['obj']) for t in nc.tracks}), baseline)
+
+    def test_aud10_partial_overlap_width_and_endpoint_changes_still_block(self):
+        for a, b, width in (((2, 0), (8, 0), .2), ((0, 0), (10, 0), .4),
+                            ((.0005, 0), (10.0005, 0), .2)):
+            with self.subTest(a=a, b=b, width=width):
+                self.straight_route()
+                self.helper.track(a, b, 'QSPI_CLK', width)
+                instances = rc.scan(self.board)
+                failures, _, _ = rc.evaluate(instances, [])
+                self.assertTrue(any(d['cat'] == 'collinear_overlap' for d in failures), failures)
+                self.assertFalse(any(d['cat'] == 'duplicate_segment' for d in instances), instances)
+                self.assertGreater(rc.net_route(rc.collect(self.board)['QSPI_CLK'])['len'], 10.)
+
+    def test_aud10_crossings_and_genuine_loops_still_block_with_duplicates(self):
+        for category in ('crossing_without_node', 'track_loop'):
+            with self.subTest(category=category):
+                self.straight_route()
+                self.helper.track((10, 0), (0, 0), 'QSPI_CLK')
+                if category == 'crossing_without_node':
+                    self.helper.pad('A3', 5, -3, 'QSPI_CLK')
+                    self.helper.pad('A4', 5, 3, 'QSPI_CLK')
+                    self.helper.track((5, -3), (5, 3), 'QSPI_CLK')
+                else:
+                    self.helper.chain([(0, 0), (3, 3), (7, 3), (10, 0)], 'QSPI_CLK')
+                failures, _, _ = rc.evaluate(rc.scan(self.board), [])
+                self.assertTrue(any(d['cat'] == category for d in failures), failures)
+
+    def test_aud10_duplicate_keeps_true_segment_and_dead_copper_failures(self):
+        self.straight_route()
+        self.helper.track((10, 0), (0, 0), 'QSPI_CLK')
+        self.helper.track((5, 0), (5.1, 3), 'QSPI_CLK')
+        failures, _, _ = rc.evaluate(rc.scan(self.board), [])
+        for category in ('off_angle', 'dead_copper'):
+            self.assertTrue(any(d['cat'] == category for d in failures), failures)
+
+    def test_aud10_exact_geometry_on_other_nets_or_layers_is_not_collapsed(self):
+        self.straight_route()
+        self.helper.two_pads('USB_DP')
+        self.helper.track((0, 0), (10, 0), 'USB_DP')
+        self.helper.track((0, 0), (10, 0), 'QSPI_CLK', layer=pcbnew.B_Cu)
+        instances = rc.scan(self.board)
+        failures, _, _ = rc.evaluate(instances, [])
+        self.assertFalse(any(d['cat'] == 'duplicate_segment' for d in instances))
+        self.assertTrue(any(d['cat'] == 'dead_copper' and d['layer'] == 'B.Cu' for d in failures), failures)
+        self.assertEqual(len(rc.Copper(self.board).segs), 3)
+        self.assertEqual(rc.net_route(rc.collect(self.board)['QSPI_CLK'])['len'], 20.)
+
+    def test_aud10_preserves_legacy_duplicate_gate_and_route_length(self):
+        self.straight_route()
+        self.helper.track((10, 0), (0, 0), 'QSPI_CLK')
+        for profile in ('r7', 'r8', 'r9'):
+            with self.subTest(profile=profile):
+                rc.set_profile(profile)
+                failures, _, _ = rc.evaluate(rc.scan(self.board), [])
+                for category in ('duplicate_segment', 'fold_back', 'track_loop'):
+                    self.assertTrue(any(d['cat'] == category for d in failures), failures)
+                self.assertEqual(rc.net_route(rc.collect(self.board)['QSPI_CLK'])['len'], 20.)
+
+    def test_aud10_real_target_exact_duplicate_has_no_collateral_failures(self):
+        board = pcbnew.LoadBoard(str(Path(__file__).resolve().parents[1] / 'm3_design/assembly_review/m3.kicad_pcb'))
+        baseline = rc.scan(board)
+        self.assertEqual(rc.evaluate(baseline, [])[0], [])
+        a, b = self.helper.P(28.8, 24.2), self.helper.P(28.8, 11.0)
+        matches = [t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'GPS_RX_MCU'
+                   and t.GetLayer() == pcbnew.F_Cu and t.GetWidth() == pcbnew.FromMM(.2)
+                   and {tuple(t.GetStart()), tuple(t.GetEnd())} == {tuple(a), tuple(b)}]
+        self.assertEqual(len(matches), 1)
+        nc = rc.collect(board)['GPS_RX_MCU']
+        length, connected = rc.net_route(nc)['len'], rc.pad_groups(nc)
+        for start, end in ((a, b), (b, a)):
+            with self.subTest(start=tuple(start)):
+                duplicate = pcbnew.PCB_TRACK(board)
+                duplicate.SetNet(matches[0].GetNet()); duplicate.SetLayer(pcbnew.F_Cu)
+                duplicate.SetStart(start); duplicate.SetEnd(end); duplicate.SetWidth(pcbnew.FromMM(.2))
+                board.Add(duplicate)
+                instances = rc.scan(board)
+                self.assertEqual(rc.evaluate(instances, [])[0], [])
+                self.assertEqual(sum(d['cat'] == 'duplicate_segment' for d in instances), 1)
+                self.assertEqual(len(instances), len(baseline) + 1)
+                nc = rc.collect(board)['GPS_RX_MCU']
+                self.assertEqual(rc.net_route(nc)['len'], length)
+                self.assertEqual(rc.pad_groups(nc), connected)
+                board.Remove(duplicate)
 
 
 if __name__ == '__main__':

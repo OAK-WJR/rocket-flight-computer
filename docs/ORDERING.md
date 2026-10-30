@@ -221,18 +221,46 @@ inspection and depaneling procedures only where restated here. R10 has one exter
 wired terminals, external GPS/radio, a hinged microSD socket, one bus-sense bank and no servo-power copper.
 There are no GH connectors, servo headers, servo tie holes, ARM link, pull-pin, on-board RF modules or SMA jacks.
 
-**Board/evidence state,2026-10-30UTC:** native PCB
-`632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`:
-209 footprints,951 segments,296 vias,2,256,162 bytes. Two complete native builds/
-check0 reproduce42 generated files byte for byte. DRC/unconnected/parity/ERC0,
-all31 R10 rules, routing, legends, fit, orientation, paste geometry and five-output
-manifest pass. Both final assembly-page rasters match and complete pages were inspected.
-Actual-feed2304 required+60 local hot-plug cases
-pass as Simulation/Inference. Full R15 on789f4d5/7866d6b8 found0Critical/0Major/
-14Minor groups from20raw; these fixes change the PCB and need fresh full16/17 on
-the committed result. DB125 insertion/fabrication and exact C19/C20 combined C/ESR
-process qualification remain open. No owner, process, physical or firmware
-acceptance follows. See [R10_VALIDATION](R10_VALIDATION.md).
+**Full R16 and gate follow-up (2026-10-30):** unchanged PCB `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
+46×90×1.6mm,2,256,162 bytes;209 footprints,951 segments,296 vias(168 GND),
+1788.675665mm track. All1942 committed files stayed byte-identical through ten
+full R16 lenses on `b1b8658`/`632a9ad3`:0Critical/0Major/11Minor groups from17raw
+observations(5new/6carried). Full R17 on this same PCB is pending; no final pair,
+owner acceptance or order is claimed. Full R16's original scope was119D IDs/
+22owner mandates. Current amendments total122D IDs throughD-R16-03/23mandates;
+these additions do not rewrite the sealed review's source scope.
+**Software/CAD:** one new R16 integrated build/check exits0:DRC/unconnected/
+parity/ERC0,all32R10rules including K-binding,180R10tests,31fit,16paste,5parts
+and67route. All four native NumPy skips are separately resolved with supplied
+NumPy. Orientation,618paste geometries and five-output manifest pass. Its42
+generated files exactly match both complete R15 build snapshots on this same
+PCB. Those two R15 executions retain their original31-rule/176R10/60route
+scope; this is one new R16 build, not a second new-build pair. Assembly-page
+rasters match the b1b8658 pages despite PDF metadata-byte changes. The separate
+final standalone check also exits0 with the same32rules/test counts and all
+four native NumPy skips separately resolved.
+**Simulation/Inference:** fresh R16 actual-feed2304required+60local hot-plug
+cases pass. The optional181.1Hz pinnedD5/70.5g estimated plate result retains
+its R15 calculation scope. No physical qualification is inferred.
+**Procurement:** exact supplier2026-10-30T15:30:06.601825..15:30:40.008183Z:
+$79.5232 placed/feeder share and$81.3254 with minimum purchases,both below$84.41
+before fixed/process/PCB/shipping. Cost-only procurement passes; stock release
+fails at R43017<3610 and U4zero<5. U9stock123/minimum1. Quote/process and owner
+cost/deviation acceptance remain pending; nothing ordered.
+**Retained Minors, latest supervisor steer (2026-10-30):** no PCB,placement,
+routing or circuit-generator change for Minors. The SD_MOSI alternative saving
+1.994603mm/two segments is retained as a measured owner-acceptance deviation;
+its queued adoption is cancelled. Under-body IMU_CS/SPI1_MISO/IMU_INT1/3V3A
+paths remain a measured TN1383 stress-guidance departure with rejected bounded
+prototypes. Commit R16,then full R17 on the same632a9ad3; if also0Critical/
+0Major,finalize deviations/status/AGENTS,commit and report. PCB changes require
+a confirmed Critical or Major; no complete TN1383 compliance is claimed.
+**Not verified:** DB125 insertion/fabricated S-8 allocation,VCAP combined C/ESR/
+process,R10 firmware,SD/e-match lot20ms firing,electrical/thermal/transient/
+endurance,installedRF/ESD,harness/retention,tool/card access,physical bore/stack/
+flight and first-article/process. AGENTS section2 is unchanged; R9 stays accepted.
+See [R10_VALIDATION](R10_VALIDATION.md), round16 reconciliation and current integration.
+
 
 Coordinates are KiCad millimetres, x=0 west, y=0 aft, y=90 forward; Gerber Y is −KiCad y.
 F/B mean top/bottom. Positions below describe the current `632a9ad3…` native board and placement source,
@@ -249,7 +277,7 @@ this is not a flight release.
 | Panel | JLC tab-routed rails, no V-cut. OQ-4 retains an aft-edge tab and aft rail/frame supporting the aft-east corner. Obtain JLC acceptance of the actual rail/tab plan and confirm every span against T-1 and the mouse-bite clearances in §3. Do not enlarge or relocate tabs without checking the final board. |
 | Vias | Ordinary vias plugged only where JLC's 0.35 mm clearance/size rules permit; otherwise tent/mask-cover them without adding openings. Preserve the large BAT_IN via's supplied covering. **Only the two U401.11 vias below use VIPPO.** Preserve the supplied covering set; changed covering requires renewed DFM/paste checks. |
 | Uploads | Final `m3_gerber.zip`, `m3_bom_jlc.csv`, `m3_cpl_jlc.csv`; both assembly PDFs are inspection aids. `m3_fab_manifest.json` must bind all five outputs to the final CAD/export inputs. Cost/stock files are evidence, not uploads. |
-| Acceptance | Two qualifying independent review rounds and owner acceptance of the refreshed board-bound deviations remain required. Two complete builds/check0 and the42-file reproducibility comparison pass; factory process acceptance and stock/quote resolution remain required before ordering. The final clean pair remains pending on this corrected board. |
+| Acceptance | Two qualifying independent review rounds and owner acceptance of the refreshed board-bound deviations remain required. Two complete R15 builds/check0 and the42-file reproducibility comparison pass on this PCB; one new R16 integrated build/check0 matches both R15 snapshots. Factory process acceptance and stock/quote resolution remain required before ordering. FullR16 is clean; fullR17 on the same PCB remains pending. The measured SD_MOSI1.994603mm/two-segment alternative remains an owner-acceptance deviation; latest steer cancels its adoption and forbids PCB changes for Minors. |
 
 Use `m3_design/r10_fab.sh` for the R10 export/check sequence; `FAB_NET=1` also performs the supplier checks.
 For separate supplier checks, use the explicit R10 profile:
@@ -262,8 +290,8 @@ python3 tools/check_procurement.py --profile r10
 
 R10's placed-part/feeder target is **$84.41 per board**; Extended-code count is informational.
 
-**Current supplier snapshot:** all82 exact codes queried2026-10-30T13:13:17.644478Z
-through **13:13:48.643735Z**, frozen without a new query/timestamp. The final-BOM/CPL-bound
+**Current supplier snapshot:** all82 exact codes queried2026-10-30T15:30:06.601825Z
+through **15:30:40.008183Z**, rebound without changing those supplier times. The final-BOM/CPL-bound
 [cost](../m3_design/assembly_review/fab/cost_check.json) and
 [stock](../m3_design/assembly_review/fab/stock_check.json) preserve those supplier times.
 At5 boards, parts$54.4312/board plus feeder share$25.092/board gives**$79.5232/board**;
@@ -489,7 +517,12 @@ thermal and sensor tests apply using the contacts above and the current circuit:
   Current allocation gives0.490–0.571 ms all-ports/SD-write and1.533–1.655 ms camera-off/logic-shed/card-idle at300.8 µF
   to3.8 V (Calc/Inference), not measured hold-up. Select a card≤200 mA write/≤30 mA idle and qualify busy latency,
   buffering, power-loss/reset recovery and full-flight storage alongside primary QSPI.
-- **Sensors/installed assembly:** verify IMU roll=−gyro_Y, thrust=−a_Y and negative a_X during roll with the retained−6 mm
+- **Sensors/installed assembly:** retain the measured under-body IMU_CS 0.7596+0.0918 mm,
+  SPI1_MISO 0.3257 mm,IMU_INT1 0.3250 mm and3V3A 0.3257 mm stress-guidance departure
+  (R16-MEC-01/D-R16-02). The rejected prototype has0.106949mm supply clearance; the next combined
+  recipe creates an acute45degree CS junction at B(14.2,44.7). Neither is a
+  production fix ([receipt](../m3_design/assembly_review/sources/r10_review/round16_minor_prototypes.json)); no complete TN1383 compliance is claimed. Qualify first-article
+  bias/temperature/vibration. Verify IMU roll=−gyro_Y, thrust=−a_Y and negative a_X during roll with the retained−6 mm
   lever arm; check HSE under buzzer/QSPI activity and U4/U5 temperature under MCU load. U5 needs its recovery interval,
   venting and opaque-cover light/LED-toggle test; keep LEDs dark in flight until that test passes.
   With dummy load, installed LR900-F at full power from its flight position must cause no fire trigger and no invalid
@@ -523,10 +556,10 @@ are not vibration-release criteria. Physical fit, heat, coating process, clamp/h
 | `60be35ea…`, single-switch before AUD/GAP | 244 footprints/228 CPL rows/83 codes; later removals/replacements are not represented. |
 | `877d0199…` /reviewed fix `b337fe63…`, AUD/GAP | 225 footprints/215 CPL rows/82 codes,317/365 paste flashes; $84.43 placed/feeder snapshot. Old GH/header positions, fixed coat rectangle, probe coordinates, support examples and280.9 Hz model are historical. |
 | `6e73b6eb…`, circuit-only pass | 209 footprints/199 CPL rows/82 codes; radio parked west; $82.59 snapshot. Superseded by AVA placement. |
-| `0c50b9fd…`, frozen AVA review target | 209 footprints/981 segments/294 vias,199 fitted/82 codes;245/373 paste flashes. Its package binding and ten-lens review belong to this historical PCB. It was superseded by the R11–R14 fixes and reviewed as7866d6b8 in full R15. Current632a9ad3 needs fresh full16/17. It receives no transferred review credit. |
+| `0c50b9fd…`, frozen AVA review target | 209 footprints/981 segments/294 vias,199 fitted/82 codes;245/373 paste flashes. Its package binding and ten-lens review belong to this historical PCB. It was superseded by the R11–R14 fixes and reviewed as7866d6b8 in full R15. FullR16 reviewed632a9ad3; fullR17 on that same PCB is pending. The SD_MOSI alternative is retained for owner acceptance; no PCB change for Minors is planned. |
 
 Earlier R7–R9 instructions, including RF modules/SMA, GH mates, ARM link/fuses, servo headers/ties, old coating rectangles
 and old thermal/modal/copper/stock counts, do not become current through a designator substitution.
 Historical details remain in M3_R10, R10_VALIDATION and R10_DECISIONS. The current software/CAD and fabrication
-results above belong to `632a9ad3…`, reproduced by two complete successful builds with all42 generated-file hashes and board metrics identical. Resolve stock/quote requirements before any order. Factory approval, first-article processes, firmware, bench/thermal/e-match, coating, harness/tool/card
+results above belong to `632a9ad3…`, reproduced by two complete successful R15 builds with all42 generated-file hashes and board metrics identical. One new R16 integrated build/check0 matches both R15 snapshots; it is not a second new-build pair. Resolve stock/quote requirements before any order. Factory approval, first-article processes, firmware, bench/thermal/e-match, coating, harness/tool/card
 access and installed mechanical qualification remain open.
