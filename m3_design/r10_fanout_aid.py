@@ -154,7 +154,7 @@ def main():
                 if any(seg_dist(px, py, cx, cy, x, y) < VIA_D / 2 + 0.15 + 0.1 for px, py in placed + vias):
                     continue
                 cand.update(x=x, y=y, cx=cx, cy=cy, layer=layer)
-                if clear([(pcbnew.F_Cu, via), (pcbnew.B_Cu, via), (layer, stub)], net, x, y, p.m_Uuid.AsString()):
+                if clear([(pcbnew.F_Cu, via), (pcbnew.In1_Cu, via), (pcbnew.In2_Cu, via), (pcbnew.B_Cu, via), (layer, stub)], net, x, y, p.m_Uuid.AsString()):
                     best = (x, y)
                     break
             if best:

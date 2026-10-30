@@ -15,7 +15,7 @@ def draw(d):
     t('SD_MISO','F',.2,[p('U1.79'),(12.5,38.5),(12.0,39.0),(11.0,39.0)]);v('SD_MISO',(11.0,39.0))
     t('SD_MOSI','F',.2,[p('U1.80'),(13.0,39.0),(12.4,39.6)]);v('SD_MOSI',(12.4,39.6))
     t('SD_CS','F',.2,[p('U1.81'),(13.7,39.5),(13.0,40.2)]);v('SD_CS',(13.0,40.2))
-    for at in ((10.3,38.3),(11.7,40.0),(12.25,40.65)):
+    for at in ((10.3,38.3),(11.7,40.0)):
         v('GND',at)
     # Each lane: a vertical north, a diagonal NE, a horizontal, a vertical north, a second diagonal and a straight entry
     # into the pad from the south.  MISO's second diagonal is offset 0.25 mm from the first (no knee).
@@ -32,9 +32,9 @@ def draw(d):
     # socket pin 4's via and carries C461.1's 3V3.  The GND partner via sits within 1.5 mm of the signal via, west of
     # the GPS lanes' band.
     t('SD_DAT2','B',.2,[p('J430.1'),(27.205+DX,22.18)]);v('SD_DAT2',(27.205+DX,22.18))
-    t('SD_DAT2','F',.2,[(27.205+DX,22.18),p('R464.1')]);v('GND',(26.75,21.0))
+    t('SD_DAT2','F',.2,[(27.205+DX,22.18),p('R464.1')]);v('GND',(28.2,22.4))
     t('3V3','F',.2,[p('R464.2'),(23.905+DX,23.0)])
-    t('3V3','F',.3,[p('C461.1'),(25.8,21.105),p('R464.2')])
+    t('3V3','F',.3,[p('C461.1'),(26.605,20.3),p('R464.2')])
     for ref,at in [('R461',(24.5,18.5)),('R462',(13.375,15.8)),('R463',(13.375,20.0))]:
         corners=[(25.025,17.975)] if ref=='R461' else []
         t('3V3','B',.2,[p(ref+'.2'),*corners,at]);v('3V3',at)
@@ -43,7 +43,6 @@ def draw(d):
     t('3V3','B',.3,[p('J430.4'),(23.905+DX,23.0)]);v('3V3',(23.905+DX,23.0))
     t('3V3','F',.3,[(23.905+DX,23.0),(23.255,22.35),p('C460.1')])
     t('GND','F',.3,[p('C460.2'),(21.705+DX,22.8)])
-    t('GND','F',.3,[p('C461.2'),(30.25,19.6)]);v('GND',(30.25,19.6))
-    for pin,at in [(6,(21.705+DX,22.8)),(9,(30.875+DX,31.6)),(10,(15.6+DX,30.5)),(11,(18.725+DX,23.3)),(12,(32.5,21.7))]:
-        corners=[(16.1+DX,30.0)] if pin==10 else []
+    for pin,at in [(6,(21.705+DX,22.8)),(9,(30.875+DX,31.6)),(10,(15.6+DX,30.5)),(11,(18.725+DX,23.3)),(12,(34.0,22.4))]:
+        corners=[(16.1+DX,30.0)] if pin==10 else [(30.875+DX,22.4)] if pin==12 else []
         t('GND','B',.3,[p('J430.'+str(pin)),*corners,at]);v('GND',at)

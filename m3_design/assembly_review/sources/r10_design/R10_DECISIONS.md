@@ -1676,3 +1676,68 @@ Three gate / test fixes, none weakening a rule: each corrects a gap in the check
 
 Result: the full `tools/check.sh` passes at zero on `6e73b6eb…` in both builds; the self-test counts and every threshold
 are otherwise unchanged. AGENTS §2 is unchanged.
+
+
+## D-AVA-01. AVA terminal rows and local cells (2026-10-29; CAD layout complete)
+
+The supervisor verified the circuit-pass baseline `6e73b6eb…` at check.sh exit 0 outside the sandbox. KiCad CLI's
+sandbox-only Swift crash is an environment fault; subsequent builds and DRC use the supervisor build service.
+The completed relayout is PCB `0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8`.
+No AGENTS §2 rule, electrical connection, MCU pin assignment, part selection, support or IMU pose changes.
+[AVA_LAYOUT.md](AVA_LAYOUT.md) records measurements, the ten §6 dispositions and remaining review items.
+
+- **Terminals:** west x = 7 mm, east x = 39 mm, all wires outward. The west IGN / switch / battery centres are
+  y = 55.85 / 65.85 / 75.85 mm, giving a 10 mm pitch and one power/pyro zone. IGN remains black and BAT green (F8).
+  The east GPS / radio / camera centres are y = 15.5 / 31.5 / 47.5 mm, giving a 16 mm pitch; servos continue the same
+  column at y = 71.5 mm. This fixes parked J420 and keeps the five supports. Calculated wire room is 4.953 mm at
+  every DB125; physical harness, bore and stack qualification remain pending.
+- **Port cells:** GPS and radio use identical bottom-side resistor / ESD / decoupling coordinates translated 16 mm.
+  Camera uses the same terminal-side resistor / ESD lanes, with its retained U12/U13 isolation and U402 switch
+  immediately inboard. U12 is rotated to 0° at (31.6, 39.8), C93 is directly beside its IO supply and C100 immediately west of it;
+  the RX/TX entries each cross sides once. Camera retains a larger envelope than the circuit pass to accommodate
+  its separate switch/isolation, ADC column and the uninterrupted servo/status lanes. Removed GPS/radio switches and translators stay
+  removed; the owner's always-on circuit takes precedence over the older AVA comparison.
+- **Sense cells:** continuity and RAW_ACT divider/filter chains use matching vertical columns at x = 23 and 28 mm,
+  beside the pyro block and MCU ADC edge. Camera and VLOGIC sense chains use one east-side column. Series safety
+  resistors, parallel lower legs and filters remain as audited; no duplicate RAW_ACT reading is restored.
+- **Battery:** D8, input capacitors, damper, U9 and its local clamp / dividers cluster at J1. C88 stays before U9;
+  the actual regenerated input feed passes all 2304 hot-plug cases (simulation / Inference). U11, U2 and C84 sit immediately inboard.
+  R166 is horizontal below the capacitor row, keeping its return short and clear of the forward supports.
+  D9 is vertical beside U9 OUT; its GND return shares the C80/C96 return. R83 moves west of D9 to retain courtyard
+  clearance. C82 and D9 keep the original measured-loop limits, without widening those limits.
+- **Buzzer:** LS120, Q123, R162/R163 and D123 form one cell immediately below U1's PC14 edge; BUZZ_DRV has one via.
+  PC13 remains unused. The drive is no longer routed across the board.
+- **Bottom rows and escapes:** passive rows follow their terminals and local power/sense cells. Core placement and
+  fast buses are retained; C24 turns to 90° at (25.45, 49) and C14 turns to 180° at (21.4, 52.15), opening the status
+  and buzzer escapes with local supply/ground redraws. C19 moves 0.8 mm north and C16 moves 1.5 mm west to free
+  U12's short bypass; C15 moves 0.15 mm west to clear the bus-sense lane. C16/C23 and C100/the QSPI guard share
+  existing GND vias. C13's return clears the USB power trunk. C92 and R103 form the IO-rail branch below U13.
+  QSPI already uses one layer transition per signal and remains so. C90 moves into the core 3V3 plane region.
+- **In2:** wider contiguous rail regions replace the narrow terminal-following fingers. A short 3V3A trunk and the
+  USB_LIMITED feed use In2 power copper, freeing outer-layer status corridors; neither carries a signal on In2.
+  A short 0.4 mm F.Cu 3V3 bridge joins the buck and core regions across the RAW/VLOGIC corridor; the two vias avoid
+  isolating either region. The CH1 GND region follows the entire firing-resistor pads, with the mandated barrel
+  clearance. Crystal reference, fast-interface reference continuity and S-8 barrel exclusions remain mandatory gates.
+- **Ground, legends and probes:** regenerate the frozen ground fan-out for the moved cells, retain required fast-via
+  partners, and place terminal pin legends beside their subjects. TP80/81/83/88 follow the battery and supply cell,
+  TP120/121/122 follow the pyro switch / gate / firing cell, and TP82 follows USB protection. Probe spacing stays gated.
+  R90 moves into the USB limiter cell at (7.8, 23.1), and the SPI3 transitions share two compliant return vias;
+  the redundant (12.25, 40.65) partner and (8.7, 37.75) stitch are removed. This reserves six short 1 mm J2 pin
+  legends, each nearer J2 than any other connector and within 6 mm. R110’s return moves to (11.6, 23.9), clear
+  of the pull-up feed. R405 shares D410's return; C60 shares C431's. The camera ADC divider and filter have their
+  own short returns where sharing would cross the supply via. No GND trim removes a pad's pour contact. The SOT-23-3 library pin-1 dot moves alongside pin 1, clear of R134 openings; U12's library pin-1 dot moves 0.2 mm away from C100's mask opening. Neither changes a land or pad.
+
+Two complete builds exit 0 and reproduce the PCB and all 23 recorded CAD/binding/model files byte for byte.
+Both run the full check.sh: DRC 0 / unconnected 0 / parity 0 / ERC 0, all 31 R10 rules, routing, fit, fabrication
+and required regression tests pass. The actual-feed hot-plug model passes 2304/2304 cases (simulation / Inference).
+This remains CAD evidence only; no independent review round, physical qualification or owner acceptance is claimed.
+
+### D-AVA-02. Gates and reproducibility support
+
+P-11 now applies the accepted 4.95 mm floor and outward entry to all seven DB125 terminals, with seeded failures
+for each newly covered connector. S-9's seven source-bridge records translate exactly 1 mm with Q120/Q121; widths
+and lengths are unchanged. Three regression fixtures follow the new layout: the free-area conflicting textbox is
+now nearest J410.3, and the width seeds select a real long terminal-to-FET path instead of silently missing old
+coordinates. They still inject and detect the same faults. No safety, width, reference, thermal or clearance limit
+is reduced. The full build regenerates the fabrication package before check.sh so its manifest is checked without
+an override. Rendering uses an optional local output directory; no machine-specific path is stored in the project.

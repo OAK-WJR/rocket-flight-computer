@@ -1,0 +1,586 @@
+{
+  "board_sha256": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+  "blocking_routing_findings": [],
+  "critical_allowlist": [],
+  "noncritical_leftovers": [
+    {
+      "cat": "micro_segment",
+      "net": "SERVO1_OUT",
+      "cls": "actuator",
+      "layer": "B.Cu",
+      "x": 39.015,
+      "y": 78.5,
+      "len_mm": 0.015,
+      "end": [
+        39.0,
+        78.5
+      ]
+    },
+    {
+      "cat": "micro_segment",
+      "net": "SERVO1_MCU",
+      "cls": "actuator",
+      "layer": "B.Cu",
+      "x": 34.21,
+      "y": 75.31,
+      "len_mm": 0.035,
+      "end": [
+        34.175,
+        75.31
+      ]
+    },
+    {
+      "cat": "short_segment",
+      "net": "BAT_OVLO",
+      "cls": "other",
+      "layer": "B.Cu",
+      "x": 16.4,
+      "y": 83.0,
+      "len_mm": 0.15,
+      "width": 0.2,
+      "end": [
+        16.4,
+        83.15
+      ]
+    },
+    {
+      "cat": "tiny_jog",
+      "net": "V3V3_SENSE",
+      "cls": "other",
+      "layer": "B.Cu",
+      "x": 26.25,
+      "y": 52.5,
+      "end": [
+        25.93,
+        55.7
+      ],
+      "seglens": [
+        1.8,
+        0.453,
+        1.08
+      ]
+    },
+    {
+      "cat": "tiny_jog",
+      "net": "BAT_FAULT_N",
+      "cls": "other",
+      "layer": "B.Cu",
+      "x": 26.0,
+      "y": 47.3,
+      "end": [
+        26.4,
+        51.95
+      ],
+      "seglens": [
+        1.45,
+        0.4,
+        3.2
+      ]
+    },
+    {
+      "cat": "tiny_jog",
+      "net": "LED_YEL",
+      "cls": "other",
+      "layer": "F.Cu",
+      "x": 15.45,
+      "y": 43.0,
+      "end": [
+        12.4,
+        42.7
+      ],
+      "seglens": [
+        1.05,
+        0.424,
+        1.7
+      ]
+    },
+    {
+      "cat": "tiny_jog",
+      "net": "BUZZ_DRV",
+      "cls": "other",
+      "layer": "F.Cu",
+      "x": 20.5,
+      "y": 51.8,
+      "end": [
+        20.2,
+        52.1
+      ],
+      "mid_mm": 0.424,
+      "offset_mm": 0.3,
+      "at": "plain/via",
+      "via": true
+    },
+    {
+      "cat": "tiny_jog",
+      "net": "BAT_FAULT_N",
+      "cls": "other",
+      "layer": "B.Cu",
+      "x": 28.2,
+      "y": 47.5,
+      "end": [
+        28.0,
+        47.3
+      ],
+      "mid_mm": 0.283,
+      "offset_mm": 0.2,
+      "at": "via/plain",
+      "via": true
+    },
+    {
+      "cat": "tiny_jog",
+      "net": "BAT_ENABLE",
+      "cls": "other",
+      "layer": "F.Cu",
+      "x": 19.675,
+      "y": 66.0,
+      "end": [
+        19.675,
+        66.4
+      ],
+      "mid_mm": 0.4,
+      "offset_mm": 0.4,
+      "at": "T/via",
+      "via": true
+    },
+    {
+      "cat": "tiny_jog",
+      "net": "BAT_ENABLE",
+      "cls": "other",
+      "layer": "B.Cu",
+      "x": 21.0,
+      "y": 68.6,
+      "end": [
+        21.3,
+        68.9
+      ],
+      "mid_mm": 0.424,
+      "offset_mm": 0.3,
+      "at": "plain/via",
+      "via": true
+    },
+    {
+      "cat": "detour",
+      "net": "USB_FAULT_N",
+      "cls": "other",
+      "layer": "net",
+      "x": 8.625,
+      "y": 23.1,
+      "pads": 3,
+      "first": "R90.2",
+      "len_mm": 39.13,
+      "mst_mm": 23.3,
+      "ratio": 1.68,
+      "vias": 1,
+      "need": 1
+    },
+    {
+      "cat": "detour",
+      "net": "USB_ILIM",
+      "cls": "other",
+      "layer": "net",
+      "x": 14.825,
+      "y": 27.2,
+      "pads": 2,
+      "first": "R85.1",
+      "len_mm": 3.33,
+      "mst_mm": 1.05,
+      "ratio": 3.18,
+      "vias": 1,
+      "need": 1
+    }
+  ],
+  "audit10_review": [
+    {
+      "cat": "segment_inside_pad",
+      "net": "USB_ILIM",
+      "cls": "other",
+      "layer": "B.Cu",
+      "x": 14.325,
+      "y": 27.5,
+      "pad": "U10.5",
+      "len_mm": 0.425
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "GND",
+      "cls": "power",
+      "layer": "F.Cu",
+      "x": 15.475,
+      "y": 79.5,
+      "pad": "C80.2",
+      "len_mm": 0.566
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "GND",
+      "cls": "power",
+      "layer": "B.Cu",
+      "x": 30.875,
+      "y": 21.7,
+      "pad": "J430.12",
+      "len_mm": 0.7
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "GND",
+      "cls": "power",
+      "layer": "B.Cu",
+      "x": 33.3,
+      "y": 52.5,
+      "pad": "C92.2",
+      "len_mm": 0.4
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "GND",
+      "cls": "power",
+      "layer": "B.Cu",
+      "x": 29.05,
+      "y": 46.98,
+      "pad": "C15.2",
+      "len_mm": 0.212
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "GND",
+      "cls": "power",
+      "layer": "B.Cu",
+      "x": 28.95,
+      "y": 51.6,
+      "pad": "C129.2",
+      "len_mm": 0.566
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "GND",
+      "cls": "power",
+      "layer": "B.Cu",
+      "x": 23.8,
+      "y": 62.2,
+      "pad": "C98.2",
+      "len_mm": 0.424
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "BAT_IN",
+      "cls": "power",
+      "layer": "F.Cu",
+      "x": 13.35,
+      "y": 75.0,
+      "pad": "D8.1",
+      "len_mm": 1.167
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "BAT_IN",
+      "cls": "power",
+      "layer": "B.Cu",
+      "x": 13.0,
+      "y": 74.1,
+      "pad": "Q120.9",
+      "len_mm": 0.707
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "PORT_4V8",
+      "cls": "power",
+      "layer": "B.Cu",
+      "x": 33.475,
+      "y": 16.1,
+      "pad": "R405.1",
+      "len_mm": 0.354
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "RAW_PROTECTED",
+      "cls": "power",
+      "layer": "B.Cu",
+      "x": 19.3,
+      "y": 78.25,
+      "pad": "C82.1",
+      "len_mm": 1.0
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "3V3",
+      "cls": "power",
+      "layer": "F.Cu",
+      "x": 27.0,
+      "y": 20.3,
+      "pad": "C461.1",
+      "len_mm": 0.395
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "3V3",
+      "cls": "power",
+      "layer": "B.Cu",
+      "x": 25.0,
+      "y": 77.88,
+      "pad": "C8.1",
+      "len_mm": 0.566
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "SWCLK",
+      "cls": "other",
+      "layer": "F.Cu",
+      "x": 14.7,
+      "y": 37.0,
+      "pad": "U1.76",
+      "len_mm": 0.75
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "SERVO2_OUT",
+      "cls": "actuator",
+      "layer": "B.Cu",
+      "x": 38.055,
+      "y": 75.0,
+      "pad": "J122.2",
+      "len_mm": 0.945
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "SERVO4_OUT",
+      "cls": "actuator",
+      "layer": "B.Cu",
+      "x": 35.825,
+      "y": 67.69,
+      "pad": "R153.2",
+      "len_mm": 0.438
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "BUZZ_OUT",
+      "cls": "other",
+      "layer": "F.Cu",
+      "x": 24.85,
+      "y": 60.25,
+      "pad": "LS120.2",
+      "len_mm": 0.77
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "BUZZ_OUT",
+      "cls": "other",
+      "layer": "B.Cu",
+      "x": 20.5,
+      "y": 60.5,
+      "pad": "Q123.3",
+      "len_mm": 0.25
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "LED_RED",
+      "cls": "other",
+      "layer": "F.Cu",
+      "x": 13.7,
+      "y": 42.0,
+      "pad": "R32.1",
+      "len_mm": 0.566
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "LED_YEL_A",
+      "cls": "other",
+      "layer": "F.Cu",
+      "x": 10.3,
+      "y": 44.6,
+      "pad": "R33.2",
+      "len_mm": 0.566
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "SERVO4_MCU",
+      "cls": "actuator",
+      "layer": "B.Cu",
+      "x": 33.96,
+      "y": 67.69,
+      "pad": "R153.1",
+      "len_mm": 0.215
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "CAM_UART_OE",
+      "cls": "portctl",
+      "layer": "B.Cu",
+      "x": 34.425,
+      "y": 39.55,
+      "pad": "R102.1",
+      "len_mm": 0.354
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "CAM_FAULT_N",
+      "cls": "portctl",
+      "layer": "B.Cu",
+      "x": 35.27,
+      "y": 57.8,
+      "pad": "R432.1",
+      "len_mm": 0.354
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "VBUS",
+      "cls": "power",
+      "layer": "F.Cu",
+      "x": 6.88,
+      "y": 28.4,
+      "pad": "J3.A4B9",
+      "len_mm": 0.57
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "ACT_GATE",
+      "cls": "pyro",
+      "layer": "B.Cu",
+      "x": 11.025,
+      "y": 71.5,
+      "pad": "TP121.1",
+      "len_mm": 0.525
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "ACT_GATE",
+      "cls": "pyro",
+      "layer": "B.Cu",
+      "x": 18.23,
+      "y": 73.3,
+      "pad": "R120.2",
+      "len_mm": 0.382
+    },
+    {
+      "cat": "segment_inside_pad",
+      "net": "VLOGIC",
+      "cls": "power",
+      "layer": "B.Cu",
+      "x": 34.25,
+      "y": 81.75,
+      "pad": "TP83.1",
+      "len_mm": 0.354
+    },
+    {
+      "cat": "collinear_unmerged",
+      "net": "USB_FAULT_N",
+      "cls": "other",
+      "layer": "B.Cu",
+      "x": 9.3,
+      "y": 35.5,
+      "lens": [
+        1.4,
+        5.7
+      ]
+    },
+    {
+      "cat": "collinear_unmerged",
+      "net": "VLOGIC",
+      "cls": "power",
+      "layer": "B.Cu",
+      "x": 29.8,
+      "y": 70.0,
+      "lens": [
+        1.4,
+        2.8
+      ]
+    }
+  ],
+  "hidden_references": [
+    "C6",
+    "C7",
+    "C10",
+    "C11",
+    "C13",
+    "C14",
+    "C15",
+    "C16",
+    "C19",
+    "C20",
+    "C21",
+    "C22",
+    "C23",
+    "C24",
+    "C25",
+    "C26",
+    "C30",
+    "C31",
+    "C32",
+    "C81",
+    "C82",
+    "C85",
+    "C88",
+    "C92",
+    "C94",
+    "C99",
+    "C100",
+    "C126",
+    "C127",
+    "C129",
+    "C410",
+    "C421",
+    "D121",
+    "D400",
+    "D401",
+    "D410",
+    "D420",
+    "LED1",
+    "Q122",
+    "Q123",
+    "R5",
+    "R9",
+    "R10",
+    "R13",
+    "R32",
+    "R62",
+    "R63",
+    "R64",
+    "R87",
+    "R100",
+    "R101",
+    "R103",
+    "R104",
+    "R105",
+    "R120",
+    "R121",
+    "R122",
+    "R126",
+    "R127",
+    "R128",
+    "R129",
+    "R130",
+    "R132",
+    "R133",
+    "R151",
+    "R152",
+    "R155",
+    "R162",
+    "R163",
+    "R164",
+    "R173",
+    "R175",
+    "R178",
+    "R180",
+    "R403",
+    "R405",
+    "R441",
+    "R451",
+    "TP82",
+    "TP120",
+    "TP122",
+    "U2",
+    "U4",
+    "U5",
+    "U9",
+    "U11",
+    "U402"
+  ],
+  "designators_shown": 122,
+  "top_designators_under_part_on_bottom": [
+    "C402",
+    "J400",
+    "R404",
+    "U400"
+  ],
+  "legend_distance_review": [],
+  "port_rows_not_nearest": []
+}

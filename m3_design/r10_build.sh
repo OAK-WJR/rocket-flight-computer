@@ -53,8 +53,9 @@ shasum -a 256 "$D/m3.kicad_pcb"
 # OQ-2: qualify the generated input feed before the full board gate.
 "$KICAD_PY" -I -B tools/r10_hotplug.py --extract "$D/m3.kicad_pcb"
 "$NUMPY_PY" -I -B tools/r10_hotplug.py
-# the fab package is bound to the board it was made from: rebuild it with m3_design/r10_fab.sh, then run tools/check.sh
-R10_SKIP_FAB_MANIFEST=1 KICAD_PY="$KICAD_PY" NUMPY_PY="$NUMPY_PY" tools/check.sh
+# Rebind fabrication before the full gate; renders remain local working artifacts.
+R10_RENDER_DIR=.supervisor/r10_renders KICAD_PY="$KICAD_PY" m3_design/r10_fab.sh
+KICAD_PY="$KICAD_PY" NUMPY_PY="$NUMPY_PY" tools/check.sh
 # the firmware binding evidence record (never an approval: AGENTS.md section 3), bound to the board just checked
 PYTHONUNBUFFERED=1 "$KICAD_PY" -I -B m3_design/r10_sch_check.py --project "$D" --board "$D/m3.kicad_pcb" \
   --binding-note "$D/sources/r10_design/r10_binding_note.json" > "$T/binding.txt" 2>&1

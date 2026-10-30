@@ -96,7 +96,9 @@ CONNECTOR = check_r8.CONNECTOR
 DOT_PARTS = ('U9', 'U10', 'U11', 'U13', 'U400', 'U402', 'U410', 'U420')
 DOT_REQUIRED = ('U9', 'U10', 'U11', 'U13')
 DOT_REACH = r9_post.DOT_REACH
-FIXED_REFS = {'Q124': ('F', 13.9, 61.0, 0)}  # nearest legal top spot is beyond the fallback's 3 mm search radius
+FIXED_REFS = {}  # D-AVA-01: references are placed against the new local cells.
+# D-AVA-01: reserve an unambiguous SWD band before all other legends.
+SWD_LEGENDS = {'J2 4:SWCLK': ['B', 5.0, 37.2, 0], 'J2 2:SWDIO': ['F', 5.0, 37.0, 0], 'J2 3:NRST': ['B', 10.0, 42.5, 90], 'J2 5:GND': ['B', 10.9, 35.800000000000004, 0], 'J2 1:3V3': ['F', 11.3, 35.6, 0], 'J2 6:NC': ['B', 11.4, 43.400000000000006, 90]}
 DOT_OWN_MARGIN = 0.5            # mm: a pin-1 mark's centre is this much nearer its pad 1 than any other part's pad 1
 MARK_R = 0.35                   # mm: a footprint silkscreen circle this small is a mark, not an outline
 SILK_PAD = 0.15                 # mm: JLC pad-to-silkscreen minimum, every silkscreen item to every solder-mask opening
@@ -436,7 +438,7 @@ def subjects(b, boxes):
 
 def port_rows(ref):
     names = PORTS[ref][1]
-    count = 1 if ref in ('J410', 'J420') else 2
+    count = 1  # D-AVA-01: short SWD rows fit beside J2 instead of straddling USB/core.
     return [ref + ' ' + ' '.join(f'{i + 1}:{names[i]}' for i in range(k, min(k + count, len(names))))
             for k in range(0, len(names), count)]
 
@@ -581,19 +583,26 @@ def finish(b, lib):
         return result
 
     # 1. Connector names and the sole SWD table; every wired connector has individual pin legends.
-    for ref, word in WORDS:
-        put_near(word, ref, sides=('F', 'B'))
+    # Reserve the SWD pin table before short subject words; longest rows constrain placement most.
     fallback = []
     for ref in PORTS:
-        for text in port_rows(ref):
+        for text in sorted(port_rows(ref), key=lambda text: (-len(text), text)):
             if ref in SUBJECT_PORTS:
                 put_about(text, ref)
                 continue
-            got = put_subject(b, silks, text, ref, boxes, margin=0.0, angles=(0, 90))
-            placed[text] = None if got is None else list(got)
-            if got is None:
-                fallback.append(text)
-                put_near(text, ref)
+            side, x, y, angle = SWD_LEGENDS[text]
+            t = silk._text(b, text, silks[side].layer, 1.0)
+            t.SetTextAngleDegrees(angle)
+            t.SetPosition(silk.P(x, y))
+            box = silk.ink(t)
+            margin, gap = subject_margin(box, ref, boxes)
+            if not silks[side].free(box) or margin < 0 or gap > LEGEND_REACH:
+                raise RuntimeError(f'{text}: reserved SWD legend is obstructed or no longer beside J2')
+            b.Add(t)
+            silks[side].add(box)
+            placed[text] = [side, x, y, angle, round(gap, 3), round(margin, 3)]
+    for ref, word in WORDS:
+        put_near(word, ref, sides=('F', 'B'))
     for ref, note in NOTES:
         sides, prefer = NOTE_PLACE.get(note, NOTE_PLACE.get(ref, (('B', 'F'), None)))
         put_about(note, ref, sides=sides, prefer=prefer)

@@ -155,7 +155,7 @@
     "cad/kilib/rocket.pretty/M3_TPS709_DBV.kicad_mod": "f75e69628079ee074af6e8fc4c660359c8f9284e07d1ff0986c5ca31715ad310",
     "cad/kilib/rocket.pretty/M3_TPS7A91_DSK10.kicad_mod": "4d4f03f099a74f3a576cce028c3ff91cbe698e7bd22c2d573ca73d072321629d",
     "cad/kilib/rocket.pretty/M3_TSLP_2_20.kicad_mod": "db7aecba7f11006ec5cbb3581430e929fff34d9f0b3a52b1179f6b2b50846ad8",
-    "cad/kilib/rocket.pretty/M3_TXU0202_DCU.kicad_mod": "fc698c3470d74ea80c8eefc469666454ed0e3d7a7a3ea8944f233304e703906f",
+    "cad/kilib/rocket.pretty/M3_TXU0202_DCU.kicad_mod": "92898e4be4ea10e52d9c95c2a0dc126a28f657e9702473b8d9f6b61f2f25923d",
     "cad/kilib/rocket.pretty/M3_TestPad_1.5.kicad_mod": "5edadc3a1073680d29c01ca0c6543475da9525892d54708404748d26169fa7d8",
     "cad/kilib/rocket.pretty/M3_ToolingHole_JLC.kicad_mod": "8f0ff0c55c8b6b8f998134fbaa7f0db50a6337b305f6d9de78e75fcd088c55eb",
     "cad/kilib/rocket.pretty/PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL.kicad_mod": "e88112b180733913966b06a962067143ffb535a29227b3698821b93172de43f3",
@@ -169,14 +169,14 @@
     "cad/kilib/rocket.pretty/SMB_L4.6-W3.6-LS5.3-BI.kicad_mod": "374a64ab4bb9dbab591623d061227d7b80c2840c9d922b29ed68795479c9d2b4",
     "cad/kilib/rocket.pretty/SOD-323_L1.8-W1.3-LS2.5-RD.kicad_mod": "2e6c2fe27766305768e5f2bed90117f25a5e31efa45bc2735ec00226fbe8a0bd",
     "cad/kilib/rocket.pretty/SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL.kicad_mod": "62e3f47977328744d35a2c980b166e758dcfe32e76cfc402ea25389f0dfa1d84",
-    "cad/kilib/rocket.pretty/SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR.kicad_mod": "a65d2452e5d04ec87bedf7dca1e44dc540031ab4103e9da2ca9bf9490abe6ce7",
+    "cad/kilib/rocket.pretty/SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR.kicad_mod": "560574e78cd85152bbf9c38e4a8e6997e3ba74eca8c57d556db4c523c85e7a0d",
     "cad/kilib/rocket.pretty/SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL.kicad_mod": "448c89fa3a8f53810be2c986bedc11a06277204c88de6ccd372e8ce5b8c46f8f",
     "cad/kilib/rocket.pretty/SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR.kicad_mod": "72b564fbb112185438a6981a5c57bcb23ba4cf68b1cc18ca2eb5571bf1920641",
     "cad/kilib/rocket.pretty/TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL.kicad_mod": "5442069ef675d8aa52c12eec21bd8398a3ed7269c2a3acc393707d796ac21b03",
     "cad/kilib/rocket.pretty/USB-C_SMD-TYPE-C-31-M-12_1.kicad_mod": "f77f08eb642c6ec21933dc0cf3e2e4866e5b54717d8f1c237a4159bbdc6e8ce6",
     "cad/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
     "cad/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
-    "cad/m3.kicad_pcb": "6e73b6ebe7e25d7a8c810493887fbaa7cce34f6fe1d379828dc67017e14235aa",
+    "cad/m3.kicad_pcb": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
     "cad/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
     "cad/m3.kicad_sch": "4c3cd068b22c171d198a022adc3dd8f3a16ed2dd2b3e15f8cf99793443c8f89b",
     "cad/mcu.kicad_sch": "03f3a7007ed196a1a0770523f193f90a9c7a1e9b9d32783dd2bfcd285af207bf",
@@ -195,11 +195,11 @@
     "tools/jlc_orient.py": "75b36799b732384eac5ac0f0d4e5ae3a9a2e8b2b1d230421ff791e76e77619ae"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "e155d6a40b6c7ee57a6319efd7f25ca2c14c206f2db627aaff3e90c2f1ca86cc",
-    "m3_assembly_top.pdf": "3ecf4747f923893747510ee96691017eee430cf5fce9502f30ac94525864ddbd",
+    "m3_assembly_bottom.pdf": "4b65c3b19698b860843d48e03842aba7ca6a3eb27a405be7718f16f5f154298a",
+    "m3_assembly_top.pdf": "8bac49e3ee6099f212789648ffe6c844e8ccd332698d0537f83e74f55770e017",
     "m3_bom_jlc.csv": "d04fed383a7df9981b1f459b86c0292d09833b6fa34dcadac890aeb65325f081",
-    "m3_cpl_jlc.csv": "66458360a1685476df93c9883fbaacce0ff384075c2b1fb75f44d2ce3ab764a2",
-    "m3_gerber.zip": "7214ecd3eefc30fae1b5178dda9b1233e3084a0da369555ce3bd210cd6464d9c"
+    "m3_cpl_jlc.csv": "36c50ef4e6f2b0e0509a5ef593f9dd82c4b170c3b9aab247e6c4d150aef63e11",
+    "m3_gerber.zip": "870bad2ce2088e38fd03deb98de87b467434ae24b919b496ab886190b2289bf6"
   },
   "schema": 1
 }

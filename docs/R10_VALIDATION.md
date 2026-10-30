@@ -1,6 +1,21 @@
 # R10 validation and adversarial review
 
-> **Current circuit pass, owner/supervisor2026-10-28:** always-on GPS/radio,
+**AVA layout candidate (2026-10-29):** PCB `0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8`, 46 × 90 mm,
+209 footprints / 981 segments / 294 vias / 1818.770 mm of track. All seven DB125s form outward-facing long-edge
+rows; J420 is in the east port row, repeated port/sense cells are local, and battery/buzzer wiring is shorter.
+Circuit, pin map, supports, IMU pose and AGENTS §2 are unchanged. **Software / CAD:** DRC 0 / unconnected 0 /
+parity 0 / ERC 0, all 31 R10 rules, routing, legends and fit pass. **Simulation / Inference:** actual-feed hot-plug
+2304/2304 pass. **Fabrication:** package regenerated and bound; orientation, paste and manifest pass.
+Two complete `m3_design/r10_build.sh` runs, including full `tools/check.sh` with
+`NUMPY_PY=.supervisor/venv/bin/python`, exited 0. The PCB and all 23 recorded generated
+CAD, binding and model files are byte-identical between builds.
+**Not verified:** independent review rounds, firmware, SD latency/power loss, e-match lot firing, electrical/
+thermal behavior, harness, DB125 screwdriver access and physical bore/stack fit. R9 remains accepted; R10 is
+not accepted or ordered. Fresh reviews begin at round 11 with the separate review agent.
+
+Evidence: [AVA layout hand-off](../m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md) and its metrics, validation and review-item JSON files.
+
+> **Historical circuit pass, owner/supervisor 2026-10-28 (superseded by the layout above):** always-on GPS/radio,
 > retained camera switch/isolation, SPI3 hinged microSD, sole bus sense/direct
 > ADC inputs, all wired DB125 terminals and requirements audit2. This pass proves
 > circuit/CAD integration only. The separate layout agent owns the AVA pass,

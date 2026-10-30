@@ -1,104 +1,67 @@
-"""R10 CH1 pyro channel, its load switch and the two sense chains: explicit pad-referenced polylines (no search).
+"""R10 CH1, the independent load switch and repeated ADC cells (D-AVA-01).
 
-Fire feed on B.Cu at 0.5 mm (AUD-6): Q121 drain (RAW_ACT) -> R134 (2 ohm shorted-igniter limit) -> J121.2 (IGN);
-J121.1 (OUT) -> Q124's drain on F.Cu. Pulse at most 4.2 A for 20 ms (8.4 V / 2 ohm; firmware ends every pulse by
-20 ms); no steady current. The external power switch is the pad arming device (owner, 2026-10-28); Q120 / Q121
-remain the independent load switch ahead of R134, and ARM1_SENSE is the sole bus reading.
-Fire-gate and OUT layer changes retain their GND partners; filtered ADC and ACT controls are exempt (AUD-2).
-Pad positions are asserted by Draw.pad: a moved part stops the build.
+Explicit octilinear routes. Fire paths stay on the outer layers, with no series via;
+C126/R128/R126 and the passive cold screen retain their electrical functions.
 """
-
-S, P = 0.2, 0.3          # signal, gate / GND bar widths
-FIRE = 0.5               # 20 ms fire-only copper (AUD-6)
-RAWW = 0.4               # RAW_ACT branch to TP120 / the sense divider
+S, P, FIRE = .2, .3, .5
 
 
 def draw(d):
-    t, link, via = d.track, d.link, d.via
-
-    # R134 occupies the removed ARM terminal's west-edge space on B.Cu: straight feed and igniter runs, no fire via.
-    link('RAW_ACT', 'B', FIRE, 'Q121.9', 'R134.2')
-    link('PYRO1_IGN', 'B', FIRE, 'R134.1', 'J121.2')
-    t('PYRO1_OUT', 'F', FIRE, [d.pad('J121.1'), (10.33, 54.1), (11.33, 55.1)])
-    t('PYRO1_OUT', 'F', FIRE, [(11.33, 55.1), d.pad('Q124.5')])
-
-    # Q124 source return: a bar over the three source pads, two GND vias into In1.
-    t('GND', 'F', P, [d.pad('Q124.3'), d.pad('Q124.1')])
-    for n in ('2', '1'):
-        a = d.pad('Q124.' + n)
-        t('GND', 'F', P, [a, (15.75, a[1])])
-        via('GND', (15.75, a[1]))
-
-    # OUT to the bottom: the continuity tap R173, the snubber C128 and the cold-side divider R131.
-    via('PYRO1_OUT', (11.33, 55.1))
-    via('GND', (10.0, 55.6))
-    t('PYRO1_OUT', 'B', S, [(11.33, 55.1), (10.37, 56.06), d.pad('R173.1')])
-    t('PYRO1_OUT', 'B', S, [d.pad('R173.1'), (10.37, 59.5)])
-    t('PYRO1_OUT', 'B', S, [(10.37, 59.5), d.pad('C128.1')])
-    t('PYRO1_OUT', 'B', S, [(10.37, 59.5), d.pad('R131.1')])
-    link('PYRO1_COLD', 'B', S, 'R131.2', 'D120.1')
-    # D120's 3V3 clamp rail: its own via into a 3V3 tongue of In2 that reaches it from the east (enclosed on B.Cu by
-    # PYRO1_CONT, RAW_ACT and PYRO1_COLD; r10_route_power.IN2_GND_CH1, D-R3-01).
-    t('3V3', 'B', S, [d.pad('D120.3'), (18.0, 58.6)])
-    via('3V3', (18.0, 58.6))
-
-    # Gate: U1.3 -> R126 (series) -> Q124.4, C126 / R128 (gate-source hold and pull-down), TP122.
-    link('PYRO1_GATE_N', 'F', S, 'U1.3', 'R126.1')
-    link('PYRO1_GATE_N', 'F', S, 'R126.1', 'R127.1')
-    # TP122 (the gate's bare test pad) sits on the bottom (check_actuators; R9 practice): one via beside it, its GND
-    # partner 1.49 mm away and >= 1.0 mm from the bare pad's edge (R10_DECISIONS D-R2-11).
-    t('PYRO1_GATE', 'B', P, [d.pad('TP122.1'), (14.4, 53.3)])
-    via('PYRO1_GATE', (14.4, 53.3))
-    via('GND', (15.35, 52.15))
-    t('PYRO1_GATE', 'F', P, [(14.4, 53.3), (16.0, 53.3), d.pad('R126.2')])
-    t('PYRO1_GATE', 'F', P, [d.pad('R126.2'), (16.0, 55.395)])
-    t('PYRO1_GATE', 'F', P, [(16.0, 55.395), (15.0, 55.395), d.pad('Q124.4')])   # square T (no 45 deg branch)
-    t('PYRO1_GATE', 'F', P, [(16.0, 55.395), (16.0, 56.275), d.pad('C126.1')])
-    link('PYRO1_GATE', 'F', P, 'C126.1', 'R128.1')
-
-    # Continuity: R173 / R129 / R130 / R178 divider (bottom), C127 filter, directly to U1.15 (audit 2: single-resistor fault protection retained).
-    link('PYRO1_CONT_MID', 'B', S, 'R173.2', 'R129.1')
-    link('PYRO1_CONT', 'B', S, 'R129.2', 'R130.1')
-    link('PYRO1_CONT', 'B', S, 'R130.1', 'R178.1')
-    link('PYRO1_CONT', 'B', S, 'R178.1', 'C127.1', ((19.85, 56.8),))
-    t('PYRO1_CONT', 'B', S, [d.pad('C127.1'), (21.65, 55.0), (24.0, 55.0)])
-    via('PYRO1_CONT', (24.0, 55.0))
-    t('PYRO1_CONT', 'F', S, [(24.0, 55.0), d.pad('U1.15')])
-
-    # Bus sense (ARM1_SENSE signal names retained): RAW_ACT -> R132 / R175 -> filtered divider directly to U1.33 (PC5).
-    t('RAW_ACT', 'B', S, [d.pad('Q121.8'), (19.0, 61.58), (19.0, 59.32), d.pad('R132.1')])
-    link('ARM1_SENSE_MID', 'B', S, 'R132.2', 'R175.1')
-    link('ARM1_SENSE', 'B', S, 'R175.2', 'R133.1')
-    link('ARM1_SENSE', 'B', S, 'R133.1', 'R180.1')
-    link('ARM1_SENSE', 'B', S, 'R180.1', 'C129.1')
-    # C129.1 -> U1.33 (the B.Cu lead, via and F.Cu lane) is drawn by the signals family beside the status lanes it must
-    # pass: with no resistor left beside U1.33 the lane's detour round their vias only reads as needed once they exist.
-
-    # AUD-3: compact facing-source DFN3x3 pair. The source bridge retains the qualified 0.4 mm pulse width;
-    # no series via. The gates use F.Cu to cross the bridge, separate from the two MCU controls.
-    # Square tee from the bridge; the diagonal passes through C120.1 before the straight R120.1 entry.
-    t('ACT_FET_S', 'B', P, [(14.475, 70.1), (16.3, 70.1), (17.37, 71.17), d.pad('R120.1')])
-    t('ACT_FET_S', 'B', RAWW, [d.pad('Q120.1'), (12.525, 70.1), (14.475, 70.1), d.pad('Q121.1')])
-    for n in ('2', '3'):
-        for q in ('Q120', 'Q121'):
-            a = d.pad(f'{q}.{n}')
-            t('ACT_FET_S', 'B', RAWW, [a, (a[0], 70.1)])
-    t('ACT_GATE', 'B', P, [d.pad('Q120.4'), (15.575, 72.3), (16.2, 72.3)])
-    t('ACT_GATE', 'B', P, [(16.2, 72.3), d.pad('C120.2')])
-    t('ACT_GATE', 'B', P, [d.pad('C120.2'), (18.23, 72.3), d.pad('R120.2')])
-    via('ACT_GATE', (16.2, 72.3))
-    t('ACT_GATE', 'F', P, [d.pad('TP121.1'), (16.2, 72.3)])
-    t('ACT_GATE', 'B', P, [d.pad('Q121.4'), (11.8, 69.0)])
-    via('ACT_GATE', (11.8, 69.0))
-    t('ACT_GATE', 'F', P, [(11.8, 69.0), (11.8, 70.4), (13.7, 72.3), d.pad('R121.1')])
-    t('ACT_GATE', 'F', P, [d.pad('R121.1'), (16.2, 72.3)])
-    link('ACT_DRV', 'F', P, 'Q122.3', 'R121.2', ((15.8, 70.14),))
-    # PC1 controls the load switch independently of PE4's fire gate. F.Cu leaves the ADC lane to its east, then
-    # parallels SERVO1's diagonal on its inner side; no layer change. R123 holds Q122 off while PC1 floats at reset.
-    t('ACT_EN_MCU', 'F', S, [d.pad('U1.16'), (24.5, 51.6), (26.6, 53.7), (26.6, 54.6),
-                            (19.6, 61.6), d.pad('R122.1')])
-    link('ACT_EN', 'F', S, 'Q122.1', 'R122.2', ((19.08, 70.75),))
-    link('ACT_EN', 'F', S, 'R122.2', 'R123.1')
-
-    # Retained load-switch drain probe; duplicate six-part bus divider removed.
-    t('RAW_ACT', 'B', RAWW, [d.pad('Q121.9'), d.pad('TP120.1', at=(18.0, 67.6))])
+    t,p,v=d.track,d.pad,d.via
+    # West igniter cell; the source return and gate network retain their local geometry.
+    t('RAW_ACT','B',FIRE,[p('Q121.8'),(17.58,64.0),p('R134.2')])
+    t('PYRO1_IGN','B',FIRE,[p('J121.2'),(7.0,59.0),(12.0,64.0),p('R134.1')])
+    t('PYRO1_OUT','F',FIRE,[p('J121.1'),(10.33,54.1),(11.33,55.1),p('Q124.5')])
+    t('GND','F',P,[p('Q124.3'),p('Q124.1')])
+    for n in ('2','1'):
+        a=p('Q124.'+n);t('GND','F',P,[a,(15.75,a[1])]);v('GND',(15.75,a[1]))
+    v('PYRO1_OUT',(11.33,55.1));v('GND',(10.0,55.6))
+    t('PYRO1_OUT','B',S,[(11.33,55.1),(10.37,56.06),(10.37,56.6),(10.37,57.5),p('R131.1')])
+    t('PYRO1_OUT','B',S,[(10.37,57.5),p('C128.1')])
+    t('PYRO1_OUT','B',S,[(10.37,56.6),(15.5,56.6),(17,58.1),(17,61.8),(20.83,61.8),p('R173.1')])
+    d.link('PYRO1_COLD','B',S,'R131.2','D120.1')
+    t('3V3','B',S,[p('D120.3'),(15.7,61.6)]);v('3V3',(15.7,61.6))
+    d.link('PYRO1_GATE_N','F',S,'U1.3','R126.1')
+    d.link('PYRO1_GATE_N','F',S,'R126.1','R127.1')
+    t('PYRO1_GATE','B',P,[p('TP122.1'),(14.4,53.3)])
+    v('PYRO1_GATE',(14.4,53.3));v('GND',(15.35,52.15))
+    t('PYRO1_GATE','F',P,[(14.4,53.3),(16.0,53.3),p('R126.2')])
+    t('PYRO1_GATE','F',P,[p('R126.2'),(16.0,55.395)])
+    t('PYRO1_GATE','F',P,[(16.0,55.395),(15.0,55.395),p('Q124.4')])
+    t('PYRO1_GATE','F',P,[(16.0,55.395),(16.0,56.275),p('C126.1')])
+    d.link('PYRO1_GATE','F',P,'C126.1','R128.1')
+    t('GND','F',P,[p('R128.2'),(17.76,58.375),p('C126.2')])
+    # Two identical five-part cells: the filtered end faces the ADC, the high-side end faces the firing circuit.
+    for net,mid,refs,x in [('PYRO1_CONT','PYRO1_CONT_MID',('R173','R129','R130','R178','C127'),23.0),
+                          ('ARM1_SENSE','ARM1_SENSE_MID',('R132','R175','R133','R180','C129'),28.0)]:
+        a,b,c,e,f=refs
+        d.link(mid,'B',S,a+'.2',b+'.1')
+        tail = [(27.55,52.8),p(f+'.1')] if f == 'C129' else [(x,p(f+'.1')[1]+.05),p(f+'.1')]
+        t(net,'B',S,[p(b+'.2'),p(c+'.1'),p(e+'.1'),*tail])
+        t('GND','B',P,[p(c+'.2'),p(e+'.2'),(x+.86,p(f+'.2')[1]),p(f+'.2')])
+        at=(30.15,52.0) if f == 'C129' else (p(f+'.2')[0]+.8,p(f+'.2')[1]+.8)
+        knee=[(29.35,52.0)] if f == 'C129' else []
+        t('GND','B',P,[p(f+'.2'),*knee,at]);v('GND',at)
+    t('PYRO1_CONT','B',S,[p('C127.1'),(24.0,52.15)])
+    v('PYRO1_CONT',(24.0,52.15))
+    t('PYRO1_CONT','F',S,[(24.0,52.15),p('U1.15')])
+    t('RAW_ACT','B',S,[p('R134.2'),(19.2,63.875),(22.8,63.875),(22.8,61.4),(26.17,58.03),p('R132.1')])
+    t('ARM1_SENSE','B',S,[p('C129.1'),(29.75,49.4),(29.75,45.5),(29.2,45.5)])
+    v('ARM1_SENSE',(29.2,45.5))
+    t('ARM1_SENSE','F',S,[(29.2,45.5),p('U1.33')])
+    # Facing DFN sources, 0.4 mm qualified pin bridges; the common branch passes through the slew capacitor.
+    t('ACT_FET_S','B',.4,[p('Q120.1'),(12.525,71.1),(14.475,71.1),p('Q121.1')])
+    for q in ('Q120','Q121'):
+        for n in ('2','3'):
+            a=p(q+'.'+n);t('ACT_FET_S','B',.4,[a,(a[0],71.1)])
+    t('ACT_FET_S','B',P,[(14.475,71.1),(16.45,71.1),p('C120.1'),(17.52,72.17),p('R120.1')])
+    t('ACT_GATE','B',P,[p('Q120.4'),(15.575,73.3),(16.2,73.3),p('C120.2'),(18.23,73.3),p('R120.2')])
+    v('ACT_GATE',(16.2,73.3))
+    t('ACT_GATE','B',P,[p('Q121.4'),(11.8,70.725)]);v('ACT_GATE',(11.8,70.725))
+    t('ACT_GATE','F',P,[(11.8,70.725),(11.8,71.4),(12.7,72.3),p('R121.1'),(15.2,72.3),(16.2,73.3)])
+    t('ACT_GATE','B',P,[(11.8,70.725),(11.025,71.5),p('TP121.1')])
+    d.link('ACT_DRV','F',P,'Q122.3','R121.2',((15.8,70.14),))
+    t('ACT_EN_MCU','F',S,[p('U1.16'),(24.5,51.6),(26.5,53.6),(26.5,66.0),(25.3,67.2),(21.0,67.2),(19.6,68.6),p('R122.1')])
+    d.link('ACT_EN','F',S,'Q122.1','R122.2',((19.08,70.75),))
+    d.link('ACT_EN','F',S,'R122.2','R123.1')
+    d.link('RAW_ACT','B',.4,'Q121.9','TP120.1')

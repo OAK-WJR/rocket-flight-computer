@@ -101,8 +101,8 @@
 		(uuid "f7b4ca09-5f20-497e-b586-a914220efb91")
 	)
 	(fp_circle
-		(center 1 1.75)
-		(end 1.1 1.75)
+		(center 2 0.95)
+		(end 2.1 0.95)
 		(stroke
 			(width 0.2)
 			(type default)

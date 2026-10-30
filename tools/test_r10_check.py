@@ -2251,8 +2251,8 @@ class RealBoardSeeds(unittest.TestCase):
 
     def test_conflicting_silkscreen_textboxes(self):
         # 'J420 3:...' is a combined table beside individual pin legends; the bare '2:RXI' (no terminal has that word)
-        # lies nearest J420.2, which reads 2:GND, so it would give that pin a second name.
-        for value, word in (('J420 3:RXI', 'J420.3'), ('J420 3:TXO', 'J420.3'), ('2:RXI', 'J420.2'),
+        # lies nearest J410.3 after D-AVA-01; its 3:TXO legend must reject the conflicting number and role.
+        for value, word in (('J420 3:RXI', 'J420.3'), ('J420 3:TXO', 'J420.3'), ('2:RXI', 'J410.3'),
                             ('SERVO + FROM BOARD', 'J122:'), (gate.SERVO_HARNESS_NOTE, 'J122:')):
             with self.subTest(text=value):
                 def seed(b):
@@ -2305,17 +2305,16 @@ class RealBoardSeeds(unittest.TestCase):
         self.assertEqual(issues, [], evidence)
         self.assertEqual(len(gate.FIRE_NARROW), 7)
         self.assertEqual(len(evidence['narrow_used']), 7)
-        for net, ends in (('RAW_ACT', (7., 67.6, 13.5, 67.6)), ('BAT_IN', (12., 74.1, 13.5, 72.6))):
+        for net in ('RAW_ACT', 'BAT_IN'):
             board = self.load()
             fp = board.FindFootprintByReference('Q121' if net == 'RAW_ACT' else 'Q120')
             self.assertAlmostEqual(pcbnew.ToMM(fp.FindPadByNumber('9').GetSize().x), .43)
-            tracks = []
-            for t in gate.fire_path(board, net, gate.FIRE_TERMINALS[net])[0]:
-                points = sorted((pcbnew.ToMM(p.x), pcbnew.ToMM(p.y)) for p in (t.GetStart(), t.GetEnd()))
-                if all(abs(a - b) < .001 for a, b in zip(points[0] + points[1], ends)):
-                    tracks.append(t)
-            self.assertEqual(len(tracks), 1, (net, ends))
-            tracks[0].SetWidth(pcbnew.FromMM(.43))
+            # Follow the actual terminal-to-FET path, rather than the circuit-pass coordinates.
+            tracks = gate.fire_path(board, net, gate.FIRE_TERMINALS[net])[0]
+            self.assertTrue(tracks, net)
+            track = max(tracks, key=lambda t: t.GetLength())
+            self.assertGreater(pcbnew.ToMM(track.GetLength()), 2.0, net)
+            track.SetWidth(pcbnew.FromMM(.43))
             self.assertTrue(any(f'{net} fire-path track 0.430 mm' in i
                                 for i in gate.s9(gate.make_ctx(board))[0]))
         for entry in gate.FIRE_NARROW:
@@ -2366,12 +2365,13 @@ class RealBoardSeeds(unittest.TestCase):
         ev = rep['rules']['K-legends']['evidence']
         self.assertEqual(ev['hidden_count'], len(ev['hidden']))
 
-        def narrow(b):                      # the B.Cu BAT_IN run (17.35, 86.6) -> (36.725, 86.6) narrowed to 0.3 mm
-            for t in b.GetTracks():
-                if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'BAT_IN' and t.GetLayer() == pcbnew.B_Cu and \
-                        abs(pcbnew.ToMM(t.GetWidth()) - 1.0) < 1e-6 and abs(pcbnew.ToMM(t.GetStart().y) - 86.6) < 1e-3 \
-                        and abs(pcbnew.ToMM(t.GetEnd().y) - 86.6) < 1e-3:
-                    t.SetWidth(pcbnew.FromMM(0.3))
+        def narrow(b):
+            # A real battery load-feed segment; a stale coordinate must not silently inject no fault.
+            tracks = gate.fire_path(b, 'BAT_IN', gate.FIRE_TERMINALS['BAT_IN'])[0]
+            self.assertTrue(tracks)
+            track = max(tracks, key=lambda t: t.GetLength())
+            self.assertGreater(pcbnew.ToMM(track.GetLength()), 2.0)
+            track.SetWidth(pcbnew.FromMM(0.3))
         self.seeded('K-width', narrow, 'BAT_IN: 0.3 mm-wide run')
 
         def thin(b):
@@ -2511,6 +2511,11 @@ class RealBoardSeeds(unittest.TestCase):
     def move(self, b, ref, dx, dy):
         f = b.FindFootprintByReference(ref)
         f.SetPosition(pcbnew.VECTOR2I(f.GetPosition().x + pcbnew.FromMM(dx), f.GetPosition().y + pcbnew.FromMM(dy)))
+
+    def test_p11_all_db125_wire_room(self):
+        for ref, dx in [('J400', -0.6), ('J410', 0.6), ('J420', 0.6), ('J9', 0.6), ('J122', 0.6)]:
+            with self.subTest(ref=ref):
+                self.seeded('P-11', lambda b: self.move(b, ref, dx, 0), 'wire room')
 
     def test_p11_j121_moved_west_loses_wire_room(self):
         """R7-GATE-04: J121 0.6 mm west leaves 4.35 mm of wire room, below WIRE_ROOM_R10 (4.95)."""

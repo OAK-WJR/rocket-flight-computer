@@ -5,7 +5,7 @@ from r10_route import CORE_SHIFT, Translated
 USB_SHIFT = (0.0, -3.5)
 
 
-def draw(d):
+def draw(d, feed=False):
     local = Translated(d, USB_SHIFT)
     core = Translated(d, CORE_SHIFT)
     for ref, num, net, at in old.PADS:
@@ -22,8 +22,10 @@ def draw(d):
         elif net == 'USB_FAULT_N':
             continue  # R10 circuit pass: make a four-lane SPI3 escape beside NRST.
         elif net == 'NRST':
-            if nrst_count < 3:
+            if nrst_count < 2:
                 core.track(net, layer, width, pts)
+            elif nrst_count == 2:
+                d.track('NRST','B',.2,[core.move(old.V_C24),(25.13,49.1),d.pad('C24.1')])
             nrst_count += 1
         elif net == 'USB_ILIM':
             continue
@@ -48,8 +50,10 @@ def draw(d):
     d.via('USB_FAULT_N', (16.7, 39.05))
     d.track('USB_FAULT_N', 'B', .2, [(16.7, 39.05), (16.7, 41.2), (9.3, 41.2),
                                    (9.3, 35.5), (9.3, 34.1), (12.6, 30.8), (12.6, 26.55), d.pad('U10.4')])
-    d.track('USB_FAULT_N', 'B', .2, [d.pad('R90.2'), (d.pad('R90.2')[0], 41.2)])
-    d.track('3V3', 'B', .2, [d.pad('R90.1'), (12.745, 43.32), (13.45, 43.32)])
+    # D-AVA-01: the fault pull-up joins the limiter cell, freeing J2's pin-legend band.
+    d.track('USB_FAULT_N', 'B', .2, [d.pad('U10.4'),(13.05,25.7),(13.05,24.1),(12.25,23.3),(8.625,23.3)])
+    d.track('3V3', 'B', .2, [d.pad('R90.1'),(6.2,23.1)])
+    d.via('3V3',(6.2,23.1))
     # SWD from the TC2030 pads (J2: 2 SWDIO, 4 SWCLK, 3 NRST), clear of its three locating holes.
     # J2's F.Cu keep-out covers the strip between its pad rows: each track ends inside its pad, outside the strip.
     d.pad('J2.2', at=(3.73, 38.765)); d.pad('J2.4', at=(5.0, 38.765)); d.pad('J2.3', at=(5.0, 40.035))
@@ -82,21 +86,27 @@ def draw(d):
     d.track('USB_ILIM', 'F', .2, [d.pad('R85.1'), (14.825, 26.0)])
     d.via('USB_ILIM', (14.825, 26.0))
     d.track('USB_ILIM', 'B', .2, [(14.825, 26.0), (14.825, 27.0), (14.325, 27.5), d.pad('U10.5')])
-    d.track('GND', 'F', .2, [d.pad('R85.2'), (13.175, 26.275), (13.75, 25.7)])
-    d.track('GND', 'F', .2, [d.pad('R110.2'), (11.6, 23.3)])
-    d.via('GND', (11.6, 23.3))
-    # USB_LIMITED leaves U10.6 on B.Cu, crosses the four SD fan-in lanes (B.Cu) on an F.Cu overpass that also serves C86,
-    # and returns to B.Cu at one via east of them; the B.Cu run to the U11 trunk then needs no second hop.
-    d.track('USB_LIMITED', 'B', .4, [d.pad('U10.6'), (15.55, 28.45), (16.0, 28.0)])
-    d.via('USB_LIMITED', (16.0, 28.0))
-    d.track('USB_LIMITED', 'F', .4, [(16.0, 28.0), d.pad('C86.1')])
-    d.track('USB_LIMITED', 'F', .4, [(16.0, 28.0), (21.45, 33.45)])
-    d.via('USB_LIMITED', (21.45, 33.45))
-    d.track('GND', 'F', .3, [d.pad('C86.2'), (18.3, 25.3)])
-    d.via('GND', (18.3, 25.3))
-    d.track('USB_LIMITED', 'B', .4, [(21.45, 33.45), (31.8, 33.45), (31.8, 45.0),
-                                   (32.3, 45.5), (32.3, 56.8), (32.3, 58.2), (32.3, 59.2)])
-    d.track('USB_LIMITED', 'B', .4, [(32.3, 56.8), d.pad('TP82.1')])
-    d.track('USB_LIMITED', 'B', .4, [(32.3, 59.2), d.pad('U11.7')])
-    d.track('USB_LIMITED', 'B', .4, [(32.3, 59.2), d.pad('C98.1')])
-    d.track('USB_LIMITED', 'B', .4, [d.pad('R87.1'), (30.0, 58.6), (30.4, 58.2), (32.3, 58.2)])
+    d.track('GND', 'F', .2, [d.pad('R110.2'), (11.6, 23.9)])
+    d.via('GND', (11.6, 23.9))
+    # Local bypass and one transition into the west In2 power corridor. This corridor
+    # passes outside SPI3/IMU and below the crystal keep-out before reaching the mux.
+    d.track('USB_LIMITED','B',.4,[d.pad('U10.6'),(15.1,28.45),(15.55,28)])
+    d.via('USB_LIMITED',(16,28))
+    d.track('USB_LIMITED','F',.4,[(16,28),d.pad('C86.1')])
+    d.track('GND','F',.3,[d.pad('C86.2'),(18.3,25.3)]);d.via('GND',(18.3,25.3))
+    d.track('USB_LIMITED','B',.4,[(15.55,28),(16,28)]
+    )
+    d.track('USB_LIMITED','B',.4,[(15.55,28),(15.55,25),(14.525,25),(14.525,22.3),(11.8,22.3),d.pad('TP82.1')])
+
+    if feed:
+        power_feed(d)
+
+
+def power_feed(d):
+    """Draw after In2 rail regions exist, so the stage gate sees their real routing constraints."""
+    d.track('USB_LIMITED','In2',.4,[(16,28),(15,29),(8.5,29),(8.5,30.3),(9.6,31.4),(9.6,50.85),(26.2,50.85),(26.2,61.8),(26.2,62.4),(25.6,63.0)])
+    d.track('USB_LIMITED','In2',.4,[(26.2,61.8),(22.45,61.8),(22,62.25)])
+    for at in ((25.6,63.0),(22,62.25)):d.via('USB_LIMITED',at)
+    d.track('USB_LIMITED','B',.3,[(25.6,63.0),(25.35,62.75),d.pad('C98.1')])
+    d.track('USB_LIMITED','B',.3,[d.pad('C98.1'),(24.3,63.25),d.pad('U11.7')])
+    d.track('USB_LIMITED','B',.4,[(22,62.25),d.pad('R87.1')])

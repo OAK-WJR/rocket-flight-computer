@@ -52,7 +52,7 @@ Mechanical and placement (kept from check_r9 where they still apply, read from t
   M-6   bottom parts SMD only, >= 1.5 mm from foreign through-hole pads, >= 3.5 mm from an M3 support centre
   M-7   U4 on the bottom at R9's rotation 180 (roll = -gyro_Y, R9_DECISIONS D-S7-06), actual lever arm -6.0 +/-0.05 mm;
         no via or fill under U4 / U5 on their side (check_r9.m7); the axis map is read from the board and reported
-  P-11  J1 / J121 wires enter from -x (owner, r10_plan 2 item 2; J1's wires leave the same west face, R3-MEC-02);
+  P-11  All seven DB125 terminals face outward with >= 4.95 mm wire room; J1 / J121 enter from -x (owner, r10_plan 2 item 2; J1's wires leave the same west face, R3-MEC-02);
         the entry direction is read from the footprint
         description ("wire entry +y"), else DB128's local -y. Wire room to the bore wall: R8 / R9's 6.25 mm is R8's
         measured value (a non-regression floor, not a derived need). Owner OQ-1, 2026-10-28: R10's accepted floor is
@@ -731,7 +731,7 @@ MCU_REF = 'U1'
 DEFAULT_CLEARANCE = 0.15                       # mm, used only when the board carries no default net class
 SERVO_TERMINAL = ('SERVO1_OUT', 'SERVO2_OUT', 'SERVO3_OUT', 'SERVO4_OUT', 'GND')
 BOARD_WIDTH, BOARD_MAX = 46.0, 120.0            # P1
-WIRE_ENTRY = {'J1': '-x', 'J121': '-x'}           # r10_plan section 2 item 2; J1 the same west face (R3-MEC-02)
+WIRE_ENTRY = {'J1': '-x', 'J121': '-x', 'J400': '-x', 'J410': '+x', 'J420': '+x', 'J9': '+x', 'J122': '+x'}  # D-AVA-01: every DB125 shares the wire-room floor
 WIRE_ROOM = 6.25                                # mm, R8 / R9 P-11
 BOT_THT, BOT_M3 = 1.5, 3.5                      # mm, R9 M-6 without its pyro-via term (a pyro spacing rule)
 IMU_LEVER_R10 = -6.0                           # mm: U4 centre x - 23 (roll axis), M3_R10 "IMU axis map" (R4-MEC-05)
@@ -844,14 +844,14 @@ FIRE_TERMINALS = {
 # dT = J^2 rho t / (rho_d c) = 9.0e16 x 1.72e-8 x 0.02 / (8960 x 385) = 9.0 K; at GAP-5's 36 ms fault ceiling,
 # 16.2 K (Inference, adiabatic). Matched within 0.01 mm; a narrower, longer or moved segment fails.
 FIRE_NARROW = [
-    # AUD-3: AONR21357's 0.65mm source pitch; same measured 0.4mm pulse bridge policy.
-    ('ACT_FET_S', 'B.Cu', 0.4, 1.95, (12.525, 70.1, 14.475, 70.1), 'AONR21357 source bridge bar'),
-    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (12.525, 70.1, 12.525, 71.2), 'Q120.1 source leg'),
-    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (13.175, 70.1, 13.175, 71.2), 'Q120.2 source leg'),
-    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (13.825, 70.1, 13.825, 71.2), 'Q120.3 source leg'),
-    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (14.475, 69., 14.475, 70.1), 'Q121.1 source leg'),
-    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (13.825, 69., 13.825, 70.1), 'Q121.2 source leg'),
-    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (13.175, 69., 13.175, 70.1), 'Q121.3 source leg'),
+    # AUD-3: AONR21357's 0.65mm source pitch; D-AVA-01 translates the identical bridge +1 mm in y.
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.95, (12.525, 71.1, 14.475, 71.1), 'AONR21357 source bridge bar'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (12.525, 71.1, 12.525, 72.2), 'Q120.1 source leg'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (13.175, 71.1, 13.175, 72.2), 'Q120.2 source leg'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (13.825, 71.1, 13.825, 72.2), 'Q120.3 source leg'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (14.475, 70., 14.475, 71.1), 'Q121.1 source leg'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (13.825, 70., 13.825, 71.1), 'Q121.2 source leg'),
+    ('ACT_FET_S', 'B.Cu', 0.4, 1.1, (13.175, 70., 13.175, 71.1), 'Q121.3 source leg'),
 ]
 
 # K-loader (R3-MCU-01). AN2606 Rev 64 (September 2024) Table 119 "STM32H74xxx/75xxx configuration in system memory boot

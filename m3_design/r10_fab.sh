@@ -37,10 +37,12 @@ PYTHONUNBUFFERED=1 "$KICAD_PY" -I tools/jlc_orient.py tools/jlc_easyeda/pads.jso
   --verify-cpl "$D/fab/m3_cpl_jlc.csv" 2>&1 | quiet
 PYTHONUNBUFFERED=1 "$KICAD_PY" -I tools/paste_check.py "$B" "$D/fab/m3_gerber.zip" 2>&1 | quiet
 python3 tools/fab_manifest.py "$B"
+RENDER_DIR=${R10_RENDER_DIR:-$D}
+mkdir -p "$RENDER_DIR"
 for SIDE in top bottom; do
-  "$KICAD_CLI" pcb render --side "$SIDE" -w 1016 -h 1988 --quality high -o "$D/r10_$SIDE.png" "$B" > /dev/null 2>&1
+  "$KICAD_CLI" pcb render --side "$SIDE" -w 1016 -h 1988 --quality high -o "$RENDER_DIR/r10_$SIDE.png" "$B" > /dev/null 2>&1
 done
-echo "renders: $D/r10_top.png $D/r10_bottom.png"
+echo "renders: $RENDER_DIR/r10_top.png $RENDER_DIR/r10_bottom.png"
 if [[ -n "${FAB_NET:-}" ]]; then
   python3 tools/jlc_stock.py || echo "jlc_stock: short lines above (U4 is consigned when out of JLC stock: ORDERING section 1)"
   STATUS=0
