@@ -68,6 +68,18 @@ R10_MATED = {'M3_MICROSD_MOLEX_472192001': dict(
           'card seating, hinge locking and retention under 100 g/vibration require physical qualification. '
           'Open/insertion envelope is bench-only with the board out of the bay and unpowered',
     source='https://cdn.promelec.ru/upload/items/2020/09/01/472192001_sd.pdf')}
+# R12-GATE-01: normalized maximum envelopes, in footprint-local KiCad x/y and
+# component-side z (mm), before placement/flip. D-R11-01 / T0-1 p1 for DB125;
+# the SD entry is the existing conservative closed socket/card union above.
+# Compare physical coordinates, not scale literals: equivalent unit conversions remain legal.
+R10_MODEL_BOXES = {
+    'M3_DB125_2P_BK': (-4.62, -4.10, 3.70, 4.00, 0., 8.90),
+    'M3_DB125_2P_GN': (-4.62, -4.10, 3.70, 4.00, 0., 8.90),
+    'M3_DB125_4P_GN': (-8.32, -4.10, 7.20, 4.00, 0., 8.90),
+    'M3_DB125_5P_GN': (-10.07, -4.10, 8.95, 4.00, 0., 8.90),
+    'M3_MICROSD_MOLEX_472192001': R10_MATED['M3_MICROSD_MOLEX_472192001']['box'],
+}
+R10_MODEL_TOL = 2e-5  # mm; six-decimal VRML endpoint error <=1.905e-6 mm, with a numeric guard
 R10_MATED_REFS = {'J430'}
 REQUIRED_MATED = {'M3_GH_BM04B_GHS_TBT', 'M3_SMA_KH_KE8_EDGE'}
 # These are bare board features, not an escape hatch for missing fitted-part geometry.
@@ -160,7 +172,15 @@ def model_box(f, prj):
             pts.append(q)
     if not pts:
         return None
-    box = footprint_points_box(f, [(x, -y, z) for x, y, z in pts])
+    local = [(x, -y, z) for x, y, z in pts]
+    expected = R10_MODEL_BOXES.get(fp_name(f))
+    if expected is not None:
+        xs, ys, zs = zip(*local)
+        actual = (min(xs), min(ys), max(xs), max(ys), min(zs), max(zs))
+        if any(abs(a - e) > R10_MODEL_TOL for a, e in zip(actual, expected)):
+            raise ValueError(f'{f.GetReference()}: model envelope differs from reviewed dimensions/pose '
+                             f'of {fp_name(f)}: {actual}, expected {expected} mm')
+    box = footprint_points_box(f, local)
     if not all(math.isfinite(v) for v in box) or any(box[lo] >= box[hi] for lo, hi in ((0, 2), (1, 3), (4, 5))):
         raise ValueError(f'{f.GetReference()}: nonfinite or degenerate transformed model envelope')
     return box

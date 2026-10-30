@@ -258,7 +258,7 @@
   },
   "fire_current_GAP1": {
     "status": "Native-board CAD path calculation; material, hot FET, source and harness conditions unmeasured",
-    "board_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "board_sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
     "selected_ematch": "MJG J-Tek LEAD-FREE standard24AWG",
     "maker_all_fire_A": 0.75,
     "current_margin": 1.5,

@@ -1,0 +1,3521 @@
+{
+  "schema": 1,
+  "round": 12,
+  "lens": 8,
+  "lens_name": "manufacturing, native DRC/parity/ERC, silkscreen, assembly drawings and fab",
+  "target": {
+    "commit_supplied": "d57b216c365fc8d18896bceba37f63caf20d52a4",
+    "pcb": "m3_design/assembly_review/m3.kicad_pcb",
+    "sha256_before": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "sha256_after": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "bytes_before": 2263730,
+    "bytes_after": 2263730,
+    "canonical_CAD_or_fab_modified": false
+  },
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 1
+  },
+  "findings": [
+    {
+      "id": "R12-MFG-01",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Five bottom assembly-drawing labels intersect their own Fab outlines",
+      "scope": "Fab assembly text only; electrical copper and production silkscreen are unaffected",
+      "file": "m3_design/assembly_review/fab/m3_assembly_bottom.pdf",
+      "page": 1,
+      "native_evidence": [
+        {
+          "ref": "C29",
+          "side": "B",
+          "xy_mm": [
+            28.0,
+            43.52
+          ],
+          "text_size_mm": [
+            1.0,
+            1.0
+          ],
+          "text_bbox_mm": [
+            27.379647,
+            42.182905,
+            28.529991,
+            44.857094
+          ],
+          "colliding_fab_graphics": [
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.092685521778
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.092685521778
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.122685521778
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.122685521778
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.065715737603
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.065715737603
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.053047573358
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.053047573358
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.04667045858
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.0466704570565
+            },
+            {
+              "shape": "Circle",
+              "overlap_area_mm2": 0.011321744174
+            }
+          ]
+        },
+        {
+          "ref": "C92",
+          "side": "B",
+          "xy_mm": [
+            32.35,
+            52.5
+          ],
+          "text_size_mm": [
+            1.0,
+            1.0
+          ],
+          "text_bbox_mm": [
+            31.012923,
+            51.879647,
+            33.687094,
+            53.029991
+          ],
+          "colliding_fab_graphics": [
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.069390147237
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.032527073863
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.032527073863
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.0694076032065
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.0377717241545
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.017402426699
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.0377773981315
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.0174065645305
+            },
+            {
+              "shape": "Circle",
+              "overlap_area_mm2": 0.011321744174
+            }
+          ]
+        },
+        {
+          "ref": "R10",
+          "side": "B",
+          "xy_mm": [
+            20.0,
+            44.69
+          ],
+          "text_size_mm": [
+            1.0,
+            1.0
+          ],
+          "text_bbox_mm": [
+            18.662905,
+            44.069647,
+            21.289385,
+            45.219991
+          ],
+          "colliding_fab_graphics": [
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.16322023995
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.08776384995
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.124185521778
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.124185521778
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.16322023995
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.08776384995
+            },
+            {
+              "shape": "Circle",
+              "overlap_area_mm2": 0.011321744174
+            }
+          ]
+        },
+        {
+          "ref": "R8",
+          "side": "B",
+          "xy_mm": [
+            9.0,
+            32.5
+          ],
+          "text_size_mm": [
+            1.0,
+            1.0
+          ],
+          "text_bbox_mm": [
+            8.379647,
+            31.686805,
+            9.529991,
+            33.360886
+          ],
+          "colliding_fab_graphics": [
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.096322010889
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.103475660889
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.067840343873
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.072847472001
+            },
+            {
+              "shape": "Circle",
+              "overlap_area_mm2": 0.011321744174
+            }
+          ]
+        },
+        {
+          "ref": "C5",
+          "side": "B",
+          "xy_mm": [
+            22.2,
+            71.43
+          ],
+          "text_size_mm": [
+            1.0,
+            1.0
+          ],
+          "text_bbox_mm": [
+            21.339113,
+            70.809647,
+            23.060903,
+            71.959991
+          ],
+          "colliding_fab_graphics": [
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.0535996159285
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.06571573995
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.092685521778
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.06571573995
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.092685521778
+            },
+            {
+              "shape": "Line",
+              "overlap_area_mm2": 0.0536131996345
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.0376617762605
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.031284664035
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.0376657770855
+            },
+            {
+              "shape": "Arc",
+              "overlap_area_mm2": 0.03128866486
+            },
+            {
+              "shape": "Circle",
+              "overlap_area_mm2": 0.011321744174
+            }
+          ]
+        }
+      ],
+      "visual_evidence": "Complete page rendered with Poppler; all five verified in 600 dpi detail crops. R10/C29/C92 cross heavy surrounding strokes; R8/C5 are similarly obscured.",
+      "cause": "r5_post.fab_refs preserves existing 1 mm references unless they overlap another reference; r9_post.fab_clear checks reference-to-reference boxes, not own Fab graphics or drill shapes.",
+      "fix": "Narrow Fab-only override in m3_design/r10_post.py after silk.fab_refs and the J122 Fab position (current lines 667-669), before r9_post.fab_clear (line 670). Use 0.4 mm height/width and 0.06 mm stroke on R10/C29/C92/R8/C5. Positions and native-copy proof below. Regenerate both PDFs and board binding after implementation.",
+      "candidate_proof": {
+        "R10": {
+          "before": {
+            "position_mm": [
+              20.0,
+              44.69
+            ],
+            "size_mm": [
+              1.0,
+              1.0
+            ],
+            "stroke_mm": 0.15,
+            "angle_degrees": 180.0
+          },
+          "after": {
+            "position_mm": [
+              20.0,
+              44.79
+            ],
+            "size_mm": [
+              0.4,
+              0.4
+            ],
+            "stroke_mm": 0.06,
+            "offset_mm": [
+              0.0,
+              0.1
+            ]
+          },
+          "minimum_checked_gap_mm": 0.025,
+          "collisions": [],
+          "rejected_nearer_positions": [
+            {
+              "offset_mm": [
+                0.0,
+                0.0
+              ],
+              "collisions": [
+                [
+                  "R10",
+                  "Circle"
+                ]
+              ]
+            },
+            {
+              "offset_mm": [
+                -0.05,
+                0.0
+              ],
+              "collisions": [
+                [
+                  "R10",
+                  "Circle"
+                ]
+              ]
+            },
+            {
+              "offset_mm": [
+                0.0,
+                -0.05
+              ],
+              "collisions": [
+                [
+                  "R10",
+                  "Circle"
+                ]
+              ]
+            },
+            {
+              "offset_mm": [
+                0.0,
+                0.05
+              ],
+              "collisions": [
+                [
+                  "R10",
+                  "Circle"
+                ]
+              ]
+            },
+            {
+              "offset_mm": [
+                0.05,
+                0.0
+              ],
+              "collisions": [
+                [
+                  "R10",
+                  "Circle"
+                ]
+              ]
+            },
+            {
+              "offset_mm": [
+                -0.05,
+                -0.05
+              ],
+              "collisions": [
+                [
+                  "R10",
+                  "Circle"
+                ]
+              ]
+            },
+            {
+              "offset_mm": [
+                -0.05,
+                0.05
+              ],
+              "collisions": [
+                [
+                  "R10",
+                  "Circle"
+                ]
+              ]
+            },
+            {
+              "offset_mm": [
+                0.05,
+                -0.05
+              ],
+              "collisions": [
+                [
+                  "R10",
+                  "Circle"
+                ]
+              ]
+            },
+            {
+              "offset_mm": [
+                0.05,
+                0.05
+              ],
+              "collisions": [
+                [
+                  "R10",
+                  "Circle"
+                ]
+              ]
+            },
+            {
+              "offset_mm": [
+                -0.1,
+                0.0
+              ],
+              "collisions": [
+                [
+                  "R10",
+                  "Circle"
+                ]
+              ]
+            },
+            {
+              "offset_mm": [
+                0.0,
+                -0.1
+              ],
+              "collisions": [
+                [
+                  "R10",
+                  "Circle"
+                ]
+              ]
+            }
+          ]
+        },
+        "C29": {
+          "before": {
+            "position_mm": [
+              28.0,
+              43.52
+            ],
+            "size_mm": [
+              1.0,
+              1.0
+            ],
+            "stroke_mm": 0.15,
+            "angle_degrees": 90.0
+          },
+          "after": {
+            "position_mm": [
+              27.95,
+              43.52
+            ],
+            "size_mm": [
+              0.4,
+              0.4
+            ],
+            "stroke_mm": 0.06,
+            "offset_mm": [
+              -0.05,
+              0.0
+            ]
+          },
+          "minimum_checked_gap_mm": 0.025,
+          "collisions": [],
+          "rejected_nearer_positions": [
+            {
+              "offset_mm": [
+                0.0,
+                0.0
+              ],
+              "collisions": [
+                [
+                  "C29",
+                  "Circle"
+                ]
+              ]
+            }
+          ]
+        },
+        "C92": {
+          "before": {
+            "position_mm": [
+              32.35,
+              52.5
+            ],
+            "size_mm": [
+              1.0,
+              1.0
+            ],
+            "stroke_mm": 0.15,
+            "angle_degrees": 180.0
+          },
+          "after": {
+            "position_mm": [
+              32.35,
+              52.5
+            ],
+            "size_mm": [
+              0.4,
+              0.4
+            ],
+            "stroke_mm": 0.06,
+            "offset_mm": [
+              0.0,
+              0.0
+            ]
+          },
+          "minimum_checked_gap_mm": 0.025,
+          "collisions": [],
+          "rejected_nearer_positions": []
+        },
+        "R8": {
+          "before": {
+            "position_mm": [
+              9.0,
+              32.5
+            ],
+            "size_mm": [
+              1.0,
+              1.0
+            ],
+            "stroke_mm": 0.15,
+            "angle_degrees": 270.0
+          },
+          "after": {
+            "position_mm": [
+              9.0,
+              32.5
+            ],
+            "size_mm": [
+              0.4,
+              0.4
+            ],
+            "stroke_mm": 0.06,
+            "offset_mm": [
+              0.0,
+              0.0
+            ]
+          },
+          "minimum_checked_gap_mm": 0.025,
+          "collisions": [],
+          "rejected_nearer_positions": []
+        },
+        "C5": {
+          "before": {
+            "position_mm": [
+              22.2,
+              71.43
+            ],
+            "size_mm": [
+              1.0,
+              1.0
+            ],
+            "stroke_mm": 0.15,
+            "angle_degrees": 180.0
+          },
+          "after": {
+            "position_mm": [
+              22.2,
+              71.43
+            ],
+            "size_mm": [
+              0.4,
+              0.4
+            ],
+            "stroke_mm": 0.06,
+            "offset_mm": [
+              0.0,
+              0.0
+            ]
+          },
+          "minimum_checked_gap_mm": 0.025,
+          "collisions": [],
+          "rejected_nearer_positions": []
+        },
+        "candidate_only": true,
+        "candidate_pcb_sha256": "3c1b7c436bbfc761b121e8c9d297339c5e0a3f4edd8e5794e2a68702abc35ac4"
+      }
+    }
+  ],
+  "closed_prior_findings": [
+    {
+      "id": "R11-MFG-01",
+      "severity": "Minor",
+      "status": "closed",
+      "evidence": "All five terminal GND pads have explicit local zone_connect=1; saved-fill ring sampling finds four separated spokes and 68/360 occupied angular samples on each of F.Cu/In1.Cu/B.Cu; In2 has no connected GND fill at these pads.",
+      "measurements": [
+        {
+          "pad": "J1.2",
+          "xy_mm": [
+            7.4,
+            77.6
+          ],
+          "zone_connect": 1,
+          "saved_fill_ring_radius_mm": 1.075,
+          "layers": {
+            "F.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            },
+            "In1.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            },
+            "In2.Cu": {
+              "angular_samples_inside": 0,
+              "separated_spokes": 0
+            },
+            "B.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            }
+          }
+        },
+        {
+          "pad": "J9.2",
+          "xy_mm": [
+            38.6,
+            49.25
+          ],
+          "zone_connect": 1,
+          "saved_fill_ring_radius_mm": 1.075,
+          "layers": {
+            "F.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            },
+            "In1.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            },
+            "In2.Cu": {
+              "angular_samples_inside": 0,
+              "separated_spokes": 0
+            },
+            "B.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            }
+          }
+        },
+        {
+          "pad": "J410.2",
+          "xy_mm": [
+            38.6,
+            17.25
+          ],
+          "zone_connect": 1,
+          "saved_fill_ring_radius_mm": 1.075,
+          "layers": {
+            "F.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            },
+            "In1.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            },
+            "In2.Cu": {
+              "angular_samples_inside": 0,
+              "separated_spokes": 0
+            },
+            "B.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            }
+          }
+        },
+        {
+          "pad": "J420.2",
+          "xy_mm": [
+            38.6,
+            33.25
+          ],
+          "zone_connect": 1,
+          "saved_fill_ring_radius_mm": 1.075,
+          "layers": {
+            "F.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            },
+            "In1.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            },
+            "In2.Cu": {
+              "angular_samples_inside": 0,
+              "separated_spokes": 0
+            },
+            "B.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            }
+          }
+        },
+        {
+          "pad": "J122.5",
+          "xy_mm": [
+            38.6,
+            64.5
+          ],
+          "zone_connect": 1,
+          "saved_fill_ring_radius_mm": 1.075,
+          "layers": {
+            "F.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            },
+            "In1.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            },
+            "In2.Cu": {
+              "angular_samples_inside": 0,
+              "separated_spokes": 0
+            },
+            "B.Cu": {
+              "angular_samples_inside": 68,
+              "separated_spokes": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "R11-MFG-02",
+      "severity": "Minor",
+      "status": "closed",
+      "evidence": "J122 Fab text now at native (36.5,71.5), clear of centre drill at (38.6,71.5). Fresh top-PDF detail is legible.",
+      "text_to_centre_drill_gap_mm": 0.094619,
+      "all_Fab_reference_drill_intersections": []
+    }
+  ],
+  "native_CLI": {
+    "version": "official unmodified KiCad 10.0.7",
+    "DRC_command": "kicad-cli pcb drc --severity-all --all-track-errors --schematic-parity --format json --exit-code-violations -o <temporary>/drc.json m3_design/assembly_review/m3.kicad_pcb",
+    "DRC_exit": 0,
+    "DRC_raw": {
+      "$schema": "https://schemas.kicad.org/drc.v1.json",
+      "coordinate_units": "mm",
+      "date": "2026-10-29T23:25:39",
+      "ignored_checks": [],
+      "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+      ],
+      "kicad_version": "10.0.7",
+      "schematic_parity": [],
+      "source": "m3.kicad_pcb",
+      "unconnected_items": [],
+      "violations": []
+    },
+    "ERC_command": "kicad-cli sch erc --severity-all --format json --exit-code-violations -o <temporary>/erc.json m3_design/assembly_review/m3.kicad_sch",
+    "ERC_exit": 0,
+    "ERC_raw": {
+      "$schema": "https://schemas.kicad.org/erc.v1.json",
+      "coordinate_units": "mm",
+      "date": "2026-10-29T23:26:27",
+      "ignored_checks": [],
+      "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+      ],
+      "kicad_version": "10.0.7",
+      "sheets": [
+        {
+          "path": "/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8",
+          "violations": []
+        },
+        {
+          "path": "/02 | MCU, clock and debug/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/f468108e-0b0c-5879-abe2-8195c9cd53e8",
+          "violations": []
+        },
+        {
+          "path": "/03 | Memory and sensors/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0",
+          "violations": []
+        },
+        {
+          "path": "/04 | Voltage diagnosis and indicators/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19",
+          "violations": []
+        },
+        {
+          "path": "/05 | Regulated camera, radio and GPS port supplies/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73",
+          "violations": []
+        },
+        {
+          "path": "/06 | Camera terminal and characterization/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4",
+          "violations": []
+        },
+        {
+          "path": "/07 | Battery input, contact and protection/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5",
+          "violations": []
+        },
+        {
+          "path": "/08 | USB limit, source mux and hold-up/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/98c21473-b271-5039-bfe5-b3672097f1da",
+          "violations": []
+        },
+        {
+          "path": "/09 | Camera UART, separate supply domains/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/3918f78b-b8e6-50fb-8165-8fdc93a836ab",
+          "violations": []
+        },
+        {
+          "path": "/10 | USB cable presence, ordinary GPIO sensing/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/7323b515-8986-5814-85b5-9e04db992507",
+          "violations": []
+        },
+        {
+          "path": "/11 | Actuator power switch/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31",
+          "violations": []
+        },
+        {
+          "path": "/12 | Pyro channels, arming and continuity/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/a44998d3-a410-5959-9243-41a16cadc930",
+          "violations": []
+        },
+        {
+          "path": "/13 | Servo outputs/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9",
+          "violations": []
+        },
+        {
+          "path": "/14 | Buzzer/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f",
+          "violations": []
+        },
+        {
+          "path": "/15 | Always-on GPS / radio UARTs and microSD log/",
+          "uuid_path": "/6007a7db-6a58-5660-8beb-956dea045ff8/05a85211-bc24-59d4-a8a4-ff7347ee84fc",
+          "violations": []
+        }
+      ],
+      "source": "m3.kicad_sch"
+    },
+    "CLI_reservation_released_after_DRC_ERC": true,
+    "board_not_saved_or_refilled_by_CLI": true
+  },
+  "executed_checks": [
+    {
+      "check": "fab_manifest.py",
+      "exit": 0,
+      "inputs": 193,
+      "outputs": 5,
+      "verified_again_after_all_probes": true
+    },
+    {
+      "check": "jlc_orient.py --verify-cpl",
+      "exit": 0,
+      "independent_pad_rows_top": 66,
+      "independent_pad_rows_bottom": 121,
+      "placement_only_nonpolar_rows": 12,
+      "expected_rows": 199,
+      "worst_pad_residual_mm": 0.491,
+      "errors": []
+    },
+    {
+      "check": "paste_check.py",
+      "exit": 0,
+      "result": {
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "F_Paste": {
+            "flashes": 245,
+            "pads_with_paste": 245,
+            "components": 60
+          },
+          "B_Paste": {
+            "flashes": 373,
+            "pads_with_paste": 373,
+            "components": 132
+          },
+          "dry_pads": []
+        }
+      }
+    },
+    {
+      "check": "independent paste aperture dimensions/rotation/margin comparison",
+      "exit": 0,
+      "flashes": 618,
+      "tolerance_mm": 0.002,
+      "worst_bbox_delta_mm": 0.00019999999999997797,
+      "errors": []
+    },
+    {
+      "check": "silk_check.py with official 10.0.7 CLI",
+      "exit": 0,
+      "outline_mm": [
+        46,
+        90
+      ],
+      "outside_stroke_points": 0
+    },
+    {
+      "check": "selected native contracts only",
+      "exit": 0,
+      "complete_full_gate": false,
+      "rules": {
+        "S-4": {
+          "ok": true,
+          "issues": []
+        },
+        "LC-1": {
+          "ok": true,
+          "issues": []
+        },
+        "M-6": {
+          "ok": true,
+          "issues": []
+        },
+        "T-1": {
+          "ok": true,
+          "issues": []
+        },
+        "K-legends": {
+          "ok": true,
+          "issues": []
+        },
+        "K-copper": {
+          "ok": true,
+          "issues": []
+        },
+        "K-rules": {
+          "ok": true,
+          "issues": []
+        }
+      },
+      "S4_required_fitted_count": 199
+    }
+  ],
+  "inventory": {
+    "footprints": 209,
+    "fitted": 199,
+    "fitted_top": 67,
+    "fitted_bottom": 132,
+    "bom_codes": 82,
+    "bom_qty": 199,
+    "cpl_rows": 199,
+    "bom_missing": [],
+    "bom_extra": [],
+    "bom_duplicates": [],
+    "bom_identity_errors": [],
+    "netlist_identity_errors": [],
+    "tracks": 973,
+    "vias": 295,
+    "via_sizes": {
+      "(0.5, 0.3)": 290,
+      "(1.0, 0.5)": 1,
+      "(0.6, 0.3)": 4
+    }
+  },
+  "silkscreen": {
+    "visible_items": 308,
+    "visible_text_items": 158,
+    "shown_designators": 118,
+    "legends": 40,
+    "minimum_text_size_mm": 1.0,
+    "minimum_text_stroke_mm": 0.15,
+    "minimum_nonzero_graphic_stroke_mm": 0.15,
+    "filled_zero_outline_width_dots": 2,
+    "ink_to_pad_mask_by_side": [
+      {
+        "side": "F",
+        "visible_items": 139,
+        "minimum_ink_to_pad_mask_gap_mm": 0.154008
+      },
+      {
+        "side": "B",
+        "visible_items": 169,
+        "minimum_ink_to_pad_mask_gap_mm": 0.150009
+      }
+    ],
+    "minimum_ink_to_outer_outline_mm": 0.5,
+    "hidden_count": 91,
+    "hidden_references": [
+      "C10",
+      "C100",
+      "C11",
+      "C126",
+      "C127",
+      "C129",
+      "C13",
+      "C14",
+      "C15",
+      "C16",
+      "C19",
+      "C20",
+      "C21",
+      "C22",
+      "C23",
+      "C24",
+      "C25",
+      "C26",
+      "C30",
+      "C31",
+      "C32",
+      "C410",
+      "C411",
+      "C421",
+      "C6",
+      "C7",
+      "C81",
+      "C82",
+      "C85",
+      "C88",
+      "C92",
+      "C99",
+      "D121",
+      "D400",
+      "D401",
+      "D410",
+      "D420",
+      "D421",
+      "LED1",
+      "Q122",
+      "Q123",
+      "R10",
+      "R100",
+      "R101",
+      "R103",
+      "R104",
+      "R105",
+      "R120",
+      "R121",
+      "R122",
+      "R126",
+      "R127",
+      "R128",
+      "R129",
+      "R13",
+      "R130",
+      "R132",
+      "R133",
+      "R151",
+      "R152",
+      "R155",
+      "R162",
+      "R163",
+      "R164",
+      "R173",
+      "R175",
+      "R178",
+      "R180",
+      "R32",
+      "R403",
+      "R405",
+      "R432",
+      "R441",
+      "R450",
+      "R451",
+      "R5",
+      "R62",
+      "R63",
+      "R64",
+      "R87",
+      "R9",
+      "TP120",
+      "TP122",
+      "TP82",
+      "U11",
+      "U12",
+      "U2",
+      "U4",
+      "U402",
+      "U5",
+      "U9"
+    ],
+    "opposite_side_references": [
+      "C402",
+      "J400",
+      "R404",
+      "U400"
+    ],
+    "Fab_references": 209,
+    "references_without_exactly_one_Fab_reference": {}
+  },
+  "mask_vias": {
+    "native_polygon_error_mm": 0.0001,
+    "minimum_distinct_net_pad_mask_web_mm": 0.100005,
+    "mask_openings_by_side": {
+      "F": 281,
+      "B": 411
+    },
+    "different_net_pad_webs_below_0_1_mm": [],
+    "U4_pairs": [
+      {
+        "side": "B",
+        "a": "U4.1",
+        "b": "U4.2",
+        "nets": [
+          "SPI1_MISO",
+          "GND"
+        ],
+        "gap_mm": 0.100005
+      },
+      {
+        "side": "B",
+        "a": "U4.1",
+        "b": "U4.14",
+        "nets": [
+          "SPI1_MISO",
+          "SPI1_MOSI"
+        ],
+        "gap_mm": 0.197502
+      },
+      {
+        "side": "B",
+        "a": "U4.2",
+        "b": "U4.3",
+        "nets": [
+          "GND",
+          "GND"
+        ],
+        "gap_mm": 0.100005
+      },
+      {
+        "side": "B",
+        "a": "U4.3",
+        "b": "U4.4",
+        "nets": [
+          "GND",
+          "IMU_INT1"
+        ],
+        "gap_mm": 0.100005
+      },
+      {
+        "side": "B",
+        "a": "U4.4",
+        "b": "U4.5",
+        "nets": [
+          "IMU_INT1",
+          "3V3A"
+        ],
+        "gap_mm": 0.197502
+      },
+      {
+        "side": "B",
+        "a": "U4.5",
+        "b": "U4.6",
+        "nets": [
+          "3V3A",
+          "GND"
+        ],
+        "gap_mm": 0.100005
+      },
+      {
+        "side": "B",
+        "a": "U4.6",
+        "b": "U4.7",
+        "nets": [
+          "GND",
+          "GND"
+        ],
+        "gap_mm": 0.100005
+      },
+      {
+        "side": "B",
+        "a": "U4.7",
+        "b": "U4.8",
+        "nets": [
+          "GND",
+          "3V3A"
+        ],
+        "gap_mm": 0.197502
+      },
+      {
+        "side": "B",
+        "a": "U4.8",
+        "b": "U4.9",
+        "nets": [
+          "3V3A",
+          "unconnected-(U4-INT2-Pad9)"
+        ],
+        "gap_mm": 0.100005
+      },
+      {
+        "side": "B",
+        "a": "U4.9",
+        "b": "U4.10",
+        "nets": [
+          "unconnected-(U4-INT2-Pad9)",
+          "unconnected-(U4-OCS_aux-Pad10)"
+        ],
+        "gap_mm": 0.100005
+      },
+      {
+        "side": "B",
+        "a": "U4.10",
+        "b": "U4.11",
+        "nets": [
+          "unconnected-(U4-OCS_aux-Pad10)",
+          "unconnected-(U4-SDO_aux-Pad11)"
+        ],
+        "gap_mm": 0.100005
+      },
+      {
+        "side": "B",
+        "a": "U4.11",
+        "b": "U4.12",
+        "nets": [
+          "unconnected-(U4-SDO_aux-Pad11)",
+          "IMU_CS"
+        ],
+        "gap_mm": 0.197502
+      },
+      {
+        "side": "B",
+        "a": "U4.12",
+        "b": "U4.13",
+        "nets": [
+          "IMU_CS",
+          "SPI1_SCK"
+        ],
+        "gap_mm": 0.100005
+      },
+      {
+        "side": "B",
+        "a": "U4.13",
+        "b": "U4.14",
+        "nets": [
+          "SPI1_SCK",
+          "SPI1_MOSI"
+        ],
+        "gap_mm": 0.100005
+      }
+    ],
+    "ordinary_ring_to_pad_opening_pairs_below_0_1_mm": [
+      {
+        "side": "F",
+        "via": [
+          20.706,
+          65.619
+        ],
+        "via_net": "GND",
+        "pad": "R81.2",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.092023,
+        "hole_gap_mm": 0.192023
+      },
+      {
+        "side": "F",
+        "via": [
+          15.85,
+          57.695
+        ],
+        "via_net": "GND",
+        "pad": "Q124.2",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.050001,
+        "hole_gap_mm": 0.150007
+      },
+      {
+        "side": "F",
+        "via": [
+          15.85,
+          58.345
+        ],
+        "via_net": "GND",
+        "pad": "Q124.1",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.050001,
+        "hole_gap_mm": 0.150007
+      },
+      {
+        "side": "F",
+        "via": [
+          18.3,
+          25.3
+        ],
+        "via_net": "GND",
+        "pad": "C86.2",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.050011,
+        "hole_gap_mm": 0.150007
+      },
+      {
+        "side": "F",
+        "via": [
+          11.95,
+          30.6
+        ],
+        "via_net": "VBUS",
+        "pad": "D4.5",
+        "pad_net": "VBUS",
+        "ring_gap_mm": 0.014003,
+        "hole_gap_mm": 0.164007
+      },
+      {
+        "side": "B",
+        "via": [
+          19.423,
+          55.023
+        ],
+        "via_net": "GND",
+        "pad": "C10.2",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.080197,
+        "hole_gap_mm": 0.180197
+      },
+      {
+        "side": "B",
+        "via": [
+          22.994,
+          80.719
+        ],
+        "via_net": "GND",
+        "pad": "C81.2",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.064718,
+        "hole_gap_mm": 0.164717
+      },
+      {
+        "side": "B",
+        "via": [
+          22.903,
+          65.022
+        ],
+        "via_net": "GND",
+        "pad": "U11.3",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.073409,
+        "hole_gap_mm": 0.173415
+      },
+      {
+        "side": "B",
+        "via": [
+          22.903,
+          65.022
+        ],
+        "via_net": "GND",
+        "pad": "U11.4",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.093212,
+        "hole_gap_mm": 0.193212
+      },
+      {
+        "side": "B",
+        "via": [
+          18.2,
+          48.55
+        ],
+        "via_net": "GND",
+        "pad": "C18.2",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.087347,
+        "hole_gap_mm": 0.187346
+      },
+      {
+        "side": "B",
+        "via": [
+          32.968,
+          67.452
+        ],
+        "via_net": "GND",
+        "pad": "R157.2",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.091658,
+        "hole_gap_mm": 0.191657
+      },
+      {
+        "side": "B",
+        "via": [
+          19.423,
+          53.023
+        ],
+        "via_net": "GND",
+        "pad": "C11.2",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.080197,
+        "hole_gap_mm": 0.180197
+      },
+      {
+        "side": "B",
+        "via": [
+          27.6,
+          38.35
+        ],
+        "via_net": "GND",
+        "pad": "C19.2",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.050001,
+        "hole_gap_mm": 0.150007
+      },
+      {
+        "side": "B",
+        "via": [
+          14.2,
+          48.0
+        ],
+        "via_net": "GND",
+        "pad": "C31.2",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.097132,
+        "hole_gap_mm": 0.197134
+      },
+      {
+        "side": "B",
+        "via": [
+          24.3,
+          66.0
+        ],
+        "via_net": "RAW_PROTECTED",
+        "pad": "U11.2",
+        "pad_net": "RAW_PROTECTED",
+        "ring_gap_mm": 0.050001,
+        "hole_gap_mm": 0.150007
+      },
+      {
+        "side": "B",
+        "via": [
+          15.45,
+          49.8
+        ],
+        "via_net": "3V3",
+        "pad": "C13.1",
+        "pad_net": "3V3",
+        "ring_gap_mm": 0.080003,
+        "hole_gap_mm": 0.180007
+      },
+      {
+        "side": "B",
+        "via": [
+          9.97,
+          51.5
+        ],
+        "via_net": "I2C1_SDA",
+        "pad": "R13.1",
+        "pad_net": "I2C1_SDA",
+        "ring_gap_mm": 0.087149,
+        "hole_gap_mm": 0.187155
+      },
+      {
+        "side": "B",
+        "via": [
+          25.6,
+          63.0
+        ],
+        "via_net": "USB_LIMITED",
+        "pad": "C98.1",
+        "pad_net": "USB_LIMITED",
+        "ring_gap_mm": 0.075483,
+        "hole_gap_mm": 0.175482
+      }
+    ],
+    "ordinary_pair_count": 18,
+    "unique_ordinary_vias_in_those_pairs": 17,
+    "minimum_ordinary_hole_to_soldered_pad_mask_gap_mm": 0.150007,
+    "ordinary_hole_enters_pad_mask_opening": false,
+    "VIPPO_pad_entries": [
+      {
+        "side": "B",
+        "via": [
+          27.9,
+          13.6
+        ],
+        "via_net": "GND",
+        "pad": "U401.11",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.0,
+        "hole_gap_mm": 0.0
+      },
+      {
+        "side": "B",
+        "via": [
+          27.3,
+          13.6
+        ],
+        "via_net": "GND",
+        "pad": "U401.11",
+        "pad_net": "GND",
+        "ring_gap_mm": 0.0,
+        "hole_gap_mm": 0.0
+      }
+    ],
+    "all_via_native_tenting_flags_true": true,
+    "vias_under_0_35_mm_from_any_pad_mask_opening_count": 173,
+    "ordinary_vias_under_0_35_count": 171,
+    "ordinary_vias_under_0_35_coordinates": [
+      [
+        14.825,
+        26.0
+      ],
+      [
+        20.706,
+        65.619
+      ],
+      [
+        26.0,
+        46.75
+      ],
+      [
+        17.15,
+        6.5
+      ],
+      [
+        23.25,
+        81.825
+      ],
+      [
+        29.14,
+        49.25
+      ],
+      [
+        15.25,
+        51.6
+      ],
+      [
+        19.423,
+        55.023
+      ],
+      [
+        6.27,
+        40.8
+      ],
+      [
+        15.85,
+        57.695
+      ],
+      [
+        13.0,
+        1.8
+      ],
+      [
+        29.2,
+        46.2
+      ],
+      [
+        24.8,
+        47.7
+      ],
+      [
+        11.23,
+        53.343
+      ],
+      [
+        22.994,
+        80.719
+      ],
+      [
+        30.3,
+        18.0
+      ],
+      [
+        31.85,
+        38.25
+      ],
+      [
+        22.903,
+        65.022
+      ],
+      [
+        28.455,
+        78.28
+      ],
+      [
+        36.6,
+        87.0
+      ],
+      [
+        8.35,
+        81.8
+      ],
+      [
+        36.45,
+        12.625
+      ],
+      [
+        28.62,
+        43.94
+      ],
+      [
+        21.4,
+        37.3
+      ],
+      [
+        23.76,
+        13.6
+      ],
+      [
+        13.75,
+        24.1
+      ],
+      [
+        31.4,
+        14.4
+      ],
+      [
+        28.805,
+        70.75
+      ],
+      [
+        25.45,
+        47.8
+      ],
+      [
+        35.0,
+        15.1
+      ],
+      [
+        35.75,
+        28.725
+      ],
+      [
+        31.183,
+        74.96
+      ],
+      [
+        43.6,
+        58.0
+      ],
+      [
+        22.825,
+        67.825
+      ],
+      [
+        16.75,
+        47.6
+      ],
+      [
+        32.299999,
+        59.5
+      ],
+      [
+        27.9,
+        64.25
+      ],
+      [
+        26.425,
+        30.525
+      ],
+      [
+        26.95,
+        45.5
+      ],
+      [
+        27.1,
+        34.2
+      ],
+      [
+        22.65,
+        44.35
+      ],
+      [
+        15.35,
+        52.15
+      ],
+      [
+        27.0,
+        15.8
+      ],
+      [
+        26.384,
+        67.444
+      ],
+      [
+        37.05,
+        39.7
+      ],
+      [
+        28.675,
+        66.55
+      ],
+      [
+        31.333,
+        67.97
+      ],
+      [
+        12.775,
+        59.025
+      ],
+      [
+        18.2,
+        48.55
+      ],
+      [
+        15.85,
+        58.345
+      ],
+      [
+        33.4,
+        74.96
+      ],
+      [
+        36.1,
+        34.2
+      ],
+      [
+        28.6,
+        41.2
+      ],
+      [
+        20.863,
+        54.24
+      ],
+      [
+        36.825,
+        59.175
+      ],
+      [
+        29.1,
+        61.8
+      ],
+      [
+        13.35,
+        44.0
+      ],
+      [
+        26.295,
+        74.8
+      ],
+      [
+        36.45,
+        9.025
+      ],
+      [
+        32.968,
+        67.452
+      ],
+      [
+        27.8,
+        46.6
+      ],
+      [
+        20.2,
+        81.0
+      ],
+      [
+        26.45,
+        15.25
+      ],
+      [
+        35.75,
+        32.225
+      ],
+      [
+        19.423,
+        53.023
+      ],
+      [
+        34.3,
+        38.5
+      ],
+      [
+        35.95,
+        15.625
+      ],
+      [
+        32.799999,
+        53.3
+      ],
+      [
+        19.967,
+        71.09
+      ],
+      [
+        27.6,
+        38.35
+      ],
+      [
+        10.975,
+        25.725
+      ],
+      [
+        18.8,
+        43.9
+      ],
+      [
+        17.5,
+        39.3
+      ],
+      [
+        18.725,
+        23.3
+      ],
+      [
+        8.72,
+        44.8
+      ],
+      [
+        14.2,
+        48.0
+      ],
+      [
+        20.95,
+        45.5
+      ],
+      [
+        19.35,
+        59.3
+      ],
+      [
+        25.15,
+        54.0
+      ],
+      [
+        16.05,
+        75.0
+      ],
+      [
+        39.3,
+        55.25
+      ],
+      [
+        32.65,
+        87.5
+      ],
+      [
+        25.8,
+        65.9
+      ],
+      [
+        19.53,
+        48.45
+      ],
+      [
+        25.95,
+        70.1
+      ],
+      [
+        34.95,
+        47.525
+      ],
+      [
+        16.178,
+        59.047
+      ],
+      [
+        31.5,
+        73.6
+      ],
+      [
+        13.536,
+        85.161
+      ],
+      [
+        18.3,
+        25.3
+      ],
+      [
+        22.33,
+        58.25
+      ],
+      [
+        36.1,
+        18.2
+      ],
+      [
+        23.5,
+        65.9
+      ],
+      [
+        9.0,
+        27.837
+      ],
+      [
+        34.95,
+        44.025
+      ],
+      [
+        25.9,
+        8.6
+      ],
+      [
+        25.65,
+        14.9
+      ],
+      [
+        29.75,
+        12.6
+      ],
+      [
+        35.3,
+        35.25
+      ],
+      [
+        30.3,
+        20.3
+      ],
+      [
+        33.725,
+        33.299999
+      ],
+      [
+        33.725,
+        17.3
+      ],
+      [
+        14.4,
+        53.3
+      ],
+      [
+        20.3,
+        79.1
+      ],
+      [
+        30.175,
+        86.5
+      ],
+      [
+        31.0,
+        83.6
+      ],
+      [
+        21.1,
+        79.1
+      ],
+      [
+        24.3,
+        66.0
+      ],
+      [
+        23.2,
+        68.6
+      ],
+      [
+        17.0,
+        36.75
+      ],
+      [
+        28.75,
+        43.1
+      ],
+      [
+        19.5,
+        49.15
+      ],
+      [
+        13.45,
+        43.32
+      ],
+      [
+        29.2,
+        48.5
+      ],
+      [
+        19.05,
+        55.9
+      ],
+      [
+        31.5,
+        69.4
+      ],
+      [
+        26.425,
+        32.075
+      ],
+      [
+        23.905,
+        23.0
+      ],
+      [
+        26.4,
+        79.26
+      ],
+      [
+        29.25,
+        38.65
+      ],
+      [
+        15.45,
+        49.8
+      ],
+      [
+        28.1,
+        60.0
+      ],
+      [
+        22.6,
+        52.15
+      ],
+      [
+        23.0,
+        70.0
+      ],
+      [
+        29.25,
+        37.0
+      ],
+      [
+        6.25,
+        48.94
+      ],
+      [
+        6.2,
+        23.1
+      ],
+      [
+        3.73,
+        40.8
+      ],
+      [
+        14.2,
+        37.3
+      ],
+      [
+        19.55,
+        60.85
+      ],
+      [
+        17.5,
+        40.57
+      ],
+      [
+        20.2,
+        52.1
+      ],
+      [
+        24.69,
+        45.5
+      ],
+      [
+        25.5,
+        51.75
+      ],
+      [
+        27.0,
+        49.25
+      ],
+      [
+        33.0,
+        75.9
+      ],
+      [
+        34.325,
+        73.8
+      ],
+      [
+        33.675,
+        69.05
+      ],
+      [
+        30.85,
+        51.8
+      ],
+      [
+        28.2,
+        47.5
+      ],
+      [
+        26.9,
+        52.45
+      ],
+      [
+        29.2,
+        45.5
+      ],
+      [
+        27.75,
+        40.57
+      ],
+      [
+        34.0,
+        42.0
+      ],
+      [
+        29.25,
+        38.0
+      ],
+      [
+        26.13,
+        38.55
+      ],
+      [
+        27.75,
+        41.83
+      ],
+      [
+        9.95,
+        27.7
+      ],
+      [
+        16.7,
+        39.05
+      ],
+      [
+        16.7,
+        43.1
+      ],
+      [
+        17.55,
+        43.5
+      ],
+      [
+        17.55,
+        44.25
+      ],
+      [
+        19.57,
+        43.9
+      ],
+      [
+        14.0,
+        44.9
+      ],
+      [
+        13.8,
+        45.6
+      ],
+      [
+        7.75,
+        49.8
+      ],
+      [
+        9.97,
+        51.5
+      ],
+      [
+        11.95,
+        30.6
+      ],
+      [
+        7.95,
+        27.9
+      ],
+      [
+        8.0,
+        33.7
+      ],
+      [
+        19.675,
+        66.4
+      ],
+      [
+        17.1,
+        82.8
+      ],
+      [
+        34.2,
+        49.325
+      ],
+      [
+        16.2,
+        73.3
+      ],
+      [
+        11.8,
+        70.725
+      ],
+      [
+        27.205,
+        22.18
+      ],
+      [
+        25.6,
+        63.0
+      ],
+      [
+        22.0,
+        62.25
+      ],
+      [
+        7.85,
+        29.25
+      ],
+      [
+        7.95,
+        32.549999
+      ],
+      [
+        32.2,
+        40.05
+      ]
+    ]
+  },
+  "package": {
+    "zip_members": [
+      "m3-B_Cu.gbr",
+      "m3-B_Mask.gbr",
+      "m3-B_Paste.gbr",
+      "m3-B_Silkscreen.gbr",
+      "m3-Edge_Cuts.gbr",
+      "m3-F_Cu.gbr",
+      "m3-F_Mask.gbr",
+      "m3-F_Paste.gbr",
+      "m3-F_Silkscreen.gbr",
+      "m3-In1_Cu.gbr",
+      "m3-In2_Cu.gbr",
+      "m3-NPTH.drl",
+      "m3-PTH.drl",
+      "m3-job.gbrjob"
+    ],
+    "drills": {
+      "m3-NPTH.drl": {
+        "round_holes_by_diameter_mm": {
+          "0.600": 2,
+          "0.991": 3
+        },
+        "slots": []
+      },
+      "m3-PTH.drl": {
+        "round_holes_by_diameter_mm": {
+          "0.300": 294,
+          "0.500": 1,
+          "1.300": 23
+        },
+        "slots": [
+          {
+            "tool": "0.600",
+            "path": "X2.53Y-26.475G85X1.73Y-26.475"
+          },
+          {
+            "tool": "0.600",
+            "path": "X2.53Y-35.125G85X1.73Y-35.125"
+          },
+          {
+            "tool": "0.600",
+            "path": "X6.86Y-26.475G85X5.76Y-26.475"
+          },
+          {
+            "tool": "0.600",
+            "path": "X6.86Y-35.125G85X5.76Y-35.125"
+          }
+        ]
+      }
+    },
+    "manifest_inputs_count": 193,
+    "bound_outputs_sha256": {
+      "m3_assembly_bottom.pdf": "68c208f6aecc8014c358661c9cece0bec4a8d90b38b009a42fd38fe96d38dddf",
+      "m3_assembly_top.pdf": "991025f8ca52800bf4d188302272b1482a0705dbc207586b6532d0b5d83e35c0",
+      "m3_bom_jlc.csv": "d04fed383a7df9981b1f459b86c0292d09833b6fa34dcadac890aeb65325f081",
+      "m3_cpl_jlc.csv": "75ae408d078701f84e87e28ed35fcc1327801a9bf0142a8a859da82074f9f3d7",
+      "m3_gerber.zip": "63b923bbac33df175e35f337085fecbde9b66bb04b5561e527e1e244f7dc7720"
+    },
+    "paste_selected_native_dimensions": {
+      "U4": [
+        {
+          "side": "B",
+          "pad": "1",
+          "xy_mm": [
+            18.21,
+            45.15
+          ],
+          "aperture_mm": [
+            0.5405,
+            0.329
+          ],
+          "native_local_size_mm": [
+            0.575,
+            0.35
+          ],
+          "paste_margin_mm": [
+            -0.01725,
+            -0.0105
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "2",
+          "xy_mm": [
+            18.21,
+            45.65
+          ],
+          "aperture_mm": [
+            0.5405,
+            0.329
+          ],
+          "native_local_size_mm": [
+            0.575,
+            0.35
+          ],
+          "paste_margin_mm": [
+            -0.01725,
+            -0.0105
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "3",
+          "xy_mm": [
+            18.21,
+            46.15
+          ],
+          "aperture_mm": [
+            0.5405,
+            0.329
+          ],
+          "native_local_size_mm": [
+            0.575,
+            0.35
+          ],
+          "paste_margin_mm": [
+            -0.01725,
+            -0.0105
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "4",
+          "xy_mm": [
+            18.21,
+            46.65
+          ],
+          "aperture_mm": [
+            0.5405,
+            0.329
+          ],
+          "native_local_size_mm": [
+            0.575,
+            0.35
+          ],
+          "paste_margin_mm": [
+            -0.01725,
+            -0.0105
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "5",
+          "xy_mm": [
+            17.5,
+            46.86
+          ],
+          "aperture_mm": [
+            0.329,
+            0.5405
+          ],
+          "native_local_size_mm": [
+            0.35,
+            0.575
+          ],
+          "paste_margin_mm": [
+            -0.0105,
+            -0.01725
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "6",
+          "xy_mm": [
+            17.0,
+            46.86
+          ],
+          "aperture_mm": [
+            0.329,
+            0.5405
+          ],
+          "native_local_size_mm": [
+            0.35,
+            0.575
+          ],
+          "paste_margin_mm": [
+            -0.0105,
+            -0.01725
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "7",
+          "xy_mm": [
+            16.5,
+            46.86
+          ],
+          "aperture_mm": [
+            0.329,
+            0.5405
+          ],
+          "native_local_size_mm": [
+            0.35,
+            0.575
+          ],
+          "paste_margin_mm": [
+            -0.0105,
+            -0.01725
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "8",
+          "xy_mm": [
+            15.79,
+            46.65
+          ],
+          "aperture_mm": [
+            0.5405,
+            0.329
+          ],
+          "native_local_size_mm": [
+            0.575,
+            0.35
+          ],
+          "paste_margin_mm": [
+            -0.01725,
+            -0.0105
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "9",
+          "xy_mm": [
+            15.79,
+            46.15
+          ],
+          "aperture_mm": [
+            0.5405,
+            0.329
+          ],
+          "native_local_size_mm": [
+            0.575,
+            0.35
+          ],
+          "paste_margin_mm": [
+            -0.01725,
+            -0.0105
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "10",
+          "xy_mm": [
+            15.79,
+            45.65
+          ],
+          "aperture_mm": [
+            0.5405,
+            0.329
+          ],
+          "native_local_size_mm": [
+            0.575,
+            0.35
+          ],
+          "paste_margin_mm": [
+            -0.01725,
+            -0.0105
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "11",
+          "xy_mm": [
+            15.79,
+            45.15
+          ],
+          "aperture_mm": [
+            0.5405,
+            0.329
+          ],
+          "native_local_size_mm": [
+            0.575,
+            0.35
+          ],
+          "paste_margin_mm": [
+            -0.01725,
+            -0.0105
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "12",
+          "xy_mm": [
+            16.5,
+            44.94
+          ],
+          "aperture_mm": [
+            0.329,
+            0.5405
+          ],
+          "native_local_size_mm": [
+            0.35,
+            0.575
+          ],
+          "paste_margin_mm": [
+            -0.0105,
+            -0.01725
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "13",
+          "xy_mm": [
+            17.0,
+            44.94
+          ],
+          "aperture_mm": [
+            0.329,
+            0.5405
+          ],
+          "native_local_size_mm": [
+            0.35,
+            0.575
+          ],
+          "paste_margin_mm": [
+            -0.0105,
+            -0.01725
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "14",
+          "xy_mm": [
+            17.5,
+            44.94
+          ],
+          "aperture_mm": [
+            0.329,
+            0.5405
+          ],
+          "native_local_size_mm": [
+            0.35,
+            0.575
+          ],
+          "paste_margin_mm": [
+            -0.0105,
+            -0.01725
+          ]
+        }
+      ],
+      "J430": [
+        {
+          "side": "B",
+          "pad": "1",
+          "xy_mm": [
+            27.205,
+            24.3
+          ],
+          "aperture_mm": [
+            0.8,
+            1.5
+          ],
+          "native_local_size_mm": [
+            0.8,
+            1.5
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "2",
+          "xy_mm": [
+            26.105,
+            24.3
+          ],
+          "aperture_mm": [
+            0.8,
+            1.5
+          ],
+          "native_local_size_mm": [
+            0.8,
+            1.5
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "3",
+          "xy_mm": [
+            25.005,
+            24.3
+          ],
+          "aperture_mm": [
+            0.8,
+            1.5
+          ],
+          "native_local_size_mm": [
+            0.8,
+            1.5
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "4",
+          "xy_mm": [
+            23.905,
+            24.3
+          ],
+          "aperture_mm": [
+            0.8,
+            1.5
+          ],
+          "native_local_size_mm": [
+            0.8,
+            1.5
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "5",
+          "xy_mm": [
+            22.805,
+            24.3
+          ],
+          "aperture_mm": [
+            0.8,
+            1.5
+          ],
+          "native_local_size_mm": [
+            0.8,
+            1.5
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "6",
+          "xy_mm": [
+            21.705,
+            24.3
+          ],
+          "aperture_mm": [
+            0.8,
+            1.5
+          ],
+          "native_local_size_mm": [
+            0.8,
+            1.5
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "7",
+          "xy_mm": [
+            20.605,
+            24.3
+          ],
+          "aperture_mm": [
+            0.8,
+            1.5
+          ],
+          "native_local_size_mm": [
+            0.8,
+            1.5
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "8",
+          "xy_mm": [
+            19.505,
+            24.3
+          ],
+          "aperture_mm": [
+            0.8,
+            1.5
+          ],
+          "native_local_size_mm": [
+            0.8,
+            1.5
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "9",
+          "xy_mm": [
+            30.875,
+            30.0
+          ],
+          "aperture_mm": [
+            1.45,
+            2.0
+          ],
+          "native_local_size_mm": [
+            1.45,
+            2.0
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "10",
+          "xy_mm": [
+            17.125,
+            30.0
+          ],
+          "aperture_mm": [
+            1.45,
+            2.0
+          ],
+          "native_local_size_mm": [
+            1.45,
+            2.0
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "11",
+          "xy_mm": [
+            17.125,
+            21.7
+          ],
+          "aperture_mm": [
+            1.45,
+            2.0
+          ],
+          "native_local_size_mm": [
+            1.45,
+            2.0
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "12",
+          "xy_mm": [
+            30.875,
+            21.7
+          ],
+          "aperture_mm": [
+            1.45,
+            2.0
+          ],
+          "native_local_size_mm": [
+            1.45,
+            2.0
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "U401": [
+        {
+          "side": "B",
+          "pad": "",
+          "xy_mm": [
+            27.6,
+            14.155
+          ],
+          "aperture_mm": [
+            1.13,
+            0.89
+          ],
+          "native_local_size_mm": [
+            1.13,
+            0.89
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "",
+          "xy_mm": [
+            27.6,
+            13.045
+          ],
+          "aperture_mm": [
+            1.13,
+            0.89
+          ],
+          "native_local_size_mm": [
+            1.13,
+            0.89
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "1",
+          "xy_mm": [
+            28.75,
+            12.6
+          ],
+          "aperture_mm": [
+            0.6,
+            0.25
+          ],
+          "native_local_size_mm": [
+            0.6,
+            0.25
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "2",
+          "xy_mm": [
+            28.75,
+            13.1
+          ],
+          "aperture_mm": [
+            0.6,
+            0.25
+          ],
+          "native_local_size_mm": [
+            0.6,
+            0.25
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "3",
+          "xy_mm": [
+            28.75,
+            13.6
+          ],
+          "aperture_mm": [
+            0.6,
+            0.25
+          ],
+          "native_local_size_mm": [
+            0.6,
+            0.25
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "4",
+          "xy_mm": [
+            28.75,
+            14.1
+          ],
+          "aperture_mm": [
+            0.6,
+            0.25
+          ],
+          "native_local_size_mm": [
+            0.6,
+            0.25
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "5",
+          "xy_mm": [
+            28.75,
+            14.6
+          ],
+          "aperture_mm": [
+            0.6,
+            0.25
+          ],
+          "native_local_size_mm": [
+            0.6,
+            0.25
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "6",
+          "xy_mm": [
+            26.45,
+            14.6
+          ],
+          "aperture_mm": [
+            0.6,
+            0.25
+          ],
+          "native_local_size_mm": [
+            0.6,
+            0.25
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "7",
+          "xy_mm": [
+            26.45,
+            14.1
+          ],
+          "aperture_mm": [
+            0.6,
+            0.25
+          ],
+          "native_local_size_mm": [
+            0.6,
+            0.25
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "8",
+          "xy_mm": [
+            26.45,
+            13.6
+          ],
+          "aperture_mm": [
+            0.6,
+            0.25
+          ],
+          "native_local_size_mm": [
+            0.6,
+            0.25
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "9",
+          "xy_mm": [
+            26.45,
+            13.1
+          ],
+          "aperture_mm": [
+            0.6,
+            0.25
+          ],
+          "native_local_size_mm": [
+            0.6,
+            0.25
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "10",
+          "xy_mm": [
+            26.45,
+            12.6
+          ],
+          "aperture_mm": [
+            0.6,
+            0.25
+          ],
+          "native_local_size_mm": [
+            0.6,
+            0.25
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "U11": [
+        {
+          "side": "B",
+          "pad": "1",
+          "xy_mm": [
+            25.0,
+            65.175
+          ],
+          "aperture_mm": [
+            0.4,
+            1.05
+          ],
+          "native_local_size_mm": [
+            1.05,
+            0.4
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "2",
+          "xy_mm": [
+            24.3,
+            65.175
+          ],
+          "aperture_mm": [
+            0.4,
+            1.05
+          ],
+          "native_local_size_mm": [
+            1.05,
+            0.4
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "3",
+          "xy_mm": [
+            23.5,
+            65.25
+          ],
+          "aperture_mm": [
+            0.6,
+            0.2
+          ],
+          "native_local_size_mm": [
+            0.2,
+            0.6
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "4",
+          "xy_mm": [
+            23.5,
+            64.75
+          ],
+          "aperture_mm": [
+            0.6,
+            0.2
+          ],
+          "native_local_size_mm": [
+            0.2,
+            0.6
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "5",
+          "xy_mm": [
+            23.5,
+            64.25
+          ],
+          "aperture_mm": [
+            0.6,
+            0.2
+          ],
+          "native_local_size_mm": [
+            0.2,
+            0.6
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "6",
+          "xy_mm": [
+            23.5,
+            63.75
+          ],
+          "aperture_mm": [
+            0.6,
+            0.2
+          ],
+          "native_local_size_mm": [
+            0.2,
+            0.6
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "7",
+          "xy_mm": [
+            24.3,
+            63.825
+          ],
+          "aperture_mm": [
+            0.4,
+            1.05
+          ],
+          "native_local_size_mm": [
+            1.05,
+            0.4
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "8",
+          "xy_mm": [
+            25.0,
+            63.825
+          ],
+          "aperture_mm": [
+            0.4,
+            1.05
+          ],
+          "native_local_size_mm": [
+            1.05,
+            0.4
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "9",
+          "xy_mm": [
+            25.8,
+            63.75
+          ],
+          "aperture_mm": [
+            0.6,
+            0.2
+          ],
+          "native_local_size_mm": [
+            0.2,
+            0.6
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "10",
+          "xy_mm": [
+            25.8,
+            64.25
+          ],
+          "aperture_mm": [
+            0.6,
+            0.2
+          ],
+          "native_local_size_mm": [
+            0.2,
+            0.6
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "11",
+          "xy_mm": [
+            25.8,
+            64.75
+          ],
+          "aperture_mm": [
+            0.6,
+            0.2
+          ],
+          "native_local_size_mm": [
+            0.2,
+            0.6
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "side": "B",
+          "pad": "12",
+          "xy_mm": [
+            25.8,
+            65.25
+          ],
+          "aperture_mm": [
+            0.6,
+            0.2
+          ],
+          "native_local_size_mm": [
+            0.2,
+            0.6
+          ],
+          "paste_margin_mm": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "stackup_native_mm": {
+      "board": 1.6,
+      "F_Cu": 0.035,
+      "In1_Cu": 0.03,
+      "In2_Cu": 0.03,
+      "B_Cu": 0.035
+    },
+    "finish": "ENIG"
+  },
+  "candidate_Fab_only_fix": {
+    "canonical_unchanged": true,
+    "saved_temporary_board_sha256": "3c1b7c436bbfc761b121e8c9d297339c5e0a3f4edd8e5794e2a68702abc35ac4",
+    "text_only_diff_hunks": 5,
+    "candidate_native_check": "Each replacement clears all bottom Fab graphics, other Fab references and drilled holes by at least the checked 0.025 mm. Existing angles and mirroring preserved.",
+    "candidate_visual_check": "Official 10.0.7 PDF export to temporary path; complete page plus core/R8/C5 details rendered by Poppler and inspected.",
+    "readability_limit": "0.4 mm text and 0.06 mm stroke apply only to the zoomable vector Fab/assembly aid; details may require zoom or high-resolution rendering. No claim of 1 mm physical silkscreen sizing is transferred; production silkscreen remains 1.0/0.15 mm.",
+    "source_generator": "m3_design/r10_post.py:667, after silk.fab_refs/J122 override and before r9_post.fab_clear",
+    "native_before_after": {
+      "R10": {
+        "before": {
+          "position_mm": [
+            20.0,
+            44.69
+          ],
+          "size_mm": [
+            1.0,
+            1.0
+          ],
+          "stroke_mm": 0.15,
+          "angle_degrees": 180.0
+        },
+        "after": {
+          "position_mm": [
+            20.0,
+            44.79
+          ],
+          "size_mm": [
+            0.4,
+            0.4
+          ],
+          "stroke_mm": 0.06,
+          "offset_mm": [
+            0.0,
+            0.1
+          ]
+        }
+      },
+      "C29": {
+        "before": {
+          "position_mm": [
+            28.0,
+            43.52
+          ],
+          "size_mm": [
+            1.0,
+            1.0
+          ],
+          "stroke_mm": 0.15,
+          "angle_degrees": 90.0
+        },
+        "after": {
+          "position_mm": [
+            27.95,
+            43.52
+          ],
+          "size_mm": [
+            0.4,
+            0.4
+          ],
+          "stroke_mm": 0.06,
+          "offset_mm": [
+            -0.05,
+            0.0
+          ]
+        }
+      },
+      "C92": {
+        "before": {
+          "position_mm": [
+            32.35,
+            52.5
+          ],
+          "size_mm": [
+            1.0,
+            1.0
+          ],
+          "stroke_mm": 0.15,
+          "angle_degrees": 180.0
+        },
+        "after": {
+          "position_mm": [
+            32.35,
+            52.5
+          ],
+          "size_mm": [
+            0.4,
+            0.4
+          ],
+          "stroke_mm": 0.06,
+          "offset_mm": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "R8": {
+        "before": {
+          "position_mm": [
+            9.0,
+            32.5
+          ],
+          "size_mm": [
+            1.0,
+            1.0
+          ],
+          "stroke_mm": 0.15,
+          "angle_degrees": 270.0
+        },
+        "after": {
+          "position_mm": [
+            9.0,
+            32.5
+          ],
+          "size_mm": [
+            0.4,
+            0.4
+          ],
+          "stroke_mm": 0.06,
+          "offset_mm": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "C5": {
+        "before": {
+          "position_mm": [
+            22.2,
+            71.43
+          ],
+          "size_mm": [
+            1.0,
+            1.0
+          ],
+          "stroke_mm": 0.15,
+          "angle_degrees": 180.0
+        },
+        "after": {
+          "position_mm": [
+            22.2,
+            71.43
+          ],
+          "size_mm": [
+            0.4,
+            0.4
+          ],
+          "stroke_mm": 0.06,
+          "offset_mm": [
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "temporary_after_render_basenames": [
+      "candidate_bottom.png",
+      "candidate_core.png",
+      "candidate_r8.png",
+      "candidate_c5.png"
+    ],
+    "temporary_vector_PDF_basename": "candidate_bottom.pdf",
+    "retention": "Root confirmed inspection of the complete after-page and all three detail PNGs. PNGs were removed after recording hashes; exact temporary candidate PCB/PDF and native-copy proof remain for integration.",
+    "root_visual_inspection_confirmed": true,
+    "temporary_PNGs_removed_after_hashing_and_root_inspection": true
+  },
+  "retained_deviations_and_process_conditions": [
+    {
+      "item": "Ordinary same-net ring-to-pad opening residuals",
+      "status": "carried/current remeasured inventory",
+      "evidence": "18 pairs at 17 ordinary vias below 0.100 mm; minimum 0.014003 mm at VBUS (11.95,30.6) to D4.5. The closest ordinary hole gap is 0.150007 mm. These are covered same-net rings, not two different-net open solder-mask apertures.",
+      "disposition": "Retain current covering/first-article inspection; no soldered-joint failure is demonstrated."
+    },
+    {
+      "item": "Three bottom courtyard graphic-stroke residuals",
+      "status": "carried, prior fix inventory",
+      "evidence": "round11_terminal_closure.json retains C421/U12 and R151/D121, R152/D121 line-stroke residuals with no native polygon intersection. Fresh all-severity DRC and M-6 pass on the actual final board.",
+      "disposition": "Do not relabel graphic-stroke overlap as demonstrated body collision."
+    },
+    {
+      "item": "L400 proxy land, C84 manual fit, U4 mask web, U401 VIPPO",
+      "status": "carried qualification/deviation conditions",
+      "evidence": "Current ordering keeps L400 land qualification; C84 absent through both reflows and manually fitted under a validated operation; U4 0.100 mm mask web and supplied paste; exactly two U401.11 sites require resin-filled copper-capped planar manufacture.",
+      "disposition": "Obtain assembler/process acceptance and first-article evidence. None is newly demonstrated to fail by this review."
+    },
+    {
+      "item": "Panel, cleaning/reflow/THT process, stock and preview",
+      "status": "pending, explicitly not hardware failure",
+      "evidence": "Aft rail/tab acceptance, no washing/no-clean process, bottom-first/top-last reflow, hand/selective THT and hole-fill inspection, U5 two-reflow acceptance, factory orientation/body preview and R430/U4 stock resolution remain pre-order conditions."
+    }
+  ],
+  "primary_sources_checked": [
+    {
+      "url": "https://jlcpcb.com/capabilities/pcb-capabilities",
+      "basis": "Green 1 oz 0.10 mm solder-mask web; 1.0 mm text and 0.15 mm line/pad-to-silk rules; ordinary ink plugging requires at least 0.35 mm to openings and diameter no greater than 0.5 mm."
+    },
+    {
+      "url": "https://jlcpcb.com/capabilities/pcb-assembly-capabilities",
+      "basis": "Standard supports two-sided SMT/THT and 240 +/-5 C reflow. Actual panel/process acceptance still required."
+    },
+    {
+      "url": "https://www.st.com/resource/en/technical_note/tn0018-surface-mounting-guidelines-for-mems-sensors--in-an-lga-package--stmicroelectronics.pdf",
+      "basis": "Rev8 p9 section3.3 recommends 90-150 um stencil and 70-90% signal-pad paste area. Native U4 paste 0.5405x0.329 vs 0.575x0.350 mm is 88.36%; selected 0.10 mm stencil lies in the range."
+    }
+  ],
+  "limitations": [
+    "No complete tools/check.sh, build, Git action, canonical CAD/fab change, assembly, hardware measurement or firmware execution was performed by this lens.",
+    "Native checks use official CLI10.0.7 and project KiCad Python10.0.6; nonfatal fontconfig/wx initialization diagnostics did not change zero-exit results.",
+    "PDF QA covers both complete canonical assembly pages and selected high-resolution details, plus the proposed temporary-copy after page/details. No GUI launch or retry of the existing rejection was attempted.",
+    "CPL independent reconstruction covers187 rows;12 nonpolar resistor rows have corrected placement/inventory checks only; supplier library agreement does not prove factory body/polarity placement.",
+    "Primary Molex PDF opened through web but direct local download failed HTTP2 then timed out; no new maker-sheet stencil/hinge qualification is asserted from those attempts.",
+    "No reflow-cycle, VIPPO, hole-fill, C84 soldering, vibration/retention, physical harness/screwdriver/bore fit, coating, electrical/thermal or flight qualification is claimed.",
+    "No other current-round report was read. Earlier round11 records were used only as historical context and closure targets."
+  ],
+  "evidence_integrity": {
+    "drc.json": "506efff17560e08b3f610571d9c33654101268aa0f98cce9faa8af7d28b51c50",
+    "erc.json": "09a8a72abfef6730aea6d0e6e1654b3239285a69a2c69a698df16d178ce3aae1",
+    "native_geometry2.json": "43b09528f609bce8ab1a644f7bffd571b7797199c21854a91d83fa13d6d4d722",
+    "package_geometry.json": "c89838b395a8784f7137c1bd61b29f64998c47b4efc467a5864ecbdd4a80f7d4",
+    "covering.json": "13e98eb5101f7512b7ffd9a0d58cc0c760ca6045342564d80b2e60ee77e68d15",
+    "additional.json": "ec3bbec800f88c78b968f836fa2f177daf976eb9dc4da28fe503c85bf2ca41c0",
+    "fab_candidate.json": "eacbe4fd35195077678c9d4852e91912b3d57c51b24986fe688c5ad86dac82cc",
+    "selected_rules.json": "8904a28a5c046523d0def59be0f4d796244a3daaf4971851e1b71ae69ccaf6e9",
+    "paste.json": "965dff067a397fc51088457d507a9393c1249944bba8f1ee81b715e4cc2eee1b",
+    "candidate_bottom.pdf": "b3337298592c3dc26995b07c8885a2c9fdfb6452a4216538793e105c1c347027",
+    "candidate_bottom.png": "69d89d50b5e501600b40f84c51013ede7bc99608312a1791f37774f7ee1907ff",
+    "candidate_core.png": "c327fe1b2e01a93072f3b46517219b9cec5bccfc72c459d86056bed190897df0",
+    "candidate_r8.png": "b48d217c25490ad2834adc786634eeaaacfdb39f0cd280216ca3f66e7e7e8c69",
+    "candidate_c5.png": "e7e817314bbe549599e727430e1003406f765e24b544969bb25b414db0f46edf"
+  }
+}

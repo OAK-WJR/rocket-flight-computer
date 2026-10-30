@@ -2,16 +2,17 @@
 
 **Historical completion before the new circuit changes (2026-10-28):** full rounds 9/10 are clean on the original and Minor-fix targets; final PCB`b337fe63…` is frozen. R10_VALIDATION contains the complete current deviation list; owner acceptance/OQ-3, procurement, process and physical/firmware qualifications remain pending. The single-switch/AUD/GAP amendments below supersede original hardware descriptions.
 
-**AVA review baseline (2026-10-29):** committed`21bc3b2`, PCB SHA-256
-`0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8`,46×90mm.
-The completed AVA rows/cells supersede the circuit-pass placement; its two reproducible
-builds/check0 and2304-case hot-plug evidence are in`AVA_LAYOUT.md`. All10 independent
-round11 lenses are complete; one freshly confirmed Major concerns the DB125 maximum
-envelope/wire-room floor. Generator fixes and new build/review evidence are pending;
-rounds9/10 remain credit only for`b337fe63…`. See`docs/R10_VALIDATION.md`.
-Hardware descriptions in §§1–8 mentioning GH ports/switches/translators, the servo
-header/tie holes or duplicate bus sense are historical, superseded by the newest
-owner decisions and D-CIR-01…04, D-AVA-01…02 and D-R11 decisions.
+**Current review status (2026-10-30):** full round12 on committed0ad0135c/
+d57b216 completed0Critical/0Major/12consolidatedMinor groups. The low-risk fix
+PCB is `7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c`,46x90mm,
+973segments/296vias. Two complete direct native builds/check0 reproduce42
+recorded generated files; all31 rules, routing and current fabrication/binding
+checks pass. Fresh full rounds13/14 on this committed result must supply the
+final same-board pair. No earlier clean pair transfers to a changed board.
+Hardware descriptions in sections1-8 mentioning GH/switches/translators, servo
+header/tie holes or duplicate bus sense are historical and superseded by the
+newest owner decisions and D-CIR/D-AVA/D-R11/D-R12 records. All acceptance,
+stock/cost/process, physical and firmware obligations remain; no order exists.
 
 
 Historical starting plan: owner direction of 2026-10-26. Nothing here changes R9: M3-ASSY-R9 (board `4f841a0e…`, branch

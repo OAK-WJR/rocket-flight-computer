@@ -1,0 +1,798 @@
+{
+  "schema": 1,
+  "review": "R10 round 12 lens 4: parts, BOM, footprints, stock and orientation",
+  "target": {
+    "commit_from_task": "d57b216c365fc8d18896bceba37f63caf20d52a4",
+    "branch_from_task": "m3-assy-r10",
+    "board": "m3_design/assembly_review/m3.kicad_pcb",
+    "board_sha256_before": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "board_sha256_after": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "board_bytes": 2263730,
+    "native_board_unchanged": true,
+    "git_actions_performed": false
+  },
+  "review_completed_utc": "2026-10-30T06:23:18Z",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 1,
+    "new": 0,
+    "carried": 1,
+    "closed_prior_items": 2
+  },
+  "findings": [
+    {
+      "id": "R12-BOM-01",
+      "severity": "Minor",
+      "status": "carried",
+      "prior_ids": [
+        "R4-BOM-01",
+        "R10_VALIDATION historical deviation section 9 L400"
+      ],
+      "title": "L400 retains a reduced heel land relative to the maker recommendation",
+      "evidence": {
+        "files": [
+          "m3_design/assembly_review/m3.kicad_pcb",
+          "m3_design/assembly_review/kilib/rocket.pretty/M3_SRP5030TA.kicad_mod",
+          "docs/ORDERING.md:355"
+        ],
+        "reference": "L400",
+        "centre_mm": [
+          24.2,
+          5.55
+        ],
+        "side": "F",
+        "rotation_deg": 0,
+        "pad_centres_mm": [
+          [
+            21.85,
+            5.55
+          ],
+          [
+            26.55,
+            5.55
+          ]
+        ],
+        "native_local_pad_centres_mm": [
+          -2.35,
+          2.35
+        ],
+        "native_pad_size_mm": [
+          1.8,
+          2.5
+        ],
+        "native_inner_gap_mm": 2.9,
+        "native_outer_span_mm": 6.5,
+        "maker_recommended_pad_size_mm": [
+          2.0,
+          1.8
+        ],
+        "maker_recommended_centres_mm": [
+          -2.25,
+          2.25
+        ],
+        "maker_inner_gap_mm": 2.5,
+        "maker_outer_span_mm": 6.5,
+        "worst_contact_heel_mm": 1.3,
+        "native_heel_edge_mm": 1.45,
+        "possible_uncovered_heel_mm": 0.15,
+        "source": "https://www.bourns.com/docs/Product-Datasheets/SRP5030T.pdf",
+        "source_page": 1
+      },
+      "impact": "A bounded solder-land deviation remains without assembly qualification. Nominal terminations are covered; no open circuit or required functional failure is demonstrated. The proxy library pad match does not establish the maker-recommended heel geometry.",
+      "fix": "Adopt the maker 2.0 x 1.8 mm lands at local x +/-2.25 mm through the generator, then rerun routing, paste, orientation, native DRC and binding; alternatively preserve this exact measured deviation for explicit owner disposition with assembler and first-article solder-joint qualification. Do not claim it is already the maker land."
+    }
+  ],
+  "closed_prior_items": [
+    {
+      "id": "R11-BOM-01",
+      "previous_severity": "Major",
+      "status": "closed_on_this_board",
+      "evidence": "Independent maker tolerance reconstruction gives local unions x [-4.62,3.70]/[-8.32,7.20]/[-10.07,8.95] mm for 2/4/5P, y [-4.10,4.00] mm and 8.90 mm height. Every current terminal gives 5.003011866 mm wire room versus 4.95 mm. Adjacent 4P maximum bodies have 0.480 mm axial gap; courtyards add 0.20 mm per side. Fits are calculations, not physical qualification."
+    },
+    {
+      "id": "R11-BOM-02",
+      "previous_severity": "Minor",
+      "status": "closed_in_current_instructions",
+      "evidence": "Current parts_qualification circuit amendment and ORDERING section 8 agree with current DB125 rows and camera pin 3 board RX / pin 4 board TX. Historical GH/header/parked-radio records are scoped as superseded."
+    }
+  ],
+  "terminal_native_measurements": [
+    {
+      "ref": "J1",
+      "lcsc": "C466970",
+      "centre_mm": [
+        7.4,
+        75.85
+      ],
+      "native_rotation_deg": -90,
+      "side": "F",
+      "outward_entry": "west",
+      "pin_order_nets": [
+        "BAT_IN",
+        "GND"
+      ],
+      "maker_union_xy_mm": [
+        3.4,
+        71.23,
+        11.5,
+        79.55
+      ],
+      "wire_room_mm": 5.003011866,
+      "accepted_floor_mm": 4.95,
+      "body_radial_margin_mm": 2.976268566,
+      "pad_pitch_mm": 3.5,
+      "pad_diameter_mm": 1.9,
+      "finished_drill_mm": 1.3,
+      "maker_recommended_drill_mm": 1.2
+    },
+    {
+      "ref": "J121",
+      "lcsc": "C52993880",
+      "centre_mm": [
+        7.4,
+        55.85
+      ],
+      "native_rotation_deg": -90,
+      "side": "F",
+      "outward_entry": "west",
+      "pin_order_nets": [
+        "PYRO1_OUT",
+        "PYRO1_IGN"
+      ],
+      "maker_union_xy_mm": [
+        3.4,
+        51.23,
+        11.5,
+        59.55
+      ],
+      "wire_room_mm": 5.003011866,
+      "accepted_floor_mm": 4.95,
+      "body_radial_margin_mm": 2.976268566,
+      "pad_pitch_mm": 3.5,
+      "pad_diameter_mm": 1.9,
+      "finished_drill_mm": 1.3,
+      "maker_recommended_drill_mm": 1.2
+    },
+    {
+      "ref": "J400",
+      "lcsc": "C466970",
+      "centre_mm": [
+        7.4,
+        65.85
+      ],
+      "native_rotation_deg": -90,
+      "side": "F",
+      "outward_entry": "west",
+      "pin_order_nets": [
+        "BAT_SW_SOURCE",
+        "BAT_SW_RETURN"
+      ],
+      "maker_union_xy_mm": [
+        3.4,
+        61.23,
+        11.5,
+        69.55
+      ],
+      "wire_room_mm": 5.003011866,
+      "accepted_floor_mm": 4.95,
+      "body_radial_margin_mm": 2.976268566,
+      "pad_pitch_mm": 3.5,
+      "pad_diameter_mm": 1.9,
+      "finished_drill_mm": 1.3,
+      "maker_recommended_drill_mm": 1.2
+    },
+    {
+      "ref": "J410",
+      "lcsc": "C2757925",
+      "centre_mm": [
+        38.6,
+        15.5
+      ],
+      "native_rotation_deg": 90,
+      "side": "F",
+      "outward_entry": "east",
+      "pin_order_nets": [
+        "PORT_4V8",
+        "GND",
+        "GPS_TX_WIRE",
+        "GPS_RX_WIRE"
+      ],
+      "maker_union_xy_mm": [
+        34.5,
+        8.3,
+        42.6,
+        23.82
+      ],
+      "wire_room_mm": 5.003011866,
+      "accepted_floor_mm": 4.95,
+      "body_radial_margin_mm": 2.976268566,
+      "pad_pitch_mm": 3.5,
+      "pad_diameter_mm": 1.9,
+      "finished_drill_mm": 1.3,
+      "maker_recommended_drill_mm": 1.2
+    },
+    {
+      "ref": "J420",
+      "lcsc": "C2757925",
+      "centre_mm": [
+        38.6,
+        31.5
+      ],
+      "native_rotation_deg": 90,
+      "side": "F",
+      "outward_entry": "east",
+      "pin_order_nets": [
+        "PORT_4V8",
+        "GND",
+        "RADIO_TX_WIRE",
+        "RADIO_RX_WIRE"
+      ],
+      "maker_union_xy_mm": [
+        34.5,
+        24.3,
+        42.6,
+        39.82
+      ],
+      "wire_room_mm": 5.003011866,
+      "accepted_floor_mm": 4.95,
+      "body_radial_margin_mm": 2.976268566,
+      "pad_pitch_mm": 3.5,
+      "pad_diameter_mm": 1.9,
+      "finished_drill_mm": 1.3,
+      "maker_recommended_drill_mm": 1.2
+    },
+    {
+      "ref": "J9",
+      "lcsc": "C2757925",
+      "centre_mm": [
+        38.6,
+        47.5
+      ],
+      "native_rotation_deg": 90,
+      "side": "F",
+      "outward_entry": "east",
+      "pin_order_nets": [
+        "CAM_5V",
+        "GND",
+        "CAM_RX_WIRE",
+        "CAM_TX_WIRE"
+      ],
+      "maker_union_xy_mm": [
+        34.5,
+        40.3,
+        42.6,
+        55.82
+      ],
+      "wire_room_mm": 5.003011866,
+      "accepted_floor_mm": 4.95,
+      "body_radial_margin_mm": 2.976268566,
+      "pad_pitch_mm": 3.5,
+      "pad_diameter_mm": 1.9,
+      "finished_drill_mm": 1.3,
+      "maker_recommended_drill_mm": 1.2
+    },
+    {
+      "ref": "J122",
+      "lcsc": "C3646874",
+      "centre_mm": [
+        38.6,
+        71.5
+      ],
+      "native_rotation_deg": 90,
+      "side": "F",
+      "outward_entry": "east",
+      "pin_order_nets": [
+        "SERVO1_OUT",
+        "SERVO2_OUT",
+        "SERVO3_OUT",
+        "SERVO4_OUT",
+        "GND"
+      ],
+      "maker_union_xy_mm": [
+        34.5,
+        62.55,
+        42.6,
+        81.57
+      ],
+      "wire_room_mm": 5.003011866,
+      "accepted_floor_mm": 4.95,
+      "body_radial_margin_mm": 2.976268566,
+      "pad_pitch_mm": 3.5,
+      "pad_diameter_mm": 1.9,
+      "finished_drill_mm": 1.3,
+      "maker_recommended_drill_mm": 1.2
+    }
+  ],
+  "microSD": {
+    "ref": "J430",
+    "maker_part": "472192001",
+    "code": "C164170",
+    "centre_mm": [
+      24.0,
+      24.3
+    ],
+    "side": "B",
+    "native_rotation_deg": 0,
+    "cpl_rotation_deg": 180,
+    "signal_pads": "0.80 x 1.50 mm, pitch 1.10 mm; local x 3.205 to -4.495 mm, y 0; matches maker drawing within 0.005 mm datum rounding",
+    "shell_pads": "1.45 x 2.00 mm, column centres +/-6.875 mm, row centres +2.60/-5.70 mm before bottom mirroring; maker G1/G2/G3/G4 aliases 12/9/10/11, all GND",
+    "pin_order_nets": [
+      "SD_DAT2",
+      "SD_CS",
+      "SD_MOSI",
+      "3V3",
+      "SD_SCK",
+      "GND",
+      "SD_MISO",
+      "SD_DAT1"
+    ],
+    "support_parts": "R460-R464 each 10k from CS/CMD/DAT0/DAT1/DAT2 to 3V3; C460 100nF and C461 22uF from 3V3 to GND, checked natively",
+    "maker_stencil_mm": [
+      0.1,
+      0.12
+    ],
+    "paste_aperture_percent": 100,
+    "maker_contact_current_max_A": 0.5,
+    "source": {
+      "url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+      "mirror_used": "https://cdn.promelec.ru/upload/items/2020/09/01/472192001_sd.pdf",
+      "document": "Molex SD-47219-001 Rev G, sheet 1/1",
+      "sha256": "793d191c35764f9e0dbde0d95a19418da8016b442c4b2716e787f808011faa1e",
+      "inspection": "Complete maker drawing rendered and inspected; maker site download timed out, maker-document mirror used."
+    },
+    "limits": "Closed-card geometry is inferred conservatively. No lid-travel, actual card current/latency/power-loss or flight-retention qualification. Current instructions require PCB removal from continuous sled or a qualified hinge window."
+  },
+  "population_and_identity": {
+    "native_functional_fitted": 199,
+    "bom_designators": 199,
+    "cpl_rows": 199,
+    "unique_codes": 82,
+    "schematic_native_bom_field_mismatches": [],
+    "fresh_supplier_exact_mpn_mismatches": [],
+    "native_fitted_excluded_or_DNP": [],
+    "contradictory_part_fields": [],
+    "nonlocal_model_paths": [],
+    "bare_patterns": [
+      "J2",
+      "TP120",
+      "TP121",
+      "TP122",
+      "TP74",
+      "TP80",
+      "TP81",
+      "TP82",
+      "TP83",
+      "TP88"
+    ],
+    "manufacturer_aliases": "Differences were spelling/corporate aliases (Yageo/YAGEO, Murata/Murata Electronics, UNI-ROYAL/Uniroyal Elec, NATIONSTAR/Foshan NationStar, Bourns/BOURNS, JSCJ/Jiangsu Changjing, Vishay Beyschlag/Vishay Intertech, Winbond/Winbond Elec). No competing MPN field found."
+  },
+  "orientation": {
+    "full_cached_supplier_check": {
+      "exit_code": 0,
+      "independently_rebuilt_top_rows": 66,
+      "independently_rebuilt_bottom_rows": 121,
+      "placement_only_nonpolar_rows": 12,
+      "expected_rows": 199,
+      "worst_pad_residual_mm": 0.491,
+      "errors": [],
+      "placement_only_refs": [
+        "R100",
+        "R101",
+        "R103",
+        "R110",
+        "R150",
+        "R151",
+        "R152",
+        "R153",
+        "R440",
+        "R441",
+        "R450",
+        "R451"
+      ]
+    },
+    "fresh_supplier_library_checks": [
+      {
+        "ref": "J1",
+        "code": "C466970",
+        "matched_pads": 2,
+        "best_theta": 0,
+        "best_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "best_residual_mm": 5.9999999967752515e-05,
+        "next_residual_mm": 2.4749161609234136,
+        "CPL_rotation": 270.0,
+        "CPL_absolute_residual_mm": 5.99999999622014e-05
+      },
+      {
+        "ref": "J121",
+        "code": "C52993880",
+        "matched_pads": 2,
+        "best_theta": 0,
+        "best_offset_mm": [
+          5.080000004498153e-05,
+          0.0
+        ],
+        "best_residual_mm": 6.000000002548411e-05,
+        "next_residual_mm": 2.474916160923454,
+        "CPL_rotation": 270.0,
+        "CPL_absolute_residual_mm": 0.00010919999998293406
+      },
+      {
+        "ref": "J400",
+        "code": "C466970",
+        "matched_pads": 2,
+        "best_theta": 0,
+        "best_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "best_residual_mm": 5.9999999967752515e-05,
+        "next_residual_mm": 2.4749161609234136,
+        "CPL_rotation": 270.0,
+        "CPL_absolute_residual_mm": 6.099999995967664e-05
+      },
+      {
+        "ref": "J410",
+        "code": "C2757925",
+        "matched_pads": 4,
+        "best_theta": 0,
+        "best_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "best_residual_mm": 7.400000003343621e-05,
+        "next_residual_mm": 7.424568876741305,
+        "CPL_rotation": 90.0,
+        "CPL_absolute_residual_mm": 7.400000003343621e-05
+      },
+      {
+        "ref": "J420",
+        "code": "C2757925",
+        "matched_pads": 4,
+        "best_theta": 0,
+        "best_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "best_residual_mm": 7.400000003343621e-05,
+        "next_residual_mm": 7.424568876741305,
+        "CPL_rotation": 90.0,
+        "CPL_absolute_residual_mm": 7.400000003343621e-05
+      },
+      {
+        "ref": "J9",
+        "code": "C2757925",
+        "matched_pads": 4,
+        "best_theta": 0,
+        "best_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "best_residual_mm": 7.400000003343621e-05,
+        "next_residual_mm": 7.424568876741305,
+        "CPL_rotation": 90.0,
+        "CPL_absolute_residual_mm": 7.400000003343621e-05
+      },
+      {
+        "ref": "J122",
+        "code": "C3646874",
+        "matched_pads": 5,
+        "best_theta": 0,
+        "best_offset_mm": [
+          5.0799999964201706e-05,
+          0.0
+        ],
+        "best_residual_mm": 8.320000003676497e-05,
+        "next_residual_mm": 9.899520958175422,
+        "CPL_rotation": 90.0,
+        "CPL_absolute_residual_mm": 0.00013400000000274304
+      },
+      {
+        "ref": "J430",
+        "code": "C164170",
+        "matched_pads": 12,
+        "best_theta": 0,
+        "best_offset_mm": [
+          -0.0033451666666849656,
+          1.5498540000000556
+        ],
+        "best_residual_mm": 0.00831784329184009,
+        "next_residual_mm": 12.668509195611579,
+        "CPL_rotation": 180.0,
+        "CPL_absolute_residual_mm": 0.005133673343765411
+      },
+      {
+        "ref": "Q120",
+        "code": "C431196",
+        "matched_pads": 8,
+        "best_theta": 0,
+        "best_offset_mm": [
+          3.1750000020903946e-05,
+          0.0475000000000001
+        ],
+        "best_residual_mm": 0.05262421879763283,
+        "next_residual_mm": 2.519806521270836,
+        "CPL_rotation": 180.0,
+        "CPL_absolute_residual_mm": 0.1001240896687644
+      },
+      {
+        "ref": "Q121",
+        "code": "C431196",
+        "matched_pads": 8,
+        "best_theta": 0,
+        "best_offset_mm": [
+          3.1750000020903946e-05,
+          0.0475000000000001
+        ],
+        "best_residual_mm": 0.05262421879763283,
+        "next_residual_mm": 2.519806521270836,
+        "CPL_rotation": 0.0,
+        "CPL_absolute_residual_mm": 0.1001240896687502
+      },
+      {
+        "ref": "U401",
+        "code": "C2878140",
+        "matched_pads": 11,
+        "best_theta": 0,
+        "best_offset_mm": [
+          0.0,
+          4.618181819123061e-05
+        ],
+        "best_residual_mm": 0.007478447580486337,
+        "next_residual_mm": 2.1626894777916505,
+        "CPL_rotation": 0.0,
+        "CPL_absolute_residual_mm": 0.007479095399796087
+      },
+      {
+        "ref": "U12",
+        "code": "C5186957",
+        "matched_pads": 8,
+        "best_theta": 180,
+        "best_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "best_residual_mm": 0.1474120138930506,
+        "next_residual_mm": 2.3908484480593803,
+        "CPL_rotation": 0.0,
+        "CPL_absolute_residual_mm": 0.1474120138930508
+      },
+      {
+        "ref": "C84",
+        "code": "C46550466",
+        "matched_pads": 2,
+        "best_theta": 0,
+        "best_offset_mm": [
+          -5.773159728050814e-14,
+          0.0
+        ],
+        "best_residual_mm": 0.04501500000002068,
+        "next_residual_mm": 4.628133949036602,
+        "CPL_rotation": 90.0,
+        "CPL_absolute_residual_mm": 0.04501500000007752
+      }
+    ],
+    "source": "JLCEDA/EasyEDA Official Library",
+    "source_homepages": [
+      "https://lceda.cn/",
+      "https://easyeda.com/"
+    ],
+    "api_pattern": "https://lceda.cn/api/products/{LCSC}/components",
+    "raw_scratch": ".supervisor/round12_parts_libraries.json",
+    "raw_sha256": "511e266dd094ab9c89c449d380fe8628c42f0d41ab7ea20279d3e8c2d1e2c336",
+    "limits": "Supplier library reconstruction is CAD evidence. The assumed bottom CPL viewing convention and body wire direction still require factory placement preview. AOS EP9 is a common custom polygon; eight distinct fingers establish orientation, and maker PO-00047 separately establishes the copper union."
+  },
+  "procurement": {
+    "checked_utc": "2026-10-30T06:11:29Z",
+    "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList",
+    "raw_scratch": ".supervisor/round12_parts_supplier.json",
+    "raw_sha256": "5ea50a4d9d3a56ba0035e4d5cd410207578f88a1c4f8d170dfb67b0ec49fc12f",
+    "input_hashes": {
+      "m3_bom_jlc.csv": "d04fed383a7df9981b1f459b86c0292d09833b6fa34dcadac890aeb65325f081",
+      "m3_cpl_jlc.csv": "75ae408d078701f84e87e28ed35fcc1327801a9bf0142a8a859da82074f9f3d7"
+    },
+    "exact_codes_queried": 82,
+    "extended": 46,
+    "basic": 36,
+    "boards": 5,
+    "placed_parts_usd_per_board_unrounded": 57.5554,
+    "feeder_calculation": "82 x USD1.53 / 5 = USD25.092 per board",
+    "feeder_usd_per_board": 25.092,
+    "placed_parts_plus_feeders_usd_per_board_unrounded": 82.6474,
+    "placed_parts_plus_feeders_usd_per_board": 82.65,
+    "target_usd_per_board": 84.41,
+    "placed_quantity_cost_model_passes": true,
+    "minimum_purchase_parts_usd_per_board_unrounded": 59.8958,
+    "minimum_purchase_parts_plus_feeders_usd_per_board_unrounded": 84.9878,
+    "minimum_purchase_parts_plus_feeders_usd_per_board": 84.99,
+    "minimum_purchase_uplift_usd_per_board": 2.3404,
+    "minimum_purchase_causes": [
+      {
+        "code": "C185349",
+        "refs": "R430",
+        "need": 5,
+        "minimum": 3610,
+        "placed_line_usd_per_board": 0.0028,
+        "ordered_line_usd_per_board": 1.805,
+        "uplift_usd_per_board": 1.8022
+      },
+      {
+        "code": "C3662793",
+        "refs": "U9",
+        "need": 5,
+        "minimum": 7,
+        "placed_line_usd_per_board": 1.3455,
+        "ordered_line_usd_per_board": 1.8837,
+        "uplift_usd_per_board": 0.5382
+      }
+    ],
+    "stock_ok": false,
+    "short": [
+      "C185349 R430 stock 17 < 3610",
+      "C26633007 U4 stock 0 < 5"
+    ],
+    "thin": [],
+    "selected_evidence": [
+      {
+        "code": "C466970",
+        "refs": "J1,J400",
+        "supplier_mpn": "DB125-3.5-2P-GN-S",
+        "stock": 35576,
+        "min_purchase": 1,
+        "placed_demand_5_boards": 10,
+        "order_qty": 10,
+        "applicable_placed_unit_usd": 0.1833
+      },
+      {
+        "code": "C52993880",
+        "refs": "J121",
+        "supplier_mpn": "DB125-3.5-2P-BK-S",
+        "stock": 346,
+        "min_purchase": 1,
+        "placed_demand_5_boards": 5,
+        "order_qty": 5,
+        "applicable_placed_unit_usd": 0.1977
+      },
+      {
+        "code": "C2757925",
+        "refs": "J410,J420,J9",
+        "supplier_mpn": "DB125-3.5-4P-GN-S",
+        "stock": 38851,
+        "min_purchase": 1,
+        "placed_demand_5_boards": 15,
+        "order_qty": 15,
+        "applicable_placed_unit_usd": 0.4025
+      },
+      {
+        "code": "C3646874",
+        "refs": "J122",
+        "supplier_mpn": "DB125-3.5-5P-GN-S",
+        "stock": 4169,
+        "min_purchase": 1,
+        "placed_demand_5_boards": 5,
+        "order_qty": 5,
+        "applicable_placed_unit_usd": 0.4753
+      },
+      {
+        "code": "C164170",
+        "refs": "J430",
+        "supplier_mpn": "472192001",
+        "stock": 8659,
+        "min_purchase": 1,
+        "placed_demand_5_boards": 5,
+        "order_qty": 5,
+        "applicable_placed_unit_usd": 0.7293
+      },
+      {
+        "code": "C185349",
+        "refs": "R430",
+        "supplier_mpn": "RC0603FR-0722K6L",
+        "stock": 17,
+        "min_purchase": 3610,
+        "placed_demand_5_boards": 5,
+        "order_qty": 3610,
+        "applicable_placed_unit_usd": 0.0028
+      },
+      {
+        "code": "C26633007",
+        "refs": "U4",
+        "supplier_mpn": "LSM6DSV320XTR",
+        "stock": 0,
+        "min_purchase": 1,
+        "placed_demand_5_boards": 5,
+        "order_qty": 5,
+        "applicable_placed_unit_usd": 12.3925
+      },
+      {
+        "code": "C3662793",
+        "refs": "U9",
+        "supplier_mpn": "TPS259470LRPWR",
+        "stock": 101,
+        "min_purchase": 7,
+        "placed_demand_5_boards": 5,
+        "order_qty": 7,
+        "applicable_placed_unit_usd": 1.3455
+      }
+    ],
+    "classification": "Pending procurement/owner items, not new CAD Critical/Major findings. USD84.99 including minima exceeds the USD84.41 placed-quantity target by USD0.58; preserve the surcharge for quote/cost acceptance. No order, stock reservation or quote acceptance.",
+    "excluded_costs": "USD83.96 fixed fees per two-sided order, possible USD14.93 handling, PCB, rails, solder joints, VIPPO, manual C84, consignment and shipping; attrition extras not modelled."
+  },
+  "executed_checks": [
+    {
+      "check": "SHA-256 before/after native review",
+      "result": "exact frozen target"
+    },
+    {
+      "check": "Native pcbnew and schematic S-expression field/pad/population probes",
+      "result": "199 identities agree; all terminal roles and SD pin/pull-up/bypass nets checked"
+    },
+    {
+      "check": "Independent maker dimension reconstruction",
+      "result": "all seven DB125 unions/entry rooms, microSD lands/stencil, AOS load-FET copper union, L400 measured"
+    },
+    {
+      "check": "Fresh exact-code JLC lookup",
+      "result": "82/82 exact MPN matches; prices present; two stock failures"
+    },
+    {
+      "check": "Fresh JLCEDA/EasyEDA library rigid matching and CPL reconstruction",
+      "result": "13 placements across 9 exact codes; evidence above"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 KICAD_PY -I tools/jlc_orient.py tools/jlc_easyeda/pads.json m3_design/assembly_review/m3.kicad_pcb --verify-cpl m3_design/assembly_review/fab/m3_cpl_jlc.csv",
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 KICAD_PY -I tools/paste_check.py m3_design/assembly_review/m3.kicad_pcb m3_design/assembly_review/fab/m3_gerber.zip",
+      "exit_code": 0,
+      "result": "245 F / 373 B flashes for 245 / 373 pasted pads; zero dry pads"
+    },
+    {
+      "command": "python3 -B tools/fab_manifest.py m3_design/assembly_review/m3.kicad_pcb",
+      "exit_code": 0,
+      "result": "all five outputs match current CAD/export inputs"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 KICAD_PY -I tools/fit_check.py m3_design/assembly_review/m3.kicad_pcb --profile r10",
+      "exit_code": 0,
+      "result": "CAD envelope fit pass; terminal body margin 2.976 mm"
+    }
+  ],
+  "primary_sources": {
+    "db125": {
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+      "document": "DORABO T0-1, 2022-11-26, sheet 1/1",
+      "sha256": "76a55d0cbb4d30bf4d714401b8612365b6b35fedcd9660adae81c0e79d86ff7a",
+      "inspection": "Complete sheet rendered with Poppler and inspected."
+    },
+    "microsd": {
+      "url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+      "mirror_used": "https://cdn.promelec.ru/upload/items/2020/09/01/472192001_sd.pdf",
+      "document": "Molex SD-47219-001 Rev G, sheet 1/1",
+      "sha256": "793d191c35764f9e0dbde0d95a19418da8016b442c4b2716e787f808011faa1e",
+      "inspection": "Complete maker drawing rendered and inspected; maker site download timed out, maker-document mirror used."
+    },
+    "l400": {
+      "url": "https://www.bourns.com/docs/Product-Datasheets/SRP5030T.pdf",
+      "document": "Bourns SRP5030T, p1 Recommended Layout and Product Dimensions",
+      "sha256": "c52004cbb76ccf3275e5a94ca6c437fc5a0b81ca8c3643abf1fee902f83741d2",
+      "inspection": "Complete relevant page rendered with Poppler and inspected."
+    },
+    "load_fets": {
+      "url": "https://www.aosmd.com/sites/default/files/res/packaging_information/DFN3x3A_8L_EP1_P.pdf",
+      "document": "AOS PO-00047 version I, p1",
+      "sha256": "221c5d11af8ebfacef185ef2c498a3d2681cab856afbff2dd144fa5ccb41fde2",
+      "inspection": "Complete maker land sheet rendered with Poppler and inspected."
+    }
+  },
+  "coverage_limits": [
+    "No native DRC, full check.sh, build, Git operation, board modification, GUI launch or physical test was performed by this lens.",
+    "Whole BOM identities/population and all CPL rows were checked. Fresh dimensional rereads focused on terminals, microSD, L400 and new load FETs; not all 82 maker datasheets were reread independently.",
+    "Twelve symmetric nonpolar resistors receive placement-only inventory/side/rotation checks rather than independent supplier-pad reconstruction.",
+    "C84 derived land/manual-solder process, exact U401 resin-filled copper-capped VIPPO, U4 mask webs, terminal hole fill/staking, factory previews, physical screwdriver/wire/sled fit, chosen-card behavior and retention remain explicit qualification items; their pending state alone is not a demonstrated hardware failure.",
+    "Stock/cost are the public supplier snapshot, not a binding manufacturing quote; U4 consignment cost/availability and R430 minimum must be resolved before ordering."
+  ]
+}

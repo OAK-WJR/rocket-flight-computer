@@ -47,6 +47,15 @@ class Assembly(unittest.TestCase):
         self.assertEqual(gate.assembly_population('Designator,Qty\n"R127,R128",2\nR134,1\n', {'R127', 'R128', 'R134'}), [])
         self.assertTrue(gate.assembly_population('Designator,Qty\nR127,1\n', {'R134'}))
 
+    def test_bom_quantities_and_quantity_free_cpl(self):
+        self.assertEqual(gate.assembly_population('Designator,Qty\n"U1,U1",1\n', {'U1'}, require_qty=True), [])
+        for qty in ('0', '-1', '1.5', 'bad', '', '2'):
+            with self.subTest(qty=qty):
+                self.assertTrue(gate.assembly_population(f'Designator,Qty\nU1,{qty}\n', {'U1'}, require_qty=True))
+        self.assertEqual(gate.assembly_population('Designator\nU1\n', {'U1'}), [])
+        self.assertIn('Qty column required for BOM',
+                      gate.assembly_population('Designator\nU1\n', {'U1'}, require_qty=True))
+
     def test_reviewed_fitted_population_includes_core_and_support(self):
         import r10_sch_check as sch
         parts, _ = sch.read_netlist(gate.ROOT / 'm3_design/assembly_review/schematic.net.xml')
@@ -2155,6 +2164,101 @@ class RealBoardSeeds(unittest.TestCase):
                         if members:
                             row['Designator'] = ','.join(members); writer.writerow(row)
                     self.assertTrue(any(ref + ':' in i for i in gate.assembly_population(out.getvalue())))
+
+    def test_native_bom_zero_and_missing_qty_fail_s4_but_quantity_free_cpl_passes(self):
+        import csv
+        import io
+        import tempfile
+        source = real_project()
+        with (r10_board().parent / 'fab/m3_bom_jlc.csv').open() as stream:
+            rows = list(csv.DictReader(stream))
+        fields = list(rows[0])
+        self.assertEqual(gate.s4(gate.make_ctx(self.load(), source, source / 'm3.kicad_pcb',
+                         bom=r10_board().parent / 'fab/m3_bom_jlc.csv',
+                         cpl=r10_board().parent / 'fab/m3_cpl_jlc.csv'))[0], [])
+        for missing in (False, True):
+            with self.subTest(missing_qty=missing), tempfile.TemporaryDirectory() as temp:
+                columns = [field for field in fields if field != 'Qty'] if missing else fields
+                output = io.StringIO(); writer = csv.DictWriter(output, columns, extrasaction='ignore')
+                writer.writeheader()
+                for row in rows:
+                    row = dict(row)
+                    if row['Designator'] == 'U1':
+                        row['Qty'] = '0'
+                    writer.writerow(row)
+                path = Path(temp) / 'bom.csv'; path.write_text(output.getvalue())
+                issues = gate.s4(gate.make_ctx(self.load(), source, source / 'm3.kicad_pcb', bom=path,
+                                cpl=r10_board().parent / 'fab/m3_cpl_jlc.csv'))[0]
+                self.assertTrue(any('BOM:' in issue and 'Qty' in issue for issue in issues), issues)
+
+    def test_reviewed_models_reject_positive_shrinkage_and_pose_drift(self):
+        import fit_check as fit
+        for ref in (*gate.WIRE_ENTRY, 'J430'):
+            for field, axis, value in (('m_Scale', 'x', .01), ('m_Scale', 'y', .99999),
+                                       ('m_Offset', 'y', .1), ('m_Offset', 'y', 3e-5), ('m_Rotation', 'z', 90.)):
+                with self.subTest(ref=ref, field=field):
+                    board = self.load(); part = board.FindFootprintByReference(ref)
+                    setattr(getattr(part.Models()[0], field), axis, value)
+                    report = fit.check_board(board, real_project(), profile='r10')
+                    self.assertTrue(any(ref + ': model envelope differs from reviewed dimensions/pose' in issue
+                                        for issue in report['issues']), report['issues'])
+                    if ref != 'J430':
+                        self.assertTrue(any(ref + ': model envelope differs from reviewed dimensions/pose' in issue
+                                            for issue in self.run_rule('P-11', board)))
+
+    def test_reviewed_models_allow_equivalent_metre_to_mm_conversion(self):
+        import fit_check as fit
+        import tempfile
+        for ref in (*gate.WIRE_ENTRY, 'J430'):
+            with self.subTest(ref=ref), tempfile.TemporaryDirectory() as temp:
+                board = self.load(); part = board.FindFootprintByReference(ref); model = part.Models()[0]
+                original = fit.model_box(part, real_project())
+                raw = fit.wrl_points(Path(model.m_Filename.replace('${KIPRJMOD}', str(real_project()))))
+                xs, ys, zs = zip(*raw)
+                path = Path(temp) / 'metres.step'
+                path.write_text("#1=CARTESIAN_POINT('',(" + ','.join(str(min(a)/1000) for a in (xs, ys, zs))
+                                + "));\n#2=CARTESIAN_POINT('',(" + ','.join(str(max(a)/1000) for a in (xs, ys, zs)) + "));\n")
+                model.m_Filename = str(path)
+                for axis in ('x', 'y', 'z'):
+                    setattr(model.m_Scale, axis, getattr(model.m_Scale, axis)*1000)
+                for actual, expected in zip(fit.model_box(part, real_project()), original):
+                    self.assertAlmostEqual(actual, expected, places=6)
+                self.assertTrue(fit.check_board(board, real_project(), profile='r10')['ok'])
+                self.assertEqual(self.run_rule('P-11', board), set())
+
+    def test_connected_foreign_inner_drawings_and_zones_fail_k_inner(self):
+        self.assertEqual(self.run_rule('K-inner', self.load()), set())
+        for footprint, zone in ((False, False), (True, False), (False, True)):
+            with self.subTest(footprint=footprint, zone=zone):
+                board = self.load()
+                via = min((item for item in board.GetTracks() if item.GetClass() == 'PCB_VIA'
+                           and item.GetNetname() == '3V3'),
+                          key=lambda item: (item.GetPosition() - self.P(28.1, 60)).EuclideanNorm())
+                centre = via.GetPosition()
+                owner = board.FindFootprintByReference('U1') if footprint else board
+                if zone:
+                    item = pcbnew.ZONE(owner); item.SetLayer(pcbnew.In1_Cu)
+                    item.SetNet(board.FindNet('3V3')); item.SetAssignedPriority(10)
+                    item.SetLocalClearance(pcbnew.FromMM(.15)); outline = item.Outline(); outline.NewOutline()
+                    for dx, dy in ((-.6, -.6), (.6, -.6), (.6, .6), (-.6, .6)):
+                        point = centre + self.P(dx, dy); outline.Append(point.x, point.y)
+                else:
+                    item = pcbnew.PCB_SHAPE(owner); item.SetShape(pcbnew.SHAPE_T_SEGMENT)
+                    item.SetLayer(pcbnew.In1_Cu); item.SetNet(board.FindNet('3V3'))
+                    item.SetStart(centre); item.SetEnd(centre + self.P(1, 0)); item.SetWidth(pcbnew.FromMM(.2))
+                owner.Add(item)
+                pcbnew.ZONE_FILLER(board).Fill(board.Zones())
+                if zone:
+                    self.assertTrue(item.HasFilledPolysForLayer(pcbnew.In1_Cu))
+                    self.assertTrue(pcbnew.SHAPE.Collide(item.GetFilledPolysList(pcbnew.In1_Cu),
+                                    via.GetEffectiveShape(pcbnew.In1_Cu), 1))
+                issues = self.run_rule('K-inner', board)
+                self.assertTrue(any('In1.Cu' in issue and '3V3' in issue for issue in issues), issues)
+                # This assertion proves real connected copper, rather than an unfilled-zone metadata seed.
+                nodes = [node for node in gate.copper_nodes(board) if node[5] == '3V3'
+                         and node[1] == pcbnew.In1_Cu and node[6].endswith('copper drawing')]
+                if not zone:
+                    self.assertTrue(any(node[2].Collide(via.GetPosition(), 0) for node in nodes))
 
     def test_individual_terminal_textbox_conflicts_and_duplicates(self):
         self.assertEqual(self.run_rule('K-legends', self.load()), set())

@@ -221,18 +221,19 @@ inspection and depaneling procedures only where restated here. R10 has one exter
 wired terminals, external GPS/radio, a hinged microSD socket, one bus-sense bank and no servo-power copper.
 There are no GH connectors, servo headers, servo tie holes, ARM link, pull-pin, on-board RF modules or SMA jacks.
 
-**Board/evidence state, 2026-10-30 UTC (2026-10-29 local):** the generated native PCB is
-`0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d`:
-209 footprints, 973 segments, 295 vias and 2,263,730 bytes. The complete build exited 0 with native DRC,
-unconnected, schematic parity and ERC all zero; all 31 R10 rules, routing, orientation, paste and five-output
-fabrication binding pass. The actual-feed hot-plug simulation passes 2304/2304 cases (Simulation/Inference).
-Two complete builds exited 0, each including full `tools/check.sh`, with DRC/unconnected/parity/ERC zero,
-all31 R10 rules and current fabrication checks passing. All42 generated-file hashes and board metrics match
-exactly between the builds. These software/CAD results do not establish a qualifying clean review round, owner acceptance,
-factory process acceptance or physical qualification. See [R10_VALIDATION](R10_VALIDATION.md).
+**Board/evidence state,2026-10-30UTC:** native PCB
+`7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c`:
+209 footprints,973 segments,296 vias,2,264,839bytes. Two complete direct
+native builds exit0, each including full tools/check.sh: DRC/unconnected/parity/
+ERC0, all31 R10 rules, routing, legends, fit, orientation, paste and five-output
+manifest pass. All42 recorded generated-file hashes/metrics match exactly.
+Actual-feed hot-plug2304 required+60 local cases pass (Simulation/Inference).
+R12 reviewed the prior0ad PCB with0Critical/0Major/12Minor groups; this fix needs
+fresh full same-board rounds13/14. No owner/process/physical acceptance follows.
+See [R10_VALIDATION](R10_VALIDATION.md).
 
 Coordinates are KiCad millimetres, x=0 west, y=0 aft, y=90 forward; Gerber Y is −KiCad y.
-F/B mean top/bottom. Positions below describe the current `0ad0135c…` native board and placement source,
+F/B mean top/bottom. Positions below describe the current `7355ae1a…` native board and placement source,
 including west/east terminal rows at x=7.4/38.6 mm and the repaired bottom port/servo cells. Recheck every probe,
 coat mask and harness against its hash-bound assembly drawing before work. R10 remains unaccepted and unordered;
 this is not a flight release.
@@ -246,7 +247,7 @@ this is not a flight release.
 | Panel | JLC tab-routed rails, no V-cut. OQ-4 retains an aft-edge tab and aft rail/frame supporting the aft-east corner. Obtain JLC acceptance of the actual rail/tab plan and confirm every span against T-1 and the mouse-bite clearances in §3. Do not enlarge or relocate tabs without checking the final board. |
 | Vias | Ordinary vias plugged only where JLC's 0.35 mm clearance/size rules permit; otherwise tent/mask-cover them without adding openings. Preserve the large BAT_IN via's supplied covering. **Only the two U401.11 vias below use VIPPO.** Preserve the supplied covering set; changed covering requires renewed DFM/paste checks. |
 | Uploads | Final `m3_gerber.zip`, `m3_bom_jlc.csv`, `m3_cpl_jlc.csv`; both assembly PDFs are inspection aids. `m3_fab_manifest.json` must bind all five outputs to the final CAD/export inputs. Cost/stock files are evidence, not uploads. |
-| Acceptance | Two qualifying independent review rounds and owner acceptance of the refreshed board-bound deviations remain required. Two complete builds and the42-file reproducibility comparison pass; factory process acceptance and stock/quote resolution remain required before ordering. No clean review round is credited to this corrected board. |
+| Acceptance | Two qualifying independent review rounds and owner acceptance of the refreshed board-bound deviations remain required. Two complete builds and the42-file reproducibility comparison pass; factory process acceptance and stock/quote resolution remain required before ordering. The final clean pair remains pending on this corrected board. |
 
 Use `m3_design/r10_fab.sh` for the R10 export/check sequence; `FAB_NET=1` also performs the supplier checks.
 For separate supplier checks, use the explicit R10 profile:
@@ -259,16 +260,17 @@ python3 tools/check_procurement.py --profile r10
 
 R10's placed-part/feeder target is **$84.41 per board**; Extended-code count is informational.
 
-**Current supplier snapshot:** all82 exact codes were queried at **2026-10-30 05:00:14 UTC**
-(2026-10-29 local). The final-BOM/CPL-bound [cost report](../m3_design/assembly_review/fab/cost_check.json)
-and [stock report](../m3_design/assembly_review/fab/stock_check.json) were refreshed at05:15:08 UTC.
-At five Standard PCBA boards, parts $54.44 plus feeder share $25.092 gives **$79.53/board**, passing the
-$84.41 placed-part/feeder target. Supplier minimum purchases raise parts to $56.78, or about **$81.87/board**
-with feeders, before $83.96/order fixed fees, possible $14.93 handling, PCB, VIPPO, C84 manual operation and
-shipping. Cost passes; stock still fails at R430 and U4 below. These catalog calculations supersede the
-00:15:29 UTC $82.61/$84.95 snapshot in the historical
-[parts review](../m3_design/assembly_review/sources/r10_review/round11_parts.md); no quote, order or factory
-process acceptance is established.
+**Current supplier snapshot:** all82 exact codes were queried at
+**2026-10-30T06:11:29Z**. Final-BOM/CPL-bound [cost](../m3_design/assembly_review/fab/cost_check.json)
+and [stock](../m3_design/assembly_review/fab/stock_check.json) reports were refreshed
+at07:21:07UTC. At five Standard PCBA boards, parts$57.5554 plus feeder
+share$25.092 gives**$82.65/board**, passing the$84.41 placed-part target.
+Minimum purchases raise parts to$59.8958 and total to**$84.99/board** ($0.58 over),
+before$83.96/order fixed fees, possible$14.93 handling, PCB/rails/joints, VIPPO,
+C84 manual operation, consignment and shipping. Owner cost/quote acceptance,
+R430/U4 stock and factory process acceptance remain pending; no order is made.
+Earlier05:00UTC$79.53/$81.87 and R11 preliminary$82.61/$84.95 are dated historical
+snapshots. Refresh all supplier evidence within24h of ordering.
 
 | Part | Snapshot / required action |
 |---|---|
@@ -279,7 +281,7 @@ process acceptance is established.
 
 ### 8.2 Assembly, order remarks and placement preview
 
-**Standard PCBA, both sides, including all seven THT terminals.** The current `0ad0135c…` package has
+**Standard PCBA, both sides, including all seven THT terminals.** The current `7355ae1a…` package has
 82 BOM codes and 199 fitted parts, all included in the BOM/CPL. Its 199 CPL rows are 67 top +132 bottom;
 independent pad reconstruction checks cover 66 top +121 bottom, plus 12 placement-only nonpolar-resistor checks.
 Orientation passes, with worst reconstructed-pad residual0.491 mm. Paste passes at245 top +373 bottom flashes,
@@ -370,7 +372,7 @@ Record the final board/firmware hashes. After coating/rework or any firmware cha
 J2 F(5,39.4) must be programmed before fitting the adjacent (4,44.3) support, or with that support removed:
 the TC2030 nose cannot seat with its hardware in place.
 
-**Current probe worksheet** (read-only native contact positions on `0ad0135c…`):
+**Current probe worksheet** (read-only native contact positions on `7355ae1a…`):
 
 | Probe / role | Face and exact contact centre (mm) | Use |
 |---|---|---|
@@ -501,11 +503,11 @@ are not vibration-release criteria. Physical fit, heat, coating process, clamp/h
 | `60be35ea…`, single-switch before AUD/GAP | 244 footprints/228 CPL rows/83 codes; later removals/replacements are not represented. |
 | `877d0199…` /reviewed fix `b337fe63…`, AUD/GAP | 225 footprints/215 CPL rows/82 codes,317/365 paste flashes; $84.43 placed/feeder snapshot. Old GH/header positions, fixed coat rectangle, probe coordinates, support examples and280.9 Hz model are historical. |
 | `6e73b6eb…`, circuit-only pass | 209 footprints/199 CPL rows/82 codes; radio parked west; $82.59 snapshot. Superseded by AVA placement. |
-| `0c50b9fd…`, frozen AVA review target | 209 footprints/981 segments/294 vias,199 fitted/82 codes;245/373 paste flashes. Its package binding and ten-lens review belong to this historical PCB. The corrected current board is `0ad0135c…`; no clean round is transferred to it. |
+| `0c50b9fd…`, frozen AVA review target | 209 footprints/981 segments/294 vias,199 fitted/82 codes;245/373 paste flashes. Its package binding and ten-lens review belong to this historical PCB. The corrected current board is `7355ae1a…`; no clean round is transferred to it. |
 
 Earlier R7–R9 instructions, including RF modules/SMA, GH mates, ARM link/fuses, servo headers/ties, old coating rectangles
 and old thermal/modal/copper/stock counts, do not become current through a designator substitution.
 Historical details remain in M3_R10, R10_VALIDATION and R10_DECISIONS. The current software/CAD and fabrication
-results above belong to `0ad0135c…`, reproduced by two complete successful builds with all42 generated-file hashes
+results above belong to `7355ae1a…`, reproduced by two complete successful builds with all42 generated-file hashes
 and board metrics identical. Resolve stock/quote requirements before any order. Factory approval, first-article processes, firmware, bench/thermal/e-match, coating, harness/tool/card
 access and installed mechanical qualification remain open.

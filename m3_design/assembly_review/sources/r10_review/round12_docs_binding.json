@@ -1,0 +1,296 @@
+{
+  "round": 12,
+  "lens": 10,
+  "scope": "Documentation and firmware-binding consistency; independent read-only review",
+  "target_commit_as_assigned": "d57b216c365fc8d18896bceba37f63caf20d52a4",
+  "board_sha256_before": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "board_sha256_after": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "current_findings": [
+    {
+      "id": "R12-DOC-01",
+      "severity": "Minor",
+      "status": "carried",
+      "prior_groups": [
+        "R11-m01 narrative residual",
+        "R11-m02 narrative residual"
+      ],
+      "title": "Active R10 summaries still mix pre-fix and circuit-pass geometry with the current board",
+      "evidence": [
+        {
+          "file": "docs/REQUIREMENTS.md",
+          "lines": [
+            156,
+            165
+          ],
+          "observed": "The explicitly current-board block names PCB 0c50b9fd..., 981 segments/294 vias/23 reproduced files, says no review has run, and sends fresh reviews to round 11.",
+          "actual": "Frozen PCB is 0ad0135c..., 973 segments/295 vias; all 42 recorded generated hashes match. Round 11 is completed and non-clean on the older board, as R10_VALIDATION accurately records."
+        },
+        {
+          "file": "docs/M3_R10.md",
+          "lines": [
+            130,
+            139
+          ],
+          "observed": "Placement text says the row correction requires a future supervised build and leaves the measurements bound to 0c50b9fd....",
+          "actual": "The opening banner, current native board and round11 completion addendum already record the completed corrected build."
+        },
+        {
+          "file": "docs/M3_R10.md",
+          "lines": [
+            178,
+            189
+          ],
+          "observed": "Unscoped Power bullets give Q120/Q121 B(13.5,72.6)/(13.5,67.6), C82 B(39.8,74.75), D9 B(43.35,73.45), and R92 now F(35.25,57). They also repeat old fire lengths RAW_ACT 6.5/IGN 4.85/OUT 7.954478 mm and hot copper 30.1231 mOhm.",
+          "actual": "Native: Q120/Q121 B(13.5,73.6)/(13.5,68.6), C82 B(19.3,76.75), D9 B(15,79.3), R92 F(31,87.5). Current board-bound budget: RAW_ACT 5.886133/IGN 10.230382/OUT 7.854478 mm, hot copper 35.132126 mOhm. The updated CH1 budget and parts_qualification already state the correct values."
+        }
+      ],
+      "impact": "Bounded evidence/navigation defect. The native CAD, current assembly worksheet and generated binding agree; no failed firing-current criterion or hardware failure is established.",
+      "concrete_fix": "Replace the current-board requirement block and active placement/power summaries from the frozen target, or explicitly scope every retained old paragraph to its named historical board. Keep actual current measurements in one authoritative worksheet and link to it. Do not change CAD, acceptance criteria or qualification labels.",
+      "maker_source_applicable": false
+    },
+    {
+      "id": "R12-DOC-02",
+      "severity": "Minor",
+      "status": "carried",
+      "prior_groups": [
+        "R11-m03",
+        "R11-REQ-03"
+      ],
+      "title": "The separately owned vehicle mirror still describes removed ARM/GH hardware",
+      "evidence": [
+        {
+          "file": "../../docs/VEHICLE.md",
+          "lines": [
+            39
+          ],
+          "observed": "The candidate row names ARM/IGN terminals, GH-4 ports, GH-2 J400 at (10.5,85.5) and a 0.03 mm mated-GH margin.",
+          "actual": "There is no J124/J123 or GH/header footprint. Native J400 is DB125-2 F(7.4,65.85), J1 F(7.4,75.85), J121 F(7.4,55.85); DB125-4 GPS/radio/camera are F(38.6,15.5)/(38.6,31.5)/(38.6,47.5), and DB125-5 servos F(38.6,71.5). J430 is bottom (24,24.3)."
+        }
+      ],
+      "impact": "Known integration-document defect; no physical fit or firmware failure follows. The authoritative in-worktree ordering worksheet is correct and the parent file is explicitly disclosed as stale.",
+      "concrete_fix": "In a separately authorized parent-document update, retain the R9 history and replace only the R10 candidate clause with seven outward-facing DB125 terminals at the current row coordinates, sole J400 power/arming switch, no ARM link/GH/header/tie holes, always-on external GPS/radio, retained camera isolation, bottom hinged microSD and its sled-removal/access-window condition. Preserve five supports, 46 x 90 mm, no RF overhang, the wholly-forward-of-joint+47 mm rule and explicit unqualified harness/bore/stack fit. Record calculated 5.003 mm wire room separately from physical fit; integrate the required 2.6/4 Ah battery case without claiming the old coax slack proves fit.",
+      "maker_source_applicable": false
+    }
+  ],
+  "closed_or_verified_prior_items": [
+    {
+      "prior": "R11-DOC-01 underlying generated fire-budget mismatch",
+      "status": "closed for generated evidence",
+      "evidence": "parts_budget.json SHA256 55b84df3de5d75373a515b6e41584004bc6f3245382e3c9eda5daf9a68edaf3a matches the refreshed qualification record and 42-file receipt. Current loop 4.617458126 Ohm, current 1.544366072 A idle/1.283013039 A four stalls. No new solver or physical measurement was run. Stale parallel narrative remains in R12-DOC-01."
+    },
+    {
+      "prior": "R11-DOC-02 active retention/assembly worksheets",
+      "status": "closed for the ordering/retention portions",
+      "evidence": "ORDERING section8 uses all seven DB125s, correct J9 board directions, current native probes and poses, staking including J400, full U4/U5 coating exclusions, manual C84/VIPPO process conditions and bottom-card access. M3_R10 retention table is refreshed. Some other active prose remains in R12-DOC-01."
+    }
+  ],
+  "executed_checks": {
+    "native_parser": "Installed KiCad Python read-only LoadBoard; no SaveBoard, CLI, fill, generator or GUI call",
+    "native_counts": {
+      "footprints": 209,
+      "straight_segments": 973,
+      "vias": 295
+    },
+    "all_component_comparison": {
+      "pcb_components": 209,
+      "xml_components": 209,
+      "component_set_mismatches": 0,
+      "shared_numbered_pad_nets_checked": 663,
+      "pad_net_mismatches": 0,
+      "LCSC_Manufacturer_ManufacturerPart_mismatches": 0
+    },
+    "explicit_circuit_comparison": {
+      "parts": 68,
+      "pins": 186,
+      "net_mismatches": 0
+    },
+    "mcu_four_way_comparison": {
+      "pins": 100,
+      "sources": [
+        "native PCB",
+        "schematic.net.xml",
+        "pin_table.tsv r10_net",
+        "r10_binding_note.json"
+      ],
+      "net_mismatches": 0,
+      "table_note_mode_mismatches": 0
+    },
+    "binding_hashes": {
+      "board": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+      "netlist": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+      "pin_table": "34e77f0f51ecdd5b13e32dea1e2939302b312b89ac375bde7fb82dc329d2d619",
+      "circuit": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f",
+      "matching": 4
+    },
+    "passive_AST_binding_check": {
+      "literal_sections": [
+        "sources",
+        "port_states",
+        "arming_policy",
+        "firmware_obligations",
+        "physical_tests"
+      ],
+      "obligations": 34,
+      "mismatches": 0,
+      "generator_executed": false
+    },
+    "imu": {
+      "side": "bottom",
+      "rotation_deg": 180,
+      "centre_mm": [
+        17,
+        45.9
+      ],
+      "pad1_mm": [
+        18.21,
+        45.15
+      ],
+      "pad1_offset_mm": [
+        1.21,
+        -0.75
+      ],
+      "lever_arm_x_mm": -6,
+      "binding_roll": "-gyro_Y",
+      "binding_forward_thrust": "-a_Y",
+      "z_mm": -2.06,
+      "z_status": "Inference, not measured",
+      "maker_axis_diagram_rederived": false
+    },
+    "removed_hardware_absent": [
+      "J124",
+      "J123",
+      "U30",
+      "U31",
+      "J30",
+      "J31",
+      "U410",
+      "U420",
+      "U411",
+      "U421",
+      "U412",
+      "U422",
+      "R168",
+      "R170",
+      "R172",
+      "R177",
+      "R124",
+      "R125",
+      "R182",
+      "C122"
+    ],
+    "recorded_generated_hashes": {
+      "checked": 42,
+      "missing": 0,
+      "mismatches": 0,
+      "reproducibility_rerun": false
+    },
+    "fabrication_hashes": {
+      "inputs_checked": 193,
+      "outputs_checked": 5,
+      "missing": 0,
+      "mismatches": 0,
+      "CPL_rows": 199,
+      "CPL_top": 67,
+      "CPL_bottom": 132,
+      "BOM_codes": 82
+    },
+    "historical_firmware_bindings": {
+      "files": 25,
+      "matching_current_board": 0,
+      "profiles": [
+        "M3-ASSY-R1",
+        "M3-GNSS-R1",
+        "M3-PDIAG-R1",
+        "M3-PWR-R3",
+        "M3-UART-R1",
+        "M3-USB-R1"
+      ],
+      "builder_executed": false
+    },
+    "probe_corrections": "An initial identity probe used an unsupported GetProperty API; corrected to GetFields and reran successfully. An initial manifest path interpretation treated cad/ as a directory; corrected to the documented logical prefix and rehashed all entries. Neither preliminary probe changed any file.",
+    "parser_warning": "KiCad emitted a wx traits/Get assertion during import but completed both successful read-only native checks with exit0."
+  },
+  "owner_requirement_coverage": [
+    {
+      "ids": "AGENTS2.1-4/F7/F8/single-switch/D-SS/D-GAP-05",
+      "result": "Native PC1 enable and independent PE4 fire chain, retained gate-network map and sole PC5 bus/PC0 continuity match. Note preserves pre-enable cold screen, verified >=1s discharge after prior enable, >=100ms settle, launch-only firing, ground hard refusal/in-flight non-veto, dual GPIO locks/readback,20ms normal/36ms fault physical current, no refresh during fire and neutral-first <=50ms. Implementation/physical timing remains open."
+    },
+    {
+      "ids": "O1/O2/O4/O5 as amended/always-on ports/audit2.15/F9/F10",
+      "result": "Direct1k/GND-ESD GPS/radio, no obsolete controls/isolation/power-cycle promise, retained U402/U12/U13 camera, UART pin/direction facts and back-feed restrictions agree. Installed UART/ESD/RF/thermal behavior remains open."
+    },
+    {
+      "ids": "O3/O6/F4",
+      "result": "J122 has four signals plus GND, no board motor supply. Pack-star return bounds and neutral/reset/harness qualification are retained; no zero-current or jam-clearing claim."
+    },
+    {
+      "ids": "F1-F3/F5/F6/microSD/AUD4/audit2.1-2,12,16",
+      "result": "U4 pose, signed binding and inferred lever arm agree; PC13/PB0 NC, PA6 watchdog, LSE/PA15/trace/EXTI/ADC facts and bounded QSPI/SD/UART work remain in the handoff. Primary QSPI/secondary SD, no blocking flush, selected-card allocations and dark-flight LEDs pending cover test are preserved. Sampling/logging/range requirements remain authoritative in REQUIREMENTS; no R10 implementation is claimed."
+    },
+    {
+      "ids": "OQ1,2,4,5,6,7/P1-P3/AUD-GAP/M1-M3",
+      "result": "Current ordering worksheet retains4.95mm accepted wire-room floor, actual-feed model/harness domain, selected panel rail, C84/no cutoff, unfused harness, forward-of-joint47mm rule, five supports/insulated sled, coating/staking, exact VIPPO and manual C84 process, procurement/stock/quote conditions. Physical qualifications and owner acceptance stay open. Parent mirror issue is R12-DOC-02."
+    }
+  ],
+  "primary_sources_consulted": [
+    {
+      "title": "ST DS12110 Rev11",
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "pages": "Table10 pp91-92; Table9 p67; Table136 p233",
+      "check": "Selected UART/ADC assignments and RevV LSI29.4-33.6kHz basis agree;960LSI cycles gives28.571-32.653ms. This was a selected check, not a complete fresh AF/silicon review."
+    },
+    {
+      "title": "ST AN2606 Rev70",
+      "url": "https://www.st.com/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf",
+      "pages": "Table135 pp320-323",
+      "check": "Current primary source retains PA6/PC11 loader outputs and PE11/PE12 input roles; older Rev64 citations in the record are historical references, not proof of a new incompatibility."
+    },
+    {
+      "title": "MJG J-Tek LEAD-FREE technical sheet",
+      "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+      "pages": "p1",
+      "check": "0.75A/0.5s all-fire and retained protective shroud agree;1.5x current criterion is1.125A. Actual selected-lot20ms firing remains correctly unqualified."
+    },
+    {
+      "title": "ST LSM6DSV320X datasheet",
+      "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+      "check": "Web retrieval failed because PDF exceeds the tool size limit. No new maker-axis-diagram review is credited."
+    }
+  ],
+  "records_read": [
+    ".supervisor/r10_review_packet.md",
+    "AGENTS.md",
+    "docs/REQUIREMENTS.md",
+    "sources/r10_design/R10_DECISIONS.md, complete chronological record through D-R11 completed validation",
+    "sources/r10_design/AVA_LAYOUT.md, including round11 delta",
+    "docs/M3_R10.md",
+    "docs/R10_VALIDATION.md",
+    "docs/R9_VALIDATION.md severity precedents",
+    "../../docs/VEHICLE.md, read-only",
+    "sources/r10_design/r10_plan.md",
+    "sources/r10_design/parts_qualification.md current amendments",
+    "docs/ORDERING.md section8",
+    "docs/FMEA_REDUNDANCY.md current amendments",
+    "STATUS.md current R10 section",
+    "README.md",
+    "m3_firmware README/build/assembly_binding and retained binding JSONs",
+    "prior round11 docs-binding report for disposition context"
+  ],
+  "limits": [
+    "No round12 peer report read or findings shared with peer reviewers.",
+    "No git action, source/CAD/doc edit, other-worktree edit, CLI/DRC/ERC, full gate, build, generator, export, simulation solve, firmware build/execution, GUI retry, supplier refresh or physical test.",
+    "Hash comparison confirms existing artifacts, not a new reproducible-build execution or physical acceptance.",
+    "No new missing safety/electrical binding obligation or proven required-function failure was established. Correctly disclosed firmware/physical/process/procurement limits are not counted as new hardware findings.",
+    "Current board-bound final deviation inventory remains expected after these full reviews; that planned work is not recounted as a new defect."
+  ],
+  "write_scope": [
+    "m3_design/assembly_review/sources/r10_review/round12_docs_binding.md",
+    "m3_design/assembly_review/sources/r10_review/round12_docs_binding.json"
+  ],
+  "supervisor_request_absent_at_write": true
+}

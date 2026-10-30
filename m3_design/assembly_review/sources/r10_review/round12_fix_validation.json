@@ -1,0 +1,210 @@
+{
+  "round": 12,
+  "kind": "full integration fix validation; not an independent full round",
+  "board": {
+    "sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+    "bytes": 2264839,
+    "footprints": 209,
+    "segments": 973,
+    "vias": 296,
+    "gnd_vias": 168,
+    "track_length_mm": 1808.3004062475577,
+    "size_mm": [
+      46,
+      90
+    ]
+  },
+  "full_builds_passed": 2,
+  "check_sh_exit_code": 0,
+  "builds": {
+    "a": {
+      "command": "KICAD_CLI=official10.0.7 NUMPY_PY=.supervisor/venv/bin/python m3_design/r10_build.sh",
+      "log": ".supervisor/r12_build_a.log",
+      "log_sha256": "e395d1f7a74eee60e65f8ba9a4b7664c71bd476faaccb97c772d2b06a7b6f8c5",
+      "exit_code": 0,
+      "full_check_sh_exit_code": 0,
+      "native_R10_tests": 171,
+      "native_NumPy_skips": 3,
+      "required_numerical_tests_rerun_with_NumPy": 2
+    },
+    "b": {
+      "command": "KICAD_CLI=official10.0.7 NUMPY_PY=.supervisor/venv/bin/python m3_design/r10_build.sh",
+      "log": ".supervisor/r12_build_b.log",
+      "log_sha256": "24cfb808e1d750bea98057eb8c60bebb7d61a12e21031bf09b9bf8a777ce8543",
+      "exit_code": 0,
+      "full_check_sh_exit_code": 0,
+      "native_R10_tests": 171,
+      "native_NumPy_skips": 3,
+      "required_numerical_tests_rerun_with_NumPy": 2
+    }
+  },
+  "reproducibility": {
+    "generated_file_count": 42,
+    "byte_identical": true,
+    "generated_sha256": {
+      "m3_design/assembly_review/actuator_power.kicad_sch": "54ed8859d0d0d77f05724df8052962258eb240fcbdf38910e2d7ef2bf0e5d6bc",
+      "m3_design/assembly_review/battery_entry.kicad_sch": "984d524d93f87852803f524b7041d3c1d9eadca4f775a717e1cb2241da0fec69",
+      "m3_design/assembly_review/camera_connector.kicad_sch": "84069d1f115d9a3c331e38ec5e0c73733b6f00432c79ea42d95e616dbf48f162",
+      "m3_design/assembly_review/camera_power.kicad_sch": "cd8a5a352bea9a9c80211d511b9d78c3aafd2816bec6a6db9c1a9beb53ba15d0",
+      "m3_design/assembly_review/camera_uart.kicad_sch": "8f64fb78ed2f9b76023ace78df25557ee44908e973494356720db6b85e0a50a6",
+      "m3_design/assembly_review/diagnostics.kicad_sch": "6e1ad47f47ee0003a9e595431a5ddcb279d3a4c587d8730248c5376f7c75b71d",
+      "m3_design/assembly_review/kilib/m3.kicad_sym": "eae1338782216a005145b430e198f7cb19fa61cf92e1d906e1d68fd8c5b00664",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_AONR21357_DFN3x3A_EP1.wrl": "93e8ba4cae28023b19542d8f6b9e4194da6fdabc4bd3071e791a74620ed953f3",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_2P_BK.wrl": "efab17f431f377ab6318d1cc151901eda5c070e525bd79a23448963f43aa53d0",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_2P_GN.wrl": "949835401190a4182f9cb7d9268d42cc6d59886a4ad246b27d085055678e507c",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_4P_GN.wrl": "ff19ffd9b2c61765b655e3f885fad407f3445c38a5cc797daa8d840166d27f17",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_5P_GN.wrl": "4123f68eb0c390da876c64c2d764ffffa9ceffb3e433450c7e2dbed7348f608d",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_GH_BM02B_GHS_TBT.wrl": "f27ad581dcbb5ca4ad16a3bc34481a689d6198301463486288b8eea5fb76805f",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_MA_8x10.wrl": "8969c393340692a96a03cd804c70720747d9adc62146d0757f266fe5a2a12902",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_MICROSD_MOLEX_472192001.wrl": "b42294e799c534e0e628109596c34a816745ddf6ae14cb993d1a99d62f9085de",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_TPS7A91_DSK10.wrl": "70bf43d3dc6293d6b658ff8e0dd38f8526a70fc243421c11834c41f2608b0f80",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_AONR21357_DFN3x3A_EP1.kicad_mod": "98b34fd0b10c91fc0da1b4c3d45d92d8b8bb3ae4f6823ec7a751e82986fccc59",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_2P_BK.kicad_mod": "7cb3c1e4e590fab8abe7ea0191aace6c4078952205f14214880b3c8df8135dd0",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_2P_GN.kicad_mod": "e7cd78cfa9f62841ec4d2035c56b2e679a08eb3d41b3d1a9cbc116b0b5eb2317",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_4P_GN.kicad_mod": "747446dd144e6eaeefc8268d60e286510cf72af60f2268e2f405fc192874439b",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_5P_GN.kicad_mod": "ca2aada63759dc14a4f130b89c3f264a28159c535bf0f4e5967a952782c07b5b",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_GH_BM02B_GHS_TBT.kicad_mod": "0d8a27c223081d11ad282328b59e57fc34b37501bc8425b6bc72223c140a650a",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_MA_8x10.kicad_mod": "f11bd91ea91f130a2b974ed82ddb6b425710359341b5c2a454df2adda5e9fce0",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_MICROSD_MOLEX_472192001.kicad_mod": "ff60b0babf97df08f58030a70b4f929976b469ea4f131455be6c8d2cf310a97d",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_TPS7A91_DSK10.kicad_mod": "4d4f03f099a74f3a576cce028c3ff91cbe698e7bd22c2d573ca73d072321629d",
+      "m3_design/assembly_review/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
+      "m3_design/assembly_review/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+      "m3_design/assembly_review/m3.kicad_pcb": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+      "m3_design/assembly_review/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
+      "m3_design/assembly_review/m3.kicad_sch": "4c3cd068b22c171d198a022adc3dd8f3a16ed2dd2b3e15f8cf99793443c8f89b",
+      "m3_design/assembly_review/mcu.kicad_sch": "03f3a7007ed196a1a0770523f193f90a9c7a1e9b9d32783dd2bfcd285af207bf",
+      "m3_design/assembly_review/pullpin_buzzer.kicad_sch": "6251166ef5e36bd43d48060c3085437fd637df326d82dd7709f9836d9282e1e7",
+      "m3_design/assembly_review/pyro.kicad_sch": "d3a6fde39e5a5df3a93a7a2c60bd7e90c24b28de1fe281a9bcfa03babc35e056",
+      "m3_design/assembly_review/schematic.net.xml": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+      "m3_design/assembly_review/sensors.kicad_sch": "bc81013b62caf9c9093acac15a3fd8cfce56a6b0c922f4899906e745d5af8ece",
+      "m3_design/assembly_review/servos.kicad_sch": "c9d0d4661e6d30337fb9fa094219678f38a8a8b0c3dc48fa35e392ab2c1c1e0f",
+      "m3_design/assembly_review/sources/r10_design/hotplug_inputs.json": "12ee937e82aaa2fcf8e5f9d4afb414cfde40f8046e1fe48e33fc7308ce0f3a82",
+      "m3_design/assembly_review/sources/r10_design/hotplug_results.json": "9b1ed811334c449ab69cbdfc7382ddab89bc8ccc2321b6da9aba1b2d22857a9a",
+      "m3_design/assembly_review/sources/r10_design/parts_budget.json": "398a68f5732818fbb2d788bc05e5d2d2e4e2e590ee464bbf5a2c4f7d3f61f0d5",
+      "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "9fb7b913003d378ce395ff0d518979183a6fa02974ce89c84e74e25f3328d6f3",
+      "m3_design/assembly_review/telemetry.kicad_sch": "16145d6f1b32a8cc90356996d7a5d364d05bc7c99501e7f6809f5eea7ce711f8",
+      "m3_design/assembly_review/usb_sense.kicad_sch": "1ce87ca1ed4f2e09f2289c8af29069a094162bf5e6f58e50e66138b9f37ae865"
+    },
+    "fab_scope": "Gerber/PDF export binaries are not claimed byte-reproducible; each package is bound by its native manifest. Final full-page/detail rasters match inspected buildA images."
+  },
+  "native_evidence": {
+    "path": "round12_fix_native.json",
+    "sha256": "c81bb9ab4f8280f0174dda1720d9f8f459abd7e45209c9559f9e57452c2e51aa"
+  },
+  "native_DRC_unconnected_parity_ERC": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "all_R10_rules_pass": 31,
+  "native_gate_tests": {
+    "R10_unique_tests": 171,
+    "fit": 29,
+    "routing": 60,
+    "numpy_resolution": {
+      "cases": 3,
+      "passed": 3,
+      "unresolved_skips": 0,
+      "log_sha256": "9c26c06b5270d91d2d03ca364d16ac57c5b3eff283ab2b71fcb3a768afb0d944"
+    },
+    "note": "The extra supplied-interpreter run resolves both hot-plug numerical skips and the optional Plate skip. Synthetic invalid Plate controls emit NumPy warnings and exit0."
+  },
+  "simulation_inference": {
+    "hotplug_required_pass": 2304,
+    "hotplug_local_pass": 60,
+    "optional_plate_Hz_pinned_D5": 181.3,
+    "estimated_mass_g": 70.3,
+    "physical_qualification": false
+  },
+  "visual_QA": {
+    "board_sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+    "scope": "Native build-A PDFs; root inspected complete top/bottom pages and four600dpi detail crops covering all five changed Fab labels.",
+    "full_page_dpi": 150,
+    "detail_dpi": 600,
+    "changed_labels": [
+      "R10",
+      "C29",
+      "C92",
+      "R8",
+      "C5"
+    ],
+    "observations": "All five labels clear own outlines and pin1 dots and are legible at detail zoom; complete pages have no new clipping or misplaced labels. Five0.4mm/0.06mm Fab texts require vector zoom. Silkscreen unchanged>=1mm/.15mm. Factory preview/physical identification unverified.",
+    "images_sha256": {
+      ".supervisor/r12_pdf_qa/bottom.png": "76e73aff6b0b36dcaab75bd60e235ffdec6ca547d200b544505547bbccae924f",
+      ".supervisor/r12_pdf_qa/fab_c5.png": "d457a228b40f9c3e9904ffed15d1c1a789e417e3f66fe2dc405f817f0cf59de1",
+      ".supervisor/r12_pdf_qa/fab_c92.png": "36b7f044bb306afc9bd477bf7f5fcfb4d44c952e8c371c718e21b5eafececcc0",
+      ".supervisor/r12_pdf_qa/fab_r10_c29.png": "933521263b595c48368551c2b6c22716a9a4de6e27f1478340a6ae236ef485b0",
+      ".supervisor/r12_pdf_qa/fab_r8.png": "ea38fc0f1af721e17b22651f04bea454ea643359d29b6c5af98600812670d34d",
+      ".supervisor/r12_pdf_qa/top.png": "6e8d9b810d237e2665ff01f730bb58b054da747bd3414de466c6635cfdbd1b05"
+    },
+    "final_pdf_hash_confirmation": "PDF binary hashes differ between exports; all six final full-page/detail raster hashes equal the inspected buildA images exactly. Fabrication manifest verifies final binaries.",
+    "buildA_pdf_sha256": {
+      "m3_design/assembly_review/fab/m3_assembly_top.pdf": "9868ba6f2a0835fb07fe8ca73d267f51a54ea2c2a37f723e34d9a97ac6d9219d",
+      "m3_design/assembly_review/fab/m3_assembly_bottom.pdf": "667fb056c2a9898ffa4fd3b0c6f5bf09df6492f50f68bda7c1e1315d1371d67e"
+    },
+    "final_pdf_sha256": {
+      "m3_design/assembly_review/fab/m3_assembly_top.pdf": "ac5a4330fdb1d6b74644ad7d670528a88f5aaf792c2d2f1c10c06a23bca9b031",
+      "m3_design/assembly_review/fab/m3_assembly_bottom.pdf": "2fd91e43d69e62fc4b9686408a14a0d355aded3ad941c11e213515181ac110c8"
+    },
+    "final_raster_sha256": {
+      "top": "6e8d9b810d237e2665ff01f730bb58b054da747bd3414de466c6635cfdbd1b05",
+      "bottom": "76e73aff6b0b36dcaab75bd60e235ffdec6ca547d200b544505547bbccae924f",
+      "fab_r10_c29": "933521263b595c48368551c2b6c22716a9a4de6e27f1478340a6ae236ef485b0",
+      "fab_c92": "36b7f044bb306afc9bd477bf7f5fcfb4d44c952e8c371c718e21b5eafececcc0",
+      "fab_r8": "ea38fc0f1af721e17b22651f04bea454ea643359d29b6c5af98600812670d34d",
+      "fab_c5": "d457a228b40f9c3e9904ffed15d1c1a789e417e3f66fe2dc405f817f0cf59de1"
+    }
+  },
+  "fabrication": {
+    "BOM_codes": 82,
+    "fitted": 199,
+    "CPL_top_bottom": [
+      67,
+      132
+    ],
+    "reconstructed_top_bottom": [
+      66,
+      121
+    ],
+    "placement_only_checks": 12,
+    "paste_F_B": [
+      245,
+      373
+    ],
+    "manifest_outputs": 5,
+    "orientation_paste_manifest_pass": true
+  },
+  "procurement": {
+    "supplier_checked_utc": "2026-10-30T06:11:29Z",
+    "supplier_snapshot_sha256": "5ea50a4d9d3a56ba0035e4d5cd410207578f88a1c4f8d170dfb67b0ec49fc12f",
+    "placed_and_feeders_USD": 82.6474,
+    "including_minimum_purchases_USD": 84.9878,
+    "target_USD": 84.41,
+    "minimum_purchase_excess_USD": 0.5778,
+    "stock_blockers": [
+      "R43017<3610 minimum",
+      "U4 0<5"
+    ],
+    "U9_minimum": "7 for5 fitted",
+    "BOM_CPL_hashes_verified": true,
+    "cost_target_model_pass": true,
+    "stock_release_pass": false,
+    "quote_process_owner_acceptance": false
+  },
+  "full_round_12": {
+    "reviewed_board_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "reviewed_commit": "d57b216c365fc8d18896bceba37f63caf20d52a4",
+    "confirmed_C_M_minor_groups": [
+      0,
+      0,
+      12
+    ]
+  },
+  "same_board_clean_pair_credit": false,
+  "fresh_full_rounds_required": [
+    13,
+    14
+  ],
+  "limitations": "Firmware, selected-card/e-match lot, electrical/thermal/transient/endurance, installed RF/ESD, physical access/harness/fit/retention/flight and factory first-article/process are unverified. R10 is not accepted or ordered; AGENTS section2 remains unchanged."
+}

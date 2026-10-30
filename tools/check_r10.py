@@ -209,10 +209,23 @@ def schematic_population(path):
     return population('(kicad_sch ' + '\n'.join(symbols) + ')', schematic=True)
 
 
-def assembly_population(text, required=REQUIRED_FITTED):
-    rows = list(csv.DictReader(io.StringIO(text)))
-    refs = {ref.strip() for row in rows for ref in row.get('Designator', '').split(',') if ref.strip()}
-    return [f'{ref}: required fitted part missing from assembly list' for ref in sorted(required - refs)]
+def assembly_population(text, required=REQUIRED_FITTED, *, require_qty=False):
+    reader = csv.DictReader(io.StringIO(text))
+    rows = list(reader)
+    has_qty = 'Qty' in (reader.fieldnames or [])
+    refs, issues = set(), []
+    if require_qty and not has_qty:
+        issues.append('Qty column required for BOM')
+    for line, row in enumerate(rows, 2):
+        members = {ref.strip() for ref in (row.get('Designator') or '').split(',') if ref.strip()}
+        refs.update(members)
+        if has_qty:
+            value = (row.get('Qty') or '').strip()
+            if not re.fullmatch(r'\d+', value) or int(value) <= 0:
+                issues.append(f'line {line}: Qty {value!r} must be a positive integer')
+            elif int(value) != len(members):
+                issues.append(f'line {line}: Qty {value} differs from {len(members)} distinct designators')
+    return issues + [f'{ref}: required fitted part missing from assembly list' for ref in sorted(required - refs)]
 
 
 def uart_ports(pins, values, codes):
@@ -1478,7 +1491,7 @@ def s4(ctx):
         ev['schematic'] = sch.name
     for name, path in (('BOM', ctx.bom), ('CPL', ctx.cpl)):
         if path:
-            issues += [f'{name}: {i}' for i in assembly_population(Path(path).read_text())]
+            issues += [f'{name}: {i}' for i in assembly_population(Path(path).read_text(), require_qty=name == 'BOM')]
             ev[name] = str(path)
         else:
             ev[name] = 'not supplied (board and schematic flags checked)'
@@ -1760,7 +1773,20 @@ def k_inner_signal(ctx):
             name = ctx.board.GetLayerName(layer)
             length[name] = length.get(name, 0.) + pcbnew.ToMM(track.GetLength())
             issues.append(f'{name} track of {net}: In1 carries GND only; In2 power and GND only')
-    return issues, dict(length_mm=length)
+    # R12-GATE-02: drawings/text and filled board/footprint zones are manufactured
+    # copper too. Pads and vias legitimately traverse inner layers; the existing
+    # track walk above already handles every routed segment/arc.
+    routed = {item.m_Uuid.AsString() for item in ctx.board.GetTracks()}
+    extra = 0
+    for key, layer, shape, box, pad, net, label in copper_nodes(ctx.board):
+        if pad is not None or key in routed or layer not in (pcbnew.In1_Cu, pcbnew.In2_Cu):
+            continue
+        extra += 1
+        bad = (layer == pcbnew.In1_Cu and net != 'GND') or (layer == pcbnew.In2_Cu and rc.net_class(net) != 'power')
+        if bad:
+            issues.append(f'{ctx.board.GetLayerName(layer)} {label} of {net or "(no net)"}: '
+                          'In1 carries GND only; In2 power and GND only')
+    return issues, dict(length_mm=length, other_inner_copper_items=extra)
 
 
 def m1(ctx):

@@ -1,0 +1,296 @@
+{
+  "schema": 1,
+  "round": 12,
+  "review_date_utc": "2026-10-30T07:03:38.212560+00:00",
+  "target_commit": "d57b216c365fc8d18896bceba37f63caf20d52a4",
+  "board_sha256_before": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "board_sha256_after": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "canonical_target_unchanged_during_all_ten": true,
+  "full_lenses": 10,
+  "max_concurrent_reviewers": 3,
+  "independence": "Fresh fork-none contexts; no current-round report crossreading. Root consolidated after all ten final handoffs.",
+  "severity_method": "R9 precedents have no literal rubric. Critical: credible inadvertent fire/comparable serious hazard; Major: demonstrated required-function/constraint failure under stated conditions; Minor: bounded residual/prospective checker gap/evidence-procedure defect. Pending CAD-stage qualification alone is not demonstrated hardware failure. AGENTS section2 remains blocking.",
+  "lens_reports": [
+    {
+      "lens": 1,
+      "name": "requirements",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 3
+      },
+      "report": "m3_design/assembly_review/sources/r10_review/round12_requirements.json",
+      "sha256": "702518cb8ad169e9ae706ae16d2c11b31ef33a8de4c69a3da16432ee7c0ee6e6"
+    },
+    {
+      "lens": 2,
+      "name": "safety",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 0
+      },
+      "report": "m3_design/assembly_review/sources/r10_review/round12_safety.json",
+      "sha256": "b5a590b67d43dcd8c523474e96932c1df35f49a96a2a05e1258fca56a6d20910"
+    },
+    {
+      "lens": 3,
+      "name": "power",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 1
+      },
+      "report": "m3_design/assembly_review/sources/r10_review/round12_power.json",
+      "sha256": "52cf27a94a44ced81e82bffc0bd4a0bc574d241713d34231d8e7843c840f800a"
+    },
+    {
+      "lens": 4,
+      "name": "parts",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 1
+      },
+      "report": "m3_design/assembly_review/sources/r10_review/round12_parts.json",
+      "sha256": "bd6c1934a04a6c345fa45a9068d5ccb40acfc11ce555c8fbeebf8d4f36bd20ad"
+    },
+    {
+      "lens": 5,
+      "name": "mcu",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 1
+      },
+      "report": "m3_design/assembly_review/sources/r10_review/round12_mcu.json",
+      "sha256": "9c70683d602b2a4c190ee05231c3c561c26331e48aaf38f52aa03d18cc5ed3e4"
+    },
+    {
+      "lens": 6,
+      "name": "mechanics",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 1
+      },
+      "report": "m3_design/assembly_review/sources/r10_review/round12_mechanics.json",
+      "sha256": "c41642843775feb35692ecc3fa25c9c6c55566cc52c3bdc043130869f9a7b74b"
+    },
+    {
+      "lens": 7,
+      "name": "routing",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 4
+      },
+      "report": "m3_design/assembly_review/sources/r10_review/round12_routing.json",
+      "sha256": "de7d3bc97578e0990fd0d353055c35ff2ce5adacffe9943466de8c33ba67e439"
+    },
+    {
+      "lens": 8,
+      "name": "manufacturing",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 1
+      },
+      "report": "m3_design/assembly_review/sources/r10_review/round12_manufacturing.json",
+      "sha256": "9db95152d0f11c9d052a1e20b4734b9de59f4794bb4278ea5aa70a156e8dcb4d"
+    },
+    {
+      "lens": 9,
+      "name": "gate",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 3
+      },
+      "report": "m3_design/assembly_review/sources/r10_review/round12_gate.json",
+      "sha256": "2c031361695885741c0ce1ccaad7d70cd47bd873d306c9218dc645932cdae409"
+    },
+    {
+      "lens": 10,
+      "name": "docs_binding",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "report": "m3_design/assembly_review/sources/r10_review/round12_docs_binding.json",
+      "sha256": "d1087d203ec387e08c7249800dd5bff88ece35272cdd972299903149186f8554"
+    }
+  ],
+  "raw_totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 17
+  },
+  "consolidated_totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 12
+  },
+  "deduplication": "Active prose/mirror/C98 duplicates merged. REQ-03 and RTE-04 overlapping M2 drawing/entry inventory share one measured group; noncritical return companions remain separate.",
+  "findings": [
+    {
+      "id": "R12-m01",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-REQ-01",
+        "R12-DOC-01"
+      ],
+      "title": "Active current-board records",
+      "planned_disposition": "Correct current snapshots, pending-build wording and parallel old power/copper prose.",
+      "fix_status": "Current records corrected; current native evidence and all91 hidden references; full rounds13/14 still pending."
+    },
+    {
+      "id": "R12-m02",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-REQ-02",
+        "R12-MEC-01",
+        "R12-DOC-02"
+      ],
+      "title": "Parent vehicle mirror",
+      "planned_disposition": "Retain separate-worktree mismatch with an exact in-worktree handoff; never edit parent worktree.",
+      "fix_status": "Retained separate-worktree mirror mismatch; exact in-worktree R10_VEHICLE_HANDOFF.md supplied."
+    },
+    {
+      "id": "R12-m03",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-REQ-03",
+        "R12-RTE-04"
+      ],
+      "title": "M2 drawing, pad-entry and noncritical residuals",
+      "planned_disposition": "One final inventory: nine count/location-only leftovers, actual entry/near-edge/between-pad measurements; overlapping inventory is counted once.",
+      "fix_status": "Retained final141-instance M2 inventory and9 location-only hygiene rows once; new C98/BAT annotations explicit."
+    },
+    {
+      "id": "R12-m04",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-PWR-01",
+        "R12-RTE-02"
+      ],
+      "title": "C98 remote bypass return",
+      "planned_disposition": "Try bounded temporary local stitches; adopt only a checked generator fix or retain31.812237mm diagnostic return with qualification.",
+      "fix_status": "Local return remedied in generator and verified7.345584mm on final native board; actual transient/inductance qualification remains open."
+    },
+    {
+      "id": "R12-m05",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-BOM-01"
+      ],
+      "title": "L400 heel land",
+      "planned_disposition": "Retain exact0.15mm possible uncovered heel strip for owner/assembler qualification; changing power land requires covered requalification.",
+      "fix_status": "Retained L4000.15mm possible uncovered heel for owner/assembler qualification; no unqualified power-land change."
+    },
+    {
+      "id": "R12-m06",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-MCU-01"
+      ],
+      "title": "PC14 current-bound evidence",
+      "planned_disposition": "Withdraw2.9mA maximum; use resistor-only3.3mA nominal/3.363636mA corner and unmeasured dynamics, retain R1621k, refresh binding.",
+      "fix_status": "Closed evidence defect: unsupported2.9mA withdrawn; corrected resistor-only/current-dynamics note and binding regenerated."
+    },
+    {
+      "id": "R12-m07",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-RTE-01"
+      ],
+      "title": "BAT_ENABLE removable bend",
+      "planned_disposition": "Apply exact checked complete generator polyline;1.408326mm shorter without pad/via/layer change.",
+      "fix_status": "Closed removable bump: BAT_ENABLE shortened1.408326mm; geodesic-length whole-chain annotation retained under M2."
+    },
+    {
+      "id": "R12-m08",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-RTE-03"
+      ],
+      "title": "Noncritical return companions",
+      "planned_disposition": "Retain actual NRST/BOOT0/I2C distances and reset/boot/interface qualification; no fast-rule scope expansion.",
+      "fix_status": "Retained measured noncritical NRST/BOOT0/I2C companions and qualification; fast-rule scope unchanged."
+    },
+    {
+      "id": "R12-m09",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-MFG-01"
+      ],
+      "title": "Five obscured Fab labels",
+      "planned_disposition": "Apply checked five Fab-only0.4mm/0.06mm replacements/offsets, preserve1mm silk and vector-zoom readability limit.",
+      "fix_status": "Five Fab overlaps corrected and final complete-page/detail rasters checked;0.4mm/0.06mm vector-zoom limit retained."
+    },
+    {
+      "id": "R12-m10",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-GATE-01"
+      ],
+      "title": "Positive model shrinkage",
+      "planned_disposition": "Validate reviewed normalized terminal/closed-SD envelope identity with positive-shrink and valid-unit-conversion seeds.",
+      "fix_status": "Closed prospective model gap: normalized dimensions/pose and equivalent-unit controls pass;40 physical-model fault cases reject."
+    },
+    {
+      "id": "R12-m11",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-GATE-02"
+      ],
+      "title": "Connected foreign inner copper representations",
+      "planned_disposition": "Extend K-inner over zones/drawings, preserving legitimate through-hole barrels; connected native seeds.",
+      "fix_status": "Closed prospective inner-copper representation gap; connected native board-zone and board/footprint-drawing seeds reject."
+    },
+    {
+      "id": "R12-m12",
+      "severity": "Minor",
+      "status_at_review": "open",
+      "source_findings": [
+        "R12-GATE-03"
+      ],
+      "title": "BOM quantity semantics",
+      "planned_disposition": "Positive integer production BOM Qty equals distinct row designators; retain quantity-free CPL and test malformed/zero/mismatched quantities.",
+      "fix_status": "Closed prospective BOMQty gap; positive-integer/count semantics and quantity-free CPL controls pass."
+    }
+  ],
+  "critical_major_candidates": [],
+  "fresh_critical_major_verification": "No C/M candidate in any lens. Previous terminal Major freshly closed in R11 closure and independently rechecked in R12.",
+  "clean_on_reviewed_board": true,
+  "final_same_board_pair_credit": false,
+  "pair_coverage": "Low-risk copper/Fab fixes planned; run full13 and14 on the newly committed resulting board. No same-board clean pair transfers from0ad or earlier boards.",
+  "separate_focused_followup": "round12_c98_candidate is implementation evidence, not an eleventh full lens.",
+  "full_build_check_run_by_this_round_record": false,
+  "native_cli_current_round": "Manufacturing all-severity/all-track DRC/unconnected/parity/ERC0/0/0/0, no ignored checks; see independent report.",
+  "owner_acceptance": false,
+  "firmware_physical_or_order_release": false,
+  "fix_pass": {
+    "board_sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+    "receipt": "round12_fix_validation.json",
+    "full_builds_exit0": 2,
+    "generated_files_byte_identical": 42,
+    "full_check_sh_exit0": true,
+    "fresh_full_same_board_rounds_required": [
+      13,
+      14
+    ]
+  }
+}

@@ -540,6 +540,16 @@ def in_hardware(b):
                    for c in keep[d.GetLayer()])]
 
 
+def fab_reference_details(b):
+    """R12-MFG-01: clear five Fab outlines/dots; small assembly text requires detail zoom."""
+    for ref, dx, dy in (('R10', 0, 0.1), ('C29', -0.05, 0), ('C92', 0, 0), ('R8', 0, 0), ('C5', 0, 0)):
+        f = silk.fp_of(b, ref)
+        text = silk._fab_ref(f)
+        text.SetTextSize(silk.P(0.4, 0.4))
+        text.SetTextThickness(silk.MM(0.06))
+        text.SetPosition(f.GetPosition() + silk.P(dx, dy))
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 def finish(b, lib):
     """Place every legend, the designators and the Fab references; return the placement evidence."""
@@ -667,6 +677,7 @@ def finish(b, lib):
     silk.fab_refs(b)
     # Keep the assembly reference clear of the five terminal drills.
     silk._fab_ref(silk.fp_of(b, 'J122')).SetPosition(silk.P(36.5, 71.5))
+    fab_reference_details(b)
     fab_moved = r9_post.fab_clear(b)
     b.GetTitleBlock().SetRevision(REV)
     distance_review = []

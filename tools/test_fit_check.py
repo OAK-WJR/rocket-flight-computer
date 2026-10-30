@@ -79,6 +79,10 @@ class FitValidation(unittest.TestCase):
 
     def test_micro_sd_locked_card_has_a_required_envelope_and_clears_hardware(self):
         socket = self.add_part('J430', 12, 17, footprint='M3_MICROSD_MOLEX_472192001')
+        model = self.folder / 'closed_sd.step'
+        model.write_text("#1=CARTESIAN_POINT('',(-7,-6,0));\n#2=CARTESIAN_POINT('',(7,9.5,2.1));\n")
+        socket.Models()[0].m_Filename = '${KIPRJMOD}/closed_sd.step'
+
         report = fit.check_board(self.board, self.folder, profile='r10')
         self.assertIn('J430 mated', {row[1] for row in report['rows']})
         self.assertTrue(any('J430 mated top body' in issue for issue in report['issues']))
@@ -157,6 +161,30 @@ class FitValidation(unittest.TestCase):
         model.m_Offset.x = .2; model.m_Offset.y = -.2; model.m_Offset.z = .3
         model.m_Rotation.x = 10; model.m_Rotation.y = 20; model.m_Rotation.z = 30
         self.assertTrue(self.report()['ok'], self.report()['issues'])
+
+    def test_reviewed_terminal_envelope_uses_physical_dimensions_not_scale_literals(self):
+        terminal = self.add_part('J410', 30, 35, footprint='M3_DB125_4P_GN')
+        model = self.folder / 'terminal.step'
+        # T0-1/D-R11-01 maximum union; STEP's model y is opposite footprint y.
+        model.write_text("#1=CARTESIAN_POINT('',(-8.32,-4,0));\n#2=CARTESIAN_POINT('',(7.2,4.1,8.9));\n")
+        part_model = terminal.Models()[0]
+        part_model.m_Filename = '${KIPRJMOD}/terminal.step'
+        original = fit.model_box(terminal, self.folder)
+        for scale in (.01, .99999):
+            part_model.m_Scale.x = scale
+            with self.assertRaisesRegex(ValueError, 'reviewed dimensions/pose'):
+                fit.model_box(terminal, self.folder)
+        part_model.m_Scale.x = 1.
+        for shift in (.1, 3e-5):
+            part_model.m_Offset.x = shift
+            with self.assertRaisesRegex(ValueError, 'reviewed dimensions/pose'):
+                fit.model_box(terminal, self.folder)
+        part_model.m_Offset.x = 0.
+        model.write_text("#1=CARTESIAN_POINT('',(-.00832,-.004,0));\n#2=CARTESIAN_POINT('',(.0072,.0041,.0089));\n")
+        for axis in ('x', 'y', 'z'):
+            setattr(part_model.m_Scale, axis, 1000.)
+        for actual, expected in zip(fit.model_box(terminal, self.folder), original):
+            self.assertAlmostEqual(actual, expected, places=6)
 
     def test_missing_midspan_support_fails(self):
         self.board.Delete(self.holes[4])

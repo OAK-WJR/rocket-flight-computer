@@ -536,6 +536,8 @@ other (U401 keeps its footprint mark). Support hardware circles (3.5 mm bottom, 
 R162 (BUZZ_DRV gate resistor) 220 Ω → 1 kΩ (C17513, the existing 1k 0805 line): edge current ≤ ≈ 2.9 mA (DS12110 Rev 10
 Table 62 p. 141 characterises PC13–PC15 at ± 3 mA), the gate still reaches 3.0 V (AO3400A V_GS(th) ≤ 1.45 V).
 
+**R12 correction:** the <=2.9 mA maximum above is withdrawn; see D-R12-01. The resistor value stays1kOhm.
+
 ## D-R3-13. Records
 
 F6's battery-break ride-through recomputed (parts_budget.json; 300.8 / 470 µF, to 3.5 V): ports off and logic shed
@@ -1967,3 +1969,95 @@ minimum for five needed. No quote, process/deviation acceptance or order is
 inferred. Fresh complete rounds 12+ must still earn two consecutive clean rounds
 on the committed PCB; round 11 remains 0 Critical / 1 Major / 16 Minor groups.
 AGENTS §2 and all owner decisions remain authoritative and unchanged.
+
+## D-R12-01. Correct the evidence without an unsupported circuit change
+
+The full committed-board round12 found no Critical or Major. Its PC14 review
+(R12-MCU-01) correctly rejects the old2.9mA proof: [ST DS12110 Rev11
+Table149 p244](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf) bounds
+output drop at the3mA characterization point. Dividing0.4V by3mA cannot supply
+a minimum driver resistance for a maximum-current calculation. Withdraw that
+claim in the current pin-table source and mark the old D-R3-12 basis corrected.
+
+Retain R1621kOhm and Q123: a hard transient-current violation or failed buzzer
+is not demonstrated. The resistor-only initial bound is3.3mA nominal and
+3.363636mA at the stated3.33V/990Ohm initial-tolerance corner; steady current is
+about0.306mA. These are calculations, not measured gate/driver waveforms or
+all-temperature limits. Table150 note2 p246's2MHz limit remains; use the4kHz
+buzzer with LSE disabled. Regenerate binding provenance after the note change;
+electrical nets, pin assignments, axes and AGENTS section2 are unchanged.
+
+Refresh active status/geometry from the current native budget/ordering worksheet
+rather than duplicate superseded coordinates. Keep every earlier review tied to
+its exact PCB. Parent VEHICLE remains a separately owned stale mirror; supply an
+in-worktree integration handoff without editing that worktree. The fresh
+2026-10-30T06:11:29Z public supplier record is82.65USD placed/feeder share and
+84.99USD with minimum purchases,0.58USD above84.41; R430/U4 supply and full
+process/quote/deviation acceptance remain owner items. No acceptance/order is
+inferred and no AGENTS section2 rule changes.
+
+## D-R12-02. Local return, direct control route and readable Fab references
+
+R12-RTE-01 identifies a removable BAT_ENABLE bend. In the complete power
+generator polyline, replace the tail through (18.2,78.3)/(19.9,80) with
+(18.0232,78.4768)/(18.0232,81.8768), ending at the existing (17.1,82.8) via.
+This saves1.408326mm without moving a pad, via or layer transition. Preserve
+the complete diagonal from (21.3,75.2); do not introduce a collinear sliver.
+The resulting complete four-segment chain is15.639697mm, equal to its unobstructed
+45degree geodesic. The fresh route pass counts it as one `extra_bends` information
+item, while the former removable bump is gone. Native0.15mm copper screening
+rejects both two-segment vertical/diagonal alternatives: the east route has only
+0.100mm to the (20.85,76.4) GND via and collides with the U9 OUT-via field;
+the west route hits ACT_EN copper and the D8/GND return. Retain this shortest-
+length routed compromise; this bounded screen is not a proof about every
+possible whole-board relayout. The ordinary C98 stitch is a separate new
+informational item. Final count/category definitions are refreshed from the
+finished native board, not added to an old review's supplementary bump total.
+
+R12-PWR-01/RTE-02 finds C98.2's remote return. Add one ordinary0.5/0.3mm GND
+stitch at (23.8,62.95), preserving every existing GND track and the fanout table.
+The focused native candidate connects C98's B.Cu island through the continuous
+In1 plane to U11.12's existing ground fanout. Its0.05mm-grid saved-copper return
+is7.345584mm versus31.812237mm before; the0.025mm-grid result is7.270584mm.
+These are geometric diagnostics, not measured inductance or transient response.
+[TI TPS2121 SLVSEA3F p33](https://www.ti.com/lit/ds/symlink/tps2121.pdf) calls
+for close bypasses/short wide returns without a numerical loop limit. No
+functional failure was demonstrated. The ordinary hole-to-paste/mask minimum
+is0.125mm against0.1mm, and native DRC, fit and routing pass on the candidate.
+Its in-fill via/track annotation remains an explicit M2 deviation: the centre
+is0.300mm off the preserved track and its ring overlaps it0.050mm; the via also
+contacts the saved ground pour. Do not add the rejected0.424mm tiny jog merely
+to remove that annotation. Full integration and provenance checks remain required.
+
+R12-MFG-01 is addressed only in the Fab-reference generator: R10, C29, C92,
+R8 and C5 use0.4mm text/0.06mm strokes, preserving angle and mirroring; R10
+moves0.10mm and C29 moves0.05mm. The checked focused candidate changes only
+those five text items, is idempotent and has0.027960mm minimum glyph-to-own-Fab
+clearance. Root inspected the complete bottom drawing and enlarged details.
+Small Fab text needs vector zoom; silkscreen remains at least1.0mm/0.15mm.
+The focused receipts are implementation evidence, not a new full review round.
+Rebuild all native artifacts twice and run fresh full rounds13/14 on the
+resulting committed PCB. Circuit, pins, axes, supports, gate scope and AGENTS
+section2 are unchanged.
+
+## D-R12-03. Gate the manufactured geometry and fitted quantities
+
+Close the three prospective R12 gate gaps without altering design limits.
+Compare normalized local physical boxes for all seven DB125s and the closed
+microSD/card union with the reviewed maker-derived dimensions and pose. An
+equivalent model-unit conversion is valid; a positive scale that shrinks the
+physical envelope is not. The tolerance is0.000020mm: the measured maximum
+endpoint discrepancy is0.00000149mm, with0.000001905mm bound from six-decimal
+VRML endpoint quantization. Include0.01/0.99999 shrink and0.000030mm offset
+faults as well as equivalent-unit positive controls.
+
+Extend K-inner's existing In1-GND-only/In2-power-and-GND policy across actual
+manufactured drawings, text and filled board/footprint zones using the existing
+native copper walk. Legitimate pads/vias still traverse inner layers. Test real
+connected foreign copper; an empty footprint-zone fixture is not coverage.
+Production BOM Qty must be a positive integer equal to the row's distinct
+designators; a production BOM requires Qty while a CPL remains quantity-free.
+Test zero, malformed and mismatched counts. These are prospective gate gaps;
+the frozen mutants also hit existing stale-binding checks, so no whole-gate
+escape was established. Test receipts and complete integration checks record
+the actual closure; no physical or firmware qualification is inferred.

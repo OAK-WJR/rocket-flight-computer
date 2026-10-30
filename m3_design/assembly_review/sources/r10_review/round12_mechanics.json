@@ -1,0 +1,6257 @@
+{
+  "schema_version": 1,
+  "round": 12,
+  "lens": 6,
+  "title": "Placement and mechanics",
+  "review_date_context": "2026-10-29",
+  "target": {
+    "commit_provided": "d57b216c365fc8d18896bceba37f63caf20d52a4",
+    "board": "m3_design/assembly_review/m3.kicad_pcb",
+    "sha256_before": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "sha256_after": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "unchanged": true,
+    "kicad_python_version": "10.0.6"
+  },
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 1,
+    "new_current_findings": 0,
+    "carried_current_findings": 1,
+    "closed_prior_items": 3
+  },
+  "findings": [
+    {
+      "id": "R12-MEC-01",
+      "severity": "Minor",
+      "status": "carried",
+      "carried_from": [
+        "R11-MEC-02 parent-vehicle portion",
+        "R11-m03"
+      ],
+      "title": "The vehicle candidate mirror still specifies superseded R10 connectors and mating clearance",
+      "evidence": [
+        {
+          "file": "../../docs/VEHICLE.md",
+          "location": "Dimensions / Main-section stack, bulkplate up",
+          "stale_claims": [
+            "GPS/radio on GH-4 ports",
+            "J400 GH-2 at (10.5,85.5)",
+            "separate ARM terminal",
+            "0.03 mm GH mated bore clearance"
+          ],
+          "current_native_geometry": {
+            "west_rows_x_mm": 7.4,
+            "J121_y_mm": 55.85,
+            "J400_y_mm": 65.849999,
+            "J1_y_mm": 75.85,
+            "east_rows_x_mm": 38.6,
+            "J410_y_mm": 15.5,
+            "J420_y_mm": 31.5,
+            "J9_y_mm": 47.5,
+            "J122_y_mm": 71.5,
+            "all_wire_entries": "outward",
+            "wire_room_defined_benchmark_mm": 5.003011866037408
+          }
+        },
+        {
+          "file": "docs/ORDERING.md",
+          "location": "section 8.4",
+          "fact": "current seven-DB125/hinged-card/hardware worksheet correctly supersedes the old connector instructions"
+        }
+      ],
+      "maker_pages": [
+        {
+          "source": "DORABO-T0-1",
+          "page": 1,
+          "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+        },
+        {
+          "source": "Molex-SD-47219-001",
+          "page": 1,
+          "url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf"
+        }
+      ],
+      "impact": "Bounded integration-record discrepancy. No built wrong harness, rigid collision, or failed required board function is demonstrated. The parent file says CAD wins; R10 remains unaccepted.",
+      "concrete_fix": "Carry a separately owned parent-repository update replacing the R10 candidate subentry with seven outward DB125 terminals at the measured rows, no ARM/GH/header/tie-hole or SMA-coax assumptions, bottom hinged card service requiring board removal or a qualified window, and current wire/stack limits. Preserve the accepted R9 subentry and OQ-7. Do not edit that read-only worktree in this review."
+    }
+  ],
+  "closed_prior_findings": [
+    {
+      "id": "R11-MEC-01 / R11-BOM-01",
+      "status": "closed",
+      "severity_at_consolidation": "Major",
+      "evidence": "Independent maker-chain reconstruction, present model extents and actual placements agree within 0.000002 mm; all seven defined OQ-1 wire rooms 5.003011866 mm >=4.95 mm; adjacent maximum bodies clear by >=0.48 mm; no terminal intersects another fitted top courtyard."
+    },
+    {
+      "id": "R11-MEC-02 local assembly/staking/support worksheet portion",
+      "status": "closed",
+      "evidence": "ORDERING section 8 contains current board hash, all seven terminal poses/staking, current support minima C32.2/LED2.2, L1 pose/hang and current probes/coating. Parent mirror portion remains R12-MEC-01."
+    },
+    {
+      "id": "R11-MEC-03",
+      "status": "closed",
+      "evidence": "ORDERING section 8.4 explicitly requires unbolting/removing PCB from a continuous sled before off/out-of-bay card work, unless actual access window/lid/finger sweep is qualified."
+    }
+  ],
+  "sources": [
+    {
+      "id": "DORABO-T0-1",
+      "author": "Ningbo Dorabo Electric Co., Ltd.",
+      "revision": "T0-1, 2022-11-26",
+      "pages": [
+        1
+      ],
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+      "download_sha256": "76a55d0cbb4d30bf4d714401b8612365b6b35fedcd9660adae81c0e79d86ff7a",
+      "inspection": "complete rendered sheet inspected",
+      "facts": {
+        "pitch_mm": 3.5,
+        "depth_mm": 7.4,
+        "depth_tolerance_mm": 0.3,
+        "rear_pin_row_datum_mm": 3.9,
+        "rear_pin_row_datum_tolerance_mm": 0.2,
+        "interlock_mm": 0.42,
+        "interlock_tolerance_mm": 0.2,
+        "body_height_max_mm": 8.9,
+        "tail_length_mm": [
+          3.2,
+          3.8
+        ],
+        "clamp_AWG": [
+          28,
+          16
+        ],
+        "strip_length_mm": [
+          4,
+          5
+        ],
+        "screw_max_torque_Nm": 0.2
+      }
+    },
+    {
+      "id": "Molex-SD-47219-001",
+      "author": "Molex",
+      "revision": "G",
+      "pages": [
+        1
+      ],
+      "url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+      "mirror_used": "https://cdn.promelec.ru/upload/items/2020/09/01/472192001_sd.pdf",
+      "download_sha256": "793d191c35764f9e0dbde0d95a19418da8016b442c4b2716e787f808011faa1e",
+      "inspection": "complete rendered maker sheet inspected from mirror after direct download timed out",
+      "facts": {
+        "body_width_mm": 13.6,
+        "body_depth_mm": 14.5,
+        "body_height_mm": 1.9,
+        "general_tolerance_mm": 0.15,
+        "hinge_open_sweep_dimensioned": false,
+        "card_seating_dimensioned": false
+      }
+    },
+    {
+      "id": "ST-DS14623",
+      "author": "STMicroelectronics",
+      "revision_inspected": "Rev 1",
+      "pages": [
+        9,
+        187
+      ],
+      "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+      "mirror_used": "https://download.mikroe.com/documents/datasheets/LSM6DSV320X_datasheet.pdf",
+      "download_sha256": "1b3b1d497968a6dd54a8ce7875e84ff6579217733061617beb1f62a1ba7d9c1c",
+      "inspection": "complete rendered Figure 5 and Figure 32 pages inspected; indexed official Rev 3 page 9 independently agrees on pin map. Current full ST download failed; no claim of full Rev 3 review.",
+      "facts": {
+        "nominal_W_L_H_mm": [
+          3,
+          2.5,
+          0.83
+        ],
+        "max_W_L_H_mm": [
+          3.05,
+          2.55,
+          0.86
+        ],
+        "pin1_bottom_view": "right upper corner"
+      }
+    },
+    {
+      "id": "Sunlord-SWPA1102230000",
+      "author": "Shenzhen Sunlord Electronics",
+      "revision": "11",
+      "pages": [
+        4
+      ],
+      "url": "https://www.alfatec.de/fileadmin/productfiles/datasheets/sunlord_swpa4030s_series.pdf",
+      "inspection": "maker Table 4-1 parsed via web; C height 3.0 mm max, A/B 4.0 +/-0.2 mm"
+    },
+    {
+      "id": "HRO-TYPE-C-31-M-12",
+      "author": "HRO",
+      "url": "https://en.krhro.com/Product-Details/726.html",
+      "inspection": "maker product page nominal body dimensions 8.94 x 7.35 x 3.16 mm; full drawing download unavailable; native USB model remains envelope evidence, not a renewed full vendor-tolerance verification"
+    }
+  ],
+  "native_geometry": {
+    "board_sha256_before": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "kicad_python_version": "10.0.6",
+    "outline_mm": [
+      0.0,
+      0.0,
+      46.0,
+      90.0
+    ],
+    "thickness_mm": 1.6,
+    "holes": [
+      {
+        "centre_mm": [
+          3.7,
+          86.0
+        ],
+        "diameter_mm": 3.2
+      },
+      {
+        "centre_mm": [
+          4.0,
+          4.0
+        ],
+        "diameter_mm": 3.2
+      },
+      {
+        "centre_mm": [
+          4.0,
+          44.3
+        ],
+        "diameter_mm": 3.2
+      },
+      {
+        "centre_mm": [
+          42.0,
+          4.0
+        ],
+        "diameter_mm": 3.2
+      },
+      {
+        "centre_mm": [
+          42.0,
+          86.0
+        ],
+        "diameter_mm": 3.2
+      }
+    ],
+    "terminals": {
+      "J121": {
+        "position_mm": [
+          7.4,
+          55.85
+        ],
+        "rotation_deg": -90.0,
+        "body_tolerance_union_local_xyzxyz_mm": [
+          -4.62,
+          -4.1,
+          0,
+          3.7,
+          4.0,
+          8.9
+        ],
+        "placed_body_xyzxyz_mm": [
+          3.4000000000000004,
+          51.230000000000004,
+          0,
+          11.5,
+          59.550000000000004,
+          8.9
+        ],
+        "model_box_xyzxyz_mm": [
+          3.4000003800000003,
+          51.23000035,
+          1.2700000001775181e-06,
+          11.49999942,
+          59.55000149,
+          8.90000125
+        ],
+        "model_vs_maker_max_error_mm": 1.4899999953854604e-06,
+        "wire_face_x_mm": 3.4000000000000004,
+        "wire_room_bare_R25_4_z5_x_tolerance_mm": 5.003011866037408,
+        "diagnostic_wire_room_R25_4_z5_3_xy_tolerance_mm": 4.9408937037297385,
+        "body_bore_margin_mm": 2.9762685657755767,
+        "top_courtyard_collisions": [],
+        "nearest_other_courtyards_mm": [
+          [
+            0.255001,
+            "Q124"
+          ],
+          [
+            1.485,
+            "J400"
+          ],
+          [
+            2.905001,
+            "U1"
+          ]
+        ]
+      },
+      "J400": {
+        "position_mm": [
+          7.4,
+          65.849999
+        ],
+        "rotation_deg": -90.0,
+        "body_tolerance_union_local_xyzxyz_mm": [
+          -4.62,
+          -4.1,
+          0,
+          3.7,
+          4.0,
+          8.9
+        ],
+        "placed_body_xyzxyz_mm": [
+          3.4000000000000004,
+          61.229999,
+          0,
+          11.5,
+          69.549999,
+          8.9
+        ],
+        "model_box_xyzxyz_mm": [
+          3.4000003800000003,
+          61.22999935,
+          1.2700000001775181e-06,
+          11.49999942,
+          69.55000049,
+          8.90000125
+        ],
+        "model_vs_maker_max_error_mm": 1.4900000024908877e-06,
+        "wire_face_x_mm": 3.4000000000000004,
+        "wire_room_bare_R25_4_z5_x_tolerance_mm": 5.003011866037408,
+        "diagnostic_wire_room_R25_4_z5_3_xy_tolerance_mm": 4.9408937037297385,
+        "body_bore_margin_mm": 2.9762685657755767,
+        "top_courtyard_collisions": [],
+        "nearest_other_courtyards_mm": [
+          [
+            0.275001,
+            "R165"
+          ],
+          [
+            0.275001,
+            "R80"
+          ],
+          [
+            1.485,
+            "J121"
+          ]
+        ]
+      },
+      "J1": {
+        "position_mm": [
+          7.4,
+          75.85
+        ],
+        "rotation_deg": -90.0,
+        "body_tolerance_union_local_xyzxyz_mm": [
+          -4.62,
+          -4.1,
+          0,
+          3.7,
+          4.0,
+          8.9
+        ],
+        "placed_body_xyzxyz_mm": [
+          3.4000000000000004,
+          71.22999999999999,
+          0,
+          11.5,
+          79.55,
+          8.9
+        ],
+        "model_box_xyzxyz_mm": [
+          3.4000003800000003,
+          71.23000035,
+          1.2700000001775181e-06,
+          11.49999942,
+          79.55000149,
+          8.90000125
+        ],
+        "model_vs_maker_max_error_mm": 1.4900000024908877e-06,
+        "wire_face_x_mm": 3.4000000000000004,
+        "wire_room_bare_R25_4_z5_x_tolerance_mm": 5.003011866037408,
+        "diagnostic_wire_room_R25_4_z5_3_xy_tolerance_mm": 4.9408937037297385,
+        "body_bore_margin_mm": 2.9762685657755767,
+        "top_courtyard_collisions": [],
+        "nearest_other_courtyards_mm": [
+          [
+            0.255001,
+            "C80"
+          ],
+          [
+            0.355001,
+            "D8"
+          ],
+          [
+            1.33366,
+            "R80"
+          ]
+        ]
+      },
+      "J410": {
+        "position_mm": [
+          38.6,
+          15.5
+        ],
+        "rotation_deg": 90.0,
+        "body_tolerance_union_local_xyzxyz_mm": [
+          -8.32,
+          -4.1,
+          0,
+          7.2,
+          4.0,
+          8.9
+        ],
+        "placed_body_xyzxyz_mm": [
+          34.5,
+          8.3,
+          0,
+          42.6,
+          23.82,
+          8.9
+        ],
+        "model_box_xyzxyz_mm": [
+          34.500000580000005,
+          8.29999916,
+          1.2700000001775181e-06,
+          42.59999962,
+          23.819998599999998,
+          8.90000125
+        ],
+        "model_vs_maker_max_error_mm": 1.4000000021496817e-06,
+        "wire_face_x_mm": 42.6,
+        "wire_room_bare_R25_4_z5_x_tolerance_mm": 5.003011866037408,
+        "diagnostic_wire_room_R25_4_z5_3_xy_tolerance_mm": 4.9408937037297385,
+        "body_bore_margin_mm": 2.9762685657755767,
+        "top_courtyard_collisions": [],
+        "nearest_other_courtyards_mm": [
+          [
+            0.285001,
+            "J420"
+          ],
+          [
+            1.105001,
+            "C407"
+          ],
+          [
+            1.625001,
+            "R402"
+          ]
+        ]
+      },
+      "J420": {
+        "position_mm": [
+          38.6,
+          31.5
+        ],
+        "rotation_deg": 90.0,
+        "body_tolerance_union_local_xyzxyz_mm": [
+          -8.32,
+          -4.1,
+          0,
+          7.2,
+          4.0,
+          8.9
+        ],
+        "placed_body_xyzxyz_mm": [
+          34.5,
+          24.3,
+          0,
+          42.6,
+          39.82,
+          8.9
+        ],
+        "model_box_xyzxyz_mm": [
+          34.500000580000005,
+          24.29999916,
+          1.2700000001775181e-06,
+          42.59999962,
+          39.8199986,
+          8.90000125
+        ],
+        "model_vs_maker_max_error_mm": 1.4000000021496817e-06,
+        "wire_face_x_mm": 42.6,
+        "wire_room_bare_R25_4_z5_x_tolerance_mm": 5.003011866037408,
+        "diagnostic_wire_room_R25_4_z5_3_xy_tolerance_mm": 4.9408937037297385,
+        "body_bore_margin_mm": 2.9762685657755767,
+        "top_courtyard_collisions": [],
+        "nearest_other_courtyards_mm": [
+          [
+            0.285001,
+            "J410"
+          ],
+          [
+            0.285001,
+            "J9"
+          ],
+          [
+            0.375001,
+            "C93"
+          ]
+        ]
+      },
+      "J9": {
+        "position_mm": [
+          38.6,
+          47.5
+        ],
+        "rotation_deg": 90.0,
+        "body_tolerance_union_local_xyzxyz_mm": [
+          -8.32,
+          -4.1,
+          0,
+          7.2,
+          4.0,
+          8.9
+        ],
+        "placed_body_xyzxyz_mm": [
+          34.5,
+          40.3,
+          0,
+          42.6,
+          55.82,
+          8.9
+        ],
+        "model_box_xyzxyz_mm": [
+          34.500000580000005,
+          40.29999916,
+          1.2700000001775181e-06,
+          42.59999962,
+          55.8199986,
+          8.90000125
+        ],
+        "model_vs_maker_max_error_mm": 1.4000000021496817e-06,
+        "wire_face_x_mm": 42.6,
+        "wire_room_bare_R25_4_z5_x_tolerance_mm": 5.003011866037408,
+        "diagnostic_wire_room_R25_4_z5_3_xy_tolerance_mm": 4.9408937037297385,
+        "body_bore_margin_mm": 2.9762685657755767,
+        "top_courtyard_collisions": [],
+        "nearest_other_courtyards_mm": [
+          [
+            0.285001,
+            "J420"
+          ],
+          [
+            0.335001,
+            "C94"
+          ],
+          [
+            0.375001,
+            "C93"
+          ]
+        ]
+      },
+      "J122": {
+        "position_mm": [
+          38.6,
+          71.5
+        ],
+        "rotation_deg": 90.0,
+        "body_tolerance_union_local_xyzxyz_mm": [
+          -10.069999999999999,
+          -4.1,
+          0,
+          8.95,
+          4.0,
+          8.9
+        ],
+        "placed_body_xyzxyz_mm": [
+          34.5,
+          62.55,
+          0,
+          42.6,
+          81.57,
+          8.9
+        ],
+        "model_box_xyzxyz_mm": [
+          34.500000580000005,
+          62.54999885,
+          1.2700000001775181e-06,
+          42.59999962,
+          81.56999891,
+          8.90000125
+        ],
+        "model_vs_maker_max_error_mm": 1.2700000001775181e-06,
+        "wire_face_x_mm": 42.6,
+        "wire_room_bare_R25_4_z5_x_tolerance_mm": 5.003011866037408,
+        "diagnostic_wire_room_R25_4_z5_3_xy_tolerance_mm": 4.9408937037297385,
+        "body_bore_margin_mm": 2.9762685657755767,
+        "top_courtyard_collisions": [],
+        "nearest_other_courtyards_mm": [
+          [
+            1.475001,
+            "R431"
+          ],
+          [
+            2.505001,
+            "C84"
+          ],
+          [
+            3.561664,
+            "R60"
+          ]
+        ]
+      }
+    },
+    "terminal_adjacent_body_gaps_mm": [
+      [
+        0.4799999999999969,
+        "J420",
+        "J9"
+      ],
+      [
+        0.4800000000000004,
+        "J410",
+        "J420"
+      ],
+      [
+        1.6799989999999951,
+        "J121",
+        "J400"
+      ],
+      [
+        1.68000099999999,
+        "J400",
+        "J1"
+      ],
+      [
+        6.729999999999997,
+        "J9",
+        "J122"
+      ],
+      [
+        11.679999999999986,
+        "J121",
+        "J1"
+      ],
+      [
+        16.479999999999997,
+        "J410",
+        "J9"
+      ],
+      [
+        22.729999999999997,
+        "J420",
+        "J122"
+      ],
+      [
+        23.0,
+        "J1",
+        "J122"
+      ],
+      [
+        23.0,
+        "J121",
+        "J9"
+      ],
+      [
+        23.0,
+        "J400",
+        "J122"
+      ],
+      [
+        23.194827009486403,
+        "J121",
+        "J122"
+      ],
+      [
+        23.62769750060299,
+        "J400",
+        "J9"
+      ],
+      [
+        25.67465871243472,
+        "J121",
+        "J420"
+      ],
+      [
+        27.685160284889083,
+        "J1",
+        "J9"
+      ],
+      [
+        31.422731535943864,
+        "J400",
+        "J420"
+      ],
+      [
+        35.7813932093204,
+        "J121",
+        "J410"
+      ],
+      [
+        38.73,
+        "J410",
+        "J122"
+      ],
+      [
+        38.9305548380703,
+        "J1",
+        "J420"
+      ],
+      [
+        43.91478139738374,
+        "J400",
+        "J410"
+      ],
+      [
+        52.694478837919995,
+        "J1",
+        "J410"
+      ]
+    ],
+    "supports": [
+      {
+        "centre_mm": [
+          3.7,
+          86.0
+        ],
+        "nearest_bottom": [
+          [
+            6.375048,
+            "R83.2"
+          ],
+          [
+            6.685057965343305,
+            "R83 body"
+          ],
+          [
+            7.759979,
+            "R83.1"
+          ]
+        ],
+        "nearest_top": [
+          [
+            5.543014,
+            "TP80.1"
+          ],
+          [
+            6.44999851,
+            "J1 body"
+          ],
+          [
+            8.22878,
+            "J1.2"
+          ]
+        ],
+        "non_GND_surface_copper_in_R3_5": []
+      },
+      {
+        "centre_mm": [
+          4.0,
+          4.0
+        ],
+        "nearest_bottom": [
+          [
+            15.40677,
+            "R462.2"
+          ],
+          [
+            15.640012787718558,
+            "R462 body"
+          ],
+          [
+            16.430432,
+            "R462.1"
+          ]
+        ],
+        "nearest_top": [
+          [
+            6.612111,
+            "C400.2"
+          ],
+          [
+            6.852919086053767,
+            "C400 body"
+          ],
+          [
+            8.004039,
+            "R401.2"
+          ]
+        ],
+        "non_GND_surface_copper_in_R3_5": []
+      },
+      {
+        "centre_mm": [
+          4.0,
+          44.3
+        ],
+        "nearest_bottom": [
+          [
+            4.536177,
+            "C32.2"
+          ],
+          [
+            4.591699857348258,
+            "C32 body"
+          ],
+          [
+            4.770839,
+            "C32.1"
+          ]
+        ],
+        "nearest_top": [
+          [
+            3.807887,
+            "LED2.2"
+          ],
+          [
+            3.860052,
+            "LED1.1"
+          ],
+          [
+            3.879838,
+            "J2.1"
+          ]
+        ],
+        "non_GND_surface_copper_in_R3_5": [
+          {
+            "gap_to_centre_mm": 3.260399,
+            "net": "3V3",
+            "layer": "F.Cu",
+            "class": "PCB_VIA",
+            "at_mm": [
+              3.73,
+              40.8
+            ]
+          },
+          {
+            "gap_to_centre_mm": 3.260399,
+            "net": "3V3",
+            "layer": "B.Cu",
+            "class": "PCB_VIA",
+            "at_mm": [
+              3.73,
+              40.8
+            ]
+          },
+          {
+            "gap_to_centre_mm": 3.410399,
+            "net": "3V3",
+            "layer": "F.Cu",
+            "class": "PCB_TRACK",
+            "at_mm": [
+              3.73,
+              40.35
+            ]
+          },
+          {
+            "gap_to_centre_mm": 3.421392,
+            "net": "NRST",
+            "layer": "F.Cu",
+            "class": "PCB_TRACK",
+            "at_mm": [
+              5.0,
+              40.35
+            ]
+          },
+          {
+            "gap_to_centre_mm": 3.421392,
+            "net": "NRST",
+            "layer": "F.Cu",
+            "class": "PCB_TRACK",
+            "at_mm": [
+              6.2021,
+              41.5521
+            ]
+          }
+        ]
+      },
+      {
+        "centre_mm": [
+          42.0,
+          4.0
+        ],
+        "nearest_bottom": [
+          [
+            6.16495,
+            "J410.4"
+          ],
+          [
+            7.248188795554408,
+            "D411 body"
+          ],
+          [
+            7.283029,
+            "D411.1"
+          ]
+        ],
+        "nearest_top": [
+          [
+            4.2999991600000005,
+            "J410 body"
+          ],
+          [
+            6.16495,
+            "J410.4"
+          ],
+          [
+            9.375818,
+            "J410.3"
+          ]
+        ],
+        "non_GND_surface_copper_in_R3_5": []
+      },
+      {
+        "centre_mm": [
+          42.0,
+          86.0
+        ],
+        "nearest_bottom": [
+          [
+            7.284683,
+            "J122.1"
+          ],
+          [
+            7.721723,
+            "TP83.1"
+          ],
+          [
+            10.259874,
+            "TP81.1"
+          ]
+        ],
+        "nearest_top": [
+          [
+            4.430001090000005,
+            "J122 body"
+          ],
+          [
+            5.755433,
+            "TP88.1"
+          ],
+          [
+            7.284683,
+            "J122.1"
+          ]
+        ],
+        "non_GND_surface_copper_in_R3_5": []
+      }
+    ],
+    "bottom_courtyard_to_THT": [
+      {
+        "bottom_part": "R152",
+        "nearest": [
+          1.535488,
+          "J122.3"
+        ]
+      },
+      {
+        "bottom_part": "R151",
+        "nearest": [
+          1.535488,
+          "J122.3"
+        ]
+      },
+      {
+        "bottom_part": "C83",
+        "nearest": [
+          1.540964,
+          "J3.4"
+        ]
+      },
+      {
+        "bottom_part": "C91",
+        "nearest": [
+          1.555001,
+          "J9.1"
+        ]
+      },
+      {
+        "bottom_part": "R102",
+        "nearest": [
+          1.561225,
+          "J9.4"
+        ]
+      },
+      {
+        "bottom_part": "R153",
+        "nearest": [
+          1.575001,
+          "J122.4"
+        ]
+      },
+      {
+        "bottom_part": "R13",
+        "nearest": [
+          1.579516,
+          "J121.1"
+        ]
+      },
+      {
+        "bottom_part": "R150",
+        "nearest": [
+          1.581058,
+          "J122.2"
+        ]
+      },
+      {
+        "bottom_part": "D400",
+        "nearest": [
+          1.586149,
+          "J9.4"
+        ]
+      },
+      {
+        "bottom_part": "D410",
+        "nearest": [
+          1.586149,
+          "J410.3"
+        ]
+      },
+      {
+        "bottom_part": "D401",
+        "nearest": [
+          1.586149,
+          "J9.3"
+        ]
+      },
+      {
+        "bottom_part": "D421",
+        "nearest": [
+          1.586149,
+          "J420.4"
+        ]
+      },
+      {
+        "bottom_part": "D420",
+        "nearest": [
+          1.586149,
+          "J420.3"
+        ]
+      },
+      {
+        "bottom_part": "C421",
+        "nearest": [
+          1.605001,
+          "J420.1"
+        ]
+      },
+      {
+        "bottom_part": "D411",
+        "nearest": [
+          1.619641,
+          "J410.4"
+        ]
+      },
+      {
+        "bottom_part": "C410",
+        "nearest": [
+          1.684626,
+          "J410.2"
+        ]
+      },
+      {
+        "bottom_part": "C420",
+        "nearest": [
+          1.684626,
+          "J420.2"
+        ]
+      },
+      {
+        "bottom_part": "U5",
+        "nearest": [
+          1.793001,
+          "J121.1"
+        ]
+      },
+      {
+        "bottom_part": "R7",
+        "nearest": [
+          1.800881,
+          "J3.4"
+        ]
+      },
+      {
+        "bottom_part": "C431",
+        "nearest": [
+          1.805001,
+          "J9.1"
+        ]
+      },
+      {
+        "bottom_part": "C411",
+        "nearest": [
+          1.855001,
+          "J410.1"
+        ]
+      },
+      {
+        "bottom_part": "R405",
+        "nearest": [
+          1.906791,
+          "J410.2"
+        ]
+      },
+      {
+        "bottom_part": "R8",
+        "nearest": [
+          1.935394,
+          "J3.1"
+        ]
+      },
+      {
+        "bottom_part": "R90",
+        "nearest": [
+          2.05,
+          "J3.4"
+        ]
+      },
+      {
+        "bottom_part": "R101",
+        "nearest": [
+          2.175001,
+          "J9.4"
+        ]
+      },
+      {
+        "bottom_part": "R450",
+        "nearest": [
+          2.175001,
+          "J420.4"
+        ]
+      },
+      {
+        "bottom_part": "R451",
+        "nearest": [
+          2.175001,
+          "J420.3"
+        ]
+      },
+      {
+        "bottom_part": "R441",
+        "nearest": [
+          2.175001,
+          "J410.3"
+        ]
+      },
+      {
+        "bottom_part": "R100",
+        "nearest": [
+          2.175001,
+          "J9.3"
+        ]
+      },
+      {
+        "bottom_part": "R440",
+        "nearest": [
+          2.175001,
+          "J410.4"
+        ]
+      },
+      {
+        "bottom_part": "C128",
+        "nearest": [
+          2.175001,
+          "J121.2"
+        ]
+      },
+      {
+        "bottom_part": "R9",
+        "nearest": [
+          2.583431,
+          "J3.4"
+        ]
+      },
+      {
+        "bottom_part": "R64",
+        "nearest": [
+          2.596019,
+          "J121.1"
+        ]
+      },
+      {
+        "bottom_part": "R131",
+        "nearest": [
+          2.635031,
+          "J400.1"
+        ]
+      },
+      {
+        "bottom_part": "R83",
+        "nearest": [
+          2.702568,
+          "J1.2"
+        ]
+      },
+      {
+        "bottom_part": "R12",
+        "nearest": [
+          2.915001,
+          "J121.1"
+        ]
+      },
+      {
+        "bottom_part": "R430",
+        "nearest": [
+          2.989068,
+          "J122.5"
+        ]
+      }
+    ],
+    "minimum_native_model_margins_mm": [
+      [
+        0.8861286438584379,
+        "J3",
+        [
+          -0.44988000000000117,
+          26.330106999999998,
+          -0.8501380000000001,
+          7.450028,
+          35.269891,
+          3.2509460000000003
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J1",
+        [
+          3.4000003800000003,
+          71.23000035,
+          1.2700000001775181e-06,
+          11.49999942,
+          79.55000149,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J121",
+        [
+          3.4000003800000003,
+          51.23000035,
+          1.2700000001775181e-06,
+          11.49999942,
+          59.55000149,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J122",
+        [
+          34.500000580000005,
+          62.54999885,
+          1.2700000001775181e-06,
+          42.59999962,
+          81.56999891,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J400",
+        [
+          3.4000003800000003,
+          61.22999935,
+          1.2700000001775181e-06,
+          11.49999942,
+          69.55000049,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J410",
+        [
+          34.500000580000005,
+          8.29999916,
+          1.2700000001775181e-06,
+          42.59999962,
+          23.819998599999998,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J420",
+        [
+          34.500000580000005,
+          24.29999916,
+          1.2700000001775181e-06,
+          42.59999962,
+          39.8199986,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J9",
+        [
+          34.500000580000005,
+          40.29999916,
+          1.2700000001775181e-06,
+          42.59999962,
+          55.8199986,
+          8.90000125
+        ]
+      ],
+      [
+        6.369956828704364,
+        "C431",
+        [
+          37.949999999999996,
+          56.0,
+          -4.2999999924,
+          40.65,
+          59.5,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        8.196479084611532,
+        "R12",
+        [
+          6.750064,
+          48.869873999999996,
+          -1.959918,
+          7.249936,
+          49.870126,
+          -1.6
+        ]
+      ],
+      [
+        8.431469403738532,
+        "R90",
+        [
+          7.0,
+          22.700000000000003,
+          -2.0500000000000003,
+          8.6,
+          23.5,
+          -1.6
+        ]
+      ],
+      [
+        9.182096195739076,
+        "R431",
+        [
+          37.6,
+          58.800000000000004,
+          -2.775557561563e-17,
+          38.4,
+          60.4,
+          0.45
+        ]
+      ]
+    ],
+    "model_rows": [
+      [
+        0.8861286438584379,
+        "J3",
+        [
+          -0.44988000000000117,
+          26.330106999999998,
+          -0.8501380000000001,
+          7.450028,
+          35.269891,
+          3.2509460000000003
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J1",
+        [
+          3.4000003800000003,
+          71.23000035,
+          1.2700000001775181e-06,
+          11.49999942,
+          79.55000149,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J121",
+        [
+          3.4000003800000003,
+          51.23000035,
+          1.2700000001775181e-06,
+          11.49999942,
+          59.55000149,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J122",
+        [
+          34.500000580000005,
+          62.54999885,
+          1.2700000001775181e-06,
+          42.59999962,
+          81.56999891,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J400",
+        [
+          3.4000003800000003,
+          61.22999935,
+          1.2700000001775181e-06,
+          11.49999942,
+          69.55000049,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J410",
+        [
+          34.500000580000005,
+          8.29999916,
+          1.2700000001775181e-06,
+          42.59999962,
+          23.819998599999998,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J420",
+        [
+          34.500000580000005,
+          24.29999916,
+          1.2700000001775181e-06,
+          42.59999962,
+          39.8199986,
+          8.90000125
+        ]
+      ],
+      [
+        2.9762683861528316,
+        "J9",
+        [
+          34.500000580000005,
+          40.29999916,
+          1.2700000001775181e-06,
+          42.59999962,
+          55.8199986,
+          8.90000125
+        ]
+      ],
+      [
+        6.369956828704364,
+        "C431",
+        [
+          37.949999999999996,
+          56.0,
+          -4.2999999924,
+          40.65,
+          59.5,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        8.196479084611532,
+        "R12",
+        [
+          6.750064,
+          48.869873999999996,
+          -1.959918,
+          7.249936,
+          49.870126,
+          -1.6
+        ]
+      ],
+      [
+        8.431469403738532,
+        "R90",
+        [
+          7.0,
+          22.700000000000003,
+          -2.0500000000000003,
+          8.6,
+          23.5,
+          -1.6
+        ]
+      ],
+      [
+        9.182096195739076,
+        "R431",
+        [
+          37.6,
+          58.800000000000004,
+          -2.775557561563e-17,
+          38.4,
+          60.4,
+          0.45
+        ]
+      ],
+      [
+        9.40664165455533,
+        "U5",
+        [
+          8.099878,
+          47.599876,
+          -2.700074,
+          13.100121999999999,
+          50.600124,
+          -1.6
+        ]
+      ],
+      [
+        9.449352763794518,
+        "LED2",
+        [
+          7.899999999419999,
+          45.82500000126,
+          0.0,
+          10.000000000579998,
+          47.17499999874,
+          0.94999999992
+        ]
+      ],
+      [
+        9.467566620362682,
+        "LED1",
+        [
+          7.899999999419999,
+          41.94999999952,
+          0.0,
+          10.000000000579998,
+          43.25000000048,
+          0.69999999954
+        ]
+      ],
+      [
+        9.877097265176346,
+        "C32",
+        [
+          8.470064,
+          45.349874,
+          -2.100126,
+          8.969936,
+          46.350126,
+          -1.6
+        ]
+      ],
+      [
+        10.015452368330838,
+        "D4",
+        [
+          8.543602,
+          29.149914000000003,
+          0.0,
+          11.356397999999999,
+          32.049832,
+          1.648968
+        ]
+      ],
+      [
+        10.175603001452995,
+        "R7",
+        [
+          8.750064,
+          28.399873999999997,
+          -1.959918,
+          9.249936,
+          29.400126,
+          -1.6
+        ]
+      ],
+      [
+        10.175603001452995,
+        "R8",
+        [
+          8.750064,
+          31.999874,
+          -1.959918,
+          9.249936,
+          33.000126,
+          -1.6
+        ]
+      ],
+      [
+        10.578250566463598,
+        "C84",
+        [
+          23.24999961,
+          74.24999961,
+          -1.2700000001775181e-06,
+          31.75000039,
+          82.75000039,
+          10.799999990000002
+        ]
+      ],
+      [
+        10.605508053799182,
+        "R83",
+        [
+          9.2,
+          81.39999999999999,
+          -2.0500000000000003,
+          10.8,
+          82.2,
+          -1.6
+        ]
+      ],
+      [
+        10.605508053799186,
+        "R430",
+        [
+          35.2,
+          59.6,
+          -2.0500000000000003,
+          36.8,
+          60.4,
+          -1.6
+        ]
+      ],
+      [
+        10.740197741493699,
+        "C83",
+        [
+          9.399999999999999,
+          24.5,
+          -2.4000000000000004,
+          11.0,
+          25.299999999999997,
+          -1.6
+        ]
+      ],
+      [
+        11.113575932431933,
+        "R9",
+        [
+          9.700064,
+          28.399873999999997,
+          -1.959918,
+          10.199936,
+          29.400126,
+          -1.6
+        ]
+      ],
+      [
+        11.196989381891296,
+        "R102",
+        [
+          34.6,
+          39.300000000000004,
+          -2.0500000000000003,
+          36.199999999999996,
+          40.1,
+          -1.6
+        ]
+      ],
+      [
+        11.212026030759695,
+        "R432",
+        [
+          35.199874,
+          57.550064,
+          -1.959918,
+          36.200126000000004,
+          58.049935999999995,
+          -1.6
+        ]
+      ],
+      [
+        11.25146528267301,
+        "C411",
+        [
+          32.85,
+          21.0,
+          -4.2999999924,
+          35.550000000000004,
+          24.5,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        11.251465282673015,
+        "C421",
+        [
+          32.05,
+          35.4,
+          -4.2999999924,
+          35.55,
+          38.1,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        11.342011995011914,
+        "D400",
+        [
+          35.42499938,
+          43.17499978,
+          -1.91999936,
+          36.07500062,
+          44.225000220000005,
+          -1.6
+        ]
+      ],
+      [
+        11.342011995011914,
+        "D401",
+        [
+          35.42499938,
+          46.67499978,
+          -1.91999936,
+          36.07500062,
+          47.725000220000005,
+          -1.6
+        ]
+      ],
+      [
+        11.342011995011914,
+        "D410",
+        [
+          35.42499938,
+          11.77499978,
+          -1.91999936,
+          36.07500062,
+          12.825000220000002,
+          -1.6
+        ]
+      ],
+      [
+        11.342011995011914,
+        "D411",
+        [
+          35.42499938,
+          8.174999779999998,
+          -1.91999936,
+          36.07500062,
+          9.22500022,
+          -1.6
+        ]
+      ],
+      [
+        11.342011995011914,
+        "D420",
+        [
+          35.42499938,
+          30.67499978,
+          -1.91999936,
+          36.07500062,
+          31.72500022,
+          -1.6
+        ]
+      ],
+      [
+        11.342011995011914,
+        "D421",
+        [
+          35.42499938,
+          27.17499978,
+          -1.91999936,
+          36.07500062,
+          28.22500022,
+          -1.6
+        ]
+      ],
+      [
+        11.388800941441204,
+        "C91",
+        [
+          34.150000000000006,
+          52.3,
+          -3.2,
+          35.75,
+          55.5,
+          -1.6
+        ]
+      ],
+      [
+        11.409428219277729,
+        "R13",
+        [
+          10.000064,
+          52.049873999999996,
+          -1.959918,
+          10.499936,
+          53.050126,
+          -1.6
+        ]
+      ],
+      [
+        11.553909748544331,
+        "R110",
+        [
+          9.975,
+          24.6,
+          -2.775557561563e-17,
+          11.575000000000001,
+          25.4,
+          0.45
+        ]
+      ],
+      [
+        11.704906010846303,
+        "R131",
+        [
+          10.299874,
+          60.900064,
+          -1.959918,
+          11.300126,
+          61.399936,
+          -1.6
+        ]
+      ],
+      [
+        11.868183374077578,
+        "R33",
+        [
+          10.300002000000001,
+          43.950014,
+          0.0,
+          12.299998,
+          45.249986,
+          0.610108
+        ]
+      ],
+      [
+        11.886065160759408,
+        "R151",
+        [
+          33.900000000000006,
+          72.36999999999999,
+          -2.0500000000000003,
+          35.5,
+          73.17,
+          -1.6
+        ]
+      ],
+      [
+        11.886065160759408,
+        "R152",
+        [
+          33.900000000000006,
+          69.83,
+          -2.0500000000000003,
+          35.5,
+          70.63000000000001,
+          -1.6
+        ]
+      ],
+      [
+        11.984408646910511,
+        "R150",
+        [
+          33.800000000000004,
+          75.5,
+          -2.0500000000000003,
+          35.4,
+          76.30000000000001,
+          -1.6
+        ]
+      ],
+      [
+        11.984408646910511,
+        "R153",
+        [
+          33.800000000000004,
+          67.6,
+          -2.0500000000000003,
+          35.4,
+          68.4,
+          -1.6
+        ]
+      ],
+      [
+        12.013961043051284,
+        "C410",
+        [
+          33.7,
+          17.8,
+          -2.4000000000000004,
+          35.3,
+          18.599999999999998,
+          -1.6
+        ]
+      ],
+      [
+        12.013961043051284,
+        "C420",
+        [
+          33.7,
+          33.800000000000004,
+          -2.4000000000000004,
+          35.3,
+          34.6,
+          -1.6
+        ]
+      ],
+      [
+        12.093653918685469,
+        "C400",
+        [
+          10.85,
+          4.199999999999999,
+          -7.600000018204156e-09,
+          14.35,
+          6.9,
+          2.6999999924000004
+        ]
+      ],
+      [
+        12.279282904684065,
+        "R405",
+        [
+          33.5,
+          15.700000000000001,
+          -2.0500000000000003,
+          35.099999999999994,
+          16.5,
+          -1.6
+        ]
+      ],
+      [
+        12.374503905600385,
+        "R64",
+        [
+          10.980064,
+          51.779874,
+          -1.959918,
+          11.479936,
+          52.780126,
+          -1.6
+        ]
+      ],
+      [
+        12.502419590904037,
+        "C128",
+        [
+          11.2,
+          57.1,
+          -2.4000000000000004,
+          12.8,
+          57.9,
+          -1.6
+        ]
+      ],
+      [
+        12.573909784526156,
+        "R100",
+        [
+          33.2,
+          45.35,
+          -2.0500000000000003,
+          34.8,
+          46.15,
+          -1.6
+        ]
+      ],
+      [
+        12.573909784526156,
+        "R101",
+        [
+          33.2,
+          41.85,
+          -2.0500000000000003,
+          34.8,
+          42.65,
+          -1.6
+        ]
+      ],
+      [
+        12.573909784526156,
+        "R440",
+        [
+          33.2,
+          9.85,
+          -2.0500000000000003,
+          34.8,
+          10.65,
+          -1.6
+        ]
+      ],
+      [
+        12.573909784526156,
+        "R441",
+        [
+          33.2,
+          13.35,
+          -2.0500000000000003,
+          34.8,
+          14.15,
+          -1.6
+        ]
+      ],
+      [
+        12.573909784526156,
+        "R450",
+        [
+          33.2,
+          25.85,
+          -2.0500000000000003,
+          34.8,
+          26.65,
+          -1.6
+        ]
+      ],
+      [
+        12.573909784526156,
+        "R451",
+        [
+          33.2,
+          29.35,
+          -2.0500000000000003,
+          34.8,
+          30.15,
+          -1.6
+        ]
+      ],
+      [
+        12.849974067029562,
+        "U10",
+        [
+          11.725,
+          25.975,
+          -3.0499999978,
+          13.475,
+          29.025,
+          -1.5999999978000001
+        ]
+      ],
+      [
+        12.86553912417893,
+        "R32",
+        [
+          11.300002000000001,
+          40.950014,
+          0.0,
+          13.299998,
+          42.249986,
+          0.610108
+        ]
+      ],
+      [
+        13.112612303355734,
+        "Q120",
+        [
+          11.84999949,
+          71.94999949,
+          -2.49999947,
+          15.15000051,
+          75.25000050999999,
+          -1.59999873
+        ]
+      ],
+      [
+        13.112612303355734,
+        "Q121",
+        [
+          11.84999949,
+          66.94999949,
+          -2.49999947,
+          15.15000051,
+          70.25000050999999,
+          -1.59999873
+        ]
+      ],
+      [
+        13.524796704234246,
+        "C28",
+        [
+          12.2499,
+          24.49995,
+          -2.4001,
+          13.850100000000001,
+          25.30005,
+          -1.6
+        ]
+      ],
+      [
+        13.553965450431589,
+        "R167",
+        [
+          12.2,
+          83.39999999999999,
+          -2.0500000000000003,
+          13.8,
+          84.2,
+          -1.6
+        ]
+      ],
+      [
+        13.675908187630501,
+        "C94",
+        [
+          33.06995,
+          50.1999,
+          0.0,
+          33.87005,
+          51.8001,
+          0.8001
+        ]
+      ],
+      [
+        13.745628659579241,
+        "C93",
+        [
+          33.0,
+          38.475,
+          0.0,
+          33.8,
+          40.074999999999996,
+          0.8
+        ]
+      ],
+      [
+        13.774691015526802,
+        "R401",
+        [
+          12.2,
+          1.4,
+          -2.775557561563e-17,
+          13.8,
+          2.2,
+          0.45
+        ]
+      ],
+      [
+        13.835642811261016,
+        "C89",
+        [
+          12.4,
+          83.9,
+          0.0,
+          15.6,
+          85.5,
+          1.6
+        ]
+      ],
+      [
+        13.835642811261016,
+        "C95",
+        [
+          12.4,
+          86.5,
+          0.0,
+          15.6,
+          88.1,
+          1.6
+        ]
+      ],
+      [
+        13.835642811261016,
+        "C96",
+        [
+          12.4,
+          81.3,
+          0.0,
+          15.6,
+          82.89999999999999,
+          1.6
+        ]
+      ],
+      [
+        13.880096924990667,
+        "R104",
+        [
+          32.699874,
+          46.250064,
+          0.0,
+          33.700126000000004,
+          46.749936,
+          0.35991799999999996
+        ]
+      ],
+      [
+        13.880096924990667,
+        "R105",
+        [
+          32.699874,
+          48.350064,
+          0.0,
+          33.700126000000004,
+          48.849936,
+          0.35991799999999996
+        ]
+      ],
+      [
+        13.880096924990667,
+        "R60",
+        [
+          32.699874,
+          58.350064,
+          0.0,
+          33.700126000000004,
+          58.849936,
+          0.35991799999999996
+        ]
+      ],
+      [
+        13.880096924990667,
+        "R61",
+        [
+          32.699874,
+          53.750064,
+          0.0,
+          33.700126000000004,
+          54.249936,
+          0.35991799999999996
+        ]
+      ],
+      [
+        13.884896732213537,
+        "C80",
+        [
+          12.450000000000001,
+          78.7,
+          0.0,
+          15.65,
+          80.3,
+          1.6
+        ]
+      ],
+      [
+        13.944576228529536,
+        "C60",
+        [
+          32.79995,
+          55.9999,
+          0.0,
+          33.60005,
+          57.6001,
+          0.8001
+        ]
+      ],
+      [
+        13.94662609056004,
+        "Q124",
+        [
+          12.4,
+          55.879999999999995,
+          0.2,
+          15.4,
+          58.86,
+          0.78
+        ]
+      ],
+      [
+        14.024109231883576,
+        "R165",
+        [
+          12.45,
+          66.6,
+          -2.775557561563e-17,
+          14.05,
+          67.4,
+          0.45
+        ]
+      ],
+      [
+        14.024109231883576,
+        "R80",
+        [
+          12.45,
+          68.8,
+          -2.775557561563e-17,
+          14.05,
+          69.60000000000001,
+          0.45
+        ]
+      ],
+      [
+        14.027902688331015,
+        "C407",
+        [
+          30.45,
+          17.75,
+          -7.600000018204156e-09,
+          33.15,
+          21.25,
+          2.6999999924000004
+        ]
+      ],
+      [
+        14.052906524214883,
+        "D121",
+        [
+          30.050168,
+          70.093602,
+          -3.248968,
+          32.950086,
+          72.906398,
+          -1.6
+        ]
+      ],
+      [
+        14.106709027363335,
+        "C92",
+        [
+          31.5499,
+          52.09995,
+          -2.4001,
+          33.1501,
+          52.90005,
+          -1.6
+        ]
+      ],
+      [
+        14.110728524556441,
+        "R5",
+        [
+          12.750064,
+          44.669874,
+          -1.959918,
+          13.249936,
+          45.670126,
+          -1.6
+        ]
+      ],
+      [
+        14.16664078678068,
+        "D8",
+        [
+          12.85,
+          73.225,
+          -2.775557561563e-17,
+          18.15,
+          76.775,
+          2.15
+        ]
+      ],
+      [
+        14.187711496358025,
+        "U402",
+        [
+          31.125,
+          57.475,
+          -3.0499999978,
+          32.875,
+          60.525,
+          -1.5999999978000001
+        ]
+      ],
+      [
+        14.330083965079947,
+        "U13",
+        [
+          30.975,
+          48.175000000000004,
+          -3.0499999978,
+          32.725,
+          51.225,
+          -1.5999999978000001
+        ]
+      ],
+      [
+        14.407293008951408,
+        "D9",
+        [
+          13.65,
+          76.8,
+          -3.8200000000000003,
+          16.35,
+          81.8,
+          -1.6
+        ]
+      ],
+      [
+        14.563535423637344,
+        "U12",
+        [
+          30.55,
+          38.599999999999994,
+          -2.499999989,
+          32.65,
+          41.0,
+          -1.599999989
+        ]
+      ],
+      [
+        14.615328582348383,
+        "D120",
+        [
+          13.447271999999998,
+          58.749914000000004,
+          -2.649274,
+          15.952727999999999,
+          61.650086,
+          -1.6
+        ]
+      ],
+      [
+        14.640735893837217,
+        "R134",
+        [
+          13.35,
+          62.4,
+          -2.2,
+          19.65,
+          65.6,
+          -1.6
+        ]
+      ],
+      [
+        14.64788073758308,
+        "R154",
+        [
+          32.200064000000005,
+          74.029874,
+          -1.959918,
+          32.699936,
+          75.030126,
+          -1.6
+        ]
+      ],
+      [
+        14.64788073758308,
+        "R157",
+        [
+          32.200064000000005,
+          67.89987400000001,
+          -1.959918,
+          32.699936,
+          68.900126,
+          -1.6
+        ]
+      ],
+      [
+        14.724907862825022,
+        "R462",
+        [
+          13.399999999999999,
+          16.5,
+          -2.0500000000000003,
+          15.0,
+          17.299999999999997,
+          -1.6
+        ]
+      ],
+      [
+        14.724907862825022,
+        "R463",
+        [
+          13.399999999999999,
+          18.5,
+          -2.0500000000000003,
+          15.0,
+          19.299999999999997,
+          -1.6
+        ]
+      ],
+      [
+        14.772191747470726,
+        "R85",
+        [
+          13.2,
+          26.8,
+          -2.775557561563e-17,
+          14.8,
+          27.599999999999998,
+          0.45
+        ]
+      ],
+      [
+        14.83707299390083,
+        "C406",
+        [
+          28.15,
+          7.25,
+          -4.2999999924,
+          31.65,
+          9.95,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        15.27074769494536,
+        "C403",
+        [
+          28.35,
+          2.25,
+          -7.600000018204156e-09,
+          31.85,
+          4.95,
+          2.6999999924000004
+        ]
+      ],
+      [
+        15.27074769494536,
+        "C404",
+        [
+          28.35,
+          5.65,
+          -7.600000018204156e-09,
+          31.85,
+          8.35,
+          2.6999999924000004
+        ]
+      ],
+      [
+        15.280824745810062,
+        "R11",
+        [
+          13.950064,
+          43.249874,
+          -1.959918,
+          14.449936,
+          44.250126,
+          -1.6
+        ]
+      ],
+      [
+        15.370440723727043,
+        "R402",
+        [
+          30.599999999999998,
+          12.2,
+          -2.775557561563e-17,
+          32.199999999999996,
+          13.0,
+          0.45
+        ]
+      ],
+      [
+        15.370440723727043,
+        "R403",
+        [
+          30.599999999999998,
+          14.0,
+          -2.775557561563e-17,
+          32.199999999999996,
+          14.8,
+          0.45
+        ]
+      ],
+      [
+        15.686422706570438,
+        "J430",
+        [
+          17.00000003,
+          18.2999993,
+          -3.70000088,
+          30.99999997,
+          33.79999878,
+          -1.6
+        ]
+      ],
+      [
+        15.694974198841157,
+        "R103",
+        [
+          30.8,
+          54.0,
+          -2.0500000000000003,
+          31.599999999999998,
+          55.599999999999994,
+          -1.6
+        ]
+      ],
+      [
+        15.69510999522536,
+        "C430",
+        [
+          29.9,
+          61.4,
+          -2.4000000000000004,
+          31.5,
+          62.199999999999996,
+          -1.6
+        ]
+      ],
+      [
+        15.730377760236138,
+        "C31",
+        [
+          14.450064,
+          46.569874,
+          -2.100126,
+          14.949936,
+          47.570126,
+          -1.6
+        ]
+      ],
+      [
+        15.769145713570934,
+        "R92",
+        [
+          30.2,
+          87.1,
+          -2.775557561563e-17,
+          31.8,
+          87.9,
+          0.45
+        ]
+      ],
+      [
+        15.826035410537463,
+        "R121",
+        [
+          14.250064,
+          71.36987400000001,
+          0.0,
+          14.749936,
+          72.370126,
+          0.35991799999999996
+        ]
+      ],
+      [
+        15.875062813516537,
+        "C13",
+        [
+          14.600064,
+          49.599874,
+          -2.100126,
+          15.099936,
+          50.600126,
+          -1.6
+        ]
+      ],
+      [
+        16.40706169624942,
+        "U1",
+        [
+          15.0,
+          35.0,
+          0.0,
+          31.0,
+          51.0,
+          1.500000286476
+        ]
+      ],
+      [
+        16.490707962567832,
+        "R155",
+        [
+          30.300064,
+          74.029874,
+          -1.959918,
+          30.799936000000002,
+          75.030126,
+          -1.6
+        ]
+      ],
+      [
+        16.490707962567832,
+        "R156",
+        [
+          30.300064,
+          67.89987400000001,
+          -1.959918,
+          30.799936000000002,
+          68.900126,
+          -1.6
+        ]
+      ],
+      [
+        16.606007937244936,
+        "U4",
+        [
+          15.50013,
+          44.650065999999995,
+          -2.519988,
+          18.500124,
+          47.149934,
+          -1.6
+        ]
+      ],
+      [
+        16.6362236263074,
+        "C401",
+        [
+          15.600000000000001,
+          7.65,
+          -7.600000018204156e-09,
+          19.1,
+          10.35,
+          2.6999999924000004
+        ]
+      ],
+      [
+        16.777615805688576,
+        "R82",
+        [
+          15.524999999999999,
+          83.5,
+          -2.0500000000000003,
+          17.125,
+          84.30000000000001,
+          -1.6
+        ]
+      ],
+      [
+        17.03073499181404,
+        "Q122",
+        [
+          15.547272000000001,
+          68.349914,
+          0.0,
+          18.052728000000002,
+          71.250086,
+          1.049274
+        ]
+      ],
+      [
+        17.384696040692162,
+        "C10",
+        [
+          16.500002,
+          53.450014,
+          -2.899972,
+          18.499998,
+          54.749986,
+          -1.6
+        ]
+      ],
+      [
+        17.384696040692162,
+        "C11",
+        [
+          16.500002,
+          51.450014,
+          -2.899972,
+          18.499998,
+          52.749986,
+          -1.6
+        ]
+      ],
+      [
+        17.38746880206145,
+        "R404",
+        [
+          15.825,
+          1.4,
+          -2.775557561563e-17,
+          17.425,
+          2.2,
+          0.45
+        ]
+      ],
+      [
+        17.49286562495313,
+        "C86",
+        [
+          15.974999,
+          24.900000000000002,
+          0.0,
+          17.574999000000002,
+          25.7,
+          0.8
+        ]
+      ],
+      [
+        17.53437036122776,
+        "U400",
+        [
+          16.049999999999997,
+          4.05,
+          -9.39999999283181e-09,
+          17.75,
+          7.05,
+          0.9999999905999999
+        ]
+      ],
+      [
+        17.54348809749702,
+        "R126",
+        [
+          16.000002,
+          53.590014000000004,
+          0.0,
+          17.999998,
+          54.889986,
+          0.610108
+        ]
+      ],
+      [
+        17.715179889517064,
+        "C87",
+        [
+          16.1999,
+          64.59995,
+          0.0,
+          17.8001,
+          65.40005,
+          0.8001
+        ]
+      ],
+      [
+        17.729008088137313,
+        "R164",
+        [
+          16.525,
+          55.5,
+          -2.0500000000000003,
+          18.125,
+          56.3,
+          -1.6
+        ]
+      ],
+      [
+        17.769081405597174,
+        "C120",
+        [
+          16.700000000000003,
+          71.72500000000001,
+          -2.4000000000000004,
+          17.5,
+          73.325,
+          -1.6
+        ]
+      ],
+      [
+        17.844328527341993,
+        "C82",
+        [
+          17.95,
+          75.0,
+          -4.2999999924,
+          20.650000000000002,
+          78.5,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        17.877197139320224,
+        "C15",
+        [
+          28.800064,
+          46.899874,
+          -2.100126,
+          29.299936000000002,
+          47.900126,
+          -1.6
+        ]
+      ],
+      [
+        17.878451324602242,
+        "C7",
+        [
+          27.650014000000002,
+          72.80000199999999,
+          -2.899972,
+          28.949986,
+          74.799998,
+          -1.6
+        ]
+      ],
+      [
+        17.924165539523457,
+        "C17",
+        [
+          16.750064,
+          37.399874,
+          -2.100126,
+          17.249936,
+          38.400126,
+          -1.6
+        ]
+      ],
+      [
+        17.962175772441334,
+        "C126",
+        [
+          16.44995,
+          56.8749,
+          0.0,
+          17.25005,
+          58.4751,
+          0.8001
+        ]
+      ],
+      [
+        17.9710915130901,
+        "C30",
+        [
+          16.800064,
+          48.229873999999995,
+          -2.100126,
+          17.299936000000002,
+          49.230126,
+          -1.6
+        ]
+      ],
+      [
+        17.999687686778227,
+        "C129",
+        [
+          27.4499,
+          51.19995,
+          -2.4001,
+          29.0501,
+          52.00005,
+          -1.6
+        ]
+      ],
+      [
+        18.06481268581672,
+        "C100",
+        [
+          28.600064,
+          39.469874,
+          -2.100126,
+          29.099936000000003,
+          40.470126,
+          -1.6
+        ]
+      ],
+      [
+        18.137604161689428,
+        "U401",
+        [
+          26.300000060000002,
+          12.30000006,
+          -2.39999967,
+          28.89999994,
+          14.899999939999999,
+          -1.59999873
+        ]
+      ],
+      [
+        18.269577690674595,
+        "R91",
+        [
+          27.3,
+          59.6,
+          -2.0500000000000003,
+          28.900000000000002,
+          60.4,
+          -1.6
+        ]
+      ],
+      [
+        18.272655181552718,
+        "R133",
+        [
+          27.929873999999998,
+          54.000064,
+          -1.959918,
+          28.930126,
+          54.499936,
+          -1.6
+        ]
+      ],
+      [
+        18.272655181552718,
+        "R180",
+        [
+          27.929873999999998,
+          53.000064,
+          -1.959918,
+          28.930126,
+          53.499936,
+          -1.6
+        ]
+      ],
+      [
+        18.27477207844892,
+        "C19",
+        [
+          27.94995,
+          36.8499,
+          -2.4001,
+          28.75005,
+          38.4501,
+          -1.6
+        ]
+      ],
+      [
+        18.320486340161608,
+        "C85",
+        [
+          27.099999999999998,
+          65.32499899999999,
+          -2.4000000000000004,
+          28.7,
+          66.124999,
+          -1.6
+        ]
+      ],
+      [
+        18.363207116560904,
+        "C6",
+        [
+          27.100014,
+          68.750002,
+          -2.899972,
+          28.399986,
+          70.749998,
+          -1.6
+        ]
+      ],
+      [
+        18.368897175965156,
+        "L1",
+        [
+          23.000004,
+          72.600004,
+          -4.615825312,
+          26.999996,
+          76.59999599999999,
+          -1.6
+        ]
+      ],
+      [
+        18.370643221152637,
+        "U9",
+        [
+          17.45,
+          80.55,
+          -2.5999999905999998,
+          19.55,
+          82.64999999999999,
+          -1.5999999906000002
+        ]
+      ],
+      [
+        18.411416177623963,
+        "C23",
+        [
+          26.9999,
+          34.89995,
+          -2.4001,
+          28.6001,
+          35.70005,
+          -1.6
+        ]
+      ],
+      [
+        18.456204534592985,
+        "R86",
+        [
+          27.099999999999998,
+          63.85,
+          -2.0500000000000003,
+          28.7,
+          64.65,
+          -1.6
+        ]
+      ],
+      [
+        18.502930361923514,
+        "C461",
+        [
+          25.65,
+          17.05,
+          -7.600000018204156e-09,
+          28.35,
+          20.55,
+          2.6999999924000004
+        ]
+      ],
+      [
+        18.530377434121228,
+        "C21",
+        [
+          27.599874,
+          49.000064,
+          -2.100126,
+          28.600126000000003,
+          49.499936,
+          -1.6
+        ]
+      ],
+      [
+        18.549212647238136,
+        "R460",
+        [
+          27.0,
+          16.400000000000002,
+          -2.0500000000000003,
+          28.6,
+          17.2,
+          -1.6
+        ]
+      ],
+      [
+        18.78394965927781,
+        "U3",
+        [
+          18.646998,
+          38.550018,
+          -3.669338,
+          26.553002000000003,
+          43.849982000000004,
+          -1.6
+        ]
+      ],
+      [
+        18.85331541917622,
+        "C29",
+        [
+          27.750064,
+          43.019874,
+          -2.100126,
+          28.249936,
+          44.020126000000005,
+          -1.6
+        ]
+      ],
+      [
+        18.899000847212857,
+        "C18",
+        [
+          17.799874,
+          48.900064,
+          -2.100126,
+          18.800126000000002,
+          49.399936,
+          -1.6
+        ]
+      ],
+      [
+        18.907586548741815,
+        "R132",
+        [
+          27.750064,
+          57.099874,
+          -1.959918,
+          28.249936,
+          58.100126,
+          -1.6
+        ]
+      ],
+      [
+        18.907586548741815,
+        "R175",
+        [
+          27.750064,
+          55.299873999999996,
+          -1.959918,
+          28.249936,
+          56.300126,
+          -1.6
+        ]
+      ],
+      [
+        19.049506228611126,
+        "Q123",
+        [
+          18.247272,
+          58.799914,
+          -2.649274,
+          20.752728,
+          61.700086,
+          -1.6
+        ]
+      ],
+      [
+        19.15000000608,
+        "C405",
+        [
+          22.65,
+          8.950000000000001,
+          -4.2999999924,
+          26.15,
+          11.65,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        19.214069820971417,
+        "C8",
+        [
+          25.400001999999997,
+          77.630014,
+          -2.899972,
+          27.399998,
+          78.929986,
+          -1.6
+        ]
+      ],
+      [
+        19.214069820971417,
+        "C9",
+        [
+          25.400001999999997,
+          79.590014,
+          -2.899972,
+          27.399998,
+          80.889986,
+          -1.6
+        ]
+      ],
+      [
+        19.319677430334337,
+        "L400",
+        [
+          21.2,
+          2.7999999999999994,
+          -2.7999999918648655e-09,
+          27.2,
+          8.3,
+          2.9999999971999998
+        ]
+      ],
+      [
+        19.367452397780927,
+        "R120",
+        [
+          18.250064,
+          72.099874,
+          -1.959918,
+          18.749936,
+          73.10012599999999,
+          -1.6
+        ]
+      ],
+      [
+        19.47957473877741,
+        "C22",
+        [
+          26.59995,
+          46.4999,
+          -2.4001,
+          27.40005,
+          48.1001,
+          -1.6
+        ]
+      ],
+      [
+        19.483301469375647,
+        "R162",
+        [
+          18.500002,
+          57.050014000000004,
+          -2.210108,
+          20.499998,
+          58.349986,
+          -1.6
+        ]
+      ],
+      [
+        19.608750641784113,
+        "R128",
+        [
+          18.050064,
+          56.904874,
+          0.0,
+          18.549936000000002,
+          57.905126,
+          0.35991799999999996
+        ]
+      ],
+      [
+        19.822461224175633,
+        "C20",
+        [
+          18.9999,
+          36.89995,
+          -2.4001,
+          20.6001,
+          37.70005,
+          -1.6
+        ]
+      ],
+      [
+        19.887843415080486,
+        "C16",
+        [
+          26.099874,
+          36.370064,
+          -2.100126,
+          27.100126000000003,
+          36.869935999999996,
+          -1.6
+        ]
+      ],
+      [
+        20.10598564666604,
+        "C88",
+        [
+          19.150063999999997,
+          83.44987400000001,
+          -2.100126,
+          19.649936,
+          84.450126,
+          -1.6
+        ]
+      ],
+      [
+        20.225886791309822,
+        "U2",
+        [
+          23.549914,
+          68.399952,
+          -2.4900160000000002,
+          26.450086,
+          71.200048,
+          -1.6
+        ]
+      ],
+      [
+        20.363032396880925,
+        "C25",
+        [
+          19.449873999999998,
+          47.450064000000005,
+          -2.100126,
+          20.450126,
+          47.949936,
+          -1.6
+        ]
+      ],
+      [
+        20.478666831983816,
+        "R10",
+        [
+          19.499874,
+          44.440064,
+          -1.959918,
+          20.500126,
+          44.939935999999996,
+          -1.6
+        ]
+      ],
+      [
+        20.544256671303966,
+        "U11",
+        [
+          23.349999999999998,
+          63.45,
+          -2.5999999905999998,
+          25.95,
+          65.55,
+          -1.5999999906000002
+        ]
+      ],
+      [
+        20.61467627456781,
+        "C26",
+        [
+          25.249874,
+          45.250064,
+          -2.100126,
+          26.250126,
+          45.749936,
+          -1.6
+        ]
+      ],
+      [
+        20.63356120400163,
+        "R400",
+        [
+          19.099999999999998,
+          1.4,
+          -2.775557561563e-17,
+          20.7,
+          2.2,
+          0.45
+        ]
+      ],
+      [
+        20.655002944641776,
+        "C402",
+        [
+          19.200000000000003,
+          3.9750000000000005,
+          0.0,
+          20.0,
+          5.575,
+          0.8
+        ]
+      ],
+      [
+        20.832752772102733,
+        "LS120",
+        [
+          20.34999999902,
+          55.84999999902,
+          0.0,
+          25.65000000098,
+          61.15000000098,
+          2.50000000126
+        ]
+      ],
+      [
+        20.84580466891394,
+        "R127",
+        [
+          19.299874,
+          53.990064000000004,
+          0.0,
+          20.300126000000002,
+          54.489936,
+          0.35991799999999996
+        ]
+      ],
+      [
+        20.848765620209072,
+        "R166",
+        [
+          20.35,
+          84.7,
+          0.0,
+          26.65,
+          87.89999999999999,
+          0.6
+        ]
+      ],
+      [
+        20.88380574775671,
+        "C99",
+        [
+          24.919874,
+          66.650064,
+          -2.100126,
+          25.920126000000003,
+          67.14993600000001,
+          -1.6
+        ]
+      ],
+      [
+        20.895316969993754,
+        "R122",
+        [
+          19.350064,
+          69.299874,
+          0.0,
+          19.849936000000003,
+          70.30012599999999,
+          0.35991799999999996
+        ]
+      ],
+      [
+        20.90024238451878,
+        "R62",
+        [
+          24.999874,
+          55.450064000000005,
+          -1.959918,
+          26.000126,
+          55.949936,
+          -1.6
+        ]
+      ],
+      [
+        20.90024238451878,
+        "R63",
+        [
+          24.999874,
+          56.450064000000005,
+          -1.959918,
+          26.000126,
+          56.949936,
+          -1.6
+        ]
+      ],
+      [
+        21.058096719076335,
+        "C24",
+        [
+          25.200063999999998,
+          48.499874,
+          -2.100126,
+          25.699936,
+          49.500126,
+          -1.6
+        ]
+      ],
+      [
+        21.099259940485272,
+        "C98",
+        [
+          23.775,
+          61.800000000000004,
+          -2.4000000000000004,
+          25.375,
+          62.6,
+          -1.6
+        ]
+      ],
+      [
+        21.173741823222656,
+        "R464",
+        [
+          24.75,
+          21.78,
+          -2.775557561563e-17,
+          26.35,
+          22.58,
+          0.45
+        ]
+      ],
+      [
+        21.220326101405178,
+        "C81",
+        [
+          20.8,
+          79.69999999999999,
+          -2.4000000000000004,
+          22.400000000000002,
+          80.5,
+          -1.6
+        ]
+      ],
+      [
+        21.22270479836062,
+        "R81",
+        [
+          19.7,
+          64.6,
+          -2.775557561563e-17,
+          21.3,
+          65.4,
+          0.45
+        ]
+      ],
+      [
+        21.361460748875036,
+        "C408",
+        [
+          24.299874,
+          13.350064,
+          -2.100126,
+          25.300126000000002,
+          13.849936,
+          -1.6
+        ]
+      ],
+      [
+        21.421494573814783,
+        "C90",
+        [
+          25.200000000000003,
+          30.5,
+          0.0,
+          26.0,
+          32.1,
+          0.8
+        ]
+      ],
+      [
+        21.468892307140447,
+        "R84",
+        [
+          20.8,
+          81.425,
+          -2.0500000000000003,
+          22.400000000000002,
+          82.22500000000001,
+          -1.6
+        ]
+      ],
+      [
+        21.505709259395708,
+        "C14",
+        [
+          20.899873999999997,
+          51.900064,
+          -2.100126,
+          21.900126,
+          52.399936,
+          -1.6
+        ]
+      ],
+      [
+        21.61176339050852,
+        "R461",
+        [
+          23.4,
+          16.400000000000002,
+          -2.0500000000000003,
+          25.0,
+          17.2,
+          -1.6
+        ]
+      ],
+      [
+        21.682331586381217,
+        "C127",
+        [
+          22.849899999999998,
+          52.79995,
+          -2.4001,
+          24.4501,
+          53.60005,
+          -1.6
+        ]
+      ],
+      [
+        21.71900718084369,
+        "D123",
+        [
+          20.374882,
+          62.350014,
+          0.0,
+          23.025118,
+          63.649986,
+          0.94996
+        ]
+      ],
+      [
+        21.792720693925954,
+        "Y1",
+        [
+          21.600066,
+          45.000054,
+          -2.3010400000000004,
+          24.099934,
+          48.199946000000004,
+          -1.6
+        ]
+      ],
+      [
+        21.87715131526237,
+        "R123",
+        [
+          20.350064,
+          70.159874,
+          0.0,
+          20.849936000000003,
+          71.16012599999999,
+          0.35991799999999996
+        ]
+      ],
+      [
+        21.999568997545364,
+        "R87",
+        [
+          21.6,
+          63.125,
+          -2.0500000000000003,
+          22.4,
+          64.725,
+          -1.6
+        ]
+      ],
+      [
+        21.999568997545364,
+        "R88",
+        [
+          21.6,
+          66.2,
+          -2.0500000000000003,
+          22.4,
+          67.8,
+          -1.6
+        ]
+      ],
+      [
+        22.015384248855316,
+        "C5",
+        [
+          21.699873999999998,
+          71.180064,
+          -2.100126,
+          22.700126,
+          71.67993600000001,
+          -1.6
+        ]
+      ],
+      [
+        22.041765340140874,
+        "R163",
+        [
+          21.550064,
+          58.799873999999996,
+          -1.959918,
+          22.049936000000002,
+          59.800126,
+          -1.6
+        ]
+      ],
+      [
+        22.32697855768748,
+        "R130",
+        [
+          22.929873999999998,
+          55.600064,
+          -1.959918,
+          23.930126,
+          56.099936,
+          -1.6
+        ]
+      ],
+      [
+        22.32697855768748,
+        "R178",
+        [
+          22.929873999999998,
+          54.600064,
+          -1.959918,
+          23.930126,
+          55.099936,
+          -1.6
+        ]
+      ],
+      [
+        22.574132641180928,
+        "R129",
+        [
+          22.750064,
+          56.899874,
+          -1.959918,
+          23.249936,
+          57.900126,
+          -1.6
+        ]
+      ],
+      [
+        22.574132641180928,
+        "R173",
+        [
+          22.750064,
+          58.699874,
+          -1.959918,
+          23.249936,
+          59.700126000000004,
+          -1.6
+        ]
+      ],
+      [
+        22.617457557897332,
+        "C97",
+        [
+          23.900000000000002,
+          63.60000000000001,
+          0.0,
+          24.7,
+          65.2,
+          0.8
+        ]
+      ],
+      [
+        22.94183759611211,
+        "C460",
+        [
+          21.68,
+          21.3,
+          0.0,
+          23.28,
+          22.099999999999998,
+          0.8
+        ]
+      ],
+      [
+        23.568647304430563,
+        "R89",
+        [
+          22.2,
+          69.6,
+          -2.775557561563e-17,
+          23.8,
+          70.4,
+          0.45
+        ]
+      ]
+    ],
+    "deepest_bottom_models_mm": [
+      [
+        -3.015825312,
+        "L1",
+        [
+          23.000004,
+          72.600004,
+          -4.615825312,
+          26.999996,
+          76.59999599999999,
+          -1.6
+        ]
+      ],
+      [
+        -2.6999999924,
+        "C405",
+        [
+          22.65,
+          8.950000000000001,
+          -4.2999999924,
+          26.15,
+          11.65,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        -2.6999999924,
+        "C406",
+        [
+          28.15,
+          7.25,
+          -4.2999999924,
+          31.65,
+          9.95,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        -2.6999999924,
+        "C411",
+        [
+          32.85,
+          21.0,
+          -4.2999999924,
+          35.550000000000004,
+          24.5,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        -2.6999999924,
+        "C421",
+        [
+          32.05,
+          35.4,
+          -4.2999999924,
+          35.55,
+          38.1,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        -2.6999999924,
+        "C431",
+        [
+          37.949999999999996,
+          56.0,
+          -4.2999999924,
+          40.65,
+          59.5,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        -2.6999999924,
+        "C82",
+        [
+          17.95,
+          75.0,
+          -4.2999999924,
+          20.650000000000002,
+          78.5,
+          -1.5999999924000001
+        ]
+      ],
+      [
+        -2.22,
+        "D9",
+        [
+          13.65,
+          76.8,
+          -3.8200000000000003,
+          16.35,
+          81.8,
+          -1.6
+        ]
+      ],
+      [
+        -2.10000088,
+        "J430",
+        [
+          17.00000003,
+          18.2999993,
+          -3.70000088,
+          30.99999997,
+          33.79999878,
+          -1.6
+        ]
+      ],
+      [
+        -2.069338,
+        "U3",
+        [
+          18.646998,
+          38.550018,
+          -3.669338,
+          26.553002000000003,
+          43.849982000000004,
+          -1.6
+        ]
+      ]
+    ],
+    "mems": {
+      "U4": {
+        "position_mm": [
+          17.0,
+          45.9
+        ],
+        "rotation_deg": 180.0,
+        "bottom": true,
+        "native_model_xyzxyz_mm": [
+          15.50013,
+          44.650065999999995,
+          -2.519988,
+          18.500124,
+          47.149934,
+          -1.6
+        ],
+        "pad1_offset_mm": [
+          1.2100000000000009,
+          -0.75
+        ],
+        "nearest_vias_mm": [
+          [
+            0.050001,
+            "SPI1_MOSI",
+            [
+              17.55,
+              44.25
+            ]
+          ],
+          [
+            0.100001,
+            "GND",
+            [
+              16.75,
+              47.6
+            ]
+          ],
+          [
+            0.150001,
+            "IMU_INT1",
+            [
+              18.21,
+              47.65
+            ]
+          ],
+          [
+            0.430074,
+            "GND",
+            [
+              18.8,
+              43.9
+            ]
+          ]
+        ],
+        "component_side_filled_copper_overlap": [],
+        "conservative_guard_xyzxyz_mm": [
+          15.4,
+          44.55,
+          -2.5300000000000002,
+          18.6,
+          47.25,
+          -1.6
+        ],
+        "maker_max_body_xyzxyz_mm": [
+          15.475,
+          44.625,
+          -2.46,
+          18.525,
+          47.175,
+          -1.6
+        ],
+        "maker_max_dimensions_mm": [
+          3.05,
+          2.55,
+          0.86
+        ],
+        "conservative_guard_basis": "3.2 x 2.7 mm planar guard deliberately exceeds ST Figure 32 maxima 3.05 x 2.55 mm; no via or B.Cu fill intersects this larger guard."
+      },
+      "U5": {
+        "position_mm": [
+          10.6,
+          49.1
+        ],
+        "rotation_deg": 0.0,
+        "bottom": true,
+        "native_model_xyzxyz_mm": [
+          8.099878,
+          47.599876,
+          -2.700074,
+          13.100121999999999,
+          50.600124,
+          -1.6
+        ],
+        "pad1_offset_mm": [
+          -1.879999999999999,
+          -1.8250000000000028
+        ],
+        "nearest_vias_mm": [
+          [
+            0.100001,
+            "GND",
+            [
+              13.45,
+              50.2
+            ]
+          ],
+          [
+            0.100001,
+            "I2C1_SCL",
+            [
+              7.75,
+              49.8
+            ]
+          ],
+          [
+            0.400001,
+            "GND",
+            [
+              13.75,
+              48.5
+            ]
+          ],
+          [
+            0.650001,
+            "I2C1_SDA",
+            [
+              9.97,
+              51.5
+            ]
+          ]
+        ],
+        "component_side_filled_copper_overlap": [],
+        "nominal_body_xyzxyz_mm": [
+          8.1,
+          47.6,
+          -2.7,
+          13.1,
+          50.6,
+          -1.6
+        ]
+      }
+    },
+    "J430_closed_card_allocation_xyzxyz_mm": [
+      17.0,
+      18.3,
+      -3.7,
+      31.0,
+      33.8,
+      -1.6
+    ],
+    "board_sha256_after": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d"
+  },
+  "selected_project_rules": {
+    "ok": true,
+    "complete": false,
+    "issues": [],
+    "failing": [],
+    "rules": {
+      "M-1": {
+        "title": "outline 46 mm wide, length <= 120 mm",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "outline_mm": [
+            0.0,
+            0.0,
+            46.0,
+            90.0
+          ],
+          "width_mm": 46.0,
+          "length_mm": 90.0
+        }
+      },
+      "M-3": {
+        "title": "five supports, former servo plug tie holes absent",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "support_circles": 5,
+          "servo_plug_tie_holes_required": false
+        }
+      },
+      "M-5": {
+        "title": "fit (profile r10)",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "width_mm": 46.0,
+          "length_mm": 90.0,
+          "supports": [
+            [
+              3.7,
+              86.0
+            ],
+            [
+              4.0,
+              4.0
+            ],
+            [
+              4.0,
+              44.3
+            ],
+            [
+              42.0,
+              4.0
+            ],
+            [
+              42.0,
+              86.0
+            ]
+          ],
+          "nearest_support": [
+            4.536176804314399,
+            "C32.2",
+            [
+              4.0,
+              44.3
+            ]
+          ],
+          "nearest_top_support": [
+            3.807887,
+            "LED2.2 exposed top pad",
+            [
+              4.0,
+              44.3
+            ]
+          ]
+        }
+      },
+      "M-6": {
+        "title": "bottom keep-outs",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "supports": [
+            [
+              3.7,
+              86.0
+            ],
+            [
+              4.0,
+              4.0
+            ],
+            [
+              4.0,
+              44.3
+            ],
+            [
+              42.0,
+              4.0
+            ],
+            [
+              42.0,
+              86.0
+            ]
+          ]
+        }
+      },
+      "M-7": {
+        "title": "IMU and MEMS",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "imu_rotation": {
+            "revision": "M3-ASSY-R10",
+            "required": 180.0,
+            "axis_map": "R9 D-S7-06 axis map: roll = -gyro_Y"
+          },
+          "imu_lever_arm_mm": 6.0,
+          "U4": {
+            "body": [
+              15.355,
+              44.505,
+              18.645,
+              47.295
+            ],
+            "interior": [
+              16.078,
+              45.227,
+              17.922,
+              46.572
+            ]
+          },
+          "U5": {
+            "body": [
+              8.055,
+              47.005,
+              13.145,
+              51.195
+            ],
+            "interior": [
+              9.02,
+              48.55,
+              12.18,
+              49.65
+            ]
+          },
+          "imu_lever_arm_signed_mm": -6.0,
+          "imu_pad1_offset_mm": [
+            1.21,
+            -0.75
+          ],
+          "board_axis_map": {
+            "side": "bottom",
+            "rotation": 180.0,
+            "map": "R9 D-S7-06 axis map: +X_imu = -x_board, +Y_imu = -y_board; roll = -gyro_Y"
+          }
+        }
+      },
+      "P-11": {
+        "title": "terminal entry and owner-accepted 4.95 mm wire room",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "J1": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J121": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J400": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J410": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J420": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J9": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J122": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          }
+        }
+      }
+    },
+    "board_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d"
+  },
+  "fit_supplement": {
+    "ok": true,
+    "issues": [],
+    "nearest_support": [
+      4.536176804314399,
+      "C32.2",
+      [
+        4.0,
+        44.3
+      ]
+    ],
+    "nearest_top_support": [
+      3.807887,
+      "LED2.2 exposed top pad",
+      [
+        4.0,
+        44.3
+      ]
+    ],
+    "physical_fit_verified": false,
+    "checker_sha256": "3cab47f0de8ff8b170d4288236a3f7b7b9abc42a08ef7b775d2b51d329e75abd"
+  },
+  "stack_arithmetic": {
+    "usable_bore_radius_mm": 24.9,
+    "PCB_thickness_mm": 1.6,
+    "centering_tolerance_each_axis_mm": 0.3,
+    "nominal_nut_assumptions": {
+      "across_corners_mm": 6.35,
+      "thickness_mm": 2.4,
+      "screw_projection_mm": 0.4
+    },
+    "h_plus_t_max_x4_x42_mm": 6.018412895573664,
+    "h_plus_t_max_x3_7_mm": 5.365255833807699,
+    "default_h_mm": 4,
+    "default_t_max_mm": 1,
+    "nominal_default_nut_radial_margin_x3_7_mm": 0.1453918431335275,
+    "board_aft_edge_rule": "joint +47 mm plus axial tolerance, wholly forward in every roll orientation",
+    "vehicle_arithmetic_inference": {
+      "bulkplate_top_from_joint_mm": -44.6,
+      "battery_bay_mm": 80,
+      "old_lead_zone_mm": [
+        44,
+        48
+      ],
+      "resulting_aft_edge_from_joint_mm": [
+        79.4,
+        83.4
+      ],
+      "margin_forward_of_shroud_end_mm": [
+        32.4,
+        36.4
+      ]
+    },
+    "physical_fit_verified": false
+  },
+  "IMU_binding_review": {
+    "native_pose": "U4 bottom, rotation 180 degrees at (17,45.9)",
+    "pad1_mm": [
+      18.21,
+      45.15
+    ],
+    "axis_map": {
+      "+X_imu": "-x_board",
+      "+Y_imu": "-y_board",
+      "+Z_imu": "out of bottom face"
+    },
+    "roll_about_board_forward": "-gyro_Y",
+    "forward_thrust": "-a_Y",
+    "lever_x_board_mm": -6,
+    "model_center_z_board_mm": -2.059994,
+    "bound_z_board_mm": -2.06,
+    "z_basis": "Inference: model box centre, not die centre measurement",
+    "lever_IMU_x_z_mm": [
+      6,
+      2.06
+    ],
+    "board_frame_handedness": "left-handed as documented; use right-handed IMU frame for rotations/cross products",
+    "4000_dps_centripetal_x_g": 2.9819838884352987,
+    "physical_sign_check_done": false
+  },
+  "optional_plate_local_clearance": {
+    "board_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "model": "existing optional Kirchhoff D5 point-pinned model; mass/stiffness/support/harness inference, not physical qualification",
+    "total_mass_g": 70.2975988460437,
+    "f1_Hz": 181.30609483574582,
+    "part_gaps": [
+      {
+        "ref": "C431",
+        "position_box_mm": [
+          37.949999999999996,
+          56.0,
+          40.65,
+          59.5
+        ],
+        "height_below_bottom_mm": 2.6999999924,
+        "nominal_gap_h4_mm": 1.3000000076,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 1.0255936601045295,
+        "remaining_gap_mm": 0.27440634749547055,
+        "remaining_gap_h3_5_sensitivity_mm": -0.22559365250452945
+      },
+      {
+        "ref": "C421",
+        "position_box_mm": [
+          32.05,
+          35.4,
+          35.55,
+          38.1
+        ],
+        "height_below_bottom_mm": 2.6999999924,
+        "nominal_gap_h4_mm": 1.3000000076,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.9518281662448186,
+        "remaining_gap_mm": 0.3481718413551814,
+        "remaining_gap_h3_5_sensitivity_mm": -0.15182815864481858
+      },
+      {
+        "ref": "L1",
+        "position_box_mm": [
+          23.000004,
+          72.600004,
+          26.999996,
+          76.59999599999999
+        ],
+        "height_below_bottom_mm": 3.015825312,
+        "nominal_gap_h4_mm": 0.984174688,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.45952631636290947,
+        "remaining_gap_mm": 0.5246483716370904,
+        "remaining_gap_h3_5_sensitivity_mm": 0.024648371637090438
+      },
+      {
+        "ref": "C411",
+        "position_box_mm": [
+          32.85,
+          21.0,
+          35.550000000000004,
+          24.5
+        ],
+        "height_below_bottom_mm": 2.6999999924,
+        "nominal_gap_h4_mm": 1.3000000076,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7117944091284214,
+        "remaining_gap_mm": 0.5882055984715786,
+        "remaining_gap_h3_5_sensitivity_mm": 0.0882055984715786
+      },
+      {
+        "ref": "C82",
+        "position_box_mm": [
+          17.95,
+          75.0,
+          20.650000000000002,
+          78.5
+        ],
+        "height_below_bottom_mm": 2.6999999924,
+        "nominal_gap_h4_mm": 1.3000000076,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.3428029848792539,
+        "remaining_gap_mm": 0.957197022720746,
+        "remaining_gap_h3_5_sensitivity_mm": 0.457197022720746
+      },
+      {
+        "ref": "C405",
+        "position_box_mm": [
+          22.65,
+          8.950000000000001,
+          26.15,
+          11.65
+        ],
+        "height_below_bottom_mm": 2.6999999924,
+        "nominal_gap_h4_mm": 1.3000000076,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.2597800190119453,
+        "remaining_gap_mm": 1.0402199885880548,
+        "remaining_gap_h3_5_sensitivity_mm": 0.5402199885880548
+      },
+      {
+        "ref": "C406",
+        "position_box_mm": [
+          28.15,
+          7.25,
+          31.65,
+          9.95
+        ],
+        "height_below_bottom_mm": 2.6999999924,
+        "nominal_gap_h4_mm": 1.3000000076,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.23764262067017378,
+        "remaining_gap_mm": 1.0623573869298262,
+        "remaining_gap_h3_5_sensitivity_mm": 0.5623573869298262
+      },
+      {
+        "ref": "J430",
+        "position_box_mm": [
+          17.00000003,
+          18.2999993,
+          30.99999997,
+          33.79999878
+        ],
+        "height_below_bottom_mm": 2.10000088,
+        "nominal_gap_h4_mm": 1.89999912,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7897457550663031,
+        "remaining_gap_mm": 1.1102533649336968,
+        "remaining_gap_h3_5_sensitivity_mm": 0.6102533649336968
+      },
+      {
+        "ref": "J430 mated",
+        "position_box_mm": [
+          17.0,
+          18.3,
+          31.0,
+          33.8
+        ],
+        "height_below_bottom_mm": 2.1,
+        "nominal_gap_h4_mm": 1.9,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7897457711091098,
+        "remaining_gap_mm": 1.11025422889089,
+        "remaining_gap_h3_5_sensitivity_mm": 0.6102542288908901
+      },
+      {
+        "ref": "U3",
+        "position_box_mm": [
+          18.646998,
+          38.550018,
+          26.553002000000003,
+          43.849982000000004
+        ],
+        "height_below_bottom_mm": 2.069338,
+        "nominal_gap_h4_mm": 1.9306619999999999,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7395893676419332,
+        "remaining_gap_mm": 1.1910726323580667,
+        "remaining_gap_h3_5_sensitivity_mm": 0.6910726323580667
+      },
+      {
+        "ref": "C91",
+        "position_box_mm": [
+          34.150000000000006,
+          52.3,
+          35.75,
+          55.5
+        ],
+        "height_below_bottom_mm": 1.6,
+        "nominal_gap_h4_mm": 2.4,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.963524749694987,
+        "remaining_gap_mm": 1.4364752503050129,
+        "remaining_gap_h3_5_sensitivity_mm": 0.9364752503050129
+      },
+      {
+        "ref": "D9",
+        "position_box_mm": [
+          13.65,
+          76.8,
+          16.35,
+          81.8
+        ],
+        "height_below_bottom_mm": 2.22,
+        "nominal_gap_h4_mm": 1.7799999999999998,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.2662202633111079,
+        "remaining_gap_mm": 1.5137797366888919,
+        "remaining_gap_h3_5_sensitivity_mm": 1.0137797366888919
+      },
+      {
+        "ref": "U13",
+        "position_box_mm": [
+          30.975,
+          48.175000000000004,
+          32.725,
+          51.225
+        ],
+        "height_below_bottom_mm": 1.4499999978,
+        "nominal_gap_h4_mm": 2.5500000022,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.9111141093370286,
+        "remaining_gap_mm": 1.6388858928629713,
+        "remaining_gap_h3_5_sensitivity_mm": 1.1388858928629713
+      },
+      {
+        "ref": "U402",
+        "position_box_mm": [
+          31.125,
+          57.475,
+          32.875,
+          60.525
+        ],
+        "height_below_bottom_mm": 1.4499999978,
+        "nominal_gap_h4_mm": 2.5500000022,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.8404111202642374,
+        "remaining_gap_mm": 1.7095888819357627,
+        "remaining_gap_h3_5_sensitivity_mm": 1.2095888819357627
+      },
+      {
+        "ref": "D121",
+        "position_box_mm": [
+          30.050168,
+          70.093602,
+          32.950086,
+          72.906398
+        ],
+        "height_below_bottom_mm": 1.648968,
+        "nominal_gap_h4_mm": 2.351032,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5878438892678591,
+        "remaining_gap_mm": 1.7631881107321408,
+        "remaining_gap_h3_5_sensitivity_mm": 1.2631881107321408
+      },
+      {
+        "ref": "C6",
+        "position_box_mm": [
+          27.100014,
+          68.750002,
+          28.399986,
+          70.749998
+        ],
+        "height_below_bottom_mm": 1.299972,
+        "nominal_gap_h4_mm": 2.700028,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5631323594946925,
+        "remaining_gap_mm": 2.1368956405053074,
+        "remaining_gap_h3_5_sensitivity_mm": 1.6368956405053074
+      },
+      {
+        "ref": "C11",
+        "position_box_mm": [
+          16.500002,
+          51.450014,
+          18.499998,
+          52.749986
+        ],
+        "height_below_bottom_mm": 1.299972,
+        "nominal_gap_h4_mm": 2.700028,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5080227453268661,
+        "remaining_gap_mm": 2.192005254673134,
+        "remaining_gap_h3_5_sensitivity_mm": 1.6920052546731341
+      },
+      {
+        "ref": "C10",
+        "position_box_mm": [
+          16.500002,
+          53.450014,
+          18.499998,
+          54.749986
+        ],
+        "height_below_bottom_mm": 1.299972,
+        "nominal_gap_h4_mm": 2.700028,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5078992892754923,
+        "remaining_gap_mm": 2.192128710724508,
+        "remaining_gap_h3_5_sensitivity_mm": 1.692128710724508
+      },
+      {
+        "ref": "U12",
+        "position_box_mm": [
+          30.55,
+          38.599999999999994,
+          32.65,
+          41.0
+        ],
+        "height_below_bottom_mm": 0.8999999889999999,
+        "nominal_gap_h4_mm": 3.100000011,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.8982707159542022,
+        "remaining_gap_mm": 2.201729295045798,
+        "remaining_gap_h3_5_sensitivity_mm": 1.7017292950457978
+      },
+      {
+        "ref": "C7",
+        "position_box_mm": [
+          27.650014,
+          72.80000199999999,
+          28.949986000000003,
+          74.799998
+        ],
+        "height_below_bottom_mm": 1.299972,
+        "nominal_gap_h4_mm": 2.700028,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.47414103603426033,
+        "remaining_gap_mm": 2.2258869639657397,
+        "remaining_gap_h3_5_sensitivity_mm": 1.7258869639657397
+      },
+      {
+        "ref": "U10",
+        "position_box_mm": [
+          11.725,
+          25.975,
+          13.475,
+          29.025
+        ],
+        "height_below_bottom_mm": 1.4499999978,
+        "nominal_gap_h4_mm": 2.5500000022,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.28945527833623597,
+        "remaining_gap_mm": 2.260544723863764,
+        "remaining_gap_h3_5_sensitivity_mm": 1.760544723863764
+      },
+      {
+        "ref": "C420",
+        "position_box_mm": [
+          33.7,
+          33.800000000000004,
+          35.3,
+          34.6
+        ],
+        "height_below_bottom_mm": 0.8000000000000003,
+        "nominal_gap_h4_mm": 3.1999999999999997,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.905837128120191,
+        "remaining_gap_mm": 2.294162871879809,
+        "remaining_gap_h3_5_sensitivity_mm": 1.7941628718798088
+      },
+      {
+        "ref": "C92",
+        "position_box_mm": [
+          31.5499,
+          52.09995,
+          33.1501,
+          52.90005
+        ],
+        "height_below_bottom_mm": 0.8001,
+        "nominal_gap_h4_mm": 3.1999,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.902430895113583,
+        "remaining_gap_mm": 2.297469104886417,
+        "remaining_gap_h3_5_sensitivity_mm": 1.7974691048864169
+      },
+      {
+        "ref": "C8",
+        "position_box_mm": [
+          25.400001999999997,
+          77.630014,
+          27.399998,
+          78.929986
+        ],
+        "height_below_bottom_mm": 1.299972,
+        "nominal_gap_h4_mm": 2.700028,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.332983541823677,
+        "remaining_gap_mm": 2.367044458176323,
+        "remaining_gap_h3_5_sensitivity_mm": 1.867044458176323
+      },
+      {
+        "ref": "U11",
+        "position_box_mm": [
+          23.349999999999998,
+          63.45,
+          25.95,
+          65.55
+        ],
+        "height_below_bottom_mm": 0.9999999905999997,
+        "nominal_gap_h4_mm": 3.0000000094000003,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6169641137462527,
+        "remaining_gap_mm": 2.3830358956537476,
+        "remaining_gap_h3_5_sensitivity_mm": 1.8830358956537476
+      },
+      {
+        "ref": "C129",
+        "position_box_mm": [
+          27.4499,
+          51.19995,
+          29.0501,
+          52.00005
+        ],
+        "height_below_bottom_mm": 0.8001,
+        "nominal_gap_h4_mm": 3.1999,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.8035102265274121,
+        "remaining_gap_mm": 2.396389773472588,
+        "remaining_gap_h3_5_sensitivity_mm": 1.8963897734725879
+      },
+      {
+        "ref": "Q123",
+        "position_box_mm": [
+          18.247272,
+          58.799914,
+          20.752728,
+          61.700086
+        ],
+        "height_below_bottom_mm": 1.049274,
+        "nominal_gap_h4_mm": 2.950726,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5513547510581386,
+        "remaining_gap_mm": 2.3993712489418613,
+        "remaining_gap_h3_5_sensitivity_mm": 1.8993712489418613
+      },
+      {
+        "ref": "C9",
+        "position_box_mm": [
+          25.400001999999997,
+          79.590014,
+          27.399998,
+          80.889986
+        ],
+        "height_below_bottom_mm": 1.299972,
+        "nominal_gap_h4_mm": 2.700028,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.27727720190939276,
+        "remaining_gap_mm": 2.4227507980906076,
+        "remaining_gap_h3_5_sensitivity_mm": 1.9227507980906076
+      },
+      {
+        "ref": "C19",
+        "position_box_mm": [
+          27.94995,
+          36.8499,
+          28.75005,
+          38.4501
+        ],
+        "height_below_bottom_mm": 0.8001,
+        "nominal_gap_h4_mm": 3.1999,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7759835562294161,
+        "remaining_gap_mm": 2.423916443770584,
+        "remaining_gap_h3_5_sensitivity_mm": 1.923916443770584
+      },
+      {
+        "ref": "C22",
+        "position_box_mm": [
+          26.59995,
+          46.4999,
+          27.40005,
+          48.1001
+        ],
+        "height_below_bottom_mm": 0.8001,
+        "nominal_gap_h4_mm": 3.1999,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7678342081120025,
+        "remaining_gap_mm": 2.4320657918879975,
+        "remaining_gap_h3_5_sensitivity_mm": 1.9320657918879975
+      },
+      {
+        "ref": "C430",
+        "position_box_mm": [
+          29.9,
+          61.4,
+          31.5,
+          62.199999999999996
+        ],
+        "height_below_bottom_mm": 0.8000000000000003,
+        "nominal_gap_h4_mm": 3.1999999999999997,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7540281200500594,
+        "remaining_gap_mm": 2.4459718799499406,
+        "remaining_gap_h3_5_sensitivity_mm": 1.9459718799499406
+      },
+      {
+        "ref": "C23",
+        "position_box_mm": [
+          26.9999,
+          34.89995,
+          28.6001,
+          35.70005
+        ],
+        "height_below_bottom_mm": 0.8001,
+        "nominal_gap_h4_mm": 3.1999,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7485813678616232,
+        "remaining_gap_mm": 2.451318632138377,
+        "remaining_gap_h3_5_sensitivity_mm": 1.9513186321383769
+      },
+      {
+        "ref": "D120",
+        "position_box_mm": [
+          13.447272,
+          58.749914000000004,
+          15.952727999999999,
+          61.650086
+        ],
+        "height_below_bottom_mm": 1.049274,
+        "nominal_gap_h4_mm": 2.950726,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.43442476209404407,
+        "remaining_gap_mm": 2.5163012379059557,
+        "remaining_gap_h3_5_sensitivity_mm": 2.0163012379059557
+      },
+      {
+        "ref": "C127",
+        "position_box_mm": [
+          22.849899999999998,
+          52.79995,
+          24.4501,
+          53.60005
+        ],
+        "height_below_bottom_mm": 0.8001,
+        "nominal_gap_h4_mm": 3.1999,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6742099224341003,
+        "remaining_gap_mm": 2.5256900775658995,
+        "remaining_gap_h3_5_sensitivity_mm": 2.0256900775658995
+      },
+      {
+        "ref": "U5",
+        "position_box_mm": [
+          8.099878,
+          47.599876,
+          13.100121999999999,
+          50.600124
+        ],
+        "height_below_bottom_mm": 1.1000739999999998,
+        "nominal_gap_h4_mm": 2.8999260000000002,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.3400999776640939,
+        "remaining_gap_mm": 2.559826022335906,
+        "remaining_gap_h3_5_sensitivity_mm": 2.059826022335906
+      },
+      {
+        "ref": "C85",
+        "position_box_mm": [
+          27.099999999999998,
+          65.32499899999999,
+          28.7,
+          66.124999
+        ],
+        "height_below_bottom_mm": 0.8000000000000003,
+        "nominal_gap_h4_mm": 3.1999999999999997,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6356021398779984,
+        "remaining_gap_mm": 2.564397860122001,
+        "remaining_gap_h3_5_sensitivity_mm": 2.064397860122001
+      },
+      {
+        "ref": "R102",
+        "position_box_mm": [
+          34.6,
+          39.300000000000004,
+          36.199999999999996,
+          40.1
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.9845014732594102,
+        "remaining_gap_mm": 2.5654985267405896,
+        "remaining_gap_h3_5_sensitivity_mm": 2.0654985267405896
+      },
+      {
+        "ref": "U2",
+        "position_box_mm": [
+          23.549914,
+          68.399952,
+          26.450086,
+          71.200048
+        ],
+        "height_below_bottom_mm": 0.8900160000000001,
+        "nominal_gap_h4_mm": 3.109984,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5427353197316934,
+        "remaining_gap_mm": 2.5672486802683063,
+        "remaining_gap_h3_5_sensitivity_mm": 2.0672486802683063
+      },
+      {
+        "ref": "C98",
+        "position_box_mm": [
+          23.775,
+          61.800000000000004,
+          25.375,
+          62.6
+        ],
+        "height_below_bottom_mm": 0.8000000000000003,
+        "nominal_gap_h4_mm": 3.1999999999999997,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6272244909419179,
+        "remaining_gap_mm": 2.572775509058082,
+        "remaining_gap_h3_5_sensitivity_mm": 2.072775509058082
+      },
+      {
+        "ref": "U4",
+        "position_box_mm": [
+          15.50013,
+          44.650065999999995,
+          18.500124,
+          47.149934
+        ],
+        "height_below_bottom_mm": 0.919988,
+        "nominal_gap_h4_mm": 3.080012,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5013972510874537,
+        "remaining_gap_mm": 2.578614748912546,
+        "remaining_gap_h3_5_sensitivity_mm": 2.078614748912546
+      },
+      {
+        "ref": "R100",
+        "position_box_mm": [
+          33.2,
+          45.35,
+          34.8,
+          46.15
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.9684509643323539,
+        "remaining_gap_mm": 2.581549035667646,
+        "remaining_gap_h3_5_sensitivity_mm": 2.081549035667646
+      },
+      {
+        "ref": "R101",
+        "position_box_mm": [
+          33.2,
+          41.85,
+          34.8,
+          42.65
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.962507548069554,
+        "remaining_gap_mm": 2.587492451930446,
+        "remaining_gap_h3_5_sensitivity_mm": 2.087492451930446
+      },
+      {
+        "ref": "Y1",
+        "position_box_mm": [
+          21.600066,
+          45.000054,
+          24.099934,
+          48.199946000000004
+        ],
+        "height_below_bottom_mm": 0.7010400000000003,
+        "nominal_gap_h4_mm": 3.2989599999999997,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.672790069532901,
+        "remaining_gap_mm": 2.626169930467099,
+        "remaining_gap_h3_5_sensitivity_mm": 2.126169930467099
+      },
+      {
+        "ref": "C410",
+        "position_box_mm": [
+          33.7,
+          17.8,
+          35.3,
+          18.599999999999998
+        ],
+        "height_below_bottom_mm": 0.8000000000000003,
+        "nominal_gap_h4_mm": 3.1999999999999997,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5416758558307606,
+        "remaining_gap_mm": 2.658324144169239,
+        "remaining_gap_h3_5_sensitivity_mm": 2.158324144169239
+      },
+      {
+        "ref": "R430",
+        "position_box_mm": [
+          35.2,
+          59.6,
+          36.8,
+          60.4
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.8866250698635962,
+        "remaining_gap_mm": 2.6633749301364036,
+        "remaining_gap_h3_5_sensitivity_mm": 2.1633749301364036
+      },
+      {
+        "ref": "C20",
+        "position_box_mm": [
+          18.9999,
+          36.89995,
+          20.6001,
+          37.70005
+        ],
+        "height_below_bottom_mm": 0.8001,
+        "nominal_gap_h4_mm": 3.1999,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5352265067171723,
+        "remaining_gap_mm": 2.6646734932828275,
+        "remaining_gap_h3_5_sensitivity_mm": 2.1646734932828275
+      },
+      {
+        "ref": "C15",
+        "position_box_mm": [
+          28.800064,
+          46.899874,
+          29.299936000000002,
+          47.900126
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.8209512487936831,
+        "remaining_gap_mm": 2.678922751206317,
+        "remaining_gap_h3_5_sensitivity_mm": 2.178922751206317
+      },
+      {
+        "ref": "D401",
+        "position_box_mm": [
+          35.42499938,
+          46.67499978,
+          36.07500062,
+          47.725000220000005
+        ],
+        "height_below_bottom_mm": 0.31999935999999995,
+        "nominal_gap_h4_mm": 3.68000064,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 1.0004795048613249,
+        "remaining_gap_mm": 2.6795211351386747,
+        "remaining_gap_h3_5_sensitivity_mm": 2.1795211351386747
+      },
+      {
+        "ref": "D400",
+        "position_box_mm": [
+          35.42499938,
+          43.17499978,
+          36.07500062,
+          44.225000220000005
+        ],
+        "height_below_bottom_mm": 0.31999935999999995,
+        "nominal_gap_h4_mm": 3.68000064,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.9998450845174628,
+        "remaining_gap_mm": 2.680155555482537,
+        "remaining_gap_h3_5_sensitivity_mm": 2.180155555482537
+      },
+      {
+        "ref": "R103",
+        "position_box_mm": [
+          30.8,
+          54.0,
+          31.599999999999998,
+          55.599999999999994
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.8494013089870626,
+        "remaining_gap_mm": 2.7005986910129374,
+        "remaining_gap_h3_5_sensitivity_mm": 2.2005986910129374
+      },
+      {
+        "ref": "C21",
+        "position_box_mm": [
+          27.599874,
+          49.000064,
+          28.600126000000003,
+          49.499936
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7988744654942679,
+        "remaining_gap_mm": 2.7009995345057325,
+        "remaining_gap_h3_5_sensitivity_mm": 2.2009995345057325
+      },
+      {
+        "ref": "C100",
+        "position_box_mm": [
+          28.600064,
+          39.469874,
+          29.099936000000003,
+          40.470126
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7986696571640247,
+        "remaining_gap_mm": 2.7012043428359753,
+        "remaining_gap_h3_5_sensitivity_mm": 2.2012043428359753
+      },
+      {
+        "ref": "C29",
+        "position_box_mm": [
+          27.750064,
+          43.019874,
+          28.249936,
+          44.020126000000005
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7886780878472579,
+        "remaining_gap_mm": 2.7111959121527422,
+        "remaining_gap_h3_5_sensitivity_mm": 2.2111959121527422
+      },
+      {
+        "ref": "Q121",
+        "position_box_mm": [
+          11.84999949,
+          66.94999949,
+          15.15000051,
+          70.25000050999999
+        ],
+        "height_below_bottom_mm": 0.89999947,
+        "nominal_gap_h4_mm": 3.10000053,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.3772025213171958,
+        "remaining_gap_mm": 2.7227980086828043,
+        "remaining_gap_h3_5_sensitivity_mm": 2.2227980086828043
+      },
+      {
+        "ref": "R451",
+        "position_box_mm": [
+          33.2,
+          29.35,
+          34.8,
+          30.15
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.8225665985916911,
+        "remaining_gap_mm": 2.727433401408309,
+        "remaining_gap_h3_5_sensitivity_mm": 2.227433401408309
+      },
+      {
+        "ref": "R432",
+        "position_box_mm": [
+          35.199874,
+          57.550064,
+          36.200126000000004,
+          58.049935999999995
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.9093618915447101,
+        "remaining_gap_mm": 2.73072010845529,
+        "remaining_gap_h3_5_sensitivity_mm": 2.23072010845529
+      },
+      {
+        "ref": "C26",
+        "position_box_mm": [
+          25.249874,
+          45.250064,
+          26.250126,
+          45.749936
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7342855260443468,
+        "remaining_gap_mm": 2.7655884739556535,
+        "remaining_gap_h3_5_sensitivity_mm": 2.2655884739556535
+      },
+      {
+        "ref": "Q120",
+        "position_box_mm": [
+          11.84999949,
+          71.94999949,
+          15.15000051,
+          75.25000050999999
+        ],
+        "height_below_bottom_mm": 0.89999947,
+        "nominal_gap_h4_mm": 3.10000053,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.325022305321896,
+        "remaining_gap_mm": 2.774978224678104,
+        "remaining_gap_h3_5_sensitivity_mm": 2.274978224678104
+      },
+      {
+        "ref": "C24",
+        "position_box_mm": [
+          25.200063999999998,
+          48.499874,
+          25.699936,
+          49.500126
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.718755799158154,
+        "remaining_gap_mm": 2.781118200841846,
+        "remaining_gap_h3_5_sensitivity_mm": 2.281118200841846
+      },
+      {
+        "ref": "C16",
+        "position_box_mm": [
+          26.099874,
+          36.370064,
+          27.100126000000003,
+          36.869935999999996
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7181615069040197,
+        "remaining_gap_mm": 2.7817124930959807,
+        "remaining_gap_h3_5_sensitivity_mm": 2.2817124930959807
+      },
+      {
+        "ref": "U9",
+        "position_box_mm": [
+          17.45,
+          80.55,
+          19.55,
+          82.64999999999999
+        ],
+        "height_below_bottom_mm": 0.9999999905999997,
+        "nominal_gap_h4_mm": 3.0000000094000003,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.21761503564541262,
+        "remaining_gap_mm": 2.7823849737545876,
+        "remaining_gap_h3_5_sensitivity_mm": 2.2823849737545876
+      },
+      {
+        "ref": "R450",
+        "position_box_mm": [
+          33.2,
+          25.85,
+          34.8,
+          26.65
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7499423216766418,
+        "remaining_gap_mm": 2.800057678323358,
+        "remaining_gap_h3_5_sensitivity_mm": 2.300057678323358
+      },
+      {
+        "ref": "D420",
+        "position_box_mm": [
+          35.42499938,
+          30.67499978,
+          36.07500062,
+          31.72500022
+        ],
+        "height_below_bottom_mm": 0.31999935999999995,
+        "nominal_gap_h4_mm": 3.68000064,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.8794162244540765,
+        "remaining_gap_mm": 2.800584415545923,
+        "remaining_gap_h3_5_sensitivity_mm": 2.300584415545923
+      },
+      {
+        "ref": "R91",
+        "position_box_mm": [
+          27.3,
+          59.6,
+          28.900000000000002,
+          60.4
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7277938789632393,
+        "remaining_gap_mm": 2.8222061210367606,
+        "remaining_gap_h3_5_sensitivity_mm": 2.3222061210367606
+      },
+      {
+        "ref": "U401",
+        "position_box_mm": [
+          26.300000060000002,
+          12.300000059999999,
+          28.89999994,
+          14.89999994
+        ],
+        "height_below_bottom_mm": 0.79999967,
+        "nominal_gap_h4_mm": 3.20000033,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.36565275080682696,
+        "remaining_gap_mm": 2.834347579193173,
+        "remaining_gap_h3_5_sensitivity_mm": 2.334347579193173
+      },
+      {
+        "ref": "R162",
+        "position_box_mm": [
+          18.500002,
+          57.050014000000004,
+          20.499998,
+          58.349986
+        ],
+        "height_below_bottom_mm": 0.6101079999999999,
+        "nominal_gap_h4_mm": 3.389892,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5537605257691468,
+        "remaining_gap_mm": 2.836131474230853,
+        "remaining_gap_h3_5_sensitivity_mm": 2.336131474230853
+      },
+      {
+        "ref": "C120",
+        "position_box_mm": [
+          16.700000000000003,
+          71.72500000000001,
+          17.5,
+          73.325
+        ],
+        "height_below_bottom_mm": 0.8000000000000003,
+        "nominal_gap_h4_mm": 3.1999999999999997,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.3607702113486836,
+        "remaining_gap_mm": 2.8392297886513163,
+        "remaining_gap_h3_5_sensitivity_mm": 2.3392297886513163
+      },
+      {
+        "ref": "C128",
+        "position_box_mm": [
+          11.2,
+          57.1,
+          12.8,
+          57.9
+        ],
+        "height_below_bottom_mm": 0.8000000000000003,
+        "nominal_gap_h4_mm": 3.1999999999999997,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.35447331450902503,
+        "remaining_gap_mm": 2.8455266854909746,
+        "remaining_gap_h3_5_sensitivity_mm": 2.3455266854909746
+      },
+      {
+        "ref": "R180",
+        "position_box_mm": [
+          27.929873999999998,
+          53.000064,
+          28.930126,
+          53.499936
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7907260491318366,
+        "remaining_gap_mm": 2.8493559508681634,
+        "remaining_gap_h3_5_sensitivity_mm": 2.3493559508681634
+      },
+      {
+        "ref": "R133",
+        "position_box_mm": [
+          27.929873999999998,
+          54.000064,
+          28.930126,
+          54.499936
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7840193135265913,
+        "remaining_gap_mm": 2.856062686473409,
+        "remaining_gap_h3_5_sensitivity_mm": 2.356062686473409
+      },
+      {
+        "ref": "R153",
+        "position_box_mm": [
+          33.800000000000004,
+          67.6,
+          35.4,
+          68.4
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6849505307642388,
+        "remaining_gap_mm": 2.865049469235761,
+        "remaining_gap_h3_5_sensitivity_mm": 2.365049469235761
+      },
+      {
+        "ref": "D421",
+        "position_box_mm": [
+          35.42499938,
+          27.17499978,
+          36.07500062,
+          28.22500022
+        ],
+        "height_below_bottom_mm": 0.31999935999999995,
+        "nominal_gap_h4_mm": 3.68000064,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.8103272648143366,
+        "remaining_gap_mm": 2.869673375185663,
+        "remaining_gap_h3_5_sensitivity_mm": 2.369673375185663
+      },
+      {
+        "ref": "R175",
+        "position_box_mm": [
+          27.750064,
+          55.299873999999996,
+          28.249936,
+          56.300126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7573674102797483,
+        "remaining_gap_mm": 2.8827145897202517,
+        "remaining_gap_h3_5_sensitivity_mm": 2.3827145897202517
+      },
+      {
+        "ref": "R86",
+        "position_box_mm": [
+          27.099999999999998,
+          63.85,
+          28.7,
+          64.65
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6614118520834579,
+        "remaining_gap_mm": 2.888588147916542,
+        "remaining_gap_h3_5_sensitivity_mm": 2.388588147916542
+      },
+      {
+        "ref": "C14",
+        "position_box_mm": [
+          20.899873999999997,
+          51.900064,
+          21.900126,
+          52.399936
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6059713425133232,
+        "remaining_gap_mm": 2.893902657486677,
+        "remaining_gap_h3_5_sensitivity_mm": 2.393902657486677
+      },
+      {
+        "ref": "R134",
+        "position_box_mm": [
+          13.35,
+          62.4,
+          19.65,
+          65.6
+        ],
+        "height_below_bottom_mm": 0.6000000000000001,
+        "nominal_gap_h4_mm": 3.4,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5020514872610619,
+        "remaining_gap_mm": 2.897948512738938,
+        "remaining_gap_h3_5_sensitivity_mm": 2.397948512738938
+      },
+      {
+        "ref": "R132",
+        "position_box_mm": [
+          27.750064,
+          57.099874,
+          28.249936,
+          58.100126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7413645739171001,
+        "remaining_gap_mm": 2.8987174260829,
+        "remaining_gap_h3_5_sensitivity_mm": 2.3987174260829
+      },
+      {
+        "ref": "C28",
+        "position_box_mm": [
+          12.2499,
+          24.49995,
+          13.850100000000001,
+          25.30005
+        ],
+        "height_below_bottom_mm": 0.8001,
+        "nominal_gap_h4_mm": 3.1999,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.28074123325511563,
+        "remaining_gap_mm": 2.9191587667448844,
+        "remaining_gap_h3_5_sensitivity_mm": 2.4191587667448844
+      },
+      {
+        "ref": "R152",
+        "position_box_mm": [
+          33.900000000000006,
+          69.83,
+          35.5,
+          70.63000000000001
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6241716195531074,
+        "remaining_gap_mm": 2.9258283804468923,
+        "remaining_gap_h3_5_sensitivity_mm": 2.4258283804468923
+      },
+      {
+        "ref": "C99",
+        "position_box_mm": [
+          24.919874,
+          66.650064,
+          25.920126000000003,
+          67.14993600000001
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5664594051197825,
+        "remaining_gap_mm": 2.9334145948802175,
+        "remaining_gap_h3_5_sensitivity_mm": 2.4334145948802175
+      },
+      {
+        "ref": "C25",
+        "position_box_mm": [
+          19.449873999999998,
+          47.450064000000005,
+          20.450126,
+          47.949936
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5634774204710806,
+        "remaining_gap_mm": 2.9363965795289193,
+        "remaining_gap_h3_5_sensitivity_mm": 2.4363965795289193
+      },
+      {
+        "ref": "R62",
+        "position_box_mm": [
+          24.999874,
+          55.450064000000005,
+          26.000126,
+          55.949936
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.7008664384726797,
+        "remaining_gap_mm": 2.9392155615273206,
+        "remaining_gap_h3_5_sensitivity_mm": 2.4392155615273206
+      },
+      {
+        "ref": "R63",
+        "position_box_mm": [
+          24.999874,
+          56.450064000000005,
+          26.000126,
+          56.949936
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6936972567703176,
+        "remaining_gap_mm": 2.9463847432296824,
+        "remaining_gap_h3_5_sensitivity_mm": 2.4463847432296824
+      },
+      {
+        "ref": "C81",
+        "position_box_mm": [
+          20.8,
+          79.69999999999999,
+          22.400000000000002,
+          80.5
+        ],
+        "height_below_bottom_mm": 0.8000000000000003,
+        "nominal_gap_h4_mm": 3.1999999999999997,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.25315437099541666,
+        "remaining_gap_mm": 2.9468456290045832,
+        "remaining_gap_h3_5_sensitivity_mm": 2.4468456290045832
+      },
+      {
+        "ref": "C83",
+        "position_box_mm": [
+          9.399999999999999,
+          24.5,
+          11.0,
+          25.299999999999997
+        ],
+        "height_below_bottom_mm": 0.8000000000000003,
+        "nominal_gap_h4_mm": 3.1999999999999997,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.215321269768399,
+        "remaining_gap_mm": 2.9846787302316007,
+        "remaining_gap_h3_5_sensitivity_mm": 2.4846787302316007
+      },
+      {
+        "ref": "C18",
+        "position_box_mm": [
+          17.799874,
+          48.900064,
+          18.800126000000002,
+          49.399936
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5146631112350831,
+        "remaining_gap_mm": 2.985210888764917,
+        "remaining_gap_h3_5_sensitivity_mm": 2.485210888764917
+      },
+      {
+        "ref": "R178",
+        "position_box_mm": [
+          22.929873999999998,
+          54.600064,
+          23.930126,
+          55.099936
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.652940362798594,
+        "remaining_gap_mm": 2.987141637201406,
+        "remaining_gap_h3_5_sensitivity_mm": 2.487141637201406
+      },
+      {
+        "ref": "R130",
+        "position_box_mm": [
+          22.929873999999998,
+          55.600064,
+          23.930126,
+          56.099936
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6478594853970813,
+        "remaining_gap_mm": 2.992222514602919,
+        "remaining_gap_h3_5_sensitivity_mm": 2.492222514602919
+      },
+      {
+        "ref": "R87",
+        "position_box_mm": [
+          21.6,
+          63.125,
+          22.4,
+          64.725
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.551921827883182,
+        "remaining_gap_mm": 2.9980781721168177,
+        "remaining_gap_h3_5_sensitivity_mm": 2.4980781721168177
+      },
+      {
+        "ref": "R157",
+        "position_box_mm": [
+          32.200064000000005,
+          67.89987400000001,
+          32.699936,
+          68.900126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6411797630348222,
+        "remaining_gap_mm": 2.998902236965178,
+        "remaining_gap_h3_5_sensitivity_mm": 2.498902236965178
+      },
+      {
+        "ref": "R151",
+        "position_box_mm": [
+          33.900000000000006,
+          72.36999999999999,
+          35.5,
+          73.17
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5462761075722586,
+        "remaining_gap_mm": 3.0037238924277414,
+        "remaining_gap_h3_5_sensitivity_mm": 2.5037238924277414
+      },
+      {
+        "ref": "R129",
+        "position_box_mm": [
+          22.750064,
+          56.899874,
+          23.249936,
+          57.900126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.623306782566274,
+        "remaining_gap_mm": 3.016775217433726,
+        "remaining_gap_h3_5_sensitivity_mm": 2.516775217433726
+      },
+      {
+        "ref": "R156",
+        "position_box_mm": [
+          30.300064,
+          67.89987400000001,
+          30.799936000000002,
+          68.900126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6150814187071174,
+        "remaining_gap_mm": 3.0250005812928826,
+        "remaining_gap_h3_5_sensitivity_mm": 2.5250005812928826
+      },
+      {
+        "ref": "R173",
+        "position_box_mm": [
+          22.750064,
+          58.699874,
+          23.249936,
+          59.700126000000004
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.6110459174247583,
+        "remaining_gap_mm": 3.029036082575242,
+        "remaining_gap_h3_5_sensitivity_mm": 2.529036082575242
+      },
+      {
+        "ref": "C30",
+        "position_box_mm": [
+          16.800064,
+          48.229873999999995,
+          17.299936000000002,
+          49.230126
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.46799179989790063,
+        "remaining_gap_mm": 3.0318822001020997,
+        "remaining_gap_h3_5_sensitivity_mm": 2.5318822001020997
+      },
+      {
+        "ref": "R88",
+        "position_box_mm": [
+          21.6,
+          66.2,
+          22.4,
+          67.8
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5142905785414607,
+        "remaining_gap_mm": 3.035709421458539,
+        "remaining_gap_h3_5_sensitivity_mm": 2.535709421458539
+      },
+      {
+        "ref": "R164",
+        "position_box_mm": [
+          16.525,
+          55.5,
+          18.125,
+          56.3
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.4958326390438509,
+        "remaining_gap_mm": 3.054167360956149,
+        "remaining_gap_h3_5_sensitivity_mm": 2.554167360956149
+      },
+      {
+        "ref": "R163",
+        "position_box_mm": [
+          21.550064,
+          58.799873999999996,
+          22.049936000000002,
+          59.800126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5821568777240869,
+        "remaining_gap_mm": 3.057925122275913,
+        "remaining_gap_h3_5_sensitivity_mm": 2.557925122275913
+      },
+      {
+        "ref": "C5",
+        "position_box_mm": [
+          21.699873999999998,
+          71.180064,
+          22.700126,
+          71.67993600000001
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.4390642037543338,
+        "remaining_gap_mm": 3.060809796245666,
+        "remaining_gap_h3_5_sensitivity_mm": 2.560809796245666
+      },
+      {
+        "ref": "C17",
+        "position_box_mm": [
+          16.750064,
+          37.399874,
+          17.249936,
+          38.400126
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.43452150871614087,
+        "remaining_gap_mm": 3.0653524912838592,
+        "remaining_gap_h3_5_sensitivity_mm": 2.5653524912838592
+      },
+      {
+        "ref": "R405",
+        "position_box_mm": [
+          33.5,
+          15.700000000000001,
+          35.099999999999994,
+          16.5
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.47308586606552666,
+        "remaining_gap_mm": 3.076914133934473,
+        "remaining_gap_h3_5_sensitivity_mm": 2.576914133934473
+      },
+      {
+        "ref": "R10",
+        "position_box_mm": [
+          19.499874,
+          44.440064,
+          20.500126,
+          44.939935999999996
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.5595564684960774,
+        "remaining_gap_mm": 3.0805255315039224,
+        "remaining_gap_h3_5_sensitivity_mm": 2.5805255315039224
+      },
+      {
+        "ref": "C13",
+        "position_box_mm": [
+          14.600064,
+          49.599874,
+          15.099936,
+          50.600126
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.40278689063809964,
+        "remaining_gap_mm": 3.0970871093619006,
+        "remaining_gap_h3_5_sensitivity_mm": 2.5970871093619006
+      },
+      {
+        "ref": "R150",
+        "position_box_mm": [
+          33.800000000000004,
+          75.5,
+          35.4,
+          76.30000000000001
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.4399413661131352,
+        "remaining_gap_mm": 3.1100586338868648,
+        "remaining_gap_h3_5_sensitivity_mm": 2.6100586338868648
+      },
+      {
+        "ref": "C31",
+        "position_box_mm": [
+          14.450064,
+          46.569874,
+          14.949936,
+          47.570126
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.388354394379343,
+        "remaining_gap_mm": 3.111519605620657,
+        "remaining_gap_h3_5_sensitivity_mm": 2.611519605620657
+      },
+      {
+        "ref": "R460",
+        "position_box_mm": [
+          27.0,
+          16.400000000000002,
+          28.6,
+          17.2
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.4216715204349865,
+        "remaining_gap_mm": 3.1283284795650133,
+        "remaining_gap_h3_5_sensitivity_mm": 2.6283284795650133
+      },
+      {
+        "ref": "R441",
+        "position_box_mm": [
+          33.2,
+          13.35,
+          34.8,
+          14.15
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.3925309631589049,
+        "remaining_gap_mm": 3.157469036841095,
+        "remaining_gap_h3_5_sensitivity_mm": 2.657469036841095
+      },
+      {
+        "ref": "R154",
+        "position_box_mm": [
+          32.200064000000005,
+          74.029874,
+          32.699936,
+          75.030126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.47135453689733164,
+        "remaining_gap_mm": 3.1687274631026683,
+        "remaining_gap_h3_5_sensitivity_mm": 2.6687274631026683
+      },
+      {
+        "ref": "R461",
+        "position_box_mm": [
+          23.4,
+          16.400000000000002,
+          25.0,
+          17.2
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.37654028471034856,
+        "remaining_gap_mm": 3.1734597152896513,
+        "remaining_gap_h3_5_sensitivity_mm": 2.6734597152896513
+      },
+      {
+        "ref": "R155",
+        "position_box_mm": [
+          30.300064,
+          74.029874,
+          30.799936000000002,
+          75.030126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.4568676254179616,
+        "remaining_gap_mm": 3.1832143745820383,
+        "remaining_gap_h3_5_sensitivity_mm": 2.6832143745820383
+      },
+      {
+        "ref": "C408",
+        "position_box_mm": [
+          24.299874,
+          13.350064,
+          25.300126000000002,
+          13.849936
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.305843493804062,
+        "remaining_gap_mm": 3.194030506195938,
+        "remaining_gap_h3_5_sensitivity_mm": 2.694030506195938
+      },
+      {
+        "ref": "R120",
+        "position_box_mm": [
+          18.250064,
+          72.099874,
+          18.749936,
+          73.10012599999999
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.37193244977567685,
+        "remaining_gap_mm": 3.268149550224323,
+        "remaining_gap_h3_5_sensitivity_mm": 2.768149550224323
+      },
+      {
+        "ref": "R11",
+        "position_box_mm": [
+          13.950064,
+          43.249874,
+          14.449936,
+          44.250126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.3608084026981719,
+        "remaining_gap_mm": 3.2792735973018283,
+        "remaining_gap_h3_5_sensitivity_mm": 2.7792735973018283
+      },
+      {
+        "ref": "R440",
+        "position_box_mm": [
+          33.2,
+          9.85,
+          34.8,
+          10.65
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.27070567503743753,
+        "remaining_gap_mm": 3.2792943249625623,
+        "remaining_gap_h3_5_sensitivity_mm": 2.7792943249625623
+      },
+      {
+        "ref": "R463",
+        "position_box_mm": [
+          13.399999999999999,
+          18.5,
+          15.0,
+          19.299999999999997
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.2567201813052349,
+        "remaining_gap_mm": 3.293279818694765,
+        "remaining_gap_h3_5_sensitivity_mm": 2.793279818694765
+      },
+      {
+        "ref": "R462",
+        "position_box_mm": [
+          13.399999999999999,
+          16.5,
+          15.0,
+          17.299999999999997
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.23590942568695206,
+        "remaining_gap_mm": 3.314090574313048,
+        "remaining_gap_h3_5_sensitivity_mm": 2.814090574313048
+      },
+      {
+        "ref": "R5",
+        "position_box_mm": [
+          12.750064,
+          44.669874,
+          13.249936,
+          45.670126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.32509115789151,
+        "remaining_gap_mm": 3.31499084210849,
+        "remaining_gap_h3_5_sensitivity_mm": 2.81499084210849
+      },
+      {
+        "ref": "C32",
+        "position_box_mm": [
+          8.470064,
+          45.349874,
+          8.969936,
+          46.350126
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.18145403564419516,
+        "remaining_gap_mm": 3.318419964355805,
+        "remaining_gap_h3_5_sensitivity_mm": 2.818419964355805
+      },
+      {
+        "ref": "R131",
+        "position_box_mm": [
+          10.299874,
+          60.900064,
+          11.300126,
+          61.399936
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.32010582784932123,
+        "remaining_gap_mm": 3.3199761721506786,
+        "remaining_gap_h3_5_sensitivity_mm": 2.8199761721506786
+      },
+      {
+        "ref": "D410",
+        "position_box_mm": [
+          35.42499938,
+          11.77499978,
+          36.07500062,
+          12.825000220000002
+        ],
+        "height_below_bottom_mm": 0.31999935999999995,
+        "nominal_gap_h4_mm": 3.68000064,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.35436650959955307,
+        "remaining_gap_mm": 3.325634130400447,
+        "remaining_gap_h3_5_sensitivity_mm": 2.825634130400447
+      },
+      {
+        "ref": "R84",
+        "position_box_mm": [
+          20.8,
+          81.425,
+          22.400000000000002,
+          82.22500000000001
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.21082239109346979,
+        "remaining_gap_mm": 3.33917760890653,
+        "remaining_gap_h3_5_sensitivity_mm": 2.83917760890653
+      },
+      {
+        "ref": "R64",
+        "position_box_mm": [
+          10.980064,
+          51.779874,
+          11.479936,
+          52.780126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.30001329624407397,
+        "remaining_gap_mm": 3.340068703755926,
+        "remaining_gap_h3_5_sensitivity_mm": 2.840068703755926
+      },
+      {
+        "ref": "C88",
+        "position_box_mm": [
+          19.150063999999997,
+          83.44987400000001,
+          19.649936,
+          84.450126
+        ],
+        "height_below_bottom_mm": 0.5001259999999998,
+        "nominal_gap_h4_mm": 3.499874,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.15226292778162057,
+        "remaining_gap_mm": 3.3476110722183794,
+        "remaining_gap_h3_5_sensitivity_mm": 2.8476110722183794
+      },
+      {
+        "ref": "R13",
+        "position_box_mm": [
+          10.000064,
+          52.049873999999996,
+          10.499936,
+          53.050126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.27187172569196877,
+        "remaining_gap_mm": 3.3682102743080313,
+        "remaining_gap_h3_5_sensitivity_mm": 2.8682102743080313
+      },
+      {
+        "ref": "R90",
+        "position_box_mm": [
+          7.0,
+          22.700000000000003,
+          8.6,
+          23.5
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.15707349332108617,
+        "remaining_gap_mm": 3.3929265066789136,
+        "remaining_gap_h3_5_sensitivity_mm": 2.8929265066789136
+      },
+      {
+        "ref": "R82",
+        "position_box_mm": [
+          15.524999999999999,
+          83.5,
+          17.125,
+          84.30000000000001
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.14080128401993317,
+        "remaining_gap_mm": 3.4091987159800667,
+        "remaining_gap_h3_5_sensitivity_mm": 2.9091987159800667
+      },
+      {
+        "ref": "R83",
+        "position_box_mm": [
+          9.2,
+          81.39999999999999,
+          10.8,
+          82.2
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.13622114279030312,
+        "remaining_gap_mm": 3.4137788572096968,
+        "remaining_gap_h3_5_sensitivity_mm": 2.9137788572096968
+      },
+      {
+        "ref": "R167",
+        "position_box_mm": [
+          12.2,
+          83.39999999999999,
+          13.8,
+          84.2
+        ],
+        "height_below_bottom_mm": 0.4500000000000002,
+        "nominal_gap_h4_mm": 3.55,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.12407241121081204,
+        "remaining_gap_mm": 3.425927588789188,
+        "remaining_gap_h3_5_sensitivity_mm": 2.925927588789188
+      },
+      {
+        "ref": "R9",
+        "position_box_mm": [
+          9.700064,
+          28.399873999999997,
+          10.199936,
+          29.400126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.2042748981434765,
+        "remaining_gap_mm": 3.4358071018565237,
+        "remaining_gap_h3_5_sensitivity_mm": 2.9358071018565237
+      },
+      {
+        "ref": "D411",
+        "position_box_mm": [
+          35.42499938,
+          8.174999779999998,
+          36.07500062,
+          9.22500022
+        ],
+        "height_below_bottom_mm": 0.31999935999999995,
+        "nominal_gap_h4_mm": 3.68000064,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.22140020615877243,
+        "remaining_gap_mm": 3.4586004338412275,
+        "remaining_gap_h3_5_sensitivity_mm": 2.9586004338412275
+      },
+      {
+        "ref": "R7",
+        "position_box_mm": [
+          8.750064,
+          28.399873999999997,
+          9.249936,
+          29.400126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.1791584598413941,
+        "remaining_gap_mm": 3.460923540158606,
+        "remaining_gap_h3_5_sensitivity_mm": 2.960923540158606
+      },
+      {
+        "ref": "R8",
+        "position_box_mm": [
+          8.750064,
+          31.999874,
+          9.249936,
+          33.000126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.17879941589877052,
+        "remaining_gap_mm": 3.4612825841012294,
+        "remaining_gap_h3_5_sensitivity_mm": 2.9612825841012294
+      },
+      {
+        "ref": "R12",
+        "position_box_mm": [
+          6.750064,
+          48.869873999999996,
+          7.249936,
+          49.870126
+        ],
+        "height_below_bottom_mm": 0.35991799999999996,
+        "nominal_gap_h4_mm": 3.640082,
+        "max_100g_D5_pinned_deflection_in_footprint_mm": 0.14695605735469794,
+        "remaining_gap_mm": 3.4931259426453023,
+        "remaining_gap_h3_5_sensitivity_mm": 2.9931259426453023
+      }
+    ]
+  },
+  "retention_worksheet": [
+    {
+      "refs": [
+        "J1",
+        "J121",
+        "J400"
+      ],
+      "allocated_mass_each_g": 4,
+      "required_5x100g_force_each_N": 19.6133,
+      "basis": "mass allowance Inference except maker J430 socket 0.434 g; no measured joint/hinge/clamp holding capacity"
+    },
+    {
+      "refs": [
+        "J9",
+        "J410",
+        "J420"
+      ],
+      "allocated_mass_each_g": 8,
+      "required_5x100g_force_each_N": 39.2266,
+      "basis": "mass allowance Inference except maker J430 socket 0.434 g; no measured joint/hinge/clamp holding capacity"
+    },
+    {
+      "refs": [
+        "J122"
+      ],
+      "allocated_mass_each_g": 10,
+      "required_5x100g_force_each_N": 49.033249999999995,
+      "basis": "mass allowance Inference except maker J430 socket 0.434 g; no measured joint/hinge/clamp holding capacity"
+    },
+    {
+      "refs": [
+        "C84"
+      ],
+      "allocated_mass_each_g": 3,
+      "required_5x100g_force_each_N": 14.709975,
+      "basis": "mass allowance Inference except maker J430 socket 0.434 g; no measured joint/hinge/clamp holding capacity"
+    },
+    {
+      "refs": [
+        "LS120"
+      ],
+      "allocated_mass_each_g": 0.3,
+      "required_5x100g_force_each_N": 1.4709975,
+      "basis": "mass allowance Inference except maker J430 socket 0.434 g; no measured joint/hinge/clamp holding capacity"
+    },
+    {
+      "refs": [
+        "J3"
+      ],
+      "allocated_mass_each_g": 1,
+      "required_5x100g_force_each_N": 4.903325,
+      "basis": "mass allowance Inference except maker J430 socket 0.434 g; no measured joint/hinge/clamp holding capacity"
+    },
+    {
+      "refs": [
+        "J430 socket and card"
+      ],
+      "allocated_mass_each_g": 0.934,
+      "required_5x100g_force_each_N": 4.57970555,
+      "basis": "mass allowance Inference except maker J430 socket 0.434 g; no measured joint/hinge/clamp holding capacity"
+    }
+  ],
+  "checks_executed": [
+    "SHA-256 before/after; frozen board matched",
+    "Independent native LoadBoard extraction, maker-chain DB125 bounds, rotations, model transforms and full body/courtyard comparisons",
+    "Independent 199 model body bore margins and all five support body/exposed-pad/track-via measurements",
+    "Independent bottom courtyard to every plated through-hole pad measurement, minimum 1.535488 mm",
+    "Independent U4/U5 component-side via/fill intersections and U4 pad orientation versus maker Figure 5",
+    "tools/fit_check.py --profile r10: exit 0, temporary output only",
+    "tools/check_r10.py --only M-1,M-3,M-5,M-6,M-7,P-11: exit 0, all six pass; this is explicitly a selected-rules check",
+    "Fresh existing optional plate model at D5, point-pinned, 100 g, present masses/fit; sampled each bottom model footprint on a 9 x 9 grid",
+    "Rendered complete maker DORABO/Molex sheets and ST pages 9/187 inspected; browser primary-source checks for Sunlord/HRO",
+    "Required governing records and read-only parent VEHICLE reviewed; no current-round peer report read"
+  ],
+  "limits": [
+    "No native DRC, full check.sh, canonical build, CAD save, Git action, GUI retry or other-worktree write executed. Root owns integration/DRC.",
+    "All 199 existing native models were extracted; independent full maker dimensional reconstruction focused on DB125, microSD and IMU. Generic inherited models are not actual seated-part certification.",
+    "OQ-1 benchmark uses bare R25.4 bore, fixed z5 and +/-0.3 horizontal tolerance. It is not the full P2 wire bend envelope. Additional diagnostic z5.3 gives 4.940893704 mm; no impossible physical wire bend is proved and the defined benchmark is not changed.",
+    "No selected ferrule, insulation OD, bend radius, actual screwdriver/shaft/handle, lid-opening angle, finger/tool sweep, actual hardware maxima/eccentricity, coating thickness, or sled structure has been physically measured.",
+    "At selected h4 the optional inferred 100 g model gives C431 remaining gap 0.274406 mm, C421 0.348172 and L1 0.524648. h3.5 sensitivity predicts overlap at C431/C421 in that model; do not treat the stated 3.5 minimum alone as a 100 g clearance qualification. This is conditional modeling, not a demonstrated hardware failure or a reinstated frequency release threshold.",
+    "P3 five-times-100 g retention, flight shock/vibration, thermal sensor behavior, fitted modules/harness/pack stack, actual board position and on-rail screw-switch reachability remain unqualified.",
+    "Official current ST full PDF and direct Molex PDF downloads failed; visual review used the original makers Rev1/G mirrored documents with provenance and page limits above.",
+    "Parent VEHICLE remains read-only and stale; explicit R10 candidate corrective handoff is the carried Minor, not an unauthorized external edit."
+  ]
+}

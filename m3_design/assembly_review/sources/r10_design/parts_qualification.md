@@ -12,16 +12,18 @@ tests were performed. The current always-on ports, screw terminals, microSD and 
 
 No physical tests or firmware qualification are claimed. The actual source contract is
 `circuit.json` plus `pin_table.tsv`; the earlier `parts.json` is a historical selection worksheet.
-The native-path record below is bound to the round-11 fix-pass target PCB
-`0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d`.
-The budget and hot-plug results are regenerated for this exact target. Two complete
-builds exited 0, each including full `tools/check.sh`: DRC, unconnected, parity and
-ERC are zero; all 31 R10 rules and fabrication checks pass. All 42 recorded generated
-file hashes and board metrics match exactly. The two NumPy numerical cases pass in
-each full gate, and the separate Plate regression passes. Evidence:
-[round-11 fix validation](../r10_review/round11_fix_validation.json). Positions and envelope
-snapshots in the dated records below are historical
-where the current circuit/layout amendment supersedes them.
+The current native-path record is bound to the round12 fix PCB
+`7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c`. Two complete direct builds exit0,
+including full tools/check.sh: DRC/unconnected/parity/ERC0, all31 rules and fab
+checks pass;42 recorded generated files match byte for byte. All171 R10 cases
+are covered, resolving the three native NumPy skips;29fit cases pass. See
+[round12 fix validation](../r10_review/round12_fix_validation.json). This is not
+full-round or physical qualification. Dated records below remain historical
+where this circuit/layout amendment supersedes them. R12 native comparison
+proves all original part poses, pad lands/nets, GND tracks and via geometry
+unchanged; BAT_ENABLE loses1.408326mm, the ordinary C98 stitch is added, and five
+Fab labels are corrected. C98's saved-copper return is7.345584mm at0.05mm grid,
+versus31.812237mm before; no transient behavior is inferred.
 
 **Always-on GPS/radio.** J410/J420 pin1 directly joins PORT_4V8. Delete U410/U420,
 R410–412/R420–422, U411/U421, R442/R452 and C440/C443/C450/C453. Keep the four
@@ -41,6 +43,21 @@ would provide a back-feed path into PORT_5V3. [TPS2553 SLVS841F pp7/13–14](htt
 has disabled reverse blocking; enabled reverse blocking needs the specified voltage
 threshold and3–7ms trip transition, so it does not remove the no-back-feed operating rule.
 Camera OE must go low before EN. Only camera EN/OE/FAULT GPIOs remain.
+
+**Current camera harness allocation.** J9 is DB125, not GH. The conditional
+5.031682V minimum at1A uses the port-buck low corner5.366682V, switch135mOhm,
+an additional complete supply-plus-return loop<=150mOhm and negative transient
+allocation<=50mV. Measure that loop four-wire, including native copper, both
+DB125 joints/contacts, ferrules, leads and camera-end termination. The old GH
+100mOhm/26AWG/6-7cm split below is historical and is not a current DB125 lead
+length limit. DB125 accepts28-16AWG; use qualified ferrules or wire>=28AWG.
+
+**Round12 evidence correction.** D-R12-01 withdraws the PC14<=2.9mA proof.
+DS12110 Rev11 Table149p244's3mA output-drop test point does not supply a minimum
+driver resistance. R1621k remains; resistor-only initial current is3.3mA nominal
+or3.363636mA at the stated3.33V/990Ohm initial-tolerance corner, with about
+0.306mA steady current. Gate/driver transients and all-temperature limits remain
+unmeasured; use4kHz with LSE disabled. Pin-table provenance is regenerated.
 
 **Shared port fault budget (Calc / Inference).** [TPS7A91 SBVS282A p5](https://www.ti.com/lit/ds/symlink/tps7a91.pdf)
 limits at1.5–1.9A; hard-short foldback≈1.45A is typical, not a guaranteed maximum.
@@ -291,8 +308,8 @@ after pad/flight drain, Rpack≤0.15 Ω, servo stall1.92 A each. Solve
 (1+Rpack/Rfire)V²−(Voc−Rpack×Iservo)V+Rpack×Pother=0 using its high root;
 Ifire=V/Rfire. Retain conservative2 Ω e-match and≤0.3 Ω external leads/harness,
 R134 tolerance/hot corner2.02909 Ω, hot FETs,5 mΩ ground/10 mΩ contact allowances.
-The round-11 `parts_budget.json` is regenerated and bound to PCB
-`0ad0135c…` instead of carrying circuit-pass length literals. Native fire-path pruning
+The current `parts_budget.json` is regenerated and bound to PCB
+`7355ae1a…` instead of carrying circuit-pass length literals. Native fire-path pruning
 gives BAT_IN6.307107mm/1.0mm, RAW_ACT5.886133mm, IGN10.230382mm and
 OUT7.854478mm at0.5mm, plus one aligned2.2mm/0.4mm source path. BAT_IN includes
 the additional0.707107mm routed entry inside Q120's common drain pad; dead sense
@@ -301,7 +318,7 @@ series via. Copper is29.362412mΩ at20°C/35.132126mΩ at70°C (TCR0.00393/K).
 With the primary40mΩ/FET ceiling, total loop4.617458126Ω gives0/1/2/3/4-stall
 currents1.544366072/1.479437787/1.414263776/1.348804955/1.283013039A;
 all exceed1.125A. D-R11-03 binds the generator to native geometry. The regenerated
-budget SHA-256 is `55b84df3de5d75373a515b6e41584004bc6f3245382e3c9eda5daf9a68edaf3a`.
+budget SHA-256 is `398a68f5732818fbb2d788bc05e5d2d2e4e2e590ee464bbf5a2c4f7d3f61f0d5`.
 The intermediate `419a8f49…` board had the same fire-path lengths/current estimates;
 the new budget binds the later target independently.
 The earlier `0c50b9fd…` review calculation (4.618006Ω,1.544183A idle/1.282861A
@@ -343,7 +360,7 @@ TP122, NRST and dummy-load current for early/late CPU starvation, normal abort,
 postfire refresh, reset/unpowered gate tails and hot R134 pulses; record resistor
 drift and actual physical20/36 ms limits across supply and temperature.
 
-**Final-target local output paths (GAP-2, native CAD / Inference):** on `0ad0135c…`,
+**Current local output paths (GAP-2, native CAD / Inference):** on `7355ae1a…`; original paths preserved by exact native comparison,
 U9 is B(18.5,81.6), C82 is B(19.3,76.75),90°, and D9 is B(15.0,79.3),−90°.
 The saved-copper API gives:
 
@@ -833,7 +850,7 @@ gives 504.292318 W peak and 2.888490051 mJ over 150 µs in different corners; se
 that waveform or test repeated hot/cold insertions and resistance drift. This is a component-data/model update,
 not a claim of measured pulse durability or board acceptance.
 
-The final round-11 target PCB `0ad0135c…` has a separately bound 2304-case
+The historical final round-11 target PCB `0ad0135c…` has a separately bound 2304-case
 sweep: R166 stress reaches579.049147 W and2.979359077 mJ in different corners;
 the retained-output common-node estimate is5.877715489 V after two seconds with
 1616.123714 µF. `hotplug.md` records that exact board, electrical/input/model hashes

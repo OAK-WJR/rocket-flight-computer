@@ -1,0 +1,5699 @@
+{
+  "schema": 1,
+  "round": 12,
+  "lens": 9,
+  "review_kind": "independent native gate adversary",
+  "created_utc": "2026-10-30T06:46:28.244294+00:00",
+  "designated_commit": "d57b216c365fc8d18896bceba37f63caf20d52a4",
+  "board": "m3_design/assembly_review/m3.kicad_pcb",
+  "board_before_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "board_after_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "canonical_board_unchanged": true,
+  "current_totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 3
+  },
+  "findings": [
+    {
+      "id": "R12-GATE-01",
+      "severity": "Minor",
+      "status": "new",
+      "kind": "prospective gate gap",
+      "title": "Positive model shrinkage is accepted without checking reviewed physical dimensions",
+      "files": [
+        "tools/fit_check.py:129",
+        "tools/check_r10.py:1893"
+      ],
+      "at_mm": [
+        38.6,
+        15.5
+      ],
+      "seed": "J410 model m_Scale x/y/z = 0.01; all native pads, tracks and parts unchanged",
+      "measured": {
+        "original_box_mm": [
+          34.50000058,
+          8.29999916,
+          42.59999962,
+          23.8199986,
+          1.27e-06,
+          8.90000125
+        ],
+        "seeded_box_mm": [
+          38.5590000058,
+          15.4279999916,
+          38.6399999962,
+          15.583199986,
+          1.27e-08,
+          0.0890000125
+        ],
+        "original_wire_room_mm": 5.003011866,
+        "seeded_wire_room_mm": 8.96301149,
+        "fit_issues": [],
+        "p11_issues": [],
+        "native_drc": [
+          0,
+          0,
+          0
+        ],
+        "r10_contract_failing": [
+          "F9-1"
+        ],
+        "parts_check_exit": 1
+      },
+      "target_defect": false,
+      "full_path_limit": "The entire 31-rule R10 contract rejects stale F9 inputs and r10_parts --check rejects stale board-bound budget; no tools/check.sh escape was demonstrated. The current native model has the correct maximum envelope.",
+      "source": {
+        "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+        "page": 1,
+        "basis": "Existing D-R11-01 reviewed T0-1 maximum envelope; this lens probes its checker identity rather than requalifying the maker drawing."
+      },
+      "fix": "Validate normalized physical extents and pose of reviewed terminal/SD model envelopes, allowing genuine unit conversions only when the resulting dimensions agree. Add a positive finite shrink seed alongside the existing invalid-transform regressions."
+    },
+    {
+      "id": "R12-GATE-02",
+      "severity": "Minor",
+      "status": "new",
+      "kind": "prospective gate gap",
+      "title": "K-inner omits connected foreign-net drawings and zones",
+      "files": [
+        "tools/check_r10.py:1749"
+      ],
+      "at_mm": [
+        28.1,
+        60.0
+      ],
+      "seeds": [
+        {
+          "representation": "PCB_SHAPE",
+          "net": "3V3",
+          "layer": "In1.Cu",
+          "start_mm": [
+            28.1,
+            60.0
+          ],
+          "end_mm": [
+            29.1,
+            60.0
+          ],
+          "width_mm": 0.2,
+          "connection": "existing 3V3 through-via at (28.1,60.0)"
+        },
+        {
+          "representation": "ZONE",
+          "net": "3V3",
+          "layer": "In1.Cu",
+          "outline_mm": [
+            [
+              27.5,
+              59.4
+            ],
+            [
+              28.7,
+              59.4
+            ],
+            [
+              28.7,
+              60.6
+            ],
+            [
+              27.5,
+              60.6
+            ]
+          ],
+          "priority": 10,
+          "connection": "same existing via"
+        }
+      ],
+      "measured": {
+        "both_native_drc": [
+          0,
+          0,
+          0
+        ],
+        "both_fit_issues": [],
+        "both_r10_contract_failing": [
+          "F9-1"
+        ],
+        "both_parts_check_exit": 1,
+        "connected_zone_full_route_failures": 0,
+        "connected_zone_removable_bumps": 0,
+        "current_target_inner_drawings_fields": 0,
+        "current_target_in1_foreign_zones": 0
+      },
+      "target_defect": false,
+      "full_path_limit": "Official native all-severity DRC/parity and all other R10 rules pass both connected mutants. Full route scan plus bump search was run for the zone mutant only. Both still fail F9-1 and the board-bound budget check; no whole-gate escape was demonstrated. The initial disconnected graphic/zone variants were independently caught by native unconnected/island checks.",
+      "fix": "Extend K-inner through the existing complete copper representation walk to board/footprint zones and copper drawings, with explicit treatment of legitimate through-hole pads/vias. Keep In1 GND-only and In2 power/GND-only policy independent of the serialization class; seed connected variants so DRC isolation cannot mask a checker miss."
+    },
+    {
+      "id": "R12-GATE-03",
+      "severity": "Minor",
+      "status": "new",
+      "kind": "prospective exported-list validation gap",
+      "title": "S-4 accepts a present required BOM reference with Qty zero",
+      "files": [
+        "tools/check_r10.py:212",
+        "m3_design/r10_fab.sh:30"
+      ],
+      "at_mm": [
+        23.0,
+        43.0
+      ],
+      "seed": "Copy the real JLC BOM; change only the U1 row Qty from 1 to 0. Keep Designator=U1 and the native PCB, schematic and CPL unchanged.",
+      "measured": {
+        "assembly_population_issues": [],
+        "native_S4_ok": true,
+        "native_S4_required_count": 199,
+        "native_S4_issues": [],
+        "existing_manifest_verifier": "rejects the changed BOM",
+        "current_U1_Qty": "1",
+        "current_BOM_rows": 82,
+        "current_BOM_quantity_sum": 199,
+        "current_BOM_quantity_mismatches": 0,
+        "current_CPL_rows": 199
+      },
+      "target_defect": false,
+      "full_path_limit": "This is a presence-check limitation, not evidence that an assembler would omit U1. The existing bound package rejects the modified CSV, and current exporter output has correct quantities. A future export bug plus a freshly generated matching manifest would need separate production-path validation; that path was not manufactured or claimed here.",
+      "fix": "When a BOM supplies Qty, validate that it is positive and equals the number of distinct designators in the row, reusing the existing S-4 CSV walk. Preserve the quantity-free CPL schema."
+    }
+  ],
+  "closed_prior_findings": [
+    {
+      "id": "R11-GATE-01",
+      "status": "closed in scoped native checks",
+      "evidence": "All 23 terminal pins, each with wrong role/polarity, hidden and footprint-textbox duplicate mutations: 69/69 rejected."
+    },
+    {
+      "id": "R11-GATE-02",
+      "status": "closed in scoped native checks",
+      "evidence": "DNP for every 199 required part plus 33 additional native exclusion flags: 232/232 rejected. Ten real BOM/CPL omission cases rejected."
+    },
+    {
+      "id": "R11-GATE-03",
+      "status": "closed in scoped native checks",
+      "evidence": "Zero/negative/NaN scaling of seven terminals and J430: 24/24 rejected by fit. The new positive finite shrink issue is separate."
+    }
+  ],
+  "execution_summary": {
+    "focused_phase1_mutations": 357,
+    "phase1_rejected_by_selected_checks": 355,
+    "phase1_selected_check_misses": 2,
+    "manifest_failure_cases": 12,
+    "manifest_failures_rejected": 12,
+    "saved_native_mutant_runs": 6,
+    "identical_native_baseline_runs": 1,
+    "additional_reference_AUD2_faults_rejected": 2,
+    "additional_native_qty_zero_S4_miss": 1,
+    "recorded_probe_executions_including_repeated_faults_at_stronger_stages": 378,
+    "native_cli_version": "10.0.7",
+    "production_full_check_sh_run": false,
+    "canonical_build_run": false,
+    "canonical_git_actions_run": false,
+    "native_cli_reservation": "released after the seven baseline/mutant runs"
+  },
+  "context_sources": [
+    "AGENTS.md",
+    "docs/REQUIREMENTS.md",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md",
+    "docs/M3_R10.md",
+    "docs/R10_VALIDATION.md",
+    "docs/R9_VALIDATION.md",
+    "../../docs/VEHICLE.md",
+    ".supervisor/r10_review_packet.md"
+  ],
+  "scope_amendments": [
+    "Single external screw switch, no J124/pull-pin; PC1 independent load-switch enable and PE4 fire; post-Q120/Q121 RAW_ACT bus retained.",
+    "AUD-2 omits only named slow return geometry; critical hygiene still gates. Actual ACT_EN_MCU off-angle seed is rejected.",
+    "AUD-10 exact duplicate/collinear/inside-pad/distance residuals are informational; the partial-overlap seed is rejected.",
+    "Audit2 all199 native fitted population, sole PC5 sense/direct ADC tails, GND-only In1 routing, optional plate and local-clearance rules respected.",
+    "GAP-3 two VIPPO vias, GAP-4 post-reflow C84 and GAP-5 20ms/36ms obligations remain; this lens does not physically qualify them."
+  ],
+  "coverage_limits": [
+    "No complete tools/check.sh or canonical build, no source/CAD implementation change, no git action, no current-round peer report read, no owner question.",
+    "No complete fabrication regeneration; current five-output manifest was verified and genuine corrupt/missing/malformed outputs/manifest variants were exercised on isolated copies.",
+    "No firmware, bench, thermal, e-match, physical fit, vibration, order or supplier-stock qualification.",
+    "No whole-gate escape demonstrated. Selected-rule misses were followed through the entire 31-rule R10 contract, native DRC/parity and board-bound budget check as stated, but the untouched production shell was not rerun.",
+    "No fake CLI or substituted real-board gate. Native JSON produced by official10.0.7 is retained in the evidence below; CLI return0 alone is not a pass when JSON contains violations/unconnected items.",
+    "Positive normalized model sizing and foreign inner copper findings concern prospective future inputs; neither seeded condition is present on this PCB."
+  ],
+  "evidence": {
+    "phase1": {
+      "board_before_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+      "seeds": [
+        {
+          "group": "native_population",
+          "name": "C10 DNP",
+          "rejected": true,
+          "issues": [
+            "C10: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            17.5,
+            54.1
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C100 DNP",
+          "rejected": true,
+          "issues": [
+            "C100: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            28.85,
+            39.97
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C11 DNP",
+          "rejected": true,
+          "issues": [
+            "C11: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            17.5,
+            52.1
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C120 DNP",
+          "rejected": true,
+          "issues": [
+            "C120: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            17.1,
+            72.525
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C126 DNP",
+          "rejected": true,
+          "issues": [
+            "C126: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            16.85,
+            57.675
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C127 DNP",
+          "rejected": true,
+          "issues": [
+            "C127: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            23.65,
+            53.2
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C128 DNP",
+          "rejected": true,
+          "issues": [
+            "C128: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            12.0,
+            57.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C129 DNP",
+          "rejected": true,
+          "issues": [
+            "C129: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            28.25,
+            51.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C13 DNP",
+          "rejected": true,
+          "issues": [
+            "C13: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.85,
+            50.1
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C14 DNP",
+          "rejected": true,
+          "issues": [
+            "C14: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            21.4,
+            52.15
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C15 DNP",
+          "rejected": true,
+          "issues": [
+            "C15: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            29.05,
+            47.4
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C16 DNP",
+          "rejected": true,
+          "issues": [
+            "C16: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            26.6,
+            36.62
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C17 DNP",
+          "rejected": true,
+          "issues": [
+            "C17: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            17.0,
+            37.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C18 DNP",
+          "rejected": true,
+          "issues": [
+            "C18: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            18.3,
+            49.15
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C19 DNP",
+          "rejected": true,
+          "issues": [
+            "C19: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            28.35,
+            37.65
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C20 DNP",
+          "rejected": true,
+          "issues": [
+            "C20: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            19.8,
+            37.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C21 DNP",
+          "rejected": true,
+          "issues": [
+            "C21: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            28.1,
+            49.25
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C22 DNP",
+          "rejected": true,
+          "issues": [
+            "C22: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            27.0,
+            47.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C23 DNP",
+          "rejected": true,
+          "issues": [
+            "C23: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            27.8,
+            35.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C24 DNP",
+          "rejected": true,
+          "issues": [
+            "C24: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            25.45,
+            49.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C25 DNP",
+          "rejected": true,
+          "issues": [
+            "C25: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            19.95,
+            47.7
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C26 DNP",
+          "rejected": true,
+          "issues": [
+            "C26: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            25.75,
+            45.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C28 DNP",
+          "rejected": true,
+          "issues": [
+            "C28: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            13.05,
+            24.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C29 DNP",
+          "rejected": true,
+          "issues": [
+            "C29: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            28.0,
+            43.52
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C30 DNP",
+          "rejected": true,
+          "issues": [
+            "C30: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            17.05,
+            48.73
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C31 DNP",
+          "rejected": true,
+          "issues": [
+            "C31: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.7,
+            47.07
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C32 DNP",
+          "rejected": true,
+          "issues": [
+            "C32: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            8.72,
+            45.85
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C400 DNP",
+          "rejected": true,
+          "issues": [
+            "C400: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            12.6,
+            5.55
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C401 DNP",
+          "rejected": true,
+          "issues": [
+            "C401: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            17.35,
+            9.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C402 DNP",
+          "rejected": true,
+          "issues": [
+            "C402: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            19.6,
+            4.775
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C403 DNP",
+          "rejected": true,
+          "issues": [
+            "C403: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            30.1,
+            3.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C404 DNP",
+          "rejected": true,
+          "issues": [
+            "C404: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            30.1,
+            7.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C405 DNP",
+          "rejected": true,
+          "issues": [
+            "C405: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            24.4,
+            10.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C406 DNP",
+          "rejected": true,
+          "issues": [
+            "C406: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            29.9,
+            8.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C407 DNP",
+          "rejected": true,
+          "issues": [
+            "C407: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            31.8,
+            19.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C408 DNP",
+          "rejected": true,
+          "issues": [
+            "C408: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            24.8,
+            13.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C410 DNP",
+          "rejected": true,
+          "issues": [
+            "C410: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.5,
+            18.2
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C411 DNP",
+          "rejected": true,
+          "issues": [
+            "C411: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.2,
+            22.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C420 DNP",
+          "rejected": true,
+          "issues": [
+            "C420: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.5,
+            34.2
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C421 DNP",
+          "rejected": true,
+          "issues": [
+            "C421: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            33.8,
+            36.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C430 DNP",
+          "rejected": true,
+          "issues": [
+            "C430: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            30.7,
+            61.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C431 DNP",
+          "rejected": true,
+          "issues": [
+            "C431: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            39.3,
+            57.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C460 DNP",
+          "rejected": true,
+          "issues": [
+            "C460: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            22.48,
+            21.7
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C461 DNP",
+          "rejected": true,
+          "issues": [
+            "C461: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            27.0,
+            18.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C5 DNP",
+          "rejected": true,
+          "issues": [
+            "C5: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            22.2,
+            71.43
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C6 DNP",
+          "rejected": true,
+          "issues": [
+            "C6: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            27.75,
+            69.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C60 DNP",
+          "rejected": true,
+          "issues": [
+            "C60: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            33.2,
+            56.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C7 DNP",
+          "rejected": true,
+          "issues": [
+            "C7: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            28.3,
+            73.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C8 DNP",
+          "rejected": true,
+          "issues": [
+            "C8: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            26.4,
+            78.28
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C80 DNP",
+          "rejected": true,
+          "issues": [
+            "C80: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.05,
+            79.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C81 DNP",
+          "rejected": true,
+          "issues": [
+            "C81: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            21.6,
+            80.1
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C82 DNP",
+          "rejected": true,
+          "issues": [
+            "C82: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            19.3,
+            76.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C83 DNP",
+          "rejected": true,
+          "issues": [
+            "C83: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            10.2,
+            24.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C84 DNP",
+          "rejected": true,
+          "issues": [
+            "C84: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            27.5,
+            78.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C85 DNP",
+          "rejected": true,
+          "issues": [
+            "C85: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            27.9,
+            65.724999
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C86 DNP",
+          "rejected": true,
+          "issues": [
+            "C86: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            16.774999,
+            25.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C87 DNP",
+          "rejected": true,
+          "issues": [
+            "C87: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            17.0,
+            65.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C88 DNP",
+          "rejected": true,
+          "issues": [
+            "C88: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            19.4,
+            83.95
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C89 DNP",
+          "rejected": true,
+          "issues": [
+            "C89: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.0,
+            84.7
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C9 DNP",
+          "rejected": true,
+          "issues": [
+            "C9: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            26.4,
+            80.24
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C90 DNP",
+          "rejected": true,
+          "issues": [
+            "C90: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            25.6,
+            31.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C91 DNP",
+          "rejected": true,
+          "issues": [
+            "C91: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.95,
+            53.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C92 DNP",
+          "rejected": true,
+          "issues": [
+            "C92: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            32.35,
+            52.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C93 DNP",
+          "rejected": true,
+          "issues": [
+            "C93: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            33.4,
+            39.275
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C94 DNP",
+          "rejected": true,
+          "issues": [
+            "C94: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            33.47,
+            51.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C95 DNP",
+          "rejected": true,
+          "issues": [
+            "C95: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.0,
+            87.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C96 DNP",
+          "rejected": true,
+          "issues": [
+            "C96: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.0,
+            82.1
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C97 DNP",
+          "rejected": true,
+          "issues": [
+            "C97: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            24.3,
+            64.4
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C98 DNP",
+          "rejected": true,
+          "issues": [
+            "C98: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            24.575,
+            62.2
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C99 DNP",
+          "rejected": true,
+          "issues": [
+            "C99: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            25.42,
+            66.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D120 DNP",
+          "rejected": true,
+          "issues": [
+            "D120: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.7,
+            60.2
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D121 DNP",
+          "rejected": true,
+          "issues": [
+            "D121: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            31.5,
+            71.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D123 DNP",
+          "rejected": true,
+          "issues": [
+            "D123: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            21.7,
+            63.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D4 DNP",
+          "rejected": true,
+          "issues": [
+            "D4: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            9.95,
+            30.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D400 DNP",
+          "rejected": true,
+          "issues": [
+            "D400: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            35.75,
+            43.7
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D401 DNP",
+          "rejected": true,
+          "issues": [
+            "D401: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            35.75,
+            47.2
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D410 DNP",
+          "rejected": true,
+          "issues": [
+            "D410: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            35.75,
+            12.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D411 DNP",
+          "rejected": true,
+          "issues": [
+            "D411: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            35.75,
+            8.7
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D420 DNP",
+          "rejected": true,
+          "issues": [
+            "D420: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            35.75,
+            31.2
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D421 DNP",
+          "rejected": true,
+          "issues": [
+            "D421: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            35.75,
+            27.7
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D8 DNP",
+          "rejected": true,
+          "issues": [
+            "D8: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            15.5,
+            75.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "D9 DNP",
+          "rejected": true,
+          "issues": [
+            "D9: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            15.0,
+            79.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J1 DNP",
+          "rejected": true,
+          "issues": [
+            "J1: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            7.4,
+            75.85
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J121 DNP",
+          "rejected": true,
+          "issues": [
+            "J121: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            7.4,
+            55.85
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J122 DNP",
+          "rejected": true,
+          "issues": [
+            "J122: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            38.6,
+            71.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J3 DNP",
+          "rejected": true,
+          "issues": [
+            "J3: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            4.6,
+            30.799999
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J400 DNP",
+          "rejected": true,
+          "issues": [
+            "J400: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            7.4,
+            65.849999
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J410 DNP",
+          "rejected": true,
+          "issues": [
+            "J410: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            38.6,
+            15.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J420 DNP",
+          "rejected": true,
+          "issues": [
+            "J420: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            38.6,
+            31.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J430 DNP",
+          "rejected": true,
+          "issues": [
+            "J430: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            24.0,
+            24.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J9 DNP",
+          "rejected": true,
+          "issues": [
+            "J9: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            38.6,
+            47.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "L1 DNP",
+          "rejected": true,
+          "issues": [
+            "L1: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            25.0,
+            74.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "L400 DNP",
+          "rejected": true,
+          "issues": [
+            "L400: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            24.2,
+            5.55
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "LED1 DNP",
+          "rejected": true,
+          "issues": [
+            "LED1: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            8.95,
+            42.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "LED2 DNP",
+          "rejected": true,
+          "issues": [
+            "LED2: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            8.95,
+            46.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "LS120 DNP",
+          "rejected": true,
+          "issues": [
+            "LS120: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            23.0,
+            58.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "Q120 DNP",
+          "rejected": true,
+          "issues": [
+            "Q120: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            13.5,
+            73.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "Q121 DNP",
+          "rejected": true,
+          "issues": [
+            "Q121: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            13.5,
+            68.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "Q122 DNP",
+          "rejected": true,
+          "issues": [
+            "Q122: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            16.8,
+            69.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "Q123 DNP",
+          "rejected": true,
+          "issues": [
+            "Q123: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            19.5,
+            60.25
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "Q124 DNP",
+          "rejected": true,
+          "issues": [
+            "Q124: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            13.9,
+            57.37
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R10 DNP",
+          "rejected": true,
+          "issues": [
+            "R10: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            20.0,
+            44.69
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R100 DNP",
+          "rejected": true,
+          "issues": [
+            "R100: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.0,
+            45.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R101 DNP",
+          "rejected": true,
+          "issues": [
+            "R101: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.0,
+            42.25
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R102 DNP",
+          "rejected": true,
+          "issues": [
+            "R102: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            35.4,
+            39.7
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R103 DNP",
+          "rejected": true,
+          "issues": [
+            "R103: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            31.2,
+            54.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R104 DNP",
+          "rejected": true,
+          "issues": [
+            "R104: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            33.2,
+            46.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R105 DNP",
+          "rejected": true,
+          "issues": [
+            "R105: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            33.2,
+            48.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R11 DNP",
+          "rejected": true,
+          "issues": [
+            "R11: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.2,
+            43.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R110 DNP",
+          "rejected": true,
+          "issues": [
+            "R110: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            10.775,
+            25.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R12 DNP",
+          "rejected": true,
+          "issues": [
+            "R12: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            7.0,
+            49.37
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R120 DNP",
+          "rejected": true,
+          "issues": [
+            "R120: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            18.5,
+            72.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R121 DNP",
+          "rejected": true,
+          "issues": [
+            "R121: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.5,
+            71.87
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R122 DNP",
+          "rejected": true,
+          "issues": [
+            "R122: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            19.6,
+            69.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R123 DNP",
+          "rejected": true,
+          "issues": [
+            "R123: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            20.6,
+            70.66
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R126 DNP",
+          "rejected": true,
+          "issues": [
+            "R126: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            17.0,
+            54.24
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R127 DNP",
+          "rejected": true,
+          "issues": [
+            "R127: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            19.8,
+            54.24
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R128 DNP",
+          "rejected": true,
+          "issues": [
+            "R128: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            18.3,
+            57.405
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R129 DNP",
+          "rejected": true,
+          "issues": [
+            "R129: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            23.0,
+            57.4
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R13 DNP",
+          "rejected": true,
+          "issues": [
+            "R13: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            10.25,
+            52.55
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R130 DNP",
+          "rejected": true,
+          "issues": [
+            "R130: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            23.43,
+            55.85
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R131 DNP",
+          "rejected": true,
+          "issues": [
+            "R131: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            10.8,
+            61.15
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R132 DNP",
+          "rejected": true,
+          "issues": [
+            "R132: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            28.0,
+            57.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R133 DNP",
+          "rejected": true,
+          "issues": [
+            "R133: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            28.43,
+            54.25
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R134 DNP",
+          "rejected": true,
+          "issues": [
+            "R134: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            16.5,
+            64.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R150 DNP",
+          "rejected": true,
+          "issues": [
+            "R150: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.6,
+            75.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R151 DNP",
+          "rejected": true,
+          "issues": [
+            "R151: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.7,
+            72.77
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R152 DNP",
+          "rejected": true,
+          "issues": [
+            "R152: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.7,
+            70.23
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R153 DNP",
+          "rejected": true,
+          "issues": [
+            "R153: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.6,
+            68.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R154 DNP",
+          "rejected": true,
+          "issues": [
+            "R154: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            32.45,
+            74.53
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R155 DNP",
+          "rejected": true,
+          "issues": [
+            "R155: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            30.55,
+            74.53
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R156 DNP",
+          "rejected": true,
+          "issues": [
+            "R156: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            30.55,
+            68.4
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R157 DNP",
+          "rejected": true,
+          "issues": [
+            "R157: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            32.45,
+            68.4
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R162 DNP",
+          "rejected": true,
+          "issues": [
+            "R162: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            19.5,
+            57.7
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R163 DNP",
+          "rejected": true,
+          "issues": [
+            "R163: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            21.8,
+            59.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R164 DNP",
+          "rejected": true,
+          "issues": [
+            "R164: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            17.325,
+            55.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R165 DNP",
+          "rejected": true,
+          "issues": [
+            "R165: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            13.25,
+            67.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R166 DNP",
+          "rejected": true,
+          "issues": [
+            "R166: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            23.5,
+            86.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R167 DNP",
+          "rejected": true,
+          "issues": [
+            "R167: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            13.0,
+            83.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R173 DNP",
+          "rejected": true,
+          "issues": [
+            "R173: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            23.0,
+            59.2
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R175 DNP",
+          "rejected": true,
+          "issues": [
+            "R175: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            28.0,
+            55.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R178 DNP",
+          "rejected": true,
+          "issues": [
+            "R178: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            23.43,
+            54.85
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R180 DNP",
+          "rejected": true,
+          "issues": [
+            "R180: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            28.43,
+            53.25
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R32 DNP",
+          "rejected": true,
+          "issues": [
+            "R32: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            12.3,
+            41.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R33 DNP",
+          "rejected": true,
+          "issues": [
+            "R33: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            11.3,
+            44.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R400 DNP",
+          "rejected": true,
+          "issues": [
+            "R400: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            19.9,
+            1.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R401 DNP",
+          "rejected": true,
+          "issues": [
+            "R401: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            13.0,
+            1.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R402 DNP",
+          "rejected": true,
+          "issues": [
+            "R402: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            31.4,
+            12.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R403 DNP",
+          "rejected": true,
+          "issues": [
+            "R403: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            31.4,
+            14.4
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R404 DNP",
+          "rejected": true,
+          "issues": [
+            "R404: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            16.625,
+            1.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R405 DNP",
+          "rejected": true,
+          "issues": [
+            "R405: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.3,
+            16.1
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R430 DNP",
+          "rejected": true,
+          "issues": [
+            "R430: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            36.0,
+            60.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R431 DNP",
+          "rejected": true,
+          "issues": [
+            "R431: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            38.0,
+            59.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R432 DNP",
+          "rejected": true,
+          "issues": [
+            "R432: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            35.7,
+            57.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R440 DNP",
+          "rejected": true,
+          "issues": [
+            "R440: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.0,
+            10.25
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R441 DNP",
+          "rejected": true,
+          "issues": [
+            "R441: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.0,
+            13.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R450 DNP",
+          "rejected": true,
+          "issues": [
+            "R450: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.0,
+            26.25
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R451 DNP",
+          "rejected": true,
+          "issues": [
+            "R451: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            34.0,
+            29.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R460 DNP",
+          "rejected": true,
+          "issues": [
+            "R460: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            27.8,
+            16.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R461 DNP",
+          "rejected": true,
+          "issues": [
+            "R461: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            24.2,
+            16.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R462 DNP",
+          "rejected": true,
+          "issues": [
+            "R462: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.2,
+            16.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R463 DNP",
+          "rejected": true,
+          "issues": [
+            "R463: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.2,
+            18.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R464 DNP",
+          "rejected": true,
+          "issues": [
+            "R464: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            25.55,
+            22.18
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R5 DNP",
+          "rejected": true,
+          "issues": [
+            "R5: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            13.0,
+            45.17
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R60 DNP",
+          "rejected": true,
+          "issues": [
+            "R60: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            33.2,
+            58.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R61 DNP",
+          "rejected": true,
+          "issues": [
+            "R61: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            33.2,
+            54.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R62 DNP",
+          "rejected": true,
+          "issues": [
+            "R62: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            25.5,
+            55.7
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R63 DNP",
+          "rejected": true,
+          "issues": [
+            "R63: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            25.5,
+            56.7
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R64 DNP",
+          "rejected": true,
+          "issues": [
+            "R64: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            11.23,
+            52.28
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R7 DNP",
+          "rejected": true,
+          "issues": [
+            "R7: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            9.0,
+            28.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R8 DNP",
+          "rejected": true,
+          "issues": [
+            "R8: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            9.0,
+            32.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R80 DNP",
+          "rejected": true,
+          "issues": [
+            "R80: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            13.25,
+            69.2
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R81 DNP",
+          "rejected": true,
+          "issues": [
+            "R81: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            20.5,
+            65.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R82 DNP",
+          "rejected": true,
+          "issues": [
+            "R82: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            16.325,
+            83.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R83 DNP",
+          "rejected": true,
+          "issues": [
+            "R83: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            10.0,
+            81.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R84 DNP",
+          "rejected": true,
+          "issues": [
+            "R84: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            21.6,
+            81.825
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R85 DNP",
+          "rejected": true,
+          "issues": [
+            "R85: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            14.0,
+            27.2
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R86 DNP",
+          "rejected": true,
+          "issues": [
+            "R86: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            27.9,
+            64.25
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R87 DNP",
+          "rejected": true,
+          "issues": [
+            "R87: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            22.0,
+            63.925
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R88 DNP",
+          "rejected": true,
+          "issues": [
+            "R88: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            22.0,
+            67.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R89 DNP",
+          "rejected": true,
+          "issues": [
+            "R89: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            23.0,
+            70.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R9 DNP",
+          "rejected": true,
+          "issues": [
+            "R9: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            9.95,
+            28.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R90 DNP",
+          "rejected": true,
+          "issues": [
+            "R90: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            7.8,
+            23.1
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R91 DNP",
+          "rejected": true,
+          "issues": [
+            "R91: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            28.1,
+            60.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R92 DNP",
+          "rejected": true,
+          "issues": [
+            "R92: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            31.0,
+            87.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U1 DNP",
+          "rejected": true,
+          "issues": [
+            "U1: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            23.0,
+            43.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U10 DNP",
+          "rejected": true,
+          "issues": [
+            "U10: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            12.6,
+            27.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U11 DNP",
+          "rejected": true,
+          "issues": [
+            "U11: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            24.65,
+            64.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U12 DNP",
+          "rejected": true,
+          "issues": [
+            "U12: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            31.6,
+            39.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U13 DNP",
+          "rejected": true,
+          "issues": [
+            "U13: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            31.85,
+            49.7
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U2 DNP",
+          "rejected": true,
+          "issues": [
+            "U2: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            25.0,
+            69.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U3 DNP",
+          "rejected": true,
+          "issues": [
+            "U3: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            22.6,
+            41.2
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U4 DNP",
+          "rejected": true,
+          "issues": [
+            "U4: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            17.0,
+            45.9
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U400 DNP",
+          "rejected": true,
+          "issues": [
+            "U400: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            16.9,
+            5.55
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U401 DNP",
+          "rejected": true,
+          "issues": [
+            "U401: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            27.6,
+            13.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U402 DNP",
+          "rejected": true,
+          "issues": [
+            "U402: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            32.0,
+            59.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U5 DNP",
+          "rejected": true,
+          "issues": [
+            "U5: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            10.6,
+            49.1
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U9 DNP",
+          "rejected": true,
+          "issues": [
+            "U9: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            18.5,
+            81.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "Y1 DNP",
+          "rejected": true,
+          "issues": [
+            "Y1: required fitted part excluded (dnp)"
+          ],
+          "at_mm": [
+            22.85,
+            46.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U1 exclude_from_bom",
+          "rejected": true,
+          "issues": [
+            "U1: required fitted part excluded (exclude_from_bom)"
+          ],
+          "at_mm": [
+            23.0,
+            43.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U1 exclude_from_pos_files",
+          "rejected": true,
+          "issues": [
+            "U1: required fitted part excluded (exclude_from_pos_files)"
+          ],
+          "at_mm": [
+            23.0,
+            43.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U1 board_only",
+          "rejected": true,
+          "issues": [
+            "U1: required fitted part excluded (board_only)"
+          ],
+          "at_mm": [
+            23.0,
+            43.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U2 exclude_from_bom",
+          "rejected": true,
+          "issues": [
+            "U2: required fitted part excluded (exclude_from_bom)"
+          ],
+          "at_mm": [
+            25.0,
+            69.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U2 exclude_from_pos_files",
+          "rejected": true,
+          "issues": [
+            "U2: required fitted part excluded (exclude_from_pos_files)"
+          ],
+          "at_mm": [
+            25.0,
+            69.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U2 board_only",
+          "rejected": true,
+          "issues": [
+            "U2: required fitted part excluded (board_only)"
+          ],
+          "at_mm": [
+            25.0,
+            69.8
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "L1 exclude_from_bom",
+          "rejected": true,
+          "issues": [
+            "L1: required fitted part excluded (exclude_from_bom)"
+          ],
+          "at_mm": [
+            25.0,
+            74.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "L1 exclude_from_pos_files",
+          "rejected": true,
+          "issues": [
+            "L1: required fitted part excluded (exclude_from_pos_files)"
+          ],
+          "at_mm": [
+            25.0,
+            74.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "L1 board_only",
+          "rejected": true,
+          "issues": [
+            "L1: required fitted part excluded (board_only)"
+          ],
+          "at_mm": [
+            25.0,
+            74.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "Y1 exclude_from_bom",
+          "rejected": true,
+          "issues": [
+            "Y1: required fitted part excluded (exclude_from_bom)"
+          ],
+          "at_mm": [
+            22.85,
+            46.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "Y1 exclude_from_pos_files",
+          "rejected": true,
+          "issues": [
+            "Y1: required fitted part excluded (exclude_from_pos_files)"
+          ],
+          "at_mm": [
+            22.85,
+            46.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "Y1 board_only",
+          "rejected": true,
+          "issues": [
+            "Y1: required fitted part excluded (board_only)"
+          ],
+          "at_mm": [
+            22.85,
+            46.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C6 exclude_from_bom",
+          "rejected": true,
+          "issues": [
+            "C6: required fitted part excluded (exclude_from_bom)"
+          ],
+          "at_mm": [
+            27.75,
+            69.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C6 exclude_from_pos_files",
+          "rejected": true,
+          "issues": [
+            "C6: required fitted part excluded (exclude_from_pos_files)"
+          ],
+          "at_mm": [
+            27.75,
+            69.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C6 board_only",
+          "rejected": true,
+          "issues": [
+            "C6: required fitted part excluded (board_only)"
+          ],
+          "at_mm": [
+            27.75,
+            69.75
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C13 exclude_from_bom",
+          "rejected": true,
+          "issues": [
+            "C13: required fitted part excluded (exclude_from_bom)"
+          ],
+          "at_mm": [
+            14.85,
+            50.1
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C13 exclude_from_pos_files",
+          "rejected": true,
+          "issues": [
+            "C13: required fitted part excluded (exclude_from_pos_files)"
+          ],
+          "at_mm": [
+            14.85,
+            50.1
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C13 board_only",
+          "rejected": true,
+          "issues": [
+            "C13: required fitted part excluded (board_only)"
+          ],
+          "at_mm": [
+            14.85,
+            50.1
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R5 exclude_from_bom",
+          "rejected": true,
+          "issues": [
+            "R5: required fitted part excluded (exclude_from_bom)"
+          ],
+          "at_mm": [
+            13.0,
+            45.17
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R5 exclude_from_pos_files",
+          "rejected": true,
+          "issues": [
+            "R5: required fitted part excluded (exclude_from_pos_files)"
+          ],
+          "at_mm": [
+            13.0,
+            45.17
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R5 board_only",
+          "rejected": true,
+          "issues": [
+            "R5: required fitted part excluded (board_only)"
+          ],
+          "at_mm": [
+            13.0,
+            45.17
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C84 exclude_from_bom",
+          "rejected": true,
+          "issues": [
+            "C84: required fitted part excluded (exclude_from_bom)"
+          ],
+          "at_mm": [
+            27.5,
+            78.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C84 exclude_from_pos_files",
+          "rejected": true,
+          "issues": [
+            "C84: required fitted part excluded (exclude_from_pos_files)"
+          ],
+          "at_mm": [
+            27.5,
+            78.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "C84 board_only",
+          "rejected": true,
+          "issues": [
+            "C84: required fitted part excluded (board_only)"
+          ],
+          "at_mm": [
+            27.5,
+            78.5
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U401 exclude_from_bom",
+          "rejected": true,
+          "issues": [
+            "U401: required fitted part excluded (exclude_from_bom)"
+          ],
+          "at_mm": [
+            27.6,
+            13.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U401 exclude_from_pos_files",
+          "rejected": true,
+          "issues": [
+            "U401: required fitted part excluded (exclude_from_pos_files)"
+          ],
+          "at_mm": [
+            27.6,
+            13.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "U401 board_only",
+          "rejected": true,
+          "issues": [
+            "U401: required fitted part excluded (board_only)"
+          ],
+          "at_mm": [
+            27.6,
+            13.6
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J430 exclude_from_bom",
+          "rejected": true,
+          "issues": [
+            "J430: required fitted part excluded (exclude_from_bom)"
+          ],
+          "at_mm": [
+            24.0,
+            24.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J430 exclude_from_pos_files",
+          "rejected": true,
+          "issues": [
+            "J430: required fitted part excluded (exclude_from_pos_files)"
+          ],
+          "at_mm": [
+            24.0,
+            24.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "J430 board_only",
+          "rejected": true,
+          "issues": [
+            "J430: required fitted part excluded (board_only)"
+          ],
+          "at_mm": [
+            24.0,
+            24.3
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R134 exclude_from_bom",
+          "rejected": true,
+          "issues": [
+            "R134: required fitted part excluded (exclude_from_bom)"
+          ],
+          "at_mm": [
+            16.5,
+            64.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R134 exclude_from_pos_files",
+          "rejected": true,
+          "issues": [
+            "R134: required fitted part excluded (exclude_from_pos_files)"
+          ],
+          "at_mm": [
+            16.5,
+            64.0
+          ]
+        },
+        {
+          "group": "native_population",
+          "name": "R134 board_only",
+          "rejected": true,
+          "issues": [
+            "R134: required fitted part excluded (board_only)"
+          ],
+          "at_mm": [
+            16.5,
+            64.0
+          ]
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J1.1 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J1.1: conflicting silkscreen pin legend '1:BAT-': its strictly nearest connector pin must be labelled \"1:BAT+\"",
+            "J1.1: 0 legends \"1:BAT+\" nearest it, expected one"
+          ],
+          "at_mm": [
+            6.0,
+            71.399999
+          ],
+          "expected": "1:BAT+"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J1.1 hidden",
+          "rejected": true,
+          "issues": [
+            "J1.1: 0 legends \"1:BAT+\" nearest it, expected one"
+          ],
+          "at_mm": [
+            6.0,
+            71.399999
+          ],
+          "expected": "1:BAT+"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J1.1 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J1.1: 2 legends \"1:BAT+\" nearest it, expected one"
+          ],
+          "at_mm": [
+            6.0,
+            71.399999
+          ],
+          "expected": "1:BAT+"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J1.2 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J1.2: conflicting silkscreen pin legend '2:WRONG': its strictly nearest connector pin must be labelled \"2:GND\"",
+            "J1.2: 0 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            5.3,
+            80.399999
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J1.2 hidden",
+          "rejected": true,
+          "issues": [
+            "J1.2: 0 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            5.3,
+            80.399999
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J1.2 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J1.2: 2 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            5.3,
+            80.399999
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J121.1 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J121.1: conflicting silkscreen pin legend '1:WRONG': its strictly nearest connector pin must be labelled \"1:E1-\"",
+            "J121.1: 0 legends \"1:E1-\" nearest it, expected one"
+          ],
+          "at_mm": [
+            8.8,
+            49.8
+          ],
+          "expected": "1:E1-"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J121.1 hidden",
+          "rejected": true,
+          "issues": [
+            "J121.1: 0 legends \"1:E1-\" nearest it, expected one"
+          ],
+          "at_mm": [
+            8.8,
+            49.8
+          ],
+          "expected": "1:E1-"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J121.1 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J121.1: 2 legends \"1:E1-\" nearest it, expected one"
+          ],
+          "at_mm": [
+            8.8,
+            49.8
+          ],
+          "expected": "1:E1-"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J121.2 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J121.2: conflicting silkscreen pin legend '2:E1-': its strictly nearest connector pin must be labelled \"2:E1+\"",
+            "J121.2: 0 legends \"2:E1+\" nearest it, expected one"
+          ],
+          "at_mm": [
+            8.6,
+            60.4
+          ],
+          "expected": "2:E1+"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J121.2 hidden",
+          "rejected": true,
+          "issues": [
+            "J121.2: 0 legends \"2:E1+\" nearest it, expected one"
+          ],
+          "at_mm": [
+            8.6,
+            60.4
+          ],
+          "expected": "2:E1+"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J121.2 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J121.2: 2 legends \"2:E1+\" nearest it, expected one"
+          ],
+          "at_mm": [
+            8.6,
+            60.4
+          ],
+          "expected": "2:E1+"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.1 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J122.1: conflicting silkscreen pin legend '1:WRONG': its strictly nearest connector pin must be labelled \"1:S1\"",
+            "J122.1: 0 legends \"1:S1\" nearest it, expected one"
+          ],
+          "at_mm": [
+            38.1,
+            82.2
+          ],
+          "expected": "1:S1"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.1 hidden",
+          "rejected": true,
+          "issues": [
+            "J122.1: 0 legends \"1:S1\" nearest it, expected one"
+          ],
+          "at_mm": [
+            38.1,
+            82.2
+          ],
+          "expected": "1:S1"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.1 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J122.1: 2 legends \"1:S1\" nearest it, expected one"
+          ],
+          "at_mm": [
+            38.1,
+            82.2
+          ],
+          "expected": "1:S1"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.2 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J122.2: conflicting silkscreen pin legend '2:WRONG': its strictly nearest connector pin must be labelled \"2:S2\"",
+            "J122.2: 0 legends \"2:S2\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.3,
+            74.5
+          ],
+          "expected": "2:S2"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.2 hidden",
+          "rejected": true,
+          "issues": [
+            "J122.2: 0 legends \"2:S2\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.3,
+            74.5
+          ],
+          "expected": "2:S2"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.2 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J122.2: 2 legends \"2:S2\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.3,
+            74.5
+          ],
+          "expected": "2:S2"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.3 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J122.3: conflicting silkscreen pin legend '3:WRONG': its strictly nearest connector pin must be labelled \"3:S3\"",
+            "J122.3: 0 legends \"3:S3\" nearest it, expected one"
+          ],
+          "at_mm": [
+            32.7,
+            71.0
+          ],
+          "expected": "3:S3"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.3 hidden",
+          "rejected": true,
+          "issues": [
+            "J122.3: 0 legends \"3:S3\" nearest it, expected one"
+          ],
+          "at_mm": [
+            32.7,
+            71.0
+          ],
+          "expected": "3:S3"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.3 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J122.3: 2 legends \"3:S3\" nearest it, expected one"
+          ],
+          "at_mm": [
+            32.7,
+            71.0
+          ],
+          "expected": "3:S3"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.4 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J122.4: conflicting silkscreen pin legend '4:WRONG': its strictly nearest connector pin must be labelled \"4:S4\"",
+            "J122.4: 0 legends \"4:S4\" nearest it, expected one"
+          ],
+          "at_mm": [
+            40.4,
+            67.2
+          ],
+          "expected": "4:S4"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.4 hidden",
+          "rejected": true,
+          "issues": [
+            "J122.4: 0 legends \"4:S4\" nearest it, expected one"
+          ],
+          "at_mm": [
+            40.4,
+            67.2
+          ],
+          "expected": "4:S4"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.4 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J122.4: 2 legends \"4:S4\" nearest it, expected one"
+          ],
+          "at_mm": [
+            40.4,
+            67.2
+          ],
+          "expected": "4:S4"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.5 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J122.5: conflicting silkscreen pin legend '5:WRONG': its strictly nearest connector pin must be labelled \"5:GND\"",
+            "J122.5: 0 legends \"5:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            37.0,
+            61.8
+          ],
+          "expected": "5:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.5 hidden",
+          "rejected": true,
+          "issues": [
+            "J122.5: 0 legends \"5:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            37.0,
+            61.8
+          ],
+          "expected": "5:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J122.5 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J122.5: 2 legends \"5:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            37.0,
+            61.8
+          ],
+          "expected": "5:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J400.1 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J400.1: conflicting silkscreen pin legend '1:WRONG': its strictly nearest connector pin must be labelled \"1:SW\"",
+            "J400.1: 0 legends \"1:SW\" nearest it, expected one"
+          ],
+          "at_mm": [
+            2.9,
+            63.299999
+          ],
+          "expected": "1:SW"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J400.1 hidden",
+          "rejected": true,
+          "issues": [
+            "J400.1: 0 legends \"1:SW\" nearest it, expected one"
+          ],
+          "at_mm": [
+            2.9,
+            63.299999
+          ],
+          "expected": "1:SW"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J400.1 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J400.1: 2 legends \"1:SW\" nearest it, expected one"
+          ],
+          "at_mm": [
+            2.9,
+            63.299999
+          ],
+          "expected": "1:SW"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J400.2 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J400.1: conflicting silkscreen pin legend '2:WRONG': its strictly nearest connector pin must be labelled \"1:SW\"",
+            "J400.2: 0 legends \"2:SW\" nearest it, expected one"
+          ],
+          "at_mm": [
+            2.9,
+            67.499999
+          ],
+          "expected": "2:SW"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J400.2 hidden",
+          "rejected": true,
+          "issues": [
+            "J400.2: 0 legends \"2:SW\" nearest it, expected one"
+          ],
+          "at_mm": [
+            2.9,
+            67.499999
+          ],
+          "expected": "2:SW"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J400.2 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J400.2: 2 legends \"2:SW\" nearest it, expected one"
+          ],
+          "at_mm": [
+            2.9,
+            67.499999
+          ],
+          "expected": "2:SW"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.1 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J410.1: conflicting silkscreen pin legend '1:WRONG': its strictly nearest connector pin must be labelled \"1:4V8\"",
+            "J410.1: 0 legends \"1:4V8\" nearest it, expected one"
+          ],
+          "at_mm": [
+            43.2,
+            21.05
+          ],
+          "expected": "1:4V8"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.1 hidden",
+          "rejected": true,
+          "issues": [
+            "J410.1: 0 legends \"1:4V8\" nearest it, expected one"
+          ],
+          "at_mm": [
+            43.2,
+            21.05
+          ],
+          "expected": "1:4V8"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.1 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J410.1: 2 legends \"1:4V8\" nearest it, expected one"
+          ],
+          "at_mm": [
+            43.2,
+            21.05
+          ],
+          "expected": "1:4V8"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.2 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J410.2: conflicting silkscreen pin legend '2:WRONG': its strictly nearest connector pin must be labelled \"2:GND\"",
+            "J410.2: 0 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.9,
+            16.75
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.2 hidden",
+          "rejected": true,
+          "issues": [
+            "J410.2: 0 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.9,
+            16.75
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.2 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J410.2: 2 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.9,
+            16.75
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.3 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J410.3: conflicting silkscreen pin legend '3:WRONG': its strictly nearest connector pin must be labelled \"3:TXO\"",
+            "J410.3: 0 legends \"3:TXO\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.7,
+            13.25
+          ],
+          "expected": "3:TXO"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.3 hidden",
+          "rejected": true,
+          "issues": [
+            "J410.3: 0 legends \"3:TXO\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.7,
+            13.25
+          ],
+          "expected": "3:TXO"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.3 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J410.3: 2 legends \"3:TXO\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.7,
+            13.25
+          ],
+          "expected": "3:TXO"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.4 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J410.4: conflicting silkscreen pin legend '4:WRONG': its strictly nearest connector pin must be labelled \"4:RXI\"",
+            "J410.4: 0 legends \"4:RXI\" nearest it, expected one"
+          ],
+          "at_mm": [
+            36.9,
+            7.55
+          ],
+          "expected": "4:RXI"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.4 hidden",
+          "rejected": true,
+          "issues": [
+            "J410.4: 0 legends \"4:RXI\" nearest it, expected one"
+          ],
+          "at_mm": [
+            36.9,
+            7.55
+          ],
+          "expected": "4:RXI"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J410.4 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J410.4: 2 legends \"4:RXI\" nearest it, expected one"
+          ],
+          "at_mm": [
+            36.9,
+            7.55
+          ],
+          "expected": "4:RXI"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.1 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J420.1: conflicting silkscreen pin legend '1:WRONG': its strictly nearest connector pin must be labelled \"1:4V8\"",
+            "J420.1: 0 legends \"1:4V8\" nearest it, expected one"
+          ],
+          "at_mm": [
+            44.6,
+            37.35
+          ],
+          "expected": "1:4V8"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.1 hidden",
+          "rejected": true,
+          "issues": [
+            "J420.1: 0 legends \"1:4V8\" nearest it, expected one"
+          ],
+          "at_mm": [
+            44.6,
+            37.35
+          ],
+          "expected": "1:4V8"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.1 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J420.1: 2 legends \"1:4V8\" nearest it, expected one"
+          ],
+          "at_mm": [
+            44.6,
+            37.35
+          ],
+          "expected": "1:4V8"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.2 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J420.2: conflicting silkscreen pin legend '2:WRONG': its strictly nearest connector pin must be labelled \"2:GND\"",
+            "J420.2: 0 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.9,
+            32.75
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.2 hidden",
+          "rejected": true,
+          "issues": [
+            "J420.2: 0 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.9,
+            32.75
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.2 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J420.2: 2 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.9,
+            32.75
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.3 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J420.3: conflicting silkscreen pin legend '3:WRONG': its strictly nearest connector pin must be labelled \"3:TXO\"",
+            "J420.3: 0 legends \"3:TXO\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.7,
+            29.25
+          ],
+          "expected": "3:TXO"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.3 hidden",
+          "rejected": true,
+          "issues": [
+            "J420.3: 0 legends \"3:TXO\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.7,
+            29.25
+          ],
+          "expected": "3:TXO"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.3 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J420.3: 2 legends \"3:TXO\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.7,
+            29.25
+          ],
+          "expected": "3:TXO"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.4 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J420.4: conflicting silkscreen pin legend '4:WRONG': its strictly nearest connector pin must be labelled \"4:RXI\"",
+            "J420.4: 0 legends \"4:RXI\" nearest it, expected one"
+          ],
+          "at_mm": [
+            43.2,
+            25.45
+          ],
+          "expected": "4:RXI"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.4 hidden",
+          "rejected": true,
+          "issues": [
+            "J420.4: 0 legends \"4:RXI\" nearest it, expected one"
+          ],
+          "at_mm": [
+            43.2,
+            25.45
+          ],
+          "expected": "4:RXI"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J420.4 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J420.4: 2 legends \"4:RXI\" nearest it, expected one"
+          ],
+          "at_mm": [
+            43.2,
+            25.45
+          ],
+          "expected": "4:RXI"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.1 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J9.1: conflicting silkscreen pin legend '1:WRONG': its strictly nearest connector pin must be labelled \"1:5V4\"",
+            "J9.1: 0 legends \"1:5V4\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.7,
+            55.55
+          ],
+          "expected": "1:5V4"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.1 hidden",
+          "rejected": true,
+          "issues": [
+            "J9.1: 0 legends \"1:5V4\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.7,
+            55.55
+          ],
+          "expected": "1:5V4"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.1 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J9.1: 2 legends \"1:5V4\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.7,
+            55.55
+          ],
+          "expected": "1:5V4"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.2 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J9.2: conflicting silkscreen pin legend '2:WRONG': its strictly nearest connector pin must be labelled \"2:GND\"",
+            "J9.2: 0 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.9,
+            48.75
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.2 hidden",
+          "rejected": true,
+          "issues": [
+            "J9.2: 0 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.9,
+            48.75
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.2 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J9.2: 2 legends \"2:GND\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.9,
+            48.75
+          ],
+          "expected": "2:GND"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.3 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J9.3: conflicting silkscreen pin legend '3:WRONG': its strictly nearest connector pin must be labelled \"3:RXI\"",
+            "J9.3: 0 legends \"3:RXI\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.5,
+            45.25
+          ],
+          "expected": "3:RXI"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.3 hidden",
+          "rejected": true,
+          "issues": [
+            "J9.3: 0 legends \"3:RXI\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.5,
+            45.25
+          ],
+          "expected": "3:RXI"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.3 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J9.3: 2 legends \"3:RXI\" nearest it, expected one"
+          ],
+          "at_mm": [
+            41.5,
+            45.25
+          ],
+          "expected": "3:RXI"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.4 wrong role/polarity",
+          "rejected": true,
+          "issues": [
+            "J9.4: conflicting silkscreen pin legend '4:WRONG': its strictly nearest connector pin must be labelled \"4:TXO\"",
+            "J9.4: 0 legends \"4:TXO\" nearest it, expected one"
+          ],
+          "at_mm": [
+            43.2,
+            40.55
+          ],
+          "expected": "4:TXO"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.4 hidden",
+          "rejected": true,
+          "issues": [
+            "J9.4: 0 legends \"4:TXO\" nearest it, expected one"
+          ],
+          "at_mm": [
+            43.2,
+            40.55
+          ],
+          "expected": "4:TXO"
+        },
+        {
+          "group": "terminal_labels",
+          "name": "J9.4 footprint textbox duplicate",
+          "rejected": true,
+          "issues": [
+            "J9.4: 2 legends \"4:TXO\" nearest it, expected one"
+          ],
+          "at_mm": [
+            43.2,
+            40.55
+          ],
+          "expected": "4:TXO"
+        },
+        {
+          "group": "topology_reset",
+          "name": "R134.2 RAW_ACT -> BAT_IN",
+          "rejected": true,
+          "issues": [
+            "S-1: R134.2 must be on RAW_ACT (RAW_ACT bus behind Q120/Q121)",
+            "S-1: R134 has pads on the armed / RAW_ACT side net PYRO1_IGN and on the supply BAT_IN: not a named tie (GND_TIES / SUPPLY_TIES in tools/check_r10.py)"
+          ],
+          "rule": "S-1",
+          "at_mm": [
+            19.075,
+            64.0
+          ]
+        },
+        {
+          "group": "topology_reset",
+          "name": "R132.1 RAW_ACT -> RAW_PROTECTED",
+          "rejected": true,
+          "issues": [
+            "S-1: R132.1 must be on RAW_ACT (RAW_ACT bus behind Q120/Q121)"
+          ],
+          "rule": "S-1",
+          "at_mm": [
+            28.0,
+            58.03
+          ]
+        },
+        {
+          "group": "topology_reset",
+          "name": "Q121.5 RAW_ACT -> BAT_IN",
+          "rejected": true,
+          "issues": [
+            "S-2: Q121 must be drain RAW_ACT, source ACT_FET_S, gate ACT_GATE (is {'S': ['ACT_FET_S'], 'G': ['ACT_GATE'], 'D': ['BAT_IN', 'RAW_ACT']})",
+            "S-2: RAW_ACT copper touches Q121.5 (BAT_IN) through Q121.9"
+          ],
+          "rule": "S-2",
+          "at_mm": [
+            12.525,
+            67.105
+          ]
+        },
+        {
+          "group": "topology_reset",
+          "name": "U1.16 ACT_EN_MCU -> PYRO1_GATE_N",
+          "rejected": true,
+          "issues": [
+            "S-3: independent load-switch enable ACT_EN_MCU must touch only ['R122', 'U1']",
+            "S-3: independent load-switch enable U1.16 must be ACT_EN_MCU (is PYRO1_GATE_N)"
+          ],
+          "rule": "S-3",
+          "at_mm": [
+            24.5,
+            50.55
+          ]
+        },
+        {
+          "group": "topology_reset",
+          "name": "R123.2 GND -> 3V3",
+          "rejected": true,
+          "issues": [
+            "S-3: independent load-switch enable R123.2 must be GND (is 3V3)"
+          ],
+          "rule": "S-3",
+          "at_mm": [
+            20.6,
+            71.09
+          ]
+        },
+        {
+          "group": "topology_reset",
+          "name": "R128.2 GND -> 3V3",
+          "rejected": true,
+          "issues": [
+            "S-3: pyro FET Q124: no a resistor from the gate (PYRO1_GATE) to the source (GND) of 1 k - 100 k"
+          ],
+          "rule": "S-3",
+          "at_mm": [
+            18.3,
+            57.835
+          ]
+        },
+        {
+          "group": "topology_reset",
+          "name": "C126.2 GND -> 3V3",
+          "rejected": true,
+          "issues": [
+            "S-3: pyro FET Q124: no a gate-source capacitor >= 100 nF (PYRO1_GATE to GND)"
+          ],
+          "rule": "S-3",
+          "at_mm": [
+            16.85,
+            58.375
+          ]
+        },
+        {
+          "group": "topology_reset",
+          "name": "J400.1 BAT_SW_SOURCE -> BAT_IN",
+          "rejected": true,
+          "issues": [
+            "S-5: BAT_SW_SOURCE must touch only ['J400', 'R80']",
+            "S-5: J400.1 must be BAT_SW_SOURCE (is BAT_IN)",
+            "S-5: BAT_SW_SOURCE copper touches J400.1 (BAT_IN) through track BAT_SW_SOURCE (7.40, 64.10): switch contact / resistor bypass"
+          ],
+          "rule": "S-5",
+          "at_mm": [
+            7.4,
+            64.099999
+          ]
+        },
+        {
+          "group": "topology_reset",
+          "name": "R128=1M",
+          "rejected": true,
+          "issues": [
+            "S-3: pyro FET Q124: no a resistor from the gate (PYRO1_GATE) to the source (GND) of 1 k - 100 k"
+          ],
+          "at_mm": [
+            18.3,
+            57.405
+          ]
+        },
+        {
+          "group": "topology_reset",
+          "name": "R126=0R",
+          "rejected": true,
+          "issues": [
+            "S-3: pyro FET Q124: no a series resistor of 100 ohm - 10 k from a non-supply net into the gate (PYRO1_GATE)",
+            "S-3: pyro FET Q124: no series resistor from a U1 GPIO pad (a non-rail net) into the gate"
+          ],
+          "at_mm": [
+            17.0,
+            54.24
+          ]
+        },
+        {
+          "group": "topology_reset",
+          "name": "C126=10nF",
+          "rejected": true,
+          "issues": [
+            "S-3: pyro FET Q124: no a gate-source capacitor >= 100 nF (PYRO1_GATE to GND)"
+          ],
+          "at_mm": [
+            16.85,
+            57.675
+          ]
+        },
+        {
+          "group": "topology_reset",
+          "name": "R123=0R",
+          "rejected": true,
+          "issues": [
+            "S-3: independent load-switch enable R123 must be 100000 ohm"
+          ],
+          "at_mm": [
+            20.6,
+            70.66
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J1 scale.x zero",
+          "rejected": true,
+          "issues": [
+            "J1: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            7.4,
+            75.85
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J1: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J1 scale.x negative",
+          "rejected": true,
+          "issues": [
+            "J1: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            7.4,
+            75.85
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J1: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J1 scale.x nan",
+          "rejected": true,
+          "issues": [
+            "J1: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            7.4,
+            75.85
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J1: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J121 scale.x zero",
+          "rejected": true,
+          "issues": [
+            "J121: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            7.4,
+            55.85
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J121: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J121 scale.x negative",
+          "rejected": true,
+          "issues": [
+            "J121: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            7.4,
+            55.85
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J121: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J121 scale.x nan",
+          "rejected": true,
+          "issues": [
+            "J121: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            7.4,
+            55.85
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J121: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J400 scale.x zero",
+          "rejected": true,
+          "issues": [
+            "J400: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            7.4,
+            65.849999
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J400: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J400 scale.x negative",
+          "rejected": true,
+          "issues": [
+            "J400: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            7.4,
+            65.849999
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J400: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J400 scale.x nan",
+          "rejected": true,
+          "issues": [
+            "J400: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            7.4,
+            65.849999
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J400: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J410 scale.x zero",
+          "rejected": true,
+          "issues": [
+            "J410: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            15.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J410: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J410 scale.x negative",
+          "rejected": true,
+          "issues": [
+            "J410: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            15.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J410: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J410 scale.x nan",
+          "rejected": true,
+          "issues": [
+            "J410: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            15.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J410: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J420 scale.x zero",
+          "rejected": true,
+          "issues": [
+            "J420: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            31.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J420: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J420 scale.x negative",
+          "rejected": true,
+          "issues": [
+            "J420: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            31.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J420: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J420 scale.x nan",
+          "rejected": true,
+          "issues": [
+            "J420: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            31.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J420: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J9 scale.x zero",
+          "rejected": true,
+          "issues": [
+            "J9: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            47.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J9: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J9 scale.x negative",
+          "rejected": true,
+          "issues": [
+            "J9: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            47.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J9: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J9 scale.x nan",
+          "rejected": true,
+          "issues": [
+            "J9: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            47.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J9: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J122 scale.x zero",
+          "rejected": true,
+          "issues": [
+            "J122: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            71.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J122: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J122 scale.x negative",
+          "rejected": true,
+          "issues": [
+            "J122: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            71.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J122: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J122 scale.x nan",
+          "rejected": true,
+          "issues": [
+            "J122: invalid model transform; finite values and positive scales required"
+          ],
+          "at_mm": [
+            38.6,
+            71.5
+          ],
+          "p11_rejected": true,
+          "p11_issues": [
+            "P-11: J122: invalid model transform; finite values and positive scales required"
+          ]
+        },
+        {
+          "group": "model_validity",
+          "name": "J430 scale.x zero",
+          "rejected": true,
+          "issues": [
+            "J430: invalid model transform; finite values and positive scales required",
+            "J430: required R10 mated envelope missing"
+          ],
+          "at_mm": [
+            24.0,
+            24.3
+          ],
+          "p11_rejected": false,
+          "p11_issues": []
+        },
+        {
+          "group": "model_validity",
+          "name": "J430 scale.x negative",
+          "rejected": true,
+          "issues": [
+            "J430: invalid model transform; finite values and positive scales required",
+            "J430: required R10 mated envelope missing"
+          ],
+          "at_mm": [
+            24.0,
+            24.3
+          ],
+          "p11_rejected": false,
+          "p11_issues": []
+        },
+        {
+          "group": "model_validity",
+          "name": "J430 scale.x nan",
+          "rejected": true,
+          "issues": [
+            "J430: invalid model transform; finite values and positive scales required",
+            "J430: required R10 mated envelope missing"
+          ],
+          "at_mm": [
+            24.0,
+            24.3
+          ],
+          "p11_rejected": false,
+          "p11_issues": []
+        },
+        {
+          "group": "prospective_model",
+          "name": "J410 positive 0.01 scaling",
+          "rejected": false,
+          "issues": [],
+          "at_mm": [
+            38.6,
+            15.5
+          ],
+          "original_box_mm": [
+            34.50000058,
+            8.29999916,
+            42.599999620000006,
+            23.819998599999998,
+            1.2700000001775181e-06,
+            8.90000125
+          ],
+          "seeded_box_mm": [
+            38.5590000058,
+            15.4279999916,
+            38.639999996200004,
+            15.583199986,
+            1.2700000001775182e-08,
+            0.0890000125
+          ],
+          "p11_issues": []
+        },
+        {
+          "group": "barrel_representations",
+          "name": "board shape",
+          "rejected": true,
+          "issues": [
+            "S-8:  copper on In2.Cu is 0.200 mm from the J121.1 hole barrel of PYRO1_OUT (minimum 1.0 mm)"
+          ],
+          "at_mm": [
+            8.35,
+            53.8
+          ],
+          "evidence": {
+            "barrels": 4,
+            "gap_mm": 1.0,
+            "near": {
+              "J121.1 hole /  / In2.Cu": 0.2
+            }
+          }
+        },
+        {
+          "group": "barrel_representations",
+          "name": "footprint shape",
+          "rejected": true,
+          "issues": [
+            "S-8:  copper on In2.Cu is 0.200 mm from the J121.1 hole barrel of PYRO1_OUT (minimum 1.0 mm)"
+          ],
+          "at_mm": [
+            8.35,
+            53.8
+          ],
+          "evidence": {
+            "barrels": 4,
+            "gap_mm": 1.0,
+            "near": {
+              "J121.1 hole /  / In2.Cu": 0.2
+            }
+          }
+        },
+        {
+          "group": "barrel_representations",
+          "name": "board text",
+          "rejected": true,
+          "issues": [
+            "S-8:  copper on In2.Cu is 0.070 mm from the J121.1 hole barrel of PYRO1_OUT (minimum 1.0 mm)"
+          ],
+          "at_mm": [
+            8.35,
+            54.1
+          ],
+          "evidence": {
+            "barrels": 4,
+            "gap_mm": 1.0,
+            "near": {
+              "J121.1 hole /  / In2.Cu": 0.07
+            }
+          }
+        },
+        {
+          "group": "barrel_representations",
+          "name": "footprint text",
+          "rejected": true,
+          "issues": [
+            "S-8:  copper on In2.Cu is 0.070 mm from the J121.1 hole barrel of PYRO1_OUT (minimum 1.0 mm)"
+          ],
+          "at_mm": [
+            8.35,
+            54.1
+          ],
+          "evidence": {
+            "barrels": 4,
+            "gap_mm": 1.0,
+            "near": {
+              "J121.1 hole /  / In2.Cu": 0.07
+            }
+          }
+        },
+        {
+          "group": "barrel_representations",
+          "name": "footprint field",
+          "rejected": true,
+          "issues": [
+            "S-8:  copper on In2.Cu is 0.000 mm from the X.1 hole barrel of PYRO1_OUT (minimum 1.0 mm)"
+          ],
+          "at_mm": [
+            8.35,
+            54.1
+          ],
+          "evidence": {
+            "barrels": 4,
+            "gap_mm": 1.0,
+            "near": {
+              "X.1 hole /  / In2.Cu": 0.0
+            }
+          }
+        },
+        {
+          "group": "prospective_inner",
+          "name": "3V3 In1 board drawing",
+          "rejected": false,
+          "issues": [],
+          "at_mm": [
+            21.0,
+            60.0
+          ],
+          "seed": "1mm x 0.2mm 3V3 drawing on In1.Cu"
+        },
+        {
+          "group": "route_faults",
+          "name": "off_angle",
+          "rejected": true,
+          "issues": [
+            {
+              "cat": "overlap_only_joint",
+              "net": "SD_SCK",
+              "layer": "B.Cu",
+              "x": 15.8,
+              "y": 32.1
+            },
+            {
+              "cat": "overlap_only_joint",
+              "net": "SD_SCK",
+              "layer": "B.Cu",
+              "x": 15.91,
+              "y": 32.13
+            },
+            {
+              "cat": "off_angle",
+              "net": "SD_SCK",
+              "layer": "B.Cu",
+              "x": 11.7,
+              "y": 36.2
+            },
+            {
+              "cat": "dead_copper",
+              "net": "SD_SCK",
+              "layer": "F.Cu",
+              "x": 11.7,
+              "y": 38.0
+            },
+            {
+              "cat": "dead_copper",
+              "net": "SD_SCK",
+              "layer": "B.Cu",
+              "x": 22.805,
+              "y": 24.3
+            },
+            {
+              "cat": "dead_copper",
+              "net": "SD_SCK",
+              "layer": "B.Cu",
+              "x": 21.505,
+              "y": 25.6
+            },
+            {
+              "cat": "dead_copper",
+              "net": "SD_SCK",
+              "layer": "B.Cu",
+              "x": 11.7,
+              "y": 36.2
+            },
+            {
+              "cat": "dead_copper",
+              "net": "SD_SCK",
+              "layer": "B.Cu",
+              "x": 19.4,
+              "y": 32.1
+            },
+            {
+              "cat": "dead_copper",
+              "net": "SD_SCK",
+              "layer": "B.Cu",
+              "x": 22.805,
+              "y": 25.6
+            },
+            {
+              "cat": "dead_copper",
+              "net": "SD_SCK",
+              "layer": "B.Cu",
+              "x": 19.4,
+              "y": 27.705
+            },
+            {
+              "cat": "dead_copper",
+              "net": "SD_SCK",
+              "layer": "B.Cu",
+              "x": 15.91,
+              "y": 32.13
+            },
+            {
+              "cat": "dead_copper",
+              "net": "SD_SCK",
+              "layer": "via",
+              "x": 11.7,
+              "y": 38.0
+            },
+            {
+              "cat": "track_loop",
+              "net": "SD_SCK",
+              "layer": "B.Cu",
+              "x": 15.8891,
+              "y": 32.1502
+            }
+          ],
+          "at_mm": [
+            11.7,
+            36.2
+          ]
+        },
+        {
+          "group": "route_faults",
+          "name": "partial_overlap",
+          "rejected": true,
+          "issues": [
+            {
+              "cat": "collinear_overlap",
+              "net": "USB_DP",
+              "layer": "F.Cu",
+              "x": 11.1,
+              "y": 31.55
+            },
+            {
+              "cat": "fold_back",
+              "net": "USB_DP",
+              "layer": "F.Cu",
+              "x": 11.1,
+              "y": 31.55
+            },
+            {
+              "cat": "fold_back",
+              "net": "USB_DP",
+              "layer": "F.Cu",
+              "x": 13.925,
+              "y": 31.55
+            },
+            {
+              "cat": "track_loop",
+              "net": "USB_DP",
+              "layer": "F.Cu",
+              "x": 12.5125,
+              "y": 31.55
+            }
+          ],
+          "at_mm": [
+            11.1,
+            31.55
+          ]
+        },
+        {
+          "group": "route_faults",
+          "name": "gnd_partner_removed",
+          "rejected": true,
+          "issues": [
+            {
+              "cat": "critical_via_no_gnd",
+              "net": "SD_SCK",
+              "layer": "via",
+              "x": 11.7,
+              "y": 38.0
+            }
+          ],
+          "at_mm": [
+            11.7,
+            38.0
+          ]
+        },
+        {
+          "group": "assembly_lists",
+          "name": "m3_bom_jlc.csv omits U1",
+          "rejected": true,
+          "issues": [
+            "U1: required fitted part missing from assembly list"
+          ],
+          "file": "m3_design/assembly_review/fab/m3_bom_jlc.csv"
+        },
+        {
+          "group": "assembly_lists",
+          "name": "m3_bom_jlc.csv omits U4",
+          "rejected": true,
+          "issues": [
+            "U4: required fitted part missing from assembly list"
+          ],
+          "file": "m3_design/assembly_review/fab/m3_bom_jlc.csv"
+        },
+        {
+          "group": "assembly_lists",
+          "name": "m3_bom_jlc.csv omits U401",
+          "rejected": true,
+          "issues": [
+            "U401: required fitted part missing from assembly list"
+          ],
+          "file": "m3_design/assembly_review/fab/m3_bom_jlc.csv"
+        },
+        {
+          "group": "assembly_lists",
+          "name": "m3_bom_jlc.csv omits R134",
+          "rejected": true,
+          "issues": [
+            "R134: required fitted part missing from assembly list"
+          ],
+          "file": "m3_design/assembly_review/fab/m3_bom_jlc.csv"
+        },
+        {
+          "group": "assembly_lists",
+          "name": "m3_bom_jlc.csv omits J430",
+          "rejected": true,
+          "issues": [
+            "J430: required fitted part missing from assembly list"
+          ],
+          "file": "m3_design/assembly_review/fab/m3_bom_jlc.csv"
+        },
+        {
+          "group": "assembly_lists",
+          "name": "m3_cpl_jlc.csv omits U1",
+          "rejected": true,
+          "issues": [
+            "U1: required fitted part missing from assembly list"
+          ],
+          "file": "m3_design/assembly_review/fab/m3_cpl_jlc.csv"
+        },
+        {
+          "group": "assembly_lists",
+          "name": "m3_cpl_jlc.csv omits U4",
+          "rejected": true,
+          "issues": [
+            "U4: required fitted part missing from assembly list"
+          ],
+          "file": "m3_design/assembly_review/fab/m3_cpl_jlc.csv"
+        },
+        {
+          "group": "assembly_lists",
+          "name": "m3_cpl_jlc.csv omits U401",
+          "rejected": true,
+          "issues": [
+            "U401: required fitted part missing from assembly list"
+          ],
+          "file": "m3_design/assembly_review/fab/m3_cpl_jlc.csv"
+        },
+        {
+          "group": "assembly_lists",
+          "name": "m3_cpl_jlc.csv omits R134",
+          "rejected": true,
+          "issues": [
+            "R134: required fitted part missing from assembly list"
+          ],
+          "file": "m3_design/assembly_review/fab/m3_cpl_jlc.csv"
+        },
+        {
+          "group": "assembly_lists",
+          "name": "m3_cpl_jlc.csv omits J430",
+          "rejected": true,
+          "issues": [
+            "J430: required fitted part missing from assembly list"
+          ],
+          "file": "m3_design/assembly_review/fab/m3_cpl_jlc.csv"
+        }
+      ],
+      "baselines": {
+        "population": [],
+        "terminal_legends": [],
+        "fit": [],
+        "p11": [],
+        "manifest_outputs": 5
+      },
+      "board_after_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d"
+    },
+    "phase2": {
+      "cli_version": "10.0.7",
+      "cases": [
+        {
+          "name": "baseline_native_resave",
+          "board_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+          "native_drc_exit": 0,
+          "native_drc_counts": {
+            "violations": 0,
+            "unconnected_items": 0,
+            "schematic_parity": 0
+          },
+          "native_drc_types": {},
+          "drc_items": [],
+          "metadata_missing_fields": [],
+          "metadata_conflicts": [],
+          "metadata_model_missing": 0,
+          "fit_issues": [],
+          "r10_contract_ok": true,
+          "r10_contract_failing": [],
+          "r10_contract_issues": [],
+          "parts_check_exit": 0,
+          "parts_check_stdout": "r10_parts: 9 footprints parsed; terminal copper gap 1.600mm; generated files current\nr10_parts: native-board power budget current",
+          "parts_check_stderr_tail": "./src/common/stdpbase.cpp(59): assert \"\"traits\"\" failed in Get(): create wxApp before calling this\n"
+        },
+        {
+          "name": "terminal_positive_scale",
+          "board_sha256": "a84411db87d66334088d389899751d00d39e6708cb9b64bb0670477348be7963",
+          "native_drc_exit": 0,
+          "native_drc_counts": {
+            "violations": 0,
+            "unconnected_items": 0,
+            "schematic_parity": 0
+          },
+          "native_drc_types": {},
+          "drc_items": [],
+          "metadata_missing_fields": [],
+          "metadata_conflicts": [],
+          "metadata_model_missing": 0,
+          "fit_issues": [],
+          "r10_contract_ok": false,
+          "r10_contract_failing": [
+            "F9-1"
+          ],
+          "r10_contract_issues": [
+            "F9-1: stale board-derived model inputs"
+          ],
+          "parts_check_exit": 1,
+          "parts_check_stdout": "r10_parts: stale: parts_budget.json",
+          "parts_check_stderr_tail": "./src/common/stdpbase.cpp(59): assert \"\"traits\"\" failed in Get(): create wxApp before calling this\n"
+        },
+        {
+          "name": "in1_foreign_drawing",
+          "board_sha256": "7d3105ffbcc5bc34e526c617d0590e8e8b584c2b6133b7c9e9974049ba200795",
+          "native_drc_exit": 0,
+          "native_drc_counts": {
+            "violations": 0,
+            "unconnected_items": 1,
+            "schematic_parity": 0
+          },
+          "native_drc_types": {
+            "unconnected_items": 1
+          },
+          "drc_items": [
+            {
+              "description": "Missing connection between items",
+              "items": [
+                {
+                  "description": "Segment [3V3] on In1.Cu",
+                  "pos": {
+                    "x": 21.0,
+                    "y": 60.0
+                  },
+                  "uuid": "82b34b3c-fccc-4962-8f49-565b085db743"
+                },
+                {
+                  "description": "Track [3V3] on F.Cu, length 2.3500 mm",
+                  "pos": {
+                    "x": 21.15,
+                    "y": 60.25
+                  },
+                  "uuid": "4a7f8dea-930e-49ed-be52-55ab017d8f6c"
+                }
+              ],
+              "severity": "error",
+              "type": "unconnected_items"
+            }
+          ],
+          "metadata_missing_fields": [],
+          "metadata_conflicts": [],
+          "metadata_model_missing": 0,
+          "fit_issues": [],
+          "r10_contract_ok": false,
+          "r10_contract_failing": [
+            "F9-1"
+          ],
+          "r10_contract_issues": [
+            "F9-1: stale board-derived model inputs"
+          ],
+          "parts_check_exit": 1,
+          "parts_check_stdout": "r10_parts: stale: parts_budget.json",
+          "parts_check_stderr_tail": "./src/common/stdpbase.cpp(59): assert \"\"traits\"\" failed in Get(): create wxApp before calling this\n"
+        },
+        {
+          "name": "in1_foreign_zone",
+          "board_sha256": "4f95a9792f6dd27208f64d623bbd42807dced33bd5d0d4e1310c4e040cf734c7",
+          "native_drc_exit": 0,
+          "native_drc_counts": {
+            "violations": 1,
+            "unconnected_items": 0,
+            "schematic_parity": 0
+          },
+          "native_drc_types": {
+            "isolated_copper": 1
+          },
+          "drc_items": [
+            {
+              "description": "Isolated copper fill",
+              "items": [
+                {
+                  "description": "Zone 'R12_GATE_FOREIGN_IN1_SEED' [3V3] on In1.Cu, priority 10",
+                  "pos": {
+                    "x": 21.0,
+                    "y": 60.0
+                  },
+                  "uuid": "b7bdf1c6-ad9c-49a1-b9f8-cc3b2461602f"
+                }
+              ],
+              "severity": "warning",
+              "type": "isolated_copper"
+            }
+          ],
+          "metadata_missing_fields": [],
+          "metadata_conflicts": [],
+          "metadata_model_missing": 0,
+          "fit_issues": [],
+          "r10_contract_ok": false,
+          "r10_contract_failing": [
+            "F9-1"
+          ],
+          "r10_contract_issues": [
+            "F9-1: stale board-derived model inputs"
+          ],
+          "parts_check_exit": 1,
+          "parts_check_stdout": "r10_parts: stale: parts_budget.json",
+          "parts_check_stderr_tail": "./src/common/stdpbase.cpp(59): assert \"\"traits\"\" failed in Get(): create wxApp before calling this\n"
+        },
+        {
+          "name": "j400_graphic_contact_short",
+          "board_sha256": "66ac45109d13cead2141477bdc9bdb15c3001bd1fea3e489e036bbf6597c1586",
+          "native_drc_exit": 0,
+          "native_drc_counts": {
+            "violations": 5,
+            "unconnected_items": 0,
+            "schematic_parity": 0
+          },
+          "native_drc_types": {
+            "shorting_items": 3,
+            "solder_mask_bridge": 2
+          },
+          "drc_items": [
+            {
+              "description": "Items shorting two nets (nets <no net> and BAT_SW_RETURN)",
+              "items": [
+                {
+                  "description": "Segment [<no net>] on F.Cu",
+                  "pos": {
+                    "x": 7.4,
+                    "y": 64.099999
+                  },
+                  "uuid": "393ade2f-0a5b-4481-b7bb-7321a422d4a2"
+                },
+                {
+                  "description": "Track [BAT_SW_RETURN] on F.Cu, length 4.4250 mm",
+                  "pos": {
+                    "x": 7.4,
+                    "y": 67.6
+                  },
+                  "uuid": "99a467b1-cf6f-48f1-94a3-6a9b88cbad9f"
+                }
+              ],
+              "severity": "error",
+              "type": "shorting_items"
+            },
+            {
+              "description": "Items shorting two nets (nets <no net> and BAT_SW_SOURCE)",
+              "items": [
+                {
+                  "description": "Segment [<no net>] on F.Cu",
+                  "pos": {
+                    "x": 7.4,
+                    "y": 64.099999
+                  },
+                  "uuid": "393ade2f-0a5b-4481-b7bb-7321a422d4a2"
+                },
+                {
+                  "description": "PTH pad 1 [BAT_SW_SOURCE] of J400",
+                  "pos": {
+                    "x": 7.4,
+                    "y": 64.099999
+                  },
+                  "uuid": "468664f5-eaf0-41f3-9d4d-33c54bd6859d"
+                }
+              ],
+              "severity": "error",
+              "type": "shorting_items"
+            },
+            {
+              "description": "Items shorting two nets (nets <no net> and BAT_SW_RETURN)",
+              "items": [
+                {
+                  "description": "Segment [<no net>] on F.Cu",
+                  "pos": {
+                    "x": 7.4,
+                    "y": 64.099999
+                  },
+                  "uuid": "393ade2f-0a5b-4481-b7bb-7321a422d4a2"
+                },
+                {
+                  "description": "PTH pad 2 [BAT_SW_RETURN] of J400",
+                  "pos": {
+                    "x": 7.4,
+                    "y": 67.599999
+                  },
+                  "uuid": "be59bf5f-534b-4824-8133-032b7aa9c6bb"
+                }
+              ],
+              "severity": "error",
+              "type": "shorting_items"
+            },
+            {
+              "description": "Front solder mask aperture bridges items with different nets",
+              "items": [
+                {
+                  "description": "Segment [<no net>] on F.Cu",
+                  "pos": {
+                    "x": 7.4,
+                    "y": 64.099999
+                  },
+                  "uuid": "393ade2f-0a5b-4481-b7bb-7321a422d4a2"
+                },
+                {
+                  "description": "PTH pad 1 [BAT_SW_SOURCE] of J400",
+                  "pos": {
+                    "x": 7.4,
+                    "y": 64.099999
+                  },
+                  "uuid": "468664f5-eaf0-41f3-9d4d-33c54bd6859d"
+                }
+              ],
+              "severity": "error",
+              "type": "solder_mask_bridge"
+            },
+            {
+              "description": "Front solder mask aperture bridges items with different nets",
+              "items": [
+                {
+                  "description": "Segment [<no net>] on F.Cu",
+                  "pos": {
+                    "x": 7.4,
+                    "y": 64.099999
+                  },
+                  "uuid": "393ade2f-0a5b-4481-b7bb-7321a422d4a2"
+                },
+                {
+                  "description": "PTH pad 2 [BAT_SW_RETURN] of J400",
+                  "pos": {
+                    "x": 7.4,
+                    "y": 67.599999
+                  },
+                  "uuid": "be59bf5f-534b-4824-8133-032b7aa9c6bb"
+                }
+              ],
+              "severity": "error",
+              "type": "solder_mask_bridge"
+            }
+          ],
+          "metadata_missing_fields": [],
+          "metadata_conflicts": [],
+          "metadata_model_missing": 0,
+          "fit_issues": [],
+          "r10_contract_ok": false,
+          "r10_contract_failing": [
+            "S-5",
+            "F9-1"
+          ],
+          "r10_contract_issues": [
+            "S-5: BAT_SW_SOURCE copper touches J400.2 (BAT_SW_RETURN) through board copper drawing: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches R165.1 (BAT_SW_RETURN) through track BAT_SW_RETURN (11.82, 67.60): switch contact / resistor bypass",
+            "S-5: BAT_SW_RETURN copper touches J400.1 (BAT_SW_SOURCE) through board copper drawing: switch contact / resistor bypass",
+            "F9-1: stale board-derived model inputs"
+          ],
+          "parts_check_exit": 1,
+          "parts_check_stdout": "r10_parts: stale: parts_budget.json",
+          "parts_check_stderr_tail": "./src/common/stdpbase.cpp(59): assert \"\"traits\"\" failed in Get(): create wxApp before calling this\n"
+        }
+      ]
+    },
+    "phase3": {
+      "cli_version": "10.0.7",
+      "cases": [
+        {
+          "name": "in1_connected_foreign_drawing",
+          "board_sha256": "ee69add10ef13495e8f11d2aebd1e904542723838f3ab98a4f971fb64ea432be",
+          "native_drc_exit": 0,
+          "native_drc_counts": {
+            "violations": 0,
+            "unconnected_items": 0,
+            "schematic_parity": 0
+          },
+          "native_drc_types": {},
+          "drc_items": [],
+          "metadata_missing_fields": [],
+          "metadata_conflicts": [],
+          "metadata_model_missing": 0,
+          "fit_issues": [],
+          "r10_contract_ok": false,
+          "r10_contract_failing": [
+            "F9-1"
+          ],
+          "r10_contract_issues": [
+            "F9-1: stale board-derived model inputs"
+          ],
+          "parts_check_exit": 1,
+          "parts_check_stdout": "r10_parts: stale: parts_budget.json",
+          "parts_check_stderr_tail": "./src/common/stdpbase.cpp(59): assert \"\"traits\"\" failed in Get(): create wxApp before calling this\n"
+        },
+        {
+          "name": "in1_connected_foreign_zone",
+          "board_sha256": "2d1a87479713ce40a83772b057b74b72e61a05ffadac18b950a86b94790e836d",
+          "native_drc_exit": 0,
+          "native_drc_counts": {
+            "violations": 0,
+            "unconnected_items": 0,
+            "schematic_parity": 0
+          },
+          "native_drc_types": {},
+          "drc_items": [],
+          "metadata_missing_fields": [],
+          "metadata_conflicts": [],
+          "metadata_model_missing": 0,
+          "fit_issues": [],
+          "r10_contract_ok": false,
+          "r10_contract_failing": [
+            "F9-1"
+          ],
+          "r10_contract_issues": [
+            "F9-1: stale board-derived model inputs"
+          ],
+          "parts_check_exit": 1,
+          "parts_check_stdout": "r10_parts: stale: parts_budget.json",
+          "parts_check_stderr_tail": "./src/common/stdpbase.cpp(59): assert \"\"traits\"\" failed in Get(): create wxApp before calling this\n"
+        }
+      ]
+    },
+    "phase4": {
+      "cases": [
+        {
+          "name": "USB_DP reference window",
+          "at_mm": [
+            13.925,
+            31.55
+          ],
+          "rejected": true,
+          "issues": [
+            "90 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('USB_DP', 'F.Cu', 13.78, 31.55), ('USB_DP', 'F.Cu', 13.78, 31.65), ('USB_DP', 'F.Cu', 13.78, 31.45)]"
+          ],
+          "evidence": {
+            "samples": 160761,
+            "unreferenced": 10146,
+            "inside_own_antipad": 10049,
+            "recorded_stray": 6,
+            "loose": 90,
+            "b_cu_planes": [
+              "GND",
+              "3V3",
+              "3V3A",
+              "PORT_5V3",
+              "PORT_4V8",
+              "RAW_PROTECTED"
+            ],
+            "by_net_layer": {
+              "SPI1_MISO B.Cu": {
+                "samples": 2,
+                "box": [
+                  17.79,
+                  43.88,
+                  17.8,
+                  43.89
+                ]
+              },
+              "SPI1_MISO F.Cu": {
+                "samples": 1,
+                "box": [
+                  17.3,
+                  43.89,
+                  17.3,
+                  43.89
+                ]
+              },
+              "SPI1_SCK B.Cu": {
+                "samples": 3,
+                "box": [
+                  17.1,
+                  43.4,
+                  17.1,
+                  43.42
+                ]
+              },
+              "USB_DM F.Cu": {
+                "samples": 1,
+                "box": [
+                  8.08,
+                  29.58,
+                  8.08,
+                  29.58
+                ]
+              },
+              "USB_DP F.Cu": {
+                "samples": 90,
+                "box": [
+                  13.78,
+                  31.45,
+                  14.07,
+                  31.65
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "AUD-2 ACT_EN_MCU off-angle still blocking",
+          "rejected": true,
+          "issues": [
+            {
+              "cat": "overlap_only_joint",
+              "net": "ACT_EN_MCU",
+              "layer": "F.Cu",
+              "x": 26.5,
+              "y": 66.0
+            },
+            {
+              "cat": "overlap_only_joint",
+              "net": "ACT_EN_MCU",
+              "layer": "F.Cu",
+              "x": 26.61,
+              "y": 66.03
+            },
+            {
+              "cat": "off_angle",
+              "net": "ACT_EN_MCU",
+              "layer": "F.Cu",
+              "x": 26.5,
+              "y": 53.6
+            },
+            {
+              "cat": "dead_copper",
+              "net": "ACT_EN_MCU",
+              "layer": "F.Cu",
+              "x": 19.6,
+              "y": 69.37
+            },
+            {
+              "cat": "dead_copper",
+              "net": "ACT_EN_MCU",
+              "layer": "F.Cu",
+              "x": 24.5,
+              "y": 51.6
+            },
+            {
+              "cat": "dead_copper",
+              "net": "ACT_EN_MCU",
+              "layer": "F.Cu",
+              "x": 25.3,
+              "y": 67.2
+            },
+            {
+              "cat": "dead_copper",
+              "net": "ACT_EN_MCU",
+              "layer": "F.Cu",
+              "x": 19.6,
+              "y": 68.6
+            },
+            {
+              "cat": "dead_copper",
+              "net": "ACT_EN_MCU",
+              "layer": "F.Cu",
+              "x": 26.5,
+              "y": 53.6
+            },
+            {
+              "cat": "dead_copper",
+              "net": "ACT_EN_MCU",
+              "layer": "F.Cu",
+              "x": 26.61,
+              "y": 66.03
+            },
+            {
+              "cat": "dead_copper",
+              "net": "ACT_EN_MCU",
+              "layer": "F.Cu",
+              "x": 21.0,
+              "y": 67.2
+            }
+          ]
+        }
+      ],
+      "terminal_geometry": {
+        "J1": {
+          "at_mm": [
+            7.4,
+            75.85
+          ],
+          "model_box_mm": [
+            3.40000038,
+            71.23000035,
+            11.49999942,
+            79.55000149,
+            1.2700000001775181e-06,
+            8.90000125
+          ],
+          "p11": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          }
+        },
+        "J121": {
+          "at_mm": [
+            7.4,
+            55.85
+          ],
+          "model_box_mm": [
+            3.40000038,
+            51.23000035,
+            11.49999942,
+            59.55000149,
+            1.2700000001775181e-06,
+            8.90000125
+          ],
+          "p11": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          }
+        },
+        "J400": {
+          "at_mm": [
+            7.4,
+            65.849999
+          ],
+          "model_box_mm": [
+            3.40000038,
+            61.22999935,
+            11.49999942,
+            69.55000049,
+            1.2700000001775181e-06,
+            8.90000125
+          ],
+          "p11": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          }
+        },
+        "J410": {
+          "at_mm": [
+            38.6,
+            15.5
+          ],
+          "model_box_mm": [
+            34.50000058,
+            8.29999916,
+            42.599999620000006,
+            23.819998599999998,
+            1.2700000001775181e-06,
+            8.90000125
+          ],
+          "p11": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          }
+        },
+        "J420": {
+          "at_mm": [
+            38.6,
+            31.5
+          ],
+          "model_box_mm": [
+            34.50000058,
+            24.29999916,
+            42.599999620000006,
+            39.8199986,
+            1.2700000001775181e-06,
+            8.90000125
+          ],
+          "p11": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          }
+        },
+        "J9": {
+          "at_mm": [
+            38.6,
+            47.5
+          ],
+          "model_box_mm": [
+            34.50000058,
+            40.29999916,
+            42.599999620000006,
+            55.8199986,
+            1.2700000001775181e-06,
+            8.90000125
+          ],
+          "p11": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          }
+        },
+        "J122": {
+          "at_mm": [
+            38.6,
+            71.5
+          ],
+          "model_box_mm": [
+            34.50000058,
+            62.54999885,
+            42.599999620000006,
+            81.56999891,
+            1.2700000001775181e-06,
+            8.90000125
+          ],
+          "p11": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          }
+        }
+      },
+      "slow_return_names": [
+        "ACT_DRV",
+        "ACT_EN",
+        "ACT_EN_MCU",
+        "ACT_GATE",
+        "ARM1_SENSE",
+        "ARM1_SENSE_MID",
+        "CAM_5V_SENSE",
+        "CAM_FAULT_N",
+        "CAM_PWR_EN",
+        "CAM_UART_OE",
+        "PYRO1_CONT",
+        "PYRO1_CONT_MID",
+        "V3V3_SENSE",
+        "VLOGIC_SENSE"
+      ],
+      "reference_baseline": [
+        [],
+        {
+          "samples": 160761,
+          "unreferenced": 10056,
+          "inside_own_antipad": 10049,
+          "recorded_stray": 6,
+          "loose": 0,
+          "b_cu_planes": [
+            "GND",
+            "3V3",
+            "3V3A",
+            "PORT_5V3",
+            "PORT_4V8",
+            "RAW_PROTECTED"
+          ],
+          "by_net_layer": {
+            "SPI1_MISO B.Cu": {
+              "samples": 2,
+              "box": [
+                17.79,
+                43.88,
+                17.8,
+                43.89
+              ]
+            },
+            "SPI1_MISO F.Cu": {
+              "samples": 1,
+              "box": [
+                17.3,
+                43.89,
+                17.3,
+                43.89
+              ]
+            },
+            "SPI1_SCK B.Cu": {
+              "samples": 3,
+              "box": [
+                17.1,
+                43.4,
+                17.1,
+                43.42
+              ]
+            },
+            "USB_DM F.Cu": {
+              "samples": 1,
+              "box": [
+                8.08,
+                29.58,
+                8.08,
+                29.58
+              ]
+            }
+          }
+        }
+      ],
+      "connected_in1_zone_route": {
+        "failures": [],
+        "allowed": [],
+        "stale": [],
+        "bumps": [],
+        "bump_windows_searched": 25
+      },
+      "board_final_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d"
+    },
+    "package": {
+      "baseline_outputs": 5,
+      "cases": [
+        {
+          "name": "changed output m3_assembly_bottom.pdf",
+          "rejected": true,
+          "error": "ValueError: fabrication output missing or changed: m3_assembly_bottom.pdf"
+        },
+        {
+          "name": "changed output m3_assembly_top.pdf",
+          "rejected": true,
+          "error": "ValueError: fabrication output missing or changed: m3_assembly_top.pdf"
+        },
+        {
+          "name": "changed output m3_bom_jlc.csv",
+          "rejected": true,
+          "error": "ValueError: fabrication output missing or changed: m3_bom_jlc.csv"
+        },
+        {
+          "name": "changed output m3_cpl_jlc.csv",
+          "rejected": true,
+          "error": "ValueError: fabrication output missing or changed: m3_cpl_jlc.csv"
+        },
+        {
+          "name": "changed output m3_gerber.zip",
+          "rejected": true,
+          "error": "ValueError: fabrication output missing or changed: m3_gerber.zip"
+        },
+        {
+          "name": "missing output declaration",
+          "rejected": true,
+          "error": "ValueError: fabrication manifest is missing required outputs"
+        },
+        {
+          "name": "wrong input",
+          "rejected": true,
+          "error": "ValueError: fabrication package does not match current CAD/export inputs; regenerate it"
+        },
+        {
+          "name": "schema unknown",
+          "rejected": true,
+          "error": "ValueError: fabrication package does not match current CAD/export inputs; regenerate it"
+        },
+        {
+          "name": "path traversal",
+          "rejected": true,
+          "error": "ValueError: fabrication output missing or changed: ../m3_bom_jlc.csv"
+        },
+        {
+          "name": "missing manifest",
+          "rejected": true,
+          "error": "FileNotFoundError: [Errno 2] No such file or directory: 'TEMP_PROJECT/fab/m3_fab_manifest.json'"
+        },
+        {
+          "name": "malformed manifest",
+          "rejected": true,
+          "error": "JSONDecodeError: Expecting value: line 1 column 1 (char 0)"
+        },
+        {
+          "name": "U1 Qty=0 without regenerating manifest",
+          "rejected": true,
+          "error": "ValueError: fabrication output missing or changed: m3_bom_jlc.csv"
+        }
+      ],
+      "qty_zero_parser_issues": []
+    },
+    "qty_s4": {
+      "S4_ok": true,
+      "S4_issues": [],
+      "required_count": 199,
+      "seed": "U1 BOM row Qty 1 -> 0, Designator U1 unchanged; native PCB and CPL unchanged"
+    },
+    "target_inventory": {
+      "target_inner_drawings_fields": [],
+      "target_in1_non_gnd_zones": [],
+      "bom_rows": 82,
+      "bom_qty_sum": 199,
+      "bom_qty_mismatch": [],
+      "cpl_rows": 199,
+      "U1_bom_qty": "1",
+      "target_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d"
+    }
+  }
+}
