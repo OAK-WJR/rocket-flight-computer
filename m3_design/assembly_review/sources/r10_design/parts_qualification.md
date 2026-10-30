@@ -12,18 +12,19 @@ tests were performed. The current always-on ports, screw terminals, microSD and 
 
 No physical tests or firmware qualification are claimed. The actual source contract is
 `circuit.json` plus `pin_table.tsv`; the earlier `parts.json` is a historical selection worksheet.
-The current native-path record is bound to round13 fix PCB
-`e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`. Two complete direct native builds/check0
+The current native-path record is bound to round14 fix PCB
+`7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783`. Two complete direct native builds/check0
 reproduce42 generated files. All31 R10 rules and fab checks pass; R10173/
 fit30 tests pass,including separate resolution of all native NumPy skips.
-See [round13 fix validation](../r10_review/round13_fix_validation.json). This is
+See [round14 fix validation](../r10_review/round14_fix_validation.json). This is
 integration evidence,not independent full-round or physical qualification.
 Dated records below remain historical where superseded. Native comparison
-preserves all part poses,pad lands/nets,vias and GND tracks; bounded same-layer
-signal redraws and77 Fab references change. SD model nails/tolerances and23
-separately calculated terminal tails are now covered by current fit. C98 return
+preserves all part poses,pad lands/nets,vias,GND tracks,zone definitions and
+Fab references; twelve qualified local route windows change. R13's77 Fab-reference
+corrections, SD nails/tolerances and23 separately calculated terminal tails remain
+covered by native preservation and current fit. C98 return
 remains7.345584mm at0.05mm grid,versus31.812237mm before R12; no transient
-behavior is inferred. Fresh complete14/15 must review the committed result.
+behavior is inferred. Fresh complete15/16 must review the committed result.
 
 **Always-on GPS/radio.** J410/J420 pin1 directly joins PORT_4V8. Delete U410/U420,
 R410–412/R420–422, U411/U421, R442/R452 and C440/C443/C450/C453. Keep the four
@@ -320,7 +321,7 @@ after pad/flight drain, Rpack≤0.15 Ω, servo stall1.92 A each. Solve
 Ifire=V/Rfire. Retain conservative2 Ω e-match and≤0.3 Ω external leads/harness,
 R134 tolerance/hot corner2.02909 Ω, hot FETs,5 mΩ ground/10 mΩ contact allowances.
 The current `parts_budget.json` is regenerated and bound to PCB
-`e0e3ad84…` instead of carrying circuit-pass length literals. Native fire-path pruning
+`7866d6b8…` instead of carrying circuit-pass length literals. Native fire-path pruning
 gives BAT_IN6.307107mm/1.0mm, RAW_ACT5.886133mm, IGN10.230382mm and
 OUT7.854478mm at0.5mm, plus one aligned2.2mm/0.4mm source path. BAT_IN includes
 the additional0.707107mm routed entry inside Q120's common drain pad; dead sense
@@ -371,7 +372,7 @@ TP122, NRST and dummy-load current for early/late CPU starvation, normal abort,
 postfire refresh, reset/unpowered gate tails and hot R134 pulses; record resistor
 drift and actual physical20/36 ms limits across supply and temperature.
 
-**Current local output paths (GAP-2, native CAD / Inference):** on `e0e3ad84…`; original paths preserved by exact native comparison,
+**Current local output paths (GAP-2, native CAD / Inference):** on `7866d6b8…`; original paths preserved by exact native comparison,
 U9 is B(18.5,81.6), C82 is B(19.3,76.75),90°, and D9 is B(15.0,79.3),−90°.
 The saved-copper API gives:
 

@@ -1,0 +1,73 @@
+{
+  "round": 14,
+  "kind": "Root source/evidence fixes; final canonical integration is separate",
+  "reviewed_commit": "f5e4a5a94013514edb952fd328325341b63a98df",
+  "reviewed_board_sha256": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "original_full_reports_immutable": true,
+  "changes": {
+    "mass": {
+      "LS120_g_before": 0.3,
+      "LS120_g_after": 0.5,
+      "maker_page": 2,
+      "maker_item": 9,
+      "maker_url": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598",
+      "maker_pdf_sha256": "db73c860afd42abdf9a2e69c4a34ac915d68e07108a2188d6ee0a9c02f723be9",
+      "nominal_100g_N": 0.4903325,
+      "fivefold_N": 2.4516625,
+      "actual_weighed_or_qualified": false
+    },
+    "UART_source_notes": "AF Table10 p91 PB12/PB13,p92 PC6/PC7; direct RX pulls disabled throughout; operating relevant-IO+0.3V differs from absolute stress. No pin/circuit change.",
+    "requirements_P1": "Remove obsolete SMA/aft overhang; retain J3 west0.45mm and46x90mm outline.",
+    "records_scope": "FMEA currents, eight-location labels, all16courtyard stroke pairs, current ordering board and exact11:03supplier row are updated by final integration receipts; older snapshots are preserved."
+  },
+  "post_review_integration_findings": {
+    "plate_collision_only_mass_guard": {
+      "old_source_sha256": "889a8aa9b6f69c4e78d3ecf7053149cee24c203cce3c135c5f8c043b48d698ef",
+      "current_source_sha256": "fee9434b2fe00e58f7f20b6e915d9488955de90a37bd0435da777a8a3f23e5d5",
+      "current_tests_sha256": "cfa1168e118458e9183e0100a011690c9f9d334bf29f28ff3dd106bd41245a3c",
+      "old_code_tests": 2,
+      "old_code_valid_control_passes": 1,
+      "old_code_expected_negative_test_failures": 1,
+      "old_code_errors": 0,
+      "current_supplied_NumPy_cases": 4,
+      "current_supplied_NumPy_pass": 4,
+      "old_control_log_sha256": "80887c55cff5cd23c5a081d5132c50bb807febdbbdc057ffd8bec55abb476386",
+      "current_log_sha256": "ad9876ff740ac3d975a1f0abeaafbf2a199ba19027331a615e3de3abc6283212",
+      "scope": "Root post-review optional-calculator input guard; old explicit tail mass accepted then silently dropped. Valid actual mass inputs preserved; no physical qualification."
+    },
+    "requirements_count_label_erratum": {
+      "original_report": "round14_requirements.json",
+      "original_report_preserved": true,
+      "correct_XML_nodes": 651,
+      "correct_unique_reference_pin_pairs": 651,
+      "physical_numbered_pads": 663,
+      "duplicate_fingers": 12,
+      "MCU_pads": 100,
+      "normalized_mismatches": 0,
+      "actual_native_XML_proof": {
+        "scope": "Root independent denominator reconciliation; no canonical edits",
+        "board_sha256": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+        "netlist_sha256": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+        "components": 209,
+        "raw_XML_net_nodes": 651,
+        "unique_XML_ref_pin_pairs": 651,
+        "native_physical_pads": 682,
+        "native_numbered_physical_pads": 663,
+        "native_unique_numbered_ref_pin_pairs": 651,
+        "duplicate_numbered_pad_fingers": 12,
+        "MCU_numbered_physical_pads": 100,
+        "native_XML_normalized_mismatches": 0,
+        "erratum": "Round14 requirements report labels663 as XML nodes;663 actually counts numbered physical pads including12 repeated ref/pin fingers. All651 unique mappings agree; original report preserved and root reconciliation supplies corrected denominator."
+      },
+      "reason": "Original report mislabelled663numbered physical pads as XML nodes. No electrical discrepancy; separately recorded root erratum, no full-round total inflation."
+    }
+  },
+  "source_sha256": {
+    "m3_design/assembly_review/sources/r10_design/masses.json": "bf1be0eaa57d3c2e9b662b4862fca64109af9a3e12422dfc235ebe6a235efc29",
+    "m3_design/assembly_review/sources/r10_design/circuit.json": "ef67b3f1d4c71433f6969b4ad4b6bcb4bff8e72da647888e16ed1ce8a087ec09",
+    "tools/plate_model.py": "fee9434b2fe00e58f7f20b6e915d9488955de90a37bd0435da777a8a3f23e5d5",
+    "tools/test_r10_check.py": "cfa1168e118458e9183e0100a011690c9f9d334bf29f28ff3dd106bd41245a3c"
+  },
+  "AGENTS_section2_changed": false,
+  "limitations": "Source corrections and focused tests only here; fresh complete native builds/gates, board-bound budget/hotplug/fab/note, optional plate calculation and committed full15/16 remain separately required. No physical or firmware qualification."
+}

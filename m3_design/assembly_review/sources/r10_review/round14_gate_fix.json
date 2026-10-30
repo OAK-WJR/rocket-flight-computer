@@ -1,0 +1,1030 @@
+{
+  "schema": 1,
+  "finding": "R14-GATE-01",
+  "status": "implemented and focused-tested; canonical integration pending",
+  "base_target_commit": "f5e4a5a94013514edb952fd328325341b63a98df",
+  "board_sha256_before": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "board_sha256_after": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "source_hashes_before": {
+    "tools/paste_check.py": "c13ebf135a233b4d678d15fb61cc4cdf0d24dea93e3576732a71ef2854f059f2",
+    "tools/test_paste_check.py": "69086e5cb4b7f05a320cc82cc91bf6964c2deabf374876b35bbdd2956d6d5c83",
+    "m3_design/assembly_review/m3.kicad_pcb": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+    "m3_design/assembly_review/fab/m3_gerber.zip": "90966328ca7339095590a4397545f418c6fa407f4f25e0964e53e7aaac9f2007",
+    "m3_design/assembly_review/sources/r10_review/round14_gate.md": "863c4467daa5546385abece515e97158efb23e040aec1fccf04d7d5828ea0a0a",
+    "m3_design/assembly_review/sources/r10_review/round14_gate.json": "d5ed5561167c9b31dd972d3f29e46d5f6c242408e1a06bbd8b8cea8a3fdb9935"
+  },
+  "source_hashes_after": {
+    "tools/paste_check.py": "009938355d0b37923a7fd8438b1f56a831338df9486119714839a89340d67e2f",
+    "tools/test_paste_check.py": "6830471717dc1c26a217222f5818064623fec12cf4c64815fce53a783f652a43",
+    "m3_design/assembly_review/m3.kicad_pcb": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+    "m3_design/assembly_review/fab/m3_gerber.zip": "90966328ca7339095590a4397545f418c6fa407f4f25e0964e53e7aaac9f2007",
+    "m3_design/assembly_review/sources/r10_review/round14_gate.md": "863c4467daa5546385abece515e97158efb23e040aec1fccf04d7d5828ea0a0a",
+    "m3_design/assembly_review/sources/r10_review/round14_gate.json": "d5ed5561167c9b31dd972d3f29e46d5f6c242408e1a06bbd8b8cea8a3fdb9935"
+  },
+  "changed_files": [
+    "tools/paste_check.py",
+    "tools/test_paste_check.py"
+  ],
+  "source_policy": {
+    "native_subset": "One mm/absolute4.6 header pair before apertures/operations; dark native polarity; pad flashes, aperture definitions/macros and attributes; terminal M02.",
+    "legacy_image_controls": "Only exact neutral IR/MI/OF/SF defaults accepted. Decimal equality avoids rounding a tiny non-default to a default.",
+    "AS_IP": "ASAXBY and IPPOS accepted; non-default AS/IP rejected as project policy.",
+    "plain_state": "G71/G90 confirm mm/absolute and M01 has no effect; unsupported units/notation/stops, unknown commands and commands after M02 reject.",
+    "metadata": "G04, IN/LN and native TF/TA/TO/TD remain valid. Named metadata deletion clears component identity only for TD.C or TD-all.",
+    "representation": "Commands parsed at Gerber boundaries, including compact files and complete macro blocks; line breaks do not define semantics.",
+    "modern_transforms": "Prior LPC/LM/LR/LS/SR/AB rejection remains.",
+    "geometry": "Native margins, aperture geometry, split EP windows, dry/manual policy and1um comparison unchanged; no coverage-percentage or stencil-volume rule."
+  },
+  "primary_reference": {
+    "url": "https://www.ucamco.com/files/downloads/file_en/554/gerber-layer-format-specification-revision-2026-05_en.pdf",
+    "sha256": "ac9e9899f573d69e472b2112f1ae879c70f6cd13e17db41a1c885caf69961662",
+    "revision": "2026.05",
+    "pages": [
+      186,
+      187,
+      188,
+      190,
+      191,
+      193,
+      194,
+      195
+    ],
+    "calibration": "Ucamco permits ignoring several deprecated image controls; rejection of non-default use is this project's explicit subset policy. AS has no computer-to-computer image effect. No guaranteed historical CAM displacement or previous whole-gate escape is claimed."
+  },
+  "checks_actually_executed": {
+    "focused_suite": {
+      "command": "KICAD_PY -I -B tools/test_paste_check.py",
+      "tests": 16,
+      "skips": 0,
+      "returncode": 0,
+      "prior11_tests_retained": true,
+      "covers": "missing/duplicate/stray/dry/region; dimensions/shapes/macros/margins/rotation; split EP/manual; legacy defaults/nondefaults; unknown state/stop/header errors; compact commands/named metadata"
+    },
+    "actual_repacked_native_zip_comparison": {
+      "count": 32,
+      "expected_new_accept": 16,
+      "expected_new_reject": 16,
+      "cases": [
+        {
+          "label": "native",
+          "command": null,
+          "expected_new_accept": true,
+          "copied_zip_sha256": "b3e611020b1f472e1da310cdfc6bf82eaf36300ed34b3f46fdb330ce820568cc",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "AS_default",
+          "command": "%ASAXBY*%",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "bbb9f3dc899beed8c3f360e2ccc3d6974253abe8e34f41da1f3a9d83f77986a0",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "AS_swap",
+          "command": "%ASAYBX*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "f00898c7eee10dd6c0ca186e18136248cba6cc48d0b4cb5e9cb3d9fcc9ebe296",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %ASAYBX*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "IR_neutral",
+          "command": "%IR0*%",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "6e1adb37c503584f3f0a5882c027cbe42a0bf111836aa76ea2155239076b6ce1",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "IR90",
+          "command": "%IR90*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "be75eb40a63fb639991950d535757287e944184ecdff494cb7fdd0c261d009ae",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %IR90*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "MI_neutral",
+          "command": "%MIA0B0*%",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "58f384d2f0b17feb336cee33312afee5f1a7321c0bea9fae98ab9948a7c7f129",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "MI_A",
+          "command": "%MIA1B0*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "73339fcfaf497796a06da86b5911e5f8a057f14225930ecb76a45410636cf9d5",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %MIA1B0*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "OF_neutral",
+          "command": "%OFA0B0*%",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "0cdb5a59fce962298738ceaf858eb8c65469a0810bebd0e298ba8cbf88f13ca3",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "OF_A1",
+          "command": "%OFA1.0B0*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "05cea1afd196bccdc9174fefd3db14b9654854edbcfa3bd6ab842252a233b727",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %OFA1.0B0*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "SF_neutral",
+          "command": "%SFA1B1*%",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "bb3416c960446b023bad2b91466b3ea150eb4a7ecccbf8519098a6c824f18b1e",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "SF_A2",
+          "command": "%SFA2B1*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "1d0809c7f9638e3e3fe25d7430ffa3b074661e71ab9d2ddc9c4cdb4417aa8f9a",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %SFA2B1*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "IP_positive",
+          "command": "%IPPOS*%",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "341ab72a0356c792bf650f7f77b7c494f9d54853448ff05609f642d4a7d9b680",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "IP_negative",
+          "command": "%IPNEG*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "b158df2a63fe81ec75efef9f95d6c1ef4123005328bfd3f79cb887dc3fdb3cf8",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %IPNEG*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "IN_metadata",
+          "command": "%INR14_control*%",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "d8a6367b332b50b5de85f6a065ee65c121d46b6a2be19e11142a19406342e4fd",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "LN_metadata",
+          "command": "%LNR14_control*%",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "2b8b10aaf44a376b0b4c93b4d88edaee1c13babef7785b123165365db19bae47",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "G04_metadata",
+          "command": "G04 R14 harmless comment*",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "ed3bd96a65eed7170b2a0cfc431c7ee036fabdc83644b8e56b2b463cf906d3b8",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "G71_mm",
+          "command": "G71*",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "bbfdb578ce4b33a43b9e54975e618922e06f5fa92765196178d6fd4626483a02",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "G70_inch",
+          "command": "G70*",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "b6abd97d6324cf4656993b4f6c09c9075bafabeef5e1f68d5134c731c91863a0",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command G70* (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "G90_absolute",
+          "command": "G90*",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "af57effb51b26800a0a3bc332cce5cff803767f206ba76b570f028d447c2a13c",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "G91_incremental",
+          "command": "G91*",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "4486cc9d9420aca144a03a59460817c5a8c1ad227132f00a951bfc712c5dc487",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command G91* (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "M01_optional_stop",
+          "command": "M01*",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "c89f4c5664b29be462fa7c3968db189a2a97f2c1fc7ffdb3e88699464dc3abf9",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "M00_stop",
+          "command": "M00*",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "f88b80cf747e2d37fbcca2c84a3dece71e0450a11b5ea9ce14e65830616869c0",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command M00* (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "LPD_dark",
+          "command": "%LPD*%",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "89c475b1a39ce99307a7007af99fc35ca0a9dcd6294a6c673122135f19cac909",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "LPC_clear",
+          "command": "%LPC*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "11b9c3eb6c74e9cb5f6b63dad2c9a1846a1e3cb506948386dc82bea342484e42",
+          "results": {
+            "old": {
+              "accepted": false,
+              "issue_count": 246,
+              "proof_issues": [
+                "F_Paste: unsupported paste polarity/transform/repeat/block operation (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %LPC*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "LM_neutral",
+          "command": "%LMN*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "1e9daa2973b7eabe6c61c9d5cd1801070cf1edb3801910ed9aa951971e821d58",
+          "results": {
+            "old": {
+              "accepted": false,
+              "issue_count": 246,
+              "proof_issues": [
+                "F_Paste: unsupported paste polarity/transform/repeat/block operation (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %LMN*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "LM_X",
+          "command": "%LMX*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "e83cb43b9d15bb448f64998ac488950b0f4ec3c8a744883a97f8534cd662d5ea",
+          "results": {
+            "old": {
+              "accepted": false,
+              "issue_count": 246,
+              "proof_issues": [
+                "F_Paste: unsupported paste polarity/transform/repeat/block operation (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %LMX*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "LR90",
+          "command": "%LR90*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "2fda502c3b5c23acdb8de0cbd852017c0e05cfc33bc7c44b38524ccc03521d15",
+          "results": {
+            "old": {
+              "accepted": false,
+              "issue_count": 246,
+              "proof_issues": [
+                "F_Paste: unsupported paste polarity/transform/repeat/block operation (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %LR90*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "LS2",
+          "command": "%LS2*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "ffa540e78c9180297dd128ded2bbc792a1f0efbcbf125eefd2a7203b37ff730e",
+          "results": {
+            "old": {
+              "accepted": false,
+              "issue_count": 246,
+              "proof_issues": [
+                "F_Paste: unsupported paste polarity/transform/repeat/block operation (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %LS2*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "numeric_zero_offset",
+          "command": "%OFA-0.0B+0.00000*%",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "96c2046c9aec993e2323e65e696db5d9ada854d04da6be94c271984704b10264",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "numeric_unit_scale",
+          "command": "%SFA1.000B1*%",
+          "expected_new_accept": true,
+          "copied_zip_sha256": "65feb70b53b2d8084344e8c0667b623317db45c9b091c543ced056a91a5d9ed2",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "unknown_extended",
+          "command": "%ZZunknown*%",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "1d19a6007c3846b75441a52f7093018e81e096adbab8194b3ae72dadeea1b1f2",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: unsupported paste command %ZZunknown*% (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        },
+        {
+          "label": "early_M02",
+          "command": "M02*",
+          "expected_new_accept": false,
+          "copied_zip_sha256": "d2232282e77718470773135b0dfdb989fc0e49f5605c17f338d7962aef726bea",
+          "results": {
+            "old": {
+              "accepted": true,
+              "issue_count": 0,
+              "proof_issues": [],
+              "geometry_matches": {
+                "F_Paste": 245,
+                "B_Paste": 373
+              }
+            },
+            "new": {
+              "accepted": false,
+              "issue_count": 1,
+              "proof_issues": [
+                "F_Paste: paste data after M02 end command (rule 5)"
+              ],
+              "geometry_matches": {
+                "F_Paste": 0,
+                "B_Paste": 373
+              }
+            }
+          }
+        }
+      ]
+    },
+    "original_fault": {
+      "label": "OF_A1",
+      "command": "%OFA1.0B0*%",
+      "expected_new_accept": false,
+      "copied_zip_sha256": "05cea1afd196bccdc9174fefd3db14b9654854edbcfa3bd6ab842252a233b727",
+      "results": {
+        "old": {
+          "accepted": true,
+          "issue_count": 0,
+          "proof_issues": [],
+          "geometry_matches": {
+            "F_Paste": 245,
+            "B_Paste": 373
+          }
+        },
+        "new": {
+          "accepted": false,
+          "issue_count": 1,
+          "proof_issues": [
+            "F_Paste: unsupported paste command %OFA1.0B0*% (rule 5)"
+          ],
+          "geometry_matches": {
+            "F_Paste": 0,
+            "B_Paste": 373
+          }
+        }
+      }
+    },
+    "current_geometry": {
+      "top": 245,
+      "bottom": 373,
+      "total_matches": 618
+    },
+    "compact_actual_export_control": {
+      "accepted": true,
+      "geometry_matches": {
+        "F_Paste": 245,
+        "B_Paste": 373
+      }
+    },
+    "native_python_entrypoints": {
+      "unit": {
+        "returncode": 0,
+        "expected": 0
+      },
+      "proof": {
+        "returncode": 0,
+        "expected": 0
+      },
+      "native_control": {
+        "returncode": 0,
+        "expected": 0
+      },
+      "native_original_fault": {
+        "returncode": 1,
+        "expected": 1
+      }
+    },
+    "original_review_and_CAD_integrity": {
+      "protected_paths": [
+        "m3_design/assembly_review/m3.kicad_pcb",
+        "m3_design/assembly_review/fab/m3_gerber.zip",
+        "m3_design/assembly_review/sources/r10_review/round14_gate.md",
+        "m3_design/assembly_review/sources/r10_review/round14_gate.json"
+      ],
+      "unchanged": true
+    }
+  },
+  "ignored_reproduction": {
+    "directory": ".supervisor/r14_gate_fix",
+    "script": "prove.py",
+    "old_checker": "old_paste_check.py exact pre-fix snapshot",
+    "actual_fault": "original_fault.zip",
+    "temporary_case_zips": "deleted by TemporaryDirectory after each proof run"
+  },
+  "log_sha256": {
+    "unit.log": "99bcaf3ac80edc729c9828a825440d41a80ed6a4ebe67eca9ab18e69c73d8b85",
+    "proof.log": "3498cab0c5ceb305913e593f472ed15db810a286f4d29c9f86f49f988dba2768",
+    "native_control.log": "e7ffe5f33f4f51ac03b69e3c0f008a31d4364a3ac3bf45b97afea9713dee1148",
+    "native_original_fault.log": "fed605e63eb0ff696a8a5831552ae050fb2e74eeec7343f59c121f7c91079d44"
+  },
+  "limits": [
+    "No native CAD/fab output or original R14 report edited. No full build/check.sh, git mutation, GUI or native KiCad CLI invocation.",
+    "Only the focused paste gate and source are qualified here. Root must run canonical builds/full gate, refresh provenance and fabrication as needed, and obtain fresh full15/16 reviews.",
+    "No stencil process, solder volume, physical assembly, electrical/thermal, firmware, flight, owner acceptance or order qualification follows."
+  ]
+}

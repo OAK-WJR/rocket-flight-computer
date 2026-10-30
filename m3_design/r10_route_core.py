@@ -22,6 +22,8 @@ class CoreTable(Translated):
         return super().pad(ref, number, net, at)
 
     def track(self, net, layer, width, points):
+        if net == 'I2C1_SDA' and layer == 'F' and points == [r9_route_imu_baro.u1_pin(96), (8.35,48.5), (4.97,51.88), (4.97,53.0)]:
+            points = [points[0], (9.47,48.5), (4.97,53.0)]
         if net == 'I2C1_SDA' and layer == 'B' and points == [(4.97,53.0),(4.97,53.62)]:
             points = [(4.97,53.0),(5.25,53.28),(5.25,53.62)]
         if net == '3V3' and layer == 'B' and points == [(4.97,54.48),(4.2,54.48)]:
@@ -85,5 +87,5 @@ def draw(d):
     # C14 remains at its MCU supply pin; its transition is east of the adjacent buzzer escape.
     d.track('3V3','F',.3,[d.pad('U1.11'),(22,51.55),(22.6,52.15)])
     d.via('3V3',(22.6,52.15))
-    d.track('3V3','B',.3,[(22.6,52.15),d.pad('C14.1'),(21.82,51.8),(19.5,49.48),(19.5,49.15)])
+    d.track('3V3','B',.3,[(22.6,52.15),d.pad('C14.1'),(21.82,51.47),(19.5,49.15)])
     d.track('GND','B',.2,[d.pad('C14.2'),(20.98,52.96),(21.82,53.8)])

@@ -6,31 +6,35 @@ Last updated 2026-10-30 (R10 candidate section below; the rest as of 2026-10-25)
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
-**Round13 fix pass (2026-10-30):** PCB `e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`,
-46x90x1.6mm,2,259,597bytes;209 footprints/966segments/296vias/
-1802.125220mm track. Circuit,pin map,supports,IMU pose and AGENTS
-section2 are unchanged. Qualified local signal routes and77 Fab references are
-corrected; SD nails/tolerances and23 terminal tails now have explicit fit allocations.
-**Software/CAD:** two complete direct native builds/check0 reproduce42 generated
-CAD/library/model/electrical-evidence/binding files byte for byte. DRC/unconnected/
-parity/ERC0; all31 R10 rules,routing,legends,fit,orientation,paste geometry and
-five-output manifest pass. Tests: R10 173, fit 30, routing 60;
-all native NumPy skips are separately resolved. No gate/section2 limit is weakened.
+**Round14 fix pass (2026-10-30):** PCB `7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783`,
+46x90x1.6mm,2,257,812bytes;209 footprints/957segments/296vias/
+1797.140178mm track. Twelve qualified local redraws save4.985043mm
+and nine segments. All part poses,pad lands,nets,vias,supports and IMU pose are
+preserved; circuit and AGENTS section2 are unchanged. Source notes,maker mass,
+closed-subset paste guards and current records are corrected.
+**Software/CAD:** two complete native builds/check0 reproduce42 generated files
+byte for byte. DRC/unconnected/parity/ERC0; all31 R10 rules,routing,legends,fit,
+orientation,618paste geometries and five-output manifest pass. R10 tests173,
+paste16,fit30,routing60; all native NumPy skips separately resolved.
 **Simulation/Inference:** actual-feed2304 required+60 local hot-plug cases pass;
-optional plate181.3Hz pinnedD5/70.3g estimated mass. These are not physical tests.
-**Procurement:** public supplier2026-10-30T08:38:52.797802Z:$82.6458 placed/feeder
-share versus$84.41;$84.9862 including minimum purchases ($0.58 over),before fixed/
-process/PCB/shipping. R430 has17<3610 and U4 has0<5; stock remains short; U9 minimum7 for5 fitted.
-Quote,process and owner cost/deviation acceptance remain pending; no order.
-**Reviews:** full R13 on7355ae1a/fa897c8 is0Critical/0Major/17consolidatedMinor
-(24active raw). These fixes change the PCB; fresh full14/15 on the committed
-result must supply the final same-board clean pair. Earlier pairs do not transfer.
+optional plate181.1Hz pinnedD5/70.5g estimated mass with maker
+nominal0.5g LS120. Neither is physical qualification.
+**Procurement:** public supplier2026-10-30T11:02:47.315965..11:03:42.599036Z:
+$82.6434 placed/feeder share versus$84.41;$84.4456 with minimum purchases
+($0.0356 over),before fixed/process/PCB/shipping. R43017<3610 and U4 0<5 remain
+short; U9 is113/minimum1. Quote,process and owner cost/deviation acceptance are
+pending; no order.
+**Reviews:** full R14 onf5e4a5a/e0e3ad84 found0Critical/0Major/14consolidated
+Minor groups (20raw;10new/4carried). These fixes change the PCB; fresh complete
+15/16 on the committed result must earn the final same-board clean pair.
+Earlier pairs do not transfer. The disclosed R14 routing search exposure and
+root count-label erratum remain in their scoped receipts.
 **Not verified:** R10 firmware,SD latency/power loss,e-match lot20ms firing,
 electrical/thermal/transient/endurance,installed RF/ESD,harness/retention,
 screwdriver/card access,physical bore/stack/flight and first-article/process.
 R9 remains accepted; R10 is not accepted or ordered. Evidence:
-`m3_design/assembly_review/sources/r10_review/round13_fix_validation.json` and
-`docs/R10_VALIDATION.md`,round13.
+`m3_design/assembly_review/sources/r10_review/round14_fix_validation.json` and
+`docs/R10_VALIDATION.md`,round14.
 
 Layout measurements, §6 disposition and review items: [m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md](m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md).
 

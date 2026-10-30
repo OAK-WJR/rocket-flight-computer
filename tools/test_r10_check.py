@@ -1872,6 +1872,10 @@ class Plate(unittest.TestCase):
         _, masses, actual = plate.build(fit, 5, False, 'r10_mated', 'r10', self.spec)
         self.assertEqual(masses, baseline)
         self.assertEqual(actual, total)
+        for key in (extra[1], extra[1] + ' mated'):
+            mutant = dict(self.spec, masses_g=dict(self.spec['masses_g'], **{key: 1.0}))
+            with self.assertRaises(ValueError):
+                plate.build(fit, 5, False, 'r10_mated', 'r10', mutant)
 
 
 class FabScript(unittest.TestCase):

@@ -2179,3 +2179,90 @@ order or owner cost/process/deviation acceptance is inferred. Rebuild twice,
 check0, refresh all native provenance and commit; because these fixes change the
 PCB, fresh complete rounds14/15 must earn the final same-board clean pair.
 AGENTS section2 is unchanged.
+
+## D-R14-01. Apply twelve individually qualified local route corrections
+
+Full round14 on f5e4a5a/e0e3ad84 found0Critical/0Major/14 consolidated Minor
+groups from20 raw observations. Replace only the twelve source polylines named
+in round14_routing_fix: PORT_4V8,3V3,USB_DM,SD_MISO,SD_CS,I2C1_SDA,ACT_GATE,
+CAM_IO_3V3,USB_LIMITED,BAT_IN,USB_DP and PYRO1_GATE. Individual and combined
+native all-severity/parity DRC, reference/region and critical-hygiene controls
+qualify these redraws. Preserve every pad,part pose,via,layer,track width and
+unselected track; retire only the now-unused R10 USB_DM REF_STRAY entry. The
+source-generated957-track/296-via candidate saves4.985043mm and nine segments.
+Do not change R9 sources or relax actual clearance/reference/IPC-2152 limits.
+The changed BAT_IN feed requires fresh canonical extraction and the complete
+2304 required/60 local hot-plug sweep, not transfer of an old board's binding.
+
+The remaining M2 compromises still need owner acceptance. The new production
+information denominator is139=109ordinary+22inside-pad+8noncritical hygiene
+leftovers; supplementary search windows are not extra production observations.
+Remote noncritical return companions and the possible0.15mm L400 heel strip
+remain measured deviations. Neither native checks nor local search prove a
+physical noise margin, manufacturing qualification or globally shortest layout.
+Rebuild twice, check0 and refresh native/fab/firmware-evidence provenance.
+Because the PCB changes, fresh complete rounds15/16 must earn the final same-
+board clean pair. AGENTS section2 remains byte-identical.
+
+## D-R14-02. Correct maker mass, operating citations and current records
+
+Use Huaneng MLT-5020 maker sheet p2 item9's nominal0.5g for LS120, replacing
+the unsupported0.3g allocation. [Maker sheet](https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598)
+SHA256 db73c860afd42abdf9a2e69c4a34ac915d68e07108a2188d6ee0a9c02f723be9.
+At100g the nominal inertial force is0.4903325N and its fivefold retention
+allocation2.4516625N. Actual assembled mass/retention remain unmeasured. Run
+the optional plate calculation on the final native fit and corrected mass;
+keep its stiffness,support,wire and shock assumptions labelled Inference.
+
+Correct the UART AF citation to DS12110 Rev11 Table10 p91 PB12/PB13 and p92
+PC6/PC7. Direct GPS/radio RX internal pulls stay disabled throughout operation;
+Table112 note3 p210/Table147 note6 p242's relevant-I/O-supply+0.3V operating
+condition is distinct from Table109 absolute stress. These are source-note
+corrections; all100 MCU pins and electrical decisions remain unchanged.
+Correct FMEA's active fire currents from the final board-bound budget, P1's
+obsolete SMA-overhang parenthesis, the current ordering-board pointer and both
+active eight-location ledger labels. Inventory all16 courtyard stroke overlaps
+(6top/10bottom); their small polygon gaps and model separation do not prove
+physical collisions or qualify assembly access. Retain each measured pair for
+owner/assembler first article rather than altering a courtyard for a counter.
+
+Keep the separately owned VEHICLE mirror as an explicit integration obligation;
+use this worktree's R10_VEHICLE_HANDOFF without editing another worktree.
+The exact82-code public supplier queries2026-10-30T11:02:47.315965 through
+11:03:42.599036UTC give82.6434USD placed/feeder share and84.4456USD with minimum
+purchases, before fixed/process/PCB/shipping. The latter is0.0356USD over84.41.
+U9 is113available/minimum1; R43017<3610 and U4 0<5 remain stock blockers.
+This dated evidence is not a quote, order, procurement release or owner acceptance.
+Preserve all earlier review executions and supplier snapshots at their own hashes.
+
+## D-R14-03. Fail closed on ambiguous paste commands and collision-only masses
+
+The native-Gerber checker advertises a closed supported subset. Reject
+non-default legacy image transforms instead of silently accepting IR/MI/OF/SF;
+retain only explicit default AS/IP policy and native/neutral/metadata positives.
+[Ucamco Rev2026.05](https://www.ucamco.com/files/downloads/file_en/554/gerber-layer-format-specification-revision-2026-05_en.pdf)
+pp186-195 permits ignoring legacy commands. Thus the seeded acceptance is a
+project parser-boundary ambiguity, not proof of shifted CAM output or an actual
+bad native package. Keep modern transform/polarity rejection and unsupported
+unit/notation/stop guards; preserve reviewed split-pad/manual-paste semantics.
+The original manifest rejects a mutated archive. Do not invent universal paste
+coverage or claim the prior whole gate accepted a corrupt production package.
+Actual old-fault/new-reject and native positive controls are in round14_gate_fix.
+
+Filter the23 named terminal-tail collision rows before validating optional plate
+mass keys. Explicit connector lumps already contain their pins. A mass key on a
+collision-only row, including a mated allowance parent, must fail rather than be
+accepted and silently discarded or placed. Valid mass-bearing inputs remain
+identical; old-code negative and current positive/negative controls document this
+root integration finding separately from the20 full-review observations.
+
+Preserve the requirements review's original count-label error with a root erratum:
+651 raw XML nodes/651 unique reference-pin mappings agree with663 numbered
+physical pads collapsed to651 unique pairs; twelve duplicate fingers explain
+the difference. All100 MCU pins agree. No electrical discrepancy is implied.
+The routing reviewer disclosed a broad CLI-location search that exposed unrelated
+probe-script lines after initial sketches; it did not read peer reports or use
+those lines as evidence. Preserve that method limit and use exact CLI pointer
+lookup in fresh rounds. No historical total or independence claim is rewritten.
+All changes require integrated check0; firmware/bench/physical and owner process
+qualification stay open. AGENTS section2 is unchanged.

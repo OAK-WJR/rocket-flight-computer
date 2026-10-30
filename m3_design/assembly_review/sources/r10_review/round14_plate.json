@@ -1,0 +1,174 @@
+{
+  "label": "Optional current native-fit calculation, not physical qualification",
+  "profile": "r10",
+  "mass_spec": {
+    "profile": "r10",
+    "basis": "Inference: conservative engineering mass allowances, except LS120 maker nominal mass 0.5 g (MLT-5020 sheet p2 item9) and J430 socket maker mass 0.434 g (Molex 472192001 product record). The J430 mated card allowance 0.5 g is an inference. DB125 terminal body allowances scale the existing 3 g two-contact allowance by pole count: 3 g two-contact, 6 g four-contact, 7.5 g five-contact. Terminal keys ending in 'mated' are separate local wire/ferrule allowances, not mating plugs: 1 g per two contacts, 2 g per four, 2.5 g per five. Validate by weighing the actual populated board and supported harness. Connector/capacitor dimensions: parts_qualification.md; DB125 drawing T0-1; MA drawing p2. No inherited R9 RF, SMA, GH or servo-plug masses.",
+    "masses_g": {
+      "J1": 3.0,
+      "J121": 3.0,
+      "J122": 7.5,
+      "C84": 3.0,
+      "LS120": 0.5,
+      "J3": 1.0,
+      "J9": 6.0,
+      "J400": 3.0,
+      "J410": 6.0,
+      "J420": 6.0,
+      "J430": 0.434,
+      "J1 mated": 1.0,
+      "J121 mated": 1.0,
+      "J122 mated": 2.5,
+      "J9 mated": 2.0,
+      "J400 mated": 1.0,
+      "J410 mated": 2.0,
+      "J420 mated": 2.0,
+      "J430 mated": 0.5
+    },
+    "placement": "tools/plate_model.py --profile r10 places every key: on its own fit-report row's model box, or, for 'X mated' with no row of its own (DB125 terminals' local wire/ferrule allowance, no mated plug envelope in fit_check), on its parent X's model box; any other key is refused (R3-MEC-01) Collision-only terminal-tail rows are excluded from mass placement and cannot be explicit masses or mated-allowance parents; connector masses already include their pins.",
+    "removed_bench_only": {
+      "J2": "TC2030 Tag-Connect: a bare land (fit_check board feature), no body on the board",
+      "J2 mated": "the TC2030 cable is a bench programming tool, never fitted in flight",
+      "J3 mated": "the USB-C plug is a bench / ground tool, never fitted in flight (J3's body mass stays)"
+    },
+    "physical_mass_verified": false,
+    "harness_rule": "Strain relief carries cable mass beyond the modelled plug/local-wire envelope; unrestrained long leads invalidate these allowances.",
+    "maker_mass_sources": {
+      "LS120": {
+        "url": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598",
+        "page": 2,
+        "item": 9,
+        "nominal_g": 0.5,
+        "actual_weighing_verified": false
+      }
+    }
+  },
+  "board_sha256": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "supports": [
+    [
+      3.7,
+      86.0
+    ],
+    [
+      4.0,
+      4.0
+    ],
+    [
+      4.0,
+      44.3
+    ],
+    [
+      42.0,
+      4.0
+    ],
+    [
+      42.0,
+      86.0
+    ]
+  ],
+  "f1": {
+    "r10_mated": {
+      "pinned_D5": 181.1,
+      "pinned_D10": 256.1,
+      "clamped_D5": 287.9,
+      "clamped_D10": 407.1,
+      "board_mass_g": 70.5
+    }
+  },
+  "static": {
+    "r10_mated": {
+      "max_deflection_mm": 1.24,
+      "at": [
+        46.0,
+        45.0
+      ],
+      "strain_ue": {
+        "U4": 473,
+        "U1": 994,
+        "J121": 1035,
+        "C84": 1343,
+        "U5": 732,
+        "J1": 1087,
+        "J122": 1490
+      }
+    }
+  },
+  "calculation_basis": "Calculation/Inference: nominal maker LS1200.5g,explicit DB125 lumps already include pins.23collision-only tails excluded before validation. Unmeasured assembled mass,wire distribution,stiffness,damping,sled and boundary conditions. No modal release floor or shock qualification.",
+  "actual_estimated_mass_g": 70.4975988460437,
+  "local_sled_clearance": {
+    "method": "0.25mm raster plus envelope endpoints; rigid sled; absolute100g/pinnedD5 deflection",
+    "minima": [
+      {
+        "name": "C431",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 1.029087336300195,
+        "gap_h4_mm": 0.2709126712998049,
+        "gap_h3_5_mm": -0.2290873287001951
+      },
+      {
+        "name": "C421",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 0.9546146466081721,
+        "gap_h4_mm": 0.3453853609918279,
+        "gap_h3_5_mm": -0.15461463900817207
+      },
+      {
+        "name": "L1",
+        "hang_mm": 3.015825312,
+        "max_100g_D5_deflection_mm": 0.46159728511475834,
+        "gap_h4_mm": 0.5225774028852417,
+        "gap_h3_5_mm": 0.022577402885241626
+      },
+      {
+        "name": "C411",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 0.7135355700474036,
+        "gap_h4_mm": 0.5864644375525964,
+        "gap_h3_5_mm": 0.08646443755259636
+      },
+      {
+        "name": "C82",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 0.34446538183588477,
+        "gap_h4_mm": 0.9555346257641153,
+        "gap_h3_5_mm": 0.45553462576411524
+      },
+      {
+        "name": "C405",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 0.26032599015523317,
+        "gap_h4_mm": 1.0396740174447667,
+        "gap_h3_5_mm": 0.5396740174447668
+      },
+      {
+        "name": "C406",
+        "hang_mm": 2.6999999924,
+        "max_100g_D5_deflection_mm": 0.23813933234324075,
+        "gap_h4_mm": 1.0618606752567592,
+        "gap_h3_5_mm": 0.5618606752567592
+      },
+      {
+        "name": "J430",
+        "hang_mm": 2.10000088,
+        "max_100g_D5_deflection_mm": 0.8076953170217047,
+        "gap_h4_mm": 1.0923038029782952,
+        "gap_h3_5_mm": 0.5923038029782952
+      }
+    ],
+    "physical_or_shock_qualified": false
+  },
+  "collision_only_mass_guard": {
+    "proof_path": ".supervisor/r14_plate_guard_proof.json",
+    "proof_sha256": "d1c5d664e6897d424c4a21511756ae45f047503003cd26dea1202b93aa5893f5",
+    "old_negative_control_fails_new_negative_and_valid_controls_pass": true
+  },
+  "source_sha256": {
+    "tools/plate_model.py": "fee9434b2fe00e58f7f20b6e915d9488955de90a37bd0435da777a8a3f23e5d5",
+    "tools/test_r10_check.py": "cfa1168e118458e9183e0100a011690c9f9d334bf29f28ff3dd106bd41245a3c",
+    "m3_design/assembly_review/sources/r10_design/masses.json": "bf1be0eaa57d3c2e9b662b4862fca64109af9a3e12422dfc235ebe6a235efc29"
+  },
+  "fit_report_sha256": "75068f406a3daa45a8a9ce10a5aca88cb0cc2c266914595e9fb1204823e6a326",
+  "LS120_nominal_100g_N": 0.4903325,
+  "LS120_fivefold_retention_N": 2.4516625,
+  "physical_or_firmware_qualified": false
+}

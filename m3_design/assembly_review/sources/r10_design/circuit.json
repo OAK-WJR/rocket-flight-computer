@@ -1373,8 +1373,8 @@
     ],
     "telemetry": [
       "R10: always-on GPS J410 and radio J420. DB1254pos pins1 PORT_4V8,2 GND,3 board TX,4 board RX; harness crosses TX to endpoint RX.",
-      "GPS USART6 PC6 TX / PC7 RX AF7; radio UART5 PB13 TX / PB12 RX AF14 (ST DS12110 Rev11 Tables11/12 pp90-92). Direct MCU UART through1k and ground-only ESD; no EN/OE/FAULT GPIOs.",
-      "RX GPIOs are FT_h / FT_u with digital5V tolerance subject to DS12110 Table109. Disable analog mode/pulls for5V input. External UARTs must stay within0..5V. Board off: self-powered modules are forbidden;1k is not galvanic or powered-off isolation.",
+      "GPS USART6 PC6 TX / PC7 RX AF7; radio UART5 PB13 TX / PB12 RX AF14 (ST DS12110 Rev11 Table10 p91 PB12/PB13, p92 PC6/PC7). Direct MCU UART through1k and ground-only ESD; no EN/OE/FAULT GPIOs.",
+      "RX FT_h / FT_u: digital0..5V only, pulls disabled throughout use. Operating pull limit is relevant IO supply+0.3V (DS12110 Rev11 Table112 n3 p210 / Table147 n6 p242), distinct from Table109 absolute stress. Board off: no self-powered module;1k is not powered-off isolation.",
       "J430 Molex472192001 is a locking hinged microSD socket, no eject spring or card-detect switch. SPI3 PC10/11/12 AF6, PD0 software CS with10k pull-up. QSPI remains the crash-safe primary log.",
       "Card pins1 DAT2,2 CS,3 MOSI/CMD,4 3V3,5 SCK,6 GND,7 MISO/DAT0,8 DAT1; four shield tabs to GND. R460-R46410k pull-ups on CS/CMD/DAT0/DAT1/DAT2; C460100nF plus C46122uF at card supply; no SCK pull.",
       "Power-up SD: CS high, MOSI high, >=74 clocks at100-400kHz; enter SPI with CMD0. Limit run clock<=25MHz, card write<=200mA and idle<=30mA as bench-qualified allocations. No blocking card operation in flight; card removal only with board off.",

@@ -13,6 +13,10 @@ def draw(d, feed=False):
             local.pad(ref, num, net, at)
     nrst_count = 0
     for index, (net, layer, width, pts) in enumerate(old.TRACKS):
+        if net == 'USB_DM' and layer == 'F' and pts == [(6.88,33.55),(7.75,33.55),(8.15,33.15),(8.8,33.15)]:
+            pts = [(6.88,33.55),(8.4,33.55),(8.8,33.15)]
+        if net == 'USB_DP' and layer == 'F' and pts == [(6.88,34.05),(7.9,34.05),(7.9,35.05)]:
+            pts = [(6.88,34.05),(7.455,34.05),(7.9,34.495),(7.9,35.05)]
         if net in ('CC1', 'CC2', 'VBUS') or index < 6:
             if net == 'VBUS' and layer == 'B' and pts == [(11.35, 33.5), (11.35, 32.15)]:
                 # Tee into the retained trunk on U10.1's axis (R9-RTE-05).
@@ -93,7 +97,7 @@ def draw(d, feed=False):
     d.track('GND','F',.3,[d.pad('C86.2'),(18.3,25.3)]);d.via('GND',(18.3,25.3))
     d.track('USB_LIMITED','B',.4,[(15.55,28),(16,28)]
     )
-    d.track('USB_LIMITED','B',.4,[(15.55,28),(15.55,25),(14.525,25),(14.525,22.3),(11.8,22.3),d.pad('TP82.1')])
+    d.track('USB_LIMITED','B',.4,[(15.55,28),(15.55,25.05),(11.8,21.3),d.pad('TP82.1')])
 
     if feed:
         power_feed(d)

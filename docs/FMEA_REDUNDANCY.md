@@ -18,7 +18,7 @@
 > technical sheet p1](https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF)
 > gives0.75 A all-fire under0.5 s,0.30 A no-fire/40 mA maximum test. Keep one1.5×
 > margin=1.125 A, replacing an unnamed1 A match's1.5 A criterion. Coupled hot-loop
-> calculation with SD/ports gives1.546/1.481/1.284 A at0/1/4 persistent stalls
+> calculation on PCB `7866d6b8…` with SD/ports gives1.544/1.479/1.283 A at0/1/4 persistent stalls
 > (7.4 V equivalent source,Calc/Inference). Neutral does not clear a jam. R1342 Ω
 > and normal20 ms/fault36 ms physical limits remain; selected-lot20 ms/charge
 > qualification is unmeasured and is not proved by the maker's0.5 s rating.

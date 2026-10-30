@@ -103,6 +103,9 @@ class Plate:                       # a, b [m]; D [N m]; rho_h [kg/m^2]  (pass2_m
 def build(fit, D, clamp, case, profile='r9', mass_spec=None):
     if profile not in ('r9', 'r10'):
         raise ValueError(f'unknown plate profile {profile!r}')
+    # Tail rows are collision allocations, not extra parts. The connector mass includes its metal pins.
+    rows = [row for row in fit['rows']
+            if not (profile == 'r10' and row[1].endswith(' terminal tail'))]
     if profile == 'r10':
         if fit.get('profile') != 'r10' or not mass_spec or mass_spec.get('profile') != 'r10':
             raise ValueError('R10 requires an R10 fit report and explicit R10 mass specification')
@@ -110,7 +113,7 @@ def build(fit, D, clamp, case, profile='r9', mass_spec=None):
             raise ValueError('R10 plate requires five effective supports')
         if case != 'r10_mated':
             raise ValueError('R10 plate must include the allocated local leads and retained microSD card')
-        names = {row[1] for row in fit['rows']}
+        names = {row[1] for row in rows}
         required = {'J1', 'J121', 'J122', 'C84', 'J3', 'J9', 'J400', 'J410', 'J420', 'J430'}
         required |= {name for name in names if name.endswith(' mated')}
         if required - names or required - mass_spec.get('masses_g', {}).keys():
@@ -131,18 +134,14 @@ def build(fit, D, clamp, case, profile='r9', mass_spec=None):
             if parent and parent in names:
                 parents[key] = parent
             else:
-                raise ValueError(f'R10 mass {key!r} has no fit-report row' + (f' and no parent row {parent!r}'
+                raise ValueError(f'R10 mass {key!r} has no mass-bearing fit-report row' + (f' and no parent row {parent!r}'
                                                                                if parent else ''))
     x0, y0, x1, y1 = fit['outline']
     a, b = (x1 - x0) / 1e3, (y1 - y0) / 1e3
     p = Plate(a, b, D, NU, RHO_H)
     masses = {}
-    # R13: terminal tails are collision allocations for the already massed DB125,
-    # not extra components. The connector's explicit lump includes its metal pins.
-    rows = [row for row in fit['rows']
-            if not (profile == 'r10' and row[1].endswith(' terminal tail'))]
     if profile == 'r10':
-        boxes = {row[1]: row for row in fit['rows']}
+        boxes = {row[1]: row for row in rows}
         rows += [(boxes[parent][0], key, boxes[parent][2], boxes[parent][3]) for key, parent in sorted(parents.items())]
     for _, name, side, box in rows:
         if profile != 'r10' and (' ' in name or name in JACKS):

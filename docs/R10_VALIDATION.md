@@ -1,30 +1,34 @@
 # R10 validation and adversarial review
 
-**Round13 fix pass (2026-10-30):** PCB `e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`,
-46x90x1.6mm,2,259,597bytes;209 footprints/966segments/296vias/
-1802.125220mm track. Circuit,pin map,supports,IMU pose and AGENTS
-section2 are unchanged. Qualified local signal routes and77 Fab references are
-corrected; SD nails/tolerances and23 terminal tails now have explicit fit allocations.
-**Software/CAD:** two complete direct native builds/check0 reproduce42 generated
-CAD/library/model/electrical-evidence/binding files byte for byte. DRC/unconnected/
-parity/ERC0; all31 R10 rules,routing,legends,fit,orientation,paste geometry and
-five-output manifest pass. Tests: R10 173, fit 30, routing 60;
-all native NumPy skips are separately resolved. No gate/section2 limit is weakened.
+**Round14 fix pass (2026-10-30):** PCB `7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783`,
+46x90x1.6mm,2,257,812bytes;209 footprints/957segments/296vias/
+1797.140178mm track. Twelve qualified local redraws save4.985043mm
+and nine segments. All part poses,pad lands,nets,vias,supports and IMU pose are
+preserved; circuit and AGENTS section2 are unchanged. Source notes,maker mass,
+closed-subset paste guards and current records are corrected.
+**Software/CAD:** two complete native builds/check0 reproduce42 generated files
+byte for byte. DRC/unconnected/parity/ERC0; all31 R10 rules,routing,legends,fit,
+orientation,618paste geometries and five-output manifest pass. R10 tests173,
+paste16,fit30,routing60; all native NumPy skips separately resolved.
 **Simulation/Inference:** actual-feed2304 required+60 local hot-plug cases pass;
-optional plate181.3Hz pinnedD5/70.3g estimated mass. These are not physical tests.
-**Procurement:** public supplier2026-10-30T08:38:52.797802Z:$82.6458 placed/feeder
-share versus$84.41;$84.9862 including minimum purchases ($0.58 over),before fixed/
-process/PCB/shipping. R430 has17<3610 and U4 has0<5; stock remains short; U9 minimum7 for5 fitted.
-Quote,process and owner cost/deviation acceptance remain pending; no order.
-**Reviews:** full R13 on7355ae1a/fa897c8 is0Critical/0Major/17consolidatedMinor
-(24active raw). These fixes change the PCB; fresh full14/15 on the committed
-result must supply the final same-board clean pair. Earlier pairs do not transfer.
+optional plate181.1Hz pinnedD5/70.5g estimated mass with maker
+nominal0.5g LS120. Neither is physical qualification.
+**Procurement:** public supplier2026-10-30T11:02:47.315965..11:03:42.599036Z:
+$82.6434 placed/feeder share versus$84.41;$84.4456 with minimum purchases
+($0.0356 over),before fixed/process/PCB/shipping. R43017<3610 and U4 0<5 remain
+short; U9 is113/minimum1. Quote,process and owner cost/deviation acceptance are
+pending; no order.
+**Reviews:** full R14 onf5e4a5a/e0e3ad84 found0Critical/0Major/14consolidated
+Minor groups (20raw;10new/4carried). These fixes change the PCB; fresh complete
+15/16 on the committed result must earn the final same-board clean pair.
+Earlier pairs do not transfer. The disclosed R14 routing search exposure and
+root count-label erratum remain in their scoped receipts.
 **Not verified:** R10 firmware,SD latency/power loss,e-match lot20ms firing,
 electrical/thermal/transient/endurance,installed RF/ESD,harness/retention,
 screwdriver/card access,physical bore/stack/flight and first-article/process.
 R9 remains accepted; R10 is not accepted or ordered. Evidence:
-`m3_design/assembly_review/sources/r10_review/round13_fix_validation.json` and
-`docs/R10_VALIDATION.md`,round13.
+`m3_design/assembly_review/sources/r10_review/round14_fix_validation.json` and
+`docs/R10_VALIDATION.md`,round14.
 
 Evidence: [AVA layout hand-off](../m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md) and its metrics, validation and review-item JSON files.
 
@@ -1264,15 +1268,47 @@ cost/stock acceptance remain explicit deviations. Fresh complete14/15 must
 review this newly committed result; no earlier clean pair transfers. AGENTS
 section2 is byte-identical. R10 remains unaccepted and unordered.
 
+## Round 14: full independent review of committed `f5e4a5a`
+
+Target PCB `e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`.
+Ten full lenses ran in batches of at most3 with1879 preexisting tracked files
+frozen throughout. Result:0Critical/0Major/14consolidatedMinor groups from20raw
+observations (10new/4carried). Every original MD/JSON stays immutable; the
+reconciliation embeds exact originals and source hashes. No C/M candidate
+needed a fresh verifier. Routing disclosed unrelated probe-script lines from a
+broad CLI lookup after its initial sketches; it did not read peer reports or use
+those lines. This method limit remains explicit; fresh rounds use exact lookup.
+The requirements report's663-XML-node label has a root erratum:651XML nodes/
+unique mappings agree with663numbered physical pads after12duplicate fingers.
+All100MCU pins match. These post-review errata do not inflate full-round totals.
+
+Low-risk fixes adopt12 individually/combined-qualified local redraws, retire
+only obsolete USB_DM reference information, close legacy-paste subset guards,
+reject collision-only mass keys,use maker0.5g LS120 and correct operating/data/
+ordering/inventory records.16courtyard stroke pairs,possible0.15mm L400 heel,
+noncritical remote return companions,M2 compromises and stale parent mirror
+retain measured owner/qualification dispositions. Decisions:D-R14-01..03.
+Two complete source builds/check0 reproduce42 generated files on successor
+`7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783` (2,257,812bytes,957segments/296vias),saving4.985043mm/nine segments.
+DRC/unconnected/parity/ERC0,31rules,route/fit/legends/fab/note pass; actual-feed
+2304required+60local simulation cases pass. Optional plate181.1Hz/
+70.5g remains Inference. Gate/route/model old-fault and valid controls
+are scoped in fix receipts. No safety limit or AGENTS section2 was weakened.
+The changed PCB requires fresh full15/16 on its committed target; no clean pair
+is yet credited. R10 remains unaccepted/unordered and physically/FW unqualified.
+Evidence:`sources/r10_review/round14_reconciliation.json`,round14_fix_native,
+round14_fix_validation,round14_routing_fix,round14_gate_fix,round14_root_fix and
+round14_plate; exact paths are catalogued by the current deviation ledger.
+
 ## R10 deviations for owner acceptance
 
 Current-board inventory for PCB
-`e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`,46x90mm.
+`7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783`,46x90mm.
 The integration and fresh full-review status is stated in the opening record;
 the final same-board clean pair remains pending until both full rounds finish.
 The [complete JSON ledger](../m3_design/assembly_review/sources/r10_review/r10_final_deviations.json)
 maps every remaining obligation,46 historical groups,229 prior finding rows,
-all113 agent-decision IDs and22 owner-mandate records. Earlier measurements
+all116 agent-decision IDs and22 owner-mandate records. Earlier measurements
 remain at their original hashes; exact native geometry comparison and current
 gate/budget/fit evidence state what carries to this PCB. This supersedes the
 historical round10 acceptance inventory without transferring its clean pair.
@@ -1411,13 +1447,16 @@ is credited. D-R12-01 and the regenerated pin table carry this correction.
 
 ### 6. Routing cleanliness, AVA scope and returns
 
-The finished native --bumps-all pass has140 actual route information
-instances:110 ordinary+22 AUD-10 inside-pad+
+The finished native --bumps-all pass has139 actual route information
+instances:109 ordinary+22 AUD-10 inside-pad+
 8 noncritical hygiene leftovers. Blocking,critical-allowlisted
 and stale counts are zero. The location-only leftovers appear once in
 `r10_final_deviations.json#/routing_inventory/noncritical_leftovers_once`.
-The exact partition,alternative controls and scope are in round13_fix_native
-and round13_routing_fix. Supplemental search sketches are not extra instances
+The exact partition,alternative controls and scope are in round14_fix_native
+and round14_routing_fix. Fresh successor detailed native measurements are in
+round14_routing_geometry_metrics (5near-edge records,4lanes,11slow observations,
+6noncritical companions,3hops); these are newly executed rather than relabelled
+older values. Supplemental search sketches are not extra instances
 or proof of globally optimal routing. Low-risk adopted polylines pass native
 DRC/reference/hygiene; no general impossibility of other redraws is asserted.
 
@@ -1463,12 +1502,37 @@ ranges0.3..1.0mm (the existing C80/D8 0.3mm labels are preserved); vector zoom
 and first-article identification remain obligations. Silkscreen stays>=1.0mm.
 Final regenerated complete pages/details are checked in the integration receipt.
 
-Three bottom courtyard graphics have stroked overlaps while the actual native
-collision polygons/bodies are separate: C421/U12 and R151/D121, R152/D121.
-The conservative C91/C92 envelope gap is0.010 mm versus native collision-
-polygon gap0.110 mm. Adjacent4P terminal bodies have0.480 mm gap and courtyard
-ink0.030 mm gap. Do not turn informational graphics into a fabricated clearance
-waiver; inspect workmanship and real component tolerances.
+All209 native courtyards were inspected in full round14:16 stroke-overlap
+pairs remain (6top/10bottom), rather than the earlier three-pair inventory.
+Native collision polygons remain separate with0.010..0.040mm gaps; nominal
+model-body gaps are at least0.499938mm. The following complete inventory gives
+coordinates,polygon gap and ink penetration; these are CAD measurements, not
+component-tolerance or assembler-access qualification. Parts/courtyards are
+preserved by the route-only successor comparison. Retain owner/assembler
+first-article inspection; no physical collision is proved by overlapping ink.
+
+| Pair / side | Location mm | Polygon gap mm | Stroke penetration mm | Nominal model gap mm |
+|---|---|---|---|---|
+| C97/D123 F | 23.560,63.310 | 0.030 | 0.030 | 0.874882 |
+| R400/L400 F | 21.040,2.540 | 0.030 | 0.030 | 0.781025 |
+| R32/LED1 F | 10.465,42.120 | 0.040 | 0.020 | 1.300002 |
+| LED2/R33 F | 10.065,45.545 | 0.020 | 0.040 | 0.648569 |
+| C60/R60 F | 33.200,58.165 | 0.040 | 0.020 | 0.749964 |
+| R121/D8 F | 14.500,72.745 | 0.020 | 0.040 | 0.854874 |
+| C85/R86 B | 27.900,64.987 | 0.025 | 0.035 | 0.674999 |
+| C421/U12 B | 32.688,38.350 | 0.010 | 0.050 | 0.500000 |
+| R152/D121 B | 33.215,70.260 | 0.020 | 0.040 | 0.949914 |
+| R64/U5 B | 11.230,51.405 | 0.020 | 0.040 | 1.179750 |
+| U4/C31 B | 15.135,46.875 | 0.040 | 0.020 | 0.550194 |
+| D121/R151 B | 33.215,72.740 | 0.020 | 0.040 | 0.949914 |
+| C22/C26 B | 26.435,45.935 | 0.040 | 0.020 | 0.827540 |
+| C83/C28 B | 11.690,24.900 | 0.030 | 0.030 | 1.249900 |
+| Y1/R10 B | 20.885,44.705 | 0.040 | 0.020 | 1.101582 |
+| C18/C30 B | 17.475,49.140 | 0.020 | 0.040 | 0.499938 |
+
+The conservative C91/C92 envelope gap remains0.010mm versus native collision-
+polygon gap0.110mm. Adjacent4P terminal bodies have0.480mm gap and courtyard
+ink0.030mm gap. Inspect real component tolerances and workmanship.
 
 ### 8. Mechanics, access and retention
 
@@ -1492,12 +1556,12 @@ closed allocation includes maker nails/tolerances; common seating/card front
 remain Inference. Native bore clearance15.210798mm and C23 courtyard gap0.575mm
 do not qualify the actual assembled/socket/card maximum.
 
-The optional plate diagnostic uses70.3 g estimated board/local-wire mass:
-181.3 Hz pinnedD5,256.4 HzD10,288.1/407.5 Hz clamped and1.24 mm maximum100 g
+The optional plate diagnostic uses70.5 g estimated board/local-wire mass:
+181.1 Hz pinnedD5,256.1 HzD10,287.9/407.1 Hz clamped and1.24 mm maximum100 g
 deflection. No modal release floor or vibration test is inferred. Qualify
 5x100 g retention, supports, shroud, board wholly forward of joint+47 mm with
 axial tolerance, every roll orientation, external module/antenna/harness volume
-and actual bore/stack. Selected4 mm standoffs give0.274363 mm modeled100 g gap under C431; the3.5 mm sensitivity overlaps C431/C421. This is a local D5 calculation, not physical shock/clearance proof. Freed PCB length stays slack under OQ-7.
+and actual bore/stack. Selected4 mm standoffs give0.270913 mm modeled100 g gap under C431; the3.5 mm sensitivity overlaps C431/C421. This is a local D5 calculation, not physical shock/clearance proof. Freed PCB length stays slack under OQ-7.
 
 ### 9. Parts, lands and fabrication process
 
@@ -1514,20 +1578,19 @@ and actual bore/stack. Selected4 mm standoffs give0.274363 mm modeled100 g gap u
 
 ### 10. Cost, stock and owner items
 
-The2026-10-30 08:38:52.797802 UTC public supplier snapshot gives$82.65/board against
-$84.41, with46 Extended/36 Basic codes (82 total; Extended count informational).
-Parts$57.5538 plus modelled feeder share$25.092; minimum purchases bring parts to
-$59.8942 and total$84.9862 (rounded$84.99), a$0.58 excess. Preserve that minimum-
-purchase surcharge for owner cost/quote acceptance. Standard two-side fixed
-$83.96/order, possible$14.93 handling, VIPPO/manual/consignment/joints/rails/PCB/
-shipping remain additional. This is not a complete quote. Placed-quantity cost
-passes; stock/procurement do not. Earlier05:00UTC$79.53/$81.87 is historical.
+The2026-10-30T11:02:47.315965..11:03:42.599036UTC exact-code snapshot gives
+$82.6434/board placed/feeder share against$84.41:parts57.5514+feeders25.092.
+Minimum purchases bring parts to59.3536 and total84.4456,an excess0.0356USD.
+Keep that surcharge for owner cost/quote acceptance; fixed83.96/order,possible
+14.93handling,VIPPO/manual/consignment/joints/rails/PCB/attrition/shipping/tax
+remain additional. This is not a complete quote. Cost target passes; stock and
+procurement release do not. Earlier snapshots retain their historical scope.
 
-R430/C185349 has17 stock against3610 minimum purchase; U4/C26633007 has0 against
-5, requiring stock or consignment. U9 has a7-piece minimum for5 needed. Obtain
-the process/panel quote, supply resolution and a new cost/stock run within24 h
-of ordering. Owner acceptance of this full deviation list and retained agent
-choices remains pending. No order or accepted quote is recorded.
+R430/C18534917<3610minimum and U4/C26633007 0<5 require supply resolution;
+U9/C3662793 is113available/minimum1,with no minimum uplift for5fitted. Obtain
+process/panel quote and fresh final-BOM/CPL cost/stock within24h of ordering.
+Owner acceptance of the entire deviation list and retained agent choices is
+pending. No accepted quote/order is recorded.
 
 ### 11. Historical applicability and vehicle handoff
 
@@ -1544,7 +1607,7 @@ support/hardware and integration limits. No other worktree may be edited.
 
 ### 12. Every agent decision
 
-The JSON indexes all113 unique D-* IDs, including suffixes through D-R13-03,
+The JSON indexes all116 unique D-* IDs, including suffixes through D-R14-03,
 by ID/title/current applicability/reason, and all22 owner-mandate records/amendments.
 Review-process decisions do not infer owner acceptance of an electrical or
 mechanical tradeoff. Any later adopted decision must be added before finalization; the current decision-source hash is recorded.

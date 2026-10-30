@@ -1,11 +1,11 @@
 # R10 AVA layout hand-off
 
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
-The current round13 fix PCB is
-`e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`; two complete native builds/check0,
-42-file byte equality,actual native comparison and package/binding proof are in
-`sources/r10_review/round13_fix_validation.json`. Fresh full14/15 on the
-committed result remain required; no earlier clean pair transfers.
+The current round14 fix PCB is `7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783`;
+two native builds/check0,42-file equality and exact native/package/binding proof
+are in `sources/r10_review/round14_fix_validation.json`. Full14 was0C/0M/14Minor
+groups onf5/e0. Fresh full15/16 on the committed successor remain required;
+no earlier pair transfers.
 Round11 found one confirmed Major/16Minor groups on the hand-off board and
 fixed it as `0ad0135c…`; its named historical proof remains separate. The
 historical measurements below describe `0c50b9fd…`; fix deltas are at the end.
@@ -212,3 +212,14 @@ The source receipts are round13_routing_fix,round13_fab_fix,round13_root_fix
 and round13_gate_fix; complete canonical integration is round13_fix_native and
 round13_fix_validation. Full R13 was0C/0M/17Minor groups on7355/fa897c8. Fresh
 complete14/15 on this committed result must earn the final clean pair.
+
+## Round14 fix-pass delta
+
+PCB `7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783`:209footprints/957segments/296vias,
+1797.140178mm track. Twelve individually qualified source redraws
+save4.985043mm/nine segments; all part poses,pads,nets,vias,zone outlines and Fab
+references remain unchanged. Only the obsolete USB_DM reference exception is
+retired. Native hot-plug is freshly extracted/swept; no physical result follows.
+Maker LS1200.5g,optional mass-key/paste-subset guards and current records are
+corrected. Full proof:round14_fix_native/round14_fix_validation; source decisions
+D-R14-01..03. Full15/16 on the committed successor are pending.

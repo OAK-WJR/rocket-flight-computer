@@ -2469,14 +2469,14 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 26a75c96-ffbc-5db5-aa06-c6ec09e73f5d))
-	(text "GPS USART6 PC6 TX / PC7 RX AF7; radio UART5 PB13 TX / PB12 RX AF14 (ST DS12110 Rev11 Tables11/12 pp90-92). Direct MCU UART through1k and ground-only ESD; no EN/OE/FAULT GPIOs."
+	(text "GPS USART6 PC6 TX / PC7 RX AF7; radio UART5 PB13 TX / PB12 RX AF14 (ST DS12110 Rev11 Table10 p91 PB12/PB13, p92 PC6/PC7). Direct MCU UART through1k and ground-only ESD; no EN/OE/FAULT GPIOs."
 		(at 20.32 20.32 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 579bbb63-3f35-524b-a20a-edbe58a56b0b))
-	(text "RX GPIOs are FT_h / FT_u with digital5V tolerance subject to DS12110 Table109. Disable analog mode/pulls for5V input. External UARTs must stay within0..5V. Board off: self-powered modules are forbidden;1k is not galvanic or powered-off isolation."
+	(text "RX FT_h / FT_u: digital0..5V only, pulls disabled throughout use. Operating pull limit is relevant IO supply+0.3V (DS12110 Rev11 Table112 n3 p210 / Table147 n6 p242), distinct from Table109 absolute stress. Board off: no self-powered module;1k is not powered-off isolation."
 		(at 20.32 25.4 0)
 		(effects
 			(font

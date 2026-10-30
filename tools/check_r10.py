@@ -784,8 +784,6 @@ REF_PLANES_B = ('GND', '3V3', '3V3A', 'PORT_5V3', 'PORT_4V8', 'RAW_PROTECTED')
 REF_PAD_ANTIPAD = 0.6          # mm beyond half a plated pad's size: the plane void around a terminal barrel (Inference)
 REF_OWN_R = 0.45               # mm: a sample this close to a same-net via centre lies in that via's own antipad
 REF_STRAY = [   # (net, layer, x, y, reason): unreferenced samples outside their own via antipads; matched within 0.01 mm
-    ('USB_DM', 'F.Cu', 8.0793, 29.5793, "USB_DM's 45-degree run's copper edge grazes CC1's via antipad (7.85, 29.25), "
-                                         "r 0.40 mm: 0.401 mm from its centre (R9's REF_STRAY, translated; one edge sample)"),
     ('SPI1_MISO', 'B.Cu', 17.7904, 43.8818, "R9's translated IMU fan-out: the edge of SPI1_MISO's 45-degree stub passes "
                                              "SPI1_MOSI's via (17.55, 44.25) antipad at 0.440 mm (edge samples)"),
     ('SPI1_MISO', 'B.Cu', 17.7975, 43.8889, 'as above'),

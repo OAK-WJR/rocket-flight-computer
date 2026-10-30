@@ -1,0 +1,2127 @@
+{
+  "round": 14,
+  "lens": "docs_binding",
+  "review_kind": "full independent adversarial documentation and firmware-provenance review",
+  "target_commit": "f5e4a5a94013514edb952fd328325341b63a98df",
+  "target_commit_basis": "Frozen exact-target packet; no git invocation by this lens",
+  "board_sha256_before": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "board_sha256_after": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 3
+  },
+  "totals_basis": "Active findings only:2new bounded record mismatches+1carried parent mirror mismatch;3prior R13 findings freshly closed. Pending qualification/procurement choices alone not counted as new failures.",
+  "findings": [
+    {
+      "id": "R14-DOC-01",
+      "severity": "Minor",
+      "status": "active",
+      "origin": "new",
+      "title": "Active FMEA amendment retains the earlier fire-current allocation",
+      "evidence": [
+        {
+          "file": "docs/FMEA_REDUNDANCY.md",
+          "line": 21,
+          "observation": "Current R10 amendment gives 1.546/1.481/1.284 A at 0/1/4 stalls without a historical board qualifier."
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/parts_budget.json",
+          "line": 322,
+          "json_pointer": "/fire_current_GAP1/primary_40mohm_FETs",
+          "measurement": {
+            "native_board_bound_fire_branch_without_pack_ohm": 4.467458126128065,
+            "pack_ohm": 0.15,
+            "other_converter_W": 12.370806905016599,
+            "open_equivalent_V": 7.4,
+            "servo_stall_A": 1.92,
+            "current_fire_A_0_1_4_stalls": [
+              1.5443660716989063,
+              1.4794377872063396,
+              1.2830130390490941
+            ]
+          }
+        },
+        {
+          "check": "Fresh native power_budget replay plus separately written high-root quadratic",
+          "result": "All five stall cases agree exactly with stored budget. FMEA values differ by +1.634/+1.562/+0.987 mA at 0/1/4 stalls."
+        }
+      ],
+      "coordinate": {
+        "ref": "J121",
+        "xy_mm": [
+          7.4,
+          55.85
+        ],
+        "pins": {
+          "1": "PYRO1_OUT",
+          "2": "PYRO1_IGN"
+        }
+      },
+      "maker_source": {
+        "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+        "page": 1,
+        "relevance": "The unchanged selected-match criterion is maker 0.75 A times one 1.5 margin. The finding is native-allocation transcription, not a challenge to that maker datum."
+      },
+      "severity_basis": "Bounded stale calculation summary: all current cases remain above the unchanged 1.125 A floor, and the FMEA labels calculations and pending physical firing qualification. No required-function failure is proved.",
+      "fix": "Use current 1.544/1.479/1.283 A rounded values and bind them to e0e3ad84/parts_budget.json, or label the existing values with their exact historical board. Preserve 7.4 V equivalent fire-time reserve and all lot/harness/pulse qualification."
+    },
+    {
+      "id": "R14-DOC-02",
+      "severity": "Minor",
+      "status": "active",
+      "origin": "new",
+      "title": "Current U9 ordering row disagrees with its named supplier snapshot",
+      "evidence": [
+        {
+          "file": "docs/ORDERING.md",
+          "line": 278,
+          "observation": "U9 row says 101 available and two extra pieces add USD0.53784 per board."
+        },
+        {
+          "file": "m3_design/assembly_review/fab/stock_check.json",
+          "line": 655,
+          "measurement": {
+            "lcsc": "C3662793",
+            "jlc_stock": 94,
+            "minimum_purchase": 7,
+            "fitted_5_boards": 5
+          }
+        },
+        {
+          "file": "m3_design/assembly_review/fab/cost_check.json",
+          "line": 913,
+          "measurement": {
+            "unit_USD": 1.3455,
+            "placed_USD_per_board": 1.3455,
+            "minimum_purchase_USD_per_board": 1.8837,
+            "increment_USD_per_board": 0.5382
+          }
+        },
+        {
+          "source": "Saved original public JLC query, independently inspected exact U9 item",
+          "supplier_checked_utc": "2026-10-30T08:38:52.797802+00:00",
+          "raw_sha256": "b925f9fb991c9aac14cd3dfd92f4bd0cee263043398dfd8411e0afdf0c330357",
+          "measurement": {
+            "componentCode": "C3662793",
+            "componentModelEn": "TPS259470LRPWR",
+            "stockCount": 94,
+            "minPurchaseNum": 7,
+            "price_1_to_9_USD": 1.3455
+          }
+        },
+        {
+          "check": "Independent quantity arithmetic",
+          "measurement": "(7 - 5) * USD1.3455 / 5 = USD0.53820/board; written increment is USD0.00036/board low; stock overstatement is 7 pieces."
+        }
+      ],
+      "coordinate": {
+        "ref": "U9",
+        "xy_mm": [
+          18.5,
+          81.6
+        ],
+        "side": "B"
+      },
+      "maker_source": {
+        "url": "https://jlcpcb.com/partdetail/TexasInstruments-TPS259470LRPWR/C3662793",
+        "page": "exact-code supplier snapshot item, no PDF page",
+        "endpoint": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+      },
+      "severity_basis": "Small worksheet transcription mismatch. U9 still has more stock than the seven-piece minimum; R430/U4 remain the documented blockers. Total placed/minimum costs already reconcile correctly.",
+      "fix": "Replace the row with the bound snapshot values 94 available and USD0.53820 additional per board, or omit the redundant precise figures and reference the bound supplier record. Retain seven for five and the fresh pre-order checks."
+    },
+    {
+      "id": "R14-DOC-03",
+      "severity": "Minor",
+      "status": "active",
+      "origin": "carried",
+      "prior_ids": [
+        "R11-m03",
+        "R12-m02",
+        "R12-DOC-02",
+        "R13-DOC-03"
+      ],
+      "title": "Parent vehicle candidate mirror still describes removed R10 hardware",
+      "evidence": [
+        {
+          "file": "../../docs/VEHICLE.md",
+          "line": 39,
+          "observation": "R10 paragraph still calls out GH4 ports, ARM terminals, GH2 J400 at (10.5,85.5), and the old 0.03 mm mated-GH margin."
+        },
+        {
+          "file": "docs/R10_VEHICLE_HANDOFF.md",
+          "line": 11,
+          "observation": "The concrete current replacement gives all seven DB125s, no J124, current switch/support/card/hardware instructions and explicit physical limits."
+        },
+        {
+          "check": "Fresh native J400 and terminal map",
+          "measurement": {
+            "J400_xy_mm": [
+              7.4,
+              65.849999
+            ],
+            "rotation_deg": -90,
+            "J400_nets": [
+              "BAT_SW_SOURCE",
+              "BAT_SW_RETURN"
+            ],
+            "current_board_has_J124": false,
+            "terminal_positions_mm": {
+              "J121": [
+                7.4,
+                55.85
+              ],
+              "J400": [
+                7.4,
+                65.849999
+              ],
+              "J1": [
+                7.4,
+                75.85
+              ],
+              "J410": [
+                38.6,
+                15.5
+              ],
+              "J420": [
+                38.6,
+                31.5
+              ],
+              "J9": [
+                38.6,
+                47.5
+              ],
+              "J122": [
+                38.6,
+                71.5
+              ]
+            }
+          }
+        }
+      ],
+      "coordinate": {
+        "ref": "J400",
+        "xy_mm": [
+          7.4,
+          65.849999
+        ],
+        "rotation_deg": -90
+      },
+      "maker_source": {
+        "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+        "page": 1,
+        "relevance": "DB125 family drawing is the current terminal basis; no GH mating result transfers. The defect is the stale parent mirror, not a new fit failure."
+      },
+      "severity_basis": "Known integration/documentation mismatch with an explicit correct in-worktree handoff. Actual physical fit remains openly unverified; no separately owned file was edited.",
+      "fix": "Apply the full current handoff in the separately authorized parent-repository workflow, preserving accepted R9 history; alternatively mark that candidate paragraph obsolete and link the handoff."
+    }
+  ],
+  "closed_rechecks": [
+    {
+      "id": "R13-DOC-01",
+      "status": "closed",
+      "proof": "Current R10_VALIDATION section2 says signal-reference branches; ORDERING section8.4 and independent4*7.68*0.001/0.050=0.6144A agree. Motor pairs remain direct to pack."
+    },
+    {
+      "id": "R13-DOC-02",
+      "status": "closed",
+      "proof": "AGENTS current firmware row explicitly distinguishes record-only current R10 note from R1-bound executable assembly_binding/v0.8.1/diagnostics. Complete in-memory note equality and all four hashes verified."
+    },
+    {
+      "id": "R13-DOC-04",
+      "status": "closed",
+      "proof": "REQUIREMENTS current accepted servo-raceway risk now says estimated approximately Mach1.9 with physical qualification open."
+    }
+  ],
+  "native_read_only_evidence": {
+    "board_sha256_before": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+    "native_inventory": {
+      "bytes": 2259597,
+      "revision": "M3-ASSY-R10",
+      "footprints": 209,
+      "segments": 966,
+      "vias": 296,
+      "track_length_mm": 1802.12522017822,
+      "gnd_vias": 168,
+      "thickness_mm": 1.6
+    },
+    "netlist_contract_issues": [],
+    "binding_regenerated_in_memory_equal": true,
+    "binding_sources": {
+      "board_sha256": {
+        "expected": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+        "actual": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+        "matches": true
+      },
+      "netlist_sha256": {
+        "expected": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+        "actual": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+        "matches": true
+      },
+      "pin_table_sha256": {
+        "expected": "d4c460c8bdb47ebca22d88363ad71a83d14738576d2f98f9bab59c5c3ea6aecd",
+        "actual": "d4c460c8bdb47ebca22d88363ad71a83d14738576d2f98f9bab59c5c3ea6aecd",
+        "matches": true
+      },
+      "circuit_sha256": {
+        "expected": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f",
+        "actual": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f",
+        "matches": true
+      }
+    },
+    "u1_pin_count": 100,
+    "u1_pin_mismatches": [],
+    "board_netlist_mismatches": [],
+    "board_netlist_compared_pads": 663,
+    "poses": {
+      "U1": {
+        "xy_mm": [
+          23.0,
+          43.0
+        ],
+        "rotation_deg": 0.0,
+        "side": "F"
+      },
+      "U4": {
+        "xy_mm": [
+          17.0,
+          45.9
+        ],
+        "rotation_deg": 180.0,
+        "side": "B",
+        "selected_pad_facts": {
+          "1": {
+            "net": "SPI1_MISO",
+            "xy_mm": [
+              18.21,
+              45.15
+            ]
+          },
+          "4": {
+            "net": "IMU_INT1",
+            "xy_mm": [
+              18.21,
+              46.65
+            ]
+          },
+          "12": {
+            "net": "IMU_CS",
+            "xy_mm": [
+              16.5,
+              44.94
+            ]
+          },
+          "13": {
+            "net": "SPI1_SCK",
+            "xy_mm": [
+              17.0,
+              44.94
+            ]
+          },
+          "14": {
+            "net": "SPI1_MOSI",
+            "xy_mm": [
+              17.5,
+              44.94
+            ]
+          }
+        }
+      },
+      "U5": {
+        "xy_mm": [
+          10.6,
+          49.1
+        ],
+        "rotation_deg": 0.0,
+        "side": "B",
+        "selected_pad_facts": {
+          "1": {
+            "net": "3V3A",
+            "xy_mm": [
+              8.72,
+              48.0
+            ]
+          },
+          "2": {
+            "net": "3V3A",
+            "xy_mm": [
+              9.97,
+              48.0
+            ]
+          },
+          "3": {
+            "net": "GND",
+            "xy_mm": [
+              11.23,
+              48.0
+            ]
+          },
+          "4": {
+            "net": "GND",
+            "xy_mm": [
+              12.48,
+              48.0
+            ]
+          },
+          "5": {
+            "net": "GND",
+            "xy_mm": [
+              12.48,
+              50.925
+            ]
+          },
+          "6": {
+            "net": "BARO_SDO",
+            "xy_mm": [
+              11.23,
+              50.925
+            ]
+          },
+          "7": {
+            "net": "I2C1_SDA",
+            "xy_mm": [
+              9.97,
+              50.925
+            ]
+          },
+          "8": {
+            "net": "I2C1_SCL",
+            "xy_mm": [
+              8.72,
+              50.925
+            ]
+          }
+        }
+      },
+      "J1": {
+        "xy_mm": [
+          7.4,
+          75.85
+        ],
+        "rotation_deg": -90.0,
+        "side": "F",
+        "selected_pad_facts": {
+          "1": {
+            "net": "BAT_IN",
+            "xy_mm": [
+              7.4,
+              74.1
+            ]
+          },
+          "2": {
+            "net": "GND",
+            "xy_mm": [
+              7.4,
+              77.6
+            ]
+          }
+        }
+      },
+      "J121": {
+        "xy_mm": [
+          7.4,
+          55.85
+        ],
+        "rotation_deg": -90.0,
+        "side": "F",
+        "selected_pad_facts": {
+          "1": {
+            "net": "PYRO1_OUT",
+            "xy_mm": [
+              7.4,
+              54.1
+            ]
+          },
+          "2": {
+            "net": "PYRO1_IGN",
+            "xy_mm": [
+              7.4,
+              57.6
+            ]
+          }
+        }
+      },
+      "J400": {
+        "xy_mm": [
+          7.4,
+          65.849999
+        ],
+        "rotation_deg": -90.0,
+        "side": "F",
+        "selected_pad_facts": {
+          "1": {
+            "net": "BAT_SW_SOURCE",
+            "xy_mm": [
+              7.4,
+              64.099999
+            ]
+          },
+          "2": {
+            "net": "BAT_SW_RETURN",
+            "xy_mm": [
+              7.4,
+              67.599999
+            ]
+          }
+        }
+      },
+      "J410": {
+        "xy_mm": [
+          38.6,
+          15.5
+        ],
+        "rotation_deg": 90.0,
+        "side": "F",
+        "selected_pad_facts": {
+          "1": {
+            "net": "PORT_4V8",
+            "xy_mm": [
+              38.6,
+              20.75
+            ]
+          },
+          "2": {
+            "net": "GND",
+            "xy_mm": [
+              38.6,
+              17.25
+            ]
+          },
+          "3": {
+            "net": "GPS_TX_WIRE",
+            "xy_mm": [
+              38.6,
+              13.75
+            ]
+          },
+          "4": {
+            "net": "GPS_RX_WIRE",
+            "xy_mm": [
+              38.6,
+              10.25
+            ]
+          }
+        }
+      },
+      "J420": {
+        "xy_mm": [
+          38.6,
+          31.5
+        ],
+        "rotation_deg": 90.0,
+        "side": "F",
+        "selected_pad_facts": {
+          "1": {
+            "net": "PORT_4V8",
+            "xy_mm": [
+              38.6,
+              36.75
+            ]
+          },
+          "2": {
+            "net": "GND",
+            "xy_mm": [
+              38.6,
+              33.25
+            ]
+          },
+          "3": {
+            "net": "RADIO_TX_WIRE",
+            "xy_mm": [
+              38.6,
+              29.75
+            ]
+          },
+          "4": {
+            "net": "RADIO_RX_WIRE",
+            "xy_mm": [
+              38.6,
+              26.25
+            ]
+          }
+        }
+      },
+      "J9": {
+        "xy_mm": [
+          38.6,
+          47.5
+        ],
+        "rotation_deg": 90.0,
+        "side": "F",
+        "selected_pad_facts": {
+          "1": {
+            "net": "CAM_5V",
+            "xy_mm": [
+              38.6,
+              52.75
+            ]
+          },
+          "2": {
+            "net": "GND",
+            "xy_mm": [
+              38.6,
+              49.25
+            ]
+          },
+          "3": {
+            "net": "CAM_RX_WIRE",
+            "xy_mm": [
+              38.6,
+              45.75
+            ]
+          },
+          "4": {
+            "net": "CAM_TX_WIRE",
+            "xy_mm": [
+              38.6,
+              42.25
+            ]
+          }
+        }
+      },
+      "J122": {
+        "xy_mm": [
+          38.6,
+          71.5
+        ],
+        "rotation_deg": 90.0,
+        "side": "F",
+        "selected_pad_facts": {
+          "1": {
+            "net": "SERVO1_OUT",
+            "xy_mm": [
+              38.6,
+              78.5
+            ]
+          },
+          "2": {
+            "net": "SERVO2_OUT",
+            "xy_mm": [
+              38.6,
+              75.0
+            ]
+          },
+          "3": {
+            "net": "SERVO3_OUT",
+            "xy_mm": [
+              38.6,
+              71.5
+            ]
+          },
+          "4": {
+            "net": "SERVO4_OUT",
+            "xy_mm": [
+              38.6,
+              68.0
+            ]
+          },
+          "5": {
+            "net": "GND",
+            "xy_mm": [
+              38.6,
+              64.5
+            ]
+          }
+        }
+      },
+      "J430": {
+        "xy_mm": [
+          24.0,
+          24.3
+        ],
+        "rotation_deg": 0.0,
+        "side": "B",
+        "selected_pad_facts": {
+          "1": {
+            "net": "SD_DAT2",
+            "xy_mm": [
+              27.205,
+              24.3
+            ]
+          },
+          "2": {
+            "net": "SD_CS",
+            "xy_mm": [
+              26.105,
+              24.3
+            ]
+          },
+          "3": {
+            "net": "SD_MOSI",
+            "xy_mm": [
+              25.005,
+              24.3
+            ]
+          },
+          "4": {
+            "net": "3V3",
+            "xy_mm": [
+              23.905,
+              24.3
+            ]
+          },
+          "5": {
+            "net": "SD_SCK",
+            "xy_mm": [
+              22.805,
+              24.3
+            ]
+          },
+          "6": {
+            "net": "GND",
+            "xy_mm": [
+              21.705,
+              24.3
+            ]
+          },
+          "7": {
+            "net": "SD_MISO",
+            "xy_mm": [
+              20.605,
+              24.3
+            ]
+          },
+          "8": {
+            "net": "SD_DAT1",
+            "xy_mm": [
+              19.505,
+              24.3
+            ]
+          },
+          "9": {
+            "net": "GND",
+            "xy_mm": [
+              30.875,
+              30.0
+            ]
+          },
+          "10": {
+            "net": "GND",
+            "xy_mm": [
+              17.125,
+              30.0
+            ]
+          },
+          "11": {
+            "net": "GND",
+            "xy_mm": [
+              17.125,
+              21.7
+            ]
+          },
+          "12": {
+            "net": "GND",
+            "xy_mm": [
+              30.875,
+              21.7
+            ]
+          }
+        }
+      },
+      "C84": {
+        "xy_mm": [
+          27.5,
+          78.5
+        ],
+        "rotation_deg": 90.0,
+        "side": "F",
+        "selected_pad_facts": {
+          "1": {
+            "net": "VLOGIC",
+            "xy_mm": [
+              27.5,
+              81.75
+            ]
+          },
+          "2": {
+            "net": "GND",
+            "xy_mm": [
+              27.5,
+              75.25
+            ]
+          }
+        }
+      }
+    },
+    "silkscreen_references": {
+      "visible": [
+        "C120",
+        "C128",
+        "C17",
+        "C18",
+        "C28",
+        "C29",
+        "C400",
+        "C401",
+        "C402",
+        "C403",
+        "C404",
+        "C405",
+        "C406",
+        "C407",
+        "C408",
+        "C420",
+        "C430",
+        "C431",
+        "C460",
+        "C461",
+        "C5",
+        "C60",
+        "C8",
+        "C80",
+        "C83",
+        "C84",
+        "C86",
+        "C87",
+        "C89",
+        "C9",
+        "C90",
+        "C91",
+        "C93",
+        "C94",
+        "C95",
+        "C96",
+        "C97",
+        "C98",
+        "D120",
+        "D123",
+        "D4",
+        "D411",
+        "D8",
+        "D9",
+        "J1",
+        "J121",
+        "J122",
+        "J2",
+        "J3",
+        "J400",
+        "J410",
+        "J420",
+        "J430",
+        "J9",
+        "L1",
+        "L400",
+        "LED2",
+        "LS120",
+        "Q120",
+        "Q121",
+        "Q124",
+        "R102",
+        "R11",
+        "R110",
+        "R12",
+        "R123",
+        "R131",
+        "R134",
+        "R150",
+        "R153",
+        "R154",
+        "R156",
+        "R157",
+        "R165",
+        "R166",
+        "R167",
+        "R33",
+        "R400",
+        "R401",
+        "R402",
+        "R404",
+        "R430",
+        "R431",
+        "R440",
+        "R460",
+        "R461",
+        "R462",
+        "R463",
+        "R464",
+        "R60",
+        "R61",
+        "R7",
+        "R8",
+        "R80",
+        "R81",
+        "R82",
+        "R83",
+        "R84",
+        "R85",
+        "R86",
+        "R88",
+        "R89",
+        "R90",
+        "R91",
+        "R92",
+        "TP121",
+        "TP74",
+        "TP80",
+        "TP81",
+        "TP83",
+        "TP88",
+        "U1",
+        "U10",
+        "U13",
+        "U3",
+        "U400",
+        "U401",
+        "Y1"
+      ],
+      "hidden": [
+        "C10",
+        "C100",
+        "C11",
+        "C126",
+        "C127",
+        "C129",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23",
+        "C24",
+        "C25",
+        "C26",
+        "C30",
+        "C31",
+        "C32",
+        "C410",
+        "C411",
+        "C421",
+        "C6",
+        "C7",
+        "C81",
+        "C82",
+        "C85",
+        "C88",
+        "C92",
+        "C99",
+        "D121",
+        "D400",
+        "D401",
+        "D410",
+        "D420",
+        "D421",
+        "LED1",
+        "Q122",
+        "Q123",
+        "R10",
+        "R100",
+        "R101",
+        "R103",
+        "R104",
+        "R105",
+        "R120",
+        "R121",
+        "R122",
+        "R126",
+        "R127",
+        "R128",
+        "R129",
+        "R13",
+        "R130",
+        "R132",
+        "R133",
+        "R151",
+        "R152",
+        "R155",
+        "R162",
+        "R163",
+        "R164",
+        "R173",
+        "R175",
+        "R178",
+        "R180",
+        "R32",
+        "R403",
+        "R405",
+        "R432",
+        "R441",
+        "R450",
+        "R451",
+        "R5",
+        "R62",
+        "R63",
+        "R64",
+        "R87",
+        "R9",
+        "TP120",
+        "TP122",
+        "TP82",
+        "U11",
+        "U12",
+        "U2",
+        "U4",
+        "U402",
+        "U5",
+        "U9"
+      ]
+    },
+    "documented_hidden_set_equal": true,
+    "r9_source_manifest_verified": 18,
+    "power_budget_recomputed_equal": true,
+    "power_budget_different_keys": [],
+    "hotplug_fresh_extraction_equal": true,
+    "hotplug_extraction_comparison_scope": "JSON normalized; native extractor uses tuples for coordinates and serialized source uses lists",
+    "hotplug_validated_record_issues": [],
+    "hotplug_record_counts": {
+      "required": 2304,
+      "refined": 4,
+      "local": 60,
+      "local_refined": 4
+    },
+    "hotplug_sources": {
+      "inputs_digest": "a6823d75c2588c917706dfeda324d4f06b1f2adf49c20a6c66c2983a7abbb2a2",
+      "model_sha256": "a7079e1a3ce189031ab28f8538a8c02b4bd8adcdf4cfc45877a0405935656883",
+      "electrical_sha256": "5c069037842d5af804e1642e3ebd63754ce7dd552e4322053960dbddd49b61fc"
+    },
+    "fab_manifest_output_count": 5,
+    "fab_manifest_input_count": 193,
+    "build_receipt_file_mismatches": [],
+    "build_receipt_generated_files_checked": 42,
+    "decision_index": {
+      "source_unique": 113,
+      "ledger_count": 113,
+      "source_sha256": "f93da61053b2019504aa05a621389644842030b4548163bcdf9f0a758a3333f7",
+      "missing": [],
+      "extra": [],
+      "title_or_line_mismatches": [],
+      "owner_mandates": 22
+    },
+    "ledger_catalog_mismatches": [],
+    "ledger_catalog_missing": [],
+    "ledger_source_pointers": {
+      "checked": 315,
+      "failures": []
+    },
+    "pcb_model_paths_non_project_relative": [],
+    "board_sha256_after": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6"
+  },
+  "independent_arithmetic": {
+    "method": "Independent high root of (1+Rp/Rfire)V^2-(Voc-Rp*Iservo)V+Rp*P=0; I=V/Rfire. Conditional source/harness/hot-FET assumptions retained.",
+    "coupled_fire": [
+      {
+        "stalls": 0,
+        "pack_V": 6.899390756727756,
+        "fire_A": 1.5443660716989063,
+        "abs_difference_A": 0.0
+      },
+      {
+        "stalls": 1,
+        "pack_V": 6.609326364555884,
+        "fire_A": 1.4794377872063396,
+        "abs_difference_A": 0.0
+      },
+      {
+        "stalls": 2,
+        "pack_V": 6.318164198837923,
+        "fire_A": 1.4142637760577872,
+        "abs_difference_A": 0.0
+      },
+      {
+        "stalls": 3,
+        "pack_V": 6.025729657046817,
+        "fire_A": 1.348804955060497,
+        "abs_difference_A": 0.0
+      },
+      {
+        "stalls": 4,
+        "pack_V": 5.7318070272281405,
+        "fire_A": 1.2830130390490941,
+        "abs_difference_A": 0.0
+      }
+    ],
+    "watchdog_ms": [
+      28.57142857142857,
+      32.6530612244898
+    ],
+    "fault_guard_ms": 34.8530612244898,
+    "normal_plus_sync_postfire_ms": 25.2,
+    "O6_board_reference_bound_A": 0.6144,
+    "single_resistor_fault_pin_V": 3.3421708288152567,
+    "u9_current_limit_A": [
+      3.9461883408071747,
+      4.856999498243853
+    ],
+    "hold_up_to_3p8V_C300p8uF_ms": {
+      "a_ports_off_logic_shed": [
+        7.045719364924254,
+        7.105818382212524
+      ],
+      "b_ports_off_no_shed": [
+        2.589369148684744,
+        4.060610077326016
+      ],
+      "c_camera_radio_gps_on": [
+        0.4901966417033703,
+        0.5711294274640745
+      ],
+      "d_gps_radio_on_camera_off_logic_shed": [
+        1.5326147859198498,
+        1.655039182900379
+      ]
+    }
+  },
+  "procurement_consistency": {
+    "supplier_checked_utc": "2026-10-30T08:38:52.797802+00:00",
+    "supplier_snapshot_sha256": "8e15e2fb2d261f176ee0221da9de20f3fb7fba31c2c6e11be2c1b88f4a73378e",
+    "BOM_codes": 82,
+    "fitted_qty": 199,
+    "CPL_rows": 199,
+    "CPL_layers": {
+      "Bottom": 132,
+      "Top": 67
+    },
+    "BOM_CPL_sets_equal": true,
+    "placed_parts_USD": 57.55380000000001,
+    "minimum_purchase_parts_USD": 59.894200000000005,
+    "feeder_share_USD": 25.092000000000002,
+    "placed_total_USD": 82.64580000000001,
+    "minimum_total_USD": 84.98620000000001,
+    "target_USD": 84.41,
+    "cost_ok": true,
+    "stock_ok": false,
+    "short": [
+      "C185349 R430 stock 17 < 3610",
+      "C26633007 U4 stock 0 < 5"
+    ],
+    "supplier_inputs_bound": true,
+    "qualification": "Dated supplier evidence only, not a new quote or query, stock reservation, process acceptance, owner acceptance, order or physical qualification."
+  },
+  "primary_sources": [
+    {
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "revision": "DS12110Rev11 January2026",
+      "pages": [
+        "66-80 Table9",
+        "90-92 Table10",
+        "208-210 Tables109/112",
+        "233 Table136",
+        "242 Table147"
+      ],
+      "scope": "Pin/AF/ADC identities, operating pull-off condition and LSI range; web text opened freshly."
+    },
+    {
+      "url": "https://www.st.com/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf",
+      "revision": "AN2606Rev70 February2026",
+      "pages": [
+        "320-323 Table135"
+      ],
+      "scope": "Fresh current source agrees with retained historicalRev64 loader roles; PA6output/PA4-5inputs/PC11output and camera/SD preparation obligations remain."
+    },
+    {
+      "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+      "revision": "DS14623Rev1 March2025",
+      "sha256": "1b3b1d497968a6dd54a8ce7875e84ff6579217733061617beb1f62a1ba7d9c1c",
+      "pages": [
+        "9 Figure5",
+        "11 Table2",
+        "15 Table4",
+        "17 Table6"
+      ],
+      "scope": "Reused cached primary PDF per process constraints. Text checked; complete p9andp10 rendered/read. Web direct fetch exceeded service size limit.40ms Ton is typical only."
+    }
+  ],
+  "decision_requirements_coverage": {
+    "decision_source_sha256": "f93da61053b2019504aa05a621389644842030b4548163bcdf9f0a758a3333f7",
+    "unique_D_IDs": 113,
+    "owner_mandates": 22,
+    "decision_index": [
+      {
+        "id": "D-R1-01",
+        "title": "Review the plan before changing CAD",
+        "source_line": 6,
+        "family": "R1"
+      },
+      {
+        "id": "D-R1-02",
+        "title": "O1 needs a voltage decision",
+        "source_line": 17,
+        "family": "R1"
+      },
+      {
+        "id": "D-R1-03",
+        "title": "Separate camera and radio voltage budgets",
+        "source_line": 34,
+        "family": "R1"
+      },
+      {
+        "id": "D-R1-04",
+        "title": "Review concurrency limit",
+        "source_line": 53,
+        "family": "R1"
+      },
+      {
+        "id": "D-R1-05",
+        "title": "Baseline environment",
+        "source_line": 61,
+        "family": "R1"
+      },
+      {
+        "id": "D-R1-06",
+        "title": "Close round 1 at the owner-decision boundary",
+        "source_line": 70,
+        "family": "R1"
+      },
+      {
+        "id": "D-R1-07",
+        "title": "Implement O5 and O6",
+        "source_line": 92,
+        "family": "R1"
+      },
+      {
+        "id": "D-R2-01",
+        "title": "Placement legalised by moves, not rebuilt",
+        "source_line": 116,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-02",
+        "title": "Pyro channel and USB / SWD routing redrawn from the pads",
+        "source_line": 127,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-03",
+        "title": "Port supply re-planned for routability",
+        "source_line": 136,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-04",
+        "title": "Hand-routing kept for critical nets (owner, 2026-10-26)",
+        "source_line": 153,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-05",
+        "title": "U9 cell moved; In2 split into four rails",
+        "source_line": 159,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-06",
+        "title": "Rail fan-out finished; radio UART on UART5 (PB12 / PB13)",
+        "source_line": 195,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-07",
+        "title": "Signal routing: pin re-map, re-placements, hand-routed escapes and a frozen router table",
+        "source_line": 225,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-08",
+        "title": "Owner: hand-route every signal (2026-10-27)",
+        "source_line": 276,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-09",
+        "title": "Placement relieved south and east of U1; three status pins re-mapped",
+        "source_line": 284,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-10",
+        "title": "K-reference re-derived on R10's planes; via inner pads removed",
+        "source_line": 338,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-11",
+        "title": "Copper fixes for K-copper, K-retained and schematic parity",
+        "source_line": 359,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-12",
+        "title": "Placement relief for the supports, J122's pins and the tie channel",
+        "source_line": 377,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-13",
+        "title": "T-1 re-derived for R10",
+        "source_line": 392,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-14",
+        "title": "P-11 and F9-1: owner questions, R10 figures held meanwhile",
+        "source_line": 402,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-15",
+        "title": "Build and fab scripts",
+        "source_line": 413,
+        "family": "R2"
+      },
+      {
+        "id": "D-R2-16",
+        "title": "Silkscreen",
+        "source_line": 421,
+        "family": "R2"
+      },
+      {
+        "id": "D-R3-01",
+        "title": "R410 (GPS ILIM) stays 100 k\u03a9; the port budget re-derived on it",
+        "source_line": 435,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-02",
+        "title": "In2 is GND under the CH1 pyro column (R3-SAF-01)",
+        "source_line": 445,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-03",
+        "title": "U9's power path widened (R3-PWR-01)",
+        "source_line": 456,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-04",
+        "title": "In2 regions re-cut for the port control nets (R3-RTE-01, R3-PWR-04)",
+        "source_line": 465,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-05",
+        "title": "Buck input loop (R3-PWR-05)",
+        "source_line": 475,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-06",
+        "title": "Crystal In2 GND restored (R3-RTE-02)",
+        "source_line": 480,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-07",
+        "title": "Camera supply vias, ACT_GATE partner, J122 relief",
+        "source_line": 486,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-08",
+        "title": "GND stitching (R3-RTE-05)",
+        "source_line": 493,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-09",
+        "title": "Port-signal layer changes and hops (R3-RTE-01, -03, -04, -06, -07)",
+        "source_line": 499,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-10",
+        "title": "Gates",
+        "source_line": 508,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-11",
+        "title": "Silkscreen and footprint graphics",
+        "source_line": 523,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-12",
+        "title": "R162 1 k\u03a9 (PC14's 3 mA)",
+        "source_line": 534,
+        "family": "R3"
+      },
+      {
+        "id": "D-R3-13",
+        "title": "Records",
+        "source_line": 541,
+        "family": "R3"
+      },
+      {
+        "id": "D-R4-01",
+        "title": "In2 under the CH1 sense runs re-cut to one region (R4-RTE-01)",
+        "source_line": 561,
+        "family": "R4"
+      },
+      {
+        "id": "D-R4-02",
+        "title": "Pad entries straightened (R4-RTE-05)",
+        "source_line": 576,
+        "family": "R4"
+      },
+      {
+        "id": "D-R4-03",
+        "title": "Gates (R4-RTE-01/-02, R4-GATE-01 \u2026 -06, R4-SAF-01/-02, R4-MEC-05)",
+        "source_line": 586,
+        "family": "R4"
+      },
+      {
+        "id": "D-R4-04",
+        "title": "Records (R4-REQ-01 \u2026 -06, R4-MEC-01 \u2026 -04, R4-PWR-01/-02, R4-BOM-01 \u2026 -03, R4-MCU-01 \u2026 -04, R4-DOC-*)",
+        "source_line": 609,
+        "family": "R4"
+      },
+      {
+        "id": "D-R5-01",
+        "title": "In2 edges re-cut for pads, margins and chains (R5-RTE-01 / -02 / -06)",
+        "source_line": 628,
+        "family": "R5"
+      },
+      {
+        "id": "D-R5-02",
+        "title": "Pad entries, stubs and silkscreen edge margin (R5-RTE-03 / -04 / -07, R5-MFG-02)",
+        "source_line": 641,
+        "family": "R5"
+      },
+      {
+        "id": "D-R5-03",
+        "title": "Gates (R5-RTE-01 / -02 / -05 / -06, R5-SAF-01 / -02, R5-GATE-01 \u2026 -03)",
+        "source_line": 655,
+        "family": "R5"
+      },
+      {
+        "id": "D-R5-04",
+        "title": "Records (R5-MFG-01, R5-REQ-01 \u2026 -04, R5-PWR-01 \u2026 -04, R5-MCU-01 \u2026 -05, R5-MEC-01 \u2026 -05, R5-DOC-01 / -02)",
+        "source_line": 672,
+        "family": "R5"
+      },
+      {
+        "id": "D-R6-01",
+        "title": "CH1 In2 GND arms widened round the sense vias (R6-RTE-01)",
+        "source_line": 690,
+        "family": "R6"
+      },
+      {
+        "id": "D-R6-02",
+        "title": "Gates and the fit tool (R6-RTE-02, R6-SAF-01 / -02, R6-GATE-01 \u2026 -08, R6-MEC-04 / -05)",
+        "source_line": 700,
+        "family": "R6"
+      },
+      {
+        "id": "D-R6-03",
+        "title": "Records (R6-MEC-01 \u2026 -06, R6-REQ-01 \u2026 -08, R6-PWR-01 \u2026 -03, R6-MCU-01 \u2026 -05, R6-SAF-03 / -04, R6-MFG-02, R6-RTE-03)",
+        "source_line": 715,
+        "family": "R6"
+      },
+      {
+        "id": "D-R7-01",
+        "title": "Gates (R7-GATE-01 \u2026 -04, R7-SAF-01 / -02)",
+        "source_line": 735,
+        "family": "R7"
+      },
+      {
+        "id": "D-R7-02",
+        "title": "Records (R7-REQ-01 / -02, R7-PWR-02, R7-SAF-03, R7-MCU-01 \u2026 -04, R7-MEC-01 \u2026 -07, R7-MFG-01 \u2026 -04, R7-BOM-03, R7-DOC-01 / -02)",
+        "source_line": 745,
+        "family": "R7"
+      },
+      {
+        "id": "D-R8-01",
+        "title": "Copper clean-ups (R7-RTE-01 / -02 / -03, R8-RTE-03)",
+        "source_line": 764,
+        "family": "R8"
+      },
+      {
+        "id": "D-R8-02",
+        "title": "Gates (R8-GATE-01 \u2026 -05)",
+        "source_line": 773,
+        "family": "R8"
+      },
+      {
+        "id": "D-R8-03",
+        "title": "Records (R8-MEC-01, R8-MFG-01 / -02 / -03, R8-REQ-01 \u2026 -04, R8-SAF-01, R8-MCU-01 / -02, R8-MEC-02 \u2026 -05, R8-RTE-01 / -02, R8-DOC-01 / -02)",
+        "source_line": 783,
+        "family": "R8"
+      },
+      {
+        "id": "D-OA-01",
+        "title": "Harness, fit and assembly records (OQ-1 / -4 / -6 / -7)",
+        "source_line": 840,
+        "family": "OA"
+      },
+      {
+        "id": "D-OA-02",
+        "title": "Firmware shedding and thermal estimate (OQ-5 / R9-PWR-01)",
+        "source_line": 853,
+        "family": "OA"
+      },
+      {
+        "id": "D-OA-03",
+        "title": "Historical routing aids",
+        "source_line": 865,
+        "family": "OA"
+      },
+      {
+        "id": "D-OA-04",
+        "title": "OQ-2 failure confirmation",
+        "source_line": 871,
+        "family": "OA"
+      },
+      {
+        "id": "D-OA-05",
+        "title": "Retained U9 output voltage",
+        "source_line": 879,
+        "family": "OA"
+      },
+      {
+        "id": "D-OA-06",
+        "title": "Input feed and damper requalification",
+        "source_line": 896,
+        "family": "OA"
+      },
+      {
+        "id": "D-OA-07",
+        "title": "C88 intercepts the feed; local copper remains in the model",
+        "source_line": 916,
+        "family": "OA"
+      },
+      {
+        "id": "D-OA-08",
+        "title": "Record corrections before the fresh full round 9",
+        "source_line": 940,
+        "family": "OA"
+      },
+      {
+        "id": "D-OA-09",
+        "title": "Complete the interrupted pass before audit implementation",
+        "source_line": 956,
+        "family": "OA"
+      },
+      {
+        "id": "D-SS-01",
+        "title": "Implement the two independent MCU controls in the recorded decision",
+        "source_line": 1046,
+        "family": "SS"
+      },
+      {
+        "id": "D-SS-02",
+        "title": "One named post-switch net and a shorter fire path",
+        "source_line": 1065,
+        "family": "SS"
+      },
+      {
+        "id": "D-SS-03",
+        "title": "Keep required assembly references visible",
+        "source_line": 1075,
+        "family": "SS"
+      },
+      {
+        "id": "D-AUD-01",
+        "title": "Size the surviving IO-LDO capacitor for its electrical load",
+        "source_line": 1092,
+        "family": "AUD"
+      },
+      {
+        "id": "D-AUD-02",
+        "title": "Keep fast returns constrained; simplify slow returns by explicit name",
+        "source_line": 1101,
+        "family": "AUD"
+      },
+      {
+        "id": "D-AUD-03",
+        "title": "Use a qualified smaller post-switch pair",
+        "source_line": 1111,
+        "family": "AUD"
+      },
+      {
+        "id": "D-AUD-04",
+        "title": "Delete the advisory pull-pin as a complete function",
+        "source_line": 1126,
+        "family": "AUD"
+      },
+      {
+        "id": "D-AUD-05",
+        "title": "Remove redundant probe branches",
+        "source_line": 1134,
+        "family": "AUD"
+      },
+      {
+        "id": "D-AUD-06",
+        "title": "Size fire-only copper for bounded pulse energy",
+        "source_line": 1141,
+        "family": "AUD"
+      },
+      {
+        "id": "D-AUD-07",
+        "title": "Use ordinary digital pull-ups and fault-rated servo resistors",
+        "source_line": 1150,
+        "family": "AUD"
+      },
+      {
+        "id": "D-AUD-08",
+        "title": "Share 3V3 for GPS / radio UART IO; retain local bypasses",
+        "source_line": 1158,
+        "family": "AUD"
+      },
+      {
+        "id": "D-AUD-09",
+        "title": "Keep USB-only programming and log download",
+        "source_line": 1168,
+        "family": "AUD"
+      },
+      {
+        "id": "D-AUD-10",
+        "title": "Report harmless drawing artifacts without blocking the electrical gate",
+        "source_line": 1174,
+        "family": "AUD"
+      },
+      {
+        "id": "D-GAP-01",
+        "title": "Superpose all pack loads at the fire instant",
+        "source_line": 1183,
+        "family": "GAP"
+      },
+      {
+        "id": "D-GAP-02",
+        "title": "Make U9's output-protection loop local",
+        "source_line": 1194,
+        "family": "GAP"
+      },
+      {
+        "id": "D-GAP-03",
+        "title": "Add two explicitly manufactured U401 thermal vias",
+        "source_line": 1202,
+        "family": "GAP"
+      },
+      {
+        "id": "D-GAP-04",
+        "title": "Fit C84 after all reflow",
+        "source_line": 1213,
+        "family": "GAP"
+      },
+      {
+        "id": "D-GAP-05",
+        "title": "One physical-current duration contract",
+        "source_line": 1223,
+        "family": "GAP"
+      },
+      {
+        "id": "D-AUD-03a",
+        "title": "Correct the retained gate-slew capacitor's voltage rating",
+        "source_line": 1250,
+        "family": "AUD"
+      },
+      {
+        "id": "D-AUD-03b",
+        "title": "Verify new assembly orientation against the supplier",
+        "source_line": 1263,
+        "family": "AUD"
+      },
+      {
+        "id": "D-SS-04",
+        "title": "Recalculate passive cold readings before enabling the merged bus",
+        "source_line": 1271,
+        "family": "SS"
+      },
+      {
+        "id": "D-GAP-01a",
+        "title": "Final track-based conservative fire envelope",
+        "source_line": 1283,
+        "family": "GAP"
+      },
+      {
+        "id": "D-GAP-02a",
+        "title": "Reject the nearer diode position on measured clearance",
+        "source_line": 1298,
+        "family": "GAP"
+      },
+      {
+        "id": "D-AUD-03c",
+        "title": "Match orientation by distinct fingers, not an arbitrary EP anchor",
+        "source_line": 1306,
+        "family": "AUD"
+      },
+      {
+        "id": "D-GAP-02b",
+        "title": "Freeze the actual output and return paths",
+        "source_line": 1322,
+        "family": "GAP"
+      },
+      {
+        "id": "D-AUD-01a",
+        "title": "Keep one assembly land per supplier code",
+        "source_line": 1335,
+        "family": "AUD"
+      },
+      {
+        "id": "D-R9-01",
+        "title": "Complete existing capacitor labels and use the current fault-delay bound",
+        "source_line": 1363,
+        "family": "R9"
+      },
+      {
+        "id": "D-R9-02",
+        "title": "Put the cold screen before enabling the bus",
+        "source_line": 1379,
+        "family": "R9"
+      },
+      {
+        "id": "D-R9-03",
+        "title": "Reject unmeasured gate exceptions and select R10 procurement explicitly",
+        "source_line": 1398,
+        "family": "R9"
+      },
+      {
+        "id": "D-R9-04",
+        "title": "Remove demonstrated detours and align three supply entries",
+        "source_line": 1414,
+        "family": "R9"
+      },
+      {
+        "id": "D-R9-05",
+        "title": "Include both transverse sled tolerances",
+        "source_line": 1431,
+        "family": "R9"
+      },
+      {
+        "id": "D-R9-06",
+        "title": "Cover the Minor fix pass in the fresh round 10",
+        "source_line": 1446,
+        "family": "R9"
+      },
+      {
+        "id": "D-R10-01",
+        "title": "Close two representation gaps without changing CAD",
+        "source_line": 1470,
+        "family": "R10"
+      },
+      {
+        "id": "D-R10-02",
+        "title": "Correct PA6 limits and preserve the barometer coating exclusion",
+        "source_line": 1480,
+        "family": "R10"
+      },
+      {
+        "id": "D-R10-03",
+        "title": "Freeze the reviewed board and finish the complete acceptance inventory",
+        "source_line": 1495,
+        "family": "R10"
+      },
+      {
+        "id": "D-CIR-01",
+        "title": "Select the real e-match before choosing the all-fire margin",
+        "source_line": 1610,
+        "family": "CIR"
+      },
+      {
+        "id": "D-CIR-02",
+        "title": "Switched camera pad energy",
+        "source_line": 1624,
+        "family": "CIR"
+      },
+      {
+        "id": "D-CIR-03",
+        "title": "Circuit-pass placement and routing (minimum for a connected DRC-clean board)",
+        "source_line": 1635,
+        "family": "CIR"
+      },
+      {
+        "id": "D-CIR-04",
+        "title": "Gate fixes",
+        "source_line": 1661,
+        "family": "CIR"
+      },
+      {
+        "id": "D-AVA-01",
+        "title": "AVA terminal rows and local cells (2026-10-29; CAD layout complete)",
+        "source_line": 1683,
+        "family": "AVA"
+      },
+      {
+        "id": "D-AVA-02",
+        "title": "Gates and reproducibility support",
+        "source_line": 1737,
+        "family": "AVA"
+      },
+      {
+        "id": "D-R11-01",
+        "title": "Maximum DB125 envelopes and row clearance (2026-10-29)",
+        "source_line": 1747,
+        "family": "R11"
+      },
+      {
+        "id": "D-R11-02",
+        "title": "Close the demonstrated gate gaps",
+        "source_line": 1786,
+        "family": "R11"
+      },
+      {
+        "id": "D-R11-03",
+        "title": "Bind electrical calculations to native firing copper",
+        "source_line": 1803,
+        "family": "R11"
+      },
+      {
+        "id": "D-R11-04",
+        "title": "Current assembly records and retained qualification limits",
+        "source_line": 1827,
+        "family": "R11"
+      },
+      {
+        "id": "D-R11-05",
+        "title": "Use the vendor's headless DRC fix",
+        "source_line": 1871,
+        "family": "R11"
+      },
+      {
+        "id": "D-R12-01",
+        "title": "Correct the evidence without an unsupported circuit change",
+        "source_line": 1973,
+        "family": "R12"
+      },
+      {
+        "id": "D-R12-02",
+        "title": "Local return, direct control route and readable Fab references",
+        "source_line": 1999,
+        "family": "R12"
+      },
+      {
+        "id": "D-R12-03",
+        "title": "Gate the manufactured geometry and fitted quantities",
+        "source_line": 2043,
+        "family": "R12"
+      },
+      {
+        "id": "D-R13-01",
+        "title": "Allocate actual tails and socket nails; clear Fab references",
+        "source_line": 2065,
+        "family": "R13"
+      },
+      {
+        "id": "D-R13-02",
+        "title": "Reject contradictory identities, duplicate BOM rows and wrong paste",
+        "source_line": 2109,
+        "family": "R13"
+      },
+      {
+        "id": "D-R13-03",
+        "title": "Correct operating evidence and adopt only qualified local redraws",
+        "source_line": 2127,
+        "family": "R13"
+      }
+    ],
+    "owner_mandate_review": [
+      {
+        "id": "Initial plan items1-4",
+        "assessment": "Ordinary 0.15mm/S8, split battery/switch and 470uF retained; removed ARM/keyed connector clauses superseded."
+      },
+      {
+        "id": "O1",
+        "assessment": "External GPS/direct 4V8+1k UART replaces original GH/switched3V3; L5 loss and measurement limits retained."
+      },
+      {
+        "id": "O2",
+        "assessment": "External LR900-F/no RF copper; direct UART5/4V8, no uplink authority and installed RF/channel qualification retained."
+      },
+      {
+        "id": "O3",
+        "assessment": "No servo motor feed/return designed through board; protected signals and lost power cutoff explicitly retained."
+      },
+      {
+        "id": "O4",
+        "assessment": "Regulated camera buck and U402/U12/U13 retained, conditional endpoint budget replays."
+      },
+      {
+        "id": "O5",
+        "assessment": "Buck/LDO architecture retained; later always-on choice supersedes per-port switch/translator requirement."
+      },
+      {
+        "id": "O6",
+        "assessment": "Pack-star motor pairs and reference-branch >=50mohm/<=1mohm transfer give independent0.6144A; physical measurement pending."
+      },
+      {
+        "id": "D-R2-04 then D-R2-08",
+        "assessment": "Every signal hand-routing mandate remains; no old router-permission claim transfers."
+      },
+      {
+        "id": "OQ-1",
+        "assessment": "Accepted4.95mm floor retained; present5.003012mm current record and physical access qualification explicit."
+      },
+      {
+        "id": "OQ-2",
+        "assessment": "Current native actual-feed extraction equals bound inputs;2304+refinements/local records validate, no fresh full numerical sweep claimed here."
+      },
+      {
+        "id": "OQ-3",
+        "assessment": "Cost target/minimum surcharge/owner pending state reconcile; bounded U9 row error R14-DOC-02 remains."
+      },
+      {
+        "id": "OQ-4",
+        "assessment": "Aft rail/tab remains ordering obligation; no factory/panel acceptance is claimed."
+      },
+      {
+        "id": "OQ-5",
+        "assessment": "C84/firmware shedding/no hardware cutoff retained; GPS/radio/card cannot be shed by firmware."
+      },
+      {
+        "id": "OQ-6",
+        "assessment": "No battery/ARM fuse claim restored; unfused entry hazard/harness treatment explicit."
+      },
+      {
+        "id": "OQ-7",
+        "assessment": "Forward-of-joint+47 including tolerance remains; current handoff correct, stale parent mirror R14-DOC-03 remains."
+      },
+      {
+        "id": "Single switch and keep-one-switch reaffirmation",
+        "assessment": "Single J400, PC1+PE4 controls, on-rail/on-last/off-first and ground/in-flight policy retained."
+      },
+      {
+        "id": "AUD-1..10 and GAP-1..5",
+        "assessment": "Narrow adopted AUD/GAP reductions reflected in native schematic/budget/binding; later always-on/audit2 amendments applied."
+      },
+      {
+        "id": "AVA comparison10 layout items",
+        "assessment": "All ten visible AVA layout items considered in AVA record; hidden electrical choices are not inferred."
+      },
+      {
+        "id": "Always-on ports plus microSD",
+        "assessment": "Always-on GPS/radio and hinged SPI3 SD alongside primary QSPI reflected in every100-pin map/port state obligation."
+      },
+      {
+        "id": "All wired screw terminals / Steer1",
+        "assessment": "All seven wired DB125s/current role tables match fresh native; circuit-only stop superseded by full current task."
+      },
+      {
+        "id": "Requirements audit2 items1-13,15",
+        "assessment": "Audit2 exact hardware removals, floors, optional plate, count-only leftovers, single map and always-on scope retained."
+      },
+      {
+        "id": "Requirements audit2 item14/16",
+        "assessment": "Check0/STATUS/hash provenance and conditional dark LEDs retained; receipts match current42files, no flight firmware qualification claimed."
+      }
+    ],
+    "AGENTS_section2_sha256": "c680401aaa65deab1cc25ea12e511bc04e51b5a2b513fa776c2e06ef91b4797e",
+    "AGENTS_section2_assessment": "Compared with supplied constraints: same on-rail/on-last/off-first/post-load-switch/launch/ground-hard-refusal/in-flight-never-veto/default-off/Inference-label duties; no relaxation proposed.",
+    "family_assessments": {
+      "R1": "Historical plan/process and supply decision provenance; later O5/always-on/terminal/single-switch amendments govern hardware.",
+      "R2": "Historical placement/routing/gate choices; hand-route mandate remains; current native source/map/receipt checked, later pose/width/reference amendments prevail.",
+      "R3": "Historical fixes and contracts; removed port/pull-pin/bus hardware is superseded; PC14 proof corrected by R12; source hashes/current native facts checked.",
+      "R4": "Historical fixes/records retained only where current hardware remains; AUD2/10/GAP and later poses supersede obsolete numerical/assembly claims.",
+      "R5": "Historical gate/record foundations; exact current pin, value, safety, coating and source records checked under later amendments.",
+      "R6": "Historical gate/record foundations; current source preserves safety and fit obligations, with removed bank/port hardware explicitly retired.",
+      "R7": "Historical gate/records; current watchdog/lock/storage/pin facts amended and carried; no historical clean pair transfers.",
+      "R8": "Historical copper/gate/records; current native/manifest hashes and current order worksheet supersede obsolete coordinates and removed hardware.",
+      "OA": "Owner-answer provenance; current C88-first feed/R92/R166 extraction checked; new model binding valid, waveform/endurance/harness measurements remain open.",
+      "SS": "Current single-switch policy/two controls/merged RAW_ACT/default-off chain retained; cold bands use surviving two banks, no physical ARM link inferred.",
+      "AUD": "Current narrow AUD2/10 exceptions and retained part/rating/USB provisions; always-on/terminal/audit2 decisions supersede removed port hardware and redundant ADC tails.",
+      "GAP": "Current coupled source/time/manual C84/VIPPO/local output obligations; native budget and model binding checked; selected-match threshold is latest 1.125 A, not old 1.5 A.",
+      "R9": "Current cold-before-enable, exact labels, procurement profile and mounting-tolerance obligations retained; old copper values superseded by native current worksheet.",
+      "R10": "Representation/pin-limit/coating fixes retained; freeze/clean-pair claims describe b337 only and do not transfer to e0.",
+      "CIR": "Current electrical architecture/pin/table/source match checked; subsequent AVA/R11/R12/R13 records supersede original circuit-pass positions and evidence.",
+      "AVA": "Visible local-layout direction retained; historical handoff hashes/metrics explicitly bounded; no hidden AVA electrical inference or exact-cell freeze.",
+      "R11": "Current maximum terminal union, fitted/geometry/label/procurement gates and native fire-path binding retained; corrected poses in current source/ordering checked.",
+      "R12": "Current PC14 qualification correction, C98 stitch, geometric gates and counted routing/Fab deviations retained; source/receipt hashes checked.",
+      "R13": "Latest native/model/fit/paste/identity/routing/record amendments are reflected in this target and matching 42-file receipt; new review pair remains pending."
+    }
+  },
+  "checks_executed": [
+    {
+      "check": "Target identity",
+      "result": "Fresh SHA before/after native probe and immediately before report; exact assigned e0 hash,2259597bytes,209footprints/966segments/296vias/168GNDvias/1802.12522017822mm/1.6mm."
+    },
+    {
+      "check": "Schematic/board/pin contract",
+      "result": "18 R9 baseline source manifest hashes; current netlist source contract zero issues; all100 U1 pins and663 schematic-backed numbered pads match board/table/note; no native CLI or export."
+    },
+    {
+      "check": "Firmware evidence replay",
+      "result": "binding_note() generated entirely in memory equals stored note; board/netlist/table/circuit hashes all exact; fresh U4 B180 pose and14pad map checked."
+    },
+    {
+      "check": "Executable firmware boundary",
+      "result": "Read assembly_binding.py/build.py/protocol_assembly.json/verification_assembly.json. Protocol and proof retain R1 e432d343; import-only legacy binding probe returns ModuleNotFoundError check_assembly before any build/programming. No R10 executable approval exists."
+    },
+    {
+      "check": "Power/safety arithmetic",
+      "result": "Fresh native power_budget equals complete stored JSON. Independent quadratic solves all0..4stall cases exactly; separate IWDG/O6/single-resistor/U9-limit/energy arithmetic recorded."
+    },
+    {
+      "check": "Hot-plug provenance",
+      "result": "Fresh native extraction JSON-normalizes identically; current model/input/electrical hashes validate complete2304required+4refined+60local+4local-refined records with zero issues. Entire2304numerical sweep was not rerun by this lens."
+    },
+    {
+      "check": "Manufacturing binding and population",
+      "result": "verify_manifest read-only checks193inputs/fiveoutputs; all42generated-file receipt hashes match. BOM82codes/199fitted and CPL199rows67top132bottom; sets equal; all PCB model paths project-relative."
+    },
+    {
+      "check": "Current records/decisions/deviations",
+      "result": "Read current requirements/owner amendments/AVA/M3/validation/ordering/STATUS/AGENTS/handoff and historical supersession records. All113source D IDs exactly match ledger titles/lines;22mandates considered;58catalog paths exist with no applicable hash mismatch,315source JSON pointers resolve."
+    },
+    {
+      "check": "Silkscreen inventory consistency",
+      "result": "Fresh118visible/91hidden native references; current M3 hidden-reference set exactly matches."
+    },
+    {
+      "check": "Procurement snapshot arithmetic",
+      "result": "Independently summed82costlines and matched BOM/CPL input hashes;82.6458USDplaced/feeder and84.9862USDwithminima,46Extended/36Basic; stock fails R430/U4. Inspected original saved U9 query item; R14-DOC-02."
+    },
+    {
+      "check": "Primary maker crosschecks",
+      "result": "Fresh official web DS12110Rev11/AN2606Rev70 text for AF/ADC/loader/FT operating pulls/LSI. PDF skill: reused cached original ST DS14623Rev1; Poppler text and complete p9/p10 rendered inspection, especially p9Figure5 axis/pin1. Ton40ms is typical only, not a worst-case readiness guarantee."
+    },
+    {
+      "check": "Probe corrections",
+      "result": "First extraction Python equality differed only by tuple/list representation; normalized JSON passes. Supplemental source-pointer visitor initially hit a dict-valued source; fixed the probe guard, then315pointers pass. Native read-only API emitted wx/image-handler diagnostics but final probe exited0. No canonical file was changed."
+    }
+  ],
+  "source_hashes": {
+    "AGENTS.md": {
+      "sha256": "0ce3e6e22e968e206316355f27a1ecb343eb625de66b192904434cce7c46f22d",
+      "bytes": 24365
+    },
+    ".supervisor/r14_target_packet.md": {
+      "sha256": "e0522baeb0aef7092f0ebd334abc6d2c42bfc149e4cbc071ac2bca0774338ded",
+      "bytes": 3124
+    },
+    ".supervisor/r10_review_packet.md": {
+      "sha256": "70c48551c6736fa21890cb216a51fb24debec079bc9c6f527e748b7ff2321535",
+      "bytes": 4017
+    },
+    "docs/REQUIREMENTS.md": {
+      "sha256": "327e4361052e413a4a7dcb6be5b686f0c92373f275f213b374e81a6c96548c31",
+      "bytes": 56349
+    },
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": {
+      "sha256": "f93da61053b2019504aa05a621389644842030b4548163bcdf9f0a758a3333f7",
+      "bytes": 179396
+    },
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": {
+      "sha256": "3fb173c963be8e2ccaf666e1baa11221d488ac5994f2fe89d4aceed3e928a5b9",
+      "bytes": 14183
+    },
+    "docs/M3_R10.md": {
+      "sha256": "2f3918d0ee7f9f2cd3c44db304983ad723c21e4085edc865f73b3f90067dc634",
+      "bytes": 54018
+    },
+    "docs/R10_VALIDATION.md": {
+      "sha256": "5dfc344da26865e228c4e217c34eeb77778a2588ff8c9a6835ba4a48b4cf6bb0",
+      "bytes": 178556
+    },
+    "docs/R9_VALIDATION.md": {
+      "sha256": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+      "bytes": 81266
+    },
+    "../../docs/VEHICLE.md": {
+      "sha256": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+      "bytes": 8424
+    },
+    "docs/R10_VEHICLE_HANDOFF.md": {
+      "sha256": "f0f3ed2d5b22c78f65482b9e7a3d0807564fb4b7f5d7dadba91fa43246ffdba3",
+      "bytes": 4648
+    },
+    "docs/ORDERING.md": {
+      "sha256": "57023ad390970e7d5801933ab36d6ff10b62be1149bcdb3e9ec1d2b5dadbc4b8",
+      "bytes": 107164
+    },
+    "STATUS.md": {
+      "sha256": "f72f62f12d82dead2c83f52259ac5cadc59ba2411a6c8b0d7e7a32f8c598b744",
+      "bytes": 102768
+    },
+    "README.md": {
+      "sha256": "3ba6dc40fcc75096f7c3625a3573ddefa96d5015043a2597aa473a330298b602",
+      "bytes": 7268
+    },
+    "docs/FMEA_REDUNDANCY.md": {
+      "sha256": "dc38bc1397190d2c177cce8113c22b8704e8f1b68f67e8782a439add16290442",
+      "bytes": 120046
+    },
+    "m3_design/assembly_review/sources/r10_design/r10_plan.md": {
+      "sha256": "ebe8d71ce1b5a1cb3768df3d2fcccc0969870590a027b6e86494c9b9a6c139c3",
+      "bytes": 20467
+    },
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md": {
+      "sha256": "51fd7fe359a152b9e22c6efed840560d3355773c291069239cfbe6dd2d449fa0",
+      "bytes": 70185
+    },
+    "m3_design/assembly_review/sources/r10_design/hotplug.md": {
+      "sha256": "6c962d08b6081f1bfb8bb87e9ffd2c51ce676b040e0f4420dc9e3d1456b6825b",
+      "bytes": 22479
+    },
+    "m3_design/assembly_review/sources/r10_design/circuit.json": {
+      "sha256": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f",
+      "bytes": 41937
+    },
+    "m3_design/assembly_review/sources/r10_design/pin_table.tsv": {
+      "sha256": "d4c460c8bdb47ebca22d88363ad71a83d14738576d2f98f9bab59c5c3ea6aecd",
+      "bytes": 21423
+    },
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": {
+      "sha256": "2e2ab94f2302977b99baa0c670143114eacf23b6a7082d412960ea1419fff661",
+      "bytes": 29258
+    },
+    "m3_design/assembly_review/sources/r10_design/parts_budget.json": {
+      "sha256": "e46603e498b2b534df7bf607f80a2254929e30e3acd70e76d78190660b7725ba",
+      "bytes": 16005
+    },
+    "m3_design/assembly_review/sources/r10_design/hotplug_inputs.json": {
+      "sha256": "8e7bf8ff377f629a93b50cec92104b4a07ae3fc8ac885eb8439646a1bcac4ee3",
+      "bytes": 74075
+    },
+    "m3_design/assembly_review/sources/r10_design/hotplug_results.json": {
+      "sha256": "f703851c7e88fcf50264d6c28dc128ca75ec73fb0bc7d1478d065c7a81b5ad2d",
+      "bytes": 1477557
+    },
+    "m3_design/assembly_review/sources/r10_design/hotplug_capacitors.json": {
+      "sha256": "ae011f9e731ae28e77d38e0d191332cdf95bca8fbcf920f33c22c011b82f53a3",
+      "bytes": 74480
+    },
+    "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json": {
+      "sha256": "f6224aa62494376d717dfa8d326d88df0a8bdf7b8546624785d4c6caf37ceccd",
+      "bytes": 633253
+    },
+    "m3_firmware/assembly_binding.py": {
+      "sha256": "2a7a1391950a7c629861c5c0c93e6335cfe55c38d8a2f4ccf1d481ebdecf89e9",
+      "bytes": 1188
+    },
+    "m3_firmware/build.py": {
+      "sha256": "d97fca19c340d4bc9f471abd5bedea58df00fc45d2e8ad86a6315a07abcdd86b",
+      "bytes": 14850
+    },
+    "m3_firmware/protocol_assembly.json": {
+      "sha256": "4e3280a0eeaf14af4d0c4dd3ad603af52d2fc6e222eecc2dc5956ea95ab1698a",
+      "bytes": 13320
+    },
+    "m3_design/assembly_review/verification_assembly.json": {
+      "sha256": "413210df906cdd064c8f6f04717729b64f4575e215c1b6cfc7ea3b56b4f4adc5",
+      "bytes": 14383
+    },
+    "m3_design/r10_parts.py": {
+      "sha256": "a832add1ca3d61cfd652162d4ec67d78e09f97ac9f90509a8a88007f0151d08b",
+      "bytes": 39450
+    },
+    "m3_design/r10_sch.py": {
+      "sha256": "f4b98a0c390862f3924da610d31844ba42a44e02aed369c4e292da6990b30950",
+      "bytes": 17070
+    },
+    "m3_design/r10_sch_check.py": {
+      "sha256": "1f0e114eccf8df43025729ac1871d5078be246fc9da88bea6bed896f97944deb",
+      "bytes": 35898
+    },
+    "tools/r10_hotplug.py": {
+      "sha256": "dc94dbad3a4e8b194bd436b6669cf3534bdc2a189c447c90888ed7bfa64fb580",
+      "bytes": 39165
+    },
+    "tools/r10_hotplug_solver.c": {
+      "sha256": "196a3f54209132fab62fc6c70b437f654a977ace869cfa4050cab2eba9a07bb0",
+      "bytes": 7868
+    }
+  },
+  "coverage_limits": [
+    "Full fresh assigned documentation/firmware-provenance lens, not a delta-only pass. Current peer R14 reports were not read and no findings shared with peers. Prior R13 docs report was read only after fresh native/source checks to classify closure/carry-over.",
+    "Target commit is supplied by the frozen review packet and parent; this lens executed no git action. PCB identity was independently hashed before/after.",
+    "Root reserves all native CLI. No CLI DRC/ERC/netlist regeneration, full check.sh, canonical build, GUI launch/retry, firmware compile, flashing, order, quote acceptance or other-worktree write was executed. Existing full-build/DRC receipts were hashed, not relabelled as freshly rerun here.",
+    "Native netlist contract and hash agreement do not replace a fresh CLI export/parity check. Root full gate remains necessary. All historical measurements stay tied to their original target; no earlier clean pair transfers.",
+    "No new supplier network query was made: audit checks the explicitly dated08:38:52.797802Z snapshot and exact bound production files. Pre-order <=24h refresh, R430/U4 resolution, U9minima, full process/panel/VIPPO/manualC84 quote and owner acceptance remain open.",
+    "Mechanical/route/thermal numerical records are checked for source/binding/wording consistency, not independently certified as physical fit or thermal performance. No sensor sign, SD busy/power-loss,20mslotfiring, watchdogtail, electrical/thermal/transient/endurance, RF/ESD, harness/switch/retention, tool/cardaccess, bore/stack, firstarticle or flight qualification exists.",
+    "Correctly disclosed pending firmware/physical qualification is not counted as a demonstrated hardware failure. The40ms gyro turn-on figure is typical; actual startup validity remains part of pending firmware/sensor qualification.",
+    "No hidden AVA copper/circuit inference was made; the independently inspected primary IMU drawing supports the stated signed-map basis, and bench sign checks remain mandatory."
+  ]
+}

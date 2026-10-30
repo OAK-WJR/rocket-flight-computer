@@ -160,6 +160,63 @@ class PasteCheck(unittest.TestCase):
                 layers['F'] = layers['F'].replace(old, new)
                 self.assertTrue(gate.check(self.board, layers)[0])
 
+    def with_command(self, command):
+        layers = self.gerber(('R1', 1, 1))
+        layers['F'] = layers['F'].replace('%MOMM*%', '%MOMM*%\n' + command, 1)
+        return layers
+
+    def test_nondefault_legacy_image_controls_fail_closed(self):
+        self.fp('R1', [(1, 1)])
+        # This project rejects these controls; Ucamco also permits ignoring the
+        # deprecated image family. Survival alone never proved a CAM displacement.
+        for command in ('%OFA1.0B0*%', '%MIA1B0*%', '%IR90*%', '%SFA2B1*%',
+                        '%ASAYBX*%', '%IPNEG*%', '%SFA1.0000000000000000000001B1*%'):
+            with self.subTest(command=command):
+                issues = '\n'.join(gate.check(self.board, self.with_command(command))[0])
+                self.assertIn('unsupported paste command ' + command, issues)
+
+    def test_neutral_legacy_controls_and_metadata_pass(self):
+        self.fp('R1', [(1, 1)])
+        for command in ('%ASAXBY*%', '%IPPOS*%', '%IR0*%', '%MIA0B0*%', '%MIB0*%',
+                        '%OFA0B0*%', '%OFA-0.0B+0.00000*%', '%OFB0*%',
+                        '%SFA1B1*%', '%SFA1.000*%', '%SFB1*%',
+                        'G71*', 'G90*', 'M01*', 'G04 harmless metadata*',
+                        '%INneutral_image*%', '%LNneutral_level*%', '%TF.User,neutral*%'):
+            with self.subTest(command=command):
+                self.assertEqual(gate.check(self.board, self.with_command(command))[0], [])
+
+    def test_unsupported_unit_notation_stop_and_unknown_commands_fail_closed(self):
+        self.fp('R1', [(1, 1)])
+        for command in ('G70*', 'G91*', 'M00*', '%MOIN*%', '%FSLIX46Y46*%',
+                        '%ZZunknown*%', 'G99*', '%LMN*%', '%LMX*%', '%LR90*%',
+                        '%LS2*%', '%SRX2Y1I1J0*%', '%ABD11*%'):
+            with self.subTest(command=command):
+                self.assertIn('unsupported paste command ' + command,
+                              '\n'.join(gate.check(self.board, self.with_command(command))[0]))
+
+    def test_terminal_end_and_single_native_headers_required(self):
+        self.fp('R1', [(1, 1)])
+        for command in ('M02*', '%MOMM*%', '%FSLAX46Y46*%'):
+            with self.subTest(command=command):
+                self.assertTrue(gate.check(self.board, self.with_command(command))[0])
+        layers = self.gerber(('R1', 1, 1))
+        layers['F'] = layers['F'].removesuffix('M02*\n')
+        self.assertIn('missing paste M02', '\n'.join(gate.check(self.board, layers)[0]))
+        layers['F'] += 'M02*X1000000Y-1000000D03*'
+        self.assertIn('after M02', '\n'.join(gate.check(self.board, layers)[0]))
+        layers = self.gerber(('R1', 1, 1))
+        layers['F'] = layers['F'].replace('%MOMM*%\n', '').replace('M02*', '%MOMM*%\nM02*')
+        self.assertIn('before native mm/absolute headers', '\n'.join(gate.check(self.board, layers)[0]))
+
+    def test_compact_commands_and_named_metadata_deletion_pass(self):
+        self.fp('R1', [(1, 1)])
+        layers = self.gerber(('R1', 1, 1))
+        layers['F'] = layers['F'].replace('%TO.C,R1*%', '%TO.C,R1*%%TO.P,R1,1*%%TD.P*%')
+        layers = {side: text.replace('\n', '') for side, text in layers.items()}
+        self.assertEqual(gate.check(self.board, layers)[0], [])
+        layers['F'] = layers['F'].replace('%TD.P*%', '%TD.C*%')
+        self.assertIn('names None', '\n'.join(gate.check(self.board, layers)[0]))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -24,10 +24,10 @@ def draw(d):
     t('SD_MOSI','B',.2,[(12.4,39.6),(12.4,36.9),(16.5,32.8),(20.1,32.8),(20.1,27.7),(21.6,26.2),(25.005+DX,26.2),p('J430.3')])
     t('SD_CS','B',.2,[(13.0,40.2),(13.0,37.6),(17.1,33.5),(20.8,33.5),(20.8,27.7),(21.5,27.0),(26.105+DX,27.0),p('J430.2')])
     # Pull-up components sit beyond the retaining-body courtyard on B.Cu.
-    t('SD_MISO','B',.2,[p('J430.7'),(20.605+DX,21.9),(15.605+DX,16.9),p('R462.1')])
+    t('SD_MISO','B',.2,[p('J430.7'),(20.605+DX,22.48+DX),p('R462.1')])
     t('SD_DAT1','B',.2,[p('J430.8'),(19.505+DX,22.0),(16.405+DX,18.9),p('R463.1')])
     t('SD_MOSI','B',.2,[p('J430.3'),(25.005+DX,20.0+DX),(23.375,18.37),p('R461.1')])
-    t('SD_CS','B',.2,[p('J430.2'),(26.105+DX,19.0),(26.975,18.13+DX),p('R460.1')])
+    t('SD_CS','B',.2,[p('J430.2'),(26.105+DX,17.67-DX),p('R460.1')])
     # SD_DAT2: a B.Cu stub north from the pad to one via, then a straight F.Cu link to R464, which takes its 3V3 from the
     # socket pin 4's via and carries C461.1's 3V3.  The GND partner via sits within 1.5 mm of the signal via, west of
     # the GPS lanes' band.

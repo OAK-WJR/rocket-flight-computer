@@ -15,12 +15,17 @@ to a pad of that component on that side, by position (within 1 um). Rules:
   4. no paste region (G36/G37) or draw (D01) at all: the board's paste is pads only (a region would need its own rule);
   5. each aperture matches its native paste geometry (1 um), including reviewed margins and separate EP windows.
      Explicit dry/manual-process exceptions retain their native paste layers; no coverage percentage is imposed.
+The command subset is KiCad mm/absolute 4.6, dark polarity, pad flashes and native aperture macros/attributes.
+Legacy image controls are accepted only at their defaults; AS uses AXBY and IP uses POS. Non-default controls,
+unit/notation changes, early stops and unknown commands fail closed. This is a project policy: Ucamco permits
+readers to ignore several deprecated image controls. Comments and image-neutral metadata remain valid.
 Coordinates: Gerber Y = -KiCad Y (KiCad's original coordinates, %TF.SameCoordinates%).
 """
 import argparse
 import ast
 import math
 from collections import defaultdict
+from decimal import Decimal
 import json
 from pathlib import Path
 import re
@@ -57,6 +62,66 @@ def gerbers(source):
 # authoritative. No stencil thickness or solder volume is inferred.
 POLY_ERROR = 100                             # nm: each polygon approximation
 GEOMETRY_TOL = TOL                           # 1 um; exceeds both approximation errors and 1 nm file rounding
+
+
+def neutral_legacy(command):
+    """Ucamco2026.05 section8.1: accept defaults only, rather than interpret legacy image transforms."""
+    if command in ('ASAXBY', 'IPPOS', 'IR0'):
+        return True
+    if command.startswith('MI'):
+        match = re.fullmatch(r'MI(?:A([01]))?(?:B([01]))?', command)
+        return bool(match) and all(v in (None, '0') for v in match.groups())
+    kind = command[:2]
+    if kind in ('OF', 'SF'):
+        number = r'[+-]?(?:\d+(?:\.\d*)?|\.\d+)'
+        match = re.fullmatch(rf'{kind}(?:A({number}))?(?:B({number}))?', command)
+        default = 0 if kind == 'OF' else 1
+        return bool(match) and all(v is None or Decimal(v) == default for v in match.groups())
+    return False
+
+
+def commands(text):
+    """Tokenize and validate the native subset; never silently discard an image/state command."""
+    position, ended, headers = 0, False, []
+    while position < len(text):
+        if text[position].isspace():
+            position += 1
+            continue
+        extended = text[position] == '%'
+        end = text.find('%' if extended else '*', position + 1)
+        if end < 0:
+            raise ValueError('unterminated paste command')
+        token = text[position:end + 1]
+        position = end + 1
+        if ended:
+            raise ValueError('paste data after M02 end command')
+        if extended:
+            if not token.endswith('*%'):
+                raise ValueError('malformed extended paste command')
+            command = token[1:-2]
+            if command in ('FSLAX46Y46', 'MOMM'):
+                headers.append(command)
+            elif not (command == 'LPD' or neutral_legacy(command)
+                      or re.fullmatch(r'(?:ADD\d+[^,*%]+(?:,[^*%]*)?|AM[^*%]+\*.*)', command, re.S)
+                      or re.fullmatch(r'(?:T[FAO][^*%]+|TD(?:\.[^*%]+)?|(?:IN|LN)[^*%]+)', command)):
+                raise ValueError(f'unsupported paste command {token[:80]}')
+            if command.startswith(('ADD', 'AM')) and set(headers) != {'FSLAX46Y46', 'MOMM'}:
+                raise ValueError('paste aperture before native mm/absolute headers')
+        else:
+            command = token[:-1]
+            # G71/G90 confirm the required mm/absolute state; M01 has no effect.
+            if not (command.startswith('G04') or command in ('G01', 'G75', 'G36', 'G37', 'G71', 'G90', 'M01', 'M02')
+                    or re.fullmatch(r'D(?:[1-9]\d+)', command)
+                    or re.fullmatch(r'(?:X-?\d+)?(?:Y-?\d+)?D0[123]', command)):
+                raise ValueError(f'unsupported paste command {token[:80]}')
+            if not command.startswith('G04') and set(headers) != {'FSLAX46Y46', 'MOMM'}:
+                raise ValueError('paste operation before native mm/absolute headers')
+            ended = command == 'M02'
+        yield token
+    if headers.count('FSLAX46Y46') != 1 or headers.count('MOMM') != 1:
+        raise ValueError('expected one KiCad mm/absolute format4.6 header')
+    if not ended:
+        raise ValueError('missing paste M02 end command')
 
 
 def polygon(points, rotation=0.):
@@ -147,8 +212,7 @@ def macro_shape(body, parameters):
 
 def apertures(text):
     """Read the emitted KiCad aperture subset; unsupported image operations fail closed."""
-    if re.search(r'%(?:LPC|LM|LR|LS|SR|AB)', text):
-        raise ValueError('unsupported paste polarity/transform/repeat/block operation')
+    text = '\n'.join(token for token in commands(text) if token.startswith(('%AM', '%ADD')))
     macros = dict(re.findall(r'%AM([^*%]+)\*(.*?)%', text, re.S))
     result = {}
     for ident, kind, raw in re.findall(r'%ADD(\d+)([^,*%]+)(?:,([^*%]*))?\*%', text):
@@ -233,17 +297,13 @@ def geometry_matches(actual, expected):
 
 def parse(text):
     """Flashes [(component, x_nm, y_nm_kicad, aperture)] and the other drawing operations of one Gerber layer."""
-    fmt = re.search(r'%FSLAX(\d)(\d)Y(\d)(\d)\*%', text)
-    if not fmt or fmt.group(2) != '6' or fmt.group(4) != '6' or '%MOMM*%' not in text:
-        raise ValueError('expected KiCad mm Gerbers in format 4.6')
     flashes, other = [], []
     comp, aperture, x, y = None, None, None, None
-    for raw in text.splitlines():
-        line = raw.strip()
+    for line in commands(text):
         if line.startswith('%TO.C,'):
-            comp = line[len('%TO.C,'):].rstrip('*%')
+            comp = line[len('%TO.C,'):-2]
             continue
-        if line.startswith('%TD'):
+        if line in ('%TD*%', '%TD.C*%'):
             comp = None
             continue
         if line.startswith(('G36', 'G37')):
@@ -258,6 +318,8 @@ def parse(text):
             x = int(m.group(1)) if m.group(1) is not None else x
             y = int(m.group(2)) if m.group(2) is not None else y
             if m.group(3) == '3':
+                if x is None or y is None or aperture is None:
+                    raise ValueError('paste flash without coordinates/aperture')
                 flashes.append((comp, x, -y, aperture))
             elif m.group(3) == '1':
                 other.append(('draw', comp, line))
@@ -274,12 +336,15 @@ def check(board, layers):
         if placeholder or DRY_REFS.match(f.GetReference()):
             dry += [(f.GetReference(), p) for p in f.Pads()]
     for side, (tag, paste) in SIDES.items():
-        flashes, other = parse(layers[side])
+        pasted = sum(p.IsOnLayer(paste) for f in board.GetFootprints() for p in f.Pads())
         try:
+            flashes, other = parse(layers[side])
             shapes = apertures(layers[side])
         except ValueError as error:
             issues.append(f'{tag}: {error} (rule 5)')
-            shapes = {}
+            evidence[tag] = dict(flashes=0, pads_with_paste=pasted, geometry_matched=0,
+                                 components=0, parse_error=str(error))
+            continue
         checked_geometry = 0
         for kind, comp, line in other:
             issues.append(f'{tag}: {kind} ({comp}: {line}): the paste layers are pads only (rule 4)')
