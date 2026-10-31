@@ -29,7 +29,7 @@ The deliverable is **one** board (the M1/M2 two-board scheme was abandoned; see 
 
 **R10 single-switch scope (owner decision, 2026-10-28).** One external screw switch (J400) powers and arms the board. Pad checks are done on the rail. Bench work uses USB power with the pack or the e-match disconnected. Connect the e-match only when no USB source and no self-powered module (GPS, radio, camera) is attached. The pull-pin is removed and PC13 is NC. The GPS and radio ports are powered whenever the battery path is on, and are off on USB-only power.
 
-**R10 status (2026-10-30).** PCB `a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. The round 18 fix pass changed the board from `632a9ad3…`, which rounds 16 and 17 (same reviewer family) and round 18 (the first review by a different model family) reviewed and found no Critical or Major issue on. The clean pair does not carry to the current board: rounds 19 and 20 will review it after the gate pass. Full state, checks, cost and open items: [docs/M3_R10.md, "Current state"](docs/M3_R10.md#current-state). What the owner must accept or do: [docs/R10_VALIDATION.md, "R10 deviations for owner acceptance"](docs/R10_VALIDATION.md#r10-deviations-for-owner-acceptance).
+**R10 status (2026-10-30).** PCB `a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. The round 18 fix pass changed the board from `632a9ad3…`, which rounds 16 and 17 (same reviewer family) and round 18 (the first review by a different model family) reviewed and found no Critical or Major issue on. The clean pair does not carry to the current board: rounds 19 and 20 will review it (the gate pass, which changed checks and the fab package only, is done). Full state, checks, cost and open items: [docs/M3_R10.md, "Current state"](docs/M3_R10.md#current-state). What the owner must accept or do: [docs/R10_VALIDATION.md, "R10 deviations for owner acceptance"](docs/R10_VALIDATION.md#r10-deviations-for-owner-acceptance).
 
 Current placement, §6 disposition and metrics: `m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md`. Current assembly and harness instructions are in `docs/ORDERING.md` section 8 and `docs/R10_VEHICLE_HANDOFF.md`.
 
@@ -65,7 +65,7 @@ Current placement, §6 disposition and metrics: `m3_design/assembly_review/sourc
 
 ```bash
 tools/check.sh                                   # board gate
-python3 tools/export_fab.py                      # Gerber zip + JLC BOM/CPL into m3_design/assembly_review/fab/
+m3_design/r10_fab.sh                             # export Gerber zip + JLC BOM/CPL into m3_design/assembly_review/fab/, content checks, manifest binding
 KICAD_CLI=/path/to/kicad-cli tools/check.sh      # specify kicad-cli on non-macOS systems
 kicad-cli pcb render --side top -o top.png m3_design/assembly_review/m3.kicad_pcb
 kicad-cli pcb export gerbers -o gerber/ m3_design/assembly_review/m3.kicad_pcb

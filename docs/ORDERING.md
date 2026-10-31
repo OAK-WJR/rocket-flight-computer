@@ -20,7 +20,7 @@ python3 tools/fab_manifest.py               # every export must match current CA
 (cd tools && python3 check_procurement.py)      # binds both reports to the current fab outputs; supplier data <= 24 h old
 ```
 
-Set `KICAD_PY` to the Python interpreter bundled with KiCad for the CPL check. A missing or stale fabrication manifest blocks use of the package; regenerate it after any CAD or placement-tool change. Hash verification establishes consistency, not flight readiness.
+Set `KICAD_PY` to the Python interpreter bundled with KiCad for the CPL check. A missing or stale fabrication manifest blocks use of the package; regenerate it after any CAD or placement-tool change. Hash verification establishes consistency, not flight readiness. **On branch `m3-assy-r10` these R9 commands no longer work as written:** `tools/export_fab.py` writes no manifest (it deletes any old one), and the historic `m3_design/r8_fab.sh` and `r9_fab.sh` stop at their manifest check (they fail closed). For R10 use `m3_design/r10_fab.sh` (section 8.1); for R9, use the flow on `m3-assy-r9`.
 
 `export_fab.py` must report all of these:
 - `parts without LCSC code: none`
@@ -223,7 +223,7 @@ inspection and depaneling procedures only where restated here. R10 has one exter
 wired terminals, external GPS/radio, a hinged microSD socket, one bus-sense bank and no servo-power copper.
 There are no GH connectors, servo headers, servo tie holes, ARM link, pull-pin, on-board RF modules or SMA jacks.
 
-**Status.** PCB `a3144b15…` (46 × 90 mm), not accepted, nothing ordered. It replaces `632a9ad3…` (round 18 fix pass), so the earlier clean reviews do not carry over and rounds 19 and 20 will review it after the gate pass. Review results, checks, cost and stock, retained
+**Status.** PCB `a3144b15…` (46 × 90 mm), not accepted, nothing ordered. It replaces `632a9ad3…` (round 18 fix pass), so the earlier clean reviews do not carry over and rounds 19 and 20 will review it (the gate pass is done). Review results, checks, cost and stock, retained
 deviations and what is not verified are in [M3_R10.md, "Current state"](M3_R10.md#current-state); they are not repeated here.
 The cost basis used by this section is in 8.1.
 
@@ -241,10 +241,12 @@ this is not a flight release.
 | Rules | Ordinary clearance 0.15 mm; the S-8 foreign inner-copper barrel exclusion remains ≥ 1.0 mm and now also covers the load-switch gate and enable barrels (fill-only keep-outs hold them 1.050 mm clear). Silkscreen ≥ 1.0 mm text /0.15 mm strokes. Final native DRC, schematic parity, ERC and the complete project gate must pass; old counts/filled areas are not new-layout evidence. |
 | Panel | JLC tab-routed rails, no V-cut. Use the tab plan below; obtain JLC acceptance of the actual rail and tab plan and confirm every span against T-1 and the mouse-bite clearances in §3. Do not enlarge or relocate tabs without checking the final board. |
 | Vias | Ordinary vias plugged only where JLC's 0.35 mm clearance/size rules permit; otherwise tent/mask-cover them without adding openings. Preserve the large BAT_IN via's supplied covering. **Only the two U401.11 vias use VIPPO (resin-filled and copper-capped): see "Via covering and the VIPPO fallback" below.** Preserve the supplied covering set; changed covering requires renewed DFM/paste checks. |
-| Uploads | Final `m3_gerber.zip`, `m3_bom_jlc.csv`, `m3_cpl_jlc.csv`; both assembly PDFs are inspection aids. `m3_bom_owner.csv` (C84, the hand-fitted part) is the owner's record and is not uploaded. `m3_fab_manifest.json` must bind all six outputs to the final CAD/export inputs. Cost/stock files are evidence, not uploads. |
+| Uploads | Final `m3_gerber.zip`, `m3_bom_jlc.csv`, `m3_cpl_jlc.csv`; both assembly PDFs are inspection aids. `m3_bom_owner.csv` (C84, the hand-fitted part) is the owner's record and is not uploaded. `m3_fab_manifest.json` must bind all six outputs to the final CAD/export inputs, and is written only after the three content checks below pass. Cost/stock files are evidence, not uploads. |
 | Acceptance | Needed before any order: owner acceptance of the board-bound deviation list (the owner decision table in [R10_VALIDATION.md](R10_VALIDATION.md#r10-deviations-for-owner-acceptance)), factory process acceptance (panel, VIPPO, manual C84, no-wash, two U5 reflows) and stock and quote resolution. Review and build status: [M3_R10.md, "Current state"](M3_R10.md#current-state). |
 
 Use `m3_design/r10_fab.sh` for the R10 export/check sequence; `FAB_NET=1` also performs the supplier checks.
+The script runs `tools/export_fab.py --pending`, which writes the outputs but **no manifest**, and then `tools/fab_manifest.py --bind`, which runs the three content checks (check_r10 S-4 on the BOM and CPL, `jlc_orient --verify-cpl`, the paste check)
+and writes the manifest only if all three pass and neither inputs nor outputs changed since the export. `python3 tools/export_fab.py` alone deletes any old manifest and leaves the package unbound, and `tools/check.sh` fails on an unbound or unchecked package.
 For separate supplier checks, use the explicit R10 profile:
 
 ```sh
@@ -346,7 +348,7 @@ Evidence: [pad-energy calculation](../m3_design/assembly_review/sources/r10_revi
 independent pad reconstruction checks cover 65 top + 120 bottom, plus 12 placement-only nonpolar-resistor checks.
 Orientation passes, with worst reconstructed-pad residual 0.491 mm. Paste passes at 245 top + 371 bottom flashes,
 with no pasted pad missing a flash. The [manifest](../m3_design/assembly_review/fab/m3_fab_manifest.json)
-binds the six outputs to this PCB and 193 CAD/export inputs. These are current build results; the earlier
+binds the six outputs to this PCB and 193 CAD/export inputs, after the BOM / CPL (S-4), CPL-orientation and paste checks pass. These are current build results; the earlier
 [manufacturing review](../m3_design/assembly_review/sources/r10_review/round11_manufacturing.md) describes `0c50b9fd…`.
 K-legends passes with zero silk/mask overlaps; 88 hidden designators require the Fab references/assembly drawings.
 Inspect every terminal role legend and pin 1/polarity mark in the factory preview.

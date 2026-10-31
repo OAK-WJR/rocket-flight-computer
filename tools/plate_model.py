@@ -37,7 +37,10 @@ JACKS = ('J30', 'J31')
 OVERHANG = {'plugs_on_jacks': (5.55e-3, 13.7e-3, 335e-9), 'jacks_only': (1.8e-3, 5.0e-3, 1.8e-3 * (9.5e-3) ** 2 / 12)}
 RHO_H, NU, SMALL_RHO = 3.65, 0.15, 3.0e3        # kg/m^2, -, kg/m^3 (3 g/cm^3)
 T = 1.566e-3
-STRAIN_PARTS = ('U31', 'U30', 'U4', 'U1', 'J121', 'J124', 'C121', 'C84', 'U5', 'J1', 'J122')
+# R18-MEC-01: R10's east-edge terminals (J410 / J420 / J9 carry most of the east column's mass on an 82 mm unsupported
+# edge), J400 and the 1210-class C431 / C421 / C411 beside them are reported too
+STRAIN_PARTS = ('U31', 'U30', 'U4', 'U1', 'J121', 'J124', 'C121', 'C84', 'U5', 'J1', 'J122',
+                'J410', 'J420', 'J9', 'J400', 'C431', 'C421', 'C411')
 
 
 def leg(n, t):

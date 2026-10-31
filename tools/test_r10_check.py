@@ -1142,6 +1142,9 @@ class Synthetic(SyntheticBase):
         self.assertNotIn('K-binding', gate.STAGES['placement'])
         for gone in ('P-0', 'P-1', 'P-3', 'P-4', 'P-5', 'P-6', 'P-7', 'K-power-pyro') + tuple(f'R-{i}' for i in range(1, 14)):
             self.assertNotIn(gone, ids)
+        for rid in ('K-power', 'K-lands'):                  # R18-GATE-02 / -03 / -09: finished copper and library
+            self.assertIn(rid, gate.STAGES['full'])
+            self.assertNotIn(rid, gate.STAGES['placement'])
 
 
 # ======================================================================================================================
@@ -1833,6 +1836,174 @@ class Audit2(SyntheticBase):
 
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R18Gate(SyntheticBase):
+    """Round 18 gate hardening on small synthetic boards: K-power's path, via and return rules, the word legends."""
+    def setUp(self):
+        super().setUp()
+        self.board.Add(pcbnew.NETINFO_ITEM(self.board, 'BAT_FAULT_N'))
+
+    def fill(self, net, layer, x0, y0, x1, y1):
+        z = pcbnew.ZONE(self.board); z.SetLayer(layer); z.SetNet(self.board.FindNet(net))
+        poly = pcbnew.SHAPE_POLY_SET(); poly.NewOutline()
+        for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)):
+            poly.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        z.Outline().NewOutline()
+        for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)):
+            z.Outline().Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        z.SetFilledPolysList(layer, poly); z.SetIsFilled(True); self.board.Add(z)
+        return z
+
+    def out_path(self):
+        """U9.6 -> 0.7 mm run -> two In2 RAW_PROTECTED vias, and an unrelated RAW_PROTECTED cluster elsewhere."""
+        self.part('U9', [('6', 0, 0, 'RAW_PROTECTED')], at=(20, 60))
+        run = self.track((20, 60), (25, 60), 'RAW_PROTECTED', width=0.7)
+        link = self.track((25, 60), (26, 60), 'RAW_PROTECTED', width=0.7)
+        vias = [self.via(25, 60, 'RAW_PROTECTED', d=0.5), self.via(26, 60, 'RAW_PROTECTED', d=0.5)]
+        self.via(35, 75, 'RAW_PROTECTED', d=0.5)
+        self.track((35, 75), (38, 75), 'RAW_PROTECTED', width=0.2)                    # another region's thin tap
+        self.fill('RAW_PROTECTED', pcbnew.In2_Cu, 15, 55, 40, 80)
+        return run, link, vias
+
+    SPEC = dict(name='U9 OUT', net='RAW_PROTECTED', start={'U9': ('6',)}, end=None, through={}, floor=0.7,
+                vias=dict(count=2, drill=0.3, pad=0.5, plane='In2.Cu'))
+
+    def test_out_path_ends_at_its_own_plane_vias(self):
+        run, link, vias = self.out_path()
+        segs, joined, on_vias, pads = gate.path_graph(self.board, 'RAW_PROTECTED', {'U9': ('6',)})
+        self.assertTrue(joined)
+        self.assertEqual(sorted(t.m_Uuid.AsString() for t in segs), sorted(t.m_Uuid.AsString() for t in (run, link)))
+        self.assertEqual(len(on_vias), 2)                            # the unrelated region's via is not on the path
+        self.assertEqual(gate.power_paths(self.board, paths=(self.SPEC,), narrow=[])[0], [])
+        run.SetWidth(pcbnew.FromMM(0.31))                            # s03: the OUT run necked to 0.31 mm
+        found = gate.power_paths(self.board, paths=(self.SPEC,), narrow=[])[0]
+        self.assertTrue(any('U9 OUT: RAW_PROTECTED track 0.310 mm wide' in i for i in found), found)
+
+    def test_out_vias_count_size_and_plane(self):
+        run, link, vias = self.out_path()
+        self.board.Remove(vias[1]); self.board.Remove(link)          # s11: one transition left
+        found = gate.power_paths(self.board, paths=(self.SPEC,), narrow=[])[0]
+        self.assertTrue(any('1 via(s) on the path; at least 2' in i for i in found), found)
+        self.board.Add(vias[1]); self.board.Add(link)
+        vias[0].SetDrill(pcbnew.FromMM(0.2))
+        found = gate.power_paths(self.board, paths=(self.SPEC,), narrow=[])[0]
+        self.assertTrue(any('via (25.000, 60.000) 0.500 / 0.200 mm' in i for i in found), found)
+        vias[0].SetDrill(pcbnew.FromMM(0.3))
+        self.assertTrue(gate.plane_via(self.board, vias[0], pcbnew.In2_Cu, 'RAW_PROTECTED'))
+        self.board.Remove(next(z for z in self.board.Zones()))       # no In2 fill: the vias reach no plane
+        found = gate.power_paths(self.board, paths=(self.SPEC,), narrow=[])[0]
+        self.assertTrue(any('is not joined to the In2.Cu RAW_PROTECTED fill' in i for i in found), found)
+
+    def test_named_narrow_entry_matches_exactly_and_goes_stale(self):
+        run, link, vias = self.out_path()
+        link.SetWidth(pcbnew.FromMM(0.4))
+        entry = [('RAW_PROTECTED', 'F.Cu', 0.4, 1.0, (25.0, 60.0, 26.0, 60.0), 'via link')]
+        self.assertEqual(gate.power_paths(self.board, paths=(self.SPEC,), narrow=entry)[0], [])
+        link.SetWidth(pcbnew.FromMM(0.35))
+        found = gate.power_paths(self.board, paths=(self.SPEC,), narrow=entry)[0]
+        self.assertTrue(any('RAW_PROTECTED track 0.350 mm' in i for i in found), found)
+        self.assertTrue(any('stale POWER_NARROW' in i for i in found), found)
+
+    def test_in_path_through_its_bypass_capacitor_and_feed_via(self):
+        spec = dict(name='U9 IN', net='BAT_IN', start={'J1': ('1',)}, end={'U9': ('5',)}, through={'C88': ('1',)},
+                    floor=1.0, vias=dict(count=1, drill=0.5, pad=1.0, plane=None))
+        self.part('J1', [('1', 0, 0, 'BAT_IN')], at=(5, 70), tht=True)
+        for ref, x in (('C88', 20), ('U9', 25)):                     # bottom-side parts, as on the R10 board
+            self.part(ref, [('1' if ref == 'C88' else '5', 0, 0, 'BAT_IN')], at=(x, 70)).SetLayerAndFlip(pcbnew.B_Cu)
+        self.track((5, 70), (12, 70), 'BAT_IN', width=1.0)
+        via = self.via(12, 70, 'BAT_IN', d=1.0, drill=0.5)
+        self.track((12, 70), (20, 70), 'BAT_IN', pcbnew.B_Cu, width=1.0)
+        bypass = self.track((20, 70), (25, 70), 'BAT_IN', pcbnew.B_Cu, width=1.0)
+        self.assertEqual(gate.power_paths(self.board, paths=(spec,), narrow=[])[0], [])
+        via.SetWidth(pcbnew.FromMM(0.5)); via.SetDrill(pcbnew.FromMM(0.3))       # s11b: the feed via shrunk
+        found = gate.power_paths(self.board, paths=(spec,), narrow=[])[0]
+        self.assertTrue(any('U9 IN: via (12.000, 70.000) 0.500 / 0.300 mm' in i for i in found), found)
+        via.SetWidth(pcbnew.FromMM(1.0)); via.SetDrill(pcbnew.FromMM(0.5))
+        self.board.Remove(bypass)                                    # a direct feed that skips C88
+        self.track((12, 70), (25, 72), 'BAT_IN', pcbnew.B_Cu, width=1.0)
+        self.track((25, 72), (25, 70), 'BAT_IN', pcbnew.B_Cu, width=1.0)
+        found = gate.power_paths(self.board, paths=(spec,), narrow=[])[0]
+        self.assertTrue(any('does not pass C88.1' in i for i in found), found)
+
+    def q124(self):
+        self.part('Q124', [('1', 0, 1.3, 'GND'), ('2', 0, 0.65, 'GND'), ('3', 0, 0, 'GND'), ('4', 0, -0.65, 'PYRO1_GATE')],
+                  at=(15, 50))
+        bar = self.track((15, 50), (15, 51.3), 'GND', width=0.3)
+        stubs = [self.track((15, 50.65), (15.55, 50.65), 'GND', width=0.3),
+                 self.track((15, 51.3), (15.55, 51.3), 'GND', width=0.3)]
+        vias = [self.via(15.55, 50.65, 'GND', d=0.5), self.via(15.55, 51.3, 'GND', d=0.5)]
+        self.fill('GND', pcbnew.In1_Cu, 10, 45, 20, 55)
+        return bar, stubs, vias
+
+    def test_fire_return_width_vias_and_every_source_pad(self):
+        bar, stubs, vias = self.q124()
+        self.assertEqual(gate.fire_return(self.board)[0], [])
+        for t in [bar] + stubs:                                      # s26: the source bar and stubs at 0.15 mm
+            t.SetWidth(pcbnew.FromMM(0.15))
+        found = gate.fire_return(self.board)[0]
+        self.assertEqual(sum('Q124 fire return: GND track 0.150 mm' in i for i in found), 3, found)
+        for t in [bar] + stubs:
+            t.SetWidth(pcbnew.FromMM(0.3))
+        self.board.Remove(vias[0])
+        found = gate.fire_return(self.board)[0]
+        self.assertTrue(any('1 via(s) on the path; at least 2' in i for i in found), found)
+        self.board.Add(vias[0]); self.board.Remove(bar)
+        found = gate.fire_return(self.board)[0]
+        self.assertTrue(any('source pad Q124.3 is on no return track' in i for i in found), found)
+
+    def word(self, text, x, y, layer=None):
+        t = pcbnew.PCB_TEXT(self.board); t.SetText(text); t.SetLayer(pcbnew.F_SilkS if layer is None else layer)
+        t.SetTextSize(self.P(1, 1)); t.SetTextThickness(pcbnew.FromMM(0.15)); t.SetPosition(self.P(x, y))
+        self.board.Add(t)
+        return t
+
+    def terminal(self, ref, y):
+        """A two-way terminal whose courtyard spans y - 2 .. y + 6 at x 3 .. 11."""
+        f = self.part(ref, [('1', 0, 0, 'BAT_IN'), ('2', 0, 3.5, 'GND')], at=(7, y), tht=True)
+        crt = pcbnew.PCB_SHAPE(f); crt.SetShape(pcbnew.SHAPE_T_RECT); crt.SetLayer(pcbnew.F_CrtYd)
+        crt.SetStart(self.P(3, y - 2)); crt.SetEnd(self.P(11, y + 6)); crt.SetWidth(pcbnew.FromMM(0.05)); f.Add(crt)
+        return f
+
+    def test_word_legends_identity_seam_and_count(self):
+        subjects = {'IGN': 'J121', 'BAT': 'J1'}
+        self.terminal('J121', 20); self.terminal('J1', 28)          # abutting courtyards (y 18-26 and 26-34)
+        ign, bat = self.word('IGN', 7, 17.4), self.word('BAT', 1, 31)
+        self.assertEqual(gate.word_legends(self.board, subjects=subjects, seams=[])[0], [])
+        ign.SetText('BAT'); bat.SetText('IGN')                       # s16c: the two words exchanged
+        found = gate.word_legends(self.board, subjects=subjects, seams=[])[0]
+        self.assertTrue(any("J1: word legend 'BAT'" in i and 'from J121' in i for i in found), found)
+        self.assertTrue(any("J121: word legend 'IGN'" in i and 'from J1 ' in i for i in found), found)
+        ign.SetText('IGN'); bat.SetText('IGN')                       # BAT gone, IGN twice
+        found = gate.word_legends(self.board, subjects=subjects, seams=[])[0]
+        self.assertTrue(any("'BAT' appears 0 times" in i for i in found), found)
+        self.assertTrue(any("'IGN' appears 2 times" in i for i in found), found)
+        bat.SetText('BAT'); bat.SetPosition(self.P(1, 26))           # west of the seam: equally near both
+        found = gate.word_legends(self.board, subjects=subjects, seams=[])[0]
+        self.assertTrue(any("J1: word legend 'BAT'" in i for i in found), found)
+        seam = [('BAT', 'J1', 'J121', 'measured seam')]
+        self.assertEqual(gate.word_legends(self.board, subjects=subjects, seams=seam)[0], [])
+        bat.SetPosition(self.P(1, 31))                               # beside J1 alone: the seam entry is stale
+        found = gate.word_legends(self.board, subjects=subjects, seams=seam)[0]
+        self.assertEqual([i for i in found if 'stale WORD_SEAMS' in i] and len(found), 1, found)
+        bat.SetPosition(self.P(1, 24))                               # beside J121: no seam excuses it
+        found = gate.word_legends(self.board, subjects=subjects, seams=seam)[0]
+        self.assertTrue(any("J1: word legend 'BAT'" in i and 'from J121' in i for i in found), found)
+
+    def test_word_legend_face_and_subject_map(self):
+        self.assertEqual(gate.WORD_SUBJECTS_R10['SWITCH'], 'J400')
+        self.assertNotIn('SWITCH', gate.WORD_LEGENDS_R10)          # r10_post adds SWITCH to its own word list
+        self.terminal('J1', 30)
+        sd = self.part('J430', [('1', 0, 0, 'GND')], at=(7, 26))     # a bottom SMD socket under the legend
+        sd.SetLayerAndFlip(pcbnew.B_Cu)
+        crt = pcbnew.PCB_SHAPE(sd); crt.SetShape(pcbnew.SHAPE_T_RECT); crt.SetLayer(pcbnew.B_CrtYd)
+        crt.SetStart(self.P(2, 25)); crt.SetEnd(self.P(12, 27.6)); sd.Add(crt)
+        self.word('BAT', 7, 27.4)
+        self.assertEqual(gate.word_legends(self.board, subjects={'BAT': 'J1'}, seams=[])[0], [])
+        self.word('BAT', 7, 27.4, layer=pcbnew.B_SilkS).SetMirrored(True)
+        found = gate.word_legends(self.board, subjects={'BAT': 'J1'}, seams=[])[0]
+        self.assertTrue(any("J1: word legend 'BAT'" in i and 'J430' in i for i in found), found)
+
+
 class AuditScope(SyntheticBase):
     plane = R4Synthetic.plane
 
@@ -2057,6 +2228,17 @@ class Plate(unittest.TestCase):
             with self.assertRaises(ValueError):
                 plate.build(self.fit, 5, False, 'r10_mated', 'r10', mutant)
 
+    def test_r18_east_edge_terminals_and_capacitors_in_the_strain_table(self):
+        """R18-MEC-01: the 100 g strain table reports the east-edge terminals, J400 and C431 / C421 / C411."""
+        wanted = ('J410', 'J420', 'J9', 'J400', 'C431', 'C421', 'C411')
+        self.assertTrue(set(wanted) <= set(plate.STRAIN_PARTS))
+        rows = self.fit['rows'] + [(1, ref, 'F', [30 + i, 50, 31.5 + i, 52.5, 0, 2.5])
+                                   for i, ref in enumerate(('C431', 'C421', 'C411'))]
+        strain = plate.run(dict(self.fit, rows=rows), 'r18', 'r10', self.spec)['static']['r10_mated']['strain_ue']
+        for ref in wanted:
+            self.assertIn(ref, strain)
+            self.assertGreater(strain[ref], 0)
+
     def test_terminal_tail_collision_rows_do_not_add_connector_mass(self):
         _, baseline, total = plate.build(self.fit, 5, False, 'r10_mated', 'r10', self.spec)
         extra = (1, 'J1.1 terminal tail', 'B', [6.45, 74, 8.35, 76, -3.8, -1.6])
@@ -2072,13 +2254,19 @@ class Plate(unittest.TestCase):
 
 class FabScript(unittest.TestCase):
     def test_r10_fab_checks_required_fitted_on_the_exported_lists(self):
-        """R3-GATE-05: r10_fab.sh runs check_r10 S-4 on the exported BOM and CPL, after export_fab, failing the run."""
+        """R3-GATE-05 / R18-GATE-04: r10_fab.sh exports an unbound package, then fab_manifest --bind runs check_r10 S-4
+        on the exported BOM and CPL (with --verify-cpl and paste_check) and binds only after they pass, failing the run."""
+        import fab_manifest
         text = (gate.ROOT / 'm3_design/r10_fab.sh').read_text()
         self.assertIn('set -euo pipefail', text)
-        export = text.index('tools/export_fab.py "$B"')
-        s4 = text.index('tools/check_r10.py "$B" --only S-4 --bom "$D/fab/m3_bom_jlc.csv"')
-        self.assertLess(export, s4)
-        self.assertIn('--cpl "$D/fab/m3_cpl_jlc.csv"', text[s4:s4 + 200])
+        export = text.index('tools/export_fab.py "$B" --pending "$RECORD_DIR/export.json"')
+        bind = text.index('tools/fab_manifest.py "$B" --bind "$RECORD_DIR/export.json"')
+        self.assertLess(export, bind)
+        self.assertNotIn('write_manifest', (gate.ROOT / 'tools/export_fab.py').read_text())
+        checks = dict(fab_manifest.content_checks(Path('m3.kicad_pcb'), Path('fab'), 'kicad-python'))
+        self.assertEqual(checks['S-4 BOM / CPL'][4:],
+                         ['--only', 'S-4', '--bom', str(Path('fab/m3_bom_jlc.csv')), '--cpl', str(Path('fab/m3_cpl_jlc.csv'))])
+        self.assertEqual(len(checks), 3)
 
     def test_r10_fab_selects_the_r10_procurement_limits(self):
         text = (gate.ROOT / 'm3_design/r10_fab.sh').read_text()
@@ -2771,6 +2959,154 @@ class RealBoardSeeds(unittest.TestCase):
                       and t.GetLayer() == pcbnew.B_Cu and r119 in (t.GetStart(), t.GetEnd())]:
                 b.Remove(t)
         self.seeded('S-3', seed, 'load switch Q121')
+
+    def test_r18_k_rules_silkscreen_text_floors(self):
+        """R18-GATE-06: lowering the project's silkscreen text height / stroke, silk clearance or spoke floor fails
+        K-rules (DRC then no longer holds a 0.6 mm safety designator)."""
+        folder = real_project()
+        pro = folder / 'm3.kicad_pro'
+        old = pro.read_text()
+        self.assertEqual(self.run_rule('K-rules', self.load()), set())
+        try:
+            for key, value in (('min_text_height', 0.5), ('min_text_thickness', 0.08), ('min_silk_clearance', 0.05),
+                               ('min_resolved_spokes', 1)):
+                with self.subTest(key=key):
+                    d = json.loads(old); d['board']['design_settings']['rules'][key] = value; pro.write_text(json.dumps(d))
+                    found = self.run_rule('K-rules', self.load(), folder / 'm3.kicad_pcb')
+                    self.assertTrue(any(f'design rule {key} = {value}' in i for i in found), found)
+                    pro.write_text(old)
+        finally:
+            pro.write_text(old)
+
+    def test_r18_support_centres_are_pinned(self):
+        """R18-GATE-07: s15b's fit-clean 2.55 mm move of the middle support, and a corner move, fail M-3."""
+        self.assertEqual(self.run_rule('M-3', self.load()), set())
+        for old, new in (((4.0, 44.3), (3.5, 46.8)), ((42.0, 86.0), (40.0, 84.0))):
+            def move(b, old=old, new=new):
+                hole = next(d for d in b.GetDrawings() if d.GetLayer() == pcbnew.Edge_Cuts
+                            and d.GetShape() == pcbnew.SHAPE_T_CIRCLE
+                            and math.dist((pcbnew.ToMM(d.GetCenter().x), pcbnew.ToMM(d.GetCenter().y)), old) < .01)
+                radius = hole.GetRadius()
+                hole.SetCenter(self.P(*new)); hole.SetEnd(self.P(*new) + pcbnew.VECTOR2I(radius, 0))
+            self.seeded('M-3', move, f'support ({old[0]:g}, {old[1]:g})')
+
+    def texts(self, b, text):
+        return [d for d in b.GetDrawings() if isinstance(d, pcbnew.PCB_TEXT) and d.GetText() == text]
+
+    def test_r18_word_legends_are_beside_their_own_terminal(self):
+        """R18-GATE-08: s16c (BAT and IGN exchanged), BAT / SWITCH exchanged, GPS / RADIO exchanged, SWITCH removed and
+        RADIO moved off its J410 / J420 seam each fail K-legends; the real legends pass."""
+        def swap(a, c):
+            def seed(b):
+                ta, tc = self.texts(b, a), self.texts(b, c)
+                self.assertEqual((len(ta), len(tc)), (1, 1))
+                ta[0].SetText(c); tc[0].SetText(a)
+            return seed
+        self.seeded('K-legends', swap('BAT', 'IGN'), "J1: word legend 'BAT'")
+        self.seeded('K-legends', swap('BAT', 'SWITCH'), "J400: word legend 'SWITCH'")
+        self.seeded('K-legends', swap('GPS', 'RADIO'), "J420: word legend 'RADIO'")
+        self.seeded('K-legends', lambda b: b.Remove(self.texts(b, 'SWITCH')[0]), "'SWITCH' appears 0 times")
+
+        def lift(b):
+            t = self.texts(b, 'RADIO')[0]
+            t.SetPosition(t.GetPosition() - self.P(0, 1))
+        self.seeded('K-legends', lift, 'stale WORD_SEAMS')
+        rep = gate.check_board(self.load(), real_project(), real_project() / 'm3.kicad_pcb', only={'K-legends'})
+        words = rep['rules']['K-legends']['evidence']['word_legends']
+        self.assertEqual(sorted(w.split("'")[1] for w in words), sorted(gate.WORD_SUBJECTS_R10))
+
+    def path_tracks(self, b, name):
+        spec = next(p for p in gate.POWER_PATHS if p['name'] == name)
+        return gate.path_graph(b, spec['net'], spec['start'], spec['end'])[0]
+
+    def test_r18_u9_power_path_seeds(self):
+        """R18-GATE-02 / -03: s03 (the U9 OUT 0.7 mm runs at 0.31 mm), s03c (the IN feed upstream of C88 at 0.31 mm), a
+        named C88-local run at 0.6 mm, s11 (one OUT via and its link removed) and s11b (the IN via 0.5 / 0.3 mm)."""
+        board = self.load()
+        issues, evidence = gate.power_paths(board)
+        self.assertEqual(issues, [], evidence)
+        self.assertEqual(len(evidence['narrow_used']), len(gate.POWER_NARROW))
+
+        def neck(name, width, layer=None):
+            def seed(b):
+                hit = [t for t in self.path_tracks(b, name) if abs(pcbnew.ToMM(t.GetWidth()) - width) < .001
+                       and (layer is None or t.GetLayer() == layer)]
+                self.assertTrue(hit)
+                for t in hit:
+                    t.SetWidth(pcbnew.FromMM(0.31))
+            return seed
+        self.seeded('K-power', neck('U9 OUT', 0.7), 'U9 OUT: RAW_PROTECTED track 0.310 mm wide')
+        self.seeded('K-power', neck('U9 IN', 1.0, pcbnew.F_Cu), 'U9 IN: BAT_IN track 0.310 mm wide')
+
+        def local(b):
+            t = next(t for t in self.path_tracks(b, 'U9 IN') if abs(pcbnew.ToMM(t.GetLength()) - 1.15) < .001)
+            t.SetWidth(pcbnew.FromMM(0.6))
+        self.seeded('K-power', local, 'U9 IN: BAT_IN track 0.600 mm wide')
+
+        def one_via(b):
+            via = next(v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'RAW_PROTECTED'
+                       and v.GetPosition() == self.P(21.1, 79.1))
+            link = next(t for t in self.path_tracks(b, 'U9 OUT') if abs(pcbnew.ToMM(t.GetWidth()) - 0.4) < .001)
+            b.Remove(via); b.Remove(link)
+        self.seeded('K-power', one_via, 'U9 OUT: 1 via(s) on the path; at least 2 required')
+
+        def small_feed_via(b):
+            via = next(v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'BAT_IN')
+            via.SetWidth(pcbnew.FromMM(0.5)); via.SetDrill(pcbnew.FromMM(0.3))
+        self.seeded('K-power', small_feed_via, 'U9 IN: via (17.500, 87.300) 0.500 / 0.300 mm')
+
+    def test_r18_q124_fire_return_seeds(self):
+        """R18-GATE-03: s26 (Q124's source bar and via stubs at 0.15 mm) and one of its two GND vias removed."""
+        issues, evidence = gate.fire_return(self.load())
+        self.assertEqual(issues, [], evidence)
+        self.assertEqual(len(evidence['vias']), 2)
+
+        def thin(b):
+            q124 = b.FindFootprintByReference('Q124')
+            sources = [p for p in q124.Pads() if p.GetNumber() in ('1', '2', '3')]
+            hit = [t for t in b.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'GND'
+                   and any(p.HitTest(q) for p in sources for q in (t.GetStart(), t.GetEnd()))]
+            self.assertEqual(len(hit), 3)
+            for t in hit:
+                t.SetWidth(pcbnew.FromMM(0.15))
+        self.seeded('K-power', thin, 'Q124 fire return: GND track 0.150 mm wide')
+
+        def drop_via(b):
+            b.Remove(next(v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA'
+                          and v.GetPosition() == self.P(15.85, 57.695)))
+        self.seeded('K-power', drop_via, 'Q124 fire return: 1 via(s) on the path; at least 2 required')
+
+    def test_r18_unpinned_land_edit_fails(self):
+        """R18-GATE-09: s25 (Q124's gate pad moved 0.08 mm in the library, as a consistent library + board edit would)
+        fails K-lands, and so do an unpinned footprint, a stale pin and a second footprint library."""
+        import shutil
+        import tempfile
+        src = r10_board()
+        with tempfile.TemporaryDirectory(prefix='r10_lands_') as name:
+            folder = Path(name)
+            shutil.copyfile(src, folder / 'm3.kicad_pcb')
+            shutil.copyfile(src.parent / 'fp-lib-table', folder / 'fp-lib-table')
+            shutil.copytree(src.parent / 'kilib/rocket.pretty', folder / 'kilib/rocket.pretty')
+            board = pcbnew.LoadBoard(str(folder / 'm3.kicad_pcb'))
+            ctx = gate.make_ctx(board, folder, folder / 'm3.kicad_pcb')
+            self.assertEqual(gate.k_lands(ctx)[0], [])
+            land = folder / 'kilib/rocket.pretty/M3_AON7524_DFN3x3A.kicad_mod'
+            text = land.read_text()
+            self.assertEqual(text.count('(at 0.975 1.4'), 1)
+            land.write_text(text.replace('(at 0.975 1.4', '(at 1.055 1.4'))
+            found = gate.k_lands(ctx)[0]
+            self.assertTrue(any('M3_AON7524_DFN3x3A (Q124) library file SHA-256' in i for i in found), found)
+            land.write_text(text)
+            pins = dict(gate.FOOTPRINT_SHA256)
+            del pins['R0402']
+            pins['M3_UNUSED_LAND'] = '0' * 64
+            found = gate.k_lands(ctx, pins=pins)[0]
+            self.assertTrue(any('R0402' in i and 'neither generated by r10_parts nor pinned' in i for i in found), found)
+            self.assertTrue(any('stale FOOTPRINT_SHA256 entry M3_UNUSED_LAND' in i for i in found), found)
+            table = folder / 'fp-lib-table'
+            table.write_text(table.read_text().rstrip()[:-1] + '\n\t(lib (name "other") (type "KiCad") '
+                             '(uri "${KIPRJMOD}/other.pretty") (options "") (descr "")))\n')
+            self.assertTrue(any('fp-lib-table lists' in i for i in gate.k_lands(ctx)[0]))
 
     def test_inner_graphics_near_pyro_barrel(self):
         for footprint in (False, True):

@@ -600,5 +600,50 @@
    1.92
   ],
   "q122_gate_with_30k_pullup_V": 0.22
+ },
+ "follow_up_text_pass": {
+  "after_commit": "acba196",
+  "board_sha256_before_after": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+  "build_run": false,
+  "pin_table_rows_edited": [
+   3,
+   18,
+   33,
+   51,
+   52,
+   63,
+   64,
+   78,
+   79,
+   80,
+   81
+  ],
+  "binding_note": {
+   "regenerated_by": "m3_design/r10_sch_check.py --binding-note",
+   "pin_table_sha256": [
+    "ca5a4af4945839b69ed09fdfe4b759b4a96c2aa09ffeee44281750ff71eb43b4",
+    "ae686cd16f36a7d16d6f17228c9f04796f63ff2dd07eaf6a0dd7261b19fdfafe"
+   ],
+   "ds12110_cites": "Rev 11 Table 10 p. 92 / p. 91 (USART6 / UART5), Table 149 p. 244 and Table 150 note 2 p. 246 (PC13-PC15), as pin_table.tsv; were Rev 10 Table 12 p. 91 / Table 11 p. 90 / Table 62 p. 141 / Table 63 note 2",
+   "unchanged": [
+    "board_sha256",
+    "netlist_sha256",
+    "circuit_sha256"
+   ]
+  },
+  "checks": {
+   "r10_sch_check": "OK, ERC 0, seeds 34/34, sheets and netlist reproduce",
+   "check_r10_only": {
+    "K-binding": "OK",
+    "K-contract": "OK",
+    "K-loader": "OK"
+   },
+   "erc": 0,
+   "drc": 0,
+   "unconnected": 0,
+   "schematic_parity": 0,
+   "binding_note_tests": 5
+  },
+  "decisions": "D-R18-10 follow-up note; D-R18-11 added (137 unique D IDs)"
  }
 }

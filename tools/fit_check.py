@@ -503,6 +503,7 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
     issues.extend(f'{ref}: outside bore by {-mgn:.3f} mm' for mgn, ref, _, _ in rows if mgn < 0)
     return dict(profile=profile, rows=sorted(rows), issues=issues, supports=supports, nearest_support=nearest,
                 nearest_top_support=nearest_top, top_hardware_radius_mm=TOP_HARDWARE_RADIUS,
+                wire_room_mm=wire_rooms(b, rows, profile, axis_x, tol),
                 outline=outline, width_mm=width, length_mm=length, excluded=sorted(excluded),
                 terminal_tails=dict(count=len(tails), max_below_seating_mm=R10_TERMINAL_TAIL_MM,
                                     transverse_allocation='Inference: native copper-pad AABB, not a pin/solder model',
@@ -511,6 +512,27 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
                                     nominal_4mm_standoff_plate_clearance_mm=4-(R10_TERMINAL_TAIL_MM-BOARD_T),
                                     source='https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf'),
                 ok=not issues)
+
+
+def wire_rooms(b, rows, profile, axis_x, tol):
+    """Wire bend room from each side-entry terminal's entry face (its model box side farther from the axis, nearest
+    the long edge) to the bore wall at WIRE_Z, sled tolerance both ways: {ref: (low, high) mm}. Profile r10 (R3-MEC-02,
+    R18-MEC-03): every DB125 terminal (all seven, J1 / J121 / J400 west and J410 / J420 / J9 / J122 east); else
+    SIDE_ENTRY's DB128 terminals. To the nominal bore wall (BORE_R), as P-11 measures it."""
+    out = {}
+    for _, ref, _, box in rows:
+        f = b.FindFootprintByReference(ref)
+        if f is None or ref in out:
+            continue
+        if profile == 'r10':
+            if not fp_name(f).startswith(('M3_DB125', 'M3_DB128')):
+                continue
+        elif ref not in SIDE_ENTRY or not fp_name(f).startswith('M3_DB128'):
+            continue
+        face = box[0] if abs(box[0] - axis_x) > abs(box[2] - axis_x) else box[2]
+        room = math.sqrt(BORE_R ** 2 - WIRE_Z ** 2) - abs(face - axis_x)
+        out[ref] = (round(room - tol, 3), round(room + tol, 3))
+    return dict(sorted(out.items()))
 
 
 def margin(box, radius, axis_x, tol):
@@ -553,18 +575,9 @@ def main():
     if report['nearest_top_support']:
         distance, ref, hole = report['nearest_top_support']
         print(f'  nearest top hardware clearance: {ref}, {distance:.3f} mm from support {hole} (minimum 3.8 mm)')
-    walls = []                                       # wire bend room: the entry face (the model box's side nearest
-    # its long edge) to the wall at WIRE_Z, sled tolerance both ways; profile r10 (R3-MEC-02): also J1 and R10's DB125
-    # terminals (the same west face)
-    side_entry, lands = (SIDE_ENTRY + ('J1',), ('M3_DB128', 'M3_DB125')) if a.profile == 'r10' else \
-        (SIDE_ENTRY, ('M3_DB128',))
-    for mgn, ref, side, box in rows:
-        if ref in side_entry and fp_name(b.FindFootprintByReference(ref)).startswith(lands):
-            face = box[0] if abs(box[0] - a.axis_x) > abs(box[2] - a.axis_x) else box[2]
-            room = math.sqrt(BORE_R ** 2 - WIRE_Z ** 2) - abs(face - a.axis_x)
-            walls.append(f'{ref} {room - a.tol:.2f}-{room + a.tol:.2f}')
-    if walls:
-        print(f'  wire entry to the bore wall at {WIRE_Z} mm height: ' + ', '.join(sorted(walls)))
+    walls = [f'{ref} {low:.2f}-{high:.2f}' for ref, (low, high) in report['wire_room_mm'].items()]
+    if walls:                                        # wire_rooms(): every R10 DB125 terminal (R18-MEC-03)
+        print(f'  wire entry to the bore wall at {WIRE_Z} mm height: ' + ', '.join(walls))
     for issue in report['issues']:
         print('  FAIL', issue)
     print('fit check:', 'OK (CAD envelopes only)' if report['ok'] else f"FAIL ({len(report['issues'])} findings)")

@@ -1,0 +1,367 @@
+{
+ "schema": 1,
+ "lane": "round 18 fix pass, gate implementer C",
+ "date": "2026-10-30",
+ "findings": [
+  "R18-GATE-02",
+  "R18-GATE-03",
+  "R18-GATE-04",
+  "R18-GATE-05",
+  "R18-GATE-06",
+  "R18-GATE-07",
+  "R18-GATE-08",
+  "R18-GATE-09",
+  "R18-MEC-01",
+  "R18-MEC-03"
+ ],
+ "board_sha256_before": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "board_sha256_after": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "board_changed": false,
+ "base_commit": "acba196 (the CAD pass, committed by the root while this lane ran); all changes here are unstaged",
+ "files_edited": [
+  "tools/check.sh",
+  "tools/check_r10.py",
+  "tools/fab_manifest.py",
+  "tools/export_fab.py",
+  "tools/fit_check.py",
+  "tools/plate_model.py",
+  "m3_design/r10_fab.sh",
+  "tools/test_check_shell.py",
+  "tools/test_fab_validation.py",
+  "tools/test_r10_check.py",
+  "tools/test_fit_check.py"
+ ],
+ "files_regenerated": {
+  "by": "m3_design/r10_fab.sh (KICAD_CLI / KICAD_PY 10.0.7, R10_RENDER_DIR=.supervisor/r10_renders): export_fab.py and fab_manifest.py are manifest inputs, so the package had to be rebound",
+  "changed": [
+   "m3_design/assembly_review/fab/m3_gerber.zip (creation dates only)",
+   "m3_design/assembly_review/fab/m3_assembly_top.pdf",
+   "m3_design/assembly_review/fab/m3_assembly_bottom.pdf",
+   "m3_design/assembly_review/fab/m3_fab_manifest.json"
+  ],
+  "byte_identical": [
+   "m3_bom_jlc.csv",
+   "m3_bom_owner.csv",
+   "m3_cpl_jlc.csv",
+   "tools/jlc_corrections.json",
+   "m3.kicad_pcb"
+  ],
+  "content_checks_at_bind": {
+   "S-4 BOM / CPL": "OK",
+   "CPL rebuilt from JLC footprints": "OK, worst pad residual 0.491 mm, 197 rows",
+   "paste openings": "OK, F 245 / B 371"
+  },
+  "manifest_outputs": 6
+ },
+ "gate": {
+  "command": "KICAD_CLI=<10.0.7> NUMPY_PY=.supervisor/venv/bin/python tools/check.sh (canonical tree)",
+  "exit": 0,
+  "drc": 0,
+  "unconnected": 0,
+  "schematic_parity": 0,
+  "erc": 0,
+  "audit": "OK",
+  "silk_outline_points": 0,
+  "r10_parts_check": "OK",
+  "fit": "OK",
+  "check_r10_full_rules": 35,
+  "check_r10_new_rules": [
+   "K-power",
+   "K-lands"
+  ],
+  "route_check_failing": 0,
+  "fab_content_checks": "3/3 OK",
+  "fab_manifest_outputs": 6,
+  "self_tests": {
+   "test_check_shell": 10,
+   "test_procurement": 20,
+   "test_fab_validation": 34,
+   "test_fit_check": 33,
+   "test_paste_check": 16,
+   "test_r10_parts": 5,
+   "test_route_check": 67,
+   "test_r10_check": 201,
+   "test_r10_check_native_skips": 5,
+   "numpy_HotplugNumerics_Plate": 5
+  },
+  "self_tests_before": {
+   "test_check_shell": 7,
+   "test_fab_validation": "not in check.sh (23, 1 failing)",
+   "test_fit_check": 31,
+   "test_r10_check": 187,
+   "numpy_HotplugNumerics": 2
+  },
+  "runs": "two complete runs on the canonical tree, both exit 0; the second after the last test edit"
+ },
+ "gaps": [
+  {
+   "gap": 1,
+   "finding": "R18-GATE-05",
+   "check": "check.sh: [[ \"$BOARD\" -ef \"$CANON\" ]] (device + inode); R10_SKIP_FAB_MANIFEST branch and unset removed; a missing board fails before any stage",
+   "seeds_now_failing": [
+    "canonical board through a symlinked folder",
+    "canonical board through a '..' spelling",
+    "M3_DESIGN/... case variant (case-insensitive volumes)",
+    "R10_SKIP_FAB_MANIFEST=1 and =yes",
+    "missing board path"
+   ],
+   "old_check_sh_against_new_tests": "8 of 10 shell tests fail",
+   "tests": [
+    "test_check_shell.GateSequence.test_repository_board_is_recognised_by_identity",
+    "test_check_shell.GateSequence.test_skip_flag_no_longer_skips_the_package",
+    "test_check_shell.GateSequence.test_missing_board_fails_before_any_stage"
+   ],
+   "retired": [
+    "test_check_shell.GateSequence.test_explicit_build_stage_skips_manifest_only (the flag is gone)"
+   ]
+  },
+  {
+   "gap": 2,
+   "finding": "R18-GATE-04",
+   "check": "export_fab.py writes no manifest (deletes the old one; --pending RECORD records inputs at start and outputs); fab_manifest.py --bind runs content_checks (check_r10 --only S-4 --bom --cpl, jlc_orient --verify-cpl, paste_check) and binds only if all pass and nothing changed since the export; r10_fab.sh = export --pending then --bind; check.sh canonical branch runs fab_manifest.py --content (binding + the three checks)",
+   "seeds_now_failing": [
+    "D9 CPL row turned 180 deg (s17 class): verify-cpl names ('D9', ...)",
+    "R134 BOM LCSC C3013496 -> C25744 (s18): S-4 \"R134 LCSC Part #\"",
+    "B_Paste removed from the Gerber zip: paste_check",
+    "each failing content check: no manifest, export record kept",
+    "an output or input edited after the export: bind refused",
+    "a standalone export: no manifest (check.sh fails)",
+    "check.sh calling the verifier without --content",
+    "fab_manifest.py whose --content skips the checks (CLI test)"
+   ],
+   "tests": [
+    "test_fab_validation.Binding (7)",
+    "test_fab_validation.ContentChecks (4, real package copy)",
+    "test_check_shell.GateSequence.test_repository_package_needs_its_content_checks",
+    "test_r10_check.FabScript.test_r10_fab_checks_required_fitted_on_the_exported_lists (rewritten)"
+   ]
+  },
+  {
+   "gap": 3,
+   "finding": [
+    "R18-GATE-02",
+    "R18-GATE-03"
+   ],
+   "check": "new rule K-power: path_graph (fire_path graph, start component only, end = pads or every via of the net); U9 IN J1.1 -> U9.5 through C88.1 >= 1.0 mm; U9 OUT U9.6 -> In2 vias >= 0.7 mm; six exact POWER_NARROW entries, stale fails; IN >= 1 via >= 1.0 / 0.5 mm; OUT >= 2 vias >= 0.5 / 0.3 mm on the In2 RAW_PROTECTED fill; Q124 source pads 1-3 -> >= 0.3 mm tracks -> >= 2 In1 GND vias >= 0.5 / 0.3 mm",
+   "real_board": {
+    "U9 IN": {
+     "segments": 15,
+     "widths_mm": [
+      0.3,
+      0.7,
+      1.0
+     ],
+     "vias": [
+      [
+       17.5,
+       87.3,
+       1.0,
+       0.5
+      ]
+     ]
+    },
+    "U9 OUT": {
+     "segments": 5,
+     "widths_mm": [
+      0.3,
+      0.4,
+      0.7
+     ],
+     "vias": [
+      [
+       20.3,
+       79.1,
+       0.5,
+       0.3
+      ],
+      [
+       21.1,
+       79.1,
+       0.5,
+       0.3
+      ]
+     ]
+    },
+    "Q124 return": {
+     "tracks": 3,
+     "widths_mm": [
+      0.3
+     ],
+     "vias": [
+      [
+       15.85,
+       57.695,
+       0.5,
+       0.3
+      ],
+      [
+       15.85,
+       58.345,
+       0.5,
+       0.3
+      ]
+     ]
+    },
+    "narrow_entries_used": 6
+   },
+   "seeds_now_failing": [
+    "s03: U9 OUT 0.7 mm runs at 0.31 mm",
+    "s03c: U9 IN 1.0 mm F.Cu runs at 0.31 mm",
+    "a C88-local 0.7 mm run at 0.6 mm (plus stale entry)",
+    "s11: via (21.1, 79.1) and its link removed",
+    "s11b: IN via (17.5, 87.3) 0.5 / 0.3 mm",
+    "s26: Q124 bar and stubs at 0.15 mm",
+    "one Q124 return via removed",
+    "synthetic: OUT vias with no In2 fill, 0.2 mm drill, a feed that skips C88, a source pad on no return track, a stale or mismatched named entry"
+   ],
+   "tests": [
+    "test_r10_check.R18Gate (5 synthetic)",
+    "test_r10_check.RealBoardSeeds.test_r18_u9_power_path_seeds",
+    "test_r10_check.RealBoardSeeds.test_r18_q124_fire_return_seeds"
+   ],
+   "note": "IN floor 1.0 mm (S-9 BAT_IN floor) with the three C88-local 0.7 mm runs named, stricter than one 0.7 mm floor"
+  },
+  {
+   "gap": 4,
+   "finding": "R18-GATE-06",
+   "check": "PRO_FLOORS += min_text_height 1.0, min_text_thickness 0.15, min_silk_clearance 0.15, min_resolved_spokes 2",
+   "seeds_now_failing": [
+    "min_text_height 0.5",
+    "min_text_thickness 0.08",
+    "min_silk_clearance 0.05",
+    "min_resolved_spokes 1"
+   ],
+   "tests": [
+    "test_r10_check.RealBoardSeeds.test_r18_k_rules_silkscreen_text_floors"
+   ]
+  },
+  {
+   "gap": 5,
+   "finding": "R18-GATE-07",
+   "check": "M-3: Edge.Cuts circle centres = SUPPORTS_R10 (4, 4), (42, 4), (4, 44.3), (3.7, 86), (42, 86) within 0.01 mm",
+   "seeds_now_failing": [
+    "s15b (4, 44.3) -> (3.5, 46.8)",
+    "(42, 86) -> (40, 84)"
+   ],
+   "tests": [
+    "test_r10_check.RealBoardSeeds.test_r18_support_centres_are_pinned"
+   ]
+  },
+  {
+   "gap": 6,
+   "finding": "R18-GATE-08",
+   "check": "K-legends word_legends: IGN, BAT, SWITCH, CAM, SWD, SERVO, GPS, RADIO each once (visible silkscreen text or text box) and nearer its own connector courtyard box than any other connector on its face by > 0.01 mm; only named WORD_SEAMS ties; stale seam fails",
+   "seeds_now_failing": [
+    "s16c BAT / IGN exchanged",
+    "BAT / SWITCH exchanged",
+    "GPS / RADIO exchanged",
+    "SWITCH removed",
+    "RADIO lifted 1 mm off its seam (stale seam)",
+    "synthetic: duplicate word, bottom-face legend over a bottom connector"
+   ],
+   "tests": [
+    "test_r10_check.R18Gate.test_word_legends_identity_seam_and_count",
+    "test_r10_check.R18Gate.test_word_legend_face_and_subject_map",
+    "test_r10_check.RealBoardSeeds.test_r18_word_legends_are_beside_their_own_terminal"
+   ],
+   "measured": {
+    "RADIO": "ink box (30.153, 22.905)-(34.255, 24.055): 0.000 mm to J420 and J410 courtyard boxes (courtyards 0.09 mm apart; by polygon or pad distance about 0.02 mm nearer J410): the one WORD_SEAMS entry",
+    "J430": "bottom SMD microSD under RADIO, not ranked for top-side legends",
+    "BAT / SWITCH": "0.000 mm to their own terminal, 0.040 mm to the neighbouring west-edge terminal (0.030 mm beyond the tie)",
+    "IGN / SWD / SERVO / GPS / CAM": "0.000 mm to their own connector; the next connector is >= 3.155 mm away"
+   },
+   "note": "SWITCH -> J400 is in WORD_SUBJECTS_R10, not WORD_LEGENDS_R10: m3_design/r10_post.py adds SWITCH to WORD_LEGENDS_R10 itself, so the next build would place it twice"
+  },
+  {
+   "gap": 7,
+   "finding": "R18-GATE-09",
+   "check": "new rule K-lands: fp-lib-table exactly rocket -> ${KIPRJMOD}/kilib/rocket.pretty; every board footprint from it and r10_parts-generated (9) or SHA-256 pinned in FOOTPRINT_SHA256 (37); unpinned and stale entries fail",
+   "seeds_now_failing": [
+    "s25: Q124 gate pad (0.975, 1.4) -> (1.055, 1.4) in M3_AON7524_DFN3x3A.kicad_mod",
+    "R0402 unpinned",
+    "stale pin M3_UNUSED_LAND",
+    "second library in fp-lib-table"
+   ],
+   "tests": [
+    "test_r10_check.RealBoardSeeds.test_r18_unpinned_land_edit_fails"
+   ]
+  },
+  {
+   "gap": 8,
+   "finding": [
+    "R18-MEC-01",
+    "R18-MEC-03"
+   ],
+   "check": "plate_model.STRAIN_PARTS += J410, J420, J9, J400, C431, C421, C411; fit_check.wire_rooms(): profile r10 reports (wire_room_mm) and prints every DB125 terminal",
+   "real_board": {
+    "wire_room_mm": {
+     "J1": [
+      5.003,
+      5.603
+     ],
+     "J121": [
+      5.003,
+      5.603
+     ],
+     "J122": [
+      5.003,
+      5.603
+     ],
+     "J400": [
+      5.003,
+      5.603
+     ],
+     "J410": [
+      5.003,
+      5.603
+     ],
+     "J420": [
+      5.003,
+      5.603
+     ],
+     "J9": [
+      5.003,
+      5.603
+     ]
+    }
+   },
+   "seeds_now_failing": [
+    "old STRAIN_PARTS (strain test)",
+    "old printout selection (J1 / J121 / J9 only)"
+   ],
+   "tests": [
+    "test_r10_check.Plate.test_r18_east_edge_terminals_and_capacitors_in_the_strain_table (NumPy; check.sh now runs HotplugNumerics Plate)",
+    "test_fit_check.FitValidation.test_r10_wire_room_lists_every_db125_terminal",
+    "test_fit_check.FitValidation.test_real_r10_board_reports_seven_wire_rooms"
+   ],
+   "not_done": "R150-R155 (also named in R18-MEC-01) not added: not in the brief"
+  },
+  {
+   "gap": 9,
+   "finding": "test_fab_validation connector tabs",
+   "check": "test_connector_mechanical_tabs_are_independently_checked shifts J3's USB-C shell tabs (C165948 pads 1-2) and J430's microSD nails (C164170 pads 9-10); R9's GH J9 (C161692) case retired (not on R10); the file runs in check.sh",
+   "seeds_now_failing": [
+    "shifted J3 tabs: verify-cpl names J3",
+    "shifted J430 nails: verify-cpl names J430"
+   ],
+   "tests": [
+    "test_fab_validation.PlacementValidation.test_connector_mechanical_tabs_are_independently_checked"
+   ],
+   "file_tests": {
+    "before": "23 (1 failing, not in check.sh)",
+    "after": 34
+   }
+  }
+ ],
+ "not_done": [
+  "no width floor for VLOGIC / PORT_5V3 / CAM_5V / PORT_4V8 / 3V3 (R18-GATE-02 other rails): not in the brief",
+  "R150-R155 not in STRAIN_PARTS: not in the brief",
+  "no real-board seed for an OUT via without In2 fill (synthetic only)",
+  "m3_design/r8_fab.sh / r9_fab.sh (historic, not edited) now stop at their manifest check: fail closed"
+ ],
+ "for_docs_lane": [
+  "AGENTS.md section 5: python3 tools/export_fab.py alone leaves the package unbound; point at m3_design/r10_fab.sh",
+  "R10_DECISIONS D-R8-03: R10_SKIP_FAB_MANIFEST removed",
+  "check_r10 now 35 rules (K-power, K-lands); check.sh self-test counts; check.sh runs the fab content checks and test_fab_validation.py"
+ ]
+}

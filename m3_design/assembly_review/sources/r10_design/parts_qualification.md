@@ -12,7 +12,7 @@ tests were performed. The current always-on ports, screw terminals, microSD and 
 
 Review status, checks, cost and open items are stated once, in [M3_R10.md, "Current state"](../../../../docs/M3_R10.md#current-state). In short: PCB `a3144b15…` (46 × 90 mm) is not accepted and nothing is ordered. The round 18 fix pass changed the board from `632a9ad3…`, on which
 rounds 16 and 17 (same reviewer family) found no Critical or Major issue and round 18 (the first review by a different model family) found none either
-([R10_VALIDATION.md](../../../../docs/R10_VALIDATION.md#round-18-first-claude-review-of-committed-dcbb6c8)); that clean pair does not carry to the changed board, and rounds 19 and 20 are planned after the gate pass. AGENTS section 2 is unchanged. This file is the component contract; where a section below is marked historical it describes
+([R10_VALIDATION.md](../../../../docs/R10_VALIDATION.md#round-18-first-claude-review-of-committed-dcbb6c8)); that clean pair does not carry to the changed board, and rounds 19 and 20 are planned (the gate pass is done). AGENTS section 2 is unchanged. This file is the component contract; where a section below is marked historical it describes
 hardware that was removed from R10 and is kept only for the record.
 
 **R16 retained MEMS stress deviation (R16-MEC-01, Minor):** component-side B.Cu

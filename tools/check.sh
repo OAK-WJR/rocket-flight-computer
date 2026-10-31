@@ -8,10 +8,14 @@
 # tools/check_r8.py (--profile r8), R7's in tools/check_r7.py (--profile r7).
 # The optional plate model is separate; NUMPY_PY (default python3) runs the numerical gate self-tests.
 # The self-tests' real-board seeds run on the board being checked (R10_BOARD is exported as BOARD below, R5-GATE-03).
+# The repository board (recognised as the same file, however its path is spelled) must carry its bound fab package,
+# and the package must pass its content checks (R17-GATE-01, R18-GATE-04 / -05); a board copy is not held to one.
 # Usage: tools/check.sh [path/to/board.kicad_pcb]      exit 0 = every check clean
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BOARD="${1:-$ROOT/m3_design/assembly_review/m3.kicad_pcb}"
+CANON="$ROOT/m3_design/assembly_review/m3.kicad_pcb"
+BOARD="${1:-$CANON}"
+[[ -f "$BOARD" ]] || { echo "board not found: $BOARD" >&2; exit 1; }
 BOARD="$(cd "$(dirname "$BOARD")" && pwd)/$(basename "$BOARD")"   # absolute: the audit step runs in quality_audit/
 CLI="${KICAD_CLI:-$(command -v kicad-cli || true)}"
 if [[ -z "$CLI" ]]; then
@@ -51,21 +55,22 @@ python3 "$ROOT/tools/silk_check.py" "$BOARD" --cli "$CLI"     # DRC skips silksc
   --report "$OUT/r10.json"
 "$KICAD_PY" -I "$ROOT/tools/route_check.py" "$BOARD" --profile r10 --report "$OUT/route.json" \
   | { grep -E '^(FAIL|routing hygiene: [0-9])' || true; }       # clean routing (AGENTS.md §3); full list in route.json
-# R17-GATE-01: the repository board requires its bound fab package; absence must fail too.
-# A board copy elsewhere is not held to a package, and the explicit build-stage skip remains available.
+# R17-GATE-01 / R18-GATE-05: the repository board requires its bound fab package; absence must fail too. -ef recognises
+# it by device and inode (a case variant, symlink or relative spelling of the same file is the repository board). There
+# is no skip: m3_design/r10_build.sh rebuilds the package (m3_design/r10_fab.sh) before it runs this gate.
+# R18-GATE-04: besides the hash binding, the bound package must pass its content checks (fab_manifest.content_checks:
+# check_r10 S-4 on the exported BOM / CPL, jlc_orient --verify-cpl, paste_check). A board copy is not held to a package.
 MANIFEST="$(dirname "$BOARD")/fab/m3_fab_manifest.json"
-if [[ "${R10_SKIP_FAB_MANIFEST:-0}" == 1 ]]; then   # m3_design/r10_build.sh: the package is rebuilt after the board
-  echo "fab manifest: not checked (build stage: run m3_design/r10_fab.sh, then tools/check.sh)"
-elif [[ "$BOARD" == "$ROOT/m3_design/assembly_review/m3.kicad_pcb" ]]; then
-  python3 "$ROOT/tools/fab_manifest.py" "$BOARD" \
-    || { echo "fab package bound to a different board: run m3_design/r10_fab.sh"; exit 1; }
+if [[ "$BOARD" -ef "$CANON" ]]; then
+  python3 "$ROOT/tools/fab_manifest.py" "$CANON" --content \
+    || { echo "fab package unbound, bound to a different board or failing its content checks: run m3_design/r10_fab.sh"
+         exit 1; }
 elif [[ -f "$MANIFEST" ]]; then
   echo "fab manifest: not checked (board copy)"
 fi
 # Gate self-tests (R4-GATE-02): a weakened gate fails here. Seeded faults on synthetic boards and on a temporary copy of
 # the R10 board (R10_BOARD, set here to the checked board); about 2 minutes.
 export R10_BOARD="$BOARD"
-unset R10_SKIP_FAB_MANIFEST     # test_check_shell runs check.sh copies of its own
 selftest() {          # print the unittest summary; a failing run prints its tail and fails the gate
   local out
   out="$("$@" 2>&1)" || { { printf '%s\n' "$out" | grep -v Debug || true; } | tail -40; echo "gate self-test FAILED: $*"; exit 1; }
@@ -73,9 +78,10 @@ selftest() {          # print the unittest summary; a failing run prints its tai
 }
 selftest python3 "$ROOT/tools/test_check_shell.py"       # check.sh itself fails closed (R8-GATE-01)
 selftest python3 "$ROOT/tools/test_procurement.py"       # required R9 / R10 limits cannot be weakened by report data
+selftest python3 "$ROOT/tools/test_fab_validation.py"    # placement, export and binding regressions (R18-GATE-04)
 selftest "$KICAD_PY" "$ROOT/tools/test_fit_check.py"       # no -I: the test imports fit_check from its own folder
 selftest "$KICAD_PY" -I "$ROOT/tools/test_paste_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_parts.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_route_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_check.py"
-selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" HotplugNumerics
+selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" HotplugNumerics Plate   # Plate: R18-MEC-01 strain table

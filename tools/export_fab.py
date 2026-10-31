@@ -13,6 +13,10 @@ A footprint field "JLC_Assembly" (for example a consignment note) replaces the B
 Assembly column for that part.
 DNP parts: one left in the BOM is owner-fitted (owner BOM); one also excluded from the BOM is an unfitted
 placeholder (no BOM, no CPL, no part number needed); a DNP part in the BOM without an LCSC code stops the export.
+R18-GATE-04: the export never binds the package. It deletes any previous manifest first and, with --pending RECORD,
+records the export (tools/fab_manifest.write_pending); `tools/fab_manifest.py BOARD --bind RECORD` writes the manifest
+only after the content checks (S-4 on the BOM / CPL, jlc_orient --verify-cpl, paste_check) pass. m3_design/r10_fab.sh
+runs the whole sequence; a standalone export leaves the package unbound, which tools/check.sh rejects.
 """
 import argparse, csv, json, math, os, re, shutil, subprocess, sys, tempfile, zipfile
 from collections import defaultdict
@@ -21,7 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'quality_audit'))
 from sexpr import read, properties  # noqa: E402
-from fab_manifest import input_hashes, write_manifest  # noqa: E402
+from fab_manifest import input_hashes, write_pending  # noqa: E402
 
 # R18-REQ-10 / R18-MFG-06 (D-R18-09): parts that stay fitted on the schematic and board but are soldered by hand after
 # JLC's reflow passes. They leave the JLC BOM and CPL uploads and go to the owner BOM with this note, so no upload can
@@ -69,6 +73,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('board', nargs='?', default=str(ROOT / 'm3_design/assembly_review/m3.kicad_pcb'))
     ap.add_argument('--out', default=str(ROOT / 'm3_design/assembly_review/fab'))
+    ap.add_argument('--pending', type=Path, metavar='RECORD',
+                    help='write the unbound export record here for tools/fab_manifest.py --bind (m3_design/r10_fab.sh)')
     a = ap.parse_args()
     board, out = Path(a.board).resolve(), Path(a.out).resolve()
     before = input_hashes(board)
@@ -93,8 +99,10 @@ def main():
         sys.exit(f'Fab export blocked: missing LCSC codes {missing}; '
                  f'unverified placement corrections {sorted(uncorrected, key=natural)}')
     out.mkdir(parents=True, exist_ok=True)
-    # An interrupted or failed export must not leave an apparently current manifest.
+    # An interrupted or failed export must not leave an apparently current manifest or a stale export record.
     (out / f'{board.stem}_fab_manifest.json').unlink(missing_ok=True)
+    if a.pending:
+        a.pending.unlink(missing_ok=True)
     stem = board.stem
     with tempfile.TemporaryDirectory() as tmp:
         g = Path(tmp) / 'gerber'; g.mkdir()
@@ -184,7 +192,11 @@ def main():
           ', '.join(f"{','.join(v)} ({k[1] if k[0] == 'lcsc' else k[3] or k[1]})" for k, v in owner.items()) or 'none')
     print('not fitted (DNP placeholders, in no BOM or CPL):', ', '.join(placeholders) or 'none')
     print('CPL rows without a verified JLC orientation correction:', ', '.join(sorted(uncorrected, key=natural)) or 'none')
-    print('source/output binding:', write_manifest(board, out, before).name)
+    if a.pending:
+        print('unbound export record:', write_pending(board, out, before, a.pending),
+              '(tools/fab_manifest.py --bind writes the manifest after the content checks)')
+    else:
+        print('fab package NOT bound (no manifest): m3_design/r10_fab.sh exports, runs the content checks and binds')
 
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ the replacement facts without editing that worktree. Preserve the accepted R9 en
 fit is claimed.
 
 **Status.** PCB `a3144b15…`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. It replaces `632a9ad3…` (round 18 fix pass), so the earlier clean reviews do not carry over to it;
-rounds 19 and 20 will review it after the gate pass. Review results, checks, cost and open items are
+rounds 19 and 20 will review it (the gate pass is done). Review results, checks, cost and open items are
 in [M3_R10.md, "Current state"](M3_R10.md#current-state); the owner's decision list is in
 [R10_VALIDATION.md](R10_VALIDATION.md#r10-deviations-for-owner-acceptance).
 
