@@ -3005,7 +3005,12 @@ note, the binding-note obligation (which had kept ">= 150 ms") and check_actuato
 native board): all 2304 required cases and every row are unchanged (qualification pass, convergence pass); only its
 retained-output envelope moves, the shared capacitance 1616.12 -> 1613.41 uF (C87 3.036 -> 0.304 uF in the
 +38 % envelope, C123 +0.014 uF) and the 2 s output bound 5.878 -> 5.874 V; the cold-input minimum stays at the -15 V
-clamp.
+clamp. These two figures are for items 1-13 alone. After D-R19-14 added C444 / C445, `hotplug_results.json` gives
+1643.90 uF and 5.914 V (every row unchanged, passed = true; docs-lane correction 2026-10-31 from the round 19 circuit
+check). Low-voltage corner (same check, Calculation, SLVSFC9C p9; the regenerated binding note's figures): worst-case
+drop-out immunity is 11.4 / 21 / 27 ms at 6.0 / 7.4 / 8.4 V (the 12 / 22 / 27 ms above leave out R81's 1 % tolerance and the ±0.1 µA EN leakage that the binding note includes) and about 9.3 ms at
+the fire budget's four-stall BAT_IN of 5.73 V, below the proposed 10 ms F6 criterion;
+if the bench drop-out exceeds these, C87 is re-sized (BOM only, same land).
 
 ## D-R19-11. U4: ISM6HG256X fitted, LSM6DSV320X the consigned alternate (2026-10-30)
 
@@ -3117,3 +3122,105 @@ the default map is GPS J410, radio J420, AUX spare, and the silkscreen words kee
   (201), U4 thin (9 for 5).
 
 The record index is now **151 unique D IDs through D-R19-14**.
+
+## D-R19-15. Harden the gate (R19-GATE-01 to -07, R19-REQ-10, R19-RTE-01, R18-MEC-01, AUX feed) (2026-10-31)
+
+Checks only, by the round 19 gate lane (`../r10_review/round19_fix_gate.md` / `.json`). The PCB is unchanged at
+`50a39de5…`. No fab-manifest input changed, so the package was not rebound; `fab_manifest.py --content` passes on it.
+What each gap now checks:
+- **K-lands paste and mask (R19-GATE-01).** Each placed footprint's paste margin, paste ratio and mask margin, and
+  each pad's local paste margin, paste ratio, mask margin and paste / mask layers, must equal its library copy
+  (`pcbnew.FootprintLoad` on `kilib/rocket.pretty`). Pads are paired by number and local position (within 2 µm,
+  mirrored for a bottom part). 701 pads are compared and none differs. C84's missing paste is its library variant
+  (D-R19-07), so no exception is named. Zone-connection and clearance overrides stay with K-copper / LC-1.
+- **Part codes (R19-GATE-02).** check_actuators' r10 block pins R131 = 10k, C25744 / 0402WGF1002TCE, R0402, and
+  C127 / C129 = 10nF 50V X7R 10%, C57112. S-4 decodes the Manufacturer Part of every fitted R / C part (the field the
+  JLC BOM is exported from; S-4 `--bom` holds the BOM's code, MPN and footprint to it). The decoded value must equal
+  the Value field, and so must any tolerance, voltage or dielectric the Value states. Decoded: 157 parts in eleven
+  families (UNI-ROYAL 73, Samsung CL 44, Murata GRM 14, Yageo CC 9, Yageo RT 7, Fenghua 4, Yageo RC 2, and one each of
+  Bourns CRM, FOJAN FRC, Murata GCJ and Vishay MCT). Listed as not decoded: C84, an aluminium polymer part.
+- **K-plane necks (R19-GATE-03).** Each non-GND inner fill is unfractured and deflated by PLANE_LINK_W / 2. A
+  landing-via cluster that the deflation cuts off from the largest piece then counts as a split piece and needs two
+  outer links of >= 0.5 mm. Necks under 1.0 mm are reported, located by bisection. The fill must be unfractured
+  first: KiCad's fracture slits otherwise showed a false 0.474 mm neck. Calibration on the board, all in In2 3V3:
+  - 0.549 mm, with landings (18.8, 60.25), (22.6, 52.15) and (19.05, 55.9);
+  - 0.549 mm, with landings (23.1, 78.1), (23.0, 70.0) and (23.2, 68.6) (the east path the gate report measured at
+    0.54 mm);
+  - 0.589 mm, landing (9.2, 52.98);
+  - 0.706 mm, landing (19.5, 49.15).
+  PORT_4V8, PORT_5V3 and RAW_PROTECTED have no neck under 1.0 mm.
+- **Rail widths (R19-GATE-04).** Every K-power path names its design current, with the basis in the code. Its floor
+  must be at least `ipc2152.ipc_width` for that current at a 30 C rise (external fit, no plane credit; Inference), or
+  the table fails. New paths:
+  - VLOGIC trunk, U11 to U2 through C99: 0.4 mm floor, 1.294 A, IPC width 0.167 mm;
+  - CAM_5V out, U402.6 to J9.1 through C431: 0.4 mm, 1.249 A, 0.157 mm;
+  - J410 feed and J420 feed (PORT_4V8, one In2 via each): 0.4 mm, 1.9 A, 0.326 mm.
+  Existing paths now carry currents too: U401 IN / OUT 1.9 A, U402 IN 1.249 A, U400 OUT 1.81 A, U2 OUT 2.0 A,
+  C84 hold-up 1.294 A, U9 IN / OUT 2.9 A. U401's two 0.25 mm pin links (0.5 mm DSK pitch) are new named POWER_NARROW
+  entries, making 8.
+- **Simple paths (R19-GATE-05).** `fire_path` and `path_graph` keep only copper on simple paths between the terminal
+  sets: biconnected blocks along the block-cut tree between the terminal hubs. A loop that hangs off one cut vertex is
+  dropped, not only a leaf. On the board all six fire paths and every earlier K-power path are unchanged; only the
+  J440 feed changed, by the item 11 change below. U9 IN needs at least one via of >= 1.0 / 0.5 mm; any further via
+  needs >= 0.5 / 0.3 mm. route_check already had its measured-reason list (PARALLEL_VIAS_R10, D-R19-09), and no
+  generic exemption was added. Seeds c01 (1.0 / 0.5 mm) and c01b (0.6 / 0.3 mm) were drawn cleanly on a copy of the
+  post-CAD tree: the second via at the F.Cu feed node (17.5, 88.891), joined on B.Cu by 1.0 mm straight to
+  (17.5, 87.3). With one PARALLEL_VIAS_R10 line, each passes every check.sh checker step after the r10_build
+  regeneration, including the real hot-plug re-solve (passed). S-9 evidence is identical; K-power changes only in U9
+  IN's added via and run; the budget differs only in its board hash. The adversary's own drawing (V2 at
+  (18.9, 88.891), a 0.707 mm B.Cu diagonal, then north to (19.4, 85.4)) now passes the budget, r10_parts and
+  check_r10; the refusal in the gate report is gone. It still fails route_check on three faults of the drawing itself,
+  which M2 rejects and the clean drawing does not have:
+  - the 0.707 mm short segment;
+  - a 45 degree junction at (19.4, 85.4);
+  - a BAT_IN net detour: 64.67 mm of copper against 1.6 x the 38.99 mm MST = 62.38 mm (the clean drawing has
+    61.16 mm).
+- **Word centre margins (R19-GATE-06).** Each word's ink-box centre must be at least 1.0 mm nearer its own courtyard
+  than any other. This blocks for GPS (13.178 mm), RADIO (3.716), AUX (14.465), IGN (5.265), SERVO (3.764),
+  CAM (3.451) and SWD (2.853). BAT (0.080) and SWITCH (0.040) are reported only. They fill the 1.19 mm gaps between
+  DB125 courtyards, where D-R19-06 keeps them, and the per-pin legends and J121's black body disambiguate.
+- **Silkscreen allowlist (R19-GATE-07).** Every visible silkscreen text must be a designator or an allowed legend:
+  board text, text box and footprint text or field, on either face. Allowed legends are the TERMINAL_PINS_R10 pins,
+  the words, the PORT_LEGENDS_R10 rows, SERVO_HARNESS_NOTE, PINNED_TEXTS and the JLC mark. On the board: 39 legends,
+  6 port rows and 121 designators.
+- **Stale names and port UART scope (R19-REQ-10).** critical_reference drops V3V3_SENSE, which went with its divider
+  in D-R18-01. R10's extended set is now `EXTENDED_R10` = SWDIO / SWCLK / NRST; the radio SPI names stay in `EXTENDED`
+  for the R7-R9 record tools. The CAM_TX_MCU / CAM_RX_MCU names, which exist on no R10 board, are also dropped from
+  `R10_PORT_UART` / `R10_PORT_NETS`. K-reference fails on any listed name that is not a board net. **Decision:** the
+  GPS / RADIO / AUX / CAM port UART nets stay under the stricter 1.5 mm GND-partner-via and one-In2-region rules.
+  R19-REQ-10 proposed relaxing them (115200 baud behind 1 kohm), but the frozen board meets them, and relaxing a gate
+  rule needs a reason that board does not give.
+- **Pour debris (R19-RTE-01).** K-copper: every zone fill piece, of any size, must hold a via of its net or touch two
+  or more of its net's pads. Only an exact, measured POUR_DEBRIS entry is excepted, and an entry fails as stale once
+  its piece is gone. The board has 35 pieces. One fails: a 0.282 mm^2 F.Cu GND piece at U1.74 (17.50, 34.48), which
+  touches only that pin. It was already on the round 18 board beside the 1.693 mm^2 U1.19 piece that D-R19-05
+  removed. It is the one named entry. CAD fix: ZONE_CONNECTION_NONE on U1.74, as D-R19-05 did for U1.19, then delete
+  the entry.
+- **STRAIN_PARTS (R18-MEC-01).** R150-R155 are added (NumPy test).
+- **AUX feed (CAD hand-back, open item).** The J440 feed path is held to F.Cu (`layers=('F.Cu',)`). Its two In2 vias
+  are (29.75, 9.95) and (30.5, 9.95). The via (29.75, 12.6), behind them on U401's B.Cu run, no longer counts, so
+  losing (30.5, 9.95) alone fails K-power.
+
+Each gap has a seeded regression on a copy of the post-CAD board:
+- R19-GATE-01: b19a (Q124 paste margin -0.1 mm), a U9 paste ratio, an R134 mask margin and a removed paste layer;
+- R19-GATE-02: b08e (R131 re-coded to C11702 / 0402WGF1001TCE with Value 10k) fails K-actuators and S-4;
+- R19-GATE-03: b10b (0.30 mm neck);
+- R19-GATE-04: a 0.2 mm run on VLOGIC, PORT_5V3 (twice), CAM_5V, PORT_4V8 and 3V3;
+- R19-GATE-06: RADIO moved 4.2 mm north;
+- R19-GATE-07: b21b ("BATT+") and a shown Value field;
+- R19-REQ-10: V3V3_SENSE back in the list;
+- R19-RTE-01: U1.19's pour connection restored, giving the 1.693 mm^2 piece;
+- item 11: the via (30.5, 9.95) removed.
+The gate lane's `check.sh` exits 0:
+- check_r10: 35 rules;
+- fab: content checks 3 / 3, manifest 6 outputs;
+- self-tests: shell 10, procurement 20, fab_validation 34, fit 33, paste 16, r10_parts 5, route 68, R10 234 (6
+  NumPy skips under KiCad Python), and NumPy `HotplugNumerics Plate` 6.
+
+Open items:
+- U1.74's GND piece needs the CAD fix above.
+- BAT and SWITCH word centre margins are below 1.0 mm (reported only).
+- check_procurement `--cost-only` still fails at $85.35 against the $84.41 cap. That is an owner decision, outside
+  check.sh, and was not touched.
+
+The record index is now **152 unique D IDs through D-R19-15**.

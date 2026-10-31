@@ -40,7 +40,8 @@ T = 1.566e-3
 # R18-MEC-01: R10's east-edge terminals (J410 / J420 / J9 carry most of the east column's mass on an 82 mm unsupported
 # edge), J400 and the 1210-class C431 / C421 / C411 beside them are reported too
 STRAIN_PARTS = ('U31', 'U30', 'U4', 'U1', 'J121', 'J124', 'C121', 'C84', 'U5', 'J1', 'J122',
-                'J410', 'J420', 'J9', 'J400', 'C431', 'C421', 'C411', 'J440', 'C445')   # D-R19-14: the AUX port and its 1210
+                'J410', 'J420', 'J9', 'J400', 'C431', 'C421', 'C411', 'J440', 'C445',   # D-R19-14: the AUX port and its 1210
+                'R150', 'R151', 'R152', 'R153', 'R154', 'R155')   # R18-MEC-01: the servo resistors beside J122
 
 
 def leg(n, t):

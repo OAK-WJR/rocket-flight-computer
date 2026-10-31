@@ -38,7 +38,10 @@ bodies can hide the top legends, so **check every lead's pin identity by continu
   5.456 V buck output through U402; it is not a separate setpoint or guarantee.
 - **J410, J420 and J440 are electrically identical** (owner request, D-R19-14): the GPS or the radio may be wired to any of them. Firmware keeps the
   port map (default GPS on J410, radio on J420, AUX spare, as the silkscreen words show); record any other wiring in the firmware map before flight.
-  The AUX port may draw up to 100 mA at 4.8 V beyond the GPS 150 mA and radio 300 mA. **J9 is not interchangeable** with them: it carries the 5.4 V
+  The AUX port may draw up to 100 mA at 4.8 V beyond the GPS 150 mA and radio 300 mA (provisional until the first-article
+  power-knot temperature check, ORDERING 8.3). Any device on J410, J420 or J440 must drive its TX high at no more than 3.6 V:
+  no 5 V-logic devices (R20-MCU-02). Before connecting any module, check PORT_4V8 at J410.1, J420.1 and J440.1 reads
+  4.71–4.87 V on pack power, e-match disconnected (R20-PWR-02). **J9 is not interchangeable** with them: it carries the 5.4 V
   camera supply, the reversed TX / RX order and an isolated UART.
 - **What R10 does not have:** J124, an ARM plug, link or fuse, a pull-pin, GH connectors, servo headers or tie holes, on-board radio or GNSS, and
   an SMA or coax overhang. The GPS, the LR900-F radio and the AUX port use the shared PORT_4V8 supply (nominal 4.792 V) and direct protected UARTs. The camera alone keeps its switch and
@@ -47,13 +50,18 @@ bodies can hide the top legends, so **check every lead's pin identity by continu
 ## Power, arming and USB
 
 The sole J400 screw switch is the power and pad-arming device, reachable on the rail; turn it on last and off first. Connect the e-match without USB or
-any self-powered module (GPS, radio, camera) attached. USB bench work requires the pack or the e-match to be disconnected.
+any self-powered module (GPS, radio, AUX or camera) attached. USB bench work requires the pack or the e-match to be disconnected.
 **The GPS, radio and AUX ports are fed from the battery path, so they are off on USB-only power:** during a USB-only session either disconnect the J410, J420
 and J440 leads or check that pins J410.3, J420.3 and J440.3 stay near 0 V (the board's TX lines must not drive an unpowered module). Per flight, before the
 e-match is inserted: with the pack connected and J400 open, confirm the board is off (no telemetry or buzzer, or 3V3 at TP81 below 0.3 V), then measure
 J121.2 (IGN) to GND with a floating meter; it must read below 0.1 V. After any closed-switch check, confirm that opening J400 turns the board off: surface
 leaks at U9's EN node or a chafed J400.2 lead can hold it on (R19-SAF-02). Run the J400 pair twisted, on its own ties, away from the battery and servo
-power leads.
+power leads and from J440's leads, which leave the same west edge: a chafe from J440.1 (4.79 V) or J440.3 (TX) onto J400.2 holds U9 on
+(EN 1.87 V or 1.28 V, Calculation), and J440.1 or J440.2 onto J121.1 with the bus on joins the OUT-to-GND fire class. Keep J440's leads apart from the igniter leads too.
+**J440 lead routing (R20-MEC-01):** route J440's leads aft, over or around the (4, 4) nylon screw head, keep them south of
+y 23.5, and take them past the aft edge on the side away from the camera shroud, tied to the sled. Never run them forward
+along x = 0, where they would cross the USB-C plug zone, ride over the (4, 44.3) support head and run beside the J121 / J400
+exits. The same applies if the GPS or the radio is moved to J440.
 Preserve AGENTS section 2 and the electrically isolated Blue Jay. Qualify dry contacts, strain relief, ferrules and gauge, polarity and UART order and installed RF immunity.
 
 ## Board, supports and hardware
@@ -62,8 +70,9 @@ The board is 46 × 90 × 1.6 mm. Retain the five supports at (4,4), (42,4), (4,4
 **Use nylon (or otherwise insulated) screws and washers at all five supports:** at (4,44.3) the exposed LED2, LED1 and J2 lands (GND, GND, 3V3 and NRST) lie
 only 3.808–3.918 mm from the support centre, against a 3.8 mm washer gate. Start with the selected 4 mm standoffs, nut on the sled side and head on top; keep the nut-inclusive
 h + t below 6.0 mm at x = 4 and 42 and below 5.3 mm at x = 3.7. Program J2 before installing the adjacent mid support, or remove it for programming.
-Hardware maxima, eccentricity, solder tails, plate strength and shock clearance remain unqualified. The optional 100 g / D5 model (run on `632a9ad3…`, not re-run since; J440 has been added since) leaves only 0.270913 mm below C431
-at h = 4 mm and predicts overlap at h = 3.5 mm. This is an inference, not a physical result. The east edge carries 34 g of the 70.5 g board mass on an unsupported 82 mm edge
+Hardware maxima, eccentricity, solder tails, plate strength and shock clearance remain unqualified. The optional 100 g / D5 model, re-run on `50a39de5…` by the round 20 mechanics lens (R20-MEC-02), gives a first mode of 180.8 Hz pinned (was 181.1)
+for an estimated 78.6 g (was 70.5 g), and leaves only 0.261 mm below C431 (was 0.271) and 0.320 mm below C421 at h = 4 mm at 100 g; it predicts overlap at
+h = 3.5 mm. These are Calculation/Inference, not physical results. The east edge carries 34 g of the board mass on an unsupported 82 mm edge
 (see M3_R10, "East-edge asymmetry"): require a first-article vibration and shock check.
 
 **Terminal bodies and wires.** Maximum DB125 insulating bodies are in the VRML models. The fit checker separately allocates all 27 solder tails to their native pad XY boxes and
@@ -108,7 +117,7 @@ no production copper change and no full PCB, CLI or gate qualification of that M
 ## Cost
 
 The target is $84.41 per board, R3's cost per board for parts plus JLC feeder fees only. The supplier data (stock 2026-10-31T08:22Z, cost 08:23Z) give $85.35 placed, with no minimum-purchase uplift (every minimum is 1);
-JLC's fixed fees add $16.79 per board (5 boards). **The cost target fails by $0.94** because of the owner-approved AUX port (+$1.14); the owner decides whether to accept it. Stock passes; U4 (now the ISM6HG256X) is thin at 9 for 5, so buy at once.
+JLC's fixed fees add $16.79 per board (5 boards). **The cost target fails by $0.94** because of the owner-approved AUX port (+$1.14); the owner decides whether to accept it. U4 (now the ISM6HG256X) shows 9 in stock but only 2 orderable, so it may be 3 short (R20-BOM-01, Inference): confirm the quantity in the JLC cart on order day, else consign the LSM6DSV320X.
 Quote, process and owner acceptance are open. C84 is on the owner BOM, bought by the owner and hand-fitted after both reflows. No physical fit, firmware or order is qualified. Table and basis: [M3_R10.md, "Cost and stock"](M3_R10.md#cost-and-stock).
 
 Current source and qualification details: [M3_R10.md](M3_R10.md), [ORDERING.md section 8](ORDERING.md), and the maker-linked `sources/r10_design/parts_qualification.md`. Apply the parent mirror update only within its

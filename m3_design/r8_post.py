@@ -143,7 +143,7 @@ def run_on_offenders(b):
 
 def courtyard_fails(b, f):
     """r7_post.courtyard_offenders for one part: its visible designator's ink lies nearer another part's courtyard
-    (on the face the text is on, centres within 8 mm) than its own part's courtyard (ink polygon to courtyard
+    (on the face the text is on, of any size: R20-MFG-02) than its own part's courtyard (ink polygon to courtyard
     polygon)."""
     t = f.Reference()
     yard = f.GetCourtyard(pcbnew.B_CrtYd if f.IsFlipped() else pcbnew.F_CrtYd)
@@ -152,7 +152,7 @@ def courtyard_fails(b, f):
     ink_ = pcbnew.SHAPE_POLY_SET()
     t.TransformShapeToPolygon(ink_, t.GetLayer(), 0, silk.MM(0.002), pcbnew.ERROR_INSIDE)
     back = t.GetLayer() == pcbnew.B_SilkS
-    c = ink_.BBox().Centre()
+    box = ink_.BBox()
     own = r7_post._poly_gap(ink_, yard)
     for g in b.GetFootprints():
         if g.GetReference() == f.GetReference() or g.IsFlipped() != back:
@@ -160,8 +160,8 @@ def courtyard_fails(b, f):
         ps = g.GetCourtyard(pcbnew.B_CrtYd if back else pcbnew.F_CrtYd)
         if not ps.OutlineCount():
             continue
-        bb = ps.BBox().Centre()
-        if abs(bb.x - c.x) < silk.MM(8) and abs(bb.y - c.y) < silk.MM(8) and r7_post._poly_gap(ink_, ps) < own:
+        # R20-MFG-02: no 8 mm box-centre filter; a courtyard whose box lies at least `own` away cannot be nearer
+        if r7_post._box_gap(box, ps.BBox()) < own and r7_post._poly_gap(ink_, ps) < own:
             return True
     return False
 

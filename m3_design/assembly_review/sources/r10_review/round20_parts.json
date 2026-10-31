@@ -1,0 +1,123 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round20_parts",
+ "reviewer": "claude",
+ "target_commit": "6628488cf34bf33bdf104cb4383fcbe447c5da65",
+ "board_sha256_before": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "board_sha256_after": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 3
+ },
+ "findings": [
+  {
+   "id": "R20-BOM-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "U4 ISM6HG256XTR: JLC reports 9 in stock but only 2 orderable (canPresaleNumber), against 5 needed; the stock gate reads stockCount only",
+   "evidence": {
+    "file": "m3_design/assembly_review/fab/stock_check.json; tools/jlc_stock.py lines 116-128; docs/ORDERING.md section 8.1 U4 row; docs/REQUIREMENTS.md M1",
+    "reference": "U4 C51931514",
+    "measured": "JLC selectSmtComponentList exact-code query 2026-10-31T09:54-09:57Z: stockCount 9, canPresaleNumber 2, minPurchaseNum 1, lossNumber 0; the round 19 probe (01:54Z) also had canPresaleNumber 2. Every other line has canPresaleNumber >= 2 x need (U9 45 / 29 for 5; C535146 201 / 194 for 40; U1 812 / 721 for 5). LCSC stock for C51931514 is 0, so JLC cannot be restocked from LCSC.",
+    "interpretation": "Inference: the project itself reads canPresaleNumber as the orderable quantity (docs/ORDERING.md line 34 \"stock 0, available -33\"; docs/ROCKET_FC_FROZEN_DESIGN.md lines 29 and 63 \"canPresale -519, oversold\"). On that reading 7 of the 9 are already committed elsewhere and U4 is short by 3, not thin. JLC semantics not confirmed from a JLC document.",
+    "url": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList (keyword C51931514)"
+   },
+   "impact": "Procurement only, no hardware effect. The docs and the gate say \"9 available for 5, buy at once\"; if only 2 can be ordered, the order stalls at JLC parts matching or falls back to the LSM6DSV320X consignment path (CPL rotation regenerate, firmware register map), which ORDERING 8.1 already describes.",
+   "concrete_fix": "Record canPresaleNumber in jlc_stock.py and treat min(stockCount, canPresaleNumber) as available (fail short, warn thin); restate the U4 row in ORDERING 8.1 and REQUIREMENTS M1 as \"9 in stock, 2 orderable\"; on order day add U4 to the JLC cart first (or pre-buy into Parts Manager) and confirm the quantity before paying, else start the LSM6DSV320X consignment."
+  },
+  {
+   "id": "R20-BOM-02",
+   "severity": "Minor",
+   "status": "carried (R19-BOM-04, R18-BOM-02)",
+   "title": "DB125 holes 1.30 mm / lands 1.90 mm against DORABO T0-1 1.20 mm on all contacts, now 27 with J440",
+   "evidence": {
+    "file": "kilib/rocket.pretty/M3_DB125_4P_GN.kicad_mod (unchanged since 1e60441)",
+    "reference": "J1, J9, J121, J122, J400, J410, J420, J440",
+    "measured": "J440 uses the same footprint as J410 (fresh EasyEDA C2757925 reconstruction residual 0.000 mm on all 4 pads, CPL Top 270 like J1 / J400)."
+   },
+   "impact": "Bounded first-article hole fill / wobble; unchanged.",
+   "concrete_fix": "No CAD change; keep the R18-m11 first-article fill check, now including J440."
+  },
+  {
+   "id": "R20-BOM-03",
+   "severity": "Minor",
+   "status": "carried (R19-BOM-05, R18-BOM-04)",
+   "title": "VCAP C19 / C20 (C23630, 2.2 uF X5R +/-10 %) still lack a maker-bounded worst case against ST 2.2 uF +/-20 %",
+   "evidence": {
+    "file": "fab/m3_bom_jlc.csv line 4",
+    "reference": "C19, C20",
+    "measured": "Unchanged code and land; C87 left this line (qty 3 -> 2)."
+   },
+   "impact": "Bench qualification item, unchanged.",
+   "concrete_fix": "As R18-m10."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R19-04",
+   "claim": "C123 10 nF 50 V X7R 0402 CL05B103KB5NNNC C15195 at F(18.22,71.85) 0 deg, ACT_EN to GND",
+   "measurement": "Native: C123 F.Cu (18.220,71.850) rot 0, pad1 ACT_EN, pad2 GND, Q122.1 ACT_EN. BOM line C123,C408 C15195 qty 2. LCSC live: 10 nF, X7R, +/-10 %, 50 V. CPL Top 0, EasyEDA C0402 residual 0.000 mm. F.Paste flashes 0.50 x 0.54 at (17.80,71.85) and (18.64,71.85).",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-07",
+   "claim": "C84 M3_MA_8x10 has no F.Paste; copper and mask unchanged",
+   "measurement": "Library pads layers F.Cu F.Mask only; board pads match. Gerber F_Paste: no flash within 0.3 mm of (27.5,81.75) or (27.5,75.25); F_Mask: 1.7 x 3.5 openings present at both. Paste totals F 257 / B 371 (245 + C123 2 + J440 cell 10 = 257). Owner BOM: C84 C46550466 MA25V470M8x10, JLC live 111,338 in stock.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-10",
+   "claim": "C87 220 nF 25 V X7R CL10B224KA8NNNC C21120 on the same 0603 land",
+   "measurement": "Native C87 F(17,65) rot 0, BAT_ENABLE / GND, rocket:C0603; BOM line C87,C126 C21120 qty 2, Basic; LCSC 220 nF X7R +/-10 % 25 V; CPL residual 0.000 mm. EN <= 2.06 V is 8 % of rating. DC-bias derating remains an inference (Samsung curve not read by me either).",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-11",
+   "claim": "U4 ISM6HG256XTR C51931514 on the same land, same pin map and axes; CPL bottom 0 -> 180 deg, residual 0.040 mm",
+   "measurement": "DS15034 Rev 1 Fig. 5 p9 rendered side by side with DS14623 Rev 1 p9: identical pin map, axis and angular-rate figures. Table 2 pp10-11: pins 2/3 SDx/SCx \"connect to VDDIO or GND\" (board: GND), pins 10/11 \"VDDIO or leave unconnected\" (board: NC), 5 VDDIO and 8 VDD (3V3A), 4 INT1, 12 CS, 13 SCL, 14 SDA, 1 SDO. Drawing p187 DM01021587_2: 14 x 0.475 x 0.25 mm pads, 0.5 mm pitch, 2.5 x 3.0 x 0.83 mm. Board pads seen from the top equal the datasheet bottom view (pin 1 upper right, 1-4 down the east side, 5 south-east, 12-14 north). Fresh EasyEDA C51931514 is LGA-14_L3.0-W2.5-P0.50-BR, exactly 180 deg from C26633007 TL; reconstruction at Bottom 180 gives 0.040 mm on all 14 pads, no pad nearer a wrong number; repo pads.json entry equals the fresh record. B.SilkS pin-1 dot at (18.91,45.14), 0.70 mm east of pad 1 (18.21,45.15). Live: stock 9, Extended, $14.34 (see R20-BOM-01). Operating temperature -40..+105 C (DS15034 p14).",
+   "verdict": "confirmed (procurement residual R20-BOM-01)"
+  },
+  {
+   "d_id": "D-R19-14 (parts)",
+   "claim": "J440 cell reuses J410 codes: C2757925, C21190 x2, C535146 x2, C14663, C21397",
+   "measurement": "Native nets: J440 1 PORT_4V8 / 2 GND / 3 AUX_TX_WIRE / 4 AUX_RX_WIRE; R471 AUX_TX_MCU-AUX_TX_WIRE, R470 AUX_RX_WIRE-AUX_RX_MCU, D440 / D441 wire-GND, C444 / C445 PORT_4V8-GND; same topology and codes as J410 / J420. All seven rows reconstruct from fresh EasyEDA: J440 0.000, C444 0.075, C445 0.017, D440 / D441 0.005, R470 / R471 0.072 mm. LCSC ratings: C21397 22 uF X7R 25 V; C14663 100 nF X7R 50 V; C535146 bidirectional, Vrwm 15 V; C2757925 300 V 10 A -40..105 C. Stock: C2757925 37,802 for 20; C535146 201 (194 orderable) for 40.",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [],
+ "rejected_or_closed_candidates": [
+  "Consigned LSM6DSV320X under the 180 deg CPL row: ORDERING 8.1 (R10) says its rotation is 0 deg from its own EasyEDA footprint and to regenerate the CPL; the R9 section 1 / 4 text that consigns C26633007 without that note is R9 history. Closed.",
+  "Q124 reconstruction 1.789 mm: EasyEDA drain pads 5-9 fall inside our merged pad 5 (carried, closed in R19).",
+  "R134 0.491, LS120 0.45, Q120 / Q121 0.35 mm residuals: land-size differences, every pad nearest its own number. Closed.",
+  "C444 designator on B.SilkS under a top part: allowed by AGENTS 3 (crowded designators go on the bottom under their part).",
+  "Identity: kicad-cli 10.0.7 netlist vs native board vs JLC BOM / CPL vs owner BOM: 215 / 215 symbols and footprints, 206 fitted, 205 CPL rows, 666 pin nodes, 0 mismatches.",
+  "Values / MPN / package: all 82 codes match the live JLC model and LCSC parameters; 36 Basic / 45 Extended.",
+  "Cost: live parts $60.57 incl. C84 + feeder $24.79 = $85.35 per board at 5 against the $84.41 cap; owner decision, noted only."
+ ],
+ "checks_actually_executed": [
+  "git archive 6628488 into the probe dir; SHA-256 of the board before / after on both the archive and the working tree",
+  "Native pcbnew dump of all 215 footprints (fields, pose, pads, layers)",
+  "kicad-cli 10.0.7 schematic netlist; identity comparison against board, JLC BOM, CPL and owner BOM",
+  "kicad-cli 10.0.7 DRC --schematic-parity --severity-all: 0 violations, 0 unconnected, 0 parity (lib_footprint_mismatch included)",
+  "Fresh EasyEDA records for C51931514, C26633007, C21120, C15195, C2757925, C535146, C21190, C14663, C21397; round 19 same-day cache for the other 74 codes; CPL reconstruction of all 205 rows",
+  "Live JLC exact-code and LCSC detail queries for all 82 codes plus C26633007 (2026-10-31T09:54-09:57Z)",
+  "Gerber flash checks of F_Paste / F_Mask at C84, C123, D440, C445; paste flash totals",
+  "Render of the bottom side and U4 crop; B.SilkS pin-1 dot location",
+  "DS15034 / DS14623 p9 rendered and compared; DS15034 Table 2 and p187 text read",
+  "git diff 1e60441..6628488 of the fab package, kilib, pads.json and verified_part_metadata.json"
+ ],
+ "sources": [
+  "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (DS15034 Rev 1 p9 Fig. 5, pp10-11 Table 2, p187 Fig. 32)",
+  "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf (DS14623 Rev 1 p9)",
+  "https://easyeda.com/api/products/C51931514/components?version=6.5.39",
+  "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList",
+  "https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=<code>"
+ ],
+ "coverage_limits": [
+  "JLC bottom-side rotation convention and the meaning of canPresaleNumber are Inferences; the JLC placement preview and cart quantity are the release checks.",
+  "Lands of unchanged footprints (DB125, microSD, U9, U1, U5, Q120 / Q121 / Q124, USB-C, crystal) were re-checked by EasyEDA reconstruction and DRC library parity only; their maker-drawing comparisons are carried from round 19 (library files unchanged since 1e60441 except M3_MA_8x10).",
+  "Stock and prices are a 2026-10-31T09:54-09:57Z snapshot.",
+  "No physical, firmware or JLC quote qualification."
+ ]
+}

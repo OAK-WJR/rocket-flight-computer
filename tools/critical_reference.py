@@ -28,24 +28,44 @@ R6_NETS = ('USB_DP', 'USB_DM', 'HSE_IN', 'HSE_OUT', 'QSPI_CLK', 'QSPI_NCS', 'QSP
            'QSPI_IO3', 'SPI1_SCK', 'SPI1_MOSI', 'SPI1_MISO', 'IMU_CS')
 EXTENDED = ('SWDIO', 'SWCLK', 'NRST', 'RADIO_NSS', 'RADIO_SCK', 'RADIO_SCK_MCU', 'RADIO_MOSI', 'RADIO_MOSI_MCU',
             'RADIO_MISO', 'RADIO_MISO_MCU')
+# R19-REQ-10: R10 has no on-board radio, so its extended set is the debug port alone; EXTENDED keeps the R7-R9 radio SPI
+# names for the record tools (reference_audit.py, --extended) that judge those boards.
+EXTENDED_R10 = ('SWDIO', 'SWCLK', 'NRST')
 # R10 external-port signal nets: the ONE definition both gates use (R3-RTE-01 / R3-GATE-04): route_check profile r10
 # classes them critical for hygiene; AUD-2 omits only the named slow controls from 1.5 mm GND-partner and reference
 # checks. Always-on GPS/radio/AUX have only the MCU and wire sides of their 1 kOhm resistors (D-R19-14 adds the
 # identical AUX port); the camera retains its translator buffer side, CAM_MCU_TX / _RX names, and load-switch/OE controls.
-R10_PORT_UART = re.compile(r'^((GPS|RADIO|AUX)_(TX|RX)_(MCU|WIRE)|CAM_(TX|RX)_(MCU|WIRE|BUFFER)|CAM_MCU_(TX|RX))$')
+# R19-REQ-10: the camera's MCU-side nets are CAM_MCU_TX / _RX; the CAM_TX_MCU / CAM_RX_MCU names this list also generated
+# exist on no R10 board and are dropped (their pattern too, so both gates still share one definition).
+R10_PORT_UART = re.compile(r'^((GPS|RADIO|AUX)_(TX|RX)_(MCU|WIRE)|CAM_(TX|RX)_(WIRE|BUFFER)|CAM_MCU_(TX|RX))$')
 R10_PORT_CONTROL = re.compile(r'^CAM_(PWR_EN|FAULT_N|UART_OE)$')
 R10_PORT_NETS = ('CAM_MCU_TX', 'CAM_MCU_RX') + tuple(f'{port}_{signal}_{side}' for port in ('GPS', 'RADIO', 'AUX', 'CAM')
-    for signal in ('TX', 'RX') for side in (('MCU', 'WIRE', 'BUFFER') if port == 'CAM' else ('MCU', 'WIRE'))) + tuple(
+    for signal in ('TX', 'RX') for side in (('WIRE', 'BUFFER') if port == 'CAM' else ('MCU', 'WIRE'))) + tuple(
     f'CAM_{signal}' for signal in ('PWR_EN', 'FAULT_N', 'UART_OE'))
 assert all(R10_PORT_UART.match(n) or R10_PORT_CONTROL.match(n) for n in R10_PORT_NETS)
 R10_SD_NETS = ('SD_SCK', 'SD_MISO', 'SD_MOSI', 'SD_CS', 'SD_DAT1', 'SD_DAT2')
 R10_SD_SIGNAL = re.compile(r'^SD_(SCK|MISO|MOSI|CS|DAT[12])$')
 
 # AUD-2: these named slow nets omit return geometry only; route_check keeps their critical hygiene classes.
+# R19-REQ-10 (D-R19-15): V3V3_SENSE went with its divider (D-R18-01) and is dropped. The GPS / RADIO / AUX / CAM port
+# UART nets stay OUT of this list, under the stricter 1.5 mm GND-partner-via and one-In2-region rules: R19-REQ-10
+# proposed relaxing them (115200 baud behind 1 kohm), but the frozen board meets them, and relaxing a gate rule needs a
+# reason that board does not give.
 R10_SLOW_RETURN_NETS = frozenset(
-    {'VLOGIC_SENSE', 'V3V3_SENSE', 'CAM_5V_SENSE', 'ACT_EN', 'ACT_EN_MCU', 'ACT_DRV', 'ACT_GATE'}
+    {'VLOGIC_SENSE', 'CAM_5V_SENSE', 'ACT_EN', 'ACT_EN_MCU', 'ACT_DRV', 'ACT_GATE'}
     | {base + suffix for base in ('PYRO1_CONT', 'ARM1_SENSE') for suffix in ('', '_MID')}
     | {f'CAM_{signal}' for signal in ('PWR_EN', 'FAULT_N', 'UART_OE')})
+
+
+def r10_names():
+    """{list name: names}: every net the R10 gates name (K-reference's sample set and AUD-2's whitelist)."""
+    return {'R6_NETS': R6_NETS, 'EXTENDED_R10': EXTENDED_R10, 'R10_PORT_NETS': R10_PORT_NETS,
+            'R10_SD_NETS': R10_SD_NETS, 'R10_SLOW_RETURN_NETS': tuple(sorted(R10_SLOW_RETURN_NETS))}
+
+
+def r10_stale_names(board_nets):
+    """R19-REQ-10: [(list name, name)] of every listed name that is no net of the board (a stale entry fails)."""
+    return [(lst, n) for lst, names in r10_names().items() for n in names if n not in board_nets]
 
 
 def r10_slow_return_net(name):

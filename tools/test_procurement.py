@@ -87,6 +87,35 @@ class ProcurementValidation(unittest.TestCase):
                 self.assertFalse(jlc_cost.cost_report(self.parts(), 5, 'standard', 1,
                     fetch=lambda _: dict(self.item, **changes))['ok'])
 
+    def test_presale_number_caps_the_orderable_quantity(self):
+        """R20-BOM-01: U4's live JLC data on 2026-10-31 (stockCount 9, canPresaleNumber 2) for 5 boards is short, where
+        stockCount alone read it as thin; both numbers are reported and the smaller is the orderable quantity."""
+        self.bom([('C51931514', 'U4')])
+        u4 = dict(self.item, stockCount=9, canPresaleNumber=2)
+        report = jlc_stock.stock_report(self.parts(), 5, lambda _: u4)
+        self.assertFalse(report['ok'])
+        line = report['lines'][0]
+        self.assertEqual((line['jlc_stock'], line['jlc_presale'], line['orderable']), (9, 2, 2))
+        self.assertEqual(report['short'], ['C51931514 U4 orderable 2 (stockCount 9, canPresaleNumber 2) < 5'])
+        # (stockCount, canPresaleNumber) -> (ok, thin): the smaller one decides; absent leaves stockCount alone;
+        # an oversold (negative) or unreadable canPresaleNumber is short
+        for stock, presale, ok, thin in ((9, None, True, True), (9, 100, True, True), (100, 20, True, False),
+                                         (100, 7, True, True), (100, 5, True, True), (100, 4, False, False),
+                                         (0, 40, False, False), (9, -33, False, False), (9, 'unknown', False, False),
+                                         (9, 4.5, False, False), (9, True, False, False)):
+            item = dict(self.item, stockCount=stock)
+            if presale is not None:
+                item['canPresaleNumber'] = presale
+            with self.subTest(stock=stock, presale=presale):
+                result = jlc_stock.stock_report(self.parts(), 5, lambda _: item)
+                self.assertEqual((result['ok'], bool(result['thin'])), (ok, thin))
+        with patch.object(jlc_stock, 'lookup', return_value=u4), patch.object(jlc_stock.time, 'sleep'), \
+                patch('sys.argv', ['jlc_stock.py', '--fab', str(self.folder)]):
+            self.assertEqual(jlc_stock.main(), 1)
+        saved = json.loads((self.folder / 'stock_check.json').read_text())
+        self.assertEqual((saved['lines'][0]['jlc_stock'], saved['lines'][0]['jlc_presale']), (9, 2))
+        self.assertIn('canPresaleNumber', saved['source'])
+
     def test_price_without_matching_quantity_break_is_not_guessed(self):
         self.assertIsNone(jlc_cost.unit_price(dict(componentPrices=[
             dict(startNumber=100, endNumber=-1, productPrice=0.01)]), 15))

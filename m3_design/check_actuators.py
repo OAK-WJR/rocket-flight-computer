@@ -340,6 +340,8 @@ def check(text, dru=None, profile="r9"):
     part, side = {}, {}
     pin, val = pad_nets(text, part, side)
     fpname = {properties(fp)['Reference'].items[2].atom: fp.items[1].atom for fp in read(text).children('footprint')}
+    mpn = {properties(fp)['Reference'].items[2].atom: properties(fp)['Manufacturer Part'].items[2].atom
+           for fp in read(text).children('footprint') if 'Manufacturer Part' in properties(fp)}
     members = {}
     for p, n in pin.items():
         if n: members.setdefault(n, set()).add(p)
@@ -518,6 +520,14 @@ def check(text, dru=None, profile="r9"):
             and pin.get('C123.1') == 'ACT_EN' and pin.get('C123.2') == 'GND',
             'R10 C123 must be the 10nF 0402 (C15195) Q122 gate-source capacitor, ACT_EN to GND')
         req('TP121' not in val, 'R10 D-R19-03: the ACT_GATE test pad TP121 must be removed')
+        # R19-GATE-02: the cold pull-up and the two sense-node filter capacitors are pinned by code as well as value: a
+        # source-level re-code of R131 to a 1 kohm part (C11702) let the healthy continuity band overlap the open band.
+        req(val.get('R131') == '10k' and part.get('R131') == 'C25744' and mpn.get('R131') == '0402WGF1002TCE'
+            and fpname.get('R131') == 'rocket:R0402',
+            'R10 R131 must be the 10k 0402 cold pull-up C25744 / 0402WGF1002TCE (R19-GATE-02)')
+        for c in ('C127', 'C129'):
+            req(val.get(c) == '10nF 50V X7R 10%' and part.get(c) == 'C57112',
+                f'R10 {c} must be the 10nF 50V X7R sense filter capacitor C57112 (R19-GATE-02)')
     else:
         req({pin.get('R122.1'), pin.get('R122.2')} == {'RAW_PROTECTED', 'ACT_EN'}, 'ACT_EN divider from RAW_PROTECTED')
     req(pin.get('Q122.1') == 'ACT_EN' and pin.get('Q122.3') == 'ACT_DRV', 'Q122 drives the load-switch gate')

@@ -15,13 +15,13 @@ hardware that was removed from R10 and is kept only for the record. The round 19
 
 ## Round 19 component amendments (2026-10-30/31; D-R19-04, -07, -10, -11, -14)
 
-No new BOM code except U4's. JLC BOM 81 lines (45 Extended / 36 Basic) plus C84 on the owner BOM; 205 placed parts. Live JLC 2026-10-31T08:23Z: $85.35 per board against the $84.41 cap (owner decision pending; see M3_R10 "Cost and stock"); no line short, U4 thin.
+No new BOM code except U4's. JLC BOM 81 lines (45 Extended / 36 Basic) plus C84 on the owner BOM; 205 placed parts. Live JLC 2026-10-31T08:23Z: $85.35 per board against the $84.41 cap (owner decision pending; see M3_R10 "Cost and stock"); no line short by `stockCount`, but U4 shows 9 in stock and only 2 orderable, so it may be 3 short (R20-BOM-01, Inference).
 
 | Ref | Part | Change and evidence |
 |---|---|---|
 | U4 (fitted) | ST **ISM6HG256XTR**, LCSC C51931514, Extended | Replaces LSM6DSV320XTR (0 JLC stock; R19-BOM-01) on the unchanged `LGA-14_L3.0-W2.5-P0.50-TL` land and pose B(17,45.9), 180°. [DS15034 Rev 1](https://www.st.com/resource/en/datasheet/ism6hg256x.pdf): LGA-14L 2.5 × 3.0 × 0.83 mm, drawing p187 the same as DS14623's (14 × 0.475 × 0.25 mm pads, 0.5 mm pitch); Figure 5 p9 and Table 2 pp10–11 give the same pin map and axis directions as DS14623 Rev 1 p9, so roll stays −gyro_Y and the lever arm is unchanged; gyro ±4000 dps, low-g ±16 g and high-g ±32…256 g meet F1 / F2; −40…+105 °C (p1). Pins 10–11 (OCS_Aux, SDO_Aux) stay unconnected ("VDDIO or unconnected", Table 2). WHO_AM_I reads 0x73 on both parts (p66). **The high-g full-scale codes differ** (Table 150 p93: on the ISM part 100 = ±256 g and 011 is reserved; on the LSM part 011 = ±256 g, 100 = ±320 g), so firmware uses only codes 001 / 010, which mean the same on both. Live JLC 2026-10-31: 9 in stock for 5 (thin: buy at once), $14.34 at 1–9. CPL rotation 180° from the EasyEDA `LGA-14_L3.0-W2.5-P0.50-BR` footprint (14 pads matched, residual 0.040 mm); confirm pin 1 in JLC's bottom-side preview. That the two parts' register maps otherwise match is not checked (Inference). |
 | U4 (alternate) | ST LSM6DSV320XTR, LCSC C26633007 | Consign only if the ISM stock is gone: same land, pins, axes and board pose; its `pads.json` record is kept. Its CPL rotation comes from its own EasyEDA TL footprint (0°, as before round 19), so regenerate and re-verify the CPL (`jlc_orient --verify-cpl`) if it is fitted. [DS14623 Rev 1](https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf) pp9, 187. |
-| C87 | Samsung **CL10B224KA8NNNC**, 220 nF 25 V X7R 10 % 0603, LCSC C21120 (Basic, C126's line) | Was 2.2 µF C23630 (R19-REQ-02, D-R19-10); same land F(17,65). EN stays ≤ 2.06 V (8 % of rating). With R80 + R165 = 940 kΩ, R81 = 300 kΩ and the [TPS25947 SLVSFC9C p9](https://www.ti.com/lit/ds/symlink/tps25947.pdf) EN thresholds (Calculation): turn-on 88 / 56 / 45 ms at 6.0 / 7.4 / 8.4 V (31–122 ms over C 0.72–1.27 ×, 1 % resistors and thresholds); a J400 drop-out shorter than 19 / 33 / 41 ms (worst 12 / 22 / 27 ms) cannot trip U9. The X7R DC-bias loss at ≤ 2.06 V is taken as ≤ 6 % inside the 0.72 × minimum (Inference: Samsung's curve not re-read). C19 / C20 keep C23630. |
+| C87 | Samsung **CL10B224KA8NNNC**, 220 nF 25 V X7R 10 % 0603, LCSC C21120 (Basic, C126's line) | Was 2.2 µF C23630 (R19-REQ-02, D-R19-10); same land F(17,65). EN stays ≤ 2.06 V (8 % of rating). With R80 + R165 = 940 kΩ, R81 = 300 kΩ and the [TPS25947 SLVSFC9C p9](https://www.ti.com/lit/ds/symlink/tps25947.pdf) EN thresholds (Calculation): turn-on 88 / 56 / 45 ms at 6.0 / 7.4 / 8.4 V (31–122 ms over C 0.72–1.27 ×, 1 % resistors and thresholds); a J400 drop-out shorter than 19 / 33 / 41 ms (worst 11.4 / 21 / 27 ms) cannot trip U9. The X7R DC-bias loss at ≤ 2.06 V is taken as ≤ 6 % inside the 0.72 × minimum (Inference: Samsung's curve not re-read). C19 / C20 keep C23630. |
 | C123 | Samsung CL05B103KB5NNNC, 10 nF 50 V X7R 10 % 0402, LCSC C15195 (Basic, C408's line) | New Q122 gate–source capacitor at F(18.22,71.85), ACT_EN to GND (R19-SAF-06, D-R19-04). R122 ∥ R123 = 667 Ω with 10 nF plus AO3400A Ciss 630 pF typical ([AO3400A Rev 3.1 p2](https://www.aosmd.com/res/datasheets/AO3400A.pdf)): τ ≈ 7.1 µs (Calculation), microseconds against the load switch's millisecond C120 network. |
 | J440, R470 / R471, D440 / D441, C444, C445 | DB125-3.5-4P-GN-S C2757925; 1 kΩ C21190; ESD103-B1-02EL C535146; 100 nF C14663; 22 µF C21397 | The spare AUX port (D-R19-14, owner-approved 2026-10-30): an electrical copy of J410's cell, no new codes. Per board the terminal code is now 4 and the ESD code 8 (37,827 and 201 in JLC stock, 2026-10-31). AUX may draw at most 100 mA at 4.8 V (GAP-3: U401 junction ≤ 125 °C at a 70 °C bay with the inferred 80–110 °C/W; [TPS7A91 SBVS282A p1, p5](https://www.ti.com/lit/ds/symlink/tps7a91.pdf)). Its UART is USART6 PC6 / PC7; the GPS on J410 moves to USART3 PD8 / PD9 (AF7, [DS12110 Rev 8](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf) Table 13 p94; FT_h, Table 9 p75). J410 / J420 / J440 are electrically identical; firmware keeps the port map. Eight DB125 terminals now carry 27 contacts, all Ø1.30 mm holes / Ø1.90 mm copper (R19-BOM-04 carried). |
 | C84 | MA25V470M8x10, C46550466 | Its generated footprint `M3_MA_8x10` has no F.Paste since round 19 (D-R19-07; R19-MFG-02 / R19-BOM-02): no stencil aperture, the hand fit applies its own solder. The [supplier sheet](https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf) gives no manual or reflow profile; ORDERING §8.2 holds the heat limit (Inference) and the re-inspection of the bottom joints under it (R19-MEC-02). |
@@ -79,15 +79,17 @@ behavior remain unqualified; no model/CAD change.
 R410–412/R420–422, U411/U421, R442/R452 and C440/C443/C450/C453. Keep the four
 1k series resistors and ground-only ESD, and C410/C411/C420/C421 as local supply
 bypass. R440/R450 connect RX_WIRE to RX_MCU; R441/R451 connect TX_MCU to TX_WIRE.
-No firmware port power-cycle, individual FAULT or OE remains. PC6/PC7 are FT_h;
-PB12/PB13 are FT_u in [ST DS12110 Rev11 Table9 pp74–79 and Table10 pp91–92](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf).
-The digital FT absolute ceiling is min(min(relevant supplies)+4V,6V), with zero
-positive-injection allowance (Table109 pp207–208). Keep direct UART RX internal
-pulls disabled throughout operation: Table112 note3 p210/Table147 note6 p242
-requires pulls off above the relevant I/O supply+0.3V; the4V absolute-stress
-condition does not replace that operating rule. Restrict external
-UART levels to0…5V with the board powered and digital inputs configured; confirm module
-levels on the bench. A1k resistor does not give powered-off isolation: no self-powered
+No firmware port power-cycle, individual FAULT or OE remains. **Current pin map (D-R19-14, R20-MCU-04):** PD8 / PD9
+(GPS, J410, USART3, through R441 / R440) and PC6 / PC7 (AUX, J440, USART6, through R471 / R470, ESD D440 / D441) are
+FT_h; PB12 / PB13 (radio, J420, UART5, through R450 / R451) are FT_u ([ST DS12110 Rev 8](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf)
+Table 9 pp. 74–79; AF Tables 11–13 pp. 91–94; Table 119 p. 212). The digital FT absolute ceiling is
+min(min(relevant supplies) + 4 V, 6 V), with zero positive-injection allowance (Rev 8 Table 119 pp. 212–213; the 6 V cap
+is a Rev 11 design limit, Inference for Rev 8). Keep direct UART RX internal pulls disabled throughout operation: Rev 8
+Table 122 note 3 p. 215 / Table 157 note 7 p. 247 require pulls off above the relevant I/O supply + 0.3 V; the 4 V
+absolute-stress condition does not replace that operating rule. **Endpoint rule (R20-MCU-02):** any device on J410,
+J420 or J440 must drive its TX high at no more than 3.6 V (no 5 V-logic devices), because PORT_4V8 rises about 44 ms or
+more before 3V3 and an FT pin allows only 4.0 V while VDD = 0 (Table 119 p. 212). Confirm module levels and the
+PORT_4V8-to-3V3 lag on the bench. A1k resistor does not give powered-off isolation: no self-powered
 GPS/radio with the board off. Direct power pins can also back-feed the shared LDO/buck
 (Inference); connect the e-match only without USB or any self-powered port source.
 
@@ -717,15 +719,16 @@ behaviors (D-SS-01).
 The camera back-feed prohibition (REQUIREMENTS
 "Camera") extends to J410 and J420.
 
-**Port UART ESD (R3-MCU-05; current direct-port amendment).** D400/D401, D410/D411, D420/D421 are ESD103-B1-02EL
+**Port UART ESD (R3-MCU-05; current direct-port amendment).** D400/D401, D410/D411, D420/D421 and D440/D441 are ESD103-B1-02EL
 (shared code with R9's RF clamps): ±15 V working, clamping at about20/36/48 V at
 1/8/16 A TLP (Infineon ESD103-B1-02 datasheet; R3 review read rev 1.3 Tables 3/5
 p6, R7 pass 2 v2.0 Tables 2/4/6). That clamp is far above a 3.3–5 V I/O, so the
 diode limits the surge without establishing a safe receiving-pin voltage.
 Only the camera retains 1 kΩ resistors into TXU0202 U12's B side, with the MCU
 behind its A side (TI SCES942A §7.2 p5 gives ±2500 V component HBM).
-GPS/radio instead connect directly through R440/R441/R450/R451 to PC7/PC6/
-PB12/PB13. There is no translator or additional rail clamp on those four paths.
+GPS, radio and AUX instead connect directly through R440 / R441 (PD9 / PD8), R450 / R451 (PB12 / PB13) and
+R470 / R471 (PC7 / PC6), with D440 / D441 the AUX clamps (R20-MCU-04). There is no translator or additional rail clamp on
+those six paths.
 Neither the resistor nor a component HBM rating demonstrates installed cable
 ESD survival or compliance with ST's pin/injection limits. Handling protection
 is an Inference; installed waveform/ESD qualification remains open and no

@@ -117,6 +117,13 @@ def _poly_gap(a, c):
     return silk.mm(math.sqrt(best))
 
 
+def _box_gap(a, c):
+    """Edge distance (mm) between two BOX2Is, 0 when they overlap: never more than their polygons' distance."""
+    dx = max(a.GetLeft() - c.GetRight(), c.GetLeft() - a.GetRight(), 0)
+    dy = max(a.GetTop() - c.GetBottom(), c.GetTop() - a.GetBottom(), 0)
+    return silk.mm(math.hypot(dx, dy))
+
+
 def courtyard_offenders(b):
     """Visible designators whose ink lies nearer another part's courtyard (on the side the text is on) than their own
     part's courtyard (any side: a designator under its part on the other face measures to it in plan): the pass-4/5
@@ -135,10 +142,12 @@ def courtyard_offenders(b):
         ink_ = pcbnew.SHAPE_POLY_SET()
         t.TransformShapeToPolygon(ink_, t.GetLayer(), 0, silk.MM(0.002), pcbnew.ERROR_INSIDE)
         back = t.GetLayer() == pcbnew.B_SilkS
-        c = ink_.BBox().Centre()
+        box = ink_.BBox()
         own = _poly_gap(ink_, yards[ref][1])
+        # R20-MFG-02: courtyards of any size are tested; one is skipped only when its box lies at least `own` from the
+        # ink's box (the former 8 mm box-centre filter skipped large parts such as U1, J430 and J440)
         near_ = [(_poly_gap(ink_, ps), r) for r, (flip, ps, bb) in yards.items()
-                 if r != ref and flip == back and abs(bb.Centre().x - c.x) < silk.MM(8) and abs(bb.Centre().y - c.y) < silk.MM(8)]
+                 if r != ref and flip == back and _box_gap(box, bb) < own]
         if near_:
             g, r = min(near_)
             if g < own:

@@ -1,0 +1,254 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round20_safety",
+ "reviewer": "claude",
+ "target_commit": "6628488cf34bf33bdf104cb4383fcbe447c5da65",
+ "board_sha256_before": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "board_sha256_after": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 5
+ },
+ "findings": [
+  {
+   "id": "R20-SAF-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "U9's EN/UVLO pin reaches its only pull-down (R81) through three series vias; one via open floats EN and the J400 arming switch no longer controls the board",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "U9.1 (BAT_ENABLE), R81.1, C87.1, R165.2",
+    "measured": "Own single-open connectivity on native copper (.supervisor/r20_safety/open_faults.json): removing any one of the BAT_ENABLE vias (19.675,66.600), (21.300,68.900), (17.100,82.800) (0.3 mm drill) or any of 10 track segments (F.Cu (19.675,65.0)-(19.675,66.6), (21.3,68.9)-(21.3,75.2)-(18.023,78.477)-(18.023,81.877)-(17.1,82.8); B.Cu (19.675,66.6)-(21.0,67.925)-(21.0,68.6)-(21.3,68.9), (17.1,82.8)-(17.6,82.3)) separates U9.1 from R81.1 (its only pull-down; BAT_ENABLE = C87.1, R165.2, R81.1, U9.1). Run length between the divider node and U9.1 about 20 mm of 0.2 mm track. For comparison the Q120/Q121/Q122/Q124 gate networks have no via in the path from the gate pin to its pull-down (same script). After a via (17.1,82.8) open, the U9.1 island (pads, B.Cu stub, via B ring) is 0.200 mm from U9.5 / its BAT_IN 0.3 mm track (7.4-8.4 V) and 0.200-0.415 mm from U9.2 / BAT_OVLO copper (BAT_IN x 280k/2.28M, about 0.91 V at 7.4 V), with no GND within 0.6 mm on B.Cu (own measurement).",
+    "layer": "F.Cu / B.Cu",
+    "coordinates_mm": "U9 B(18.5,81.6); vias (19.675,66.6), (21.3,68.9), (17.1,82.8); R81 F(20.5,65.0); C87 F(17,65)",
+    "maker": "https://www.ti.com/lit/ds/symlink/tps25947.pdf p5 (Table 5-1: EN/UVLO 'Do not leave floating'), p9 (IENLKG -0.1..0.1 uA: no internal pull)",
+    "prior_coverage": "Round 19 single-open analysis covered ACT_GATE, ACT_FET_S, PYRO1_GATE, PYRO1_GATE_N, ACT_EN, ACT_DRV only (round19_safety.json); S-3 local_gate_bias covers the P-FETs only; R19-SAF-02 / deviation section 1 cover EN leaks, not opens."
+   },
+   "impact": "One latent via-barrel crack (thermal cycling, vibration) or a track open leaves EN floating. Its leakage environment under the QFN (BAT_IN 0.2 mm, OVLO about 0.9 V, no GND) biases it toward ON (Inference): the board can come on, or stay on, with J400 open, so the pad-arming device (AGENTS 2.1) is defeated while firmware still gates PC1 / PE4. A static open is caught by the per-flight 'off with J400 open' and 'opening J400 turns it off' checks (ORDERING 8.3); an intermittent crack may pass them. In flight a floating EN can also drop U9 (board reset). Not an inadvertent fire by itself.",
+   "concrete_fix": "Put the EN pull-down at the pin: place R81 300 kOhm (or a new high-value pull-down, with R81 re-valued so the parallel stays 300 kOhm and the R19-SAF-02 leak thresholds are unchanged) on B.Cu beside U9.1, joined to U9.1 with no via and with its GND end in the B.Cu pour; put C87 beside it if room. The J400 run then carries only the R165 feed, so any open in it leaves EN pulled low (board off, fail-safe). Extend the single-open check (S-3 or a K rule) to U9.1 -> pull-down. If no legal B.Cu spot exists, record the class in deviation section 1 as a respin item next to the R19-SAF-02 rows."
+  },
+  {
+   "id": "R20-SAF-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "S-6 (port isolation) does not see the new AUX_ nets or the arming-switch chain",
+   "evidence": {
+    "file": "tools/check_r10.py (commit 6628488)",
+    "reference": "line 830 PORT_NET = re.compile(r'^(GPS_|RADIO_|CAM_|PORT_)'); line 831 SAFE_NET = re.compile(r'^(PYRO1_|ARM1_|ACT_|RAW_ACT)'); s6() lines 2204-2231",
+    "measured": "Seeded in memory (.supervisor/r20_safety/scripts/seed_s6.py, .supervisor/r20_safety/seed_s6.txt): a 0.2 mm B.Cu AUX_TX_WIRE track (12.0,56.30)-(13.0,56.30), 0.100 mm from the PYRO1_OUT run (10.37,56.6)-(15.5,56.6), passes S-6; the identical track on GPS_TX_WIRE fails ('0.100 mm < 0.15 mm'). PORT_NET.match('AUX_TX_WIRE') is False; SAFE_NET.match('BAT_ENABLE') is False. On this board the AUX copper is >= 27.7 mm from any pyro / arming copper (AUX_RX_WIRE R470.1 to ARM1_SENSE via (29.2,45.5)) and every port net >= 7.8 mm (PORT_4V8 In2 fill), so there is no current violation. FMEA_REDUNDANCY I-11 states 'no port net touches a pyro, arming, actuator, RAW_ACT, BAT_IN, BOOT0 or NRST net (check_r10 S-6)', which the regexes do not implement. The S-8 header (line 42) and s8() docstring still describe the R3 four-net rule with GND exempt ('the P-FET gate drive'), although BARREL_NETS has 11 nets and PYRO1_OUT is now a GND hazard.",
+    "layer": "all",
+    "coordinates_mm": "seed (12.0-13.0, 56.30) B.Cu"
+   },
+   "impact": "D-R19-14 added four port nets that the port-isolation gate does not classify as port nets, and the gate never covered the U9 EN / J400 chain whose bridges latch or bypass the switch (R19-SAF-02). A future edit that put AUX copper next to a pyro, actuator or EN net, or a part joining them, would pass the gate. Gate gap; no hardware defect now.",
+   "concrete_fix": "PORT_NET = re.compile(r'^(GPS_|RADIO_|CAM_|PORT_|AUX_)'); SAFE_NET = re.compile(r'^(PYRO1_|ARM1_|ACT_|RAW_ACT|BAT_ENABLE|BAT_SW_)'); add the two seeds above (AUX fails, GPS fails) and one for a port net beside BAT_ENABLE; either add BAT_IN / NRST / BOOT0 to the protected set or correct the FMEA I-11 sentence; update the S-8 header and s8() docstring to the 11-net, three-GND-hazard rule."
+  },
+  {
+   "id": "R20-SAF-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "West-face harness rules were not extended to the AUX leads that now leave beside the igniter, switch and battery leads",
+   "evidence": {
+    "file": "docs/ORDERING.md section 8.4 (lines 619-623), docs/R10_VEHICLE_HANDOFF.md lines 49-56, docs/REQUIREMENTS.md Camera row (line 91), AGENTS.md section 1",
+    "reference": "J440 (WIRE_ENTRY -x, F(7.4,16.25)) with J121 F(7.4,55.85), J400 F(7.4,65.85), J1 F(7.4,75.85) on the same west face",
+    "measured": "Rules as committed: J400 pair 'away from the battery and servo power leads'; 'Battery and igniter enter the west row; label/dress them apart'; e-match connection 'without USB or any self-powered module (GPS, radio, camera)'; REQUIREMENTS Camera row: 'self- or USB-powered GPS on J410 or radio on J420'. Calculation (EN divider R165 470k / R81 300k, 1 % parts; TPS25947 VUVLO(F) max 1.116 V, VUVLO(R) max 1.223 V): J440.1 PORT_4V8 (4.712-4.792 V) chafed onto the J400.2 lead holds EN at 1.81-1.87 V; J440.3 board TXO idling high through R471 1 kOhm holds 1.27-1.28 V; both above 1.116 V, so J400 cannot turn the board off. A self-powered module's TX on the J440.4 lead gives 1.27-1.29 V > 1.223 V: board on with J400 open. J440.2 GND chafed onto the J121.1 (E1-, PYRO1_OUT) lead bypasses Q124 and fires an enabled match (about 1.5 A, the harness form of D-R19-01's hazard); onto J121.2 (IGN) it shorts the enabled bus through R134 2 Ohm (about 27 W at 7.4 V into a 2 W pulse part). Separately, the handoff's per-flight check says '3V3 at TP81 below 0.3 V'; TP81 is RAW_PROTECTED (B(31.0,84.8)), as ORDERING 8.3 line 591 states.",
+    "layer": "harness",
+    "coordinates_mm": "J440.1-.4 (7.4, 11.0/14.5/18.0/21.5); J121.1 (7.4,54.1); J400.2 (7.4,67.6)",
+    "maker": "https://www.ti.com/lit/ds/symlink/tps25947.pdf p9"
+   },
+   "impact": "The owner-approved spare port adds a GND lead, a 4.8 V lead and two UART leads to the face where the e-match and switch pairs exit. One chafe can latch or bypass the arming switch, or (GND onto E1-) fire an enabled match. The existing rules cover only battery / servo power conductors. Procedure gap; consequences are Calculation; harness geometry is not yet defined.",
+   "concrete_fix": "ORDERING 8.4 and the handoff: run the J121 pair and the J400 pair each twisted, on their own ties, with no other conductor in their bundle, and route the J440 leads (and any port lead moved there) away from the west-row exits of J121, J400 and J1; name 'any self-powered or USB-powered module on J410, J420, J440 or J9' in the e-match rule (AGENTS section 1, handoff, REQUIREMENTS Camera row); change '3V3 at TP81' to 'RAW_PROTECTED at TP81 (and 3V3 at C15.1)'."
+  },
+  {
+   "id": "R20-SAF-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "D-R19-10's worst-case EN timing omits the EN leakage; the 10 ms chatter criterion then has about 6 % margin at 6.0 V and none below 5.92 V",
+   "evidence": {
+    "file": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R19-10; docs/REQUIREMENTS.md F6",
+    "reference": "C87 220 nF C21120 F(17,65); R80 / R165 470k, R81 300k (1 %)",
+    "measured": "Own calculation (.supervisor/r20_safety/calc/en_timing.py, .json): reproduces D-R19-10 without leakage (turn-on 87.7 / 55.5 / 44.7 ms at 6.0 / 7.4 / 8.4 V, 30.8-122.2 ms worst; immunity 18.9 / 32.8 / 41.1 ms nominal, 11.65 / 21.52 / 27.48 ms worst). With IENLKG +/-0.1 uA (SLVSFC9C p9, same table as the thresholds): worst immunity 10.65 / 20.47 / 26.41 ms, worst turn-on 30.3-128.6 ms; the pack voltage at which worst immunity equals the proposed 10 ms bench criterion is 5.92 V (5.80 V without leakage); at 5.5 V loaded the worst immunity is 6.6 ms. Worst-case minimum turn-on pack voltage 5.13 V (5.23 V with leakage). Disarm: U9 off at most 57.2 ms after J400 opens (8.4 V, C x 1.27), against about 0.57 s with 2.2 uF.",
+    "layer": "n/a",
+    "coordinates_mm": "U9 B(18.5,81.6)",
+    "maker": "https://www.ti.com/lit/ds/symlink/tps25947.pdf p9 (VUVLO(R) 1.183/1.20/1.223 V, VUVLO(F) 1.076/1.09/1.116 V, IENLKG +/-0.1 uA)"
+   },
+   "impact": "The F6 acceptance basis is optimistic by about 1 ms. A 10-12 ms switch drop-out at a sagging pack (servo stalls) resets the board in flight: loss of roll control and of the primary deployment (Blue Jay backup). Reliability / evidence item, not an inadvertent fire; disarm after J400 opens is ten times faster than before.",
+   "concrete_fix": "Restate D-R19-10 / F6 with the leakage term (10.6 / 20.5 / 26.4 ms; turn-on up to 129 ms) and the pack-voltage floor; set the bench chatter criterion against the worst immunity at the minimum loaded pack voltage (for example < 5 ms), or restore margin with a larger C87 (330 nF gives about 16 ms worst at 6.0 V and turn-on up to about 190 ms)."
+  },
+  {
+   "id": "R20-SAF-05",
+   "severity": "Minor",
+   "status": "carried",
+   "carried_from": "R19-SAF-05",
+   "title": "Terminal inner rings stay 0.75 mm from hazardous inner copper; J121.1 to In2 3V3 moved closer (0.803 -> 0.761 mm)",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb; fab m3-In1_Cu.gbr / m3-In2_Cu.gbr / m3-PTH.drl",
+    "reference": "J121.1 (PYRO1_OUT), J400.2 (BAT_SW_RETURN)",
+    "measured": "Three methods agree (pcbnew 10.0.7 polygons, a refilled copy, own parser of the fabricated Gerbers + Excellon): J121.1 (drill 1.3, ring 1.9) wall to In1 / In2 GND 1.050 mm, ring 0.750 mm; wall to In2 3V3 1.061 mm (a3144b15: 1.103), ring 0.761 mm (a3144b15: 0.804); In1 3V3 via (9.2,52.98) barrel 1.320 mm from the wall (ring 1.024). J400.2 ring to In2 RAW_PROTECTED 0.750 mm and In2 GND 0.750 mm (wall 1.050). S-8 measures only from the hole wall. The 3V3 fill now meets the new 1.70 mm J121.1 keep-out edge, where GND used to stand between.",
+    "layer": "In1.Cu / In2.Cu",
+    "coordinates_mm": "J121.1 (7.4,54.1); J400.2 (7.4,67.6)"
+   },
+   "impact": "With the bus enabled, an inner J121.1-to-3V3 short drives the match into the 3V3 rail (0.3-0.8 A estimated, against 0.30 A no-fire; R19 Calculation / Inference); J121.1-to-GND fires; J400.2-to-RAW_PROTECTED latches U9 on. Ring-to-plane CAF on an inner layer is less likely than wall-initiated CAF, and the owner is asked to accept the figures (owner table row 9).",
+   "concrete_fix": "Remove the unconnected inner pads of J121.1 and J400.2 (board pad override with 'remove unconnected layers', as D-R19-05 did for U1.19; their In1 / In2 pads join nothing): the copper-to-copper figures become the wall figures (1.050 / 1.061 / 1.050 mm) with no fill or track moved. Alternative: J121.1 keep-out radius 2.00 mm (ring + 1.05 mm), checking that the In2 3V3 via (9.2,52.98), 2.12 mm from J121.1's centre, keeps its plane contact."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R19-01",
+   "claim": "PYRO1_OUT via In1/In2 GND 0.251 -> 1.021 mm; J121.1 wall 0.551 -> 1.050 mm, ring 0.251 -> 0.750 mm; S-8 counts GND at PYRO1_OUT; planes stay one piece",
+   "measurement": "OUT via (11.630,55.100): In1 / In2 GND 1.021 mm (ring of GND partner via (10.3,55.6), 1.421 mm centre to centre; hole-to-hole 1.121 mm); J121.1 wall 1.050 mm, ring 0.750 mm; same figures from the fabricated In1 / In2 Gerbers and drill file and after a zone refill of a copy; committed S-8 passes on 10 barrels; BARREL_GND_HAZARD contains PYRO1_OUT; R10_GND_In1 and R10_GND_In2_CH1 fills are one piece each. Side effect: In2 3V3 now 1.061 mm from the J121.1 wall (was 1.103) and 0.761 mm from its ring (was 0.804); recorded in section 1 as a Calculation.",
+   "verdict": "confirmed",
+   "note": "Ring figures carried as R20-SAF-05."
+  },
+  {
+   "d_id": "D-R19-02",
+   "claim": "BAT_ENABLE via (19.675,66.4) -> (19.675,66.6): to R134.2 0.300 -> 0.500 mm; In2 RAW 1.050 kept; In2 GND 0.994 -> 1.123",
+   "measurement": "0.500 mm to R134.2 (B.Cu), its new B.Cu run 0.650 mm; In2 RAW_PROTECTED 1.050, In2 GND 1.123 (was 0.993), In1 GND 0.251 (fail-safe); no non-GND F.Cu copper within 1.0 mm of the via. Adjacency diff a3144b15 -> 50a39de5 shows no other change on BAT_ENABLE.",
+   "verdict": "confirmed",
+   "note": "The move does not change the three-via dependence of U9.1 on R81 (R20-SAF-01)."
+  },
+  {
+   "d_id": "D-R19-03",
+   "claim": "TP121 and its 7.14 mm ACT_GATE stub removed; ACT_GATE copper within 0.30 mm of GND 12.896 -> 7.996 mm; ACT_GATE-BAT_SW_SOURCE 0.400 -> 0.470",
+   "measurement": "TP121 absent from board, BOM and CPL; ACT_GATE pads C120.2, Q120.4, Q121.4, R119.1, R120.2, R121.1; own sampling 12.915 -> 7.992 mm of track within 0.30 mm of GND; ACT_GATE-BAT_SW_SOURCE 0.4693 mm; DRC 0 / 0 / 0.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-04",
+   "claim": "C123 10 nF (C15195) at F(18.22,71.85) on ACT_EN-GND; tau 7.1 us, on 7.6 us, off 8.6 us, reset 26 us; Miller 35 mV; fail-safe neighbours",
+   "measurement": "Board / BOM / CPL: C123 ACT_EN-GND, 10nF 50V X7R 0402 C15195, Top rot 0. 667 Ohm x (10 nF + 630 pF) = 7.09 us; VGS(th) max 1.45 V at 7.63 us; 0.65 V reached 8.64 us after PC1 low, 25.9 us after reset (R123 alone); 7.4 V x 50 / 10630 pF = 35 mV (AO3400A Rev 3.1 p2). C123.1 neighbours: GND fill 0.251, C123.2 0.34, GND run 0.44 mm; no non-GND copper within 1 mm. Bus timing is set by C120 (1 uF): on to -4.5 V about 11 ms nominal, off 49-78 ms at 7.4 V; the 100 ms / 1 s waits hold. An open of Q122.1's 2.0 mm east branch leaves the gate on C123 only, among GND copper (drifts off; pin-to-first-node class).",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-10",
+   "claim": "C87 220 nF: turn-on 88 / 56 / 45 ms (31-122 ms worst); drop-out immunity 19 / 33 / 41 ms (worst 12 / 22 / 27 ms)",
+   "measurement": "Reproduced exactly without EN leakage; with IENLKG +/-0.1 uA (SLVSFC9C p9) worst immunity 10.6 / 20.5 / 26.4 ms and turn-on to 129 ms; 10 ms criterion needs >= 5.92 V; disarm <= 57 ms. EN max 2.06 V (5 V recommended, 6.5 V abs). BOM C87 = C21120.",
+   "verdict": "partly",
+   "note": "R20-SAF-04."
+  },
+  {
+   "d_id": "D-R19-14",
+   "claim": "Spare AUX port J440, electrical copy of J410; no path to pyro / arming; S-6 and port tables extended",
+   "measurement": "Board: J440 pads PORT_4V8 / GND / AUX_TX_WIRE / AUX_RX_WIRE; AUX parts touch only AUX nets, PORT_4V8, GND and U1.63 / U1.64 (PC6 / PC7, neighbours PD15 NC and PC8); AUX copper >= 27.7 mm from any pyro / arming copper; DRC and schematic parity 0. Gate: S-6 does not classify AUX_ nets (seeded, R20-SAF-02). Harness: the west-face dress rules were not extended (R20-SAF-03). Back-feed class unchanged from J410 / J420 (FT pins through 1 kOhm, device-based rule).",
+   "verdict": "partly"
+  },
+  {
+   "d_id": "docs lane: surface inventory \"taken from round 19 a3144b15\"",
+   "claim": "Round 19 inventory (49 rows) still describes the new board apart from the CAD lane deltas",
+   "measurement": "Own inventory of 18 pyro / arming nets on both boards (outer < 0.5 mm, inner < 1.0 mm): the same 76 outer (net, net, layer) pairs (49 without GND); only differences are D-R19-01 / -02 / -03 deltas and J121.1 ring to In2 3V3 0.804 -> 0.761 mm.",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R20-SAF-05",
+   "change": "Board pad override on J121.1 and J400.2: remove unconnected inner layers (their In1 / In2 pads join no copper). Ring-to-foreign becomes 1.050 / 1.061 / 1.050 mm; no fill or track changes; re-run S-8, route_check (pour-contact rule) and the fab package."
+  },
+  {
+   "finding": "R20-SAF-02",
+   "change": "tools/check_r10.py: PORT_NET r'^(GPS_|RADIO_|CAM_|PORT_|AUX_)', SAFE_NET r'^(PYRO1_|ARM1_|ACT_|RAW_ACT|BAT_ENABLE|BAT_SW_)'; seeds: AUX_TX_WIRE track 0.10 mm from PYRO1_OUT fails, GPS control fails, a port track beside BAT_ENABLE fails; S-8 header / docstring text."
+  },
+  {
+   "finding": "R20-SAF-01",
+   "change": "If a legal B.Cu spot exists within about 2 mm of U9.1: move R81 (and C87 if room) beside U9.1, via-free to U9.1, GND end in the B.Cu pour; the J400 / R165 run then feeds the node. Otherwise record as a respin item in section 1."
+  },
+  {
+   "finding": "R20-SAF-03 / R20-SAF-04",
+   "change": "Docs only: harness dress rule naming J440 leads and separate ties for the J121 and J400 pairs; e-match rule lists J410 / J420 / J440 / J9 modules; TP81 = RAW_PROTECTED; F6 / D-R19-10 numbers with IENLKG and the 5.92 V floor."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "BAT_IN to In2 RAW_PROTECTED: J1.1 ring 0.251 mm, BAT_IN via (17.5,87.3) wall 0.250 mm (bypasses U9 and J400)",
+   "disposition": "Not filed: needs a hard low-ohm short that carries the board current; the fabricator isolation test screens it and the per-flight off check detects it; U9.5 to U9.6 (IN to OUT) is 0.200 mm on B.Cu by TI's land, the same class and inherent."
+  },
+  {
+   "candidate": "Fire-gate nodes near active copper: U1.3 (PE4) 0.553 mm from the QSPI_IO2 escape under U1; R128.1 / R126.1 0.676 / 0.835 mm from the 3V3 via (19.05,55.9)",
+   "disposition": "Recorded (R10_VALIDATION historical round-10 table lines 2294-2295; R9 P-7b), unchanged on 50a39de5; vias tented. Note AON7524 VGS(th) min 0.4 V (Rev 1.1 p2): any such bridge with the bus enabled can fire."
+  },
+  {
+   "candidate": "Pin-to-first-node opens: Q124 gate (two F.Cu segments, 1.7 mm), Q121 gate (two B.Cu segments), Q120 gate (two B.Cu segments), Q122 east branch",
+   "disposition": "Inherent class (round 19). Q120 floating cannot energise the bus (Q121 blocks forward current); Q122's island keeps C123 and only GND neighbours."
+  },
+  {
+   "candidate": "C123 failure",
+   "disposition": "Short: ACT_EN at GND, bus cannot be enabled (caught by the powered check). Open: the round 18 state."
+  },
+  {
+   "candidate": "ACT_GATE to BAT_IN (0.218 mm at Q120.9, 0.421 mm F.Cu) and ACT_GATE to BAT_SW_SOURCE (0.469 mm)",
+   "disposition": "Fail-safe: the first holds the pair off (PC1 cannot enable); the second gives VGS about -0.45 V with J400 closed and, with PC1 high, drags EN low and resets the board."
+  },
+  {
+   "candidate": "On-board AUX path into pyro / arming nets",
+   "disposition": "None: >= 27.7 mm copper separation, no shared part, MCU pins 63 / 64 far from PC1 / PE4 / PC0 / PC5."
+  },
+  {
+   "candidate": "AUX back-feed into the unpowered MCU",
+   "disposition": "Same class as J410 / J420: FT inputs through 1 kOhm, ground-only ESD, rule \"no self-powered module with the board off\"; wording item in R20-SAF-03."
+  },
+  {
+   "candidate": "Momentary J400 closure now turns the board on after >= 31 ms (was >= 0.31 s)",
+   "disposition": "No new hazard: the board stays firmware-gated; the per-flight checks remain."
+  },
+  {
+   "candidate": "PYRO1_OUT via S-8 margin 0.021 mm inside the 1.40-1.50 mm partner-via window",
+   "disposition": "Disclosed as nominal / fabrication unqualified (handoff line 75)."
+  },
+  {
+   "candidate": "U9.3 AUXOFF unconnected",
+   "disposition": "TPS259470x AUXOFF is an open-drain output (SLVSFC9C p5); leaving it open is allowed."
+  },
+  {
+   "candidate": "In2 3V3 fill -19.8 mm^2",
+   "disposition": "J440's four THT pads and the new vias in the In2 3V3 region; no pyro / arming consequence."
+  }
+ ],
+ "checks_actually_executed": [
+  "git archive 6628488 into .supervisor/r20_safety/src; board SHA-256 checked before and after (archive, worktree, git show).",
+  "Geometry export with the pcbnew 10.0.7 Python bundled with kicad-cli 10.0.7 (.supervisor/r20_safety/scripts/extract_geom.py); every distance by own numpy code (scripts/geo.py), unflashed via and PTH barrels included.",
+  "S-8 three ways: pcbnew polygons (s8_probe.txt), a copy refilled with kicad-cli pcb drc --refill-zones --save-board (refill/, identical), own parser of the fabricated In1 / In2 Gerbers and PTH Excellon (gerber_s8.txt); hole-to-hole wall spacing from the drill file.",
+  "Committed check_r10 S-3, S-5, S-6, S-8 on the board in memory (s8_gate.txt): all pass.",
+  "Seeded S-6 in memory (AUX vs GPS control track), never saved (seed_s6.txt).",
+  "Native DRC, all severities, schematic parity, kicad-cli 10.0.7 on the archive copy: 0 violations / 0 unconnected / 0 parity (drc_asis.json).",
+  "Adjacency inventory of 18 pyro / arming nets on 50a39de5 and a3144b15 with diff (adjacency_*.json / .txt).",
+  "Single-open connectivity on BAT_ENABLE, ACT_EN, ACT_GATE, ACT_FET_S, PYRO1_GATE, PYRO1_GATE_N, ACT_DRV, BAT_SW_RETURN, BAT_SW_SOURCE (open_faults.json); GND sides of every pull-down checked for direct pour contact.",
+  "ACT_GATE near-GND track length on both boards (act_gate_exposure.txt).",
+  "EN timing, nominal and worst case with and without IENLKG, pack-voltage floors, disarm time (calc/en_timing.py / .json).",
+  "BOM / CPL / owner BOM rows for C123, C87, R123, Q122, the AUX cell and TP121 absence.",
+  "Port-net (AUX_, GPS_, RADIO_, PORT_4V8) distance to every pyro / arming net on all layers."
+ ],
+ "sources": [
+  {
+   "doc": "TI TPS25947 SLVSFC9C (rev May 2026)",
+   "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+   "pages": "p5 Table 5-1 (EN/UVLO do not leave floating; AUXOFF open-drain output); p9 (VUVLO(R), VUVLO(F), VSD(F), IENLKG)",
+   "copy": ".supervisor/r14_parts_pdf/tps25947.pdf"
+  },
+  {
+   "doc": "AOS AON7524 Rev 1.1",
+   "url": "https://www.aosmd.com/res/datasheets/AON7524.pdf",
+   "pages": "p2 (VGS(th) 0.4 / 0.8 / 1.2 V; Ciss 2250 pF; Crss 65 pF)",
+   "copy": ".supervisor/r14_parts_pdf/aon7524.pdf"
+  },
+  {
+   "doc": "AOS AO3400A Rev 3.1",
+   "url": "https://www.aosmd.com/res/datasheets/AO3400A.pdf",
+   "pages": "p2 (VGS(th) 0.65 / 1.05 / 1.45 V; Ciss 630 pF; Coss 75 pF; Crss 50 pF; IGSS 100 nA)",
+   "copy": ".supervisor/r14_parts_pdf/ao3400a.pdf"
+  },
+  {
+   "doc": "Repository at 6628488",
+   "url": "",
+   "pages": "AGENTS.md section 2; R10_DECISIONS D-R18-01..04, D-R19-01..14; round19_fix_cad.md; round19_fix_docs.md; R10_VALIDATION section 1 and owner table; ORDERING 8.3 / 8.4; R10_VEHICLE_HANDOFF; FMEA_REDUNDANCY I-11 / H-6; pin_table.tsv; tools/check_r10.py; fab package"
+  }
+ ],
+ "coverage_limits": [
+  "No bench, firmware or physical test; no SPICE. The leakage direction of a floating EN (R20-SAF-01) is Inference from its neighbours.",
+  "Harness consequences (R20-SAF-03) are Calculation; no vehicle harness drawing exists.",
+  "The Gerber cross-check covers In1 / In2 and the PTH drill only; outer layers were measured from pcbnew polygons.",
+  "Adjacency inventory limited to 18 pyro / arming nets at 0.5 mm outer / 1.0 mm inner; fabrication tolerances not applied to nominal S-8 figures.",
+  "The gate and docs commits after 6628488 and the working-tree edits were not reviewed; the hot-plug model and tools/check.sh were not re-run.",
+  "Other round 20 reports and probe directories were not opened."
+ ],
+ "probe_dir": ".supervisor/r20_safety/"
+}
