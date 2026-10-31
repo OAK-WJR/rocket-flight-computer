@@ -663,22 +663,6 @@
    "pads_matched": 2,
    "status": "OK"
   },
-  "C26633007|LGA-14_L3.0-W2.5-P0.50-TL": {
-   "footprint": "LGA-14_L3.0-W2.5-P0.50-TL",
-   "easyeda": "LGA-14_L3.0-W2.5-P0.50-TL",
-   "easyeda_proxy": null,
-   "theta": 0,
-   "offset": [
-    0.0,
-    0.0
-   ],
-   "residual_mm": 0.052,
-   "next_best_mm": 2.064,
-   "pads_ours": 14,
-   "pads_easyeda": 14,
-   "pads_matched": 14,
-   "status": "OK"
-  },
   "C2757925|M3_DB125_4P_GN": {
    "footprint": "M3_DB125_4P_GN",
    "easyeda": "CONN-TH_DB125-3.5-4P-GN",
@@ -965,6 +949,22 @@
    "pads_ours": 8,
    "pads_easyeda": 8,
    "pads_matched": 8,
+   "status": "OK"
+  },
+  "C51931514|LGA-14_L3.0-W2.5-P0.50-TL": {
+   "footprint": "LGA-14_L3.0-W2.5-P0.50-TL",
+   "easyeda": "LGA-14_L3.0-W2.5-P0.50-BR",
+   "easyeda_proxy": null,
+   "theta": 180,
+   "offset": [
+    -0.0,
+    0.0
+   ],
+   "residual_mm": 0.04,
+   "next_best_mm": 2.005,
+   "pads_ours": 14,
+   "pads_easyeda": 14,
+   "pads_matched": 14,
    "status": "OK"
   },
   "C5271084|LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL": {

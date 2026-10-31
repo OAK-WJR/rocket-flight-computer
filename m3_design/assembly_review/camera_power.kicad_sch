@@ -3,7 +3,7 @@
 	(generator "m3_r10")
 	(uuid 5fe62d29-5f56-5202-9e1e-56e4f8398e97)
 	(paper "A1")
-	(title_block (title "05 | Regulated camera, radio and GPS port supplies") (date "2026-10-26") (rev "M3-ASSY-R10"))
+	(title_block (title "05 | Regulated camera and GPS / radio / AUX port supplies") (date "2026-10-26") (rev "M3-ASSY-R10"))
 	(lib_symbols
 		(symbol "M3:C"
 			(pin_numbers
@@ -3519,7 +3519,191 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid f82fd7fe-1376-55cd-9b1e-62898abce50f))
-	(text "R10 owner always-on ports: RAW_PROTECTED -> AP63201 5.456V -> retained camera TPS2553; TPS7A91 4.792V directly feeds J410 GPS and J420 radio."
+	(symbol
+		(lib_id "M3:C")
+		(at 505.46 330.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d78b8c53-3c97-58a7-865a-041103de242d)
+		(property "Reference" "C444"
+			(at 508 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 508 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 505.46 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C14663.html"
+			(at 505.46 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14663"
+			(at 505.46 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 505.46 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
+			(at 505.46 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C444")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 505.46 326.39)
+			(xy 505.46 321.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b3b209c2-a1cf-5d3b-bd87-b7f881306367))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 505.46 321.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 73fcf3bf-ee35-55b1-b97b-292970b2ab48))
+	(wire
+		(pts
+			(xy 505.46 334.01)
+			(xy 505.46 339.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6156ae5f-1281-5c04-acf2-7618214489fb))
+	(global_label "GND"
+		(shape passive)
+		(at 505.46 339.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 853823b4-c665-5d5c-ac22-cf2efe8c79a1))
+	(symbol
+		(lib_id "M3:C")
+		(at 645.16 330.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 610e879a-275d-5c94-bc19-e6fc9f0b26d9)
+		(property "Reference" "C445"
+			(at 647.7 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 647.7 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 645.16 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 645.16 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 645.16 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 645.16 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 645.16 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C445")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 645.16 326.39)
+			(xy 645.16 321.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e34ad26a-3121-5666-a656-22f6af02e9ee))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 645.16 321.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 851b1134-2945-5b10-8a48-50bf7b8e7c05))
+	(wire
+		(pts
+			(xy 645.16 334.01)
+			(xy 645.16 339.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 39e73af5-4e57-5a9b-afe3-33f13846a236))
+	(global_label "GND"
+		(shape passive)
+		(at 645.16 339.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 305b1a74-8aad-59ac-b482-c96da97079c6))
+	(text "R10 owner always-on ports: RAW_PROTECTED -> AP63201 5.456V -> retained camera TPS2553; TPS7A91 4.792V directly feeds J410 GPS, J420 radio and J440 AUX (D-R19-14: AUX up to 100mA beyond GPS 150mA + radio 300mA, U401 thermal floor)."
 		(at 20.32 15.24 0)
 		(effects
 			(font
@@ -3533,14 +3717,14 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 2ba75920-67bd-5285-98cb-da128c83589a))
-	(text "GPS/radio switches and translators are removed. The shared LDO current limit/thermal shutdown protect a cable short; no individual fault or power-cycle GPIO remains. R405 sets the LDO minimum load."
+	(text "GPS/radio/AUX switches and translators are removed. The shared LDO current limit/thermal shutdown protect a cable short; no individual fault or power-cycle GPIO remains. R405 sets the LDO minimum load."
 		(at 20.32 25.4 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 5932a333-be27-53af-811f-fae85fa8d05d))
-	(text "F6: GPS/radio loads cannot be shed by firmware. Stop SD/QSPI writes and UART activity, disable camera OE/EN, lower MCU clock, extinguish LEDs/buzzer; retain sensors, state and safety. Ports-on hold-up is conditional, not guaranteed."
+	(text "F6: GPS/radio/AUX loads cannot be shed by firmware. Stop SD/QSPI writes and UART activity, disable camera OE/EN, lower MCU clock, extinguish LEDs/buzzer; retain sensors, state and safety. Ports-on hold-up is conditional, not guaranteed."
 		(at 20.32 30.48 0)
 		(effects
 			(font

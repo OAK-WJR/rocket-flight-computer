@@ -517,7 +517,8 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
 def wire_rooms(b, rows, profile, axis_x, tol):
     """Wire bend room from each side-entry terminal's entry face (its model box side farther from the axis, nearest
     the long edge) to the bore wall at WIRE_Z, sled tolerance both ways: {ref: (low, high) mm}. Profile r10 (R3-MEC-02,
-    R18-MEC-03): every DB125 terminal (all seven, J1 / J121 / J400 west and J410 / J420 / J9 / J122 east); else
+    R18-MEC-03, D-R19-14): every DB125 terminal (all eight, J1 / J121 / J400 / J440 west and J410 / J420 / J9 / J122
+    east); else
     SIDE_ENTRY's DB128 terminals. To the nominal bore wall (BORE_R), as P-11 measures it."""
     out = {}
     for _, ref, _, box in rows:

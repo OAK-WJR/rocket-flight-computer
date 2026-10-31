@@ -428,7 +428,7 @@ def check(text, dru=None, profile="r9"):
         # time and the Miller margin (M3_ACTUATOR_MERGE); a wrong value passed every rule above
         req(val.get(rs) == '220R' and val.get(rpd) == '1k' and val.get(rgs) == '10k', f'{rs}/{rpd}/{rgs} must be 220R / 1k / 10k')
         req(side.get(f'TP{121 + ch}') == 'B.Cu', f'TP{121 + ch} (bare gate pad) must stay on the bottom side')
-    # 5. sentinel pins beside the pyro gates carry no net (firmware drives them low)
+    # 5. sentinel pins beside the pyro gates carry no net (firmware keeps them analog, never driven: R5-MCU-03, R19-MCU-03)
     for p in ('U1.2', 'U1.4', 'U1.5', 'U1.32') + (() if r10 else ('U1.16',)):
         req(pin.get(p) is None or pin.get(p, '').startswith('unconnected-'), f'{p} must stay a no-net sentinel')
     # 6. CH1 drain contains only its terminal, FET, divider, cold pull-up and drain capacitor
@@ -512,6 +512,12 @@ def check(text, dru=None, profile="r9"):
         req(val.get('R123') == '2k', 'R10 R123 must be the 2k ACT_EN pull-down')
         req(val.get('R119') == '100k' and part.get('R119') == 'C25741' and fpname.get('R119') == 'rocket:R0402',
             'R10 R119 must be the 100k 0402 (C25741) Q121 gate-source resistor')
+        # D-R19-04 (R19-SAF-06): C123 10 nF is Q122's gate-source capacitor, completing the AGENTS 2.4 gate network
+        # (R122 series, R123 pull-down, C123); D-R19-03 (R19-SAF-03) removes the bare ACT_GATE test pad TP121.
+        req(val.get('C123') == '10nF 50V X7R 10%' and part.get('C123') == 'C15195' and fpname.get('C123') == 'rocket:C0402'
+            and pin.get('C123.1') == 'ACT_EN' and pin.get('C123.2') == 'GND',
+            'R10 C123 must be the 10nF 0402 (C15195) Q122 gate-source capacitor, ACT_EN to GND')
+        req('TP121' not in val, 'R10 D-R19-03: the ACT_GATE test pad TP121 must be removed')
     else:
         req({pin.get('R122.1'), pin.get('R122.2')} == {'RAW_PROTECTED', 'ACT_EN'}, 'ACT_EN divider from RAW_PROTECTED')
     req(pin.get('Q122.1') == 'ACT_EN' and pin.get('Q122.3') == 'ACT_DRV', 'Q122 drives the load-switch gate')
@@ -519,6 +525,10 @@ def check(text, dru=None, profile="r9"):
     for n, want in ACT_NETS.items():
         if r10 and n in ('ACT_GATE', 'ACT_FET_S'):
             want = want | {'R119.1' if n == 'ACT_GATE' else 'R119.2'}
+        if r10 and n == 'ACT_GATE':
+            want = want - {'TP121.1'}  # D-R19-03: probe ACT_GATE at R119.1 or R120.2
+        if r10 and n == 'ACT_EN':
+            want = want | {'C123.1'}  # D-R19-04: Q122 gate-source capacitor
         if r10 and n == 'RAW_ACT':
             want = (want - {'C121.1', 'C150.1', 'C151.1', 'J122.2', 'J122.5', 'J122.8', 'J122.11', 'J124.2', 'R177.1'}) | {'R134.2', 'R132.1'}
         req(members.get(n) == want, f'{n} must be exactly {sorted(want)} (is {sorted(members.get(n, ()))})')
@@ -638,6 +648,8 @@ def check(text, dru=None, profile="r9"):
             code = 'C21190'  # AUD-7: 0603 100mW, 72mW worst fault at 8.4V / 980ohm.
         if r10 and ref == 'C120':
             code = 'C29936'  # AUD-3 corrective 1uF gate capacitor; original pads retained.
+        if r10 and ref == 'C87':
+            code = 'C21120'  # D-R19-10 (R19-REQ-02): 220 nF 25 V X7R 0603 EN/UVLO capacitor on the same land.
         if r10 and ref in ('Q120', 'Q121'):
             code = 'C431196'  # AUD-3: AONR21357; the maker pad roles are unchanged.
         if r10 and ref in ('C121', 'J1', 'J121', 'J124'):

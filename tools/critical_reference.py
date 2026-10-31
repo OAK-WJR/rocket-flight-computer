@@ -30,11 +30,11 @@ EXTENDED = ('SWDIO', 'SWCLK', 'NRST', 'RADIO_NSS', 'RADIO_SCK', 'RADIO_SCK_MCU',
             'RADIO_MISO', 'RADIO_MISO_MCU')
 # R10 external-port signal nets: the ONE definition both gates use (R3-RTE-01 / R3-GATE-04): route_check profile r10
 # classes them critical for hygiene; AUD-2 omits only the named slow controls from 1.5 mm GND-partner and reference
-# checks. Always-on GPS/radio have only the MCU and wire sides of their 1 kOhm resistors; the camera retains its
-# translator buffer side, CAM_MCU_TX / _RX names, and load-switch/OE controls.
-R10_PORT_UART = re.compile(r'^((GPS|RADIO)_(TX|RX)_(MCU|WIRE)|CAM_(TX|RX)_(MCU|WIRE|BUFFER)|CAM_MCU_(TX|RX))$')
+# checks. Always-on GPS/radio/AUX have only the MCU and wire sides of their 1 kOhm resistors (D-R19-14 adds the
+# identical AUX port); the camera retains its translator buffer side, CAM_MCU_TX / _RX names, and load-switch/OE controls.
+R10_PORT_UART = re.compile(r'^((GPS|RADIO|AUX)_(TX|RX)_(MCU|WIRE)|CAM_(TX|RX)_(MCU|WIRE|BUFFER)|CAM_MCU_(TX|RX))$')
 R10_PORT_CONTROL = re.compile(r'^CAM_(PWR_EN|FAULT_N|UART_OE)$')
-R10_PORT_NETS = ('CAM_MCU_TX', 'CAM_MCU_RX') + tuple(f'{port}_{signal}_{side}' for port in ('GPS', 'RADIO', 'CAM')
+R10_PORT_NETS = ('CAM_MCU_TX', 'CAM_MCU_RX') + tuple(f'{port}_{signal}_{side}' for port in ('GPS', 'RADIO', 'AUX', 'CAM')
     for signal in ('TX', 'RX') for side in (('MCU', 'WIRE', 'BUFFER') if port == 'CAM' else ('MCU', 'WIRE'))) + tuple(
     f'CAM_{signal}' for signal in ('PWR_EN', 'FAULT_N', 'UART_OE'))
 assert all(R10_PORT_UART.match(n) or R10_PORT_CONTROL.match(n) for n in R10_PORT_NETS)

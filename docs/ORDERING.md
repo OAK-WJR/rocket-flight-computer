@@ -97,7 +97,7 @@ Keep every mouse-bite hole edge at least 0.50 mm from copper on every layer. Fil
   - A 0.10 mm stencil is preferred: U11's 0.2 × 0.6 mm apertures release marginally at 0.12 mm (area ratio 0.63), and TI's U9/U11 stencil examples assume 0.10 mm. U30's apertures are u-blox's T-shape for a 150 µm stencil; at 0.10 mm they give about 67 % of u-blox's paste volume (Inference). This is accepted; inspect U30's castellations on the first boards.
   - No PCBA cleaning or washing at any stage, including after through-hole soldering (please confirm in writing): U5 (MS5611) has an open pressure port, and TE asks for no-clean paste without cleaning ("Cleaning might damage the sensor!").
   - **R9 only (these Gerber spans lie beyond the 90 mm R10 outline; the R10 tab plan is in section 8.1).** Edge rails: tab-routed (mouse bites), no V-cut; nothing on the aft or forward edge. Four nominal 5.00 mm long-edge tabs: X = 0 at Gerber Y −5.50…−0.50 and −101.50…−96.50; X = 46 at Y −13.75…−8.75 and −101.50…−96.50 (KiCad y is −Y). These complete spans clear every component/pad by at least 1.5 mm, every capacitor, R166, LED2 and RF module by at least 5 mm and every connector by at least 2 mm. Please confirm that four tabs suffice for this 102 mm board without a forward rail. Do not enlarge or relocate tabs.
-  - U4 uses 0.575 × 0.35 mm lands, +0.025 mm mask relief and 88.36 % paste coverage. Use multilayer LDI with green mask and 1 oz outer copper; preserve its 0.100 mm individual mask webs and supplied openings. This adapts ST's nominal mask relief to [JLC's current multilayer process](https://jlcpcb.com/capabilities/pcb-); do not enlarge or merge these openings during CAM. D30/D31 (TSLP-2-20) have one mask opening per pad with a 0.30 mm web; keep it.
+  - **R9 board only (R19-MFG-03).** On the R10 board U4's mask relief is 0 and its mask webs are 0.150 mm (D-R18-08); for an R10 order use section 8.2, not this bullet. On R9, U4 uses 0.575 × 0.35 mm lands, +0.025 mm mask relief and 88.36 % paste coverage. Use multilayer LDI with green mask and 1 oz outer copper; preserve its 0.100 mm individual mask webs and supplied openings. This adapts ST's nominal mask relief to [JLC's current multilayer process](https://jlcpcb.com/capabilities/pcb-); do not enlarge or merge these openings during CAM. D30/D31 (TSLP-2-20) have one mask opening per pad with a 0.30 mm web; keep it.
   - Use the supplied paste layer exactly; no aperture optimisation (JLC re-cuts apertures by default unless told: its stencil opening standard, updated 2025-04-24). The apertures follow the makers' stencil guidance (U4, U7, U9, U11, U30, Q120/Q121, J3 pin-in-paste). J30/J31 have none on purpose, and neither do the unfitted 0402 lands C303, C304, C305, C313 and C314 (no part, no BOM line): do not add apertures there.
   - Vias that cannot be ink-plugged (within 0.35 mm of a pad): tent them; never open the mask over a via. No via lies in a bare contact on R9 (review pass 1 moved the two RAW_ACT vias that reached into TP120).
   - The copper of the SMA jack pads reaches to 0.2 mm from the routed aft edge on purpose (Kinghelm land; JLC's routed-edge minimum is 0.2 mm). The rest of the board keeps 0.5 mm.
@@ -219,16 +219,16 @@ The other design changes are listed in `docs/M3_R4.md` §1–1c (R4), `docs/M3_R
 ## 8. M3-ASSY-R10 (branch `m3-assy-r10`; CAD candidate, not accepted)
 
 **This section is the current R10 worksheet.** Sections 1–7 describe R9; use their generic upload, no-clean,
-inspection and depaneling procedures only where restated here. R10 has one external screw switch, seven DB125
-wired terminals, external GPS/radio, a hinged microSD socket, one bus-sense bank and no servo-power copper.
+inspection and depaneling procedures only where restated here. R10 has one external screw switch, eight DB125
+wired terminals (27 contacts), external GPS/radio, a spare AUX port, a hinged microSD socket, one bus-sense bank and no servo-power copper.
 There are no GH connectors, servo headers, servo tie holes, ARM link, pull-pin, on-board RF modules or SMA jacks.
 
-**Status.** PCB `a3144b15…` (46 × 90 mm), not accepted, nothing ordered. It replaces `632a9ad3…` (round 18 fix pass), so the earlier clean reviews do not carry over and rounds 19 and 20 will review it (the gate pass is done). Review results, checks, cost and stock, retained
+**Status.** PCB `50a39de5…` (46 × 90 mm), not accepted, nothing ordered. Round 19 (ten Claude lenses) reviewed the previous PCB `a3144b15…` and found 0 Critical / 0 Major / 57 Minor; its fix pass changed the board, so rounds 20 and 21 will review `50a39de5…`. Review results, checks, cost and stock, retained
 deviations and what is not verified are in [M3_R10.md, "Current state"](M3_R10.md#current-state); they are not repeated here.
 The cost basis used by this section is in 8.1.
 
 Coordinates are KiCad millimetres, x=0 west, y=0 aft, y=90 forward; Gerber Y is −KiCad y.
-F/B mean top/bottom. Positions below describe the current `a3144b15…` native board and placement source,
+F/B mean top/bottom. Positions below describe the current `50a39de5…` native board and placement source,
 including west/east terminal rows at x=7.4/38.6 mm and the repaired bottom port/servo cells. Recheck every probe,
 coat mask and harness against its hash-bound assembly drawing before work. R10 remains unaccepted and unordered;
 this is not a flight release.
@@ -238,7 +238,7 @@ this is not a flight release.
 | Item | R10 ordering rule |
 |---|---|
 | PCB | 46 × 90 mm, four layers, 1.6 mm, ENIG, green mask, **1 oz outer and inner copper**, stackup **JLC041611-7628**. In1 GND; In2 power/GND regions. No on-board RF or impedance-control requirement. |
-| Rules | Ordinary clearance 0.15 mm; the S-8 foreign inner-copper barrel exclusion remains ≥ 1.0 mm and now also covers the load-switch gate and enable barrels (fill-only keep-outs hold them 1.050 mm clear). Silkscreen ≥ 1.0 mm text /0.15 mm strokes. Final native DRC, schematic parity, ERC and the complete project gate must pass; old counts/filled areas are not new-layout evidence. |
+| Rules | Ordinary clearance 0.15 mm; the S-8 foreign inner-copper barrel exclusion remains ≥ 1.0 mm and also covers the load-switch gate and enable barrels and, since round 19, In1 / In2 GND at the PYRO1_OUT barrels (fill-only keep-outs; D-R18-04, D-R19-01). Silkscreen ≥ 1.0 mm text /0.15 mm strokes. Final native DRC, schematic parity, ERC and the complete project gate must pass; old counts/filled areas are not new-layout evidence. |
 | Panel | JLC tab-routed rails, no V-cut. Use the tab plan below; obtain JLC acceptance of the actual rail and tab plan and confirm every span against T-1 and the mouse-bite clearances in §3. Do not enlarge or relocate tabs without checking the final board. |
 | Vias | Ordinary vias plugged only where JLC's 0.35 mm clearance/size rules permit; otherwise tent/mask-cover them without adding openings. Preserve the large BAT_IN via's supplied covering. **Only the two U401.11 vias use VIPPO (resin-filled and copper-capped): see "Via covering and the VIPPO fallback" below.** Preserve the supplied covering set; changed covering requires renewed DFM/paste checks. |
 | Uploads | Final `m3_gerber.zip`, `m3_bom_jlc.csv`, `m3_cpl_jlc.csv`; both assembly PDFs are inspection aids. `m3_bom_owner.csv` (C84, the hand-fitted part) is the owner's record and is not uploaded. `m3_fab_manifest.json` must bind all six outputs to the final CAD/export inputs, and is written only after the three content checks below pass. Cost/stock files are evidence, not uploads. |
@@ -258,30 +258,33 @@ python3 tools/check_procurement.py --profile r10
 **The $84.41 per-board target** is R3's cost per board ($54.94 + 48 × $3.07 / 5; [REQUIREMENTS M3](REQUIREMENTS.md#manufacturing-and-cost)).
 It counts parts plus JLC's per-code feeder fees only. The Extended-code count is informational.
 
-**Current supplier snapshot.** All 82 exact codes (81 JLC BOM lines plus C84 on the owner BOM) were queried for stock at 2026-10-30T23:50:54Z and for cost at 23:51:50Z; both reports'
-input hashes match the final JLC BOM, owner BOM and CPL ([cost](../m3_design/assembly_review/fab/cost_check.json) and
+**Current supplier snapshot.** All 82 exact codes (81 JLC BOM lines, 45 Extended / 36 Basic, plus C84 on the owner BOM) were queried live from JLC for stock at 2026-10-31T08:22:17Z and for cost at 08:23:13Z; both reports'
+input hashes match the final JLC BOM, owner BOM and CPL of `50a39de5…` ([cost](../m3_design/assembly_review/fab/cost_check.json) and
 [stock](../m3_design/assembly_review/fab/stock_check.json)). At 5 boards:
 
 | Basis (JLC Standard, both sides) | Per board |
 |---|---|
-| Parts $54.33 (includes C84, about $0.28, bought by the owner) + feeder share $24.79 (81 charged codes × $1.53 / 5): the target basis | **$79.12** |
-| Same, with JLC minimum purchases | $79.12 (every minimum is now 1) |
-| Plus JLC fixed fees, $83.96 per order (setup, stencils, fixture) | $95.91 |
-| Plus the handling fee JLC may add, $14.93 per order | $98.90 |
-| Not yet quoted: PCB and rails, VIPPO surcharge, manual C84 fit, consignment, attrition, shipping, tax | open |
+| Parts $60.57 (includes C84, bought by the owner) + feeder share $24.79 (81 charged codes × $1.53 / 5): the target basis | **$85.35** |
+| Same, with JLC minimum purchases | $85.35 (every minimum is 1) |
+| Plus JLC fixed fees, $83.96 per order (setup, stencils, fixture; $16.79 per board) | $102.14 |
+| Plus the handling fee JLC may add, $14.93 per order | $105.13 |
+| Not yet quoted: PCB and rails, VIPPO surcharge, manual C84 fit, attrition, shipping, tax | open |
 
-So the cost target passes, but the order-day price is about $96–$99 per board before the unquoted items. The stock check **fails** on U4 alone. Quote and
-process acceptance and the owner's cost and deviation acceptance remain pending; nothing is ordered. Refresh the exact-code supplier evidence within 24 h of ordering.
+**The cost target is not met: $85.35 against $84.41, $0.94 over.** Items 1–13 of the round 19 fix pass alone gave $84.21 (U4 ISM6HG256XTR at $14.34 against $9.27 for the LSM6DSV320X line); the spare AUX port J440 (D-R19-14) adds $1.14 per board ($0.403 terminal, $0.271 22 µF, 2 × $0.231 ESD, the resistors and 100 nF). `check_procurement --cost-only` fails and was not weakened.
+**Owner decision pending:** accept the AUX port's $0.94 over R3's cost, or change its parts (any saving on its ESD diodes or 22 µF breaks the identical-port intent). The stock check passes: no line is short. Quote and
+process acceptance and the owner's cost and deviation acceptance remain pending; nothing is ordered. Refresh the exact-code supplier evidence within 24 h of ordering (`FAB_NET=1 m3_design/r10_fab.sh`).
 
 | Part | Snapshot / required action |
 |---|---|
-| R430 C2999509, 22.6 kΩ | 84,923 available, minimum 1; stock passes. FOJAN FRC0603F2262TS (1 %, ±100 ppm/°C, 0603) replaced C185349, which had 17 available against a 3610 minimum (D-R18-09). |
-| U4 C26633007 | 0 available against 5 fitted; secure stock or consign with attrition spares. Do not plan to hand-fit this bottom LGA. |
-| U9 C3662793 | 45 available, minimum 1 for five fitted. Refresh before ordering. |
-| C84 C46550466 | 111,385 available at JLC; an owner purchase on the owner BOM, hand-fitted after both reflows (section 8.2). |
-| Other codes | No thin line or model mismatch in this snapshot; refresh all final-BOM/CPL-bound evidence within 24 h of ordering. |
+| U4 ISM6HG256XTR C51931514 (fitted, D-R19-11) | **Thin: 9 available for 5 fitted**, minimum 1, Extended, $14.34. Buy all five at once, the same day as the stock run. Same land, pins and axes as the LSM6DSV320X (ST DS15034 Rev 1 Figure 5 p9, Table 2 pp10–11, drawing p187). CPL rotation 180° (bottom side, from the EasyEDA BR footprint): confirm pin 1 in JLC's bottom-side placement preview. |
+| U4 alternate LSM6DSV320XTR C26633007 | 0 at JLC. Consign it **only if** the ISM6HG256XTR stock is gone: same land and board pose, but its CPL rotation comes from its own EasyEDA footprint (0°), so regenerate and re-verify the CPL; firmware must then use the LSM6DSV320X register map (the high-g full-scale codes differ, D-R19-11). Do not plan to hand-fit this bottom LGA. |
+| R430 C2999509, 22.6 kΩ | In stock, minimum 1. FOJAN FRC0603F2262TS (1 %, ±100 ppm/°C, 0603) replaced C185349, which had 17 available against a 3610 minimum (D-R18-09). |
+| U9 C3662793 | 45 available at the previous snapshot, minimum 1 for five fitted. Refresh before ordering. |
+| C2757925 (DB125-4) and C535146 (ESD103-B1-02EL) | Four and eight per board with the AUX port; 37,827 and 201 in stock (2026-10-31). |
+| C84 C46550466 | An owner purchase on the owner BOM, hand-fitted after both reflows (section 8.2). |
+| Other codes | No other thin line or model mismatch in this snapshot; refresh all final-BOM/CPL-bound evidence within 24 h of ordering. |
 
-**Tab and rail plan (R18-MFG-01; computed from `check_r10` T-1 on `632a9ad3…`, and a read-only re-computation on `a3144b15…` gives the same windows, tabs and margins; a proposal for JLC to confirm).** R9's tab spans (section 3 and the section 4 order remarks) are
+**Tab and rail plan (R18-MFG-01; computed from `check_r10` T-1 on `632a9ad3…`, and a read-only re-computation on `a3144b15…` gives the same windows, tabs and margins; a proposal for JLC to confirm). A read-only re-computation of `check_r10.t1` on `50a39de5…` (round 19 docs lane) gives the same four windows and passes; the new J440 is now the nearest part to the west aft-third tab (3.155 mm against the 2.0 mm connector rule).** R9's tab spans (section 3 and the section 4 order remarks) are
 history and lie beyond this 90 mm outline: do not paste them. Coordinates are KiCad millimetres (x = 0 west edge, y = 0 aft edge); Gerber Y = −KiCad y. T-1 uses a 5 mm tab (JLC's minimum width) and
 requires 1.5 mm to every part, pad and courtyard, 2 mm to connectors, 5 mm to capacitor-class parts, R166 and LED2, and 1.5 mm to Edge.Cuts holes. Legal windows (a 5 mm tab fits anywhere inside each):
 
@@ -296,7 +299,7 @@ Proposed plan: four tabs, one wholly in each end third of each long edge, at the
 
 | Tab | KiCad span | Gerber span | Nearest part or hole (gap; rule) |
 |---|---|---|---|
-| West, aft third | x = 0, y 12.50–17.50 | X 0, Y −17.50…−12.50 | hole (4,4), 7.31 mm (1.5 mm) |
+| West, aft third | x = 0, y 12.50–17.50 | X 0, Y −17.50…−12.50 | J440, 3.155 mm (2.0 mm); before J440 it was hole (4,4), 7.31 mm (1.5 mm) |
 | West, forward third | x = 0, y 60.00–65.00 | X 0, Y −65.00…−60.00 | J400, 3.15 mm (2.0 mm) |
 | East, aft third | x = 46, y 6.75–11.75 | X 46, Y −11.75…−6.75 | J410, 3.16 mm (2.0 mm) |
 | East, forward third | x = 46, y 63.75–68.75 | X 46, Y −68.75…−63.75 | J122, 3.16 mm (2.0 mm) |
@@ -307,8 +310,8 @@ long-edge tabs also satisfy T-1 (the owner chooses which plan to ask JLC for). W
 mouse-bite hole edge at least 0.50 mm from copper on every layer (section 3), and do not enlarge or relocate tabs without re-running T-1 (`check_r10`, rule T-1, records the four windows). J3's shell overhangs the west edge by 0.45 mm; no rail or tab may touch it.
 
 **Via covering and the VIPPO fallback (R18-MFG-03).** Only the two U401.11 GND vias, at (27.3,13.6) and (27.9,13.6), 0.5 mm pad / 0.3 mm drill, are to be resin-filled, copper-capped and planarized (VIPPO). No fabrication file carries
-this: the saved board marks exactly those two vias as filled and capped, but the Gerber and drill files list them in the ordinary 0.3 mm via group, so the order remark and JLC's written confirmation are the only carrier. Of the 292 vias,
-287 are 0.5 / 0.3 mm, 4 are 0.6 / 0.3 mm and one, the BAT_IN via at (17.5,87.3), is 1.0 mm pad / 0.5 mm drill, which equals JLC's plug maximum of 0.5 mm. Via covering is an order-level option on JLC's page; the reviewer's reading
+this: the saved board marks exactly those two vias as filled and capped, but the Gerber and drill files list them in the ordinary 0.3 mm via group, so the order remark and JLC's written confirmation are the only carrier. Of the 301 vias on `50a39de5…`,
+296 are 0.5 / 0.3 mm, 4 are 0.6 / 0.3 mm and one, the BAT_IN via at (17.5,87.3), is 1.0 mm pad / 0.5 mm drill, which equals JLC's plug maximum of 0.5 mm. Via covering is an order-level option on JLC's page; the reviewer's reading
 (https://jlcpcb.com/capabilities/pcb-capabilities, 2026-10-30; Inference, confirm in writing) is that fill-and-cap is offered for 0.15–0.55 mm vias and is not the 4-layer default. JLC may therefore refuse per-via mixing, apply the option
 to every via (cost), or silently ignore it and leave U401's exposed pad open to solder wicking. **Fallback if JLC cannot do it as requested:** (1) order the whole-board filled-and-capped option and accept the cost, after asking how JLC treats the
 BAT_IN via; (2) a board change that moves the two vias outside the pad, followed by requalification of the U401 thermal Inference (not done; needs the K-rules and a new review); or (3) do not order until one of these is agreed in writing. Ink plugging or
@@ -339,19 +342,31 @@ mixed-basis 1.76 / 2.04 / 3.19 Ah subtotals and the generic 2.6 / 4 Ah sizing; d
 repaired camera increment to them. On the table's 5.546 V basis the extra 1.5 h of camera is 1.733 Ah (4.123602 − 2.390393 = 1.733209 Ah);
 at the nominal 5.456 V it would be 1.705 Ah. Use 1.733 Ah. The allocations are conservative (R18-REQ-05, Inference): the SD term charges continuous writes for the whole pad wait although F5 logs only from launch, and the logic term charges 1.4 W although the firmware runs at 200 MHz.
 Re-basing both would give a smaller board-only capacity (the reviewer expected about 1.5 Ah at camera off, before reserve); that would reissue the sealed D-R17-01 numbers, so the larger worksheet stands until the owner asks for it.
+
+**Where each margin comes from (R19-REQ-01).** The table above is sealed (D-R17-01) and is kept as written. Its four terms stack margins, and not every one has a root:
+
+| Term | Worksheet value | Root | Physics-based value (Inference) |
+|---|---|---|---|
+| GPS, radio and port quiescent | 0.461 A × 5.546 V / 0.8 = 3.196 W | **No source found** in the repository for 0.461 A | About 1.7 W: the REQUIREMENTS Pack row's LR900-F 1 W maker average plus GPS 0.05 A through an 85 % buck |
+| SD writes | 0.825 W for the whole 2 h | F5 logs from launch, with a RAM ring buffer before it | About 0 W on the pad; 0.825 W only from launch to apogee + 30 s |
+| Unshed logic | 1.4 W | The 480 MHz allocation | About 0.17–0.46 W at the 200 MHz firmware clock, scaling the Temperature row's 0.4–1.1 W at 480 MHz by clock (Inference) |
+| Wh to Ah | at 6 V (2 × 3.0 V, the empty end) | Conservative choice | Rated Ah is delivered over the whole curve, about 7.4 V nominal |
+
+On the physics basis (1.7 W ports + about 0.5 W logic + 0.02 W, 2 h, camera off, Ah = Wh / 7.4 V) the board's pad charge is **about 0.6 Ah, or 0.75 Ah leaving 20 % unused** (Inference; the sealed table gives 1.812657 / 2.265821 Ah for the same case). Neither is a selected or measured pack; motor, flight and recovery charge still add before the 0.8 divisor.
+**Owner decision (open):** which basis sizes the pack. Recommended: the physics basis, once the LR900-F idle / telemetry current is cited from the maker and the 200 MHz logic power is measured on a first article. Until the owner answers, the sealed table stays the conservative bound and is not an oversizing mandate.
 Evidence: [pad-energy calculation](../m3_design/assembly_review/sources/r10_review/round17_pad_energy.json).
 
 ### 8.2 Assembly, order remarks and placement preview
 
-**Standard PCBA, both sides, including all seven THT terminals.** The current `a3144b15…` package has
-81 JLC BOM codes and 197 placed parts; C84, the 198th fitted part, is on the owner BOM `m3_bom_owner.csv` and not in the JLC files. The 197 CPL rows are 66 top + 131 bottom;
-independent pad reconstruction checks cover 65 top + 120 bottom, plus 12 placement-only nonpolar-resistor checks.
-Orientation passes, with worst reconstructed-pad residual 0.491 mm. Paste passes at 245 top + 371 bottom flashes,
-with no pasted pad missing a flash. The [manifest](../m3_design/assembly_review/fab/m3_fab_manifest.json)
-binds the six outputs to this PCB and 193 CAD/export inputs, after the BOM / CPL (S-4), CPL-orientation and paste checks pass. These are current build results; the earlier
+**Standard PCBA, both sides, including all eight THT terminals.** The current `50a39de5…` package has
+81 JLC BOM codes (45 Extended / 36 Basic) and 205 placed parts; C84, the 206th fitted part, is on the owner BOM `m3_bom_owner.csv` and not in the JLC files. The 205 CPL rows are 74 top + 131 bottom;
+independent pad reconstruction checks cover 191 parts (71 top + 120 bottom), plus 14 placement-only checks.
+Orientation passes, with worst reconstructed-pad residual 0.491 mm. Paste passes at 257 top + 371 bottom flashes,
+with no pasted pad missing a flash; C84's lands have no aperture (D-R19-07). The [manifest](../m3_design/assembly_review/fab/m3_fab_manifest.json)
+binds the six outputs to this PCB and its CAD/export inputs, after the BOM / CPL (S-4), CPL-orientation and paste checks pass. These are the round 19 CAD pass's build results; the earlier
 [manufacturing review](../m3_design/assembly_review/sources/r10_review/round11_manufacturing.md) describes `0c50b9fd…`.
-K-legends passes with zero silk/mask overlaps; 88 hidden designators require the Fab references/assembly drawings.
-Inspect every terminal role legend and pin 1/polarity mark in the factory preview.
+K-legends passes with zero silk/mask overlaps; 94 hidden designators (C28, R110, C123, D440, D441 and R88 newly hidden in round 19) require the Fab references/assembly drawings.
+Inspect every terminal role legend and pin 1/polarity mark in the factory preview. Since round 19 every top-side pin and word legend lies wholly outside the DB125 fit envelopes (D-R19-08); the pin 2 legends of J121 (2:E1+) and J400 (2:SW), and pins 2–4 of J440, are on the bottom beside their pins.
 
 Type the following current process requirements into the order remarks and obtain acceptance before payment:
 
@@ -369,6 +384,10 @@ Type the following current process requirements into the order remarks and obtai
   with no supplier profile; remove those two lines or mark them do-not-place, and say so in the order remark and in JLC's written confirmation. Its supplier sheet supplies no land/reflow/manual temperature profile;
   the old OS-CON 250 °C statement does not apply. Confirm the separate operation, then inspect polarity/seating/height
   and measure capacitance/ESR before and after first-article fitting.
+  **No paste on C84's lands (D-R19-07; closes R19-MFG-02 / R19-BOM-02).** Since round 19 the `M3_MA_8x10` footprint has no F.Paste, so the stencil has no aperture there and the two 3.5 × 1.7 mm lands arrive bare (ENIG). The manual operation applies its own paste or solder. Tell JLC in the order remark that the two bare lands at (27.5,75.25) and (27.5,81.75) are intentional (a hand-fitted part), so they need no query.
+  **Heat limit for the C84 fit (R19-MEC-02).** Four bottom joints sit directly under C84's lands (L1.2 3V3, C7.2 GND, C9.1 3V3, C9.2 GND; also L1.1 at 0.60 mm and C7.1 at 0.90 mm), and R166's courtyard is 0.56 mm away on the top. Heat on C84's pads conducts through the 1.6 mm board and planes to those joints.
+  The [supplier sheet](https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf) gives no manual-soldering or reflow profile, so the limits here are a project allocation (Inference, to be validated on a scrap board first): support the bottom face on a flat, heat-sinking fixture that does not press on L1, C7 or C9; heat only from the top; keep the iron or hot air on each land for as short a time as gives a full fillet, and stop and let the board cool between the two lands; do not reflow the bottom side. Record the tip temperature and time used.
+  Afterwards inspect L1, C7, C9 and R166 for movement, re-flowed or dull joints and bridges (magnifier, both faces), then measure 3V3 and VLOGIC on the bench supply against the unloaded values recorded before the fit. Reopening placement to move C84 away from these bottom parts is an owner option, not done.
 - Confirm U5 may take two reflows: TE specifies 250 °C/40 s and a profile, not the number of passes.
   LS120 on top sees one reflow; its maker limits remain 250 °C peak, ≤ 10 s above 245 °C.
   R10 has no u-blox/EBYTE module, MSL-4 module bake or RF-specific final-reflow restriction.
@@ -377,14 +396,14 @@ Type the following current process requirements into the order remarks and obtai
   at 0.12 mm, and J430 requires 100% openings. Molex permits 0.10/0.12 mm and discourages 0.08 mm for this socket.
 - Preserve U4's 0.575 × 0.35 mm lands, its individual green-mask webs and its supplied paste. On the current board the webs are 0.150 mm (mask relief 0; paste unchanged at 88.4 % of the land, inside TN1383's 70–90 %). They were exactly 0.100 mm (+0.025 mm relief) on `632a9ad3…`, with no margin to JLC's green-mask minimum
   (R18-MFG-02); use the values in the final Gerbers. Use multilayer LDI, green mask and 1 oz outer copper. Do not merge or enlarge its openings.
-- **Hand/selective solder all seven DB125 bodies, not wave.** Inspect all **23 connected contacts**:
-  J1/J400/J121 pins 1–2; J9/J410/J420 pins 1–4; J122 pins 1–5. No contact is a dead servo-power row.
-  All five GND contacts—J1.2/J9.2/J410.2/J420.2/J122.5—now have explicit local thermal overrides (zone_connect=1).
+- **Hand/selective solder all eight DB125 bodies, not wave.** Inspect all **27 connected contacts**:
+  J1/J400/J121 pins 1–2; J9/J410/J420/J440 pins 1–4; J122 pins 1–5. No contact is a dead servo-power row.
+  All six GND contacts—J1.2/J9.2/J410.2/J420.2/J440.2/J122.5—have explicit local thermal overrides (zone_connect=1; J440.2's, added in round 19, read back as 1 on `50a39de5…`). The spoke count below was read on the earlier board and was not re-read for J440.2.
   Read-only inspection of current fills finds four separated spokes on F.Cu/In1.Cu/B.Cu at each contact;
   no In2 GND pour connects at these pads. The former four solid In1 contacts on `0c50b9fd…` are historical.
   Thermal relief does not qualify solderability: inspect first-article hole fill and validate the selective/hand process.
 - Hand-finish all four J3 shell slots for hole fill, keeping the iron off bottom C83 and R8.
-  Use consigned U4 stock if selected. Choose “confirm parts placement” and inspect both-side body/pin-1/polarity previews.
+  U4 is the stocked ISM6HG256XTR (C51931514); use consigned LSM6DSV320XTR only if that stock is gone (section 8.1). Choose “confirm parts placement” and inspect both-side body/pin-1/polarity previews; U4's CPL rotation is 180° on the bottom (confirm pin 1).
 
 The [DORABO T0-1 drawing, p1](https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf)
 covers the DB125 family: 3.5 mm pitch, 28–16 AWG clamp, 4–5 mm strip and 0.2 N·m maximum torque.
@@ -395,7 +414,7 @@ Verify seating and actual wire/clamp performance on first articles.
 relative pin pattern/form and permitted seating/lead-form method with the maker/assembler. Obtain the fabricator's
 minimum/maximum finished-hole and relative-pattern allocation, including annulus and protected inner-copper clearance.
 The nominal holes pass the current CAD checks; conditional pin/fabrication corners are not qualified by those checks.
-Use the agreed method and inspect all 23 contacts for full seating, undamaged barrels/plating and solder fill before
+Use the agreed method and inspect all 27 contacts for full seating, undamaged barrels/plating and solder fill before
 harness loading. No enlarged drill or shop-floor reaming is approved. See the measured limits in
 [component qualification](../m3_design/assembly_review/sources/r10_design/parts_qualification.md#round-15-component-qualification-2026-10-30-r15-bom-02--r15-mcu-01)
 and the [fresh terminal verification](../m3_design/assembly_review/sources/r10_review/round15_terminal_verification.md).
@@ -405,25 +424,28 @@ and the [fresh terminal verification](../m3_design/assembly_review/sources/r10_r
 | J1 battery | DB125-3.5-2P-GN-S / C466970, green | F(7.4,75.85), −90° | west; 1 BAT+, 2 GND |
 | J121 igniter | DB125-3.5-2P-BK-S / C52993880, black | F(7.4,55.85), −90° | west; pin 1 OUT = silkscreen E1− (PYRO1_OUT), pin 2 IGN = silkscreen E1+ (PYRO1_IGN) |
 | J400 power/arm switch | DB125-3.5-2P-GN-S / C466970, green | F(7.4,65.85), −90° | west; 1 switch source, 2 switch return |
-| J410 GPS | DB125-3.5-4P-GN-S / C2757925, green | F(38.6,15.5), 90° | east; 1 4V8, 2 GND, 3 board TXO (to the module RX), 4 board RXI (to the module TX) |
-| J420 radio | same 4P | F(38.6,31.5), 90° | east; 1 4V8, 2 GND, 3 board TXO (to the module RX), 4 board RXI (to the module TX) |
+| J410 GPS (default) | DB125-3.5-4P-GN-S / C2757925, green | F(38.6,15.5), 90° | east; 1 4V8, 2 GND, 3 board TXO (to the module RX; USART3 PD8), 4 board RXI (to the module TX; PD9) |
+| J420 radio (default) | same 4P | F(38.6,31.5), 90° | east; 1 4V8, 2 GND, 3 board TXO (to the module RX; UART5 PB13), 4 board RXI (to the module TX; PB12) |
+| J440 spare AUX | same 4P | F(7.4,16.25), −90° | west; 1 4V8, 2 GND, 3 board TXO (to the module RX; USART6 PC6), 4 board RXI (to the module TX; PC7). Only 1:4V8 is printed on the top; 2:GND, 3:TXO and 4:RXI are on the bottom beside their pins. At most 100 mA at 4.8 V (U401 thermal limit, D-R19-14) |
 | J9 camera | same 4P | F(38.6,47.5), 90° | east; 1 5V4, 2 GND, 3 board RXI (from the camera TX), 4 board TXO (to the camera RX) |
 | J122 servos | DB125-3.5-5P-GN-S / C3646874, green | F(38.6,71.5), 90° | east; 1–4 S1–S4, 5 reference GND |
 
 The camera TX/RX order differs from GPS/radio; all directions above are board-relative: board TXO is a line the board drives, so the module's RX goes there, and board RXI is a line the board receives on, so the module's TX goes there.
+**J410, J420 and J440 are electrically identical** (same supply, resistors and ESD; D-R19-14): the GPS or the radio may be wired to any of the three, and firmware maps each device to its port UART (default GPS J410, radio J420, AUX spare; the GPS / RADIO / AUX words show the default). If a module moves, the firmware port map must move with it. **J9 is not interchangeable** with them: its supply is the switched 5.4 V camera rail, its TX / RX pin order is reversed and its UART goes through the U12 / U13 isolation.
 There is no mirrored-numbering/header exception. A symmetric pin row cannot prove a terminal's wire-facing direction;
 confirm bodies, colours and every contact in the fresh factory preview. Do not apply R9's +180° terminal correction.
-Also confirm:
+Also confirm (positions last verified against `50a39de5…` by a read-only parse of the native board, round 19 docs lane):
 
 - Q120/Q121, genuine AONR21357/C431196: B(13.5,73.6),0° and B(13.5,68.6),180°; opposing source/gate/drain roles.
-  Q124 is F(13.9,57.37),90°; C126 is F(16.85,57.675),−90° with its GND via at (16.178,59.047).
+  Q124 is F(13.9,57.37),90°; C126 is F(16.85,57.675),−90° with its GND via at (15.8,59.425) (moved there by D-R18-05; R19-DOC-01).
+  Q122's new gate–source capacitor C123 (10 nF, C15195) is F(18.22,71.85), 0° (D-R19-04).
   Preview the repaired bottom cells, including C411 B(34.2,22.75),90°; C421 B(33.8,36.75),180°;
   C431 B(39.3,57.75),90°; C91 B(34.95,53.9),−90° and C92 B(32.35,52.5),0°. Their rotations are current.
 - C84: F(27.5,78.5),90°, positive pad 1 VLOGIC at (27.5,81.75); manual fitting after all reflow.
   D9: B(15,79.3),−90°, cathode pad 1 RAW_PROTECTED (15,77.3), anode pad 2 GND (15,81.3).
   Check D120/D123 and both LED polarities against native pads.
 - Pin 1 on U1/U2/U3/U4/U5/U9/U10/U11/U12/U13/U400/U401/U402, Q120–Q124, D4/D120/D121 and LS120.
-  U4 stays B(17,45.9),180°. GPS/radio have no translator/switch cells; camera alone retains U12/U13/U402.
+  U4 stays B(17,45.9),180° (fitted part ISM6HG256XTR; CPL rotation 180°). GPS/radio/AUX have no translator/switch cells; camera alone retains U12/U13/U402.
 - J430 Molex 472192001/C164170, B(24,24.3),0°: eight signal lands and four GND shell lands; confirm hinge orientation.
   Its [maker drawing, sheet 1](https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf)
   and supplied 100% paste apertures govern.
@@ -431,7 +453,7 @@ Also confirm:
   heel lie off the pad at worst tolerance; the JLC EasyEDA proxy residual is now 0.05 mm. Still inspect heel wetting on first articles: a factory image is not a
   soldered first article. J3's USB shell overhangs the west edge by about 0.45 mm.
 - Expected DFM queries: U11's 0.2 × 0.6 mm lands, J3 locator clearances/slot fill, U4 mask webs, ordinary via covering,
-  exact U401 VIPPO, manual C84 and the five milled M3 holes. No servo tie holes or obsolete connector pin-number queries remain.
+  exact U401 VIPPO, manual C84 (its two bare, unpasted lands) and the five milled M3 holes. No servo tie holes or obsolete connector pin-number queries remain.
 
 **VCAP bench qualification:** keep C19/C20 Samsung CL10A225KO8NNNC/C23630, 2.2 µF 16 V X5R ±10%.
 Resolve [ST Rev 11 Table 114 p211](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf)'s measurement conditions
@@ -456,16 +478,16 @@ Record the final board/firmware hashes. After coating/rework or any firmware cha
 J2 F(5,39.4) must be programmed before fitting the adjacent (4,44.3) support, or with that support removed:
 the TC2030 nose cannot seat with its hardware in place.
 
-**Current probe worksheet** (native contact positions, read on `632a9ad3…`; the round 18 fix pass moved only TP121, so every other row is unchanged on `a3144b15…`):
+**Current probe worksheet** (native contact positions, re-read on `50a39de5…` in round 19: TP121 is removed (D-R19-03) and TP82 moved (D-R19-14); every other row is unchanged):
 
 | Probe / role | Face and exact contact centre (mm) | Use |
 |---|---|---|
 | TP80 BAT_IN | F(9.8,83.8) | Pack-input discharge; confirm <1 V before reconnection |
 | TP81 RAW_PROTECTED | B(31,84.8) | Protected input/output rail |
-| TP82 USB_LIMITED | B(10.8,21.3) | USB-limiter output |
-| TP83 VLOGIC | B(34.5,81.5) | Logic hold-up rail |
+| TP82 USB_LIMITED | **B(11.0,17.6)** | USB-limiter output. Moved from B(10.8,21.3) in round 19 to keep 1.5 mm from J440's pads (M-6) |
+| TP83 VLOGIC | B(34.5,81.5) | Logic hold-up rail; C84-connected check on first articles (below) |
 | TP120 RAW_ACT | B(18,68.6) | Post-load-switch bus; mask during coating |
-| TP121 ACT_GATE | **B(4,70)** | High-side gate; coated with its cell. Moved from B(10.5,71.5); its B.Cu stub to the gate net is 7.14 mm long |
+| ACT_GATE at R119.1 / R120.2 / C120.2 | **B(11.14,71.1) / B(18.5,73.03) / B(17.1,73.3)** | High-side gate. TP121 and its 7.14 mm stub are removed (D-R19-03, R19-SAF-03); probe these bare part pads **before coating** only, with a fine probe and no clip |
 | TP122 PYRO1_GATE | **B(13.3,53.3)** | Low-side leakage probe; coat last, then repeat static gate |
 | C24.1 NRST /C24.2 GND | **B(25.45,49.42) /B(25.45,48.58)** | NRST powered ratio or reset short |
 | C15.1 3V3 | **B(29.05,47.82)** | Same-time NRST reference voltage |
@@ -475,7 +497,7 @@ the TC2030 nose cannot seat with its hardware in place.
 
 Probe U9 ILM only at its own pad with a high-impedance instrument; do not load, short or drive it.
 Never clip an earthed instrument ground to an igniter terminal: use a suitably rated differential probe,
-clamp current probe or floating battery meter. TP121 and TP122 are bottom-side probes.
+clamp current probe or floating battery meter. TP122 and the ACT_GATE part pads are bottom-side probes.
 
 **Coating worksheet (mandatory P3):** select the following fitted parts and their associated current gate, fire,
 cold/sense and load-switch copper from the **final hash-bound native board on each face**. Mark the resulting local
@@ -487,10 +509,11 @@ mask before brushing.
 - Top selections: J121 body/pad area; Q124, R126, R127, R128, C126; Q122, R121, R122, R123 and their connecting
   control copper. Retain the existing local body/pad coating at D8 and J1, keeping terminal entries/screws clear.
 - Bottom selections: R134, Q120, Q121, R120, R119, C120, D120; C127/C128/C129; R129/R130/R131/R132/R133,
-  R173/R175/R178/R180; TP121 and their current connecting copper. The sole RAW_ACT bank is the R132/R175/R133/R180/C129 cell.
+  R173/R175/R178/R180 and their current connecting copper. The sole RAW_ACT bank is the R132/R175/R133/R180/C129 cell.
+- **Switch-enable network (R19-SAF-02):** U9, R80, R81, R165, C87 and the BAT_ENABLE vias (17.1,82.8), (19.675,66.6), (21.3,68.9) and their tracks, on both faces, plus C123 with Q122's cell. U9's EN pad sits 0.200 mm from its IN pad under the QFN (TI's land), and the (17.1,82.8) via 0.200 mm from BAT_FAULT_N: a surface leak at either can hold the board on with J400 open. Coat U9's body edge and these vias; keep coating off J400's wire entry and screw.
 - Retain the existing whole-part selections C10, C14, D121, R150–R157 and R164 (R62 and R63 are removed) where the complete sensor
   exclusions permit them. Other parts/copper enclosed by a selected local mask must be checked individually.
-  Mask TP120 and every other test point except TP121 and the separately processed TP122.
+  Mask TP120 and every other test point except the separately processed TP122.
 - Keep coating/resin **≥3 mm from U4** on both faces; its bottom outline remains x15.1–19.1, y44.3–47.5.
   Keep adhesive, foam and staking off U4. **Mask C11, R13 and R64 whole.**
 - Keep coating/resin **≥3 mm from the union of U5 body and pads**, with the whole sensor covered by polyimide until
@@ -510,7 +533,7 @@ mask before brushing.
 supports protecting the pressure ports/no-clean handling; [ST TN1383](https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf)
 supports keeping resin/stress away from the MEMS. Numerical coat boundaries above are project process constraints.
 
-**Staking after coating cures:** stake **all seven DB125 bodies, including J400**, C84 F(27.5,78.5),
+**Staking after coating cures:** stake **all eight DB125 bodies, including J400 and J440**, C84 F(27.5,78.5),
 LS120 F(23,58.5) and J3's shell tabs as applicable. Use the current terminal positions in §8.2;
 locally back the PCB while tightening wires and support/strain-relieve every lead independently of the board.
 Keep fillets off mating openings, screws, card/hinge motion, sensor exclusions and probes still needed for acceptance.
@@ -520,14 +543,18 @@ is in M3_R10; actual joint/clamp/adhesive/hinge retention remains unmeasured.
 **Required bench/firmware qualification:** §5's generic static, leakage, reset, bootloader, power-transition,
 thermal and sensor tests apply using the contacts above and the current circuit:
 
+- **Harness pin-identity check before first power (R19-MEC-01).** After wiring and before any power, check every lead of all eight terminals end to end with a continuity meter against the terminal table in §8.2 (pin, net and module pin). Pin identity after wiring comes from this check, not from the silkscreen: the pin-1 end legends sit beside the bodies and the wire-side legends lie under their own wires, so once wired they cannot be read by eye. Repeat it after any re-wire, and record it with the first-article record.
+- **First-article power path (R19-PWR-01).** Power up once from the pack only (USB disconnected, e-match disconnected, dummy loads): this screens a manufacturing open of the single RAW_PROTECTED via (24.3,66.0) at U11.2, the only battery feed into VLOGIC, which could not be doubled (D-R19-09). Then show that C84 is connected: measure the VLOGIC capacitance at TP83 with the board unpowered, or measure the hold-up after a deliberate pack break. A missing C84 joint is not otherwise screened. The 3V3A vias (16.0,50.2) and (27.0,49.25) are also single; a first power-up with sensor and ADC readings screens them.
+
 - Keep PC1/ACT_EN_MCU and PE4 low for the **passive cold screen before enabling the bus**. After any prior enable,
   wait ≥ 1 s and verify discharge/ACT_GATE off. Qualify healthy CONT/BUS ≈ 99.369/99.338 mV and open ≈ 146.23/0 mV
   with actual leakage/ADC/temperature error; ground faults refuse enable. Only then enable PC1, keep PE4 low and
   wait ≥ 100 ms before powered checks. In flight these readings are logged/annunciated and never veto a fire.
-- **Load-switch gate drive (D-R18-01, D-R18-02).** With PC1 high, measure the Q122 gate (2.19 V nominal; 1.92 V at the VOH floor) and ACT_GATE settling at the lowest loaded battery voltage (calculated worst-case settled |VGS| 4.74 V, 31.9 ms to −4.5 V; the ≥ 100 ms wait above stays). Q122 saturating at that gate is Inference, because AO3400A RDS(on) is specified only at 2.5 V.
+- **Load-switch gate drive (D-R18-01, D-R18-02, D-R19-04).** With PC1 high, measure the Q122 gate (2.19 V nominal; 1.92 V at the VOH floor; C123 10 nF now sets a gate time constant of about 7 µs, Calculation) and ACT_GATE settling at the lowest loaded battery voltage (calculated worst-case settled |VGS| 4.74 V, 31.9 ms to −4.5 V; the ≥ 100 ms wait above stays). Q122 saturating at that gate is Inference, because AO3400A RDS(on) is specified only at 2.5 V.
 - Replace ARM-link transitions with 20 screw-switch on/off cycles, verifying RAW_ACT<1 V and 3V3<0.3 V between cycles
   with all back-feed sources disconnected. Retain reset, camera-switching, servo/buzzer and source-transition disturbance tests.
   Firmware may fire only after accelerometer+barometer launch detection; commanded dummy-load firing exercises that policy.
+  With C87 at 220 nF (D-R19-10) the calculated turn-on delay is 31–122 ms and a J400 drop-out shorter than 12 / 22 / 27 ms (worst case at 6.0 / 7.4 / 8.4 V) cannot trip U9 (Calculation). Measure the chosen switch's contact chatter at flight vibration: pass if the longest drop-out is < 10 ms (REQUIREMENTS F6).
 - Static/leakage gates use the flight firmware, dummy load and isolated instruments. After coating and before each flight,
   powered NRST at C24.1 must be **≥0.90×3V3** measured at C15.1 with a 10 MΩ DMM, corresponding to the retained
   ≥ 250 kΩ leakage requirement. Do not substitute an unpowered resistance reading.
@@ -546,22 +573,24 @@ thermal and sensor tests apply using the contacts above and the current circuit:
   starts, with PC1/PE4 locked low, camera EN/OE low and SD_CS high. PC1/PE4 are not
   loader pins. The current primary text was checked; current PDF raster inspection
   is not claimed.
-- **Port faults/back-feed:** GPS/radio are powered whenever the battery path is on (they are off on USB-only power) and have no EN/OE/FAULT or individual power-cycle facility.
+- **Port faults/back-feed:** GPS/radio/AUX are powered whenever the battery path is on (they are off on USB-only power) and have no EN/OE/FAULT or individual power-cycle facility.
   Their digital UARTs require powered-board FT setup, internal RX pulls always off and 0–5 V endpoints; the operating pull-off threshold is relevant I/O supply+0.3 V, separate from the 4 V absolute-stress note; no self-powered module
   with the board off. Short each port with worst camera/SD load and observe logic/flight-state survival.
   Camera alone retains U402/U12/U13: test OE-before-EN disable and all allowed source transitions.
   With no e-match, characterize separately powered-port reverse current and rail decay; back-feed may hide J400 opening.
   Do not promise detection/shutdown of an unobservable opening. Connect the e-match only without USB/self-powered back-feed.
-- **Power/thermal:** measure port endpoints at 6.0 V loaded battery, maximum GPS/radio/camera/card loads, U400/U401 and
+- **Power/thermal:** measure port endpoints at 6.0 V loaded battery, maximum GPS/radio/camera/card loads and the 100 mA AUX allowance (U401 junction calculated at 109.2–123.9 °C at a 70 °C bay with the inferred 80–110 °C/W, against 125 °C), U400/U401 and
   U9 neck temperatures, independent Q124 cutoff and high-side turn-on at 70 °C. U401's VIPPO and calculated thermal
   estimate require first-article temperature verification. Qualify USB-only attach/startup against the actual current-limited host.
 - **USB-only operation (R18-PWR-02, R18-MCU-02).** With the pack disconnected, U10 (R85 66.5 kΩ; limit 0.3477–0.4530 A) is the only limit between VBUS and the logic. The upper allocation of 1.4 W logic
   + 0.825 W continuous SD writes would draw 0.4596 A at VBUS 5.00 V and 0.4856 A at 4.75 V, above the 0.453 A maximum; at the minimum limit the guaranteed input power is about 1.61 W (at most 0.785 W of logic with
   continuous SD writes); the lower allocation (0.6 W + 0.776 W) draws 0.281–0.296 A and fits (Calculation; details in M3_R10, "Power"). Run full-speed and SD-logging tests on pack power (switch on, e-match disconnected, dummy loads),
   or cap the clock and SD write rate in firmware while PA4 (LOGIC_SOURCE_ST) reports the USB input, and measure the USB-only draw on first articles. The GPS and radio ports are off on USB-only power: disconnect
-  the J410 and J420 module leads for USB-only sessions, or verify that J410.3 and J420.3 stay near 0 V, and characterise module behaviour. Firmware keeps PC6 and PB13 analog while the ports are unpowered.
-- **Per-flight check before the e-match is inserted (R18-SAF-06).** With the pack connected and J400 open, measure J121.2 (IGN) to GND with a floating meter (never an earthed instrument ground on an igniter terminal): it must read below 0.1 V.
-  A higher reading means Q120/Q121 or their gate bias has failed on, so the bus is live with the switch off; do not insert the e-match. TP120 (RAW_ACT) faces the sled and is not a substitute for this reading.
+  the J410, J420 and J440 module leads for USB-only sessions, or verify that J410.3, J420.3 and J440.3 stay near 0 V, and characterise module behaviour. Firmware enables each port TX (PD8, PB13, PC6) only while PA4 reads low (U11 on IN2, the battery) and parks it analog, no pull, when PA4 rises or PA6 trips (D-R19-13).
+- **Per-flight check before the e-match is inserted (R18-SAF-06, R19-SAF-02).** With the pack connected and J400 open:
+  (1) confirm the board is **off**: no telemetry and no buzzer, or, with access, RAW_PROTECTED at TP81 and 3V3 at C15.1 both below 0.3 V. A board that is on with J400 open means a leak or bridge at the EN network or a chafed J400.2 lead (R19-SAF-02): do not insert the e-match;
+  (2) measure J121.2 (IGN) to GND with a floating meter (never an earthed instrument ground on an igniter terminal): it must read below 0.1 V. A higher reading means Q120/Q121 or their gate bias has failed on, so the bus is live with the switch off; do not insert the e-match. TP120 (RAW_ACT) faces the sled and is not a substitute for this reading;
+  (3) after any check with J400 closed, open J400 and confirm again that the board turns off before anyone works at the rocket.
 - **Hot-plug:** use the final unfused harness, measured R ≥ 0.03 Ω and L 0.1–2 µH, switch open and e-match/USB/self-powered
   sources disconnected. Wait ≥ 2 s after unplugging and confirm TP80<1 V before reconnection. R166 is 0.36 Ω/1%;
   measure resistance before/after repeated hot/cold insertions. Scope U9 IN and OUT together; below −10 °C,
@@ -569,7 +598,7 @@ thermal and sensor tests apply using the contacts above and the current circuit:
   passes 2304/2304 cases (Simulation/Inference); this does not qualify the actual harness or measured hot-plug waveform.
 - **Battery-break/SD:** no hardware port-buck cutoff or GPS/radio shedding. Qualify PA6 watchdog threshold, latency,
   stopping SD/QSPI writes/UARTs without flush, camera OE/EN and actual load decay with state/sensors/safety timing retained.
-  Current allocation gives 0.490–0.571 ms all-ports/SD-write and 1.533–1.655 ms camera-off/logic-shed/card-idle at 300.8 µF
+  Current allocation (with the 100 mA AUX allowance) gives 0.464–0.539 ms all-ports/SD-write and 1.304–1.412 ms camera-off/logic-shed/card-idle at 300.8 µF
   to 3.8 V (Calc/Inference), not measured hold-up. Select a card ≤ 200 mA write/≤30 mA idle and qualify busy latency,
   buffering, power-loss/reset recovery and full-flight storage alongside primary QSPI.
 - **Sensors/installed assembly:** retain the measured under-body IMU_CS 0.7596+0.0918 mm,
@@ -587,11 +616,11 @@ thermal and sensor tests apply using the contacts above and the current circuit:
 
 | Item | Current instruction |
 |---|---|
-| Power/pad switch | One external screw switch on DB125 J400, reachable on the rail; on last/off first. Qualify the ≈ 7 µA dry-circuit contact and clamp under vibration. Bench uses USB with pack or e-match disconnected; on-rail pad checks precede launch. Treat the powered board as armed. No physical break while powered is owner-accepted; PC1 and PE4 separately control the series firing path. |
+| Power/pad switch | One external screw switch on DB125 J400, reachable on the rail; on last/off first. Qualify the ≈ 7 µA dry-circuit contact and clamp under vibration. Bench uses USB with pack or e-match disconnected; on-rail pad checks precede launch. Treat the powered board as armed. No physical break while powered is owner-accepted; PC1 and PE4 separately control the series firing path. **Dress the J400 pair (R19-SAF-02):** twist the two switch leads and run them on their own ties, away from the battery and servo power leads; J400.2 sits at the EN potential, and a chafe onto any pack-voltage conductor turns the board on with the switch open. |
 | Battery lead | **No battery-lead fuse/holder (OQ-6)**. Pack-to-U9/Q120 leads/copper/TVS/caps remain unfused: strain relief, no chafe points, qualified crimps/soldered splices. Battery and igniter enter the west row; label/dress them apart and inspect loose strands. Keep the harness within F7's source/lead budget and clear of the forward-west support/washer. |
-| All terminal leads | Unkeyed; verify every endpoint/polarity/function before power, including the two green2P battery/switch bodies. Clamp 28–16 AWG; use qualified ferrules or ≥ 28 AWG splices for thinner leads. **No solder-tinned stranded ends in screw clamps.** Strip 4–5 mm and qualify actual torque/retention, within maker 0.2 N·m maximum. Back the PCB locally while tightening. Stake every terminal body and independently support its leads. Current maximum-maker envelopes give 5.003 mm bare-bore wire room on all seven terminals, 0.053 mm above OQ-1's 4.95 mm floor; body/bore margin is 2.976 mm. This is CAD/Inference from the [terminal closure](../m3_design/assembly_review/sources/r10_review/round11_terminal_closure.json), not installed harness/screwdriver qualification. |
+| All terminal leads | Unkeyed; verify every endpoint/polarity/function before power with the continuity check in §8.3 (R19-MEC-01), including the two green 2P battery/switch bodies. Clamp 28–16 AWG; use qualified ferrules or ≥ 28 AWG splices for thinner leads. **No solder-tinned stranded ends in screw clamps.** Strip 4–5 mm and qualify actual torque/retention, within maker 0.2 N·m maximum. Back the PCB locally while tightening. Stake every terminal body and independently support its leads. Current maximum-maker envelopes give 5.003 mm bare-bore wire room on all eight terminals (J440 included, at the west row's figure), 0.053 mm above OQ-1's 4.95 mm floor; body/bore margin is 2.976 mm (measured before J440; J440 shares the west row's x). This is CAD/Inference from the [terminal closure](../m3_design/assembly_review/sources/r10_review/round11_terminal_closure.json), not installed harness/screwdriver qualification. |
 | Servo harness | DB125 J122 pins 1–4 signals, pin 5 shared signal-reference GND only. Motor power **and motor return** run directly in the pack-star harness; preserve O6's ≥ 50 mΩ reference branches and ≤ 1 mΩ star transfer resistance and qualify the inferred ≤ 0.62 A board share with a 1 A allowance. No + row/header plug/tie holes remain. Per-servo fault containment and hinge loads remain physical qualifications. |
-| External modules | HGLRC M100 Mini GPS on J410 and MicoAir LR900-F on J420; camera on J9. All use DB125 leads; no on-board antennas/coax/SMA procedure. Supply/GND then board TXO/RXI on GPS/radio; camera RXI/TXO differs. Mount/support modules and keep radio/harness away from the CH1 cell; qualify installed RF immunity. |
+| External modules | HGLRC M100 Mini GPS on J410 and MicoAir LR900-F on J420 by default; J440 is a spare of the same kind (west edge). J410, J420 and J440 are electrically identical, so the GPS or the radio may use any of them if the firmware port map is changed to match; the camera stays on J9, which is not interchangeable. AUX may draw at most 100 mA at 4.8 V. All use DB125 leads; no on-board antennas/coax/SMA procedure. Supply/GND then board TXO/RXI on GPS/radio/AUX; camera RXI/TXO differs. Mount/support modules and keep radio/harness away from the CH1 cell; qualify installed RF immunity. |
 | microSD access | Board off, pack/USB/self-powered sources disconnected, and assembly out of the bay before opening/inserting/removing. **Unbolt/remove the PCB from a continuous sled first**, or use a deliberately designed hinge-access window whose actual lid sweep, fingers/tools, card retention and structural clearances have been qualified. Merely taking the sled out of the bay does not establish bottom-hinge access. Never force the hinge against the sled. |
 | Board position | OQ-7: the PCB aft edge plus axial mounting tolerance is wholly forward of booster/main joint+47 mm in every roll orientation; do not use freed PCB/coax length to move it aft into the shroud. Select tested capacity using section 8.1.1 including motor/flight/recovery charge, then physically integrate that actual pack, lead zone, external modules and full harness; prior bay/lead-zone arithmetic is not a fit test. |
 | Sled/supports | Top PCB face on bore axis, horizontal/vertical centring each ±0.3 mm; usable bore radius 24.9 mm after 0.5 mm wall allowance. Exactly five M3 supports: **(4,4), (42,4), (4,44.3), (3.7,86), (42,86)**. Nonconductive sled/insulation under the whole bottom face; no sixth support or servo tie channel. Deepest bottom part is **L1 B(25,74.6),3.015825 mm below the bottom face** (model-derived, Inference). Minimum standoffs 3.5 mm; use measured **4.0 mm standoffs and plate ≤ 1.0 mm** by default. At 4 mm the nominal L1/plate gap is 0.984175 mm; dynamic deflection/installed fit remain unqualified. |
@@ -599,7 +628,7 @@ thermal and sensor tests apply using the contacts above and the current circuit:
 | Support/board checks | Current hash-bound fit gate confirms nearest bottom obstacle C32.2, 4.536177 mm from (4,44.3), and nearest top exposed pad LED2.2, 3.807887 mm from that support. These are CAD measurements; actual hardware/washer eccentricity and installed fit remain unverified. Keep whole-face insulation even over masked copper. |
 | U5 cover | Opaque open-cell cover capped at U5 outline+1 mm, kept off U4 with no port pressure. At 4 mm standoffs, the conservative 1.1 mm engineering model/cover allocation leaves 2.9 mm. TE MS5611-01BA03 06/2017 p15 Fig 18 specifies package height 1.0 mm +0/-0.10; its package-only 3.0 mm gap excludes seating/foam/adhesive tolerances. The native triangulated model is 1.100074 mm and is retained. Qualify compression/venting and LED/ambient-light rejection on the installed assembly; no adhesive/staking load near U4. |
 
-Five-times 100 g retention remains an open qualification assertion for all seven terminals, C84, LS120, J3 and the
+Five-times 100 g retention remains an open qualification assertion for all eight terminals, C84, LS120, J3 and the
 closed socket/card; see the refreshed mass worksheet in M3_R10. The optional plate model and any historical frequency
 are not vibration-release criteria. Physical fit, heat, coating process, clamp/hinge retention and firmware remain unverified.
 
@@ -612,10 +641,11 @@ are not vibration-release criteria. Physical fit, heat, coating process, clamp/h
 | `877d0199…` /reviewed fix `b337fe63…`, AUD/GAP | 225 footprints/215 CPL rows/82 codes, 317/365 paste flashes; $84.43 placed/feeder snapshot. Old GH/header positions, fixed coat rectangle, probe coordinates, support examples and 280.9 Hz model are historical. |
 | `6e73b6eb…`, circuit-only pass | 209 footprints/199 CPL rows/82 codes; radio parked west; $82.59 snapshot. Superseded by AVA placement. |
 | `0c50b9fd…`, frozen AVA review target | 209 footprints/981 segments/294 vias, 199 fitted/82 codes; 245/373 paste flashes. Its package binding and ten-lens review belong to this historical PCB. It was superseded by the R11–R14 fixes and reviewed as `7866d6b8…` in full R15. Full R16 and R17 then reviewed 632a9ad3 (the clean pair is earned) and full R18 reviewed it again; the SD_MOSI alternative, retained at the time for owner acceptance, was adopted in the round 18 fix pass. |
+| `a3144b15…`, board of round 19 (superseded by the round 19 fix pass) | 208 footprints/197 CPL rows/81 JLC codes, 245/371 paste flashes; $79.12 placed/feeder snapshot, U4 LSM6DSV320X short. Reviewed in full by round 19 (0 Critical / 0 Major / 57 Minor). Seven terminals; TP121 at B(4,70); C87 2.2 µF. |
 | `632a9ad3…`, board of rounds 15 to 18 (superseded by the round 18 fix pass) | 209 footprints/199 CPL rows/82 codes, 245/373 paste flashes; $79.52 placed/feeder snapshot, with R430 and U4 short. Reviewed in full by rounds 16 and 17 (the clean pair) and by round 18. Its hash-bound values appear above only where marked. |
 
 Earlier R7–R9 instructions, including RF modules/SMA, GH mates, ARM link/fuses, servo headers/ties, old coating rectangles
 and old thermal/modal/copper/stock counts, do not become current through a designator substitution.
 Historical details remain in M3_R10, R10_VALIDATION and R10_DECISIONS. The current software/CAD and fabrication
-results belong to `a3144b15…` (build and check history: M3_R10, "Current state"). Resolve stock/quote requirements before any order. Factory approval, first-article processes, firmware, bench/thermal/e-match, coating, harness/tool/card
+results belong to `50a39de5…` (build and check history: M3_R10, "Current state"). Resolve stock/quote requirements before any order. Factory approval, first-article processes, firmware, bench/thermal/e-match, coating, harness/tool/card
 access and installed mechanical qualification remain open.

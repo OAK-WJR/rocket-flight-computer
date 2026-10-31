@@ -54,7 +54,7 @@ Mechanical and placement (kept from check_r9 where they still apply, read from t
   M-6   bottom parts SMD only, >= 1.5 mm from foreign through-hole pads, >= 3.5 mm from an M3 support centre
   M-7   U4 on the bottom at R9's rotation 180 (roll = -gyro_Y, R9_DECISIONS D-S7-06), actual lever arm -6.0 +/-0.05 mm;
         no via or fill under U4 / U5 on their side (check_r9.m7); the axis map is read from the board and reported
-  P-11  All seven DB125 terminals face outward with >= 4.95 mm wire room; J1 / J121 enter from -x (owner, r10_plan 2 item 2; J1's wires leave the same west face, R3-MEC-02);
+  P-11  All eight DB125 terminals (D-R19-14 adds J440, west) face outward with >= 4.95 mm wire room; J1 / J121 enter from -x (owner, r10_plan 2 item 2; J1's wires leave the same west face, R3-MEC-02);
         the entry direction is read from the footprint
         description ("wire entry +y"), else DB128's local -y. Wire room to the bore wall: R8 / R9's 6.25 mm is R8's
         measured value (a non-regression floor, not a derived need). Owner OQ-1, 2026-10-28: R10's accepted floor is
@@ -78,8 +78,11 @@ Kept contract and copper rules:
   K-width      BAT_IN / RAW_PROTECTED power tracks >= 0.3 mm, no 0.3 mm run > 2 mm (R8-GATE-04); only dead-end
                R80.1 / R82.1 / R167.1 / R92.1 taps to their first power junction may use 0.15 mm without a length cap
   K-legends    pinned revision / safety texts, shown safety refs (R8-GATE-02/03), duplicate ids, pin legends, legend subjects (R10 word legends),
-               R18-GATE-08: each connector word (IGN, BAT, SWITCH, CAM, SWD, SERVO, GPS, RADIO) once and beside its own
-               connector (no other courtyard as near; only the named WORD_SEAMS tie), R10 terminal pin legends (a combined 'Jnn n:NAME' table or an unknown bare 'n:NAME' legend, text or
+               R18-GATE-08: each connector word (WORD_LEGENDS_R10, the one list m3_design/r10_post.py places: IGN, BAT,
+               CAM, SWD, SERVO, GPS, RADIO, SWITCH) once and beside its own connector (no other courtyard as near; only
+               a named WORD_SEAMS tie, none on R10 since D-R19-06); D-R19-06: GPS and RADIO, the only names of the two
+               identically pinned port terminals, lie inside their own terminal's courtyard y-span by WORD_SPAN_MARGIN;
+               R10 terminal pin legends (a combined 'Jnn n:NAME' table or an unknown bare 'n:NAME' legend, text or
                text box, is a conflicting second legend of the terminal pin it names / is nearest); AUD-10 counts subject distance for review;
                R3-MFG-01: no
                silkscreen item (board or footprint graphic, text, field), as its polygon, overlaps a pad's solder mask
@@ -88,7 +91,9 @@ Kept contract and copper rules:
                >= 0.7 mm, only the named, measured POWER_NARROW entries (the 0.3 mm bar entries, the C88-local 0.7 mm
                runs, the 0.4 mm via link) excepted; IN >= 1 via of >= 1.0 / 0.5 mm, OUT >= 2 vias of >= 0.5 / 0.3 mm
                joined to In2 RAW_PROTECTED; Q124's source pads reach >= 2 In1 GND vias (>= 0.5 / 0.3 mm) on >= 0.3 mm
-               F.Cu (D-R3-03)
+               F.Cu (D-R3-03); D-R19-09: the doubled feeds (U401 IN / EN / OUT, U402 IN: >= 2 In2 vias; C84 hold-up:
+               >= 2 VLOGIC vias) and the buck outputs (L400.2 >= 2 In2 PORT_5V3 vias; L1.2 >= 2 In2 3V3 vias plus the
+               named F/B-only bridge via (26.4, 79.26))
   K-copper     vias in pads, overlap-only joints, thermal policy, via paste (check_r9.k_copper); GAP-3 admits only
                two exact filled/capped GND vias in U401.11, with unchanged maker paste and a VIPPO order condition
   K-inner      In1 GND only, In2 power and GND only (route_check r10 classes)
@@ -97,13 +102,15 @@ Kept contract and copper rules:
                port nets): F.Cu over In1 GND; B.Cu over any In2 rail plane (GND, 3V3, 3V3A and R10's PORT_5V3,
                PORT_4V8, RAW_PROTECTED regions: decoupled DC rails, as R6 counted 3V3; Inference for the new ones);
                In1 / In2 tracks over F.Cu / B.Cu GND. An unreferenced sample passes only inside its own net's via
-               antipad (REF_OWN_R of a same-net via, R9 D-S8-17) or as a recorded REF_STRAY (D-R2-10)
+               antipad (REF_OWN_R of a same-net via, R9 D-S8-17), inside the S-8 void round its own barrel when it
+               is a BARREL_GND_HAZARD net (BARREL_VOID_REACH, D-R19-01) or as a recorded REF_STRAY (D-R2-10)
   K-region     R4-RTE-02, R5-RTE-01 / -02 / -06: every B.Cu track of a signal-critical net (route_check r10's pyro,
                crystal, usb, spi, uart, portctl classes minus AUD-2's named slow list: the same nets K-reference samples; sampled every 0.02 mm on its
                centre line and on both edges pushed 0.1 mm outward) and every B.Cu SMD pad of such a net (0.05 mm grid
                over the pad grown by 0.1 mm) lies over exactly one In2 plane net and over In2 copper, outside its own
-               vias' antipads (REF_OWN_R) and the own through-hole pads' clearance voids (a no-copper region wholly
-               inside the disc pad half-size + zone clearance + 0.05 mm); each connected B.Cu chain sees one plane net
+               vias' antipads (REF_OWN_R), the own through-hole pads' clearance voids (a no-copper region wholly
+               inside the disc pad half-size + zone clearance + 0.05 mm) and, for a BARREL_GND_HAZARD net, the S-8 void
+               round its own barrels (D-R19-01); each connected B.Cu chain sees one plane net
   K-fill       R4-GATE-05: a copy of the board loaded from its file and refilled has the saved fill geometry in every
                zone UUID/layer/net (symmetric difference <= 0.01 mm^2); a stale or hand-edited fill fails
   K-rules      R4-GATE-01: m3.kicad_dru is pinned by SHA-256 (it is generated by m3_design/r10_sch.py); the .kicad_pro
@@ -141,10 +148,10 @@ PORT_REMOVED = frozenset({'U410', 'U420', 'R410', 'R411', 'R412', 'R420', 'R421'
 REQUIRED_FITTED = (set(actuators.PINNED) - {'C121', 'J124'} - BUS_SENSE_REMOVED) | {
     'R131', 'C127', 'C129', 'C84', 'U11', 'U12', 'U13',
     'R100', 'R101', 'R102', 'R103', 'C91', 'C92', 'C93', 'C100', 'C29',
-    'J400', 'J410', 'J420', 'J430', 'U400', 'U401', 'U402'} | {f'{prefix}{n}' for prefix, numbers in
-        (('R', (440, 441, 450, 451)), ('C', (410, 411, 420, 421)),
+    'J400', 'J410', 'J420', 'J430', 'J440', 'U400', 'U401', 'U402'} | {f'{prefix}{n}' for prefix, numbers in
+        (('R', (440, 441, 450, 451, 470, 471)), ('C', (410, 411, 420, 421, 444, 445)),
          ('R', range(460, 465)), ('C', (460, 461)),
-         ('D', (400, 401, 410, 411, 420, 421)), ('R', (430, 431, 432)),
+         ('D', (400, 401, 410, 411, 420, 421, 440, 441)), ('R', (430, 431, 432)),
          ('R', range(400, 405)), ('C', range(400, 409)), ('L', (400,))) for n in numbers}
 # Retained functional parts and their support, in addition to the safety/new-port set above. This closes the
 # final native/schematic/BOM/CPL population invariant without another complete schematic-contract walk.
@@ -162,12 +169,14 @@ CONNECTORS = {
     'J1': ('BAT_IN', 'GND'), 'J400': ('BAT_SW_SOURCE', 'BAT_SW_RETURN'),
     'J410': ('PORT_4V8', 'GND', 'GPS_TX_WIRE', 'GPS_RX_WIRE'),
     'J420': ('PORT_4V8', 'GND', 'RADIO_TX_WIRE', 'RADIO_RX_WIRE'),
+    'J440': ('PORT_4V8', 'GND', 'AUX_TX_WIRE', 'AUX_RX_WIRE'),             # D-R19-14: the spare AUX port, a J410 copy
     'J9': ('CAM_5V', 'GND', 'CAM_RX_WIRE', 'CAM_TX_WIRE'),
     'J122': ('SERVO1_OUT', 'SERVO2_OUT', 'SERVO3_OUT', 'SERVO4_OUT', 'GND')}
 PARTS = {'J1': ('C466970', 'M3_DB125_2P_GN'),
          'J121': ('C52993880', 'M3_DB125_2P_BK'),
          'J400': ('C466970', 'M3_DB125_2P_GN'),
          'J410': ('C2757925', 'M3_DB125_4P_GN'), 'J420': ('C2757925', 'M3_DB125_4P_GN'),
+         'J440': ('C2757925', 'M3_DB125_4P_GN'),
          'J9': ('C2757925', 'M3_DB125_4P_GN'), 'J122': ('C3646874', 'M3_DB125_5P_GN'),
          'C84': ('C46550466', 'M3_MA_8x10'),
          'C92': ('C19666', 'C0603'),  # AUD-1: same qualified land as C23/C28; inferred effective-capacitance bound 2.211uF.
@@ -183,6 +192,8 @@ AUD_REMOVED = {'J123', 'R160', 'R161', 'C160', 'D122', 'TP84', 'TP85', 'TP86', '
 REMOVED |= AUD_REMOVED
 REMOVED |= BUS_SENSE_REMOVED | PORT_REMOVED
 REMOVED |= {'R62', 'R63'}            # D-R18-01 (R18-REQ-08): V3V3_SENSE divider removed; PC3_C is NC
+REMOVED |= {'TP121'}                 # D-R19-03 (R19-SAF-03): bare ACT_GATE probe pad removed; probe R119.1 / R120.2
+REQUIRED_FITTED |= {'C123'}          # D-R19-04 (R19-SAF-06): Q122 gate-source capacitor
 
 
 def population(text, required=REQUIRED_FITTED, schematic=False):
@@ -258,7 +269,7 @@ def assembly_population(text, required=REQUIRED_FITTED, *, require_qty=False, na
 
 
 def uart_ports(pins, values, codes):
-    """Always-on GPS/radio: 1 k series and connector-side ESD, direct to their 3V3 MCU UARTs."""
+    """Always-on GPS/radio/AUX: 1 k series and connector-side ESD, direct to their 3V3 MCU UARTs (D-R19-14)."""
     issues = []
     for ref in PORT_REMOVED | {'U412', 'U422', 'R443', 'R453', 'C441', 'C442', 'C451', 'C452'}:
         if ref in codes or ref in values or any(p.startswith(ref + '.') for p in pins):
@@ -272,17 +283,22 @@ def uart_ports(pins, values, codes):
             issues.append(f'{ref}: direct UART requires LCSC {code}')
         if value and values.get(ref) != value:
             issues.append(f'{ref}: direct UART requires {value}')
-    for port, base, rbase in (('GPS', 410, 440), ('RADIO', 420, 450)):
-        expect(f'R{rbase}', {1: f'{port}_RX_WIRE', 2: f'{port}_RX_MCU'}, 'C21190', '1k 1%')
-        expect(f'R{rbase + 1}', {1: f'{port}_TX_MCU', 2: f'{port}_TX_WIRE'}, 'C21190', '1k 1%')
-        expect(f'J{base}', {1: 'PORT_4V8', 2: 'GND', 3: f'{port}_TX_WIRE', 4: f'{port}_RX_WIRE'}, 'C2757925')
-        expect(f'C{base}', {1: 'PORT_4V8', 2: 'GND'}, 'C14663', '100nF 50V X7R 10%')
-        expect(f'C{base + 1}', {1: 'PORT_4V8', 2: 'GND'}, 'C21397', '22uF 25V X7R 10%')
-        expect(f'D{base}', {1: f'{port}_TX_WIRE', 2: 'GND'}, 'C535146')
-        expect(f'D{base + 1}', {1: f'{port}_RX_WIRE', 2: 'GND'}, 'C535146')
-        mcu_pins = {'GPS': {'TX': '63', 'RX': '64'}, 'RADIO': {'TX': '52', 'RX': '51'}}[port]
+    # D-R19-14: three electrically identical ports (terminal, RX / TX 1 k, 100 nF / 22 uF, TX / RX clamps, MCU TX / RX
+    # pins); J410 moved to USART3 PD8 / PD9 and J440 (AUX) took USART6 PC6 / PC7.
+    for port, j, r_rx, r_tx, c_small, c_big, d_tx, d_rx, tx_pin, rx_pin in (
+            ('GPS', 'J410', 'R440', 'R441', 'C410', 'C411', 'D410', 'D411', '55', '56'),
+            ('RADIO', 'J420', 'R450', 'R451', 'C420', 'C421', 'D420', 'D421', '52', '51'),
+            ('AUX', 'J440', 'R470', 'R471', 'C444', 'C445', 'D440', 'D441', '63', '64')):
+        expect(r_rx, {1: f'{port}_RX_WIRE', 2: f'{port}_RX_MCU'}, 'C21190', '1k 1%')
+        expect(r_tx, {1: f'{port}_TX_MCU', 2: f'{port}_TX_WIRE'}, 'C21190', '1k 1%')
+        expect(j, {1: 'PORT_4V8', 2: 'GND', 3: f'{port}_TX_WIRE', 4: f'{port}_RX_WIRE'}, 'C2757925')
+        expect(c_small, {1: 'PORT_4V8', 2: 'GND'}, 'C14663', '100nF 50V X7R 10%')
+        expect(c_big, {1: 'PORT_4V8', 2: 'GND'}, 'C21397', '22uF 25V X7R 10%')
+        expect(d_tx, {1: f'{port}_TX_WIRE', 2: 'GND'}, 'C535146')
+        expect(d_rx, {1: f'{port}_RX_WIRE', 2: 'GND'}, 'C535146')
+        mcu_pins = {'TX': tx_pin, 'RX': rx_pin}
         for signal, mcu, resistor in (
-                ('RX', f'{port}_RX_MCU', f'R{rbase}'), ('TX', f'{port}_TX_MCU', f'R{rbase + 1}')):
+                ('RX', f'{port}_RX_MCU', r_rx), ('TX', f'{port}_TX_MCU', r_tx)):
             want = {f'{resistor}.{2 if signal == "RX" else 1}',
                     f'U1.{mcu_pins[signal]}'}
             if {p for p, net in pins.items() if net == mcu} != want:
@@ -430,6 +446,32 @@ def in_own_antipad(own, net, x, y):
     return any(math.dist((x, y), q[:2]) <= q[2] for q in own.get(net, ()))
 
 
+# D-R19-01 (R19-SAF-01): S-8 keeps all foreign inner copper, GND included, BARREL_GAP clear of the barrel walls of the
+# BARREL_GND_HAZARD nets, and r10_route_ground.BARREL_KEEPOUT opens the In1 / In2 fills there by a 16-sided polygon
+# 1.05 mm beyond the wall. A sample of such a net's own copper inside that void has no reference by S-8's design, so
+# K-reference and K-region skip it there (out to the polygon's corners, 1.05 / cos(pi / 16) = 1.0706 mm beyond the wall).
+# Every other net's samples over the void are still taken.
+BARREL_VOID_REACH = 1.071       # mm beyond the barrel wall
+
+
+def own_barrel_voids(board, nets=None):
+    """{net: [(x, y, r)]} mm: the inner-layer voids S-8 forces round the plated barrels of the GND-hazard nets."""
+    import pcbnew
+    nets = BARREL_GND_HAZARD if nets is None else nets
+    out = {}
+    for v in board.GetTracks():
+        if v.GetClass() == 'PCB_VIA' and v.GetNetname() in nets:
+            out.setdefault(v.GetNetname(), []).append((pcbnew.ToMM(v.GetPosition().x), pcbnew.ToMM(v.GetPosition().y),
+                                                       pcbnew.ToMM(v.GetDrillValue()) / 2 + BARREL_VOID_REACH))
+    for f in board.GetFootprints():
+        for p in f.Pads():
+            if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH and p.GetNetname() in nets:
+                r = max(pcbnew.ToMM(p.GetDrillSize().x), pcbnew.ToMM(p.GetDrillSize().y)) / 2
+                out.setdefault(p.GetNetname(), []).append((pcbnew.ToMM(p.GetPosition().x),
+                                                           pcbnew.ToMM(p.GetPosition().y), r + BARREL_VOID_REACH))
+    return out
+
+
 REGION_STEP = 0.02             # mm: K-region sample spacing along a track (centre line and both pushed edges)
 REGION_MARGIN = 0.1            # mm: the edges are sampled this far outside the copper edge (R5-RTE-02)
 REGION_PAD_STEP = 0.05         # mm: K-region sample grid over an SMD pad grown by REGION_MARGIN
@@ -570,6 +612,7 @@ def region_issues(board):
         if v.GetClass() == 'PCB_VIA':
             vias.setdefault(v.GetNetname(), []).append((pcbnew.ToMM(v.GetPosition().x), pcbnew.ToMM(v.GetPosition().y)))
     voids = OwnPadVoids(board, zones)
+    barrel_voids = own_barrel_voids(board)                          # D-R19-01
     # a sample over no copper inside a hole of the In2 fill that holds another net's via is that via's clearance hole,
     # not a plane boundary (geometric: the hole's own outline and size, R6-RTE-02); K-reference holds the run's own
     # reference there (R5 fix pass, D-R5-03)
@@ -583,6 +626,8 @@ def region_issues(board):
         seen, gaps = set(), []
         for x, y in pts:
             if any(math.dist((x, y), q) <= REF_OWN_R for q in vias.get(net, ())):
+                continue
+            if in_own_antipad(barrel_voids, net, x, y):
                 continue
             on = [n for n, ps in zones.items() if cr.inside(ps, x, y)]
             if not on and voids.exempt(net, x, y):
@@ -680,7 +725,9 @@ def references(board):
     empty = pcbnew.SHAPE_POLY_SET()
     missing = [s for s in samples if not cr.inside(fill.get(s[1], empty), s[2], s[3])]
     own = own_antipads(board)
-    stray = [s for s in missing if not in_own_antipad(own, s[0], s[2], s[3])]
+    barrel_voids = own_barrel_voids(board)                          # D-R19-01: S-8's own-barrel voids
+    stray = [s for s in missing if not in_own_antipad(own, s[0], s[2], s[3])
+             and not in_own_antipad(barrel_voids, s[0], s[2], s[3])]
     used, loose = set(), []
     for s in stray:
         name = pcbnew.LayerName(s[1])
@@ -737,7 +784,7 @@ def contract(text):
         if codes.get(ref) != code or ref not in fps or fps[ref].items[1].atom != 'rocket:' + land:
             issues.append(f'{ref}: must use {code} on rocket:{land}')
     forbidden = re.compile(r'^(PYRO|ARM|ACT_|SERVO|RAW_ACT|BAT_IN)')
-    for ref in ('J410', 'J420', 'U410', 'U420', 'U411', 'U421'):
+    for ref in ('J410', 'J420', 'J440', 'U410', 'U420', 'U411', 'U421'):
         nets = [n for p, n in pins.items() if p.startswith(ref + '.') and n and forbidden.match(n)]
         if nets:
             issues.append(f'{ref}: external port touches safety nets {nets}')
@@ -786,7 +833,7 @@ MCU_REF = 'U1'
 DEFAULT_CLEARANCE = 0.15                       # mm, used only when the board carries no default net class
 SERVO_TERMINAL = ('SERVO1_OUT', 'SERVO2_OUT', 'SERVO3_OUT', 'SERVO4_OUT', 'GND')
 BOARD_WIDTH, BOARD_MAX = 46.0, 120.0            # P1
-WIRE_ENTRY = {'J1': '-x', 'J121': '-x', 'J400': '-x', 'J410': '+x', 'J420': '+x', 'J9': '+x', 'J122': '+x'}  # D-AVA-01: every DB125 shares the wire-room floor
+WIRE_ENTRY = {'J1': '-x', 'J121': '-x', 'J400': '-x', 'J440': '-x', 'J410': '+x', 'J420': '+x', 'J9': '+x', 'J122': '+x'}  # D-AVA-01: every DB125 shares the wire-room floor
 WIRE_ROOM = 6.25                                # mm, R8 / R9 P-11
 BOT_THT, BOT_M3 = 1.5, 3.5                      # mm, R9 M-6 without its pyro-via term (a pyro spacing rule)
 IMU_LEVER_R10 = -6.0                           # mm: U4 centre x - 23 (roll axis), M3_R10 "IMU axis map" (R4-MEC-05)
@@ -794,15 +841,18 @@ IMU_PAD1_R10 = (1.21, -0.75)                   # mm: pad 1 board position from t
 IMU_ROTATION_R10 = 180.0                        # R9 D-S7-06 kept: U4 bottom, rotation 180
 IMU_MAPS = {0.0: 'M3_R5 axis map: +X_imu = +x_board, +Y_imu = +y_board; roll = +gyro_Y',
             180.0: 'R9 D-S7-06 axis map: +X_imu = -x_board, +Y_imu = -y_board; roll = -gyro_Y'}
+# D-R19-06: the ONE connector word list. m3_design/r10_post.py places these words in this order and K-legends gates the
+# same list; SWITCH (J400) is the last entry, as r10_post placed it before the list was merged.
 WORD_LEGENDS_R10 = {'IGN': 'J121', 'BAT': 'J1', 'CAM': 'J9', 'SWD': 'J2', 'SERVO': 'J122',
-                    'GPS': 'J410', 'RADIO': 'J420'}
+                    'GPS': 'J410', 'RADIO': 'J420', 'AUX': 'J440', 'SWITCH': 'J400'}   # D-R19-14: AUX at its reviewed spot
 TERMINAL_PINS_R10 = (('J121', (('1', 'E1-'), ('2', 'E1+'))),
                      ('J1', (('1', 'BAT+'), ('2', 'GND'))),
                      ('J400', (('1', 'SW'), ('2', 'SW'))),
                      ('J122', (('1', 'S1'), ('2', 'S2'), ('3', 'S3'), ('4', 'S4'), ('5', 'GND'))),
                      ('J9', (('1', '5V4'), ('2', 'GND'), ('3', 'RXI'), ('4', 'TXO'))),
                      ('J410', (('1', '4V8'), ('2', 'GND'), ('3', 'TXO'), ('4', 'RXI'))),
-                     ('J420', (('1', '4V8'), ('2', 'GND'), ('3', 'TXO'), ('4', 'RXI'))))
+                     ('J420', (('1', '4V8'), ('2', 'GND'), ('3', 'TXO'), ('4', 'RXI'))),
+                     ('J440', (('1', '4V8'), ('2', 'GND'), ('3', 'TXO'), ('4', 'RXI'))))   # D-R19-14: identical ports
 EPS = 1e-3
 # K-reference (R10_DECISIONS D-R2-10): R9's D-S8-17 method on R10's planes.
 REF_PLANES_B = ('GND', '3V3', '3V3A', 'PORT_5V3', 'PORT_4V8', 'RAW_PROTECTED')
@@ -927,12 +977,14 @@ FOOTPRINT_SHA256 = {
 WIRE_ROOM_R10 = 4.95
 
 # S-8 barrels (R3-SAF-01); the former PYRO1_BUS is now RAW_ACT. R18-SAF-01 / R18-GATE-01 (D-R18-04) add the load-switch
-# gate drive and the arming-switch enable chain. GND is hazardous only for the P-FET gate drive: a short from ACT_GATE /
-# ACT_DRV to GND turns Q120 / Q121 on with PC1 low; GND on the N-FET gate, the enable chain (U9 EN, J400.2, Q122's gate
-# and its MCU pin) or the pyro bus nodes holds them off.
+# gate drive and the arming-switch enable chain. GND is hazardous for the P-FET gate drive (a short from ACT_GATE /
+# ACT_DRV to GND turns Q120 / Q121 on with PC1 low) and, D-R19-01 (R19-SAF-01), for PYRO1_OUT, Q124's drain: OUT to GND
+# bypasses the fire FET and fires the match once the bus is enabled. GND on the N-FET gate or the enable chain (U9 EN,
+# J400.2, Q122's gate and its MCU pin) holds them off; GND on RAW_ACT or PYRO1_IGN shorts the bus (through R134 for IGN)
+# without driving current through the igniter.
 BARREL_NETS = ('RAW_ACT', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE', 'ACT_GATE', 'ACT_DRV', 'BAT_ENABLE', 'BAT_SW_RETURN',
                'ACT_EN', 'ACT_EN_MCU', 'PYRO1_GATE_N')
-BARREL_GND_HAZARD = frozenset({'ACT_GATE', 'ACT_DRV'})
+BARREL_GND_HAZARD = frozenset({'ACT_GATE', 'ACT_DRV', 'PYRO1_OUT'})
 BARREL_GAP = 1.0                # mm, plated barrel wall to foreign In1 / In2 copper
 # S-9 (R3-GATE-07): the current path between its power terminals. AUD-6 sets RAW_ACT / IGN / OUT to 0.5 mm;
 # audit 2 item 3 adds pulsed ACT_FET_S. BAT_IN retains 1.0 mm; the seven named source bridges remain measured.
@@ -1587,18 +1639,23 @@ def s3(ctx):
         local, ev[fet]['local_bias'] = local_gate_bias(ctx, fet, PFET_ROLES)
         issues += local
     pins = {f'{ref}.{p.GetNumber()}': p.GetNetname() for ref, f in ctx.fps.items() for p in f.Pads()}
+    # D-R19-04 (R19-SAF-06): C123 is Q122's gate-source capacitor (gate ACT_EN, source GND), completing the AGENTS 2.4
+    # network (R122 series, R123 pull-down, C123).
     want = {'U1.16': 'ACT_EN_MCU', 'R122.1': 'ACT_EN_MCU', 'R122.2': 'ACT_EN', 'R123.1': 'ACT_EN',
-            'R123.2': 'GND', 'Q122.1': 'ACT_EN', 'Q122.2': 'GND', 'Q122.3': 'ACT_DRV'}
+            'R123.2': 'GND', 'Q122.1': 'ACT_EN', 'Q122.2': 'GND', 'Q122.3': 'ACT_DRV', 'C123.1': 'ACT_EN',
+            'C123.2': 'GND'}
     for pin, net in want.items():
         if pins.get(pin) != net:
             issues.append(f'S-3: independent load-switch enable {pin} must be {net} (is {pins.get(pin)})')
-    for net, refs in (('ACT_EN_MCU', {'U1', 'R122'}), ('ACT_EN', {'R122', 'R123', 'Q122'})):
+    for net, refs in (('ACT_EN_MCU', {'U1', 'R122'}), ('ACT_EN', {'R122', 'R123', 'Q122', 'C123'})):
         if net_parts(ctx.board).get(net) != refs:
             issues.append(f'S-3: independent load-switch enable {net} must touch only {sorted(refs)}')
-    for ref, value in (('R122', 1e3), ('R123', 2e3)):        # D-R18-01 (R18-MCU-01): R123 dominates a PC1 pull-up
+    # D-R18-01 (R18-MCU-01): R123 dominates a PC1 pull-up; D-R19-04: C123 10 nF (about 7 us PC1 edge with R122 || R123).
+    for ref, value, kind in (('R122', 1e3, 'R'), ('R123', 2e3, 'R'), ('C123', 10e-9, 'C')):
         f = ctx.fps.get(ref)
-        if f is None or parse_value(f.GetValue(), 'R') != value:
-            issues.append(f'S-3: independent load-switch enable {ref} must be {value:g} ohm')
+        got = parse_value(f.GetValue(), kind) if f is not None else None
+        if got is None or abs(got - value) > 1e-6 * value:
+            issues.append(f'S-3: independent load-switch enable {ref} must be {value:g} ' + ('ohm' if kind == 'R' else 'F'))
     ev['load_enable'] = {p: pins.get(p) for p in want}
     return sorted(set(issues)), ev
 
@@ -1632,6 +1689,16 @@ def s4(ctx):
     else:
         issues += [f'schematic: {i}' for i in schematic_population(sch)]
         ev['schematic'] = sch.name
+    # D-R19-07 (R19-MFG-02 / R19-BOM-02): a part fitted by hand after both reflows gets no stencil aperture; paste on its
+    # lands would leave reflowed solder on pads that the hand fit then has to clear.
+    from export_fab import MANUAL_FIT
+    for ref in sorted(MANUAL_FIT):
+        f = ctx.fps.get(ref)
+        pasted = sorted(p.GetNumber() for p in (f.Pads() if f else ())
+                        if p.IsOnLayer(pcbnew.F_Paste) or p.IsOnLayer(pcbnew.B_Paste))
+        if pasted:
+            issues.append(f'{ref} is fitted by hand after reflow ({MANUAL_FIT[ref]}) but pads {pasted} carry paste')
+    ev['manual_fit_unpasted'] = sorted(MANUAL_FIT)
     for name, path in (('BOM', ctx.bom), ('CPL', ctx.cpl)):
         if path:
             native_parts = None
@@ -1649,7 +1716,6 @@ def s4(ctx):
                 ev['BOM_native_identities'] = len(native_parts)
             # D-R18-09 (R18-REQ-10 / R18-MFG-06): hand-fitted parts stay required on the board and schematic, are absent
             # from the JLC uploads and present in the owner BOM beside them.
-            from export_fab import MANUAL_FIT
             text = Path(path).read_text()
             issues += [f'{name}: {i}' for i in assembly_population(text, REQUIRED_FITTED - set(MANUAL_FIT),
                                                                  require_qty=name == 'BOM', native_parts=native_parts)]
@@ -1869,6 +1935,30 @@ POWER_PATHS = (   # end None: every via of the net (the plane transitions) ends 
          vias=dict(count=1, drill=0.5, pad=1.0, plane=None)),
     dict(name='U9 OUT', net='RAW_PROTECTED', start={'U9': ('6',)}, end=None, through={}, floor=0.7,
          vias=dict(count=2, drill=0.3, pad=0.5, plane='In2.Cu')),
+    # D-R19-09 (R19-PWR-01): the supply feeds the round 19 pass doubled keep two vias each (an open barrel no longer
+    # drops the load). Widths are each run's drawn width (the 0.25 mm pin-pitch links at U401 included).
+    dict(name='U401 IN', net='PORT_5V3', start={'U401': ('9', '10')}, end=None, through={}, floor=0.25,
+         vias=dict(count=2, drill=0.3, pad=0.5, plane='In2.Cu')),
+    dict(name='U401 EN', net='PORT_5V3', start={'U401': ('7',)}, end=None, through={}, floor=0.2,
+         vias=dict(count=2, drill=0.3, pad=0.5, plane='In2.Cu')),
+    dict(name='U401 OUT', net='PORT_4V8', start={'U401': ('1', '2')}, end=None, through={}, floor=0.25,
+         vias=dict(count=2, drill=0.3, pad=0.5, plane='In2.Cu')),
+    dict(name='U402 IN', net='PORT_5V3', start={'U402': ('1',)}, end=None, through={'C430': ('1',)}, floor=0.4,
+         vias=dict(count=2, drill=0.3, pad=0.5, plane='In2.Cu')),
+    # D-R19-14: the AUX port's F.Cu feed (In2 under J440 is 3V3) leaves the In2 PORT_4V8 region through two vias.
+    dict(name='J440 feed', net='PORT_4V8', start={'J440': ('1',)}, end=None, through={}, floor=0.4,
+         vias=dict(count=2, drill=0.3, pad=0.5, plane='In2.Cu')),
+    dict(name='C84 hold-up', net='VLOGIC', start={'C84': ('1',)}, end={'U11': ('1', '8')}, through={}, floor=0.4,
+         vias=dict(count=2, drill=0.3, pad=0.5, plane=None)),
+    # D-R19-09 (R19-GATE-04): the two buck outputs. U400's L400.2 reaches In2 PORT_5V3 through two vias; U2's L1.2
+    # reaches In2 3V3 through the direct via (23.1, 78.1) and through the F.Cu bridge over the RAW / VLOGIC corridor,
+    # whose west via (26.4, 79.26) sits in the In2 RAW region and joins only F.Cu and B.Cu (a named bridge, measured).
+    dict(name='U400 OUT', net='PORT_5V3', start={'L400': ('2',)}, end=None, through={'C404': ('1',)}, floor=0.4,
+         vias=dict(count=2, drill=0.3, pad=0.5, plane='In2.Cu')),
+    dict(name='U2 OUT', net='3V3', start={'L1': ('2',)}, end=None, through={'C8': ('1',)}, floor=0.4,
+         vias=dict(count=2, drill=0.3, pad=0.5, plane='In2.Cu',
+                   bridges=(((26.4, 79.26), 'the F.Cu bridge west end over the In2 RAW region: F.Cu and B.Cu only, '
+                                            'measured on the R10 board (D-R19-09)'),))),
 )
 POWER_NARROW = [  # (net, layer, width mm, length mm, (x0, y0, x1, y1) ends sorted, reason), measured on the R10 board
     ('BAT_IN', 'B.Cu', 0.7, 1.03, (19.4, 84.37, 19.4, 85.4), 'C88.1 local feed from the IN via run'),
@@ -1964,19 +2054,30 @@ def plane_via(board, via, layer, net):
 
 
 def via_issues(board, label, vias, spec, net):
-    """Count, drill, pad and (spec['plane']) plane connection of the vias carrying a power or return current."""
+    """Count, drill, pad and (spec['plane']) plane connection of the vias carrying a power or return current. A via
+    named in spec['bridges'] ((x, y) mm, measured reason) is a layer-to-layer bridge on the path: its size is checked,
+    it needs no plane join and does not count; a named bridge that is not on the path fails (D-R19-09)."""
     import pcbnew
     mm = pcbnew.ToMM
-    issues = []
-    if len(vias) < spec['count']:
-        issues.append(f'{label}: {len(vias)} via(s) on the path; at least {spec["count"]} required')
+    issues, counted, used = [], [], set()
+    bridges = spec.get('bridges', ())
     for v in vias:
-        at = f'({mm(v.GetPosition().x):.3f}, {mm(v.GetPosition().y):.3f})'
+        xy = (mm(v.GetPosition().x), mm(v.GetPosition().y))
+        at = f'({xy[0]:.3f}, {xy[1]:.3f})'
         drill, pad = mm(v.GetDrillValue()), mm(v.GetWidth(pcbnew.F_Cu))
         if drill < spec['drill'] - EPS or pad < spec['pad'] - EPS:
             issues.append(f'{label}: via {at} {pad:.3f} / {drill:.3f} mm; at least {spec["pad"]} / {spec["drill"]} mm')
+        bridge = next((k for k, (b, _) in enumerate(bridges) if math.dist(b, xy) <= 0.02), None)
+        if bridge is not None:
+            used.add(bridge)
+            continue
+        counted.append(v)
         if spec['plane'] and not plane_via(board, v, board.GetLayerID(spec['plane']), net):
             issues.append(f'{label}: via {at} is not joined to the {spec["plane"]} {net} fill')
+    if len(counted) < spec['count']:
+        issues.insert(0, f'{label}: {len(counted)} via(s) on the path; at least {spec["count"]} required')
+    issues += [f'{label}: named bridge via {b} is not on the path ({reason})' for k, (b, reason) in enumerate(bridges)
+               if k not in used]
     return issues
 
 
@@ -2836,23 +2937,23 @@ def terminal_legends(board, items=None, terminals=None):
 # connector, i.e. its ink box is nearer that connector's courtyard box than any other connector's (J*) on the legend's
 # face by more than WORD_TIE. A connector is on a face when it is mounted there or has plated through-holes (the DB125
 # terminals are on both); J430, the bottom-side microSD socket under RADIO, is not beside a top legend. AUD-10's 6 mm
-# distance stays a review count. SWITCH -> J400 is listed here, not in WORD_LEGENDS_R10, because
-# m3_design/r10_post.py places the words of WORD_LEGENDS_R10 and adds SWITCH itself (it would otherwise place it twice).
-WORD_SUBJECTS_R10 = {**WORD_LEGENDS_R10, 'SWITCH': 'J400'}
+# distance stays a review count. The words are WORD_LEGENDS_R10 alone (D-R19-06).
 WORD_TIE = 0.01                 # mm
 # A word legend at the seam of two abutting connectors touches both: (word, its own connector, the other one, measured
-# reason). Accepted only while the two gaps tie (within WORD_TIE); a moved legend or an unused entry fails.
-WORD_SEAMS = [
-    ('RADIO', 'J420', 'J410', "heads J420 at its courtyard's top-left corner (as SERVO heads J122) where J410's west side "
-                              'ends: the J410 / J420 courtyards are 0.09 mm apart and the ink box is 0.000 mm from both '
-                              'courtyard boxes (measured on the R10 board, 2026-10-30)'),
-]
+# reason). Accepted only while the two gaps tie (within WORD_TIE); a moved legend or an unused entry fails. D-R19-06
+# (R19-MFG-01 / R19-GATE-06) moved RADIO off the J410 / J420 seam, so R10 names none.
+WORD_SEAMS = []
+# D-R19-06: J410 and J420 carry identical pin legends, so the word is the only thing that tells them apart: it must lie
+# inside its own terminal's courtyard y-span (the pin row axis), WORD_SPAN_MARGIN clear of both ends (a seam word fails).
+WORD_SPAN_R10 = {'GPS': 'J410', 'RADIO': 'J420', 'AUX': 'J440'}   # D-R19-14: J440 has the same pin legends too
+WORD_SPAN_MARGIN = 0.5          # mm
 
 
-def word_legends(board, items=None, subjects=WORD_SUBJECTS_R10, seams=WORD_SEAMS, tie=WORD_TIE):
+def word_legends(board, items=None, subjects=WORD_LEGENDS_R10, seams=WORD_SEAMS, tie=WORD_TIE, spans=WORD_SPAN_R10,
+                 span_margin=WORD_SPAN_MARGIN):
     """(issues, evidence): every connector word legend once, as visible silkscreen text or text box (board or footprint
     text), beside its own connector: no other connector's courtyard box within `tie` of the gap to its own, except a
-    named, still-tied seam."""
+    named, still-tied seam; a word of `spans` also lies inside its own connector's courtyard y-span by `span_margin`."""
     import pcbnew
     import check_r7 as r7
     mm = pcbnew.ToMM
@@ -2887,6 +2988,13 @@ def word_legends(board, items=None, subjects=WORD_SUBJECTS_R10, seams=WORD_SEAMS
         if own not in gaps:
             issues.append(f'{own}: word legend {where} names a connector that is not on the board on its face')
             continue
+        if word in spans:
+            y0, y1 = boxes[item.GetLayer()][own][1], boxes[item.GetLayer()][own][3]
+            inside = min(ink[1] - y0, y1 - ink[3])
+            evidence[where]['own_y_span_margin'] = round(inside, 3)
+            if inside < span_margin - EPS:
+                issues.append(f'{own}: word legend {where} lies {inside:.3f} mm inside its courtyard y-span '
+                              f'({y0:.3f} .. {y1:.3f}); it must be inside by {span_margin} mm (D-R19-06)')
         for ref, g in sorted(gaps.items(), key=lambda kv: kv[1]):
             if ref == own or g > gaps[own] + tie:
                 continue
@@ -2943,7 +3051,7 @@ def port_legends(board, required=PORT_LEGENDS_R10, terminal_evidence=None):
 PINNED_TEXTS = (('B.Silkscreen', 'M3-ASSY-R10'),)
 # R8-GATE-03: these references must stay shown on silkscreen (all shown on the R10 board now). The full hidden list is
 # reported in the evidence, not pinned.
-SHOWN_REFS = ('J1', 'J121', 'J122', 'J400', 'J9', 'J410', 'J420', 'J3', 'Q120', 'Q121', 'Q124', 'R134')
+SHOWN_REFS = ('J1', 'J121', 'J122', 'J400', 'J9', 'J410', 'J420', 'J440', 'J3', 'Q120', 'Q121', 'Q124', 'R134')
 
 
 def pinned_texts(board, pinned=PINNED_TEXTS):
@@ -3106,7 +3214,7 @@ def k_width(board, floor=HC_MIN_W, max_len=HC_NARROW_MAX_LEN):
 def k_legends(ctx):
     import check_r7 as r7
     review, ev = [], {}
-    with patched(r7, WORD_LEGENDS=WORD_SUBJECTS_R10):
+    with patched(r7, WORD_LEGENDS=WORD_LEGENDS_R10):
         issues = list(r7.duplicate_ids(ctx.board)) + port_legends(ctx.board, terminal_evidence=ev) + \
             list(r7.legend_subjects(ctx.board, distance_review=review))  # AUD-10: distance only, names still block.
     words, word_ev = word_legends(ctx.board)                              # R18-GATE-08: identity blocks.
@@ -3489,7 +3597,8 @@ RULES = [
     ('K-lands', 'footprints from the project library, each generated or SHA-256 pinned (R18-GATE-09)',
      lambda c, s: k_lands(c)),
     ('K-width', 'BAT_IN / RAW_PROTECTED width floor (R8-GATE-04)', lambda c, s: k_width(c.board)),
-    ('K-power', 'U9 IN / OUT path widths and vias, Q124 fire return (R18-GATE-02 / -03)', lambda c, s: k_power(c)),
+    ('K-power', 'U9 IN / OUT path widths and vias, the doubled supply feeds and buck outputs (D-R19-09), Q124 fire '
+                'return (R18-GATE-02 / -03)', lambda c, s: k_power(c)),
     ('K-retained', 'flash/camera/microSD bypass, TP122', lambda c, s: retained_routing(c)),
 ]
 STAGES = {'functional': {'S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'K-contract', 'K-loader', 'K-actuators'}}

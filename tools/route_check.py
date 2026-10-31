@@ -85,7 +85,10 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
                           node, unless the narrower one runs straight on into a pad whose copper is within 1 mm of the
                           node (a pad-entry neck); a branch at a T, a via or a pad may be narrower than its trunk
     track_loop            a closed loop of tracks and vias on a net without a pour (two routes between the same
-                          points: duplicate copper); one instance per independent loop
+                          points: duplicate copper); one instance per independent loop. Profile r10 (D-R19-09): a via
+                          named in PARALLEL_VIAS (a second barrel beside a supply's single-via layer change, with its
+                          measured reason) is left out of the loop search; a named via that is missing or not parallel
+                          (without it a pad of its net is cut off) is a parallel_via instance (gated)
     detour                a net without a pour whose track copper is longer than DETOUR_MAX (1.6) x the octilinear
                           minimum spanning tree of its pad centres and more than DETOUR_SLACK (2 mm) longer than it
                           (for a two-pad net: the copper path against the octilinear pad-to-pad distance); profile r8
@@ -231,7 +234,7 @@ SIGNAL_CRITICAL = {'rf', 'pyro', 'crystal', 'usb', 'spi', 'rfif', 'uart', 'portc
 # AUD-2 omits only the named slow-return whitelist from companion-via checks; these critical classes stay intact.
 CRITICAL = SIGNAL_CRITICAL | {'power'}
 RULE = ('off_angle', 'staircase', 'acute_angle', 'fold_back', 'dead_copper', 'pour_stub', 'dangling_via',
-        'critical_via_no_gnd', 'arc_segment')
+        'critical_via_no_gnd', 'arc_segment', 'parallel_via')
 HYGIENE = ('micro_segment', 'short_segment', 'tiny_jog', 'collinear_unmerged', 'duplicate_segment',
            'collinear_overlap', 'side_by_side_overlap', 'crossing_without_node', 'overlap_only_joint',
            'via_offcentre_joint', 'neck_down', 'track_loop', 'via_overlap', 'detour', 'extra_vias', 'chain_detour',
@@ -298,6 +301,17 @@ ROUTE_FIGURES = {'GNSS_LNA_EN': (7.65, 1), 'GNSS_VCC_RF': (6.2, 1)}         # D5
 # (route_lists_r7.py) and the plain baseline, which reproduces the owner-accepted R7 verdict on board c872a3d3...
 PROFILES = ('r10', 'r9', 'r8', 'r7')
 PROFILE = 'r8'
+# D-R19-09 (R19-PWR-01), profile r10 only: a second via beside a supply's single-via layer change on a net without a pour
+# closes one deliberate loop (the two barrels join the same two copper pieces). (net, (x, y) mm of the added via, measured
+# reason); loops() leaves the named via out, so any other loop on the net still fails, and a named via that is missing
+# or not parallel fails as parallel_via.
+PARALLEL_VIAS_R10 = [
+    ('VLOGIC', (29.8, 81.15),
+     "D-R19-09: C84.1, the 470 uF hold-up, reaches the 0.4 mm B.Cu VLOGIC trunk through the original via (29.5, 82.05) and "
+     "this one 0.95 mm away; the loop is the B.Cu trunk end (0.6 mm and the 0.42 mm diagonal) and the two 0.4 mm F.Cu "
+     "diagonals (0.42 / 0.85 mm) meeting at the C84.1 run's bend (29.2, 81.75); either barrel alone carries the pad"),
+]
+PARALLEL_VIAS = []
 KEEPOUT_BASELINE = True
 _R8_LISTS = (ALLOWLIST, LEFTOVERS, ROUTE_FIGURES)
 
@@ -321,6 +335,24 @@ def set_profile(name):
     else:
         raise ValueError(f'unknown profile {name!r}; one of {PROFILES}')
     PROFILE = name
+    global PARALLEL_VIAS
+    PARALLEL_VIAS = list(PARALLEL_VIAS_R10) if name == 'r10' else []
+
+
+def parallel_skip(nc, entries=None):
+    """id()s of the vias of nc that a PARALLEL_VIAS entry names (within 0.02 mm), and the entries of nc's net that
+    match no via of it."""
+    entries = PARALLEL_VIAS if entries is None else entries
+    skip, stale = set(), []
+    for net, xy, reason in entries:
+        if net != nc.net:
+            continue
+        hit = [v for v in nc.vias if math.hypot(mm(v['pos'][0]) - xy[0], mm(v['pos'][1]) - xy[1]) <= 0.02]
+        if hit:
+            skip.update(id(v['obj']) for v in hit)
+        else:
+            stale.append((net, xy, reason))
+    return frozenset(skip), stale
 
 
 def net_class(name):
@@ -796,7 +828,7 @@ def loops(nc):
     or via, and pieces under 1 µm, are contracted first (they are one place, not a loop)."""
     if nc.zones:
         return []
-    nn, edges, _, _ = graph(nc, zones=False)
+    nn, edges, _, _ = graph(nc, zones=False, skip=parallel_skip(nc)[0])     # D-R19-09: named parallel vias left out
     parent = list(range(nn))
 
     def root(i):
@@ -2201,6 +2233,13 @@ def scan(board, baseline_log=None):
             add('dead_copper', net, 'via', nc.vias[j]['pos'])
         for x, y, lid in loops(nc):
             add('track_loop', net, board.GetLayerName(lid), (x, y))
+        skip, stale = parallel_skip(nc)                                # D-R19-09: each named via exists and is parallel
+        for _, xy, _ in (stale if nc.tracks else ()):                  # (a net not drawn yet: a later route family)
+            add('parallel_via', net, 'via', (xy[0] / NM, xy[1] / NM), problem='no via of the net at the named spot')
+        if skip and pad_groups(nc, skip=skip, zones=True) != pad_groups(nc, zones=True):
+            for v in nc.vias:
+                if id(v['obj']) in skip:
+                    add('parallel_via', net, 'via', v['pos'], problem='not parallel: without it a pad of the net is cut off')
         if nc.zones:
             continue
         r = net_route(nc)

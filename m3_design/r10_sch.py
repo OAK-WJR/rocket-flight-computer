@@ -206,26 +206,52 @@ R10_MCU_NOTES = {
                           'changes.'),
     'R8 follow-on moves': ('R10 MCU map (pin_table.tsv r10_net is the sole authority): BUZZ_DRV PC14; LOGIC_SOURCE_ST '
                            'PA4, BAT_FAULT_N PA5 (D-R2-09); camera UART7 PE7 RX / PE8 TX, CAM_UART_OE PE9; radio UART5 '
-                           'PB12 RX / PB13 TX; GPS USART6 PC6 TX / PC7 RX; SD SPI3 PC10 / PC11 / PC12, PD0 CS; '
+                           'PB12 RX / PB13 TX (J420); GPS USART3 PD8 TX / PD9 RX (J410) and AUX USART6 PC6 TX / PC7 RX (J440, D-R19-14); '
+                           'SD SPI3 PC10 / PC11 / PC12, PD0 CS; '
                            'ACT_EN_MCU PC1; PE4 fire, ACTIVE HIGH (PYRO1_GATE_N is a historical name); VBUS_SENSE '
-                           'PC8; LEDs PD5 / PD7. NC: PC13, PB0, PC3_C (R18-REQ-08), PB10, PB14, PD8-PD10, PD14, '
-                           'PD15, PE15.'),
+                           'PC8; LEDs PD5 / PD7. NC: PC13, PB0, PC3_C (R18-REQ-08), PB10, PB14, PD10, PD14, PD15, '
+                           'PE15.'),
     'Pins the ROM bootloader drives': ('R10 pins the ROM bootloader drives (AN2606 Rev64 Table119 / Rev70 Table135; '
                                        'K-loader): SERVO3 PA2 (USART2_TX), VLOGIC_SENSE PA6 (SPI1_MISO into the '
                                        'divider), SD_MISO PC11 (SPI3_MISO; R460 keeps the card deselected), USB '
                                        'PA11/PA12 (DFU), QSPI_NCS PB6 and I2C1_SDA PB9 (open drain); PA8, PA9, PB10, '
-                                       'PB14, PC9 and PE13 stay NC. UART5 PB12/PB13 and USART6 PC6/PC7 are not loader '
-                                       'interfaces.'),
+                                       'PB14, PC9 and PE13 stay NC. UART5 PB12/PB13, USART6 PC6/PC7 and USART3 on PD8/PD9 '
+                                       '(the loader\'s USART3 is PB10/PB11) are not loader interfaces.'),
 }
 # Each claim above, checked against the reviewed pin table (pin: r10_net).
 R10_MCU_NOTE_PINS = {'8': 'BUZZ_DRV', '28': 'LOGIC_SOURCE_ST', '29': 'BAT_FAULT_N', '37': 'CAM_MCU_RX',
                      '38': 'CAM_MCU_TX', '39': 'CAM_UART_OE', '41': 'CAM_PWR_EN', '42': 'CAM_FAULT_N',
-                     '51': 'RADIO_RX_MCU', '52': 'RADIO_TX_MCU', '63': 'GPS_TX_MCU', '64': 'GPS_RX_MCU',
+                     '51': 'RADIO_RX_MCU', '52': 'RADIO_TX_MCU', '55': 'GPS_TX_MCU', '56': 'GPS_RX_MCU',
+                     '63': 'AUX_TX_MCU', '64': 'AUX_RX_MCU',
                      '78': 'SD_SCK', '79': 'SD_MISO', '80': 'SD_MOSI', '81': 'SD_CS', '16': 'ACT_EN_MCU',
                      '3': 'PYRO1_GATE_N', '65': 'VBUS_SENSE', '86': 'LED_RED', '88': 'LED_YEL', '24': 'SERVO3_MCU',
                      '30': 'VLOGIC_SENSE', '70': 'USB_DM', '71': 'USB_DP', '92': 'QSPI_NCS', '96': 'I2C1_SDA',
                      '7': 'NC', '34': 'NC', '18': 'NC', '46': 'NC', '53': 'NC', '67': 'NC', '68': 'NC', '66': 'NC',
-                     '43': 'NC'}
+                     '43': 'NC', '2': 'NC', '4': 'NC', '5': 'NC', '32': 'NC'}  # R19-MCU-03 sentinels PE3 / PE5 / PE6 / PC4
+
+
+# R19-MCU-03 / R19-REQ-02 / R19-MCU-02: retained R8 / R9 sheet notes that contradicted the R10 pin map, part values or
+# the single DS12110 revision, each replaced in place (matched by its opening words).
+R19_SHEET_NOTES = {
+    'mcu.kicad_sch': {
+        'R2: PE3 (pin 2) and PE6 (pin 5)': ('R10: PE3 (pin 2) and PE5 (pin 4) flank the PE4 fire pin (pin 3); PE3, PE5, PE6 (pin 5) '
+                                          'and PC4 (pin 32) have no net and stay analog (their reset state), never driven '
+                                          '(R5-MCU-03, R19-MCU-03). R8: LED_RED on PD5 (pin 86), LED_YEL on PD7 (pin 88).')},
+    'camera_uart.kicad_sch': {
+        'R8: PE8/pin38 UART7_TX': ('R8: PE8/pin38 UART7_TX and PE7/pin37 UART7_RX use AF7, no flow control (never AF7 on PE9 or '
+                                   'PE10); off the ROM loader\'s USART3. R10: PE9/pin39 CAM_UART_OE drives OE as a GPIO; R102 '
+                                   '10k holds it low (R19-MCU-03).')},
+    'battery_entry.kicad_sch': {
+        'C87: EN/UVLO ride-through.': ('C87: EN/UVLO ride-through, 220 nF 25 V X7R (R19-REQ-02). (R80+R165)||R81 = 227k charges it '
+                                       '(tau 50 ms; turn-on 88/56/45 ms at 6.0/7.4/8.4 V, 31-122 ms worst case); R81 alone '
+                                       'discharges it (tau 66 ms), so J400 drop-outs shorter than 19/33/41 ms (worst case '
+                                       '12/22/27 ms) cannot trip U9 (25-64 us t_D,OFF). EN thresholds 1.183-1.223 V rising, '
+                                       '1.076-1.116 V falling (TI SLVSFC9C p9): UVLO on 4.89-5.05 V, off 4.45-4.61 V.')},
+    'usb_sense.kicad_sch': {
+        'Input range and tolerance calculation uses DS12110': ('Input range and tolerance calculation uses DS12110 Rev 8, rev V '
+                                                              'chapter: Table 122 pp214-215 and Table 157 pp246-247 '
+                                                              '(R19-MCU-02).')},
+}
 
 
 def override_values(text, values):
@@ -338,7 +364,7 @@ def build(out, netlist=True):
                               if 'radio SPI2' in n.items[1].atom or 'R8 EXTI:' in n.items[1].atom
                               or 'pull-pin' in n.items[1].atom.lower() or 'PULLPIN' in n.items[1].atom
                               or 'CH1 sense:' in n.items[1].atom])
-                t = sch.insert(t, sch.note('R10: USART6 PC6/PC7 AF7 GPS; UART5 PB13/PB12 AF14 radio, direct1k UARTs on always-on PORT_4V8. Camera EN/OE default low; EXTI12 CAM_FAULT_N; EXTI4 LOGIC_SOURCE_ST (PA4), EXTI5 BAT_FAULT_N (PA5); VLOGIC_SENSE ADC on PA6. EXTI1 PE1 IMU_INT1 data-ready. SPI3 PC10/11/12 AF6 SD_SCK/MISO/MOSI; PD0 SD_CS high at reset via10k. No SD card-detect.', 20.32, 259.08, 'mcu:r10:ports'))
+                t = sch.insert(t, sch.note('R10: three identical always-on ports, direct1k UARTs on PORT_4V8 (D-R19-14): USART3 PD8/PD9 AF7 J410 (GPS by default); UART5 PB13/PB12 AF14 J420 (radio); USART6 PC6/PC7 AF7 J440 (AUX spare); firmware maps devices to ports. Camera EN/OE default low; EXTI12 CAM_FAULT_N; EXTI4 LOGIC_SOURCE_ST (PA4), EXTI5 BAT_FAULT_N (PA5); VLOGIC_SENSE ADC on PA6. EXTI1 PE1 IMU_INT1 data-ready. SPI3 PC10/11/12 AF6 SD_SCK/MISO/MOSI; PD0 SD_CS high at reset via10k. No SD card-detect.', 20.32, 259.08, 'mcu:r10:ports'))
                 t = sch.insert(t, sch.note('Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise PC1 and PE4 low before output mode. R123 2k holds the load switch off at reset and against a 30k internal pull-up (R18-MCU-01); never enable a PC1 or PE4 pull-up. PE4 U1.3 is ACTIVE HIGH: PE4 high turns Q124 on (PYRO1_GATE_N is a historical name). Both low for passive cold screening; after prior enable wait >=1 s and verify bus discharge. Refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks (D-SS-04). Disable synchronous trace; lock/read back both gate GPIO configurations. AUD-4: PC13 U1.7 is NC/analog; no pull-pin.', 20.32, 269.24, 'mcu:r10:load-switch'))
                 for row in R10_MCU_NOTE_PINS.items():
                     assert pinmap[row[0]][1] == row[1], f'R10 MCU note claim U1.{row[0]} {row[1]} differs from the pin table'
@@ -356,6 +382,8 @@ def build(out, netlist=True):
             if file.name == 'actuator_power.kicad_sch':
                 # R18-SAF-02: Q121's own gate-source resistor (circuit.json sheets: actuator_power).
                 t = add(t, library, 'R119', changed['R119'], 157.48, 114.3)
+                # R19-SAF-06: Q122's gate-source capacitor completes the AGENTS 2.4 network.
+                t = add(t, library, 'C123', changed['C123'], 215.9, 114.3)
             if file.name == 'diagnostics.kicad_sch':
                 # R18-REQ-08: the 3V3 / 2 divider (R62 / R63, V3V3_SENSE) is removed; 3V3 is read internally.
                 t = replace_once(t, '"Measure VLOGIC and 3V3 directly, then compare divider outputs: VLOGIC/11 and 3V3/2."',
@@ -367,6 +395,8 @@ def build(out, netlist=True):
                     t = add(t, library, ref, changed[ref], 330.2, y)
             if file.name == 'usb_sense.kicad_sch':
                 t = t.replace('TP92 measures their junction.', 'Probe R9.2 / R110.1; TP92 removed (AUD-5).')
+            for prefix, line in R19_SHEET_NOTES.get(file.name, {}).items():
+                t = replace_note(t, prefix, line, f'{file.stem}:r19:{prefix}')
             if file.stem in data['notes']:
                 t = replace_notes(t, data['notes'][file.stem])
         t = override_values(t, values)

@@ -2262,112 +2262,6 @@
 		(uuid 02872c82-4632-5f02-bd4a-10d1087dd53e))
 	(symbol
 		(lib_id "M3:C")
-		(at 340.36 121.92 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid bf85c789-3a3e-5548-a07f-680462cea5f5)
-		(property "Reference" "C87"
-			(at 342.9 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "2.2uF 16V X5R 10%"
-			(at 342.9 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:C0603"
-			(at 340.36 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" ""
-			(at 340.36 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C23630"
-			(at 340.36 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 340.36 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "CL10A225KO8NNNC"
-			(at 340.36 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC Part" "C23630"
-			(at 340.36 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
-					(reference "C87")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 340.36 118.11)
-			(xy 332.74 118.11))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 01d66fe8-3cde-5840-9ca3-be5d5a3716ca))
-	(global_label "BAT_ENABLE"
-		(shape passive)
-		(at 332.74 118.11 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid d5b81f47-184a-583a-80fb-ad9ba6f2474e))
-	(wire
-		(pts
-			(xy 340.36 125.73)
-			(xy 332.74 125.73))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 6cefd7d2-c91e-5cc5-a13c-33fea6bc8458))
-	(global_label "GND"
-		(shape passive)
-		(at 332.74 125.73 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f48e4ca6-590a-5f97-8491-17545b0b0985))
-	(text "C87: EN/UVLO ride-through. (R80+R165)||R81 = 227k charges it (0.4-1.1 s turn-on); R81 alone discharges it (0.66 s), so switch bounce shorter than 0.19/0.33/0.41 s at 6.0/7.4/8.4 V (worst case 0.11/0.21/0.27 s) cannot trip U9 (25-64 us t_D,OFF). UVLO on 4.89-5.05 V, off 4.45-4.61 V."
-		(at 20.32 280.67 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 139639c0-95ae-5415-8573-9ddceca8935f))
-	(symbol
-		(lib_id "M3:C")
 		(at 391.16 121.92 0)
 		(unit 1)
 		(in_bom yes)
@@ -3244,6 +3138,98 @@
 			(justify right))
 		(uuid 2afebdf4-b2c7-582c-afe3-e5f1675d45e0))
 	(symbol
+		(lib_id "M3:C")
+		(at 340.36 121.92 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid bf85c789-3a3e-5548-a07f-680462cea5f5)
+		(property "Reference" "C87"
+			(at 342.9 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "220nF 25V X7R"
+			(at 342.9 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0603"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21120.html"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21120"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL10B224KA8NNNC"
+			(at 340.36 121.92 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "C87")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 340.36 118.11)
+			(xy 340.36 113.03))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 09d45fee-d3dd-5212-aa43-b83fec6d538c))
+	(global_label "BAT_ENABLE"
+		(shape passive)
+		(at 340.36 113.03 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid aec9a550-2981-5da7-a798-56853dea3eac))
+	(wire
+		(pts
+			(xy 340.36 125.73)
+			(xy 340.36 130.81))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 88d334e0-cfe1-5203-8d6a-daf896eea273))
+	(global_label "GND"
+		(shape passive)
+		(at 340.36 130.81 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9b32ff8c-d5e9-552a-b004-5ea8b662e18f))
+	(symbol
 		(lib_id "M3:Conn_1x2")
 		(at 330.2 238.76 0)
 		(unit 1)
@@ -3335,6 +3321,13 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 1c89241f-d370-5f19-902d-a3d99f9e819b))
+	(text "C87: EN/UVLO ride-through, 220 nF 25 V X7R (R19-REQ-02). (R80+R165)||R81 = 227k charges it (tau 50 ms; turn-on 88/56/45 ms at 6.0/7.4/8.4 V, 31-122 ms worst case); R81 alone discharges it (tau 66 ms), so J400 drop-outs shorter than 19/33/41 ms (worst case 12/22/27 ms) cannot trip U9 (25-64 us t_D,OFF). EN thresholds 1.183-1.223 V rising, 1.076-1.116 V falling (TI SLVSFC9C p9): UVLO on 4.89-5.05 V, off 4.45-4.61 V."
+		(at 20.32 280.67 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 3eefb64e-bbbf-52be-aadf-8d4077bae59b))
 	(sheet_instances
 		(path "/"
 			(page "7"))))

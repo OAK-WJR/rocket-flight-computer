@@ -362,14 +362,15 @@ class FitValidation(unittest.TestCase):
         self.assertGreater(fit.margin(box, 24.9, 23.0, 0.3), 0)
 
     DB125 = {'J1': 'M3_DB125_2P_GN', 'J121': 'M3_DB125_2P_BK', 'J400': 'M3_DB125_2P_GN', 'J410': 'M3_DB125_4P_GN',
-             'J420': 'M3_DB125_4P_GN', 'J9': 'M3_DB125_4P_GN', 'J122': 'M3_DB125_5P_GN'}
+             'J420': 'M3_DB125_4P_GN', 'J9': 'M3_DB125_4P_GN', 'J122': 'M3_DB125_5P_GN',
+             'J440': 'M3_DB125_4P_GN'}                                   # D-R19-14: the west AUX port
 
     def test_r10_wire_room_lists_every_db125_terminal(self):
-        """R18-MEC-03: the R10 report and printout give the wire room of all seven DB125 terminals (the west entry
-        face is the box's x0, the east one its x1), not only J1 / J121 / J9."""
+        """R18-MEC-03: the R10 report and printout give the wire room of every DB125 terminal (eight with D-R19-14's J440;
+        the west entry face is the box's x0, the east one its x1), not only J1 / J121 / J9."""
         rows = []
         for i, (ref, name) in enumerate(self.DB125.items()):
-            west = ref in ('J1', 'J121', 'J400')
+            west = ref in ('J1', 'J121', 'J400', 'J440')
             self.add_part(ref, 7.4 if west else 38.6, 10 + 10 * i, model=False, footprint=name)
             rows.append((1.0, ref, 'F', (3.4, 8 + 10 * i, 11.5, 12 + 10 * i, 0, 8.9) if west
                          else (34.5, 8 + 10 * i, 42.6, 12 + 10 * i, 0, 8.9)))
@@ -381,7 +382,8 @@ class FitValidation(unittest.TestCase):
         self.assertAlmostEqual(rooms['J420'][1], wall - (42.6 - 23.0) + 0.3, places=3)
         self.assertEqual(fit.wire_rooms(self.board, rows, 'r9', 23.0, 0.3), {})     # R9 lists its DB128 entries only
 
-    def test_real_r10_board_reports_seven_wire_rooms(self):
+    def test_real_r10_board_reports_eight_wire_rooms(self):
+        """D-R19-14: the real board lists all eight DB125 terminals, the AUX port J440 at the west terminals' room."""
         board = Path(os.environ.get('R10_BOARD') or
                      Path(__file__).resolve().parents[1] / 'm3_design/assembly_review/m3.kicad_pcb')
         if not board.is_file() or 'M3-ASSY-R10' not in board.read_text()[:20000]:
@@ -389,6 +391,7 @@ class FitValidation(unittest.TestCase):
         report = fit.check_board(pcbnew.LoadBoard(str(board)), board.parent, profile='r10')
         self.assertEqual(sorted(report['wire_room_mm']), sorted(self.DB125))
         self.assertGreaterEqual(min(low for low, _ in report['wire_room_mm'].values()), 4.95 - 1e-3)
+        self.assertEqual(report['wire_room_mm']['J440'], report['wire_room_mm']['J121'])
 
     def test_thickness_and_invalid_bore_assumptions_are_rejected(self):
         self.board.GetDesignSettings().SetBoardThickness(pcbnew.FromMM(2))

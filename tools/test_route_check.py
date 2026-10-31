@@ -890,6 +890,35 @@ class R10AuditScope(unittest.TestCase):
         self.board = self.helper.board; self.board.SetCopperLayerCount(4)
         rc.set_profile('r10'); self.addCleanup(rc.set_profile, 'r8')
 
+    def test_r19_named_parallel_via_closes_only_its_own_loop(self):
+        """D-R19-09 (R19-PWR-01): a via named in PARALLEL_VIAS beside a supply's single-via layer change leaves the
+        loop search, so its own loop passes; without the entry it is a track_loop; a named via that is missing or not
+        parallel fails as parallel_via (gated), and any other loop on the net still fails."""
+        from unittest.mock import patch
+        h = self.helper
+        self.board.Add(pcbnew.NETINFO_ITEM(self.board, 'VLOGIC'))
+        h.pad('A1', 0, 0, 'VLOGIC'); h.pad('A2', 10, 0, 'VLOGIC')
+        h.track((0, 0), (2, 0), 'VLOGIC', 0.4); h.via(2, 0, 'VLOGIC', d=0.5)
+        h.track((2, 0), (8, 0), 'VLOGIC', 0.4, pcbnew.B_Cu); h.via(8, 0, 'VLOGIC', d=0.5)
+        h.track((8, 0), (10, 0), 'VLOGIC', 0.4)
+        h.via(2.75, 0.75, 'VLOGIC', d=0.5)                           # the parallel barrel and its two stubs
+        h.track((2.75, 0.75), (2, 0), 'VLOGIC', 0.4)
+        h.track((2.75, 0.75), (2.75, 0), 'VLOGIC', 0.4, pcbnew.B_Cu)
+
+        def found(entries):
+            with patch.object(rc, 'PARALLEL_VIAS', entries):
+                inst = rc.scan(self.board)
+            hits = [d for d in inst if d['net'] == 'VLOGIC' and d['cat'] in ('track_loop', 'parallel_via')]
+            self.assertTrue(all(rc.gated(d) for d in hits))
+            return sorted(d['cat'] for d in hits)
+        self.assertEqual(found([]), ['track_loop'])
+        self.assertEqual(found([('VLOGIC', (2.75, 0.75), 'test')]), [])
+        self.assertEqual(found([('VLOGIC', (2.75, 0.75), 'test'), ('VLOGIC', (5.0, 5.0), 'stale')]), ['parallel_via'])
+        self.assertEqual(found([('VLOGIC', (8.0, 0.0), 'not parallel')]), ['parallel_via', 'track_loop'])
+        h.chain([(0, 0), (1, 1), (2, 0)], 'VLOGIC', 0.4)                 # a second, unrelated loop on F.Cu
+        self.assertEqual(found([('VLOGIC', (2.75, 0.75), 'test')]), ['track_loop'])
+        self.assertEqual([e[:2] for e in rc.PARALLEL_VIAS], [('VLOGIC', (29.8, 81.15))])
+
     def test_aud2_return_exclusions_keep_other_critical_checks(self):
         slow = ('ARM1_SENSE_MID', 'ARM1_SENSE', 'ACT_GATE', 'ACT_DRV', 'ACT_EN_MCU', 'CAM_PWR_EN', 'CAM_UART_OE')
         fast = ('USB_DP', 'HSE_IN', 'QSPI_CLK', 'SPI1_SCK', 'IMU_CS', 'GPS_TX_WIRE', 'PYRO1_GATE_N', 'PYRO1_COLD',
@@ -1054,7 +1083,7 @@ class R10AuditScope(unittest.TestCase):
         board = pcbnew.LoadBoard(str(Path(__file__).resolve().parents[1] / 'm3_design/assembly_review/m3.kicad_pcb'))
         baseline = rc.scan(board)
         self.assertEqual(rc.evaluate(baseline, [])[0], [])
-        a, b = self.helper.P(28.8, 24.2), self.helper.P(28.8, 11.0)
+        a, b = self.helper.P(28.8, 29.6), self.helper.P(28.8, 11.0)      # D-R19-14: GPS_RX's run now starts at PD9
         matches = [t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'GPS_RX_MCU'
                    and t.GetLayer() == pcbnew.F_Cu and t.GetWidth() == pcbnew.FromMM(.2)
                    and {tuple(t.GetStart()), tuple(t.GetEnd())} == {tuple(a), tuple(b)}]

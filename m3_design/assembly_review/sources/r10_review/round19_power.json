@@ -1,0 +1,300 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round19_power",
+ "reviewer": "claude",
+ "target_commit": "acba1969b42973aaf8d348dc6d2fce6b465fc1dd",
+ "board_sha256_before": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "board_sha256_after": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "findings": [
+  {
+   "id": "R19-PWR-01",
+   "severity": "Minor",
+   "status": "new",
+   "related_earlier": "R18-GATE-03 (gate lens: no gate on power-path via count; it pinned only the U9 OUT / U9 IN transitions). This finding is the board-side inventory, not the gate gap.",
+   "title": "Several power feeds change layer through one 0.3 mm via; the only battery-path input of the logic supply (U11.2) is one of them",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "method": "native pcbnew 10.0.7 read-only: per net, every outer-layer copper island of tracks + SMD pads joined geometrically, then the vias / plated holes that join it to other layers (.supervisor/r19_power/viafeeds.py); currents from tools/dc_solve.py at acba196 (copied unmodified to the probe dir), grid 0.1 mm, 20 um via plating, room-temperature copper",
+    "single_via_transitions": [
+     {
+      "net": "RAW_PROTECTED",
+      "pads": "U11.2 (TPS2121 IN2, B.Cu) and C97.1 (F.Cu)",
+      "via_mm": [
+       24.3,
+       66.0
+      ],
+      "via": "0.5/0.3 mm",
+      "layers": "F.Cu/B.Cu to In2 RAW_PROTECTED",
+      "dc_solve": "U9:6 -> U11:2 7.05 mOhm; this via carries 100 % (1.00 A at 1.0 A)",
+      "role": "the only battery path into VLOGIC (U11 IN1 is USB only)"
+     },
+     {
+      "net": "PORT_5V3",
+      "pads": "U402.1 (camera switch) and C430.1, B.Cu",
+      "via_mm": [
+       42.0,
+       61.8
+      ],
+      "via": "0.5/0.3 mm",
+      "dc_solve": "L400:2 -> U402:1 36.12 mOhm; this via carries 1.25 A at the 1.25 A U402 limit"
+     },
+     {
+      "net": "PORT_5V3",
+      "pads": "U401.9, U401.10 (LDO IN) and C405.1, B.Cu",
+      "via_mm": [
+       25.9,
+       8.6
+      ],
+      "via": "0.5/0.3 mm"
+     },
+     {
+      "net": "PORT_5V3",
+      "pads": "U401.7 (TPS7A91 EN, tied to IN only through the plane)",
+      "via_mm": [
+       25.65,
+       14.9
+      ],
+      "via": "0.5/0.3 mm",
+      "note": "TPS7A91 EN has no defined pull (IEN +/-0.2 uA, SBVS282A p5), so an open via leaves EN floating"
+     },
+     {
+      "net": "PORT_4V8",
+      "pads": "U401.1, U401.2 (LDO OUT) and C406.1, B.Cu",
+      "via_mm": [
+       29.75,
+       12.6
+      ],
+      "via": "0.5/0.3 mm",
+      "dc_solve": "U401:1,2 -> J420:1 3.45 mOhm; this via carries 0.60 A at 0.6 A"
+     },
+     {
+      "net": "VLOGIC",
+      "pads": "C84.1 (470 uF hold-up, F.Cu)",
+      "via_mm": [
+       29.5,
+       82.05
+      ],
+      "via": "0.5/0.3 mm",
+      "dc_solve": "C84:1 -> U2:2,3 23.36 mOhm; this via carries 100 %"
+     },
+     {
+      "net": "3V3A",
+      "pads": "U1.20 / U1.21 (VREF+ / VDDA) and C21.1 / C22.1",
+      "via_mm": [
+       27.0,
+       49.25
+      ],
+      "via": "0.6/0.3 mm"
+     },
+     {
+      "net": "3V3A",
+      "pads": "R164.2 and the sensor 3V3A island (U4, U5, C10, C11, C30-C32)",
+      "via_mm": [
+       16.0,
+       50.2
+      ],
+      "via": "0.5/0.3 mm"
+     }
+    ],
+    "redundant_for_comparison": "U9 OUT -> In2 two vias (20.3,79.1)/(21.1,79.1) (1.34 / 0.56 A at 1.9 A); U400 IN two vias (14.1,7.6)/(14.1,9.0); 3V3 buck output two independent paths (via (23.1,78.1) into the In2 finger 0.23 A, and (26.4,79.26)-F.Cu-(30.8,79.26) 0.17 A, at 0.4 A); CAM_5V needs no layer change (B.Cu from U402.6 to the J9.1 plated hole; its via (34.2,49.325) only feeds the R104 sense divider); BAT_IN U9 feed is one 1.0/0.5 mm via (17.5,87.3) by design (C88-first hot-plug topology, D-R18 unchanged, 2.10 A at 2.1 A)",
+    "via_barrel_estimate": "IPC-2152 internal fit (tools/ipc2152.py constants) applied to the 0.3 mm barrel as a 0.94-1.0 mm wide, 20 um conductor, no plane credit: about 8 C at 1.25 A, about 19 C at 2.0 A (U11 ILM maximum, TPS2121 SLVSEA3F pp7-8 ILM table, RILM 80 kohm row 1.0/1.5/2.0 A); Calculation/Inference, short barrels run cooler",
+    "local_space_at_U11": "B.Cu VLOGIC trunk x 24.8-25.2 (0.4 mm track at x 25.0), C99.1 pad x 24.69-25.19 y 66.63-67.17, GND via (23.5,65.9), F.Cu ACT_EN_MCU (24.764,67.2)-(26.62,65.344); In2 RAW strip edge at x about 24.0 (In2 3V3 finger west of it). Candidate octilinear second-via spots (24.3,66.6), (23.7,66.6), (26.4,66.2) each violate 0.15 mm clearance or land in the In2 3V3 finger (Calculation from the dumped geometry; not DRC-run)",
+    "maker_refs": [
+     "TI TPS2121 SLVSEA3F p4 Pin Functions (RUX: IN2 pin 2, GND pin 12) https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+     "TI TPS7A91 SBVS282A p3 Table 4-1 (EN must connect to IN if unused) and p5 (IEN -0.2..0.2 uA) https://www.ti.com/lit/ds/symlink/tps7a91.pdf"
+    ]
+   },
+   "impact": "No current-capacity problem at the stated loads. Each listed via is a single point of failure: an open or later-cracked via at (24.3,66.0) removes the battery feed to VLOGIC, so the primary computer loses power in flight and recovery falls to the isolated Blue Jay; (29.5,82.05) silently removes the 470 uF hold-up (ride-through falls to roughly 0.03-0.2 ms on C6/C7 alone, against the recorded 0.49-0.57 ms; Calculation); (42.0,61.8), (25.9,8.6), (25.65,14.9) and (29.75,12.6) drop the camera or both GPS and radio (EN floating for the last-but-one); (27.0,49.25) / (16.0,50.2) remove VDDA / VREF+ or the IMU and barometer supply. A pack-only power-up on first articles screens a manufacturing open of the U11 via; nothing screens the C84 via unless hold-up or VLOGIC capacitance is measured; latent barrel cracks are not screened. Bounded residual (Minor): no demonstrated failure.",
+   "concrete_fix": "At the next CAD change give each listed transition a second same-net via or a second outer-layer path, prioritising U11.2 / C97.1 (RAW_PROTECTED) and C84.1 (VLOGIC); at U11 this needs a local re-route (no legal octilinear spot within about 1 mm was found), so it is a respin item, not a drop-in. Until then: (a) add to ORDERING section 8.3 first-article steps a pack-only power-up (USB disconnected) and a C84-connected check (VLOGIC capacitance at TP83, or measured hold-up after a pack break), and (b) list these single-via transitions with their measured currents in R10_VALIDATION deviation section 4 \"Continuous power necks\" next to the U9 entries; (c) extend the R18-GATE-03 gate pin to U11.2, U402.1, U401 and C84.1."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R18-06",
+   "finding": "R18-PWR-01 / R18-RTE-01",
+   "claim": "In2 3V3 fill one piece, 1466.52 mm^2 (was 1354.23/63.11/30.54); narrowest necks about 0.55 mm (former island A) and 0.50 mm (former finger); IN2_GND_CH1 tongue removed; IN2_RAW notched",
+   "measurement": "pcbnew 10.0.7: R10_3V3_In2 = 1 outline, 1466.52 mm^2 (previous board 632a9ad3: 3 outlines, 1447.88 mm^2 total). Bisection on the unfractured fill deflated by w/2 (pcbnew Deflate, round corners, 1 um error): island A to main splits at w = 0.5495 mm, at about (26.92,61.98) beside the In2 USB_LIMITED corner; the finger splits internally at w = 0.4745 mm at (23.46,67.83), between the GND via (22.825,67.825) clearance and the finger edge (the passage west of that via is about 0.3 mm, so the total cross-section there is about 0.75 mm). DC (tools/dc_solve.py, 0.1 mm grid): L1.2 -> R164.1 9.99 mOhm (R18 measured 32.83 mOhm through one 0.30 mm B.Cu link), L1.2 -> LS120.1 11.26 mOhm, L1.2 -> U1 VDD pins 7.38 mOhm (previous board 16.40 mOhm). IPC-2152 rise at the necks <= 0.1 C at 0.15 A and about 0.4 C at 0.23 A. Side effect: the finger, which on 632a9ad3 carried only U2 FB sense, now carries 57 % of the 3V3 load (0.23 A of 0.4 A via (23.1,78.1)); U2 FB via (23.2,68.6) sits on it, so the regulation point moves about 1 mV (Calculation, about 3-4 mOhm of finger). Return path: In1 GND is one piece (3753.40 mm^2) under the whole area; the B.Cu tracks that cross the new In2 boundaries in x 16-28.5, y 57-66 are all DC/slow nets (GND, BUZZ_*, PYRO1_CONT_MID, RAW_ACT sense, USB_LIMITED, VLOGIC, LOGIC_*), no fast interface.",
+   "verdict": "confirmed (finger neck 0.4745 mm against the recorded about 0.50 mm; the record does not say that the former sense-only finger is now the main 3V3 feed; electrically adequate)"
+  },
+  {
+   "id": "D-R18-04",
+   "finding": "R18-SAF-01 / R18-GATE-01 (power side effects only)",
+   "claim": "fill-only keep-outs; In2 RAW_PROTECTED fill 1253.99 -> 1222.74 mm^2",
+   "measurement": "R10_RAW_In2 one outline, 1222.74 mm^2; In1 GND one outline 3753.40 mm^2 (was 3760.54). RAW DC: U9:6 -> U400:2,3 37.77 mOhm (R18: 38.02), neck 1.05 mm on the B.Cu 0.7 mm U9 output run, 7.8 C at 1.9 A (no plane credit); U9:6 -> U11:2 7.05 mOhm. The BAT_ENABLE_4 keep-out narrows the In2 3V3 finger to about 1.25 mm at y 68-69.8, not its bottleneck.",
+   "verdict": "confirmed (no power-path degradation)"
+  },
+  {
+   "id": "D-R18-01",
+   "finding": "R18-REQ-08 / R18-MCU-01 (power side)",
+   "claim": "R62/R63 and V3V3_SENSE removed, PC3_C NC; R123 2 kohm; VREFINT and VBAT/4 carry the 3V3 information",
+   "measurement": "R62/R63 absent; U1.18 unconnected; U1.6 (VBAT) on 3V3; U1.20/21 on 3V3A via R164 2.2 ohm; R123 2k C4109 on board. PC1 now sources 1.1 mA while the bus is enabled (3.6 mW; negligible pad energy). Removing the V3V3_SENSE copper left a new F.Cu GND fill piece of 1.69 mm^2 at (25.12-27.15, 51.24-53.45) joined only through the U1.19 (VSSA) pad; it carries no current.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R18-02",
+   "finding": "R18-SAF-02 (power side)",
+   "claim": "R119 100 kohm on Q121; R119 || R120 = 50 kohm; settled worst-case |VGS| 4.74 V, time to -4.5 V 31.9 ms",
+   "measurement": "R119 100k C25741 at B(11.57,71.1), ACT_GATE/ACT_FET_S. parts_budget enable_vgs = (6.0 - 4.2 x 0.040 - 0.1) x 49 000/(49 000 + 10 200) = 4.744 V reproduced (m3_design/r10_parts.py at acba196, lines 440-448). The same budget gives a four-stall loaded BAT_IN of 5.73 V at fire; with that basis |VGS| = 4.52 V (shorted-match 4.2 A drop) to 4.62 V (1.28 A normal fire), still above the 4.5 V point where AONR21357 RDS(on) <= 12.3 mOhm is specified (Rev 2.1 p1), and the fire budget already carries a 40 mOhm per-FET ceiling.",
+   "verdict": "confirmed (margin over 4.5 V shrinks from 0.24 V to 0.02-0.12 V on the budget's own four-stall basis; no functional effect)"
+  },
+  {
+   "id": "D-R18-03",
+   "finding": "R18-SAF-03 (power side)",
+   "claim": "U11.12 GND fan-out via (25.8,65.9) removed; U11.12 joins C99.2's return",
+   "measurement": "U11.12 is the TPS2121 device ground (SLVSEA3F p4; pins 3/4/6 are CP2/OV2/PR1 tied to GND). Path now B.Cu 0.3 mm (25.8,65.25)-(25.8,66.9) -> C99.2 -> (25.84,66.9)-(26.384,67.444) -> GND via (26.384,67.444), about 2.4 mm; quiescent current only.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R18-08",
+   "finding": "R18-BOM-03",
+   "claim": "L400 on the Bourns SRP5030T recommended land: 2.0 x 1.8 mm pads at +/-2.25 mm (gap 2.50, outer 6.50)",
+   "measurement": "L400.1 (21.95,5.55) and L400.2 (26.45,5.55), 2.0 x 1.8 mm, F.Cu: matches Bourns SRP5030T p1 Recommended Layout (6.50 / 2.50 / 1.8 mm). PORT_SW 0.4 mm F.Cu ends at the pad centre: U400:5 -> L400:1 2.61 mOhm. PORT_5V3 1.0 mm from (26.45,5.55): L400:2 -> U402:1 36.12 mOhm (36.07 on 632a9ad3), In2 neck 1.05 mm, 3.9 C at 1.25 A. SRP5030T-6R8M Isat 4.3 A, Irms 4.0 A, DCR 76.2 mOhm max (p1) against AP63201 HS peak limit 2.5-3.1 A (DS41326 p5). DRC (CLI 10.0.7 on a copy): 0 copper violations, 0 unconnected.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R18-09",
+   "finding": "R18-BOM-01 / R18-REQ-10 (power side)",
+   "claim": "R430 -> FOJAN FRC0603F2262TS C2999509 (22.6 kohm 1 %, 100 ppm/C); C84 to the owner BOM",
+   "measurement": "R430 22.6k 1 % C2999509 on board at B(36.0,60.0); same value, tolerance and TCR as the replaced part, so the U402 limit stays 1.041-1.250 A (TPS2553 SLVS841G, RILIM range 15-232 kohm p5). C84 (470 uF, VLOGIC) is still on the board at F(27.5,78.5); its only connection to VLOGIC is via (29.5,82.05) (R19-PWR-01).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R18-05",
+   "finding": "R18-SAF-04 (fire-path copper only)",
+   "claim": "IGN diagonal moved 0.5 mm SW; IGN 10.230382 -> 10.523276 mm; four-stall fire current 1.282918 A",
+   "measurement": "PYRO1_IGN B.Cu 0.5 mm: (7.4,57.6)-(7.4,59.9)-(11.5,64.0)-(13.925,64.0) = 10.523 mm; OUT F.Cu 0.5 mm 7.854 mm; RAW_ACT fire run 0.5 mm 5.886 mm; seven 0.4 mm ACT_FET_S bridges; BAT_IN fire feed B.Cu 1.0 mm (J1:1 -> Q120 1.87 mOhm). No via in the fire path. GND fire return Q124:1-3 -> J1:2 0.88 mOhm (window x 2-22, y 52-82), 64 % on In1; largest via 1.15 A at 4.2 A; narrowest cut is J1.2's thermal spokes (house relief rule).",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R19-PWR-01",
+   "type": "records / procedure now; CAD at the next board change",
+   "change": "Now (no CAD): add the pack-only power-up and C84-connected (VLOGIC capacitance at TP83 or measured hold-up) first-article checks to ORDERING section 8.3, and list the eight single-via transitions with their measured currents in R10_VALIDATION deviation section 4. CAD (only when the board is changed for another reason): a second RAW_PROTECTED via for U11.2/C97.1 and a second VLOGIC via for C84.1 first; not recommended as a stand-alone CAD change because U11.2 has no legal octilinear spot without re-routing and any board change restarts the two-clean-round count."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "In2 3V3 necks (0.4745 / 0.5495 mm) too narrow for current",
+   "result": "Closed by DC solve. The finger now carries 57 % of the 3V3 load (0.23 A of 0.4 A); IPC-2152 internal fit on 0.47 mm x 30 um at 0.3 A is about 0.6 C; L1.2 to U1 VDD 7.38 mOhm (was 16.40). The buzzer (MLT-5020: 3.0 Vo-p, <= 100 mA, coil 12 +/- 3 ohm, maker spec item 4) and 3V3A loads behind island A see 10-11 mOhm (was 32.83)."
+  },
+  {
+   "candidate": "U2 (AP63203) FB now senses a load-carrying region",
+   "result": "Closed. FB via (23.2,68.6) on the finger; finger drop between L1 feed via (23.1,78.1) and FB about 3-4 mOhm x 0.23 A, about 1 mV; the finger inductance over In1 (about 7 nH) is negligible at the converter crossover (Inference). Record-only observation in fix_verification."
+  },
+  {
+   "candidate": "Return path for B.Cu signals over the changed In2 area",
+   "result": "Closed for the power lens: every B.Cu segment in x 16-28.5, y 57-66 was sampled every 0.05 mm against the In2 fills (.supervisor/r19_power/refcross.py); the reference changes only under DC/slow nets. In1 GND is one piece beneath."
+  },
+  {
+   "candidate": "U9 TPS259470L latch-off could disable the board after a recharge transient",
+   "result": "Closed. TPS259470x is the active-current-limit variant (SLVSFC9C p4 Device Comparison); overcurrent is limited, not latched (Table 7-3 p38: persistent overcurrent -> current limit, not latched); only thermal shutdown latches the L variant (Table 7-2 p37). Fast-trip at 2 x ILIM retries after 30 us in current limit (section 7.3.5.4, p34). Reverse-current-blocking recovery tSWRCB 50 us (p11)."
+  },
+  {
+   "candidate": "U9 configuration against SLVSFC9C",
+   "result": "Closed. ILIM 750 ohm (R84 0.1 %) -> 3.960/4.452/4.840 A (p9 table; recommended RILM 549-6650 ohm p8). UVLO from R80+R165 940 k / R81 300 k: 1.183/1.20/1.223 V rising -> 4.96 V, 1.09 V falling -> 4.51 V (p9). OVLO 2 M / 280 k: 1.20 V -> 9.77 V; OVLO pin 1.03 V at 8.4 V within the 0.5-1.5 V recommended range (p8). dVdt C81 4.7 nF C0G 50 V >= VIN + 5 V rating rule (p8); 2000/4700 = 0.43 V/ms (eq. 4 p30). EN and OVLO pull-ups >= 350 kohm for reverse polarity (p7 note 2). ITIMER open = fastest (pin table p6). IMAX 5.5 A."
+  },
+  {
+   "candidate": "TI layout guideline: power path sized for 2 x full load",
+   "result": "Not raised. Neck about 1.0 mm equivalent on the U9 IN (F.Cu 1.0 mm, 10.1 C at 2.1 A) and OUT (B.Cu 0.7 mm run, 7.8 C at 1.9 A); at 2 x (about 4 A) the long-conductor IPC fit gives about 38 C with no plane credit, but the runs are 1-4 mm long and the 4.45 A case is a fault lasting until limit/TSD. The 0.3 mm pad entries are set by TI's own 0.3 x 2.4 mm IN/OUT lands (SLVSFC9C RPW0010A land pattern)."
+  },
+  {
+   "candidate": "Gate-drive budget basis (6.0 V) is not the fire budget's four-stall BAT_IN (5.73 V)",
+   "result": "Not raised as a finding. Recomputed 4.52-4.62 V >= 4.5 V; recorded under D-R18-02 verification."
+  },
+  {
+   "candidate": "Hot-plug model inputs after the fix pass",
+   "result": "Closed. hotplug_inputs.json at acba196 differs from dcbb6c8 only in board_sha256; hotplug_results.json only in inputs_sha256; copper diff of the two boards shows no BAT_IN, BAT_DAMP or battery-entry GND change."
+  },
+  {
+   "candidate": "Port buck / LDO thermal and radio load",
+   "result": "Closed. MicoAir LR900-F: 5 V DC, average TX current 200 mA at 27 dBm (maker page https://micoair.com/radio_telemetry_lr900f/); the budget allocates 0.30 A. AP63201 at the 1.461 A port allocation: about 0.4 W loss x 89 C/W (single-layer test board, DS41326 p4) = about 36 C rise (Inference). TPS7A91 JEDEC RthJA 62.5 C/W (SBVS282A) is better than the recorded 80-110 C/W inference."
+  },
+  {
+   "candidate": "VBAT/4 as the 3V3 monitor after removing V3V3_SENSE",
+   "result": "Not raised. The recorded VBAT/4 path has a +/-10 % bridge ratio error (as the records state); 3V3 is better estimated as VDDA from VREFINT plus the R164 drop (<= about 25 mV). Firmware guidance note only."
+  },
+  {
+   "candidate": "J1.2 thermal-relief spokes in the battery return",
+   "result": "Closed. 4 spokes x 0.3 mm on F.Cu, In1 and B.Cu (12), 0.25 mm long; carries the board return plus the fire current (0.88 mOhm fire-return solve; the 26.8 C IPC figure at 4.2 A is the long-conductor fit misapplied to 0.25 mm spokes, as tools/run_dc.sh notes); house THT-GND relief rule (REQUIREMENTS M2)."
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3_design/assembly_review/m3.kicad_pcb before and after: a3144b15... both; git HEAD acba196; no tracked file written.",
+  "Native pcbnew 10.0.7 dump of all 208 footprints with values, LCSC/MPN fields, pad nets, sizes and local zone-connection overrides (.supervisor/r19_power/dump.py).",
+  "Zone inventory and per-outline fill areas on every layer; island membership (vias/pads) for GND F.Cu and B.Cu.",
+  "Copper diff of the previous board (git show dcbb6c8: m3.kicad_pcb, 632a9ad3) against the current board: segments, vias, zone fills, footprints.",
+  "In2 3V3 neck widths by bisection on the unfractured fill with pcbnew Deflate (.supervisor/r19_power/neckloc.py), split locations reported.",
+  "Raster renders of In1, In2 and B.Cu around the changed areas (.supervisor/r19_power/raster.py, NumPy).",
+  "tools/dc_solve.py (committed acba196 version, copied unmodified), 15 runs at 0.1 mm (PORT_SW 0.05 mm): on the current board 3V3 x3, RAW_PROTECTED x2, PORT_5V3, PORT_SW, PORT_4V8, CAM_5V, VLOGIC x2, BAT_IN x2 and the windowed GND fire return; 3V3 L1.2 -> U1 VDD also on the previous board 632a9ad3.",
+  "Power-feed via inventory per outer-layer island (.supervisor/r19_power/viafeeds.py).",
+  "In2 reference sampling under B.Cu tracks in x 16-28.5, y 57-66 (.supervisor/r19_power/refcross.py).",
+  "kicad-cli 10.0.7 pcb drc --severity-all on a copy of the board, project and rules in the probe dir: 0 copper violations, 0 unconnected (199 lib_footprint_issues are the copy's missing library table only).",
+  "Diff of hotplug_inputs.json / hotplug_results.json between dcbb6c8 and acba196.",
+  "Recomputation of the parts_budget gate-drive bound and the U9 / U11 / U402 / U401 / L400 settings against the maker tables (cached PDFs of the maker datasheets plus the MicoAir and Bourns pages)."
+ ],
+ "sources": [
+  {
+   "doc": "TI TPS25947 datasheet SLVSFC9C (rev. May 2026)",
+   "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+   "pages": "p4 device comparison; p6 pin functions (ITIMER open); p7 absolute maximum (VIN, slew 100/10 V/us, EN/OVLO 6.5 V, note 2); p8 recommended (OVLO 0.5-1.5 V, EN <= 5 V, RILM 549-6650 ohm, IMAX 5.5 A, dVdt cap rating); p9 UVLO/OVLO thresholds and ILIM table; p11 tRCB/tSWRCB; p30 dVdt (eq. 4); pp31-32 active current limit (eq. 7); p34 short-circuit fast-trip; pp35-36 RCB; p37 TSD table; p38 fault table; p62 layout guidelines"
+  },
+  {
+   "doc": "TI TPS2120/TPS2121 datasheet SLVSEA3F",
+   "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+   "pages": "p4 pin functions (RUX); pp7-8 ILM table"
+  },
+  {
+   "doc": "TI TPS7A91 datasheet SBVS282A",
+   "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+   "pages": "p3 pin functions; p4 thermal table (RthJA 62.5 C/W); p5 EN current and thresholds"
+  },
+  {
+   "doc": "TI TPS2553 datasheet SLVS841G",
+   "url": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+   "pages": "p5 RILIM range"
+  },
+  {
+   "doc": "Diodes AP63200/AP63201/AP63203/AP63205 DS41326 Rev 3-2",
+   "url": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf",
+   "pages": "p4 absolute maximum, thermal (TSOT26 89 C/W), TA range; p5 IPEAK_LIMIT 2.5/2.8/3.1 A"
+  },
+  {
+   "doc": "Bourns SRP5030T series datasheet",
+   "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+   "pages": "p1 electrical table (SRP5030T-6R8M) and Recommended Layout"
+  },
+  {
+   "doc": "AOS AONR21357 Rev 2.1",
+   "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+   "pages": "p1 product summary RDS(on) < 12.3 mOhm at -4.5 V"
+  },
+  {
+   "doc": "Huawha MLT-5020 product specification (cached maker PDF)",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598",
+   "pages": "spec table items 1, 4, 5 (3.0 Vo-p, <= 100 mA, 12 +/- 3 ohm)"
+  },
+  {
+   "doc": "MicoAir LR900-F product page",
+   "url": "https://micoair.com/radio_telemetry_lr900f/",
+   "pages": "specification list (5 V DC; 200 mA average TX at 27 dBm)"
+  },
+  {
+   "doc": "Project records at acba196",
+   "url": "repository",
+   "pages": "R10_DECISIONS D-R18-01..10; round18_fix_cad.md; M3_R10 Power; REQUIREMENTS F6, F7, F9; R10_VALIDATION deviation sections 1-4; parts_budget.json; round18_power.json / round18_gate.json (context)"
+  }
+ ],
+ "coverage_limits": [
+  "No physical measurement, transient SPICE, thermal simulation or full tools/check.sh; DC solves use room-temperature copper, 20 um via plating and ideal pad contacts.",
+  "The hot-plug model was not re-run: its inputs are byte-identical to the previous board apart from the board hash, and its results file differs only in the input hash.",
+  "Converter loop stability and the effect of the moved FB sense point were judged by inference, not modelled.",
+  "Second-via candidate spots at U11 were screened geometrically from dumped coordinates, not by a seeded DRC.",
+  "Records edited in the worktree after acba196 by other lanes (D-R18-11, follow-up text passes) were not reviewed; findings are against the committed state."
+ ]
+}

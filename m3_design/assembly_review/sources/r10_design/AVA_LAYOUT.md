@@ -1,8 +1,16 @@
 # R10 AVA layout hand-off
 
+**How to read this file (R19-DOC-08).** For the current board `50a39de5…` read only "Round19 CAD fix pass" at the end;
+it lists the changes from its predecessor `a3144b15…` ("Round18 CAD fix pass"). The current placement itself is
+`m3_design/r10_place.tsv` and the board; everything above the round 18 section is history of earlier boards.
+Sealed historical sections keep their original text, including run-together words and numbers (R19-DOC-04); only the
+current-status paragraphs were respaced in round 19.
+
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
-**Round 18 CAD fix pass (2026-10-30):** the current CAD candidate is the rebuilt PCB recorded in
-"Round18 CAD fix pass" at the end (D-R18-01..10); the 632a9ad3 paragraphs below are its predecessor's record.
+**Round 19 CAD fix pass (2026-10-30):** the current CAD candidate is the rebuilt PCB recorded in
+"Round19 CAD fix pass" at the end (D-R19-01..14); "Round18 CAD fix pass" records its predecessor `a3144b15…`.
+**Round 18 CAD fix pass (2026-10-30):** the round 18 PCB is recorded in "Round18 CAD fix pass" below
+(D-R18-01..10); the 632a9ad3 paragraphs below are its predecessor's record.
 **Full R16/R17 pair complete (2026-10-30):** PCB
 `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
 46 x 90 x 1.6 mm, 2,256,162 bytes; 209 footprints, 951 segments, 296 vias
@@ -11,21 +19,21 @@ This is the immutable hand-off measurement record for `0c50b9fd…` below.
 with all 1,942 files frozen. Full R17 on `ac483f4` found
 0 Critical / 0 Major / 13 Minor groups from 23 raw observations (4 new/9 carried),
 with all 1,966 files frozen through ten complete lenses. The same-PCB clean pair
-is earned; original reports remain immutable. R16 reviewed 119 D IDs/22 owner
+is earned on that board (it does not carry to `a3144b15…` or `50a39de5…`); original reports remain immutable. R16 reviewed 119 D IDs/22 owner
 mandates; R17 reviewed 122/23. The final record index has **126 D IDs through
 D-R17-04 and 23 mandates**; later record/check amendments do not enlarge either
 sealed review's scope.
 
-**Software/CAD:** two complete R15 builds/check0 reproduced 42 generated files
-on this PCB; one complete R16 build/check0 matched both snapshots. There is no
-new R17 full build. R15 retains its 31-rule/176-R10-test/60-route-test scope;
-R16 passed 32 rules, 180 R10/31 fit/16 paste/5 parts/67 route tests, with all four
+**Software/CAD (on `632a9ad3…`):** two complete R15 builds with check exit 0 reproduced 42 generated files
+on this PCB; one complete R16 build with check exit 0 matched both snapshots. There is no
+new R17 full build. R15 retains its scope of 31 rules, 176 R10 tests and 60 route tests;
+R16 passed 32 rules and 180 R10 / 31 fit / 16 paste / 5 parts / 67 route tests, with all four
 native NumPy skips separately resolved. Orientation, all 618 paste geometries
 and the five-output manifest passed in that execution. R17 corrections affect
-docs/checks and text-only pin-table/binding provenance. The refreshed binding
-changes only pin_table_sha256; electrical assignments/axes and the other41
-recorded generated files stay unchanged. The manifest-gate fix has7 shell
-regressions. **Final post-R17 canonical check: exit0.** All32rules,7shell/180R10/31fit/16paste/5parts/67route tests and five-output manifest pass; all4native NumPy skips separately resolved. Evidence: round17_fix_validation.json.
+docs, checks and text-only pin-table / binding provenance. The refreshed binding
+changes only pin_table_sha256; electrical assignments, axes and the other 41
+recorded generated files stay unchanged. The manifest-gate fix has 7 shell
+regressions. **Final post-R17 canonical check: exit 0.** All 32 rules, 7 shell / 180 R10 / 31 fit / 16 paste / 5 parts / 67 route tests and the five-output manifest pass; all 4 native NumPy skips separately resolved. Evidence: round17_fix_validation.json.
 
 **Simulation/Inference:** the R16 actual-feed 2304 required +60 local hot-plug
 cases passed. The optional 181.1 Hz pinned-D5/70.5 g plate result remains the
@@ -71,6 +79,7 @@ not clean; rounds9/10 cover historical`b337fe63…` only. No acceptance or order
 
 ## Placement and the AVA comparison's §6
 
+This §6 table is the hand-off record for `0c50b9fd…` (seven terminals, 40 legends); the round sections at the end hold the later changes.
 The owner-supplied AVA comparison is a layout reference. Later owner decisions supersede its old
 three-sense-bank, switched-port and connector assumptions. Reasons and local placement choices are
 in [R10_DECISIONS.md](R10_DECISIONS.md).
@@ -92,7 +101,7 @@ Terminal pin roles and labels remain unchanged; the radio is no longer parked on
 | 7. Flash/buffer escapes | All six QSPI signals retain one F-to-B transition. Radio RX/TX and camera RX/TX now each have one transition; their old two-via hops are gone. QSPI_IO2 remains 14.524 mm: its pin map and sensor/reference corridor are retained, with no matching meander or timing claim. |
 | 8. Legends | All 40 legends fit, including individual terminal pin legends and six short J2 rows beside J2. No connector-association fallback and no >6 mm legend-distance item. Text/mask/support checks pass. Two library pin-1 dots move for clearance; pads/lands do not change. |
 | 9. GND stitches | Local returns follow the moved cells; C16/C23, C100/QSPI guard, R405/D410, C60/C431 and C80/C96/D9 share existing/local returns where legal. Camera divider/filter returns remain separate to clear the supply via. GND vias fall 171 to 166; fast partners and the exact two U401 VIPPO thermal vias remain. |
-| 10. Probes | TP80/81/83/88 follow battery/supply subjects; TP120/121/122 follow the bus switch and fire gate; TP82 follows USB protection. Bare-contact and support clearances remain gated. |
+| 10. Probes | TP80/81/83/88 follow battery/supply subjects; TP120/121/122 follow the bus switch and fire gate; TP82 follows USB protection. Bare-contact and support clearances remain gated. **Current board (R19-RTE-02):** TP121 and its ACT_GATE stub are removed (D-R19-03), so ACT_GATE is probed at the bare R119.1 / R120.2 / C120.2 pads before coating, as AVA probes values at part pads (D-AUD-05); TP82 moved to B(11.0,17.6) beside J440 (D-R19-14). |
 
 ## Measurements
 
@@ -283,52 +292,52 @@ segments, giving net8.464513mm/six segments saved. All part poses,lands/nets,
 fields/models,vias,zone outlines and Fab references remain unchanged. GND tracks
 change; this is not complete TN1383 stress/process or sensor-performance qualification.
 
-Both complete native builds/check0 pass all31 rules,DRC/unconnected/parity/ERC0,routing,fit,
-orientation,618 paste geometries and five-output manifest. R10 suite176,fit31,
-paste16,routing60 and the four separately resolved native NumPy skips pass.
-All42 generated files reproduce byte for byte; final assembly-page rasters match
-and complete pages were inspected. Fresh optional plate estimates181.1Hz
-pinnedD5/70.497598846g (70.5g rounded),Calculation/Inference. Actual-feed2304+60
-hot-plug cases pass as Simulation/Inference. Current routing has140 information
-instances=111ordinary+23AUD-10 inside-pad+6noncritical hygiene leftovers,59off-centre
-entries and46all-net bump windows; blocking,allowed,stale and critical bumps are0.
-The new0.475mm CAM_5V B(33.625,48.75) segment inside U13.1 is AUD-10 information.
+Both complete native builds with check exit 0 pass all 31 rules, DRC / unconnected / parity / ERC 0, routing, fit,
+orientation, 618 paste geometries and the five-output manifest. R10 suite 176, fit 31,
+paste 16, routing 60 and the four separately resolved native NumPy skips pass.
+All 42 generated files reproduce byte for byte; final assembly-page rasters match
+and complete pages were inspected. Fresh optional plate estimates: 181.1 Hz
+pinned (D5) at 70.497598846 g (70.5 g rounded), Calculation/Inference. The actual-feed 2304 + 60
+hot-plug cases pass as Simulation/Inference. Routing on that board had 140 information
+instances = 111 ordinary + 23 AUD-10 inside-pad + 6 noncritical hygiene leftovers, 59 off-centre
+entries and 46 all-net bump windows; blocking, allowed, stale and critical bumps are 0.
+The new 0.475 mm CAM_5V B(33.625,48.75) segment inside U13.1 is AUD-10 information.
 These and other M2 compromises remain owner deviations; full native counts are in
 [round15_fix_native](../r10_review/round15_fix_native.json). Exact DB125 insertion/fabricated
 barrel allocation and C19/C20 operating C/ESR/process qualification are open.
-D-R15-01…03 records those changes. Full R16 has now reviewed632a9ad3;
+D-R15-01…03 records those changes. Full R16 has now reviewed 632a9ad3;
 current pair/gate status is in the opening record and the follow-up below.
 
 ## Round16 records and gate follow-up (unchanged PCB)
 
 **R16 retained MEMS stress deviation (R16-MEC-01, Minor):** component-side B.Cu
 still crosses U4's nominal body outside its lands: IMU_CS 0.7596+0.0918 mm,
-SPI1_MISO 0.3257 mm,IMU_INT1 0.3250 mm and3V3A 0.3257 mm (0.001mm midpoint sampling;
-native body x15.50..18.50/y44.65..47.15). Signal widths are0.20mm; the0.25mm
+SPI1_MISO 0.3257 mm, IMU_INT1 0.3250 mm and 3V3A 0.3257 mm (0.001 mm midpoint sampling;
+native body x 15.50–18.50, y 44.65–47.15). Signal widths are 0.20 mm; the 0.25 mm
 3V3A rail also departs from the same-width guidance. These specifically depart from
-[ST TN1383 Rev1 pp7–9](https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf)
-pad-axis/outside-body stress guidance. The R15 GND correction and passing M-7/P3
+[ST TN1383 Rev 1 pp 7–9](https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf)
+pad-axis / outside-body stress guidance. The R15 GND correction and passing M-7 / P3
 checks are narrower than complete compliance. The bounded supply prototype
-has only0.106949mm clearance; the next combined recipe creates an acute45degree
+has only 0.106949 mm clearance; the next combined recipe creates an acute 45 degree
 CS junction at B(14.2,44.7). Both are rejected, with no production copper change
-or full PCB/CLI/gate qualification of that MEMS recipe. Retain first-article
-bias/temperature/vibration qualification. [Prototype evidence](../r10_review/round16_minor_prototypes.json)
-and R16-MEC-01/D-R16-02 preserve the limits; no offset error or physical failure
-is demonstrated.
+or full PCB / CLI / gate qualification of that MEMS recipe. Retain first-article
+bias / temperature / vibration qualification. [Prototype evidence](../r10_review/round16_minor_prototypes.json)
+and R16-MEC-01 / D-R16-02 preserve the limits; no offset error or physical failure
+is demonstrated. (Still true on `50a39de5…`: no copper under U4 changed in rounds 18 and 19; R19-RTE-08 carried.)
 
 The exact-duplicate and saved-binding gate corrections change no production
-copper,part,pose,pin or axis. One integrated R16 build/check exits0 with32rules,
-180R10tests/67route; all four native NumPy skips are separately resolved. Its42
-files exactly match both R15snapshots, with no second new-build pair claimed.
-Full R16 onb1b8658/
-632a9ad3 is0C/0M/11Minor groups from17raw(5new/6carried),all1942files unchanged;
-full R17 on ac483f4/632a9ad3 is complete:0C/0M/13Minor groups from23raw(4new/9carried),all1966files unchanged. The same-PCB pair is earned. The text-only R17 binding provenance is refreshed; final post-R17 canonical check exits0; no new R17 full build is claimed. R16's separate standalone check exited0
-with the same32rules/180R10/67route and all four native NumPy skips resolved.
-The latest supervisor steer cancels queued SD_MOSI adoption: retain the measured
-1.994603mm/two-segment saving for owner acceptance. No PCB,placement,routing or
-circuit-generator changes for Minors; only confirmed Critical/Major changes
-warrant CAD edits. Current126D IDs throughD-R17-04/23owner scopes are indexed in
-the final ledger; fullR16's sealed original scope remains119/22. D-R16-03
+copper, part, pose, pin or axis. One integrated R16 build with check exits 0 with 32 rules,
+180 R10 tests and 67 route tests; all four native NumPy skips are separately resolved. Its 42
+files exactly match both R15 snapshots, with no second new-build pair claimed.
+Full R16 on b1b8658 /
+632a9ad3 is 0 Critical / 0 Major / 11 Minor groups from 17 raw observations (5 new / 6 carried), all 1942 files unchanged;
+full R17 on ac483f4 / 632a9ad3 is complete: 0 Critical / 0 Major / 13 Minor groups from 23 raw observations (4 new / 9 carried), all 1966 files unchanged. The same-PCB pair is earned on that board. The text-only R17 binding provenance is refreshed; the final post-R17 canonical check exits 0; no new R17 full build is claimed. R16's separate standalone check exited 0
+with the same 32 rules / 180 R10 / 67 route tests and all four native NumPy skips resolved.
+The supervisor steer of that time cancelled queued SD_MOSI adoption and kept the measured
+1.994603 mm / two-segment saving for owner acceptance (the round 18 fix pass later adopted it, D-R18-07). No PCB, placement, routing or
+circuit-generator changes for Minors were made then; only confirmed Critical / Major changes
+warranted CAD edits. Then-current 126 D IDs through D-R17-04 and 23 owner scopes are indexed in
+the final ledger; full R16's sealed original scope remains 119 / 22. D-R16-03
 supersedes D-R16-02's former post-pair adoption plan without erasing that history.
 
 
@@ -337,10 +346,10 @@ supersedes D-R16-02's former post-pair adoption plan without erasing that histor
 The opening record states the completed same-PCB R16/R17 pair. The four new
 R17 groups receive pad-energy,boot-address,U5 source-label and manifest-gate
 corrections; courtyard stroke metrics are corrected in R10_VALIDATION without
-changing the16 graphic pairs or physical geometry. Retain all measured M2,
-SD/MEMS/L400/DB125/VCAP/process/vehicle qualifications and no queued Minor CAD
-adoption. Current D-R17-01..04 are record/check amendments after R17's122-ID
-review; they do not enlarge its sealed scope. Final canonical check exits0. No new R17 full build or physical/FW/owner acceptance is claimed.
+changing the 16 graphic pairs or physical geometry. Retain all measured M2,
+SD / MEMS / L400 / DB125 / VCAP / process / vehicle qualifications and no queued Minor CAD
+adoption. D-R17-01..04 are record / check amendments after R17's 122-ID
+review; they do not enlarge its sealed scope. The final canonical check exits 0. No new R17 full build or physical, firmware or owner acceptance is claimed.
 
 
 ## Round18 CAD fix pass (new PCB; D-R18-01..10)
@@ -368,3 +377,41 @@ is in the generators, footprints and checks, with two complete `r10_build.sh` bu
 Silkscreen designators (r10_post's unchanged rule): 91 -> 88 hidden; R91 is newly hidden (kept on F.Fab); R132 and
 R163 are now shown; R119 and TP121 are shown; R62/R63 are gone. All other part poses, lands, nets and supports are
 unchanged; the IMU axis map (roll = -gyro_Y) and U1's pin map except PC3_C are unchanged.
+
+
+## Round19 CAD fix pass (new PCB; D-R19-01..14)
+
+The root orchestrator reopened CAD for thirteen round-19 Minors (brief `.supervisor/r19_fix_cad_brief.md`) and the
+owner's spare AUX port (item 14, `.supervisor/r19_aux_port_brief.md`, D-R19-14); every change is in the generators,
+footprints and checks, with two complete `r10_build.sh` builds (`../r10_review/round19_fix_cad.md`). PCB
+`50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976`, 46 x 90 x 1.6 mm, 2,336,742 bytes; 215 footprints,
+984 segments, 301 vias (169 GND), 1870.487095 mm track (round 18 a3144b15: 208 / 947 / 292 (166) / 1788.737627 mm).
+
+| Change | Placement / copper |
+|---|---|
+| PYRO1_OUT barrels (D-R19-01) | 2 fill-only areas on In1 / In2 round the OUT via (11.63,55.1) r 1.20 and J121.1 r 1.70 |
+| BAT_ENABLE via (D-R19-02) | (19.675,66.4) -> (19.675,66.6); B.Cu (19.675,66.6) -> (21.0,67.925) -> (21.0,68.6) |
+| TP121 (D-R19-03) | removed with its B.Cu stub (11.14,70.0) -> (4.0,70.0) |
+| C123 added (D-R19-04) | F(18.22,71.85) 0; ACT_EN Q122.1 -> C123.1; GND C123.2 -> (19.207,71.85) -> via (19.967,71.09) |
+| U1.19 (D-R19-05) | pad zone connection none; the 1.693 mm^2 F.Cu GND fragment is gone |
+| Second vias (D-R19-09) | VLOGIC (29.8,81.15); PORT_5V3 (42.75,61.8), (26.45,11.95), (24.9,14.9); PORT_4V8 (29.75,9.95) |
+| C87 / U4 (D-R19-10 / -11) | same lands; C21120 220 nF; ISM6HG256XTR C51931514 (CPL rotation 0 -> 180 from its EasyEDA footprint) |
+| C84 (D-R19-07) | no paste on its library footprint |
+| AUX port J440 (D-R19-14) | F(7.4,16.25) -90, wires west; top cell C444 F(12.5,12.6) -90, C445 F(15.2,13.4) -90, D440 F(13.9,17.2), R471 F(16.1,18.0) 180, D441 F(13.9,21.4), R470 F(16.1,20.6); AUX pair F.Cu only from U1.63 / U1.64 (USART6) |
+| J410 UART (D-R19-14) | GPS pair from U1.55 / U1.56 (USART3): north between C90's vias and RADIO_TX, NE beside the radio pair, then the former run at x 28.8 / 29.3; C23.2's fan-out via (27.1,34.2) -> (25.95,34.15) |
+| AUX feed (D-R19-14) | F.Cu 0.4 mm from vias (29.75,9.95) and new (30.5,9.95) along y 9.95 / 11.0 to J440.1 |
+| R90 / TP82 (D-R19-14, M-6) | R90 B(7.8,23.1) -> B(11.275,23.0), 3V3 via (6.2,23.1) -> (9.6,23.0); TP82 B(10.8,21.3) -> B(11.0,17.6); stitches (7.0,22.0) removed, (2.0,9.0) -> (0.9,9.0), (16.5,12.5) -> (17.5,12.0) |
+
+Silkscreen: RADIO and BAT at reviewed word spots (D-R19-06); twelve terminal pin legends at reviewed spots wholly
+outside the DB125 render envelopes, 2:E1+ and 2:SW on the bottom beside their pins and J420's wire-side pair in an outer
+column (D-R19-08); R80 / R81 / R123 / C5 / C407 / R89 / J121 held at their round 18 designator spots, J400's on the top
+board-edge strip and J122's in the C84 / J122 gap (D-R19-12); D8, C404, C408 and LED2 moved, R88 and C123 hidden.
+D-R19-14: AUX word F(13.4,10.2), J440 1:4V8 on the west strip, its 2:GND / 3:TXO / 4:RXI on the bottom; the AUX cell and
+J440's courtyard move the C400, C401, R90, R462 and R463 designators and leave no unambiguous spot for C28, R110, D440
+or D441 (hidden, kept on F.Fab: 88 -> 94 hidden in all). All other part poses, lands, nets and supports are unchanged;
+the IMU axis map (roll = -gyro_Y) is unchanged; U1's pin map changes only at pins 55 / 56 (GPS, USART3) and 63 / 64
+(AUX, USART6).
+
+Counts on `50a39de5…` (round 19 docs lane, read-only parse of the board): 121 designators shown and 94 hidden
+(C28, R110, C123, D440, D441 and R88 newly hidden; TP121 removed), 45 silkscreen legends, eight DB125 terminals with
+27 contacts. The full hidden list is in `docs/M3_R10.md`, "Silkscreen and assembly identification".

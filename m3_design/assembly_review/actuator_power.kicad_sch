@@ -978,65 +978,6 @@
 			(justify right))
 		(uuid c2db87d7-6b95-5652-b83f-a98fc7fd7647))
 	(symbol
-		(lib_id "M3:TestPoint")
-		(at 99.06 177.8 0)
-		(unit 1)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid 94912719-40fa-5608-a251-acb922c6e5d3)
-		(property "Reference" "TP121"
-			(at 102.87 168.91 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "ACT_GATE"
-			(at 102.87 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 99.06 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 99.06 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" ""
-			(at 99.06 177.8 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
-					(reference "TP121")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 99.06 177.8)
-			(xy 99.06 182.88))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid fd73348d-2c60-5acc-b9ba-05a4b841ec5a))
-	(global_label "ACT_GATE"
-		(shape passive)
-		(at 99.06 182.88 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 88ec35d1-8abb-5409-bd68-e5cd9a75ec1d))
-	(symbol
 		(lib_id "M3:R")
 		(at 40.64 114.3 0)
 		(unit 1)
@@ -1620,6 +1561,98 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid a6777b8f-def5-5db6-87c0-7505f1ad5728))
+	(symbol
+		(lib_id "M3:C")
+		(at 215.9 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 67d77e16-5fbd-59c6-a268-75ae83570fa0)
+		(property "Reference" "C123"
+			(at 218.44 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10nF 50V X7R 10%"
+			(at 218.44 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0402"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C15195.html"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C15195"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B103KB5NNNC"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
+					(reference "C123")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 215.9 110.49)
+			(xy 215.9 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 79521a03-9164-561a-ba1e-5986a067b448))
+	(global_label "ACT_EN"
+		(shape passive)
+		(at 215.9 105.41 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b02a3c1b-5bb3-5956-95a4-ad1a9e9a9652))
+	(wire
+		(pts
+			(xy 215.9 118.11)
+			(xy 215.9 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8137f79c-1e36-5eea-9e7a-9a049e68e39d))
+	(global_label "GND"
+		(shape passive)
+		(at 215.9 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d2473e75-1422-5ba3-a902-95c4dfa585d8))
 	(text "R10 single screw switch (owner 2026-10-28): J400 powers and arms the board; J124 is removed. Q120/Q121 remain the pyro-bus load switch feeding RAW_ACT."
 		(at 20.32 15.24 0)
 		(effects
@@ -1627,7 +1660,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 83127760-6cb2-56c5-a73d-92d39a229209))
-	(text "PC1 (U1.16) drives ACT_EN_MCU through R122 1k to Q122; R123 2k holds Q122 off in reset, unpowered or against a 30k internal pull-up (gate <=0.22V at 3.6V; R18-MCU-01). PC1 high gives about 2.2V gate. Q124 uses a separate MCU fire pin and its retained gate network."
+	(text "PC1 (U1.16) drives ACT_EN_MCU through R122 1k to Q122; R123 2k holds Q122 off in reset, unpowered or against a 30k internal pull-up (gate <=0.22V at 3.6V; R18-MCU-01), and C123 10nF gate-source completes the AGENTS 2.4 network at Q122 (R19-SAF-06; about 7 us edge). PC1 high gives about 2.2V gate. Q124 uses a separate MCU fire pin and its retained gate network."
 		(at 20.32 20.32 0)
 		(effects
 			(font
@@ -1648,7 +1681,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid e379a682-3ef2-58c6-a879-d5cbff021361))
-	(text "R18-SAF-02: R120 100k at Q120 and R119 100k at Q121 each tie a P-FET gate to ACT_FET_S through via-free local bottom copper, so one open via or track leaves both FETs off. ACT_GATE/BAT_ENABLE barrels keep 1mm inner clearance."
+	(text "R18-SAF-02: R120 100k at Q120 and R119 100k at Q121 each tie a P-FET gate to ACT_FET_S through via-free local bottom copper, so one open via or track leaves both FETs off. ACT_GATE/BAT_ENABLE barrels keep 1mm inner clearance. R19-SAF-03: TP121 is removed; probe ACT_GATE at R119.1 or R120.2."
 		(at 20.32 35.56 0)
 		(effects
 			(font

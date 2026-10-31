@@ -10,10 +10,29 @@ tests were performed. The current always-on ports, screw terminals, microSD and 
 
 ## Current circuit amendment and review status
 
-Review status, checks, cost and open items are stated once, in [M3_R10.md, "Current state"](../../../../docs/M3_R10.md#current-state). In short: PCB `a3144b15…` (46 × 90 mm) is not accepted and nothing is ordered. The round 18 fix pass changed the board from `632a9ad3…`, on which
-rounds 16 and 17 (same reviewer family) found no Critical or Major issue and round 18 (the first review by a different model family) found none either
-([R10_VALIDATION.md](../../../../docs/R10_VALIDATION.md#round-18-first-claude-review-of-committed-dcbb6c8)); that clean pair does not carry to the changed board, and rounds 19 and 20 are planned (the gate pass is done). AGENTS section 2 is unchanged. This file is the component contract; where a section below is marked historical it describes
-hardware that was removed from R10 and is kept only for the record.
+Review status, checks, cost and open items are stated once, in [M3_R10.md, "Current state"](../../../../docs/M3_R10.md#current-state). In short: PCB `50a39de5…` (46 × 90 mm) is not accepted and nothing is ordered. Round 19 (ten Claude lenses) reviewed the previous PCB `a3144b15…` and found 0 Critical / 0 Major / 57 Minor; its fix pass changed the board, so rounds 20 and 21 will review `50a39de5…`. AGENTS section 2 is unchanged. This file is the component contract; where a section below is marked historical it describes
+hardware that was removed from R10 and is kept only for the record. The round 19 amendments below supersede earlier text in this file where they differ.
+
+## Round 19 component amendments (2026-10-30/31; D-R19-04, -07, -10, -11, -14)
+
+No new BOM code except U4's. JLC BOM 81 lines (45 Extended / 36 Basic) plus C84 on the owner BOM; 205 placed parts. Live JLC 2026-10-31T08:23Z: $85.35 per board against the $84.41 cap (owner decision pending; see M3_R10 "Cost and stock"); no line short, U4 thin.
+
+| Ref | Part | Change and evidence |
+|---|---|---|
+| U4 (fitted) | ST **ISM6HG256XTR**, LCSC C51931514, Extended | Replaces LSM6DSV320XTR (0 JLC stock; R19-BOM-01) on the unchanged `LGA-14_L3.0-W2.5-P0.50-TL` land and pose B(17,45.9), 180°. [DS15034 Rev 1](https://www.st.com/resource/en/datasheet/ism6hg256x.pdf): LGA-14L 2.5 × 3.0 × 0.83 mm, drawing p187 the same as DS14623's (14 × 0.475 × 0.25 mm pads, 0.5 mm pitch); Figure 5 p9 and Table 2 pp10–11 give the same pin map and axis directions as DS14623 Rev 1 p9, so roll stays −gyro_Y and the lever arm is unchanged; gyro ±4000 dps, low-g ±16 g and high-g ±32…256 g meet F1 / F2; −40…+105 °C (p1). Pins 10–11 (OCS_Aux, SDO_Aux) stay unconnected ("VDDIO or unconnected", Table 2). WHO_AM_I reads 0x73 on both parts (p66). **The high-g full-scale codes differ** (Table 150 p93: on the ISM part 100 = ±256 g and 011 is reserved; on the LSM part 011 = ±256 g, 100 = ±320 g), so firmware uses only codes 001 / 010, which mean the same on both. Live JLC 2026-10-31: 9 in stock for 5 (thin: buy at once), $14.34 at 1–9. CPL rotation 180° from the EasyEDA `LGA-14_L3.0-W2.5-P0.50-BR` footprint (14 pads matched, residual 0.040 mm); confirm pin 1 in JLC's bottom-side preview. That the two parts' register maps otherwise match is not checked (Inference). |
+| U4 (alternate) | ST LSM6DSV320XTR, LCSC C26633007 | Consign only if the ISM stock is gone: same land, pins, axes and board pose; its `pads.json` record is kept. Its CPL rotation comes from its own EasyEDA TL footprint (0°, as before round 19), so regenerate and re-verify the CPL (`jlc_orient --verify-cpl`) if it is fitted. [DS14623 Rev 1](https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf) pp9, 187. |
+| C87 | Samsung **CL10B224KA8NNNC**, 220 nF 25 V X7R 10 % 0603, LCSC C21120 (Basic, C126's line) | Was 2.2 µF C23630 (R19-REQ-02, D-R19-10); same land F(17,65). EN stays ≤ 2.06 V (8 % of rating). With R80 + R165 = 940 kΩ, R81 = 300 kΩ and the [TPS25947 SLVSFC9C p9](https://www.ti.com/lit/ds/symlink/tps25947.pdf) EN thresholds (Calculation): turn-on 88 / 56 / 45 ms at 6.0 / 7.4 / 8.4 V (31–122 ms over C 0.72–1.27 ×, 1 % resistors and thresholds); a J400 drop-out shorter than 19 / 33 / 41 ms (worst 12 / 22 / 27 ms) cannot trip U9. The X7R DC-bias loss at ≤ 2.06 V is taken as ≤ 6 % inside the 0.72 × minimum (Inference: Samsung's curve not re-read). C19 / C20 keep C23630. |
+| C123 | Samsung CL05B103KB5NNNC, 10 nF 50 V X7R 10 % 0402, LCSC C15195 (Basic, C408's line) | New Q122 gate–source capacitor at F(18.22,71.85), ACT_EN to GND (R19-SAF-06, D-R19-04). R122 ∥ R123 = 667 Ω with 10 nF plus AO3400A Ciss 630 pF typical ([AO3400A Rev 3.1 p2](https://www.aosmd.com/res/datasheets/AO3400A.pdf)): τ ≈ 7.1 µs (Calculation), microseconds against the load switch's millisecond C120 network. |
+| J440, R470 / R471, D440 / D441, C444, C445 | DB125-3.5-4P-GN-S C2757925; 1 kΩ C21190; ESD103-B1-02EL C535146; 100 nF C14663; 22 µF C21397 | The spare AUX port (D-R19-14, owner-approved 2026-10-30): an electrical copy of J410's cell, no new codes. Per board the terminal code is now 4 and the ESD code 8 (37,827 and 201 in JLC stock, 2026-10-31). AUX may draw at most 100 mA at 4.8 V (GAP-3: U401 junction ≤ 125 °C at a 70 °C bay with the inferred 80–110 °C/W; [TPS7A91 SBVS282A p1, p5](https://www.ti.com/lit/ds/symlink/tps7a91.pdf)). Its UART is USART6 PC6 / PC7; the GPS on J410 moves to USART3 PD8 / PD9 (AF7, [DS12110 Rev 8](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf) Table 13 p94; FT_h, Table 9 p75). J410 / J420 / J440 are electrically identical; firmware keeps the port map. Eight DB125 terminals now carry 27 contacts, all Ø1.30 mm holes / Ø1.90 mm copper (R19-BOM-04 carried). |
+| C84 | MA25V470M8x10, C46550466 | Its generated footprint `M3_MA_8x10` has no F.Paste since round 19 (D-R19-07; R19-MFG-02 / R19-BOM-02): no stencil aperture, the hand fit applies its own solder. The [supplier sheet](https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf) gives no manual or reflow profile; ORDERING §8.2 holds the heat limit (Inference) and the re-inspection of the bottom joints under it (R19-MEC-02). |
+| TP121 | removed | TP121 and its 7.14 mm ACT_GATE stub are gone (D-R19-03); probe ACT_GATE at R119.1, R120.2 or C120.2 before coating. |
+
+**Cold-end ratings (R19-BOM-03).** Four fitted parts are rated above −40 °C at the cold end. The bay is −20…+70 °C (85 °C unshaded, DESIGN_ASSURANCE §6.1):
+- LS120 buzzer: −20…+70 °C (no cold margin at the −20 °C bay floor).
+- J430 Molex 472192001 (C164170): −20…+85 °C in the [JLC / LCSC listing](https://www.lcsc.com/product-detail/C164170.html) and the Molex product page (above); some distributors list −40 °C. No cold margin at −20 °C; confirm with the Molex product specification (not retrieved). J430 is the in-flight secondary log.
+- LED1 Nationstar NCD0805R1 (C84256): −30…+85 °C ([datasheet p1](https://datasheet.lcsc.com/datasheet/pdf/e3e35db60c068efe42b02d21fe498cf3.pdf?productCode=C84256)); 10 °C of cold margin.
+- J3 HRO TYPE-C-31-M-12 (C165948): −30…+80 °C ([drawing 2020-12-08 rev A p1, note 5](https://datasheet.lcsc.com/lcsc/1903211732_Korean-Hroparts-Elec-TYPE-C-31-M-12_C165948.pdf)); its +80 °C is below the 85 °C unshaded case, but J3 is unmated in flight (non-operating exposure).
+Every other fitted part is rated −40…+85 °C or wider in maker or supplier data (the round 19 parts lens scanned 82 codes). No flight-critical part is affected.
 
 **R16 retained MEMS stress deviation (R16-MEC-01, Minor):** component-side B.Cu
 still crosses U4's nominal body outside its lands: IMU_CS 0.7596+0.0918 mm,
@@ -215,7 +234,7 @@ maker identities, nets and lands are unchanged. Source inventory:
 | References | Full Value | Existing order code / source |
 |---|---|---|
 | C6–C11 | 22uF 25V X5R 20% | C45783, Samsung [CL21A226MAQNNNE](https://product.samsungsem.com/mlcc/CL21A226MAQNNN.do) |
-| C19/C20/C87 | 2.2uF 16V X5R 10% | C23630, Samsung [CL10A225KO8NNNC](https://www.lcsc.com/product-detail/C23630.html) |
+| C19/C20 (C87 until round 19; now C21120 220 nF) | 2.2uF 16V X5R 10% | C23630, Samsung [CL10A225KO8NNNC](https://www.lcsc.com/product-detail/C23630.html) |
 | C22 | 1uF 50V X5R 10% | C15849, Samsung [CL10A105KB8NNNC](https://product.samsungsem.com/mlcc/CL10A105KB8NNN.do) |
 | C23/C28 | 4.7uF 16V X5R 10% | C19666, Samsung [CL10A475KO8NNNC](https://product.samsungsem.com/mlcc/CL10A475KO8NNN.do) |
 | C25/C26 | 10pF 50V C0G 5% | C32949, Samsung [CL05C100JB5NNNC](https://product.samsungsem.com/mlcc/CL05C100JB5NNN.do) |
@@ -428,16 +447,19 @@ after pad/flight drain, Rpack ≤ 0.15 Ω, servo stall 1.92 A each. Solve
 Ifire=V/Rfire. Retain conservative 2 Ω e-match and ≤ 0.3 Ω external leads/harness,
 R134 tolerance/hot corner 2.02909 Ω, hot FETs, 5 mΩ ground/10 mΩ contact allowances.
 The current `parts_budget.json` is regenerated and bound to PCB
-`a3144b15…` instead of carrying circuit-pass length literals. Native fire-path pruning
+`50a39de5…` instead of carrying circuit-pass length literals. Native fire-path pruning
 gives BAT_IN 6.307107 mm / 1.0 mm, RAW_ACT 5.886133 mm, IGN 10.523276 mm and
 OUT 7.854478 mm at 0.5 mm, plus one aligned 2.2 mm/0.4 mm source path. BAT_IN includes
 the additional 0.707107 mm routed entry inside Q120's common drain pad; dead sense
 branches are excluded, no parallel-source credit is taken and no fire path has a
 series via. Copper is 29.650284 mΩ at 20 °C/35.476565 mΩ at 70 °C (TCR 0.00393/K).
 With the primary 40 mΩ/FET ceiling, total loop 4.617802565 Ω gives 0/1/2/3/4-stall
-currents 1.544251030/1.479327596/1.414158454/1.348704524/1.282917526 A;
+currents 1.540851284/1.475765326/1.410415927/1.344760704/1.278747143 A
+(other converter load 13.064 W with the 100 mA AUX allowance);
 all exceed 1.125 A. D-R11-03 binds the generator to native geometry. The regenerated
-budget SHA-256 is `61727af7baec761ded6d75c963bf6442f702a827e59b7e5656de08e526ce54fa`.
+budget SHA-256 is `ca8d2f8430d9d2404d1d0bd89fff35e111d9c8a936b3c3204a3b7716f1488cb8` (round 19 docs lane read).
+On `a3144b15…` the same loop gave 1.544251030/1.479327596/1.414158454/1.348704524/1.282917526 A
+(budget SHA-256 `61727af7baec761ded6d75c963bf6442f702a827e59b7e5656de08e526ce54fa`); the AUX allowance's extra load accounts for the change.
 On `632a9ad3…` (IGN 10.230382 mm, copper 29.362412 mΩ/35.132126 mΩ) the loop was 4.617458126 Ω with
 1.544366072/1.479437787/1.414263776/1.348804955/1.283013039 A and budget SHA-256 `c5fb1337b9561be9f88243145d3e8aa071822116533a70805acfb9f52a42a7ea`;
 the longer IGN run (D-R18-05) accounts for the change.
@@ -482,7 +504,7 @@ TP122, NRST and dummy-load current for early/late CPU starvation, normal abort,
 postfire refresh, reset/unpowered gate tails and hot R134 pulses; record resistor
 drift and actual physical20/36 ms limits across supply and temperature.
 
-**Current local output paths (GAP-2, native CAD / Inference):** measured on `632a9ad3…` and unchanged on `a3144b15…` (a net-level comparison of tracks and vias finds no change to U9's BAT_IN or RAW_PROTECTED copper, or to C82 or D9); original paths preserved by exact native comparison,
+**Current local output paths (GAP-2, native CAD / Inference):** measured on `632a9ad3…` and unchanged on `a3144b15…`; the round 19 CAD hand-back lists no change to these nets on `50a39de5…` (not re-measured by the docs lane) (a net-level comparison of tracks and vias finds no change to U9's BAT_IN or RAW_PROTECTED copper, or to C82 or D9); original paths preserved by exact native comparison,
 U9 is B(18.5,81.6), C82 is B(19.3,76.75),90°, and D9 is B(15.0,79.3),−90°.
 The saved-copper API gives:
 

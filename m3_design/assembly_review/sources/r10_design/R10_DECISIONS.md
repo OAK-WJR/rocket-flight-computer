@@ -3,6 +3,9 @@
 R10 is a CAD candidate (built by `m3_design/r10_build.sh`; not owner-accepted). R9 remains the accepted board. These records do not change the
 owner's decisions in `r10_plan.md` sections 6, 7 and 8.
 
+Sealed historical records keep their original text, including numbers glued to words; only the lines R19-DOC-04 named
+(in D-R16-01 … D-R17-01) were respaced, on 2026-10-31, with no change to any value.
+
 ## D-R1-01. Review the plan before changing CAD
 
 **Decision.** Round 1 reviews the plan and inherited implementation contracts. Do not
@@ -2402,7 +2405,7 @@ No circuit, pin map, pad, placement, axis or AGENTS section2 change is made.
 ## D-R16-02. Preserve the same-board pair and cover the final bounded CAD delta
 
 All1942 committed files remained byte-identical through all ten independent
-round16 lenses. Consolidation gives0Critical/0Major/11Minor groups from17raw
+round 16 lenses. Consolidation gives 0 Critical / 0 Major / 11 Minor groups from 17 raw
 observations, five new and six carried. Correct gate/record Minors while
 retaining PCB632a9ad3 for the fresh full round17. No Critical or Major is
 deferred; the pair is earned only if the second complete round is also clean.
@@ -2420,25 +2423,25 @@ two full rounds on a changed successor. If a blocking change or incomplete
 coverage remains, run another full round instead.
 
 Round16 also identifies retained B.Cu component-side IMU_CS, SPI1_MISO, IMU_INT1
-and3V3A paths under U4 outside its lands: sampled centreline portions0.7596+
-0.0918,0.3257,0.3250 and0.3257mm respectively. This specifically departs from
-[ST TN1383 Rev1 pp7-9](https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf)
-pad-axis/outside-body stress guidance. Existing M-7/P3 passing is narrower;
+and 3V3A paths under U4 outside its lands: sampled centreline portions 0.7596 +
+0.0918, 0.3257, 0.3250 and 0.3257 mm respectively. This specifically departs from
+[ST TN1383 Rev 1 pp. 7–9](https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf)
+pad-axis / outside-body stress guidance. Existing M-7 / P3 passing is narrower;
 no sensor offset or flight failure has been measured. Assess only bounded
 outside-body escapes with unchanged pads, widths and vias; an initial supply
 sketch fails clearance and is rejected. Any adopted alternative needs the
 same exact-delta and build coverage. Otherwise retain these measured advisory
-departures and first-article bias/temperature/vibration qualification explicitly.
+departures and first-article bias / temperature / vibration qualification explicitly.
 No complete TN1383 or physical performance compliance is inferred. DB125
-insertion/S-8 process allocation, VCAP combined-condition/ESR, L400 heel, drawing
+insertion / S-8 process allocation, VCAP combined-condition / ESR, L400 heel, drawing
 residuals and the separately owned vehicle mirror remain bounded deviations.
 
 The bounded MEMS source exploration is complete: its first supply T has only
-0.106949mm copper clearance and is rejected. The revised combined sketch
-passes a local0.16mm screen but makes a45degree free IMU_CS branch at
+0.106949 mm copper clearance and is rejected. The revised combined sketch
+passes a local 0.16 mm screen but makes a 45 degree free IMU_CS branch at
 B(14.2,44.7); reject it without changing the angle rule. Retain the present
-signal/supply guidance departure explicitly. Exact interval lengths are0.760+
-0.091923882mm for CS and0.325mm each for MISO,INT1 and3V3A,distinct from the
+signal / supply guidance departure explicitly. Exact interval lengths are 0.760 +
+0.091923882 mm for CS and 0.325 mm each for MISO, INT1 and 3V3A, distinct from the
 lens's0.001mm midpoint diagnostic. Neither is physical evidence. Different
 0.20mm signal/0.25mm supply widths also depart from equal-width guidance.
 The engineering task did not qualify refill, DRC, references or production
@@ -2469,8 +2472,8 @@ copy remain evidence of bounded exploration, not an authorization to alter CAD.
 The saved-binding gate, exact-duplicate checker semantics and record fixes are
 allowed without a PCB change. One new full native build/check0 and a separate
 standalone check0 reproduce the same42 generated files against both R15 builds;
-all32rules and180R10/31fit/16paste/67route tests pass, with all four NumPy skips
-resolved. Full R16 remains0Critical/0Major/11Minor groups on committedb1b8658.
+all 32 rules and 180 R10 / 31 fit / 16 paste / 67 route tests pass, with all four NumPy skips
+resolved. Full R16 remains 0 Critical / 0 Major / 11 Minor groups on committed b1b8658.
 Commit these unchanged-board fixes, then fresh full R17 on the same PCB. If it
 is also clean, finalize records/deviations and report; no subsequent Minor CAD
 cleanup is planned. Any confirmed Critical/Major still requires fresh
@@ -2488,7 +2491,7 @@ Use the unchanged native upper allocations: port buck5.546269302559V,
 camera1A when recording, GPS/radio/quiescent0.461A, unshed logic1.4W and SD
 write3.3V*0.2A/0.8=0.825W. Preserve the existing conservative R92 loss allocation
 7.4V squared/(3300ohm*0.98)=0.016933W. At the allocated80% converter efficiency,
-camera input is6.932837W and the remaining board input5.437970W. Divide pad
+camera input is 6.932837 W and the remaining board input 5.437970 W. Divide pad
 energy by6V for the conditional capacity worksheet. Neither efficiency nor
 device duty is a measured or maker-guaranteed bound.
 
@@ -2835,3 +2838,282 @@ Open items:
 - An OUT via without In2 fill is seeded only synthetically.
 
 The record index is now **137 unique D IDs through D-R18-11**.
+
+## D-R19-01. Keep In1 / In2 GND 1 mm from the PYRO1_OUT barrels (2026-10-30)
+
+Round 19 CAD fix pass (R19-SAF-01, R19-SAF-05; `../r10_review/round19_fix_cad.md`). PYRO1_OUT is Q124's drain, so a
+short from OUT to GND bypasses the fire FET and, with the bus enabled, fires the match (about 1.5 A): unlike the bus
+nodes, GND is a hazard there. `r10_route_ground.BARREL_KEEPOUT` adds `PYRO1_OUT: (In1, In2)`, giving the OUT via
+(11.630, 55.100) and the J121.1 hole the round 18 fill-only 16-gon (drill/2 + 1.05 mm: radius 1.20 / 1.70 mm), and
+`check_r10.BARREL_GND_HAZARD` adds PYRO1_OUT, so S-8 counts GND there. Measured wall to foreign inner copper, before
+-> after: OUT via In1 / In2 GND 0.251 -> 1.021 mm (the nearest is now the ring of OUT's own GND partner via
+(10.3, 55.6), 1.42 mm centre to centre, so the 1.5 mm partner rule still holds); J121.1 In1 / In2 GND 0.551 -> 1.050
+mm, its own inner ring to GND 0.251 -> 0.750 mm. Every other S-8 barrel is as round 18 (ring and wall table in the
+hand-back). A 0.5 mm opening leaves In1 GND and In2 GND_CH1 one piece each; near the new voids it removes only corner
+cusps of <= 0.04 mm^2, so no inner neck below 0.5 mm is new. The voids leave PYRO1_OUT's own F.Cu and B.Cu runs
+unreferenced next to its barrels (758 K-reference samples and one K-region run on the first scratch build): S-8 forbids the
+copper K-reference asks for there, so `check_r10.own_barrel_voids` exempts a BARREL_GND_HAZARD net's own samples
+within drill/2 + 1.071 mm of its own barrels (the 16-gon's corner reach); every other net's samples over the voids are
+still taken (no fast net crosses them). Tests: `R19Gate.test_r19_s8_gnd_is_a_hazard_at_pyro1_out`,
+`R4Synthetic.test_r19_own_barrel_void_is_exempt_for_hazard_nets_only`, `RealBoardSeeds.test_r19_pyro_out_barrels_clear_gnd`.
+
+## D-R19-02. Move the R81 BAT_ENABLE via off R134.2 (2026-10-30)
+
+R19-SAF-02. The BAT_ENABLE via (19.675, 66.4) moves to (19.675, 66.6); its F.Cu stub runs to 66.6 and the B.Cu run
+is (19.675, 66.6) -> (21.0, 67.925) -> (21.0, 68.6) -> (21.3, 68.9), as the reviewer measured. BAT_ENABLE to R134.2
+(RAW_ACT; once the bus is on, a leak there holds EN on) 0.300 -> 0.500 mm; the via's In2 RAW_PROTECTED wall stays 1.050
+mm (S-8) and In2 GND 0.994 -> 1.123 mm; In1 GND 0.251 mm is kept (fail-safe: holds U9 off). Not changed: U9.1 (EN) to
+BAT_IN under the QFN is 0.200 mm, fixed by TI's RPW land and pin order (EN beside IN; SLVSFC9C pin table), and the
+BAT_ENABLE via (17.1, 82.8) to BAT_FAULT_N 0.200 mm sits inside U9's fan-out; neither opens without moving U9's
+pins. Both stay recorded leak paths for the coating and per-flight checks R19-SAF-02 asks the docs lane to state.
+
+## D-R19-03. Remove TP121 and its ACT_GATE stub (2026-10-30)
+
+R19-SAF-03 / R19-RTE-02. TP121 (B(4, 70)) and the 7.14 mm B.Cu stub (11.14, 70.0) -> (4.0, 70.0) are removed
+(circuit.json `removed_refs`, r10_place.tsv, r10_route_pyro, r10_post's Fab table). ACT_GATE is probed at R119.1 or
+R120.2 (bare pads in the same cell, before coating). ACT_GATE outer copper within 0.30 mm of GND 12.896 -> 7.996 mm
+(this lane's sampling; the reviewer's 12.872 -> 7.629); ACT_GATE to BAT_SW_SOURCE 0.400 -> 0.470 mm. check_actuators'
+r10 ACT_GATE membership drops TP121.1 and rejects any part named TP121; check_r10 lists TP121 as removed.
+
+## D-R19-04. Give Q122 its gate-source capacitor (2026-10-30)
+
+R19-SAF-06 (AGENTS 2.4 for the load-switch enable FET). **C123 10 nF 50 V X7R 10 % 0402, Samsung CL05B103KB5NNNC,
+LCSC C15195** (C408's BOM line, Basic) at F(18.22, 71.85) 0 degrees: pad 1 (ACT_EN) straight below Q122.1 on a 1.1 mm
+F.Cu run, pad 2 (GND) to R123.2's fan-out via (19.967, 71.09) by (19.207, 71.85) -> 45 degrees; courtyard clear of
+Q122 (0.085 mm) and D8. Gate node (Calculation): R122 || R123 = 667 ohm, 10 nF + AO3400A Ciss 630 pF typical
+([AO3400A Rev 3.1 p2](https://www.aosmd.com/res/datasheets/AO3400A.pdf)): tau 7.1 us, VGS(th) max 1.45 V reached
+7.6 us after PC1 rises, below VGS(th) min 0.65 V 8.6 us after it falls and 26 us after a reset (R123 alone). Both are
+microseconds against the load switch's millisecond C120 network and D-SS-04's >= 100 ms wait; the fire path (PE4,
+Q124) and the GAP-5 budget are untouched. A 7.4 V step on Q122's drain couples about 35 mV into the gate through Crss
+50 pF (0.54 V without C123; Inference from the typical capacitances). S-3 now requires C123 (10 nF, ACT_EN to GND) and
+ACT_EN = {R122, R123, Q122, C123}; check_actuators pins C123's value, code, land and nets. Nearest foreign copper:
+R122.2 (ACT_EN) to the C123 GND run 0.436 mm, C123.1 to the F.Cu GND fill 0.251 mm (both fail-safe: GND holds Q122 off). Tests:
+`Synthetic.test_r19_s3_q122_gate_source_capacitor` (the synthetic S-3 fixture now carries C123),
+`RealBoardSeeds.test_r19_load_switch_enable_cap_and_removed_probe`.
+
+## D-R19-05. No pour connection on U1.19 (2026-10-30)
+
+R19-RTE-01. `r10_pcb.py` sets U1 pad 19 (VSSA) to `ZONE_CONNECTION_NONE` on the board (a pad override; the library
+footprint is unchanged and DRC's library comparison stays clean). U1.19 keeps its own fan-out stub and via
+(26.0, 46.75); the via-less 1.693 mm^2 F.Cu GND fragment that hung on its pin tip (x 25.12-27.15, y 51.24-53.45) is no
+longer filled.
+
+## D-R19-06. One word list; GPS and RADIO inside their own terminal's span (2026-10-30)
+
+R19-MFG-01, R19-GATE-06 and the coordinator's additions. `check_r10.WORD_LEGENDS_R10` is the one list (SWITCH last,
+where r10_post placed it); `WORD_SUBJECTS_R10` and r10_post's own `('J400', 'SWITCH')` are gone, and r10_post's
+final self-check now runs `check_r10.word_legends`. `WORD_SEAMS` is empty. New K-legends rule (D-R19-06): GPS and
+RADIO, the only names of the identically pinned J410 / J420, lie inside their own courtyard's y-span by >= 0.5 mm.
+r10_post places RADIO, BAT and IGN at reviewed `WORD_SPOTS` (free-spot and reach checked); every other word keeps its
+search spot. Every word stays at the same end of its own terminal. Centre of the ink box to the own / nearest other
+connector courtyard box (mm) and the ink-gap margin, before -> after:
+
+| Word | Own | Centre: own / nearest other | Ink-gap margin | Inside own y-span | Spot |
+|---|---|---|---|---|---|
+| RADIO | J420 | 2.130 / 2.051 J410 -> 2.051 / 5.767 J410 | 0.000 -> 4.815 | -1.150 -> 4.825 | moved off the J410 / J420 seam into J420's span |
+| GPS | J410 | 1.361 / 14.539 J420 | 13.900 | 0.950 | unchanged |
+| BAT | J1 | 1.256 / 1.275 J400 -> 0.555 / 0.635 J400 | 0.040 -> 0.060 | heads J1 | J400 / J1 gap, 0.55 mm east (clear of 1:BAT+) |
+| SWITCH | J400 | 0.575 / 0.615 J121 | 0.040 | heads J400 | unchanged: no clean spot |
+| IGN | J121 | 1.240 / 8.965 J2 -> 2.194 / 7.460 J2 | 8.390 -> 5.380 | heads J121 | one line north, over 1:E1- |
+| CAM, SWD, SERVO | | unchanged | 4.04 / 3.155 / 5.09 | | unchanged |
+
+RADIO sits in J420's span between the (30.3, 27.8) / (31.2, 28.4) and (30.875, 31.6) vias, ink y 28.88-30.03. BAT and
+SWITCH keep the 0.040 mm identity margin of round 18: each fills a 1.19 mm gap between two terminals at their north
+end, which is where the coordinator wants them, and no clean spot gives more there (the board-edge strip beside J1 is
+needed for 1:BAT+, D-R19-08; the vias at x 0.9 and 1:SW leave none beside J400). With 2:E1+ and 2:SW on the bottom
+(D-R19-08), each is now the only text on its line, so neither reads as part of another terminal's legend. Tests:
+`R18Gate.test_word_legend_face_and_subject_map`, `R19Gate.test_r19_port_words_inside_their_own_span`,
+`RealBoardSeeds.test_r18_word_legends_are_beside_their_own_terminal` (RADIO back on its seam and GPS at J410's edge fail).
+
+## D-R19-07. No stencil aperture on the hand-fitted C84 (2026-10-30)
+
+R19-MFG-02 / R19-BOM-02. C84 is soldered by hand after both reflows (export_fab `MANUAL_FIT`, D-R18-09), so its
+generated library footprint `M3_MA_8x10` (r10_parts `polymer()`, used only by C84) drops F.Paste from both pads;
+copper and mask openings are unchanged, and the placed pads match the library copy (no board override). The pin is
+`r10_parts --check`, as for every generated footprint. S-4 now fails paste on any MANUAL_FIT part's lands.
+Paste flashes F 245 -> 245 (C84's two gone, C123's two added) / B 371 -> 371. Test:
+`RealBoardSeeds.test_r19_hand_fitted_c84_has_no_paste`.
+
+## D-R19-08. Terminal legends fully outside the DB125 bodies, one terminal per line (2026-10-30)
+
+R19-MEC-01 / R19-MFG-04 and the coordinator's top-render check (kicad-cli 10.0.7 `pcb render --quality high`, which
+draws each DB125 as its VRML fit envelope: 8.32 x 8.10 mm for two ways, 15.52 / 19.02 mm long for four / five, offset
+toward pin 1, so it reaches 1.12-1.32 mm past the DORABO nominal body at the pin-1 end). r10_post `PIN_SPOTS` places
+twelve terminal pin legends at reviewed spots, each nearest its own pin by OWN_MARGIN (0.3 mm), and the words in
+D-R19-06. Ink to the nearest DB125 envelope (mm, round 18 -> now; negative = under the envelope):
+
+| Legend | Spot | To envelope | Owner margin |
+|---|---|---|---|
+| 1:E1- (J121) | horizontal on J121's north line, under IGN | -0.716 -> 0.245 | 3.32 |
+| 2:E1+ (J121) | bottom side beside J121.2 | (top) -> bottom | 1.83 |
+| 1:SW (J400) | 0.50 west on the board-edge strip | -0.030 -> 0.470 | 0.65 |
+| 2:SW (J400) | bottom side beside J400.2 | (top, under J400) -> bottom | 1.77 |
+| 1:BAT+ (J1) | vertical on the board-edge strip beside J1.1 | -0.700 -> 0.550 | 0.38 |
+| 1:S1 (J122) | horizontal along J122's south end, clear of the (42, 86) washer | -0.920 -> 0.180 | 3.50 |
+| 1:5V4 (J9) | 1.15 south | -0.937 -> 0.213 | 3.44 |
+| 4:RXI (J410) | 0.50 north | 0.220 -> 0.720 | 3.50 |
+| 1:4V8 (J410), 4:TXO (J9) | 0.20 east, inner column | -0.067 -> 0.133 | 0.31 |
+| 4:RXI, 1:4V8 (J420) | outer column x 44.18-45.38 | -0.067 / 1.333 -> 1.583 / 1.583 | 0.45 / 0.32 |
+
+Every top-side pin and word legend is now wholly outside every DB125 envelope (smallest 0.133 mm, the inner east column)
+and outside the 0.42 mm latch plus 0.15 mm half tolerance of the nominal bodies. Lines: 2:E1+ and 2:SW go to the bottom
+beside their pins (as J410 / J420 / J9 / J122 already carry their inner pins), so SWITCH and BAT are each the only text
+on their gap's line, where round 18 read "SWITCH 2:E1+" and "BAT 1:BAT+ 2:SW"; J420's two wire-side legends move to an
+outer column so J410's 1:4V8 and J420's 4:RXI no longer run on across the seam. The remaining shared lines belong to one
+terminal: IGN over 1:E1- and SERVO 5:GND. 1:BAT+ cannot stay in the J400 / J1 gap: anywhere wholly outside J1's envelope
+there it is nearer J400.2 than J1.1 (check_r8.terminal_legends would give it to J400). Text stays 1.0 mm, off every pad,
+within 6 mm of its part. Checked in the top and bottom renders of the final board (`.supervisor/r10_renders/`) and by
+measurement. Every terminal designator also reads whole in the render: J1, J121, J400, J410, J420 and J9 touch their
+envelope's edge by 0.060-0.087 mm, and J122's moves into the C84 / J122 gap (D-R19-12).
+
+## D-R19-09. Second vias on single-via supply feeds (2026-10-30)
+
+R19-PWR-01 / R19-GATE-04 / R19-GATE-05. Added where a legal octilinear spot exists (every one at >= 0.15 mm to foreign
+copper, 0.25 mm hole spacing, in its own In2 fill, scanned on the round 18 board):
+- C84 hold-up (VLOGIC): (29.8, 81.15) on the B.Cu trunk, F.Cu 45 degrees to the C84.1 run's bend (29.2, 81.75);
+- U402 IN (PORT_5V3): (42.75, 61.8), 0.75 mm further into the In2 strip;
+- U401 IN (PORT_5V3): (26.45, 11.95) on the C405.1 -> U401.10 run;
+- U401 EN (PORT_5V3): (24.9, 14.9), 0.75 mm west of the first;
+- U401 OUT (PORT_4V8): (29.75, 9.95), at the C406.1 run's bend.
+Not doubled, measured: U11.2 RAW_PROTECTED (24.3, 66.0): no spot within 1.5 mm keeps 0.5 mm from ACT_EN_MCU
+(D-R18-03's floor for strong nodes beside the PC1 enable; 22 spots exist without it, all 0.15-0.35 mm from that run),
+so it stays a respin item, as the reviewer found. 3V3A (16.0, 50.2): the USB_LIMITED In2 run 0.65 mm south blocks every
+spot below the 3V3A In2 run, and every spot above sits 0.15 mm from U1.100 / U1.1 and off the B.Cu trunk. 3V3A
+(27.0, 49.25): every F.Cu spot is <= 0.10 mm from U1.19's GND fan-out stub or the pin row, and a B.Cu spot joins the
+In2 run only through the first via's own pad, needing a stub on all three layers. K-power adds the doubled feeds
+(U401 IN / EN / OUT, U402 IN >= 2 In2 vias; C84 hold-up >= 2 vias) and the buck outputs (U400 OUT: L400.2 >= 2 In2
+PORT_5V3 vias; U2 OUT: L1.2 >= 2 In2 3V3 vias, the F/B-only bridge via (26.4, 79.26) named, measured: it sits in the
+In2 RAW region). The VLOGIC pair closes one loop on a net without a pour: route_check's r10 `PARALLEL_VIAS` names it
+with its measured reason; loops() leaves only that via out (any other loop still fails), and a named via that is
+missing or not parallel fails as `parallel_via`. The other four are in their own In2 fills (no loop). Tests:
+`R10AuditScope.test_r19_named_parallel_via_closes_only_its_own_loop`, `R19Gate.test_r19_named_bridge_via`,
+`RealBoardSeeds.test_r19_doubled_feeds_keep_two_vias` (each via of each feed, the reviewer's (26.0, 8.0) seed and the
+bridge).
+
+## D-R19-10. C87 2.2 uF -> 220 nF (2026-10-30)
+
+R19-REQ-02. **C87: Samsung CL10B224KA8NNNC, 220 nF 25 V X7R 10 % 0603, LCSC C21120** (C126's BOM line, Basic), same
+land at F(17, 65). EN stays at most 2.06 V (8.4 V x 300/1240 with 1 % resistors), 8 % of the 25 V rating; the X7R
+DC-bias loss there is taken as <= 6 % in the 0.72 x minimum (Inference: Samsung's curve not re-read). With
+(R80 + R165) = 940 k, R81 = 300 k and the [TPS25947 SLVSFC9C p9](https://www.ti.com/lit/ds/symlink/tps25947.pdf)
+EN thresholds (rising 1.183 / 1.20 / 1.223 V, falling 1.076 / 1.09 / 1.116 V), Calculation: charge tau 50.0 ms,
+turn-on 88 / 56 / 45 ms at 6.0 / 7.4 / 8.4 V (31-122 ms over C 0.72-1.27 x, 1 % resistors and thresholds; was
+0.31-1.22 s); discharge tau 66 ms through R81, so a J400 drop-out shorter than 19 / 33 / 41 ms (worst 12 / 22 / 27 ms;
+was 0.19 / 0.33 / 0.41 s, worst 0.12 / 0.21 / 0.27 s) cannot trip U9. That is above the proposed 10 ms chatter
+acceptance (REQUIREMENTS F6), and recovery after a real supply interruption is about ten times faster. The schematic
+note, the binding-note obligation (which had kept ">= 150 ms") and check_actuators' r10 pin follow. Hot-plug model (re-extracted from the
+native board): all 2304 required cases and every row are unchanged (qualification pass, convergence pass); only its
+retained-output envelope moves, the shared capacitance 1616.12 -> 1613.41 uF (C87 3.036 -> 0.304 uF in the
++38 % envelope, C123 +0.014 uF) and the 2 s output bound 5.878 -> 5.874 V; the cold-input minimum stays at the -15 V
+clamp.
+
+## D-R19-11. U4: ISM6HG256X fitted, LSM6DSV320X the consigned alternate (2026-10-30)
+
+R19-BOM-01. LSM6DSV320X (C26633007) had 0 JLC stock. **ST ISM6HG256XTR, LCSC C51931514** (live 2026-10-31T04:01Z:
+9 in stock, Extended, $14.34 at 1-9) is fitted on the same `LGA-14_L3.0-W2.5-P0.50-TL` land (K-lands pin unchanged).
+[DS15034 Rev 1](https://www.st.com/resource/en/datasheet/ism6hg256x.pdf): LGA-14L 2.5 x 3.0 x 0.83 mm, drawing p187
+the same as DS14623's (14 x 0.475 x 0.25 mm pads); Figure 5 p9 and Table 2 pp10-11 give the same pin map and axis
+directions as DS14623 Rev 1 p9, so roll stays -gyro_Y and the lever arm is unchanged; F1 / F2: gyro +/-4000 dps,
+low-g +/-16 g and high-g +/-32..256 g (>= +/-64 g); -40..105 C. WHO_AM_I reads 0x73 on both (p66), and the high-g
+full-scale codes differ (Table 150 p93: ISM 100 = +/-256 g, 011 reserved; LSM 011 = +/-256, 100 = +/-320), so the
+binding note tells firmware to use only 001 / 010. Pins 10-11 (OCS_Aux, SDO_Aux) are "VDDIO or unconnected" on the
+ISM6HG256X; they stay unconnected. tools/jlc_easyeda/pads.json gains C51931514 (EasyEDA LGA-14_L3.0-W2.5-P0.50-BR),
+tools/verified_part_metadata.json its identity; jlc_orient derives the CPL rotation from it (bottom side 0 -> 180 degrees, residual 0.040 mm; confirm pin 1 in JLC's placement preview). Live JLC data 2026-10-31T05:30Z (`fab/cost_check.json`, `stock_check.json`, bound to this BOM / CPL): $84.21 per board at 5 boards (parts $59.43 plus the $1.53 feeder fee on 81 codes), $0.20 under REQUIREMENTS M3's $84.41 (U4 $14.34 against the LSM6DSV320X line's $9.27); no line short, U4 thin (9 in stock for 5). The margin is small: a price change re-runs `FAB_NET=1 m3_design/r10_fab.sh` before ordering.
+
+## D-R19-12. Fixed spots for nine designators (2026-10-30)
+
+C123 beside Q122, the second vias and the moved terminal legends reorder r5_post's most-constrained-first designator
+search, which on the scratch builds hid R80, R81, R123 and C5, showed Q122 and R403, moved C404, C407, C408, D8, J400,
+R88 and R89, and put J121's and J400's designators into the J121 / J400 and J400 / J1 gaps, on SWITCH's and BAT's lines.
+r10_post `FIXED_REFS` keeps R80, R81, R123, C5, C407, R89 and J121 at their round 18 spots and J400 on the board-edge
+strip beside its body (2.937, 67.617, 90 degrees; round 18 had it on the bottom). J122's goes into the C84 / J122 gap
+(33.3, 78.6, 90 degrees): the search's spot south of the body, beside the moved 1:S1, clears the nominal body but sits
+0.910 mm under the DB125 fit model the 3D render draws (round 18: 0.772 mm), so it read as a sliver; the new spot is
+0.395 mm from its own courtyard and 0.705 mm from C84's. The existing free-spot and own-courtyard checks pass. Moved by
+their own copper: D8 (C123 covers its spot), C404 and C408 (the new vias), R88 (hidden: the moved BAT_ENABLE via covers
+its spot); LED2 takes the spot the old 1:E1- left. C123 is hidden (no unambiguous spot). Hidden designators 88 -> 90.
+
+## D-R19-13. MCU text: port UART enable on U11's status, one DS12110 revision, VREFBUF, sheet notes (2026-10-30)
+
+R19-MCU-01 / -02 / -03 / -04. Text, binding note and sheet notes; no net or land changes.
+- **R19-MCU-01.** U11 (TPS2121) IN1 is USB_LIMITED and IN2 RAW_PROTECTED; ST low means IN2 powers the output
+  ([SLVSEA3F Table 9-3 p18, p21](https://www.ti.com/lit/ds/symlink/tps2121.pdf)). The pin table (rows 28, 52, 63) and
+  binding note now enable the GPS / radio TX alternate function only while PA4 reads low after a settling delay, and
+  park PC6 / PB13 in analog mode, no pull, when PA4 rises or the PA6 watchdog trips (one parking mode everywhere).
+  Obligation 14 says the ports stay powered whenever the battery path is on (off on USB-only power).
+- **R19-MCU-02.** Every DS12110 citation in pin_table.tsv (82 rows) and the binding note is Rev 8 (April 2021), revision
+  V chapter, re-read page by page from the cached copy (SHA-256 0c4f0169…, byte-identical to LCSC's): Table 9 per pin,
+  AF Tables 10-14, Table 119 pp212-213, Table 120 p213, Table 122 note 3 p215, Table 146 p238, Table 157 note 7 p247,
+  Table 159 p249, Table 160 note 2 p251, Tables 127-128 pp218-219, Table 192 p293. The 6.0 V FT cap and the 4.0 V
+  ADC-mode maximum, read from Rev 11 in round 14, stay as labelled design limits (Inference: not in Rev 8). This
+  supersedes D-R18-10's keeping of Rev 11 table numbers.
+- **R19-MCU-03.** camera_uart: OE is PE9 (pin 39, R102 10 k pull-down), not PA7; mcu: PE3 / PE5 flank PE4 and
+  PE3 / PE5 / PE6 / PC4 have no net and stay analog, never driven (the notes' pins asserted against the pin table);
+  check_actuators' comment matches.
+- **R19-MCU-04.** New obligation: keep VREFBUF_CSR at reset (ENVR = 0, HIZ = 1), never enable the buffer, scale ADC
+  readings from VREFINT: VREF+ (U1.20) is tied to VDDA on 3V3A (Figure 95 p286; Table 189 p291). Applying Table 9 note
+  7's "kept disabled" to this board-level tie is Inference (RM0433 not re-read).
+- **D-R19-11's IMU obligation** and the INT1 polarity (IF_CFG PP_OD / H_LACTIVE, DS15034 / DS14623 p60) are in the same
+  regeneration; the usb_sense and telemetry notes cite Rev 8.
+
+## D-R19-14. Spare AUX port J440; J410 / J420 / J440 electrically identical (owner approval, 2026-10-30)
+
+The owner approved a spare four-way port in the empty north-west corner ("Add spare port", 2026-10-30; brief
+`.supervisor/r19_aux_port_brief.md`): a stand-in if the GPS or radio port is damaged in the field (the camera cannot use
+it) and a spare serial port for flight 2 without a respin. The owner also asked that J410, J420 and J440 be electrically
+identical so the GPS and the radio can each be wired to any of the three. Firmware maps each device to a port UART;
+the default map is GPS J410, radio J420, AUX spare, and the silkscreen words keep that default. J9 is not in the set.
+- **Circuit (no new codes).** J440 copies J410: DB125-3.5-4P-GN-S C2757925, pin 1 PORT_4V8, 2 GND, 3 board TXO
+  (AUX_TX_WIRE), 4 board RXI (AUX_RX_WIRE); R471 / R470 1 kohm C21190 (R441 / R440), D440 / D441 ESD103-B1-02EL C535146
+  (D410 / D411), C444 100 nF C14663 and C445 22 uF C21397 (C410 / C411). C440-C443 are retired R9 references, so the
+  capacitors are C444 / C445; the resistors follow GPS / radio's terminal + 30 numbering.
+- **UART.** The free UART is USART3 on PD8 / PD9 (option A: AF7, [DS12110 Rev 8](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf)
+  Table 13 p94; FT_h, Table 9 p75; not loader pins: AN2606 Rev64 Table 119 p278 maps the loader's USART3 to PB10 / PB11
+  only). PD8 / PD9 lie on U1's north row between the GPS pair (PC6 / PC7) and the radio pair. A route from them to the
+  north-west corner must cross the GPS pair; its only B.Cu crossing lies over the microSD contact row (J430.1-4,
+  y 23.55-25.05) and the parallel SD_CS / SD_MOSI runs under the GPS diagonals, and east of them it straddles the In2
+  3V3 / PORT_4V8 boundary at x 28.0-28.3 (K-region): measured infeasible for two nets. The other way round is an
+  80 mm F.Cu detour past the port LDO and buck. Option B (UART8 PE0 / PE1) moves the reviewed IMU_INT1 pin and must
+  still cross the I2C1 / SWD / SD / USB fan-out west of U1. So J410 takes USART3 PD8 TX / PD9 RX and J440 takes the
+  GPS's former USART6 PC6 TX / PC7 RX, whose pins face the corner. Both routes are F.Cu only: the AUX pair has no layer
+  change (no GND partner via needed), and the J410 pair changes only its first 7 mm before rejoining the former GPS run.
+  C23.2's fan-out via moves from (27.1, 34.2) to (25.95, 34.15) to free PD8's escape. All three ports keep the R19-MCU-01
+  rule: each TX pin (PD8, PB13, PC6) takes its alternate function only while PA4 reads low and is parked analog, no pull,
+  when PA4 rises or the PA6 watchdog trips. PC6 / PC7 can also serve TIM3 / TIM8 channels (Table 12 p92); PD8 / PD9
+  have no ADC input or timer channel (pin_table rows 55-56, 63-64).
+- **Placement.** J440 F(7.4, 16.25), rotation -90, wires leaving west like J121 / J400 / J1. Top washer at (4, 4):
+  3.93 mm to the fit envelope (>= 3.8); J3's courtyard 1.67 mm; wire room 5.003 mm (5.00-5.60 with tolerance), the
+  other west terminals' figure. The cell is on the top east of the body: C444 F(12.5, 12.6), C445 F(15.2, 13.4), D440
+  F(13.9, 17.2), R471 F(16.1, 18.0), D441 F(13.9, 21.4), R470 F(16.1, 20.6); the TX wire runs straight west to J440.3,
+  the RX wire takes one 45 degree step to J440.4. M-6 (bottom parts 1.5 mm from THT pads) moved TP82 B(10.8, 21.3) ->
+  B(11.0, 17.6) and R90 B(7.8, 23.1) -> B(11.275, 23.0) (its 3V3 via (6.2, 23.1) -> (9.6, 23.0); its run no longer
+  doubles back west). Stitch vias: (7.0, 22.0) removed (J440.4), (2.0, 9.0) -> (0.9, 9.0), (16.5, 12.5) -> (17.5, 12.0).
+- **Feed.** In2 under J440 is the 3V3 region, so PORT_4V8 reaches J440.1 on a 0.4 mm F.Cu run from the In2 PORT_4V8
+  region through (29.75, 9.95) and a new second via (30.5, 9.95), along y 9.95 and 11.0 (22.8 mm, about 28 mohm, 8.5 mV
+  at 300 mA if the radio is moved there). K-power gates it as "J440 feed" (two vias).
+- **AUX allowance.** U401 TPS7A9101 is rated 1 A ([TI SBVS282A](https://www.ti.com/lit/ds/symlink/tps7a91.pdf) p1,
+  current limit 1.5-1.9 A p5). The binding floor is GAP-3: junction <= 125 C at the 70 C bay limit with the inferred
+  80-110 C/W, i.e. (buck_max 5.546 V - ldo_min 4.712 V) x (0.46 A + AUX) + 22 mW <= 0.5 W, which allows 112 mA. Documented
+  limit: **the spare port may draw up to 100 mA at 4.8 V** beyond GPS 150 mA and radio 300 mA, whichever ports they use.
+  Changed cases (`parts_budget.json`, Calculation / Inference): LDO loss 0.406 -> 0.490 W; junction at 70 C 102.5-114.7
+  -> 109.2-123.9 C (85 C, outside the bay range: 124.2-138.9 C); camera-short buck case 1.710 -> 1.810 A (< 2 A); ports-on
+  battery-break ride-through at 300.8 uF to 3.8 V 0.490-0.571 -> 0.464-0.539 ms (470 uF 0.725-0.842 ms), ports on with
+  the camera off 1.533-1.655 -> 1.304-1.412 ms; fire current at 7.4 V 1.544 -> 1.541 A, four stalls 1.283 -> 1.279 A
+  (>= 1.125 A). LDO-limited short cases are unchanged (U401's limit covers all three ports). Hot-plug: 2304 cases pass.
+- **Legends.** AUX word F(13.4, 10.2), inside J440's courtyard span (WORD_SPAN); 1:4V8 on the west board-edge strip
+  F(2.4, 10.6, 90); 2:GND, 3:TXO and 4:RXI on the bottom beside their pins. No top spot for 4:RXI is nearer J440.4
+  than J3's shell pads (west and south) or J430's shell pad 11 (east) by OWN_MARGIN; B(4.2, 21.5) has 1.74 mm. The
+  designator search moves C400, C401, R90, R462 and R463 and finds no unambiguous spot for C28, R110 (J440's courtyard
+  now claims its former spot), D440 or D441: hidden, kept on F.Fab (90 -> 94).
+- **Checks.** R10_PORT_UART / R10_PORT_NETS add AUX (route_check and K-reference); uart_ports holds all three ports
+  (J410 on pins 55 / 56); CONNECTORS, PARTS, REQUIRED_FITTED, WIRE_ENTRY, TERMINAL_PINS_R10, SHOWN_REFS,
+  WORD_LEGENDS_R10 and WORD_SPAN_R10 add J440 / AUX; POWER_PATHS adds the J440 feed; plate_model STRAIN_PARTS adds J440
+  and C445 (masses: J440 6 g + 2 g mated, the J410 allowance, Inference); r10_sch_check pins the three ports' MCU and
+  resistor nets and seeds three AUX faults. K-power's path graph also counts the via behind (29.75, 9.95) on C406.1's B.Cu
+  run, so it would not notice the loss of (30.5, 9.95) alone; the seeded test drops (29.75, 9.95).
+- **Cost (owner decision).** AUX adds $1.14 per board ($0.403 terminal, $0.271 22 uF, 2 x $0.231 ESD, resistors and
+  100 nF): live JLC 2026-10-31 gives $85.35 per board against the $84.41 M3 cap, $0.94 over; `check_procurement
+  --cost-only` fails and is not weakened. Stock: none short; C2757925 4 per board (37,827 in stock), C535146 8 per board
+  (201), U4 thin (9 for 5).
+
+The record index is now **151 unique D IDs through D-R19-14**.

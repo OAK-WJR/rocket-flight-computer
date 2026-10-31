@@ -96,10 +96,13 @@ def build(project, table):
             footprint.SetLocalClearance(pcbnew.FromMM(1.0))
     # R10 signal/logic returns need solderable THT thermals on every plane,
     # including In1's otherwise solid GND connection (R11-MFG-01).
-    for ref in ('J1', 'J9', 'J122', 'J410', 'J420'):
+    for ref in ('J1', 'J9', 'J122', 'J410', 'J420', 'J440'):          # D-R19-14: the AUX port's GND contact too
         for p in board.FindFootprintByReference(ref).Pads():
             if p.GetNetname() == 'GND':
                 p.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_THERMAL)
+    # D-R19-05 (R19-RTE-01): U1.19 (VSSA) reaches GND through its own fan-out stub and via only; with no pour connection
+    # the via-less 1.693 mm2 F.Cu GND fragment that hung on its pin tip is an island and is not filled.
+    board.FindFootprintByReference('U1').FindPadByNumber('19').SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_NONE)
     print(f'r10_pcb: library land margins: {" ".join(sync_lands(board, project / "kilib" / "rocket.pretty"))}')
     rows, features = r9_pcb.read_place(table, tie_count=0)
     r9_pcb.outline(board, features)

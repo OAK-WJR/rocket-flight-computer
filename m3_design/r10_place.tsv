@@ -9,6 +9,7 @@ C10	17.5	54.1	0	B	D-AVA-01: explicit cell placement; electrical contract unchang
 C100	28.85	39.97	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C11	17.5	52.1	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C120	17.1	72.525	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+C123	18.22	71.85	0	F	D-R19-04 (R19-SAF-06): Q122 gate-source 10nF, pad 1 straight below Q122.1, pad 2 to R123.2's GND via
 C126	16.85	57.675	-90	F	D-R11-01: clear moved Q124 courtyard; electrical contract unchanged
 C127	23.65	53.2	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C128	12	57.5	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -179,16 +180,15 @@ R87	22	63.925	-90	B	D-AVA-01: explicit cell placement; electrical contract uncha
 R88	22	67.0	-90.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R89	23	70	180	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 R9	9.95	28.9	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R90	7.8	23.1	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+R90	11.275	23.0	0	B	D-R19-14: 3.5 mm east to the end of its own run, 1.5 mm M-6 clear of J440.4 (was B(7.8,23.1))
 R91	28.1	60	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R92	31	87.5	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 TP120	18	68.6	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-TP121	4	70	0	B	D-R18-02: west between J400 and J1 (M-6 1.5 mm, test-pad 1.0 mm clearances); electrical contract unchanged
 TP122	13.3	53.3	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 TP74	42.5	58	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 TP80	9.8	83.8	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 TP81	31	84.8	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-TP82	10.8	21.3	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+TP82	11.0	17.6	0	B	D-R19-14: 3.7 mm north, out of J440.4's M-6 ring and R90's new land (was B(10.8,21.3))
 TP83	34.5	81.5	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 TP88	35.5	87	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 U1	23.0	43.0	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -213,3 +213,10 @@ R461	24.2	16.8	0	B	D-AVA-01: explicit cell placement; electrical contract unchan
 R462	14.2	16.9	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R463	14.2	18.9	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R464	25.55	22.18	180	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+J440	7.4	16.25	-90	F	D-R19-14: spare AUX port (owner 2026-10-30), J410 copy on the west edge; washer 3.93 mm, J3 courtyard 1.67 mm
+C444	12.5	12.6	-90	F	D-R19-14: AUX port 100 nF beside J440.1 (C410 copy)
+C445	15.2	13.4	-90	F	D-R19-14: AUX port 22 uF on the PORT_4V8 feed (C411 copy)
+D440	13.9	17.2	0	F	D-R19-14: AUX TX wire ground-only ESD (D410 copy)
+D441	13.9	21.4	0	F	D-R19-14: AUX RX wire ground-only ESD (D411 copy)
+R470	16.1	20.6	0	F	D-R19-14: AUX RX 1 kohm (R440 copy)
+R471	16.1	18.0	180	F	D-R19-14: AUX TX 1 kohm (R441 copy)

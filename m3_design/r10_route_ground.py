@@ -24,7 +24,9 @@ STITCH = (
     # west-edge row (x < 6); beside the terminals at x 0.9 (ring 0.65 mm from the edge), clear of the terminal legends'
     # spots (IGN / BAT on F.Cu at y 50.5-52.3, 70.5-72.3)
     # Circuit pass: (5,9.5) removed for J420.1's new terminal pad.
-    (2.0, 9.0), (4.0, 12.0), (3.5, 18.0), (0.9, 48.0), (0.9, 54.5), (0.9, 57.5), (0.9, 64.0), (0.9, 67.0),
+    # D-R19-14: (7.0, 22.0) removed for J440.4's terminal pad; (16.5, 12.5) moves to (17.5, 12.0), clear of C445.1; (2.0, 9.0)
+    # moves to the x 0.9 edge row, clear of J440's 1:4V8 legend strip.
+    (0.9, 9.0), (4.0, 12.0), (3.5, 18.0), (0.9, 48.0), (0.9, 54.5), (0.9, 57.5), (0.9, 64.0), (0.9, 67.0),
     (0.9, 74.5), (0.9, 77.5), (0.9, 80.5),
     # B.Cu void pair below J2's bottom pin-table spot (y >= 34.68).
     # Circuit pass: (25.6,28.85) removed for SD R461.2's new 3V3 pad.
@@ -35,9 +37,9 @@ STITCH = (
     (7.4, 51.2),
     # coverage spots
     # The relocated R110 return now covers the former (15,20.5) stitch, which entered its SMD pad.
-    (8.0, 3.0), (18.0, 3.0), (25.0, 2.5), (38.0, 3.0), (43.5, 8.0), (10.5, 9.0), (16.5, 12.5),
+    (8.0, 3.0), (18.0, 3.0), (25.0, 2.5), (38.0, 3.0), (43.5, 8.0), (10.5, 9.0), (17.5, 12.0),
     # Circuit pass: (36,54.5)/(16.5,78.5)/(22,23) removed for moved R89.1/R80.2/C461.2 pads.
-    (7.0, 22.0), (43.0, 65.0),
+    (43.0, 65.0),
     (6.5, 83.0), (33.5, 88.0),  # D400's moved return replaces the former (34.9,44.5) stitch.
 )
 
@@ -56,8 +58,11 @@ TRIMS = (
 # chain keeps >= 1.0 mm (check_r10.S-8) of inner-layer copper clearance, by a fill-only rule area around it on the inner
 # layers where foreign copper is hazardous: In1 GND and In2 for the P-FET gate drive (a short to GND turns Q120 / Q121
 # on), In2 only for the enable chain (In1 GND holds U9 / Q122 off). The areas follow the drawn barrels; no search.
+# D-R19-01 (R19-SAF-01): PYRO1_OUT is Q124's drain, so In1 / In2 GND there would bypass the fire FET: its OUT via and
+# the J121.1 hole get the same fill-only keep-out on both inner layers.
 BARREL_KEEPOUT = {'ACT_GATE': ('In1', 'In2'), 'ACT_DRV': ('In1', 'In2'), 'BAT_ENABLE': ('In2',),
-                  'BAT_SW_RETURN': ('In2',), 'ACT_EN': ('In2',), 'ACT_EN_MCU': ('In2',), 'PYRO1_GATE_N': ('In2',)}
+                  'BAT_SW_RETURN': ('In2',), 'ACT_EN': ('In2',), 'ACT_EN_MCU': ('In2',), 'PYRO1_GATE_N': ('In2',),
+                  'PYRO1_OUT': ('In1', 'In2')}
 BARREL_KEEPOUT_GAP = 1.05          # mm: S-8's 1.0 mm plus 0.05 mm for the fill outline
 BARREL_KEEPOUT_SIDES = 16
 

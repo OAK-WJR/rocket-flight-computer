@@ -1,4 +1,5 @@
 # r10_fanout_aid.py output (frozen): net, pad, pad layer, via x, via y; stub 0.3 mm pad centre -> via
+# D-R19-14: C23.2 moves from (27.1, 34.2) to (25.95, 34.15), freeing U1.55 (PD8, J410 TX); C444.2 / C445.2 are the AUX cell returns
 net	pad	layer	x	y
 3V3	C90.1	F	26.425	32.075
 3V3	R89.1	F	23.0	70.0
@@ -8,7 +9,7 @@ GND	C11.2	B	19.423	53.023
 GND	C126.2	F	15.8	59.425
 GND	C128.2	B	12.775	59.025
 GND	C22.2	B	27.8	46.6
-GND	C23.2	B	27.1	34.2
+GND	C23.2	B	25.95	34.15
 GND	C28.2	B	13.75	24.1
 GND	C29.2	B	28.62	43.94
 GND	C400.2	F	12.6	5.55
@@ -21,6 +22,8 @@ GND	C407.2	F	30.3	18.0
 GND	C408.2	B	23.76	13.6
 GND	C410.2	B	36.1	18.2
 GND	C411.2	B	34.2	19.75
+GND	C444.2	F	12.5	14.25
+GND	C445.2	F	15.2	15.85
 GND	C420.2	B	36.1	34.2
 GND	C421.2	B	33.8	36.75
 GND	C430.2	B	29.1	61.8

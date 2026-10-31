@@ -1,5 +1,7 @@
 # M3-ASSY-R2 — merging servos, pyro, arming, pull-pin and buzzer into the single board
 
+> **Historical R2 record (R19-REQ-03).** For R10 only section 2.6 (the shorted-igniter current limit, R134 2 Ω) is current. Everything else here (two fused channels, the 7.7 A servo rail and header, AON6403 load switch, R122 / R123 100 k / 100 k, C121, the RAW_ACT sense to PB0, the in-line fuse, the pull-pin J123 and the ARM terminal J124) is superseded by the R10 single-switch decision, AUD-3 / AUD-4 / AUD-6 and D-R18-01 / D-R18-02 / D-R19-04 in `m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md`. The current R10 circuit is in [M3_R10.md](M3_R10.md), "Power" and "CH1 pyro".
+
 Status: **design + CAD only.** Nothing in this document has been measured on a real board. Every value below is either taken from a named datasheet / LCSC page (URL given), taken from an earlier ruling in this repository (section given), or marked **inference**.
 
 ## 1. Vehicle-level decisions this revision is built on (owner rulings, 2026-09-25)

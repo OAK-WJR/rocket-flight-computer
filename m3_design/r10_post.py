@@ -13,8 +13,9 @@ graphics (sync_silk; nothing else in a footprint may differ, asserted with KiCad
 board-level silkscreen item is deleted and every footprint field hidden, then, in this order:
   1. Connector subject legends; wired DB125 contacts use individual terminal-pin legends;
      then the legends about one part, each at the free spot nearest that part's courtyard within LEGEND_REACH (6 mm,
-     AGENTS.md; check_r7.legend_subjects gates it): the connector words (check_r10.WORD_LEGENDS_R10: IGN, BAT, CAM,
-     SWD, SERVO, GPS, RADIO; and SWITCH for J400), top face first; the port pin tables (PORTS: J9 in the board-side
+     AGENTS.md; check_r7.legend_subjects gates it): the connector words (check_r10.WORD_LEGENDS_R10, the one list
+     K-legends also gates: IGN, BAT, CAM, SWD, SERVO, GPS, RADIO, SWITCH), top face first, RADIO and BAT at their
+     reviewed WORD_SPOTS; the port pin tables (PORTS: J9 in the board-side
      convention with its supply, J2, J410 and J420), J122's five-pin table and harness note (O3 / O6), the port tables and the
      notes also with their subject the nearest connector to the legend's centre by SUBJECT_MARGIN (put_subject), J2's
      rows by 0 mm where they can (else beside J2 by label_near, listed in the evidence);
@@ -78,7 +79,33 @@ SILKS = (pcbnew.F_SilkS, pcbnew.B_SilkS)
 PORTS = {'J2': ('SWD', check_r10.PORT_LEGENDS_R10['J2'])}
 SUBJECT_PORTS = ()  # Every wired terminal uses the individually checked TERMINAL_PINS contract.
 NO_ROOM_PORTS = {}
-WORDS = tuple((ref, word) for word, ref in check_r10.WORD_LEGENDS_R10.items()) + (('J400', 'SWITCH'),)
+WORDS = tuple((ref, word) for word, ref in check_r10.WORD_LEGENDS_R10.items())    # D-R19-06: the one word list
+# D-R19-06 (R19-MFG-01 / R19-GATE-06): reviewed word spots (side, x, y, angle) in place of the nearest-gap search, which put
+# RADIO on the J410 / J420 seam (nearer J410 by its centre). RADIO sits inside J420's courtyard y-span (24.055 .. 40.065)
+# between the GND / RADIO_TX vias, 4.8 mm from the seam. BAT stays at J1's north end, in the J400 / J1 gap, but east of
+# the board-edge strip that 1:BAT+ now needs (D-R19-08); with 2:SW on the bottom it is the only text on that line. IGN
+# moves one line north so that J121's 1:E1- can sit between it and the J121 body, wholly outside the body's envelope.
+WORD_SPOTS = {'RADIO': ('F', 32.18, 29.5, 0), 'BAT': ('F', 4.75, 70.475, 0), 'IGN': ('F', 2.456, 48.95, 0),
+              # D-R19-14: AUX at J440's north end, east of its envelope, as GPS sits at J410's (inside the y-span)
+              'AUX': ('F', 13.4, 10.2, 0)}
+# D-R19-08 (R19-MEC-01 / R19-MFG-04 and the coordinator's top-render check): every terminal pin legend lies wholly outside
+# the DB125 VRML fit envelopes, which hide anything under them in the top render, and no pin legend shares a line with
+# another terminal's word. Reviewed spots (side, x, y, angle), each still nearest its own pin by OWN_MARGIN:
+#   1:E1- on J121's north line under IGN; 1:BAT+ on the board-edge strip beside J1.1 (the J400 / J1 gap is nearer J400.2);
+#   2:E1+ and 2:SW on the bottom under their pins, so neither reads as part of SWITCH's or BAT's line; 1:SW, J410 4:RXI and
+#   1:5V4 moved outward; 1:S1 along J122's south end, clear of the (42, 86) washer; the J410 / J420 / J9 wire-side
+#   legends east of the envelope, J410 / J9 in one column and J420's two in a second, so that no two terminals' pin
+#   legends run on along one column across a seam.
+PIN_SPOTS = {('J121', '1'): ('F', 3.6, 50.455, 0), ('J121', '2'): ('B', 4.0, 57.6, 0),
+             ('J1', '1'): ('F', 2.32, 73.0, 90), ('J400', '1'): ('F', 2.4, 63.3, 90), ('J400', '2'): ('B', 4.4, 67.6, 0),
+             ('J122', '1'): ('F', 37.05, 82.37, 0), ('J9', '1'): ('F', 41.7, 56.7, 0), ('J9', '4'): ('F', 43.4, 40.55, 90),
+             ('J410', '1'): ('F', 43.4, 21.05, 90), ('J410', '4'): ('F', 36.9, 7.05, 0),
+             ('J420', '1'): ('F', 44.85, 37.35, 90), ('J420', '4'): ('F', 44.85, 25.45, 90),
+             # D-R19-14: J440's pin-1 legend up the west board-edge strip (as 1:SW / 1:BAT+; above the body it would sit
+             # under the (4, 4) washer or on C400.2). Its pin-4 legend has no top spot nearer J440.4 than J3's shell pads
+             # (west and south) or J430's shell pad 11 (east) by OWN_MARGIN, so it sits on the bottom beside its pin, as
+             # 2:SW does (margin 1.74 mm)
+             ('J440', '1'): ('F', 2.4, 10.6, 90), ('J440', '4'): ('B', 4.2, 21.5, 0)}
 # Owner, 2026-10-28: the external power switch arms the board; the separate ARM terminal and fuse notes are removed.
 NOTES = (('J122', 'SERVO + FROM HARNESS'),)
 NOTE_PLACE = {'SERVO + FROM HARNESS': (('F', 'B'), None)}          # the plugs mate on the top (R3-REQ-06(b))
@@ -97,6 +124,17 @@ DOT_PARTS = ('U9', 'U10', 'U11', 'U13', 'U400', 'U402', 'U410', 'U420')
 DOT_REQUIRED = ('U9', 'U10', 'U11', 'U13')
 DOT_REACH = r9_post.DOT_REACH
 FIXED_REFS = {}  # D-AVA-01: references are placed against the new local cells.
+# D-R19-12: the round 19 copper (C123 beside Q122, the second power vias) reorders the designator search, which then
+# hid R80 / R81 / R123 / C5 and moved their neighbours; these keep their round 18 spots (side, x, y, angle), the search
+# still placing every other designator (it checks each fixed spot is free and nearest its own part).
+FIXED_REFS.update({'R80': ('F', 13.351, 71.197, 90), 'R81': ('F', 21.558, 66.697, 0), 'R123': ('F', 21.658, 72.357, 0),
+                   'C5': ('B', 21.385, 70.291, 0), 'C407': ('F', 30.911, 16.635, 0), 'R89': ('F', 24.999, 71.328, 0),
+                   # J121 / J400 read on the board-edge strip beside their bodies: the search would otherwise put them in
+                   # the J121 / J400 and J400 / J1 gaps, on SWITCH's and BAT's lines.
+                   'J121': ('F', 2.957, 57.041, 90), 'J400': ('F', 2.937, 67.617, 90),
+                   # J122 reads in the C84 / J122 gap: the search's spot south of the body (beside 1:S1) is clear of the
+                   # nominal body but 0.910 mm under the DB125 fit model the 3D render draws.
+                   'J122': ('F', 33.3, 78.6, 90)})
 # D-AVA-01: reserve an unambiguous SWD band before all other legends.
 SWD_LEGENDS = {'J2 4:SWCLK': ['B', 5.0, 37.2, 0], 'J2 2:SWDIO': ['F', 5.0, 37.0, 0], 'J2 3:NRST': ['B', 10.0, 42.5, 90], 'J2 5:GND': ['B', 10.9, 35.800000000000004, 0], 'J2 1:3V3': ['F', 11.3, 35.6, 0], 'J2 6:NC': ['B', 11.4, 43.400000000000006, 90]}
 DOT_OWN_MARGIN = 0.5            # mm: a pin-1 mark's centre is this much nearer its pad 1 than any other part's pad 1
@@ -615,7 +653,6 @@ FAB_REFERENCE_CLEARANCES_R13 = {
     'R61': (0.0, -0.05, 0.4),
     'R64': (-0.05, 0.0, 0.4),
     'TP120': (0.0, -1.15, 0.6),
-    'TP121': (0.0, -1.15, 0.6),
     'TP122': (0.0, -1.15, 0.6),
     'TP74': (0.0, -1.15, 0.6),
     'TP80': (0.0, -1.15, 0.6),
@@ -674,6 +711,20 @@ def finish(b, lib):
             missing.append(f'{text} (within {LEGEND_REACH} mm of {ref})')
         return result
 
+    def put_spot(text, ref, side, x, y, angle):
+        """D-R19-06: a word legend at its reviewed spot; it must be free and within LEGEND_REACH of its connector."""
+        t = silk._text(b, text, silks[side].layer, 1.0)
+        t.SetTextAngleDegrees(angle)
+        t.SetPosition(silk.P(x, y))
+        box = silk.ink(t)
+        gap = silk._gap(box, r7_post.subject_box(b, ref))
+        if not silks[side].free(box) or gap > LEGEND_REACH - REACH_MARGIN:
+            raise RuntimeError(f'{text}: reviewed word spot is obstructed or no longer beside {ref}')
+        b.Add(t)
+        silks[side].add(box)
+        placed[text] = [side, x, y, angle, round(gap, 2)]
+        return placed[text]
+
     def put_about(text, ref, sides=('B', 'F'), prefer=None):
         result = put_subject(b, silks, text, ref, boxes, sides=sides, prefer=prefer)
         if result is None:
@@ -703,7 +754,10 @@ def finish(b, lib):
             silks[side].add(box)
             placed[text] = [side, x, y, angle, round(gap, 3), round(margin, 3)]
     for ref, word in WORDS:
-        put_near(word, ref, sides=('F', 'B'))
+        if word in WORD_SPOTS:
+            put_spot(word, ref, *WORD_SPOTS[word])
+        else:
+            put_near(word, ref, sides=('F', 'B'))
     for ref, note in NOTES:
         sides, prefer = NOTE_PLACE.get(note, NOTE_PLACE.get(ref, (('B', 'F'), None)))
         put_about(note, ref, sides=sides, prefer=prefer)
@@ -712,6 +766,9 @@ def finish(b, lib):
         for number, name in mapping:
             x, y = silk.pad(b, ref, number)
             regions = [(clip(x - PIN_REACH, y - PIN_REACH, x + PIN_REACH, y + PIN_REACH), ('F', 'B'), (90, 0))]
+            if (ref, number) in PIN_SPOTS:          # D-R19-08: the one reviewed spot, the same OWN_MARGIN test
+                side, sx, sy, angle = PIN_SPOTS[(ref, number)]
+                regions = [((sx, sy, sx, sy), (side,), (angle,))]
             result = r9_post.put_pin(b, silks, f'{number}:{name}', pads, {(ref, number)}, (x, y), regions)
             key = f'{ref} {number}:{name}'
             placed[key] = None if result is None else list(result)
@@ -776,7 +833,7 @@ def finish(b, lib):
     with check_r10.patched(check_r7, WORD_LEGENDS=check_r10.WORD_LEGENDS_R10), \
             check_r10.patched(check_r8, TERMINAL_PINS=TERMINAL_PINS):
         issues = (check_r7.duplicate_ids(b) + port_legends(b) + check_r7.legend_subjects(b, distance_review=distance_review) + check_r10.hidden_refs(b)[0] +
-                  check_r8.terminal_legends(b)[0])
+                  check_r8.terminal_legends(b)[0] + check_r10.word_legends(b)[0])
     found, margins = subjects(b, boxes)
     issues += found
     near_pads = silk_to_openings(b)

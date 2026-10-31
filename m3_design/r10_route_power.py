@@ -84,8 +84,9 @@ def control(d):
     t('BAT_SW_RETURN','F',S,[p('J400.2'),(11.825,67.6),p('R165.1')])
     t('BAT_ENABLE','F',S,[p('R165.2'),(15.3,67.0),(16.3,66.0),(19.675,66.0),p('R81.1')])
     t('BAT_ENABLE','F',S,[(16.3,66.0),p('C87.1')])
-    t('BAT_ENABLE','F',S,[(19.675,66.0),(19.675,66.4)]);v('BAT_ENABLE',(19.675,66.4))
-    t('BAT_ENABLE','B',S,[(19.675,66.4),(21,67.725),(21,68.6),(21.3,68.9)]);v('BAT_ENABLE',(21.3,68.9))
+    # D-R19-02 (R19-SAF-02): the via sits 0.2 mm further south, 0.500 mm from R134.2 (RAW_ACT) instead of 0.300 mm.
+    t('BAT_ENABLE','F',S,[(19.675,66.0),(19.675,66.6)]);v('BAT_ENABLE',(19.675,66.6))
+    t('BAT_ENABLE','B',S,[(19.675,66.6),(21,67.925),(21,68.6),(21.3,68.9)]);v('BAT_ENABLE',(21.3,68.9))
     t('BAT_ENABLE','F',S,[(21.3,68.9),(21.3,75.2),(18.0232,78.4768),(18.0232,81.8768),(17.1,82.8)])
     v('BAT_ENABLE',(17.1,82.8));t('BAT_ENABLE','B',S,[(17.1,82.8),p('U9.1')])
 
@@ -134,9 +135,11 @@ def port_supply(d):
     for at in ((26.0,8.0),(26.8,8.0)):v('PORT_5V3',at)
     # LDO input and exact filled/capped thermal pair retained; output parts align with the port column.
     t('PORT_5V3','B',W,[p('C405.1'),(25.9,8.6)]);v('PORT_5V3',(25.9,8.6))
-    t('PORT_5V3','B',W,[p('C405.1'),(26.45,10.85),p('U401.10')])
+    # D-R19-09 (R19-PWR-01): a second In2 via on the LDO input run, between C405.1 and U401.10.
+    t('PORT_5V3','B',W,[p('C405.1'),(26.45,10.85),(26.45,11.95),p('U401.10')]);v('PORT_5V3',(26.45,11.95))
     t('PORT_5V3','B',.25,[p('U401.10'),p('U401.9')])
     t('PORT_5V3','B',S,[p('U401.7'),(25.65,14.1),(25.65,14.9)]);v('PORT_5V3',(25.65,14.9))
+    t('PORT_5V3','B',S,[(25.65,14.9),(24.9,14.9)]);v('PORT_5V3',(24.9,14.9))   # D-R19-09: EN's second In2 via
     d.link('PORT_LDO_SS','B',S,'U401.8','C408.1')
     for at in ((27.3,13.6),(27.9,13.6)):v('GND',at,filled=True,capped=True)
     d.link('PORT_4V8','B',.25,'U401.1','U401.2')
@@ -146,6 +149,7 @@ def port_supply(d):
     t('PORT_LDO_FB','F',S,[(29.75,13.6),(32.225,13.6)])
     t('PORT_LDO_FB','F',S,[p('R402.2'),(32.225,13.6),p('R403.1')])
     t('PORT_4V8','B',W,[p('C406.1'),(29.75,9.95),(29.75,12.6)])
+    v('PORT_4V8',(29.75,9.95))                    # D-R19-09: the LDO output's second In2 via, at C406.1's run bend
     t('PORT_4V8','F',W,[p('C407.1'),(31.1,20.3),(30.3,20.3)]);v('PORT_4V8',(30.3,20.3))
     t('PORT_4V8','B',S,[p('R405.1'),(33.725,16.35),(33.725,17.3)])
     # Always-on port bypass cells and terminal feeds.
@@ -159,9 +163,18 @@ def port_supply(d):
             t('PORT_4V8','B',W,[a,p(jack+'.1')])
             at=(a[0],a[1]-1.5);t('PORT_4V8','B',W,[a,at]);v('PORT_4V8',at)
         a=p(small+'.1');at=(a[0],a[1]-.9);t('PORT_4V8','B',W,[a,at]);v('PORT_4V8',at)
+    # D-R19-14: the AUX port J440 (north-west corner, In2 is 3V3 there) takes PORT_4V8 on F.Cu from the LDO output's In2
+    # region through two vias, (29.75, 9.95) (C406.1's run bend) and a second at (30.5, 9.95), west along y 9.95 north of
+    # GPS_RX's turn, then on y 11.0 south of C405.2's return via and C401, with its C445 / C444 bypass pair (the C411 /
+    # C410 copies) on the run.
+    v('PORT_4V8',(30.5,9.95))
+    t('PORT_4V8','F',W,[(30.5,9.95),(29.75,9.95),(26.5,9.95),(25.45,11.0),(15.2,11.0),(12.5,11.0),p('J440.1')])
+    t('PORT_4V8','F',W,[(15.2,11.0),p('C445.1')])
+    t('PORT_4V8','F',W,[(12.5,11.0),p('C444.1')])
     # Camera input bypass is local to IN; the quiet rail arrives along the bottom of the cell.
-    t('PORT_5V3','B',W,[p('U402.1'),(30.7,61.025),p('C430.1'),(42.0,61.8)])
-    v('PORT_5V3',(42.0,61.8))
+    # D-R19-09 (R19-PWR-01): the camera switch's feed gets a second In2 via 0.75 mm further into the strip.
+    t('PORT_5V3','B',W,[p('U402.1'),(30.7,61.025),p('C430.1'),(42.0,61.8),(42.75,61.8)])
+    v('PORT_5V3',(42.0,61.8));v('PORT_5V3',(42.75,61.8))
     t('CAM_5V','B',W,[p('U402.6'),(34.2,60.85),(37.7,60.85),p('C431.1')])
     # Pass west of the rotated cap's return land and the TP74 keep-out.
     t('CAM_5V','B',W,[(39.3,59.0),(37.75,57.45),(37.75,53.6),p('J9.1')])
@@ -175,8 +188,11 @@ def logic(d):
     # Mux, input capacitors and 3V3 buck retain their maker-derived relative geometry.
     t('VLOGIC','B',W,[p('U11.8'),p('U11.1'),p('C99.1'),p('U2.2'),p('U2.3'),(27.75,68.6),(29.8,68.6)])
     t('VLOGIC','B',W,[(29.8,68.6),(29.8,72.8),p('C7.1')])
-    t('VLOGIC','B',W,[(29.8,72.8),(29.8,81.75),(29.5,82.05)]);v('VLOGIC',(29.5,82.05))
+    # D-R19-09 (R19-PWR-01): C84 hangs on two parallel vias, so one open barrel no longer drops the 470 uF hold-up.
+    t('VLOGIC','B',W,[(29.8,72.8),(29.8,81.15),(29.8,81.75),(29.5,82.05)]);v('VLOGIC',(29.5,82.05))
+    v('VLOGIC',(29.8,81.15))
     t('VLOGIC','F',W,[(29.5,82.05),(29.2,81.75),p('C84.1')])
+    t('VLOGIC','F',W,[(29.8,81.15),(29.2,81.75)])
     # Probe and divider share a direct trunk above the mux, kept out of the switch node.
     t('VLOGIC','B',W,[(29.8,81.75),(34.25,81.75),p('TP83.1')])
     t('VLOGIC','B',S,[(29.8,68.6),(29.8,67.7),(34.5,63)])

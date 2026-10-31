@@ -9,10 +9,13 @@ PORT_CONTROL_GND = ()
 
 def uarts(d):
     t,p,v=d.track,d.pad,d.via
-    t('GPS_RX_MCU','F',S,[p('U1.64'),(22.5,30.5),(28.8,24.2),(28.8,11),(32,11)])
+    # D-R19-14: J410 (GPS by default) moves to USART3 PD8 / PD9 (U1.55 / U1.56): north between C90's vias and RADIO_TX,
+    # north-east beside the radio pair, then the former GPS run to the port cell. J440 (AUX) takes USART6 PC6 / PC7 (U1.63 /
+    # U1.64), whose pins face the north-west corner: neither port crosses the other or the microSD contacts below.
+    t('GPS_RX_MCU','F',S,[p('U1.56'),(26.5,33.6),(27.0,33.1),(27.0,31.4),(28.8,29.6),(28.8,11),(32,11)])
     v('GPS_RX_MCU',(32,11))
     t('GPS_RX_MCU','B',S,[(32,11),(32.425,11),p('R440.2')])
-    t('GPS_TX_MCU','F',S,[p('U1.63'),(23,30.8),(29.3,24.5),(29.3,16),(33,16),(34,15)])
+    t('GPS_TX_MCU','F',S,[p('U1.55'),(27.0,34.3),(27.4,33.9),(27.4,31.6),(29.3,29.7),(29.3,16),(33,16),(34,15)])
     v('GPS_TX_MCU',(34,15))
     t('GPS_TX_MCU','B',S,[(34,15),(34,14.575),p('R441.1')])
     t('RADIO_RX_MCU','F',S,[p('U1.51'),(29,32.6),(32,29.6),(32,26.25)])
@@ -21,6 +24,9 @@ def uarts(d):
     t('RADIO_RX_MCU','B',S,[(32,26.25),p('R450.2')])
     t('RADIO_TX_MCU','B',S,[(31.2,28.4),(31.825,28.4),p('R451.1')])
     for at in ((32.8,11.5),(35,15.1),(31.0,26.25),(30.3,27.8)):v('GND',at)
+    # D-R19-14: the AUX pair on F.Cu only (no layer change): north, north-west beside VBUS_SENSE, north to the top cell.
+    t('AUX_RX_MCU','F',S,[p('U1.64'),(22.5,29.95),(19.5,26.95),(19.5,20.6),p('R470.2')])
+    t('AUX_TX_MCU','F',S,[p('U1.63'),(23.0,29.95),(20.0,26.95),(20.0,18.0),p('R471.1')])
 
 
 def port_wires(d):
@@ -47,6 +53,18 @@ def port_wires(d):
             at=(a[0],a[1]+.7)
             t('GND','B',S,[a,at])
         v('GND',at)
+    # D-R19-14: the AUX cell is on the top beside J440 (its pins sit under the terminal body): each wire runs straight
+    # west from its resistor to the terminal pin, the clamp hangs on it, and the clamp's return drops to its own via.
+    # The RX row sits 0.9 mm north of J440.4 (TP82's 1 mm keep-out), so its wire steps down once, 45 degrees.
+    for net,res,dio,jack in [('AUX_TX_WIRE','R471.2','D440','J440.3'),('AUX_RX_WIRE','R470.1','D441','J440.4')]:
+        a=p(res);b=p(dio+'.1');j=p(jack)
+        if a[1]==j[1]:
+            t(net,'F',S,[a,j])
+        else:
+            t(net,'F',S,[a,(12.4,a[1]),(12.4-(j[1]-a[1]),j[1]),j])
+        t(net,'F',S,[(b[0],a[1]),b])
+        a=p(dio+'.2');at=(a[0],a[1]+(.75 if dio=='D441' else -.75))
+        t('GND','F',S,[a,at]);v('GND',at)
 
 
 def camera_local(d):

@@ -52,10 +52,11 @@ def draw(d, feed=False):
     d.via('USB_FAULT_N', (16.7, 39.05))
     d.track('USB_FAULT_N', 'B', .2, [(16.7, 39.05), (15.0383, 40.7117), (9.3, 40.7117),
                                    (9.3, 34.1), (12.6, 30.8), (12.6, 26.55), d.pad('U10.4')])
-    # D-AVA-01: the fault pull-up joins the limiter cell, freeing J2's pin-legend band.
-    d.track('USB_FAULT_N', 'B', .2, [d.pad('U10.4'),(13.05,25.7),(13.05,24.1),(12.25,23.3),(8.625,23.3)])
-    d.track('3V3', 'B', .2, [d.pad('R90.1'),(6.2,23.1)])
-    d.via('3V3',(6.2,23.1))
+    # D-AVA-01: the fault pull-up joins the limiter cell, freeing J2's pin-legend band. D-R19-14: R90 moves 3.5 mm east,
+    # out of J440.4's 1.5 mm M-6 ring, to the end of its own run (which no longer doubles back west); its 3V3 via moves with it.
+    d.track('USB_FAULT_N', 'B', .2, [d.pad('U10.4'),(13.05,25.7),(13.05,23.95),d.pad('R90.2')])
+    d.track('3V3', 'B', .2, [d.pad('R90.1'),(9.6,23.0)])
+    d.via('3V3',(9.6,23.0))
     # SWD from the TC2030 pads (J2: 2 SWDIO, 4 SWCLK, 3 NRST), clear of its three locating holes.
     # J2's F.Cu keep-out covers the strip between its pad rows: each track ends inside its pad, outside the strip.
     d.pad('J2.2', at=(3.73, 38.765)); d.pad('J2.4', at=(5.0, 38.765)); d.pad('J2.3', at=(5.0, 40.035))
@@ -97,7 +98,8 @@ def draw(d, feed=False):
     d.track('GND','F',.3,[d.pad('C86.2'),(18.3,25.3)]);d.via('GND',(18.3,25.3))
     d.track('USB_LIMITED','B',.4,[(15.55,28),(16,28)]
     )
-    d.track('USB_LIMITED','B',.4,[(15.55,28),(15.55,25.05),(11.8,21.3),d.pad('TP82.1')])
+    # D-R19-14: TP82 moves 3.7 mm north, out of J440.4's M-6 ring and R90's new land; its spur continues north to it.
+    d.track('USB_LIMITED','B',.4,[(15.55,28),(15.55,25.05),(11.8,21.3),(11.8,18.4),d.pad('TP82.1')])
 
     if feed:
         power_feed(d)

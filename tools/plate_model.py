@@ -40,7 +40,7 @@ T = 1.566e-3
 # R18-MEC-01: R10's east-edge terminals (J410 / J420 / J9 carry most of the east column's mass on an 82 mm unsupported
 # edge), J400 and the 1210-class C431 / C421 / C411 beside them are reported too
 STRAIN_PARTS = ('U31', 'U30', 'U4', 'U1', 'J121', 'J124', 'C121', 'C84', 'U5', 'J1', 'J122',
-                'J410', 'J420', 'J9', 'J400', 'C431', 'C421', 'C411')
+                'J410', 'J420', 'J9', 'J400', 'C431', 'C421', 'C411', 'J440', 'C445')   # D-R19-14: the AUX port and its 1210
 
 
 def leg(n, t):
@@ -117,7 +117,7 @@ def build(fit, D, clamp, case, profile='r9', mass_spec=None):
         if case != 'r10_mated':
             raise ValueError('R10 plate must include the allocated local leads and retained microSD card')
         names = {row[1] for row in rows}
-        required = {'J1', 'J121', 'J122', 'C84', 'J3', 'J9', 'J400', 'J410', 'J420', 'J430'}
+        required = {'J1', 'J121', 'J122', 'C84', 'J3', 'J9', 'J400', 'J410', 'J420', 'J430', 'J440'}
         required |= {name for name in names if name.endswith(' mated')}
         if required - names or required - mass_spec.get('masses_g', {}).keys():
             raise ValueError('R10 missing explicit body/plug masses: ' + str(sorted(

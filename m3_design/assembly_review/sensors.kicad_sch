@@ -784,238 +784,6 @@
 			(justify left))
 		(uuid d4e46322-0ed2-5e7a-913c-f3a6be66874c))
 	(symbol
-		(lib_id "M3:IMU_SPI")
-		(at 200.66 78.74 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid ca0da928-4da3-5eaf-ac36-80d830090b53)
-		(property "Reference" "U4"
-			(at 200.66 63.50000000000001 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Value" "LSM6DSV320X"
-			(at 200.66 67.31 0)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Footprint" "rocket:LGA-14_L3.0-W2.5-P0.50-TL"
-			(at 200.66 78.74 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 200.66 78.74 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C26633007"
-			(at 200.66 78.74 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "STMicroelectronics"
-			(at 200.66 78.74 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "LSM6DSV320XTR"
-			(at 200.66 78.74 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
-					(reference "U4")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 171.45 71.12)
-			(xy 166.36999999999998 71.12))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 6a3298a7-4268-5798-b7d0-dcaafdc7139b))
-	(global_label "SPI1_MISO"
-		(shape passive)
-		(at 166.36999999999998 71.12 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid d9dc6593-b196-581f-a7e9-ddc7be24c6f9))
-	(wire
-		(pts
-			(xy 171.45 73.66)
-			(xy 166.36999999999998 73.66))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 06ae098c-ea32-5ca9-9f9e-d1fd4f44d3ef))
-	(global_label "GND"
-		(shape passive)
-		(at 166.36999999999998 73.66 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f5aa13e0-ffa0-5df8-946b-0dafc62393d9))
-	(wire
-		(pts
-			(xy 171.45 76.2)
-			(xy 166.36999999999998 76.2))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 01e80add-a5a7-5aba-b841-80f0a968b0c5))
-	(global_label "GND"
-		(shape passive)
-		(at 166.36999999999998 76.2 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a4cfc331-405e-5d61-aa57-cd5f9d723001))
-	(wire
-		(pts
-			(xy 171.45 78.74)
-			(xy 166.36999999999998 78.74))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 17b1348d-140e-5a69-84ef-5ec3ce2945b3))
-	(global_label "IMU_INT1"
-		(shape passive)
-		(at 166.36999999999998 78.74 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid eb51de3f-40b5-5421-be68-d0d7aed07339))
-	(wire
-		(pts
-			(xy 171.45 81.28)
-			(xy 166.36999999999998 81.28))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 68d03869-e244-504e-88a9-452ed234c224))
-	(global_label "3V3A"
-		(shape passive)
-		(at 166.36999999999998 81.28 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid b1e91b73-371e-5dc3-9e6f-6c8e50752640))
-	(wire
-		(pts
-			(xy 171.45 83.82)
-			(xy 166.36999999999998 83.82))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 3f5c9855-92f3-56ba-b508-7fa3372c3659))
-	(global_label "GND"
-		(shape passive)
-		(at 166.36999999999998 83.82 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 64a8a74b-4b68-55e7-9658-98c4e54ba188))
-	(wire
-		(pts
-			(xy 171.45 86.36)
-			(xy 166.36999999999998 86.36))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid f6109ae9-e08a-5433-9ae6-fba2a7b939fc))
-	(global_label "GND"
-		(shape passive)
-		(at 166.36999999999998 86.36 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid c759255e-af2c-517f-af68-79bd1d54a2ba))
-	(wire
-		(pts
-			(xy 229.87 71.12)
-			(xy 234.95000000000002 71.12))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 0bdc1f6f-daa7-5977-ba9d-5f836caeaed6))
-	(global_label "3V3A"
-		(shape passive)
-		(at 234.95000000000002 71.12 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid a3923f6f-1129-5646-8e9b-c747d39e8047))
-	(no_connect
-		(at 229.87 73.66)
-		(uuid 552200fb-0693-526e-a637-1c018f8a248b))
-	(wire
-		(pts
-			(xy 229.87 81.28)
-			(xy 234.95000000000002 81.28))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid cd3ce6d1-2f3f-569d-a729-674e7b197a77))
-	(global_label "IMU_CS"
-		(shape passive)
-		(at 234.95000000000002 81.28 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid d73d0fbe-ef6b-5df0-89be-556bec809644))
-	(wire
-		(pts
-			(xy 229.87 83.82)
-			(xy 234.95000000000002 83.82))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 3cd913bb-9f6e-589a-8a48-1be49d704f24))
-	(global_label "SPI1_SCK"
-		(shape passive)
-		(at 234.95000000000002 83.82 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 7c30740c-da67-5cfc-a034-4dac20482ef9))
-	(wire
-		(pts
-			(xy 229.87 86.36)
-			(xy 234.95000000000002 86.36))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 6b9ca118-f00f-50f2-b4a2-eb6e2c800c53))
-	(global_label "SPI1_MOSI"
-		(shape passive)
-		(at 234.95000000000002 86.36 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid a876953b-746e-580d-b80e-cac9b58dacd5))
-	(symbol
 		(lib_id "M3:Barometer")
 		(at 327.66 76.2 0)
 		(unit 1)
@@ -2082,12 +1850,6 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 91e6e846-075b-5fd3-96bf-9d88c6b8acfe))
-	(no_connect
-		(at 229.87 76.2)
-		(uuid 13d44a29-b988-5e17-9496-4066e6c219c6))
-	(no_connect
-		(at 229.87 78.74)
-		(uuid 42686110-d5db-51ee-9fed-78c79759ab23))
 	(text "U4 = ST LSM6DSV320X (R4): +/-16 g low-g + +/-32..320 g high-g accel, +/-4000 dps gyro, SPI <= 10 MHz. Pins 10/11 open per DS14623 table 2."
 		(at 20.32 260.35 0)
 		(effects
@@ -2095,6 +1857,251 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 9c18e7d8-18e7-555d-af5a-405a6b16d840))
+	(symbol
+		(lib_id "M3:IMU_SPI")
+		(at 200.66 78.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid ca0da928-4da3-5eaf-ac36-80d830090b53)
+		(property "Reference" "U4"
+			(at 203.2 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "ISM6HG256X"
+			(at 203.2 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:LGA-14_L3.0-W2.5-P0.50-TL"
+			(at 200.66 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf"
+			(at 200.66 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C51931514"
+			(at 200.66 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "STMicroelectronics"
+			(at 200.66 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "ISM6HG256XTR"
+			(at 200.66 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/3ba7ef49-2012-5f2a-98bd-e18f61ab4da0"
+					(reference "U4")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 171.45 71.12)
+			(xy 166.37 71.12))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9fada3e0-baf3-5a74-ba92-e6d36e60450f))
+	(global_label "SPI1_MISO"
+		(shape passive)
+		(at 166.37 71.12 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f6528434-1eb3-52ac-85f4-1c1778a57613))
+	(wire
+		(pts
+			(xy 171.45 73.66)
+			(xy 166.37 73.66))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 237a3e36-acb3-5730-98cf-ec04a32b526b))
+	(global_label "GND"
+		(shape passive)
+		(at 166.37 73.66 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid dd056acd-3265-530c-9868-0cfa0e7d39e6))
+	(wire
+		(pts
+			(xy 171.45 76.2)
+			(xy 166.37 76.2))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ad3d340f-c604-5e15-b124-3ae7e32ca017))
+	(global_label "GND"
+		(shape passive)
+		(at 166.37 76.2 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 99a3055a-e439-547d-b0c9-1e85cab68147))
+	(wire
+		(pts
+			(xy 171.45 78.74)
+			(xy 166.37 78.74))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3d9f48ad-4dcd-5962-9da9-8bf1ca0135f1))
+	(global_label "IMU_INT1"
+		(shape passive)
+		(at 166.37 78.74 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 815d8a58-0b48-5049-8216-b75e97fd470d))
+	(wire
+		(pts
+			(xy 171.45 81.28)
+			(xy 166.37 81.28))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6b93d68b-3c16-59b1-b5ad-d89f0a444273))
+	(global_label "3V3A"
+		(shape passive)
+		(at 166.37 81.28 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a018191b-cc95-5039-afab-8bd67c73d772))
+	(wire
+		(pts
+			(xy 171.45 83.82)
+			(xy 166.37 83.82))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e3c86a15-db5b-55e5-a610-13a7325019ed))
+	(global_label "GND"
+		(shape passive)
+		(at 166.37 83.82 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5c0878e2-7491-5598-bb4e-31b553e26dfd))
+	(wire
+		(pts
+			(xy 171.45 86.36)
+			(xy 166.37 86.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 832604f5-d1bc-5890-8379-81f56e91bc16))
+	(global_label "GND"
+		(shape passive)
+		(at 166.37 86.36 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ce704e98-4c74-5cba-a235-201e6639fec4))
+	(wire
+		(pts
+			(xy 229.87 71.12)
+			(xy 234.95 71.12))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 272aa122-4c6b-55d1-83bf-6a08967348a3))
+	(global_label "3V3A"
+		(shape passive)
+		(at 234.95 71.12 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 64ec7f44-bbfa-5bfa-a8af-b9ed98d1848d))
+	(no_connect
+		(at 229.87 73.66)
+		(uuid a9d73998-5787-5718-97f9-f7ee63c601a4))
+	(no_connect
+		(at 229.87 76.2)
+		(uuid 81e10bf2-f864-55fe-9308-9a9902bd2998))
+	(no_connect
+		(at 229.87 78.74)
+		(uuid cb9da902-a93f-5000-a6c6-60653f8c8773))
+	(wire
+		(pts
+			(xy 229.87 81.28)
+			(xy 234.95 81.28))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1ae412fa-c79d-5f54-9d35-6a1ce6d806a8))
+	(global_label "IMU_CS"
+		(shape passive)
+		(at 234.95 81.28 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f1ec89bb-ce00-5710-8db7-aa974664278e))
+	(wire
+		(pts
+			(xy 229.87 83.82)
+			(xy 234.95 83.82))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0b017cab-3f7d-5602-850c-36ac89fe3af5))
+	(global_label "SPI1_SCK"
+		(shape passive)
+		(at 234.95 83.82 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid fc410cec-c968-5fea-afe5-f9974224d783))
+	(wire
+		(pts
+			(xy 229.87 86.36)
+			(xy 234.95 86.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4330c5d5-f2db-58ed-9b5f-27b409199c90))
+	(global_label "SPI1_MOSI"
+		(shape passive)
+		(at 234.95 86.36 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 8c100a66-bb45-5116-a869-a9b9f69a15c1))
 	(sheet_instances
 		(path "/"
 			(page "3"))))

@@ -65,9 +65,8 @@ def draw(d):
     v('ACT_GATE',(16.2,73.3))
     # D-R18-02 (R18-SAF-02): Q121's gate keeps its own 100k (R119) to the source bridge on via-free bottom copper, so
     # an open in either ACT_GATE layer change leaves both P-FETs biased off; the island's single via now sits below
-    # R119 and the probe pad TP121 moves west between J400 and J1.
+    # R119. D-R19-03 (R19-SAF-03): the bare probe pad TP121 and its stub are removed; probe ACT_GATE at R119.1 or R120.2.
     t('ACT_GATE','B',P,[p('Q121.4'),(11.14,70.0),p('R119.1'),(11.14,71.7)]);v('ACT_GATE',(11.14,71.7))
-    t('ACT_GATE','B',P,[(11.14,70.0),p('TP121.1')])
     t('ACT_FET_S','B',P,[p('R119.2'),(12.525,71.1)])
     t('ACT_GATE','F',P,[(11.14,71.7),(11.74,72.3),p('R121.1'),(15.2,72.3),(16.2,73.3)])
     d.link('ACT_DRV','F',P,'Q122.3','R121.2',((15.8,70.14),))
@@ -77,4 +76,8 @@ def draw(d):
     t('ACT_EN_MCU','F',S,[p('U1.16'),(24.5,51.6),(26.62,53.72),(26.62,65.344),(24.764,67.2),(21.77,67.2),p('R122.1')])
     d.link('ACT_EN','F',S,'Q122.1','R122.2',((19.08,70.75),))
     d.link('ACT_EN','F',S,'R122.2','R123.1')
+    # D-R19-04 (R19-SAF-06): C123, Q122's gate-source 10 nF, sits straight below the gate pad; its GND pad joins R123.2's
+    # fan-out via (r10_fanout.tsv, drawn by the ground family).
+    t('ACT_EN','F',S,[p('Q122.1'),p('C123.1')])
+    t('GND','F',P,[p('C123.2'),(19.207,71.85),(19.967,71.09)])
     d.link('RAW_ACT','B',.4,'Q121.9','TP120.1')

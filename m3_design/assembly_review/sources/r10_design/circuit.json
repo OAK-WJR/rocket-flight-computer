@@ -10,7 +10,6 @@
     "C11": "22uF 25V X5R 20%",
     "C19": "2.2uF 16V X5R 10%",
     "C20": "2.2uF 16V X5R 10%",
-    "C87": "2.2uF 16V X5R 10%",
     "C22": "1uF 50V X5R 10%",
     "C23": "4.7uF 16V X5R 10%",
     "C28": "4.7uF 16V X5R 10%",
@@ -854,6 +853,136 @@
         "2": "ACT_FET_S"
       },
       "kind": "fit"
+    },
+    "C123": {
+      "lib": "M3:C",
+      "value": "10nF 50V X7R 10%",
+      "footprint": "rocket:C0402",
+      "fields": {
+        "LCSC": "C15195",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL05B103KB5NNNC",
+        "Datasheet": "https://www.lcsc.com/product-detail/C15195.html"
+      },
+      "nets": {
+        "1": "ACT_EN",
+        "2": "GND"
+      },
+      "kind": "fit"
+    },
+    "J440": {
+      "lib": "M3:CameraTerminal",
+      "value": "DB125-3.5-4P-GN-S",
+      "footprint": "rocket:M3_DB125_4P_GN",
+      "fields": {
+        "LCSC": "C2757925",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-4P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "AUX_TX_WIRE",
+        "4": "AUX_RX_WIRE"
+      },
+      "kind": "fit"
+    },
+    "R470": {
+      "lib": "M3:R",
+      "value": "1k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C21190",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1001T5E",
+        "Datasheet": ""
+      },
+      "nets": {
+        "1": "AUX_RX_WIRE",
+        "2": "AUX_RX_MCU"
+      },
+      "kind": "fit"
+    },
+    "R471": {
+      "lib": "M3:R",
+      "value": "1k 1%",
+      "footprint": "rocket:R_0603_1608Metric",
+      "fields": {
+        "LCSC": "C21190",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1001T5E",
+        "Datasheet": ""
+      },
+      "nets": {
+        "1": "AUX_TX_MCU",
+        "2": "AUX_TX_WIRE"
+      },
+      "kind": "fit"
+    },
+    "D440": {
+      "lib": "M3:ESD_Bidir",
+      "value": "ESD103-B1-02EL",
+      "footprint": "rocket:M3_TSLP_2_20",
+      "fields": {
+        "LCSC": "C535146",
+        "Manufacturer": "Infineon Technologies",
+        "Manufacturer Part": "ESD103-B1-02EL E6327",
+        "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146"
+      },
+      "nets": {
+        "1": "AUX_TX_WIRE",
+        "2": "GND"
+      },
+      "kind": "fit"
+    },
+    "D441": {
+      "lib": "M3:ESD_Bidir",
+      "value": "ESD103-B1-02EL",
+      "footprint": "rocket:M3_TSLP_2_20",
+      "fields": {
+        "LCSC": "C535146",
+        "Manufacturer": "Infineon Technologies",
+        "Manufacturer Part": "ESD103-B1-02EL E6327",
+        "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146"
+      },
+      "nets": {
+        "1": "AUX_RX_WIRE",
+        "2": "GND"
+      },
+      "kind": "fit"
+    },
+    "C444": {
+      "lib": "M3:C",
+      "value": "100nF 50V X7R 10%",
+      "footprint": "rocket:C_0603_1608Metric",
+      "fields": {
+        "LCSC": "C14663",
+        "Manufacturer": "YAGEO",
+        "Manufacturer Part": "CC0603KRX7R9BB104",
+        "Datasheet": "https://www.lcsc.com/product-detail/C14663.html"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "GND"
+      },
+      "kind": "fit"
+    },
+    "C445": {
+      "lib": "M3:C",
+      "value": "22uF 25V X7R 10%",
+      "footprint": "rocket:M3_GRM32_1210",
+      "fields": {
+        "LCSC": "C21397",
+        "Manufacturer": "Murata",
+        "Manufacturer Part": "GRM32ER71E226KE15L",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21397.html"
+      },
+      "nets": {
+        "1": "PORT_4V8",
+        "2": "GND"
+      },
+      "kind": "fit"
     }
   },
   "mcu_changes": {
@@ -1224,6 +1353,50 @@
         "2": "GND"
       },
       "kind": "fit"
+    },
+    "C87": {
+      "lib": "M3:C",
+      "value": "220nF 25V X7R",
+      "footprint": "rocket:C0603",
+      "fields": {
+        "LCSC": "C21120",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10B224KA8NNNC",
+        "Datasheet": "https://www.lcsc.com/product-detail/C21120.html"
+      },
+      "nets": {
+        "1": "BAT_ENABLE",
+        "2": "GND"
+      },
+      "kind": "fit"
+    },
+    "U4": {
+      "lib": "M3:IMU_SPI",
+      "value": "ISM6HG256X",
+      "footprint": "rocket:LGA-14_L3.0-W2.5-P0.50-TL",
+      "fields": {
+        "LCSC": "C51931514",
+        "Manufacturer": "STMicroelectronics",
+        "Manufacturer Part": "ISM6HG256XTR",
+        "Datasheet": "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf"
+      },
+      "nets": {
+        "1": "SPI1_MISO",
+        "2": "GND",
+        "3": "GND",
+        "4": "IMU_INT1",
+        "5": "3V3A",
+        "6": "GND",
+        "7": "GND",
+        "8": "3V3A",
+        "9": null,
+        "10": null,
+        "11": null,
+        "12": "IMU_CS",
+        "13": "SPI1_SCK",
+        "14": "SPI1_MOSI"
+      },
+      "kind": "fit"
     }
   },
   "sheets": {
@@ -1276,7 +1449,15 @@
     "R464": "telemetry",
     "C460": "telemetry",
     "C461": "telemetry",
-    "R119": "actuator_power"
+    "R119": "actuator_power",
+    "C123": "actuator_power",
+    "J440": "telemetry",
+    "R470": "telemetry",
+    "R471": "telemetry",
+    "D440": "telemetry",
+    "D441": "telemetry",
+    "C444": "power",
+    "C445": "power"
   },
   "removed_refs": [
     "C121",
@@ -1393,30 +1574,31 @@
     "U421",
     "U422",
     "U7",
-    "U8"
+    "U8",
+    "TP121"
   ],
   "titles": {
-    "power": "05 | Regulated camera, radio and GPS port supplies",
-    "telemetry": "15 | Always-on GPS / radio UARTs and microSD log",
+    "power": "05 | Regulated camera and GPS / radio / AUX port supplies",
+    "telemetry": "15 | Always-on GPS / radio / AUX UARTs and microSD log",
     "pullpin_buzzer": "14 | Buzzer"
   },
   "notes": {
     "power": [
-      "R10 owner always-on ports: RAW_PROTECTED -> AP63201 5.456V -> retained camera TPS2553; TPS7A91 4.792V directly feeds J410 GPS and J420 radio.",
+      "R10 owner always-on ports: RAW_PROTECTED -> AP63201 5.456V -> retained camera TPS2553; TPS7A91 4.792V directly feeds J410 GPS, J420 radio and J440 AUX (D-R19-14: AUX up to 100mA beyond GPS 150mA + radio 300mA, U401 thermal floor).",
       "Camera U402 remains: its disabled reverse blocking separates CAM_5V from PORT_5V3. Enabled reverse blocking has a threshold and delay; no self-powered camera when the e-match is connected.",
-      "GPS/radio switches and translators are removed. The shared LDO current limit/thermal shutdown protect a cable short; no individual fault or power-cycle GPIO remains. R405 sets the LDO minimum load.",
-      "F6: GPS/radio loads cannot be shed by firmware. Stop SD/QSPI writes and UART activity, disable camera OE/EN, lower MCU clock, extinguish LEDs/buzzer; retain sensors, state and safety. Ports-on hold-up is conditional, not guaranteed."
+      "GPS/radio/AUX switches and translators are removed. The shared LDO current limit/thermal shutdown protect a cable short; no individual fault or power-cycle GPIO remains. R405 sets the LDO minimum load.",
+      "F6: GPS/radio/AUX loads cannot be shed by firmware. Stop SD/QSPI writes and UART activity, disable camera OE/EN, lower MCU clock, extinguish LEDs/buzzer; retain sensors, state and safety. Ports-on hold-up is conditional, not guaranteed."
     ],
     "telemetry": [
-      "R10: always-on GPS J410 and radio J420. DB1254pos pins1 PORT_4V8,2 GND,3 board TX,4 board RX; harness crosses TX to endpoint RX.",
-      "GPS USART6 PC6 TX / PC7 RX AF7; radio UART5 PB13 TX / PB12 RX AF14 (ST DS12110 Rev11 Table10 p91 PB12/PB13, p92 PC6/PC7). Direct MCU UART through1k and ground-only ESD; no EN/OE/FAULT GPIOs.",
-      "RX FT_h / FT_u: digital0..5V only, pulls disabled throughout use. Operating pull limit is relevant IO supply+0.3V (DS12110 Rev11 Table112 n3 p210 / Table147 n6 p242), distinct from Table109 absolute stress. Board off: no self-powered module;1k is not powered-off isolation.",
+      "R10: always-on GPS J410, radio J420 and spare AUX J440 (D-R19-14, owner 2026-10-30), three electrically identical ports. DB1254pos pins1 PORT_4V8,2 GND,3 board TX,4 board RX; harness crosses TX to endpoint RX.",
+      "Port UARTs: J410 USART3 PD8 TX / PD9 RX AF7; J420 UART5 PB13 TX / PB12 RX AF14; J440 USART6 PC6 TX / PC7 RX AF7 (ST DS12110 Rev 8 Table 11 p91 PB12/PB13, Table 12 p92 PC6/PC7, Table 13 p94 PD8/PD9). Firmware maps each device to a port; default GPS J410, radio J420, AUX spare. Direct MCU UART through1k and ground-only ESD; no EN/OE/FAULT GPIOs. TX alternate function only while PA4 reads low (U11 on IN2, the battery path); otherwise analog, no pull (R19-MCU-01).",
+      "RX FT_h / FT_u: digital0..5V only, pulls disabled throughout use. Operating pull limit is relevant IO supply+0.3V (DS12110 Rev 8 Table 122 n3 p215 / Table 157 n7 p247), distinct from Table 119 absolute stress. Board off: no self-powered module;1k is not powered-off isolation.",
       "J430 Molex472192001 is a locking hinged microSD socket, no eject spring or card-detect switch. SPI3 PC10/11/12 AF6, PD0 software CS with10k pull-up. QSPI remains the crash-safe primary log.",
       "Card pins1 DAT2,2 CS,3 MOSI/CMD,4 3V3,5 SCK,6 GND,7 MISO/DAT0,8 DAT1; four shield tabs to GND. R460-R46410k pull-ups on CS/CMD/DAT0/DAT1/DAT2; C460100nF plus C46122uF at card supply; no SCK pull.",
       "Power-up SD: CS high, MOSI high, >=74 clocks at100-400kHz; enter SPI with CMD0. Limit run clock<=25MHz, card write<=200mA and idle<=30mA as bench-qualified allocations. No blocking card operation in flight; card removal only with board off.",
       "ROM loader drives PC11 SPI3_MISO while CS stays high throughR460; card must remain deselected. Disable synchronous trace because PC12 can be TRACED3. CS high before AF6 configuration.",
       "Radio messages may never arm/fire. LR900-F band890-915MHz: use channels12-25(902-915MHz) or maker-confirmed FHSS set. Bench-qualify installed RF immunity.",
-      "J410/J420 are unkeyedgreenDB1253.5mm4posC2757925. Labelpower/GND/TX/RXperpin; clamp28-16AWGqualifiedferrules/splices, verifypolarity andharnesscrossing beforepower. Thinnermoduleleadsmustnotbeclampeddirectly."
+      "J410/J420/J440 are unkeyedgreenDB1253.5mm4posC2757925. Labelpower/GND/TX/RXperpin; clamp28-16AWGqualifiedferrules/splices, verifypolarity andharnesscrossing beforepower. Thinnermoduleleadsmustnotbeclampeddirectly."
     ],
     "servos": [
       "R10 owner screw terminals: J122 pins1/2/3/4 SERVO1/2/3/4_OUT, pin5 GND signal reference. No servo positive connection on board.",
@@ -1426,10 +1608,10 @@
     ],
     "actuator_power": [
       "R10 single screw switch (owner 2026-10-28): J400 powers and arms the board; J124 is removed. Q120/Q121 remain the pyro-bus load switch feeding RAW_ACT.",
-      "PC1 (U1.16) drives ACT_EN_MCU through R122 1k to Q122; R123 2k holds Q122 off in reset, unpowered or against a 30k internal pull-up (gate <=0.22V at 3.6V; R18-MCU-01). PC1 high gives about 2.2V gate. Q124 uses a separate MCU fire pin and its retained gate network.",
+      "PC1 (U1.16) drives ACT_EN_MCU through R122 1k to Q122; R123 2k holds Q122 off in reset, unpowered or against a 30k internal pull-up (gate <=0.22V at 3.6V; R18-MCU-01), and C123 10nF gate-source completes the AGENTS 2.4 network at Q122 (R19-SAF-06; about 7 us edge). PC1 high gives about 2.2V gate. Q124 uses a separate MCU fire pin and its retained gate network.",
       "D-SS-04: hold PC1 and PE4 low for passive cold screening; after prior enable wait >=1 s and verify RAW_ACT discharged / ACT_GATE off. Qualify passive fault bands and refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks.",
       "AUD-3: Q120/Q121 AONR21357, C120 1uF 25V X7R. Hot resistance and turn-on SOA remain bench qualifications.",
-      "R18-SAF-02: R120 100k at Q120 and R119 100k at Q121 each tie a P-FET gate to ACT_FET_S through via-free local bottom copper, so one open via or track leaves both FETs off. ACT_GATE/BAT_ENABLE barrels keep 1mm inner clearance.",
+      "R18-SAF-02: R120 100k at Q120 and R119 100k at Q121 each tie a P-FET gate to ACT_FET_S through via-free local bottom copper, so one open via or track leaves both FETs off. ACT_GATE/BAT_ENABLE barrels keep 1mm inner clearance. R19-SAF-03: TP121 is removed; probe ACT_GATE at R119.1 or R120.2.",
       "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and the sole ARM1_SENSE bus divider; no feed directly from BAT_IN or RAW_PROTECTED.",
       "R134 limits a shorted igniter; normal physical fire current <=20 ms. Firmware timing and pulse qualification: sources/r10_design/parts_qualification.md; no firmware implemented."
     ],

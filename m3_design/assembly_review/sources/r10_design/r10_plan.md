@@ -2,6 +2,15 @@
 
 **Historical completion before the new circuit changes (2026-10-28):** full rounds 9/10 are clean on the original and Minor-fix targets; final PCB`b337fe63…` is frozen. R10_VALIDATION contains the complete current deviation list; owner acceptance/OQ-3, procurement, process and physical/firmware qualifications remain pending. The single-switch/AUD/GAP amendments below supersede original hardware descriptions.
 
+**Round 19 CAD fix pass (2026-10-30):** the root orchestrator reopened CAD for thirteen round-19 Minors and the owner's
+spare AUX port (R10_DECISIONS D-R19-01..14): new PCB `50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976`
+(AVA_LAYOUT "Round19 CAD fix pass"; `../r10_review/round19_fix_cad.md`). It adds C123 (Q122's gate-source 10 nF),
+removes TP121, keeps In1 / In2 GND 1 mm from the PYRO1_OUT barrels, moves one BAT_ENABLE via, doubles five supply-feed
+vias, fits ISM6HG256XTR for U4 (LSM6DSV320X the consigned alternate) and C87 220 nF, drops C84's paste and re-places the
+terminal legends clear of the DB125 bodies, holding or re-placing nine designators (D-R19-06 / -08 / -12), and adds the
+AUX port J440 in the north-west corner, a J410 copy on USART6 PC6 / PC7, with J410 moved to USART3 PD8 / PD9 (D-R19-14);
+the round 18 paragraph below describes its predecessor.
+
 **Round 18 CAD fix pass (2026-10-30):** the root orchestrator reopened CAD for ten round-18 Minors
 (R10_DECISIONS D-R18-01..10): new PCB `a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918`
 (AVA_LAYOUT "Round18 CAD fix pass"; `../r10_review/round18_fix_cad.md`). Where the paragraphs below say no CAD

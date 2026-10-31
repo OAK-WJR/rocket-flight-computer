@@ -402,13 +402,6 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid f72c9822-90b2-56b1-bde1-6e667d32847e))
-	(text "Input range and tolerance calculation uses DS12110 Rev11, Tables14/112 and50/147."
-		(at 20.32 157.48 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 471557a9-6037-5b25-a820-f4c46731d0c0))
 	(text "Use software attach/detach from PC8. Do NOT enable native PA9 VBUS sensing (VBDEN)."
 		(at 20.32 167.64 0)
 		(effects
@@ -444,6 +437,13 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 54433017-da7c-5eb4-a81f-ae8fe7aaafa7))
+	(text "Input range and tolerance calculation uses DS12110 Rev 8, rev V chapter: Table 122 pp214-215 and Table 157 pp246-247 (R19-MCU-02)."
+		(at 20.32 157.48 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f64e5262-8d48-5deb-a9d9-e44ed622e3e2))
 	(sheet_instances
 		(path "/"
 			(page "10"))))

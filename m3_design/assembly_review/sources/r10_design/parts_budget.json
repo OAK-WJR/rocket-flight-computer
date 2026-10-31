@@ -16,6 +16,9 @@
   "camera_module_min_V": 5.031681973094171,
   "radio_module_min_V": 4.601504463251122,
   "gps_module_min_V": 4.6315044632511215,
+  "aux_module_min_V": 4.641504463251122,
+  "port_aux_allowance_A": 0.1,
+  "port_aux_allowance_basis": "D-R19-14: the spare port (J440 AUX by default; the three ports are identical, so it is whichever port carries neither the GPS nor the radio) may draw up to 100 mA at 4.8 V beyond GPS 150 mA and radio 300 mA; set by U401 GAP-3 junction <= 125 C at 70 C bay (theta-JA 110 C/W Inference), which allows 112 mA; TI SBVS282A 1 A rating p1 and 1.5-1.9 A limit p5 not binding",
   "radio_gps_module_max_V": 4.92325003399147,
   "ldo_headroom_min_V": 0.44343193910270085,
   "switch_limit_A": {
@@ -31,7 +34,7 @@
   ],
   "ldo_hard_short_foldback_typical_A": 1.45,
   "gps_or_radio_short_camera_normal_prospective_buck_A": 2.911,
-  "port_short_note": "GPS/radio share the LDO current/thermal limit; one cable short may remove both and cause U400 current limit/hiccup with camera on. No guarantee of continuous fault operation; bench logic/flight retention.",
+  "port_short_note": "GPS/radio/AUX share the LDO current/thermal limit; one cable short may remove all three and cause U400 current limit/hiccup with camera on. No guarantee of continuous fault operation; bench logic/flight retention.",
   "microsd_current_allocation_A": {
     "write": 0.2,
     "idle": 0.03,
@@ -54,9 +57,9 @@
     "9V97_500kHz": 3.615992170491664
   },
   "buck_peak_current_limit_min_A": 2.5,
-  "buck_camera_short_radio_gps_normal_A": 1.7104980434153072,
+  "buck_camera_short_radio_gps_normal_A": 1.8104980434153073,
   "ldo_bleeder_min_A": 0.005633075637555143,
-  "ldo_full_load_loss_W": 0.4061769032918402,
+  "ldo_full_load_loss_W": 0.48965338722262375,
   "ldo_theta_ja_inference_C_per_W": [
     80,
     110
@@ -78,12 +81,12 @@
     "process": "Resin-filled, copper-capped planar VIPPO; maker paste unchanged"
   },
   "ldo_ambient_70C_junction_inference_C": [
-    102.49415226334722,
-    114.67945936210242
+    109.1722709778099,
+    123.8618725944886
   ],
   "ldo_ambient_85C_junction_inference_C": [
-    117.49415226334722,
-    129.67945936210242
+    124.1722709778099,
+    138.8618725944886
   ],
   "pack_7V4_four_stall_loaded_V": 5.899191137113537,
   "pack_6V0_four_stall_loaded_V": 4.414001778867496,
@@ -106,12 +109,12 @@
       2.3419325912183058
     ],
     "c_camera_radio_gps_on": [
-      10.617782429677817,
-      12.370806905016599
+      11.249156779453603,
+      13.06409056783647
     ],
     "d_gps_radio_on_camera_off_logic_shed": [
-      3.664038931919968,
-      3.9567202768179044
+      4.295413281695752,
+      4.650003939637774
     ]
   },
   "battery_break_ride_through_ms": {
@@ -148,39 +151,39 @@
       6.3447032458219015
     ],
     "c_camera_radio_gps_on_C300.8uF_to_3.5V": [
-      0.5168219057244611,
-      0.6021505942831796
+      0.48939525999158945,
+      0.5683540664734649
     ],
     "c_camera_radio_gps_on_C300.8uF_to_3.8V": [
-      0.4901966417033703,
-      0.5711294274640745
+      0.4641829424338012,
+      0.5390740051801953
     ],
     "c_camera_radio_gps_on_C470uF_to_3.5V": [
-      0.8075342276944705,
-      0.9408603035674682
+      0.7646800937368585,
+      0.8880532288647889
     ],
     "c_camera_radio_gps_on_C470uF_to_3.8V": [
-      0.7659322526615161,
-      0.8923897304126163
+      0.7252858475528143,
+      0.8423031330940551
     ],
     "d_gps_radio_on_camera_off_logic_shed_C300.8uF_to_3.5V": [
-      1.615859487833651,
-      1.7449334242335093
+      1.3749459318733486,
+      1.4884490922549738
     ],
     "d_gps_radio_on_camera_off_logic_shed_C300.8uF_to_3.8V": [
-      1.5326147859198496,
-      1.655039182900379
+      1.3041124434987865,
+      1.4117682286455082
     ],
     "d_gps_radio_on_camera_off_logic_shed_C470uF_to_3.5V": [
-      2.5247804497400796,
-      2.7264584753648586
+      2.148353018552107,
+      2.3257017066483967
     ],
     "d_gps_radio_on_camera_off_logic_shed_C470uF_to_3.8V": [
-      2.394710602999765,
-      2.585998723281842
+      2.0376756929668542,
+      2.2058878572586065
     ]
   },
-  "battery_break_ride_through_note": "[shortest, longest] ms; Calc / Inference: constant-power loads at the AP63203 / AP63201 inputs from7.4V; microSD additional3.3V*0.2A write or0.03A idle divided by80-85% efficiency; a:0.62W retained logic+0.1W idle port chain; b: 0.6-1.4 W unshed logic (pass1_electrical 4.4, no RF) + 0.1 W; c:ports at1.461A+unshed logic+SDwrite; d:GPS/radio always on at0.461A,camera off,logic shed+SDidle; a/b require physically absent port loads, not software switches. No credit for RAW_PROTECTED capacitance or U11 reverse blocking; each case additionally includes the 3.3 kohm R92 loss at 7.4 V and minimum resistance",
+  "battery_break_ride_through_note": "[shortest, longest] ms; Calc / Inference: constant-power loads at the AP63203 / AP63201 inputs from7.4V; microSD additional3.3V*0.2A write or0.03A idle divided by80-85% efficiency; a:0.62W retained logic+0.1W idle port chain; b: 0.6-1.4 W unshed logic (pass1_electrical 4.4, no RF) + 0.1 W; c:ports at1.561A (incl. the 0.1A AUX allowance)+unshed logic+SDwrite; d:GPS/radio/AUX always on at0.561A,camera off,logic shed+SDidle; a/b require physically absent port loads, not software switches. No credit for RAW_PROTECTED capacitance or U11 reverse blocking; each case additionally includes the 3.3 kohm R92 loss at 7.4 V and minimum resistance",
   "passive_cold_screen_sole_bus": {
     "status": "Calc / Inference; no firmware thresholds or measured fault discrimination",
     "topology": "R13110k pull-up; one11.2k OUT divider and one11.2k RAW_ACT divider, linked by2R R134 and1-2R ematch",
@@ -272,7 +275,7 @@
   },
   "fire_current_GAP1": {
     "status": "Native-board CAD path calculation; material, hot FET, source and harness conditions unmeasured",
-    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "board_sha256": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
     "selected_ematch": "MJG J-Tek LEAD-FREE standard24AWG",
     "maker_all_fire_A": 0.75,
     "current_margin": 1.5,
@@ -282,7 +285,7 @@
     "physical_pulse_qualification": "<=20ms including tail; lot bench qualification pending",
     "pack_R_ohm": 0.15,
     "open_equivalent_at_fire_V": 7.4,
-    "other_converter_load_W": 12.370806905016599,
+    "other_converter_load_W": 13.06409056783647,
     "servo_stall_A": 1.92,
     "R134_hot_max_ohm": 2.02909,
     "ematch_max_ohm": 2,
@@ -335,66 +338,66 @@
       "total_loop_ohm": 4.617802565206039,
       "pack_7V4_by_stall_count": {
         "0": {
-          "loaded_pack_V": 6.8994087129631545,
-          "fire_A": 1.5442510299568217,
-          "other_A": 1.7930242169554833
+          "loaded_pack_V": 6.884219321465066,
+          "fire_A": 1.5408512844943925,
+          "other_A": 1.8976865724051677
         },
         "1": {
-          "loaded_pack_V": 6.609343626563335,
-          "fire_A": 1.4793275956361642,
-          "other_A": 3.7917148939416023
+          "loaded_pack_V": 6.593428110550099,
+          "fire_A": 1.4757653263145112,
+          "other_A": 3.901380603351496
         },
         "2": {
-          "loaded_pack_V": 6.318180767357319,
-          "fire_A": 1.4141584537690841,
-          "other_A": 5.797969763848793
+          "loaded_pack_V": 6.301459898300999,
+          "fire_A": 1.4104159273677304,
+          "other_A": 5.913184750625614
         },
         "3": {
-          "loaded_pack_V": 6.025745533024624,
-          "fire_A": 1.3487045242221305,
-          "other_A": 7.812991922280373
+          "loaded_pack_V": 6.00812532354401,
+          "fire_A": 1.344760704139785,
+          "other_A": 7.934403805566818
         },
         "4": {
-          "loaded_pack_V": 5.731822211893446,
-          "fire_A": 1.2829175256156637,
-          "other_A": 9.83826772842803
+          "loaded_pack_V": 5.713189767224944,
+          "fire_A": 1.278747143331181,
+          "other_A": 9.966654408502531
         }
       },
-      "two_stall_compatible_all_fire_A": 0.9427723025127227,
-      "two_stall_open_equivalent_V_for_1A_all_fire": 7.77959179718616
+      "two_stall_compatible_all_fire_A": 0.9402772849118203,
+      "two_stall_open_equivalent_V_for_1A_all_fire": 7.795109127074883
     },
     "secondary_typical_hot_curve_FETs": {
       "fire_branch_without_pack_ohm": 4.422242565206038,
       "total_loop_ohm": 4.572242565206039,
       "pack_7V4_by_stall_count": {
         "0": {
-          "loaded_pack_V": 6.8970100981441895,
-          "fire_A": 1.5596182245654018,
-          "other_A": 1.7936477878066712
+          "loaded_pack_V": 6.881820278960977,
+          "fire_A": 1.5561833566314887,
+          "other_A": 1.898348116961999
         },
         "1": {
-          "loaded_pack_V": 6.607037747290937,
-          "fire_A": 1.4940468890772178,
-          "other_A": 3.7923681289832136
+          "loaded_pack_V": 6.591121739272026,
+          "fire_A": 1.4904478083429005,
+          "other_A": 3.9020739298435974
         },
         "2": {
-          "loaded_pack_V": 6.315967524755757,
-          "fire_A": 1.4282272922904415,
-          "other_A": 5.7986558760045215
+          "loaded_pack_V": 6.299246085153968,
+          "fire_A": 1.424446079623965,
+          "other_A": 5.913913352682927
         },
         "3": {
-          "loaded_pack_V": 6.023624800611276,
-          "fire_A": 1.3621199452071728,
-          "other_A": 7.813714717384325
+          "loaded_pack_V": 6.0060039234730604,
+          "fire_A": 1.3581353430786383,
+          "other_A": 7.935171833767629
         },
         "4": {
-          "loaded_pack_V": 5.729793825416247,
-          "fire_A": 1.2956760604897504,
-          "other_A": 9.839031770068605
+          "loaded_pack_V": 5.711160591272734,
+          "fire_A": 1.2914625344633586,
+          "other_A": 9.967466857051752
         }
       },
-      "two_stall_compatible_all_fire_A": 0.9521515281936277,
-      "two_stall_open_equivalent_V_for_1A_all_fire": 7.714104425640528
+      "two_stall_compatible_all_fire_A": 0.94963071974931,
+      "two_stall_open_equivalent_V_for_1A_all_fire": 7.7297816222799565
     },
     "historical_4R533_fixed_other_1p5A_fire_A": 1.5828369733068608,
     "historical_4R533_fixed_other_5p34A_fire_A": 1.455768806529892,
@@ -450,13 +453,13 @@
     6.9405
   ],
   "option_oq5_ride_through_ms": {
-    "ports_on_then_logic_shed_C300.8uF_to_3.5V": 3.8568220780584923,
-    "ports_on_then_logic_shed_C300.8uF_to_3.8V": 3.474130475648172,
-    "ports_on_then_logic_shed_C470uF_to_3.5V": 6.026284496966394,
-    "ports_on_then_logic_shed_C470uF_to_3.8V": 5.428328868200269,
-    "ports_on_then_logic_no_shed_C300.8uF_to_3.5V": 1.5863379200983478,
-    "ports_on_then_logic_no_shed_C300.8uF_to_3.8V": 1.445695101754608,
-    "ports_on_then_logic_no_shed_C470uF_to_3.5V": 2.4786530001536686,
-    "ports_on_then_logic_no_shed_C470uF_to_3.8V": 2.2588985964915755
+    "ports_on_then_logic_shed_C300.8uF_to_3.5V": 3.8426492587116754,
+    "ports_on_then_logic_shed_C300.8uF_to_3.8V": 3.459957656301355,
+    "ports_on_then_logic_shed_C470uF_to_3.5V": 6.004139466736993,
+    "ports_on_then_logic_shed_C470uF_to_3.8V": 5.406183837970867,
+    "ports_on_then_logic_no_shed_C300.8uF_to_3.5V": 1.572165100751531,
+    "ports_on_then_logic_no_shed_C300.8uF_to_3.8V": 1.4315222824077913,
+    "ports_on_then_logic_no_shed_C470uF_to_3.5V": 2.456507969924267,
+    "ports_on_then_logic_no_shed_C470uF_to_3.8V": 2.236753566262174
   }
 }

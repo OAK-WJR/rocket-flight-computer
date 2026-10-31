@@ -13,6 +13,7 @@
     "J410": 6.0,
     "J420": 6.0,
     "J430": 0.434,
+    "J440": 6.0,
     "J1 mated": 1.0,
     "J121 mated": 1.0,
     "J122 mated": 2.5,
@@ -20,7 +21,8 @@
     "J400 mated": 1.0,
     "J410 mated": 2.0,
     "J420 mated": 2.0,
-    "J430 mated": 0.5
+    "J430 mated": 0.5,
+    "J440 mated": 2.0
   },
   "placement": "tools/plate_model.py --profile r10 places every key: on its own fit-report row's model box, or, for 'X mated' with no row of its own (DB125 terminals' local wire/ferrule allowance, no mated plug envelope in fit_check), on its parent X's model box; any other key is refused (R3-MEC-01) Collision-only terminal-tail rows are excluded from mass placement and cannot be explicit masses or mated-allowance parents; connector masses already include their pins.",
   "removed_bench_only": {

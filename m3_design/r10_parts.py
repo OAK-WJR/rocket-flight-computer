@@ -89,11 +89,14 @@ def polymer():
     body = _rect((-4.15, -4.15), (4.15, 4.15), 'F.Fab', .1)
     body += _circle((0, 0), 4, 'F.Fab', .1)
     body += _rect((-5.25, -4.5), (5.25, 4.5), 'F.CrtYd', .05)
+    # D-R19-07 (R19-MFG-02 / R19-BOM-02): C84 is soldered by hand after both reflow passes (export_fab.MANUAL_FIT), so its
+    # lands carry no stencil aperture; the copper and mask openings are unchanged.
     for n, x in [('1', -3.25), ('2', 3.25)]:
-        body += _pad(n, x, 0, 3.5, 1.7, ('F.Cu', 'F.Paste', 'F.Mask'))
+        body += _pad(n, x, 0, 3.5, 1.7, ('F.Cu', 'F.Mask'))
     body += _line((-4.5, -2.2), (-4.5, -1.2), 'F.SilkS', .15)
     body += _line((-5, -1.7), (-4, -1.7), 'F.SilkS', .15)
-    return make_fp(name, body, -5.4, 'jieerrui MA25V470M8x10; positive pad1 left; derived land, reflow qualification open')
+    return make_fp(name, body, -5.4, 'jieerrui MA25V470M8x10; positive pad1 left; derived land; hand-fitted after reflow, '
+                   'no paste aperture')
 
 
 def srp5030t():
@@ -368,7 +371,12 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
     # U11 (TPS2121 reverse blocking only above IRCB 0.2 / 1 / 2 A, SLVSEA3F section 7.5 p. 8), so it also carries the
     # port buck U400 (EN tied to VIN; GPS/radio always on, camera turn-off up to3ms). Constant-power
     # loads from 7.4 V; no credit for RAW_PROTECTED / C6 / C7 capacitance or for U11 blocking (Calc / Inference).
-    ports_w = [buck_min * 1.461 / .85, buck_max * 1.461 / .80]     # camera 1 A + radio .3 A + GPS .15 A + 11 mA
+    # D-R19-14 (owner, 2026-10-30): the spare AUX port J440 shares PORT_4V8. Its allowance is set by U401's thermal floor
+    # (GAP-3: junction <= 125 C at the 70 C bay limit with the 80-110 C/W inferred theta-JA): the LDO loss
+    # (buck_max - ldo_min) x (0.46 A + AUX) + buck_max x 4 mA ground current stays <= 0.5 W for AUX <= 0.112 A, so the
+    # documented limit is 100 mA at 4.8 V. U401's 1 A rating (TI SBVS282A p. 1) and 1.5-1.9 A limit (p. 5) are not binding.
+    aux_A = .1
+    ports_w = [buck_min * (1.461 + aux_A) / .85, buck_max * (1.461 + aux_A) / .80]  # camera 1 A + radio .3 + GPS .15 + AUX .1 + 11 mA
     # D-OA-05: account explicitly for R92 (3.3 kohm) while C84 can feed RAW_PROTECTED through U11.
     # Hold its worst loss at the 7.4 V launch floor constant as voltage falls; no credit for any old envelope allowance.
     r92_bleed_w = 7.4 ** 2 / (3300 * (1-thick))
@@ -377,8 +385,8 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
     loads_w = dict(a_ports_off_logic_shed=[.62 + .1 + sd_idle_w[0], .62 + .1 + sd_idle_w[1]],
                    b_ports_off_no_shed=[.6 + .1 + sd_write_w[0], 1.4 + .1 + sd_write_w[1]],
                    c_camera_radio_gps_on=[ports_w[0] + .6 + sd_write_w[0], ports_w[1] + 1.4 + sd_write_w[1]],
-                   d_gps_radio_on_camera_off_logic_shed=[buck_min*.461/.85+.62+sd_idle_w[0],
-                                                        buck_max*.461/.80+.62+sd_idle_w[1]])
+                   d_gps_radio_on_camera_off_logic_shed=[buck_min*(.461+aux_A)/.85+.62+sd_idle_w[0],
+                                                        buck_max*(.461+aux_A)/.80+.62+sd_idle_w[1]])
     loads_w = {case: [w + r92_bleed_w for w in watts] for case, watts in loads_w.items()}
     def ride(c, v_end, w):
         return .5 * c * (7.4 ** 2 - v_end ** 2) / w * 1000
@@ -426,7 +434,7 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
                     two_stall_compatible_all_fire_A=cases['2']['fire_A']/1.5,
                     two_stall_open_equivalent_V_for_1A_all_fire=target_v+.15*(1.5+3.84+other_w/target_v))
     fire_primary, fire_typical = fire_case(.040), fire_case(.0123*1.4)
-    # GAP-5: 960 LSI cycles, including Rev V's 29.4 kHz minimum through Tj=125 C (DS12110 Rev11 table136).
+    # GAP-5: 960 LSI cycles, including Rev V's 29.4 kHz minimum through Tj=125 C (DS12110 Rev 8 Table 146 p. 238).
     watchdog_ms = [960/33600*1000, 960/29400*1000]
     c126_max = 220e-9*1.10*1.15
     r_discharge_max = (1/(1/10000 + 1/(220+1000))) * 1.02
@@ -459,6 +467,12 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
         camera_module_min_V=buck_min-.135-.15-.05,
         radio_module_min_V=ldo_min-.3*.2-.05,
         gps_module_min_V=ldo_min-.15*.2-.05,
+        aux_module_min_V=ldo_min-aux_A*.2-.05,
+        port_aux_allowance_A=aux_A,
+        port_aux_allowance_basis=('D-R19-14: the spare port (J440 AUX by default; the three ports are identical, so it is whichever '
+                                  'port carries neither the GPS nor the radio) may draw up to 100 mA at 4.8 V beyond GPS 150 mA '
+                                  'and radio 300 mA; set by U401 GAP-3 junction <= 125 C at 70 C bay (theta-JA 110 C/W '
+                                  'Inference), which allows 112 mA; TI SBVS282A 1 A rating p1 and 1.5-1.9 A limit p5 not binding'),
         radio_gps_module_max_V=ldo_max+.05,
         ldo_headroom_min_V=buck_min-.05-ldo_max,
         switch_limit_A=limits,
@@ -466,7 +480,7 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
         ldo_shared_current_limit_A=[1.5,1.9],
         ldo_hard_short_foldback_typical_A=1.45,
         gps_or_radio_short_camera_normal_prospective_buck_A=ldo_short_max+1+.011,
-        port_short_note='GPS/radio share the LDO current/thermal limit; one cable short may remove both and cause U400 current limit/hiccup with camera on. No guarantee of continuous fault operation; bench logic/flight retention.',
+        port_short_note='GPS/radio/AUX share the LDO current/thermal limit; one cable short may remove all three and cause U400 current limit/hiccup with camera on. No guarantee of continuous fault operation; bench logic/flight retention.',
         microsd_current_allocation_A=dict(write=.2,idle=.03,status='selected card qualification required; allocations, not measured maxima'),
         microsd_input_write_W=sd_write_w, microsd_input_idle_W=sd_idle_w,
         buck_all_shorts_A=all_shorts,
@@ -474,16 +488,16 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
         buck_prospective_all_shorts_peak_inductor_without_limiting_A={'8V4_470kHz': peak(8.4, 470e3), '8V4_500kHz': peak(8.4, 500e3),
                                          '9V97_470kHz': peak(9.97, 470e3), '9V97_500kHz': peak(9.97, 500e3)},
         buck_peak_current_limit_min_A=2.5,
-        buck_camera_short_radio_gps_normal_A=limits['camera'][1]+.3+.15+.011,
+        buck_camera_short_radio_gps_normal_A=limits['camera'][1]+.3+.15+aux_A+.011,
         ldo_bleeder_min_A=ldo_min/(820*(1+thick)),
-        ldo_full_load_loss_W=(buck_max-ldo_min)*.46+buck_max*.004,
+        ldo_full_load_loss_W=(buck_max-ldo_min)*(.46+aux_A)+buck_max*.004,
         # GAP-3 adds two filled/capped vias; retain the conservative, unmeasured layout estimate.
         ldo_theta_ja_inference_C_per_W=[80, 110],
         ldo_thermal_vias=dict(count=2, at_mm=[[27.3,13.6],[27.9,13.6]], ring_mm=.5, drill_mm=.3,
                              process='Resin-filled, copper-capped planar VIPPO; maker paste unchanged'),
-        ldo_ambient_70C_junction_inference_C=[70+r*((buck_max-ldo_min)*.46+buck_max*.004)
+        ldo_ambient_70C_junction_inference_C=[70+r*((buck_max-ldo_min)*(.46+aux_A)+buck_max*.004)
                                              for r in (80, 110)],
-        ldo_ambient_85C_junction_inference_C=[85+r*((buck_max-ldo_min)*.46+buck_max*.004)
+        ldo_ambient_85C_junction_inference_C=[85+r*((buck_max-ldo_min)*(.46+aux_A)+buck_max*.004)
                                              for r in (80, 110)],
         pack_7V4_four_stall_loaded_V=loaded_pack(7.4,7.68),
         pack_6V0_four_stall_loaded_V=loaded_pack(6,7.68),
@@ -505,7 +519,7 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
         battery_break_ride_through_note=('[shortest, longest] ms; Calc / Inference: constant-power loads at the '
                                          'AP63203 / AP63201 inputs from7.4V; microSD additional3.3V*0.2A write or0.03A idle divided by80-85% efficiency; a:0.62W retained logic+0.1W idle '
                                          'port chain; b: 0.6-1.4 W unshed logic (pass1_electrical 4.4, no RF) + 0.1 W; '
-                                         'c:ports at1.461A+unshed logic+SDwrite; d:GPS/radio always on at0.461A,camera off,logic shed+SDidle; a/b require physically absent port loads, not software switches. No credit for '
+                                         'c:ports at1.561A (incl. the 0.1A AUX allowance)+unshed logic+SDwrite; d:GPS/radio/AUX always on at0.561A,camera off,logic shed+SDidle; a/b require physically absent port loads, not software switches. No credit for '
                                          'RAW_PROTECTED capacitance or U11 reverse blocking; each case additionally '
                                          'includes the 3.3 kohm R92 loss at 7.4 V and minimum resistance'),
         passive_cold_screen_sole_bus=passive_cold_screen(),
@@ -591,6 +605,8 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
     assert results['ldo_headroom_min_V'] > .2
     assert results['ldo_bleeder_min_A'] > .005
     assert results['buck_camera_short_radio_gps_normal_A'] < 2
+    # GAP-3 / D-R19-14: U401's inferred junction stays <= 125 C at the 70 C bay limit with the AUX allowance included.
+    assert max(results['ldo_ambient_70C_junction_inference_C']) <= 125 and .46 + results['port_aux_allowance_A'] <= 1
     # Removing individual GPS/radio limiters raises prospective short demand above
     # the buck's2A continuous rating. Current limit/hiccup/thermal response is the
     # intended fault state, not qualification of this prospective current as safe.

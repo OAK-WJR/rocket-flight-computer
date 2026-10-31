@@ -1580,13 +1580,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid c3f3faf1-e983-500a-86e4-747ba8cf4167))
-	(text "R8: PE8/pin38 UART7_TX and PE7/pin37 UART7_RX use AF7, no flow control (never AF7 on PE9 or PE10); off the ROM loader's USART3. PA7/pin31 controls OE as GPIO."
-		(at 20.32 231.14 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid a963204a-4bd7-500f-b196-bac03401f8cd))
 	(text "U12 A-port=MCU3V3. B-port=U13 camera-derived3V3. Never substitute CAM5V for VCCB."
 		(at 20.32 237.48999999999998 0)
 		(effects
@@ -1905,6 +1898,13 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 1d07fd6e-5bbd-5d34-94e5-fdb5aa5a03db))
+	(text "R8: PE8/pin38 UART7_TX and PE7/pin37 UART7_RX use AF7, no flow control (never AF7 on PE9 or PE10); off the ROM loader's USART3. R10: PE9/pin39 CAM_UART_OE drives OE as a GPIO; R102 10k holds it low (R19-MCU-03)."
+		(at 20.32 231.14 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid fe498362-cd0a-5d30-bb81-6545424f0932))
 	(sheet_instances
 		(path "/"
 			(page "9")))
