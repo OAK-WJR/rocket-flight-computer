@@ -44,7 +44,9 @@ def gh2():
     return make_fp(name, body, -4, 'JST BM02B-GHS-TBT; eGH p2 top-entry maker land; unnamed mechanical tabs')
 
 
-def terminal(color, positions=2):
+def terminal(color, positions=2, bare=()):
+    """`bare`: pad numbers that keep copper only on the layers they connect (the outer lands always; KiCad 'remove
+    unconnected layers, keep start and end', as every via since D-S8-19)."""
     name = f'M3_DB125_{positions}P_' + color
     half = positions * 3.5 / 2
     body = _rect((-half, -3.9), (half, 3.5), 'F.Fab', .1)
@@ -61,7 +63,8 @@ def terminal(color, positions=2):
     for number in range(1, positions+1):
         n, x = str(number), (number-(positions+1)/2)*3.5
         body += (f'(pad "{n}" thru_hole circle (at {x} 0) (size 1.9 1.9) '
-                 '(drill 1.3) (layers "*.Cu" "*.Mask"))\n')
+                 '(drill 1.3) (layers "*.Cu" "*.Mask")' +
+                 (' (remove_unused_layers yes) (keep_end_layers yes)' if n in bare else '') + ')\n')
     return make_fp(name, body, -5,
                    f'DORABO DB125-3.5-{positions}P; drawing T0-1; 1.3mm finished drill, 1.9mm copper; wire entry +y', True)
 
@@ -160,8 +163,11 @@ def microsd():
 
 TERMINAL_X = {2: (-4.62, 3.70), 4: (-8.32, 7.20), 5: (-10.07, 8.95)}
 
-FOOTPRINTS = {'M3_GH_BM02B_GHS_TBT': gh2, 'M3_DB125_2P_BK': lambda: terminal('BK'),
-              'M3_DB125_2P_GN': lambda: terminal('GN'), 'M3_TPS7A91_DSK10': ldo,
+# D-R20-05 (R20-SAF-05): the S-8-protected terminal barrels J121.1 (PYRO1_OUT, BK pad 1) and J400.2 (BAT_SW_RETURN, GN
+# pad 2) carry no unconnected inner rings, so ring-to-copper equals their barrel walls' >= 1.0 mm. GN pad 2 is also J1.2
+# (GND: In1 thermal kept, its unconnected In2 ring goes). J121.2 (PYRO1_IGN, GND exempt) keeps its rings.
+FOOTPRINTS = {'M3_GH_BM02B_GHS_TBT': gh2, 'M3_DB125_2P_BK': lambda: terminal('BK', bare=('1',)),
+              'M3_DB125_2P_GN': lambda: terminal('GN', bare=('2',)), 'M3_TPS7A91_DSK10': ldo,
               'M3_MA_8x10': polymer, 'M3_AONR21357_DFN3x3A_EP1': load_switch,
               'M3_MICROSD_MOLEX_472192001': microsd,
               'M3_DB125_4P_GN': lambda: terminal('GN', 4),
@@ -237,6 +243,12 @@ def geometry_checks():
                 for p in fp.Pads() if p.GetNumber()}
         assert all(p.GetLocalClearance() in (None, 0) for p in fp.Pads()), name
         result[name] = rows
+        if name.startswith('M3_DB125_'):            # D-R20-05: only the protected barrels drop unconnected rings
+            bare = {'M3_DB125_2P_BK': {'1'}, 'M3_DB125_2P_GN': {'2'}}.get(name, set())
+            assert {p.GetNumber() for p in fp.Pads() if p.Padstack().UnconnectedLayerMode()
+                    == pcbnew.UNCONNECTED_LAYER_MODE_REMOVE_EXCEPT_START_AND_END} == bare, name
+            assert all(p.Padstack().UnconnectedLayerMode() == pcbnew.UNCONNECTED_LAYER_MODE_KEEP_ALL
+                       for p in fp.Pads() if p.GetNumber() not in bare), name
         if name == 'M3_AONR21357_DFN3x3A_EP1':
             drain = next(p for p in fp.Pads() if p.GetNumber() == '9')
             box = drain.GetBoundingBox()

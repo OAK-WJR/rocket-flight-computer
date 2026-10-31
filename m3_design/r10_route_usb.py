@@ -98,8 +98,9 @@ def draw(d, feed=False):
     d.track('GND','F',.3,[d.pad('C86.2'),(18.3,25.3)]);d.via('GND',(18.3,25.3))
     d.track('USB_LIMITED','B',.4,[(15.55,28),(16,28)]
     )
-    # D-R19-14: TP82 moves 3.7 mm north, out of J440.4's M-6 ring and R90's new land; its spur continues north to it.
-    d.track('USB_LIMITED','B',.4,[(15.55,28),(15.55,25.05),(11.8,21.3),(11.8,18.4),d.pad('TP82.1')])
+    # D-R20-04 (R20-RTE-01): TP82 sits on the diagonal's own extension, B(11.2,20.7), so its spur is one straight run
+    # (D-R19-14's 4.03 mm two-bend tail to B(11.0,17.6) is gone).
+    d.track('USB_LIMITED','B',.4,[(15.55,28),(15.55,25.05),d.pad('TP82.1')])
 
     if feed:
         power_feed(d)

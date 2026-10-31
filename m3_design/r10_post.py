@@ -589,10 +589,13 @@ def fab_reference_details(b):
 
 
 # R13-MFG-01: measured per-reference Fab ink clearances. Keep all other labels unchanged.
+# D-R20-07 (R20-MFG-03): C123, C445, D440, D441, R119 and R173 measured clear of their own Fab outlines and marks
+# (C445 as C411; D440 / D441 beside their bodies as D410 / D411; R119's 1.0 mm text read "R1119").
 # This table is derived offline; the production stage performs no placement search here.
 FAB_REFERENCE_CLEARANCES_R13 = {
     'C10': (0.0, 0.1, 1.0),
     'C100': (-0.05, 0.0, 0.4),
+    'C123': (0.0, -0.1, 0.4),
     'C13': (-0.05, 0.0, 0.4),
     'C14': (0.0, -0.05, 0.4),
     'C15': (0.1, 0.0, 0.4),
@@ -609,6 +612,7 @@ FAB_REFERENCE_CLEARANCES_R13 = {
     'C407': (0.0, 0.0, 0.6),
     'C408': (0.0, -0.05, 0.4),
     'C411': (0.0, 0.0, 0.7),
+    'C445': (0.0, 0.0, 0.7),
     'C461': (0.0, 0.0, 0.7),
     'C88': (0.1, 0.0, 0.4),
     'C99': (0.0, 0.1, 0.4),
@@ -618,6 +622,8 @@ FAB_REFERENCE_CLEARANCES_R13 = {
     'D411': (0.0, -1.0, 0.8),
     'D420': (0.0, 1.1, 0.8),
     'D421': (0.15, 1.1, 0.8),
+    'D440': (0.0, -1.0, 0.8),
+    'D441': (0.0, -1.0, 0.8),
     'LED1': (-1.45, 0.0, 0.6),
     'LED2': (-1.45, 0.0, 0.6),
     'LS120': (0.0, 1.2, 0.8),
@@ -626,6 +632,7 @@ FAB_REFERENCE_CLEARANCES_R13 = {
     'R104': (0.0, 0.15, 0.4),
     'R105': (0.0, -0.05, 0.4),
     'R11': (0.1, 0.0, 0.4),
+    'R119': (0.0, 0.1, 0.4),
     'R12': (0.1, 0.0, 0.4),
     'R120': (-0.05, 0.0, 0.4),
     'R121': (-0.05, 0.0, 0.4),
@@ -644,7 +651,7 @@ FAB_REFERENCE_CLEARANCES_R13 = {
     'R156': (0.1, 0.0, 0.4),
     'R157': (0.1, 0.0, 0.4),
     'R163': (-0.05, 0.0, 0.4),
-    'R173': (0.1, 0.0, 0.4),
+    'R173': (-0.1, 0.0, 0.4),
     'R175': (0.1, 0.0, 0.4),
     'R178': (0.0, 0.1, 0.4),
     'R180': (0.0, 0.1, 0.4),

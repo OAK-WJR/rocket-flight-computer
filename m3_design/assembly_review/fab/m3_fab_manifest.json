@@ -1,7 +1,7 @@
 {
   "inputs_sha256": {
     "cad/actuator_power.kicad_sch": "7bfb223c8ed746f025b73d984ab271a4a0202c75b824c036b6ffa33a6f8d9c89",
-    "cad/battery_entry.kicad_sch": "2da5458388d0e1be7f3c448cc9c110dcea652b4952f14fb792b9a06a956c2702",
+    "cad/battery_entry.kicad_sch": "79854a97273829936167a9a4279670a7e32d9d863dfc8dbae4f639154149b0cb",
     "cad/camera_connector.kicad_sch": "60a43eaea29272aec14c08dfa2b700bbbe98521e6faa9e697d7f375a3f7e3c52",
     "cad/camera_power.kicad_sch": "71953351600449fc420a098e81d6a2b5ac5a9d4b14c6b9556a2cb1d68f51f1d6",
     "cad/camera_uart.kicad_sch": "614b30c97baf2a2e94665039e4041a443f1162ad408f7a8d0d3675120e100cde",
@@ -119,8 +119,8 @@
     "cad/kilib/rocket.pretty/M3_AONR21357_DFN3x3A_EP1.kicad_mod": "98b34fd0b10c91fc0da1b4c3d45d92d8b8bb3ae4f6823ec7a751e82986fccc59",
     "cad/kilib/rocket.pretty/M3_AP63200_TSOT26.kicad_mod": "48764b1dbaa9dfce43c5061873ea446ff6a609d1fa12b6bb1c5862791bb25df9",
     "cad/kilib/rocket.pretty/M3_BLM18K_0603.kicad_mod": "10a5e8a09bf5549d25ab44fd6c33923e7dccece40daaea38ede80f0a1cafb948",
-    "cad/kilib/rocket.pretty/M3_DB125_2P_BK.kicad_mod": "7cb3c1e4e590fab8abe7ea0191aace6c4078952205f14214880b3c8df8135dd0",
-    "cad/kilib/rocket.pretty/M3_DB125_2P_GN.kicad_mod": "e7cd78cfa9f62841ec4d2035c56b2e679a08eb3d41b3d1a9cbc116b0b5eb2317",
+    "cad/kilib/rocket.pretty/M3_DB125_2P_BK.kicad_mod": "ca5722baf0962fcd555120c7360b958538408b0875eb3f59d970b7312f5c6967",
+    "cad/kilib/rocket.pretty/M3_DB125_2P_GN.kicad_mod": "1898ccfb7f7cdd48402943955d673c8282f8dea6cadc967c855404ac23f650a7",
     "cad/kilib/rocket.pretty/M3_DB125_4P_GN.kicad_mod": "747446dd144e6eaeefc8268d60e286510cf72af60f2268e2f405fc192874439b",
     "cad/kilib/rocket.pretty/M3_DB125_5P_GN.kicad_mod": "ca2aada63759dc14a4f130b89c3f264a28159c535bf0f4e5967a952782c07b5b",
     "cad/kilib/rocket.pretty/M3_DB128L_2P.kicad_mod": "040db2dbb2275f218e759b8f0e6fcbb8777f3751eaa4c35b7707740ebfaa2444",
@@ -176,7 +176,7 @@
     "cad/kilib/rocket.pretty/USB-C_SMD-TYPE-C-31-M-12_1.kicad_mod": "f77f08eb642c6ec21933dc0cf3e2e4866e5b54717d8f1c237a4159bbdc6e8ce6",
     "cad/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
     "cad/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
-    "cad/m3.kicad_pcb": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+    "cad/m3.kicad_pcb": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
     "cad/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
     "cad/m3.kicad_sch": "7ea1809b32ae0878476f174a2ba1ff0f0b84b0ecb4808d0bc5a3e3ad35fc0380",
     "cad/mcu.kicad_sch": "fda8d2d94805cd0ea5660e969499eb156180abc01a9f1e3a4239cec6023c2f19",
@@ -195,12 +195,12 @@
     "tools/jlc_orient.py": "a23ab373cc7e13f7053a97e87a0f85cc37a5bf19391f774680e7433461701c88"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "2c153ce9e696ca7e2a08953c40d3cc9a2cafbbb8bb330cf5b36352836a905716",
-    "m3_assembly_top.pdf": "46df59671a876b086892b115dddc508bdd5cac89483296dec27b37f3f129fc5d",
+    "m3_assembly_bottom.pdf": "375b601c8b77019ff31318fe0e8f0b11190feec0fcd6e1fb28cac22816f1e6aa",
+    "m3_assembly_top.pdf": "ffbf7c8ad0a07af7403f4aa4e4da1f8730c73f9195c723370e9236c8f3572502",
     "m3_bom_jlc.csv": "df6c0fc2c86fc0be0a55583c417a48c0b06a48ca11a09e3abea2acab72003272",
     "m3_bom_owner.csv": "c48868b32f2680376e73c4ea93c98df8efd6df4cad909c83e64a7ee56b74c2c0",
-    "m3_cpl_jlc.csv": "dbb126a9b64d1acbb77975252a3bf746f478cf5b6cde1ca5dc22947f5e760d4d",
-    "m3_gerber.zip": "29719c1bbff0f08525494bd187be6af9ec432936ba56c36c91f8fcc294d96934"
+    "m3_cpl_jlc.csv": "72b39a9bcbe0130543f06e736c96f4a9e466230277caee0f5c4f3256e3913d1c",
+    "m3_gerber.zip": "21160127774c595c04583c5b146bc1a7bb31dba36f65761affeac4e01493a46a"
   },
   "schema": 1
 }

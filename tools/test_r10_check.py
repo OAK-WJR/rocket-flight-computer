@@ -1658,7 +1658,8 @@ class R3Synthetic(SyntheticBase):
 
     # --- R3-SAF-01 pyro barrels ----------------------------------------------------------------------
     def test_s8_inner_copper_near_pyro_barrel(self):
-        self.via(30, 30, 'RAW_ACT', drill=0.3)
+        v = self.via(30, 30, 'RAW_ACT', drill=0.3)
+        v.Padstack().SetUnconnectedLayerMode(pcbnew.UNCONNECTED_LAYER_MODE_REMOVE_EXCEPT_START_AND_END)  # as the board
         self.assertEqual(gate.s8(self.ctx())[0], [])
         t = self.track((30.75, 28), (30.75, 32), '3V3', pcbnew.In2_Cu)    # barrel wall 0.15 + 0.5 gap + 0.1 half
         found = gate.s8(self.ctx())[0]
@@ -1667,6 +1668,12 @@ class R3Synthetic(SyntheticBase):
         self.assertEqual(gate.s8(self.ctx())[0], [])
         t.SetNet(self.board.FindNet('3V3')); t.SetStart(self.P(31.3, 28)); t.SetEnd(self.P(31.3, 32))   # 1.05 mm
         self.assertEqual(gate.s8(self.ctx())[0], [])
+        # D-R20-05: an unconnected inner ring (r 0.3 mm) the barrel keeps sits 0.9 mm from the same track and fails.
+        v.Padstack().SetUnconnectedLayerMode(pcbnew.UNCONNECTED_LAYER_MODE_KEEP_ALL)
+        found = gate.s8(self.ctx())[0]
+        self.assertTrue(any('3V3 copper on In2.Cu is 0.900 mm from the via (30.000, 30.000) inner ring' in i
+                            for i in found), found)
+        v.Padstack().SetUnconnectedLayerMode(pcbnew.UNCONNECTED_LAYER_MODE_REMOVE_EXCEPT_START_AND_END)
         self.part('X3', [('1', 0, 0, 'PYRO1_IGN')], at=(10, 50), tht=True)     # a plated pad hole counts too
         self.track((10.6, 48), (10.6, 52), 'SERVO1_OUT', pcbnew.In1_Cu)
         self.assertTrue(any('X3.1 hole' in i and 'In1.Cu' in i for i in gate.s8(self.ctx())[0]))
@@ -2713,6 +2720,13 @@ class RealBoardSeeds(unittest.TestCase):
     def pad(self, board, ref, num):
         return board.FindFootprintByReference(ref).FindPadByNumber(num)
 
+    def drop(self, board, item):
+        """Remove `item` from `board` and leave it undeleted: KiCad 10's SWIG hands a removed item to its Python proxy
+        (thisown), which deletes it while the board's caches still point at it, and later reads of any board then fail
+        ('SwigPyObject' footprints). The test leaks the item instead."""
+        board.Remove(item)
+        item.thisown = False
+
     def copper_clear(self, board, layer, start, end, width, netcode, clearance=.25):
         """True when a track from start to end on `layer` lies >= `clearance` mm from every pad, track, via and zone
         fill of another net (the contact under test included)."""
@@ -3434,8 +3448,8 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('K-power', thin, 'Q124 fire return: GND track 0.150 mm wide')
 
         def drop_via(b):
-            b.Remove(next(v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA'
-                          and v.GetPosition() == self.P(15.85, 57.695)))
+            self.drop(b, [v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA'
+                          and v.GetPosition() == self.P(15.85, 57.695)][0])
         self.seeded('K-power', drop_via, 'Q124 fire return: 1 via(s) on the path; at least 2 required')
 
     def test_r19_load_switch_enable_cap_and_removed_probe(self):
@@ -3458,25 +3472,28 @@ class RealBoardSeeds(unittest.TestCase):
     def test_r19_doubled_feeds_keep_two_vias(self):
         """D-R19-09 (R19-PWR-01 / R19-GATE-04): removing either via of a doubled feed, one of L400.2's two In2 vias (the
         round 19 reviewer's seed) or L1.2's direct via fails K-power; dropping the F/B-only bridge via fails it as a
-        missing named bridge."""
-        def drop(net, xy):
+        missing named bridge. D-R20-02: U401 OUT also reaches In2 through R402.1's own via (30.575, 11.6) on its 0.4 mm
+        F.Cu run, so it falls to one via only with both that via and (29.75, 9.95) gone."""
+        def drop(net, *xys):
             def seed(b):
-                b.Remove(next(v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == net
-                              and v.GetPosition() == self.P(*xy)))
+                for xy in xys:
+                    self.drop(b, [v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == net
+                                  and v.GetPosition() == self.P(*xy)][0])
             return seed
-        for name, net, xy in (('U401 IN', 'PORT_5V3', (26.45, 11.95)), ('U401 IN', 'PORT_5V3', (25.9, 8.6)),
-                              ('U401 EN', 'PORT_5V3', (24.9, 14.9)), ('U401 OUT', 'PORT_4V8', (29.75, 9.95)),
-                              ('U402 IN', 'PORT_5V3', (42.75, 61.8)), ('C84 hold-up', 'VLOGIC', (29.8, 81.15)),
-                              ('U400 OUT', 'PORT_5V3', (26.0, 8.0)), ('U2 OUT', '3V3', (23.1, 78.1))):
-            self.seeded('K-power', drop(net, xy), f'{name}: 1 via(s) on the path; at least 2 required')
+        for name, net, xys in (('U401 IN', 'PORT_5V3', [(26.45, 11.95)]), ('U401 IN', 'PORT_5V3', [(25.9, 8.6)]),
+                               ('U401 EN', 'PORT_5V3', [(24.9, 14.9)]),
+                               ('U401 OUT', 'PORT_4V8', [(29.75, 9.95), (30.575, 11.6)]),
+                               ('U402 IN', 'PORT_5V3', [(42.75, 61.8)]), ('C84 hold-up', 'VLOGIC', [(29.8, 81.15)]),
+                               ('U400 OUT', 'PORT_5V3', [(26.0, 8.0)]), ('U2 OUT', '3V3', [(23.1, 78.1)])):
+            self.seeded('K-power', drop(net, *xys), f'{name}: 1 via(s) on the path; at least 2 required')
         self.seeded('K-power', drop('3V3', (26.4, 79.26)), 'named bridge via (26.4, 79.26) is not on the path')
 
     def test_r19_aux_port_feed_and_contract(self):
         """D-R19-14: the AUX port's F.Cu feed keeps two In2 vias (dropping the second fails K-power); J440 is held to the
         port terminal's part and nets (K-contract), and its AUX word to J440's courtyard span (K-legends)."""
         def drop(b):
-            b.Remove(next(v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'PORT_4V8'
-                          and v.GetPosition() == self.P(29.75, 9.95)))
+            self.drop(b, [v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'PORT_4V8'
+                          and v.GetPosition() == self.P(29.75, 9.95)][0])
         self.seeded('K-power', drop, 'J440 feed: 1 via(s) on the path; at least 2 required')
 
         self.seeded('K-contract', lambda b: self.pad(b, 'J440', '1').SetNet(b.FindNet('3V3')),
@@ -4050,8 +4067,8 @@ class RealBoardSeeds(unittest.TestCase):
     def test_r19_aux_feed_second_via(self):
         """Item 11: losing only the AUX feed's added via (30.5, 9.95) fails K-power (the feed's path is held to F.Cu)."""
         def drop(b):
-            b.Remove(next(v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'PORT_4V8'
-                          and v.GetPosition() == self.P(30.5, 9.95)))
+            self.drop(b, [v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'PORT_4V8'
+                          and v.GetPosition() == self.P(30.5, 9.95)][0])
         self.seeded('K-power', drop, 'J440 feed: 1 via(s) on the path; at least 2 required')
 
     def test_r19_word_centre_margins(self):
@@ -4083,14 +4100,20 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('K-legends', value, 'R134 Value field')
 
     def test_r19_pour_debris_seed(self):
-        """R19-RTE-01: U1.19's pour connection restored (the round 18 fragment, 1.693 mm^2) fails K-copper; without
-        its named entry, the measured U1.74 fragment fails too."""
+        """R19-RTE-01: U1.19's pour connection restored (the round 18 fragment, 1.693 mm^2) fails K-copper. D-R20-03
+        (R20-RTE-02): so does U1.74's (the round 19 fragment, 0.282 mm^2 on its pin tip), and the board has no pour
+        debris and no named entry left."""
         def fragment(b):
             self.pad(b, 'U1', '19').SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_INHERITED)
             pcbnew.ZONE_FILLER(b).Fill(b.Zones())
         self.seeded('K-copper', fragment, '1.693 mm^2 piece at (26.13, 52.34) with no via and only U1.19')
-        found = gate.pour_debris(self.load(), named=[])[0]
-        self.assertTrue(any('only U1.74' in i for i in found), found)
+
+        def tip(b):
+            self.pad(b, 'U1', '74').SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_INHERITED)
+            pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+        self.seeded('K-copper', tip, '0.282 mm^2 piece')
+        self.assertEqual(gate.POUR_DEBRIS, [])
+        self.assertEqual(gate.pour_debris(self.load(), named=[])[0], [])
 
     def test_r19_stale_critical_reference_name_fails_k_reference(self):
         """R19-REQ-10: a name the R10 gates list that no board net carries (V3V3_SENSE back in AUD-2's list) fails."""
@@ -4103,54 +4126,98 @@ class RealBoardSeeds(unittest.TestCase):
         self.assertTrue(any("stale critical_reference.R10_SLOW_RETURN_NETS entry 'V3V3_SENSE'" in i for i in found), found)
 
     def test_r20_designators_inside_a_large_neighbours_courtyard(self):
-        """R20-MFG-02: the generator's courtyard test now reaches courtyards of any size (C400 / C94 / R461 inside J440 /
-        U1 / J430, which its 8 mm centre filter never tested) and so does the gate; only the exact measured entries pass,
-        a designator moved into U1's far corner fails, and an entry no longer met is stale."""
+        """R20-MFG-02 / D-R20-06: the generator's courtyard test reaches courtyards of any size, so the rebuilt board has
+        no designator nearer another part's courtyard (C400 moved, C94 and R461 hidden) and the gate names none; each
+        round 19 spot (inside J440's / U1's / J430's courtyard) fails again, so does a designator moved into U1's far
+        corner, and a named entry the board no longer meets is stale."""
         sys.path.insert(0, str(gate.ROOT / 'm3_design'))
         import r7_post
         import r8_post
         b = self.load()
-        offenders = ['C400', 'C94', 'R461']
-        self.assertEqual(sorted(r7_post.courtyard_offenders(b)), offenders)
-        self.assertEqual(sorted(f.GetReference() for f in b.GetFootprints() if r8_post.courtyard_fails(b, f)), offenders)
+        self.assertEqual(sorted(r7_post.courtyard_offenders(b)), [])
+        self.assertEqual([f.GetReference() for f in b.GetFootprints() if r8_post.courtyard_fails(b, f)], [])
         issues, ev = gate.designator_courtyards(b)
-        self.assertEqual(issues, [])
-        self.assertEqual(sorted(o['ref'] for o in ev['offenders']), offenders)
-        self.assertEqual(sorted(i.split()[1] for i in gate.designator_courtyards(b, named=[])[0]), offenders)
-        inexact = [x if x[0] != 'C94' else x[:3] + (x[3] + 0.01,) + x[4:] for x in gate.DESIGNATOR_COURTYARD_R20]
-        found = gate.designator_courtyards(b, named=inexact)[0]
-        self.assertTrue(any(i.startswith('designator C94 ') for i in found), found)
-        self.assertTrue(any(i.startswith("stale DESIGNATOR_COURTYARD_R20 entry ('C94'") for i in found), found)
+        self.assertEqual((issues, ev['offenders']), ([], []))
+        self.assertEqual(gate.DESIGNATOR_COURTYARD_R20, [])
+
+        def back(ref, layer, xy, angle):                     # its round 19 spot, visible
+            def seed(board):
+                t = board.FindFootprintByReference(ref).Reference()
+                t.SetVisible(True); t.SetLayer(layer); t.SetPosition(self.P(*xy)); t.SetTextAngleDegrees(angle)
+            return seed
+        for ref, layer, xy, angle, other in (('C400', pcbnew.F_SilkS, (9.743, 6.048), 90, 'J440'),
+                                             ('C94', pcbnew.F_SilkS, (32.103, 51.304), 90, 'U1'),
+                                             ('R461', pcbnew.B_SilkS, (22.258, 18.211), 0, 'J430')):
+            self.seeded('K-legends', back(ref, layer, xy, angle), f"designator {ref} is nearer {other}'s courtyard")
 
         def corner(board):                  # ink centre 8.1 mm from U1's courtyard centre in x and y
             t = board.FindFootprintByReference('R165').Reference()
             t.SetPosition(self.P(31.1, 51.1)); t.SetTextAngleDegrees(0)
         self.seeded('K-legends', corner, "designator R165 is nearer U1's courtyard")
-        b = self.load()
-        b.FindFootprintByReference('C400').Reference().SetVisible(False)
-        self.assertIn("stale DESIGNATOR_COURTYARD_R20 entry ('C400'", ' '.join(gate.designator_courtyards(b)[0]))
+        stale = [('C400', 'J440', 0.082, 0.151, 'round 19 entry')]
+        self.assertIn("stale DESIGNATOR_COURTYARD_R20 entry ('C400'", ' '.join(gate.designator_courtyards(b, named=stale)[0]))
 
     def test_r20_fab_reference_crosses_its_own_fab_outline(self):
-        """R20-MFG-03: a Fab reference over its own Fab outline (R165's at R119's 1.0 mm) fails; the six measured
-        crossings pass only at their measured area, and one cleared (C445's text at 0.2 mm) is stale."""
+        """R20-MFG-03 / D-R20-07: no Fab reference crosses its own Fab outline and no entry is named; R165's at 1.0 mm
+        fails, each of the six fixed parts' round 19 text fails again (C445 0.8 mm, D440 / D441 0.4 mm on their bodies,
+        C123 centred on its pin-1 mark, R119 1.0 mm, R173 0.1 mm east), and an entry for a clear part is stale."""
         sys.path.insert(0, str(gate.ROOT / 'm3_design'))
         import r5_post as silk
         b = self.load()
         issues, ev = gate.fab_ref_crossings(b)
-        self.assertEqual(issues, [])
-        self.assertEqual(sorted(ev['crossings']), sorted(gate.FAB_REF_CROSSINGS_R20))
-        self.assertEqual(len(gate.fab_ref_crossings(b, named={})[0]), len(gate.FAB_REF_CROSSINGS_R20))
+        self.assertEqual((issues, ev['crossings']), ([], {}))
+        self.assertEqual(gate.FAB_REF_CROSSINGS_R20, {})
 
-        def size(board, ref, mm):
-            t = silk._fab_ref(board.FindFootprintByReference(ref))
-            t.SetTextSize(self.P(mm, mm)); t.SetTextThickness(pcbnew.FromMM(0.15 * mm))
-        self.seeded('K-legends', lambda board: size(board, 'R165', 1.0), 'Fab reference R165 crosses its own Fab outline')
-        b = self.load(); size(b, 'R119', 1.2)
-        found = gate.fab_ref_crossings(b)[0]
-        self.assertTrue(any(i.startswith('Fab reference R119 crosses') for i in found), found)
-        b = self.load(); size(b, 'C445', 0.2)
-        self.assertEqual([i.split(' (')[0] for i in gate.fab_ref_crossings(b)[0]],
+        def text(ref, mm, dx=0.0, dy=0.0):
+            def seed(board):
+                f = board.FindFootprintByReference(ref)
+                t = silk._fab_ref(f)
+                t.SetTextSize(self.P(mm, mm)); t.SetTextThickness(pcbnew.FromMM(0.15 * mm))
+                t.SetPosition(f.GetPosition() + self.P(dx, dy))
+            return seed
+        self.seeded('K-legends', text('R165', 1.0), 'Fab reference R165 crosses its own Fab outline')
+        for ref, mm, dx in (('C445', 0.8, 0.0), ('D440', 0.4, 0.0), ('D441', 0.4, 0.0), ('C123', 0.4, 0.0),
+                            ('R119', 1.0, 0.0), ('R173', 0.4, 0.1)):
+            b = self.load()
+            text(ref, mm, dx)(b)
+            found = gate.fab_ref_crossings(b)[0]
+            self.assertTrue(any(i.startswith(f'Fab reference {ref} crosses') for i in found), (ref, found))
+        self.assertEqual([i.split(' (')[0] for i in gate.fab_ref_crossings(self.load(), named={'C445': (0.1915, 'x')})[0]],
                          ['stale FAB_REF_CROSSINGS_R20 entry C445'])
+
+    def test_r20_s8_terminal_inner_rings(self):
+        """D-R20-05 (R20-SAF-05): S-8 measures the inner ring a protected barrel keeps; J121.1 and J400.2 keep none (their
+        footprints drop unconnected inner rings), and restoring them brings back round 19's 0.750 mm rings (GND at
+        J121.1, In2 RAW_PROTECTED at J400.2), which fail. J121.2 (PYRO1_IGN, GND exempt) keeps its rings."""
+        b = self.load()
+        self.assertEqual(self.run_rule('S-8', b), set())
+        flashed = lambda board, ref, num: [board.GetLayerName(lay) for lay in (pcbnew.In1_Cu, pcbnew.In2_Cu)  # noqa: E731
+                                          if self.pad(board, ref, num).FlashLayer(lay)]
+        self.assertEqual((flashed(b, 'J121', '1'), flashed(b, 'J400', '2')), ([], []))
+        self.assertEqual(flashed(b, 'J121', '2'), ['In1.Cu', 'In2.Cu'])
+
+        def rings(ref, num):
+            def seed(board):
+                self.pad(board, ref, num).Padstack().SetUnconnectedLayerMode(pcbnew.UNCONNECTED_LAYER_MODE_KEEP_ALL)
+                pcbnew.ZONE_FILLER(board).Fill(board.Zones())
+            return seed
+        self.seeded('S-8', rings('J121', '1'), 'GND copper on In1.Cu is 0.750 mm from the J121.1 inner ring')
+        self.seeded('S-8', rings('J400', '2'), 'RAW_PROTECTED copper on In2.Cu is 0.750 mm from the J400.2 inner ring')
+
+    def test_r20_fb_tap_survives_one_via_open(self):
+        """D-R20-02 (R20-PWR-02): U401's feedback divider top R402.1 stays joined to U401's OUT pads with any one PORT_4V8
+        via removed; without its own via into the In2 output plane (the round 19 copper) opening the OUT via (29.75,
+        12.6) cuts it off, which K-power names."""
+        issues, ev = gate.single_via_opens(self.load())
+        self.assertEqual(issues, [])
+        self.assertEqual(ev['R402.1']['single_points'], [])
+
+        def round19(board):
+            self.drop(board, [v for v in board.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'PORT_4V8'
+                              and v.GetPosition() == self.P(30.575, 11.6)][0])
+            pcbnew.ZONE_FILLER(board).Fill(board.Zones())
+        self.seeded('K-power', round19, 'R402.1 (U401\'s feedback divider top (R20-PWR-02)) hangs on one via: opening '
+                    'via PORT_4V8 (29.75, 12.60)')
 
     def test_r20_s6_sees_aux_and_the_switch_enable_chain(self):
         """R20-SAF-02: each new S-6 pattern seeded on the board. AUX_ (port): the reviewer's AUX_TX_WIRE track 0.100 mm

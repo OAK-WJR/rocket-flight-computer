@@ -108,6 +108,33 @@ def barrel_keepout(d, name, layers, centre, radius):
         d.board.Add(z)
 
 
+# D-R20-08 (R20-MFG-01): no power copper on In2 under the west aft panel tab (ORDERING 8.1: x 0, y 12.5-17.5; In2 3V3
+# before), as R8 / R9 kept GND only under every tab (R8P3-POWER-05): a crack or a burr there cannot join 3V3 to the GND
+# layers around it. A fill-only In2 rule area over the 5 mm span and 3 mm inward; tracks, vias and pads stay allowed
+# (none is there). The two east tabs keep In2 RAW_PROTECTED: the north RAW region joins the rest only along the east
+# edge, so a keep-out at x 43-46, y 6.75-11.75 splits RAW in two (a 245.01 mm^2 piece with no link) and one at
+# y 63.75-68.75 leaves that piece on a 0.45 mm neck (K-plane, measured 2026-10-31); the owner chooses the east tab plan.
+TAB_KEEPOUTS = (('R20_TAB_KEEPOUT_WEST_AFT', (-0.5, 12.5), (3.0, 17.5)),)
+
+
+def tab_keepout(d, name, a, b):
+    z = pcbnew.ZONE(d.board)
+    z.SetIsRuleArea(True)
+    z.SetLayer(pcbnew.In2_Cu)
+    z.SetZoneName(name)
+    z.SetDoNotAllowZoneFills(True)
+    z.SetDoNotAllowTracks(False)
+    z.SetDoNotAllowVias(False)
+    z.SetDoNotAllowPads(False)
+    z.SetDoNotAllowFootprints(False)
+    o = z.Outline()
+    o.NewOutline()
+    for x, y in (a, (b[0], a[1]), b, (a[0], b[1])):
+        o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+    if not d.dry:
+        d.board.Add(z)
+
+
 def trim(d, name, layer, pts):
     z = pcbnew.ZONE(d.board)
     z.SetIsRuleArea(True)
@@ -129,6 +156,8 @@ def trim(d, name, layer, pts):
 def draw(d):
     for name, layer, pts in TRIMS:
         trim(d, name, layer, pts)
+    for name, a, b in TAB_KEEPOUTS:
+        tab_keepout(d, name, a, b)
     for layer in ('F', 'B'):
         d.zone(f'R10_GND_{layer}', 'GND', layer, POUR, 0, clr=0.25, minw=0.25, conn=pcbnew.ZONE_CONNECTION_THT_THERMAL)
     with TABLE.open() as fh:

@@ -243,10 +243,11 @@ R19_SHEET_NOTES = {
                                    '10k holds it low (R19-MCU-03).')},
     'battery_entry.kicad_sch': {
         'C87: EN/UVLO ride-through.': ('C87: EN/UVLO ride-through, 220 nF 25 V X7R (R19-REQ-02). (R80+R165)||R81 = 227k charges it '
-                                       '(tau 50 ms; turn-on 88/56/45 ms at 6.0/7.4/8.4 V, 31-122 ms worst case); R81 alone '
+                                       '(tau 50 ms; turn-on 88/56/45 ms at 6.0/7.4/8.4 V, 30-129 ms worst case); R81 alone '
                                        'discharges it (tau 66 ms), so J400 drop-outs shorter than 19/33/41 ms (worst case '
-                                       '12/22/27 ms) cannot trip U9 (25-64 us t_D,OFF). EN thresholds 1.183-1.223 V rising, '
-                                       '1.076-1.116 V falling (TI SLVSFC9C p9): UVLO on 4.89-5.05 V, off 4.45-4.61 V.')},
+                                       '10.6/20.5/26.4 ms with 0.1 uA EN leakage, D-R20-11) cannot trip U9 (25-64 us t_D,OFF). '
+                                       'EN thresholds 1.183-1.223 V rising, 1.076-1.116 V falling (TI SLVSFC9C p9): UVLO on '
+                                       '4.89-5.05 V, off 4.45-4.61 V.')},
     'usb_sense.kicad_sch': {
         'Input range and tolerance calculation uses DS12110': ('Input range and tolerance calculation uses DS12110 Rev 8, rev V '
                                                               'chapter: Table 122 pp214-215 and Table 157 pp246-247 '

@@ -102,7 +102,10 @@ def build(project, table):
                 p.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_THERMAL)
     # D-R19-05 (R19-RTE-01): U1.19 (VSSA) reaches GND through its own fan-out stub and via only; with no pour connection
     # the via-less 1.693 mm2 F.Cu GND fragment that hung on its pin tip is an island and is not filled.
-    board.FindFootprintByReference('U1').FindPadByNumber('19').SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_NONE)
+    # D-R20-03 (R20-RTE-02): U1.74 (VSS, north row) had the same class, a via-less 0.282 mm2 F.Cu GND piece on its tip;
+    # it reaches GND through its own fan-out stub and via, so the same override removes the piece.
+    for pin in ('19', '74'):
+        board.FindFootprintByReference('U1').FindPadByNumber(pin).SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_NONE)
     print(f'r10_pcb: library land margins: {" ".join(sync_lands(board, project / "kilib" / "rocket.pretty"))}')
     rows, features = r9_pcb.read_place(table, tie_count=0)
     r9_pcb.outline(board, features)

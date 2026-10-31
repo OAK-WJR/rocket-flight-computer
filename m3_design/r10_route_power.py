@@ -150,6 +150,10 @@ def port_supply(d):
     t('PORT_LDO_FB','F',S,[p('R402.2'),(32.225,13.6),p('R403.1')])
     t('PORT_4V8','B',W,[p('C406.1'),(29.75,9.95),(29.75,12.6)])
     v('PORT_4V8',(29.75,9.95))                    # D-R19-09: the LDO output's second In2 via, at C406.1's run bend
+    # D-R20-02 (R20-PWR-02): the feedback divider's top, R402.1, also joins the output after both OUT vias: its own via
+    # straight north of it lands in the In2 PORT_4V8 plane that both OUT vias feed. Either via can open and FB still
+    # senses PORT_4V8 (it no longer falls to GND through R403 and drives the ports to the LDO's dropout).
+    v('PORT_4V8',(30.575,11.6));t('PORT_4V8','F',W,[(30.575,11.6),p('R402.1')])
     t('PORT_4V8','F',W,[p('C407.1'),(31.1,20.3),(30.3,20.3)]);v('PORT_4V8',(30.3,20.3))
     t('PORT_4V8','B',S,[p('R405.1'),(33.725,16.35),(33.725,17.3)])
     # Always-on port bypass cells and terminal feeds.

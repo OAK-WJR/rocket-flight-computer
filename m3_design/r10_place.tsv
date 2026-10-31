@@ -188,7 +188,7 @@ TP122	13.3	53.3	0	B	D-AVA-01: explicit cell placement; electrical contract uncha
 TP74	42.5	58	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 TP80	9.8	83.8	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 TP81	31	84.8	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-TP82	11.0	17.6	0	B	D-R19-14: 3.7 mm north, out of J440.4's M-6 ring and R90's new land (was B(10.8,21.3))
+TP82	11.2	20.7	0	B	D-R20-04: on the USB_LIMITED diagonal's extension, one straight spur (was B(11.0,17.6), D-R19-14)
 TP83	34.5	81.5	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 TP88	35.5	87	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 U1	23.0	43.0	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -216,7 +216,7 @@ R464	25.55	22.18	180	F	D-AVA-01: explicit cell placement; electrical contract un
 J440	7.4	16.25	-90	F	D-R19-14: spare AUX port (owner 2026-10-30), J410 copy on the west edge; washer 3.93 mm, J3 courtyard 1.67 mm
 C444	12.5	12.6	-90	F	D-R19-14: AUX port 100 nF beside J440.1 (C410 copy)
 C445	15.2	13.4	-90	F	D-R19-14: AUX port 22 uF on the PORT_4V8 feed (C411 copy)
-D440	13.9	17.2	0	F	D-R19-14: AUX TX wire ground-only ESD (D410 copy)
-D441	13.9	21.4	0	F	D-R19-14: AUX RX wire ground-only ESD (D411 copy)
+D440	4.45	19.45	-90	B	D-R20-09: AUX TX clamp under J440 on the wire side, between pins 3 / 4 as D410 (M-6 1.5 mm); was F(13.9,17.2)
+D441	4.45	23.05	-90	B	D-R20-09: AUX RX clamp under J440 on the wire side, beyond pin 4 as D411 (M-6 1.5 mm); was F(13.9,21.4)
 R470	16.1	20.6	0	F	D-R19-14: AUX RX 1 kohm (R440 copy)
 R471	16.1	18.0	180	F	D-R19-14: AUX TX 1 kohm (R441 copy)

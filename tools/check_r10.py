@@ -45,8 +45,9 @@ Safety (AGENTS.md section 2, F8; single screw switch owner decision 2026-10-28):
         return stay in the harness (O3 / O6 and the screw-terminal amendment)
   S-8   R3-SAF-01 / R18-SAF-01: on In1 and In2 no track or zone fill of another net lies within 1.0 mm of a plated
         barrel (via or plated hole wall) of a BARREL_NETS net (11: RAW_ACT, the PYRO1 IGN / OUT / GATE / GATE_N nodes,
-        the load-switch gate drive ACT_GATE / ACT_DRV / ACT_EN / ACT_EN_MCU, BAT_ENABLE, BAT_SW_RETURN); GND counts
-        only for the BARREL_GND_HAZARD nets ACT_GATE, ACT_DRV and PYRO1_OUT (D-R19-01)
+        the load-switch gate drive ACT_GATE / ACT_DRV / ACT_EN / ACT_EN_MCU, BAT_ENABLE, BAT_SW_RETURN), nor of the
+        inner ring such a barrel keeps on that layer (D-R20-05, R20-SAF-05); GND counts only for the BARREL_GND_HAZARD
+        nets ACT_GATE, ACT_DRV and PYRO1_OUT (D-R19-01)
   S-9   R3-GATE-07 / AUD-6: current-path copper >= 0.5 mm on fire-only RAW_ACT / PYRO1_IGN / PYRO1_OUT,
         >= 0.5 mm on ACT_FET_S and >= 1.0 mm on BAT_IN. FIRE_TERMINALS prunes dead-end branches such as sense taps; only the
         named, measured FIRE_NARROW entries are excepted
@@ -110,7 +111,8 @@ Kept contract and copper rules:
                joined to In2 RAW_PROTECTED; Q124's source pads reach >= 2 In1 GND vias (>= 0.5 / 0.3 mm) on >= 0.3 mm
                F.Cu (D-R3-03); D-R19-09: the doubled feeds (U401 IN / EN / OUT, U402 IN: >= 2 In2 vias; C84 hold-up:
                >= 2 VLOGIC vias) and the buck outputs (L400.2 >= 2 In2 PORT_5V3 vias; L1.2 >= 2 In2 3V3 vias plus the
-               named F/B-only bridge via (26.4, 79.26))
+               named F/B-only bridge via (26.4, 79.26)). D-R20-02 (R20-PWR-02): each SINGLE_OPEN_TAPS pad (U401's FB
+               divider top R402.1) stays joined to its source through its net's copper with any one via removed
   K-copper     R19-RTE-01: every pour piece holds a via of its net or joins two of its pads (only a named, measured
                POUR_DEBRIS entry excepted);
                vias in pads, overlap-only joints, thermal policy, via paste (check_r9.k_copper); GAP-3 admits only
@@ -1924,22 +1926,39 @@ def barrel_shapes(board, nets=BARREL_NETS):
     return out
 
 
+def barrel_rings(board, nets=BARREL_NETS):
+    """[(label, net, layer, SHAPE)] of the inner-layer ring each plated barrel of `nets` keeps (flashed) on In1 / In2."""
+    import pcbnew
+    out = []
+    items = [(f'via ({pcbnew.ToMM(t.GetPosition().x):.3f}, {pcbnew.ToMM(t.GetPosition().y):.3f})', t)
+             for t in board.GetTracks() if t.GetClass() == 'PCB_VIA' and t.GetNetname() in nets]
+    items += [(f'{f.GetReference()}.{p.GetNumber()}', p) for f in board.GetFootprints() for p in f.Pads()
+              if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH and p.GetNetname() in nets]
+    for label, item in items:
+        for lay in (pcbnew.In1_Cu, pcbnew.In2_Cu):
+            if item.IsOnLayer(lay) and item.FlashLayer(lay):
+                out.append((f'{label} inner ring', item.GetNetname(), lay, item.GetEffectiveShape(lay)))
+    return out
+
+
 def s8(ctx, gap=BARREL_GAP, gnd_hazard=BARREL_GND_HAZARD):
     """R3-SAF-01 / R18-SAF-01: no In1 / In2 track or zone fill of another net within `gap` of a barrel wall of a
     BARREL_NETS net; GND counts only for the nets in `gnd_hazard` (the P-FET gate drive ACT_GATE / ACT_DRV and, since
-    D-R19-01, PYRO1_OUT, the fire FET drain)."""
+    D-R19-01, PYRO1_OUT, the fire FET drain). D-R20-05 (R20-SAF-05): the same holds from an inner ring the barrel keeps
+    on that layer (its copper is the barrel's net), so a protected terminal drops its unconnected inner rings."""
     import pcbnew
     import check_r8 as r8
     inner = (pcbnew.In1_Cu, pcbnew.In2_Cu)
-    barrels = barrel_shapes(ctx.board)
+    barrels = [(label, net, shape, None) for label, net, shape in barrel_shapes(ctx.board)]
+    barrels += [(label, net, shape, lay) for label, net, lay, shape in barrel_rings(ctx.board)]
     issues, worst = [], {}
     # Every manufactured copper representation counts, including drawings, text and footprint zones.
     others = [(label, net, lay, shape, pad)
               for _, lay, shape, _, pad, net, label in copper_nodes(ctx.board)
               if lay in inner]
-    for blabel, bnet, bshape in barrels:
+    for blabel, bnet, bshape, blay in barrels:
         for label, net, lay, shape, obj in others:
-            if net == bnet or (net == 'GND' and bnet not in gnd_hazard) \
+            if net == bnet or (net == 'GND' and bnet not in gnd_hazard) or (blay is not None and lay != blay) \
                     or not pcbnew.SHAPE.Collide(bshape, shape, pcbnew.FromMM(gap) - 1):
                 continue
             g = r8.min_gap(bshape, shape, gap + 1)
@@ -1948,10 +1967,11 @@ def s8(ctx, gap=BARREL_GAP, gnd_hazard=BARREL_GND_HAZARD):
             if key not in worst or g < worst[key]:
                 worst[key] = g
     for (blabel, net, lay), g in sorted(worst.items()):
-        issues.append(f'S-8: {net} copper on {lay} is {g:.3f} mm from the {blabel} barrel of '
+        issues.append(f'S-8: {net} copper on {lay} is {g:.3f} mm from the {blabel} '
+                      f'{"" if blabel.endswith("inner ring") else "barrel "}of '
                       f'{next(b[1] for b in barrels if b[0] == blabel)} (minimum {gap} mm)')
-    return issues, dict(barrels=len(barrels), gap_mm=gap, near={f'{k[0]} / {k[1]} / {k[2]}': round(v, 3)
-                                                                for k, v in sorted(worst.items())})
+    return issues, dict(barrels=sum(1 for b in barrels if b[3] is None), inner_rings=sum(1 for b in barrels if b[3] is not None),
+                        gap_mm=gap, near={f'{k[0]} / {k[1]} / {k[2]}': round(v, 3) for k, v in sorted(worst.items())})
 
 
 def track_graph(board, net, layers=None):
@@ -2387,10 +2407,65 @@ def fire_return(board, spec=FIRE_RETURN):
                               for v in reached.values()])
 
 
+# D-R20-02 (R20-PWR-02): sense taps that must stay joined to their source through same-net copper when any one via of
+# the net opens (a barrel crack): (net, tap pad, source pads, why). Round 19's R402.1 hung on the OUT via (29.75, 12.6)
+# alone; open, FB falls to GND through R403 and the LDO drives all three ports to its dropout (about 5.2-5.55 V).
+SINGLE_OPEN_TAPS = (
+    ('PORT_4V8', 'R402.1', ('U401.1', 'U401.2'), "U401's feedback divider top (R20-PWR-02)"),
+)
+
+
+def single_via_opens(board, taps=SINGLE_OPEN_TAPS):
+    """(issues, evidence): every tap pad reaches one of its source pads through same-net copper (pads, tracks, vias,
+    fill pieces touching on a shared layer; a via joins its layers) with the board intact and with any one via of the
+    net removed."""
+    import pcbnew
+    nodes = copper_nodes(board)
+    issues, ev = [], {}
+    for net, tap, sources, why in taps:
+        mine = [n for n in nodes if n[5] == net]
+        label = {n[0]: n[6] for n in mine}
+        adj = {k: set() for k in label}
+        by_layer = {}
+        for n in mine:
+            by_layer.setdefault(n[1], []).append(n)
+        for ns in by_layer.values():
+            for i, a in enumerate(ns):
+                for c in ns[:i]:
+                    if a[0] == c[0] or a[3][0] > c[3][2] or c[3][0] > a[3][2] or a[3][1] > c[3][3] or c[3][1] > a[3][3]:
+                        continue
+                    if pcbnew.SHAPE.Collide(a[2], c[2], 0):
+                        adj[a[0]].add(c[0])
+                        adj[c[0]].add(a[0])
+        start = {k for k, v in label.items() if v == tap}
+        goal = {k for k, v in label.items() if v in sources}
+
+        def reach(skip=None):
+            seen = set(start) - {skip}
+            todo = list(seen)
+            while todo:
+                k = todo.pop()
+                if k in goal:
+                    return True
+                for m in adj[k] - seen - {skip}:
+                    seen.add(m)
+                    todo.append(m)
+            return False
+        vias = sorted(k for k, v in label.items() if v.startswith('via '))
+        if not start or not goal or not reach():
+            issues.append(f'{tap} ({why}) is not joined to {"/".join(sources)} on {net}')
+            continue
+        cut = sorted(label[v] for v in vias if not reach(v))
+        issues += [f'{tap} ({why}) hangs on one via: opening {c} cuts it off from {"/".join(sources)}' for c in cut]
+        ev[tap] = dict(net=net, vias_tested=len(vias), single_points=cut)
+    return issues, ev
+
+
 def k_power(ctx):
     issues, ev = power_paths(ctx.board)
     found, ev['fire_return'] = fire_return(ctx.board)
-    return [f'K-power: {i}' for i in issues + found], ev
+    taps, ev['single_via_open_taps'] = single_via_opens(ctx.board)
+    return [f'K-power: {i}' for i in issues + found + taps], ev
 
 
 def default_clearance(board):
@@ -3507,11 +3582,9 @@ def poly_gap(a, c):
 # 8 mm of the ink, so a large neighbour's courtyard was never tested. The gate tests every courtyard on the text's face.
 # (ref, other, own gap mm, overlap mm^2), measured on the R10 board 2026-10-31 (ink at 0.002 mm, courtyard polygons):
 # these three move at the next board change (the generator's pre-filter now tests every courtyard), then delete them.
-DESIGNATOR_COURTYARD_R20 = [
-    ('C400', 'J440', 0.082, 0.151, 'F.Silkscreen ink inside J440\'s courtyard (y from 7.685); new with D-R19-14'),
-    ('C94', 'U1', 0.142, 0.266, "F.Silkscreen ink inside U1's courtyard (x to 31.645)"),
-    ('R461', 'J430', 0.018, 0.306, "B.Silkscreen ink inside J430's courtyard (y from 18.605)"),
-]
+# D-R20-06: C400, C94 and R461 were re-placed (or hidden) by the generator's any-size courtyard test, so no entry
+# remains.
+DESIGNATOR_COURTYARD_R20 = []
 
 
 def designator_courtyards(board, named=None, tol=0.002):
@@ -3572,14 +3645,9 @@ def designator_courtyards(board, named=None, tol=0.002):
 # outline (the body lines and marks on that layer): R119's 1.0 mm text over its 0402 outline prints as "R1119" in the
 # assembly PDF. {ref: overlap mm^2 of the text polygon with the outline strokes}, measured on the R10 board 2026-10-31
 # (0.002 mm polygons); r10_post.FAB_REFERENCE_CLEARANCES_R13 is where the CAD fix goes, then delete the entry.
-FAB_REF_CROSSINGS_R20 = {
-    'C123': (0.0013, 'new with D-R19-04 (0.4 mm text)'),
-    'C445': (0.1915, "new with D-R19-14 (0.8 mm text; C411's template entry not copied)"),
-    'D440': (0.0479, "new with D-R19-14 (0.4 mm text; D410's template entry not copied)"),
-    'D441': (0.0479, "new with D-R19-14 (0.4 mm text; D411's template entry not copied)"),
-    'R119': (0.6935, 'carried: 1.0 mm text over its 0402 outline reads "R1119"'),
-    'R173': (0.011, 'carried: its R13 entry (0.1, 0.0, 0.4) still leaves 0.011 mm^2'),
-}
+# D-R20-07: the six measured crossings (C123, C445, D440, D441, R119, R173) are fixed in r10_post's
+# FAB_REFERENCE_CLEARANCES_R13, so no entry remains.
+FAB_REF_CROSSINGS_R20 = {}
 
 
 def fab_ref_crossings(board, named=None, tol=0.001):
@@ -3734,12 +3802,9 @@ def thermal_vias(board):
 # must hold a via of its own net (stitched to the net's other copper) or join two or more of its net's pads (carry
 # current between them); a piece with no via and at most one pad is pour debris. A named POUR_DEBRIS entry (net, layer,
 # pads, area mm^2, measured reason) admits one piece of exactly that geometry (area within 0.01 mm^2); unused fails.
-POUR_DEBRIS = [
-    ('GND', 'F.Cu', ('U1.74',), 0.282,
-     "U1.74's pin tip on U1's north row (x 17.5, y 34.48): 0.282 mm^2 with no via or track, the R19-RTE-01 class "
-     '(already on the round 18 board, unreported); measured 2026-10-31. CAD fix: a board pad override '
-     'ZONE_CONNECTION_NONE on U1.74, as D-R19-05 did for U1.19; then delete this entry'),
-]
+# D-R20-03 (R20-RTE-02): U1.74's 0.282 mm^2 F.Cu GND piece is gone (board pad override ZONE_CONNECTION_NONE, as
+# D-R19-05 for U1.19), so its entry is deleted; no pour debris is admitted.
+POUR_DEBRIS = []
 
 
 def pour_debris(board, named=None):
@@ -4229,7 +4294,8 @@ RULES = [
                 'mask settings as the library (R19-GATE-01)', lambda c, s: k_lands(c)),
     ('K-width', 'BAT_IN / RAW_PROTECTED width floor (R8-GATE-04)', lambda c, s: k_width(c.board)),
     ('K-power', 'U9 IN / OUT, rail paths at their IPC-2152 width (R19-GATE-04 / -05), the doubled supply feeds and '
-                'buck outputs (D-R19-09), Q124 fire return (R18-GATE-02 / -03)', lambda c, s: k_power(c)),
+                'buck outputs (D-R19-09), Q124 fire return (R18-GATE-02 / -03), sense taps with no single via '
+                '(R20-PWR-02)', lambda c, s: k_power(c)),
     ('K-retained', 'flash/camera/microSD bypass, TP122', lambda c, s: retained_routing(c)),
 ]
 STAGES = {'functional': {'S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'K-contract', 'K-loader', 'K-actuators'}}

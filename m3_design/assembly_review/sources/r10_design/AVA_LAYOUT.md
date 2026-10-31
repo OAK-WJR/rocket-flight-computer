@@ -1,14 +1,16 @@
 # R10 AVA layout hand-off
 
-**How to read this file (R19-DOC-08).** For the current board `50a39de5…` read only "Round19 CAD fix pass" at the end;
-it lists the changes from its predecessor `a3144b15…` ("Round18 CAD fix pass"). The current placement itself is
+**How to read this file (R19-DOC-08).** For the current board `0dc84776…` read only "Round 20 CAD polish pass" at the
+end; it lists the changes from its predecessor `50a39de5…` ("Round19 CAD fix pass"). The current placement itself is
 `m3_design/r10_place.tsv` and the board; everything above the round 18 section is history of earlier boards.
 Sealed historical sections keep their original text, including run-together words and numbers (R19-DOC-04); only the
 current-status paragraphs were respaced in round 19.
 
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
-**Round 19 CAD fix pass (2026-10-30):** the current CAD candidate is the rebuilt PCB recorded in
-"Round19 CAD fix pass" at the end (D-R19-01..14); "Round18 CAD fix pass" records its predecessor `a3144b15…`.
+**Round 20 CAD polish pass (2026-10-31):** the current CAD candidate is the rebuilt PCB recorded in
+"Round 20 CAD polish pass" at the end (D-R20-01..11); "Round19 CAD fix pass" records its predecessor `50a39de5…`.
+**Round 19 CAD fix pass (2026-10-30):** the round 19 PCB is recorded in "Round19 CAD fix pass"
+(D-R19-01..14); "Round18 CAD fix pass" records its predecessor `a3144b15…`.
 **Round 18 CAD fix pass (2026-10-30):** the round 18 PCB is recorded in "Round18 CAD fix pass" below
 (D-R18-01..10); the 632a9ad3 paragraphs below are its predecessor's record.
 **Full R16/R17 pair complete (2026-10-30):** PCB
@@ -101,7 +103,7 @@ Terminal pin roles and labels remain unchanged; the radio is no longer parked on
 | 7. Flash/buffer escapes | All six QSPI signals retain one F-to-B transition. Radio RX/TX and camera RX/TX now each have one transition; their old two-via hops are gone. QSPI_IO2 remains 14.524 mm: its pin map and sensor/reference corridor are retained, with no matching meander or timing claim. |
 | 8. Legends | All 40 legends fit, including individual terminal pin legends and six short J2 rows beside J2. No connector-association fallback and no >6 mm legend-distance item. Text/mask/support checks pass. Two library pin-1 dots move for clearance; pads/lands do not change. |
 | 9. GND stitches | Local returns follow the moved cells; C16/C23, C100/QSPI guard, R405/D410, C60/C431 and C80/C96/D9 share existing/local returns where legal. Camera divider/filter returns remain separate to clear the supply via. GND vias fall 171 to 166; fast partners and the exact two U401 VIPPO thermal vias remain. |
-| 10. Probes | TP80/81/83/88 follow battery/supply subjects; TP120/121/122 follow the bus switch and fire gate; TP82 follows USB protection. Bare-contact and support clearances remain gated. **Current board (R19-RTE-02):** TP121 and its ACT_GATE stub are removed (D-R19-03), so ACT_GATE is probed at the bare R119.1 / R120.2 / C120.2 pads before coating, as AVA probes values at part pads (D-AUD-05); TP82 moved to B(11.0,17.6) beside J440 (D-R19-14). |
+| 10. Probes | TP80/81/83/88 follow battery/supply subjects; TP120/121/122 follow the bus switch and fire gate; TP82 follows USB protection. Bare-contact and support clearances remain gated. **Current board (R19-RTE-02):** TP121 and its ACT_GATE stub are removed (D-R19-03), so ACT_GATE is probed at the bare R119.1 / R120.2 / C120.2 pads before coating, as AVA probes values at part pads (D-AUD-05); TP82 moved to B(11.0,17.6) beside J440 (D-R19-14), then to B(11.2,20.7) on its spur's diagonal (D-R20-04). |
 
 ## Measurements
 
@@ -415,3 +417,27 @@ the IMU axis map (roll = -gyro_Y) is unchanged; U1's pin map changes only at pin
 Counts on `50a39de5…` (round 19 docs lane, read-only parse of the board): 121 designators shown and 94 hidden
 (C28, R110, C123, D440, D441 and R88 newly hidden; TP121 removed), 45 silkscreen legends, eight DB125 terminals with
 27 contacts. The full hidden list is in `docs/M3_R10.md`, "Silkscreen and assembly identification".
+
+## Round 20 CAD polish pass (new PCB; D-R20-01..11)
+
+The supervisor's last surgical pass before the closing review pair (brief `.supervisor/r20_fix_cad_brief.md`), from
+round 20's seven board lenses (0 Critical / 0 Major on `50a39de5…`). Every change is in the generators, the generated
+footprint library and the checks, with two complete `r10_build.sh` builds (`../r10_review/round20_fix_cad.md`). PCB
+`0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3`, 46 x 90 x 1.6 mm, 2,340,154 bytes; 215 footprints, 985 segments, 302 vias (169 GND), 1874.854252 mm track
+(round 19 `50a39de5…`: 215 / 984 / 301 (169) / 1870.487095 mm).
+
+| Change | Placement / copper |
+|---|---|
+| U9 EN pull-down (D-R20-01) | not moved: no legal clean B.Cu spot at U9.1 (measured; respin item) |
+| U401 FB tap (D-R20-02) | PORT_4V8 via (30.575,11.6) into the In2 output plane, 0.4 mm F.Cu stub to R402.1; no single via cuts R402.1 off |
+| U1.74 (D-R20-03) | pad zone connection none; the 0.282 mm^2 F.Cu GND piece is gone |
+| TP82 (D-R20-04) | B(11.0,17.6) -> B(11.2,20.7); spur one segment (15.55,25.05) -> (11.2,20.7) |
+| Terminal rings (D-R20-05) | library M3_DB125_2P_BK pad 1 and M3_DB125_2P_GN pad 2 keep copper only where connected: J121.1 and J400.2 have no inner rings; J1.2 keeps its In1 thermal, loses its unconnected In2 ring |
+| Fab references (D-R20-07) | C445 / D440 / D441 / C123 / R119 / R173 clear of their Fab outlines |
+| West aft tab (D-R20-08) | fill-only In2 area R20_TAB_KEEPOUT_WEST_AFT, x -0.5..3.0, y 12.5..17.5: no In2 3V3 under the tab; the east tabs unchanged |
+| AUX clamps (D-R20-09) | D440 F(13.9,17.2) -> B(4.45,19.45) -90, D441 F(13.9,21.4) -> B(4.45,23.05) -90, under J440 on the wire side; B.Cu pin -> clamp runs; returns (3.75,19.775), (3.75,23.375); top taps and vias (14.225,16.45), (14.225,22.15) removed |
+
+Silkscreen (D-R20-06): C400 re-placed and C94 / R461 hidden by the any-size courtyard test. This pass's copper also
+moves R402, R463, C444, R470, D440 and D441 and J440's 3:TXO (to B(10.5,17.5)), shows C28, and hides C404, R90 and
+U401 (94 -> 96 hidden, all kept on F.Fab). Every other part pose, land, net and support is unchanged. U1's pin map and
+the IMU axis map (roll = -gyro_Y) are unchanged.

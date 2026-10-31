@@ -223,12 +223,12 @@ inspection and depaneling procedures only where restated here. R10 has one exter
 wired terminals (27 contacts), external GPS/radio, a spare AUX port, a hinged microSD socket, one bus-sense bank and no servo-power copper.
 There are no GH connectors, servo headers, servo tie holes, ARM link, pull-pin, on-board RF modules or SMA jacks.
 
-**Status.** PCB `50a39de5…` (46 × 90 mm), not accepted, nothing ordered. Round 19 (ten Claude lenses) reviewed the previous PCB `a3144b15…` and found 0 Critical / 0 Major / 57 Minor; its fix pass changed the board, so rounds 20 and 21 will review `50a39de5…`. Review results, checks, cost and stock, retained
+**Status.** PCB `0dc84776…` (46 × 90 mm), not accepted, nothing ordered. Round 20 (seven Claude board lenses) reviewed the previous PCB `50a39de5…` and found 0 Critical / 0 Major / 32 Minor; its polish pass changed the board, so rounds 21 and 22 will review `0dc84776…`. Review results, checks, cost and stock, retained
 deviations and what is not verified are in [M3_R10.md, "Current state"](M3_R10.md#current-state); they are not repeated here.
 The cost basis used by this section is in 8.1.
 
 Coordinates are KiCad millimetres, x=0 west, y=0 aft, y=90 forward; Gerber Y is −KiCad y.
-F/B mean top/bottom. Positions below describe the current `50a39de5…` native board and placement source,
+F/B mean top/bottom. Positions below describe the current `0dc84776…` native board and placement source (the polish pass moved only TP82, D440 and D441),
 including west/east terminal rows at x=7.4/38.6 mm and the repaired bottom port/servo cells. Recheck every probe,
 coat mask and harness against its hash-bound assembly drawing before work. R10 remains unaccepted and unordered;
 this is not a flight release.
@@ -241,6 +241,7 @@ this is not a flight release.
 | Rules | Ordinary clearance 0.15 mm; the S-8 foreign inner-copper barrel exclusion remains ≥ 1.0 mm and also covers the load-switch gate and enable barrels and, since round 19, In1 / In2 GND at the PYRO1_OUT barrels (fill-only keep-outs; D-R18-04, D-R19-01). Silkscreen ≥ 1.0 mm text /0.15 mm strokes. Final native DRC, schematic parity, ERC and the complete project gate must pass; old counts/filled areas are not new-layout evidence. |
 | Panel | JLC tab-routed rails, no V-cut. Use the tab plan below; obtain JLC acceptance of the actual rail and tab plan and confirm every span against T-1 and the mouse-bite clearances in §3. Do not enlarge or relocate tabs without checking the final board. |
 | Vias | Ordinary vias plugged only where JLC's 0.35 mm clearance/size rules permit; otherwise tent/mask-cover them without adding openings. Preserve the large BAT_IN via's supplied covering. **Only the two U401.11 vias use VIPPO (resin-filled and copper-capped): see "Via covering and the VIPPO fallback" below.** Preserve the supplied covering set; changed covering requires renewed DFM/paste checks. |
+| Electrical test | Keep JLC's bare-board electrical (open / short) test, and confirm it in the order. It is the first screen for an open via in the U9 EN chain: EN reaches its only pull-down R81 through three vias in series, (19.675,66.6), (21.3,68.9) and (17.1,82.8), and an open one would leave EN floating 0.2 mm from BAT_IN, so the board could come on with J400 open (R20-SAF-01, D-R20-01 not done; Inference). That JLC tests every four-layer bare board by default is also an Inference. The per-flight switch-off check (§8.3) is the second screen. |
 | Uploads | Final `m3_gerber.zip`, `m3_bom_jlc.csv`, `m3_cpl_jlc.csv`; both assembly PDFs are inspection aids. `m3_bom_owner.csv` (C84, the hand-fitted part) is the owner's record and is not uploaded. `m3_fab_manifest.json` must bind all six outputs to the final CAD/export inputs, and is written only after the three content checks below pass. Cost/stock files are evidence, not uploads. |
 | Acceptance | Needed before any order: owner acceptance of the board-bound deviation list (the owner decision table in [R10_VALIDATION.md](R10_VALIDATION.md#r10-deviations-for-owner-acceptance)), factory process acceptance (panel, VIPPO, manual C84, no-wash, two U5 reflows) and stock and quote resolution. Review and build status: [M3_R10.md, "Current state"](M3_R10.md#current-state). |
 
@@ -259,7 +260,7 @@ python3 tools/check_procurement.py --profile r10
 It counts parts plus JLC's per-code feeder fees only. The Extended-code count is informational.
 
 **Current supplier snapshot.** All 82 exact codes (81 JLC BOM lines, 45 Extended / 36 Basic, plus C84 on the owner BOM) were queried live from JLC for stock at 2026-10-31T08:22:17Z and for cost at 08:23:13Z; both reports'
-input hashes match the final JLC BOM, owner BOM and CPL of `50a39de5…` ([cost](../m3_design/assembly_review/fab/cost_check.json) and
+input hashes match the JLC BOM, owner BOM and CPL of `50a39de5…`. Cost and stock were not re-run after the round 20 polish pass: the BOM is unchanged and the parts and quantities are the same, but the CPL changed, so re-run both against the final files before ordering ([cost](../m3_design/assembly_review/fab/cost_check.json) and
 [stock](../m3_design/assembly_review/fab/stock_check.json)). At 5 boards:
 
 | Basis (JLC Standard, both sides) | Per board |
@@ -276,7 +277,7 @@ process acceptance and the owner's cost and deviation acceptance remain pending;
 
 | Part | Snapshot / required action |
 |---|---|
-| U4 ISM6HG256XTR C51931514 (fitted, D-R19-11) | **9 in stock (`stockCount`) but only 2 orderable (`canPresaleNumber`) for 5 fitted** (JLC exact-code query 2026-10-31T09:54–09:57Z, R20-BOM-01); LCSC has 0, so JLC cannot restock from LCSC. Reading `canPresaleNumber` as the orderable quantity, U4 is 3 short (Inference). Minimum 1, Extended, $14.34. On order day, add U4 to the JLC cart first and confirm the quantity before paying; if it is short, use the LSM6DSV320X consignment path (next row). Same land, pins and axes as the LSM6DSV320X (ST DS15034 Rev 1 Figure 5 p9, Table 2 pp10–11, drawing p187). CPL rotation 180° (bottom side, from the EasyEDA BR footprint): confirm pin 1 in JLC's bottom-side placement preview. |
+| U4 ISM6HG256XTR C51931514 (fitted, D-R19-11) | **9 in stock (`stockCount`) but only 2 orderable (`canPresaleNumber`) for 5 fitted** (JLC exact-code query 2026-10-31T09:54–09:57Z, R20-BOM-01); LCSC has 0, so JLC cannot restock from LCSC. The stock check now reads `canPresaleNumber` as the orderable quantity (an Inference about JLC's field) and fails: 2 against 5 (`stock_check.json` 2026-10-31T10:13Z). Minimum 1, Extended, $14.34. On order day, add U4 to the JLC cart first and confirm the quantity before paying; if it is short, use the LSM6DSV320X consignment path (next row). Same land, pins and axes as the LSM6DSV320X (ST DS15034 Rev 1 Figure 5 p9, Table 2 pp10–11, drawing p187). CPL rotation 180° (bottom side, from the EasyEDA BR footprint): confirm pin 1 in JLC's bottom-side placement preview. |
 | U4 alternate LSM6DSV320XTR C26633007 | 0 at JLC. Consign it **only if** the ISM6HG256XTR stock is gone: same land and board pose, but its CPL rotation comes from its own EasyEDA footprint (0°), so regenerate and re-verify the CPL; firmware must then use the LSM6DSV320X register map (the high-g full-scale codes differ, D-R19-11). Do not plan to hand-fit this bottom LGA. |
 | R430 C2999509, 22.6 kΩ | In stock, minimum 1. FOJAN FRC0603F2262TS (1 %, ±100 ppm/°C, 0603) replaced C185349, which had 17 available against a 3610 minimum (D-R18-09). |
 | U9 C3662793 | 45 available at the previous snapshot, minimum 1 for five fitted. Refresh before ordering. |
@@ -299,19 +300,22 @@ Proposed plan: four tabs, one wholly in each end third of each long edge, at the
 
 | Tab | KiCad span | Gerber span | Nearest part or hole (gap; rule) | In2 under the tab (R20-MFG-01) |
 |---|---|---|---|---|
-| West, aft third | x = 0, y 12.50–17.50 | X 0, Y −17.50…−12.50 | J440, 3.155 mm (2.0 mm); before J440 it was hole (4,4), 7.31 mm (1.5 mm) | **3V3** |
+| West, aft third | x = 0, y 12.50–17.50 | X 0, Y −17.50…−12.50 | J440, 3.155 mm (2.0 mm); before J440 it was hole (4,4), 7.31 mm (1.5 mm) | none: In2 keep-out `R20_TAB_KEEPOUT_WEST_AFT` since D-R20-08 (was 3V3) |
 | West, forward third | x = 0, y 60.00–65.00 | X 0, Y −65.00…−60.00 | J400, 3.15 mm (2.0 mm) | GND (all four layers) |
 | East, aft third | x = 46, y 6.75–11.75 | X 46, Y −11.75…−6.75 | J410, 3.16 mm (2.0 mm) | **RAW_PROTECTED** (PORT_5V3 in the 3 mm band) |
 | East, forward third | x = 46, y 63.75–68.75 | X 46, Y −68.75…−63.75 | J122, 3.16 mm (2.0 mm) | **RAW_PROTECTED** |
 
 **GND under the tabs (R20-MFG-01; measured by the round 20 manufacturing lens on `50a39de5…`).** R8 and R9 required GND
-only under every tab (R8P3-POWER-05); R10 had not kept or recorded that rule. On this board three of the four tabs above,
-and the aft-edge alternative below (x 38–43), sit over In2 power copper that starts 0.50 mm inside the edge (F.Cu, In1 and
+only under every tab (R8P3-POWER-05); R10 had not kept or recorded that rule. On `50a39de5…` three of the four tabs above,
+and the aft-edge alternative below (x 38–43), sat over In2 power copper that starts 0.50 mm inside the edge (F.Cu, In1 and
 B.Cu are GND there). The only 5 mm positions in the legal windows with GND on all four layers across a 3 mm band are on
 the west edge, y 51.75–66.25. **Choose one before ordering:** (a) tabs only over GND, i.e. all tabs inside west
 y 51.75–66.25 (whether JLC accepts tabs on one edge only is unconfirmed), or (b) the four-tab plan above as an owner
-deviation (R10_VALIDATION owner table). **Fix at the next board change:** In2 fill-only keep-outs, 5.0 × 3.0 mm, at each
-chosen tab span, then re-check the In2 3V3 / RAW_PROTECTED necks and K-region / K-power.
+deviation (R10_VALIDATION owner table). **Round 20 polish pass (D-R20-08):** the west aft tab now has an In2 fill-only keep-out, 5.0 × 3.0 mm (In2 3V3 under the
+band 12.498 → 0 mm²). The east tabs were not changed: a keep-out there cuts the In2 RAW_PROTECTED fill (the north piece
+would keep no links, or a 0.45 mm neck), so they still sit over RAW_PROTECTED (and PORT_5V3 in the aft 3 mm band). The
+choice above therefore now reads: (a) GND-only tabs, i.e. the west aft tab plus tabs inside west y 51.75–66.25, or (b) the
+east tabs as an owner deviation (owner row 28). The aft-edge alternative is still over RAW_PROTECTED.
 
 **Order-number mark (R20-MFG-04).** In JLC's order form choose **"Specify a location"** for the order number. R10's
 placeholder `JLCJLCJLCJLC` is on the bottom silkscreen (mirrored) at KiCad (20.35, 35.6), Gerber Y −35.6; ink x
@@ -371,14 +375,14 @@ Evidence: [pad-energy calculation](../m3_design/assembly_review/sources/r10_revi
 
 ### 8.2 Assembly, order remarks and placement preview
 
-**Standard PCBA, both sides, including all eight THT terminals.** The current `50a39de5…` package has
-81 JLC BOM codes (45 Extended / 36 Basic) and 205 placed parts; C84, the 206th fitted part, is on the owner BOM `m3_bom_owner.csv` and not in the JLC files. The 205 CPL rows are 74 top + 131 bottom;
-independent pad reconstruction checks cover 191 parts (71 top + 120 bottom), plus 14 placement-only checks.
-Orientation passes, with worst reconstructed-pad residual 0.491 mm. Paste passes at 257 top + 371 bottom flashes,
+**Standard PCBA, both sides, including all eight THT terminals.** The current `0dc84776…` package has
+81 JLC BOM codes (45 Extended / 36 Basic) and 205 placed parts; C84, the 206th fitted part, is on the owner BOM `m3_bom_owner.csv` and not in the JLC files. The 205 CPL rows are 72 top + 133 bottom;
+independent pad reconstruction checks cover 191 parts (69 top + 122 bottom), plus 14 placement-only checks.
+Orientation passes, with worst reconstructed-pad residual 0.491 mm. Paste passes at 253 top + 375 bottom flashes,
 with no pasted pad missing a flash; C84's lands have no aperture (D-R19-07). The [manifest](../m3_design/assembly_review/fab/m3_fab_manifest.json)
-binds the six outputs to this PCB and its CAD/export inputs, after the BOM / CPL (S-4), CPL-orientation and paste checks pass. These are the round 19 CAD pass's build results; the earlier
+binds the six outputs to this PCB and its CAD/export inputs, after the BOM / CPL (S-4), CPL-orientation and paste checks pass. These are the round 20 polish pass's build results; the earlier
 [manufacturing review](../m3_design/assembly_review/sources/r10_review/round11_manufacturing.md) describes `0c50b9fd…`.
-K-legends passes with zero silk/mask overlaps; 94 hidden designators (C28, R110, C123, D440, D441 and R88 newly hidden in round 19) require the Fab references/assembly drawings.
+K-legends passes with zero silk/mask overlaps; 96 hidden designators require the Fab references / assembly drawings (round 20 hid C94, R461, C404, R90 and U401 and showed C28, D440 and D441 again; no designator sits inside another part's courtyard and no Fab reference crosses its own outline, D-R20-06 / -07).
 Inspect every terminal role legend and pin 1/polarity mark in the factory preview. Since round 19 every top-side pin and word legend lies wholly outside the DB125 fit envelopes (D-R19-08); the pin 2 legends of J121 (2:E1+) and J400 (2:SW), and pins 2–4 of J440, are on the bottom beside their pins.
 
 Type the following current process requirements into the order remarks and obtain acceptance before payment:
@@ -447,7 +451,7 @@ The camera TX/RX order differs from GPS/radio; all directions above are board-re
 **J410, J420 and J440 are electrically identical** (same supply, resistors and ESD; D-R19-14): the GPS or the radio may be wired to any of the three, and firmware maps each device to its port UART (default GPS J410, radio J420, AUX spare; the GPS / RADIO / AUX words show the default). If a module moves, the firmware port map must move with it. **J9 is not interchangeable** with them: its supply is the switched 5.4 V camera rail, its TX / RX pin order is reversed and its UART goes through the U12 / U13 isolation.
 There is no mirrored-numbering/header exception. A symmetric pin row cannot prove a terminal's wire-facing direction;
 confirm bodies, colours and every contact in the fresh factory preview. Do not apply R9's +180° terminal correction.
-Also confirm (positions last verified against `50a39de5…` by a read-only parse of the native board, round 19 docs lane):
+Also confirm (positions last verified against `50a39de5…` by a read-only parse of the native board, round 19 docs lane; none of them moved in the round 20 polish pass):
 
 - Q120/Q121, genuine AONR21357/C431196: B(13.5,73.6),0° and B(13.5,68.6),180°; opposing source/gate/drain roles.
   Q124 is F(13.9,57.37),90°; C126 is F(16.85,57.675),−90° with its GND via at (15.8,59.425) (moved there by D-R18-05; R19-DOC-01).
@@ -491,13 +495,13 @@ Record the final board/firmware hashes. After coating/rework or any firmware cha
 J2 F(5,39.4) must be programmed before fitting the adjacent (4,44.3) support, or with that support removed:
 the TC2030 nose cannot seat with its hardware in place.
 
-**Current probe worksheet** (native contact positions, re-read on `50a39de5…` in round 19: TP121 is removed (D-R19-03) and TP82 moved (D-R19-14); every other row is unchanged):
+**Current probe worksheet** (native contact positions on `0dc84776…`: TP121 is removed (D-R19-03) and TP82 moved twice (D-R19-14, D-R20-04); every other row is unchanged since round 19):
 
 | Probe / role | Face and exact contact centre (mm) | Use |
 |---|---|---|
 | TP80 BAT_IN | F(9.8,83.8) | Pack-input discharge; confirm <1 V before reconnection |
 | TP81 RAW_PROTECTED | B(31,84.8) | Protected input/output rail |
-| TP82 USB_LIMITED | **B(11.0,17.6)** | USB-limiter output. Moved from B(10.8,21.3) in round 19 to keep 1.5 mm from J440's pads (M-6) |
+| TP82 USB_LIMITED | **B(11.2,20.7)** | USB-limiter output. Moved from B(10.8,21.3) to B(11.0,17.6) in round 19 (M-6 to J440) and to B(11.2,20.7) in round 20, on the USB_LIMITED diagonal's extension (stub 0.849 mm; D-R20-04) |
 | TP83 VLOGIC | B(34.5,81.5) | Logic hold-up rail; C84-connected check on first articles (below) |
 | TP120 RAW_ACT | B(18,68.6) | Post-load-switch bus; mask during coating |
 | ACT_GATE at R119.1 / R120.2 / C120.2 | **B(11.14,71.1) / B(18.5,73.03) / B(17.1,73.3)** | High-side gate. TP121 and its 7.14 mm stub are removed (D-R19-03, R19-SAF-03); probe these bare part pads **before coating** only, with a fine probe and no clip |
@@ -568,7 +572,7 @@ thermal and sensor tests apply using the contacts above and the current circuit:
 - Replace ARM-link transitions with 20 screw-switch on/off cycles, verifying RAW_ACT<1 V and 3V3<0.3 V between cycles
   with all back-feed sources disconnected. Retain reset, camera-switching, servo/buzzer and source-transition disturbance tests.
   Firmware may fire only after accelerometer+barometer launch detection; commanded dummy-load firing exercises that policy.
-  With C87 at 220 nF (D-R19-10) the calculated turn-on delay is 31–122 ms and a J400 drop-out shorter than 11.4 / 21 / 27 ms (worst case at 6.0 / 7.4 / 8.4 V) cannot trip U9 (Calculation). Measure the chosen switch's contact chatter at flight vibration: pass if the longest drop-out is < 10 ms (REQUIREMENTS F6).
+  With C87 at 220 nF (D-R19-10) the calculated turn-on delay is 30–129 ms and a J400 drop-out shorter than 10.6 / 20.5 / 26.4 ms (worst case at 6.0 / 7.4 / 8.4 V) cannot trip U9 (Calculation). Measure the chosen switch's contact chatter at flight vibration: pass if the longest drop-out is < 10 ms (REQUIREMENTS F6).
 - Static/leakage gates use the flight firmware, dummy load and isolated instruments. After coating and before each flight,
   powered NRST at C24.1 must be **≥0.90×3V3** measured at C15.1 with a 10 MΩ DMM, corresponding to the retained
   ≥ 250 kΩ leakage requirement. Do not substitute an unpowered resistance reading.
@@ -602,10 +606,10 @@ thermal and sensor tests apply using the contacts above and the current circuit:
   or cap the clock and SD write rate in firmware while PA4 (LOGIC_SOURCE_ST) reports the USB input, and measure the USB-only draw on first articles. The GPS and radio ports are off on USB-only power: disconnect
   the J410, J420 and J440 module leads for USB-only sessions, or verify that J410.3, J420.3 and J440.3 stay near 0 V, and characterise module behaviour. Firmware enables each port TX (PD8, PB13, PC6) only while PA4 reads low (U11 on IN2, the battery) and parks it analog, no pull, when PA4 rises or PA6 trips (D-R19-13).
 - **Per-flight check before the e-match is inserted (R18-SAF-06, R19-SAF-02).** With the pack connected and J400 open:
-  (1) confirm the board is **off**: no telemetry and no buzzer, or, with access, RAW_PROTECTED at TP81 and 3V3 at C15.1 both below 0.3 V. A board that is on with J400 open means a leak or bridge at the EN network or a chafed J400.2 lead (R19-SAF-02): do not insert the e-match;
+  (1) confirm the board is **off**: no telemetry and no buzzer, or, with access, RAW_PROTECTED at TP81 and 3V3 at C15.1 both below 0.3 V. A board that is on with J400 open means a leak or bridge at the EN network, a chafed J400.2 lead (R19-SAF-02), or an open via in the EN chain to R81 (R20-SAF-01: EN would float 0.2 mm from BAT_IN; Inference): do not insert the e-match;
   (2) measure J121.2 (IGN) to GND with a floating meter (never an earthed instrument ground on an igniter terminal): it must read below 0.1 V. A higher reading means Q120/Q121 or their gate bias has failed on, so the bus is live with the switch off; do not insert the e-match. TP120 (RAW_ACT) faces the sled and is not a substitute for this reading;
   (3) after any check with J400 closed, open J400 and confirm again that the board turns off before anyone works at the rocket.
-- **PORT_4V8 level, first article and pre-flight (R20-PWR-02).** On pack power, with the e-match disconnected and before any module is connected, measure J410.1, J420.1 and J440.1 to GND: each must read 4.71–4.87 V. This screens both U401 OUT vias and its feedback tap: R402.1 (U401's regulation sense) hangs on the first OUT via (29.75,12.6) alone, and if that via opens FB goes to GND and PORT_4V8 rises to about 5.2–5.55 V on all three ports (Calculation), above the LR900's 4.5–5 V and the M100 Mini's 3.3–5 V. Do not connect a module if the reading is out of range.
+- **PORT_4V8 level, first article and pre-flight (R20-PWR-02).** On pack power, with the e-match disconnected and before any module is connected, measure J410.1, J420.1 and J440.1 to GND: each must read 4.71–4.87 V. This is an ordinary level check of U401 and its feed. Since D-R20-02 the feedback tap R402.1 joins the output after both OUT vias (new via (30.575,11.6)), so a single open OUT via no longer leaves FB at GND; any fault that did would raise PORT_4V8 to about 5.2–5.55 V on all three ports (Calculation), above the LR900's 4.5–5 V and the M100 Mini's 3.3–5 V. Do not connect a module if the reading is out of range.
 - **Hot-plug:** use the final unfused harness, measured R ≥ 0.03 Ω and L 0.1–2 µH, switch open and e-match/USB/self-powered
   sources disconnected. Wait ≥ 2 s after unplugging and confirm TP80<1 V before reconnection. R166 is 0.36 Ω/1%;
   measure resistance before/after repeated hot/cold insertions. Scope U9 IN and OUT together; below −10 °C,
@@ -663,5 +667,5 @@ are not vibration-release criteria. Physical fit, heat, coating process, clamp/h
 Earlier R7–R9 instructions, including RF modules/SMA, GH mates, ARM link/fuses, servo headers/ties, old coating rectangles
 and old thermal/modal/copper/stock counts, do not become current through a designator substitution.
 Historical details remain in M3_R10, R10_VALIDATION and R10_DECISIONS. The current software/CAD and fabrication
-results belong to `50a39de5…` (build and check history: M3_R10, "Current state"). Resolve stock/quote requirements before any order. Factory approval, first-article processes, firmware, bench/thermal/e-match, coating, harness/tool/card
+results belong to `0dc84776…` (build and check history: M3_R10, "Current state"). Resolve stock/quote requirements before any order. Factory approval, first-article processes, firmware, bench/thermal/e-match, coating, harness/tool/card
 access and installed mechanical qualification remain open.

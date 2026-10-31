@@ -54,17 +54,19 @@ def port_wires(d):
             t('GND','B',S,[a,at])
         v('GND',at)
     # D-R19-14: the AUX cell is on the top beside J440 (its pins sit under the terminal body): each wire runs straight
-    # west from its resistor to the terminal pin, the clamp hangs on it, and the clamp's return drops to its own via.
-    # The RX row sits 0.9 mm north of J440.4 (TP82's 1 mm keep-out), so its wire steps down once, 45 degrees.
+    # west from its resistor to the terminal pin. The RX row sits 0.9 mm north of J440.4, so its wire steps down once, 45
+    # degrees. D-R20-09 (R20-RTE-05): the clamps sit on the bottom under J440's body on the wire side, as D410 / D411 sit
+    # under J410's (TX between pins 3 and 4, RX beyond pin 4, 3.2 mm from their pins, M-6 1.5 mm): each pin runs west on
+    # B.Cu and drops into its clamp, and the clamp's return goes 0.7 mm further west to its own via.
     for net,res,dio,jack in [('AUX_TX_WIRE','R471.2','D440','J440.3'),('AUX_RX_WIRE','R470.1','D441','J440.4')]:
-        a=p(res);b=p(dio+'.1');j=p(jack)
+        a=p(res);j=p(jack);b=p(dio+'.1')
         if a[1]==j[1]:
             t(net,'F',S,[a,j])
         else:
             t(net,'F',S,[a,(12.4,a[1]),(12.4-(j[1]-a[1]),j[1]),j])
-        t(net,'F',S,[(b[0],a[1]),b])
-        a=p(dio+'.2');at=(a[0],a[1]+(.75 if dio=='D441' else -.75))
-        t('GND','F',S,[a,at]);v('GND',at)
+        t(net,'B',S,[j,(b[0],j[1]),b])
+        a=p(dio+'.2');at=(round(a[0]-.7,4),a[1])
+        t('GND','B',S,[a,at]);v('GND',at)
 
 
 def camera_local(d):
