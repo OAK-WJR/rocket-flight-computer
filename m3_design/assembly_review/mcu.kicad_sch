@@ -1893,22 +1893,6 @@
 		(uuid b6029a2e-a504-543b-bfe9-33451235ca9c))
 	(wire
 		(pts
-			(xy 63.5 95.25)
-			(xy 58.42 95.25))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid ba02450a-7b5e-58c8-8439-67cc2e3f0bfc))
-	(global_label "V3V3_SENSE"
-		(shape passive)
-		(at 58.42 95.25 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 794c2792-e0ff-5d6a-99da-3f8417f908d1))
-	(wire
-		(pts
 			(xy 63.5 97.79)
 			(xy 58.42 97.79))
 		(stroke
@@ -4017,13 +4001,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid a1f83005-1216-5900-a314-f248aa8f3acf))
-	(text "R8: camera enable CAM_PWR_EN on PE12 / pin42, fault input CAM_FAULT_N on PE11 / pin41 (GPIO only, SPI4 never enabled); no actuation changes."
-		(at 185.42 220.98 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 5a22d3c3-2b31-5026-855a-cb0b85e85210))
 	(text "Unused GPIO are explicitly NC. VCAP1 / VCAP2 remain separate."
 		(at 185.42 215.9 0)
 		(effects
@@ -4510,26 +4487,15 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 542141fb-b26e-519c-b85e-2144a8420148))
-	(text "R8 follow-on moves (D3): BUZZ_DRV PC13, BAT_FAULT_N PA4, LOGIC_SOURCE_ST PA5, CAM_UART_OE PA7, camera UART7 PE7 RX / PE8 TX, CAM_FAULT_N PE11, CAM_PWR_EN PE12, VBUS_SENSE PC8, LEDs PD5 / PD7. Freed, NC: PB12, PB13, PD10, PD0, PD1, PD3, PD4."
-		(at 20.32 264.16 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid faf92212-3846-51f0-bb62-46d5bd013cb8))
-	(text "Pins the ROM bootloader drives (AN2606 Table 135; D5) carry only SERVO3 PA2, RADIO_SCK PB10, RADIO_MOSI PB14, USB PA11/PA12, QSPI_NCS PB6 and I2C1_SDA PB9; PA6, PA8, PA9, PA10, PC9, PC11, PE13 stay NC."
-		(at 20.32 269.24 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 3f0d087a-169f-51fa-b24e-acdb834fcca3))
 	(no_connect
 		(at 63.5 77.47)
 		(uuid 9c79ea49-fd10-57ae-b53a-7561dc5cabeb))
 	(no_connect
 		(at 63.5 92.71)
 		(uuid 6ad4e78c-4b81-5e19-b386-dc896f195773))
+	(no_connect
+		(at 63.5 95.25)
+		(uuid 94a74865-346a-5f29-9ca9-76e7660aa0b3))
 	(wire
 		(pts
 			(xy 119.38 100.33)
@@ -4698,13 +4664,34 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 04c4ac9e-2417-59ff-834e-3c7793af9cef))
-	(text "Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise PC1 and PE4 low before output mode. R123 100k holds the load switch off at reset. Both low for passive cold screening; after prior enable wait >=1 s and verify bus discharge. Refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks (D-SS-04). Disable synchronous trace; lock/read back both gate GPIO configurations. AUD-4: PC13 U1.7 is NC/analog; no pull-pin."
+	(text "Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise PC1 and PE4 low before output mode. R123 2k holds the load switch off at reset and against a 30k internal pull-up (R18-MCU-01); never enable a PC1 or PE4 pull-up. PE4 U1.3 is ACTIVE HIGH: PE4 high turns Q124 on (PYRO1_GATE_N is a historical name). Both low for passive cold screening; after prior enable wait >=1 s and verify bus discharge. Refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks (D-SS-04). Disable synchronous trace; lock/read back both gate GPIO configurations. AUD-4: PC13 U1.7 is NC/analog; no pull-pin."
 		(at 20.32 269.24 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid f38a2f6c-1d90-5da6-a9f1-a6883beeb5d2))
+	(text "R10: camera enable CAM_PWR_EN on PE11 / pin41, fault input CAM_FAULT_N (EXTI12) on PE12 / pin42 (GPIO only, SPI4 never enabled); swapped from R8 for routing (D-R2-07); no actuation changes."
+		(at 185.42 220.98 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid e396282b-dec7-5b52-a09c-06ea2ff86621))
+	(text "R10 MCU map (pin_table.tsv r10_net is the sole authority): BUZZ_DRV PC14; LOGIC_SOURCE_ST PA4, BAT_FAULT_N PA5 (D-R2-09); camera UART7 PE7 RX / PE8 TX, CAM_UART_OE PE9; radio UART5 PB12 RX / PB13 TX; GPS USART6 PC6 TX / PC7 RX; SD SPI3 PC10 / PC11 / PC12, PD0 CS; ACT_EN_MCU PC1; PE4 fire, ACTIVE HIGH (PYRO1_GATE_N is a historical name); VBUS_SENSE PC8; LEDs PD5 / PD7. NC: PC13, PB0, PC3_C (R18-REQ-08), PB10, PB14, PD8-PD10, PD14, PD15, PE15."
+		(at 20.32 264.16 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid bfa96026-ef64-5931-8ab5-fe38737dcad0))
+	(text "R10 pins the ROM bootloader drives (AN2606 Rev64 Table119 / Rev70 Table135; K-loader): SERVO3 PA2 (USART2_TX), VLOGIC_SENSE PA6 (SPI1_MISO into the divider), SD_MISO PC11 (SPI3_MISO; R460 keeps the card deselected), USB PA11/PA12 (DFU), QSPI_NCS PB6 and I2C1_SDA PB9 (open drain); PA8, PA9, PB10, PB14, PC9 and PE13 stay NC. UART5 PB12/PB13 and USART6 PC6/PC7 are not loader interfaces."
+		(at 20.32 269.24 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid d65308b9-d6ce-58f3-bf00-5eff8f1fb023))
 	(text "CH1 sense: filtered PYRO1_CONT -> PC0 ADC123_INP10; filtered ARM1_SENSE -> PC5 ADC12_INP8, the sole RAW_ACT bus reading (historical ARM1_SENSE name). Split divider safety retained; audit2 removes R168/R170 and _MCU tails (single-resistor fault maximum3.342V at19.9V clamp). AVA follow-up removes the duplicate six-part RAW_ACT_SENSE chain; PB0 U1.34 is NC/analog, never driven. Ground bus/continuity readings are hard refusals; in flight they never veto fire."
 		(at 20.32 279.4 0)
 		(effects

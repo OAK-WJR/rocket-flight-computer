@@ -1,0 +1,262 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round18_parts",
+ "reviewer": "claude",
+ "lens": "parts, BOM, footprints, orientation and stock",
+ "target_commit": "dcbb6c8f040b7012f78934e1caf1b401db84d356",
+ "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 4
+ },
+ "findings": [
+  {
+   "id": "R18-BOM-01",
+   "severity": "Minor",
+   "status": "carried",
+   "earlier_id": "R17-BOM-04",
+   "title": "Exact-code stock still blocks release (R430, U4); U9 stock is draining; drop-in substitutes identified",
+   "evidence": {
+    "files": [
+     "m3_design/assembly_review/fab/m3_bom_jlc.csv",
+     ".supervisor/r18_parts/stock_live.json (sha256 6e3fb3ee...)",
+     ".supervisor/r18_parts/alt_live.json (sha256 53839e07...)",
+     ".supervisor/r18_parts/detail/*.json",
+     ".supervisor/r18_parts/search_r430.json, search_u4.json, search_u9.json"
+    ],
+    "query": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList exact-code POST, 82/82 BOM codes, 2026-10-30T19:23:55Z..19:25:48Z; substitutes 19:43:30Z..19:43:44Z; detail API https://cart.jlcpcb.com/shoppingCart/smtGood/getComponentDetail?componentCode=<code> ~19:45Z",
+    "library_split_live": "36 Basic / 46 Extended (unchanged); all 82 isBuyComponent=1; all MPNs equal BOM MPNs",
+    "R430": "C185349 RC0603FR-0722K6L, B(36.0,60.0) 0603, net CAM_ILIM (U402 TPS2553 ILIM): stock 17, minPurchaseNum 3610, detail canPresaleNumber 0",
+    "U4": "C26633007 LSM6DSV320XTR, B(17.0,45.9) rot 180: stock 0, canPresaleNumber 0",
+    "U9": "C3662793 TPS259470LRPWR, B(18.5,81.6): stock 78 at 19:25:40Z (R17 snapshot 17:15Z: 83), minPurchaseNum 7, detail canPresaleNumber 0 (no LCSC presale backing)",
+    "R430_substitutes": [
+     "C2999509 FOJAN FRC0603F2262TS: stock 84,923, min 1, $0.0021; 22.6 kOhm +/-1% +/-100 ppm/C 100 mW 75 V 0603 thick film",
+     "C403080 Panasonic ERJ-3EKF2262V: stock 5,007, min 1, $0.0077; same ratings",
+     "C304721 FH RS-03K2262FT: stock 7,515 (50 V working voltage; still ample)"
+    ],
+    "U4_candidates": [
+     "C46898862 LSM6DSV80XTR: +/-80 g high-g, +/-4000 dps, LGA-14L 2.5x3: stock 0, min 2 (pin identity with 320X is Inference; ST sheet not retrieved)",
+     "C22461202 LSM6DSV32XTR: stock 5,295 but +/-32 g fails REQUIREMENTS F2 (>= +/-64 g)",
+     "C5267406 LSM6DSV16XTR: stock 15,397 but +/-16 g fails F2"
+    ],
+    "U9_candidate": "C3662799 TPS259470ARPWR: stock 2,591, min 1; same RPW0010A package and pin functions; TI SLVSFC9C Device Comparison Table p4 (https://www.ti.com/lit/ds/symlink/tps25947.pdf): only Response to Fault differs (Auto-Retry vs Latch-Off)",
+    "cost_live": "placed parts $54.3369 + feeder $25.092 = $79.4289/board; with JLC minimum purchases $81.7693; with R430 -> C2999509 $79.9664 (all before fixed/process/PCB/shipping; cap $84.41)"
+   },
+   "impact": "Order cannot be released (REQUIREMENTS M1: every part in stock for 5 boards). R430 alone forces a 3,610-piece purchase (~$1.80/board). U9 lost 5 units in ~2 h and has no presale backing; at that rate it can run out before order day, and its only in-stock pin/land-identical variant changes fault behaviour.",
+   "concrete_fix": "R430: change LCSC/Manufacturer/Manufacturer Part to C2999509 / FOJAN / FRC0603F2262TS (or C403080 Panasonic ERJ-3EKF2262V); land R_0603_1608Metric and nonpolar theta 0 unchanged; add the matching tools/jlc_corrections.json key and regenerate fab/binding evidence. U4: consign LSM6DSV320XTR (ORDERING section 1) - no JLC-stocked part meets F1+F2. U9: buy the 7-piece minimum into the JLC parts library now, or consign; use C3662799 (auto-retry) only after an owner/power-lens decision. Refresh exact stock within 24 h of ordering."
+  },
+  {
+   "id": "R18-BOM-02",
+   "severity": "Minor",
+   "status": "carried",
+   "earlier_id": "R17-BOM-02",
+   "title": "DB125 terminals: 1.30 mm finished holes vs maker 1.20 mm; process/S-8 allocation open (insertion hypothesis narrowed)",
+   "evidence": {
+    "refs": "J1 F(7.4,75.85) -90; J400 F(7.4,65.85) -90; J121 F(7.4,55.85) -90; J410 F(38.6,15.5) 90; J420 F(38.6,31.5) 90; J9 F(38.6,47.5) 90; J122 F(38.6,71.5) 90; 23 contacts, *.Cu",
+    "native": "all 23 pads circle 1.90 mm copper, drill 1.30 mm, pitch 3.50 mm; annular ring 0.30 mm nominal, 0.235 mm at JLC maximum finished hole 1.43 mm (JLC minimum ring 0.20 mm)",
+    "maker": "DORABO DB125-3.5-XXP-C-S drawing T0-1 p1 (https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf): Pin Dimensions 0.50x0.85 mm, PCB Hole Diameter 1.20 mm, 28-16 AWG, pin row 3.90 mm from rear face / 3.50 mm from wire-entry face",
+    "clearance": "nominal pin diagonal 0.986 mm; minimum finished hole 1.30-0.08 = 1.22 mm (https://jlcpcb.com/capabilities/pcb-capabilities: PTH +0.13/-0.08) leaves 0.234 mm diametral clearance (0.165 mm even for a 0.55x0.90 pin). The carried 0.70x1.05 mm (1.262 mm) corner applies the +/-0.20 general linear tolerance to the stamped pin section; such a pin could not enter the maker's own 1.20 mm hole, so it is not a credible insertion failure.",
+    "orientation": "Fresh EasyEDA records (C466970, C52993880, C2757925, C3646874) all put wire-entry openings and insertion arrows on local +y (y +1.4..+3.9 mm), the same side as ours (wire entry +y); CPL theta 0 needs no BODY correction. T0-1 is third-angle (top view above front view, symbol circles-left): the edge adjacent to the front view is the entry face, 3.50 mm from the pins, matching our Fab body (-3.9..+3.5). EasyEDA 5P outline is mirrored in depth (-3.5..+3.9): library-only, no placement effect, but do not use it for bore fit.",
+    "S8": "J121.1 nominal hole-wall to In2 3V3 1.102502 mm (R10_VALIDATION deviations section 1/9); fabricated diameter/registration allocation still not certified"
+   },
+   "impact": "No demonstrated insertion or isolation failure. Residual risks are fabrication allocation at the pyro barrel (S-8 margin 0.1025 mm nominal), selective/hand-solder barrel fill and first-article seating.",
+   "concrete_fix": "No CAD change (do not shrink or enlarge the drill). Record the T0-1 pin/hole data above to close the conditional-insertion sub-item; keep the fabricator finished-hole/registration S-8 allocation for J121 and first-article seating/fill inspection of all 23 contacts; confirm outward entry in the JLC preview."
+  },
+  {
+   "id": "R18-BOM-03",
+   "severity": "Minor",
+   "status": "carried",
+   "earlier_id": "R17-BOM-01",
+   "title": "L400 SRP5030T-6R8M uses a proxy land, not Bourns' recommended layout",
+   "evidence": {
+    "ref": "L400 C1329837, F(24.2,5.55) rot 0, F.Cu, nets PORT_SW/PORT_5V3",
+    "native": "pads 1.8 x 2.5 mm at x = +/-2.35 (outer 6.50, inner gap 2.90 mm)",
+    "maker": "Bourns SRP5030T p1 Recommended Layout (https://www.bourns.com/docs/product-datasheets/srp5030t.pdf): 6.50 outer, 2.50 inner gap, 1.8 pad height -> 2.0 x 1.8 mm at +/-2.25; body 5.7+/-0.3 x 5.2+/-0.2, terminal 1.1+/-0.3",
+    "jlc": "EasyEDA proxy C189932 (same SRP5030T package) residual 0.150 mm; live stock 1,541"
+   },
+   "impact": "Worst-case terminal heel can sit about 0.15 mm inside the pad inner edge (x 1.30 vs 1.45); bounded wetting/retention risk on the port buck inductor, no electrical failure shown.",
+   "concrete_fix": "If the board is changed for any other reason, generate L400 as 2.0 x 1.8 mm pads at +/-2.25 mm (Bourns) and re-route PORT_SW/PORT_5V3 entries; otherwise keep first-article heel-wetting inspection (X-ray/side view) as recorded."
+  },
+  {
+   "id": "R18-BOM-04",
+   "severity": "Minor",
+   "status": "carried",
+   "earlier_id": "R17-BOM-03",
+   "title": "VCAP C19/C20 X5R +/-10% parts have no maker-bounded worst-case capacitance against ST +/-20%",
+   "evidence": {
+    "refs": "C19 B(28.35,37.65) VCAP1, C20 B(19.8,37.3) VCAP2; C23630 Samsung CL10A225KO8NNNC 2.2 uF 16 V X5R +/-10% 0603",
+    "maker": "ST DS12110 Rev 8 section 6.3.2 Table 25 (p109) and section 7.3.2 Table 124 (p215), cached; current Rev 11 Table 114 p211 per R17 (https://www.st.com/resource/en/datasheet/stm32h743vi.pdf): CEXT 2.2 uF typical, +/-20% tolerated, ESR < 100 mOhm. Samsung sheet: https://product.samsungsem.com/part/download.do?masterKey=CL10A225KO8NNN&type=specsheet",
+    "estimate": "Inference with generic X5R allowances (not maker curves): 2.2 x 0.90 (tol) x 0.85 (85 C) x 0.95 (bias at ~1.2 V) x 0.95 (aging) = 1.52 uF, below 1.76 uF; nominal 1.98..2.42 uF is inside the range."
+   },
+   "impact": "Possible LDO stability margin loss at hot/aged corners; not demonstrated.",
+   "concrete_fix": "Keep the bench qualification in ORDERING (both C limits, ESR, startup/load transients at temperature), or adopt a reviewed X7R 2.2 uF 0603 (>=10 V) with maker curves bounding >=1.76 uF; no larger-value substitution."
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "item": "R18-BOM-01 R430",
+   "change": "R430 fields LCSC C185349 -> C2999509, Manufacturer YAGEO -> FOJAN, Manufacturer Part RC0603FR-0722K6L -> FRC0603F2262TS (alternative C403080 Panasonic ERJ-3EKF2262V). Same 22.6 kOhm 1% 100 ppm/C 0.1 W 75 V 0603; same R_0603_1608Metric land, no copper change; add jlc_corrections key \"C2999509|R_0603_1608Metric\" theta 0.",
+   "benefit": "Removes a release-blocking 17<3,610 line and ~$1.80/board of forced minimum purchase.",
+   "caveat": "Footprint fields live in m3.kicad_pcb, so the board hash changes; needs the documented rebinding (fab manifest, firmware binding provenance) under the supervisor steer."
+  },
+  {
+   "item": "R18-BOM-01 U9",
+   "change": "Procurement action, no CAD: reserve 7 TPS259470LRPWR in the JLC parts library now or consign; C3662799 only after an explicit fault-response decision.",
+   "benefit": "Prevents a third release-blocking line."
+  },
+  {
+   "item": "Optional cost",
+   "change": "C22 (C15849, 1 uF 50 V X5R 0603, 3V3A) could share C29936 (1 uF 25 V X7R 0603), saving one feeder code ($0.306/board). Do NOT merge C128: GCJ188R71H104KA12D is the soft-termination part on PYRO1_OUT, the only MLCC whose crack-short completes the fire path.",
+   "benefit": "Small cost; low priority."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "JLC orientation/polarity error: closed. Independent y-up reconstruction of all 199 CPL rows against fresh EasyEDA footprints (38 codes fetched now; 4 from the frozen repo cache): every pad lands on our same-number pad; worst residuals R134 0.491 mm and LS120 0.450 mm are land-size/centre differences, Q124 pins 1-4 0.100 mm, Q120/Q121 pins 1-8 0.100 mm, U1 0.000 mm, U4 0.052 mm, U9 0.192 mm, J430 0.005 mm. 12 C21190 0603 resistor rows are placement-only.",
+  "Polarity marks: EasyEDA C84256 pad1 \"-\" (chamfer) = our LED1 pad1 GND; C2296 pad1 \"+\" with cathode chamfer/arrow on pad2 = our LED2 pad1 anode (theta 180); C85098 pad1 K with band = D9 pad1 RAW_PROTECTED; C191023 pad1 K with band = D123 pad1 3V3; C46550466 pad1 \"+\" and chamfered corners = C84 pad1 VLOGIC; C94598 pad1 \"+\", pad3 NC = LS120.",
+  "C8591 EasyEDA symbol labels pins A1/A2/K (BAT54C-style) but JSCJ BAT54A p1 shows pin 3 common anode; placement uses pad numbers only and our netlist (pin 3 = 3V3 anode, pin 1 = PYRO1_COLD cathode) matches JSCJ. No impact.",
+  "U9 stencil: closed. Pad paste ratios -0.018 (corner L pads, ~93%) and -0.047 (pins 5/6, ~82%) match TI RPW0010A example stencil p74 coverage (not split windows).",
+  "U4 land/mask/paste: closed. 0.575 x 0.35 mm = ST pad 0.475 x 0.25 + 0.1 mm (TN1383 Rev 1 section 3.1 for >200 um spacing); paste ratio -0.03 -> 88.4% (ST 70-90%); mask +0.025 mm keeps a 0.100 mm web (fab acceptance already in ORDERING).",
+  "U1 LQFP-100: 0.30 x 1.60 mm pads at +/-7.55 vs ST DS12110 Figure 121 0.30 x 1.20 at 16.7 mm span: outer edge equal (8.35 mm), 0.4 mm longer inward under the body; acceptable.",
+  "U5 MS5611: TE p16 land 1.1 x 0.6 mm, 1.25 pitch, 2.2 mm column spacing matched; no foreign copper on B.Cu in the TE reserved area between the pad columns (only own-net escapes).",
+  "Y1 NX3225GA: 1.4 x 1.2 pads at 2.2 x 1.7 mm vs NDK 2.2 x 1.6 mm; pads still cover the terminals; immaterial.",
+  "Other lands checked equal to maker: Molex SD-47219-001G (signal 0.8x1.5 at 1.1 pitch, shells 1.45x2.0 at 13.75 x 8.30, pin8 2.38 from shell column); TI RPW0010A, RUX0012A, DCU0008A, DSK0010A; AOS PO-00047 rev I; HRO TYPE-C-31-M-12 (via EasyEDA 0.099 mm); Infineon TSLP-2-20 incl. stencil; Bourns CRM2512 (2.45x3.7, 7.6); UniOhm 2512 (A5.0 B1.6 C3.3 D8.2); Diodes TSOT26 for U400; Nationstar NCD0805R1; Littelfuse SMB; Sunlord SWPA4030 (ours 1.6x3.5 at +/-1.6 vs 1.1x3.7 at +/-1.5; covers terminals).",
+  "Ratings: closed. ESD103 VRWM +/-15 V on 3.3 V UARTs; SMBJ12CA 12 V/19.9 V clamp vs 8.4 V pack; AONR21357 +/-25 V gate vs 0.909 x V_BAT; AON7524/AO3400A +/-12 V vs 3.3 V drive; BAT54A 30 V vs <=16.6 V reverse; TPS7A91 6.5 V vs 5.546 V allocation; every capacitor rated >= 2x its steady-state net maximum (pack 8.4 V, OVLO-limited RAW_PROTECTED/VLOGIC 9.77 V) and above the 19.9 V clamp where exposed; R134 35.8 W/36 ms vs Bourns CRM2512 pulse curve ~46 W at 36 ms (log interpolation, Inference); 5.1 kOhm 0402 sense tops about 16 mW at the 19.9 V clamp (62.5 mW rating).",
+  "U9 canPresaleNumber -33 in the search API was not used as evidence of reservation; the detail API reports 0, read only as \"no LCSC presale backing\".",
+  "Lifecycle: TI TPS2553 and TPS25947 product pages ACTIVE; ESD103-B1-02EL listed active by distributors; all 82 JLC codes buyable. No NRND/obsolete part found (not exhaustive).",
+  "BOM Comment merges (\"10k; 10k 1%\", \"1k 1%; 1k 0603\") come from differing schematic Value strings on the same MPN; cosmetic, LCSC code governs.",
+  "TPS259470L latch-off choice, buzzer DC-hold current and SWPA4030 saturation under hiccup are electrical-lens topics; no parts-rating violation in normal operation."
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after: 632a9ad3...3982 both; git tracked tree unchanged (only other reviewers' untracked files, not opened).",
+  "Native pcbnew read-only dump: 209 footprints, fields, pads (.supervisor/r18_parts/native.json, local_pads.json).",
+  "kicad-cli 10.0.7 sch export netlist (kicadxml) and three-way compare: 209 symbols / 199 fitted / 82 BOM rows / 199 CPL rows, 651 pin-net nodes; 0 LCSC/MPN/Manufacturer/value/footprint/net/quantity/duplicate mismatches; legacy \"LCSC Part\" fields agree.",
+  "Passive package-size cross-check: every BOM footprint size code matches the JLC package of its code.",
+  "Live JLC exact-code query 82/82 plus detail API for 7 codes and keyword searches for R430/U4/U9 alternatives (raw JSON kept).",
+  "Fresh EasyEDA component records for 38 codes (pads, silk, document arrows, 3D node, symbol pins); 4 codes fell back to the repo cache.",
+  "Independent CPL reconstruction (own y-up math, bottom convention as Inference) for all 199 rows; pin-only checks for Q120/Q121/Q124.",
+  "Maker drawing comparisons: DORABO T0-1 (rendered at 300 dpi), Molex SD-47219-001G, TI RPW/RUX/DCU, AOS PO-00047, TE MS5611 p15-16, NDK NX3225GA, HRO TYPE-C-31-M-12, Infineon TSLP-2-20, Bourns SRP5030T and CRM2512 (incl. pulse curve p3), UniOhm 2512, Diodes TSOT26, Nationstar NCD0805R1, Littelfuse SMB, Sunlord SWPA4030, MLT-5020, JSCJ BAT54A.",
+  "Per-pad mask/paste override inventory from the board file (U4, U9, Q124, J3, LS120 overrides confirmed).",
+  "Under-body copper scans on the component layer for U5 and J430 (vias tented both sides).",
+  "kicad-cli pcb render top and bottom (visual pin-1/polarity check of rendered models).",
+  "Live five-board cost recomputation with and without the R430 substitute."
+ ],
+ "sources": [
+  {
+   "what": "DORABO DB125 T0-1 p1",
+   "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+   "cache_sha256": "76a55d0cbb4d30bf4d714401b8612365b6b35fedcd9660adae81c0e79d86ff7a"
+  },
+  {
+   "what": "Molex SD-47219-001 rev G sheet 1",
+   "url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf"
+  },
+  {
+   "what": "TI TPS25947 SLVSFC9C p4 device table, p73-74 RPW0010A land/stencil",
+   "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf"
+  },
+  {
+   "what": "TI TPS2121 SLVSEA3F p4-5 pins, p39-40 RUX0012A",
+   "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf"
+  },
+  {
+   "what": "TI TPS709 SBVS186H p3 pins (EN may float)",
+   "url": "https://www.ti.com/lit/ds/symlink/tps709.pdf"
+  },
+  {
+   "what": "TI TPS7A91 pin table 4-1",
+   "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf"
+  },
+  {
+   "what": "TI TXU0202 SCES942A table 6-1, p33 DCU0008A",
+   "url": "https://www.ti.com/lit/ds/symlink/txu0202.pdf"
+  },
+  {
+   "what": "ST LSM6DSV320X DS14623 Rev 1 p11 Table 2, p187 Figure 32",
+   "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf"
+  },
+  {
+   "what": "ST TN1383 Rev 1 section 3.1 (TN0018 footprint rules)",
+   "url": "https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf"
+  },
+  {
+   "what": "ST DS12110 Rev 8 Table 217/Figure 121 p321-322; VCAP p109/p215",
+   "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf"
+  },
+  {
+   "what": "TE MS5611-01BA03 06/2017 p15-16",
+   "url": "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5611-01BA03&DocType=Data+Sheet"
+  },
+  {
+   "what": "AOS DFN3x3A_8L_EP1_P PO-00047 rev I",
+   "url": "https://www.aosmd.com/sites/default/files/res/packaging_information/DFN3x3A_8L_EP1_P.pdf"
+  },
+  {
+   "what": "AOS AONR21357 / AON7524 / AO3400A absolute maxima",
+   "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AONR21357.pdf"
+  },
+  {
+   "what": "Bourns SRP5030T p1",
+   "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf"
+  },
+  {
+   "what": "Bourns CRM2512 p2 land, p3 pulse load",
+   "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf"
+  },
+  {
+   "what": "UniOhm thick-film p8 land table",
+   "url": "https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf"
+  },
+  {
+   "what": "NDK NX3225GA",
+   "url": "https://www.ndk.com/images/products/catalog/c_NX3225GA_e.pdf"
+  },
+  {
+   "what": "Diodes AP63200/1/3/5 DS41326 Rev 3-2 p17 TSOT26 land, p253/680 limits",
+   "url": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf"
+  },
+  {
+   "what": "Infineon ESD103-B1-02 Rev 1.3 p12 TSLP-2-20",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146"
+  },
+  {
+   "what": "Huawha MLT-5020 spec p2/p4",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf"
+  },
+  {
+   "what": "JSCJ BAT54/A/C/S p1",
+   "url": "https://jlcpcb.com/partdetail/C8591"
+  },
+  {
+   "what": "HRO TYPE-C-31-M-12 drawing",
+   "url": "https://datasheet.lcsc.com/lcsc/1903211732_Korean-Hroparts-Elec-TYPE-C-31-M-12_C165948.pdf"
+  },
+  {
+   "what": "JLCPCB PCB capabilities (PTH +0.13/-0.08, ring >=0.20)",
+   "url": "https://jlcpcb.com/capabilities/pcb-capabilities"
+  },
+  {
+   "what": "JLC component search / detail APIs",
+   "url": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+  },
+  {
+   "what": "EasyEDA component records",
+   "url": "https://easyeda.com/api/products/<code>/components?version=6.5.39"
+  },
+  {
+   "what": "TI product status pages",
+   "url": "https://www.ti.com/product/TPS2553 ; https://www.ti.com/product/TPS25947"
+  }
+ ],
+ "coverage_limits": [
+  "No DRC, build, tools/check.sh or test suite run; native APIs, kicad-cli export/render and read-only scripts only.",
+  "ST DS12110 cached copy is Rev 8 (current Rev 11 cited from R17 text, not re-read); st.com downloads failed (HTTP/2/56), so TN0018 itself was not retrieved; its land rule was read from TN1383 Rev 1 (smtnet mirror).",
+  "LSM6DSV80X pin compatibility not verified against an ST datasheet (Inference; it is out of stock anyway).",
+  "JLC bottom-side rotation convention is Inference (KiBot/Bouni practice); EasyEDA 3D model orientations were not inspected; the factory preview remains the release check.",
+  "Lifecycle status spot-checked only; distributor stock for consignment (DigiKey/Mouser/ST) not queried.",
+  "EasyEDA fetch rate-limited for C20917, C57269, C3013496, C168925 (repo cache used); 12 C21190 rows have no EasyEDA footprint.",
+  "Stock is volatile: figures are 2026-10-30T19:24-19:45Z snapshots and must be refreshed within 24 h of ordering.",
+  "No physical, first-article, solderability, electrical, thermal or firmware qualification is claimed."
+ ]
+}

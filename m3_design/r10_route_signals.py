@@ -135,7 +135,8 @@ def status(d):
     t('BAT_FAULT_N','F',S,[p('U1.29'),(28.2,47.5)]);v('BAT_FAULT_N',(28.2,47.5))
     t('BAT_FAULT_N','B',S,[(28.2,47.5),(28,47.3),(26,47.3),(26,51.55),(26.9,52.45)])
     v('BAT_FAULT_N',(26.9,52.45))
-    t('BAT_FAULT_N','F',S,[(26.9,52.45),(26.9,66.125),(23.85,69.175),(23,69.175),p('R89.2')])
+    # D-R18-03 (R18-SAF-03): 0.47 mm east of R17's run, 0.55 mm edge from ACT_EN_MCU; the same 45-degree run to R89.2.
+    t('BAT_FAULT_N','F',S,[(26.9,52.45),(27.37,52.92),(27.37,65.655),(23.85,69.175),(23,69.175),p('R89.2')])
     t('BAT_FAULT_N','F',S,[p('R89.2'),(22.175,80.475),(19.3,83.35),(16.55,83.35),(16.55,80.9)])
     v('BAT_FAULT_N',(16.55,80.9))
     t('BAT_FAULT_N','B',S,[(16.55,80.9),p('U9.4')])
@@ -147,22 +148,17 @@ def buzzer(d):
     t('BUZZ_DRV','B',S,[(20.2,52.1),(20.2,56.0),p('R162.1')])
     t('BUZZ_G','B',S,[p('R162.2'),(20.5,58.87),p('R163.1')])
     t('GND','B',S,[p('R163.2'),(22.33,59.73),(22.33,58.25)]);v('GND',(22.33,58.25))
-    t('BUZZ_G','B',S,[(20.5,58.7),(17.5,58.7),(17.5,60.2),p('Q123.1')])
+    # D-R18-05: the gate lead west of Q123 moves 0.25 mm east (0.15 mm from Q123.2), >= 0.5 mm from R173's OUT pad.
+    t('BUZZ_G','B',S,[(20.5,58.7),(17.75,58.7),(17.75,60.45),p('Q123.1')])
     t('BUZZ_OUT','F',IO,[p('LS120.2'),(24.85,61.02),(24,61.87),p('D123.2')])
     t('BUZZ_OUT','F',IO,[(24,61.87),(23.68,61.55),(19.55,61.55),(19.55,60.85)])
     v('BUZZ_OUT',(19.55,60.85));t('BUZZ_OUT','B',IO,[(19.55,60.85),(20.15,60.85),(20.5,60.5),p('Q123.3')])
+    # D-R18-05 (R18-SAF-04): CH1's 5.1k-isolated PYRO1_CONT_MID run south of Q123, bounded by the gate lead and the
+    # BUZZ_OUT via above (drawn after them, so the per-family gate judges it against the copper that shapes it).
+    t('PYRO1_CONT_MID','B',S,[p('R173.2'),(16.87,61.8),(20.83,61.8),(23.0,59.63),p('R129.1')])
     t('3V3','F',IO,[p('LS120.1'),(18.8,60.25),(18.8,61.9),(19.9,63),p('D123.1')])
     v('3V3',(18.8,60.25))
     t('3V3','F',IO,[(18.8,60.25),(17.05,60.25),(15.7,61.6)])
-
-
-def south_sense(d):
-    """V3V3_SENSE (PC3_C, U1.18): retain the pin via and use a direct B.Cu divider approach."""
-    t, p, via = d.track, d.pad, d.via
-    t('V3V3_SENSE','F',S,[p('U1.18'),(25.5,51.75)]);via('V3V3_SENSE',(25.5,51.75))
-    t('V3V3_SENSE','B',S,[(25.5,51.75),(25.93,52.18),p('R62.2'),p('R63.1')])
-    t('3V3','B',S,[p('R62.1'),(25.07,54.7)]);via('3V3',(25.07,54.7))
-    t('GND','B',S,[p('R63.2'),(25.07,57.6)]);via('GND',(25.07,57.6))
 
 
 def leds(d):
@@ -183,4 +179,5 @@ def leds(d):
 def draw(d):
     import r10_route_sd
     r10_route_sd.draw(d)
-    uarts(d);port_wires(d);camera(d);servos(d);status(d);south_sense(d);leds(d);buzzer(d)
+    # D-R18-01 (R18-REQ-08): the V3V3_SENSE divider (R62/R63) and its PC3_C escape are removed.
+    uarts(d);port_wires(d);camera(d);servos(d);status(d);leds(d);buzzer(d)

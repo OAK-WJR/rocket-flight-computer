@@ -1,0 +1,122 @@
+{
+  "schema": "r10-review-v1",
+  "review": "round18_power",
+  "reviewer": "claude",
+  "target_commit": "dcbb6c8f040b7012f78934e1caf1b401db84d356",
+  "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 3},
+  "findings": [
+    {
+      "id": "R18-PWR-01",
+      "severity": "Minor",
+      "status": "new",
+      "title": "In2 3V3 plane fills as three pieces; the island that feeds the 3V3A filter, buzzer and cold pull-up hangs on one 0.3 mm link",
+      "evidence": {
+        "file": "m3_design/assembly_review/m3.kicad_pcb",
+        "reference": "zone R10_3V3_In2 (In2.Cu); USB_LIMITED In2 track; R164, LS120, D123, D120, R62, U2, L1, R89",
+        "layer": "In2.Cu (plane), B.Cu/F.Cu (links)",
+        "measured": [
+          "Native filled-polygon extraction (GetFilledPolysList, In2.Cu): R10_3V3_In2 has 3 outlines: main 1354.23 mm2 bbox (0.5,7.3)-(40.7,81.7); island A 63.11 mm2 bbox (17.71,51.3)-(25.75,61.35); island B 30.54 mm2 bbox (22.0,62.25)-(23.7,81.7). Every other plane is a single fill: RAW_PROTECTED 1253.99, PORT_5V3 218.62, PORT_4V8 323.79, In1 GND 3760.54, In2 GND CH1 237.87, In2 GND Y1 37.18 mm2.",
+          "Island A is enclosed by the In2 USB_LIMITED 0.4 mm route (legs (9.6,50.85)->(26.2,50.85)->(26.2,61.8)->(22.45,61.8)->(22.0,62.25); 63.605 mm on In2 in total) and the CH1 GND region. It carries the 3V3 vias of R164.1 (19.05,55.9) [3V3 to 3V3A: U4, U5, VDDA/VREF+], of LS120.1 (21.15,60.25) / D123.1 (20.53,63.0) / D120.3 (15.7,60.2) through via (18.8,60.25), and of R62.1 (25.07,54.7).",
+          "Island A's only connection to the main 3V3 region: via (19.5,49.15) -> B.Cu 0.30 mm track (19.5,49.15)->(21.82,51.47)->(21.82,52.15)->(22.6,52.15), 4.74 mm -> via (22.6,52.15); C14 100 nF sits at the island end. Calc: track 7.8 mOhm + two 0.3 mm/20 um vias about 1.4 mOhm each; about 6 nH estimated (Inference).",
+          "tools/dc_solve.py (read-only, grid 0.1 mm): L1.2 -> R164.1 32.83 mOhm and L1.2 -> LS120.1 34.75 mOhm, all current through vias (19.5,49.15) and (22.6,52.15); L1.2 -> J430.4 18.54 mOhm.",
+          "Island B holds only U2's FB via (23.2,68.6), R89.1 pull-up via (23.0,70.0) and a tap via (23.1,78.1) on the L1.2 pad: U2 senses the inductor pad, not C8/C9 or the main plane.",
+          "All U2 output current enters the main region through one via (26.4,79.26) B.Cu->F.Cu, a 4.4 mm 0.4 mm F.Cu track and one via (30.8,79.26) F.Cu->In2 (dc_solve: 0.30 A in each at 0.3 A).",
+          "Buzzer load: Huawha MLT-5020 spec (2021-5-27) p2: rated 3.0 Vo-p, max 100 mA, coil 12+/-3 ohm, 4 kHz, https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf. Calc/Inference: 2-5 mV of 4 kHz ripple on island A from the shared link; R164 2.2 ohm with C10/C11 2 x 22 uF (corner 1.64 kHz) leaves about 1-2 mV at 3V3A."
+        ]
+      },
+      "impact": "No demonstrated electrical failure: static drops stay within a few mV at allocated loads. The analog supply source (R164 -> 3V3A for IMU, barometer and VDDA/VREF+), the pyro cold pull-up anode (D120) and the buzzer's pulsed current all depend on one 0.3 mm/4.74 mm track and two 0.3 mm vias, and the plane is fragmented contrary to AVA_LAYOUT section 5's 'broader regions' intent. A cracked link via or track would remove 3V3A and the cold pull-up while the MCU keeps running. The same split was also reported by another lens (see coverage_limits); this entry adds the power-distribution consequences.",
+      "concrete_fix": "Preferred: re-plan In2 so R10_3V3_In2 fills as one region, by moving the USB_LIMITED leg onto an outer layer or into the existing region boundary. Minimum alternative: add a second >=0.4 mm 3V3 link between island A and the main region on the other side of the x=26.2 USB_LIMITED leg, feed R164 from the main region, and add a local >=1 uF bypass at LS120.1/D123.1. Either change requires full DRC/route/gate/fab requalification. Under D-R16-03, record it as a measured deviation unless CAD is reopened."
+    },
+    {
+      "id": "R18-PWR-02",
+      "severity": "Minor",
+      "status": "new",
+      "title": "USB-only steady-state demand at the documented logic plus SD-write allocation exceeds U10's whole current-limit band; no USB-only budget exists",
+      "evidence": {
+        "file": "m3_design/assembly_review/sources/r10_design/parts_budget.json; docs/R10_VALIDATION.md section 4 'USB startup'; m3_design/assembly_review/sources/r10_design/parts_qualification.md line 928 (R6-PWR-02, historical)",
+        "reference": "U10 TPS2553DBVR B(12.6,27.5), R85 66.5 kOhm F(14.0,27.2), U11 TPS2121, USB_LIMITED In2 route",
+        "measured": [
+          "Allocation in parts_budget.json: unshed logic up to 1.4 W plus microSD write 0.825 W (microsd_input_write_W upper), both at the AP63203 input. USB powers neither the port chain nor R92, so the USB-only input demand is 2.225 W.",
+          "U10 limit: TI SLVS841G Eq. 1/3, pp16-17, https://www.ti.com/lit/ds/symlink/tps2553.pdf: R85 66.5 kOhm with 1% + 100 ppm/K x 100 K gives IOS 0.3477-0.4530 A.",
+          "Path resistance: U10 RON <= 0.135 ohm (SLVS841G p6, DBV), U11 RON <= 0.100 ohm (SLVSEA3F p7), USB_LIMITED In2 track 63.605 mm x 0.4 mm x 30 um = 0.0912 ohm (Calc), plus a 0.02 ohm allowance.",
+          "Result (Calc): 0.4596 A at VBUS 5.00 V (VLOGIC 4.84 V) and 0.4856 A at 4.75 V (VLOGIC 4.58 V), both above IOSmax 0.453 A. At IOSmin the guaranteed input power is about 1.61 W, which leaves <=0.785 W of logic at the converter input with continuous SD writes. The lower allocation (0.6 W + 0.776 W) draws 0.281-0.296 A and fits."
+        ]
+      },
+      "impact": "Bench mode only (USB with the pack disconnected); no flight effect. At the upper allocation with continuous SD writes, U10 runs in constant-current limit while U2 is a constant-power load, so VLOGIC can collapse toward U2's UVLO and the board can brown-out or reset-loop during USB firmware or logging work. The only current record (R10_VALIDATION 'USB startup') covers zero-load charging. The historical R6 note blames the host's capability, but U10's own 0.35-0.45 A limit binds whatever the host provides. Actual draw is unmeasured, so no hardware failure is demonstrated.",
+      "concrete_fix": "Records and procedure, no CAD: add a USB-only steady-state budget (about 1.6 W guaranteed converter input at IOSmin) to R10_VALIDATION section 4 and ORDERING section 8. Require pack power (switch on, e-match disconnected, dummy loads) for full-speed and SD-logging bench tests, or have firmware cap clock and SD write rate when LOGIC_SOURCE_ST (PA4) reports the USB input. Measure the USB-only draw on first articles. Do not raise IOS: any R85 that lifts IOSmin enough pushes IOSmax above USB 2.0's 500 mA."
+    },
+    {
+      "id": "R18-PWR-03",
+      "severity": "Minor",
+      "status": "new",
+      "title": "The component contract still states removed GPS/radio switch hardware, a wrong shorted-port bound and the GH-era camera-loop split as current",
+      "evidence": {
+        "file": "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+        "reference": "sections 'Supply contract and sources' (l.545), 'Voltage, current and thermal budgets' (l.596), 'Off-state and USB back-feed' (l.694); none is labelled historical, unlike l.926 'Round-6 records (historical ...)'",
+        "measured": [
+          "l.548-551: 'the three port switches default off'; 'U402/U410/U420 are TPS2553DBVR'. The native 209-footprint board has U402 only, with no U410/U420/U411/U421/R410/R420/C440/C450.",
+          "l.589-590: 'two at the buck input, two at its output, one at LDO input and two at LDO output'. The board has C403/C404/C405 on PORT_5V3 and C406/C407/C411/C421 (4 x 22 uF) plus C410/C420 on PORT_4V8.",
+          "l.630-635: R420/R410 limits ('radio 0.348-0.453 A, GPS 0.230-0.309 A') and 'The LDO's two shorted ports (0.762 A) stay below its 1 A rating'. Today a single shared PORT_4V8 short runs U401 into its 1.5-1.9 A limit (TI SBVS282A p5, https://www.ti.com/lit/ds/symlink/tps7a91.pdf).",
+          "l.696-699: AUD-8 text keeps U411/U421 and C440/C450 as fitted.",
+          "l.755-762: camera loop split assumes GH contacts 2 x 50 mOhm and 'board copper CAM_5V / GND about 14 mOhm (not re-solved)', leaving <=36 mOhm of harness. Fresh native DC solve: PORT_5V3 C403.1->U402.1 36.07 mOhm plus CAM_5V U402.6->J9.1 17.06 mOhm = 53.13 mOhm of supply-side board copper; the GND return was not solved (three planes, small).",
+          "l.771-773: 'R420's 0.348 A minimum limit covers the 1 W average ... R420 is not changed'. R420 no longer exists.",
+          "Only the blanket supersession sentence (l.8) and the 'Always-on GPS/radio' deletion paragraph (l.103-107) contradict these statements."
+        ]
+      },
+      "impact": "Documentation and evidence defect. The current numerical budgets (parts_budget.json; R10_VALIDATION sections 3-4) are right, but a harness or bench builder reading the component contract gets the wrong part inventory and the wrong short-circuit behaviour. The obsolete loop split happens to be conservative for the harness.",
+      "concrete_fix": "Mark these subsections historical, or rewrite them for the current topology: U402 is the only TPS2553 port switch; GPS/radio sit directly on PORT_4V8; list the real capacitor inventory. Say that a shared port short is limited by U401 at 1.5-1.9 A with thermal cycling, and by the buck at 2.5-3.1 A peak with hiccup when the camera is on. Replace the GH split with a DB125 split that uses the measured 53.1 mOhm board supply copper plus the GND return, leaving about 97 mOhm for DB125 contacts, harness and camera-end termination. Delete the R420 sentence and restate the LR900-F 1 W average (about 0.21 A at 4.8 V) against the 0.30 A allocation, with peaks unpublished."
+    }
+  ],
+  "fix_now_recommendations": [
+    {"finding": "R18-PWR-03", "type": "records only (no CAD)", "change": "Label parts_qualification.md lines 545-810 historical where superseded, or rewrite them as listed in the finding, including the 53.1 mOhm measured board-copper share of the 150 mOhm camera loop."},
+    {"finding": "R18-PWR-02", "type": "records/procedure only (no CAD)", "change": "Add the USB-only budget (about 1.61 W converter input guaranteed at IOSmin 0.348 A; upper allocation 0.46-0.49 A exceeds IOSmax 0.453 A) and the bench rule (pack power with e-match disconnected for full-load/SD-logging tests, or a firmware cap keyed on LOGIC_SOURCE_ST)."},
+    {"finding": "R18-PWR-01", "type": "CAD, not recommended now", "change": "D-R16-03 holds Minors without PCB change and the electrical benefit is a few mV. If CAD is reopened for another reason, re-plan the In2 USB_LIMITED leg so R10_3V3_In2 fills as one region, then run full requalification."}
+  ],
+  "rejected_or_closed_candidates": [
+    {"candidate": "Forward-polarity hot-plug (the every-flight insertion) is not in the canonical model", "result": "Closed by execution. A probe copy of tools/r10_hotplug_solver.c with pack() = +8.4 V, run on the canonical actual-feed inputs (632a9ad3) over all 2304 corners: from 0 V initial, max 13.796217 V, falling 3.855323 V/us, rising 7.090371 V/us, R166 366.36 W/1.831 mJ; from 2 V initial, max 12.592343 V, falling 2.682337 V/us, rising 5.161714 V/us. Half-step results agree within 0.0003 V/us. All corners are far inside TI's 28 V / 10 V/us / 100 V/us and C89/C95's 25 V rating. Simulation/Inference with the same parasitic and typical-curve limits."},
+    {"candidate": "Does r10_hotplug.py model the right circuit?", "result": "Yes for reverse insertion. The extracted graph is J1.1 -> D8 -> C80 -> C96 -> C89 -> C95 -> via (17.5,87.3) -> C88 -> U9.5, with the BAT_DAMP/R166 damper and R167. The pruned Q120 drain, R80 and R82 branches add <=~1.5 nF and MOhm loads, which is negligible. Reproduced exactly: min -14.807373 V, falling 8.991477 V/us, refined rising 5.091053 V/us, R166 579.049 W/2.979359 mJ. The ideal ground and pads, typical C(V) curves, instantaneous edge and the >=0.03 ohm harness domain remain disclosed limits; contact re-make is bounded by the +2 V initial state."},
+    {"candidate": "U9 TPS259470L configuration", "result": "Closed. UVLO 4.96 V rising / 4.50 V falling typ; OVLO 9.77 V trip / 8.88 V release typ (9.63-9.96 / 8.76-9.09); ILIM 3334/750 = 4.445 A typ (3.96-4.84 A table); dVdt 2000 pF/4700 pF = 0.426 V/ms typ (0.156-0.735 over IdVdt 0.81-3.82 uA); ITIMER open is the maker's fastest response; AUXOFF open-drain left NC. The latch-off variant latches only on TSD, and no non-fault path reaches the 3.96 A minimum limit (U11 limit 1.0-2.0 A, buck peak 3.1 A). Reverse-polarity pin currents are EN 6.7 uA and OVLO 5.4 uA, under TI's 10 uA guidance (SLVSFC9C p60)."},
+    {"candidate": "U11 TPS2121 pin map and settings", "result": "Closed. RUX map per SLVSEA3F p4-5: IN1 = pin 7 USB_LIMITED with OV1 (pin 5) divider 47k/10k, trip 5.76-6.27 V; IN2 = pin 2 RAW_PROTECTED; PR1, CP2 and OV2 at GND give VCOMP (highest input, IN2 on a tie); ILM 65.2/80.6^0.861 = 1.489 A typ (1.0-2.0 A table); SS 470 nF gives about 187 V/s, so C84 inrush is about 0.09 A; ST pull-up 10 kOhm is within 6-20 kOhm."},
+    {"candidate": "AP63201/L400 and AP63203/L1 component choices", "result": "Closed. U400 output 5.367-5.546 V reproduced. L400 Isat 4.3 A and Irms 4 A exceed the AP63201 2.5-3.1 A peak limit; ripple 0.56-0.75 A. Departure from DS41326 Table 1 for 5 V (10 uH, 2x22 uF, 100 pF FF) versus the fitted 6.8 uH, 3x22 uF, no FF: the internal current-mode loop's slope compensation (block-diagram 0.84 V/T, about 0.39-0.42 V/us, Inference) exceeds the about 0.10 V/us needed at Lmin, and stability stays a disclosed bench item. L1 SWPA4030S4R7MT is rated Isat 2.90 A (typ 3.20, Sunlord catalog p8) against AP63203 IPEAK 2.5-3.1 A, so soft saturation happens only at fault current limit; the normal peak is about 0.8 A."},
+    {"candidate": "TPS7A91 U401", "result": "Closed. The DSK map (SS_CTRL pin 6 GND, EN pin 7 = IN, PG NC) matches SBVS282A p3. Headroom >=0.444 V against 200 mV dropout. COUT 4 x 22 uF X7R is above the 10 uF minimum, with no maximum specified. Output 4.712-4.873 V is within VOUT 0.8-5.2 V. The 0.406 W loss and 80-110 C/W are already disclosed. OUT > IN + 0.3 V arises only from prohibited self-powered modules; at power-down the enhanced pass FET carries reverse current."},
+    {"candidate": "TPS2553 U402/U10 and TPS709 U13", "result": "Closed. Camera limit 1.041-1.250 A; USB limit 0.348-0.453 A; camera DC loss 0.135 W in DBV. TPS709 EN floating is permitted (300 nA pull-up, SBVS186H p3/p13); C92's 2.211 uF estimate meets the >=1.5 uF requirement and <=47 uF, ESR <=0.2 ohm."},
+    {"candidate": "IPC-2152 and continuous necks", "result": "Closed by fresh DC solves. BAT_IN J1->U9 16.71 mOhm, neck 1.00 mm, 5.1 C at 1.5 A, single 1.0/0.5 mm feed via carrying 1.5 A. RAW_PROTECTED U9->U400 38.02 mOhm, neck 1.14 mm, 4.4 C; U9 OUT via (20.3,79.1) carries 1.00 A of 1.5 A. VLOGIC U11->C84 27.82 mOhm. PORT_5V3 C403->U402 36.07 mOhm; CAM_5V 17.06 mOhm; PORT_4V8 3.45 mOhm. Fire copper at 0.5 mm/35 um: adiabatic rise about 10 K at 4.2 A/36 ms (Calc)."},
+    {"candidate": "MLCC voltage ratings and derating", "result": "Closed. Every capacitor's rating is >=2x its working voltage, or covers the modeled transients (C89/C95 25 V see <=13.8 V forward and <=14.8 V reverse in the model). Flex-termination for the unfused BAT_IN MLCCs was considered and kept in M3_R4, so it is not re-raised."},
+    {"candidate": "Back-feed paths", "result": "Inventoried. USB feeds VLOGIC only: U11 IN2 and U9 block, so RAW and the ports stay unpowered. A self-powered GPS/radio back-feeds through the U401 body diode and the AP63201 HS body diode into RAW_PROTECTED and U11, which is disclosed and banned procedurally. The camera is isolated by U402/U12/U13. A servo signal line pulled up by a servo with the board off would reach 3V3 through D121 (VCC = 3V3) via 1 kOhm against the 10 kOhm pull-down; this falls under the existing servo bench checks. During power-up PORT_4V8 precedes 3V3 by >=~10 ms, so 3.3 V GPS/radio TX levels sit within the 4 V FT absolute ceiling at VDD = 0 (MCU lens)."},
+    {"candidate": "Hold-up and switch-bounce arithmetic", "result": "Closed. Reproduced 0.490-0.571 ms at 300.8 uF (470 uF x 0.8 tolerance x 0.8 endurance, MA series spec pp1/3) to 3.8 V. Conservative: no U11 IRCB (0.2-2 A) credit. C87 needs about 1.18 uF effective for 150 ms from 7.4 V; the 2.2 uF X5R estimate (tolerance, bias, temperature, aging) is about 1.48 uF."},
+    {"candidate": "USB VBUS hot-plug ringing vs TPS2553 7 V absolute maximum", "result": "Closed. Type-C sources switch VBUS on only after CC detection through R7/R8 5.1 kOhm. Live legacy VBUS remains a bench item; USBLC6 VBR is >=6 V."},
+    {"candidate": "Pyro feed bypasses U9 / shorted-match brownout", "result": "Closed for the power lens. The fire current comes from BAT_IN through Q120/Q121 and R134 2 ohm. At the end of the pulse BAT_IN overshoots about 1.1 V (I*sqrt(L/C) at 4.2 A, 2 uH, 30 uF), staying below OVLO; the start droop leaves logic far above UVLO. The safety lens owns the AGENTS section 2 interpretation."}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3_design/assembly_review/m3.kicad_pcb before and after (632a9ad3..., unchanged); git HEAD dcbb6c8; no tracked file modified.",
+    "Native pcbnew dump of all 209 footprints with values, fields, pad nets and poses. BOM cross-check: 82 rows, 199 refs, 0 LCSC/MPN mismatches against the board fields.",
+    "Pin-map verification against maker pin tables for U9 (TPS25947 RPW), U11 (TPS2121 RUX), U2/U400 (AP6320x TSOT26), U401 (TPS7A91 DSK), U402/U10 (TPS2553 DBV), U13 (TPS709 DBV).",
+    "Independent recomputation: U9 UVLO/OVLO/ILIM/dVdt; U11 ILM/OV1; U400/U401 output bands; U402/U10 IOS; L400/L1 ripple and peaks versus Isat; U401 loss; C87 bounce time; hold-up energy; USB-only steady-state demand; reverse-polarity pin currents.",
+    "tools/dc_solve.py (read-only) on 9 source/sink pairs: RAW_PROTECTED, BAT_IN, PORT_5V3, CAM_5V, PORT_4V8, VLOGIC and three 3V3 paths.",
+    "Zone filled-polygon island extraction for every power and ground plane.",
+    "Hot-plug: reproduced the canonical 2304-case reverse sweep exactly with a probe harness, then ran forward-polarity 2304-case sweeps from 0 V and 2 V initial on a probe copy of the C solver, with half-step refinement of the extremes.",
+    "Maker documents read from the cached PDF text/rasters listed in .supervisor/primary_pdf_cache_paths.json; the Sunlord catalog page 8 was rendered with pdftoppm."
+  ],
+  "sources": [
+    {"part": "U9 TPS259470LRPWR", "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf", "pages": "SLVSFC9C pp5-6 pins; p7 abs max (SRIN(F) 10 V/us, SRIN(R) 100 V/us, VIN -15..28 V, EN/OVLO 6.5 V, note 2); p8 recommended (OVLO 0.5-1.5 V, RILM 549-6650 ohm); pp8-11 EC (UVLO/OVLO thresholds, ILIM at 750 ohm 3.96/4.452/4.84 A, IdVdt 0.81/2.21/3.82 uA); p11 timing; pp29-32 Eq.4/Eq.7; pp37-38 latch-off; pp60-61 transient protection"},
+    {"part": "U11 TPS2121RUXR", "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf", "pages": "SLVSEA3F pp4-5 pins; p6 ratings; pp7-8 EC (ILM table, VREF, IRCB 0.2/1/2 A, RON); p13 Eq.2; p18 Table 9-3"},
+    {"part": "U2/U400 AP63203/AP63201", "url": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf", "pages": "DS41326 Rev3-2 p1, p2 pins, p3 block diagram, pp4-5 ratings/EC (IPEAK 2.5/2.8/3.1 A, VFB 792-808 mV, UVLO), p11 OCP/hiccup, p13 Tables 1-2 and Eq.7-8"},
+    {"part": "U401 TPS7A9101DSKR", "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf", "pages": "SBVS282A p3 pins; p4 abs max/recommended; p5 EC (VDO 200 mV, ILIM 1.5-1.9 A); p18 UVLO/ICL/thermal"},
+    {"part": "U402/U10 TPS2553DBVR", "url": "https://www.ti.com/lit/ds/symlink/tps2553.pdf", "pages": "SLVS841G p5 ratings; pp6-7 EC; pp16-17 Eq.1-3"},
+    {"part": "U13 TPS70933", "url": "https://www.ti.com/lit/ds/symlink/tps709.pdf", "pages": "SBVS186H p3 pins; p4; p13 EN; p14 capacitor requirements"},
+    {"part": "L400 SRP5030T-6R8M", "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf", "pages": "p1 table"},
+    {"part": "L1 SWPA4030S4R7MT", "url": "https://jlcpcb.com/partdetail/C57269", "pages": "maker Sunlord SWPA catalog linked there, page 8 SWPA4030S table"},
+    {"part": "C84 MA25V470M8x10", "url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf", "pages": "pp1, 3-4"},
+    {"part": "LS120 MLT-5020", "url": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf", "pages": "p2"},
+    {"part": "Q120/Q121 AONR21357; Q124 AON7524", "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AONR21357.pdf ; https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf", "pages": "pp1-2"},
+    {"part": "U1 STM32H743 I/O levels", "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf", "pages": "DS12110 Table 60 (VIH)"}
+  ],
+  "coverage_limits": [
+    "No kicad-cli DRC, full tools/check.sh, build, firmware, bench, thermal or transient-SPICE execution. The DC solves are room-temperature copper with ideal pad contacts. Hot-plug runs reuse the canonical model's typical C(V) curves, ideal ground and estimated parasitics.",
+    "Converter loop stability was judged from maker guidance and block-diagram inference, not modeled. The GND return of the camera loop was not solved.",
+    "Independence disclosure: while searching earlier review rounds for 'island', a repository-wide grep also printed three lines of round18_routing.md (its R18-RTE-01 title, its fix sentence and one table row) and listed round18_safety.md by name. Neither file was opened. The island result in R18-PWR-01 came from this review's own fill extraction and DC solves, which were executed before that grep.",
+    "Probe files are under .supervisor/r18_power/ only."
+  ]
+}

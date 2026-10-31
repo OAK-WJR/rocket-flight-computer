@@ -1,6 +1,8 @@
 # R10 AVA layout hand-off
 
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
+**Round 18 CAD fix pass (2026-10-30):** the current CAD candidate is the rebuilt PCB recorded in
+"Round18 CAD fix pass" at the end (D-R18-01..10); the 632a9ad3 paragraphs below are its predecessor's record.
 **Full R16/R17 pair complete (2026-10-30):** PCB
 `632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
 46 x 90 x 1.6 mm, 2,256,162 bytes; 209 footprints, 951 segments, 296 vias
@@ -339,3 +341,30 @@ changing the16 graphic pairs or physical geometry. Retain all measured M2,
 SD/MEMS/L400/DB125/VCAP/process/vehicle qualifications and no queued Minor CAD
 adoption. Current D-R17-01..04 are record/check amendments after R17's122-ID
 review; they do not enlarge its sealed scope. Final canonical check exits0. No new R17 full build or physical/FW/owner acceptance is claimed.
+
+
+## Round18 CAD fix pass (new PCB; D-R18-01..10)
+
+The root orchestrator reopened CAD for ten round-18 Minors (brief `.supervisor/r18_fix_cad_brief.md`); every change
+is in the generators, footprints and checks, with two complete `r10_build.sh` builds. PCB
+`a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918`, 46 x 90 x 1.6 mm, 2,250,842 bytes;
+208 footprints, 947 segments, 292 vias (166 GND), 1788.737627 mm track (R17 632a9ad3: 209 / 951 / 296 (168) /
+1788.675665 mm).
+
+| Change | Placement / copper |
+|---|---|
+| R62, R63 removed (D-R18-01) | V3V3_SENSE divider and vias (25.5,51.75), (25.07,54.7), (25.07,57.6) gone; PC3_C NC |
+| R123 2 k (D-R18-01) | same land F(20.6,70.66) -90 |
+| R119 added (D-R18-02) | B(11.57,71.1) 0; ACT_GATE via (11.8,70.725) -> (11.14,71.7) |
+| TP121 (D-R18-02) | B(10.5,71.5) -> B(4,70) |
+| ACT_EN_MCU / BAT_FAULT_N (D-R18-03) | x 26.5 -> 26.62 / x 26.9 -> 27.37; U11.12 GND via (25.8,65.9) removed |
+| Barrel keep-outs (D-R18-04) | 6 fill-only areas round the ACT_GATE / BAT_ENABLE vias and J400.2 |
+| R173 (D-R18-05) | B(23.0,59.2) 90 -> B(16.87,59.7) -90; IGN diagonal 0.5 mm SW; BUZZ_G lead x 17.5 -> 17.75; C126.2 GND via (16.178,59.047) -> (15.8,59.425) |
+| In2 zones (D-R18-06) | CH1 GND tongue removed; 3V3 shoulder + bay; RAW notched; 3V3 In2 fill 1 piece |
+| SD_MOSI (D-R18-07) | one 45-degree run, -1.995 mm, -2 segments |
+| L400 / U4 lands (D-R18-08) | L400 2.0 x 1.8 mm at +/-2.25 mm; U4 mask expansion 0 (webs 0.150 mm) |
+| R430 / C84 (D-R18-09) | R430 C2999509 (no copper change); C84 in the owner BOM only |
+
+Silkscreen designators (r10_post's unchanged rule): 91 -> 88 hidden; R91 is newly hidden (kept on F.Fab); R132 and
+R163 are now shown; R119 and TP121 are shown; R62/R63 are gone. All other part poses, lands, nets and supports are
+unchanged; the IMU axis map (roll = -gyro_Y) and U1's pin map except PC3_C are unchanged.

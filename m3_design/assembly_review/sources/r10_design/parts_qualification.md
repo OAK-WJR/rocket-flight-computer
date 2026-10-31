@@ -8,57 +8,12 @@ DS41326, SLVS841F, SLVSEA3F, SBVS282A, SCES942A and the LR900 manual. No physica
 tests were performed. The current always-on ports, screw terminals, microSD and sole-bus-sense amendment below supersedes the earlier port-switch/translator, header, duplicated sense and ride-through records. AUD/GAP amendments still apply where not explicitly superseded; dated review records remain historical.
 
 
-## Current circuit amendment and completed R16/R17 review pair
+## Current circuit amendment and review status
 
-**Full R16/R17 pair complete (2026-10-30):** PCB
-`632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982`,
-46 x 90 x 1.6 mm, 2,256,162 bytes; 209 footprints, 951 segments, 296 vias
-(168 GND), 1788.675665 mm track. Full R16 on `b1b8658` found
-0 Critical / 0 Major / 11 Minor groups from 17 raw observations (5 new/6 carried),
-with all 1,942 files frozen. Full R17 on `ac483f4` found
-0 Critical / 0 Major / 13 Minor groups from 23 raw observations (4 new/9 carried),
-with all 1,966 files frozen through ten complete lenses. The same-PCB clean pair
-is earned; original reports remain immutable. R16 reviewed 119 D IDs/22 owner
-mandates; R17 reviewed 122/23. The final record index has **126 D IDs through
-D-R17-04 and 23 mandates**; later record/check amendments do not enlarge either
-sealed review's scope.
-
-**Software/CAD:** two complete R15 builds/check0 reproduced 42 generated files
-on this PCB; one complete R16 build/check0 matched both snapshots. There is no
-new R17 full build. R15 retains its 31-rule/176-R10-test/60-route-test scope;
-R16 passed 32 rules, 180 R10/31 fit/16 paste/5 parts/67 route tests, with all four
-native NumPy skips separately resolved. Orientation, all 618 paste geometries
-and the five-output manifest passed in that execution. R17 corrections affect
-docs/checks and text-only pin-table/binding provenance. The refreshed binding
-changes only pin_table_sha256; electrical assignments/axes and the other41
-recorded generated files stay unchanged. The manifest-gate fix has7 shell
-regressions. **Final post-R17 canonical check: exit0.** All32rules,7shell/180R10/31fit/16paste/5parts/67route tests and five-output manifest pass; all4native NumPy skips separately resolved. Evidence: round17_fix_validation.json.
-
-**Simulation/Inference:** the R16 actual-feed 2304 required +60 local hot-plug
-cases passed. The optional 181.1 Hz pinned-D5/70.5 g plate result remains the
-R15 calculation on this same PCB. No physical qualification follows.
-
-**Procurement:** original supplier queries 2026-10-30T17:15:34.705395..
-17:15:45.842149Z give $79.5232 placed/feeder share and $81.8636 with minimum
-purchases, below $84.41 before fixed/process/PCB/shipping costs. R430 17<3610
-and U4 0<5 still fail stock release; U9 has 83 available/minimum7 for five fitted.
-Quote/process and owner cost/deviation acceptance remain pending; nothing ordered.
-
-**Retained Minors:** no PCB, placement, routing or circuit-generator change for
-Minors (D-R16-03). SD_MOSI's measured 1.994603 mm/two-segment alternative remains
-a deviation; no adoption is queued. MEMS signal/supply stress guidance, L400 land,
-DB125 insertion/S-8 process allocation, VCAP conditions, M2/returns, courtyard
-graphics and the separate vehicle mirror remain measured deviations with open
-qualification limits.
-The four new R17 groups receive record/check corrections; no physical or owner
-acceptance is inferred. Only a confirmed Critical/Major permits a board change.
-
-**Not verified:** R10 firmware/boot configuration, physical safety timing and
-selected-lot 20 ms firing, SD latency/power loss, electrical/thermal/transient/
-endurance, installed RF/ESD, harness/switch/retention, tool/card access, physical
-bore/stack/flight and first-article/process. AGENTS section2 is unchanged.
-R9 remains accepted; R10 remains unaccepted and unordered.
-See [R10 validation](../../../../docs/R10_VALIDATION.md), round17 reconciliation and final record/check integration.
+Review status, checks, cost and open items are stated once, in [M3_R10.md, "Current state"](../../../../docs/M3_R10.md#current-state). In short: PCB `a3144b15…` (46 × 90 mm) is not accepted and nothing is ordered. The round 18 fix pass changed the board from `632a9ad3…`, on which
+rounds 16 and 17 (same reviewer family) found no Critical or Major issue and round 18 (the first review by a different model family) found none either
+([R10_VALIDATION.md](../../../../docs/R10_VALIDATION.md#round-18-first-claude-review-of-committed-dcbb6c8)); that clean pair does not carry to the changed board, and rounds 19 and 20 are planned after the gate pass. AGENTS section 2 is unchanged. This file is the component contract; where a section below is marked historical it describes
+hardware that was removed from R10 and is kept only for the record.
 
 **R16 retained MEMS stress deviation (R16-MEC-01, Minor):** component-side B.Cu
 still crosses U4's nominal body outside its lands: IMU_CS 0.7596+0.0918 mm,
@@ -289,12 +244,12 @@ burrs, pin form and relative pattern limits are unresolved. The cited
 covers moulded plastic parts; clarify the drawing table's metal-pin applicability
 with the maker rather than assuming either its application or exclusion.
 
-Native S-8 passes at **1.102501576mm**, J121.1 nominal hole wall to In2 3V3 fill.
-That is CAD geometry. A conditional +0.13mm hole diameter and 0.075mm displacement
-toward that fill consume 0.140mm radially, leaving 0.962501576mm. This illustrative
+Native S-8 passes. On `632a9ad3…` the minimum was **1.102501576 mm**, J121.1 nominal hole wall to In2 3V3 fill (1.103 mm on `a3144b15…`); since the round 18 fix pass S-8 also covers the load-switch gate and enable barrels, whose nominal minimum is 1.050 mm.
+That is CAD geometry. A conditional +0.13 mm hole diameter and 0.075 mm displacement
+toward that fill consume 0.140 mm radially, leaving 0.962501576 mm (0.910 mm at a 1.050 mm barrel; arithmetic only). This illustrative
 process corner is not a measured failure or nominal CAD violation: position
 datum/correlation, layer registration and maximum outer barrel need fabricator
-allocation. Present nominal annulus is 0.30mm. Enlarging holes alone reduces both
+allocation. Present nominal annulus is 0.30 mm. Enlarging holes alone reduces both
 annulus and S-8 reserve; **no enlarged drill is approved**.
 
 Before assembly, obtain maker/assembler maximum insertion profile, relative pin
@@ -368,7 +323,7 @@ The ~1.4 hot factor at 125°C is a typical curve: 17.22 mΩ is **Inference**;
 use **40 mΩ per FET** for the primary fire-current acceptance envelope and
 measure hot resistance. At 6 V loaded BAT_IN, 4.2 A through that source-side
 resistance, 0.1 V allowed at Q122 drain, and resistor 1% plus 100 ppm/K through
-125°C, settled |Vgs| ≥5.1916 V. Fully-on 4.2 A /20 ms at 40 mΩ dissipates
+125 °C, settled |Vgs| ≥ 4.7444 V (R119∥R120 = 50 kΩ since the round 18 fix pass; 5.1916 V with R120 alone). Fully-on 4.2 A /20 ms at 40 mΩ dissipates
 0.706 W /0.0141 J per FET. The shorted-load turn-on line is
 I=(8.4−|Vds|)/R134min; maximum one-FET linear dissipation is 8.95 W at
 |Vds|=4.2 V, I=2.13 A. This is inside the maker's reference-case SOA after
@@ -395,8 +350,8 @@ north to B (17.1, 71.525), −90°, retaining pad 2 on the existing ACT_GATE lan
 at (17.1, 72.300); pad 1 becomes (17.1, 70.750). Review its source tap and local
 clearance after regeneration. The electrical timing assumptions are unchanged.
 [Maker identity and typical curves](https://product.samsungsem.com/mlcc/CL10B105KA8NNN.do)
-replace the former2.2 µF16 V part's above-rating condition. Cmax=1.265 µF;
-R120∥R121 gives tau≤11.73 ms and ≤23.65 ms to |Vgs|=4.5 V at the corner above.
+replace the former 2.2 µF16 V part's above-rating condition. Cmax=1.265 µF;
+R121 with R119∥R120 (50 kΩ) gives tau ≤ 10.7525 ms and ≤ 31.89 ms to |Vgs|=4.5 V at the corner above (R120∥R121: ≤ 11.73 ms and ≤ 23.65 ms before the round 18 fix pass).
 Hold PE4 low and wait **≥100 ms after ACT_EN** before bus checks or a permitted
 fire. The typical bias curve with0.9 tolerance/0.85 temperature/0.9 aging yields
 Ceff≈0.587 µF at4.5 V (linear interpolation), so both FETs'2×70 nC maximum10 V total gate charge
@@ -460,36 +415,39 @@ are hard refusals on the ground; in flight they only log/annunciate and never ve
 a fire (AGENTS§2.3).
 
 **GAP-1, requirements audit 2 (current Calc / Inference):** select MJG J-Tek
-LEAD-FREE, standard24 AWG, protective shroud retained. The [maker sheet p1](https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF)
-publishes0.75 A all-fire at0.5 s, recommended minimum1.00 A/nominal1.25 A,
-average1 Ω bridgewire (standard deviation0.09 Ω),40 mA maximum test,0.30 A no-fire
-and4 mJ minimum all-fire energy. One1.5× current margin gives **1.125 A**;
-the old1.5 A criterion came from an unnamed1 A e-match and is superseded.
+LEAD-FREE, standard 24 AWG, protective shroud retained. The [maker sheet p1](https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF)
+publishes 0.75 A all-fire at 0.5 s, recommended minimum 1.00 A/nominal 1.25 A,
+average 1 Ω bridgewire (standard deviation 0.09 Ω), 40 mA maximum test, 0.30 A no-fire
+and 4 mJ minimum all-fire energy. One 1.5× current margin gives **1.125 A**;
+the old 1.5 A criterion came from an unnamed 1 A e-match and is superseded.
 
-`parts_budget.json` now includes12.370807 W normal converter allocation with SD
-writes and always-on GPS/radio. Voc≥7.4 V equivalent is required **at the fire instant**
-after pad/flight drain, Rpack≤0.15 Ω, servo stall1.92 A each. Solve
+`parts_budget.json` now includes 12.370807 W normal converter allocation with SD
+writes and always-on GPS/radio. Voc ≥ 7.4 V equivalent is required **at the fire instant**
+after pad/flight drain, Rpack ≤ 0.15 Ω, servo stall 1.92 A each. Solve
 (1+Rpack/Rfire)V²−(Voc−Rpack×Iservo)V+Rpack×Pother=0 using its high root;
-Ifire=V/Rfire. Retain conservative2 Ω e-match and≤0.3 Ω external leads/harness,
-R134 tolerance/hot corner2.02909 Ω, hot FETs,5 mΩ ground/10 mΩ contact allowances.
+Ifire=V/Rfire. Retain conservative 2 Ω e-match and ≤ 0.3 Ω external leads/harness,
+R134 tolerance/hot corner 2.02909 Ω, hot FETs, 5 mΩ ground/10 mΩ contact allowances.
 The current `parts_budget.json` is regenerated and bound to PCB
-`632a9ad3…` instead of carrying circuit-pass length literals. Native fire-path pruning
-gives BAT_IN6.307107mm/1.0mm, RAW_ACT5.886133mm, IGN10.230382mm and
-OUT7.854478mm at0.5mm, plus one aligned2.2mm/0.4mm source path. BAT_IN includes
-the additional0.707107mm routed entry inside Q120's common drain pad; dead sense
+`a3144b15…` instead of carrying circuit-pass length literals. Native fire-path pruning
+gives BAT_IN 6.307107 mm / 1.0 mm, RAW_ACT 5.886133 mm, IGN 10.523276 mm and
+OUT 7.854478 mm at 0.5 mm, plus one aligned 2.2 mm/0.4 mm source path. BAT_IN includes
+the additional 0.707107 mm routed entry inside Q120's common drain pad; dead sense
 branches are excluded, no parallel-source credit is taken and no fire path has a
-series via. Copper is29.362412mΩ at20°C/35.132126mΩ at70°C (TCR0.00393/K).
-With the primary40mΩ/FET ceiling, total loop4.617458126Ω gives0/1/2/3/4-stall
-currents1.544366072/1.479437787/1.414263776/1.348804955/1.283013039A;
-all exceed1.125A. D-R11-03 binds the generator to native geometry. The regenerated
-budget SHA-256 is `c5fb1337b9561be9f88243145d3e8aa071822116533a70805acfb9f52a42a7ea`.
+series via. Copper is 29.650284 mΩ at 20 °C/35.476565 mΩ at 70 °C (TCR 0.00393/K).
+With the primary 40 mΩ/FET ceiling, total loop 4.617802565 Ω gives 0/1/2/3/4-stall
+currents 1.544251030/1.479327596/1.414158454/1.348704524/1.282917526 A;
+all exceed 1.125 A. D-R11-03 binds the generator to native geometry. The regenerated
+budget SHA-256 is `61727af7baec761ded6d75c963bf6442f702a827e59b7e5656de08e526ce54fa`.
+On `632a9ad3…` (IGN 10.230382 mm, copper 29.362412 mΩ/35.132126 mΩ) the loop was 4.617458126 Ω with
+1.544366072/1.479437787/1.414263776/1.348804955/1.283013039 A and budget SHA-256 `c5fb1337b9561be9f88243145d3e8aa071822116533a70805acfb9f52a42a7ea`;
+the longer IGN run (D-R18-05) accounts for the change.
 The intermediate `419a8f49…` board had the same fire-path lengths/current estimates;
 the new budget binds the later target independently.
-The earlier `0c50b9fd…` review calculation (4.618006Ω,1.544183A idle/1.282861A
+The earlier `0c50b9fd…` review calculation (4.618006 Ω, 1.544183 A idle / 1.282861 A
 four stalls) remains historical and does not bind the changed board.
 These are conditional calculations, not measured guarantees. Neutral/200 ms wait
-cannot clear a jam. R134 stays2 Ω; its normal20 ms/fault36 ms pulse bounds stay.
-Maker0.5 s all-fire does not qualify our20 ms pulse: selected-lot20 ms firing,
+cannot clear a jam. R134 stays 2 Ω; its normal 20 ms/fault 36 ms pulse bounds stay.
+Maker 0.5 s all-fire does not qualify our 20 ms pulse: selected-lot 20 ms firing,
 charge deployment, actual source/harness resistance and reserve remain bench gates.
 
 **GAP-5:** [ST DS12110 Rev11 Table136 p233](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf)
@@ -524,7 +482,7 @@ TP122, NRST and dummy-load current for early/late CPU starvation, normal abort,
 postfire refresh, reset/unpowered gate tails and hot R134 pulses; record resistor
 drift and actual physical20/36 ms limits across supply and temperature.
 
-**Current local output paths (GAP-2, native CAD / Inference):** on `632a9ad3…`; original paths preserved by exact native comparison,
+**Current local output paths (GAP-2, native CAD / Inference):** measured on `632a9ad3…` and unchanged on `a3144b15…` (a net-level comparison of tracks and vias finds no change to U9's BAT_IN or RAW_PROTECTED copper, or to C82 or D9); original paths preserved by exact native comparison,
 U9 is B(18.5,81.6), C82 is B(19.3,76.75),90°, and D9 is B(15.0,79.3),−90°.
 The saved-copper API gives:
 
@@ -545,10 +503,11 @@ the gate timing and physical-tail obligations above are unchanged.
 ## Supply contract and sources
 
 RAW_PROTECTED feeds U400 AP63201WU-7 (C2071044), with EN tied to its input.
-The buck is always ready with battery protection on; the three port switches default
-off. Neither the buck nor its LDO nor any port supply connects to VLOGIC or 3V3.
+The buck is always ready with battery protection on; the camera switch U402 defaults off.
+**Historical (R18-PWR-03):** the intermediate boards also had GPS and radio port switches U410 and U420; they were removed with the always-on ports, and U402 is the only TPS2553 on the current board.
+Neither the buck nor its LDO nor any port supply connects to VLOGIC or 3V3.
 The existing logic/USB mux and hold-up path remain separate. U401 is
-TPS7A9101DSKR (C2878140); U402/U410/U420 are TPS2553DBVR (C55266).
+TPS7A9101DSKR (C2878140); U402 is TPS2553DBVR (C55266).
 
 - [Diodes AP63200/1/3/5, DS41326 Rev3-2](https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf), pp1,5,11–14:
   AP63201 forced PWM, 500 kHz, reference 0.792–0.808 V, input 3.8–32 V,
@@ -586,8 +545,8 @@ TPS7A9101DSKR (C2878140); U402/U410/U420 are TPS2553DBVR (C55266).
   combines initial tolerance with100°C excursion from25°C independently for
   each resistor. The buck itself is rated ambient−40…85°C, not125°C ambient.
 - Capacitors reuse Murata GRM32ER71E226KE15L C21397,22µF/25 V X7R10%,
-  with two at the buck input, two at its output, one at LDO input and two at
-  LDO output. Existing100 nF bootstrap C14663 and10 nF C15195 are reused.
+  on the current board: two at the buck input (C400, C401), three on PORT_5V3 at the buck output, which is also the LDO input (C403, C404, C405), four on PORT_4V8
+  (C406, C407, C411, C421, plus C410 and C420 as local bypasses) and one on CAM_5V (C431). Existing 100 nF bootstrap C14663 and 10 nF C15195 are reused.
   **Open:** verify effective capacitance at bias/temperature/aging against
   the maker curves and the assembled converter's stability. Nominal44µF is
   not a stability proof. The LDO requires at least10µF effective at its input
@@ -614,6 +573,8 @@ resistor initial tolerance/TCR and LDO feedback leakage. They give:
 | Radio/GPS maximum | ≤4.923 V | Positive transient≤50 mV |
 | LDO headroom | ≥443 mV | Includes buck negative50 mV; exceeds200 mV maximum dropout |
 
+**The radio and GPS rows above are historical:** they include the drop of the removed U410 / U420 switches. With the switches gone, the conditional endpoint minima on the current board are 4.601504 V at the radio (0.30 A) and 4.631504 V at the GPS (0.15 A), and the camera 5.031682 V at 1 A (see "Always-on GPS/radio", "Current camera harness allocation" and "Shared port fault budget" above, and `parts_budget.json`).
+
 The manufacturer [LR900 manual](https://micoair.com/en/docs/telemetry/lr900/lr900-telemetry)
 specifies4.5–5 V and3.3 V UART. [HGLRC](https://www.hglrc.com/products/hglrc-m100_mini-gps)
 specifies3.3–5 V. The300/150 mA allocations above are **engineering load envelopes**,
@@ -627,12 +588,11 @@ handling latency and actual switch turn-off / current-decay time before claiming
 fault shutdown (R9-PWR-02; SLVS841G p7). FAULT is unsuitable for battery-break
 detection. This timing correction does not change the current-limit or rail budgets.
 
-R430(camera)22.6 kΩ, R420(radio)66.5 kΩ, R410(GPS)100 kΩ (R10_DECISIONS
-D-R3-01: the board's value, on the existing 100 kΩ line C14675, no extra code)
-include1% initial plus1% temperature allowance in TI SLVS841F equation 1 (p15,
-IOSmin/IOSmax). Bounds: camera1.041–1.249 A, radio0.348–0.453 A, GPS0.230–0.309 A.
-A camera short with the other two at their normal allocations is1.711 A. The
-LDO's two shorted ports (0.762 A) stay below its1 A rating.
+R430 (camera) 22.6 kΩ is the only port current-limit resistor on the current board; it includes a 1 % initial plus 1 % temperature allowance in TI SLVS841F equation 1 (p15,
+IOSmin / IOSmax). Camera bound: 1.041–1.249 A. R430 is now the FOJAN FRC0603F2262TS (C2999509; ±1 %, ±100 ppm/°C, 0603); that the allowance carries over unchanged is an Inference, because the replaced part's temperature coefficient was not compared here.
+**Historical (R18-PWR-03):** R420 (radio) 66.5 kΩ and R410 (GPS) 100 kΩ (R10_DECISIONS D-R3-01) belonged to the removed U420 / U410 switches and bounded the radio at 0.348–0.453 A and the GPS at 0.230–0.309 A;
+"a camera short with the other two at their normal allocations is 1.711 A" and "the LDO's two shorted ports (0.762 A) stay below its 1 A rating" are superseded. On the current board the GPS and radio share PORT_4V8, so one cable short runs U401 into its
+1.5–1.9 A limit (TI SBVS282A p5) and can collapse both ports, as "Shared port fault budget" above states; the buck (2.5–3.1 A peak limit) hiccups when the camera is also loaded.
 
 **All three ports shorted** (three simultaneous faults) plus11 mA quiescent,
 divider and bleeder load draw2.022 A from the buck,1.1% over the AP63201's2 A
@@ -693,7 +653,7 @@ acceptable junction temperature. Test the complete power knot under full load.
 
 ## Off-state and USB back-feed
 
-**AUD-8:** U411/U421 TXU0202DCUR C5186957 now use main 3V3 on both VCCA and
+**AUD-8 (historical for the GPS and radio; current for the camera, R18-PWR-03).** On the current board U411 / U421, U412 / U422 and C440 / C443 / C450 / C453 no longer exist (always-on ports); only the camera's U12 (TXU0202), U13 and C92 / C93 remain. As recorded for the intermediate boards: U411/U421 TXU0202DCUR C5186957 used main 3V3 on both VCCA and
 VCCB. U412/U422, R443/R453 and C441/C442/C451/C452 are removed. C443/C453 remain
 100 nF local VCCB bypasses, retagged to 3V3: [TI TXU0202 §12.1 and Fig12-1](https://www.ti.com/lit/ds/symlink/txu0202.pdf)
 recommend a local 0.1 µF at each supply. C440/C450 remain the VCCA bypasses.
@@ -722,7 +682,7 @@ RADIO_4V8 → PORT_4V8 → U401 (TPS7A91 states no reverse-current behaviour:
 Inference) → PORT_5V3, and CAM_5V → PORT_5V3, then through U400's high-side body
 diode (Inference) into RAW_PROTECTED. From there U11 can keep VLOGIC and the MCU alive with the external screw
 switch open. The single-switch implementation replaces the former automatic R122/R123 divider with PC1
-(ACT_EN_MCU) through R122 1 kΩ and R123 100 kΩ to GND. The pyro load switch is off during MCU reset or loss of
+(ACT_EN_MCU) through R122 1 kΩ and R123 2 kΩ to GND (100 kΩ before the round 18 fix pass). The pyro load switch is off during MCU reset or loss of
 3V3, but a still-running MCU can retain its deliberate enable: no physical ARM break remains. Treat the pyro
 channel as live while any source powers the board. Connect the e-match only with the screw switch off and no USB
 or self-powered port attached; perform bench work from USB with the e-match disconnected. Firmware drops UART
@@ -750,7 +710,7 @@ is an Inference; installed waveform/ESD qualification remains open and no
 system-level IEC 61000-4-2 rating is claimed. Connect unpowered harnesses on an
 ESD-safe bench, with no independent module power.
 
-**Camera supply loop split (R3-PWR-08; harness specification).** The camera's
+**Camera supply loop split, historical GH-era version (R3-PWR-08; superseded, R18-PWR-03).** The camera's
 ≥5.03 V at 1 A rests on a ≤150 mΩ supply-plus-return loop (table above). Of it,
 the board-end GH contacts may take up to 2 × 50 mΩ = 100 mΩ (JST eGH, maximum after
 test) and the board copper CAM_5V / GND about 14 mΩ (R3 review figure, not
@@ -762,15 +722,17 @@ connector needs a measured camera minimum below 5 V, a lower camera current or a
 different supply arrangement (owner / harness item); measure the installed loop
 four-wire.
 
+**Camera supply loop split, current DB125 version (R18-PWR-03; native DC solve).** The supply side of the board copper is PORT_5V3 from C403.1 to U402.1, 36.07 mΩ, plus CAM_5V from U402.6 to J9.1, 17.06 mΩ: 53.13 mΩ in total (the GND return was not solved; three planes, small). Of the ≤ 150 mΩ supply-plus-return loop this leaves about 97 mΩ for the DB125 contacts, the harness and the camera-end termination. The GH figures above (2 × 50 mΩ contacts, about 14 mΩ of board copper) no longer apply; measure the installed loop four-wire.
+
 **LR900-F maker figures (R3-REQ-08/09).** MicoAir's LR900 manual (URL above,
 updated 2026-10-25): LR900-F 27 dBm (500 mW) transmit, **maximum average power
 consumption 1 W**, 4.5–5 V supply, operating band **890–915 MHz** with manual
 channels 0–25 for 890–915 MHz: only channels 12–25 (902–915 MHz) lie in the US
 902–928 MHz band, and the FHSS channel set and its restriction are not documented.
 Configure manual channels 12–25 only, or confirm the FHSS set with MicoAir before
-flight (regulatory: Inference). R420's 0.348 A minimum limit covers the 1 W
-average (≈0.21 A at 4.8 V), but the transmit peak is unpublished: measure the
-radio's supply current at full power on J420 before flight; R420 is not changed.
+flight (regulatory: Inference). R420 no longer exists (always-on ports). The 1 W
+average is about 0.21 A at 4.8 V against the 0.30 A radio allocation, but the transmit peak is unpublished: measure the
+radio's supply current at full power on J420 before flight.
 
 ## Battery-lead break ride-through (REQUIREMENTS F6; R3-PWR-02)
 
@@ -838,18 +800,18 @@ footprint):**
 
 - **L400 (C1329837, SRP5030T-6R8M, land `M3_SRP5030TA` at (24.2, 5.55), rotation 0):** EasyEDA has no entry for
   C1329837, so the JLC orientation comes from the proxy C189932 (SRP5030T-100M, the same SRP5030T package): rotation
-  correction 0, offset 0, residual 0.15 mm. The part is symmetric (two terminals, no pin-1 mark that matters
-  electrically), so a 180° error is harmless electrically; the land itself is still to be checked against Bourns' own
-  drawing (the proxy supplies the numbering, not the dimensions; Inference until done).
+  correction 0, offset 0, residual 0.05 mm since the round 18 fix pass (0.15 mm before). The part is symmetric (two terminals, no pin-1 mark that matters
+  electrically), so a 180° error is harmless electrically; the land is now Bourns' SRP5030T p1 recommended layout (2.0 × 1.8 mm pads at ±2.25 mm, generated by `r10_parts.srp5030t()`, D-R18-08;
+  the proxy supplies the numbering, not the dimensions).
 - **U411 / U12 / U421 (TXU0202DCUR C5186957, land `M3_TXU0202_DCU`, top, rotation −90 on the board):** correction
   180°, offset 0, residual 0.147 mm. Pin 1 on JLC's footprint is matched by pad
   geometry, not by the mark: confirm pin 1 in JLC's preview on all three before paying.
-- **C84 (C46550466, MA25V470M8x10, top at (38.5, 74.0), rotation 90):** correction 0, residual 0.045 mm. The board has
+- **C84 (C46550466, MA25V470M8x10; historical position (38.5, 74.0), rotation 90; it is now at F(27.5,78.5), 90°, and since the round 18 fix pass it is on the owner BOM, not in the JLC CPL):** correction 0, residual 0.045 mm. The board has
   + on pad 1 (VLOGIC at (38.5, 77.25)) and − on pad 2 (GND at (38.5, 70.75)); the polarity in JLC's CPL / preview
   is not confirmed (the MA-series datasheet gives no land, see the parts table above): confirm + on the VLOGIC pad in the
   preview, and check the fitted part's polarity stripe on the first boards (ORDERING §8). `parts_stock.json` is a dated component snapshot, not a final
-BOM stock gate. Camera ILIM resistor C185349 (R430): 17 in stock against a 3,610-piece minimum purchase
-(JLC, 2026-10-27): sufficient for a small prototype batch only; recheck the actual quantity before ordering.
+BOM stock gate. Camera ILIM resistor R430 is now C2999509 (FOJAN FRC0603F2262TS): 84,923 in stock, minimum 1 (JLC, 2026-10-30T23:50:54Z); the C185349 it replaced had 17 in stock against a 3,610-piece minimum purchase
+(JLC, 2026-10-27). Recheck the actual quantity before ordering.
 
 ## Servo-reference return and mechanical mass
 

@@ -96,6 +96,21 @@ def polymer():
     return make_fp(name, body, -5.4, 'jieerrui MA25V470M8x10; positive pad1 left; derived land, reflow qualification open')
 
 
+def srp5030t():
+    name = 'M3_SRP5030TA'
+    # D-R18-08 (R18-BOM-03): Bourns SRP5030T datasheet p1 "Recommended Layout" (6.50 mm over both lands, 2.50 mm
+    # between them, 1.8 mm land height): two 2.0 x 1.8 mm lands at x = +/-2.25 mm. Body 5.7 +/-0.3 x 5.2 +/-0.2 x
+    # 2.8 +/-0.2 mm, terminals 1.1 +/-0.3 x 1.5 +/-0.2 mm (same page). Replaces R7's 1.8 x 2.5 mm proxy at +/-2.35 mm.
+    body = _rect((-3, -2.75), (3, 2.75), 'F.Fab', .1)
+    body += _rect((-3.5, -3.0), (3.5, 3.0), 'F.CrtYd', .05)
+    body += _line((-3.5, -3.0), (3.5, -3.0), 'F.SilkS', .15)
+    body += _line((-3.5, 3.0), (3.5, 3.0), 'F.SilkS', .15)
+    for n, x in (('1', -2.25), ('2', 2.25)):
+        body += _pad(n, x, 0, 2.0, 1.8, ('F.Cu', 'F.Paste', 'F.Mask'))
+    return make_fp(name, body, -4.1, 'Bourns SRP5030T p1 recommended layout: 6.50 mm over both lands, 2.50 mm gap, '
+                   '2.0 x 1.8 mm lands')
+
+
 def load_switch():
     name = 'M3_AONR21357_DFN3x3A_EP1'
     # AOS PO-00047 rev I: recommended top-side copper land, in a frame
@@ -147,7 +162,7 @@ FOOTPRINTS = {'M3_GH_BM02B_GHS_TBT': gh2, 'M3_DB125_2P_BK': lambda: terminal('BK
               'M3_MA_8x10': polymer, 'M3_AONR21357_DFN3x3A_EP1': load_switch,
               'M3_MICROSD_MOLEX_472192001': microsd,
               'M3_DB125_4P_GN': lambda: terminal('GN', 4),
-              'M3_DB125_5P_GN': lambda: terminal('GN', 5)}
+              'M3_DB125_5P_GN': lambda: terminal('GN', 5), 'M3_SRP5030TA': srp5030t}
 # Boxes use millimetres, KiCad VRML scale .1in handled by r7_parts._box.
 MODELS = {
     'M3_GH_BM02B_GHS_TBT': (0, -.375, 0, 5.75, 4.25, 7.3, '.85 .85 .8'),
@@ -160,6 +175,7 @@ MODELS = {
     'M3_TPS7A91_DSK10': (0, 0, 0, 2.6, 2.6, .8, '.12 .12 .12'),
     'M3_MA_8x10': (0, 0, 0, 8.5, 8.5, 10.8, '.65 .65 .68'),
     'M3_AONR21357_DFN3x3A_EP1': (0, 0, 0, 3.3, 3.3, .9, '.12 .12 .12'),
+    'M3_SRP5030TA': (0, 0, 0, 6.0, 5.4, 3.0, '.35 .38 .42'),     # SRP5030T p1 maxima (5.7+.3, 5.2+.2, 2.8+.2)
     # SD-47219-001G sheet1: include fitting nails and independent dimension
     # tolerances; centred seating/card-front allocation remains an inference.
     # Local union x +/-7.525, y -9.70..6.00, z0..2.10 (R13-BOM-02).
@@ -235,6 +251,7 @@ def geometry_checks():
     assert result['M3_TPS7A91_DSK10']['11'] == [0, 0, 1.2, 2]
     assert len(result['M3_TPS7A91_DSK10']) == 11
     assert result['M3_MA_8x10']['1'] == [-3.25, 0, 3.5, 1.7]
+    assert result['M3_SRP5030TA'] == {'1': [-2.25, 0, 2.0, 1.8], '2': [2.25, 0, 2.0, 1.8]}
     fet = result['M3_AONR21357_DFN3x3A_EP1']
     assert len(fet) == 9 and fet['1'] == [-.975, 1.4, .35, .5]
     assert fet['4'] == [.975, 1.4, .35, .5] and fet['8'] == [-.975, -1.495, .4, .31]
@@ -419,8 +436,15 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
     fault_power = 8.4**2/r134_min
     def pulse_curve(ms):
         return 90*(ms/10)**(math.log(25/90)/math.log(10))
-    enable_ratio = (100000*.98)/(100000*.98+10000*1.02)
-    enable_tau = (100000*10000/110000)*1.02*(1e-6*1.10*1.15)
+    # D-R18-02: R119 (Q121) and R120 (Q120), both 100k 1%, now bias the shared ACT_GATE node in parallel (50k).
+    r_gs_min, r_gs_nom = 50000*.98, 50000
+    enable_ratio = r_gs_min/(r_gs_min+10000*1.02)
+    enable_tau = (r_gs_nom*10000/(r_gs_nom+10000))*1.02*(1e-6*1.10*1.15)
+    # D-R18-01 (R18-MCU-01): Q122 gate drive through R122 1k / R123 2k (1 %). AO3400A Rev3.1 p2: VGS(th) 0.65 / 1.05 /
+    # 1.45 V; RDS(on) <= 48 mohm at VGS 2.5 V. STM32H743 DS12110 Table157 p246: internal pull-up 30 / 40 / 50 kohm.
+    q122_on_V = [3.3*2000*.99/(1000*1.01+2000*.99), (3.3-.4)*2000*.99/(1000*1.01+2000*.99)]
+    q122_pullup_off_V = 3.6*2000*1.01/(2000*1.01+1000*.99+30000)
+    q122_drain_load_A = 8.4/(r_gs_min+10000*.98)
     enable_vgs = (6-4.2*.040-.1)*enable_ratio
     # Linear interpolation of the maker's typical bias curve at 4.5 V, then tolerance / temperature / aging factors.
     c120_bias_delta_pct = -14.594404761904764 + (4.5-4.471875)/(5.2344-4.471875)*(-18.78912+14.594404761904764)
@@ -503,6 +527,9 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
                              gate_event_inference_V=18, hot_R_acceptance_ceiling_ohm=.040,
                              hot_R_typical_curve_inference_ohm=.0123*1.4,
                              minimum_loaded_BAT_IN_V=6, Q122_drain_allowance_V=.1,
+                             gate_source_ohm_nominal=r_gs_nom, Q122_gate_on_V_nominal_and_VOH_floor=q122_on_V,
+                             Q122_gate_with_30k_pullup_PC1_unconfigured_V=q122_pullup_off_V,
+                             Q122_VGS_th_V=[.65, 1.05, 1.45], Q122_drain_load_max_A=q122_drain_load_A,
                              settled_min_Vgs_magnitude_V=enable_vgs,
                              C120_code='C29936', C120_max_uF=1.265,
                              C120_effective_at_4V5_uF_inference=c120_effective,
@@ -574,6 +601,7 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
     assert results['camera_io_C92']['effective_uF_inference'] > 1.5
     assert results['pyro_fault_GAP5']['physical_fault_bound_ms'] < 36
     assert .2+20+5 < watchdog_ms[0] and enable_vgs > 4.5
+    assert q122_pullup_off_V < .65 and min(q122_on_V) > 1.45
     return results
 
 

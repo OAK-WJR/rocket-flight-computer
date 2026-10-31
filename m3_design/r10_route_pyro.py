@@ -10,7 +10,8 @@ def draw(d):
     t,p,v=d.track,d.pad,d.via
     # West igniter cell; the source return and gate network retain their local geometry.
     t('RAW_ACT','B',FIRE,[p('Q121.8'),(17.58,64.0),p('R134.2')])
-    t('PYRO1_IGN','B',FIRE,[p('J121.2'),(7.4,59.4),(12.0,64.0),p('R134.1')])
+    # D-R18-05 (R18-SAF-04): the IGN diagonal moves 0.5 mm south-west, >= 0.5 mm from R131.1 (PYRO1_OUT).
+    t('PYRO1_IGN','B',FIRE,[p('J121.2'),(7.4,59.9),(11.5,64.0),p('R134.1')])
     t('PYRO1_OUT','F',FIRE,[p('J121.1'),(10.63,54.1),(11.63,55.1),p('Q124.5')])
     t('GND','F',P,[p('Q124.3'),p('Q124.1')])
     for n in ('2','1'):
@@ -18,7 +19,10 @@ def draw(d):
     v('PYRO1_OUT',(11.63,55.1));v('GND',(10.3,55.6))
     t('PYRO1_OUT','B',S,[(11.63,55.1),(10.37,56.36),(10.37,56.6),(10.37,57.5),p('R131.1')])
     t('PYRO1_OUT','B',S,[(10.37,57.5),p('C128.1')])
-    t('PYRO1_OUT','B',S,[(10.37,56.6),(15.5,56.6),(17,58.1),(17,61.8),(20.83,61.8),p('R173.1')])
+    # D-R18-05 (R18-SAF-04): R173 sits at the OUT end, so no PYRO1_OUT copper runs between R134.2 (RAW_ACT) and the
+    # buzzer FET; the PYRO1_CONT_MID node behind R173's 5.1k takes that corridor (r10_route_signals.buzzer draws it
+    # after the buzzer gate lead and BUZZ_OUT via that bound it).
+    t('PYRO1_OUT','B',S,[(10.37,56.6),(15.5,56.6),(16.87,57.97),p('R173.1')])
     d.link('PYRO1_COLD','B',S,'R131.2','D120.1')
     t('3V3','B',S,[p('D120.3'),(15.7,61.6)]);v('3V3',(15.7,61.6))
     d.link('PYRO1_GATE_N','F',S,'U1.3','R126.1')
@@ -35,7 +39,8 @@ def draw(d):
     for net,mid,refs,x in [('PYRO1_CONT','PYRO1_CONT_MID',('R173','R129','R130','R178','C127'),23.0),
                           ('ARM1_SENSE','ARM1_SENSE_MID',('R132','R175','R133','R180','C129'),28.0)]:
         a,b,c,e,f=refs
-        d.link(mid,'B',S,a+'.2',b+'.1')
+        if a != 'R173':                 # CH1's MID run: r10_route_signals.buzzer (D-R18-05)
+            d.link(mid,'B',S,a+'.2',b+'.1')
         tail = [(27.55,52.8),p(f+'.1')] if f == 'C129' else [(x,p(f+'.1')[1]+.05),p(f+'.1')]
         t(net,'B',S,[p(b+'.2'),p(c+'.1'),p(e+'.1'),*tail])
         ground_tail = [(x+.86,p(f+'.2')[1]+.49)] if f == 'C127' else [(x+.86,p(f+'.2')[1])]
@@ -58,11 +63,18 @@ def draw(d):
     t('ACT_FET_S','B',P,[(14.475,71.1),(16.45,71.1),p('C120.1'),(17.52,72.17),p('R120.1')])
     t('ACT_GATE','B',P,[p('Q120.4'),(15.575,73.3),(16.2,73.3),p('C120.2'),(18.23,73.3),p('R120.2')])
     v('ACT_GATE',(16.2,73.3))
-    t('ACT_GATE','B',P,[p('Q121.4'),(11.8,70.725)]);v('ACT_GATE',(11.8,70.725))
-    t('ACT_GATE','F',P,[(11.8,70.725),(13.375,72.3),p('R121.1'),(15.2,72.3),(16.2,73.3)])
-    t('ACT_GATE','B',P,[(11.8,70.725),(11.025,71.5),p('TP121.1')])
+    # D-R18-02 (R18-SAF-02): Q121's gate keeps its own 100k (R119) to the source bridge on via-free bottom copper, so
+    # an open in either ACT_GATE layer change leaves both P-FETs biased off; the island's single via now sits below
+    # R119 and the probe pad TP121 moves west between J400 and J1.
+    t('ACT_GATE','B',P,[p('Q121.4'),(11.14,70.0),p('R119.1'),(11.14,71.7)]);v('ACT_GATE',(11.14,71.7))
+    t('ACT_GATE','B',P,[(11.14,70.0),p('TP121.1')])
+    t('ACT_FET_S','B',P,[p('R119.2'),(12.525,71.1)])
+    t('ACT_GATE','F',P,[(11.14,71.7),(11.74,72.3),p('R121.1'),(15.2,72.3),(16.2,73.3)])
     d.link('ACT_DRV','F',P,'Q122.3','R121.2',((15.8,70.14),))
-    t('ACT_EN_MCU','F',S,[p('U1.16'),(24.5,51.6),(26.5,53.6),(26.5,66.0),(25.3,67.2),(21.77,67.2),p('R122.1')])
+    # D-R18-03 (R18-SAF-03): >= 0.5 mm edge to BAT_FAULT_N (moved east, r10_route_signals.status) on the run and the
+    # turn, and >= 0.5 mm to the buzzer's BUZZ_OUT pad LS120.2 (a 3V3-strong node through the coil); the U11.12 GND via
+    # left this corridor (r10_route_power.joins).
+    t('ACT_EN_MCU','F',S,[p('U1.16'),(24.5,51.6),(26.62,53.72),(26.62,65.344),(24.764,67.2),(21.77,67.2),p('R122.1')])
     d.link('ACT_EN','F',S,'Q122.1','R122.2',((19.08,70.75),))
     d.link('ACT_EN','F',S,'R122.2','R123.1')
     d.link('RAW_ACT','B',.4,'Q121.9','TP120.1')

@@ -530,10 +530,10 @@
       "value": "22.6k 1%",
       "footprint": "rocket:R_0603_1608Metric",
       "fields": {
-        "LCSC": "C185349",
-        "Manufacturer": "YAGEO",
-        "Manufacturer Part": "RC0603FR-0722K6L",
-        "Datasheet": "https://www.lcsc.com/product-detail/C185349.html"
+        "LCSC": "C2999509",
+        "Manufacturer": "FOJAN",
+        "Manufacturer Part": "FRC0603F2262TS",
+        "Datasheet": "https://www.lcsc.com/product-detail/C2999509.html"
       },
       "nets": {
         "1": "CAM_ILIM",
@@ -838,6 +838,22 @@
         "2": "GND"
       },
       "kind": "fit"
+    },
+    "R119": {
+      "lib": "M3:R",
+      "value": "100k",
+      "footprint": "rocket:R0402",
+      "fields": {
+        "LCSC": "C25741",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1003TCE",
+        "Datasheet": ""
+      },
+      "nets": {
+        "1": "ACT_GATE",
+        "2": "ACT_FET_S"
+      },
+      "kind": "fit"
     }
   },
   "mcu_changes": {
@@ -865,7 +881,8 @@
     "28": "LOGIC_SOURCE_ST",
     "29": "BAT_FAULT_N",
     "30": "VLOGIC_SENSE",
-    "16": "ACT_EN_MCU"
+    "16": "ACT_EN_MCU",
+    "18": "NC"
   },
   "replacements": {
     "R92": {
@@ -1191,6 +1208,22 @@
         "5": "GND"
       },
       "kind": "fit"
+    },
+    "R123": {
+      "lib": "M3:R",
+      "value": "2k",
+      "footprint": "rocket:R0402",
+      "fields": {
+        "LCSC": "C4109",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF2001TCE",
+        "Datasheet": ""
+      },
+      "nets": {
+        "1": "ACT_EN",
+        "2": "GND"
+      },
+      "kind": "fit"
     }
   },
   "sheets": {
@@ -1242,7 +1275,8 @@
     "R463": "telemetry",
     "R464": "telemetry",
     "C460": "telemetry",
-    "C461": "telemetry"
+    "C461": "telemetry",
+    "R119": "actuator_power"
   },
   "removed_refs": [
     "C121",
@@ -1325,6 +1359,8 @@
     "R443",
     "R452",
     "R453",
+    "R62",
+    "R63",
     "R70",
     "R71",
     "R72",
@@ -1390,9 +1426,10 @@
     ],
     "actuator_power": [
       "R10 single screw switch (owner 2026-10-28): J400 powers and arms the board; J124 is removed. Q120/Q121 remain the pyro-bus load switch feeding RAW_ACT.",
-      "PC1 (U1.16) drives ACT_EN_MCU through R122 1k to Q122; R123 100k holds Q122 off in reset or unpowered. Q124 uses a separate MCU fire pin and its retained gate network.",
+      "PC1 (U1.16) drives ACT_EN_MCU through R122 1k to Q122; R123 2k holds Q122 off in reset, unpowered or against a 30k internal pull-up (gate <=0.22V at 3.6V; R18-MCU-01). PC1 high gives about 2.2V gate. Q124 uses a separate MCU fire pin and its retained gate network.",
       "D-SS-04: hold PC1 and PE4 low for passive cold screening; after prior enable wait >=1 s and verify RAW_ACT discharged / ACT_GATE off. Qualify passive fault bands and refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks.",
       "AUD-3: Q120/Q121 AONR21357, C120 1uF 25V X7R. Hot resistance and turn-on SOA remain bench qualifications.",
+      "R18-SAF-02: R120 100k at Q120 and R119 100k at Q121 each tie a P-FET gate to ACT_FET_S through via-free local bottom copper, so one open via or track leaves both FETs off. ACT_GATE/BAT_ENABLE barrels keep 1mm inner clearance.",
       "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and the sole ARM1_SENSE bus divider; no feed directly from BAT_IN or RAW_PROTECTED.",
       "R134 limits a shorted igniter; normal physical fire current <=20 ms. Firmware timing and pulse qualification: sources/r10_design/parts_qualification.md; no firmware implemented."
     ],

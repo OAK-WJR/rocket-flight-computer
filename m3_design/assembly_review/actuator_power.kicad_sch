@@ -919,93 +919,6 @@
 			(justify left))
 		(uuid 1cf0af22-b75f-5c03-bade-643b6e40c287))
 	(symbol
-		(lib_id "M3:R")
-		(at 99.06 114.3 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 6e436d8f-b7f3-534c-b58c-08c01aaefe2f)
-		(property "Reference" "R123"
-			(at 102.87 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "100k"
-			(at 102.87 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 99.06 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Datasheet" ""
-			(at 99.06 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "LCSC" "C25741"
-			(at 99.06 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 99.06 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(property "Manufacturer Part" "0402WGF1003TCE"
-			(at 99.06 114.3 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))))
-		(instances
-			(project "m3"
-				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
-					(reference "R123")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 99.06 110.49)
-			(xy 99.06 105.41))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 6fea9447-64cc-517f-8ee8-2d5d3fee7d4e))
-	(global_label "ACT_EN"
-		(shape passive)
-		(at 99.06 105.41 90)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 1df5a46a-84f3-58b0-9fea-64cbb38b9a3b))
-	(wire
-		(pts
-			(xy 99.06 118.11)
-			(xy 99.06 123.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 29d643e1-5dbe-53dc-a8da-4154a76fdedf))
-	(global_label "GND"
-		(shape passive)
-		(at 99.06 123.19 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 14fc8abf-798e-59ad-afb1-f40a967fa93d))
-	(symbol
 		(lib_id "M3:TestPoint")
 		(at 40.64 177.8 0)
 		(unit 1)
@@ -1523,6 +1436,190 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid cbc3e735-1299-5bba-ba77-6ac9b5bef9c2))
+	(symbol
+		(lib_id "M3:R")
+		(at 99.06 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6e436d8f-b7f3-534c-b58c-08c01aaefe2f)
+		(property "Reference" "R123"
+			(at 101.6 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 101.6 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF2001TCE"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
+					(reference "R123")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 99.06 110.49)
+			(xy 99.06 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0d21b11b-1da1-5b5f-b0a2-29e038ef78f5))
+	(global_label "ACT_EN"
+		(shape passive)
+		(at 99.06 105.41 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a4c95e47-2c20-59c9-b7c8-b0ae6ec94eba))
+	(wire
+		(pts
+			(xy 99.06 118.11)
+			(xy 99.06 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1efc99be-7d26-5772-90c9-486c07bee03f))
+	(global_label "GND"
+		(shape passive)
+		(at 99.06 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e907f227-e9f9-5bbc-979f-85bb141a7238))
+	(symbol
+		(lib_id "M3:R")
+		(at 157.48 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6edfdf4f-ec08-53e0-8e28-fbf20aded3fb)
+		(property "Reference" "R119"
+			(at 160.02 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100k"
+			(at 160.02 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25741"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1003TCE"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/6133d301-6422-5dca-9dda-573ff465fb31"
+					(reference "R119")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 157.48 110.49)
+			(xy 157.48 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8e9c3c13-3ac1-5ee9-8820-d643b11d48df))
+	(global_label "ACT_GATE"
+		(shape passive)
+		(at 157.48 105.41 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid aaeec454-e2c7-5dc5-90a7-b075f3b98842))
+	(wire
+		(pts
+			(xy 157.48 118.11)
+			(xy 157.48 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5ad966ac-8b7d-559f-bd44-8c68a2fb824a))
+	(global_label "ACT_FET_S"
+		(shape passive)
+		(at 157.48 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a6777b8f-def5-5db6-87c0-7505f1ad5728))
 	(text "R10 single screw switch (owner 2026-10-28): J400 powers and arms the board; J124 is removed. Q120/Q121 remain the pyro-bus load switch feeding RAW_ACT."
 		(at 20.32 15.24 0)
 		(effects
@@ -1530,7 +1627,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 83127760-6cb2-56c5-a73d-92d39a229209))
-	(text "PC1 (U1.16) drives ACT_EN_MCU through R122 1k to Q122; R123 100k holds Q122 off in reset or unpowered. Q124 uses a separate MCU fire pin and its retained gate network."
+	(text "PC1 (U1.16) drives ACT_EN_MCU through R122 1k to Q122; R123 2k holds Q122 off in reset, unpowered or against a 30k internal pull-up (gate <=0.22V at 3.6V; R18-MCU-01). PC1 high gives about 2.2V gate. Q124 uses a separate MCU fire pin and its retained gate network."
 		(at 20.32 20.32 0)
 		(effects
 			(font
@@ -1551,20 +1648,27 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid e379a682-3ef2-58c6-a879-d5cbff021361))
-	(text "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and the sole ARM1_SENSE bus divider; no feed directly from BAT_IN or RAW_PROTECTED."
+	(text "R18-SAF-02: R120 100k at Q120 and R119 100k at Q121 each tie a P-FET gate to ACT_FET_S through via-free local bottom copper, so one open via or track leaves both FETs off. ACT_GATE/BAT_ENABLE barrels keep 1mm inner clearance."
 		(at 20.32 35.56 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid e795d07f-117b-513a-aa8d-555acc2ba3aa))
-	(text "R134 limits a shorted igniter; normal physical fire current <=20 ms. Firmware timing and pulse qualification: sources/r10_design/parts_qualification.md; no firmware implemented."
+	(text "C121 removed; servos use external pack power and return. RAW_ACT feeds R134 and the sole ARM1_SENSE bus divider; no feed directly from BAT_IN or RAW_PROTECTED."
 		(at 20.32 40.64 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid de33d53c-27d7-5634-8d99-5f8d4881a39f))
+	(text "R134 limits a shorted igniter; normal physical fire current <=20 ms. Firmware timing and pulse qualification: sources/r10_design/parts_qualification.md; no firmware implemented."
+		(at 20.32 45.72 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid fc192440-251a-502c-ba50-392227c331db))
 	(sheet_instances
 		(path "/"
 			(page "11"))))

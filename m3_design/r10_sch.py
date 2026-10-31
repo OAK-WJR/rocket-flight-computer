@@ -184,6 +184,50 @@ def replace_notes(text, lines):
                                    for i, line in enumerate(lines)))
 
 
+def replace_note(text, prefix, line, key):
+    """R18: replace exactly one retained sheet note (matched by its opening words) in place, at its own position."""
+    read, patch, _ = sch._reader()
+    found = [n for n in read(text).children('text') if n.items[1].atom.startswith(prefix)]
+    assert len(found) == 1, f'expected one note starting {prefix!r}, found {len(found)}'
+    x, y = sch._xy(found[0])
+    text = patch(text, [(found[0].start, found[0].end, '')])
+    return sch.insert(text, sch.note(line, x, y, key))
+
+
+def replace_once(text, old, new):
+    assert text.count(old) == 1, f'expected one {old!r}'
+    return text.replace(old, new)
+
+
+# R18-REQ-01 / R18-MCU-03: the retained R8 MCU-sheet notes, rewritten from the R10 pin table (asserted below).
+R10_MCU_NOTES = {
+    'R8: camera enable': ('R10: camera enable CAM_PWR_EN on PE11 / pin41, fault input CAM_FAULT_N (EXTI12) on PE12 / '
+                          'pin42 (GPIO only, SPI4 never enabled); swapped from R8 for routing (D-R2-07); no actuation '
+                          'changes.'),
+    'R8 follow-on moves': ('R10 MCU map (pin_table.tsv r10_net is the sole authority): BUZZ_DRV PC14; LOGIC_SOURCE_ST '
+                           'PA4, BAT_FAULT_N PA5 (D-R2-09); camera UART7 PE7 RX / PE8 TX, CAM_UART_OE PE9; radio UART5 '
+                           'PB12 RX / PB13 TX; GPS USART6 PC6 TX / PC7 RX; SD SPI3 PC10 / PC11 / PC12, PD0 CS; '
+                           'ACT_EN_MCU PC1; PE4 fire, ACTIVE HIGH (PYRO1_GATE_N is a historical name); VBUS_SENSE '
+                           'PC8; LEDs PD5 / PD7. NC: PC13, PB0, PC3_C (R18-REQ-08), PB10, PB14, PD8-PD10, PD14, '
+                           'PD15, PE15.'),
+    'Pins the ROM bootloader drives': ('R10 pins the ROM bootloader drives (AN2606 Rev64 Table119 / Rev70 Table135; '
+                                       'K-loader): SERVO3 PA2 (USART2_TX), VLOGIC_SENSE PA6 (SPI1_MISO into the '
+                                       'divider), SD_MISO PC11 (SPI3_MISO; R460 keeps the card deselected), USB '
+                                       'PA11/PA12 (DFU), QSPI_NCS PB6 and I2C1_SDA PB9 (open drain); PA8, PA9, PB10, '
+                                       'PB14, PC9 and PE13 stay NC. UART5 PB12/PB13 and USART6 PC6/PC7 are not loader '
+                                       'interfaces.'),
+}
+# Each claim above, checked against the reviewed pin table (pin: r10_net).
+R10_MCU_NOTE_PINS = {'8': 'BUZZ_DRV', '28': 'LOGIC_SOURCE_ST', '29': 'BAT_FAULT_N', '37': 'CAM_MCU_RX',
+                     '38': 'CAM_MCU_TX', '39': 'CAM_UART_OE', '41': 'CAM_PWR_EN', '42': 'CAM_FAULT_N',
+                     '51': 'RADIO_RX_MCU', '52': 'RADIO_TX_MCU', '63': 'GPS_TX_MCU', '64': 'GPS_RX_MCU',
+                     '78': 'SD_SCK', '79': 'SD_MISO', '80': 'SD_MOSI', '81': 'SD_CS', '16': 'ACT_EN_MCU',
+                     '3': 'PYRO1_GATE_N', '65': 'VBUS_SENSE', '86': 'LED_RED', '88': 'LED_YEL', '24': 'SERVO3_MCU',
+                     '30': 'VLOGIC_SENSE', '70': 'USB_DM', '71': 'USB_DP', '92': 'QSPI_NCS', '96': 'I2C1_SDA',
+                     '7': 'NC', '34': 'NC', '18': 'NC', '46': 'NC', '53': 'NC', '67': 'NC', '68': 'NC', '66': 'NC',
+                     '43': 'NC'}
+
+
 def override_values(text, values):
     """Expand retained-part labels without replacing symbols or their metadata."""
     read, patch, properties = sch._reader()
@@ -252,6 +296,9 @@ def build(out, netlist=True):
     if '(symbol "ServoTerminal"' not in library:
         library = library.rstrip()[:-1] + r10_parts.servo_terminal_symbol() + '\n)\n'
     library = library.replace('(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT"', '(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT M3_DB125_4P_GN"')
+    # R18-REQ-01: no GH 4-pin header remains on R10; the 4-position terminal symbol filters the DB125 land only.
+    library = library.replace('(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT M3_DB125_4P_GN"',
+                              '(property "ki_fp_filters" "M3_DB125_4P_GN"')
     library_path.write_text(library)
     sch.NS = NS
     pins.NS = NS
@@ -292,10 +339,29 @@ def build(out, netlist=True):
                               or 'pull-pin' in n.items[1].atom.lower() or 'PULLPIN' in n.items[1].atom
                               or 'CH1 sense:' in n.items[1].atom])
                 t = sch.insert(t, sch.note('R10: USART6 PC6/PC7 AF7 GPS; UART5 PB13/PB12 AF14 radio, direct1k UARTs on always-on PORT_4V8. Camera EN/OE default low; EXTI12 CAM_FAULT_N; EXTI4 LOGIC_SOURCE_ST (PA4), EXTI5 BAT_FAULT_N (PA5); VLOGIC_SENSE ADC on PA6. EXTI1 PE1 IMU_INT1 data-ready. SPI3 PC10/11/12 AF6 SD_SCK/MISO/MOSI; PD0 SD_CS high at reset via10k. No SD card-detect.', 20.32, 259.08, 'mcu:r10:ports'))
-                t = sch.insert(t, sch.note('Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise PC1 and PE4 low before output mode. R123 100k holds the load switch off at reset. Both low for passive cold screening; after prior enable wait >=1 s and verify bus discharge. Refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks (D-SS-04). Disable synchronous trace; lock/read back both gate GPIO configurations. AUD-4: PC13 U1.7 is NC/analog; no pull-pin.', 20.32, 269.24, 'mcu:r10:load-switch'))
+                t = sch.insert(t, sch.note('Single screw switch: PC1 U1.16 ACT_EN_MCU drives R122 1k and Q122; initialise PC1 and PE4 low before output mode. R123 2k holds the load switch off at reset and against a 30k internal pull-up (R18-MCU-01); never enable a PC1 or PE4 pull-up. PE4 U1.3 is ACTIVE HIGH: PE4 high turns Q124 on (PYRO1_GATE_N is a historical name). Both low for passive cold screening; after prior enable wait >=1 s and verify bus discharge. Refuse ground faults BEFORE PC1 enable; then PC1 high, PE4 low >=100 ms before powered-bus checks (D-SS-04). Disable synchronous trace; lock/read back both gate GPIO configurations. AUD-4: PC13 U1.7 is NC/analog; no pull-pin.', 20.32, 269.24, 'mcu:r10:load-switch'))
+                for row in R10_MCU_NOTE_PINS.items():
+                    assert pinmap[row[0]][1] == row[1], f'R10 MCU note claim U1.{row[0]} {row[1]} differs from the pin table'
+                for prefix, line in R10_MCU_NOTES.items():
+                    t = replace_note(t, prefix, line, f'mcu:r18:{prefix}')
                 t = sch.insert(t, sch.note('CH1 sense: filtered PYRO1_CONT -> PC0 ADC123_INP10; filtered ARM1_SENSE -> PC5 ADC12_INP8, the sole RAW_ACT bus reading (historical ARM1_SENSE name). Split divider safety retained; audit2 removes R168/R170 and _MCU tails (single-resistor fault maximum3.342V at19.9V clamp). AVA follow-up removes the duplicate six-part RAW_ACT_SENSE chain; PB0 U1.34 is NC/analog, never driven. Ground bus/continuity readings are hard refusals; in flight they never veto fire.', 20.32, 279.4, 'mcu:r10:sense'))
             if file.name == 'battery_entry.kicad_sch':
                 t = add(t, library, 'J400', changed['J400'], 330.2, 238.76)
+                # R18-REQ-02 / R18-SAF-05: the arming contact is J400.1 / J400.2 and the damper R166 is 0.36 ohm.
+                t = replace_once(t, '"J1.3--4: external dry contact. Closed = battery enabled;',
+                                 '"J400.1 / J400.2 (BAT_SW_SOURCE / BAT_SW_RETURN): external dry screw-switch contact. '
+                                 'Closed = battery enabled;')
+                t = replace_once(t, 'a battery lead in J1.3/J1.4 puts', 'a battery lead in J400.1/J400.2 puts')
+                t = replace_once(t, 'R166 (0.33 ohm 2512)', 'R166 (0.36 ohm 2512)')
+            if file.name == 'actuator_power.kicad_sch':
+                # R18-SAF-02: Q121's own gate-source resistor (circuit.json sheets: actuator_power).
+                t = add(t, library, 'R119', changed['R119'], 157.48, 114.3)
+            if file.name == 'diagnostics.kicad_sch':
+                # R18-REQ-08: the 3V3 / 2 divider (R62 / R63, V3V3_SENSE) is removed; 3V3 is read internally.
+                t = replace_once(t, '"Measure VLOGIC and 3V3 directly, then compare divider outputs: VLOGIC/11 and 3V3/2."',
+                                 '"Measure VLOGIC directly, then compare VLOGIC/11 (PA6). R18-REQ-08 removes R62/R63: read '
+                                 'VDDA (3V3A) from VREFINT and 3V3 from the internal VBAT/4 channel (VBAT tied to 3V3); '
+                                 'PC3_C is NC."')
             if file.name == 'camera_uart.kicad_sch':
                 for ref, y in (('D400', 228.6), ('D401', 251.46)):
                     t = add(t, library, ref, changed[ref], 330.2, y)

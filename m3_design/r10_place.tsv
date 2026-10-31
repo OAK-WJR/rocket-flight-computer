@@ -114,6 +114,7 @@ R105	33.2	48.6	0	F	D-R11-01: maximum DB125 envelope and local courtyard clearanc
 R11	14.2	43.75	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R110	10.775	25.0	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 R12	7	49.37	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+R119	11.57	71.1	0	B	D-R18-02: Q121 local gate-source 100k between the Q120/Q121 courtyards, pad 2 on the source bridge axis
 R120	18.5	72.6	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R121	14.5	71.87	90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 R122	19.6	69.8	-90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -142,7 +143,7 @@ R164	17.325	55.9	180	B	D-AVA-01: explicit cell placement; electrical contract un
 R165	13.25	67	0	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 R166	23.5	86.3	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 R167	13	83.8	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R173	23	59.2	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+R173	16.87	59.7	-90	B	D-R18-05: CONT divider top resistor at the PYRO1_OUT end; the 5.1k MID node, not OUT, crosses beside R134.2 and Q123; OUT pad >= 0.5 mm from D120.3 (3V3), BUZZ_G and C126's GND via
 R175	28	55.8	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R178	23.43	54.85	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R180	28.43	53.25	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -164,8 +165,6 @@ R451	34	29.75	0	B	D-AVA-01: explicit cell placement; electrical contract unchang
 R5	13	45.17	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R60	33.2	58.6	180	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 R61	33.2	54	0	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
-R62	25.5	55.7	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R63	25.5	56.7	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R64	11.23	52.28	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R7	9	28.9	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R8	9	32.5	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -184,7 +183,7 @@ R90	7.8	23.1	0	B	D-AVA-01: explicit cell placement; electrical contract unchange
 R91	28.1	60	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R92	31	87.5	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 TP120	18	68.6	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-TP121	10.5	71.5	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+TP121	4	70	0	B	D-R18-02: west between J400 and J1 (M-6 1.5 mm, test-pad 1.0 mm clearances); electrical contract unchanged
 TP122	13.3	53.3	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 TP74	42.5	58	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 TP80	9.8	83.8	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged

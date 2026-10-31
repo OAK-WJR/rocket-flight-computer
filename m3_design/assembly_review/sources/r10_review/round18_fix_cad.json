@@ -1,0 +1,604 @@
+{
+ "schema": 1,
+ "lane": "round 18 fix pass, CAD implementer A",
+ "date": "2026-10-30",
+ "board_before": {
+  "sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "bytes": 2256162,
+  "footprints": 209,
+  "segments": 951,
+  "vias": 296,
+  "gnd_vias": 168,
+  "track_mm": 1788.675665
+ },
+ "board_after": {
+  "sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+  "bytes": 2250842,
+  "footprints": 208,
+  "segments": 947,
+  "vias": 292,
+  "gnd_vias": 166,
+  "track_mm": 1788.737627
+ },
+ "builds": {
+  "kicad_cli": "10.0.7 (vendor build; installed 10.0.6 not used)",
+  "numpy_py": ".supervisor/venv/bin/python",
+  "complete_builds": [
+   {
+    "name": "A",
+    "exit": 0,
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "check_sh_exit": 0
+   },
+   {
+    "name": "B",
+    "exit": 0,
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "check_sh_exit": 0
+   }
+  ],
+  "earlier_build_same_board_inputs": {
+   "name": "1",
+   "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+   "note": "check.sh then failed one R10 self-test (temporary BOM name); the test was corrected, then A and B ran"
+  },
+  "byte_identical_files_A_vs_B": 923,
+  "differing_files_A_vs_B": [
+   "fab/m3_gerber.zip",
+   "fab/m3_assembly_top.pdf",
+   "fab/m3_assembly_bottom.pdf",
+   "fab/m3_fab_manifest.json",
+   "fab/cost_check.json",
+   "fab/stock_check.json",
+   "sources/r10_design/R10_DECISIONS.md"
+  ],
+  "differing_reason": "Gerber/PDF creation dates (manifest binds them); supplier reports refreshed with FAB_NET=1 between A and B; decision text edited between",
+  "stage_gates": {
+   "core": "OK",
+   "usb": "OK",
+   "pyro": "OK",
+   "power": "OK",
+   "signals": "OK",
+   "ground": "OK (DRC 0, unconnected 0, route_check 0)"
+  },
+  "check_sh": {
+   "drc_violations": 0,
+   "unconnected": 0,
+   "schematic_parity": 0,
+   "erc": 0,
+   "metadata_3d_audit": "OK",
+   "silk_outline_points": 0,
+   "r10_parts_check": "OK",
+   "fit": "OK",
+   "check_r10_full_rules": 33,
+   "check_r10_full": "OK",
+   "route_check_r10_failing": 0,
+   "fab_manifest_outputs": 6
+  },
+  "self_tests": {
+   "test_check_shell": 7,
+   "test_procurement": 20,
+   "test_fit_check": 31,
+   "test_paste_check": 16,
+   "test_r10_parts": 5,
+   "test_route_check": 67,
+   "test_r10_check": 187,
+   "test_r10_check_native_skips": 4,
+   "HotplugNumerics_numpy": 2,
+   "all": "OK"
+  },
+  "fab": {
+   "jlc_bom_lines": 81,
+   "placed": 197,
+   "cpl_top": 65,
+   "cpl_bottom": 120,
+   "placement_only_checks": 12,
+   "worst_pad_residual_mm": 0.491,
+   "paste_flashes": {
+    "F": 245,
+    "B": 371
+   },
+   "owner_bom": [
+    "C84 C46550466"
+   ],
+   "orientation": "CHECK: none"
+  },
+  "supplier_refresh": {
+   "stock_checked_utc": "2026-10-30T23:50:54Z",
+   "cost_checked_utc": "2026-10-30T23:51:50Z",
+   "inputs_match_final_bom_cpl": true,
+   "short": [
+    "U4 C26633007 0 < 5 (consign)"
+   ],
+   "U9_stock": 45,
+   "R430_stock": 84923,
+   "usd_per_board_placed_plus_feeder": 79.12,
+   "usd_per_board_parts_with_minimums": 54.33,
+   "target_usd": 84.41,
+   "note": "before fixed, process, PCB and shipping costs; not a release pass"
+  },
+  "not_check_sh": {
+   "tools/test_fab_validation.py": "22/23 pass; test_connector_mechanical_tabs_are_independently_checked fails on R17 and on this package (mutates C161692, R9's GH J9; R10 J9 is DB125 C2757925)"
+  },
+  "final_standalone_check_sh_exit": 0
+ },
+ "items": [
+  {
+   "item": 1,
+   "findings": [
+    "R18-SAF-01",
+    "R18-GATE-01"
+   ],
+   "decision": "D-R18-04",
+   "done": true,
+   "change": "fill-only keep-outs (radius drill/2 + 1.05 mm) round every ACT_GATE / ACT_DRV barrel on In1+In2 and every BAT_ENABLE / BAT_SW_RETURN / ACT_EN / ACT_EN_MCU / PYRO1_GATE_N barrel on In2; S-8 extended, GND hazardous for ACT_GATE / ACT_DRV",
+   "before": {
+    "ACT_GATE via (16.2,73.3) In1 GND": 0.251,
+    "ACT_GATE via (16.2,73.3) In2 RAW_PROTECTED": 0.251,
+    "ACT_GATE via (11.8,70.725) In1 GND": 0.251,
+    "ACT_GATE via (11.8,70.725) In2 RAW_PROTECTED": 0.251,
+    "BAT_ENABLE vias In2 non-GND (min of 3)": 0.251,
+    "J400.2 In2 RAW_PROTECTED": 0.551,
+    "J400.2 In2 GND": 0.85
+   },
+   "after": {
+    "ACT_GATE via (16.2,73.3) In1 GND": 1.05,
+    "ACT_GATE via (16.2,73.3) In2 RAW_PROTECTED": 1.05,
+    "ACT_GATE via (11.14,71.7) In1 GND": 1.05,
+    "ACT_GATE via (11.14,71.7) In2 RAW_PROTECTED": 1.05,
+    "BAT_ENABLE vias In2 non-GND (min of 3)": 1.05,
+    "J400.2 In2 RAW_PROTECTED": 1.05,
+    "J400.2 In2 GND": 1.05
+   },
+   "unit": "mm, plated barrel wall to foreign inner copper",
+   "tests": [
+    "R3Synthetic.test_s8_load_switch_gate_and_enable_barrels",
+    "RealBoardSeeds.test_r18_barrel_keepouts_removed"
+   ]
+  },
+  {
+   "item": 2,
+   "findings": [
+    "R18-SAF-02"
+   ],
+   "decision": "D-R18-02",
+   "done": true,
+   "change": "R119 100k 0402 C25741 at B(11.57,71.1) 0 deg, Q121 gate and source joined to it by B.Cu only; TP121 B(10.5,71.5) -> B(4,70); S-3 local_gate_bias",
+   "before": {
+    "Q121 same-layer gate-source resistor": null
+   },
+   "after": {
+    "Q121 same-layer gate-source resistor": "R119",
+    "Q120 same-layer gate-source resistor": "R120"
+   },
+   "tests": [
+    "Synthetic.test_s3_local_gate_bias_needs_same_layer_copper",
+    "RealBoardSeeds.test_r18_q121_local_bias_seed"
+   ]
+  },
+  {
+   "item": 3,
+   "findings": [
+    "R18-MCU-01",
+    "R18-SAF-03"
+   ],
+   "decision": "D-R18-01, D-R18-03",
+   "done": true,
+   "change": "R123 100k C25741 -> 2k C4109 (same land); ACT_EN_MCU x 26.5 -> 26.62, BAT_FAULT_N x 26.9 -> 27.37; U11.12 GND via (25.8,65.9) removed; V3V3_SENSE removed (item 10)",
+   "before": {
+    "ACT_EN_MCU~BAT_FAULT_N": 0.171,
+    "ACT_EN_MCU~V3V3_SENSE via": 0.251,
+    "ACT_EN_MCU~BUZZ_OUT (LS120.2)": 0.4,
+    "ACT_EN_MCU~USB_LIMITED via": 0.55,
+    "Q122 gate with 30k PC1 pull-up at 3.6 V, V": 2.748,
+    "Q122 gate on (nominal / VOH floor), V": null
+   },
+   "after": {
+    "ACT_EN_MCU~BAT_FAULT_N": 0.55,
+    "ACT_EN_MCU~V3V3_SENSE via": null,
+    "ACT_EN_MCU~BUZZ_OUT (LS120.2)": 0.52,
+    "ACT_EN_MCU~USB_LIMITED via": 0.67,
+    "Q122 gate with 30k PC1 pull-up at 3.6 V, V": 0.2203,
+    "Q122 gate on (nominal / VOH floor), V": [
+     2.1853,
+     1.9204
+    ]
+   },
+   "note": "AO3400A Rev 3.1 p2 VGS(th) 0.65/1.05/1.45 V; RDS(on) <= 48 mohm specified at 2.5 V only; drain load <= 0.143 mA (Inference: saturated). Retained: ACT_EN-BAT_ENABLE 0.330 mm at R123.1 (fail-safe with 2 k), NRST via 0.425 mm, U1 pin pitch 0.200 mm."
+  },
+  {
+   "item": 4,
+   "findings": [
+    "R18-SAF-04"
+   ],
+   "decision": "D-R18-05",
+   "done": true,
+   "change": "R173 B(23.0,59.2) 90 -> B(16.87,59.7) -90 (OUT end); MID takes the corridor; IGN diagonal 0.5 mm SW; BUZZ_G lead x 17.5 -> 17.75; C126.2 GND via (16.178,59.047) -> (15.8,59.425)",
+   "before": {
+    "OUT~R134.2": 0.25,
+    "OUT~Q123.1": 0.175,
+    "IGN~R131.1": 0.222
+   },
+   "after": {
+    "OUT~R134.2": 2.825,
+    "OUT~Q123.1": 1.577,
+    "IGN~R131.1": 0.575,
+    "OUT~BUZZ_G (any)": 0.51,
+    "OUT~3V3 (any)": 0.514,
+    "MID~R134.2 (behind R173 5.1k, retained)": 0.25,
+    "MID~Q123.1 (behind R173 5.1k, retained)": 0.175,
+    "OUT~GND (unchanged class)": 0.177
+   }
+  },
+  {
+   "item": 5,
+   "findings": [
+    "R18-RTE-01",
+    "R18-PWR-01"
+   ],
+   "decision": "D-R18-06",
+   "done": true,
+   "change": "IN2_GND_CH1 tongue removed; IN2_3V3 shoulder + bay round the USB_LIMITED In2 via ends; IN2_RAW notched; new K-plane rule",
+   "before": {
+    "3V3 In2 pieces mm2": [
+     30.54,
+     1354.23,
+     63.11
+    ],
+    "K-plane issues": 2
+   },
+   "after": {
+    "3V3 In2 pieces mm2": [
+     1466.52
+    ],
+    "K-plane issues": 0
+   },
+   "tests": [
+    "R3Synthetic.test_k_plane_split_fill_needs_two_links",
+    "RealBoardSeeds.test_r18_split_power_plane"
+   ]
+  },
+  {
+   "item": 6,
+   "findings": [
+    "R18-RTE-04"
+   ],
+   "decision": "D-R18-07",
+   "done": true,
+   "change": "SD_MOSI B.Cu (20.1,32.8) -> (25.005,27.895) -> (25.005,24.3)",
+   "before": {
+    "SD_MOSI length mm": 36.098292,
+    "segments": 12
+   },
+   "after": {
+    "SD_MOSI length mm": 34.103689,
+    "segments": 10
+   }
+  },
+  {
+   "item": 7,
+   "findings": [
+    "R18-BOM-03",
+    "R18-MFG-02"
+   ],
+   "decision": "D-R18-08",
+   "done": true,
+   "change": "L400 Bourns SRP5030T recommended land (p1); U4 LGA-14 mask expansion 0.025 -> 0",
+   "before": {
+    "L400 pads": [
+     {
+      "pad": "1",
+      "at": [
+       21.85,
+       5.55
+      ],
+      "size": [
+       1.8,
+       2.5
+      ]
+     },
+     {
+      "pad": "2",
+      "at": [
+       26.55,
+       5.55
+      ],
+      "size": [
+       1.8,
+       2.5
+      ]
+     }
+    ],
+    "L400 inner gap mm": 2.9,
+    "U4": {
+     "pad": [
+      0.575,
+      0.35
+     ],
+     "mask_expansion_mm": 0.025,
+     "web_mm": 0.1,
+     "paste": [
+      0.5405,
+      0.329
+     ],
+     "paste_area_ratio": 0.8836
+    }
+   },
+   "after": {
+    "L400 pads": [
+     {
+      "pad": "1",
+      "at": [
+       21.95,
+       5.55
+      ],
+      "size": [
+       2.0,
+       1.8
+      ]
+     },
+     {
+      "pad": "2",
+      "at": [
+       26.45,
+       5.55
+      ],
+      "size": [
+       2.0,
+       1.8
+      ]
+     }
+    ],
+    "L400 inner gap mm": 2.5,
+    "U4": {
+     "pad": [
+      0.575,
+      0.35
+     ],
+     "mask_expansion_mm": 0.0,
+     "web_mm": 0.15,
+     "paste": [
+      0.5405,
+      0.329
+     ],
+     "paste_area_ratio": 0.8836
+    }
+   }
+  },
+  {
+   "item": 8,
+   "findings": [
+    "R18-BOM-01",
+    "R18-REQ-10",
+    "R18-MFG-06"
+   ],
+   "decision": "D-R18-09",
+   "done": true,
+   "change": "R430 C185349 -> C2999509 FOJAN FRC0603F2262TS (stock 84,923, min 1, 2026-10-30T21:53Z); C84 owner BOM only (export_fab MANUAL_FIT), absent from the JLC BOM and CPL",
+   "before": {
+    "R430 LCSC": "C185349",
+    "JLC BOM lines": 82,
+    "CPL rows": 199
+   },
+   "after": {
+    "R430 LCSC": "C2999509",
+    "JLC BOM lines": 81,
+    "CPL rows": 197,
+    "owner BOM": "C84 (C46550466)"
+   }
+  },
+  {
+   "item": 9,
+   "findings": [
+    "R18-REQ-01",
+    "R18-REQ-02",
+    "R18-SAF-05",
+    "R18-MCU-03"
+   ],
+   "decision": "D-R18-10",
+   "done": true,
+   "change": "mcu / battery_entry notes, ki_fp_filters, pin_table rows 3 / 16 / 18, regenerated binding note"
+  },
+  {
+   "item": 10,
+   "findings": [
+    "R18-REQ-08"
+   ],
+   "decision": "D-R18-01",
+   "done": true,
+   "change": "R62 / R63 and V3V3_SENSE removed; PC3_C NC (VREF+ = VDDA = 3V3A via R164 2.2 ohm from 3V3)",
+   "before": {
+    "R62/R63 fitted": true
+   },
+   "after": {
+    "R62/R63 fitted": false
+   }
+  },
+  {
+   "item": 11,
+   "findings": [
+    "R18-GATE-02..09",
+    "R18-MEC-01",
+    "R18-MEC-03"
+   ],
+   "decision": null,
+   "done": false,
+   "change": "not in this pass (brief); the item-1 S-8 extension and the item-5 K-plane rule are kept"
+  }
+ ],
+ "parts_moved": {
+  "R173": [
+   {
+    "at": [
+     23.0,
+     59.2
+    ],
+    "rot": 90.0,
+    "side": "B",
+    "value": "5.1k",
+    "lcsc": "C25905"
+   },
+   {
+    "at": [
+     16.87,
+     59.7
+    ],
+    "rot": -90.0,
+    "side": "B",
+    "value": "5.1k",
+    "lcsc": "C25905"
+   }
+  ],
+  "TP121": [
+   {
+    "at": [
+     10.5,
+     71.5
+    ],
+    "rot": 0.0,
+    "side": "B",
+    "value": "ACT_GATE",
+    "lcsc": ""
+   },
+   {
+    "at": [
+     4.0,
+     70.0
+    ],
+    "rot": 0.0,
+    "side": "B",
+    "value": "ACT_GATE",
+    "lcsc": ""
+   }
+  ]
+ },
+ "parts_added": {
+  "R119": {
+   "at": [
+    11.57,
+    71.1
+   ],
+   "rot": 0.0,
+   "side": "B",
+   "value": "100k",
+   "lcsc": "C25741"
+  }
+ },
+ "parts_removed": [
+  "R62",
+  "R63"
+ ],
+ "designators": {
+  "hidden_before": 91,
+  "hidden_after": 88,
+  "newly_hidden": [
+   "R91"
+  ],
+  "now_shown": [
+   "R132",
+   "R163"
+  ],
+  "new_parts_shown": [
+   "R119",
+   "TP121"
+  ]
+ },
+ "decisions_added": [
+  "D-R18-01",
+  "D-R18-02",
+  "D-R18-03",
+  "D-R18-04",
+  "D-R18-05",
+  "D-R18-06",
+  "D-R18-07",
+  "D-R18-08",
+  "D-R18-09",
+  "D-R18-10"
+ ],
+ "residuals": [
+  {
+   "what": "PYRO1_CONT_MID in the R134.2 / Q123.1 corridor",
+   "gaps_mm": {
+    "MID~R134.2": 0.25,
+    "MID~Q123.1": 0.175
+   },
+   "why_retained": "the 0.625 mm corridor cannot hold 0.5 mm to both pads; MID is behind R173 5.1 k: a RAW_ACT bridge passes <= 1.6 mA (no R134 or e-match bypass) and lifts CONT to about 1.38 V vs 0.75 V intact (Inference: a firmware upper bound flags it); a BUZZ_G bridge puts <= about 4.6 V on PC14 via R162 1 k"
+  },
+  {
+   "what": "OUT-GND approaches unchanged",
+   "gaps_mm": {
+    "track (15.5,56.6) ~ GND via (15.85,57.70)": 0.177,
+    "Q124.5 ~ GND via (12.78,59.02)": 0.18
+   },
+   "why_retained": "owner-accepted default-clearance class"
+  },
+  {
+   "what": "enable-chain neighbours under 0.5 mm",
+   "gaps_mm": {
+    "ACT_EN~BAT_ENABLE at R123.1": 0.33,
+    "ACT_EN_MCU~NRST via": 0.425,
+    "U1.15/U1.17 pin pitch": 0.2
+   },
+   "why_retained": "BAT_ENABLE bridge: R123 2 k loads the 470 k-fed EN, U9 stays off; NRST has only the internal pull-up (<= 0.22 V at ACT_EN); package pitch"
+  },
+  {
+   "what": "TP121 ACT_GATE B.Cu stub",
+   "measured": {
+    "stub_mm": 7.14,
+    "ACT_GATE_BCu_track_mm": [
+     7.239,
+     14.817
+    ],
+    "ACT_GATE_FCu_track_mm": [
+     5.467,
+     5.723
+    ]
+   },
+   "why_retained": "TP121 left R119 spot; no nearer legal spot found (1.0 mm test-pad clearance, M-6 1.5 mm); outer copper at the 0.25 mm pour clearance (default class); inner barrels now 1.05 mm"
+  },
+  {
+   "what": "In2 plane necks",
+   "measured": {
+    "island_A_neck_mm_approx": 0.55,
+    "finger_neck_mm_approx": 0.5
+   },
+   "note": "polygon deflation estimate; 3V3A In2 trunk under U1 retained; fill is one piece"
+  },
+  {
+   "what": "Q122 drive",
+   "note": "AO3400A RDS(on) specified only at 2.5 V gate; 1.92-2.19 V gate with <= 0.143 mA load is Inference"
+  },
+  {
+   "what": "designators",
+   "note": "hidden 91 -> 88: R91 newly hidden (F.Fab), R132 / R163 now shown, R119 / TP121 shown"
+  }
+ ],
+ "for_docs_lane": {
+  "D_ids_total": 136,
+  "jlc_bom_lines": 81,
+  "placed": 197,
+  "paste_flashes": {
+   "F": 245,
+   "B": 371
+  },
+  "R430": "C2999509 FOJAN FRC0603F2262TS",
+  "C84": "owner BOM, manual after both reflows",
+  "four_stall_fire_A": [
+   1.283013,
+   1.282918
+  ],
+  "pfet_settled_min_abs_vgs_V": [
+   5.19,
+   4.74
+  ],
+  "time_to_minus_4V5_ms": [
+   23.6,
+   31.9
+  ],
+  "q122_gate_V_nominal_vohfloor": [
+   2.185,
+   1.92
+  ],
+  "q122_gate_with_30k_pullup_V": 0.22
+ }
+}

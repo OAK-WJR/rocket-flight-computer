@@ -68,7 +68,7 @@
 						(effects
 							(font
 								(size 1.05 1.05))))))
-			(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT M3_DB125_4P_GN"
+			(property "ki_fp_filters" "M3_DB125_4P_GN"
 				(at 0 0 0)
 				(effects
 					(font

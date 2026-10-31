@@ -2572,3 +2572,157 @@ completed round17 and its clean-round deviations/STATUS/AGENTS records through
 board change. This reaffirms D-R16-03's closing boundary and adds no hardware
 choice; it is attached as an amendment to the existing consolidated supervisor
 mandate. The final index remains126 D-* IDs/23 mandate records.
+
+## D-R18-01. Stiffen the PC1 bus-enable pull-down; remove the redundant 3V3 divider (2026-10-30)
+
+Round 18 fix pass (R18-MCU-01, R18-SAF-03 circuit part, R18-REQ-08); CAD through the generators, two complete
+builds. **R123** (ACT_EN to GND at Q122's gate) changes from 100 kohm (C25741) to **2 kohm 1 % 0402, UNI-ROYAL
+0402WGF2001TCE, LCSC C4109**, the BOM line already fitted for R130/R133/R178/R180; same R0402 land at F(20.6,70.66)
+-90 degrees, no copper change. With PC1 high the Q122 (AO3400A) gate is VOH x 2k/(1k+2k): 2.19 V at VDD 3.3 V and
+1.92 V at the [DS12110 Rev 8](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf) Table 61 p141 CMOS floor
+VOH >= VDD-0.4 V with 1 % resistor tolerance (r10_parts native budget; VOH is specified at -8 mA, PC1 now sources
+1.1 mA). [AO3400A Rev 3.1 p2](https://www.aosmd.com/res/datasheets/AO3400A.pdf):
+VGS(th) 0.65/1.05/1.45 V; RDS(on) <= 48 mohm is specified only at 2.5 V. That Q122 saturates at 1.92-2.19 V is
+Inference from its load: R121 10 k plus R119 || R120 (50 k, D-R18-02) from ACT_FET_S, <= 0.143 mA. The P-FET
+gate then sits at about -V_S x 50/60 (-6.17 V at 7.4 V); the budget's settled worst-case |VGS| goes 5.19 -> 4.74 V
+and its time to -4.5 V 23.6 -> 31.9 ms, against [AONR21357 Rev 2.1 p2](https://www.aosmd.com/res/datasheets/AONR21357.pdf)
+VGS(th) -1.3/-1.7/-2.3 V and RDS(on) <= 12.3 mohm at -4.5 V (pin_table keeps the >= 100 ms enable-to-check wait).
+Off-state dominance (Calculation): a PC1 weak pull-up (RPU 30/40/50 kohm, DS12110 Rev 8 Table 60 p139) now gives
+ACT_EN <= 0.220 V (was up to 2.75 V); a BAT_FAULT_N bridge (R89 10 k to 3V3) <= 3.6 x 2/13 = 0.554 V (was 2.97 V);
+both below VGS(th) min 0.65 V. The native budget (parts_budget.json load_switch_AUD3: Q122_gate_on_V_nominal_and_
+VOH_floor, Q122_gate_with_30k_pullup_PC1_unconfigured_V, Q122_drain_load_max_A), check_actuators and S-3 pin the
+2 kohm value. The four-stall CH1 fire current moves 1.283013 -> 1.282918 A with D-R18-05's longer IGN run
+(above the 1.125 A J-Tek floor; Calculation, native copper).
+
+**V3V3_SENSE removed.** R62/R63 (10 k/10 k) divided 3V3 into PC3_C. The ADC reference VREF+ (U1.20) and VDDA
+(U1.21) are 3V3A, fed from 3V3 through R164 2.2 ohm (C22939), so the pin read about half scale whatever 3V3 was:
+it carried no 3V3 information beyond what VREFINT/VREFIN_CAL (DS12110 Rev 8 Tables 28-29 pp111-112) and the
+internal VBAT/4 channel with VBAT tied to 3V3 (section 3.19 p37, Table 94 p180) give. circuit.json lists R62/R63
+as removed; the schematic, placement (r10_place.tsv), routing (r10_route_signals) and Fab-reference table drop them;
+U1.18 PC3_C is NC in pin_table.tsv and the binding note; check_r10 (REQUIRED_FITTED / REMOVED) and r10_sch_check's
+obligations follow. Before -> after: R123 100k -> 2k; V3V3_SENSE copper present -> absent (it also removes the
+V3V3_SENSE via that sat 0.251 mm from ACT_EN_MCU); footprints 209 -> 208 with D-R18-02's R119.
+
+## D-R18-02. Give Q121 its own via-free gate-source resistor (2026-10-30)
+
+R18-SAF-02. Before: Q121.4's B.Cu island (Q121.4, the via at (11.800,70.725), TP121 at B(10.5,71.5)) reached
+R120/C120 only through two single vias and F.Cu at R121, so one open via left Q121, the forward-blocking FET,
+without off-bias. After: **R119 100 kohm 1 % 0402 (UNI-ROYAL 0402WGF1003TCE, C25741, R120's BOM line)** at
+B(11.57,71.1) 0 degrees: Q121.4 -> (11.14,70.0) -> R119.1 -> via (11.14,71.7) and R119.2 -> (12.525,71.1) on the
+ACT_FET_S source bridge, all B.Cu with no via between Q121's gate/source pads and R119. TP121 moves to B(4,70)
+between J400 and J1 on a B.Cu stub along y = 70.0 (M-6 1.5 mm and the test-pad 1.0 mm clearances hold). R119 || R120
+= 50 kohm on the shared ACT_GATE node (C120 1 uF, R121 10 k); the gate drive is in D-R18-01. New S-3 sub-rule
+`local_gate_bias`: each load-switch P-FET's gate and source pads must each reach a pad of one 1 k - 100 k
+gate-source resistor through copper on the FET's own layer alone (`same_layer_islands`; a layer change never
+joins). R17 board: Q121 fails; this board: Q120 -> R120, Q121 -> R119. Tests:
+`Synthetic.test_s3_local_gate_bias_needs_same_layer_copper`, `RealBoardSeeds.test_r18_q121_local_bias_seed`.
+
+## D-R18-03. Space the PC1 enable run from reset-high nets (2026-10-30)
+
+R18-SAF-03 (geometry). ACT_EN_MCU F.Cu runs (24.5,51.6) -> (26.62,53.72) -> (26.62,65.344) -> (24.764,67.2) ->
+(21.77,67.2) -> R122.1 (was x 26.5 and (26.5,66.0) -> (25.3,67.2)). BAT_FAULT_N F.Cu moves east to x 27.37
+((26.9,52.45) -> (27.37,52.92) -> (27.37,65.655) -> (23.85,69.175)), still one 45-degree run to R89.2. U11.12's GND
+fan-out via (25.8,65.9) leaves the corridor (r10_fanout.tsv row removed; U11.12 joins C99.2's return at (25.8,66.9)).
+Measured edge gaps, before -> after: ACT_EN_MCU-BAT_FAULT_N 0.171 mm (0.200 mm along 12.4 mm) -> 0.550 mm;
+-V3V3_SENSE via 0.251 mm -> net removed (D-R18-01); -BUZZ_OUT pad LS120.2 (3V3 through the buzzer coil, so a strong
+source) 0.400 -> 0.520 mm; -USB_LIMITED via 0.550 -> 0.670 mm. Remaining enable-chain neighbours under 0.5 mm:
+U1.15/U1.17 pin pitch 0.200 mm (package), the NRST via 0.425 mm (a weak pull-up: <= 0.22 V at ACT_EN with 2 k),
+GND 0.251 mm (fail-safe) and ACT_EN-BAT_ENABLE 0.330 mm at R123.1, unchanged: a bridge loads U9's 470 kohm-fed EN
+with R123's 2 k, so U9 stays off (fail-safe; Calculation).
+
+## D-R18-04. Keep inner-layer copper 1 mm from the load-switch gate and enable barrels (2026-10-30)
+
+R18-SAF-01 / R18-GATE-01. `r10_route_ground.barrel_keepouts` places a fill-only rule area (16-gon, circumscribed,
+radius drill/2 + 1.05 mm, named R18_BARREL_KEEPOUT_<net>_<i>) round every drawn plated via or pad barrel of ACT_GATE
+and ACT_DRV on In1 and In2 (GND turns the P-FETs on) and of BAT_ENABLE, BAT_SW_RETURN, ACT_EN, ACT_EN_MCU and
+PYRO1_GATE_N on In2 only (In1 GND holds U9, Q122 and Q124 off). Barrels present: ACT_GATE vias (16.2,73.3) and
+(11.14,71.7); BAT_ENABLE vias (19.675,66.4), (21.3,68.9), (17.1,82.8); the J400.2 hole. ACT_DRV, ACT_EN, ACT_EN_MCU
+and PYRO1_GATE_N have no barrel. Barrel wall to foreign inner copper, before -> after: ACT_GATE In1 GND 0.251 ->
+1.050 mm and In2 RAW_PROTECTED 0.251 -> 1.050 mm at both vias; BAT_ENABLE In2 RAW_PROTECTED/3V3 0.251 -> 1.050 mm at
+all three (In1 GND 0.251 mm kept: fail-safe); J400.2 In2 RAW_PROTECTED 0.551 -> 1.050 mm and In2 GND 0.850 -> 1.050
+mm (In1 GND 0.551 mm kept). In2 RAW_PROTECTED fill 1253.99 -> 1222.74 mm^2. **S-8** now covers these seven nets
+(`BARREL_NETS`) and counts GND as foreign for `BARREL_GND_HAZARD` = {ACT_GATE, ACT_DRV}. Tests:
+`R3Synthetic.test_s8_load_switch_gate_and_enable_barrels` (the R17 0.251 mm GND geometry at an ACT_GATE barrel
+fails, 1.101 mm passes; GND beside BAT_ENABLE passes, RAW_PROTECTED there fails) and
+`RealBoardSeeds.test_r18_barrel_keepouts_removed` (disabling the areas and refilling restores R17's 0.251 mm on
+this board and S-8 fails). AGENTS section 2 is unchanged.
+
+## D-R18-05. Keep the CH1 sense branches off the fire-current pads (2026-10-30)
+
+R18-SAF-04. R173 (5.1 k, CONT divider top) moves from B(23.0,59.2) 90 degrees to **B(16.87,59.7) -90 degrees**, at
+the OUT end: PYRO1_OUT B.Cu now ends at R173.1 ((10.37,56.6) -> (15.5,56.6) -> (16.87,57.97) -> R173.1), and the
+corridor between R134.2 (RAW_ACT) and Q123.1 (BUZZ_G) carries PYRO1_CONT_MID behind R173 (R173.2 -> (16.87,61.8) ->
+(20.83,61.8) -> (23.0,59.63) -> R129.1, drawn in r10_route_signals.buzzer after the gate lead and BUZZ_OUT via that
+bound it, so the per-family gate judges it in place). The IGN 0.5 mm diagonal moves 0.5 mm south-west ((7.4,59.9)
+-> (11.5,64.0)); BUZZ_G's west lead moves 0.25 mm east to x 17.75 (0.15 mm from Q123.2); C126.2's GND fan-out via
+moves along its own 45-degree stub from (16.178,59.047) to (15.8,59.425). Measured, before -> after: OUT-R134.2 0.250
+-> 2.825 mm; OUT-Q123.1 0.175 -> 1.577 mm; OUT-BUZZ_G track 0.510 mm; OUT-3V3 (D120.3) 0.514 mm; OUT-C126 GND via
+0.550 mm; IGN-R131.1 (OUT) 0.222 -> 0.575 mm. Retained and recorded: MID-R134.2 0.250 mm and MID-Q123.1 0.175 mm. A
+RAW_ACT bridge to MID passes at most 8.4 V/5.1 kohm = 1.6 mA through R173 (no R134 or e-match bypass); it raises the
+CONT reading to 8.4 x 1/6.1 = 1.38 V against about 0.75 V intact, which a firmware upper bound can flag (Inference).
+A BUZZ_G bridge puts at most MID = 0.545 x OUT, about 4.6 V, on PC14 through R162 1 kohm, inside FT VDD + 4 V.
+OUT-GND 0.177 mm (via (15.85,57.70)) and Q124.5-GND via 0.180 mm are unchanged (the owner-accepted default-clearance
+class).
+
+## D-R18-06. Fill the In2 3V3 plane as one piece and gate it (2026-10-30)
+
+R18-RTE-01 / R18-PWR-01. IN2_GND_CH1 loses the tongue (x 17.45-24, y 59.0-62.3) that only R17's PYRO1_OUT crossing
+needed (D-R18-05); IN2_3V3 gains a shoulder (x 20.5-22, y 61.5-64.0) and a bay (x 23.7-27.2, y 61.5-64.6), so both
+In2 USB_LIMITED via ends (22.0,62.25) and (25.6,63.0) lie inside the 3V3 fill; IN2_RAW is notched to match. The In2
+USB_LIMITED route and the 3V3A trunk under U1 are unchanged. Measured: the 3V3 In2 fill was three pieces (1354.23 /
+63.11 / 30.54 mm^2; island A and the finger each had 0 links of >= 0.5 mm outer copper, island A only R17's 0.3 mm
+B.Cu link) and is now **one piece, 1466.52 mm^2**; by polygon deflation the narrowest fill neck joining the former
+island A is about 0.55 mm and the former finger's about 0.50 mm (approximate). New rule **K-plane**: every non-GND inner power fill must be one
+piece, or each residual piece needs >= 2 links, each an outer-layer path of >= 0.5 mm tracks, pads and vias from a
+via or plated pad landing in it to one landing in another piece (GND regions on In2 are separate by design). R17
+board: 2 K-plane issues; this board: 0. Tests: `R3Synthetic.test_k_plane_split_fill_needs_two_links` and
+`RealBoardSeeds.test_r18_split_power_plane`.
+
+## D-R18-07. Straighten SD_MOSI (2026-10-30)
+
+R18-RTE-04. B.Cu 0.2 mm (20.1,32.8) -> (25.005,27.895) -> (25.005,24.3) replaces (20.1,32.8) -> (20.1,27.7) ->
+(21.6,26.2) -> (25.005,26.2) -> (25.005,24.3) (r10_route_sd.py; the J430 offset DX is 0 on this placement, so the
+corner is round 16's qualified (25.005,27.894999) within KiCad's 1 nm grid). SD_MOSI copper 36.098 -> 34.104 mm
+(-1.995 mm), 12 -> 10 segments; DRC, route_check, K-reference and K-region pass.
+
+## D-R18-08. Bourns land for L400; 0.15 mm mask webs on U4 (2026-10-30)
+
+R18-BOM-03: `r10_parts.srp5030t()` now generates M3_SRP5030TA from
+[Bourns SRP5030T p1 "Recommended Layout"](https://www.bourns.com/docs/product-datasheets/srp5030t.pdf) (6.50 mm
+over both lands, 2.50 mm inner gap, 1.8 mm land height): pads 2.0 x 1.8 mm at x = +/-2.25 mm (asserted). L400 pads
+1.8 x 2.5 mm at +/-2.35 mm (2.90 mm inner gap) -> 2.0 x 1.8 mm at +/-2.25 mm (2.50 mm gap, 6.50 mm outer); its
+PORT_SW / PORT_5V3 entries follow the pad centres; jlc_orient's EasyEDA proxy residual goes 0.15 -> 0.05 mm.
+R18-MFG-02: the LSM6DSV320X LGA-14 footprint's solder-mask expansion 0.025 -> 0 mm, so the webs between its
+0.35 mm lands at 0.5 mm pitch go 0.100 -> 0.150 mm; the paste stays -3 % per axis (0.5405 x 0.329 mm, 88.4 % of the land), inside
+[ST TN1383 Rev 1 p6](https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf)'s
+70-90 % stencil range; TN1383's "land + 0.1 mm where applicable" mask opening would leave no web at this pitch.
+`r10_pcb.sync_lands` copies only the pad mask/paste margins from the library to the retained R9 U4 instance and
+asserts that its pad numbers, positions, shapes and sizes already match.
+
+## D-R18-09. Stocked R430; C84 hand-fitted outside the JLC upload (2026-10-30)
+
+R18-BOM-01: R430 (CAM_ILIM, B(36.0,60.0), 0603, nonpolar, land unchanged) changes from YAGEO RC0603FR-0722K6L
+C185349 (stock 17, minimum 3610) to **FOJAN FRC0603F2262TS, LCSC C2999509**: 22.6 kohm +/-1 %, +/-100 ppm/C,
+100 mW, 75 V, thick film, -55..+155 C, JLC extended, stock 84,923, minimum 1, $0.0021 (live JLC component query
+2026-10-30T21:53Z; LCSC page https://www.lcsc.com/product-detail/C2999509.html). circuit.json, the schematic
+fields, check_r10's pinned identity and tools/jlc_easyeda/pads.json follow. R18-REQ-10 / R18-MFG-06: C84
+(MA25V470M8x10) stays on the schematic and board but `export_fab.MANUAL_FIT` routes it to the owner BOM
+(m3_bom_owner.csv, "manual, after both reflow passes (docs/ORDERING.md section 8.2)") and out of the JLC BOM and CPL;
+`jlc_orient --verify-cpl` and S-4 (`MANUAL_FIT`, owner-BOM check) agree, so a C84 row in the JLC upload, or a
+missing owner row, fails (`RealBoardSeeds.test_r18_manual_fit_c84_s4`). JLC BOM 82 -> 81 lines, CPL 199 -> 197 rows.
+Refreshed supplier evidence on this package (`FAB_NET=1 m3_design/r10_fab.sh`; stock_check.json 2026-10-30T23:50:54Z,
+cost_check.json 23:51:50Z, exact codes): the only short line is U4 (0 < 5, consigned per ORDERING section 1); U9 45,
+R430 84,923 (minimum 1); $79.12/board placed plus feeder share for 81 charged codes and $54.33/board parts with
+minimum purchases (the R430 3610-piece minimum is gone), against the $84.41 target before fixed, process, PCB and
+shipping costs; C84 is an owner purchase (about $0.28/board). Not a release pass: stock changes daily.
+
+## D-R18-10. Correct generated schematic and pin-record text (2026-10-30)
+
+R18-REQ-01, R18-REQ-02, R18-SAF-05, R18-MCU-03; text only, no copper. r10_sch.py replaces the R9 MCU notes with the
+R10 map (CAM_PWR_EN PE11/pin41, CAM_FAULT_N EXTI12 PE12/pin42; UART5 PB12/PB13 radio; the loader-driven pins SERVO3
+PA2, VLOGIC_SENSE PA6, SD_MISO PC11, USB PA11/PA12, QSPI_NCS PB6 and I2C1_SDA PB9, matching K-loader) and asserts
+the pins it names; battery_entry names the switch contact J400.1 / J400.2 (BAT_SW_SOURCE / BAT_SW_RETURN) and R166
+0.36 ohm; the stale M3_GH_BM04B_GHS_TBT footprint filters are dropped. pin_table.tsv: PE4 (pin 3) is an
+ACTIVE-HIGH fire command (ODR low before output mode, GPIOE_LCKR locked, no pull-up, R127/R126/R128/C126 reset
+contract: gate <= 0.104 V against a 30 kohm pull-up); PC1 (pin 16) carries R123 2 k; PC3_C (pin 18) is NC. The
+binding note is regenerated from the finished board.

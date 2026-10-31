@@ -125,9 +125,11 @@ if VERIFY:
     worst_all, bad, n_top, n_bot, skipped = 0.0, [], 0, 0, []
     fps = {f.GetReference(): f for f in b.GetFootprints()}
     excluded = pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES | pcbnew.FP_DNP
+    sys.path.insert(0, str(ROOT / 'tools'))
+    from export_fab import MANUAL_FIT          # D-R18-09: hand-fitted after reflow, never in the CPL
     expected = {ref for ref, f in fps.items() if ref and not ref.startswith('#')
                 and f.GetAttributes() & (pcbnew.FP_SMD | pcbnew.FP_THROUGH_HOLE)
-                and not f.GetAttributes() & excluded}
+                and not f.GetAttributes() & excluded and ref not in MANUAL_FIT}
     with open(VERIFY, newline='') as source:
         reader = csv.DictReader(source)
         if len(reader.fieldnames or []) != 5 or set(reader.fieldnames or []) != {'Designator', 'Mid X', 'Mid Y', 'Layer', 'Rotation'}:

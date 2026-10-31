@@ -23,6 +23,11 @@ sys.path.insert(0, str(ROOT / 'quality_audit'))
 from sexpr import read, properties  # noqa: E402
 from fab_manifest import input_hashes, write_manifest  # noqa: E402
 
+# R18-REQ-10 / R18-MFG-06 (D-R18-09): parts that stay fitted on the schematic and board but are soldered by hand after
+# JLC's reflow passes. They leave the JLC BOM and CPL uploads and go to the owner BOM with this note, so no upload can
+# schedule them for reflow while procurement still carries them. check_r10 S-4 and jlc_orient --verify-cpl agree.
+MANUAL_FIT = {'C84': 'manual, after both reflow passes (docs/ORDERING.md section 8.2)'}
+
 CLI = os.environ.get('KICAD_CLI') or shutil.which('kicad-cli') or '/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli'
 if not Path(CLI).exists():
     CLI = '/Applications/KiCad.app/Contents/MacOS/kicad-cli'
@@ -79,7 +84,7 @@ def main():
     missing = sorted({r['ref'] for r in rows if not r['no_bom'] and not r['lcsc']}, key=natural)
     uncorrected = []
     for r in rows:
-        if r['no_bom'] or r['no_pos'] or r['dnp'] or not (r['smd'] or r['tht']):
+        if r['no_bom'] or r['no_pos'] or r['dnp'] or r['ref'] in MANUAL_FIT or not (r['smd'] or r['tht']):
             continue
         correction = corr.get(f"{r['lcsc']}|{r['fp']}")
         if not correction or correction['status'] != 'OK':
@@ -143,13 +148,15 @@ def main():
         tht = any(r['tht'] for r in rows if r['ref'] in refs)
         note = next((r['jlc_asm'] for r in rows if r['ref'] in refs and r['jlc_asm']), '')
         return note or ('THT (JLC THT assembly)' if tht else 'SMT')
-    groups = write_bom(out / f'{stem}_bom_jlc.csv', lambda r: not r['dnp'], jlc_assembly)
-    owner = write_bom(out / f'{stem}_bom_owner.csv', lambda r: r['dnp'], lambda refs: 'owner, after JLC assembly (docs/ORDERING.md)')
+    groups = write_bom(out / f'{stem}_bom_jlc.csv', lambda r: not r['dnp'] and r['ref'] not in MANUAL_FIT, jlc_assembly)
+    owner = write_bom(out / f'{stem}_bom_owner.csv', lambda r: r['dnp'] or r['ref'] in MANUAL_FIT,
+                      lambda refs: next((MANUAL_FIT[x] for x in refs if x in MANUAL_FIT),
+                                        'owner, after JLC assembly (docs/ORDERING.md)'))
     with open(out / f'{stem}_cpl_jlc.csv', 'w', newline='') as f:
         w = csv.writer(f); w.writerow(['Designator', 'Mid X', 'Mid Y', 'Layer', 'Rotation'])
         for r in sorted(rows, key=lambda r: natural(r['ref'])):
             # SMD and through-hole parts: JLC's THT assembly also places from the CPL
-            if r['no_bom'] or r['no_pos'] or r['dnp'] or not (r['smd'] or r['tht']): continue
+            if r['no_bom'] or r['no_pos'] or r['dnp'] or r['ref'] in MANUAL_FIT or not (r['smd'] or r['tht']): continue
             x, y, rot = r['x'], r['y'], r['rot']
             c = corr.get(f"{r['lcsc']}|{r['fp']}")
             ok = c and c['status'] == 'OK'
@@ -170,7 +177,8 @@ def main():
                         'Top' if r['layer'] == 'F.Cu' else 'Bottom', f"{rot % 360:.0f}"])
     missing = sorted({r['ref'] for r in rows if not r['no_bom'] and not r['lcsc']}, key=natural)
     print('wrote', zpath.name, f'{stem}_bom_jlc.csv', f'{stem}_cpl_jlc.csv', *(a_.name for a_ in apaths), 'to', out)
-    print('BOM lines', len(groups), '| placed parts', sum(1 for r in rows if not r['no_bom'] and not r['dnp']),
+    print('BOM lines', len(groups), '| placed parts',
+          sum(1 for r in rows if not r['no_bom'] and not r['dnp'] and r['ref'] not in MANUAL_FIT),
           '| parts without LCSC code:', ', '.join(missing) or 'none')
     print('owner-fitted (not in JLC BOM/CPL):',
           ', '.join(f"{','.join(v)} ({k[1] if k[0] == 'lcsc' else k[3] or k[1]})" for k, v in owner.items()) or 'none')

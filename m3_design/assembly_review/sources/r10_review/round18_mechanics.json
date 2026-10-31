@@ -1,0 +1,102 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round18_mechanics",
+ "reviewer": "claude",
+ "target_commit": "dcbb6c8",
+ "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 4
+ },
+ "findings": [
+  {
+   "id": "R18-MEC-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Plate/strain evidence omits the heaviest, least-supported east-edge terminals; east mid-span has no support",
+   "evidence": {
+    "files": [
+     "tools/plate_model.py (STRAIN_PARTS)",
+     "m3_design/assembly_review/sources/r10_design/masses.json",
+     "docs/M3_R10.md line ~387"
+    ],
+    "reproduced": "tools/plate_model.py --profile r10 on a fresh fit_check report: f1 181.1 Hz pinned D5, 70.5 g, max 100 g static deflection 1.24 mm at (46.0,45.0) (the east edge mid-span) - matches the docs.",
+    "own_calc": "Same plate code at 100 g, D5 pinned: peak strain J410 1359, J420 1348, J9 1312, C431 1232, J400 1155 microstrain (none of these is in the reported strain table, which lists only U4/U1/J121/C84/U5/J1/J122); 0603 R150-R155 beside J122 1328-1417. Deflection at C431 0.973 mm vs 1.30 mm static gap to a 4 mm sled plane (0.33 mm left, no dynamic amplification), C421 0.897 mm. East column carries J122+J410+J420+J9 = 34 g of the 70.5 g (masses.json) on an 82 mm unsupported edge; mid support (4,44.3) is on the light west side. Hypothetical (own calc) support at (42,59.2) instead of (4,44.3): f1 230.4 Hz, max 0.83 mm, C431 deflection 0.09 mm.",
+    "geometry": "J9 body y 40.3-55.82 and J122 body y 62.55-81.57 leave 6.73 mm between bodies at x=42; a 7 mm washer (r 3.5+0.3) does not fit there, a 5.5 mm head with insulating shoulder would."
+   },
+   "impact": "Bounded and already declared unqualified (optional plate model, no release floor, quasi-static only). Gap: the reported strain table hides that the east-edge terminals and the 1210-class C431 sit at 1.2-1.36 millistrain at 100 g, above common MLCC flex-crack guidance (about 1000 microstrain, Inference, not a maker limit for these parts), and that C431 keeps only 0.33 mm to the sled at h=4 mm.",
+   "concrete_fix": "Add J410, J420, J9, J400, C431, C421, C411 and R150-R155 to STRAIN_PARTS and the M3_R10 text; state the east-edge asymmetry; if the owner reopens placement, consider an east mid-span support near (42,59) with C431 relocated, otherwise require first-article vibration/shock and a >=4 mm standoff with underside insulation."
+  },
+  {
+   "id": "R18-MEC-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Top-hardware clearance at the (4,44.3) support is 0.008 mm to the gate and 0.31-0.42 mm to exposed 3V3/NRST/GND lands",
+   "evidence": {
+    "measured": "Native pad boxes, F.Cu with open F.Mask, distance from support centre (4,44.3): LED2.2 GND 3.808 mm, LED1.1 GND 3.860, J2.1 3V3 3.871, J2.3 NRST 3.918. Gate TOP_HARDWARE_RADIUS 3.8 mm (7 mm washer r 3.5 + 0.3) in tools/fit_check.py; fit_check prints 3.808 vs 3.8 minimum.",
+    "docs": "docs/R10_VEHICLE_HANDOFF.md says nylon/covered hardware; no REQUIREMENTS line makes nonconductive top hardware mandatory."
+   },
+   "impact": "A metal M3 washer or screw head within hole tolerance bridges a bare 3V3 or NRST land to GND (bench/flight). Disclosed by wording only; the numeric gate passes by 8 micrometres.",
+   "concrete_fix": "Make nylon (or insulated) screws and washers at all five supports an explicit ORDERING/REQUIREMENTS line, or cover LED1/LED2/J2 lands within 4.5 mm of the support with mask/Kapton at assembly. No board change needed."
+  },
+  {
+   "id": "R18-MEC-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Wire-room figure uses the bare bore while P2 requires a 0.5 mm wall allowance; margin to the 4.95 mm floor is 0.053 mm",
+   "evidence": {
+    "calc": "room = sqrt(R^2 - z^2) - |face - 23| - 0.3 with face x 3.40 / 42.60 (fit_check model boxes), z = 5.0: R=25.4 gives 5.003 mm (matches 5.003012); with P2 radius 24.9 it is 4.503 mm; at the DB125 wire-hole height of about 3 mm read from the maker drawing (DB125 T0-1: body 8.60, hole centred ~3 mm above seating plane, Inference from the drawing scale) it is 5.32 mm (bare) / 4.82 mm (24.9). fit_check prints wire rooms only for J1, J121, J9 (SIDE_ENTRY + J1); J400, J410, J420, J122 are covered only by check_r10 P-11.",
+    "source": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf sheet 1",
+    "docs": "docs/REQUIREMENTS.md P2 (\"wire bend ... fits the bore with 0.5 mm wall allowance\") vs OQ-1 and R10_DECISIONS (room to the bore wall)."
+   },
+   "impact": "Documentation ambiguity about what the owner-accepted 4.95 mm means; wires can also leave vertically, so no demonstrated failure.",
+   "concrete_fix": "State in P2/OQ-1 that wire room is measured to the nominal \u00d850.8 wall at 5 mm height and that the 0.5 mm allowance is not applied to it (or restate the floor); print all seven terminals in fit_check output."
+  },
+  {
+   "id": "R18-MEC-04",
+   "severity": "Minor",
+   "status": "carried (R17-MEC-02, R16-MEC-02)",
+   "title": "Parent ../../docs/VEHICLE.md still describes removed R10 hardware",
+   "evidence": {
+    "file": "../../docs/VEHICLE.md stack row: GH-2 J400 at (10.5,85.5), GH ports on the x=46 edge, GH ports mated 0.03 mm inside the bore, \"frees about 12 mm plus the coax loop zone\" - contradicted by the DB125 terminal layout in docs/R10_VEHICLE_HANDOFF.md."
+   },
+   "impact": "Integrator reading the parent file gets wrong connector, wire-entry and fit facts.",
+   "concrete_fix": "Apply the handoff replacement text in the parent repository workflow."
+  }
+ ],
+ "fix_now_recommendations": [
+  "R18-MEC-02: add nylon/insulated top hardware requirement (docs only)",
+  "R18-MEC-01: add east-edge terminals and C431/C421/C411 to the plate strain table (tool/doc only)",
+  "R18-MEC-03: one-sentence wire-room definition and print all seven terminals in fit_check"
+ ],
+ "rejected_or_closed_candidates": [
+  "IMU axis map: CONFIRMED. U4 B(17.0,45.9) rot 180, pad 1 at (18.21,45.15). Matching the 14 native pad positions to the ST bottom-view figure (DS14623 Rev1 p9 Fig 5) requires rotation only (no mirror, residual 0.30 mm from figure-scale reading; a mirrored fit leaves 1.98 mm). Chip axes: +X_imu = -x_board, +Y_imu = -y_board (aft), +Z_imu = -z (out of the bottom face); frame is right-handed in physical space. Roll about the forward (+y) direction = -gyro_Y; lever arm x = 17.0-23.0 = -6.0 mm, z = -2.06 mm (model box -2.52..-1.6 centre). Pin functions agree with nets (1 MISO, 4 INT1, 5/8 supplies, 12 CS, 13 SCK, 14 MOSI). Centripetal at 1850 deg/s: 0.64 g.",
+  "Bore fit: confirmed with tools/fit_check.py --profile r10 (radius 24.9, tol 0.3, top face on axis): worst margin J3 USB-C 0.89 mm (x -0.45, 0.45 mm west overhang), DB125 bodies 2.98 mm (z 0..8.9), C84 10.8 mm tall 10.58 mm, all 23 solder tails 7.56 mm (z to -3.8), deepest bottom part L1 -4.62 mm / C431 -4.30; tail projection 2.20 mm leaves 1.80 mm to a 4 mm standoff plane. Rows independently re-run, 0 issues.",
+  "Support/keep-out geometry: five supports confirmed (3.7,86),(4,4),(4,44.3),(42,4),(42,86); nearest bottom envelope C32.2 4.536 mm vs 3.5; top keep-out discussed in R18-MEC-02. (3.7,86) 7 mm washer overhangs the west edge by about 0.1 mm (harmless).",
+  "Terminal grouping: west column x=7.4 IGN(J121 y55.85)/switch(J400 65.85)/battery(J1 75.85), east column x=38.6 GPS 15.5/radio 31.5/camera 47.5/servo 71.5; all entries outward (rotation -90 -> west, +90 -> east agree with maker wire-entry +y). Contact-to-contact gap across adjacent east terminals 5.5 mm (>3.5 pitch); west 6.5 mm. Adjacent body gaps only 0.48 mm east / 1.7 mm west (disclosed courtyard overlap of 0.02 mm). Observation, not a finding: the pack is aft but J1 is the forward-most west terminal, so battery leads pass the J121/J400 wire entries in the 5 mm west corridor; no bundle model exists (physical qualification already pending).",
+  "microSD hinge-open window: closed envelope only (J430 B(24,24.3), 15.05x15.7x2.1, bottom z -3.7, 1.9 mm above a 4 mm sled plane); Molex SD-47219-001 does not dimension the open sweep and a hinged lid cannot open against the sled, so card change needs the board unbolted from the sled. Already disclosed (handoff, M3_R10); not new.",
+  "Barometer: U5 B(10.6,49.1), port side faces the sled plane with 2.9 mm model-allocated gap (package-only 3.0); dark side of the board, so light exposure is reduced; vent path/static ports are bay-level items in DESIGN_ASSURANCE, not board-checkable. U5 height wording is carried R17-MEC-04.",
+  "Mass and plate claims reproduced: 70.497598846 g and 181.1 / 256.1 / 287.9 / 407.1 Hz, 1.24 mm max deflection; masses.json allowances look conservative (DB125 3 g/2P, 6 g/4P)."
+ ],
+ "checks_actually_executed": [
+  "sha256 of the board before/after",
+  "tools/fit_check.py --profile r10 (report into probe dir) and a custom top-/bottom-row dump",
+  "pcbnew pad-geometry dump of U4 and a numpy rotation/mirror fit to the ST bottom-view figure",
+  "distance from each support centre to every exposed F.Cu pad",
+  "tools/plate_model.py --profile r10 reproduction plus own point-deflection, per-part strain and a hypothetical-support run on copies in the probe dir",
+  "maker drawings read: DORABO DB125 T0-1, Molex SD-47219-001, ST DS14623 p9 (cached PDFs)"
+ ],
+ "sources": [
+  "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf p9 Fig 5 (cached copy)",
+  "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+  "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf"
+ ],
+ "coverage_limits": [
+  "Pad positions in the datasheet figure were read by pixel; topology (not millimetres) decides the rotation.",
+  "Sled structure, pack, camera shroud, harness bundle and screwdriver envelopes are not modelled anywhere and were not modelled by me.",
+  "R16/R17 U4 routing-stress finding not re-measured.",
+  "MLCC strain limit of 1000 microstrain is a general rule of thumb, not a maker value."
+ ]
+}

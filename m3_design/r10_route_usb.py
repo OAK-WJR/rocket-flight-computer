@@ -105,6 +105,8 @@ def draw(d, feed=False):
 
 def power_feed(d):
     """Draw after In2 rail regions exist, so the stage gate sees their real routing constraints."""
+    # D-R18-06: both via ends sit inside the In2 3V3 shoulder and bay (r10_route_power.IN2_3V3), so this run no longer
+    # cuts the 3V3 fill into pieces.
     d.track('USB_LIMITED','In2',.4,[(16,28),(15,29),(8.5,29),(8.5,30.3),(9.6,31.4),(9.6,50.85),(26.2,50.85),(26.2,61.8),(26.2,62.4),(25.6,63.0)])
     d.track('USB_LIMITED','In2',.4,[(26.2,61.8),(22.45,61.8),(22,62.25)])
     for at in ((25.6,63.0),(22,62.25)):d.via('USB_LIMITED',at)

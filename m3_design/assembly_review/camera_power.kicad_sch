@@ -2626,28 +2626,28 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/product-detail/C185349.html"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C2999509.html"
 			(at 505.46 233.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C185349"
+		(property "LCSC" "C2999509"
 			(at 505.46 233.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "YAGEO"
+		(property "Manufacturer" "FOJAN"
 			(at 505.46 233.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "RC0603FR-0722K6L"
+		(property "Manufacturer Part" "FRC0603F2262TS"
 			(at 505.46 233.68 0)
 			(hide yes)
 			(effects

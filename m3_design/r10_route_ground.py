@@ -52,6 +52,57 @@ TRIMS = (
 )
 
 
+# R18-SAF-01 / R18-GATE-01 (D-R18-04): every plated barrel of the load-switch gate drive and of the arming-switch enable
+# chain keeps >= 1.0 mm (check_r10.S-8) of inner-layer copper clearance, by a fill-only rule area around it on the inner
+# layers where foreign copper is hazardous: In1 GND and In2 for the P-FET gate drive (a short to GND turns Q120 / Q121
+# on), In2 only for the enable chain (In1 GND holds U9 / Q122 off). The areas follow the drawn barrels; no search.
+BARREL_KEEPOUT = {'ACT_GATE': ('In1', 'In2'), 'ACT_DRV': ('In1', 'In2'), 'BAT_ENABLE': ('In2',),
+                  'BAT_SW_RETURN': ('In2',), 'ACT_EN': ('In2',), 'ACT_EN_MCU': ('In2',), 'PYRO1_GATE_N': ('In2',)}
+BARREL_KEEPOUT_GAP = 1.05          # mm: S-8's 1.0 mm plus 0.05 mm for the fill outline
+BARREL_KEEPOUT_SIDES = 16
+
+
+def barrel_keepouts(d):
+    """[(name, layers, centre mm, radius mm)] of the R18 barrel keep-outs, from the board's drawn vias and plated pads."""
+    out = []
+    barrels = []
+    for v in d.board.GetTracks():
+        if v.GetClass() == 'PCB_VIA' and v.GetNetname() in BARREL_KEEPOUT:
+            barrels.append((v.GetNetname(), v.GetPosition(), v.GetDrillValue() / 2))
+    for f in d.board.GetFootprints():
+        for p in f.Pads():
+            if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH and p.GetNetname() in BARREL_KEEPOUT:
+                barrels.append((p.GetNetname(), p.GetPosition(), max(p.GetDrillSize().x, p.GetDrillSize().y) / 2))
+    for i, (net, at, r) in enumerate(sorted(barrels, key=lambda b: (b[0], b[1].x, b[1].y))):
+        out.append((f'R18_BARREL_KEEPOUT_{net}_{i}', BARREL_KEEPOUT[net], (pcbnew.ToMM(at.x), pcbnew.ToMM(at.y)),
+                    pcbnew.ToMM(r) + BARREL_KEEPOUT_GAP))
+    return out
+
+
+def barrel_keepout(d, name, layers, centre, radius):
+    import math
+    z = pcbnew.ZONE(d.board)
+    z.SetIsRuleArea(True)
+    ls = pcbnew.LSET()
+    for layer in layers:
+        ls.AddLayer({'In1': pcbnew.In1_Cu, 'In2': pcbnew.In2_Cu}[layer])
+    z.SetLayerSet(ls)
+    z.SetZoneName(name)
+    z.SetDoNotAllowZoneFills(True)
+    z.SetDoNotAllowTracks(False)
+    z.SetDoNotAllowVias(False)
+    z.SetDoNotAllowPads(False)
+    z.SetDoNotAllowFootprints(False)
+    o = z.Outline()
+    o.NewOutline()
+    rr = radius / math.cos(math.pi / BARREL_KEEPOUT_SIDES)        # circumscribed: every edge >= radius from the centre
+    for k in range(BARREL_KEEPOUT_SIDES):
+        a = 2 * math.pi * (k + .5) / BARREL_KEEPOUT_SIDES
+        o.Append(pcbnew.FromMM(round(centre[0] + rr * math.cos(a), 4)), pcbnew.FromMM(round(centre[1] + rr * math.sin(a), 4)))
+    if not d.dry:
+        d.board.Add(z)
+
+
 def trim(d, name, layer, pts):
     z = pcbnew.ZONE(d.board)
     z.SetIsRuleArea(True)
@@ -101,6 +152,8 @@ def draw(d):
     d.track('GND','B',.3,[d.pad('U402.2'),(31.8,59.0),(32.3,59.5)]);d.via('GND',(32.3,59.5))
     for at in STITCH:
         d.via('GND', at)
+    for name, layers, centre, radius in barrel_keepouts(d):
+        barrel_keepout(d, name, layers, centre, radius)
     if not d.dry:
         for v in d.board.GetTracks():
             if v.GetClass() == 'PCB_VIA':

@@ -144,8 +144,8 @@ REQUIRED_FITTED |= {
     'C19', 'C20', 'C21', 'C22', 'C23', 'C24', 'C25', 'C26', 'C28', 'C30', 'C31', 'C32',
     'C60', 'C81', 'C82', 'C83', 'C85', 'C86', 'C88', 'C90', 'C94', 'C97', 'C98', 'C99',
     'C430', 'C431',
-    'R5', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R32', 'R33', 'R60', 'R61', 'R62',
-    'R63', 'R64', 'R85', 'R86', 'R87', 'R88', 'R89', 'R90', 'R91', 'R92', 'R104', 'R105',
+    'R5', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R32', 'R33', 'R60', 'R61',
+    'R64', 'R85', 'R86', 'R87', 'R88', 'R89', 'R90', 'R91', 'R92', 'R104', 'R105',
     'R110', 'R162', 'R163', 'R164', 'R405'}
 CONNECTORS = {
     'J1': ('BAT_IN', 'GND'), 'J400': ('BAT_SW_SOURCE', 'BAT_SW_RETURN'),
@@ -171,6 +171,7 @@ AUD_REMOVED = {'J123', 'R160', 'R161', 'C160', 'D122', 'TP84', 'TP85', 'TP86', '
                'U412', 'U422', 'R443', 'R453', 'C441', 'C442', 'C451', 'C452'}
 REMOVED |= AUD_REMOVED
 REMOVED |= BUS_SENSE_REMOVED | PORT_REMOVED
+REMOVED |= {'R62', 'R63'}            # D-R18-01 (R18-REQ-08): V3V3_SENSE divider removed; PC3_C is NC
 
 
 def population(text, required=REQUIRED_FITTED, schematic=False):
@@ -337,7 +338,8 @@ def port_power(pins, values, codes):
                  7: 'PORT_5V3', 8: 'PORT_LDO_SS', 9: 'PORT_5V3', 10: 'PORT_5V3', 11: 'GND'}}
     pinned = {'U400': 'C2071044', 'U401': 'C2878140'}
     for port, switch, rb, supply, out, limit, code, mcu in (
-            ('CAM', 'U402', 430, 'PORT_5V3', 'CAM_5V', '22.6k 1%', 'C185349', ('41', '42')),):
+            # D-R18-09 (R18-BOM-01): FOJAN FRC0603F2262TS, the stocked exact 22.6 kohm 1% 0603 drop-in.
+            ('CAM', 'U402', 430, 'PORT_5V3', 'CAM_5V', '22.6k 1%', 'C2999509', ('41', '42')),):
         expected[switch] = {1: supply, 2: 'GND', 3: f'{port}_PWR_EN', 4: f'{port}_FAULT_N',
                             5: f'{port}_ILIM', 6: out}
         pinned[switch] = 'C55266'
@@ -754,7 +756,7 @@ def functional(text):
 # R1-07: the safety parts that must be assembled (the task list, plus the sole bus-sense divider, the load-switch
 # driver and the cold pull-up, all of which the F8 functions rely on). REQUIRED_FITTED (above) adds every R10 contract
 # part and check_actuators' pinned parts.
-SAFETY_FITTED = {'R134', 'R126', 'R127', 'R128', 'C126', 'Q124', 'Q120', 'Q121', 'R120', 'C120', 'R121', 'Q122',
+SAFETY_FITTED = {'R134', 'R126', 'R127', 'R128', 'C126', 'Q124', 'Q120', 'Q121', 'R119', 'R120', 'C120', 'R121', 'Q122',
                  'J400', 'R80', 'R165', 'R122', 'R123', 'J121', 'D120', 'R129', 'R130', 'R131', 'R132', 'R133', 'R173', 'R175', 'R178', 'R180',
                  'C127', 'C128', 'C129'}
 REQUIRED_FITTED |= SAFETY_FITTED
@@ -863,8 +865,13 @@ def k_rules(ctx):
 # OQ-1 accepted by the owner 2026-10-28; physical fit remains outstanding.
 WIRE_ROOM_R10 = 4.95
 
-# S-8 barrels (R3-SAF-01); the former PYRO1_BUS is now RAW_ACT.
-BARREL_NETS = ('RAW_ACT', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE')
+# S-8 barrels (R3-SAF-01); the former PYRO1_BUS is now RAW_ACT. R18-SAF-01 / R18-GATE-01 (D-R18-04) add the load-switch
+# gate drive and the arming-switch enable chain. GND is hazardous only for the P-FET gate drive: a short from ACT_GATE /
+# ACT_DRV to GND turns Q120 / Q121 on with PC1 low; GND on the N-FET gate, the enable chain (U9 EN, J400.2, Q122's gate
+# and its MCU pin) or the pyro bus nodes holds them off.
+BARREL_NETS = ('RAW_ACT', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE', 'ACT_GATE', 'ACT_DRV', 'BAT_ENABLE', 'BAT_SW_RETURN',
+               'ACT_EN', 'ACT_EN_MCU', 'PYRO1_GATE_N')
+BARREL_GND_HAZARD = frozenset({'ACT_GATE', 'ACT_DRV'})
 BARREL_GAP = 1.0                # mm, plated barrel wall to foreign In1 / In2 copper
 # S-9 (R3-GATE-07): the current path between its power terminals. AUD-6 sets RAW_ACT / IGN / OUT to 0.5 mm;
 # audit 2 item 3 adds pulsed ACT_FET_S. BAT_IN retains 1.0 mm; the seven named source bridges remain measured.
@@ -1429,6 +1436,62 @@ def gate_network(ctx, fet, roles, label):
     return issues, dict(gate=gate, source=source, values=values, **found)
 
 
+def same_layer_islands(board, nets, layer):
+    """{pad label 'REF.N': island id} of the copper of `nets` on `layer` alone (tracks, pads and via rings on that layer,
+    joined where they touch); a layer change never joins two islands, so an open via barrel cannot hide behind it."""
+    import pcbnew
+    items = []
+    for t in board.GetTracks():
+        if t.GetNetname() in nets and t.IsOnLayer(layer):
+            items.append((t.GetNetname(), t.GetEffectiveShape(layer), None))
+    for f in board.GetFootprints():
+        for p in f.Pads():
+            if p.GetNetname() in nets and p.IsOnLayer(layer):
+                items.append((p.GetNetname(), p.GetEffectiveShape(layer), f'{f.GetReference()}.{p.GetNumber()}'))
+    parent = list(range(len(items)))
+
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+    for a in range(len(items)):
+        for b in range(a + 1, len(items)):
+            if items[a][0] == items[b][0] and pcbnew.SHAPE.Collide(items[a][1], items[b][1], 0):
+                parent[find(a)] = find(b)
+    return {label: find(i) for i, (_, _, label) in enumerate(items) if label}
+
+
+def local_gate_bias(ctx, fet, roles):
+    """R18-SAF-02 / D-R18-02: the FET's gate pad and source pads each reach one pad of a 1 k - 100 k gate-source
+    resistor through copper on the FET's own layer, so one open via or barrel cannot float the gate."""
+    import pcbnew
+    f = ctx.fps.get(fet)
+    if f is None:
+        return [f'S-3: {fet} missing'], []
+    nets = {role: {p.GetNetname() for p in f.Pads() if p.GetNumber() in nums} for role, nums in roles.items()}
+    if len(nets.get('G', ())) != 1 or len(nets.get('S', ())) != 1:
+        return [], []                    # gate_network reports the pad-net fault itself
+    gate, source = next(iter(nets['G'])), next(iter(nets['S']))
+    layer = pcbnew.B_Cu if f.IsFlipped() else pcbnew.F_Cu
+    island = same_layer_islands(ctx.board, {gate, source}, layer)
+    g = island.get(f'{fet}.{roles["G"][0]}')
+    s = {island.get(f'{fet}.{n}') for n in roles['S']}
+    found = []
+    for ref, nn in sorted(part_nets(ctx.board).items()):
+        r = ctx.fps[ref]
+        if nn != {gate, source} or not ref.startswith('R') or len(r.Pads()) != 2 or \
+                not PULL_RANGE[0] <= (parse_value(r.GetValue(), 'R') or 0) <= PULL_RANGE[1]:
+            continue
+        pads = {p.GetNetname(): island.get(f'{ref}.{p.GetNumber()}') for p in r.Pads()}
+        if pads.get(gate) == g and pads.get(source) in s:
+            found.append(ref)
+    if not found:
+        return [f'S-3: load switch {fet}: no gate-source resistor of 1 k - 100 k joined to its gate and source pads by '
+                f'{ctx.board.GetLayerName(layer)} copper alone (an open via barrel would float the gate)'], found
+    return [], found
+
+
 def s3(ctx):
     issues, ev = [], {}
     found, ev['Q124'] = gate_network(ctx, 'Q124', NFET_ROLES, 'pyro FET')
@@ -1460,6 +1523,8 @@ def s3(ctx):
     for fet in ('Q120', 'Q121'):
         found, ev[fet] = gate_network(ctx, fet, PFET_ROLES, 'load switch')
         issues += found
+        local, ev[fet]['local_bias'] = local_gate_bias(ctx, fet, PFET_ROLES)
+        issues += local
     pins = {f'{ref}.{p.GetNumber()}': p.GetNetname() for ref, f in ctx.fps.items() for p in f.Pads()}
     want = {'U1.16': 'ACT_EN_MCU', 'R122.1': 'ACT_EN_MCU', 'R122.2': 'ACT_EN', 'R123.1': 'ACT_EN',
             'R123.2': 'GND', 'Q122.1': 'ACT_EN', 'Q122.2': 'GND', 'Q122.3': 'ACT_DRV'}
@@ -1469,7 +1534,7 @@ def s3(ctx):
     for net, refs in (('ACT_EN_MCU', {'U1', 'R122'}), ('ACT_EN', {'R122', 'R123', 'Q122'})):
         if net_parts(ctx.board).get(net) != refs:
             issues.append(f'S-3: independent load-switch enable {net} must touch only {sorted(refs)}')
-    for ref, value in (('R122', 1e3), ('R123', 100e3)):
+    for ref, value in (('R122', 1e3), ('R123', 2e3)):        # D-R18-01 (R18-MCU-01): R123 dominates a PC1 pull-up
         f = ctx.fps.get(ref)
         if f is None or parse_value(f.GetValue(), 'R') != value:
             issues.append(f'S-3: independent load-switch enable {ref} must be {value:g} ohm')
@@ -1521,8 +1586,25 @@ def s4(ctx):
                                          'Manufacturer Part': fields.get('Manufacturer Part', ''),
                                          'Footprint': str(part.GetFPID().GetLibItemName())}
                 ev['BOM_native_identities'] = len(native_parts)
-            issues += [f'{name}: {i}' for i in assembly_population(Path(path).read_text(), require_qty=name == 'BOM',
-                                                                 native_parts=native_parts)]
+            # D-R18-09 (R18-REQ-10 / R18-MFG-06): hand-fitted parts stay required on the board and schematic, are absent
+            # from the JLC uploads and present in the owner BOM beside them.
+            from export_fab import MANUAL_FIT
+            text = Path(path).read_text()
+            issues += [f'{name}: {i}' for i in assembly_population(text, REQUIRED_FITTED - set(MANUAL_FIT),
+                                                                 require_qty=name == 'BOM', native_parts=native_parts)]
+            listed = {ref.strip() for row in csv.DictReader(io.StringIO(text))
+                      for ref in (row.get('Designator') or '').split(',') if ref.strip()}
+            issues += [f'{name}: {ref} is fitted by hand after reflow ({MANUAL_FIT[ref]}) but is in the JLC upload'
+                       for ref in sorted(set(MANUAL_FIT) & listed)]
+            if name == 'BOM':
+                owner = Path(path).with_name(Path(path).name.replace('_bom_jlc', '_bom_owner'))
+                rows = list(csv.DictReader(io.StringIO(owner.read_text()))) if owner.is_file() else []
+                owned = {ref.strip(): row for row in rows for ref in (row.get('Designator') or '').split(',')}
+                for ref in sorted(MANUAL_FIT):
+                    row, want = owned.get(ref), native_parts.get(ref, {})
+                    if row is None or any((row.get(k) or '').strip() != v for k, v in want.items()):
+                        issues.append(f'owner BOM: hand-fitted {ref} missing or not the native part {want}')
+                ev['manual_fit'] = {ref: MANUAL_FIT[ref] for ref in sorted(MANUAL_FIT)}
             ev[name] = str(path)
         else:
             ev[name] = 'not supplied (board and schematic flags checked)'
@@ -1578,9 +1660,9 @@ def barrel_shapes(board, nets=BARREL_NETS):
     return out
 
 
-def s8(ctx, gap=BARREL_GAP):
-    """R3-SAF-01: no In1 / In2 track or zone fill of a net other than GND (or the barrel's own net) within `gap` of a
-    pyro barrel wall."""
+def s8(ctx, gap=BARREL_GAP, gnd_hazard=BARREL_GND_HAZARD):
+    """R3-SAF-01 / R18-SAF-01: no In1 / In2 track or zone fill of another net within `gap` of a barrel wall of a
+    BARREL_NETS net; GND counts only for the nets in `gnd_hazard` (the P-FET gate drive)."""
     import pcbnew
     import check_r8 as r8
     inner = (pcbnew.In1_Cu, pcbnew.In2_Cu)
@@ -1589,10 +1671,11 @@ def s8(ctx, gap=BARREL_GAP):
     # Every manufactured copper representation counts, including drawings, text and footprint zones.
     others = [(label, net, lay, shape, pad)
               for _, lay, shape, _, pad, net, label in copper_nodes(ctx.board)
-              if lay in inner and net != 'GND']
+              if lay in inner]
     for blabel, bnet, bshape in barrels:
         for label, net, lay, shape, obj in others:
-            if net == bnet or not pcbnew.SHAPE.Collide(bshape, shape, pcbnew.FromMM(gap) - 1):
+            if net == bnet or (net == 'GND' and bnet not in gnd_hazard) \
+                    or not pcbnew.SHAPE.Collide(bshape, shape, pcbnew.FromMM(gap) - 1):
                 continue
             g = r8.min_gap(bshape, shape, gap + 1)
             g = 0.0 if g is None else g
@@ -2810,6 +2893,91 @@ def k_region(ctx):
     return [f'K-region: {i}' for i in issues], ev
 
 
+# K-plane (R18-RTE-01 / R18-PWR-01, D-R18-06): a power plane on an inner layer must fill as one piece; a residual
+# same-net piece is acceptable only with >= PLANE_LINKS links, each an outer-layer copper path of tracks >= PLANE_LINK_W
+# (plus pads and vias) from a via or plated pad landing in that piece to one landing in another piece. GND regions on
+# In2 (CH1, Y1) are separate GND islands by design and stitched by vias, so GND is out of scope.
+PLANE_LINKS = 2
+PLANE_LINK_W = 0.5             # mm
+PLANE_LAYERS = ('In1.Cu', 'In2.Cu')
+
+
+def plane_pieces(board, layers=PLANE_LAYERS, skip=frozenset({'GND'})):
+    """{(net, layer name): [SHAPE_POLY_SET of one piece, ...]} of every non-GND zone net's merged inner fill."""
+    import pcbnew
+    merged = {}
+    for z in board.Zones():
+        if z.GetIsRuleArea() or not z.GetNetname() or z.GetNetname() in skip:
+            continue
+        for name in layers:
+            lid = board.GetLayerID(name)
+            if z.IsOnLayer(lid) and z.HasFilledPolysForLayer(lid):
+                merged.setdefault((z.GetNetname(), name), pcbnew.SHAPE_POLY_SET()).BooleanAdd(
+                    z.GetFilledPolysList(lid))
+    return {key: [ps.UnitSet(i) for i in range(ps.OutlineCount())] for key, ps in merged.items()}
+
+
+def plane_links(board, net, pieces, width=PLANE_LINK_W):
+    """{piece index: number of its landing vias / plated pads whose outer-layer copper (tracks >= `width`, pads, vias)
+    reaches a via or plated pad landing in another piece}."""
+    import pcbnew
+    outer = (pcbnew.F_Cu, pcbnew.B_Cu)
+    items, landing = [], {}
+    for t in board.GetTracks():
+        if t.GetNetname() != net:
+            continue
+        if t.GetClass() == 'PCB_VIA':
+            items.append(('via', t, [(lid, t.GetEffectiveShape(lid)) for lid in outer]))
+        elif t.GetLayer() in outer and pcbnew.ToMM(t.GetWidth()) >= width - EPS:
+            items.append(('track', t, [(t.GetLayer(), t.GetEffectiveShape(t.GetLayer()))]))
+    for f in board.GetFootprints():
+        for p in f.Pads():
+            if p.GetNetname() == net:
+                items.append(('pad', p, [(lid, p.GetEffectiveShape(lid)) for lid in outer if p.IsOnLayer(lid)]))
+    for k, (kind, obj, _) in enumerate(items):
+        if kind == 'via' or (kind == 'pad' and obj.GetAttribute() == pcbnew.PAD_ATTRIB_PTH):
+            for i, piece in enumerate(pieces):
+                if piece.Contains(obj.GetPosition()):
+                    landing[k] = i
+    parent = list(range(len(items)))
+
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+    for a in range(len(items)):
+        for b in range(a + 1, len(items)):
+            if any(la == lb and pcbnew.SHAPE.Collide(sa, sb, 0) for la, sa in items[a][2] for lb, sb in items[b][2]):
+                parent[find(a)] = find(b)
+    reach = {}
+    for k, i in landing.items():
+        reach.setdefault(find(k), set()).add(i)
+    return {i: sum(1 for k, j in landing.items() if j == i and len(reach[find(k)]) > 1) for i in range(len(pieces))}
+
+
+def plane_issues(board, links=PLANE_LINKS):
+    issues, ev = [], {}
+    for (net, layer), pieces in sorted(plane_pieces(board).items()):
+        areas = [round(p.Area() / 1e12, 2) for p in pieces]
+        ev[f'{net} {layer}'] = areas
+        if len(pieces) < 2:
+            continue
+        main = max(range(len(pieces)), key=lambda i: areas[i])
+        count = plane_links(board, net, pieces)
+        for i, area in enumerate(areas):
+            if i != main and count[i] < links:
+                bb = pieces[i].BBox()
+                issues.append(f'K-plane: {net} on {layer} fills as {len(pieces)} pieces; the {area} mm^2 piece at '
+                              f'({pcbnew_mm(bb.GetCenter().x):.2f}, {pcbnew_mm(bb.GetCenter().y):.2f}) has '
+                              f'{count[i]} link(s) of >= {PLANE_LINK_W} mm outer copper (minimum {links})')
+    return issues, dict(pieces_mm2=ev)
+
+
+def k_plane(ctx):
+    return plane_issues(ctx.board)
+
+
 def sd_bypass(board):
     """Locality bounds are engineering layout constraints, not a measured card supply qualification."""
     import check_r7 as r7
@@ -2865,7 +3033,7 @@ RULES = [
     ('S-5', 'J400 screw arming switch and protected EN contacts', lambda c, s: s5(c)),
     ('S-6', 'external ports apart from pyro / arming copper', lambda c, s: s6(c)),
     ('S-7', 'J122 five signal/reference terminal contacts (O3/O6)', lambda c, s: s7(c)),
-    ('S-8', 'In1 / In2 copper >= 1.0 mm from pyro barrels (R3-SAF-01)', lambda c, s: s8(c)),
+    ('S-8', 'In1 / In2 copper >= 1.0 mm from pyro, load-switch gate and enable barrels (R3-SAF-01 / R18-SAF-01)', lambda c, s: s8(c)),
     ('S-9', 'fire/source copper >= 0.5 mm; BAT_IN >= 1.0 mm (AUD-6 / audit 2)', lambda c, s: s9(c)),
     ('K-contract', 'R10 netlist contract', lambda c, s: k_contract(c)),
     ('K-binding', 'saved record-only binding evidence matches native board', lambda c, s: k_binding(c)),
@@ -2886,6 +3054,7 @@ RULES = [
     ('K-inner', 'In1 GND only, In2 power and GND only', lambda c, s: k_inner_signal(c)),
     ('K-reference', 'critical signal reference copper', lambda c, s: k_reference(c)),
     ('K-region', 'critical B.Cu runs over one In2 plane region (R4-RTE-02)', lambda c, s: k_region(c)),
+    ('K-plane', 'inner power fills one piece, else >= 2 links of >= 0.5 mm (R18-RTE-01)', lambda c, s: k_plane(c)),
     ('K-fill', 'saved zone fills are current (refill a copy, R4-GATE-05)', lambda c, s: k_fill(c)),
     ('K-rules', 'm3.kicad_dru pinned, board design rules floor (R4-GATE-01)', lambda c, s: k_rules(c)),
     ('K-width', 'BAT_IN / RAW_PROTECTED width floor (R8-GATE-04)', lambda c, s: k_width(c.board)),

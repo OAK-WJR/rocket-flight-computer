@@ -48,6 +48,37 @@ def strip(board):
             board.Delete(zone)
 
 
+# D-R18-08 (R18-MFG-02): retained R9 footprints whose library land changed in R10. Only the pads' local mask / paste
+# margins follow the library (U4: mask expansion 0 for 0.15 mm webs; paste ratio unchanged at -3 % per axis, 88.4 % of
+# the land, inside ST TN1383's 70-90 %); the pad numbers, positions, shapes and sizes must already agree (asserted).
+# r10_post.sync_silk then holds the instance to KiCad's own library comparison.
+LAND_SYNC = ('U4',)
+
+
+def sync_lands(board, lib, refs=LAND_SYNC):
+    synced = []
+    for ref in refs:
+        f = board.FindFootprintByReference(ref)
+        new = pcbnew.FootprintLoad(str(lib), str(f.GetFPID().GetLibItemName()))
+        assert new is not None, ref
+        new.SetParent(board)
+        if f.IsFlipped():
+            new.Flip(new.GetPosition(), pcbnew.FLIP_DIRECTION_TOP_BOTTOM)
+        new.SetOrientation(f.GetOrientation())
+        new.SetPosition(f.GetPosition())
+        lib_pads = {p.GetNumber(): p for p in new.Pads()}
+        assert sorted(lib_pads) == sorted(p.GetNumber() for p in f.Pads()), f'{ref}: pad numbers differ from library'
+        for p in f.Pads():
+            q = lib_pads[p.GetNumber()]
+            assert (p.GetPosition(), p.GetSize(), p.GetShape()) == \
+                (q.GetPosition(), q.GetSize(), q.GetShape()), f'{ref}.{p.GetNumber()}: land differs'
+            p.SetLocalSolderMaskMargin(q.GetLocalSolderMaskMargin())
+            p.SetLocalSolderPasteMargin(q.GetLocalSolderPasteMargin())
+            p.SetLocalSolderPasteMarginRatio(q.GetLocalSolderPasteMarginRatio())
+        synced.append(ref)
+    return synced
+
+
 def build(project, table):
     board = source_board()
     pcbnew.KIID.SeedGenerator(10103)
@@ -69,6 +100,7 @@ def build(project, table):
         for p in board.FindFootprintByReference(ref).Pads():
             if p.GetNetname() == 'GND':
                 p.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_THERMAL)
+    print(f'r10_pcb: library land margins: {" ".join(sync_lands(board, project / "kilib" / "rocket.pretty"))}')
     rows, features = r9_pcb.read_place(table, tie_count=0)
     r9_pcb.outline(board, features)
     r9_pcb.place(board, rows)

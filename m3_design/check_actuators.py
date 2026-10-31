@@ -507,12 +507,18 @@ def check(text, dru=None, profile="r9"):
             and val.get('R122') == '1k' and fpname.get('R122') == 'rocket:R0402',
             'R10 R122 must be 1k 0402 from ACT_EN_MCU to ACT_EN')
         req(members.get('ACT_EN_MCU') == {'U1.16', 'R122.1'}, 'R10 ACT_EN_MCU must be only U1.16 (PC1) and R122.1')
-        req(val.get('R123') == '100k', 'R10 R123 must be the 100k ACT_EN pull-down')
+        # D-R18-01 (R18-MCU-01): 2k dominates a 30-50 kohm PC1 pull-up (gate <= 0.22 V at 3.6 V) and still gives
+        # about 2.2 V at PC1 high; D-R18-02 (R18-SAF-02): R119 is Q121's own via-free gate-source 100k.
+        req(val.get('R123') == '2k', 'R10 R123 must be the 2k ACT_EN pull-down')
+        req(val.get('R119') == '100k' and part.get('R119') == 'C25741' and fpname.get('R119') == 'rocket:R0402',
+            'R10 R119 must be the 100k 0402 (C25741) Q121 gate-source resistor')
     else:
         req({pin.get('R122.1'), pin.get('R122.2')} == {'RAW_PROTECTED', 'ACT_EN'}, 'ACT_EN divider from RAW_PROTECTED')
     req(pin.get('Q122.1') == 'ACT_EN' and pin.get('Q122.3') == 'ACT_DRV', 'Q122 drives the load-switch gate')
     # 8a (pass 9, actuators F3): every load-switch net exactly, Q122's source and the enable divider's foot on GND
     for n, want in ACT_NETS.items():
+        if r10 and n in ('ACT_GATE', 'ACT_FET_S'):
+            want = want | {'R119.1' if n == 'ACT_GATE' else 'R119.2'}
         if r10 and n == 'RAW_ACT':
             want = (want - {'C121.1', 'C150.1', 'C151.1', 'J122.2', 'J122.5', 'J122.8', 'J122.11', 'J124.2', 'R177.1'}) | {'R134.2', 'R132.1'}
         req(members.get(n) == want, f'{n} must be exactly {sorted(want)} (is {sorted(members.get(n, ()))})')
@@ -626,6 +632,8 @@ def check(text, dru=None, profile="r9"):
             code = 'C168925'  # OQ-2: qualified 0.36 ohm damper on the existing UNI-ROYAL 2512 land.
         if r10 and ref == 'R122':
             code = 'C11702'  # Independent PC1 load-switch enable, 1k 0402.
+        if r10 and ref == 'R123':
+            code = 'C4109'  # D-R18-01: 2k 0402 on the existing R130/R133 BOM line.
         if r10 and ref in ('R150', 'R151', 'R152', 'R153'):
             code = 'C21190'  # AUD-7: 0603 100mW, 72mW worst fault at 8.4V / 980ohm.
         if r10 and ref == 'C120':

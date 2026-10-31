@@ -830,7 +830,11 @@ class Synthetic(SyntheticBase):
         self.part('R121', [('1', 0, 0, 'ACT_GATE'), ('2', 1.5, 0, 'ACT_DRV')], at=(30, 74))
         self.part('Q122', [('1', 0, 0, 'ACT_EN'), ('2', 1, 0, 'GND'), ('3', 2, 0, 'ACT_DRV')], at=(35, 65))
         self.part('R122', [('1', 0, 0, 'ACT_EN_MCU'), ('2', 1.5, 0, 'ACT_EN')], at=(35, 68)).SetValue('1k')
-        self.part('R123', [('1', 0, 0, 'ACT_EN'), ('2', 1.5, 0, 'GND')], at=(35, 72)).SetValue('100k')
+        self.part('R123', [('1', 0, 0, 'ACT_EN'), ('2', 1.5, 0, 'GND')], at=(35, 72)).SetValue('2k')
+        # D-R18-02: each P-FET's gate-source resistor joined to its gate and source pads by its own layer's copper
+        self.part('R119', [('1', 0, 0, 'ACT_GATE'), ('2', 1.5, 0, 'ACT_FET_S')], at=(24, 53)).SetValue('100k')
+        self.local = [self.track((23, 50), (24, 53), 'ACT_GATE'), self.track((22, 50), (25.5, 53), 'ACT_FET_S'),
+                      self.track((23, 40), (31.5, 70), 'ACT_GATE'), self.track((22, 40), (30, 70), 'ACT_FET_S')]
 
     def test_s3_gate_networks(self):
         self.gates()
@@ -863,6 +867,22 @@ class Synthetic(SyntheticBase):
             f.SetValue(old)
         self.board.Remove(self.board.FindFootprintByReference('R123'))
         self.assertTrue(any('R123' in i for i in gate.s3(self.ctx())[0]))
+
+    def test_s3_local_gate_bias_needs_same_layer_copper(self):
+        """R18-SAF-02 / D-R18-02: a gate-source resistor reached only through a layer change (or not at all) leaves the
+        P-FET gate floating when that via opens; S-3 requires one joined by the FET's own layer."""
+        self.gates()
+        self.assertEqual(gate.s3(self.ctx())[0], [])
+        self.board.Remove(self.local[0])                                  # R119 now reaches Q121's gate by no copper
+        found = gate.s3(self.ctx())[0]
+        self.assertTrue(any('load switch Q121: no gate-source resistor' in i and 'F.Cu copper alone' in i
+                            for i in found), found)
+        self.assertFalse(any('Q120: no gate-source resistor' in i for i in found), found)
+        self.via(23.5, 51.5, 'ACT_GATE')                                  # a layer change does not count
+        self.track((23, 50), (23.5, 51.5), 'ACT_GATE', pcbnew.B_Cu); self.track((23.5, 51.5), (24, 53), 'ACT_GATE', pcbnew.B_Cu)
+        self.assertTrue(any('Q121: no gate-source resistor' in i for i in gate.s3(self.ctx())[0]))
+        self.track((23, 50), (24, 53), 'ACT_GATE')
+        self.assertEqual(gate.s3(self.ctx())[0], [])
 
     def test_s3_round5_values_and_mcu_pull(self):
         """R5-SAF-02: series 100 ohm - 10 k, no unitless capacitor value, an MCU-side pull (R127) of 100 ohm - 100 k."""
@@ -1568,6 +1588,51 @@ class R3Synthetic(SyntheticBase):
         self.part('X3', [('1', 0, 0, 'PYRO1_IGN')], at=(10, 50), tht=True)     # a plated pad hole counts too
         self.track((10.6, 48), (10.6, 52), 'SERVO1_OUT', pcbnew.In1_Cu)
         self.assertTrue(any('X3.1 hole' in i and 'In1.Cu' in i for i in gate.s8(self.ctx())[0]))
+
+    def test_s8_load_switch_gate_and_enable_barrels(self):
+        """R18-SAF-01 / R18-GATE-01: the round-17 geometry (an ACT_GATE barrel 0.251 mm from In1 GND) fails, because GND
+        on a P-FET gate turns Q120 / Q121 on; the same GND beside a BAT_ENABLE barrel passes (it holds U9 off) while
+        RAW_PROTECTED there fails; 1.1 mm clears both."""
+        self.assertTrue({'ACT_GATE', 'ACT_DRV', 'BAT_ENABLE', 'BAT_SW_RETURN'} <= set(gate.BARREL_NETS))
+        self.assertEqual(gate.BARREL_GND_HAZARD, frozenset({'ACT_GATE', 'ACT_DRV'}))
+        self.via(30, 30, 'ACT_GATE', d=0.5, drill=0.3)
+        t = self.track((30.501, 28), (30.501, 32), 'GND', pcbnew.In1_Cu)     # wall 0.15, track edge 0.401: 0.251 mm
+        found = gate.s8(self.ctx())[0]
+        self.assertTrue(any('GND copper on In1.Cu is 0.251 mm' in i and 'ACT_GATE' in i for i in found), found)
+        t.SetStart(self.P(31.351, 28)); t.SetEnd(self.P(31.351, 32))      # 1.101 mm
+        self.assertEqual(gate.s8(self.ctx())[0], [])
+        self.via(10, 60, 'BAT_ENABLE', d=0.5, drill=0.3)
+        e = self.track((10.501, 58), (10.501, 62), 'GND', pcbnew.In1_Cu)
+        self.assertEqual(gate.s8(self.ctx())[0], [])                       # GND is fail-safe for the enable chain
+        e.SetNet(self.board.FindNet('RAW_PROTECTED')); e.SetLayer(pcbnew.In2_Cu)
+        self.assertTrue(any('RAW_PROTECTED copper on In2.Cu is 0.251 mm' in i and 'BAT_ENABLE' in i
+                            for i in gate.s8(self.ctx())[0]))
+
+    def test_k_plane_split_fill_needs_two_links(self):
+        """R18-RTE-01 / R18-PWR-01 (D-R18-06): a power fill in two pieces fails with one >= 0.5 mm link, passes with
+        two, and a 0.3 mm link does not count; one piece always passes."""
+        def zone(x0, x1):
+            z = pcbnew.ZONE(self.board); z.SetLayer(pcbnew.In2_Cu); z.SetNet(self.board.FindNet('3V3'))
+            o = z.Outline(); o.NewOutline()
+            for x, y in ((x0, 0), (x1, 0), (x1, 10), (x0, 10)):
+                o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+            fill = pcbnew.SHAPE_POLY_SET(); fill.NewOutline()
+            for x, y in ((x0, 0), (x1, 0), (x1, 10), (x0, 10)):
+                fill.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+            z.SetFilledPolysList(pcbnew.In2_Cu, fill); z.SetIsFilled(True); self.board.Add(z)
+            return z
+        zone(0.5, 10)
+        self.assertEqual(gate.plane_issues(self.board)[0], [])
+        zone(12, 20)
+        self.via(5, 5, '3V3'); self.via(15, 5, '3V3')
+        self.track((5, 5), (15, 5), '3V3', pcbnew.F_Cu, width=0.5)
+        found = gate.plane_issues(self.board)[0]
+        self.assertTrue(any('3V3 on In2.Cu fills as 2 pieces' in i and '1 link(s)' in i for i in found), found)
+        self.via(5, 7, '3V3'); self.via(15, 7, '3V3')
+        thin = self.track((5, 7), (15, 7), '3V3', pcbnew.B_Cu, width=0.3)
+        self.assertTrue(gate.plane_issues(self.board)[0])
+        thin.SetWidth(pcbnew.FromMM(0.5))
+        self.assertEqual(gate.plane_issues(self.board)[0], [])
 
     def test_s8_plated_pad_and_raw_act_barrel(self):
         """R6-SAF-02: a foreign plated pad's inner copper counts; RAW_ACT's barrel is a barrel net."""
@@ -2346,13 +2411,15 @@ class RealBoardSeeds(unittest.TestCase):
     def test_native_bom_identities_and_unexpected_designators_fail_s4(self):
         import csv
         import io
+        import shutil
         import tempfile
         source = real_project()
         rows = list(csv.DictReader((r10_board().parent / 'fab/m3_bom_jlc.csv').read_text().splitlines()))
         columns = list(rows[0])
         cpl = r10_board().parent / 'fab/m3_cpl_jlc.csv'
         with tempfile.TemporaryDirectory() as temp:
-            path = Path(temp) / 'bom.csv'
+            path = Path(temp) / 'm3_bom_jlc.csv'       # D-R18-09: the owner BOM (hand-fitted C84) sits beside it
+            shutil.copyfile(r10_board().parent / 'fab/m3_bom_owner.csv', Path(temp) / 'm3_bom_owner.csv')
 
             def check(changed, fields=columns):
                 output = io.StringIO(); writer = csv.DictWriter(output, fields, extrasaction='ignore')
@@ -2385,6 +2452,44 @@ class RealBoardSeeds(unittest.TestCase):
             row['Designator'] = 'R134,U1'
             changed = [row for row in changed if row['Designator'] != 'U1']
             self.assertTrue(any('U1' in issue and 'Manufacturer Part' in issue for issue in check(changed)))
+
+    def test_r18_manual_fit_c84_s4(self):
+        """R18-REQ-10 / R18-MFG-06 (D-R18-09): C84 is hand-fitted after both reflows: S-4 fails a C84 row in the JLC BOM
+        or CPL, and a missing or wrong owner-BOM row; the real package passes."""
+        import csv
+        import io
+        import shutil
+        import tempfile
+        source = real_project()
+        fab = r10_board().parent / 'fab'
+        self.assertIn('C84', gate.REQUIRED_FITTED)
+        with tempfile.TemporaryDirectory() as temp:
+            temp = Path(temp)
+            for name in ('m3_bom_jlc.csv', 'm3_bom_owner.csv', 'm3_cpl_jlc.csv'):
+                shutil.copyfile(fab / name, temp / name)
+
+            def check():
+                return gate.s4(gate.make_ctx(self.load(), source, source / 'm3.kicad_pcb', bom=temp / 'm3_bom_jlc.csv',
+                                             cpl=temp / 'm3_cpl_jlc.csv'))[0]
+            self.assertEqual(check(), [])
+            owner = (temp / 'm3_bom_owner.csv').read_text()
+            rows = list(csv.DictReader(io.StringIO(owner)))
+            self.assertEqual([r['Designator'] for r in rows if 'C84' in r['Designator']], ['C84'])
+            bom = (temp / 'm3_bom_jlc.csv').read_text()
+            jlc_fields = list(csv.DictReader(io.StringIO(bom)).fieldnames)
+            out = io.StringIO(); writer = csv.DictWriter(out, jlc_fields, extrasaction='ignore')
+            writer.writerow({**next(r for r in rows if r['Designator'] == 'C84'), 'Qty': '1'})
+            (temp / 'm3_bom_jlc.csv').write_text(bom + out.getvalue())
+            self.assertTrue(any('BOM: C84 is fitted by hand after reflow' in i for i in check()), check())
+            (temp / 'm3_bom_jlc.csv').write_text(bom)
+            cpl = (temp / 'm3_cpl_jlc.csv').read_text()
+            (temp / 'm3_cpl_jlc.csv').write_text(cpl + 'C84,27.5000mm,-78.5000mm,Top,90\n')
+            self.assertTrue(any('CPL: C84 is fitted by hand after reflow' in i for i in check()), check())
+            (temp / 'm3_cpl_jlc.csv').write_text(cpl)
+            (temp / 'm3_bom_owner.csv').write_text(owner.replace('C46550466', 'C46550467'))
+            self.assertTrue(any('owner BOM: hand-fitted C84 missing or not the native part' in i for i in check()))
+            (temp / 'm3_bom_owner.csv').unlink()
+            self.assertTrue(any('owner BOM: hand-fitted C84 missing or not the native part' in i for i in check()))
 
     def test_reviewed_models_reject_positive_shrinkage_and_pose_drift(self):
         import fit_check as fit
@@ -2635,6 +2740,37 @@ class RealBoardSeeds(unittest.TestCase):
             t.SetWidth(pcbnew.FromMM(0.2)); t.SetStart(pcbnew.VECTOR2I(x, c.y - pcbnew.FromMM(1)))
             t.SetEnd(pcbnew.VECTOR2I(x, c.y + pcbnew.FromMM(1))); b.Add(t)
         self.seeded('S-8', near_barrel, 'In1.Cu')
+
+    def test_r18_barrel_keepouts_removed(self):
+        """R18-SAF-01 regression on the real board: without the R18 barrel keep-outs the refilled planes return to
+        0.251 mm of In1 GND from the ACT_GATE barrels and S-8 fails."""
+        def seed(b):
+            for z in b.Zones():
+                if z.GetIsRuleArea() and z.GetZoneName().startswith('R18_BARREL_KEEPOUT_'):
+                    z.SetDoNotAllowZoneFills(False)        # disabled, not removed (SWIG zone lifetime)
+            pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+        base = self.run_rule('S-8', self.load())
+        board = self.load(); seed(board)
+        new = self.run_rule('S-8', board) - base
+        self.assertTrue(any('GND copper on In1.Cu' in i and 'ACT_GATE' in i for i in new), sorted(new)[:4])
+        self.assertTrue(any('RAW_PROTECTED copper on In2.Cu' in i and 'BAT_ENABLE' in i for i in new), sorted(new)[:4])
+
+    def test_r18_split_power_plane(self):
+        """R18-RTE-01: an In2 track across the 3V3 region splits its fill and K-plane fails on the real board."""
+        def seed(b):
+            t = pcbnew.PCB_TRACK(b); t.SetLayer(pcbnew.In2_Cu); t.SetWidth(pcbnew.FromMM(0.4))
+            t.SetNet(b.FindNet('USB_LIMITED')); t.SetStart(self.P(0.3, 40.5)); t.SetEnd(self.P(45.7, 40.5)); b.Add(t)
+            pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+        self.seeded('K-plane', seed, '3V3 on In2.Cu fills as')
+
+    def test_r18_q121_local_bias_seed(self):
+        """R18-SAF-02: cut R119's bottom-copper join to Q121's gate and S-3 names Q121."""
+        def seed(b):
+            r119 = self.pad(b, 'R119', '1').GetPosition()
+            for t in [t for t in b.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'ACT_GATE'
+                      and t.GetLayer() == pcbnew.B_Cu and r119 in (t.GetStart(), t.GetEnd())]:
+                b.Remove(t)
+        self.seeded('S-3', seed, 'load switch Q121')
 
     def test_inner_graphics_near_pyro_barrel(self):
         for footprint in (False, True):
