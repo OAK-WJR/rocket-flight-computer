@@ -3432,7 +3432,10 @@ Hole-to-Hole Spacing 0.45mm". The project DRU held every hole at its general 0.2
   J1.2 stayed at 0.251 mm with DRC 0).
 - **Before -> after (hole wall to the nearest foreign inner copper, 31 plated pads, In1 / In2).** Changed: J1.2 In2
   RAW_PROTECTED 0.251 -> 0.550; J400.2 In1 GND 0.251 -> 0.550; J3.1-J3.4 In2 3V3 0.451 -> 0.550. Unchanged: every
-  other pad and layer, 0.550 mm or more (the full table is in the hand-back).
+  other pad and layer, 0.550 mm or more (the full table is in the hand-back). Re-measured for R22-PARTS: the table's
+  J3.1 / J3.4 In1 figures, 1.375 / 1.345 mm, are slot wall to the VBUS via barrels; those vias keep pads only on F.Cu /
+  B.Cu (remove-unconnected mode), so In1 holds only their 0.3 mm barrels. Counting a 0.6 mm pad there, as the round 22
+  parts lens did, gives 1.225 / 1.194 mm; both are far above 0.3 mm.
 - **Gate (K-rules).** `JLC_HOLE_TABLE` pins the four figures: each named DRU rule must exist once with its pinned
   layer and condition and a minimum at least JLC's; no later rule on the same layers (KiCad lets the last matching rule
   win) may set that constraint lower; no hole rule anywhere may be under 0.2 mm. `pth_inner_copper` measures every
@@ -3490,7 +3493,11 @@ R21-REQ-01 / R21-REQ-02; text only, `r10_sch.py` `R21_SHEET_NOTES`.
 R21-REQ-04. `tools/route_check.py` R10_CLASSES puts BAT_SW_SOURCE, BAT_SW_RETURN and BAT_ENABLE in the pyro / arming
 class (AGENTS section 2.1: J400 is the arming device). They are slow filtered nodes (R165 / R81 / C87, tau about 50 ms),
 so `critical_reference.R10_SLOW_RETURN_NETS` lists them for AUD-2: only the 1.5 mm partner-via and one-In2-region rules
-are excluded; critical hygiene applies.
+are excluded; critical hygiene applies. The exemption rests on physics, not on lack of room (R22-REQUIREMENTS-01): the
+chain is fed through 470 kOhm (R80, R165), BAT_ENABLE settles with tau = (940k || 300k) x 220 nF, about 50 ms, and the
+chain carries about 7 uA, so a return-partner via does nothing for it. The project's own spot search
+(`r7_hygiene.gnd_spots`, a 0.5 mm GND via) finds a legal spot 0.671 mm from (10.8, 69.2), (21.3, 68.9) and (19.675,
+66.6), at (10.2, 68.9), (20.7, 69.2) and (20.275, 66.3), and none for (17.1, 82.8) (measured 2026-10-31).
 - **Jog.** BAT_ENABLE's B.Cu hop (19.675, 66.6) -> (21, 67.925) -> (21, 68.6) -> (21.3, 68.9) ended in a 0.424 mm jog
   0.3 mm off the F.Cu run (tiny_jog, now gated). Its last bend moves 0.3 mm west: (19.675, 66.6) -> (20.7, 67.625) ->
   (20.7, 68.3) -> (21.3, 68.9), a 0.849 mm 45 degree run into the via. TP120's 1.0 mm clearance and R88.2 stay clear
@@ -3512,8 +3519,9 @@ R21-SAF-01; a partial fix for D-R20-01 (R81 is still not on B.Cu at U9.1, which 
   its centre (no run piece inside a pad). Pads 2 sit in the F.Cu GND pour piece of U9.8's via (20.2, 81.0).
 - **Copper removed.** R81's BAT_ENABLE stub (19.675, 66.0)-(19.675, 65.0), C87's tap, both GND stubs and the GND vias
   (20.706, 65.619) (R81.2) and (16.639, 63.939) (C87.2) (`r10_fanout.tsv`). The (20.706, 65.619) via was the closest
-  RAW_ACT-to-GND pad / track / via approach on the board, 0.196 mm from R134.2; the least is now 0.302 mm (RAW_ACT
-  (22.8, 63.875) to U11.6; fills keep 0.25 mm).
+  RAW_ACT-to-GND pad / track / via approach on the board, 0.196 mm from R134.2; the least is now 0.300 mm (B.Cu RAW_ACT
+  (22.8, 61.4)-(22.8, 63.875) to U11.6, by KiCad shape collision; the first text's 0.302 mm was a 2 um step artefact,
+  R22-SAFETY-01; fills keep 0.25 mm).
 - **Measured.** Between U9.1 and R81.1 / C87.1: three series vias -> one (17.10, 82.80); track 20.920 / 24.295 ->
   3.890 / 2.013 mm. An open anywhere up the switch run now leaves EN held low by R81 (U9 off). Foreign copper by the
   new pads (F.Cu): R81.1 (EN) 0.173 mm from the GND via (17.2, 79.9); R81.2 (GND) 0.307 mm from the RAW_PROTECTED via
@@ -3524,7 +3532,8 @@ R21-SAF-01; a partial fix for D-R20-01 (R81 is still not on B.Cu at U9.1, which 
 - **C87.** Moved too. TI SLVSFC9C section 6.1 p7: EN/UVLO absolute maximum -0.3 to 6.5 V (recommended at most 5 V,
   section 6.3). Left at the switch end with R81 moved, an open between them with J400 closed would let C87 charge
   toward BAT_IN (8.4 V) through R80 + R165 and dump into EN when the open recloses, above 6.5 V (Inference from the
-  circuit). Beside R81 it never charges above the divider's 2.03 V (8.4 V x 300k / 1240k). The D-R19-10 values (R80 /
+  circuit). Beside R81 it stays at the divider's 2.03 V nominal (8.4 V x 300k / 1240k; <= 2.06 V with 1 % parts at
+  8.4 V; Calculation) while R81 is intact (R22-DOCS_BINDING-04). The D-R19-10 values (R80 /
   R165 470 kOhm, R81 300 kOhm, C87 220 nF), the D-R19-02 via and the S-8 keep-outs are unchanged; so are D-R20-11's
   timing figures (same node).
 - **Gate.** R81.1 / C87.1 keep one single via, (17.10, 82.80), as exact `SINGLE_OPEN_EXCEPTIONS` entries (respin: U9's
@@ -3577,3 +3586,137 @@ against `0dc84776…`):
 Hidden 96 -> 93, all kept on Fab. No other designator or legend moved.
 
 The record index is now **172 unique D IDs through D-R21-09**.
+
+
+## Round 22 between-rounds pass (CAD lane, board 5516eeec… unchanged)
+
+Brief `.supervisor/r22_fix_brief.md`: round 22's lenses found 0 Critical / 0 Major on `5516eeec…`. Rounds 22 and 23 are
+the closing pair on that board, so this pass changes only checks, one schematic note and record wording; one complete
+`r10_build.sh` gives PCB `5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1` again (hand-back
+`../r10_review/round22_fix_cad.md`).
+
+## D-R22-01. K-rules measures the rest of JLC's hole, ring and NPTH rows on the board (2026-10-31)
+
+R22-REQUIREMENTS-02 (checks only). K-rules pinned four of JLC's hole rows (D-R21-01); a seeded 0.10 mm PTH ring and a
+0.40 mm non-plated hole passed DRC and check_r10. JLCPCB's capabilities page
+(https://jlcpcb.com/capabilities/pcb-capabilities, read 2026-10-31) gives:
+- "PTH annular ring >=0.20mm" (multilayer, 1 oz: 0.20 mm recommended, 0.15 mm absolute minimum);
+- "Via diameter should be 0.1mm (0.15mm preferred) larger than Via hole size" (a 0.05 mm via ring);
+- multilayer drill 0.15-6.3 mm, vias 0.15 mm hole / 0.25 mm diameter (every plated hole >= 0.15 mm);
+- "Min. Non-plated holes 0.50mm"; "NPTH pad annular ring >=0.45mm";
+- "NPTH to Track 0.2mm" (no separate NPTH-to-copper row; held here against all copper).
+
+`check_r10.jlc_board_holes` (in K-rules, `JLC_BOARD_HOLES`) measures the board itself, whatever the DRU says: every
+PTH pad's ring on each layer it flashes (true slot or circle to the copper outline, 0.1 um arcs) >= 0.20 mm, the
+headline row; every via's ring >= 0.05 mm; every plated hole >= 0.15 mm; every NPTH hole >= 0.50 mm; an NPTH pad that
+carries copper >= 0.45 mm ring (none does); every NPTH hole wall >= 0.2 mm from any copper on any layer (tolerance
+0.001 mm). The board: least PTH ring 0.200 mm (J3's slots), via ring 0.100 mm, plated hole 0.30 mm, NPTH 0.60 mm (J3),
+NPTH to copper 0.200 mm (J3's NPTH to its GND SMD lands; measured 0.201 with polygon arcs).
+
+How J3's at-limit row is held: J3's NPTH locating holes sit 0.200 mm from its GND SMD lands, HRO's own land pattern,
+at JLC's 0.2 mm and not below. The DRU rule "HRO M-12 internal SMD lands to locating holes" sets that pair's DRC
+clearance to 0.20 mm, K-lands pins the footprint file by SHA-256, and this check holds the board to 0.2 mm.
+
+Seeded tests: J122.5's ring at 0.10 mm (the lens's seed) and at 0.18 mm, a via ring of 0.025 mm, a 0.1 mm via hole,
+a J2 NPTH hole at 0.40 mm (the lens's seed), a 0.20 mm copper ring on a J2 NPTH pad and a GND track 0.1 mm from a J2
+NPTH hole each fail; the 0.40 mm hole and the 0.10 mm ring fail K-rules itself.
+
+The refactor also fixed a latent hazard: `pth_inner_copper` and the new check share `_copper_items`, and the hole
+points are copied out of their polygon (KiCad's `CPoint` returns a reference that dies with the polygon; a first
+refactor read freed memory and reported 0.000 mm walls, caught by the board run before any build).
+
+## D-R22-02. The TPS2553 grounds, the CC Rd returns and the power-state monitors are single-open taps (2026-10-31)
+
+R22-POWER-01 / R22-POWER-02 (checks only). Measured on `5516eeec…` with `single_via_opens`:
+- **TPS2553 grounds.** U10.2 (USB limiter) sits in a B.Cu island with R7.2 (CC1 Rd) whose only via is GND (9.00,
+  27.84); U402.2 (camera switch) in an island whose only via is GND (32.30, 59.50). The R85.2 / R430.2 entries
+  described an open ILIM leg; each via is the IC's only ground, so an open floats the TPS2553's ground (TI SLVS841G
+  states no open-GND behaviour: Inference): bench USB or camera supply loss, no flight hazard. Both reasons reworded.
+- **New taps** (`SINGLE_OPEN_TAPS` 26 -> 33), each an exact entry (`SINGLE_OPEN_EXCEPTIONS` 8 -> 15):
+  - ('GND', U10.2, J1.2) and ('GND', R7.2, J1.2): via GND (9.00, 27.84);
+  - ('GND', U402.2, J1.2): via GND (32.30, 59.50);
+  - ('GND', R8.2, J1.2): via GND (9.95, 30.60) (CC2 Rd island; with R7's open too, a USB-C source sees no sink;
+    bench only);
+  - ('VLOGIC', R60.1, U11.1 / U11.8): via VLOGIC (34.50, 63.00). PA6's VLOGIC sense: open, R61 holds PA6 at 0 V,
+    which the documented firmware rule reads as a permanent brown-out (logging and UARTs shed; no pyro, deployment or
+    servo effect: Inference);
+  - ('LOGIC_SOURCE_ST', U1.28, U11.9): via LOGIC_SOURCE_ST (30.85, 51.80). Open floats PA4 (Inference: the port UARTs
+    may flap or stay off);
+  - ('3V3', R91.1, L1.2): via 3V3 (28.10, 60.00). Open, PA4 can read "battery" on USB-only power (Inference).
+- Each becomes a second via (or, for R60, an F.Cu feed from C84.1) at the next board change.
+- **Seeded tests.** Each new tap with its entry dropped fails, naming its via; an entry the board does not meet is
+  stale; the round 21 test now expects all 33 taps' single points.
+
+## D-R22-03. Diagnostics sheet note: R10's camera supply and the real worst cases (2026-10-31)
+
+R22-MCU-01 (note text only, `r10_sch.py` `R21_SHEET_NOTES`; netlist and board unchanged). Line 2 was "5.25 V reads
+0.477 V; even 19.9 V (TVS clamp, failed regulator) reads 1.81 V"; it is now "Nominal 5.456 V (PORT_5V3 via U402)
+reads 0.496 V; a failed U400 passes RAW_PROTECTED (held under U9's OVLO, 9.77 V nominal) and reads about 0.89 V; even
+D8's 19.9 V clamp would read 1.81 V". Checked:
+- R104 10 kOhm / R105 1 kOhm (1 %): 1/11. 5.456 V / 11 = 0.496 V (PORT_5V3 nominal, docs/M3_R10.md).
+- U9's OVLO: R82 2 MOhm / R83 280 kOhm (0.1 %) with VOV(R) 1.20 V typ, 1.183-1.223 V (TI SLVSFC9C p9): 9.77 V
+  nominal, 9.98 V maximum. 9.77 V / 11 = 0.89 V. The lens's "<= 0.89 V" holds at nominal only (about 0.92 V at the
+  maximum threshold with 1 % divider parts), so the note says "about".
+- D8 SMBJ12CA: VC 19.9 V at 30.2 A (Littelfuse SMBJ datasheet, SMBJ12CA row). 19.9 V / 11 = 1.81 V. D8 sits on
+  BAT_IN, not on CAM_5V, so the note names it.
+The seeded sheet-notes test checks the new line and that "5.25 V reads 0.477 V" and "TVS clamp, failed regulator" are
+gone.
+
+## D-R22-04. Record corrections (2026-10-31)
+
+Text only, each re-measured or recalculated:
+- **D-R21-05** (R22-SAFETY-01): the least RAW_ACT-to-GND pad / track / via gap is 0.300 mm (B.Cu RAW_ACT (22.8, 61.4)-
+  (22.8, 63.875) to U11.6, KiCad shape collision 0.300001 mm), not 0.302 mm (a 2 um step artefact).
+- **D-R21-01** (R22-PARTS): J3.1 / J3.4 on In1, 1.375 / 1.345 mm, are slot wall to the VBUS via barrels. Those vias
+  keep pads only on F.Cu / B.Cu (remove-unconnected mode), so In1 holds only their 0.3 mm barrels. The parts lens's
+  1.225 / 1.194 mm count a 0.6 mm pad there. Both bases are now in the record.
+- **D-R21-04** (R22-REQUIREMENTS-01): the AUD-2 exemption rests on physics (470 kOhm feeds, tau about 50 ms, about
+  7 uA), not lack of room. `r7_hygiene.gnd_spots` finds a legal 0.5 mm GND via 0.671 mm from (10.8, 69.2), (21.3,
+  68.9) and (19.675, 66.6), and none for (17.1, 82.8).
+- **"EN never exceeds the divider's 2.03 V"** (R22-DOCS_BINDING-04), in D-R21-05 and the round 21 hand-back: now "2.03 V
+  nominal (<= 2.06 V with 1 % parts at 8.4 V; Calculation) while R81 is intact". 8.4 V x 300k / 1240k = 2.032 V; 8.4 V
+  x 303k / (303k + 930.6k) = 2.063 V.
+
+## D-R22-05. K-rules reads every DRU minimum and layer, and measures three more JLC rows on the board (2026-10-31)
+
+R22-GATE-01 (checks only; the gate lens reviewed ec8cb98, before D-R22-01).
+- **Parsing.** `dru_rules` read only a "(min N mm)" written first in its constraint. It now reads every "(min ...)" in
+  each constraint body, after (opt) or (max) too, in mm, mil / thou, um or in (a bare number as mm); one it cannot read
+  fails K-rules.
+- **Layers.** `jlc_hole_table` counted a later rule as an override only on the exact pinned layer word. Now any later
+  rule that can meet the pinned one counts: In*.Cu or "inner" for the inner rule, F.Cu / B.Cu or "outer" for the outer
+  rule, any layer where the pinned rule has none.
+- **Board measures, independent of the DRU** (in `jlc_board_holes`; D-R22-01 measured none of these three rows), from
+  JLCPCB's capabilities page (https://jlcpcb.com/capabilities/pcb-capabilities, read 2026-10-31):
+  - "Inner layer via hole to copper clearance 0.2mm" and "Via hole to Track 0.2mm": every via hole wall >= 0.2 mm from
+    foreign copper on every layer; least 0.25 mm (via USB_ILIM (14.82, 26.00) to the In1 GND fill);
+  - "PTH to Track 0.28mm": every PTH pad hole wall >= 0.28 mm from foreign copper on F.Cu / B.Cu; least 0.55 mm (J1.1);
+  - "Pad Hole-to-Hole Spacing 0.45mm": every pair of pad holes, plated or not, >= 0.45 mm wall to wall; least 0.835 mm
+    (J3's NPTH to J3.4).
+- **Seeds.** g01f (a 10 mil PTH override; refilled, KiCad honours it and J1.2 / J400.2 come back at 0.255 mm: K-rules
+  names the override and the walls), g01g (a 6 mil via rule, 0.152 mm), g01h ((opt) before (min)), g01e (an override on
+  In1.Cu), a um spelling, an F.Cu override at 0.21 mm and an 8 mil hole-to-hole rule each fail; an unknown unit fails as
+  unreadable; a later 0.28 mm F.Cu rule does not. On the board: a 3V3 In1 track 0.1 mm from a via hole, a GND F.Cu
+  track 0.2 mm from J122.1's hole and two J2 NPTH holes 0.3 mm apart each fail.
+
+## D-R22-06. Fab references held to their own part; stroke floor; no board-level Fab text (2026-10-31)
+
+R22-GATE-02 (checks only). Measured on `5516eeec…` first:
+- 20 Fab references sit beside their part's body box, the farthest 0.968 mm (D9); the bound is 1.5 mm
+  (`FAB_REF_REACH`), from the ink centre to the part's Fab body box. For the 14 parts whose Fab layer has no body
+  outline, only a pin-1 dot (U1, U2, U3, U4, U5, D4, D121, Y1, J3) or nothing (Q122, Q123, D120, D123, J2), the
+  courtyard box stands in.
+- Every Fab reference stroke is 0.15 x its height; the floor is 0.1 x height or 0.05 mm.
+- No board-level text sits on F.Fab / B.Fab, and none is allowed.
+- Seeds: g08a (R134's reference 8.4 mm away, 5.147 mm from its 2512 body box), g08c (a board-level B.Fab "Q121" on
+  Q120), g08d (R119's at a 0.005 mm stroke) and U1's reference 3 mm off its courtyard box each fail.
+
+## D-R22-07. Port clamp ground returns held through tracks (K-ports) (2026-10-31)
+
+R22-GATE-03 (checks only). K-ports held the pin-to-clamp path (D-R21-07); the clamp-to-GND leg is the other half of
+the ESD loop. `clamp_returns` requires each port clamp's GND pad to reach a GND via or GND plated pad through GND
+tracks only (the pour not counted) within 1.0 mm (`CLAMP_GND_MAX`), pad centre to via centre. Measured: D410 / D411 /
+D420 / D421 / D440 / D441 0.7 mm, D400 / D401 0.8 mm. Seeds: g07b (D420's GND stub and via removed, kept referenced:
+the pad reaches GND only through the pour) and D410's return re-drawn 1.5 mm long each fail.
+
+The record index is now **179 unique D IDs through D-R22-07**.

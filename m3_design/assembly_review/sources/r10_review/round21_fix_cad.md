@@ -132,6 +132,9 @@ PCB `5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1`, 46 x 90 
 | J9.3 (CAM_RX_WIRE) | 0.550 -> 0.550 (GND) | 0.550 -> 0.550 (3V3) |
 | J9.4 (CAM_TX_WIRE) | 0.550 -> 0.550 (GND) | 0.550 -> 0.550 (3V3) |
 
+  J3.1 / J3.4 on In1 (re-measured for R22-PARTS): slot wall to the VBUS via barrels. Those vias keep pads only on
+  F.Cu / B.Cu, so In1 holds only their 0.3 mm barrels; counting a 0.6 mm pad there gives 1.225 / 1.194 mm.
+
 **2. Regulator sense / OV / EN / ILIM taps (R21-PWR-01 / R21-GATE-01, D-R21-02): done.**
 - **U2.1.** The f01b 0.4 mm B.Cu 3V3 run (24.05,68.95) -> (23.0,70.0) into R89's via: U2.1's single point via
   (23.20,68.60) -> none. Chosen by M2: the in-line via (22.55,68.6) sits 0.886 mm (In2) / 0.986 mm (In1) from the
@@ -169,6 +172,9 @@ PCB `5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1`, 46 x 90 
 - **Jog removed.** B.Cu (19.675,66.6) -> (21,67.925) -> (21,68.6) -> (21.3,68.9) (0.424 mm jog, 0.3 mm offset) ->
   (19.675,66.6) -> (20.7,67.625) -> (20.7,68.3) -> (21.3,68.9). TP120 keeps its 1.0 mm and R88.2 its clearance (a
   straight (19.675,67.275) entry missed TP120's 1.0 mm by 0.011 mm). D-R19-02's via and the S-8 keep-outs unchanged.
+- **Why exempt (R22-REQUIREMENTS-01):** physics, not lack of room: 470 kOhm feeds (R80, R165), tau about 50 ms, about
+  7 uA. The project's spot search finds a legal 0.5 mm GND via 0.671 mm from (10.8,69.2), (21.3,68.9) and
+  (19.675,66.6), none for (17.1,82.8).
 - **Exposed by the reclassification** (on `0dc84776…`): the tiny jog (gated; fixed); extra_bends on the F.Cu run
   (counted; gone with the re-drawn run); short_layer_hop 2.973 mm (counted; the B.Cu hop under the F.Cu RAW_ACT /
   ACT corridor, stays). Removing R81's stub then left the F.Cu corner (19.675,66.0) -> (19.675,66.6) a removable local
@@ -187,14 +193,15 @@ PCB `5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1`, 46 x 90 
 | R81.1 (EN) to GND via (17.2,79.9) | - | 0.173 mm [0.173] |
 | R81.2 (GND) to RAW_PROTECTED via (20.3,79.1) | - | 0.307 mm [0.232] |
 | C87.1 (EN) / C87.2 (GND) nearest foreign copper | - | GND fill 0.251 / BAT_FAULT_N track 0.254 mm |
-| Least RAW_ACT to GND pad / track / via gap (fills keep 0.25 mm) | 0.196 mm (R134.2 to via (20.706,65.619)) | 0.302 mm (RAW_ACT (22.8,63.875) to U11.6) |
+| Least RAW_ACT to GND pad / track / via gap (fills keep 0.25 mm) | 0.196 mm (R134.2 to via (20.706,65.619)) | 0.300 mm (B.Cu RAW_ACT (22.8,61.4)-(22.8,63.875) to U11.6; 0.302 in the first text was a 2 um step artefact, R22-SAFETY-01) |
 
   The lens's 0.232 mm treats R81.2 as a sharp rectangle; KiCad's pad shape has a rounded corner there, which gives
   0.307 mm (shape collision stepped at 1 um). The EN-to-GND and GND-to-RAW_PROTECTED shorts fail safe (U9 off; U9's
   limit); GND to BAT_FAULT_N reads as a U9 fault.
 - **EN absolute maximum.** TI SLVSFC9C section 6.1 p7: EN/UVLO -0.3 to 6.5 V (recommended at most 5 V, section 6.3).
   With R81 alone moved, an open between C87 (switch end) and R81 with J400 closed could charge C87 toward BAT_IN
-  (8.4 V) and dump it into EN on reclosure (Inference); beside R81, C87 never exceeds the divider's 2.03 V.
+  (8.4 V) and dump it into EN on reclosure (Inference); beside R81, C87 stays at the divider's 2.03 V nominal
+  (<= 2.06 V with 1 % parts at 8.4 V; Calculation) while R81 is intact (corrected for R22-DOCS_BINDING-04).
 - **Kept:** D-R19-02's via, the S-8 keep-outs and the D-R19-10 values; D-R20-11's timing (same node).
 - **Residual:** EN still crosses the via (17.10,82.80) to U9.1 on B.Cu (exact exceptions; respin: U9's west cell).
 

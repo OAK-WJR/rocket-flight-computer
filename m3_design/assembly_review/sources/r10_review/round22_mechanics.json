@@ -1,0 +1,116 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round22_mechanics",
+ "reviewer": "claude",
+ "target_commit": "ec8cb98c198e25462a2fb5d34f87a84636e37993",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "findings": [
+  {
+   "id": "R22-MECHANICS-01",
+   "severity": "Minor",
+   "status": "new (completes R21-MEC-01, whose list was also short)",
+   "title": "ORDERING 8.2's per-terminal hand-solder keep-off list leaves out four bottom parts that sit inside its own 1.76-2.17 mm range",
+   "evidence": {
+    "file": "docs/ORDERING.md section 8.2 'Hand-solder the eight DB125 bodies' bullet; m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "J410, J420, J9 and their bottom-side neighbours",
+    "layer": "B.Cu (THT solder side)",
+    "method": "B.Cu effective pad polygons, edge to edge, every bottom SMD pad against every DB125 THT pad (probe keepoff.py)",
+    "measured_value": "Listed and confirmed: J121 R13 1.763, U5 2.172; J440 D440 1.867, D441 1.905, R90 1.956, TP82 2.105; J410 D410 1.774, D411 1.812; J420 D420/D421 1.774, C421 1.855; J9 D400/D401 1.774, C91 1.805; J122 R150-R153 1.830-1.898 mm. Missing from the list but inside the 1.76-2.17 mm range the bullet states: C410 2.011 mm from J410; C420 2.011 mm from J420; R102 2.001 mm from J9 (and 2.299 from J420); C431 2.055 mm from J9. Next out (2.2-2.5 mm, also unlisted): R405 2.243, C411 2.305 (J410); C128 2.43 (J121); C83 2.456 (J440); R440/R441, R450/R451, R100/R101 2.43. J1 has no bottom pad within 3 mm; J400's nearest is R131 at 2.85 mm.",
+    "maker_url": "n/a (CAD measurement)"
+   },
+   "impact": "An assembler working from the list keeps the iron off the named parts but not off C410, C420, R102 or C431, which are as close as the listed ones (C431 is the 1210 bulk capacitor the plate model already flags as the tightest to the sled). Risk is a disturbed or bridged joint found at first-article inspection; no fire or function hazard. Documentation defect.",
+   "concrete_fix": "Docs only: in ORDERING 8.2, add C410 to J410's entry, C420 to J420's, and R102 and C431 to J9's; or replace the list with 'every bottom part within 2.5 mm of a DB125 hole', followed by the full table above. Optionally add a fit_check/check_r10 test that rebuilds the list from the board, so it cannot go stale."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R21-05 (R81 / C87 moved to U9's end)",
+   "claim": "R81 F(18.8482,80.0) 0, C87 F(18.7232,81.8768) 0; only these two parts moved",
+   "measurement": "Pose diff 0dc84776 -> 5516eeec over all 215 footprints: only R81 (20.5,65) -> (18.8482,80.0) and C87 (17,65) -> (18.7232,81.8768) moved, both rotation 0, top side, same footprints (0603) and values. Every plated hole, the outline (46 x 90) and the five supports are unchanged. Nearest support 16.29 mm (R81) and 15.58 mm (C87), so no effect on nylon hardware or washer gates. C84 hand-fit access: R81 / C87 courtyards end at x 20.37 / 20.12, 2.58 mm from C84's courtyard (x 22.95) and over 4 mm from either C84 land edge; R166 at 1.15 mm is still the nearest top copper to C84.1, as recorded. Height 0.8 mm on the top face (bore margin is large there). They sit over U9 on the bottom, which is clear of the C84 fixture parts L1 / C7 / C9. 100 g plate strain (Inference): R81 1038 / C87 1005 microstrain at the new spot, 1171 / 1154 at the old one.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R21-01 (0.55 mm inner PTH clearance)",
+   "claim": "Fill-only change; no pad, hole or footprint moved",
+   "measurement": "Plated-hole list identical to 0dc84776. fit_check wire room 5.00-5.60 mm on all eight terminals, bore margin 2.98 mm per DB125.",
+   "verdict": "confirmed (no mechanical effect)"
+  },
+  {
+   "d_id": "D-R21-09 (designators re-placed)",
+   "claim": "Silkscreen-only moves",
+   "measurement": "R81's designator F(21.255,80.983) 90 ends about 1.2 mm west of C84's courtyard (x 22.95); not under the can's body or its staking zone.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "R21-MEC-01 (docs disposition)",
+   "claim": "ORDERING 8.2 asks for hand soldering of the DB125 bodies, lists keep-offs per terminal and masks U5's port during J121",
+   "measurement": "Hand-solder rule, U5 Kapton mask and TSLP inspection are present. Every listed distance re-measures exactly. Four parts inside the stated range are missing (R22-MECHANICS-01).",
+   "verdict": "partly"
+  },
+  {
+   "d_id": "D-R19-11 (U4 axis map, carried)",
+   "claim": "Roll = -gyro_Y; lever arm x = -6 mm",
+   "measurement": "U4 B(17.0,45.9) rot 180, pad table identical to round 21. Pad centroids: sensor +X = -board x (-2.42, 0), +Y = -board y (0, -1.92). Board y is the vehicle axis, so roll = -gyro_Y. Lever arm 17.0 - 23.0 = -6.0 mm.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "Plate model (R20-MEC-02 figures)",
+   "claim": "180.8 Hz pinned D5, about 78.6 g, 0.261 mm under C431 (re-run on 50a39de5)",
+   "measurement": "Re-run on 5516eeec (fit_check --profile r10 report, plate_model.py with masses.json): pinned D5 180.8 Hz, D10 255.6, clamped 287.8 / 407.0 Hz; mass 78.58 g; maximum deflection 1.27 mm at (46,44.5); 100 g gap at 4 mm standoffs C431 0.2613, C421 0.3199, L1 0.524 mm; peak strain J122 1489, J410 1421, C84 1350 microstrain. Identical to round 20. Two 0603 parts moved 15 mm, a negligible mass shift.",
+   "verdict": "confirmed (the round 20 figures hold for 5516eeec)"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R22-MECHANICS-01",
+   "change": "ORDERING 8.2 keep-off bullet: J410 'D410, D411 and C410'; J420 'D420, D421, C421 and C420'; J9 'D400, D401, C91, R102 and C431'. Range text stays 1.76-2.17 mm.",
+   "changes_board": false
+  },
+  {
+   "id": "(record currency, no finding)",
+   "change": "Where M3_R10, R10_VALIDATION, the handoff and AGENTS say the plate figures were re-run on 50a39de5 (not on 0dc84776), add 're-run unchanged on 5516eeec by round 22 mechanics'.",
+   "changes_board": false
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "Tallest parts: top C84 10.8 mm (x 23.25-31.75, near the axis; large bore margin), DB125 bodies 8.9 mm with 2.98 mm bore margin, J3 0.886 mm margin (tightest, unchanged). Bottom: L1 3.02 mm below the bottom face (0.984 mm to a 1 mm plate on 4 mm standoffs), then the 2.7 mm 1210 capacitors C431 / C411 / C421 / C406 / C82 / C405. Nothing moved near any of them.",
+  "Supports: nearest top exposed pad LED2.2 3.808 mm from (4,44.3) (3.8 mm gate); nearest bottom obstacle C32.2 4.536 mm (3.5 mm minimum). Nylon or insulated hardware at all five remains required. R81 / C87 are more than 15 mm from every support.",
+  "DB125 wire room: 5.00-5.60 mm on all eight terminals (5.003 nominal) against the 4.95 mm floor. Screwdriver access is from above the bodies with the board out of the bore; unchanged and recorded as physically unverified.",
+  "microSD J430 B(24,24.3): unchanged; closed envelope fits (z -1.6 to -3.7). The rule to open the hinge only with the PCB unbolted from the sled stands (ORDERING 8.4).",
+  "U5 venting: U5 B(10.6,49.1) unchanged, its port facing the sled across a 2.9 mm allocation at 4 mm standoffs; REQUIREMENTS 'Static ports' asks for a vented bay and opaque foam. The vehicle's static-port sizing for Mach 1.9 is vehicle-level and outside the board scope.",
+  "Flight loads: boost 28-37 g and recovery shock are axial, in the board plane, and act as shear on C84, the DB125 bodies, J3 and LS120. These are covered by the open P3 staking and 5 x 100 g retention qualification. The transverse 100 g plate case gives the 0.261 mm C431 gap already disclosed. Nothing in this fix pass changes either.",
+  "R81 / C87 over U9: different faces, no shared courtyard; bottom-first reflow is unaffected."
+ ],
+ "checks_actually_executed": [
+  "shasum -a 256 of the board before and after the review",
+  "git archive of ec8cb98 into the probe tree; previous board from git show accfff4",
+  "tools/fit_check.py --profile r10 --report (KiCad Python) on the commit's board: OK",
+  "tools/plate_model.py --profile r10 --mass-spec masses.json (NumPy venv), plus a deflection-gap script and a local strain probe at R81 / C87",
+  "pcbnew pose / hole / outline diff 0dc84776 against 5516eeec",
+  "pcbnew B.Cu pad-to-THT-pad edge distances for all nine through-hole connectors (keepoff.py)",
+  "pcbnew neighbour and support distances for R81, C87, C84 and R166 (rc.py); C84 paste and TP121 check (misc.py)",
+  "U4 pad and axis table (u4.py), compared with round 21's output; U5 / J121 geometry (u5.py)"
+ ],
+ "sources": [
+  "docs/ORDERING.md 8.2 and 8.4",
+  "docs/REQUIREMENTS.md P1-P3 and 'Static ports'",
+  "../../docs/VEHICLE.md (coupler bore 50.8 mm, camera shroud)",
+  "R10_DECISIONS.md D-R21-01, -05, -09",
+  "round21_fix_cad.md",
+  "round20_mechanics / round21_mechanics reports",
+  "ST DS15034 Rev 1 p9 Fig. 5 (via round 20/21 axis verification; not re-fetched)"
+ ],
+ "coverage_limits": [
+  "No physical harness, sled, screwdriver, nozzle or hinge test.",
+  "The plate model is a Calculation/Inference with allowance masses; not weighed.",
+  "The microSD open-lid sweep was not re-measured; nothing near J430 moved.",
+  "No DRC run (no copper-relevant mechanical change to judge).",
+  "Datasheets not re-fetched; the U4 pin map was compared with round 21's verified table."
+ ]
+}

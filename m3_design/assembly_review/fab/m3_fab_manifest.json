@@ -5,7 +5,7 @@
     "cad/camera_connector.kicad_sch": "60a43eaea29272aec14c08dfa2b700bbbe98521e6faa9e697d7f375a3f7e3c52",
     "cad/camera_power.kicad_sch": "71953351600449fc420a098e81d6a2b5ac5a9d4b14c6b9556a2cb1d68f51f1d6",
     "cad/camera_uart.kicad_sch": "614b30c97baf2a2e94665039e4041a443f1162ad408f7a8d0d3675120e100cde",
-    "cad/diagnostics.kicad_sch": "f61f261408cff622e89d63553b6978dcf12fb5ed215cdb1c86f7c48eae9cae84",
+    "cad/diagnostics.kicad_sch": "e7e6165c59da338848f51cfc2d1615fc9fe7f0864f7409f59c8a0db50fad398f",
     "cad/fp-lib-table": "2f9ca0537f506ea6dc329b37b14493b33a1b073055eb2b83c86e650d2341e5a5",
     "cad/kilib/core.kicad_sym": "6f57b363124c8520657d6bea9b5aa7c33ad95c61b80e183a7ab595b83e0ee3e1",
     "cad/kilib/generic.3dshapes/DFN-8-1EP_3x3mm_P0.65mm_EP1.55x2.4mm.step": "113b3987035c6f315a2a5c49dcedc349f8184b3b415289cb0cb67e90e82112b4",
@@ -195,12 +195,12 @@
     "tools/jlc_orient.py": "a23ab373cc7e13f7053a97e87a0f85cc37a5bf19391f774680e7433461701c88"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "7a71700ebabba3e01bc90a88ec43d8996bc3d173b4307b8804687fcc63abdd6f",
-    "m3_assembly_top.pdf": "de513d83a245ace9ec0b465a50f9b2b0f135cb7490b360fb83a269673719d108",
+    "m3_assembly_bottom.pdf": "566a44428673c7c1d0c828834e4f9eb191739a757fe666c561e15871ad655006",
+    "m3_assembly_top.pdf": "7efbab7831785da5e4c243c220780a07bd7beda65c891e0244e91d2cdd8d7e73",
     "m3_bom_jlc.csv": "df6c0fc2c86fc0be0a55583c417a48c0b06a48ca11a09e3abea2acab72003272",
     "m3_bom_owner.csv": "c48868b32f2680376e73c4ea93c98df8efd6df4cad909c83e64a7ee56b74c2c0",
     "m3_cpl_jlc.csv": "905e431462a7ee9ceb9d902820d8c91d8b1c9e787ef67cbb9a89a64a6391ae6b",
-    "m3_gerber.zip": "9fb07d16109d60c2b11310eae02da0db0cd566da8e258c05aedf122b597cb81d"
+    "m3_gerber.zip": "43f1d6a0622343a1feab7e85f4fc5f0416b2b2de0b35fe9717f6c819d3454957"
   },
   "schema": 1
 }

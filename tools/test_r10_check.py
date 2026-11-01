@@ -357,6 +357,13 @@ class SchematicContract(unittest.TestCase):
         self.assertIn('on USB-only power PORT_5V3 and CAM_5V are off', diag)
         self.assertNotIn('camera regulator (U8)', diag)
         self.assertNotIn('USB self-test', diag)
+        # D-R22-03 (R22-MCU-01): R10's camera supply and the real worst cases
+        self.assertIn('Nominal 5.456 V (PORT_5V3 via U402) reads 0.496 V', diag)
+        self.assertIn("a failed U400 passes RAW_PROTECTED (held under U9's OVLO, 9.77 V nominal) and reads about 0.89 V",
+                      diag)
+        self.assertIn("even D8's 19.9 V clamp would read 1.81 V", diag)
+        self.assertNotIn('5.25 V reads 0.477 V', diag)
+        self.assertNotIn('TVS clamp, failed regulator', diag)
         self.assertIn('No battery-lead fuse (owner decision OQ-6, 2026-10-28)', battery)
         self.assertIn('C88 (100 nF)', battery)
         self.assertIn('U9 (TPS259470L) current-limits and latches off RAW_PROTECTED', battery)
@@ -4358,14 +4365,17 @@ class RealBoardSeeds(unittest.TestCase):
         An entry the board no longer meets is stale, and a tap whose entry is dropped fails."""
         issues, ev = gate.single_via_opens(self.load())
         self.assertEqual(issues, [])
-        self.assertEqual(len(gate.SINGLE_OPEN_TAPS), 26)
+        self.assertEqual(len(gate.SINGLE_OPEN_TAPS), 33)                 # 26 (round 21) + 7 (D-R22-02)
         self.assertEqual(set(ev), {t[1] for t in gate.SINGLE_OPEN_TAPS})
         self.assertEqual({tap: e['single_points'] for tap, e in ev.items() if e['single_points']}, {
             'U401.3': ['via PORT_LDO_FB (29.75, 13.60)'],
             'R81.1': ['via BAT_ENABLE (17.10, 82.80)'], 'C87.1': ['via BAT_ENABLE (17.10, 82.80)'],
             'R87.1': ['via USB_LIMITED (16.00, 28.00)', 'via USB_LIMITED (22.00, 62.25)'],
             'R85.1': ['via USB_ILIM (14.82, 26.00)'], 'R85.2': ['via GND (9.00, 27.84)'],
-            'R430.2': ['via GND (32.30, 59.50)']})
+            'R430.2': ['via GND (32.30, 59.50)'],
+            'U10.2': ['via GND (9.00, 27.84)'], 'R7.2': ['via GND (9.00, 27.84)'], 'U402.2': ['via GND (32.30, 59.50)'],
+            'R8.2': ['via GND (9.95, 30.60)'], 'R60.1': ['via VLOGIC (34.50, 63.00)'],
+            'U1.28': ['via LOGIC_SOURCE_ST (30.85, 51.80)'], 'R91.1': ['via 3V3 (28.10, 60.00)']})
 
         def no_run(board):
             self.drop(board, next(t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == '3V3'
@@ -4521,6 +4531,254 @@ class RealBoardSeeds(unittest.TestCase):
                 seed(board)
                 found = gate.fab_ref_crossings(board)[0]
                 self.assertTrue(any(i.startswith(word) for i in found), found)
+
+
+    # ------------------------------------------------------------------------------------------------ round 22 pass
+    def test_r22_jlc_board_holes(self):
+        """D-R22-01 (R22-REQUIREMENTS-02): K-rules measures the board against the rest of JLC's hole rows, whatever the
+        DRU says: plated holes >= 0.15 mm, PTH rings >= 0.20 mm, via rings >= 0.05 mm, non-plated holes >= 0.50 mm,
+        NPTH copper rings >= 0.45 mm (none on this board) and NPTH hole to copper >= 0.2 mm (J3's 0.200 mm to its GND
+        lands, at the limit). The lens's seeds (J122.5 ring 0.10 mm, a J2 NPTH hole at 0.40 mm) fail, and so do a
+        0.18 mm ring, a 0.025 mm via ring, a 0.1 mm via hole, a 0.20 mm NPTH copper ring and a track 0.1 mm from an
+        NPTH hole."""
+        issues, ev = gate.jlc_board_holes(self.load())
+        self.assertEqual(issues, [])
+        least = {k: v[0] for k, v in ev['least'].items()}
+        self.assertEqual((least['plated_hole'], least['pth_ring'], least['via_ring'], least['npth_hole']),
+                         (0.3, 0.2, 0.1, 0.6))
+        self.assertAlmostEqual(least['npth_to_copper'], 0.2, delta=0.0015)
+        self.assertTrue(ev['least']['npth_to_copper'][1].startswith('J3 NPTH'))
+        self.assertNotIn('npth_ring', least)
+        P = self.P
+
+        def via(board):
+            return next(v for v in board.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'USB_ILIM'
+                        and v.GetPosition() == P(14.825, 26.0))
+
+        def npth(board):
+            return min((p for p in board.FindFootprintByReference('J2').Pads()
+                        if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH), key=lambda p: (p.GetPosition().x, p.GetPosition().y))
+
+        def small_via(board):
+            v = via(board); v.SetDrill(pcbnew.FromMM(0.1)); v.SetWidth(pcbnew.FromMM(0.3))
+
+        def near(board):                    # a GND track whose edge is 0.1 mm from the NPTH hole wall
+            p = npth(board); c, r = p.GetPosition(), p.GetDrillSize().x // 2
+            t = pcbnew.PCB_TRACK(board); t.SetLayer(pcbnew.F_Cu); t.SetWidth(pcbnew.FromMM(0.2)); t.SetNet(board.FindNet('GND'))
+            x = c.x + r + pcbnew.FromMM(0.2)
+            t.SetStart(pcbnew.VECTOR2I(x, c.y - pcbnew.FromMM(0.5))); t.SetEnd(pcbnew.VECTOR2I(x, c.y + pcbnew.FromMM(0.5)))
+            board.Add(t)
+        j122_5 = lambda board, d: board.FindFootprintByReference('J122').FindPadByNumber('5').SetDrillSize(P(d, d))  # noqa: E731
+        for name, seed, word in (
+                ('ring 0.10', lambda b: j122_5(b, 1.7), 'JLC holes: J122.5 annular ring 0.100 mm on F.Cu'),
+                ('ring 0.18', lambda b: j122_5(b, 1.54), 'JLC holes: J122.5 annular ring 0.180 mm'),
+                ('via ring', lambda b: via(b).SetDrill(pcbnew.FromMM(0.45)),
+                 'JLC holes: via USB_ILIM (14.82, 26.00) ring 0.025 mm'),
+                ('via hole', small_via, 'JLC holes: via USB_ILIM (14.82, 26.00) hole 0.100 mm'),
+                ('npth 0.40', lambda b: npth(b).SetDrillSize(P(0.4, 0.4)),
+                 'JLC holes: J2 NPTH (2.46, 39.40) non-plated hole 0.400 mm'),
+                ('npth ring', lambda b: npth(b).SetSize(P(1.391, 1.391)),
+                 'JLC holes: J2 NPTH (2.46, 39.40) NPTH pad ring 0.200 mm'),
+                ('npth to copper', near, 'JLC holes: J2 NPTH (2.46, 39.40) is 0.1')):
+            with self.subTest(seed=name):
+                board = self.load()
+                seed(board)
+                found = gate.jlc_board_holes(board)[0]
+                self.assertTrue(any(i.startswith(word) for i in found), found)
+        self.seeded('K-rules', lambda b: npth(b).SetDrillSize(P(0.4, 0.4)), "non-plated hole 0.400 mm is under JLC's")
+        self.seeded('K-rules', lambda b: j122_5(b, 1.7), "J122.5 annular ring 0.100 mm on F.Cu is under JLC's 0.2 mm")
+
+    def test_r22_monitor_and_ic_ground_taps(self):
+        """D-R22-02 (R22-POWER-01 / -02): the TPS2553 GND pins (U10.2 with R7.2, U402.2), R8.2 and the power-state
+        monitor taps (R60.1 for PA6, U1.28 for PA4, R91.1) are single-open taps held to their one via by exact entries;
+        the R85.2 / R430.2 entries name the floating IC ground. With its entry dropped a tap fails, and an entry the
+        board does not meet is stale."""
+        taps = {t[1]: t for t in gate.SINGLE_OPEN_TAPS}
+        self.assertEqual((len(gate.SINGLE_OPEN_TAPS), len(gate.SINGLE_OPEN_EXCEPTIONS)), (33, 15))
+        want = {'U10.2': 'via GND (9.00, 27.84)', 'R7.2': 'via GND (9.00, 27.84)', 'U402.2': 'via GND (32.30, 59.50)',
+                'R8.2': 'via GND (9.95, 30.60)', 'R60.1': 'via VLOGIC (34.50, 63.00)',
+                'U1.28': 'via LOGIC_SOURCE_ST (30.85, 51.80)', 'R91.1': 'via 3V3 (28.10, 60.00)'}
+        b = self.load()
+        issues, ev = gate.single_via_opens(b, taps=[taps[t] for t in want])
+        self.assertEqual(issues, [])
+        self.assertEqual({t: ev[t]['single_points'] for t in want}, {t: [v] for t, v in want.items()})
+        for tap in ('R85.2', 'R430.2', 'U10.2', 'U402.2'):
+            self.assertIn("floats the TPS2553's ground", next(x[2] for x in gate.SINGLE_OPEN_EXCEPTIONS if x[0] == tap))
+        for tap in ('U402.2', 'R60.1', 'U1.28', 'R91.1'):
+            with self.subTest(tap=tap):
+                t = taps[tap]
+                self.assertEqual(gate.single_via_opens(b, taps=[t], exceptions=[])[0],
+                                 [f'{tap} ({t[3]}) hangs on one via: opening {want[tap]} cuts it off from {"/".join(t[2])}'])
+        extra = list(gate.SINGLE_OPEN_EXCEPTIONS) + [('R60.1', 'via VLOGIC (29.80, 67.70)', 'not met')]
+        self.assertEqual(gate.single_via_opens(b, taps=[taps['R60.1']], exceptions=extra)[0],
+                         ['stale SINGLE_OPEN_EXCEPTIONS entry R60.1 / via VLOGIC (29.80, 67.70) (not met)'])
+
+
+    def test_r22_dru_override_spellings(self):
+        """D-R22-05 (R22-GATE-01): every (min ...) in a constraint is read whatever its unit or position, an unreadable
+        one fails, and a later rule on any layer that can meet a pinned row overrides it. The gate lens's seeds: g01f
+        (a 10 mil PTH override), g01g (a 6 mil via rule, 0.152 mm), g01h ((opt) before (min)), g01e (an override on
+        In1.Cu), a um spelling, an outer override on F.Cu at 0.21 mm and an 8 mil hole-to-hole rule each fail; an
+        unknown unit fails as unreadable; a later 0.28 mm F.Cu rule does not. Refilled under g01f's DRU, KiCad honours
+        10 mil (J1.2 and J400.2 come back at 0.255 mm), and K-rules names the override and the walls."""
+        import hashlib
+        import shutil
+        import tempfile
+        folder = real_project()
+        dru = (folder / 'm3.kicad_dru').read_text()
+
+        def rule(name, constraint, layer=None, cond="A.Type == 'Pad' && A.Pad_Type == 'Through-hole'"):
+            return (dru + f'\n(rule "{name}"\n' + (f'  (layer {layer})\n' if layer else '') +
+                    f'  (condition "{cond}")\n  (constraint {constraint}))\n')
+        self.assertEqual((gate.dru_min_mm('10mil'), gate.dru_min_mm('150um'), gate.dru_min_mm('0.01in'),
+                          gate.dru_min_mm('0.25mm'), gate.dru_min_mm('3 furlong')), (0.254, 0.15, 0.254, 0.25, None))
+        seeds = {
+            'g01f 10 mil PTH': (rule('Terminal relief', 'hole_clearance (min 10mil)'), 'follows "JLC inner-layer PTH'),
+            'g01g 6 mil via': (rule('Via relief', 'hole_clearance (min 6mil)', cond="A.Type == 'Via'"),
+                               "hole_clearance min 0.1524 mm is below JLC's 0.2 mm hole figure"),
+            'g01h opt first': (rule('Via relief', 'hole_clearance (opt 0.25mm) (min 0.15mm)', cond="A.Type == 'Via'"),
+                               "hole_clearance min 0.15 mm is below JLC's 0.2 mm hole figure"),
+            'g01e In1.Cu': (rule('In1 terminal relief', 'hole_clearance (min 0.25mm)', layer='In1.Cu'),
+                            'on layer In1.Cu) follows "JLC inner-layer PTH'),
+            'um spelling': (rule('x', 'hole_clearance (min 150um)'), "min 0.15 mm is below JLC's 0.2 mm hole figure"),
+            'F.Cu outer': (rule('x', 'hole_clearance (min 0.21mm)', layer='F.Cu'),
+                           'on layer F.Cu) follows "JLC outer-layer PTH hole to track"'),
+            'hole to hole 8 mil': (rule('x', 'hole_to_hole (min 8mil)', cond="A.Type == 'Pad'"),
+                                   'follows "JLC pad hole to hole"'),
+            'unreadable unit': (rule('x', 'hole_clearance (min 0.3furlong)'), 'has an unreadable minimum'),
+        }
+        for name, (text, word) in seeds.items():
+            with self.subTest(seed=name):
+                found = gate.jlc_hole_table(text)[0]
+                self.assertTrue(any(word in i for i in found), found)
+        self.assertEqual(gate.jlc_hole_table(rule('x', 'hole_clearance (min 0.28mm)', layer='F.Cu'))[0], [])
+        # g01f end to end: KiCad honours the mil value, so the fills move to 0.255 mm; K-rules (DRU re-pinned) names both
+        d = Path(tempfile.mkdtemp(prefix='r10_g01f_'))
+        self.addCleanup(shutil.rmtree, d, ignore_errors=True)
+        for name in ('m3.kicad_pcb', 'm3.kicad_pro'):
+            shutil.copyfile(folder / name, d / name)
+        text = seeds['g01f 10 mil PTH'][0]
+        (d / 'm3.kicad_dru').write_text(text)
+        board = pcbnew.LoadBoard(str(d / 'm3.kicad_pcb'))
+        self.assertTrue(pcbnew.ZONE_FILLER(board).Fill(board.Zones()))
+        walls = gate.pth_inner_copper(board)[1]
+        self.assertAlmostEqual(walls['J1.2']['In2.Cu'][0], 0.255, delta=0.002)
+        with patch.object(gate, 'DRU_SHA256', hashlib.sha256(text.encode('utf-8')).hexdigest()):
+            found = self.run_rule('K-rules', board, d / 'm3.kicad_pcb')
+        self.assertTrue(any('"Terminal relief"' in i and 'can override' in i for i in found), sorted(found)[:4])
+        self.assertTrue(any('J1.2' in i and "JLC's 0.3 mm inner-layer PTH" in i for i in found), sorted(found)[:4])
+
+    def test_r22_board_hole_rows(self):
+        """D-R22-05 (R22-GATE-01): three more JLC rows measured on the board, independent of the DRU: via hole wall to
+        foreign copper >= 0.2 mm (least 0.25 mm today), PTH hole wall to outer copper >= 0.28 mm (least 0.55 mm) and
+        pad hole to pad hole >= 0.45 mm (least 0.835 mm, J3's NPTH to J3.4). A 3V3 track on In1 0.1 mm from a via
+        hole, a GND track 0.2 mm from J122.1's hole on F.Cu and a J2 NPTH hole moved 0.3 mm from another each fail."""
+        ev = gate.jlc_board_holes(self.load())[1]['least']
+        self.assertEqual((ev['via_hole_to_copper'][0], ev['pth_hole_to_outer_copper'][0], ev['pad_hole_to_hole'][0]),
+                         (0.25, 0.55, 0.835))
+        P, MM = self.P, pcbnew.FromMM
+
+        def track(board, net, layer, a, c):
+            t = pcbnew.PCB_TRACK(board); t.SetLayer(layer); t.SetWidth(MM(0.2)); t.SetNet(board.FindNet(net))
+            t.SetStart(a); t.SetEnd(c); board.Add(t)
+
+        def via_seed(board):               # USB_ILIM via (14.825, 26.0), hole radius 0.15: track edge 0.1 mm off the wall
+            x = MM(14.825) + MM(0.15) + MM(0.1) + MM(0.1)
+            track(board, '3V3', pcbnew.In1_Cu, pcbnew.VECTOR2I(x, MM(25.5)), pcbnew.VECTOR2I(x, MM(26.5)))
+
+        def pth_seed(board):               # J122.1's hole (1.3 mm) wall + 0.2 mm, on F.Cu
+            c = board.FindFootprintByReference('J122').FindPadByNumber('1').GetPosition()
+            x = c.x + MM(0.65) + MM(0.2) + MM(0.1)
+            track(board, 'GND', pcbnew.F_Cu, pcbnew.VECTOR2I(x, c.y - MM(0.3)), pcbnew.VECTOR2I(x, c.y + MM(0.3)))
+
+        def hole_seed(board):              # one J2 NPTH 0.3 mm (wall to wall) from another
+            holes = sorted((p for p in board.FindFootprintByReference('J2').Pads()
+                            if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH), key=lambda p: (p.GetPosition().x, p.GetPosition().y))
+            a, c = holes[0], holes[1]
+            v = a.GetPosition() - c.GetPosition()
+            k = (a.GetDrillSize().x / 2 + c.GetDrillSize().x / 2 + MM(0.3)) / v.EuclideanNorm()
+            a.SetPosition(c.GetPosition() + pcbnew.VECTOR2I(int(v.x * k), int(v.y * k)))
+        for name, seed, word in (
+                ('via', via_seed, 'JLC holes: via USB_ILIM (14.82, 26.00) hole wall is 0.1'),
+                ('pth outer', pth_seed, 'JLC holes: J122.1 hole wall is 0.2'),
+                ('hole to hole', hole_seed, 'JLC holes: J2 NPTH')):
+            with self.subTest(seed=name):
+                board = self.load()
+                seed(board)
+                found = gate.jlc_board_holes(board)[0]
+                self.assertTrue(any(i.startswith(word) and ('apart' in i if name == 'hole to hole' else True)
+                                    for i in found), found)
+        self.seeded('K-rules', via_seed, "under JLC's 0.2 mm via hole to copper")
+
+    def test_r22_fab_reference_placement_and_stroke(self):
+        """D-R22-06 (R22-GATE-02): each Fab reference's ink centre is within 1.5 mm of its own part's Fab body box (the
+        courtyard box for the 14 parts with only a pin-1 dot or no Fab marks; farthest today D9, 0.968 mm), its stroke
+        is at least 0.1 x height or 0.05 mm (0.15 x everywhere today), and no board-level text sits on a Fab layer. The
+        gate lens's g08a (R134's 8.4 mm away, 5.147 mm from its body box), g08c (a board-level B.Fab 'Q121' on Q120) and
+        g08d (R119's at a 0.005 mm stroke) fail, and so does U1's (courtyard-boxed) moved 3 mm off its courtyard."""
+        issues, ev = gate.fab_ref_crossings(self.load())
+        self.assertEqual(issues, [])
+        self.assertEqual(ev['farthest_from_own_box_mm'], ('D9', 0.968))
+        self.assertEqual(len(ev['courtyard_boxed']), 14)
+        self.assertAlmostEqual(ev['least_stroke_ratio'], 0.15)
+        ref = lambda board, r: next(g for g in board.FindFootprintByReference(r).GraphicalItems()  # noqa: E731
+                                    if isinstance(g, pcbnew.PCB_TEXT) and g.GetText() == '${REFERENCE}')
+
+        def g08c(board):
+            t = pcbnew.PCB_TEXT(board); t.SetText('Q121'); t.SetLayer(pcbnew.B_Fab)
+            t.SetPosition(board.FindFootprintByReference('Q120').GetPosition())
+            t.SetTextSize(self.P(0.6, 0.6)); t.SetTextThickness(pcbnew.FromMM(0.09)); t.SetMirrored(True); board.Add(t)
+
+        def u1_far(board):
+            cy = board.FindFootprintByReference('U1').GetCourtyard(pcbnew.F_CrtYd).BBox()
+            ref(board, 'U1').SetPosition(pcbnew.VECTOR2I(cy.GetRight() + pcbnew.FromMM(3.0), cy.Centre().y))
+        for name, seed, word in (
+                ('g08a', lambda b: ref(b, 'R134').SetPosition(self.P(8.2, 65.5)),     # 8.4 mm from R134's centre,
+                 "Fab reference R134 sits 5.147 mm from its own part's Fab body box"),  # 5.1 from its 2512 body box
+                ('g08c', g08c, "board-level text 'Q121' on B.Fab"),
+                ('g08d', lambda b: ref(b, 'R119').SetTextThickness(pcbnew.FromMM(0.005)),
+                 'Fab reference R119 stroke 0.005 mm'),
+                ('U1 far', u1_far, "Fab reference U1 sits 3.")):
+            with self.subTest(seed=name):
+                board = self.load()
+                seed(board)
+                found = gate.fab_ref_crossings(board)[0]
+                self.assertTrue(any(i.startswith(word) for i in found), found)
+        self.seeded('K-legends', g08c, "board-level text 'Q121' on B.Fab")
+
+    def test_r22_clamp_gnd_returns(self):
+        """D-R22-07 (R22-GATE-03): every port clamp's GND pad reaches a GND via through tracks within 1.0 mm (0.7 mm,
+        D400 / D401 0.8 mm, today). The gate lens's g07b (D420's GND stub and via removed: the pour alone) fails, and so
+        does D410's return re-drawn 1.5 mm long."""
+        issues, ev = gate.clamp_returns(self.load())
+        self.assertEqual(issues, [])
+        self.assertEqual({k: v[0] for k, v in ev.items()},
+                         {'D400.2': 0.8, 'D401.2': 0.8, 'D410.2': 0.7, 'D411.2': 0.7, 'D420.2': 0.7, 'D421.2': 0.7,
+                          'D440.2': 0.7, 'D441.2': 0.7})
+
+        def find(board, cls, net, pts):
+            want = {tuple(self.P(*q)) for q in pts}
+            return next(t for t in board.GetTracks() if t.GetClass() == cls and t.GetNetname() == net
+                        and ({tuple(t.GetStart()), tuple(t.GetEnd())} == want if cls == 'PCB_TRACK'
+                             else tuple(t.GetPosition()) in want))
+
+        def g07b(board):
+            self.drop(board, find(board, 'PCB_TRACK', 'GND', [(35.75, 31.525), (35.75, 32.225)]))
+            self.drop(board, find(board, 'PCB_VIA', 'GND', [(35.75, 32.225)]))
+        self.seeded('K-ports', g07b, "D420.2 (the D420 clamp's GND) reaches no GND via through tracks")
+        board = self.load()                 # D410's return stub lengthened 0.8 mm: its via moves along the stub
+        via = find(board, 'PCB_VIA', 'GND', [(36.45, 12.625)])
+        at = via.GetPosition()
+        stub = next(t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'GND'
+                    and at in (t.GetStart(), t.GetEnd()))
+        q = stub.GetStart() if stub.GetEnd() == at else stub.GetEnd()
+        d = at - q
+        k = pcbnew.FromMM(0.8) / d.EuclideanNorm()
+        far = at + pcbnew.VECTOR2I(int(round(d.x * k)), int(round(d.y * k)))
+        via.SetPosition(far)
+        stub.SetEnd(far) if stub.GetEnd() == at else stub.SetStart(far)
+        found = gate.clamp_returns(board)[0]
+        self.assertTrue(any(i.startswith("D410.2 (the D410 clamp's GND) is 1.5") for i in found), found)
 
 
 if __name__ == '__main__':

@@ -241,8 +241,11 @@ R21_SHEET_NOTES = {
         'U4: 4-wire SPI.': ('U4: 4-wire SPI. INT2 open; OCS_aux/SDO_aux (pins 10/11) open, held by their internal pull-ups '
                             '(DS15034 Table 25 p52; the alternate the same, DS14623 table 25).')},
     'diagnostics.kicad_sch': {
+        # D-R22-03 (R22-MCU-01): line 2 gives R10's supply (PORT_5V3 via U402) and the real worst cases.
         'CAM_5V_SENSE = CAM_5V x 1k/11k': ('CAM_5V_SENSE = CAM_5V x 1k/11k -> PB1 (pin 35, ADC12_INP5, TT_u 4.0 V max).\\n'
-                                           '5.25 V reads 0.477 V; even 19.9 V (TVS clamp, failed regulator) reads 1.81 V.\\n'
+                                           'Nominal 5.456 V (PORT_5V3 via U402) reads 0.496 V; a failed U400 passes '
+                                           "RAW_PROTECTED (held under U9's OVLO, 9.77 V nominal) and reads about 0.89 V; "
+                                           "even D8's 19.9 V clamp would read 1.81 V.\\n"
                                            'Lets a battery-powered self-test check the camera supply (U400 buck, U402 '
                                            'switch) without a meter; on USB-only power PORT_5V3 and CAM_5V are off.')},
     'battery_entry.kicad_sch': {

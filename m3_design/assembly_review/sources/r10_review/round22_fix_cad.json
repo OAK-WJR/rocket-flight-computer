@@ -1,0 +1,279 @@
+{
+ "schema": 1,
+ "lane": "round 22 between-rounds pass, CAD lane",
+ "date": "2026-10-31",
+ "brief": ".supervisor/r22_fix_brief.md items 1-5 (item 5: the gate lens items R22-GATE-01..03, folded into a second build)",
+ "board": {
+  "sha256": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+  "changed": false,
+  "bytes": 2336572,
+  "footprints": 215,
+  "segments": 983,
+  "vias": 300,
+  "gnd_vias": 167,
+  "track_mm": 1871.611826,
+  "size_mm": [
+   46,
+   90,
+   1.6
+  ]
+ },
+ "build": {
+  "kicad_cli": "10.0.7",
+  "numpy_py": ".supervisor/venv/bin/python",
+  "complete_builds": 2,
+  "exit": 0,
+  "seconds": 1399,
+  "board_sha256": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+  "check_sh_exit": 0,
+  "drc": 0,
+  "unconnected": 0,
+  "schematic_parity": 0,
+  "erc": 0,
+  "check_r10": "36 / 36 rules OK",
+  "route_check": "0 failing",
+  "fab": "re-bound (diagnostics sheet changed); content checks and six-output manifest pass",
+  "files_changed_by_build": [
+   "m3_design/assembly_review/diagnostics.kicad_sch",
+   "fab/m3_assembly_top.pdf",
+   "fab/m3_assembly_bottom.pdf",
+   "fab/m3_gerber.zip",
+   "fab/m3_fab_manifest.json"
+  ],
+  "second_build": {
+   "exit": 0,
+   "seconds": 1424,
+   "board_sha256": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+   "check_sh_exit": 0,
+   "changed": "the date-stamped fab outputs only (checks only)"
+  }
+ },
+ "items": [
+  {
+   "n": 1,
+   "finding": "R22-REQUIREMENTS-02",
+   "decision": "D-R22-01",
+   "status": "done",
+   "jlc": "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-10-31): PTH annular ring >=0.20mm (multilayer 1 oz: 0.20 recommended, 0.15 absolute minimum); via diameter 0.1mm (0.15 preferred) larger than the hole; multilayer drill 0.15-6.3 mm, vias 0.15 / 0.25 mm; Min. Non-plated holes 0.50mm; NPTH pad annular ring >=0.45mm; NPTH to Track 0.2mm",
+   "gate": "check_r10.jlc_board_holes in K-rules (JLC_BOARD_HOLES, tolerance 0.001 mm), measured on the board whatever the DRU says",
+   "floors_mm": {
+    "pth_ring": 0.2,
+    "via_ring": 0.05,
+    "plated_hole": 0.15,
+    "npth_hole": 0.5,
+    "npth_ring": 0.45,
+    "npth_to_copper": 0.2
+   },
+   "board_least_mm": {
+    "pth_ring": [
+     0.2,
+     "J3's shell slots"
+    ],
+    "via_ring": [
+     0.1,
+     "0.5 / 0.3 mm vias"
+    ],
+    "plated_hole": [
+     0.3,
+     "vias"
+    ],
+    "npth_hole": [
+     0.6,
+     "J3"
+    ],
+    "npth_ring": "no NPTH pad carries copper",
+    "npth_to_copper": [
+     0.2,
+     "J3 NPTH to its GND SMD lands (0.201 with polygon arcs)"
+    ]
+   },
+   "j3_at_limit": "HRO's land pattern at JLC's 0.2 mm, held by the DRU rule 'HRO M-12 internal SMD lands to locating holes' (0.20 mm), K-lands' footprint SHA-256 pin and this check",
+   "before_after": "the lens's seeds (J122.5 ring 0.10 mm, J2 NPTH 0.40 mm) passed DRC and check_r10 -> each fails K-rules",
+   "seeds": [
+    "J122.5 ring 0.10 mm",
+    "J122.5 ring 0.18 mm",
+    "via ring 0.025 mm",
+    "via hole 0.1 mm",
+    "J2 NPTH 0.40 mm",
+    "J2 NPTH pad copper ring 0.20 mm",
+    "GND track 0.1 mm from a J2 NPTH hole"
+   ],
+   "side_fix": "shared _copper_items; hole points copied out of their polygon (KiCad CPoint returns a reference that dies with it; a first refactor read freed memory, caught before any build)"
+  },
+  {
+   "n": 2,
+   "finding": "R22-POWER-01 / R22-POWER-02",
+   "decision": "D-R22-02",
+   "status": "done",
+   "reworded": [
+    "R85.2 / via GND (9.00, 27.84)",
+    "R430.2 / via GND (32.30, 59.50)"
+   ],
+   "reworded_reason": "each via is a TPS2553's only ground (U10.2 with R7.2; U402.2): an open floats the IC's ground (TI states no open-GND behaviour: Inference); bench USB or camera supply loss, no flight hazard",
+   "taps_before_after": [
+    26,
+    33
+   ],
+   "exceptions_before_after": [
+    8,
+    15
+   ],
+   "new_taps": {
+    "U10.2 (GND, J1.2)": "via GND (9.00, 27.84)",
+    "R7.2 (GND, J1.2)": "via GND (9.00, 27.84)",
+    "U402.2 (GND, J1.2)": "via GND (32.30, 59.50)",
+    "R8.2 (GND, J1.2)": "via GND (9.95, 30.60)",
+    "R60.1 (VLOGIC, U11.1 / U11.8)": "via VLOGIC (34.50, 63.00)",
+    "U1.28 PA4 (LOGIC_SOURCE_ST, U11.9)": "via LOGIC_SOURCE_ST (30.85, 51.80)",
+    "R91.1 (3V3, L1.2)": "via 3V3 (28.10, 60.00)"
+   },
+   "consequences": {
+    "R60.1": "R61 holds PA6 at 0 V: permanent brown-out per the firmware rule, logging / UARTs shed (Inference; no pyro, deployment or servo effect)",
+    "U1.28": "PA4 floats; port UARTs may flap or stay off (Inference)",
+    "R91.1": "PA4 can read 'battery' on USB-only power (Inference)",
+    "R8.2": "no CC2 sink; bench USB only"
+   },
+   "next_board_change": "a second via each (R60: or an F.Cu feed from C84.1)",
+   "seeds": [
+    "each new tap with its entry dropped fails",
+    "an entry not met is stale"
+   ]
+  },
+  {
+   "n": 3,
+   "finding": "R22-MCU-01",
+   "decision": "D-R22-03",
+   "status": "done",
+   "before": "5.25 V reads 0.477 V; even 19.9 V (TVS clamp, failed regulator) reads 1.81 V.",
+   "after": "Nominal 5.456 V (PORT_5V3 via U402) reads 0.496 V; a failed U400 passes RAW_PROTECTED (held under U9's OVLO, 9.77 V nominal) and reads about 0.89 V; even D8's 19.9 V clamp would read 1.81 V.",
+   "checked": [
+    "R104 10k / R105 1k (1 %): 1/11; 5.456 / 11 = 0.496 V",
+    "U9 OVLO: R82 2M / R83 280k (0.1 %), VOV(R) 1.20 V typ (1.183-1.223, TI SLVSFC9C p9): 9.77 V nominal, 9.98 V max; 9.77 / 11 = 0.89 V",
+    "D8 SMBJ12CA VC 19.9 V at 30.2 A (Littelfuse SMBJ datasheet); 19.9 / 11 = 1.81 V"
+   ],
+   "change_from_lens_wording": "'<= 0.89 V' holds at nominal only (about 0.92 V at the maximum OVLO threshold with 1 % divider parts), so 'about 0.89 V' and '9.77 V nominal'"
+  },
+  {
+   "n": 4,
+   "finding": "R22-SAFETY-01, R22-PARTS (records slip), R22-REQUIREMENTS-01, R22-DOCS_BINDING-04",
+   "decision": "D-R22-04",
+   "status": "done",
+   "corrections": {
+    "D-R21-05 least RAW_ACT to GND mm": [
+     0.302,
+     0.3
+    ],
+    "D-R21-01 J3.1 / J3.4 In1": "1.375 / 1.345 mm kept as the board copper (slot wall to the VBUS via barrels; the vias keep pads only on F.Cu / B.Cu); the lens's 1.225 / 1.194 mm (a 0.6 mm pad counted) recorded beside them",
+    "D-R21-04 exemption reason": "physics (470 kOhm feeds, tau about 50 ms, about 7 uA); gnd_spots finds legal GND vias 0.671 mm from (10.8, 69.2), (21.3, 68.9), (19.675, 66.6), none for (17.1, 82.8)",
+    "EN 2.03 V": "'never exceeds the divider's 2.03 V' -> '2.03 V nominal (<= 2.06 V with 1 % parts at 8.4 V; Calculation) while R81 is intact' in D-R21-05 and the round 21 hand-back"
+   }
+  },
+  {
+   "n": 5,
+   "finding": "R22-GATE-01 / -02 / -03",
+   "decisions": [
+    "D-R22-05",
+    "D-R22-06",
+    "D-R22-07"
+   ],
+   "status": "done",
+   "gate_01": {
+    "before": "dru_rules read only '(min N mm)' written first; jlc_hole_table counted overrides only on the exact pinned layer word; g01e / f / g / h, um, F.Cu 0.21 and 8 mil hole-to-hole passed the table",
+    "after": "every (min ...) read in any position and unit (mm, mil / thou, um, in; bare = mm), unreadable fails; any later rule whose layer can meet the pinned one overrides; each seed fails, a later 0.28 mm F.Cu rule does not; g01f refilled: fills at 0.255 mm, K-rules names override and walls",
+    "board_measures": {
+     "via hole wall to foreign copper (every layer)": [
+      0.2,
+      0.25
+     ],
+     "PTH hole wall to F.Cu / B.Cu copper": [
+      0.28,
+      0.55
+     ],
+     "pad hole to pad hole": [
+      0.45,
+      0.835
+     ]
+    },
+    "note": "D-R22-01 measured none of these three rows"
+   },
+   "gate_02": {
+    "measured": "20 references beside their body box, farthest 0.968 mm (D9); strokes 0.15 x height; no board-level Fab text",
+    "rule": "ink centre within 1.5 mm of own Fab body box (courtyard box for the 14 parts without a body outline); stroke >= 0.1 x height or >= 0.05 mm; no board-level text on F.Fab / B.Fab",
+    "seeds": [
+     "g08a R134 8.4 mm away (5.147 mm from its body box)",
+     "g08c board-level 'Q121' on Q120",
+     "g08d R119 0.005 mm stroke",
+     "U1 3 mm off its courtyard"
+    ]
+   },
+   "gate_03": {
+    "measured_mm": {
+     "D410.2": 0.7,
+     "D411.2": 0.7,
+     "D420.2": 0.7,
+     "D421.2": 0.7,
+     "D440.2": 0.7,
+     "D441.2": 0.7,
+     "D400.2": 0.8,
+     "D401.2": 0.8
+    },
+    "rule": "each clamp GND pad reaches a GND via or plated GND pad through tracks only within 1.0 mm",
+    "seeds": [
+     "g07b D420 stub and via removed",
+     "D410 stub re-drawn 1.5 mm"
+    ]
+   }
+  }
+ ],
+ "files_changed": [
+  "tools/check_r10.py",
+  "tools/test_r10_check.py",
+  "m3_design/r10_sch.py (diagnostics note text)",
+  "m3_design/assembly_review/diagnostics.kicad_sch (generated)",
+  "m3_design/assembly_review/fab/* (re-bound)",
+  "R10_DECISIONS.md (D-R21-01 / -04 / -05 corrections; D-R22-01..07)",
+  "round21_fix_cad.md / .json (corrections)",
+  "round22_fix_cad.md / .json"
+ ],
+ "tests": {
+  "added": [
+   "RealBoardSeeds.test_r22_jlc_board_holes",
+   "RealBoardSeeds.test_r22_monitor_and_ic_ground_taps",
+   "RealBoardSeeds.test_r22_dru_override_spellings",
+   "RealBoardSeeds.test_r22_board_hole_rows",
+   "RealBoardSeeds.test_r22_fab_reference_placement_and_stroke",
+   "RealBoardSeeds.test_r22_clamp_gnd_returns"
+  ],
+  "changed": [
+   "RealBoardSeeds.test_r21_regulator_taps_survive_one_via_open (33 taps)",
+   "SchematicContract.test_r21_sheet_notes (diagnostics line)"
+  ],
+  "counts": {
+   "shell": 10,
+   "procurement": "OK",
+   "fab_validation": 34,
+   "fit": 33,
+   "paste": 16,
+   "r10_parts": 5,
+   "route": 69,
+   "r10": 253,
+   "r10_numpy_skips": 6,
+   "numpy_hotplug_plate": 6
+  }
+ },
+ "not_done": [
+  "D-R21-01's J3 In1 figures not replaced by 1.225 / 1.194 mm: re-measured, 1.375 / 1.345 mm is the board's copper (no In1 via pad); both bases recorded"
+ ],
+ "decisions": [
+  "D-R22-01",
+  "D-R22-02",
+  "D-R22-03",
+  "D-R22-04",
+  "D-R22-05",
+  "D-R22-06",
+  "D-R22-07"
+ ],
+ "record_index": "179 unique D IDs through D-R22-07",
+ "git_state_changed": false,
+ "native_cad_hand_edited": false
+}

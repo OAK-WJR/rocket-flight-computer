@@ -1,0 +1,226 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round22_safety",
+ "reviewer": "claude",
+ "target_commit": "ec8cb98c198e25462a2fb5d34f87a84636e37993",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "summary": "No single fault fires the e-match with the bus disabled. With the bus enabled the recorded single faults still fire (OUT to GND 0.1768 / 0.1795 mm, Q124 gate to drain 0.5195 mm in the package, a failed-short Q124, the 3V3 via 0.676 mm from R128.1, FMEA I-5, C128); round 21 added no neighbour to any pyro or arming net except fail-safe GND / RAW_PROTECTED / BAT_FAULT_N copper at the moved R81 and C87. D-R21-01, -02, -04 and -05 measure as claimed. S-8 holds at every protected barrel (least 1.0209 mm, native and fabricated Gerber). EN reaches R81 through 4 single items (1 via + 3 segments, 3.890 mm; 13 before); every other copper open leaves EN on R81. One Minor: the owner deviation list section 1 was not carried to 5516eeec.",
+ "findings": [
+  {
+   "id": "R22-SAFETY-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Deviation section 1 surface inventory was not carried to 5516eeec: it still lists the RAW_ACT-to-GND pair at the via D-R21-05 removed, and its stated minimum is not the board's least protected pair",
+   "evidence": {
+    "file": "docs/R10_VALIDATION.md, \"R10 deviations for owner acceptance\", section 1 \"Surface inventory\" (line 1943 and the first table row, line 1948, at ec8cb98); section \"Inventory basis\" (line 1923: the inventory \"was carried ... to 5516eeec... with the D-R21 changes\")",
+    "record_text": "\"R134.2 (RAW_ACT) to the GND via (20.706,65.619), R81.2's fan-out | 0.196 mm | With the bus enabled, the pack is shorted through Q120 / Q121 ... about 23 A, unfused\"; \"The minimum is 0.173 mm (R129.1, PYRO1_CONT_MID, to the GND via (22.330,58.250))\"",
+    "board": "m3_design/assembly_review/m3.kicad_pcb 5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1: no via at (20.706,65.619) or (16.639,63.939) (removed by D-R21-05 with r10_fanout.tsv; old board 0dc84776 had them 0.1951 mm from R134.2 and 0.2085 mm from the RAW_ACT feed (14.475,67.105)-(17.580,64.000), B.Cu)",
+    "measured": {
+     "least_RAW_ACT_to_GND_pad_track_via_mm": 0.3,
+     "where": "B.Cu RAW_ACT (22.800,61.400)-(22.800,63.875) to U11.6 (GND); pcbnew SHAPE collision 0.300002 mm; D-R21-05 states 0.302 mm",
+     "RAW_ACT_to_GND_fill_mm": 0.2505,
+     "least_protected_net_outer_pair_mm": 0.15,
+     "least_pair_where": "ARM1_SENSE B.Cu (29.750,45.500)-(29.750,49.400) to U13.5 (CAM_IO_3V3, TPS70933 output), pcbnew 0.150001 mm; identical on a3144b15, so the round 19 inventory missed it",
+     "new_D-R21-05_pairs_not_in_section_1_mm": {
+      "R81.1 (BAT_ENABLE) to GND via (17.200,79.900), F.Cu": 0.1732,
+      "R81.1 to GND track (15.875,79.900)-(17.200,79.900), F.Cu": 0.2232,
+      "R81.2 (GND) to RAW_PROTECTED via (20.300,79.100), F.Cu": 0.3068,
+      "C87.1 (BAT_ENABLE) to F.Cu GND fill": 0.2505,
+      "C87.2 (GND) to BAT_FAULT_N track (22.175,80.475)-(19.300,83.350), F.Cu": 0.2536
+     }
+    },
+    "consequences_calculation": "ARM1_SENSE to CAM_IO_3V3: at most 3.3 V on PC5 and about 3.3 V x 11.2/(10.2+11.2) = 1.73 V on RAW_ACT with the bus off, about 0.15 mA through the match (J-Tek no-fire 0.30 A); the cold screen reads the bus as live and refuses. EN to GND holds U9 off. GND to RAW_PROTECTED is a U9 output short (limit, latch-off). GND to BAT_FAULT_N reads as a U9 fault. None energises the bus, fires or turns the board on with J400 open.",
+    "method": "Own numpy adjacency inventory of 18 pyro / arming / load-switch nets on native geometry (outer <= 0.5 mm, inner <= 1.0 mm), diffed against 0dc84776; .supervisor/r22_safety/out/adj_new.json, adj_old.json; native gaps .supervisor/r22_safety/scripts/native_gap.py, native_pair.py"
+   },
+   "impact": "The owner accepts section 1 as the board-bound list of surface residuals. On 5516eeec it presents an unfused about 23 A pack-short pair that no longer exists, omits the D-R21-05 neighbours, and gives a minimum that is not the least pair. No hardware effect; the risk is a mis-informed acceptance and a stale baseline for round 23.",
+   "concrete_fix": "Text only (R10_VALIDATION section 1; optionally D-R21-05): (1) mark the first table row \"removed by D-R21-05 on 5516eeec: the least RAW_ACT-to-GND pad / track / via gap is now 0.300 mm (B.Cu RAW_ACT (22.8,61.4)-(22.8,63.875) to U11.6); fills 0.2505 mm\"; (2) add the D-R21-05 neighbours with their fail-safe outcomes (R81.1-GND via 0.173 mm, R81.2-RAW_PROTECTED via 0.307 mm, C87.1-GND fill 0.251 mm, C87.2-BAT_FAULT_N 0.254 mm); (3) restate the minimum with its net set, or as \"0.150 mm, ARM1_SENSE to U13.5 (CAM_IO_3V3), benign\"; (4) in D-R21-05 read 0.300 mm for 0.302 mm."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R21-01",
+   "claim": "Inner-layer PTH pad holes 0.55 mm from copper; J1.2, J400.2 and J3 shell holes 0.550 mm; nothing else changes; S-8 holds",
+   "measurement": "Native walls, every plated pad, In1 / In2, 0dc84776 -> 5516eeec: J1.2 In2 RAW_PROTECTED 0.2505 -> 0.5505; J400.2 In1 GND 0.2505 -> 0.5505; J3.1-J3.4 In2 3V3 0.4505 -> 0.5505 (slots); all other pads and layers unchanged (ring pads keep 0.2501 mm ring to fill, 0.5505 mm wall). Own Gerber parser on the committed m3_gerber.zip (In1 / In2 regions with net attributes + PTH drill) agrees to 0.1 um. S-8 least 1.0209 mm (PYRO1_OUT via (11.630,55.100) to its GND partner via ring, In1 and In2); 1.050 at both ACT_GATE vias, all three BAT_ENABLE vias (In2), J400.2 (In2 GND / RAW_PROTECTED) and J121.1 (In1 / In2 GND; In2 3V3 1.0612). J121.2 keeps rings 0.2501 mm from GND (exempt). Fill pieces per zone unchanged in count. K-rules OK; DRC 0/0/0.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-02",
+   "claim": "U2.1 gets a second path through a 0.4 mm B.Cu 3V3 run (24.05,68.95)->(23.0,70.0)",
+   "measurement": "Safety lens: the run and via (23.0,70.0) touch no pyro / arming / load-switch net (nearest BAT_ENABLE copper 1.350 mm; via (23.0,70.0) neighbours unchanged from 0dc84776). It adds one FMEA I-5 adjacency: its start is 0.475 mm from U2.2 (VLOGIC, U2 EN tied to VIN), not closer than the existing U2.1-U2.2 pin pair (0.400 mm) or the existing 3V3 run (24.05,68.6)-(23.2,68.6) (0.475 mm). K-power OK.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-03",
+   "claim": "battery_entry note: no battery-lead fuse; Q120 bypasses U9, R134 limits the fire path",
+   "measurement": "Sheet text present in m3_design/assembly_review/battery_entry.kicad_sch; matches the netlist (Q120.5-9 BAT_IN; R134 2 ohm RAW_ACT-PYRO1_IGN).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-04",
+   "claim": "BAT_SW_SOURCE / BAT_SW_RETURN / BAT_ENABLE critical (pyro class) and AUD-2 slow; BAT_ENABLE jog gone",
+   "measurement": "route_check --profile r10 on the committed tree: 0 failing; arming-net instances: only BAT_ENABLE short_layer_hop 2.973 mm (counted). Hop (19.675,66.6)-(20.7,67.625)-(20.7,68.3)-(21.3,68.9): R134.2 0.650 mm, R88.2 (GND) 0.619 mm; D-R19-02 via to R134.2 0.500 mm. Partner GND via centre to centre: BAT_ENABLE (21.3,68.9) 1.866, (19.675,66.6) 1.875, (17.1,82.8) 2.902; BAT_SW_SOURCE (10.8,69.2) 7.467 mm. Physics: the partner-via and one-region rules protect the return path of fast edges; these nets carry <= 18 uA (470 kohm), EN is 227 kohm // 220 nF (tau 50.0 ms charge, 66.0 ms discharge) with C87 now 2.0 mm from U9.1, and In1 GND shields the B.Cu hop from the F.Cu RAW_ACT / ACT corridor. The exemption is sound. Precision: \"tau about 50 ms\" describes BAT_ENABLE; BAT_SW_SOURCE / RETURN have no capacitor, their reason is the 470 kohm current limit.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-05",
+   "claim": "R81 F(18.8482,80.0), C87 F(18.7232,81.8768); one via left; 13 -> 4 single opens; other opens leave EN low; new neighbours fail safe; C87 beside R81 keeps EN at the divider voltage",
+   "measurement": "Pads R81.1 (18.0232,80.0) / R81.2 (19.6732,80.0), C87.1 (18.0232,81.8768) / C87.2 (19.4232,81.8768); BOM / CPL rows agree. Copper graph: U9.1 -> R81.1 single objects 4 (via (17.10,82.80); B.Cu (17.1,82.8)-(17.6,82.3) 0.707 mm; F.Cu (18.023,81.877)-(17.1,82.8) 1.306 mm; F.Cu (18.023,80.0)-(18.023,81.877) 1.877 mm; 3.890 mm), C87.1 3; on 0dc84776 13 / 14 (confirmed). The other 12 copper objects of BAT_ENABLE lie on the switch run: any one open leaves R81 and C87 on EN (low with J400 open). R81.2 / C87.2 return through F.Cu GND piece R10_GND_F[1] with vias (20.2,81.0) and (20.85,76.4): no single via open. Each of the 4 opens also cuts J400 from EN, so the board stops following J400 (visible at the next switch operation). Neighbours (pcbnew): R81.1-GND via 0.1732, R81.2-RAW_PROTECTED via (20.3,79.1) 0.3068, C87.1-GND fill 0.2505, C87.2-BAT_FAULT_N 0.2536 mm: all fail safe. GND vias (20.706,65.619) and (16.639,63.939) are gone (were 0.1951 / 0.2085 mm from RAW_ACT). EN peak: copper opens cannot charge C87 above the divider: 2.086 V max (1 % resistors, +0.1 uA leakage, 8.4 V), 3.12 V for a 12.6 V pack, 4.91 V at the 19.9 V D8 clamp (filtered, tau 50 ms), 3.33 V with one top resistor shorted; all under SLVSFC9C p7 6.5 V abs max and p8 5 V. Precision notes: least RAW_ACT-GND 0.300 mm (record 0.302); \"never exceeds 2.03 V\" is the nominal figure for copper opens (an R81 part open lets EN rise toward BAT_IN through 940 kohm, current-limited, which SLVSFC9C p8 note 2 allows at >= 350 kohm).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-01",
+   "claim": "EN pull-down at U9.1 not possible; residual recorded (owner row 29)",
+   "measurement": "Now partly fixed by D-R21-05: 1 via + 3 segments (3.890 mm) remain between U9.1 and R81 (row 29 text matches).",
+   "verdict": "partly"
+  },
+  {
+   "id": "D-R20-05",
+   "claim": "J121.1 and J400.2 carry no unconnected inner rings; J121.2 keeps them",
+   "measurement": "FlashLayer false on In1 / In2 for J121.1 and J400.2, true for J121.2 (rings 0.2501 mm to GND, exempt); Gerber shows no ring flash at J121.1 / J400.2.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-11",
+   "claim": "EN drop-out immunity 10.6 / 20.5 / 26.4 ms, 8.5 ms at 5.73 V, 6.6 ms at 5.5 V, 10 ms needs 5.92 V, turn-on 30-129 ms",
+   "measurement": "Recomputed (calc/en_timing.py; SLVSFC9C p9 VUVLO(R) 1.183/1.20/1.223 V, VUVLO(F) 1.076/1.09/1.116 V, IENLKG +/-0.1 uA; 1 % resistors; C87 0.72-1.27 x 220 nF): 10.65 / 20.47 / 26.41 ms; 8.50 ms; 6.58 ms; 5.917 V; turn-on nominal 87.7 / 55.5 / 44.7 ms, worst 30.31-128.56 ms over 6.0-8.4 V.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-02",
+   "claim": "BAT_ENABLE via (19.675,66.6) 0.500 mm from R134.2",
+   "measurement": "pcbnew shape collision 0.500000 mm (B.Cu); the moved hop segment is 0.650 mm.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-10",
+   "claim": "R80 / R165 470 kohm, R81 300 kohm, C87 220 nF 25 V X7R",
+   "measurement": "Netlist and JLC BOM: R80, R165 C23178 0603WAF4703T5E; R81 C23024 0603WAF3003T5E; C87 C21120 CL10B224KA8NNNC.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R18-04 / D-R19-01 (S-8 keep-outs)",
+   "claim": "In1 / In2 copper 1.05 mm from the protected barrels",
+   "measurement": "Confirmed above; seed: removing R18_BARREL_KEEPOUT_BAT_ENABLE_2 on a copy and refilling makes the committed S-8 fail at 0.251 mm (In2 RAW_PROTECTED at via (17.1,82.8)).",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R22-SAFETY-01",
+   "changes_board": false,
+   "kind": "text only",
+   "change": "docs/R10_VALIDATION.md section 1: replace the first \"Surface inventory\" table row with \"R134.2 (RAW_ACT) to the GND via (20.706,65.619): removed by D-R21-05 on 5516eeec (also (16.639,63.939), 0.209 mm from the RAW_ACT feed); the least RAW_ACT-to-GND pad / track / via gap is now 0.300 mm, B.Cu RAW_ACT (22.8,61.4)-(22.8,63.875) to U11.6; fills 0.2505 mm\"; add rows R81.1-GND via (17.2,79.9) 0.173 mm (EN held low), R81.2-RAW_PROTECTED via (20.3,79.1) 0.307 mm (U9 output short, latch-off), C87.2-BAT_FAULT_N 0.254 mm (reads as a U9 fault); change \"The minimum is 0.173 mm (R129.1 ...)\" to name its net set, or to \"0.150 mm (ARM1_SENSE to U13.5, CAM_IO_3V3; at most 3.3 V on PC5 and about 0.15 mA in the match)\". In D-R21-05 read 0.300 mm for 0.302 mm."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "U9 bypass, BAT_IN to RAW_PROTECTED (J1.1 In2 ring 0.2501 mm, BAT_IN via (17.5,87.3) In2 wall 0.2505 mm, U9.5-U9.6 and the B.Cu IN / OUT runs 0.200 mm): board on with J400 open",
+   "disposition": "Agree with rounds 20 and 21: running the logic needs a hard short carrying the board current; the bare-board E-test screens fabricated inner shorts and the per-flight off check a present one; a resistive leak cannot run the logic. Unchanged (Gerber and native)."
+  },
+  {
+   "candidate": "R81 part or solder-joint open",
+   "disposition": "EN floats with C87 and the top: with J400 open it stays where it was; after a closed-switch check opening J400 leaves EN on C87 (at most 0.1 uA leakage: >= about 16 s, or indefinitely), so the board stays on; caught by the per-flight \"opening J400 turns it off\" check. With J400 closed EN rises toward BAT_IN through 940 kohm, above 6.5 V but at <= 9 uA, which SLVSFC9C p8 note 2 permits (>= 350 kohm pull-up for supplies above 5 V). Part-level; unchanged by D-R21-05."
+  },
+  {
+   "candidate": "Q124 gate pin-to-first-node opens",
+   "disposition": "Two 0.3 mm F.Cu segments, (15.3,56.395)-(15.3,55.395) 1.0 mm and (15.3,55.395)-(16.0,55.395) 0.7 mm, carry the whole gate network (R126 / R127, R128, C126); with the bus enabled a floating gate is undefined (Inference). Inherent under the no-loop routing rule; closed as in rounds 19-20. No via in any gate-to-pull-down path (Q120 / Q121 / Q122 / Q124)."
+  },
+  {
+   "candidate": "FMEA I-5 worse than recorded?",
+   "disposition": "Not worse (not filed, brief). D-R21-02 adds one 3V3 adjacency, 0.475 mm from U2.2 (VLOGIC), not below the existing minima: U2.1-U2.2 pin pair 0.400 mm (B.Cu; U2 EN tied to VLOGIC), In2 plane edges 0.300 mm, J440.1 / J9.1 rings 0.2501 mm. For the record the route list also omits barrel walls at 0.2505 mm: VLOGIC vias (29.8,81.15) and (34.5,63.0) and the CAM_5V via (34.2,49.325) in the In2 3V3 fill, and the 3V3 via (26.4,79.26) in In2 RAW_PROTECTED (all unchanged since 0dc84776). Respin note: Diodes DS41326 Rev 3-2 p2 allows U2 EN to be left open (\"Attach to VIN or leave open for automatic startup\"), which would remove the U2.1-U2.2 route; the H-9 clamp covers every route."
+  },
+  {
+   "candidate": "C128 worse than recorded?",
+   "disposition": "Not worse. C128 is Murata GCJ188R71H104KA12D, a GCJ soft-termination part (resin external electrodes: \"Cracking of the ceramic element is suppressed by the resin of the external electrodes, which releases the stress\", Murata GCJ series page). That mitigates the recorded flex-crack short (Inference); the record could say so."
+  },
+  {
+   "candidate": "PYRO1_IGN to GND with the bus enabled (J121.2 rings 0.2501 mm to In1 / In2 GND; B.Cu IGN to GND fill 0.2505 mm)",
+   "disposition": "S-8 rightly exempts GND at IGN for fire (no igniter current). Consequence not stated in the record: R134 then dissipates about (8.4 / 2.05)^2 x 2 = 34 W until it opens or firmware drops PC1 (loss of the primary channel, local heating; no fire path). Unchanged; owner row 18 limits the exposure. Not filed."
+  },
+  {
+   "candidate": "ESD into J400.2 while turning the screw switch",
+   "disposition": "Worst case (full 100 pF / 8 kV transfer, 0.8 uC into C87): EN about 3.6 V, U9 on for about 66 ms x ln(3.6/1.09) = 79 ms with J400 open; needs a low-impedance return from board GND to the discharger, which an isolated airframe does not give (Inference); no fire path (launch detection, PC1, PE4). Installed ESD is unqualified (M3_R10). Not filed."
+  },
+  {
+   "candidate": "EN to BAT_OVLO (U9.2 0.200 mm; tracks 0.225-0.48 mm; via (17.1,82.8) B.Cu 0.350-0.481 mm)",
+   "disposition": "Fail safe: J400 open, EN = 8.4 x 144.8k / 2144.8k = 0.57 V (off); J400 closed, EN = OVLO = 1.55 V, above VOV(R) 1.183-1.223 V, so OVLO holds U9 off."
+  },
+  {
+   "candidate": "ACT_GATE to BAT_IN (B.Cu 0.2172 mm at Q120.9) and to BAT_SW_SOURCE (0.4693 mm)",
+   "disposition": "Fail safe for fire: the P-FETs are held off (VGS about +0.5 V); with the bus enabled the BAT_SW_SOURCE bridge pulls the EN divider top to about 1.4 V and resets the board. Unchanged."
+  },
+  {
+   "candidate": "BAT_SW_SOURCE via (10.8,69.2) 0.2505 mm from In2 RAW_PROTECTED, outside S-8",
+   "disposition": "Fail safe: with U9 off RAW_PROTECTED is about 0 V, so EN cannot rise; when on, opening J400 still disconnects R165. Its exclusion from BARREL_NETS is physically right."
+  },
+  {
+   "candidate": "U9.8 (GND) on one 0.425 mm B.Cu segment to via (20.2,81.0)",
+   "disposition": "Pin-to-first-node, unchanged; U9 behaviour with an open GND pin is not stated by TI (Inference). Not filed."
+  },
+  {
+   "candidate": "New copper from round 21 near pyro / arming nets",
+   "disposition": "Adjacency diff 0dc84776 -> 5516eeec: the only new protected-net rows are BAT_ENABLE to GND (R81.1 via / track, re-drawn run and hop to fills); removed rows include RAW_ACT to the two deleted GND vias. No new non-GND neighbour of any pyro or arming net."
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after: 5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1 (worktree file and git show ec8cb98 identical); git rev-parse HEAD ec8cb98.",
+  "git archive ec8cb98 (m3_design, tools, docs, quality_audit, m3_firmware, reference, diagnostics) into .supervisor/r22_safety/src; previous boards by git show: accfff4 (0dc84776) and 1e60441 (a3144b15).",
+  "Native geometry export (installed pcbnew 10.0.6, read-only; pads ERROR_OUTSIDE 0.5 um, tracks / vias analytic) of 5516eeec and 0dc84776; own numpy analysis (scripts in .supervisor/r22_safety/scripts).",
+  "Adjacency inventory of 18 pyro / arming / load-switch nets (outer <= 0.5 mm, inner <= 1.0 mm), 455 rows; diff against 0dc84776.",
+  "Copper-graph single-open analysis: U9.1 to R81.1 / C87.1 (new and old), nine gate / EN pin-to-bias cases, GND returns of 19 pull-down and fire-return pads.",
+  "Barrel wall and own-ring clearance of every plated pad and every protected via on In1 / In2 (new vs old), including J3 slots.",
+  "Independent S-8 on the committed fabrication Gerbers (own parser of m3-In1_Cu.gbr / m3-In2_Cu.gbr with TO.N net attributes and m3-PTH.drl).",
+  "FMEA I-5 inventory: 3V3 / 3V3A copper and barrels against 18 nets above 4 V (new vs old); BAT_IN adjacency; key net-pair minima.",
+  "pcbnew shape-collision gaps (10 nm bisection) for RAW_ACT-U11.6, R81.2-RAW_PROTECTED via, R81.1-GND via, BAT_ENABLE via-R134.2, C87.2-BAT_FAULT_N, ARM1_SENSE-U13.5 (also on a3144b15).",
+  "kicad-cli 10.0.7 pcb drc, all severities, schematic parity, on the probe copy: 0 violations / 0 unconnected / 0 parity.",
+  "Committed check_r10 on the probe copy: S-1..S-9, K-actuators, K-power, K-rules, K-plane, F9-1, K-binding all OK.",
+  "Committed route_check --profile r10: 0 failing; arming nets: BAT_ENABLE short_layer_hop 2.973 mm only.",
+  "Seed 1: previous board 0dc84776 through the committed K-power: FAIL x5 (R81.1 / C87.1 single vias (19.68,66.60) and (21.30,68.90); U2.1 via (23.20,68.60)).",
+  "Seed 2: copy with R18_BARREL_KEEPOUT_BAT_ENABLE_2 removed (kept referenced) and refilled: committed S-8 FAIL, In2 RAW_PROTECTED 0.251 mm from via (17.100,82.800).",
+  "EN timing / peak calculation (.supervisor/r22_safety/calc/en_timing.py), corners: 1 % resistors, C87 0.72-1.27 x, SLVSFC9C thresholds, IENLKG +/-0.1 uA.",
+  "Netlist (schematic.net.xml) of the EN, pyro, sense and load-switch nets; JLC BOM / CPL rows for R80, R165, R81, C87; battery_entry sheet note text."
+ ],
+ "sources": [
+  {
+   "what": "TI TPS25947 datasheet SLVSFC9C (Oct 2020, rev. May 2026)",
+   "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+   "pages": "p5 Table 5-1 (EN/UVLO \"Do not leave floating\"; AUXOFF open-drain); p7 6.1 (EN/UVLO -0.3 to 6.5 V; note 2: >= 350 kohm pull-up for reverse polarity); p8 6.3 (EN/UVLO <= 5 V; note 2: >= 350 kohm pull-up above 5 V); p9 6.5 (VUVLO(R) 1.183/1.20/1.223 V, VUVLO(F) 1.076/1.09/1.116 V, VSD(F) 0.45/0.74 V, IENLKG +/-0.1 uA); p11 (tD,ON 0.1/1.32/2.35 ms); p26 7.3.2; p37-38 latch-off reset"
+  },
+  {
+   "what": "Diodes AP63200/1/3/5 datasheet DS41326 Rev 3-2",
+   "url": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf",
+   "pages": "p2 pin descriptions (pin 1 FB, pin 2 EN \"Attach to VIN or leave open for automatic startup\", pin 3 VIN); p5 EN thresholds 1.15-1.23 V, IEN"
+  },
+  {
+   "what": "Murata GCJ series (soft termination) product page",
+   "url": "https://www.murata.com/en-us/products/capacitor/ceramiccapacitor/overview/lineup/smd/gcj",
+   "pages": "series description (read through a search summary; the page itself was not opened)"
+  },
+  {
+   "what": "JLCPCB PCB capabilities (as quoted in D-R21-01)",
+   "url": "https://jlcpcb.com/capabilities/pcb-capabilities",
+   "pages": "not re-read; figures taken from the record"
+  },
+  {
+   "what": "Records read",
+   "url": null,
+   "pages": "AGENTS.md section 2; docs/REQUIREMENTS.md F6-F9; R10_DECISIONS D-R18-04, D-R19-01/-02/-10, D-R20-01/-05/-11, D-R21-01..09; round21_fix_cad.md; docs/R10_VALIDATION.md rounds 21, owner table rows 1, 2, 24, 29, 30, sections 1 and inventory basis; docs/FMEA_REDUNDANCY.md H-6 and I-5 rows; docs/ORDERING.md 8.3; docs/M3_R10.md current state; round 19-21 safety reports (context)"
+  }
+ ],
+ "coverage_limits": [
+  "Distances are nominal CAD and Gerber values; fabricated hole size, registration and mask were not allocated (owner row 9).",
+  "Surface pairs to tented vias or under mask need a mask breach to bridge; probabilities are not quantified.",
+  "The adjacency inventory covers 18 pyro / arming / load-switch nets plus BAT_IN and the I-5 net set; other nets were not swept. Double faults were only spot-checked.",
+  "Floating-gate and floating-EN behaviour, U9 behaviour with an open GND pin and the EN pin clamp level are Inference (not stated by the makers).",
+  "The ESD and IGN-to-GND overload figures are Calculation / Inference; no installed ESD, RF or thermal test exists.",
+  "The Murata soft-termination statement was taken from the maker series description through a search summary; the GCJ specification sheet (bending limit) was not read.",
+  "Seeds were run with the installed pcbnew 10.0.6 zone filler on copies; the canonical tree was not built and tools/check.sh was not run.",
+  "No firmware exists: every firmware obligation (launch detection, PC1 / PE4 handling, refusals) is unverified."
+ ]
+}

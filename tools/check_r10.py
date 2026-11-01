@@ -102,7 +102,10 @@ Kept contract and copper rules:
                outline (only exact, measured FAB_REF_CROSSINGS_R20 entries); stale entries fail. D-R21-08
                (R21-GATE-05): each footprint carries exactly one visible Fab ${REFERENCE} on its own side's Fab layer
                (LS120's '+' / '-' the only other Fab texts), >= 0.3 mm high, its ink box crossing no other
-               footprint's Fab outline or Fab reference and its ink centre inside no other footprint's Fab outline box
+               footprint's Fab outline or Fab reference and its ink centre inside no other footprint's Fab outline box.
+               D-R22-06 (R22-GATE-02): its ink centre within FAB_REF_REACH (1.5 mm) of its own part's Fab body box (the
+               courtyard box where the Fab layer has no body), its stroke >= 0.1 x height or >= 0.05 mm, and no
+               board-level text on F.Fab / B.Fab
   K-power      R19-GATE-04: every path's floor is at least the IPC-2152 width for its named design current (30 C rise);
                the rails VLOGIC (trunk, C84 hold-up), PORT_5V3, CAM_5V (U402 -> J9), PORT_4V8 (U401, J410 / J420 / J440
                feeds) and 3V3 (U2 OUT) carry their drawn width; U401's pin links are named entries. R19-GATE-05: the
@@ -117,10 +120,13 @@ Kept contract and copper rules:
                named F/B-only bridge via (26.4, 79.26)). D-R20-02 (R20-PWR-02) / D-R21-02 (R21-GATE-01): each of the 26
                SINGLE_OPEN_TAPS regulator FB / OVLO / EN / ILIM taps stays joined to its source through its net's
                copper with any one via removed; a single point passes only as an exact SINGLE_OPEN_EXCEPTIONS entry
-               (stale when no longer met)
+               (stale when no longer met). D-R22-02 (R22-POWER-01 / -02): 7 more taps, the TPS2553 GND pins U10.2 /
+               U402.2, the CC Rd grounds R7.2 / R8.2 and the power-state monitors R60.1 (PA6), U1.28 (PA4) and R91.1,
+               each an exact entry (33 taps, 15 entries)
   K-ports      D-R21-07 (R21-GATE-04): every port ESD clamp (J410 / J420 / J440 / J9 pins 3 and 4) lies within
                CLAMP_PATH_MAX (4.5 mm) of track from its terminal pin (pad centres, the net's track graph) on a path
-               that does not pass the port's 1 k series resistor
+               that does not pass the port's 1 k series resistor; D-R22-07 (R22-GATE-03): each clamp's GND pad reaches a
+               GND via or plated GND pad through tracks (not the pour) within CLAMP_GND_MAX (1.0 mm)
   K-copper     R19-RTE-01: every pour piece holds a via of its net or joins two of its pads (only a named, measured
                POUR_DEBRIS entry excepted);
                vias in pads, overlap-only joints, thermal policy, via paste (check_r9.k_copper); GAP-3 admits only
@@ -156,7 +162,12 @@ Kept contract and copper rules:
                R21-GATE-02): JLC's hole table (JLC_HOLE_TABLE: via hole to inner copper 0.2, PTH pad hole to inner
                copper 0.3, PTH hole to outer track 0.28, pad hole to hole 0.45 mm) held by its named DRU rules, none
                overridden by a later rule or undercut by any hole rule; and on the board every plated pad hole wall
-               >= 0.3 mm from foreign In1 / In2 copper
+               >= 0.3 mm from foreign In1 / In2 copper. D-R22-01 (R22-REQUIREMENTS-02): on the board, JLC_BOARD_HOLES:
+               PTH rings >= 0.20 mm, via rings >= 0.05 mm, plated holes >= 0.15 mm, NPTH holes >= 0.50 mm, NPTH copper
+               rings >= 0.45 mm and NPTH hole to any copper >= 0.2 mm (J3's 0.200 mm maker land at the limit).
+               D-R22-05 (R22-GATE-01): every (min ...) read in any unit and position (unreadable fails); a later rule on
+               any layer that can meet the pinned one counts as an override; and on the board via hole to foreign
+               copper >= 0.2 mm, PTH hole to outer copper >= 0.28 mm and pad hole to hole >= 0.45 mm
   K-lands      R18-GATE-09: kilib/rocket.pretty is the only footprint library (fp-lib-table) and every footprint the board
                uses is generated and pinned by r10_parts --check or pinned here by its file's SHA-256 (FOOTPRINT_SHA256);
                R19-GATE-01: every placed footprint's and pad's paste margin / ratio, mask margin and paste / mask layers
@@ -944,43 +955,88 @@ JLC_HOLE_FLOOR = 0.20          # mm: JLC's least hole figure (via hole to copper
 JLC_PTH_INNER = 0.30           # mm: the board itself, every plated pad hole wall to foreign In1 / In2 copper
 
 
+# D-R22-05 (R22-GATE-01): a constraint minimum may be written in any unit KiCad's rule parser takes and may follow (opt)
+# or (max); every one is read and converted to mm, and one that cannot be read fails.
+DRU_UNITS_MM = {'mm': 1.0, '': 1.0, 'mil': 0.0254, 'mils': 0.0254, 'thou': 0.0254, 'um': 0.001, 'µm': 0.001,
+                'in': 25.4, 'inch': 25.4, '"': 25.4}
+
+
+def _sexpr_end(text, start):
+    """Index of the ')' closing the '(' at `start` (strings skipped)."""
+    depth, i = 0, start
+    while i < len(text):
+        c = text[i]
+        if c == '"':
+            i = text.index('"', i + 1)
+        elif c == '(':
+            depth += 1
+        elif c == ')':
+            depth -= 1
+            if not depth:
+                return i
+        i += 1
+    return len(text) - 1
+
+
+def dru_min_mm(value):
+    """A DRU '(min VALUE)' token in mm, or None when it cannot be read (unknown unit, no number)."""
+    m = re.fullmatch(r'\s*([+-]?(?:\d+\.?\d*|\.\d+))\s*([A-Za-zµ"]*)\s*', value)
+    if not m or m.group(2).lower() not in DRU_UNITS_MM:
+        return None
+    return float(m.group(1)) * DRU_UNITS_MM[m.group(2).lower()]
+
+
 def dru_rules(text):
-    """[(name, layer or None, condition or None, {constraint: min mm})] of a .kicad_dru text, in file order."""
+    """[(name, layer or None, condition or None, {constraint: min mm}, [unreadable '(min ...)' texts])] of a .kicad_dru
+    text, in file order. Every (min ...) inside a constraint is read, whatever its position or unit (D-R22-05)."""
     out = []
     for m in re.finditer(r'\(rule "([^"]+)"', text):
-        depth, i = 0, m.start()
-        while i < len(text):
-            c = text[i]
-            if c == '"':
-                i = text.index('"', i + 1)
-            elif c == '(':
-                depth += 1
-            elif c == ')':
-                depth -= 1
-                if not depth:
-                    break
-            i += 1
-        body = text[m.start():i + 1]
+        body = text[m.start():_sexpr_end(text, m.start()) + 1]
         layer = re.search(r'\(layer\s+([^\s()]+)\s*\)', body)
         cond = re.search(r'\(condition\s+"([^"]*)"\s*\)', body)
-        mins = {k: float(v) for k, v in re.findall(r'\(constraint\s+(\w+)[^()]*\(min\s+([0-9.]+)\s*mm\s*\)', body)}
-        out.append((m.group(1), layer.group(1) if layer else None, cond.group(1) if cond else None, mins))
+        mins, bad = {}, []
+        for c in re.finditer(r'\(constraint\s+(\w+)', body):
+            block = body[c.start():_sexpr_end(body, c.start()) + 1]
+            for raw in re.findall(r'\(min\s+([^()]*?)\s*\)', block):
+                v = dru_min_mm(raw)
+                if v is None:
+                    bad.append(f'{c.group(1)} (min {raw})')
+                else:
+                    mins[c.group(1)] = min(v, mins.get(c.group(1), v))
+        out.append((m.group(1), layer.group(1) if layer else None, cond.group(1) if cond else None, mins, bad))
     return out
+
+
+def dru_layers_meet(pinned, later):
+    """True when a rule on layer `later` can apply on some layer of a rule pinned to `pinned` (None = every layer;
+    'inner' / 'outer' keywords; named copper layers), so that a later one can override it (D-R22-05)."""
+    if pinned is None or later is None:
+        return True
+    inner = lambda lay: lay == 'inner' or re.fullmatch(r'In\d+\.Cu', lay) is not None         # noqa: E731
+    outer = lambda lay: lay in ('outer', 'F.Cu', 'B.Cu')                                       # noqa: E731
+    if inner(pinned):
+        return inner(later) and (pinned == 'inner' or later in ('inner', pinned))
+    if outer(pinned):
+        return outer(later) and (pinned == 'outer' or later in ('outer', pinned))
+    return True
 
 
 def jlc_hole_table(text, table=JLC_HOLE_TABLE, floor=JLC_HOLE_FLOOR):
     """(issues, evidence): each JLC row's DRU rule exists once, with its pinned layer and condition and a minimum at
-    least JLC's; no later rule able to apply on the same layers (KiCad lets the last matching rule win) sets that
-    constraint below JLC's figure; no hole rule anywhere is below JLC's least hole figure."""
+    least JLC's; no later rule able to apply on any of its layers (KiCad lets the last matching rule win; named layers
+    and keywords both count) sets that constraint below JLC's figure; no hole rule anywhere is below JLC's least hole
+    figure; every constraint minimum is readable (any unit, any position)."""
     rules = dru_rules(text)
     issues, ev = [], []
+    for name, _, _, _, bad in rules:
+        issues += [f'JLC table: DRU rule "{name}" has an unreadable minimum {b!r}' for b in bad]
     for what, row, name, layer, cond, constraint, need in table:
         hits = [i for i, r in enumerate(rules) if r[0] == name]
         if len(hits) != 1:
             issues.append(f'JLC table: {what} ("{row}") needs one DRU rule "{name}", found {len(hits)}')
             continue
         i = hits[0]
-        _, lay, c, mins = rules[i]
+        _, lay, c, mins, _ = rules[i]
         value = mins.get(constraint)
         ev.append(dict(what=what, jlc=row, rule=name, constraint=constraint, min_mm=value, jlc_min_mm=need))
         if lay != layer or c != cond:
@@ -989,29 +1045,28 @@ def jlc_hole_table(text, table=JLC_HOLE_TABLE, floor=JLC_HOLE_FLOOR):
         if value is None or value < need - 1e-9:
             issues.append(f'JLC table: DRU rule "{name}" {constraint} min {value} mm is below JLC\'s {need} mm ({what}: '
                           f'"{row}")')
-        for later, lay2, _, mins2 in rules[i + 1:]:
+        for later, lay2, _, mins2, _ in rules[i + 1:]:
             v = mins2.get(constraint)
-            if v is not None and v < need - 1e-9 and (layer is None or lay2 is None or lay2 == layer):
-                issues.append(f'JLC table: DRU rule "{later}" ({constraint} min {v} mm) follows "{name}" and can '
-                              f'override JLC\'s {need} mm ({what})')
-    for name, _, _, mins in rules:
+            if v is not None and v < need - 1e-9 and dru_layers_meet(layer, lay2):
+                issues.append(f'JLC table: DRU rule "{later}" ({constraint} min {v:.4g} mm on layer {lay2}) follows '
+                              f'"{name}" and can override JLC\'s {need} mm ({what})')
+    for name, _, _, mins, _ in rules:
         for constraint in ('hole_clearance', 'hole_to_hole'):
             v = mins.get(constraint)
             if v is not None and v < floor - 1e-9:
-                issues.append(f'JLC table: DRU rule "{name}" {constraint} min {v} mm is below JLC\'s {floor} mm hole '
-                              'figure')
+                issues.append(f'JLC table: DRU rule "{name}" {constraint} min {v:.4g} mm is below JLC\'s {floor} mm '
+                              'hole figure')
     return issues, ev
 
 
-def pth_inner_copper(board, floor=JLC_PTH_INNER, reach=1.0):
-    """(issues, {pad: {layer: (mm, nearest)}}): every plated through-hole pad's hole wall to the nearest copper of
-    another net on each inner layer (fill pieces, tracks, via pads or barrels, pads or plated barrels), measured on the
-    board (D-R21-01: JLC's 0.3 mm, whatever the DRU says); copper over `reach` mm away is not measured."""
+def _copper_items(board, layers, err=None):
+    """{layer: [(net, item UUID or None, SHAPE_POLY_SET, bbox, label)]}: every copper item on each of `layers` (fill
+    pieces, tracks, vias (pad where flashed, else the plated barrel), pads (copper where flashed, else a plated
+    barrel; an NPTH pad without copper is none))."""
     import pcbnew
-    inner = [lay for lay in board.GetEnabledLayers().CuStack() if lay not in (pcbnew.F_Cu, pcbnew.B_Cu)]
-    err = pcbnew.FromMM(0.001)
+    err = pcbnew.FromMM(0.001) if err is None else err
     items = {}
-    for lay in inner:
+    for lay in layers:
         out = []
         for z in board.Zones():
             if not z.GetIsRuleArea() and z.IsOnLayer(lay) and z.HasFilledPolysForLayer(lay):
@@ -1033,8 +1088,8 @@ def pth_inner_copper(board, floor=JLC_PTH_INNER, reach=1.0):
                 t.TransformShapeToPolygon(ps, lay, 0, err, pcbnew.ERROR_INSIDE)
                 what = 'track'
             at = t.GetPosition() if what == 'via' else t.GetStart()
-            out.append((t.GetNetname(), None, ps, f'{what} {t.GetNetname()} ({pcbnew.ToMM(at.x):.2f}, '
-                                                   f'{pcbnew.ToMM(at.y):.2f})'))
+            out.append((t.GetNetname(), t.m_Uuid.AsString(), ps, f'{what} {t.GetNetname()} ({pcbnew.ToMM(at.x):.2f}, '
+                                                                f'{pcbnew.ToMM(at.y):.2f})'))
         for f in board.GetFootprints():
             for p in f.Pads():
                 if not p.IsOnLayer(lay):
@@ -1048,27 +1103,58 @@ def pth_inner_copper(board, floor=JLC_PTH_INNER, reach=1.0):
                     continue
                 out.append((p.GetNetname(), p.m_Uuid.AsString(), ps, f'{f.GetReference()}.{p.GetNumber()}'))
         items[lay] = [(net, uid, ps, ps.BBox(), label) for net, uid, ps, label in out]
+    return items
+
+
+def _hole_points(pad, err):
+    """The points of `pad`'s hole outline (its true slot or circle), copied out of the polygon (CPoint returns a reference
+    into it, which dies with it), and its bbox."""
+    import pcbnew
+    hole = pcbnew.SHAPE_POLY_SET()
+    pad.TransformHoleToPolygon(hole, 0, err, pcbnew.ERROR_INSIDE)
+    pts = []
+    for i in range(hole.OutlineCount()):
+        o = hole.Outline(i)
+        for k in range(o.PointCount()):
+            q = o.CPoint(k)
+            pts.append(pcbnew.VECTOR2I(int(q.x), int(q.y)))
+    bb = hole.BBox()
+    return pts, pcbnew.BOX2I(pcbnew.VECTOR2I(bb.GetX(), bb.GetY()), pcbnew.VECTOR2L(bb.GetWidth(), bb.GetHeight()))
+
+
+def _nearest(items, pts, box, skip):
+    """(squared distance in nm^2, label) of the nearest of `items` (layer list from _copper_items) to `pts`, among
+    those whose bbox meets `box` and for which skip(net, uid) is false; None when there is none."""
+    best = None
+    for net, uid, ps, bb, what in items:
+        if skip(net, uid) or not bb.Intersects(box):
+            continue
+        d = min(ps.SquaredDistance(q) for q in pts)
+        if best is None or d < best[0]:
+            best = (d, what)
+    return best
+
+
+def pth_inner_copper(board, floor=JLC_PTH_INNER, reach=1.0):
+    """(issues, {pad: {layer: (mm, nearest)}}): every plated through-hole pad's hole wall to the nearest copper of
+    another net on each inner layer (fill pieces, tracks, via pads or barrels, pads or plated barrels), measured on the
+    board (D-R21-01: JLC's 0.3 mm, whatever the DRU says); copper over `reach` mm away is not measured."""
+    import pcbnew
+    inner = [lay for lay in board.GetEnabledLayers().CuStack() if lay not in (pcbnew.F_Cu, pcbnew.B_Cu)]
+    err = pcbnew.FromMM(0.001)
+    items = _copper_items(board, inner, err)
     issues, ev = [], {}
     margin = pcbnew.FromMM(reach)
     for f in sorted(board.GetFootprints(), key=lambda g: g.GetReference()):
         for p in f.Pads():
             if p.GetAttribute() != pcbnew.PAD_ATTRIB_PTH:
                 continue
-            hole = pcbnew.SHAPE_POLY_SET()
-            p.TransformHoleToPolygon(hole, 0, err, pcbnew.ERROR_INSIDE)
-            box = hole.BBox()
+            pts, box = _hole_points(p, err)
             box.Inflate(margin)
-            pts = [hole.Outline(i).CPoint(k) for i in range(hole.OutlineCount())
-                   for k in range(hole.Outline(i).PointCount())]
             label = f'{f.GetReference()}.{p.GetNumber()}'
             for lay in inner:
-                best = None
-                for net, uid, ps, bb, what in items[lay]:
-                    if net == p.GetNetname() or uid == p.m_Uuid.AsString() or not bb.Intersects(box):
-                        continue
-                    d = min(ps.SquaredDistance(q) for q in pts)
-                    if best is None or d < best[0]:
-                        best = (d, what)
+                best = _nearest(items[lay], pts, box,
+                                lambda net, uid, p=p: net == p.GetNetname() or uid == p.m_Uuid.AsString())
                 if best is None:
                     continue
                 dist = round(pcbnew.ToMM(int(math.sqrt(best[0]))), 3)
@@ -1078,6 +1164,188 @@ def pth_inner_copper(board, floor=JLC_PTH_INNER, reach=1.0):
                                   f'{best[1]} on {board.GetLayerName(lay)}, under JLC\'s {floor} mm inner-layer PTH '
                                   'pad hole to copper')
     return issues, ev
+
+
+# D-R22-01 (R22-REQUIREMENTS-02): the rest of JLC's hole, ring and NPTH rows, measured on the board whatever the DRU says
+# (https://jlcpcb.com/capabilities/pcb-capabilities, read 2026-10-31):
+# - "PTH annular ring >=0.20mm" (multilayer, 1 oz: 0.20 mm recommended, 0.15 mm absolute minimum): held at 0.20 mm;
+# - "Via diameter should be 0.1mm (0.15mm preferred) larger than Via hole size": a 0.05 mm via ring;
+# - multilayer drill 0.15 - 6.3 mm, vias 0.15 mm hole / 0.25 mm diameter: every plated hole >= 0.15 mm;
+# - "Min. Non-plated holes 0.50mm"; "NPTH pad annular ring >=0.45mm" (only where an NPTH pad carries copper);
+# - "NPTH to Track 0.2mm": every NPTH hole wall >= 0.2 mm from any copper on any layer. J3's NPTH locating holes sit
+#   0.200 mm from its GND SMD lands (HRO's land pattern, at the limit, not below: the DRU's "HRO M-12 internal SMD lands
+#   to locating holes" rule sets that pair's DRC clearance to 0.20 mm, K-lands pins the footprint, and this check holds
+#   the board to it within JLC_HOLE_TOL).
+# D-R22-05 (R22-GATE-01): three more rows measured on the board, so a DRU edit cannot hide them: "Inner layer via hole
+# to copper clearance 0.2mm" with "Via hole to Track 0.2mm" (every via hole wall >= 0.2 mm from foreign copper on every
+# layer), "PTH to Track 0.28mm" (every PTH pad hole wall >= 0.28 mm from foreign copper on F.Cu / B.Cu) and "Pad
+# Hole-to-Hole Spacing 0.45mm" (every pair of pad holes, plated or not, >= 0.45 mm wall to wall).
+JLC_BOARD_HOLES = dict(pth_ring=0.20, via_ring=0.05, plated_hole=0.15, npth_hole=0.50, npth_ring=0.45,
+                       npth_to_copper=0.20, via_hole_to_copper=0.20, pth_hole_to_outer_copper=0.28, pad_hole_to_hole=0.45)
+JLC_HOLE_TOL = 0.001           # mm: polygon approximation (1 um arcs) of the measured shapes
+
+
+def _seg_dist(a, b, c, d):
+    """Distance (mm) between segments ab and cd (points as (x, y) mm)."""
+    def pt(p, s, e):
+        dx, dy = e[0] - s[0], e[1] - s[1]
+        L2 = dx * dx + dy * dy
+        t = 0.0 if L2 == 0 else max(0.0, min(1.0, ((p[0] - s[0]) * dx + (p[1] - s[1]) * dy) / L2))
+        return math.hypot(p[0] - s[0] - t * dx, p[1] - s[1] - t * dy)
+
+    def cross(o, p, q):
+        return (p[0] - o[0]) * (q[1] - o[1]) - (p[1] - o[1]) * (q[0] - o[0])
+    if a != b and c != d and cross(a, b, c) * cross(a, b, d) < 0 and cross(c, d, a) * cross(c, d, b) < 0:
+        return 0.0
+    return min(pt(a, c, d), pt(b, c, d), pt(c, a, b), pt(d, a, b))
+
+
+def _pad_ring(pad, lay, err):
+    """The annular ring (mm) of `pad` on `lay`: the least distance from its hole (the true slot or circle) to its copper
+    outline."""
+    import pcbnew
+    hole = pad.GetEffectiveHoleShape()
+    seg, radius = hole.GetSeg(), pcbnew.ToMM(hole.GetWidth()) / 2
+    axis = ((pcbnew.ToMM(seg.A.x), pcbnew.ToMM(seg.A.y)), (pcbnew.ToMM(seg.B.x), pcbnew.ToMM(seg.B.y)))
+    ps = pcbnew.SHAPE_POLY_SET()
+    pad.TransformShapeToPolygon(ps, lay, 0, err, pcbnew.ERROR_INSIDE)
+    best = None
+    for i in range(ps.OutlineCount()):
+        o = ps.Outline(i)
+        pts = [(pcbnew.ToMM(o.CPoint(k).x), pcbnew.ToMM(o.CPoint(k).y)) for k in range(o.PointCount())]
+        for k in range(len(pts)):
+            d = _seg_dist(axis[0], axis[1], pts[k], pts[(k + 1) % len(pts)]) - radius
+            best = d if best is None else min(best, d)
+    return best
+
+
+def jlc_board_holes(board, figs=None, tol=JLC_HOLE_TOL, reach=1.0):
+    """(issues, evidence): D-R22-01, the board against JLC's ring, hole-size and NPTH rows (JLC_BOARD_HOLES)."""
+    import pcbnew
+    figs = JLC_BOARD_HOLES if figs is None else figs
+    err, ring_err = pcbnew.FromMM(0.001), pcbnew.FromMM(0.0001)    # rings: 0.1 um arcs (J3's 0.200 mm sits at 0.20)
+    cu = list(board.GetEnabledLayers().CuStack())
+    issues, least = [], {}
+
+    def note(key, value, where):
+        if key not in least or value < least[key][0]:
+            least[key] = (round(value, 3), where)
+    for f in sorted(board.GetFootprints(), key=lambda g: g.GetReference()):
+        for p in f.Pads():
+            attr = p.GetAttribute()
+            if attr not in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH):
+                continue
+            label = (f'{f.GetReference()}.{p.GetNumber()}' if attr == pcbnew.PAD_ATTRIB_PTH else
+                     f'{f.GetReference()} NPTH ({pcbnew.ToMM(p.GetPosition().x):.2f}, {pcbnew.ToMM(p.GetPosition().y):.2f})')
+            drill = pcbnew.ToMM(min(p.GetDrillSize().x, p.GetDrillSize().y))
+            flashed = [lay for lay in cu if p.FlashLayer(lay)]
+            if attr == pcbnew.PAD_ATTRIB_PTH:
+                note('plated_hole', drill, label)
+                if drill < figs['plated_hole'] - tol:
+                    issues.append(f'JLC holes: {label} plated hole {drill:.3f} mm is under JLC\'s {figs["plated_hole"]} '
+                                  'mm minimum')
+                for lay in flashed:
+                    ring = _pad_ring(p, lay, ring_err)
+                    note('pth_ring', ring, f'{label} {board.GetLayerName(lay)}')
+                    if ring < figs['pth_ring'] - tol:
+                        issues.append(f'JLC holes: {label} annular ring {ring:.3f} mm on {board.GetLayerName(lay)} is '
+                                      f'under JLC\'s {figs["pth_ring"]} mm PTH annular ring')
+            else:
+                note('npth_hole', drill, label)
+                if drill < figs['npth_hole'] - tol:
+                    issues.append(f'JLC holes: {label} non-plated hole {drill:.3f} mm is under JLC\'s '
+                                  f'{figs["npth_hole"]} mm minimum')
+                for lay in flashed:
+                    ring = _pad_ring(p, lay, ring_err)
+                    note('npth_ring', ring, f'{label} {board.GetLayerName(lay)}')
+                    if ring < figs['npth_ring'] - tol:
+                        issues.append(f'JLC holes: {label} NPTH pad ring {ring:.3f} mm on {board.GetLayerName(lay)} is '
+                                      f'under JLC\'s {figs["npth_ring"]} mm')
+    for v in board.GetTracks():
+        if v.GetClass() != 'PCB_VIA':
+            continue
+        at = f'via {v.GetNetname()} ({pcbnew.ToMM(v.GetPosition().x):.2f}, {pcbnew.ToMM(v.GetPosition().y):.2f})'
+        drill = pcbnew.ToMM(v.GetDrillValue())
+        note('plated_hole', drill, at)
+        if drill < figs['plated_hole'] - tol:
+            issues.append(f'JLC holes: {at} hole {drill:.3f} mm is under JLC\'s {figs["plated_hole"]} mm minimum')
+        for lay in cu:
+            if v.FlashLayer(lay):
+                ring = (pcbnew.ToMM(v.GetWidth(lay)) - drill) / 2
+                note('via_ring', ring, f'{at} {board.GetLayerName(lay)}')
+                if ring < figs['via_ring'] - tol:
+                    issues.append(f'JLC holes: {at} ring {ring:.3f} mm on {board.GetLayerName(lay)} is under JLC\'s '
+                                  f'{figs["via_ring"]} mm (via diameter 0.1 mm over the hole)')
+    items = _copper_items(board, cu, err)
+    margin = pcbnew.FromMM(reach)
+    outer = [lay for lay in cu if lay in (pcbnew.F_Cu, pcbnew.B_Cu)]
+    for v in board.GetTracks():                                      # D-R22-05: via hole wall to foreign copper
+        if v.GetClass() != 'PCB_VIA':
+            continue
+        c, r = v.GetPosition(), v.GetDrillValue() / 2
+        centre = [pcbnew.VECTOR2I(int(c.x), int(c.y))]               # a round hole: wall gap = centre gap - radius
+        box = pcbnew.BOX2I(pcbnew.VECTOR2I(int(c.x - r), int(c.y - r)), pcbnew.VECTOR2L(int(2 * r), int(2 * r)))
+        box.Inflate(margin)
+        at = f'via {v.GetNetname()} ({pcbnew.ToMM(c.x):.2f}, {pcbnew.ToMM(c.y):.2f})'
+        for lay in cu:
+            best = _nearest(items[lay], centre, box,
+                            lambda net, uid, v=v: net == v.GetNetname() or uid == v.m_Uuid.AsString())
+            if best is None:
+                continue
+            dist = pcbnew.ToMM(int(math.sqrt(best[0]) - r))
+            note('via_hole_to_copper', dist, f'{at} to {best[1]} on {board.GetLayerName(lay)}')
+            if dist < figs['via_hole_to_copper'] - tol:
+                issues.append(f'JLC holes: {at} hole wall is {dist:.3f} mm from {best[1]} on {board.GetLayerName(lay)}, '
+                              f'under JLC\'s {figs["via_hole_to_copper"]} mm via hole to copper')
+    holes = []
+    for f in sorted(board.GetFootprints(), key=lambda g: g.GetReference()):
+        for p in f.Pads():
+            if p.GetAttribute() not in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH):
+                continue
+            h = p.GetEffectiveHoleShape()
+            seg = h.GetSeg()
+            label = (f'{f.GetReference()}.{p.GetNumber()}' if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH else
+                     f'{f.GetReference()} NPTH ({pcbnew.ToMM(p.GetPosition().x):.2f}, {pcbnew.ToMM(p.GetPosition().y):.2f})')
+            holes.append((label, ((pcbnew.ToMM(seg.A.x), pcbnew.ToMM(seg.A.y)), (pcbnew.ToMM(seg.B.x), pcbnew.ToMM(seg.B.y))),
+                          pcbnew.ToMM(h.GetWidth()) / 2))
+            if p.GetAttribute() != pcbnew.PAD_ATTRIB_PTH:
+                continue
+            pts, box = _hole_points(p, err)                           # D-R22-05: PTH hole wall to outer copper
+            box.Inflate(margin)
+            for lay in outer:
+                best = _nearest(items[lay], pts, box,
+                                lambda net, uid, p=p: net == p.GetNetname() or uid == p.m_Uuid.AsString())
+                if best is None:
+                    continue
+                dist = pcbnew.ToMM(int(math.sqrt(best[0])))
+                note('pth_hole_to_outer_copper', dist, f'{label} to {best[1]} on {board.GetLayerName(lay)}')
+                if dist < figs['pth_hole_to_outer_copper'] - tol:
+                    issues.append(f'JLC holes: {label} hole wall is {dist:.3f} mm from {best[1]} on '
+                                  f'{board.GetLayerName(lay)}, under JLC\'s {figs["pth_hole_to_outer_copper"]} mm PTH to track')
+    for i, (la, sa, ra) in enumerate(holes):                          # D-R22-05: pad hole to pad hole
+        for lb, sb, rb in holes[i + 1:]:
+            gap = _seg_dist(sa[0], sa[1], sb[0], sb[1]) - ra - rb
+            note('pad_hole_to_hole', gap, f'{la} to {lb}')
+            if gap < figs['pad_hole_to_hole'] - tol:
+                issues.append(f'JLC holes: {la} and {lb} holes are {gap:.3f} mm apart, under JLC\'s '
+                              f'{figs["pad_hole_to_hole"]} mm pad hole to hole')
+    npth = [(f, p) for f in board.GetFootprints() for p in f.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH]
+    if npth:
+        for f, p in sorted(npth, key=lambda fp: (fp[0].GetReference(), fp[1].GetPosition().x, fp[1].GetPosition().y)):
+            pts, box = _hole_points(p, err)
+            box.Inflate(margin)
+            label = (f'{f.GetReference()} NPTH ({pcbnew.ToMM(p.GetPosition().x):.2f}, '
+                     f'{pcbnew.ToMM(p.GetPosition().y):.2f})')
+            for lay in cu:
+                best = _nearest(items[lay], pts, box, lambda net, uid, p=p: uid == p.m_Uuid.AsString())
+                if best is None:
+                    continue
+                dist = pcbnew.ToMM(int(math.sqrt(best[0])))
+                note('npth_to_copper', dist, f'{label} to {best[1]} on {board.GetLayerName(lay)}')
+                if dist < figs['npth_to_copper'] - tol:
+                    issues.append(f'JLC holes: {label} is {dist:.3f} mm from {best[1]} on {board.GetLayerName(lay)}, '
+                                  f'under JLC\'s {figs["npth_to_copper"]} mm NPTH to track')
+    return issues, dict(figures=figs, least=least)
 
 
 def k_rules(ctx):
@@ -1100,6 +1368,8 @@ def k_rules(ctx):
     if ctx.board is not None:
         walls, ev['pth_inner_copper_mm'] = pth_inner_copper(ctx.board)    # D-R21-01: the board itself
         issues += [f'K-rules: {i}' for i in walls]
+        holes, ev['jlc_board_holes'] = jlc_board_holes(ctx.board)        # D-R22-01: rings, hole sizes, NPTH
+        issues += [f'K-rules: {i}' for i in holes]
     bp = ctx.board_path
     pro = Path(bp).with_suffix('.kicad_pro') if bp else None
     if pro is None or not pro.is_file():
@@ -2616,12 +2886,27 @@ SINGLE_OPEN_TAPS = (
     ('GND', 'R86.2', ('U11.3', 'U11.4', 'U11.6', 'U11.12'), "U11's ILIM bottom"),
     ('GND', 'R88.2', ('U11.3', 'U11.4', 'U11.6', 'U11.12'), "U11's USB OV divider bottom"),
     ('GND', 'R430.2', ('U402.2',), "U402's ILIM bottom"),
+    # D-R22-02 (R22-POWER-01 / -02): the TPS2553s' own GND pins and the USB-C CC Rd returns, to the board's ground
+    # (J1.2), and the power-state monitor inputs: PA6's VLOGIC sense (R60, the brown-out shed trigger), PA4's ST line
+    # and R91, its pull-up, on 3V3.
+    ('GND', 'U10.2', ('J1.2',), "U10's (TPS2553, USB limiter) GND pin (R22-POWER-01)"),
+    ('GND', 'R7.2', ('J1.2',), 'R7 (USB-C CC1 Rd) GND'),
+    ('GND', 'U402.2', ('J1.2',), "U402's (TPS2553, camera switch) GND pin (R22-POWER-01)"),
+    ('GND', 'R8.2', ('J1.2',), 'R8 (USB-C CC2 Rd) GND'),
+    ('VLOGIC', 'R60.1', ('U11.1', 'U11.8'), "R60, PA6's VLOGIC sense divider top (R22-POWER-02)"),
+    ('LOGIC_SOURCE_ST', 'U1.28', ('U11.9',), "PA4, U11's ST status line (R22-POWER-02)"),
+    ('3V3', 'R91.1', ('L1.2',), "R91, the ST pull-up's 3V3 end (R22-POWER-02)"),
 )
 # (tap pad, via label as copper_nodes prints it, measured reason): the single points kept on purpose. An entry no longer
 # met fails as stale, as POUR_DEBRIS does.
 _ILIM_OPEN = ('TPS2553 SLVS841G section 8.5.1 p16: the current-limit threshold is proportional to the current sourced '
               'out of ILIM, so an open ILIM leg sets a lower limit (fail-safe; open-pin behaviour itself is not stated '
               'by TI: Inference)')
+_U10_GND_OPEN = ("U10's only GND via (a B.Cu island with U10.2 and R7.2): open floats the TPS2553's ground (TI SLVS841G "
+                 'states no open-GND behaviour: Inference); bench USB loss only. Second via at the next board change')
+_U402_GND_OPEN = ("U402's only GND via (a B.Cu island with U402.2): open floats the TPS2553's ground (TI SLVS841G states "
+                  'no open-GND behaviour: Inference); camera supply loss only, no flight hazard. Second via at the next '
+                  'board change')
 SINGLE_OPEN_EXCEPTIONS = [
     ('U401.3', 'via PORT_LDO_FB (29.75, 13.60)',
      "U401's FB to its F.Cu divider R402 / R403: no legal second via spot (round 21 power lens scan); open, FB floats on "
@@ -2632,8 +2917,27 @@ SINGLE_OPEN_EXCEPTIONS = [
     ('R87.1', 'via USB_LIMITED (16.00, 28.00)',
      'the USB input via U10.6 -> In2: open, U11 IN1 loses USB with R87 (no over-voltage reaches the board)'),
     ('R85.1', 'via USB_ILIM (14.82, 26.00)', "U10's ILIM: " + _ILIM_OPEN),
-    ('R85.2', 'via GND (9.00, 27.84)', "U10's ILIM to GND: " + _ILIM_OPEN),
-    ('R430.2', 'via GND (32.30, 59.50)', "U402's ILIM to GND: " + _ILIM_OPEN),
+    # D-R22-02 (R22-POWER-01): each of these two GND vias is a TPS2553's only ground, so an open floats the IC's
+    # ground, not only R_ILIM's return.
+    ('R85.2', 'via GND (9.00, 27.84)', _U10_GND_OPEN),
+    ('R430.2', 'via GND (32.30, 59.50)', _U402_GND_OPEN),
+    ('U10.2', 'via GND (9.00, 27.84)', _U10_GND_OPEN),
+    ('R7.2', 'via GND (9.00, 27.84)', 'R7 (CC1 Rd) shares U10.2\'s island: ' + _U10_GND_OPEN),
+    ('U402.2', 'via GND (32.30, 59.50)', _U402_GND_OPEN),
+    ('R8.2', 'via GND (9.95, 30.60)',
+     "R8 (CC2 Rd)'s only GND via (a B.Cu island): open, a USB-C source sees no CC2 sink (with R7's island open too, no "
+     'sink at all); bench USB only. Second via at the next board change'),
+    # D-R22-02 (R22-POWER-02): the power-state monitor inputs, each on one via (second vias at the next board change).
+    ('R60.1', 'via VLOGIC (34.50, 63.00)',
+     "PA6's VLOGIC sense: open, R61 holds PA6 at 0 V, which the documented firmware rule reads as a permanent brown-out "
+     '(logging and UARTs shed for the rest of the flight; no pyro, deployment or servo effect: Inference); a bench check '
+     'reads PA6 = VLOGIC / 11. Second via (or an F.Cu feed from C84.1) at the next board change'),
+    ('U1.28', 'via LOGIC_SOURCE_ST (30.85, 51.80)',
+     "PA4's ST line from U11.9 and R91: open floats PA4, so the port UARTs may flap or stay off (Inference). Second via "
+     'at the next board change'),
+    ('R91.1', 'via 3V3 (28.10, 60.00)',
+     "R91 (ST pull-up)'s 3V3: open, PA4 can read 'battery' on USB-only power (Inference). Second via at the next board "
+     'change'),
     ('R81.1', 'via BAT_ENABLE (17.10, 82.80)',
      "D-R21-05: R81 sits at U9's end on F.Cu; EN still crosses this one via from the F.Cu run to U9.1 on B.Cu (no B.Cu "
      'spot at U9.1, D-R20-01): respin item, U9 west cell re-laid'),
@@ -2832,9 +3136,61 @@ def port_clamps(board, clamps=PORT_CLAMPS, bound=CLAMP_PATH_MAX):
     return issues, ev
 
 
+# D-R22-07 (R22-GATE-03): the clamp's other half of the loop. Each clamp's GND pad reaches a GND via or GND plated pad
+# through tracks (pour copper not counted) within CLAMP_GND_MAX mm, pad centre to via centre. Measured on 5516eeec:
+# D410 / D411 / D420 / D421 / D440 / D441 0.7 mm, D400 / D401 0.8 mm.
+CLAMP_GND_MAX = 1.0            # mm
+
+
+def clamp_returns(board, clamps=PORT_CLAMPS, bound=CLAMP_GND_MAX):
+    """(issues, {clamp GND pad: (mm, via or pad)}): each port clamp's GND pad to the nearest GND via or GND plated pad
+    along GND tracks only."""
+    import pcbnew
+    lengths = {}
+    pads, vias, edges = track_graph(board, 'GND', lengths=lengths)
+    adj = {}
+    for key, (a, c, _) in edges.items():
+        adj.setdefault(a, []).append((c, lengths[key]))
+        adj.setdefault(c, []).append((a, lengths[key]))
+    plated = {'P' + lab for lab, _, _, p in pads if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH}
+    where = {'V' + v.m_Uuid.AsString(): f'via GND ({pcbnew.ToMM(v.GetPosition().x):.3f}, '
+                                         f'{pcbnew.ToMM(v.GetPosition().y):.3f})' for v in vias}
+    issues, ev = [], {}
+    for clamp in sorted({c[2].split('.')[0] for c in clamps}):
+        f = board.FindFootprintByReference(clamp)
+        gnd = [p for p in (f.Pads() if f else []) if p.GetNetname() == 'GND']
+        if not gnd:
+            issues.append(f'{clamp} has no GND pad')
+            continue
+        src = f'P{clamp}.{gnd[0].GetNumber()}'
+        dist, todo, n, hit = {src: 0.0}, [(0.0, 0, src)], 0, None
+        while todo:
+            d, _, u = heapq.heappop(todo)
+            if d > dist.get(u, math.inf):
+                continue
+            if u != src and isinstance(u, str) and (u.startswith('V') or u in plated):
+                hit = (d, where.get(u, u[1:]))
+                break
+            for v, w in adj.get(u, ()):
+                if d + w < dist.get(v, math.inf):
+                    dist[v] = d + w
+                    n += 1
+                    heapq.heappush(todo, (d + w, n, v))
+        ev[src[1:]] = None if hit is None else (round(hit[0], 3), hit[1])
+        if hit is None:
+            issues.append(f'{src[1:]} (the {clamp} clamp\'s GND) reaches no GND via through tracks, only through the pour '
+                          '(R22-GATE-03)')
+        elif hit[0] > bound + 1e-6:
+            issues.append(f'{src[1:]} (the {clamp} clamp\'s GND) is {hit[0]:.3f} mm of track from {hit[1]}, over {bound} '
+                          'mm (R22-GATE-03)')
+    return issues, ev
+
+
 def k_ports(ctx):
     issues, ev = port_clamps(ctx.board)
-    return [f'K-ports: {i}' for i in issues], dict(clamp_path_mm=ev, bound_mm=CLAMP_PATH_MAX)
+    returns, gnd = clamp_returns(ctx.board)                            # D-R22-07
+    return ([f'K-ports: {i}' for i in issues + returns],
+            dict(clamp_path_mm=ev, bound_mm=CLAMP_PATH_MAX, clamp_gnd_mm=gnd, gnd_bound_mm=CLAMP_GND_MAX))
 
 
 # ======================================================================================================================
@@ -3969,9 +4325,15 @@ FAB_REF_CROSSINGS_R20 = {}
 # buzzer's polarity marks (its library land).
 FAB_TEXT_ALLOWED = {'LS120': ('+', '-')}
 FAB_REF_MIN_H = 0.3            # mm (the smallest on the round 21 board: 0.3 mm, two parts)
+# D-R22-06 (R22-GATE-02): each Fab reference's ink centre lies within FAB_REF_REACH of its own part's box (its Fab body
+# shapes' box, or its courtyard box for the 14 parts whose Fab layer has no body outline, only a pin-1 dot or nothing);
+# measured on 5516eeec: 20 references sit beside their body, the farthest 0.968 mm (D9). Every stroke is at least
+# FAB_STROKE_RATIO x its height or FAB_STROKE_MIN (the board: 0.15 x height). No board-level text on a Fab layer.
+FAB_REF_REACH = 1.5            # mm
+FAB_STROKE_RATIO, FAB_STROKE_MIN = 0.1, 0.05
 
 
-def fab_ref_crossings(board, named=None, tol=0.001, allowed=None, min_h=FAB_REF_MIN_H):
+def fab_ref_crossings(board, named=None, tol=0.001, allowed=None, min_h=FAB_REF_MIN_H, reach=None):
     """(issues, evidence): R20-MFG-03, every footprint's visible Fab reference that intersects its own Fab-layer shapes
     (only an exact FAB_REF_CROSSINGS_R20 entry passes; an entry whose crossing is gone fails as stale); D-R21-08, each
     footprint's one Fab reference (text, side, visibility, height) and its ink box clear of every other footprint's Fab
@@ -3979,9 +4341,16 @@ def fab_ref_crossings(board, named=None, tol=0.001, allowed=None, min_h=FAB_REF_
     import pcbnew
     named = FAB_REF_CROSSINGS_R20 if named is None else named
     allowed = FAB_TEXT_ALLOWED if allowed is None else allowed
+    reach = FAB_REF_REACH if reach is None else reach
     found, checked, used, issues = {}, 0, set(), []
-    outlines, boxes = {}, {}
+    outlines, boxes, offsets, strokes, courtyard_boxed = {}, {}, {}, {}, []
     fabs = (pcbnew.F_Fab, pcbnew.B_Fab)
+    for d in board.GetDrawings():                                      # D-R22-06: no board-level Fab text
+        if isinstance(d, (pcbnew.PCB_TEXT, pcbnew.PCB_TEXTBOX)) and d.GetLayer() in fabs:
+            at = d.GetPosition()
+            issues.append(f'board-level text {d.GetText()!r} on {board.GetLayerName(d.GetLayer())} at '
+                          f'({pcbnew.ToMM(at.x):.2f}, {pcbnew.ToMM(at.y):.2f}): only footprint references belong on the '
+                          'Fab layers (R22-GATE-02)')
 
     def ink_box(t, lay):
         poly = pcbnew.SHAPE_POLY_SET()
@@ -4020,12 +4389,32 @@ def fab_ref_crossings(board, named=None, tol=0.001, allowed=None, min_h=FAB_REF_
             g.TransformShapeToPolygon(outline, fab, 0, pcbnew.FromMM(0.002), pcbnew.ERROR_INSIDE)
         outline.Simplify()
         outlines[ref] = (fab, outline)
+        body = [g for g in shapes if g.GetShape() != pcbnew.SHAPE_T_CIRCLE]          # a pin-1 dot is no body
+        if body:
+            own = body[0].GetBoundingBox()
+            for g in body[1:]:
+                own.Merge(g.GetBoundingBox())
+        else:
+            own = f.GetCourtyard(pcbnew.B_CrtYd if f.IsFlipped() else pcbnew.F_CrtYd).BBox()
+            courtyard_boxed.append(ref)
         for t in refs:
             if t.GetLayer() != fab or not t.IsVisible():
                 continue
             checked += 1
             poly, box = ink_box(t, fab)
             boxes[ref] = (fab, box)
+            c = box.BBox().Centre()
+            off = pcbnew.ToMM(int(math.hypot(max(own.GetLeft() - c.x, 0, c.x - own.GetRight()),
+                                             max(own.GetTop() - c.y, 0, c.y - own.GetBottom()))))
+            offsets[ref] = round(off, 3)
+            if off > reach + 1e-6:
+                issues.append(f'Fab reference {ref} sits {off:.3f} mm from its own part\'s '
+                              f'{"Fab body" if body else "courtyard"} box, over {reach} mm (R22-GATE-02)')
+            h, w = pcbnew.ToMM(t.GetTextHeight()), pcbnew.ToMM(t.GetTextThickness())
+            strokes[ref] = round(w / h, 3) if h else 0.0
+            if w < FAB_STROKE_RATIO * h - 1e-6 and w < FAB_STROKE_MIN - 1e-6:
+                issues.append(f'Fab reference {ref} stroke {w:.3f} mm is under {FAB_STROKE_RATIO} x its {h:.3f} mm height '
+                              f'and under {FAB_STROKE_MIN} mm (invisible in the assembly drawing, R22-GATE-02)')
             if not shapes:
                 continue
             x = pcbnew.SHAPE_POLY_SET(poly)
@@ -4062,7 +4451,11 @@ def fab_ref_crossings(board, named=None, tol=0.001, allowed=None, min_h=FAB_REF_
                 neighbours.append((ref, f"{other}'s Fab reference", round(x.Area() / 1e12, 4)))
     issues += [f'Fab reference {ref} crosses {what} by {area:.4f} mm^2 (R21-GATE-05: the assembly drawing names the '
                'wrong part)' for ref, what, area in neighbours]
+    far = max(offsets.items(), key=lambda kv: kv[1]) if offsets else None
     return issues, dict(fab_references_checked=checked, crossings=found, neighbour_crossings=neighbours,
+                        farthest_from_own_box_mm=far, beside_own_box=sum(1 for v in offsets.values() if v > 0),
+                        courtyard_boxed=sorted(courtyard_boxed),
+                        least_stroke_ratio=min(strokes.values()) if strokes else None,
                         least_height_mm=min((pcbnew.ToMM(g.GetTextHeight()) for f in board.GetFootprints()
                                              for g in f.GraphicalItems() if isinstance(g, pcbnew.PCB_TEXT)
                                              and g.GetText() == '${REFERENCE}' and g.GetLayer() in fabs), default=None))
@@ -4754,7 +5147,8 @@ RULES = [
                 '(R18-RTE-01 / R19-GATE-03); the tab keep-out and tab-band copper (R21-GATE-03)', lambda c, s: k_plane(c)),
     ('K-fill', 'saved zone fills are current (refill a copy, R4-GATE-05)', lambda c, s: k_fill(c)),
     ('K-rules', 'm3.kicad_dru pinned, board design rules floor (R4-GATE-01), JLC hole table and PTH hole to inner copper '
-                '(R21-GATE-02)', lambda c, s: k_rules(c)),
+                '(R21-GATE-02), JLC rings, hole sizes and NPTH to copper on the board (R22-REQUIREMENTS-02)',
+     lambda c, s: k_rules(c)),
     ('K-lands', 'footprints from the project library, each generated or SHA-256 pinned (R18-GATE-09); placed paste / '
                 'mask settings as the library (R19-GATE-01)', lambda c, s: k_lands(c)),
     ('K-width', 'BAT_IN / RAW_PROTECTED width floor (R8-GATE-04)', lambda c, s: k_width(c.board)),

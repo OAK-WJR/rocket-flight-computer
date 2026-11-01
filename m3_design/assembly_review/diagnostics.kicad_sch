@@ -1425,7 +1425,7 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid df9168b9-92cf-4df0-9678-30c01a143634))
-	(text "CAM_5V_SENSE = CAM_5V x 1k/11k -> PB1 (pin 35, ADC12_INP5, TT_u 4.0 V max).\n5.25 V reads 0.477 V; even 19.9 V (TVS clamp, failed regulator) reads 1.81 V.\nLets a battery-powered self-test check the camera supply (U400 buck, U402 switch) without a meter; on USB-only power PORT_5V3 and CAM_5V are off."
+	(text "CAM_5V_SENSE = CAM_5V x 1k/11k -> PB1 (pin 35, ADC12_INP5, TT_u 4.0 V max).\nNominal 5.456 V (PORT_5V3 via U402) reads 0.496 V; a failed U400 passes RAW_PROTECTED (held under U9's OVLO, 9.77 V nominal) and reads about 0.89 V; even D8's 19.9 V clamp would read 1.81 V.\nLets a battery-powered self-test check the camera supply (U400 buck, U402 switch) without a meter; on USB-only power PORT_5V3 and CAM_5V are off."
 		(at 96.52 217.17 0)
 		(effects
 			(font

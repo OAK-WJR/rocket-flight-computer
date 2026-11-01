@@ -6,7 +6,7 @@ the replacement facts without editing that worktree. Preserve the accepted R9 en
 fit is claimed.
 
 **Status.** PCB `5516eeec…`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. It replaces `0dc84776…` (round 21 fix pass, which moved R81 and C87 to U9's
-end of the EN run; the round 19 fix pass had added the spare AUX port J440), so no earlier review carries over to it; rounds 22 and 23 will review it. Review results, checks, cost and open items are
+end of the EN run; the round 19 fix pass had added the spare AUX port J440), so no earlier review carries over to it. Round 22 found 0 Critical / 0 Major on it, and round 23 is the second review of the closing pair. Review results, checks, cost and open items are
 in [M3_R10.md, "Current state"](M3_R10.md#current-state); the owner's decision list is in
 [R10_VALIDATION.md](R10_VALIDATION.md#r10-deviations-for-owner-acceptance).
 
@@ -71,7 +71,7 @@ The board is 46 × 90 × 1.6 mm. Retain the five supports at (4,4), (42,4), (4,4
 **Use nylon (or otherwise insulated) screws and washers at all five supports:** at (4,44.3) the exposed LED2, LED1 and J2 lands (GND, GND, 3V3 and NRST) lie
 only 3.808–3.918 mm from the support centre, against a 3.8 mm washer gate. Start with the selected 4 mm standoffs, nut on the sled side and head on top; keep the nut-inclusive
 h + t below 6.0 mm at x = 4 and 42 and below 5.3 mm at x = 3.7. Program J2 before installing the adjacent mid support, or remove it for programming.
-Hardware maxima, eccentricity, solder tails, plate strength and shock clearance remain unqualified. The optional 100 g / D5 model, re-run on `50a39de5…` by the round 20 mechanics lens (R20-MEC-02), gives a first mode of 180.8 Hz pinned (was 181.1)
+Hardware maxima, eccentricity, solder tails, plate strength and shock clearance remain unqualified. The optional 100 g / D5 model, re-run on `50a39de5…` by the round 20 mechanics lens (R20-MEC-02) and again on `5516eeec…` by the round 22 mechanics lens, with identical figures, gives a first mode of 180.8 Hz pinned (was 181.1)
 for an estimated 78.6 g (was 70.5 g), and leaves only 0.261 mm below C431 (was 0.271) and 0.320 mm below C421 at h = 4 mm at 100 g; it predicts overlap at
 h = 3.5 mm. These are Calculation/Inference, not physical results. The east edge carries 34 g of the board mass on an unsupported 82 mm edge
 (see M3_R10, "East-edge asymmetry"): require a first-article vibration and shock check.

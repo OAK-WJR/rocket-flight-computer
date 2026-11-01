@@ -215,7 +215,8 @@
    "status": "done",
    "change": "route_check R10_CLASSES: BAT_SW_SOURCE / BAT_SW_RETURN / BAT_ENABLE in the pyro / arming class; critical_reference R10_SLOW_RETURN_NETS lists them (AUD-2: partner via and one-In2-region rules only)",
    "jog": "BAT_ENABLE B.Cu hop (19.675, 66.6) -> (21, 67.925) -> (21, 68.6) -> (21.3, 68.9) [0.424 mm jog, 0.3 mm offset] -> (19.675, 66.6) -> (20.7, 67.625) -> (20.7, 68.3) -> (21.3, 68.9); TP120 1.0 mm and R88.2 kept; a straight (19.675, 67.275) entry missed TP120's 1.0 mm by 0.011 mm",
-   "exposed": "on 0dc84776 under the new class: tiny_jog (gated, fixed), extra_bends (info, gone with the new run), short_layer_hop 2.973 mm (info, stays); the F.Cu corner (19.675, 66.0) -> (19.675, 66.6) became a removable local bump once R81's stub went (fixed: diagonal from (19.075, 66.0)); BAT_SW_SOURCE / BAT_SW_RETURN: none"
+   "exposed": "on 0dc84776 under the new class: tiny_jog (gated, fixed), extra_bends (info, gone with the new run), short_layer_hop 2.973 mm (info, stays); the F.Cu corner (19.675, 66.0) -> (19.675, 66.6) became a removable local bump once R81's stub went (fixed: diagonal from (19.075, 66.0)); BAT_SW_SOURCE / BAT_SW_RETURN: none",
+   "why_exempt": "physics, not lack of room (R22-REQUIREMENTS-01): 470 kOhm feeds, tau about 50 ms, about 7 uA; r7_hygiene.gnd_spots finds a legal 0.5 mm GND via 0.671 mm from (10.8, 69.2), (21.3, 68.9), (19.675, 66.6), none for (17.1, 82.8)"
   },
   {
    "n": 5,
@@ -242,10 +243,11 @@
     "C87.2 (GND) to BAT_FAULT_N track mm": 0.254,
     "least RAW_ACT to GND (non-fill) mm": [
      0.196,
-     0.302
-    ]
+     0.3
+    ],
+    "least RAW_ACT to GND note": "B.Cu RAW_ACT (22.8,61.4)-(22.8,63.875) to U11.6 by KiCad shape collision; 0.302 in the first text was a 2 um step artefact (R22-SAFETY-01)"
    },
-   "en_abs_max": "TI SLVSFC9C section 6.1 p7: EN/UVLO -0.3 to 6.5 V (recommended <= 5 V, section 6.3); beside R81, C87 never charges above the divider's 2.03 V at 8.4 V; at the switch end an open between C87 and R81 could have charged it toward BAT_IN and dumped it into EN",
+   "en_abs_max": "TI SLVSFC9C section 6.1 p7: EN/UVLO -0.3 to 6.5 V (recommended <= 5 V, section 6.3); beside R81, C87 stays at the divider's 2.03 V nominal (<= 2.06 V with 1 % parts at 8.4 V; Calculation) while R81 is intact (R22-DOCS_BINDING-04); at the switch end an open between C87 and R81 could have charged it toward BAT_IN and dumped it into EN (Inference)",
    "kept": "D-R19-02 via, S-8 keep-outs, D-R19-10 values (R80 / R165 470 kOhm, R81 300 kOhm, C87 220 nF)",
    "residual": "R81.1 / C87.1 still cross the via (17.10, 82.80) to U9.1 on B.Cu (exact exceptions; respin: U9's west cell re-laid, D-R20-01)"
   },
@@ -437,7 +439,8 @@
     "before_mm": 1.375,
     "after_mm": 1.375,
     "nearest_before": "VBUS",
-    "nearest_after": "VBUS"
+    "nearest_after": "VBUS",
+    "note": "slot wall to the VBUS via barrel (re-measured for R22-PARTS; the vias keep pads only on F.Cu / B.Cu); with a 0.6 mm pad counted: 1.225 mm"
    },
    "In2.Cu": {
     "before_mm": 0.451,
@@ -485,7 +488,8 @@
     "before_mm": 1.345,
     "after_mm": 1.345,
     "nearest_before": "VBUS",
-    "nearest_after": "VBUS"
+    "nearest_after": "VBUS",
+    "note": "slot wall to the VBUS via barrel (re-measured for R22-PARTS; the vias keep pads only on F.Cu / B.Cu); with a 0.6 mm pad counted: 1.194 mm"
    },
    "In2.Cu": {
     "before_mm": 0.451,
