@@ -1,5 +1,35 @@
 # R10 procurement alternates for U9 and U4 (round 22, board 5516eeec, commit ec8cb98)
 
+## Round 23 corrections (2026-11-01)
+
+Round 23's lenses on `5516eeec…` (commit `c70d261`) correct three statements in this file and add one note. These corrections
+supersede the text below where they differ; the rest of the file is kept as written. Text only; nothing is adopted.
+
+- **TPS259470A under a short (R23-POWER-03, R23-SAFETY-09; supersedes §1.3 "Shorted load", its "Risks" line and the
+  §0 summary row's implication of reboot cycling).** On a hard short the 470A gives a foldback-limited current below
+  ILIM (TI gives no value: SLVSFC9C p32 note 2, VFB 1.9 V p10). RAW_PROTECTED stays below 1.9 V, so U11 and the AP63203
+  never reach their UVLO and the logic stays dead; FLT is unobservable (BAT_FAULT_N is pulled to the dead 3V3); and U9
+  reaches TSD every cycle (about every 110 ms plus heat and cool time) while J400 stays closed. There is no reboot
+  cycling and no C84 inrush (U11's reverse blocking keeps C84 off RAW_PROTECTED). Only a resistive overload of about
+  0.8–2 Ω (VOUT ≥ 3.75 V at ILIM) may give reboot attempts (Calculation). So the 470A turns a pad short into a dead
+  board that keeps heating U9 and slowly drains the pack until J400 is opened. **No AGENTS §2 property changes:** the
+  defaults hold through each reset, J400 still disables the board, and PC1 cannot complete its enable sequence inside
+  a retry on-time. An in-flight retry recovers only through FMEA F-4's post-reset rules, and the cold screen runs
+  after every power-up or reset (wait at least 1 s, verify RAW_ACT discharged and ACT_GATE off before classifying),
+  which covers both U9 variants.
+- **LSM6DSV80X FS_XL_HG 010 (R23-MCU-03; supersedes §2.3's "010 … is therefore unsafe" and the 1.6× scaling claim,
+  and the §0 summary row's "code 010 means ±80 g here and ±128 g on the ISM").** Code 010 is 3.904 mg/LSB on all three
+  parts (DS14764 Table 3 p12, and ST's driver); on the LSM6DSV80X it clips at ±80 g. So 001 / 010 serve all three parts,
+  with the 80 g clip noted; "001 only" remains the conservative choice. Never use ST's ism6hg256x driver's 256 g enum
+  (0x3 is reserved in DS15034 Table 150).
+- **LSM6DSV320X swap is not "BOM fields only" (R23-PARTS-03; supersedes §2.2's "Change" line).** It also changes U4's
+  CPL rotation, Bottom 180 → Bottom 0 (EasyEDA TL footprint, θ 0, residual 0.052 mm; round 23 parts lens). Keeping
+  180 misplaces the LGA by 2.892 mm. Regenerate with `m3_design/r10_fab.sh` and run `jlc_orient --verify-cpl`. For the
+  LSM6DSV80X, first add C46898862 to `tools/jlc_easyeda/pads.json` (same pads as C26633007).
+- **Consignment (R23-PARTS-02; adds to §0 and §3).** JLC's consignment steps, fees, moisture handling and carrier rules
+  are now in ORDERING 8.1 "Consigning U4 / U9". The TI store's carrier options for TPS259470LRPWR were not checked
+  per part number; check them on order day.
+
 Read-only research for the owner. Nothing here is adopted. Every BOM change below is a recommendation.
 Labels: **Datasheet** (read this session, page given), **Live** (supplier figure with UTC time), **Calculation**,
 **Inference** (not measured, not in a datasheet).

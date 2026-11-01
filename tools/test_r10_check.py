@@ -332,9 +332,78 @@ class SchematicContract(unittest.TestCase):
         self.assertTrue(any('use only 001 (+/-64 g) or 010 (+/-128 g)' in r for r in note['firmware_obligations']))
         self.assertIn('Rev 8', note['sources']['mcu_revision'])
 
+    def test_r23_sheet_replay_catches_a_hand_edited_note(self):
+        """D-R23-10 (R23-GATE-06): the schematic contract's replay (which check.sh now runs) fails a committed sheet
+        whose note was hand-edited: the gate lens's d01 (the diagnostics note reverted to round 21's text) is named as a
+        nonreproducible diagnostics.kicad_sch; the unedited copy has no such finding."""
+        import shutil
+        import tempfile
+        import r10_sch_check as sch
+        src = gate.ROOT / 'm3_design/assembly_review'
+
+        def copy():
+            d = Path(tempfile.mkdtemp(prefix='r10_replay_'))
+            self.addCleanup(shutil.rmtree, d, ignore_errors=True)
+            for f in src.iterdir():
+                if f.suffix in ('.kicad_sch', '.kicad_pro', '.kicad_dru') or f.name in ('schematic.net.xml', 'fp-lib-table',
+                                                                                        'sym-lib-table'):
+                    shutil.copyfile(f, d / f.name)
+            (d / 'kilib').symlink_to(src / 'kilib', target_is_directory=True)
+            return d
+        clean, edited = copy(), copy()
+        diag = edited / 'diagnostics.kicad_sch'
+        text = diag.read_text()
+        new = "Nominal 5.456 V (PORT_5V3 via U402) reads 0.496 V; a failed U400 passes RAW_PROTECTED"
+        self.assertIn(new, text)
+        diag.write_text(text.replace(new, '5.25 V reads 0.477 V; a failed regulator passes RAW_PROTECTED'))
+        import contextlib
+        import io
+        import warnings
+        with contextlib.redirect_stdout(io.StringIO()), warnings.catch_warnings():   # keep check.sh's summary lines
+            warnings.simplefilter('ignore', ResourceWarning)
+            clean_issues, edited_issues = sch.check(clean)['issues'], sch.check(edited)['issues']
+        self.assertNotIn('nonreproducible generated artifact: diagnostics.kicad_sch', clean_issues)
+        self.assertIn('nonreproducible generated artifact: diagnostics.kicad_sch', edited_issues)
+
+    def test_r23_binding_note_rules_and_pin_table(self):
+        """D-R23-03 (R23-MCU-04 / DOCS_BINDING-03 / -08, POWER-04 and the root's rules 1-13): the binding note carries
+        the 13 round 23 firmware rules in the root's wording, PB1 as TT_u, the LSM6DSV320X as the second-fallback
+        alternate; pin_table names the R10 pull resistor where one exists (no 'as R7' on those rows) and gives PA5's
+        reverse-blocking meaning."""
+        import csv
+        import r10_sch_check as sch
+        note = sch.binding_note(gate.ROOT / 'm3_design/assembly_review')
+        rules = [r for r in note['firmware_obligations'] if r.startswith('R23 firmware rule ')]
+        self.assertEqual([int(r.split()[3].rstrip(',')) for r in rules], list(range(1, 14)))
+        text = '\n'.join(note['firmware_obligations'])
+        for words in ('LIFTOFF from the accelerometer AND a barometric altitude gain (LAUNCH_CORROBORATED)',
+                      'wait at least 1 s, and verify that RAW_ACT has discharged and ACT_GATE is off',
+                      "Q124's gate capacitor is C126, 220 nF, not C128", 'run a QSPI quad read-verify of a known pattern',
+                      'meter U3.3 (QSPI_IO2) to R127.1 (the PE4 gate network): it must read open',
+                      'the powered BUS must read at least 0.96 × the pack voltage derived from VLOGIC_SENSE',
+                      'PC1 may go high only while PA4 reads low', 'PC1 never re-enables in the same power session',
+                      'PA5 low also means U9 is blocking reverse current (SLVSFC9C Table 7-3 p38)',
+                      'The PA6 trip window is VLOGIC about 4.8–5.2 V (PA6 0.44–0.47 V)'.replace('The', 'the'),
+                      'refuses the pad READY state below 7.4 V plus the measured PA6 divider error',
+                      'BOOT_ADD0 = 0x0800, IWDG1_SW software start', 'U5 MS5611 on I2C1 PB8 / PB9 at 0x77 (PS high, CSB low)',
+                      'within ±1.023 MHz of 1575.42 MHz', "Never use ST's ism6hg256x driver's 256 g enum",
+                      'open R105 puts CAM_5V on a TT_u pin', 'the LSM6DSV320X is the second-fallback alternate (needs part fields'):
+            self.assertIn(words, text)
+        self.assertNotIn('TT_a pin', text)
+        self.assertNotIn('consigned alternate', text)
+        with (gate.ROOT / 'm3_design/assembly_review/sources/r10_design/pin_table.tsv').open() as table:
+            rows = {r['port']: r for r in csv.DictReader(table, delimiter='\t')}
+        pulls = {'PA0': 'R154 10k to GND', 'PA1': 'R155 10k to GND', 'PA2': 'R156 10k to GND', 'PA3': 'R157 10k to GND',
+                 'PB1': 'R105 1k to GND', 'PD6': 'R90 10k to 3V3', 'PB6': 'R10 10k to 3V3', 'PB7': 'R11 10k to 3V3',
+                 'PB8': 'R12 4.7k to 3V3', 'PB9': 'R13 4.7k to 3V3'}
+        for port, start in pulls.items():
+            self.assertTrue(rows[port]['reset_contract'].startswith(start), (port, rows[port]['reset_contract']))
+        self.assertEqual(sum('as R7' in r['reset_contract'] for r in rows.values()), 15)
+        self.assertIn('PA5 low also means U9 is blocking reverse current', rows['PA5']['reset_contract'])
+
     def test_r21_sheet_notes(self):
         """D-R21-03 (R21-REQ-01 / -02): the sensors sheet names the fitted ISM6HG256X (DS15034) with the LSM6DSV320X as
-        the consigned alternate; the diagnostics note has no USB self-test of a camera regulator "U8" (the camera rail
+        the second-fallback alternate (D-R23-03); the diagnostics note has no USB self-test of a camera regulator "U8" (the camera rail
         is off on USB-only power); the battery_entry note states OQ-6's no-fuse decision, what is limited only by the
         pack (C88 included), U9's limit and R134's on the RAW_ACT path, whose Q120 drain sits on BAT_IN."""
         import shutil
@@ -350,7 +419,9 @@ class SchematicContract(unittest.TestCase):
             warnings.simplefilter('ignore', ResourceWarning)
             r10_sch.build(d, netlist=False)
         sensors, diag, battery = ((d / f'{n}.kicad_sch').read_text() for n in ('sensors', 'diagnostics', 'battery_entry'))
-        self.assertIn('U4 = ST ISM6HG256X (D-R19-11; the LSM6DSV320X is the consigned alternate on the same land)', sensors)
+        self.assertIn('U4 = ST ISM6HG256X (D-R19-11; the LSM6DSV320X is the second-fallback alternate (needs part fields, '
+                      'BOM and CPL regenerated: ORDERING 8.1) on the same land)', sensors)              # D-R23-03
+        self.assertNotIn('consigned alternate', sensors)
         self.assertIn('Pins 10/11 open per DS15034 Table 25 p52.', sensors)
         self.assertNotIn('U4 = ST LSM6DSV320X (R4)', sensors)
         self.assertNotIn('+/-32..320 g', sensors)
@@ -4365,7 +4436,7 @@ class RealBoardSeeds(unittest.TestCase):
         An entry the board no longer meets is stale, and a tap whose entry is dropped fails."""
         issues, ev = gate.single_via_opens(self.load())
         self.assertEqual(issues, [])
-        self.assertEqual(len(gate.SINGLE_OPEN_TAPS), 33)                 # 26 (round 21) + 7 (D-R22-02)
+        self.assertEqual(len(gate.SINGLE_OPEN_TAPS), 40)    # 26 (round 21) + 7 (D-R22-02) + 5 (D-R23-01 / -02) + 2 (D-R23-11)
         self.assertEqual(set(ev), {t[1] for t in gate.SINGLE_OPEN_TAPS})
         self.assertEqual({tap: e['single_points'] for tap, e in ev.items() if e['single_points']}, {
             'U401.3': ['via PORT_LDO_FB (29.75, 13.60)'],
@@ -4375,7 +4446,10 @@ class RealBoardSeeds(unittest.TestCase):
             'R430.2': ['via GND (32.30, 59.50)'],
             'U10.2': ['via GND (9.00, 27.84)'], 'R7.2': ['via GND (9.00, 27.84)'], 'U402.2': ['via GND (32.30, 59.50)'],
             'R8.2': ['via GND (9.95, 30.60)'], 'R60.1': ['via VLOGIC (34.50, 63.00)'],
-            'U1.28': ['via LOGIC_SOURCE_ST (30.85, 51.80)'], 'R91.1': ['via 3V3 (28.10, 60.00)']})
+            'U1.28': ['via LOGIC_SOURCE_ST (30.85, 51.80)'], 'R91.1': ['via 3V3 (28.10, 60.00)'],
+            'U1.94': ['via BOOT0 (13.80, 45.60)'], 'U1.48': ['via VCAP1 (29.25, 38.00)'], 'U1.73': ['via VCAP2 (18.00, 37.30)'],
+            'Q120.4': ['via ACT_GATE (16.20, 73.30)'], 'Q121.4': ['via ACT_GATE (11.14, 71.70)'],
+            'U4.6': ['via GND (16.75, 47.60)'], 'U4.7': ['via GND (16.75, 47.60)']})
 
         def no_run(board):
             self.drop(board, next(t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == '3V3'
@@ -4594,7 +4668,7 @@ class RealBoardSeeds(unittest.TestCase):
         the R85.2 / R430.2 entries name the floating IC ground. With its entry dropped a tap fails, and an entry the
         board does not meet is stale."""
         taps = {t[1]: t for t in gate.SINGLE_OPEN_TAPS}
-        self.assertEqual((len(gate.SINGLE_OPEN_TAPS), len(gate.SINGLE_OPEN_EXCEPTIONS)), (33, 15))
+        self.assertEqual((len(gate.SINGLE_OPEN_TAPS), len(gate.SINGLE_OPEN_EXCEPTIONS)), (40, 22))   # + D-R23-01 / -02 / -11
         want = {'U10.2': 'via GND (9.00, 27.84)', 'R7.2': 'via GND (9.00, 27.84)', 'U402.2': 'via GND (32.30, 59.50)',
                 'R8.2': 'via GND (9.95, 30.60)', 'R60.1': 'via VLOGIC (34.50, 63.00)',
                 'U1.28': 'via LOGIC_SOURCE_ST (30.85, 51.80)', 'R91.1': 'via 3V3 (28.10, 60.00)'}
@@ -4779,6 +4853,194 @@ class RealBoardSeeds(unittest.TestCase):
         stub.SetEnd(far) if stub.GetEnd() == at else stub.SetStart(far)
         found = gate.clamp_returns(board)[0]
         self.assertTrue(any(i.startswith("D410.2 (the D410 clamp's GND) is 1.5") for i in found), found)
+
+
+    # ------------------------------------------------------------------------------------------------ round 23 pass
+    def test_r23_boot0_vcap_and_gate_drive_taps(self):
+        """D-R23-01 / -02 (R23-MCU-02, R23-SAFETY-05): BOOT0's pull-down, both VCAP capacitors and the gate drive from
+        R121 to Q120 / Q121 are single-open taps, each held to its one via by an exact entry with its consequence. With
+        its entry dropped each fails naming its via; an entry the board does not meet is stale; and with Q120's gate via
+        removed from the board (kept referenced) Q120.4 is cut off from R121 entirely."""
+        taps = {t[1]: t for t in gate.SINGLE_OPEN_TAPS}
+        want = {'U1.94': 'via BOOT0 (13.80, 45.60)', 'U1.48': 'via VCAP1 (29.25, 38.00)', 'U1.73': 'via VCAP2 (18.00, 37.30)',
+                'Q120.4': 'via ACT_GATE (16.20, 73.30)', 'Q121.4': 'via ACT_GATE (11.14, 71.70)'}
+        b = self.load()
+        issues, ev = gate.single_via_opens(b, taps=[taps[t] for t in want])
+        self.assertEqual(issues, [])
+        self.assertEqual({t: ev[t]['single_points'] for t in want}, {t: [v] for t, v in want.items()})
+        reasons = {x[0]: x[2] for x in gate.SINGLE_OPEN_EXCEPTIONS}
+        self.assertIn('ROM loader', reasons['U1.94'])
+        self.assertIn('Table 124 p. 216', reasons['U1.48'])
+        self.assertIn('1.128 / 1.063 A against the 1.125 A floor', reasons['Q120.4'])
+        for tap, via in want.items():
+            with self.subTest(tap=tap):
+                t = taps[tap]
+                self.assertEqual(gate.single_via_opens(b, taps=[t], exceptions=[])[0],
+                                 [f'{tap} ({t[3]}) hangs on one via: opening {via} cuts it off from {"/".join(t[2])}'])
+        extra = list(gate.SINGLE_OPEN_EXCEPTIONS) + [('U1.94', 'via BOOT0 (13.00, 45.60)', 'not met')]
+        self.assertEqual(gate.single_via_opens(b, taps=[taps['U1.94']], exceptions=extra)[0],
+                         ['stale SINGLE_OPEN_EXCEPTIONS entry U1.94 / via BOOT0 (13.00, 45.60) (not met)'])
+
+        def no_gate_via(board):
+            self.drop(board, next(v for v in board.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'ACT_GATE'
+                                  and v.GetPosition() == self.P(16.2, 73.3)))
+        self.seeded('K-power', no_gate_via, "Q120.4 (Q120's gate drive from R121 (R23-SAFETY-05)) is not joined to R121.1")
+
+
+    def test_r23_dru_reader_spellings_and_floors(self):
+        """D-R23-05 / -07 (R23-GATE-01 / -03): the DRU is read as KiCad reads it ('#' comments stripped, rule names and
+        layers quoted or bare) and every minimum is floored, with no severity but error. The gate lens's seeds fail: h01
+        (an unquoted 0.10 mm relief rule), a quoted (layer "In1.Cu") / (layer "inner") override, the pinned inner rule
+        commented out, unbalanced text, h03 ((severity ignore) on SERVO1) and h04 (SERVO1 clearance 0.05 mm), and so do
+        track width 0.05, edge clearance 0, annular width 0.01, text height 0.3, hole size 0.1 and a constraint with no
+        floor; through K-rules (re-pinned) h01 fails too."""
+        import hashlib
+        folder = real_project()
+        dru = (folder / 'm3.kicad_dru').read_text()
+        self.assertEqual(gate.jlc_hole_table(dru)[0], [])
+        rules = gate.dru_rules(dru)
+        self.assertEqual(len(rules), 8)
+        self.assertTrue(all(r['name'] and not r['bad'] and r['severity'] is None for r in rules))
+
+        def rule(name, body, layer=None, cond="A.Type == 'Pad'", sev=None):
+            return (dru + f'\n(rule {name}\n' + (f'  (layer {layer})\n' if layer else '') +
+                    (f'  (severity {sev})\n' if sev else '') + f'  (condition "{cond}")\n  (constraint {body}))\n')
+        a = dru.index('(rule "JLC inner-layer PTH pad hole to copper"')
+        z = dru.index('(rule "JLC outer-layer PTH hole to track"')
+        commented = dru[:a] + ''.join('# ' + line + '\n' for line in dru[a:z].rstrip('\n').split('\n')) + '\n' + dru[z:]
+        servo = "A.NetName == 'SERVO1_MCU' || B.NetName == 'SERVO1_MCU'"
+        seeds = {
+            'h01 unquoted relief': (rule('relief', 'hole_clearance (min 0.10mm)', cond="A.Type == 'Via' && B.Type != 'Zone'"),
+                                    'DRU rule "relief" hole_clearance min 0.1 mm is below JLC'),
+            'quoted In1.Cu': (rule('"x"', 'hole_clearance (min 0.25mm)', layer='"In1.Cu"'),
+                              'on layer In1.Cu) follows "JLC inner-layer PTH'),
+            'quoted inner': (rule('"x"', 'hole_clearance (min 0.25mm)', layer='"inner"'),
+                             'on layer inner) follows "JLC inner-layer PTH'),
+            'pinned rule commented': (commented, 'needs one DRU rule "JLC inner-layer PTH pad hole to copper", found 0'),
+            'unbalanced': (dru + '\n(rule "x" (constraint clearance (min 0.2mm))\n', 'cannot be read'),
+            'h03 severity ignore': (rule('"Servo pair"', 'clearance (min 0.15mm)', cond=servo, sev='ignore'),
+                                    'sets severity ignore'),
+            'h04 clearance 0.05': (rule('"Servo pair"', 'clearance (min 0.05mm)', cond=servo),
+                                   'clearance min 0.05 mm is below the 0.15 mm floor'),
+            'track width': (rule('"x"', 'track_width (min 0.05mm)'), 'track_width min 0.05 mm is below the 0.15 mm'),
+            'edge clearance': (rule('"x"', 'edge_clearance (min 0mm)'), 'edge_clearance min 0 mm is below the 0.5 mm'),
+            'annular width': (rule('"x"', 'annular_width (min 0.01mm)'), 'annular_width min 0.01 mm is below the 0.1 mm'),
+            'text height': (rule('"x"', 'text_height (min 0.3mm)'), 'text_height min 0.3 mm is below the 1.0 mm'),
+            'hole size': (rule('"x"', 'hole_size (min 0.1mm)'), 'hole_size min 0.1 mm is below the 0.3 mm'),
+            'no floor': (rule('"x"', 'length (min 1mm)'), 'DRU_FLOORS has no floor for it'),
+        }
+        for name, (text, word) in seeds.items():
+            with self.subTest(seed=name):
+                self.assertNotEqual(text, dru)
+                found = gate.jlc_hole_table(text)[0]
+                self.assertTrue(any(word in i for i in found), found)
+        path, text = folder / 'm3.kicad_dru', seeds['h01 unquoted relief'][0]
+        try:
+            path.write_text(text)
+            with patch.object(gate, 'DRU_SHA256', hashlib.sha256(text.encode('utf-8')).hexdigest()):
+                found = self.run_rule('K-rules', self.load(), folder / 'm3.kicad_pcb')
+            self.assertTrue(any('DRU rule "relief"' in i for i in found), sorted(found))
+        finally:
+            path.write_text(dru)
+
+    def test_r23_copper_drawing_near_a_via_hole(self):
+        """D-R23-06 (R23-GATE-02): the JLC board measures take S-8's copper set (copper_nodes), so a board copper
+        drawing counts: the gate lens's h01 board copper, an In1 GND drawing 0.16 mm from via 3V3 (36.13, 58.8)'s hole
+        wall, fails the 0.2 mm via-hole row, in jlc_board_holes and through K-rules."""
+        def drawing(board):
+            x = pcbnew.FromMM(36.13 + 0.15 + 0.16 + 0.10)
+            s = pcbnew.PCB_SHAPE(board); s.SetShape(pcbnew.SHAPE_T_SEGMENT)
+            s.SetStart(pcbnew.VECTOR2I(x, pcbnew.FromMM(58.5))); s.SetEnd(pcbnew.VECTOR2I(x, pcbnew.FromMM(59.1)))
+            s.SetWidth(pcbnew.FromMM(0.2)); s.SetLayer(pcbnew.In1_Cu); s.SetNet(board.FindNet('GND')); board.Add(s)
+        board = self.load()
+        self.assertTrue(any(v.GetClass() == 'PCB_VIA' and v.GetNetname() == '3V3' and v.GetPosition() == self.P(36.13, 58.8)
+                            for v in board.GetTracks()))
+        drawing(board)
+        found = gate.jlc_board_holes(board)[0]
+        self.assertTrue(any(i.startswith('JLC holes: via 3V3 (36.13, 58.80) hole wall is 0.16') and 'copper drawing' in i
+                            for i in found), found)
+        self.seeded('K-rules', drawing, 'via 3V3 (36.13, 58.80) hole wall is 0.16')
+
+    def test_r23_fab_labels(self):
+        """D-R23-08 (R23-GATE-04): footprint text boxes and visible fields on a Fab layer are Fab text, a reference's
+        characters are at least half its height wide (or 0.3 mm), and no board-level shape sits on a Fab layer. The gate
+        lens's f01b (a text box 'Q121' in Q120), f02 (Q120's Value shown), f03 (R119's reference 0.02 mm wide) and f05 (a
+        board-level B.Fab rectangle over R134's reference) each fail."""
+        self.assertEqual(gate.fab_ref_crossings(self.load())[0], [])
+        ref = lambda board, r: next(g for g in board.FindFootprintByReference(r).GraphicalItems()  # noqa: E731
+                                    if isinstance(g, pcbnew.PCB_TEXT) and g.GetText() == '${REFERENCE}')
+        MM = pcbnew.FromMM
+
+        def f01b(board):
+            f = board.FindFootprintByReference('Q120'); c = f.GetPosition()
+            t = pcbnew.PCB_TEXTBOX(f); t.SetText('Q121'); t.SetLayer(pcbnew.B_Fab)
+            t.SetStart(pcbnew.VECTOR2I(c.x - MM(0.9), c.y + MM(2.8))); t.SetEnd(pcbnew.VECTOR2I(c.x + MM(0.9), c.y + MM(3.6)))
+            t.SetTextSize(self.P(0.6, 0.6)); t.SetTextThickness(MM(0.09)); t.SetMirrored(True); t.SetBorderEnabled(False)
+            f.Add(t)
+
+        def f02(board):
+            f = board.FindFootprintByReference('Q120'); v = f.Value()
+            self.assertEqual(board.GetLayerName(v.GetLayer()), 'B.Fab')
+            v.SetVisible(True); v.SetPosition(f.GetPosition())
+
+        def f05(board):
+            c = ref(board, 'R134').GetPosition()
+            s = pcbnew.PCB_SHAPE(board); s.SetShape(pcbnew.SHAPE_T_RECT)
+            s.SetStart(pcbnew.VECTOR2I(c.x - MM(1.6), c.y - MM(0.8))); s.SetEnd(pcbnew.VECTOR2I(c.x + MM(1.6), c.y + MM(0.8)))
+            s.SetFilled(True); s.SetWidth(MM(0.1)); s.SetLayer(pcbnew.B_Fab); board.Add(s)
+        for name, seed, word in (('f01b', f01b, "Fab text ['Q121'] on Q120"),
+                                 ('f02', f02, "Fab text ['AONR21357'] on Q120"),
+                                 ('f03', lambda b: ref(b, 'R119').SetTextWidth(MM(0.02)),
+                                  'Fab reference R119 characters are 0.020 mm wide'),
+                                 ('f05', f05, 'board-level PCB_SHAPE on B.Fab')):
+            with self.subTest(seed=name):
+                board = self.load()
+                seed(board)
+                found = gate.fab_ref_crossings(board)[0]
+                self.assertTrue(any(i.startswith(word) for i in found), found)
+        self.seeded('K-legends', f02, "Fab text ['AONR21357'] on Q120")
+
+    def test_r23_generated_footprints_and_paste_totals(self):
+        """D-R23-09 (R23-GATE-05): K-lands pins r10_parts' own footprint files by SHA-256 and the board's pasted pads
+        per side (253 F.Paste / 375 B.Paste). The gate lens's x02 (Q120 / Q121's paste stripped by a generator edit: the
+        library file changes and the board's 18 pads lose paste, 375 -> 357) fails both ways."""
+        import shutil
+        import tempfile
+        self.assertEqual(gate.paste_totals(self.load()), ([], {'F.Paste': 253, 'B.Paste': 375}))
+
+        def unpaste(board):
+            for ref in ('Q120', 'Q121'):
+                for q in board.FindFootprintByReference(ref).Pads():
+                    ls = q.GetLayerSet(); ls.RemoveLayer(pcbnew.B_Paste); ls.RemoveLayer(pcbnew.F_Paste); q.SetLayerSet(ls)
+        self.seeded('K-lands', unpaste, 'B.Paste: 357 pasted pads, pinned 375')
+        src = gate.ROOT / 'm3_design/assembly_review'
+        d = Path(tempfile.mkdtemp(prefix='r10_x02_'))
+        self.addCleanup(shutil.rmtree, d, ignore_errors=True)
+        shutil.copyfile(src / 'fp-lib-table', d / 'fp-lib-table')
+        shutil.copytree(src / 'kilib/rocket.pretty', d / 'kilib/rocket.pretty')
+        shutil.copyfile(real_project() / 'm3.kicad_pcb', d / 'm3.kicad_pcb')
+        mod = d / 'kilib/rocket.pretty/M3_AONR21357_DFN3x3A_EP1.kicad_mod'
+        text = mod.read_text()
+        self.assertIn('"F.Paste"', text)
+        mod.write_text(text.replace(' "F.Paste"', ''))
+        found = self.run_rule('K-lands', self.load(), d / 'm3.kicad_pcb')
+        self.assertTrue(any('generated footprint M3_AONR21357_DFN3x3A_EP1 file SHA-256' in i for i in found), sorted(found))
+
+    def test_r23_imu_ground_taps(self):
+        """D-R23-11 (R23-GATE-07): U4's power-ground pins U4.6 / U4.7 hang on the GND via (16.75, 47.60) alone, an exact
+        entry with its consequence (IMU dead: no launch detect, the primary does not fire; roll control lost). With the
+        entry dropped each fails naming the via."""
+        taps = {t[1]: t for t in gate.SINGLE_OPEN_TAPS}
+        b = self.load()
+        issues, ev = gate.single_via_opens(b, taps=[taps['U4.6'], taps['U4.7']])
+        self.assertEqual((issues, ev['U4.6']['single_points'], ev['U4.7']['single_points']),
+                         ([], ['via GND (16.75, 47.60)'], ['via GND (16.75, 47.60)']))
+        self.assertIn('the primary does not fire', next(x[2] for x in gate.SINGLE_OPEN_EXCEPTIONS if x[0] == 'U4.6'))
+        for tap in ('U4.6', 'U4.7'):
+            with self.subTest(tap=tap):
+                self.assertEqual(gate.single_via_opens(b, taps=[taps[tap]], exceptions=[])[0],
+                                 [f'{tap} ({taps[tap][3]}) hangs on one via: opening via GND (16.75, 47.60) cuts it off '
+                                  'from J1.2'])
 
 
 if __name__ == '__main__':

@@ -3719,4 +3719,130 @@ tracks only (the pour not counted) within 1.0 mm (`CLAMP_GND_MAX`), pad centre t
 D420 / D421 / D440 / D441 0.7 mm, D400 / D401 0.8 mm. Seeds: g07b (D420's GND stub and via removed, kept referenced:
 the pad reaches GND only through the pour) and D410's return re-drawn 1.5 mm long each fail.
 
-The record index is now **179 unique D IDs through D-R22-07**.
+## Round 23 closing pass (CAD lane, board 5516eeec… unchanged)
+
+Brief `.supervisor/r23_fix_brief.md`: round 23's ten lenses found 0 Critical / 0 Major on `5516eeec…`; a max-effort
+verifier confirmed the two fire-margin findings (R23-SAFETY-08 (a), R23-SAFETY-05) as Minor
+(`../r10_review/round23_safety_severity_check.md`). Checks, binding-note text, pin-table notes and records only; one
+complete `r10_build.sh` must give PCB `5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1` again
+(hand-back `../r10_review/round23_fix_cad.md`).
+
+## D-R23-01. BOOT0's pull-down and the VCAP capacitors are exact single-open entries (2026-11-01)
+
+R23-MCU-02 (checks only). Measured on `5516eeec…` with `single_via_opens`, each net's only via:
+- ('BOOT0', U1.94, R5.1): via BOOT0 (13.80, 45.60). Open, BOOT0 floats (DS12110 Rev 8 gives BOOT0 no pull:
+  Inference), so at the next reset the MCU may enter the ROM loader and the primary recovery and roll control go
+  silent; fire stays safe (PC1 / PE4 stay analog with R123 / R127). On the pad the missing telemetry shows it; after an
+  in-flight reset the Blue Jay is the only deployment.
+- ('VCAP1', U1.48, C19.1): via VCAP1 (29.25, 38.00); ('VCAP2', U1.73, C20.1): via VCAP2 (18.00, 37.30). Open, the core
+  LDO keeps one 2.2 uF instead of DS12110 Rev 8's two (Table 124 p. 216: CEXT 2.2 uF +/-20 %, ESR < 100 mOhm); its
+  stability then is an Inference.
+- `SINGLE_OPEN_TAPS` 33 -> 38 and `SINGLE_OPEN_EXCEPTIONS` 15 -> 20 with D-R23-02. Respin: a second via per net, or R5
+  on F.Cu beside U1.94.
+- Seeded tests: each tap with its entry dropped fails naming its via; an entry the board does not meet is stale.
+
+## D-R23-02. Q120's gate via is an exact single-open entry (2026-11-01)
+
+R23-SAFETY-05 (checks only; verified Minor). The gate drive from R121 reaches each FET's gate through one via: Q120.4
+through ACT_GATE (16.20, 73.30), Q121.4 through ACT_GATE (11.14, 71.70); the two meet only at R121.1 on F.Cu. Both
+are taps ('ACT_GATE', Q120.4 / Q121.4, R121.1) with exact entries:
+- Q120's via open: Q120 stays off (R120 / C120 keep it defined off on B.Cu, D-R18-02) and, with PC1 high, the bus is
+  fed through its body diode (AONR21357 VSD 0.7 typ / 1.0 V max at 1 A, p. 2): the four-stall fire current falls to
+  1.128 / 1.063 A against the 1.125 A floor (still >= 1.39 x the maker's 0.75 A all-fire). Firmware rule 4's ground
+  refusal (powered BUS >= 0.96 x the VLOGIC_SENSE pack voltage after 100 ms) catches it.
+- Q121's via open: Q121 stays off and the bus stays dead; the powered check refuses (fail-safe).
+- Respin: a second F.Cu-B.Cu via at each gate.
+- Seeded tests: as D-R23-01, and with the board's Q120 gate via removed (kept referenced) K-power names Q120.4 cut off
+  from R121.1.
+
+## D-R23-03. Binding-note obligations, the sensors note and pin-table notes (2026-11-01)
+
+Text only, in the generator `m3_design/r10_sch_check.py` (the binding note), `m3_design/r10_sch.py` (the sensors sheet
+note) and `sources/r10_design/pin_table.tsv`; K-binding passes on the rebuilt note.
+- **Firmware rules 1-13** (the root's round 23 decisions, the wording M3_R10 "Firmware" uses): launch (LIFTOFF AND a
+  barometric gain, no inertial-only fire path), the cold screen after every power-up or reset, the QSPI_IO2 / PE4
+  bridge (physics, ground refusal, QSPI use while PC1 is high, cold-screen traffic, first-article meter check), the bus
+  voltage refusal (>= 0.96 x pack), the PC1 source rule, LANDED, PA5, the PA6 trip and hold-up, pad readiness (pack
+  and temperature), bring-up configuration, bring-up facts, clocks and the IMU codes. Obligations 36 -> 49.
+- **PB1** (R23-MCU-04): "TT_a" -> "TT_u" (DS12110 Rev 8 Table 9 p. 70).
+- **LSM6DSV320X** (R23-DOCS_BINDING-08): "the consigned alternate" -> "the second-fallback alternate (needs part
+  fields, BOM and CPL regenerated: ORDERING 8.1)", in the IMU obligation and the sensors sheet note.
+- **pin_table.tsv:** PA5's reset contract adds rule 7 (reverse blocking also pulls PA5 low). "as R7" gives way to the
+  R10 pull resistor on the ten rows that have one: PA0-PA3 (R154-R157 10k to GND), PB1 (R105 1k to GND under R104),
+  PD6 (R90), PB6 (R10), PB7 (R11), PB8 / PB9 (R12 / R13 4.7k). The 15 rows with no pull resistor keep "as R7".
+- Seeded test: the note carries rules 1-13 in order and the key phrases, no "TT_a pin" and no "consigned
+  alternate"; pin_table names each pull and PA5's reverse-blocking meaning.
+
+## D-R23-04. JLC's order-number mark is withdrawn; the placeholder stays until the next board change (2026-11-01)
+
+R23-MANUFACTURING-02 (record only). JLC withdrew the order number in May 2026
+(https://jlcpcb.com/help/article/How-to-mark-on-PCB, updated 2026-05-22: "Order Number is not available since May
+2026"; "Please DO NOT add "JLCJLCJLCJLC" in your silkscreen layer"; no mark is added by default). The board keeps its
+bottom "JLCJLCJLCJLC" text (the closing pair may not change the board), and K-legends keeps requiring it. Deleting the
+placeholder, with its requirement in `m3_design/r10_post.py` (item 3) and `tools/check_r10.py` (`JLC_ORDER_MARK` in the
+silkscreen allowlist), is a next-board-change item; the order form says Mark on PCB: none / Remove Mark (ORDERING, docs
+lane).
+
+## D-R23-05. K-rules reads the DRU as KiCad does (2026-11-01)
+
+R23-GATE-01 (checks only; the gate lens reviewed c70d261). The regex reader missed three spellings KiCad honours:
+unquoted rule names, quoted layer names (the lens's h06: KiCad applied (layer "In1.Cu") with 130 DRC hits) and
+'#'-commented rules (KiCad ignores them; the reader still found a commented-out pinned rule). `dru_rules` now
+tokenises the file: '#' comments stripped outside quoted strings, rule names and layers taken quoted or bare, every
+"(min ...)" read in any unit and position; anything that is not a readable rule (unbalanced text, an unknown
+top-level item, a rule without a name) fails K-rules. Seeds: h01 (an unquoted 0.10 mm via relief rule), quoted
+"In1.Cu" / "inner" overrides, the pinned inner rule commented out and unbalanced text each fail; h01 through K-rules
+(re-pinned) too.
+
+## D-R23-06. The JLC board measures take S-8's copper set (2026-11-01)
+
+R23-GATE-02 (checks only). `_copper_items`, which `pth_inner_copper` and `jlc_board_holes` measure against, now comes
+from `copper_nodes` (S-8's and K-power's set), so board and footprint copper drawings, copper text and footprint zones
+count; an NPTH hole stays no copper. Every figure on 5516eeec is unchanged. Seed: the gate lens's h01 board copper, an
+In1 GND drawing 0.16 mm from via 3V3 (36.13, 58.8)'s hole wall, fails the 0.2 mm via-hole row (before: unseen).
+
+## D-R23-07. Every DRU minimum is floored; only error severity (2026-11-01)
+
+R23-GATE-03 (checks only). K-rules floored only the hole rows; the lens's h04 (a re-pinned SERVO1 clearance of
+0.05 mm, the track then 0.0636 mm from SERVO2, against JLC's 0.09 mm spacing) and h03 (a (severity ignore) rule)
+passed every step. `DRU_FLOORS` now floors every constraint minimum at the project's .kicad_pro floor where that is
+stricter than JLC's table (https://jlcpcb.com/capabilities/pcb-capabilities, read 2026-11-01: multilayer trace / space
+0.09 / 0.09 mm, vias 0.15 / 0.25 mm, board-edge copper 0.2 mm): clearance 0.15, track width 0.15, edge clearance 0.5,
+annular width 0.1, via diameter 0.5, hole size 0.3, hole clearance 0.2, hole to hole 0.25, text 1.0 / 0.15, silk
+clearance 0.15, thermal gap / spoke 0.15. A constraint with a minimum and no floor fails until one is added, and any
+severity other than error fails. Seeds h03, h04, track width 0.05, edge clearance 0, annular width 0.01, text height
+0.3, hole size 0.1 and an unfloored "length" each fail.
+
+## D-R23-08. Fab labels: text boxes, visible fields, character width and board-level shapes (2026-11-01)
+
+R23-GATE-04 (checks only). Footprint text boxes and visible fields on F.Fab / B.Fab now count as Fab text (only the one
+${REFERENCE}, LS120's marks excepted); a reference's characters must be at least 0.5 x its height wide or 0.3 mm (the
+board: every Fab reference square); no board-level shape may sit on a Fab layer (none does). Seeds f01b (a text box
+"Q121" in Q120), f02 (Q120's Value shown on B.Fab), f03 (R119's reference 0.02 mm wide) and f05 (a board-level B.Fab
+rectangle over R134's reference) each fail; f02 through K-legends.
+
+## D-R23-09. r10_parts' footprints SHA-pinned; paste totals pinned (2026-11-01)
+
+R23-GATE-05 (checks only). The generated footprints were pinned only to their generator, so the lens's x02 (Q120 /
+Q121's paste stripped in `r10_parts.py`, the board matched) passed with 357 B.Paste flashes. K-lands now pins the nine
+generated footprint files the board uses by SHA-256 (`GENERATED_SHA256`; stale entries fail) and the board's pasted
+pads per side (`PASTE_TOTALS`: 253 F.Paste / 375 B.Paste, as the bound package). Seeds: the AONR21357 library file with
+its paste removed fails the SHA pin; Q120 / Q121's pads unpasted on the board fail the totals (357).
+
+## D-R23-10. check.sh runs the schematic contract and its sheet replay (2026-11-01)
+
+R23-GATE-06 (checks only). `m3_design/r10_sch_check.py` (the contract, ERC and the replay that compares every committed
+sheet, the netlist and the DRU with a fresh `r10_sch.py` build) ran only in `r10_build.sh`; the lens's d01 (the
+diagnostics note hand-reverted) passed check.sh. check.sh now runs it first, about 6 s. Seeds: the shell self-test
+(a failing replay stops the gate before any later stage) and d01 on a project copy (named as a nonreproducible
+diagnostics.kicad_sch; the unedited copy is not).
+
+## D-R23-11. U4's power-ground via is an exact single-open entry (2026-11-01)
+
+R23-GATE-07 (checks only). The GND via (16.75, 47.60) alone carries U4.6 / U4.7, the IMU's power-ground pins (U4.2 /
+U4.3 reach GND another way). Taps ('GND', U4.6 / U4.7, J1.2) with exact entries (`SINGLE_OPEN_TAPS` 38 -> 40, entries
+20 -> 22): open, the IMU's supply ground floats and it is dead (Inference), so launch is not detected and the primary
+does not fire (fail-safe; the Blue Jay covers recovery) and roll control is lost. Respin: a second via. C19 / C20 are
+D-R23-01. Seeds: each tap with its entry dropped fails naming the via.
+
+The record index is now **190 unique D IDs through D-R23-11**.

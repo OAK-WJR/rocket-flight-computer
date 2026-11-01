@@ -182,7 +182,7 @@
     "cad/mcu.kicad_sch": "fda8d2d94805cd0ea5660e969499eb156180abc01a9f1e3a4239cec6023c2f19",
     "cad/pullpin_buzzer.kicad_sch": "6251166ef5e36bd43d48060c3085437fd637df326d82dd7709f9836d9282e1e7",
     "cad/pyro.kicad_sch": "d3a6fde39e5a5df3a93a7a2c60bd7e90c24b28de1fe281a9bcfa03babc35e056",
-    "cad/sensors.kicad_sch": "dff2d2b051c450caaab92eda6e87f2f99ab143795b406b5fc722139527697b7f",
+    "cad/sensors.kicad_sch": "ee77a74f893000724702a820630ea65162dcf5ffa6776548fa86351f6cbd77cf",
     "cad/servos.kicad_sch": "c9d0d4661e6d30337fb9fa094219678f38a8a8b0c3dc48fa35e392ab2c1c1e0f",
     "cad/sym-lib-table": "4efd2ba454e433efeb8a4a72562b389141aa0b8fabf60041f03c34171402d37f",
     "cad/telemetry.kicad_sch": "6e310ef4a30cddc8b5bd1aa06c39dd8a72d61e642709073bbc31ece01767628a",
@@ -195,12 +195,12 @@
     "tools/jlc_orient.py": "a23ab373cc7e13f7053a97e87a0f85cc37a5bf19391f774680e7433461701c88"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "566a44428673c7c1d0c828834e4f9eb191739a757fe666c561e15871ad655006",
-    "m3_assembly_top.pdf": "7efbab7831785da5e4c243c220780a07bd7beda65c891e0244e91d2cdd8d7e73",
+    "m3_assembly_bottom.pdf": "8a21d578ad323a465106e2d433b29022c8b95edfc9bf6175a641fd748aa38f17",
+    "m3_assembly_top.pdf": "b514639b9a17dc870b9533aeebc5c1961551277f7649b9633bbe4fc8b58002bc",
     "m3_bom_jlc.csv": "df6c0fc2c86fc0be0a55583c417a48c0b06a48ca11a09e3abea2acab72003272",
     "m3_bom_owner.csv": "c48868b32f2680376e73c4ea93c98df8efd6df4cad909c83e64a7ee56b74c2c0",
     "m3_cpl_jlc.csv": "905e431462a7ee9ceb9d902820d8c91d8b1c9e787ef67cbb9a89a64a6391ae6b",
-    "m3_gerber.zip": "43f1d6a0622343a1feab7e85f4fc5f0416b2b2de0b35fe9717f6c819d3454957"
+    "m3_gerber.zip": "fcf1134c85cab5e95e32f8a2bd09c602f49a61c19041ebdc604b4d22b27bed02"
   },
   "schema": 1
 }

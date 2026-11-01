@@ -1,0 +1,329 @@
+{
+ "schema": 1,
+ "lane": "round 23 closing pass, CAD lane",
+ "date": "2026-11-01",
+ "brief": ".supervisor/r23_fix_brief.md \"Root decisions\" and \"CAD lane\" items 1-5 (item 5: the gate lens items R23-GATE-01..07 from round23_gate.md, folded in before the one build)",
+ "board": {
+  "bytes": 2336572,
+  "footprints": 215,
+  "segments": 983,
+  "vias": 300,
+  "gnd_vias": 167,
+  "track_mm": 1871.611826,
+  "size_mm": [
+   46,
+   90,
+   1.6
+  ],
+  "identical_to": "c70d261",
+  "sha256": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+  "changed": false
+ },
+ "build": {
+  "kicad_cli": "10.0.7",
+  "numpy_py": ".supervisor/venv/bin/python",
+  "complete_builds": 1,
+  "exit": 0,
+  "seconds": 1586,
+  "board_sha256": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+  "r10_fab_sh": "ran inside r10_build.sh: outputs written, S-4 BOM / CPL, CPL rebuilt from JLC footprints and paste content checks pass, manifest bound",
+  "hotplug_cases": [
+   2304,
+   0
+  ],
+  "check_sh_exit": 0,
+  "drc": 0,
+  "unconnected": 0,
+  "schematic_parity": 0,
+  "erc": 0,
+  "sheet_replay": "schematic contract and sheet replay (r10_sch_check): OK, the new first check.sh step, about 6 s",
+  "check_r10": "36 / 36 rules OK",
+  "route_check": "0 failing",
+  "fab": "re-bound (sensors sheet changed); content checks and six-output manifest pass; BOM and CPL unchanged",
+  "files_changed_by_build": [
+   "m3_design/assembly_review/sensors.kicad_sch (note text only)",
+   "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+   "m3_design/assembly_review/fab/m3_assembly_top.pdf",
+   "m3_design/assembly_review/fab/m3_assembly_bottom.pdf",
+   "m3_design/assembly_review/fab/m3_gerber.zip",
+   "m3_design/assembly_review/fab/m3_fab_manifest.json"
+  ],
+  "files_identical": 913
+ },
+ "items": [
+  {
+   "n": 1,
+   "finding": "R23-MCU-02",
+   "decision": "D-R23-01",
+   "status": "done",
+   "measured_with": "check_r10.single_via_opens on 5516eeec",
+   "taps": {
+    "('BOOT0', U1.94, R5.1)": "via BOOT0 (13.80, 45.60)",
+    "('VCAP1', U1.48, C19.1)": "via VCAP1 (29.25, 38.00)",
+    "('VCAP2', U1.73, C20.1)": "via VCAP2 (18.00, 37.30)"
+   },
+   "consequences": {
+    "BOOT0": "BOOT0 floats (DS12110 Rev 8 gives BOOT0 no pull: Inference); the next reset may enter the ROM loader, so primary recovery and roll control go silent; fire stays safe (PC1 / PE4 analog with R123 / R127); after an in-flight reset the Blue Jay is the only deployment",
+    "VCAP1 / VCAP2": "the core LDO keeps one 2.2 uF instead of DS12110 Rev 8's two (Table 124 p. 216: CEXT 2.2 uF +/-20 %, ESR < 100 mOhm); its stability then is an Inference"
+   },
+   "next_board_change": "a second via per net, or R5 on F.Cu beside U1.94",
+   "lens_vias": "confirmed"
+  },
+  {
+   "n": 2,
+   "finding": "R23-SAFETY-05",
+   "decision": "D-R23-02",
+   "status": "done",
+   "taps": {
+    "('ACT_GATE', Q120.4, R121.1)": "via ACT_GATE (16.20, 73.30)",
+    "('ACT_GATE', Q121.4, R121.1)": "via ACT_GATE (11.14, 71.70)"
+   },
+   "q121_added": "beside the brief's Q120, so no gate-path single point goes unnamed (the two meet only at R121.1 on F.Cu)",
+   "consequences": {
+    "Q120 via open": "Q120 stays off (R120 / C120 hold it off, D-R18-02); with PC1 high the bus runs through its body diode (AONR21357 VSD 0.7 typ / 1.0 V max at 1 A, p. 2): four-stall fire current 1.128 / 1.063 A against the 1.125 A floor (>= 1.39 x the 0.75 A all-fire); firmware rule 4's ground refusal (powered BUS >= 0.96 x pack) catches it",
+    "Q121 via open": "the bus stays dead; the powered check refuses (fail-safe)"
+   },
+   "next_board_change": "a second F.Cu-B.Cu via at each gate",
+   "taps_before_after_items_1_2": [
+    33,
+    38
+   ],
+   "exceptions_before_after_items_1_2": [
+    15,
+    20
+   ]
+  },
+  {
+   "n": 3,
+   "finding": "R23-MCU-04, R23-DOCS_BINDING-08 and the root's firmware rules 1-13",
+   "decision": "D-R23-03",
+   "status": "done",
+   "binding_note": {
+    "obligations_before_after": [
+     36,
+     49
+    ],
+    "rules": "R23 firmware rules 1-13 in the root's wording, each headed 'R23 firmware rule N' with its finding ID",
+    "pb1": "'TT_a pin' -> 'TT_u pin' (DS12110 Rev 8 Table 9 p. 70)",
+    "imu_alternate": "'the consigned alternate' -> 'the second-fallback alternate (needs part fields, BOM and CPL regenerated: ORDERING 8.1)', in the IMU obligation and the sensors sheet note"
+   },
+   "pin_table": {
+    "pa5": "reset contract adds rule 7 (reverse blocking also pulls PA5 low; SLVSFC9C Table 7-3 p38)",
+    "pull_resistors_named": {
+     "PA0-PA3": "R154-R157 10k to GND",
+     "PB1": "R105 1k to GND (under R104)",
+     "PD6": "R90 10k to 3V3",
+     "PB6": "R10 10k to 3V3",
+     "PB7": "R11 10k to 3V3",
+     "PB8 / PB9": "R12 / R13 4.7k to 3V3"
+    },
+    "as_r7_kept": "15 rows with no pull resistor (QSPI data / clock, HSE, USB, SWD, SPI1, IMU_INT1)"
+   },
+   "caught_before_build": "a missing comma before the new block would have merged rule 1 into the VREFBUF obligation (Python string concatenation); the new test caught it",
+   "k_binding": "passes on the rebuilt note"
+  },
+  {
+   "n": 4,
+   "finding": "R23-MANUFACTURING-02",
+   "decision": "D-R23-04",
+   "status": "done (record)",
+   "source": "https://jlcpcb.com/help/article/How-to-mark-on-PCB (updated 2026-05-22): \"Order Number is not available since May 2026\"",
+   "board": "keeps the JLCJLCJLCJLC placeholder (the closing pair may not change the board); K-legends keeps requiring it",
+   "next_board_change": "delete the placeholder with its requirement in m3_design/r10_post.py and tools/check_r10.py (JLC_ORDER_MARK); the order form says Mark on PCB: none"
+  },
+  {
+   "n": 5,
+   "finding": "R23-GATE-01..07 (the gate lens reviewed c70d261)",
+   "decisions": [
+    "D-R23-05",
+    "D-R23-06",
+    "D-R23-07",
+    "D-R23-08",
+    "D-R23-09",
+    "D-R23-10",
+    "D-R23-11"
+   ],
+   "status": "done",
+   "seed_source": ".supervisor/r23_gate/scripts/ (read only), rebuilt as self-test seeds",
+   "gate_01": {
+    "decision": "D-R23-05",
+    "what": "K-rules DRU reader",
+    "before": "regex: quoted rule names only, layer words only; '#'-commented rules still read",
+    "after": "dru_rules tokenises the file as KiCad reads it: '#' comments stripped outside strings, names and layers quoted or bare, every (min ...) in any unit and position; anything that is not a readable rule (unbalanced text, unknown top-level item, rule without a name) fails",
+    "seeds_now_failing": [
+     "h01 (unquoted 0.10 mm via relief rule)",
+     "quoted \"In1.Cu\" override",
+     "quoted \"inner\" override",
+     "pinned inner rule commented out",
+     "unbalanced text",
+     "h01 through K-rules (re-pinned)"
+    ]
+   },
+   "gate_02": {
+    "decision": "D-R23-06",
+    "what": "copper set for pth_inner_copper / jlc_board_holes",
+    "before": "fills, tracks, vias and pads only",
+    "after": "copper_nodes (S-8's and K-power's set): plus copper drawings, copper text and footprint zones; an NPTH hole stays no copper; every figure on 5516eeec unchanged",
+    "seeds_now_failing": [
+     "h01: In1 GND drawing 0.16 mm from via 3V3 (36.13, 58.8) fails the 0.2 mm via-hole row"
+    ]
+   },
+   "gate_03": {
+    "decision": "D-R23-07",
+    "what": "DRU floors and severity",
+    "before": "only the hole rows floored; any severity accepted",
+    "after": "DRU_FLOORS floors every constraint minimum at the project floor where stricter than JLC (https://jlcpcb.com/capabilities/pcb-capabilities, read 2026-11-01); a constraint with a minimum and no floor fails; severity other than error fails",
+    "floors_mm": {
+     "clearance": 0.15,
+     "track_width": 0.15,
+     "edge_clearance": 0.5,
+     "annular_width": 0.1,
+     "via_diameter": 0.5,
+     "hole_size": 0.3,
+     "hole_clearance": 0.2,
+     "hole_to_hole": 0.25,
+     "text_height": 1.0,
+     "text_thickness": 0.15,
+     "silk_clearance": 0.15,
+     "thermal_relief_gap": 0.15,
+     "thermal_spoke_width": 0.15,
+     "physical_clearance": 0.15,
+     "physical_hole_clearance": 0.2,
+     "diff_pair_gap": 0.15,
+     "courtyard_clearance": 0.0
+    },
+    "seeds_now_failing": [
+     "h03 (severity ignore)",
+     "h04 (SERVO1 clearance 0.05 mm)",
+     "track width 0.05",
+     "edge clearance 0",
+     "annular width 0.01",
+     "text height 0.3",
+     "hole size 0.1",
+     "an unfloored \"length\" constraint"
+    ]
+   },
+   "gate_04": {
+    "decision": "D-R23-08",
+    "what": "Fab labels (K-legends fab_ref_crossings)",
+    "before": "PCB_TEXT only; height and stroke checked",
+    "after": "text boxes and visible fields on F.Fab / B.Fab count as Fab text (one ${REFERENCE} per part, LS120's marks excepted); character width >= 0.5 x height or 0.3 mm; no board-level shape on a Fab layer",
+    "seeds_now_failing": [
+     "f01b (text box \"Q121\" in Q120)",
+     "f02 (Q120's Value shown on B.Fab), also through K-legends",
+     "f03 (R119's reference 0.02 mm wide)",
+     "f05 (board-level B.Fab rectangle over R134's reference)"
+    ]
+   },
+   "gate_05": {
+    "decision": "D-R23-09",
+    "what": "generated footprints and paste",
+    "before": "generated footprints pinned only to their generator (x02 passed with 357 B.Paste)",
+    "after": "K-lands pins the nine generated footprint files the board uses (GENERATED_SHA256; stale entries fail) and the pasted pads per side (PASTE_TOTALS F.Paste 253 / B.Paste 375)",
+    "seeds_now_failing": [
+     "x02 as a library edit (AONR21357 paste removed: SHA pin)",
+     "x02 as a board edit (Q120 / Q121 unpasted: 357 B.Paste)"
+    ]
+   },
+   "gate_06": {
+    "decision": "D-R23-10",
+    "what": "schematic contract and sheet replay in check.sh",
+    "before": "r10_sch_check (contract, ERC, replay of every committed sheet, netlist and DRU) ran only in r10_build.sh",
+    "after": "check.sh runs it first; about 6 s (measured)",
+    "seeds_now_failing": [
+     "the shell self-test (a failing replay stops the gate before any later stage)",
+     "d01 (diagnostics note hand-reverted) on a project copy: nonreproducible diagnostics.kicad_sch; the unedited copy has no such finding"
+    ]
+   },
+   "gate_07": {
+    "decision": "D-R23-11",
+    "what": "U4's power-ground via",
+    "before": "unnamed single via",
+    "after": "taps ('GND', U4.6 / U4.7, J1.2) with exact entries at via GND (16.75, 47.60)",
+    "consequence": "the IMU supply ground floats and it is dead (Inference): no launch detect, the primary does not fire (fail-safe; the Blue Jay covers recovery), roll control lost",
+    "next_board_change": "a second via",
+    "seeds_now_failing": [
+     "each tap with its entry dropped fails naming the via"
+    ]
+   },
+   "taps_entries_now": [
+    40,
+    22
+   ],
+   "taps_entries_round21": [
+    26,
+    8
+   ]
+  }
+ ],
+ "files_changed": [
+  "tools/check_r10.py",
+  "tools/test_r10_check.py",
+  "tools/check.sh (runs r10_sch_check first)",
+  "tools/test_check_shell.py (r10_sch_check stub and stage; sheet replay test)",
+  "m3_design/r10_sch_check.py (binding-note obligations)",
+  "m3_design/r10_sch.py (sensors note text)",
+  "m3_design/assembly_review/sensors.kicad_sch (generated)",
+  "m3_design/assembly_review/sources/r10_design/pin_table.tsv (reset_contract column)",
+  "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md (D-R23-01..11)",
+  "r10_binding_note.json (regenerated)",
+  "m3_design/assembly_review/fab/* (re-bound)",
+  "round23_fix_cad.md / .json"
+ ],
+ "tests": {
+  "added": [
+   "RealBoardSeeds.test_r23_boot0_vcap_and_gate_drive_taps",
+   "RealBoardSeeds.test_r23_dru_reader_spellings_and_floors",
+   "RealBoardSeeds.test_r23_copper_drawing_near_a_via_hole",
+   "RealBoardSeeds.test_r23_fab_labels",
+   "RealBoardSeeds.test_r23_generated_footprints_and_paste_totals",
+   "RealBoardSeeds.test_r23_imu_ground_taps",
+   "SchematicContract.test_r23_sheet_replay_catches_a_hand_edited_note",
+   "SchematicContract.test_r23_binding_note_rules_and_pin_table",
+   "tools/test_check_shell.py GateSequence.test_sheet_replay_failure_stops_the_gate"
+  ],
+  "changed": [
+   "SchematicContract.test_r21_sheet_notes (second-fallback wording)",
+   "RealBoardSeeds.test_r21_regulator_taps_survive_one_via_open (40 taps, each a single point)",
+   "RealBoardSeeds.test_r22_monitor_and_ic_ground_taps (40 taps / 22 entries)",
+   "tools/test_check_shell.py (r10_sch_check stub; CONTRACTS start with r10_sch_check)"
+  ],
+  "seed_rule": "every check change has a seed that fails it; a seed that did not apply fails its test; removed items stay referenced (RealBoardSeeds.drop)",
+  "counts": {
+   "shell": 11,
+   "procurement": "OK",
+   "fab_validation": 34,
+   "fit": 33,
+   "paste": 16,
+   "r10_parts": 5,
+   "route": 69,
+   "r10": 261,
+   "r10_numpy_skips": 6,
+   "numpy_hotplug_plate": 6
+  },
+  "not_run": "no simulation beyond the existing hot-plug model; no physical test"
+ },
+ "not_done": [],
+ "decisions": [
+  "D-R23-01",
+  "D-R23-02",
+  "D-R23-03",
+  "D-R23-04",
+  "D-R23-05",
+  "D-R23-06",
+  "D-R23-07",
+  "D-R23-08",
+  "D-R23-09",
+  "D-R23-10",
+  "D-R23-11"
+ ],
+ "record_index": "190 unique D IDs through D-R23-11",
+ "for_docs_lane": [
+  "D-R23-01 / -02 / -11: the new single points (BOOT0, VCAP1 / 2, both load-switch gate vias, U4.6 / U4.7 GND) for the next-board-change list",
+  "D-R23-03: the binding note carries rules 1-13 in the root's wording; M3_R10 'Firmware' should match it",
+  "D-R23-04: the order-mark leftover",
+  "D-R23-10: check.sh now runs the schematic contract and sheet replay first"
+ ],
+ "git_state_changed": false,
+ "native_cad_hand_edited": false
+}

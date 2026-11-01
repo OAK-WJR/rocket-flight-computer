@@ -40,7 +40,7 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
 '''
         for path in ('quality_audit/verify_board.py', 'tools/silk_check.py', 'tools/fit_check.py',
                      'tools/plate_model.py', 'tools/check_r10.py', 'tools/route_check.py',
-                     'm3_design/check_actuators.py', 'm3_design/r10_parts.py'):
+                     'm3_design/check_actuators.py', 'm3_design/r10_parts.py', 'm3_design/r10_sch_check.py'):
             (self.root / path).write_text(stub)
         for path in ('tools/fab_manifest.py', 'tools/test_check_shell.py', 'tools/test_procurement.py',
                      'tools/test_fab_validation.py', 'tools/test_fit_check.py', 'tools/test_paste_check.py',
@@ -54,7 +54,7 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
 
     SELFTESTS = ['test_check_shell', 'test_procurement', 'test_fab_validation', 'test_fit_check', 'test_paste_check',
                  'test_r10_parts', 'test_route_check', 'test_r10_check', 'test_r10_check']
-    CONTRACTS = ['verify_board', 'silk_check', 'r10_parts', 'fit_check', 'check_r10', 'route_check']
+    CONTRACTS = ['r10_sch_check', 'verify_board', 'silk_check', 'r10_parts', 'fit_check', 'check_r10', 'route_check']
 
     def run_gate(self, board=None):
         return subprocess.run(['bash', str(self.root / 'tools/check.sh'), str(board or self.root / 'board.kicad_pcb')],
@@ -84,6 +84,15 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
                 result = self.run_gate()
                 self.assertEqual(result.returncode, 13, result.stdout + result.stderr)
                 self.assertEqual(self.log.read_text().splitlines()[-1], stage)
+
+    def test_sheet_replay_failure_stops_the_gate(self):
+        """D-R23-10 (R23-GATE-06): check.sh runs the schematic contract and sheet replay (r10_sch_check) first; its
+        failure (a hand-edited sheet note) fails the gate before any later stage runs."""
+        self.env['FAIL_STAGE'] = 'r10_sch_check'
+        result = self.run_gate()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('schematic contract / sheet replay FAILED', result.stdout)
+        self.assertEqual(self.log.read_text().splitlines(), ['r10_sch_check'])
 
     def test_parts_budget_stage_must_check_without_regenerating(self):
         script = self.root / 'tools/check.sh'

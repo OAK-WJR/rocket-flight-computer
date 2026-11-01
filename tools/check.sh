@@ -46,6 +46,12 @@ print(f"DRC violations {len(v)}  unconnected {len(u)}  schematic parity {len(p)}
 for k, n in collections.Counter(x['type'] for x in v + erc).most_common(15): print(f"  {n:4d}  {k}")
 sys.exit(1 if (v or u or p or erc) else 0)
 PY
+# R23-GATE-06: the schematic contract and its sheet replay, the step r10_build.sh runs (about 6 s): every committed sheet,
+# the netlist and the DRU must be what m3_design/r10_sch.py regenerates, so a hand-edited sheet note fails here.
+KICAD_CLI="$CLI" "$KICAD_PY" -I -B "$ROOT/m3_design/r10_sch_check.py" --project "$(dirname "$BOARD")" \
+  --json "$OUT/sch_check.json" > "$OUT/sch_check.txt" 2>&1 \
+  && echo "schematic contract and sheet replay (r10_sch_check): OK" \
+  || { echo "schematic contract / sheet replay FAILED: see $OUT/sch_check.json"; exit 1; }
 (cd "$ROOT/quality_audit" && python3 verify_board.py "$BOARD" --cli "$CLI" --output "$OUT/audit.json" >/dev/null) \
   && echo "metadata / 3D model audit: OK" || { echo "metadata / 3D model audit FAILED: see $OUT/audit.json"; exit 1; }
 python3 "$ROOT/tools/silk_check.py" "$BOARD" --cli "$CLI"     # DRC skips silkscreen wholly outside the outline

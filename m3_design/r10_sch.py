@@ -234,7 +234,9 @@ R10_MCU_NOTE_PINS = {'8': 'BUZZ_DRV', '28': 'LOGIC_SOURCE_ST', '29': 'BAT_FAULT_
 # D-R21-03 (R21-REQ-01 / R21-REQ-02): retained notes that named superseded parts or the pre-OQ-6 fuse, replaced in place.
 R21_SHEET_NOTES = {
     'sensors.kicad_sch': {
-        'U4 = ST LSM6DSV320X (R4)': ('U4 = ST ISM6HG256X (D-R19-11; the LSM6DSV320X is the consigned alternate on the same land): '
+        # D-R23-03 (R23-DOCS_BINDING-08): the LSM6DSV320X is a second fallback, not a drop-in consignment.
+        'U4 = ST LSM6DSV320X (R4)': ('U4 = ST ISM6HG256X (D-R19-11; the LSM6DSV320X is the second-fallback alternate (needs part '
+                                    'fields, BOM and CPL regenerated: ORDERING 8.1) on the same land): '
                                     '+/-16 g low-g + +/-32..256 g high-g accel (DS15034 Rev 1 p1; use only high-g FS codes '
                                     '001 / 010, which both parts share), +/-4000 dps gyro, SPI <= 10 MHz. Pins 10/11 open '
                                     'per DS15034 Table 25 p52.'),

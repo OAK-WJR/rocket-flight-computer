@@ -122,7 +122,9 @@ Kept contract and copper rules:
                copper with any one via removed; a single point passes only as an exact SINGLE_OPEN_EXCEPTIONS entry
                (stale when no longer met). D-R22-02 (R22-POWER-01 / -02): 7 more taps, the TPS2553 GND pins U10.2 /
                U402.2, the CC Rd grounds R7.2 / R8.2 and the power-state monitors R60.1 (PA6), U1.28 (PA4) and R91.1,
-               each an exact entry (33 taps, 15 entries)
+               each an exact entry (33 taps, 15 entries). D-R23-01 / -02 (R23-MCU-02, R23-SAFETY-05): BOOT0, VCAP1,
+               VCAP2 and the load switch's gate drive to Q120.4 / Q121.4, each an exact entry; D-R23-11 (R23-GATE-07):
+               U4's power-ground pins U4.6 / U4.7 (40 taps, 22 entries)
   K-ports      D-R21-07 (R21-GATE-04): every port ESD clamp (J410 / J420 / J440 / J9 pins 3 and 4) lies within
                CLAMP_PATH_MAX (4.5 mm) of track from its terminal pin (pad centres, the net's track graph) on a path
                that does not pass the port's 1 k series resistor; D-R22-07 (R22-GATE-03): each clamp's GND pad reaches a
@@ -986,24 +988,104 @@ def dru_min_mm(value):
     return float(m.group(1)) * DRU_UNITS_MM[m.group(2).lower()]
 
 
+def _dru_tokens(text):
+    """Tokens of a .kicad_dru text with '#' comments (to the end of the line, outside quoted strings) stripped: '(',
+    ')', ('str', text) for a quoted string and ('atom', text) for a bare word (D-R23-05)."""
+    out, i, n = [], 0, len(text)
+    while i < n:
+        c = text[i]
+        if c == '#':
+            j = text.find('\n', i)
+            i = n if j < 0 else j + 1
+        elif c in '()':
+            out.append(c)
+            i += 1
+        elif c.isspace():
+            i += 1
+        elif c == '"':
+            j, buf = i + 1, []
+            while j < n and text[j] != '"':
+                if text[j] == '\\' and j + 1 < n:
+                    buf.append(text[j + 1])
+                    j += 2
+                    continue
+                buf.append(text[j])
+                j += 1
+            if j >= n:
+                raise ValueError('an unterminated quoted string')
+            out.append(('str', ''.join(buf)))
+            i = j + 1
+        else:
+            j = i
+            while j < n and not text[j].isspace() and text[j] not in '()"#':
+                j += 1
+            out.append(('atom', text[i:j]))
+            i = j
+    return out
+
+
+def _dru_tree(tokens):
+    """Nested lists of the tokens; ValueError on unbalanced parentheses."""
+    stack = [[]]
+    for t in tokens:
+        if t == '(':
+            stack.append([])
+        elif t == ')':
+            if len(stack) < 2:
+                raise ValueError("an unmatched ')'")
+            node = stack.pop()
+            stack[-1].append(node)
+        else:
+            stack[-1].append(t)
+    if len(stack) != 1:
+        raise ValueError("an unclosed '('")
+    return stack[0]
+
+
 def dru_rules(text):
-    """[(name, layer or None, condition or None, {constraint: min mm}, [unreadable '(min ...)' texts])] of a .kicad_dru
-    text, in file order. Every (min ...) inside a constraint is read, whatever its position or unit (D-R22-05)."""
+    """[dict(name, layer, condition, mins {constraint: min mm}, bad [unreadable items], severity)] of a .kicad_dru text
+    in file order, read as KiCad reads it (D-R22-05 / D-R23-05): '#' comments stripped, rule names and layers quoted or
+    bare, every (min ...) in a constraint in any unit and position. Anything that is not a readable rule is a dict with
+    name None and its reason in bad."""
+    def word(t):
+        return t[1] if isinstance(t, tuple) else None
+    try:
+        tree = _dru_tree(_dru_tokens(text))
+    except ValueError as e:
+        return [dict(name=None, layer=None, condition=None, mins={}, bad=[f'the DRU cannot be read: {e}'], severity=None)]
     out = []
-    for m in re.finditer(r'\(rule "([^"]+)"', text):
-        body = text[m.start():_sexpr_end(text, m.start()) + 1]
-        layer = re.search(r'\(layer\s+([^\s()]+)\s*\)', body)
-        cond = re.search(r'\(condition\s+"([^"]*)"\s*\)', body)
-        mins, bad = {}, []
-        for c in re.finditer(r'\(constraint\s+(\w+)', body):
-            block = body[c.start():_sexpr_end(body, c.start()) + 1]
-            for raw in re.findall(r'\(min\s+([^()]*?)\s*\)', block):
-                v = dru_min_mm(raw)
-                if v is None:
-                    bad.append(f'{c.group(1)} (min {raw})')
-                else:
-                    mins[c.group(1)] = min(v, mins.get(c.group(1), v))
-        out.append((m.group(1), layer.group(1) if layer else None, cond.group(1) if cond else None, mins, bad))
+    for node in tree:
+        if not isinstance(node, list) or not node or word(node[0]) not in ('version', 'rule'):
+            out.append(dict(name=None, layer=None, condition=None, mins={}, severity=None,
+                            bad=[f'an unknown top-level item {node!r:.60}']))
+            continue
+        if word(node[0]) == 'version':
+            continue
+        if len(node) < 2 or word(node[1]) is None:
+            out.append(dict(name=None, layer=None, condition=None, mins={}, severity=None, bad=['a rule with no name']))
+            continue
+        rule = dict(name=word(node[1]), layer=None, condition=None, mins={}, bad=[], severity=None)
+        for child in node[2:]:
+            key = word(child[0]) if isinstance(child, list) and child else None
+            arg = word(child[1]) if key and len(child) > 1 else None
+            if key == 'layer':
+                rule['layer'] = arg
+            elif key == 'condition':
+                rule['condition'] = arg
+            elif key == 'severity':
+                rule['severity'] = arg
+            elif key == 'constraint' and arg:
+                for sub in child[2:]:
+                    if isinstance(sub, list) and sub and word(sub[0]) == 'min':
+                        raw = ''.join(word(x) or '?' for x in sub[1:])
+                        v = dru_min_mm(raw)
+                        if v is None:
+                            rule['bad'].append(f'{arg} (min {raw})')
+                        else:
+                            rule['mins'][arg] = min(v, rule['mins'].get(arg, v))
+            elif key is None:
+                rule['bad'].append(f'an unreadable item {child!r:.60}')
+        out.append(rule)
     return out
 
 
@@ -1021,88 +1103,88 @@ def dru_layers_meet(pinned, later):
     return True
 
 
-def jlc_hole_table(text, table=JLC_HOLE_TABLE, floor=JLC_HOLE_FLOOR):
+# D-R23-07 (R23-GATE-03): every DRU minimum is floored, not only the hole rows: at the project's .kicad_pro floor where
+# it is stricter than JLC's table (https://jlcpcb.com/capabilities/pcb-capabilities, read 2026-11-01: multilayer trace /
+# space 0.09 / 0.09 mm, via 0.15 / 0.25 mm, board-edge copper 0.2 mm), else at JLC's. A constraint with a minimum and no
+# floor here fails until one is added; a rule severity other than error fails.
+DRU_FLOORS = {'clearance': 0.15, 'track_width': 0.15, 'edge_clearance': 0.5, 'annular_width': 0.1, 'via_diameter': 0.5,
+              'hole_size': 0.3, 'hole_clearance': 0.20, 'hole_to_hole': 0.25, 'text_height': 1.0,
+              'text_thickness': 0.15, 'silk_clearance': 0.15, 'thermal_relief_gap': 0.15, 'thermal_spoke_width': 0.15,
+              'physical_clearance': 0.15, 'physical_hole_clearance': 0.20, 'diff_pair_gap': 0.15,
+              'courtyard_clearance': 0.0}
+
+
+def jlc_hole_table(text, table=JLC_HOLE_TABLE, floor=JLC_HOLE_FLOOR, floors=None):
     """(issues, evidence): each JLC row's DRU rule exists once, with its pinned layer and condition and a minimum at
     least JLC's; no later rule able to apply on any of its layers (KiCad lets the last matching rule win; named layers
     and keywords both count) sets that constraint below JLC's figure; no hole rule anywhere is below JLC's least hole
-    figure; every constraint minimum is readable (any unit, any position)."""
+    figure; every constraint minimum is readable (any unit, any position) and at least its DRU_FLOORS floor; no rule
+    sets a severity other than error; nothing in the DRU is unreadable (D-R23-05 / -07)."""
+    floors = DRU_FLOORS if floors is None else floors
     rules = dru_rules(text)
     issues, ev = [], []
-    for name, _, _, _, bad in rules:
-        issues += [f'JLC table: DRU rule "{name}" has an unreadable minimum {b!r}' for b in bad]
+    for r in rules:
+        issues += [f'JLC table: DRU rule "{r["name"]}" has an unreadable minimum {b!r}' if r['name'] else
+                   f'JLC table: the DRU holds {b}, which K-rules cannot read as a rule' for b in r['bad']]
+    named = [r for r in rules if r['name']]
     for what, row, name, layer, cond, constraint, need in table:
-        hits = [i for i, r in enumerate(rules) if r[0] == name]
+        hits = [i for i, r in enumerate(named) if r['name'] == name]
         if len(hits) != 1:
             issues.append(f'JLC table: {what} ("{row}") needs one DRU rule "{name}", found {len(hits)}')
             continue
         i = hits[0]
-        _, lay, c, mins, _ = rules[i]
-        value = mins.get(constraint)
+        r = named[i]
+        value = r['mins'].get(constraint)
         ev.append(dict(what=what, jlc=row, rule=name, constraint=constraint, min_mm=value, jlc_min_mm=need))
-        if lay != layer or c != cond:
-            issues.append(f'JLC table: DRU rule "{name}" has layer {lay} and condition {c!r}, not the pinned {layer} '
-                          f'and {cond!r} ({what})')
+        if r['layer'] != layer or r['condition'] != cond:
+            issues.append(f'JLC table: DRU rule "{name}" has layer {r["layer"]} and condition {r["condition"]!r}, not the '
+                          f'pinned {layer} and {cond!r} ({what})')
         if value is None or value < need - 1e-9:
             issues.append(f'JLC table: DRU rule "{name}" {constraint} min {value} mm is below JLC\'s {need} mm ({what}: '
                           f'"{row}")')
-        for later, lay2, _, mins2, _ in rules[i + 1:]:
-            v = mins2.get(constraint)
-            if v is not None and v < need - 1e-9 and dru_layers_meet(layer, lay2):
-                issues.append(f'JLC table: DRU rule "{later}" ({constraint} min {v:.4g} mm on layer {lay2}) follows '
-                              f'"{name}" and can override JLC\'s {need} mm ({what})')
-    for name, _, _, mins, _ in rules:
+        for later in named[i + 1:]:
+            v = later['mins'].get(constraint)
+            if v is not None and v < need - 1e-9 and dru_layers_meet(layer, later['layer']):
+                issues.append(f'JLC table: DRU rule "{later["name"]}" ({constraint} min {v:.4g} mm on layer '
+                              f'{later["layer"]}) follows "{name}" and can override JLC\'s {need} mm ({what})')
+    for r in named:
         for constraint in ('hole_clearance', 'hole_to_hole'):
-            v = mins.get(constraint)
+            v = r['mins'].get(constraint)
             if v is not None and v < floor - 1e-9:
-                issues.append(f'JLC table: DRU rule "{name}" {constraint} min {v:.4g} mm is below JLC\'s {floor} mm '
+                issues.append(f'JLC table: DRU rule "{r["name"]}" {constraint} min {v:.4g} mm is below JLC\'s {floor} mm '
                               'hole figure')
+        for constraint, v in sorted(r['mins'].items()):
+            least = floors.get(constraint)
+            if least is None:
+                issues.append(f'DRU floors: rule "{r["name"]}" sets {constraint} (min {v:.4g} mm) and DRU_FLOORS has no '
+                              'floor for it (R23-GATE-03)')
+            elif v < least - 1e-9:
+                issues.append(f'DRU floors: rule "{r["name"]}" {constraint} min {v:.4g} mm is below the {least} mm floor '
+                              '(R23-GATE-03)')
+        if r['severity'] not in (None, 'error'):
+            issues.append(f'DRU floors: rule "{r["name"]}" sets severity {r["severity"]}; only error is allowed '
+                          '(R23-GATE-03)')
     return issues, ev
 
 
 def _copper_items(board, layers, err=None):
-    """{layer: [(net, item UUID or None, SHAPE_POLY_SET, bbox, label)]}: every copper item on each of `layers` (fill
-    pieces, tracks, vias (pad where flashed, else the plated barrel), pads (copper where flashed, else a plated
-    barrel; an NPTH pad without copper is none))."""
+    """{layer: [(net, item UUID, shape, bbox, label)]}: every copper item on each of `layers`, taken from copper_nodes
+    (S-8's set, D-R23-06): pads (copper where flashed, else the plated barrel; an NPTH hole is no copper), tracks, vias
+    (pad where flashed, else the barrel), board and footprint fill pieces, copper drawings and copper text. Shapes are
+    KiCad SHAPEs or polygon sets; both measure SquaredDistance to a point."""
     import pcbnew
-    err = pcbnew.FromMM(0.001) if err is None else err
-    items = {}
-    for lay in layers:
-        out = []
-        for z in board.Zones():
-            if not z.GetIsRuleArea() and z.IsOnLayer(lay) and z.HasFilledPolysForLayer(lay):
-                fill = z.GetFilledPolysList(lay)
-                out += [(z.GetNetname(), None, fill.UnitSet(i), f'{z.GetNetname()} fill')
-                        for i in range(fill.OutlineCount())]
-        for t in board.GetTracks():
-            if not t.IsOnLayer(lay):
-                continue
-            ps = pcbnew.SHAPE_POLY_SET()
-            if t.GetClass() == 'PCB_VIA':
-                r = t.GetWidth(lay) // 2 if t.FlashLayer(lay) else t.GetDrillValue() // 2
-                ps.NewOutline()
-                for k in range(64):
-                    a = 2 * math.pi * k / 64
-                    ps.Append(int(t.GetPosition().x + r * math.cos(a)), int(t.GetPosition().y + r * math.sin(a)))
-                what = 'via'
-            else:
-                t.TransformShapeToPolygon(ps, lay, 0, err, pcbnew.ERROR_INSIDE)
-                what = 'track'
-            at = t.GetPosition() if what == 'via' else t.GetStart()
-            out.append((t.GetNetname(), t.m_Uuid.AsString(), ps, f'{what} {t.GetNetname()} ({pcbnew.ToMM(at.x):.2f}, '
-                                                                f'{pcbnew.ToMM(at.y):.2f})'))
-        for f in board.GetFootprints():
-            for p in f.Pads():
-                if not p.IsOnLayer(lay):
-                    continue
-                ps = pcbnew.SHAPE_POLY_SET()
-                if p.FlashLayer(lay):
-                    p.TransformShapeToPolygon(ps, lay, 0, err, pcbnew.ERROR_INSIDE)
-                elif p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH:
-                    p.TransformHoleToPolygon(ps, 0, err, pcbnew.ERROR_INSIDE)
-                else:
-                    continue
-                out.append((p.GetNetname(), p.m_Uuid.AsString(), ps, f'{f.GetReference()}.{p.GetNumber()}'))
-        items[lay] = [(net, uid, ps, ps.BBox(), label) for net, uid, ps, label in out]
+    want = set(layers)
+    items = {lay: [] for lay in layers}
+    names = {lay: board.GetLayerName(lay) for lay in layers}
+    for key, lay, shape, bb, pad, net, label in copper_nodes(board):
+        if lay not in want:
+            continue
+        if pad is not None and pad.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH and not pad.FlashLayer(lay):
+            continue
+        if label.endswith(f' fill on {names[lay]}'):
+            label = label[:-len(f' on {names[lay]}')]                 # 'GND fill', as the messages always read
+        box = pcbnew.BOX2I(pcbnew.VECTOR2I(bb[0], bb[1]), pcbnew.VECTOR2L(bb[2] - bb[0], bb[3] - bb[1]))
+        items[lay].append((net, key.split('/')[0], shape, box, label))
     return items
 
 
@@ -2896,6 +2978,16 @@ SINGLE_OPEN_TAPS = (
     ('VLOGIC', 'R60.1', ('U11.1', 'U11.8'), "R60, PA6's VLOGIC sense divider top (R22-POWER-02)"),
     ('LOGIC_SOURCE_ST', 'U1.28', ('U11.9',), "PA4, U11's ST status line (R22-POWER-02)"),
     ('3V3', 'R91.1', ('L1.2',), "R91, the ST pull-up's 3V3 end (R22-POWER-02)"),
+    # D-R23-01 (R23-MCU-02): BOOT0's only pull-down and the two VCAP capacitors of the core LDO.
+    ('BOOT0', 'U1.94', ('R5.1',), "BOOT0's pull-down R5 (R23-MCU-02)"),
+    ('VCAP1', 'U1.48', ('C19.1',), "VCAP1's 2.2 uF capacitor C19 (R23-MCU-02)"),
+    ('VCAP2', 'U1.73', ('C20.1',), "VCAP2's 2.2 uF capacitor C20 (R23-MCU-02)"),
+    # D-R23-02 (R23-SAFETY-05): the load switch's gate drive from R121 to each FET's gate.
+    ('ACT_GATE', 'Q120.4', ('R121.1',), "Q120's gate drive from R121 (R23-SAFETY-05)"),
+    ('ACT_GATE', 'Q121.4', ('R121.1',), "Q121's gate drive from R121"),
+    # D-R23-11 (R23-GATE-07): the IMU's only power-ground pins.
+    ('GND', 'U4.6', ('J1.2',), "U4's (IMU) power ground pin 6 (R23-GATE-07)"),
+    ('GND', 'U4.7', ('J1.2',), "U4's (IMU) power ground pin 7 (R23-GATE-07)"),
 )
 # (tap pad, via label as copper_nodes prints it, measured reason): the single points kept on purpose. An entry no longer
 # met fails as stale, as POUR_DEBRIS does.
@@ -2907,6 +2999,10 @@ _U10_GND_OPEN = ("U10's only GND via (a B.Cu island with U10.2 and R7.2): open f
 _U402_GND_OPEN = ("U402's only GND via (a B.Cu island with U402.2): open floats the TPS2553's ground (TI SLVS841G states "
                   'no open-GND behaviour: Inference); camera supply loss only, no flight hazard. Second via at the next '
                   'board change')
+_U4_GND_OPEN = ("the IMU's only power-ground via (pins 6 / 7, 'GND, 0 V supply', DS15034 Rev 1 pin table): open, U4's "
+                'supply ground floats and the IMU is dead (behaviour not stated by ST: Inference), so launch is not detected '
+                'and the primary does not fire (fail-safe; the Blue Jay covers recovery) and roll control is lost. Second '
+                'via at the next board change')
 SINGLE_OPEN_EXCEPTIONS = [
     ('U401.3', 'via PORT_LDO_FB (29.75, 13.60)',
      "U401's FB to its F.Cu divider R402 / R403: no legal second via spot (round 21 power lens scan); open, FB floats on "
@@ -2938,6 +3034,29 @@ SINGLE_OPEN_EXCEPTIONS = [
     ('R91.1', 'via 3V3 (28.10, 60.00)',
      "R91 (ST pull-up)'s 3V3: open, PA4 can read 'battery' on USB-only power (Inference). Second via at the next board "
      'change'),
+    # D-R23-01 (R23-MCU-02): measured on 5516eeec; each the net's only via, a second via (or R5 on F.Cu beside U1.94) at
+    # the next board change.
+    ('U1.94', 'via BOOT0 (13.80, 45.60)',
+     "BOOT0's only link to its pull-down R5 10 kOhm: open, BOOT0 floats (DS12110 Rev 8 gives BOOT0 no pull: Inference), so "
+     'at the next reset the MCU may enter the ROM loader and the primary recovery and roll control go silent; fire stays '
+     'safe (PC1 / PE4 stay analog with R123 / R127); on the pad the missing telemetry shows it, after an in-flight reset '
+     'the Blue Jay is the only deployment'),
+    ('U1.48', 'via VCAP1 (29.25, 38.00)',
+     "VCAP1's only link to C19: open, the core LDO keeps one 2.2 uF instead of DS12110 Rev 8's two (Table 124 p. 216: CEXT "
+     '2.2 uF +/-20 %, ESR < 100 mOhm); its stability then is an Inference'),
+    ('U1.73', 'via VCAP2 (18.00, 37.30)', "VCAP2's only link to C20: as U1.48 (DS12110 Rev 8 Table 124 p. 216)"),
+    # D-R23-02 (R23-SAFETY-05): the only link from R121 to each FET's gate (they meet only at R121.1 on F.Cu); the off
+    # state stays defined locally (R120 / C120 at Q120, R119 at Q121, D-R18-02). A second via each at the next board change.
+    ('Q120.4', 'via ACT_GATE (16.20, 73.30)',
+     'open, Q120 stays off and, with PC1 high, the bus is fed through its body diode (AONR21357 VSD 0.7 typ / 1.0 V max at '
+     '1 A, p. 2): the four-stall fire current falls to 1.128 / 1.063 A against the 1.125 A floor (still >= 1.39 x the '
+     "maker's 0.75 A all-fire); the ground refusal 'powered BUS >= 0.96 x the VLOGIC_SENSE pack voltage after 100 ms' "
+     '(firmware rule 4) catches it'),
+    ('Q121.4', 'via ACT_GATE (11.14, 71.70)',
+     'open, Q121 stays off and the bus stays dead: the powered-bus check refuses (fail-safe)'),
+    # D-R23-11 (R23-GATE-07): the GND via under U4 alone carries U4.6 / U4.7 (U4.2 / U4.3 reach GND another way).
+    ('U4.6', 'via GND (16.75, 47.60)', _U4_GND_OPEN),
+    ('U4.7', 'via GND (16.75, 47.60)', _U4_GND_OPEN),
     ('R81.1', 'via BAT_ENABLE (17.10, 82.80)',
      "D-R21-05: R81 sits at U9's end on F.Cu; EN still crosses this one via from the F.Cu run to U9.1 on B.Cu (no B.Cu "
      'spot at U9.1, D-R20-01): respin item, U9 west cell re-laid'),
@@ -4331,6 +4450,9 @@ FAB_REF_MIN_H = 0.3            # mm (the smallest on the round 21 board: 0.3 mm,
 # FAB_STROKE_RATIO x its height or FAB_STROKE_MIN (the board: 0.15 x height). No board-level text on a Fab layer.
 FAB_REF_REACH = 1.5            # mm
 FAB_STROKE_RATIO, FAB_STROKE_MIN = 0.1, 0.05
+# D-R23-08 (R23-GATE-04): a Fab reference's character width is at least FAB_WIDTH_RATIO x its height or FAB_REF_MIN_H
+# (the board: every Fab reference square, width = height)
+FAB_WIDTH_RATIO = 0.5
 
 
 def fab_ref_crossings(board, named=None, tol=0.001, allowed=None, min_h=FAB_REF_MIN_H, reach=None):
@@ -4346,11 +4468,16 @@ def fab_ref_crossings(board, named=None, tol=0.001, allowed=None, min_h=FAB_REF_
     outlines, boxes, offsets, strokes, courtyard_boxed = {}, {}, {}, {}, []
     fabs = (pcbnew.F_Fab, pcbnew.B_Fab)
     for d in board.GetDrawings():                                      # D-R22-06: no board-level Fab text
-        if isinstance(d, (pcbnew.PCB_TEXT, pcbnew.PCB_TEXTBOX)) and d.GetLayer() in fabs:
-            at = d.GetPosition()
-            issues.append(f'board-level text {d.GetText()!r} on {board.GetLayerName(d.GetLayer())} at '
-                          f'({pcbnew.ToMM(at.x):.2f}, {pcbnew.ToMM(at.y):.2f}): only footprint references belong on the '
-                          'Fab layers (R22-GATE-02)')
+        if d.GetLayer() not in fabs:
+            continue
+        at = d.GetPosition()
+        where = f'on {board.GetLayerName(d.GetLayer())} at ({pcbnew.ToMM(at.x):.2f}, {pcbnew.ToMM(at.y):.2f})'
+        if isinstance(d, (pcbnew.PCB_TEXT, pcbnew.PCB_TEXTBOX)):
+            issues.append(f'board-level text {d.GetText()!r} {where}: only footprint references belong on the Fab layers '
+                          '(R22-GATE-02)')
+        else:                                                          # D-R23-08: no board-level Fab shape either
+            issues.append(f'board-level {d.GetClass()} {where}: nothing but footprints belongs on the Fab layers '
+                          '(R23-GATE-04)')
 
     def ink_box(t, lay):
         poly = pcbnew.SHAPE_POLY_SET()
@@ -4365,9 +4492,13 @@ def fab_ref_crossings(board, named=None, tol=0.001, allowed=None, min_h=FAB_REF_
     for f in sorted(board.GetFootprints(), key=lambda g: g.GetReference()):
         ref = f.GetReference()
         fab = pcbnew.B_Fab if f.IsFlipped() else pcbnew.F_Fab
-        fab_texts = [g for g in f.GraphicalItems() if isinstance(g, pcbnew.PCB_TEXT) and g.GetLayer() in fabs]
-        refs = [g for g in fab_texts if g.GetText() == '${REFERENCE}']
-        others = sorted(g.GetText() for g in fab_texts if g.GetText() != '${REFERENCE}')
+        # D-R23-08 (R23-GATE-04): text boxes and visible fields on a Fab layer are Fab text too
+        fab_texts = [g for g in f.GraphicalItems() if isinstance(g, (pcbnew.PCB_TEXT, pcbnew.PCB_TEXTBOX))
+                     and g.GetLayer() in fabs]
+        fab_texts += [g for g in f.GetFields() if g.GetLayer() in fabs and g.IsVisible()]
+        refs = [g for g in fab_texts if g.GetText() == '${REFERENCE}' and isinstance(g, pcbnew.PCB_TEXT)
+                and not isinstance(g, pcbnew.PCB_FIELD)]
+        others = sorted(g.GetText() for g in fab_texts if not any(g is r for r in refs))
         if others != sorted(allowed.get(ref, ())):
             issues.append(f'Fab text {others} on {ref}: only its ${{REFERENCE}} belongs on the Fab layers (R21-GATE-05)')
         if len(refs) != 1:
@@ -4383,6 +4514,10 @@ def fab_ref_crossings(board, named=None, tol=0.001, allowed=None, min_h=FAB_REF_
             if h < min_h - 1e-6:
                 issues.append(f'Fab reference {ref} is {h:.3f} mm high, under {min_h} mm (unreadable in the assembly '
                               'drawing, R21-GATE-05)')
+            cw = pcbnew.ToMM(t.GetTextWidth())                         # D-R23-08: character width floor
+            if cw < FAB_WIDTH_RATIO * h - 1e-6 and cw < min_h - 1e-6:
+                issues.append(f'Fab reference {ref} characters are {cw:.3f} mm wide, under {FAB_WIDTH_RATIO} x its {h:.3f} '
+                              f'mm height and under {min_h} mm (squashed, R23-GATE-04)')
         shapes = [g for g in f.GraphicalItems() if isinstance(g, pcbnew.PCB_SHAPE) and g.GetLayer() == fab]
         outline = pcbnew.SHAPE_POLY_SET()
         for g in shapes:
@@ -5018,7 +5153,34 @@ def land_overrides(board, pretty):
     return issues, compared
 
 
-def k_lands(ctx, pins=None, table=None):
+# D-R23-09 (R23-GATE-05): r10_parts' own footprints are pinned here too, by their generated files' SHA-256, so that a
+# generator edit (for example Q120 / Q121's paste stripped) needs a reviewed re-pin; and the board's pasted pads are
+# pinned per side (253 F.Paste / 375 B.Paste on 5516eeec, the bound package's flash counts).
+GENERATED_SHA256 = {
+    'M3_AONR21357_DFN3x3A_EP1': '98b34fd0b10c91fc0da1b4c3d45d92d8b8bb3ae4f6823ec7a751e82986fccc59',
+    'M3_DB125_2P_BK': 'ca5722baf0962fcd555120c7360b958538408b0875eb3f59d970b7312f5c6967',
+    'M3_DB125_2P_GN': '1898ccfb7f7cdd48402943955d673c8282f8dea6cadc967c855404ac23f650a7',
+    'M3_DB125_4P_GN': '747446dd144e6eaeefc8268d60e286510cf72af60f2268e2f405fc192874439b',
+    'M3_DB125_5P_GN': 'ca2aada63759dc14a4f130b89c3f264a28159c535bf0f4e5967a952782c07b5b',
+    'M3_MA_8x10': '66db2b17c307081780c75c8a3c2b25c66e4720ef130c1c703e7d5f3182674993',
+    'M3_MICROSD_MOLEX_472192001': 'ff60b0babf97df08f58030a70b4f929976b469ea4f131455be6c8d2cf310a97d',
+    'M3_SRP5030TA': '33ab57ef2aecc64a129326274e1cce2abb16e5e27cdce55a2394a4fe12ffade0',
+    'M3_TPS7A91_DSK10': '4d4f03f099a74f3a576cce028c3ff91cbe698e7bd22c2d573ca73d072321629d',
+}
+PASTE_TOTALS = {'F.Paste': 253, 'B.Paste': 375}
+
+
+def paste_totals(board, totals=None):
+    """(issues, {layer: pads}): the board's pads with paste on each side against PASTE_TOTALS."""
+    import pcbnew
+    totals = PASTE_TOTALS if totals is None else totals
+    count = {name: sum(1 for f in board.GetFootprints() for p in f.Pads() if p.GetLayerSet().Contains(board.GetLayerID(name)))
+             for name in totals}
+    return ([f'{name}: {n} pasted pads, pinned {totals[name]} (R23-GATE-05: a paste change needs a reviewed re-pin)'
+             for name, n in count.items() if n != totals[name]], count)
+
+
+def k_lands(ctx, pins=None, table=None, generated=None):
     """R18-GATE-09: the project library is the only footprint source and every footprint the board uses is pinned:
     generated by r10_parts (pinned there) or listed in FOOTPRINT_SHA256 with its library file's SHA-256. R19-GATE-01:
     no board instance changes a paste or mask aperture of its library copy (land_overrides)."""
@@ -5041,8 +5203,16 @@ def k_lands(ctx, pins=None, table=None):
             continue
         used.setdefault(name, []).append(f.GetReference())
     hashes = {}
+    generated = GENERATED_SHA256 if generated is None else generated
     for name, refs in sorted(used.items()):
-        if name in GENERATED:
+        if name in GENERATED:                                             # D-R23-09: pinned here as well
+            path = folder / 'kilib/rocket.pretty' / f'{name}.kicad_mod'
+            actual = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+            if generated.get(name) is None:
+                issues.append(f'K-lands: generated footprint {name} has no GENERATED_SHA256 pin (file SHA-256 {actual})')
+            elif actual != generated[name]:
+                issues.append(f'K-lands: generated footprint {name} file SHA-256 {actual} is not the pinned '
+                              f'{generated[name]}: a generator change needs review, then a re-pin (R23-GATE-05)')
             continue
         path = folder / 'kilib/rocket.pretty' / f'{name}.kicad_mod'
         hashes[name] = actual = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
@@ -5058,10 +5228,14 @@ def k_lands(ctx, pins=None, table=None):
                for name in sorted(set(pins) - set(used))]
     issues += [f'K-lands: {name} is generated by r10_parts and pinned there; remove its FOOTPRINT_SHA256 entry'
                for name in sorted(set(pins) & set(GENERATED))]
+    issues += [f'K-lands: stale GENERATED_SHA256 entry {name} (no board footprint uses it)'
+               for name in sorted(set(generated) - set(used))]
     overrides, compared = land_overrides(ctx.board, folder / 'kilib/rocket.pretty')
     issues += [f'K-lands: {i} (R19-GATE-01: a stencil / mask change goes in the reviewed library land)' for i in overrides]
+    pastes, counted = paste_totals(ctx.board)                         # D-R23-09
+    issues += [f'K-lands: {i}' for i in pastes]
     return issues, dict(pinned=len(hashes), generated=sorted(set(used) & set(GENERATED)), footprints_used=len(used),
-                        pads_compared_for_paste_mask=compared)
+                        pads_compared_for_paste_mask=compared, pasted_pads=counted)
 
 
 def sd_bypass(board):

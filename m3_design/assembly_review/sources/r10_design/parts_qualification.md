@@ -10,7 +10,7 @@ tests were performed. The current always-on ports, screw terminals, microSD and 
 
 ## Current circuit amendment and review status
 
-Review status, checks, cost and open items are stated once, in [M3_R10.md, "Current state"](../../../../docs/M3_R10.md#current-state). In short: PCB `5516eeec…` (46 × 90 mm) is not accepted and nothing is ordered. Round 21 (ten Claude lenses) reviewed the previous PCB `0dc84776…` and found 0 Critical / 0 Major / 35 Minor; its fix pass changed the board, so rounds 22 and 23 will review `5516eeec…`. AGENTS section 2 is unchanged. This file is the component contract; where a section below is marked historical it describes
+Review status, checks, cost and open items are stated once, in [M3_R10.md, "Current state"](../../../../docs/M3_R10.md#current-state). In short: PCB `5516eeec…` (46 × 90 mm) is not accepted and nothing is ordered. Round 21 (ten Claude lenses) reviewed the previous PCB `0dc84776…` and found 0 Critical / 0 Major / 35 Minor; its fix pass changed the board. Round 22 found 0 / 0 / 22 on `5516eeec…`; round 23 is the second review of the closing pair. AGENTS section 2 is unchanged. This file is the component contract; where a section below is marked historical it describes
 hardware that was removed from R10 and is kept only for the record. The round 19 amendments below supersede earlier text in this file where they differ.
 
 ## Round 19 component amendments (2026-10-30/31; D-R19-04, -07, -10, -11, -14)
@@ -26,6 +26,8 @@ No new BOM code except U4's. JLC BOM 81 lines (45 Extended / 36 Basic) plus C84 
 | J440, R470 / R471, D440 / D441, C444, C445 | DB125-3.5-4P-GN-S C2757925; 1 kΩ C21190; ESD103-B1-02EL C535146; 100 nF C14663; 22 µF C21397 | The spare AUX port (D-R19-14, owner-approved 2026-10-30): an electrical copy of J410's cell, no new codes. Since D-R20-09 D440 / D441 sit on the bottom under J440, as D410 / D411 under J410, 4.08 / 4.18 mm from their pins centre to centre (3.16 / 3.19 mm pad edge to pad edge). Per board the terminal code is now 4 and the ESD code 8 (37,827 and 201 in JLC stock, 2026-10-31). AUX may draw at most 100 mA at 4.8 V (GAP-3: U401 junction ≤ 125 °C at a 70 °C bay with the inferred 80–110 °C/W; [TPS7A91 SBVS282A p1, p5](https://www.ti.com/lit/ds/symlink/tps7a91.pdf)). Its UART is USART6 PC6 / PC7; the GPS on J410 moves to USART3 PD8 / PD9 (AF7, [DS12110 Rev 8](https://www.st.com/resource/en/datasheet/stm32h743vi.pdf) Table 13 p94; FT_h, Table 9 p75). J410 / J420 / J440 are electrically identical; firmware keeps the port map. Eight DB125 terminals now carry 27 contacts, all Ø1.30 mm holes / Ø1.90 mm copper (R19-BOM-04 carried). |
 | C84 | MA25V470M8x10, C46550466 | Its generated footprint `M3_MA_8x10` has no F.Paste since round 19 (D-R19-07; R19-MFG-02 / R19-BOM-02): no stencil aperture, the hand fit applies its own solder. The [supplier sheet](https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf) gives no manual or reflow profile; ORDERING §8.2 holds the heat limit (Inference) and the re-inspection of the bottom joints under it (R19-MEC-02). |
 | TP121 | removed | TP121 and its 7.14 mm ACT_GATE stub are gone (D-R19-03); probe ACT_GATE at R119.1, R120.2 or C120.2 before coating. |
+
+**Round 23 notes (R23-MCU-03, R23-PARTS-01; text only).** FS_XL_HG code 010 is 3.904 mg/LSB on the ISM6HG256X, the LSM6DSV320X and the LSM6DSV80X (DS14764 Table 3 p12) and clips at ±80 g on the 80X, so codes 001 / 010 serve all three; never use ST's ism6hg256x driver's 256 g enum (0x3 is reserved in DS15034 Table 150). Hot-end ratings are judged against part temperature, not bay air: the 85 °C parts (MS5611, AP6320x, J430, the U4 alternates) need bay air ≤ about 55–60 °C until the first-article 70 °C chamber test at the pad load passes (ORDERING 8.3; Inference for the board rise).
 
 **Cold-end ratings (R19-BOM-03).** Four fitted parts are rated above −40 °C at the cold end. The bay is −20…+70 °C (85 °C unshaded, DESIGN_ASSURANCE §6.1):
 - LS120 buzzer: −20…+70 °C (no cold margin at the −20 °C bay floor).
@@ -404,7 +406,7 @@ Each is10.2 kΩ over1 kΩ (two5.1 kΩ series, two2 kΩ parallel). With a1–2Ω 
 plus R1342Ω, both banks load D120/R13110 kΩ. For U=3V3−Vf,
 Rload=11.2k∥(Rmatch+R134+11.2k), Vout=U×Rload/(10k+Rload),
 Vraw=Vout×11.2k/(Rmatch+R134+11.2k); each sense ADC is its bus divided by11.2.
-Use nominal3V3=3.3 V, Vf=0.20 V for the nominal column. The illustrative band
+Use nominal3V3=3.3 V, Vf=0.20 V for the nominal column. **One basis (R23-DOCS_BINDING-02):** this nominal Vf = 0.20 V table (healthy cold CONT / BUS 99.369 / 99.338 mV, open 146.23 / 0 mV) is the reference; the 96.2 / 96.1 / 141.5 mV figures quoted for the R19-SAF-04 bridge cases elsewhere are the same formula at Vf = 0.30 V (a 3.0 V source; Calculation). The illustrative band
 uses3V3=3.135–3.465 V (existing±5% budgeting assumption), Vf=0–0.32 V, and each
 resistor at±1.45% (1% plus100 ppm/K to70°C). The diode range is an **Inference**
 from the [JSCJ BAT54/A/C/S25°C table](https://www.lcsc.com/datasheet/lcsc_datasheet_1809200014_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54A_C8591.pdf)

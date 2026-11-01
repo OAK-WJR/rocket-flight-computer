@@ -1,0 +1,309 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round23_docs_binding",
+ "reviewer": "claude",
+ "target_commit": "c70d261",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 10
+ },
+ "findings": [
+  {
+   "id": "R23-DOCS_BINDING-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Round 22's completion is not carried into nine status statements: five still say the board is unreviewed or that rounds 22 / 23 'will review' it, and the decision index stops at D-R21-09",
+   "evidence": [
+    "AGENTS.md 'R10 status (2026-10-31)' paragraph: 'so no clean pair carries to it: rounds 22 and 23 will review it' (STATUS.md says 'Status (2026-11-01)' and 'Round 22 then found 0 / 0 / 22').",
+    "docs/ORDERING.md §8 'Status.' paragraph: 'rounds 22 and 23 will review 5516eeec…'.",
+    "docs/R10_VALIDATION.md line 4 (head): 'It has had no review round yet: rounds 22 and 23 will review it', contradicting line 7 of the same head ('Latest review. Round 22 … 0 / 0 / 22').",
+    "docs/R10_VALIDATION.md owner decision table preamble: 'rounds 22 and 23 are planned as the closing pair for it'.",
+    "docs/M3_R10.md 'Review status' table: row '22 and 23 | Planned | current PCB 5516eeec… | Pending' and the next line 'The current PCB has not been reviewed.', contradicting the Summary paragraph of the same section ('Round 22's ten lenses found 0 Critical / 0 Major (22 Minor) on it').",
+    "docs/M3_R10.md 'Not verified': '… and any review of the current PCB'.",
+    "Decision count: M3_R10 'Review status' and 'Evidence and records' say '172 unique decision IDs through D-R21-09'; R10_VALIDATION owner row 20 says '172 agent decisions through D-R21-09 … the 46 later ones'; R10_DECISIONS.md last line says '179 unique D IDs through D-R22-07' (grep of unique D-IDs in R10_DECISIONS: 178 tokens + index line). The R10_VALIDATION table 'Decisions after the ledger (D-R18-01 … D-R21-09)' has no D-R22-01 … 07 rows.",
+    "docs/M3_R10.md 'Evidence and records' lists round 21/20/19 records but not round22_fix_cad.md or round22_alternates.md.",
+    "Round 22 report totals checked: 10 JSONs, 1+2+3+1+1+1+2+4+4+3 = 22 Minor, all target_commit ec8cb98 and board 5516eeec; STATUS, R10_VALIDATION 'Round 22' section and its 22 disposition IDs agree with them."
+   ],
+   "impact": "A newcomer reading AGENTS (the always-loaded file), ORDERING §8 or the M3_R10 review table concludes the board has had no review and that round 23 is a first review, opposite to STATUS and the Round 22 section; the owner's acceptance row 20 asks for acceptance of a decision list that omits D-R22-01 … 07.",
+   "concrete_fix": "Text only: change the five 'will review' / 'has not been reviewed' / 'Pending' statements to 'Round 22 found 0 / 0 / 22 on 5516eeec…; round 23 is the second review of the closing pair'; set the M3_R10 review table row 22 to 'Claude, ten lenses | 5516eeec…, ec8cb98 | 0 / 0 / 22' and add a row 23 'in progress'; change '172 … through D-R21-09' to '179 … through D-R22-07' (M3_R10 ×2, R10_VALIDATION row 20, '53 later ones'); add D-R22-01 … 07 rows (all 'No (checks / note text / records)') to 'Decisions after the ledger'; add the round 22 records to M3_R10 'Evidence and records'; date AGENTS' paragraph 2026-11-01."
+  },
+  {
+   "id": "R23-DOCS_BINDING-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Two different nominal cold-screen readings are given for the same healthy and open-match cases (99.369 / 99.338 and 146.23 mV against 96.2 / 96.1 and 141.5 mV), with no stated basis",
+   "evidence": [
+    "docs/ORDERING.md §8.3 bench bullet: 'Qualify healthy CONT/BUS ≈ 99.369/99.338 mV and open ≈ 146.23/0 mV'; docs/FMEA_REDUNDANCY.md line 9 and parts_qualification.md table (line 417–419) give the same, with the formula and 'Vf = 0.20 V' nominal.",
+    "docs/M3_R10.md 'Retained deviations' PYRO1_CONT_MID bullet: 'an open match then reads CONT / BUS 102.0 / 55.5 mV, against 96.2 / 96.1 mV healthy'; docs/R10_VALIDATION.md line 1923 ('healthy cold 96.2 / 96.1 mV') and §1 table line 2014 ('healthy cold 96.2 / 96.1 mV and open 141.5 / 0.0 mV').",
+    "Board (pcbnew, read-only): CONT bank R129 5.1k + R173 5.1k over R130 ∥ R178 2k, C127 10 nF; BUS bank R132 + R175 5.1k over R133 ∥ R180 2k, C129 10 nF; ratio 11.2. Recalculated with parts_qualification's formula: source 3.1 V (3.3 V − 0.20 V) gives 99.37 mV healthy / 146.2 mV open; 96.2 / 141.5 mV correspond to a 3.0 V source (Vf ≈ 0.30 V). Calculation."
+   ],
+   "impact": "The firmware developer writing the passive cold-screen bands (a ground hard-refusal, AGENTS §2.3) gets two nominal centres 3 % apart from four documents, without knowing which diode drop each assumes; the R19-SAF-04 bridge case (102.0 / 55.5 mV) is stated only against the 96.2 basis.",
+   "concrete_fix": "Text only: state one basis in parts_qualification.md (e.g. the nominal Vf = 0.20 V table and its band) and either restate the R19-SAF-04 bridge figures on that basis or label the 96.2 / 96.1 / 141.5 mV set as 'at Vf = 0.30 V' in M3_R10 and R10_VALIDATION."
+  },
+  {
+   "id": "R23-DOCS_BINDING-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Firmware bring-up facts missing from M3_R10 'Firmware', pin_table.tsv and the binding note: barometer address, chip-select initial levels, sense scale factors, PA6 trip value, PA4 settling delay and USB VBUS sensing",
+   "evidence": [
+    "Barometer: the only mention of U5's bus is pin_table row 96's loader column ('loader slave address 0b1001110x, not U5 0x76/0x77'). Board: U5.2 (PS) = 3V3A (I2C mode), U5.4 / U5.5 (CSB) = GND, U5.6 SDO via R64 10 kΩ to GND, U5.7 / U5.8 on I2C1_SDA / I2C1_SCL with R13 / R12 4.7 kΩ pull-ups. TE MS5611-01BA03 datasheet (cached .supervisor/r14_parts_pdf/te_ms5611.pdf; https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5611-01BA03&DocType=Data+Sheet), I2C interface section ('address is 111011Cx, where C is the complementary value of the pin CSB') and pin table ('PS high (VDD) I2C'): CSB = GND gives 0x77. No doc states 0x77.",
+    "Chip selects: pin_table row 93 PB7 IMU_CS 'GPIO out', reset_contract 'as R7 (pass1/2/3_electrical, M3_R7 pin contract)'; board has R11 10 kΩ IMU_CS to 3V3 and R10 10 kΩ QSPI_NCS to 3V3. Row 81 SD_CS says 'initialise high before output mode'; IMU_CS does not. 25 pin_table rows defer to 'as R7'; docs/M3_R7.md 'Pin contract' (line 128 on) has no IMU_CS level or barometer address either.",
+    "Sense scales: board R60 100k / R61 10k (PA6 = VLOGIC / 11), R104 10k / R105 1k (PB1 = CAM_5V / 11), CONT / BUS banks / 11.2. M3_R10 'Firmware' gives none; PA6 / 11 appears only in ORDERING §8.3, PB1 only in the diagnostics sheet note (D-R22-03), / 11.2 only in parts_qualification.md.",
+    "PA6 watchdog: hold-up is computed 'to 3.8 V' (M3_R10 Firmware, binding note #12–13) but no document gives the ADC-watchdog trip voltage to program; M3_R10 Power line 488 'Still to qualify: the PA6 threshold'.",
+    "PA4: M3_R10 Firmware and binding note port_states.startup: 'Wait a settling delay after PA4 goes low' with no value or basis.",
+    "USB: pin_table row 68 PA9 = NC; PC8 VBUS_SENSE is a GPIO divider. Neither source says that OTG_FS hardware VBUS sensing (which on STM32H7 uses PA9) must stay disabled so the device enumerates with PA9 unconnected (Inference: RM0433 OTG_GCCFG not re-read here)."
+   ],
+   "impact": "A firmware developer using only the three named sources must re-derive the barometer address from the board, may drive IMU_CS low at GPIO setup (no init level stated), has no scale factors for the power monitors, no starting PA6 threshold and no PA4 delay, and may enable OTG VBUS sensing on an unconnected PA9 so USB never enumerates.",
+   "concrete_fix": "Text only: add to M3_R10 'Firmware' (and the binding note's obligations) one 'Bring-up facts' bullet: U5 MS5611 on I2C1 PB8 / PB9 at 0x77 (PS high, CSB low), 4.7 kΩ pull-ups R12 / R13; IMU_CS (PB7, R11) and QSPI_NCS (PB6, R10) idle high, write ODR high before output / AF; scales PA6 = VLOGIC / 11, PB1 = CAM_5V / 11, PC0 / PC5 = node / 11.2; a provisional PA6 trip (owner / bench value) and PA4 settling time; OTG_FS VBUS sensing off (PA9 NC), USB presence from PC8 (Inference until RM0433 is read). Replace 'as R7' in pin_table reset_contract with the R10 pull resistor where one exists."
+  },
+  {
+   "id": "R23-DOCS_BINDING-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "DS12110 revision basis is mixed although AGENTS says 'cited as Rev 8 throughout' and M3_R10 lists only two Rev 11 limits",
+   "evidence": [
+    "AGENTS.md table, STM32H743 row: 'DS12110 is cited as Rev 8 throughout.' docs/M3_R10.md 'Sources and datasheet revisions': Rev 8, with 'Two design limits read from Rev 11 … (the 6.0 V FT cap and the 4.0 V ADC-mode maximum)'.",
+    "docs/ORDERING.md §8.2 VCAP paragraph: 'Resolve [ST Rev 11 Table 114 p211]…'; round15_vcap_verification.md line 24 the same.",
+    "parts_qualification.md: 'DS12110 Rev11 Table149p244' (line 111), 'Rev11 Table114' (line 293), 'GAP-5: ST DS12110 Rev11 Table136 p233' (line 477) and 'Rev11 … Table109 pp207-208' (line 888). The binding note cites the same GAP-5 LSI range as 'DS12110 Rev 8 Table 146 p. 238'."
+   ],
+   "impact": "A reader checking the VCAP limits or the IWDG / LSI range against 'the' cited datasheet gets different table and page numbers for the same parameter; the 'Rev 8 throughout' statement is not true of the ordering worksheet or the parts record.",
+   "concrete_fix": "Text only: either re-cite the VCAP (Table 114) and LSI (Table 136) figures from Rev 8 with its table and page, or list them in M3_R10 'Sources' as further labelled Rev 11 citations and narrow AGENTS' sentence to 'pin_table and the binding note cite Rev 8'."
+  },
+  {
+   "id": "R23-DOCS_BINDING-05",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Hot-plug and ILM probe points are given at U9 pad centres under the QFN body",
+   "evidence": [
+    "docs/ORDERING.md §8.3 probe worksheet: 'U9 IN5 /OUT6 | B(18.25,81.6) /B(18.75,81.6) | Simultaneous input/output hot-plug probing'; 'Probe U9 ILM only at its own pad'.",
+    "Board (pcbnew): U9 B.Fab body x 17.40–19.60, y 80.50–82.70. Pad 5 (BAT_IN) x 18.10–18.40, y 80.40–82.80; pad 6 (RAW_PROTECTED) x 18.60–18.90, y 80.40–82.80: each exposes only 0.10 mm × 0.30 mm beyond the body at each end. Pad 9 (BAT_ILIM) x 19.10–19.70: 0.10 mm exposed. The stated coordinates are under the package.",
+    "Reachable nodes on the same nets: C88.1 B(19.4,84.37) BAT_IN and C82.1 B(19.3,78.25) RAW_PROTECTED (already in the worksheet as 'local bypass nodes'), and R84.1 B(20.775,81.825) on BAT_ILIM (R84 750 Ω 0.1 %)."
+   ],
+   "impact": "The bench operator is told to probe points that cannot be reached on an assembled board, or will try to probe a 0.1 mm sliver beside a QFN on the high-energy input; the hot-plug acceptance (IN ≥ max(−15 V, OUT − 21 V)) then has no defined measurement point.",
+   "concrete_fix": "Text only: replace the U9 row with 'U9 IN / OUT: at the exposed pad ends B(18.25,80.45) / B(18.75,80.45) with a fine probe, or at C88.1 / C82.1 (state the extra copper between)', and say 'probe ILM at R84.1 B(20.775,81.825)'."
+  },
+  {
+   "id": "R23-DOCS_BINDING-06",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The per-flight checks differ between ORDERING 8.3, the vehicle handoff and AGENTS, and two of them use bottom-side parts that face the sled",
+   "evidence": [
+    "ORDERING §8.3 per-flight / pre-flight items: (i) board off with J400 open and J121.2 < 0.1 V; (ii) 'PA6 and PA4 at pack power, before each flight (R22-POWER-02)'; (iii) J400 ESD handling (R22-REQUIREMENTS-03: 'Touch the airframe or pad ground before the switch…'); (iv) PORT_4V8 'first article and pre-flight' 4.71–4.87 V; (v) 'After coating and before each flight, powered NRST at C24.1 must be ≥0.90×3V3 measured at C15.1'.",
+    "docs/R10_VEHICLE_HANDOFF.md 'Power, arming and USB' carries (i) and (iv, before connecting a module) only; grep finds no 'ESD' and no 'PA6' in the handoff. AGENTS 'Pad arming access' row carries (i) only.",
+    "Board: C24 B(25.45,49.0), C15 B(29.05,47.4) and TP81 B(31,84.8) are on the bottom face, which ORDERING 8.4 puts on the nonconductive sled; item (v) has no installed-configuration method, and item (i)'s 'with access' rail readings use TP81 / C15.1 too."
+   ],
+   "impact": "The vehicle team, which works from the handoff, would not apply the J400 ESD handling rule or the PA6 / PA4 single-via screen before flight; the per-flight NRST gate cannot be done without unbolting the board, so it is either silently skipped or forces a sled removal each flight.",
+   "concrete_fix": "Text only: put one numbered per-flight list in ORDERING 8.3 and link it from the handoff and AGENTS' pad row; add the ESD handling sentence and the PA6 / PA4 log check to the handoff; state whether the NRST gate is per installation (board off the sled) rather than per flight, or name a reachable probe."
+  },
+  {
+   "id": "R23-DOCS_BINDING-07",
+   "severity": "Minor",
+   "status": "new",
+   "title": "ORDERING §8 does not restate the consignment procedure or several order-form values it relies on",
+   "evidence": [
+    "ORDERING §8 opening: 'use their [§1–7] generic … procedures only where restated here'. The consignment mechanics (buy 7–10 attrition spares, consign in Parts Manager, select the consigned stock when JLC matches the BOM, and 'jlc_stock.py and therefore check_procurement.py have no consignment path: check a consigned quantity in Parts Manager by hand') are only in §1's R9 U4 bullet (line 34). §8.1 says only 'consign franchised … into JLC's parts inventory'.",
+    "Quantity: §8 gives '5 boards' only as the cost basis; no PCB or PCBA quantity, silkscreen colour or material / TG is stated for the forms (§8.1 PCB row gives layers, thickness, ENIG, green mask, copper and stackup).",
+    "C84: §8.1 row 'An owner purchase on the owner BOM'; stock_check.json shows C46550466 with JLC stock 111,344, but no doc says whether to buy it with the JLC order (parts-only) or elsewhere, or how many spares for the manual fit."
+   ],
+   "impact": "Following §8 alone, a newcomer consigning U4 / U9 would not know to buy attrition spares or to expect check_procurement to keep failing on a correctly consigned part, and must guess quantities on the forms.",
+   "concrete_fix": "Text only: restate in §8.1 the consignment steps (spares count, Parts Manager, BOM-match selection, the procurement tools' blind spot) and add a short form checklist: 5 PCBs / 5 PCBA, white silkscreen (if intended), FR-4 TG per the stackup, C84 bought as N + spares from JLC / LCSC with the order."
+  },
+  {
+   "id": "R23-DOCS_BINDING-08",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The LSM6DSV320X is called 'the consigned alternate' in AGENTS, M3_R10 and the binding note, but ORDERING says it is a second fallback that needs a regenerated CPL and possibly a board change and new review",
+   "evidence": [
+    "AGENTS.md IMU row: 'the LSM6DSV320X is the consigned alternate on the same land'; docs/M3_R10.md board table and 'IMU axis map': 'the LSM6DSV320X is the consigned alternate'; r10_binding_note.json firmware_obligations[34]: 'the LSM6DSV320X is the consigned alternate on the same land'.",
+    "docs/ORDERING.md §8.1 U4 rows: 'The LSM6DSV320X path … is only a second fallback'; its 'CPL rotation comes from its own EasyEDA footprint (0°), so regenerate and re-verify the CPL' (fitted part 180°, CPL row U4 Bottom 180 checked); and 'Adopting either changes U4's or U9's part fields on the board, the BOM and the CPL, and any board change restarts the review pair'.",
+    "Related to, but not the same as, R22-DOCS_BINDING-02 (parts_qualification.md wording, fixed in D-R22)."
+   ],
+   "impact": "Two readings: consign LSM6DSV320X under the existing U4 line with no change (AGENTS / M3_R10 wording), which risks a 180° placement error, or treat it as a part change that alters the board file and restarts the closing pair (ORDERING wording).",
+   "concrete_fix": "Text only: replace 'the consigned alternate' with 'the second-fallback alternate (needs part fields, BOM and CPL regenerated: ORDERING 8.1)' in AGENTS, M3_R10 (two places) and the binding-note generator text."
+  },
+  {
+   "id": "R23-DOCS_BINDING-09",
+   "severity": "Minor",
+   "status": "new",
+   "title": "ORDERING 8.2's list of bottom-side pin legends omits the east terminals, and the handoff's 'inner pins' wording is wrong for J122",
+   "evidence": [
+    "docs/ORDERING.md §8.2: 'the pin 2 legends of J121 (2:E1+) and J400 (2:SW), and pins 2–4 of J440, are on the bottom beside their pins'.",
+    "Board silkscreen (pcbnew): also on B.Silkscreen: J410 '2:GND' (41.9,16.75) and '3:TXO' (41.7,13.25); J420 '2:GND' (41.9,32.75) and '3:TXO' (41.7,29.25); J9 '2:GND' (41.9,48.75) and '3:RXI' (41.5,45.25); J122 '2:S2' (41.3,74.5) and '4:S4' (40.4,67.2). J122 '3:S3' is on F.Silkscreen (32.7,71.0).",
+    "docs/R10_VEHICLE_HANDOFF.md: 'and the inner pins of the east terminals' (J122's middle pin 3 is on the top)."
+   ],
+   "impact": "An inspector checking the factory preview against §8.2 would expect only five bottom legends and could query nine valid ones; small, since the harness continuity check governs pin identity.",
+   "concrete_fix": "Text only: list all 14 bottom legends in §8.2 (or say 'pins 2–3 of J410 / J420 / J9 and pins 2 and 4 of J122 too'); in the handoff say 'pins 2–3 of J410 / J420 / J9 and 2 and 4 of J122'."
+  },
+  {
+   "id": "R23-DOCS_BINDING-10",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Broken anchor: R10_VALIDATION links to a removed M3_R10 heading",
+   "evidence": [
+    "docs/R10_VALIDATION.md line 1571 (Round 18 'Confirmed by round 18'): '[M3_R10.md, \"What the round 18 fix pass changed\"](M3_R10.md#what-the-round-18-fix-pass-changed)'. No such heading exists in docs/M3_R10.md (round 18 changes are now under 'Board history (superseded interim boards)'). Script check over ORDERING, the handoff, M3_R10, AGENTS, STATUS, R10_VALIDATION and REQUIREMENTS: 117 relative links, this is the only one that fails."
+   ],
+   "impact": "The link lands at the top of M3_R10; navigation only.",
+   "concrete_fix": "Text only: point it at M3_R10.md#board-history-superseded-interim-boards."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R22-04",
+   "claim": "Record corrections (EN 2.03 V nominal wording; 0.300 mm; J3 bases; AUD-2 reason)",
+   "measurement": "grep finds no 'EN never exceeds' outside the D-R22-04 / disposition records; AGENTS, M3_R10, STATUS and ORDERING all say '2.03 V nominal (≤ 2.06 V …) while R81 is intact'",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R22 (R22-DOCS_BINDING-01)",
+   "claim": "Supplier figures refreshed: 23:23Z / 23:24Z, $102.16 / $105.15, DB125-4 37,757 / 36,979",
+   "measurement": "cost_check.json 85.37 + 83.96/5 = 102.16, + 14.93/5 = 105.15; stock_check.json C2757925 37757 / 36979, U4 9 / 2, U9 40 / −69 min 7; input hashes df6c0fc2 / c48868b3 / 905e4314 equal the files",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R22 (R22-DOCS_BINDING-03)",
+   "claim": "REQUIREMENTS names U9 and C88",
+   "measurement": "REQUIREMENTS line 101 lists C88 in the unfused set; F9 names U9 TPS25947",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R22 (R22-MECHANICS-01 / R22-MANUFACTURING-01)",
+   "claim": "DB125 keep-off list adds R102, C431, C410, C420",
+   "measurement": "ORDERING 8.2 lists them under J9 / J410 / J420",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R22 (R22-MANUFACTURING-02)",
+   "claim": "14 parts have no Fab body outline: none on Q122, Q123, D120, D123, J2; pin-1 dot only on U1–U5, D4, D121, Y1, J3",
+   "measurement": "pcbnew: no Fab graphic on D120, D123, J2, Q122, Q123; only items ≤ 0.6 mm on D121, D4, J3, U1, U2, U3, U4, U5, Y1 (exact match)",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R22 (R22-POWER-02, R22-REQUIREMENTS-03)",
+   "claim": "ORDERING 8.3 pre-flight PA6 / PA4 check and J400 ESD handling added",
+   "measurement": "present in ORDERING 8.3 and M3_R10; absent from the handoff and AGENTS (R23-DOCS_BINDING-06)",
+   "verdict": "partly"
+  },
+  {
+   "id": "D-R22 records (status)",
+   "claim": "Round 22 recorded in STATUS, R10_VALIDATION, M3_R10",
+   "measurement": "STATUS and R10_VALIDATION 'Round 22' sections match the ten reports (22 Minor, ec8cb98, 5516eeec); five status sentences and the decision count were not updated (R23-DOCS_BINDING-01)",
+   "verdict": "partly"
+  },
+  {
+   "id": "D-R22 (no copper)",
+   "claim": "Between-rounds pass changed no copper",
+   "measurement": "git show c70d261:m3.kicad_pcb SHA-256 = 5516eeec…; git diff ec8cb98..c70d261 touches only the diagnostics sheet and the fab manifest / date-stamped outputs; manifest re-verified: 193 inputs and 6 outputs match",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-05",
+   "claim": "R81 F(18.8482,80.0), C87 F(18.7232,81.8768); EN reaches them from U9.1 through one via (17.10,82.80)",
+   "measurement": "pcbnew: R81 / C87 at those poses, pad 1 BAT_ENABLE; BAT_ENABLE vias exactly (17.1,82.8), (19.675,66.6), (21.3,68.9); CPL rows match",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-09",
+   "claim": "93 hidden designators; C126, Q122, R122 shown",
+   "measurement": "pcbnew: 93 hidden / 122 visible; C126, Q122, R122 visible; 45 silkscreen legends",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-03 / D-R19-14 (docs)",
+   "claim": "ACT_GATE probe at R119.1 / R120.2 / C120.2; port map J410 USART3 PD8/PD9, J420 UART5 PB13/PB12, J440 USART6 PC6/PC7",
+   "measurement": "pcbnew: R119.1 (11.14,71.1), R120.2 (18.5,73.03), C120.2 (17.1,73.3) all ACT_GATE; U1.55→R441→J410.3, U1.56←R440←J410.4, U1.52→R451→J420.3, U1.51←R450←J420.4, U1.63→R471→J440.3, U1.64←R470←J440.4; ESD D410/D411, D420/D421, D440/D441 on the wire nets",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R23-DOCS_BINDING-01",
+   "change": "Status sentences, M3_R10 review table row 22/23, decision count 179 through D-R22-07 and D-R22 rows in 'Decisions after the ledger'",
+   "board_change": false
+  },
+  {
+   "id": "R23-DOCS_BINDING-02",
+   "change": "One labelled basis for the cold-screen nominal readings",
+   "board_change": false
+  },
+  {
+   "id": "R23-DOCS_BINDING-03",
+   "change": "'Bring-up facts' bullet in M3_R10 Firmware / binding note (0x77, CS idle high, scale factors, OTG VBUS sensing off)",
+   "board_change": false
+  },
+  {
+   "id": "R23-DOCS_BINDING-05",
+   "change": "U9 probe rows to reachable nodes (C88.1 / C82.1 / R84.1)",
+   "board_change": false
+  },
+  {
+   "id": "R23-DOCS_BINDING-06",
+   "change": "One per-flight list linked from the handoff and AGENTS; add ESD rule and PA6 / PA4 check to the handoff",
+   "board_change": false
+  },
+  {
+   "id": "R23-DOCS_BINDING-08",
+   "change": "'consigned alternate' → 'second-fallback alternate' in AGENTS / M3_R10 / binding-note text",
+   "board_change": false
+  },
+  {
+   "id": "R23-DOCS_BINDING-10",
+   "change": "Fix the anchor",
+   "board_change": false
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "Every coordinate in ORDERING 8.2 / 8.3 and the handoff terminal table",
+   "reason": "All re-measured on 5516eeec (pcbnew): 8 terminals' centres, rotations and pin nets; Q120/Q121/Q122/Q124, C126 and its GND via (15.8,59.425), C123, C411/C421/C431/C91/C92, C84 (pad 1 VLOGIC at (27.5,81.75)), D9, U4, U5, J430, L1, all probe rows, VIPPO vias (27.3,13.6)/(27.9,13.6), BAT_IN via 1.0/0.5 at (17.5,87.3), (24.3,66.0), 3V3A (16.0,50.2)/(27.0,49.25), PORT_4V8 (30.575,11.6), single-via taps (34.5,63.0)/(32.3,59.5)/(9.0,27.837). All match. Only the provenance note ('last verified against 50a39de5…') is stale; worth updating with the next text pass."
+  },
+  {
+   "candidate": "Fab package counts and binding",
+   "reason": "BOM 81 lines, CPL 205 (72 Top / 133 Bottom), owner BOM C84 only, U4 CPL Bottom 180; manifest's 193 input and 6 output hashes all match the tree and the board hash 5516eeec."
+  },
+  {
+   "candidate": "Via counts",
+   "reason": "300 vias: 295 at 0.5/0.3, 4 at 0.6/0.3, 1 at 1.0/0.5; 167 GND; matches ORDERING 8.1 and M3_R10."
+  },
+  {
+   "candidate": "Pin map vs board",
+   "reason": "Every MCU-side net in pin_table rows checked against U1 pads (UART, SPI3, I2C1, ADC, EXTI, PE4/PC1 networks: R126 220 Ω, R127 1 kΩ, R128 10 kΩ, C126 220 nF; R122 1 kΩ, R123 2 kΩ, C123 10 nF; R121 10 kΩ × C120 1 µF = 10 ms); binding note pin_table / circuit / netlist hashes equal the files."
+  },
+  {
+   "candidate": "ORDERING §1–7 evidence paths (step10_evidence/…)",
+   "reason": "They resolve under sources/r9_design/ on this branch; §1–7 are labelled R9."
+  },
+  {
+   "candidate": "FMEA §6.3 pad procedure still uses the ARM link",
+   "reason": "FMEA 'R10 applicability' section states that current R10 supersedes the ARM-link procedures; not a live instruction."
+  },
+  {
+   "candidate": "J400 legend '1:SW / 2:SW' vs ORDERING 'switch source / return'",
+   "reason": "Consistent: the legend is SW on both pins; ORDERING names the nets (BAT_SW_SOURCE / BAT_SW_RETURN)."
+  }
+ ],
+ "checks_actually_executed": [
+  "sha256 of m3.kicad_pcb before and after (5516eeec…), and of git show c70d261:… ",
+  "pcbnew read-only dump of all 215 footprints (pose, side, value, fields, pad nets), 300 vias and 263 texts (.supervisor/r23_docs_binding/dump.py)",
+  "U9 pad / body extents (u9pads.py); Fab-outline survey (fab.py)",
+  "Relative link and #anchor check over 7 docs (links.py): 117 links, 1 broken",
+  "Fab manifest re-hash (193 inputs, 6 outputs); BOM / CPL / owner-BOM parsing; cost / stock JSON fields",
+  "Binding note hashes vs pin_table.tsv, circuit.json, schematic.net.xml",
+  "Round 22 report totals from the ten JSONs; git diff ec8cb98..c70d261 on board, sheets and fab",
+  "MS5611 address and pin roles from the cached TE datasheet (pdftotext)",
+  "Calculation of the cold-screen nominal readings from parts_qualification's formula"
+ ],
+ "sources": [
+  "TE MS5611-01BA03 datasheet (cached .supervisor/r14_parts_pdf/te_ms5611.pdf), I2C interface and pin-function sections: https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=MS5611-01BA03&DocType=Data+Sheet",
+  "Board, schematic netlist, fab package and docs at commit c70d261"
+ ],
+ "coverage_limits": [
+  "No DRC / kicad-cli run (not needed for a docs lens); no full check.sh (forbidden).",
+  "RM0433 (OTG VBUS sensing) not read: the R23-DOCS_BINDING-03 USB item is an Inference.",
+  "JLC stackup name JLC041611-7628 and JLC form field names not re-checked against JLC's live site.",
+  "ST DS12110 Rev 8 / Rev 11 not opened: R23-DOCS_BINDING-04 is about citation consistency only, not about which value is right.",
+  "Round 22's docs-binding report was opened only after these findings were written: none of its four findings overlaps; R22-DOCS_BINDING-02 is related to R23-DOCS_BINDING-08 (different documents)."
+ ]
+}

@@ -6,7 +6,7 @@ the replacement facts without editing that worktree. Preserve the accepted R9 en
 fit is claimed.
 
 **Status.** PCB `5516eeec…`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. It replaces `0dc84776…` (round 21 fix pass, which moved R81 and C87 to U9's
-end of the EN run; the round 19 fix pass had added the spare AUX port J440), so no earlier review carries over to it. Round 22 found 0 Critical / 0 Major on it, and round 23 is the second review of the closing pair. Review results, checks, cost and open items are
+end of the EN run; the round 19 fix pass had added the spare AUX port J440), so no earlier review carries over to it. Round 22 found 0 Critical / 0 Major / 22 Minor on `5516eeec…`; round 23 is the second review of the closing pair (R23-DOCS_BINDING-01). Review results, checks, cost and open items are
 in [M3_R10.md, "Current state"](M3_R10.md#current-state); the owner's decision list is in
 [R10_VALIDATION.md](R10_VALIDATION.md#r10-deviations-for-owner-acceptance).
 
@@ -14,7 +14,7 @@ in [M3_R10.md, "Current state"](M3_R10.md#current-state); the owner's decision l
 
 All coordinates are PCB millimetres, as in `m3_design/r10_place.tsv`. There are eight terminals. Every terminal is a DORABO DB125
 3.5 mm screw terminal, unkeyed: wire each one from its printed pin legend, never from the connector body. Some pin legends are on the
-bottom beside their pins (J121 `2:E1+`, J400 `2:SW`, J440 pins 2–4, and the inner pins of the east terminals). Once wired, the wires and
+bottom beside their pins (J121 `2:E1+`, J400 `2:SW`, J440 pins 2–4, pins 2–3 of J410 / J420 / J9 and pins 2 and 4 of J122; R23-DOCS_BINDING-09). Once wired, the wires and
 bodies can hide the top legends, so **check every lead's pin identity by continuity against this table before first power**
 (R19-MEC-01).
 
@@ -52,10 +52,12 @@ bodies can hide the top legends, so **check every lead's pin identity by continu
 The sole J400 screw switch is the power and pad-arming device, reachable on the rail; turn it on last and off first. Connect the e-match without USB or
 any self-powered module (GPS, radio, AUX or camera) attached. USB bench work requires the pack or the e-match to be disconnected.
 **The GPS, radio and AUX ports are fed from the battery path, so they are off on USB-only power:** during a USB-only session either disconnect the J410, J420
-and J440 leads or check that pins J410.3, J420.3 and J440.3 stay near 0 V (the board's TX lines must not drive an unpowered module). Per flight, before the
-e-match is inserted: with the pack connected and J400 open, confirm the board is off (no telemetry or buzzer, or, with access, RAW_PROTECTED at TP81 and 3V3 at C15.1 both below 0.3 V, ORDERING 8.3), then measure
-J121.2 (IGN) to GND with a floating meter; it must read below 0.1 V. After any closed-switch check, confirm that opening J400 turns the board off: surface
-leaks at U9's EN node or a chafed J400.2 lead can hold it on (R19-SAF-02), and an open in the one via left between EN and its
+and J440 leads or check that pins J410.3, J420.3 and J440.3 stay near 0 V (the board's TX lines must not drive an unpowered module). **Per-flight checks: use the one numbered list in [ORDERING section 8.3](ORDERING.md#83-after-delivery-probes-coating-staking-and-bench-gates), "Per-flight checklist"** (R23-DOCS_BINDING-06). In short:
+touch the airframe or pad ground before J400, and keep the screwdriver grounded (ESD handling); board off with J400 open and J121.2 below 0.1 V before any
+e-match; the closed-switch check with a 1–2 Ω dummy in J121 (PC1 raised, powered BUS / CONT and the PA6 / PA4 log checked: PA6 = VLOGIC / 11, PA4 low; then J400
+open, board off within 1 s and J121.2 below 0.1 V); the igniter resistance on a meter under 40 mA; no telemetry or buzzer before closing J400 and a fresh power-up when it
+closes; and the recovery order (J400 open, board off, match fired or disconnected, pack disconnected, only then USB). The NRST check is per installation, with the
+board off the sled. Surface leaks at U9's EN node or a chafed J400.2 lead can hold the board on (R19-SAF-02), and an open in the one via left between EN and its
 pull-down R81 can let it come on with J400 open (R21-SAF-01, Inference). R81 and C87 now sit at U9's end of the EN run, so one via, (17.10,82.80), is left (D-R21-05); the respin item is U9's west cell. Run the J400 pair twisted, on its own ties, away from the battery and servo
 power leads and from J440's leads, which leave the same west edge: a chafe from J440.1 (4.79 V) or J440.3 (TX) onto J400.2 holds U9 on
 (EN 1.87 V or 1.28 V, Calculation), and J440.1 or J440.2 onto J121.1 with the bus on joins the OUT-to-GND fire class. Keep J440's leads apart from the igniter leads too.
@@ -63,6 +65,8 @@ power leads and from J440's leads, which leave the same west edge: a chafe from 
 y 23.5, and take them past the aft edge on the side away from the camera shroud, tied to the sled. Never run them forward
 along x = 0, where they would cross the USB-C plug zone, ride over the (4, 44.3) support head and run beside the J121 / J400
 exits. The same applies if the GPS or the radio is moved to J440.
+**J400 chatter (R23-POWER-02).** At 5.73–6.0 V under flight-level vibration, U9 must stay on for the whole run (RAW_PROTECTED at TP81 never below about 5 V,
+or no reset in the log), and the open fraction in any 100 ms window must stay below 20 %; the < 10 ms single-drop-out rule stays (ORDERING 8.3).
 Preserve AGENTS section 2 and the electrically isolated Blue Jay. Qualify dry contacts, strain relief, ferrules and gauge, polarity and UART order and installed RF immunity.
 
 ## Board, supports and hardware
@@ -80,7 +84,7 @@ h = 3.5 mm. These are Calculation/Inference, not physical results. The east edge
 3.80 mm maximum length below the seating plane (conservative Inference, not a solder-joint model). Their minimum calculated bore clearance is 7.558359 mm; projection below the 1.60 mm
 PCB is 2.20 mm, leaving 1.80 mm to a nominal 4 mm sled plane. Seating, solder fillets and bent tails still need inspection. **Wire room** is measured to the nominal Ø 50.8 mm bore wall
 at 5 mm wire height (the 0.5 mm wall allowance is not subtracted): it is 5.003 mm at every wire face of all eight terminals, against the accepted 4.95 mm floor, only 0.053 mm of margin. It is not a ferrule, bend
-or tool-envelope qualification. DB125 accepts 28–16 AWG; verify the actual leads, 4–5 mm strip, ferrules, screw access and retention. Its maximum body height is 8.90 mm and its tail is
+or tool-envelope qualification. DB125 accepts 28–16 AWG, but R10 leads are at most 20 AWG (22 AWG preferred; the e-match leads are 24 AWG), insulation OD ≤ 1.8 mm, bent from the wire face at an inner radius of about 1 × OD, a recorded deviation from 3 × OD practice (R23-MECHANICS-01; arithmetic in ORDERING 8.4; with P2's 0.5 mm wall allowance the room is 4.493 mm). Verify the actual leads, 4–5 mm strip, ferrules, screw access and retention. Its maximum body height is 8.90 mm and its tail is
 3.50 ± 0.30 mm. Stake all eight terminals, including J400 and J440. The nominal Ø 1.30 mm holes and Ø 1.90 mm lands do not establish pin insertion at all process corners. Obtain the maker and assembler
 insertion profile and the fabricator's hole, pattern and barrel allocation; inspect all 27 contacts for seating, undamaged plating and barrels, and solder fill. The nominal S-8 minimum of 1.021 mm (the PYRO1_OUT via; the load-switch gate and enable barrels and the J121.1 hole are 1.050 mm, held by fill keep-outs; J121.1 and J400.2 carry no unconnected inner rings since D-R20-05) is not
 a fabricated-clearance qualification. Exact C19/C20 combined operating capacitance and ESR, process, rework and aging, and actual regulator-mode and local-temperature qualification also remain open; see
@@ -99,7 +103,7 @@ Keep the entire board, including axial mounting tolerance, forward of joint + 47
 lead zone as fit evidence. Fit the actual pack, external GPS and radio (and any AUX module), antenna, harness, accessible switch, sled and camera shroud together. Use
 [ORDERING section 8.1.1](ORDERING.md#811-pad-energy-worksheet-d-r17-01-calculationinference) (D-R17-01): C_tested_Ah ≥ (Q_pad_board + Q_pad_motors + Q_flight_all + Q_recovery) / 0.8. The conditional
 two-hour board-only capacities at camera 0 / 0.5 / 2 h are 2.265821 / 2.987991 / 5.154503 Ah under the stated 6 V and 80 % allocations; they exclude motor, flight and recovery charge and select no pack.
-Keep the camera off unless recording; verify aged and cold capacity, fire-time source reserve and resistance, transients and the installed mass and dimensions. The previous approximately 80 mm pack
+**Battery-lead route (R23-MECHANICS-04):** below the sled, up round the forward edge (y > 90) and into J1 from the west, tied to the sled's forward end; never aft along the west top side. Give each terminal a sled tie point within about 20 mm of its wire face, and anchor J121's leads at the forward-bulkhead pass-through. **Sled under the east 1210 column (R23-MECHANICS-02):** a relief pocket at least 1.5 mm deep under C411 / C421 / C431 (x 31.5–41, y 20–60), or 4.5 mm standoffs with a plate ≤ 0.8 mm (the plate model puts C431 onto a 4 mm sled at 125 g, Calculation/Inference). Keep the camera off unless recording; verify aged and cold capacity, fire-time source reserve and resistance, transients and the installed mass and dimensions. The previous approximately 80 mm pack
 description and the retired 2.6 / 4 Ah examples prove none of them.
 
 ## Boot, programming and retained deviations
@@ -118,7 +122,7 @@ no production copper change and no full PCB, CLI or gate qualification of that M
 ## Cost
 
 The target is $84.41 per board, R3's cost per board for parts plus JLC feeder fees only. The supplier data, run on the final files of `5516eeec…` (cost 2026-10-31T23:24Z, bound to the JLC BOM, owner BOM and current CPL; stock 23:23Z, bound to the BOM and owner BOM), give $85.37 placed (about $85.91 with JLC minimum purchases);
-JLC's fixed fees add $16.79 per board (5 boards). **The cost target fails by $0.96** because of the owner-approved AUX port (+$1.14); the owner decides whether to accept it. U4 (now the ISM6HG256X) shows 9 in stock but only 2 orderable, so the stock check (`stock_check.json` 2026-10-31T23:23Z) fails on U4, 2 orderable against 5, and now also on U9 (TPS259470LRPWR C3662793: 40 in stock, −69 orderable, minimum purchase 7); it reads JLC's `canPresaleNumber` as the orderable quantity, an Inference about JLC's field. For both, confirm the quantity in the JLC cart on order day, else consign franchised parts (R20-BOM-01); for U4 that means consigning franchised ISM6HG256XTR (same CPL rotation and register map), with the LSM6DSV320X, also unavailable at JLC and LCSC, only as a second fallback (R21-BOM-02).
+JLC's fixed fees add $16.79 per board (5 boards). **The cost target fails by $0.96** because of the owner-approved AUX port (+$1.14); the owner decides whether to accept it. U4 (now the ISM6HG256X) shows 9 in stock but only 2 orderable, so the stock check (`stock_check.json` 2026-10-31T23:23Z) fails on U4, 2 orderable against 5, and now also on U9 (TPS259470LRPWR C3662793: 40 in stock, −69 orderable, minimum purchase 7); it reads JLC's `canPresaleNumber` as the orderable quantity, an Inference about JLC's field. For both, confirm the quantity in the JLC cart on order day, else consign franchised parts (R20-BOM-01); for U4 that means consigning franchised ISM6HG256XTR (same CPL rotation and register map), with the LSM6DSV320X, also unavailable at JLC and LCSC, only as the second-fallback alternate (needs part fields, BOM and CPL regenerated: ORDERING 8.1; R21-BOM-02, R23-DOCS_BINDING-08).
 Quote, process and owner acceptance are open. C84 is on the owner BOM, bought by the owner and hand-fitted after both reflows. No physical fit, firmware or order is qualified. Table and basis: [M3_R10.md, "Cost and stock"](M3_R10.md#cost-and-stock).
 
 Current source and qualification details: [M3_R10.md](M3_R10.md), [ORDERING.md section 8](ORDERING.md), and the maker-linked `sources/r10_design/parts_qualification.md`. Apply the parent mirror update only within its

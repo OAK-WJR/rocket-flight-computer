@@ -2088,7 +2088,7 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 8c100a66-bb45-5116-a869-a9b9f69a15c1))
-	(text "U4 = ST ISM6HG256X (D-R19-11; the LSM6DSV320X is the consigned alternate on the same land): +/-16 g low-g + +/-32..256 g high-g accel (DS15034 Rev 1 p1; use only high-g FS codes 001 / 010, which both parts share), +/-4000 dps gyro, SPI <= 10 MHz. Pins 10/11 open per DS15034 Table 25 p52."
+	(text "U4 = ST ISM6HG256X (D-R19-11; the LSM6DSV320X is the second-fallback alternate (needs part fields, BOM and CPL regenerated: ORDERING 8.1) on the same land): +/-16 g low-g + +/-32..256 g high-g accel (DS15034 Rev 1 p1; use only high-g FS codes 001 / 010, which both parts share), +/-4000 dps gyro, SPI <= 10 MHz. Pins 10/11 open per DS15034 Table 25 p52."
 		(at 20.32 260.35 0)
 		(effects
 			(font

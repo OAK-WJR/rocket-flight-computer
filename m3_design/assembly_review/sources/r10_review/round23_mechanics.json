@@ -1,0 +1,180 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round23_mechanics",
+ "reviewer": "claude",
+ "target_commit": "c70d2614c9f187c46bce6225047ef4d03484848a",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 4
+ },
+ "findings": [
+  {
+   "id": "R23-MECHANICS-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "No 18 or 16 AWG lead can make its 90-degree turn in the 5.003 mm wire room, though OQ-1 / P2 accept 16-22 AWG; R10 dropped R9's 22 AWG cap and bend rule",
+   "evidence": {
+    "board": "pcbnew / tools/fit_check.py --profile r10 on 5516eeec: wire faces x = 3.40 (J1, J121, J400, J440) and x = 42.60 (J9, J122, J410, J420); room 5.003 mm at z 5 (bare R25.4 bore, -0.3 mm tolerance)",
+    "calculation": "A lead leaving the wire face radially and turning to run axially needs (straight exit) + (inner bend radius) + OD of radial room. Room: bare bore z5 5.003, z3 5.322; with P2's 0.5 mm wall allowance (R24.9) z5 4.493, z3 4.819 mm. Need at inner radius 1 x OD, 0.5 mm bare-stranded exit: 22 AWG (OD 1.7) 3.9, 20 AWG (1.8) 4.1, 18 AWG (2.3) 5.1, 16 AWG (2.6-3.0) 5.7-6.5 mm; with a 1.5 mm uninsulated-ferrule exit 4.9 / 5.1 / 6.1 / 6.7-7.5 mm; at 2 x OD or 3 x OD nothing fits (5.6-13.5 mm). Probe: .supervisor/r23_mechanics/wire_bend.json",
+    "wire_od": "Supplier silicone hook-up tables: 22 AWG about 1.7 mm, 18 AWG 2.2-2.3 mm, 16 AWG 2.6-3.0 mm (e.g. letronic UL3239 sheets, https://letronic.de/en/produkte/kabel/pdf/1171/silicone-ul-3239-awg-16-1500c.pdf ; Inference: OD varies by maker)",
+    "bend_practice": "Common minimum bend radius for unshielded wire is 3 x OD (Omron FAQ https://www.ia.omron.com/support/faq/answer/43/faq02669/); NASA workmanship guidance cited to NASA-STD-8739.4 gives 6 x OD for non-Kapton insulation (page not retrievable from this host; secondary search summary, Inference)",
+    "requirement_text": "docs/REQUIREMENTS.md P2: 'Every body, pin tail, wire bend ... fits the 50.8 mm bore with 0.5 mm wall allowance'; 'OQ-1 accepted a 4.95 mm wire-room bound for 16-22 AWG'. docs/ORDERING.md section 8.4 'All terminal leads': 'Clamp 28-16 AWG'. R9 rows (ORDERING lines 206-207, 6.4-7.0 mm room) required '<= 22 AWG ... bent within 2 mm of the entry face'; R10 has 1.4-2.0 mm less room and no gauge cap or bend rule.",
+    "text_error": "docs/M3_R10.md 'What wire room means': 'with it (radius 24.9 mm) the same terminals would give 4.503 mm'; sqrt(24.9^2 - 5^2) - 19.6 - 0.3 = 4.493 mm (0.5 mm subtracted from 5.003 instead of recomputed)"
+   },
+   "impact": "An assembler using 18-16 AWG (inside the accepted range) either cannot close the bay or kinks the lead at the wire face, loading the screw clamp and the THT joints and cutting strands; this applies to all eight terminals, including J1 (battery), J121 (igniter) and J400 (switch). No fire path; a broken J1 or J400 strand is a brown-out / power-loss case.",
+   "concrete_fix": "Docs only (no board change): in REQUIREMENTS P2 / OQ-1 and ORDERING 8.4 cap R10 terminal leads at 20 AWG (22 AWG preferred), insulation OD <= 1.8 mm, bare stranded or an uninsulated ferrule protruding <= 0.5 mm; state that the bend starts at the wire face with an inner radius of about 1 x OD (a recorded deviation from 3 x OD practice) and add the arithmetic above; correct 4.503 to 4.493 mm. Optionally have fit_check print the need for the declared gauge."
+  },
+  {
+   "id": "R23-MECHANICS-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The 6 m/s landing basis is not rooted in the vehicle; its own descent mass under the 36-inch chute gives about 95-170 g at 20 mm crush, above the 125 g at which the plate model puts C431 / C421 onto a 4 mm sled",
+   "evidence": {
+    "descent": "Descent mass = airframe (1.5-2.7 kg, from REQUIREMENTS' 3.7-4.9 kg L1000W liftoff less the motor) + spent case (K850DM 2041-1224 = 817 g, L1000W 2194-1400 = 794 g; https://www.thrustcurve.org/motors/AeroTech/K850DM/, https://www.thrustcurve.org/motors/AeroTech/HP-L1000W/) = 2.3-3.5 kg. VEHICLE.md recovery: single deploy, 36-inch chute. v = sqrt(2mg / (rho Cd A)), A 0.657 m^2: Cd 1.5 gives 6.1-8.1 m/s (rho 1.225-1.06); Cd 0.8-2.2 spans 5.1-11.1 m/s. Landing g = v^2/(2s): 95-168 g at 20 mm crush (Cd 1.5), up to 314 g at Cd 0.8; 381-670 g at 5 mm. docs/M3_R10.md 'Why 5 x 100 g' and DESIGN_ASSURANCE 6.1 use 6 m/s (92 g at 20 mm) without a source (Calculation; Cd and crush are Inference).",
+    "plate": "tools/plate_model.py imported unmodified (probe .supervisor/r23_mechanics/plate_ext.py, outputs plate_ext.json); reproduces 180.8 Hz pinned D5, 78.6 g. Bottom gap to a 4 mm standoff plane / deflection per g / contact g (D5; D10 in brackets): C431 B(39.3,57.75) 1.300 mm / 10.39 um/g / 125 g (250 g); C421 B(33.8,36.75) 1.300 / 9.80 / 133 g (265 g); C411 B(34.2,22.75) 1.300 / 7.42 / 175 g (351 g); L1 B(25,74.6) 0.984 / 4.60 / 214 g (428 g).",
+    "strain": "Peak principal surface strain per g (D5): C411 13.0, C431 12.2, C421 11.2 microstrain/g, i.e. 1.2-2.2 millistrain at 95-168 g. The parts are GRM32ER71E226KE15L 1210 X7R (m3_bom_jlc.csv). For scale: a 1 mm 3-point bend over a 90 mm span of 1.6 mm board is about 1.2 millistrain (6 t d / L^2, Inference; Murata's standard-termination bend test is 1 mm)",
+    "direction": "Boost (25.8-37.2 g, Calculation from the cert thrust curves with drag), coast (-4.4 to -13.2 g) and deployment are in the board plane and do not bend it; a landing on the side does, at any roll angle."
+   },
+   "impact": "A side landing within the vehicle's own plausible descent range drives the east bottom 1210s (PORT_4V8 / CAM_5V rails) into the sled and strains them past the usual flex-crack scale; a cracked 1210 shorts a port rail (the ports and camera are lost after landing, not a fire path). The 100 g design load and the 0.261 mm gap read as margin while the contact load is only 1.25 x 100 g in the D5 case.",
+   "concrete_fix": "No board change. Sled: a relief pocket (>= 1.5 mm deep) under the east bottom 1210 column C411 / C421 / C431 (x 31.5-41, y 20-60), or 4.5 mm standoffs with a plate <= 0.8 mm (keeps h + t < 5.3 at x 3.7). Docs: replace the 6 m/s basis with the selected chute's descent rate at the computed descent mass, and record the contact g (125 / 250 g) beside the 0.261 mm gap."
+  },
+  {
+   "id": "R23-MECHANICS-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Part temperature ratings are compared with bay air, not with the board: at the project's own 10-15 C/W and 1.0-1.5 W pad load the board runs 10-22 K above the bay, so the fitted 85 C parts (MS5611, AP6320x bucks, J430) and the 85 C U4 alternates have no margin at the 70 C limit; aero heating is not the driver",
+   "evidence": {
+    "ratings": "MS5611-01BA03 operating -40 to +85 C (TE datasheet DA5611-01BA03_011 p1); AP63201 / AP63203 (U400, U2) operating ambient TA -40 to +85 C (Diodes DS41326 p4, https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf); J430 -20 to +85 C (LCSC C164170); LSM6DSV320X / LSM6DSV80X top 85 C (round22_alternates.md 2.2 / DS14623 p15). With margin: ISM6HG256X -40 to +105 C (DS15034 p1), C84 MA series -55 to +105 C (maker sheet p1), TPS25947 TJ -40 to +125 C (SLVSFC9C).",
+    "board_rise": "docs/M3_R10.md 'Port LDO' / ORDERING 8.3: 'a board with roughly 10-15 C/W to the bay air' (R20-PWR-01, Inference). Pad load with the camera off, MCU at 200 MHz, ports on (Inference): about 1.0-1.5 W -> board 10-22 K above bay air; U5 B(10.6,49.1) and U4 B(17,45.9) sit beside / under U1's west pin row (x 14.38), so locally higher.",
+    "sealed_bay": "Bay 0.25 m of 57.8 mm tube, U 2.5-4 W/m^2K, C about 550 J/K (Inference): bay air rises 2.5-6 K in a 30 min hold and 3.8-10 K in 60 min at 1.0-2.2 W (probe bay_selfheat.json).",
+    "aero": "1-D conduction through the wall at the e-bay station (x 0.78 m from the tip, Eckert reference temperature, glass-epoxy k 0.35, probe wall.py / wall_results.json): L1000W at Mach 1.93, recovery temperature 196 C; outer wall peaks 116 C (25 C start) / 132 C (70 C start); inner face of the single 1.6 mm main tube 61 / 88 C, behind main tube + coupler 36 / 74 C; bay air +0.4 K at most. K850DM: inner face 41 / 72 C. Calculation/Inference.",
+    "record": "docs/REQUIREMENTS.md Temperature row and parts_qualification.md 'Cold-end ratings': 'Every other fitted part is rated -40...+85 C or wider ... No flight-critical part is affected' (bay -20...+70 C, 85 C unshaded)."
+   },
+   "impact": "At the 70 C limit the fitted barometer (primary apogee source, F-11), the two bucks and the microSD socket run at or above their 85 C rating, and the 85 C IMU alternates offered in ORDERING 8.1 would too. No pyro hazard (Blue Jay is independent; ground refusals stand), but baro error, buck derating and SD faults are plausible on a hot pad.",
+   "concrete_fix": "Docs / bench / firmware rule, no board change: state that 70 C is bay air including the board's own rise and that 85 C parts then need bay air <= about 55-60 C, or set that site limit; extend the ORDERING 8.3 70 C chamber power-knot test to log the MS5611 TEMP word, U4's temperature register and U400 / U2 case temperatures at the pad load; add a firmware pad rule to announce (and refuse arming-dependent checks) above an MS5611 TEMP of about 80 C; make the 85 C U4 alternates conditional on that measured U4 temperature. Note that a 70 C bay also exceeds the usual 60 C LiPo discharge limit (vehicle item)."
+  },
+  {
+   "id": "R23-MECHANICS-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "R10 defines no battery-lead route: J1 is the forward-most west terminal, the pack is aft, and the only top-side path runs past the J400 and J121 exits, the (4,44.3) support head and J3",
+   "evidence": {
+    "board": "pcbnew on 5516eeec: west row aft to forward J440 F(7.4,16.25), J3 F(4.6,30.8) (shell to x -0.45, y 25.3-36.3), support (4,44.3), J121 F(7.4,55.85) y 51.0-59.8, J400 F(7.4,65.85) y 61.0-69.8, J1 F(7.4,75.85) pads (7.4,74.1) BAT_IN / (7.4,77.6) GND, support (3.7,86). VEHICLE.md: the 2S pack sits aft of the board (y 0 is the aft edge).",
+    "docs": "ORDERING 8.4 'Battery lead': 'Battery and igniter enter the west row; label/dress them apart ... clear of the forward-west support/washer'; 'J440 leads (R20-MEC-01)': never run forward along x = 0 (USB-C zone, (4,44.3) head, J121 / J400 exits); 'Power/pad switch': run the J400 pair 'away from the battery and servo power leads'; a chafe of J400.2 onto pack voltage turns the board on with the switch open. The only explicit battery route (ORDERING lines 208 / 215, below the board and sled, up round the forward edge into J1) is R9's.",
+    "geometry": "Room along the west wall at wire height is the same 5.003 mm (bare bore); battery leads routed aft on the top side must share it with the J400 and J121 exits for 25 mm (y 51-77)."
+   },
+   "impact": "The shortest assembly route lays the pack leads over the J400.2 exit (the chafe class the records rate as 'board on with J400 open', i.e. live pyro with the switch off) and over the support head and J3. A procedure gap, not a board defect.",
+   "concrete_fix": "Docs only: in ORDERING 8.4 / the handoff, route the battery leads below the sled, up round the forward edge (y > 90) and into J1 from the west, tied to the sled's forward end, never aft along the west top side; give each terminal a tie point on the sled within about 20 mm of its wire face, and anchor J121's leads at the forward-bulkhead pass-through so recovery loads end there."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R22-01..07",
+   "claim": "between-rounds pass: checks, one schematic note and record text only; PCB unchanged",
+   "measurement": "git show ec8cb98 and c70d261 PCB both SHA-256 5516eeec...; git diff ec8cb98 c70d261 touches neither tools/fit_check.py, tools/plate_model.py nor masses.json; fit_check --profile r10 OK (wire room 5.003, body margin 2.98, J3 0.89 mm); plate 180.8 Hz / 78.6 g reproduced",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R22-04 / R22-MECHANICS-01 records",
+   "claim": "ORDERING 8.2 keep-off list adds C410 / C420 / R102 / C431 with 2.003 / 1.997 / 2.050 mm",
+   "measurement": "pad-polygon distance (probe keepoff.py): C410-J410 2.004, C420-J420 2.004, R102-J9 1.998, C431-J9 2.051 mm (within 0.001 mm)",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-05",
+   "claim": "R81 F(18.8482,80.0) and C87 F(18.7232,81.8768), rot 0",
+   "measurement": "pcbnew: same poses; 100 g strain at R81 1039, C87 1006 microstrain (D5, Inference)",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-01",
+   "claim": "fill / clearance change only, no mechanical change",
+   "measurement": "fit_check unchanged figures; outline 46 x 90, five supports unchanged",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-07",
+   "claim": "C84 lands carry no paste aperture",
+   "measurement": "C84 pads 1 / 2: F.Paste false, F.Mask true",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-14",
+   "claim": "J440 fits like the other terminals",
+   "measurement": "fit_check: J440 margin 2.98 mm, wire room 5.00-5.60 mm",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "Plate record (M3_R10 'Plate model')",
+   "claim": "180.8 Hz pinned, 78.6 g, 0.261 mm under C431, 0.320 mm under C421 at 100 g",
+   "measurement": "180.8 / 255.6 / 287.8 / 407.0 Hz; 78.6 g; C431 1.300 - 1.039 = 0.261 mm, C421 1.300 - 0.980 = 0.320 mm; max deflection 1.27 mm at (46,44.5)",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R23-MECHANICS-01",
+   "change": "REQUIREMENTS P2 / OQ-1 and ORDERING 8.4: cap leads at 20 AWG (22 preferred), OD <= 1.8 mm, ferrule protrusion <= 0.5 mm, bend at the wire face at about 1 x OD with the arithmetic; M3_R10 4.503 -> 4.493 mm",
+   "board_change": false
+  },
+  {
+   "id": "R23-MECHANICS-02",
+   "change": "Sled relief pocket under C411 / C421 / C431 (or 4.5 mm standoffs with plate <= 0.8 mm); docs: root the landing load in the chute and record the 125 / 250 g contact load",
+   "board_change": false
+  },
+  {
+   "id": "R23-MECHANICS-03",
+   "change": "Docs: 70 C means bay air with the board's rise, 85 C parts need about 55-60 C; ORDERING 8.3 chamber test logs MS5611 TEMP, U4 temperature and U400 / U2 cases; firmware pad temperature announcement",
+   "board_change": false
+  },
+  {
+   "id": "R23-MECHANICS-04",
+   "change": "ORDERING 8.4 / handoff: battery leads below the sled and round the forward edge into J1; per-terminal tie points; J121 anchor at the bulkhead",
+   "board_change": false
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "Boost bending: boost (25.8-37.2 g peak sensed, K850DM / L1000W cert curves with drag, airframe 1.5-2.7 kg) and coast (-4.4 to -13.2 g) are in the board plane; transverse boost load is only the lateral aero load (about 5-10 g at max q, Inference). No boost bending case is needed; the 100 g transverse case is a landing envelope.",
+  "In-plane shear on heavy parts at 37 g: C84 1.1 N (pads 6.5 mm apart along the axis, so the tipping couple is about 0.9 N per pad), J122 + wire 3.7 N, J410 + wire 2.9 N, J3 0.36 N, LS120 0.18 N (allowance masses). Covered by the P3 staking; no finding.",
+  "Deployment shock: cord snatch 3-12 g (nylon / Kevlar, energy estimate) and chute opening at 40 m/s about 22-45 g, both axial in the board plane (Inference); inside the 100 g envelope.",
+  "Random vibration (GEVS ELV 0.16 g^2/Hz analogy applied transverse, Miles, Q 10-20): 21-30 grms (D5), 3-sigma C431 deflection 0.66-0.94 mm against its 1.30 mm gap, strain 0.78-1.1 millistrain, about 540 cycles per 3 s burn; no contact, fatigue margin large (Inference, no measured PSD).",
+  "Aero heating as a bay driver: rejected by calculation (bay air +0.4 K); it only heats leads that touch the inner wall (inner face up to 88 C under the single wall, hot start, flight 2); folded into R23-MECHANICS-03.",
+  "Support hardware shear: 78.6 g x 280 g on five nylon M3 supports is about 43 N each, about 14 MPa bending in a 5.5 mm nylon standoff (Inference); acceptable, but PA66 creeps near 70 C, so re-torque or use PEEK / glass-filled hardware (advice, not filed).",
+  "J3, L400, L1 joints: J3 is unmated in flight (1.0 g allowance); L400 SRP5030 strain 11.1 microstrain/g and L1 12.6; no finding beyond P3."
+ ],
+ "checks_actually_executed": [
+  "sha256 of the PCB before and after (5516eeec...), and of the PCB at ec8cb98 via git show",
+  "pcbnew read-only dump of every footprint pose, pad and model (probe dump.py -> fp.json)",
+  "tools/fit_check.py --profile r10 --report into the probe directory (exit 0)",
+  "tools/plate_model.py --profile r10 with masses.json into the probe directory (reproduces 180.8 Hz, 78.6 g)",
+  "plate_ext.py: per-part deflection / strain per g and contact g at 4 mm and 3.5 mm standoffs, D5 and D10",
+  "flight.py: 1-D trajectory from the thrustcurve.org cert RASP samples (K850DM 29 points, HP-L1000W 24 points), airframe 1.5-2.7 kg, Cd(M) Inference",
+  "wall.py: 1-D transient wall conduction with Eckert reference-temperature heating along the trajectories",
+  "bay self-heating and descent-rate / landing-g calculations; wire-bend room arithmetic (wire_bend.json)",
+  "keepoff.py pad-polygon distances for the R22-MECHANICS-01 list",
+  "git diff ec8cb98 c70d261 for the check, plate and fit tools"
+ ],
+ "sources": [
+  "https://www.thrustcurve.org/motors/AeroTech/K850DM/ (thrustcurve.org API motorId 5f4294d20002310000000451: 1869 Ns, 1094 N max, 2.118 s, 2041 / 1224 g; cert RASP file)",
+  "https://www.thrustcurve.org/motors/AeroTech/HP-L1000W/ (motorId 5f4294d2000231000000040b: 2714 Ns, 1261 N max, 3.0 s, 2194 / 1400 g)",
+  "TE MS5611-01BA03 datasheet DA5611-01BA03_011, p1 (operating -40 to +85 C)",
+  "Diodes AP63200/AP63201/AP63203/AP63205 DS41326, p4 (TA -40 to +85 C) https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf",
+  "ST ISM6HG256X DS15034 Rev 1 p1 (-40 to +105 C) https://www.st.com/resource/en/datasheet/ism6hg256x.pdf",
+  "MA series solid aluminium capacitor sheet (C84, C46550466) p1: -55 to +105 C",
+  "TI TPS25947 SLVSFC9C: TJ -40 to +125 C",
+  "Omron FAQ on bend radius https://www.ia.omron.com/support/faq/answer/43/faq02669/",
+  "letronic silicone UL3239 wire sheets (OD) https://letronic.de/en/produkte/kabel/pdf/1171/silicone-ul-3239-awg-16-1500c.pdf",
+  "../../docs/VEHICLE.md (tube, coupler, bulkplate, stack, recovery), docs/DESIGN_ASSURANCE.md 6.1, docs/M3_R10.md, docs/ORDERING.md 8, docs/REQUIREMENTS.md"
+ ],
+ "coverage_limits": [
+  "No physical harness, sled, chute, landing or thermal test; masses are the masses.json allowances.",
+  "Vehicle mass, Cd(M), chute Cd and crush distance are Inference; no current K850DM / L1000W mass budget exists (VEHICLE.md).",
+  "The NASA workmanship page could not be fetched from this host; the 3 x OD figure rests on a vendor FAQ.",
+  "The plate model treats the sled as rigid and supports as pinned or clamped points; no local MLCC stress model.",
+  "Board-to-air thermal resistance (10-15 C/W) is the project's own Inference, not measured; no thermal solve.",
+  "Round 22's mechanics report was read only after these findings were written; none of the four appears in it (its single Minor was the keep-off list, now fixed)."
+ ]
+}

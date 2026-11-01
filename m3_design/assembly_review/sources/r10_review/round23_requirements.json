@@ -1,0 +1,287 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round23_requirements",
+ "reviewer": "claude",
+ "target_commit": "c70d2614c9f187c46bce6225047ef4d03484848a",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 8
+ },
+ "findings": [
+  {
+   "id": "R23-REQUIREMENTS-01",
+   "severity": "Minor",
+   "status": "carried (R21-REQ-05)",
+   "title": "Flight envelope still undefined; the stale 21.5 km / 460-525 s figures can now be replaced by a derived envelope",
+   "evidence": {
+    "file": "docs/REQUIREMENTS.md",
+    "reference": "Sources 'Flight envelope' table row 'Vehicle mass, axial acceleration, altitude and duration'; Temperature row ('flight 2 lasts up to 525 s'); F5 R18-REQ-09 ('about 2 MB for a whole flight')",
+    "measured": {
+     "K850DM": "max specific force 25.5-34.6 g (at ignition peak), burnout drag deceleration 3.6-12.2 g, max Mach 1.17-1.65, q_max 84-172 kPa, apogee 3.5-5.3 km AGL at 23.2-29.4 s, descent 424-848 s, whole flight 449-877 s",
+     "L1000W": "max specific force 27.7-36.6 g, burnout deceleration 4.9-14.5 g, max Mach 1.54-2.20, q_max 142-286 kPa, apogee 4.8-7.6 km AGL at 25.5-34.2 s, descent 565-1149 s, whole flight 592-1183 s",
+     "log volume": "500 Hz x 40 B to apogee+30 s plus 50 Hz under canopy: about 3.5 MB worst (16 MB QSPI holds it)"
+    },
+    "method": ".supervisor/r23_requirements/flight1d.py -> flight1d_results.json (1-D vertical, thrustcurve.org samples, generic min-diameter Cd(M) x 0.8/1.0/1.3, dry mass 1.6/2.1/2.7 kg, sites 0/1200 m, ISA; Inference)",
+    "sources": [
+     "https://www.thrustcurve.org/motors/AeroTech/K850DM/ (API search.json commonName=K850: 1869 N.s, 2.0 s, avg 922 N, max 1094 N, 2041 g, 1224 g propellant; samples via api/v1/download.json motorId 5f4294d20002310000000451)",
+     "https://www.thrustcurve.org/motors/AeroTech/HP-L1000W/ (API: 2714 N.s, 2.7 s, avg 1000 N, max 1261 N, 2194 g, 1400 g propellant, 54 x 635 mm; samples motorId 5f4294d2000231000000040b)",
+     "AeroTech K850DM product page (research_notes, parent repo): 1867 N.s, 2.2 s, 2022 g / 1149 g"
+    ]
+   },
+   "impact": "The 525 s duration used by the Temperature row and the pad-energy Q_flight is about 2.25x short for flight 2 under a 36 in chute; the drag-free 21.5 km 'upper bound' overstates apogee about 3x. No board change: the sensor ranges and the QSPI log cover the derived envelope (see closed candidates). FMEA F-11's apogee lockout (0.5 x simulated apogee time) has no number to use.",
+   "concrete_fix": "Text only: replace the envelope cell with the derived ranges above, labelled Inference (1-D, generic Cd, mass bracketed), until the simulator / OpenRocket gives the owner's numbers; change '525 s' to 'up to about 1200 s (36 in chute)'; change F5's 'about 2 MB' to 'about 2-3.5 MB'."
+  },
+  {
+   "id": "R23-REQUIREMENTS-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The <= 30 s high-rate control / roll-budget window has no physics root and is shorter than the derived time to apogee",
+   "evidence": {
+    "file": "docs/REQUIREMENTS.md",
+    "reference": "Sources ('a <= 30 s high-rate control window'); F1 ('<= 5 deg over a <= 30 s powered/coast window', the ~9 C temperature allowance computed for 30 s)",
+    "measured": "time to apogee 23.2-29.4 s (K850DM) and 25.5-34.2 s (L1000W); dynamic pressure at 30 s is still non-zero on the long L1000W cases",
+    "method": ".supervisor/r23_requirements/flight1d.py -> flight1d_results.json (1-D vertical, thrustcurve.org samples, generic min-diameter Cd(M) x 0.8/1.0/1.3, dry mass 1.6/2.1/2.7 kg, sites 0/1200 m, ISA; Inference)"
+   },
+   "impact": "If the roll program is held to apogee (project goal: 90 deg turn and hold; control stop point is an open question) the window is up to 34 s, so F1's drift term grows to 0.015 dps/C x dT x 34 s and the allowed bay change falls from about 9 C to about 8 C. The number reads as derived but is not.",
+   "concrete_fix": "Text only: either tie the window to a stop condition (e.g. control ends when q falls below the level where the tab has authority, or at apogee) and give its derived length (<= 35 s), or state that 30 s is a design choice; recompute F1's dT allowance for the chosen length."
+  },
+  {
+   "id": "R23-REQUIREMENTS-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "F3's '>= 10 km' uses the MS5611 ADC range; the specified error band stops at 450 mbar, above flight 2's derived apogee pressure",
+   "evidence": {
+    "file": "docs/REQUIREMENTS.md",
+    "reference": "F3; DESIGN_ASSURANCE.md 6.1 MS5611 row already notes 'full-accuracy range 450-1100 mbar (about 6.3 km)'",
+    "measured": "ISA apogee pressure 440-656 hPa (K850DM), 317-556 hPa (L1000W), sites 0 / 1200 m; 450 hPa = 6.3 km ISA",
+    "maker": "TE MS5611-01BA03 datasheet p.2 'Sensor performances': range 10-1200 mbar; accuracy +/-1.5 mbar at 25 C, 750 mbar; error band +/-2.5 mbar only for -20..+85 C, 450..1100 mbar (cached .supervisor/r14_parts_pdf/te_ms5611.pdf; https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7FMS5611-01BA03%7FB3%7Fpdf%7FEnglish%7FENG_DS_MS5611-01BA03_B3.pdf)",
+    "method": ".supervisor/r23_requirements/flight1d.py -> flight1d_results.json (1-D vertical, thrustcurve.org samples, generic min-diameter Cd(M) x 0.8/1.0/1.3, dry mass 1.6/2.1/2.7 kg, sites 0/1200 m, ISA; Inference)"
+   },
+   "impact": "Apogee detection (the barometer vote F-11 V1) happens where the maker gives no accuracy figure, at a cold, fast-changing temperature. Detection uses a relative fall (3 m), so the absolute error matters less, but nothing in the requirements asks for it to be characterised. No board change (no better part is needed: the range covers it).",
+   "concrete_fix": "Text only: restate F3 as 'readings to >= 300 hPa (apogee about 8.8 km MSL worst), with a bench vacuum-chamber characterisation from 1013 to 300 hPa at the cold corner before flight 2', keeping the 10 mbar ADC range as the reason the part qualifies."
+  },
+  {
+   "id": "R23-REQUIREMENTS-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "P3's 100 g landing basis assumes 6 m/s; a 36 in chute gives 6.2-8.0 m/s, i.e. 98-163 g at the same 20 mm crush, so the owner's 200 g option is not a factor of 2",
+   "evidence": {
+    "file": "docs/REQUIREMENTS.md",
+    "reference": "P3 'Basis (R18-REQ-06)' and 'Owner option (R19-REQ-06)'; DESIGN_ASSURANCE.md 6.1 landing row (6 m/s at 20 mm = 92 g); docs/M3_R10.md line 771",
+    "measured": "landing mass (dry + empty case) 2.42-3.52 kg; 36 in (0.657 m2) chute: 6.2-8.0 m/s at Cd 1.5 (flat/elliptical), 5.1-6.6 m/s at Cd 2.2 (toroidal); a = v^2/(2 x 0.020 m) = 98-163 g (Cd 1.5) or 66-111 g (Cd 2.2)",
+    "method": "v = sqrt(2 m g / (rho Cd A)), sea-level / 1200 m density; chute Cd values are assumptions (parent research_notes recovery.md, not sourced); Inference"
+   },
+   "impact": "The 500 g-equivalent (5 x 100 g) retention assertion still covers 163 g by about 3x, so nothing fails today. But the owner's open option to restate P3 as 100 g x 2 = 200 g would leave only 1.2x over the flat-chute landing case: the option's premise ('100 g is the design load') depends on a chute that is not chosen.",
+   "concrete_fix": "Text only: tie P3's design load to the selected chute's descent rate (a = v^2 / 2s, s = 20 mm), and state the owner option as '2 x the landing load of the chosen chute' (about 330 g for a flat 36 in, 220 g for a toroidal) rather than a fixed 200 g."
+  },
+  {
+   "id": "R23-REQUIREMENTS-05",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Servo stall is treated only as a fault, but flight 2's derived max-q hinge moment at large deflection is 73-84 % of the HV6120 stall torque, during boost, when J400 chatter is most likely",
+   "evidence": {
+    "file": "docs/REQUIREMENTS.md",
+    "reference": "F4 (stall <= 1.92 A as a limit); F6 low-voltage corner (8.5 ms immunity at the four-stall BAT_IN 5.73 V, 10 ms criterion needs >= 5.92 V); F7 four-stall case",
+    "measured": "tab 8 x 26.5 mm, supersonic linear theory dCp = 4 delta / sqrt(M^2-1), CP at half chord: at 15 deg, 0.39-0.41 N.m (K850DM q_max 84-172 kPa) and 0.41-0.45 N.m (L1000W q_max 212-286 kPa) against 0.53 N.m stall (5.4 kg.cm at 8.2 V, docs/GEOMETRY_REV_G.md line 343); 6 deg gives 29-34 %",
+    "method": ".supervisor/r23_requirements/hinge.py; no linkage ratio, hinge offset or thickness effect; Inference"
+   },
+   "impact": "On flight 2 with up to four surfaces, a large command near max q can hold servos at or near stall current during the burn, i.e. the four-stall sag (5.73 V, 8.5 ms chatter immunity) coincides with peak vibration on J400's dry screw contact. A U9 trip then costs 30-129 ms plus boot in the burn. Flight 1 (one servo) is not affected (one stall sags about 0.3 V). No board change shown; it is a requirement / qualification gap.",
+   "concrete_fix": "Text only: in F4 / F6 state that sustained stall during boost is an operating case on flight 2, and require one of: a firmware deflection limit scheduled on q (from the CFD hinge data), a flight-2 pack that holds >= 5.92 V under four stalls, or the chatter bench test run at 5.73 V."
+  },
+  {
+   "id": "R23-REQUIREMENTS-06",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Coverage gap after landing: no requirement says what the board does from touchdown until recovery",
+   "evidence": {
+    "file": "docs/REQUIREMENTS.md",
+    "reference": "F6 'watchdog is serviced from pad through landing'; F11 (annunciation only); Pad time row 'Switch off promptly after landing'; ORDERING 8.1.1 Q_recovery (no duration); FMEA_REDUNDANCY.md 7.4'.9 / F-8 (LANDED latch, gates low, GNSS off)",
+    "measured": "descent 424-1149 s from 3.5-7.6 km; drift 2.1-5.7 km at 5 m/s wind, 4.2-11.5 km at 10 m/s (Inference); ports draw about 1.7 W (Pack row) to 3.2 W (worksheet)",
+    "conflicts": [
+     "FMEA F-8 'GNSS turns off' after landing vs R10's always-on PORT_4V8 (no port switch, F9) and the need to keep GPS + radio beaconing to find a vehicle kilometres away",
+     "F6 services the IWDG only 'through landing'; the STM32 IWDG cannot be stopped once started, so post-landing service is required or the board resets every ~30 ms",
+     "'Switch off promptly after landing' cannot be met before the crew reaches the vehicle"
+    ]
+   },
+   "impact": "The REQUIREMENTS file, which every review checks against, covers pad to landing only. The LANDED safing (PC1 and PE4 low, latched), the tracking beacon and its energy, and watchdog service after landing live only in the R1-era FMEA, which conflicts with R10 on GNSS power. The pack worksheet has no Q_recovery figure, so a long search can flatten the pack and lose the track.",
+   "concrete_fix": "Text only: add a row (F12 'Landed') stating: LANDED criterion per FMEA 7.4'.9; PC1 and PE4 low and latched until power-off; IWDG serviced until power-off; GPS + radio position beacon kept on (no GNSS-off on R10), logging stopped or 1 Hz; a recovery-search time T_rec (owner) that sets Q_recovery = port + logic power x T_rec in ORDERING 8.1.1."
+  },
+  {
+   "id": "R23-REQUIREMENTS-07",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Coverage gap on a long pad hold: '>= 7.4 V resting at launch' is an assumption with no board-side check, although VLOGIC_SENSE reads the pack continuously",
+   "evidence": {
+    "file": "docs/REQUIREMENTS.md",
+    "reference": "Operating assumptions, Pack row ('>= 7.4 V resting at launch after the pad wait'); F7 ('Preserve 7.4 V equivalent source reserve at firing'); pin_table.tsv PA6 VLOGIC_SENSE (U11 output, battery path), PC5 ARM1_SENSE (bus after PC1)",
+    "measured": "no REQUIREMENTS row, F-ID or ORDERING 8.3 step requires firmware to measure, telemeter or refuse READY on a low pack; the 1.125 A fire margin (1.279 A four-stall case) rests on the 7.4 V premise"
+   },
+   "impact": "A hold longer than the owner's 2 h, a cold pack or an undersized pack can take the source below the fire-budget premise without anyone on the rail knowing. Board hardware already supports the check (no board change).",
+   "concrete_fix": "Text only: add to F7 / F11: firmware reads PA6 (and PC5 after the cold screen), telemeters pack voltage, and refuses the pad READY state below a stated threshold (the 7.4 V premise plus the measured PA6 divider error)."
+  },
+  {
+   "id": "R23-REQUIREMENTS-08",
+   "severity": "Minor",
+   "status": "new",
+   "title": "No in-flight thermal derivation: F1's '< 9 C during the window' and the -20 C bay floor are not tied to the flight",
+   "evidence": {
+    "file": "docs/REQUIREMENTS.md",
+    "reference": "F1 budget (dT is 'an Inference'); Temperature row (bay -20..+70 C, site limit); LS120 and J430 rated only to -20 C",
+    "measured": "ambient at apogee -8 to -27 C (K850DM) and -16 to -42 C (L1000W) ISA; 7-19 min of descent below the launch-site temperature; Mach 1.9 recovery temperature T(1 + 0.89 x 0.2 M^2) about 200 C at the 1.6 mm fibreglass wall, whose diffusion time L^2/alpha is about 8 s (alpha about 3e-7 m2/s), i.e. inside the 30 s window (Inference)"
+   },
+   "impact": "The gyro drift budget assumes a small bay change in exactly the phase where aero-heating of the wall and a 23-35 C ambient drop both act; the cold floor is a ground-site limit, not a descent limit, and the buzzer (locator after landing) and J430 have no cold margin. Board self-heating probably dominates (Inference), so no board change is shown.",
+   "concrete_fix": "Text only: state the in-flight bay temperature basis (or require it logged on flight 1 from U4 / U5 temperature), and make IMU-temperature compensation of gyro bias a firmware requirement in F1 rather than a fallback."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R22-04",
+   "claim": "Row 30 / D-R21-04 reason restated as physics (tau about 50 ms, about 7 uA); legal GND spots 0.671 mm from three vias",
+   "measurement": "Thevenin (940k || 300k) = 227 kOhm x 220 nF = 50.0 ms; 8.4 V / 1.24 MOhm = 6.8 uA; R10_VALIDATION row 30 text states physics; the three spots of R22-REQUIREMENTS-01 are each 0.671 mm from (10.8,69.2), (21.3,68.9), (19.675,66.6)",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R22-04",
+   "claim": "EN 2.03 V nominal, <= 2.06 V with 1 % parts at 8.4 V",
+   "measurement": "8.4 x 300/1240 = 2.032 V; 8.4 x 303/(303+930.6) = 2.063 V",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "R22-REQUIREMENTS-03 (text, in the D-R22 pass)",
+   "claim": "J400 ESD handling in F8 / F9 and ORDERING 8.3",
+   "measurement": "F8 last sentence and F9 'J400 ESD' paragraph present; ORDERING line 626 handling + contact-discharge check",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "R22-REQUIREMENTS-04 (text)",
+   "claim": "C88 in the OQ-6 accepted-risk bullet; U4 stock timestamp",
+   "measurement": "Accepted-risks bullet now lists C88 and Q120 drain on BAT_IN; ORDERING U4 row cites 23:23Z",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R22-03",
+   "claim": "diagnostics note text only",
+   "measurement": "note reads 'Nominal 5.456 V ... 0.496 V ... 9.77 V ... 0.89 V'; '5.25 V reads' absent; 5.456/11 = 0.496 V, 9.77/11 = 0.888 V",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R22 pass (whole)",
+   "claim": "no copper change",
+   "measurement": "git show ec8cb98 and c70d261 board both SHA-256 5516eeec...; the regenerated Gerber zip differs only in KiCad date-stamp lines (all 14 files identical after removing them)",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R21-03",
+   "claim": "three schematic notes corrected",
+   "measurement": "battery_entry note names Q120's drain on BAT_IN and R134; 'fused/current-limited externally' count 0; sensors note names ISM6HG256X",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "R21-REQ-03",
+   "claim": "Camera row names J440",
+   "measurement": "Camera row: 'any self- or USB-powered device on J410, J420 or J440'",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "R21-REQ-05",
+   "claim": "envelope flagged as owner / simulator item",
+   "measurement": "still flagged, not replaced; carried as R23-REQUIREMENTS-01 with derived numbers",
+   "verdict": "partly"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R23-REQUIREMENTS-01",
+   "change": "Text only: replace the envelope cell with the derived ranges above, labelled Inference (1-D, generic Cd, mass bracketed), until the simulator / OpenRocket gives the owner's numbers; change '525 s' to 'up to about 1200 s (36 in chute)'; change F5's 'about 2 MB' to 'about 2-3.5 MB'.",
+   "changes_board": false,
+   "kind": "text only"
+  },
+  {
+   "id": "R23-REQUIREMENTS-02",
+   "change": "Text only: either tie the window to a stop condition (e.g. control ends when q falls below the level where the tab has authority, or at apogee) and give its derived length (<= 35 s), or state that 30 s is a design choice; recompute F1's dT allowance for the chosen length.",
+   "changes_board": false,
+   "kind": "text only"
+  },
+  {
+   "id": "R23-REQUIREMENTS-03",
+   "change": "Text only: restate F3 as 'readings to >= 300 hPa (apogee about 8.8 km MSL worst), with a bench vacuum-chamber characterisation from 1013 to 300 hPa at the cold corner before flight 2', keeping the 10 mbar ADC range as the reason the part qualifies.",
+   "changes_board": false,
+   "kind": "text only"
+  },
+  {
+   "id": "R23-REQUIREMENTS-04",
+   "change": "Text only: tie P3's design load to the selected chute's descent rate (a = v^2 / 2s, s = 20 mm), and state the owner option as '2 x the landing load of the chosen chute' (about 330 g for a flat 36 in, 220 g for a toroidal) rather than a fixed 200 g.",
+   "changes_board": false,
+   "kind": "text only"
+  },
+  {
+   "id": "R23-REQUIREMENTS-05",
+   "change": "Text only: in F4 / F6 state that sustained stall during boost is an operating case on flight 2, and require one of: a firmware deflection limit scheduled on q (from the CFD hinge data), a flight-2 pack that holds >= 5.92 V under four stalls, or the chatter bench test run at 5.73 V.",
+   "changes_board": false,
+   "kind": "text only"
+  },
+  {
+   "id": "R23-REQUIREMENTS-06",
+   "change": "Text only: add a row (F12 'Landed') stating: LANDED criterion per FMEA 7.4'.9; PC1 and PE4 low and latched until power-off; IWDG serviced until power-off; GPS + radio position beacon kept on (no GNSS-off on R10), logging stopped or 1 Hz; a recovery-search time T_rec (owner) that sets Q_recovery = port + logic power x T_rec in ORDERING 8.1.1.",
+   "changes_board": false,
+   "kind": "text only"
+  },
+  {
+   "id": "R23-REQUIREMENTS-07",
+   "change": "Text only: add to F7 / F11: firmware reads PA6 (and PC5 after the cold screen), telemeters pack voltage, and refuses the pad READY state below a stated threshold (the 7.4 V premise plus the measured PA6 divider error).",
+   "changes_board": false,
+   "kind": "text only"
+  },
+  {
+   "id": "R23-REQUIREMENTS-08",
+   "change": "Text only: state the in-flight bay temperature basis (or require it logged on flight 1 from U4 / U5 temperature), and make IMU-temperature compensation of gyro bias a firmware requirement in F1 rather than a fallback.",
+   "changes_board": false,
+   "kind": "text only"
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "F2 +/-64 g: derived peak specific force 36.6 g (L1000W, light vehicle, at the ignition thrust peak of 1322 N); 1.75x margin, rooted (the 37 g figure holds).",
+  "U4 low-g +/-16 g during coast: burnout drag deceleration <= 14.5 g (L1000W, Cd x1.3) stays inside, thin margin; the high-g channel covers it.",
+  "F1 +/-4000 dps: strip-theory steady roll rate with one tab stuck at 15 deg is about 1000 dps at M0.9 (matches the historical 1100 dps) and 1440-2160 dps at M1.9 (tau 0.4-0.6; .supervisor/r23_requirements/rollrate.py); about 1.8x margin, not oversized (it is the part's maximum).",
+  "U4 lever arm x = -6 mm: centripetal 0.006 x (69.8 rad/s)^2 = 29 m/s2 = 3 g at 4000 dps; inside the low-g range.",
+  "F5 >= 800 Hz IMU and 500 Hz log: not oversized against a 10 Hz-class servo loop; log volume about 3.5 MB worst against 16 MB.",
+  "Barometer '>= 10 km' range itself: 8.8 km MSL worst apogee (1200 m site) is below 10 km; only the accuracy band is filed (-03).",
+  "Tripoli 11-6 (> 2560 N.s needs electronic recovery not relying on the motor): L1000W 2714 N.s; met by CH1 + Blue Jay.",
+  "Tripoli 11-1 landing <= 35 ft/s (10.7 m/s): derived 5.1-8.0 m/s.",
+  "GPS 'no fix above ~500 m/s': L1000W exceeds it for a few seconds of boost/coast only; tracking-only use is consistent.",
+  "Pad-energy worksheet oversizing: recorded owner decision (R19-REQ-01), not re-filed.",
+  "Hold-up time, P3 factor, cost cap, east tabs, owner row 18, U4/U9 stock: open owner items, noted not filed.",
+  "J400 ESD to EN: recorded (R22-REQUIREMENTS-03); not worse than recorded."
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after (shasum): 5516eeec... both; git show of ec8cb98 and c70d261 boards: identical hash.",
+  "Gerber zip of ec8cb98 vs c70d261 unzipped and diffed without date lines: 14/14 files identical.",
+  "thrustcurve.org API search + download (K850DM, HP-L1000W thrust samples).",
+  "1-D vertical flight sweep (54 cases): .supervisor/r23_requirements/flight1d.py, results flight1d_results.json.",
+  "Strip-theory roll-rate estimate rollrate.py; supersonic hinge-moment estimate hinge.py.",
+  "MS5611 datasheet p.2 performance table read with pdftotext from the cached PDF.",
+  "Grep of schematic notes (battery_entry, sensors, diagnostics) for D-R21-03 / D-R22-03 text.",
+  "Read REQUIREMENTS.md in full, VEHICLE.md, ORDERING 8.1.1, FMEA 7.4' and F-6..F-23, DESIGN_ASSURANCE 6.1, M3_R10 retention basis, D-R21 / D-R22 records, git diff ec8cb98..c70d261 of REQUIREMENTS and check_r10 (refactor only: pth_inner_copper, dru_rules, ILIM/GND single-open entries still present)."
+ ],
+ "sources": [
+  "https://www.thrustcurve.org/motors/AeroTech/K850DM/ (API search.json commonName=K850: 1869 N.s, 2.0 s, avg 922 N, max 1094 N, 2041 g, 1224 g propellant; samples via api/v1/download.json motorId 5f4294d20002310000000451)",
+  "https://www.thrustcurve.org/motors/AeroTech/HP-L1000W/ (API: 2714 N.s, 2.7 s, avg 1000 N, max 1261 N, 2194 g, 1400 g propellant, 54 x 635 mm; samples motorId 5f4294d2000231000000040b)",
+  "TE MS5611-01BA03 datasheet p.2 (cached .supervisor/r14_parts_pdf/te_ms5611.pdf)",
+  "ST DS15034 Rev 1 pp.12-13 (as cited in F1; not re-read)",
+  "TI SLVSFC9C p9 (as cited in F6; not re-read)",
+  "docs/GEOMETRY_REV_G.md line 343 (HV6120 5.4 kg.cm at 8.2 V, 1.916 A stall at 8.4 V)",
+  "parent research_notes/Order 1 compatibility audit/airframe_recovery.md (AeroTech K850DM page figures; chute Cd assumptions)",
+  "Tripoli Unified Safety Code v2 as quoted in docs/FMEA_REDUNDANCY.md 7.1 (not re-fetched)"
+ ],
+ "coverage_limits": [
+  "The trajectory is a 1-D vertical point-mass model with a generic Cd(M) curve and bracketed masses; it bounds, it does not predict. No OpenRocket or project simulator run.",
+  "Roll-rate and hinge-moment figures are linear-theory Inferences without the project's CFD coefficients; no linkage ratio.",
+  "Thermal figures are order-of-magnitude Inferences; no transient model.",
+  "No KiCad, DRC or check.sh run (requirements lens; the board was unchanged by the D-R22 pass, confirmed by hash and Gerber diff).",
+  "AeroTech product pages returned HTTP 429; motor figures from thrustcurve.org and the parent repo's earlier fetch."
+ ],
+ "round22_comparison": "Round 22's requirements report (R22-REQUIREMENTS-01..04) had none of these findings; all eight are independent of it. R23-REQUIREMENTS-01 carries R21-REQ-05."
+}
