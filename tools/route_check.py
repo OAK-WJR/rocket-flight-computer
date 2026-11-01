@@ -219,7 +219,10 @@ CLASSES = [
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import critical_reference as _cr                                    # noqa: E402 (tools/, after the path insert)
 R10_CLASSES = [
-    ('pyro', r'^(?!(?:PYRO1_CONT|ARM1_SENSE)_MCU$)(PYRO1_|ARM1_|ACT_(GATE|DRV|EN)$|ACT_EN_MCU$)'),
+    # D-R21-04 (R21-REQ-04): J400's arming chain BAT_SW_SOURCE / BAT_SW_RETURN / BAT_ENABLE is pyro and arming too
+    # (AGENTS section 2.1: the screw switch is the arming device); it is a slow filtered node, so AUD-2 lists it.
+    ('pyro', r'^(?!(?:PYRO1_CONT|ARM1_SENSE)_MCU$)(PYRO1_|ARM1_|ACT_(GATE|DRV|EN)$|ACT_EN_MCU$|BAT_ENABLE$|'
+             r'BAT_SW_(SOURCE|RETURN)$)'),
     ('crystal', r'^HSE_'),
     ('usb', r'^USB_D[PM]$'),
     ('spi', r'^(QSPI_|SPI1_|IMU_CS$)|' + _cr.R10_SD_SIGNAL.pattern),

@@ -5,8 +5,8 @@ terminals on the x = 0 edge, a GH-2 power-switch connector near the forward edge
 the replacement facts without editing that worktree. Preserve the accepted R9 entry. R10 remains unaccepted and no physical
 fit is claimed.
 
-**Status.** PCB `0dc84776…`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. It replaces `50a39de5…` (round 20 polish pass; the round 19 fix pass had
-added the spare AUX port J440), so no earlier review carries over to it; rounds 21 and 22 will review it. Review results, checks, cost and open items are
+**Status.** PCB `5516eeec…`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. It replaces `0dc84776…` (round 21 fix pass, which moved R81 and C87 to U9's
+end of the EN run; the round 19 fix pass had added the spare AUX port J440), so no earlier review carries over to it; rounds 22 and 23 will review it. Review results, checks, cost and open items are
 in [M3_R10.md, "Current state"](M3_R10.md#current-state); the owner's decision list is in
 [R10_VALIDATION.md](R10_VALIDATION.md#r10-deviations-for-owner-acceptance).
 
@@ -53,10 +53,10 @@ The sole J400 screw switch is the power and pad-arming device, reachable on the 
 any self-powered module (GPS, radio, AUX or camera) attached. USB bench work requires the pack or the e-match to be disconnected.
 **The GPS, radio and AUX ports are fed from the battery path, so they are off on USB-only power:** during a USB-only session either disconnect the J410, J420
 and J440 leads or check that pins J410.3, J420.3 and J440.3 stay near 0 V (the board's TX lines must not drive an unpowered module). Per flight, before the
-e-match is inserted: with the pack connected and J400 open, confirm the board is off (no telemetry or buzzer, or 3V3 at TP81 below 0.3 V), then measure
+e-match is inserted: with the pack connected and J400 open, confirm the board is off (no telemetry or buzzer, or, with access, RAW_PROTECTED at TP81 and 3V3 at C15.1 both below 0.3 V, ORDERING 8.3), then measure
 J121.2 (IGN) to GND with a floating meter; it must read below 0.1 V. After any closed-switch check, confirm that opening J400 turns the board off: surface
-leaks at U9's EN node or a chafed J400.2 lead can hold it on (R19-SAF-02), and an open via in the three-via chain from EN to its
-pull-down R81 can let it come on with J400 open (R20-SAF-01, Inference; not fixable on this board, D-R20-01). Run the J400 pair twisted, on its own ties, away from the battery and servo
+leaks at U9's EN node or a chafed J400.2 lead can hold it on (R19-SAF-02), and an open in the one via left between EN and its
+pull-down R81 can let it come on with J400 open (R21-SAF-01, Inference). R81 and C87 now sit at U9's end of the EN run, so one via, (17.10,82.80), is left (D-R21-05); the respin item is U9's west cell. Run the J400 pair twisted, on its own ties, away from the battery and servo
 power leads and from J440's leads, which leave the same west edge: a chafe from J440.1 (4.79 V) or J440.3 (TX) onto J400.2 holds U9 on
 (EN 1.87 V or 1.28 V, Calculation), and J440.1 or J440.2 onto J121.1 with the bus on joins the OUT-to-GND fire class. Keep J440's leads apart from the igniter leads too.
 **J440 lead routing (R20-MEC-01):** route J440's leads aft, over or around the (4, 4) nylon screw head, keep them south of
@@ -117,8 +117,8 @@ no production copper change and no full PCB, CLI or gate qualification of that M
 
 ## Cost
 
-The target is $84.41 per board, R3's cost per board for parts plus JLC feeder fees only. The supplier data (stock 2026-10-31T08:22Z, cost 08:23Z) give $85.35 placed, with no minimum-purchase uplift (every minimum is 1);
-JLC's fixed fees add $16.79 per board (5 boards). **The cost target fails by $0.94** because of the owner-approved AUX port (+$1.14); the owner decides whether to accept it. U4 (now the ISM6HG256X) shows 9 in stock but only 2 orderable, so the stock check now fails on U4: 2 orderable against 5 (`stock_check.json` 2026-10-31T10:13Z, which reads JLC's `canPresaleNumber` as the orderable quantity; that reading of JLC's field is an Inference) (R20-BOM-01): confirm the quantity in the JLC cart on order day, else consign the LSM6DSV320X.
+The target is $84.41 per board, R3's cost per board for parts plus JLC feeder fees only. The supplier data, run on the final files of `5516eeec…` (cost 2026-10-31T23:24Z, bound to the JLC BOM, owner BOM and current CPL; stock 23:23Z, bound to the BOM and owner BOM), give $85.37 placed (about $85.91 with JLC minimum purchases);
+JLC's fixed fees add $16.79 per board (5 boards). **The cost target fails by $0.96** because of the owner-approved AUX port (+$1.14); the owner decides whether to accept it. U4 (now the ISM6HG256X) shows 9 in stock but only 2 orderable, so the stock check (`stock_check.json` 2026-10-31T23:23Z) fails on U4, 2 orderable against 5, and now also on U9 (TPS259470LRPWR C3662793: 40 in stock, −69 orderable, minimum purchase 7); it reads JLC's `canPresaleNumber` as the orderable quantity, an Inference about JLC's field. For both, confirm the quantity in the JLC cart on order day, else consign franchised parts (R20-BOM-01); for U4 that means consigning franchised ISM6HG256XTR (same CPL rotation and register map), with the LSM6DSV320X, also unavailable at JLC and LCSC, only as a second fallback (R21-BOM-02).
 Quote, process and owner acceptance are open. C84 is on the owner BOM, bought by the owner and hand-fitted after both reflows. No physical fit, firmware or order is qualified. Table and basis: [M3_R10.md, "Cost and stock"](M3_R10.md#cost-and-stock).
 
 Current source and qualification details: [M3_R10.md](M3_R10.md), [ORDERING.md section 8](ORDERING.md), and the maker-linked `sources/r10_design/parts_qualification.md`. Apply the parent mirror update only within its

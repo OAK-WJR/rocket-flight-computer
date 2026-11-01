@@ -1,0 +1,920 @@
+{
+ "schema": 1,
+ "lane": "round 21 fix pass, CAD lane",
+ "date": "2026-10-31",
+ "brief": ".supervisor/r21_fix_brief.md (8 items: 1-5 board / generators, 6-8 checks only)",
+ "board_before": {
+  "sha256": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+  "bytes": 2340154,
+  "footprints": 215,
+  "segments": 985,
+  "vias": 302,
+  "gnd_vias": 169,
+  "track_mm": 1874.854252,
+  "rule_areas": [
+   "BARO_body_B",
+   "BARO_no_inter_row_tracks",
+   "IMU_body_B",
+   "IMU_no_internal_tracks",
+   "R10_Y1_In2_keepout",
+   "R18_BARREL_KEEPOUT_ACT_GATE_0",
+   "R18_BARREL_KEEPOUT_ACT_GATE_1",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_2",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_3",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_4",
+   "R18_BARREL_KEEPOUT_BAT_SW_RETURN_5",
+   "R18_BARREL_KEEPOUT_PYRO1_OUT_6",
+   "R18_BARREL_KEEPOUT_PYRO1_OUT_7",
+   "R20_TAB_KEEPOUT_WEST_AFT",
+   "R8_POUR_TRIM_C3",
+   "R8_POUR_TRIM_C4"
+  ]
+ },
+ "board_after": {
+  "sha256": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+  "bytes": 2336572,
+  "footprints": 215,
+  "segments": 983,
+  "vias": 300,
+  "gnd_vias": 167,
+  "track_mm": 1871.611826,
+  "rule_areas": [
+   "BARO_body_B",
+   "BARO_no_inter_row_tracks",
+   "IMU_body_B",
+   "IMU_no_internal_tracks",
+   "R10_Y1_In2_keepout",
+   "R18_BARREL_KEEPOUT_ACT_GATE_0",
+   "R18_BARREL_KEEPOUT_ACT_GATE_1",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_2",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_3",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_4",
+   "R18_BARREL_KEEPOUT_BAT_SW_RETURN_5",
+   "R18_BARREL_KEEPOUT_PYRO1_OUT_6",
+   "R18_BARREL_KEEPOUT_PYRO1_OUT_7",
+   "R20_TAB_KEEPOUT_WEST_AFT",
+   "R8_POUR_TRIM_C3",
+   "R8_POUR_TRIM_C4"
+  ],
+  "size_mm": [
+   46,
+   90,
+   1.6
+  ],
+  "vias_by_size_mm": {
+   "0.5/0.3": 295,
+   "0.6/0.3": 4,
+   "1.0/0.5": 1
+  }
+ },
+ "builds": {
+  "kicad_cli": "10.0.7",
+  "numpy_py": ".supervisor/venv/bin/python",
+  "complete_builds": [
+   {
+    "name": "1",
+    "exit": 0,
+    "seconds": 1321,
+    "check_sh_exit": 0,
+    "board_sha256": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1"
+   },
+   {
+    "name": "2",
+    "exit": 0,
+    "seconds": 1322,
+    "check_sh_exit": 0,
+    "board_sha256": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1"
+   }
+  ],
+  "build1_vs_build2": "921 files: 916 identical; 5 differ: m3_assembly_top.pdf, m3_assembly_bottom.pdf, m3_gerber.zip, m3_fab_manifest.json (date stamps, as in round 20; contents not re-diffed) and tools/test_r10_check.py (edited between the builds: the sheet-notes test no longer prints); none only in one",
+  "iterations": "scratch builds through the ground family plus r10_post on a project copy, with DRC / fit / check_r10 / route_check on each: DRU condition trials (item 1), U2.1 candidates (item 2), the BAT_ENABLE hop (item 4), C87 at y 81.55 (a run piece inside C87.1, off-centre pad end) and on the last bend at y 81.8768 (clean)",
+  "check_sh": {
+   "drc": 0,
+   "unconnected": 0,
+   "schematic_parity": 0,
+   "erc": 0,
+   "metadata_3d": "OK",
+   "silk_outside": 0,
+   "r10_parts_check": "OK",
+   "fit": "OK (eight wire rooms 5.00-5.60 mm)",
+   "check_r10": "36 / 36 rules OK (K-ports new)",
+   "route_check": "0 failing, 22 bump windows, 6 unrecorded noncritical leftovers (round 20: 7; the BAT_ENABLE jog is now critical and fixed)",
+   "fab": "S-4 BOM / CPL, CPL rebuilt from JLC footprints (69 top / 122 bottom, worst pad residual 0.491 mm), paste F 253 / B 375: OK; six-output manifest bound to 5516eeec...",
+   "route_check_info": "148 -> 148 information instances: + 3V3 pad_end_offcentre (U2.1), + 3V3 power_via_no_gnd (R89's via (23.0, 70.0), 2.182 mm); - BAT_ENABLE extra_bends, tiny_jog"
+  },
+  "fab_package": {
+   "bom_lines": 81,
+   "bom_changed": false,
+   "placed": 205,
+   "cpl_rows_changed": [
+    "C87",
+    "R81"
+   ],
+   "owner_bom": [
+    "C84"
+   ],
+   "cost_stock_rerun": false,
+   "note": "same parts and quantities"
+  },
+  "hotplug": {
+   "cases": 2304,
+   "failures": 0,
+   "qualification": "pass",
+   "extremes": "unchanged: -14.8074 V, 2.0 V, 8.9915 / 5.0907 V/us",
+   "inputs": "re-extracted (C87 moved)"
+  },
+  "binding_note": "regenerated for 5516eeec...; K-binding OK",
+  "fire_budget": "parts_budget.json regenerated: board hash only, figures unchanged"
+ },
+ "items": [
+  {
+   "n": 1,
+   "finding": "R21-PWR-02 / R21-BOM-01 / R21-MFG-01 / R21-GATE-02",
+   "decision": "D-R21-01",
+   "status": "done",
+   "change": "DRU rules from r10_sch.py JLC_HOLE_RULES: inner-layer PTH pad hole to copper 0.55 mm (copper partner only), outer-layer PTH hole to track 0.28 mm, pad hole to hole 0.45 mm; refilled in the build",
+   "chosen_mm": 0.55,
+   "why": "largest of 0.55 / 0.35 / 0.3 that keeps every plane and reference rule: DRC 0, K-plane landing necks unchanged (least 0.549 mm), K-reference / K-region OK, every inner power fill one piece; it is what the other plated pads already had, J3's four shell holes (0.451 mm) excepted",
+   "jlc_source": "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-10-31): Inner layer via hole to copper clearance 0.2mm; Inner layer PTH pad hole to copper clearance 0.3mm; PTH to Track 0.28mm (0.35mm recommended); Pad Hole-to-Hole Spacing 0.45mm",
+   "before_after_mm": {
+    "J1.2 In2 RAW_PROTECTED": [
+     0.251,
+     0.55
+    ],
+    "J400.2 In1 GND": [
+     0.251,
+     0.55
+    ],
+    "J3.1-J3.4 In2 3V3": [
+     0.451,
+     0.55
+    ],
+    "every other plated pad and layer": "unchanged, >= 0.550"
+   },
+   "gate": "K-rules: JLC_HOLE_TABLE (named rules, pinned layer / condition, minimum >= JLC, no later overriding rule, no hole rule < 0.2 mm) and pth_inner_copper (board: every plated pad hole wall >= 0.3 mm from foreign In1 / In2 copper); DRU_SHA256 5acf6db7... -> 1d2dbe77...",
+   "condition_trials": "A-only condition: DRC hole_clearance, J3's NPTH locating holes 0.535 mm from its shell pads' rings (0.835 mm hole wall to slot wall); B.Pad_Type clause alone: false for zones and tracks, fills stayed at 0.251 mm with DRC 0",
+   "plane_strips_mm": {
+    "J1.1-J1.2 In2 RAW_PROTECTED (pin line)": [
+     1.4,
+     1.1
+    ],
+    "J400.1-J400.2 In1 GND (pin line)": [
+     1.4,
+     1.1
+    ],
+    "J3.1 to VBUS via (8.0, 33.7) void, In2 3V3 (least gap)": [
+     0.633,
+     0.566
+    ],
+    "J3.4 to VBUS via (7.95, 27.9) void, In2 3V3 (least gap)": [
+     0.599,
+     0.537
+    ],
+    "J3.2 / J3.3 slot to west edge, In2 3V3": [
+     0.479,
+     0.379
+    ],
+    "parallel J3.2-J3.1 / J3.3-J3.4 slot-to-slot, In2 3V3": [
+     1.729,
+     1.529
+    ],
+    "fill pieces": "same as 0dc84776: 3V3, PORT_4V8, PORT_5V3, RAW_PROTECTED one piece each on In2; nothing splits"
+   }
+  },
+  {
+   "n": 2,
+   "finding": "R21-PWR-01 / R21-GATE-01",
+   "decision": "D-R21-02",
+   "status": "done",
+   "change": "B.Cu 3V3 0.4 mm run (24.05, 68.95) -> (23.0, 70.0) from U2.1 into R89's via (the gate lens's f01b)",
+   "candidates": {
+    "f01b run": "chosen: DRC 0, route_check 0 failing, U2.1 survives every single via open",
+    "in-line via (22.55, 68.6)": "rejected: 0.886 mm (In2) / 0.986 mm (In1) from the BAT_ENABLE barrel (21.3, 68.9), under S-8's 1.0 mm"
+   },
+   "before_after": "U2.1 single points: via 3V3 (23.20, 68.60) -> none",
+   "gate": "SINGLE_OPEN_TAPS 1 -> 26 taps (the gate lens's survey); SINGLE_OPEN_EXCEPTIONS 8 exact entries, stale when no longer met",
+   "exceptions": {
+    "U401.3 via PORT_LDO_FB (29.75, 13.60)": "no legal second via spot; respin R402 / R403 beside U401 on B.Cu",
+    "R87.1 vias USB_LIMITED (22.00, 62.25) and (16.00, 28.00)": "R87.1 (22.0, 63.1) boxed on B.Cu by RAW_ACT (x 22.8, y 61.4-63.875; y 63.875 west to x 19.2) and PYRO1_CONT_MID; a second In2 via would be a parallel-via loop and still leave U10's end on one via; open loses the USB over-voltage cut-off (USB is bench power only)",
+    "R85.1 / R85.2 / R430.2 (TPS2553 ILIM legs)": "TI SLVS841G section 8.5.1 p16: the current-limit threshold is proportional to the current sourced out of ILIM, so an open leg sets a lower limit (fail-safe); TI does not state the open-pin case (Inference)",
+    "R81.1 / C87.1 via BAT_ENABLE (17.10, 82.80)": "see item 5"
+   },
+   "route_check_info": "R89's via (23.0, 70.0) now a two-layer 3V3 via: INFO power_via_no_gnd, nearest GND via 2.182 mm; U2.1's run 0.35 mm off the pad centre: INFO pad_end_offcentre; neither gated"
+  },
+  {
+   "n": 3,
+   "finding": "R21-REQ-01 / R21-REQ-02",
+   "decision": "D-R21-03",
+   "status": "done",
+   "change": "r10_sch.py R21_SHEET_NOTES: sensors (fitted ISM6HG256X, DS15034 Rev 1 p1 / Table 150 p93 / Table 25 p52; LSM6DSV320X the consigned alternate), diagnostics (battery-powered self-test of U400 / U402; camera rail off on USB-only power; no 'U8'), battery_entry (OQ-6 no battery-lead fuse; limited only by the pack and lead: the lead, J1, BAT_IN copper, D8, C80 / C96, C88 and C89 / C95; U9 TPS259470L limits and latches off RAW_PROTECTED; Q120's drain on BAT_IN, so the RAW_ACT fire path bypasses U9 and R134 (2 Ohm) limits it)"
+  },
+  {
+   "n": 4,
+   "finding": "R21-REQ-04",
+   "decision": "D-R21-04",
+   "status": "done",
+   "change": "route_check R10_CLASSES: BAT_SW_SOURCE / BAT_SW_RETURN / BAT_ENABLE in the pyro / arming class; critical_reference R10_SLOW_RETURN_NETS lists them (AUD-2: partner via and one-In2-region rules only)",
+   "jog": "BAT_ENABLE B.Cu hop (19.675, 66.6) -> (21, 67.925) -> (21, 68.6) -> (21.3, 68.9) [0.424 mm jog, 0.3 mm offset] -> (19.675, 66.6) -> (20.7, 67.625) -> (20.7, 68.3) -> (21.3, 68.9); TP120 1.0 mm and R88.2 kept; a straight (19.675, 67.275) entry missed TP120's 1.0 mm by 0.011 mm",
+   "exposed": "on 0dc84776 under the new class: tiny_jog (gated, fixed), extra_bends (info, gone with the new run), short_layer_hop 2.973 mm (info, stays); the F.Cu corner (19.675, 66.0) -> (19.675, 66.6) became a removable local bump once R81's stub went (fixed: diagonal from (19.075, 66.0)); BAT_SW_SOURCE / BAT_SW_RETURN: none"
+  },
+  {
+   "n": 5,
+   "finding": "R21-SAF-01 (partial fix for D-R20-01)",
+   "decision": "D-R21-05",
+   "status": "done",
+   "change": "R81 F(20.5, 65) -> F(18.8482, 80.0) 0; C87 F(17, 65) -> F(18.7232, 81.8768) 0 (pad 1 on the run's last bend); pads 2 in U9.8's F.Cu GND; R81 / C87 stubs and GND vias (20.706, 65.619), (16.639, 63.939) removed",
+   "measured": {
+    "series vias U9.1 -> R81.1 / C87.1": [
+     3,
+     1
+    ],
+    "track U9.1 -> R81.1 mm": [
+     20.92,
+     3.89
+    ],
+    "track U9.1 -> C87.1 mm": [
+     24.295,
+     2.013
+    ],
+    "R81.1 (EN) to GND via (17.2, 79.9) mm": 0.173,
+    "R81.2 (GND) to RAW_PROTECTED via (20.3, 79.1) mm": 0.307,
+    "C87.1 (EN) to GND fill mm": 0.251,
+    "C87.2 (GND) to BAT_FAULT_N track mm": 0.254,
+    "least RAW_ACT to GND (non-fill) mm": [
+     0.196,
+     0.302
+    ]
+   },
+   "en_abs_max": "TI SLVSFC9C section 6.1 p7: EN/UVLO -0.3 to 6.5 V (recommended <= 5 V, section 6.3); beside R81, C87 never charges above the divider's 2.03 V at 8.4 V; at the switch end an open between C87 and R81 could have charged it toward BAT_IN and dumped it into EN",
+   "kept": "D-R19-02 via, S-8 keep-outs, D-R19-10 values (R80 / R165 470 kOhm, R81 300 kOhm, C87 220 nF)",
+   "residual": "R81.1 / C87.1 still cross the via (17.10, 82.80) to U9.1 on B.Cu (exact exceptions; respin: U9's west cell re-laid, D-R20-01)"
+  },
+  {
+   "n": 6,
+   "finding": "R21-GATE-03",
+   "decision": "D-R21-06",
+   "status": "done (check only)",
+   "gate": "K-plane: TAB_KEEPOUTS_R10 pins R20_TAB_KEEPOUT_WEST_AFT (In2, (-0.5,12.5)-(3.0,17.5), fill-only); TAB_BANDS_R10 holds non-GND inner copper per tab band (west aft 0, west forward 0, east aft In2 RAW_PROTECTED 7.497 + PORT_5V3 3.077, east forward In2 RAW_PROTECTED 12.244 mm^2); growth fails, smaller is stale",
+   "seed": "d07 fails (12.498 mm^2 In2 3V3 under the band, keep-out missing)"
+  },
+  {
+   "n": 7,
+   "finding": "R21-GATE-04",
+   "decision": "D-R21-07",
+   "status": "done (check only)",
+   "gate": "new rule K-ports: PORT_CLAMPS, CLAMP_PATH_MAX 4.5 mm pin centre to clamp centre, series resistor's pads removed",
+   "measured_mm": {
+    "J410.3": 4.288,
+    "J410.4": 4.388,
+    "J420.3": 3.975,
+    "J420.4": 3.975,
+    "J440.3": 4.075,
+    "J440.4": 4.175,
+    "J9.3": 3.975,
+    "J9.4": 3.975
+   },
+   "seed": "d08 fails at 6.975 mm"
+  },
+  {
+   "n": 8,
+   "finding": "R21-GATE-05",
+   "decision": "D-R21-08",
+   "status": "done (check only)",
+   "gate": "fab_ref_crossings: one visible ${REFERENCE} on the footprint's own Fab layer, LS120 '+' / '-' the only other Fab texts, height >= 0.3 mm, ink box crossing no other footprint's Fab outline or reference, ink centre inside no other footprint's Fab outline box",
+   "board": "215 references checked, 0 crossings, least height 0.3 mm",
+   "seeds": "d06a / d06b / d06d / d06e fail; d06c not representable in KiCad 10"
+  }
+ ],
+ "pth_hole_to_inner_copper_mm": [
+  {
+   "pad": "J1.1",
+   "net": "BAT_IN",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "RAW_PROTECTED",
+    "nearest_after": "RAW_PROTECTED"
+   }
+  },
+  {
+   "pad": "J1.2",
+   "net": "GND",
+   "In1.Cu": {
+    "before_mm": 1.901,
+    "after_mm": 1.901,
+    "nearest_before": "J1.1:BAT_IN",
+    "nearest_after": "J1.1:BAT_IN"
+   },
+   "In2.Cu": {
+    "before_mm": 0.251,
+    "after_mm": 0.55,
+    "nearest_before": "RAW_PROTECTED",
+    "nearest_after": "RAW_PROTECTED"
+   }
+  },
+  {
+   "pad": "J121.1",
+   "net": "PYRO1_OUT",
+   "In1.Cu": {
+    "before_mm": 1.05,
+    "after_mm": 1.05,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 1.05,
+    "after_mm": 1.05,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   }
+  },
+  {
+   "pad": "J121.2",
+   "net": "PYRO1_IGN",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   }
+  },
+  {
+   "pad": "J122.1",
+   "net": "SERVO1_OUT",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "RAW_PROTECTED",
+    "nearest_after": "RAW_PROTECTED"
+   }
+  },
+  {
+   "pad": "J122.2",
+   "net": "SERVO2_OUT",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "RAW_PROTECTED",
+    "nearest_after": "RAW_PROTECTED"
+   }
+  },
+  {
+   "pad": "J122.3",
+   "net": "SERVO3_OUT",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "RAW_PROTECTED",
+    "nearest_after": "RAW_PROTECTED"
+   }
+  },
+  {
+   "pad": "J122.4",
+   "net": "SERVO4_OUT",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "RAW_PROTECTED",
+    "nearest_after": "RAW_PROTECTED"
+   }
+  },
+  {
+   "pad": "J122.5",
+   "net": "GND",
+   "In1.Cu": {
+    "before_mm": 1.901,
+    "after_mm": 1.901,
+    "nearest_before": "J122.4:SERVO4_OUT",
+    "nearest_after": "J122.4:SERVO4_OUT"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "RAW_PROTECTED",
+    "nearest_after": "RAW_PROTECTED"
+   }
+  },
+  {
+   "pad": "J3.1",
+   "net": "GND",
+   "In1.Cu": {
+    "before_mm": 1.375,
+    "after_mm": 1.375,
+    "nearest_before": "VBUS",
+    "nearest_after": "VBUS"
+   },
+   "In2.Cu": {
+    "before_mm": 0.451,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J3.2",
+   "net": "GND",
+   "In1.Cu": {
+    "before_mm": 5.203,
+    "after_mm": 5.203,
+    "nearest_before": "VBUS",
+    "nearest_after": "VBUS"
+   },
+   "In2.Cu": {
+    "before_mm": 0.451,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J3.3",
+   "net": "GND",
+   "In1.Cu": {
+    "before_mm": 5.154,
+    "after_mm": 5.154,
+    "nearest_before": "VBUS",
+    "nearest_after": "VBUS"
+   },
+   "In2.Cu": {
+    "before_mm": 0.451,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J3.4",
+   "net": "GND",
+   "In1.Cu": {
+    "before_mm": 1.345,
+    "after_mm": 1.345,
+    "nearest_before": "VBUS",
+    "nearest_after": "VBUS"
+   },
+   "In2.Cu": {
+    "before_mm": 0.451,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J400.1",
+   "net": "BAT_SW_SOURCE",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   }
+  },
+  {
+   "pad": "J400.2",
+   "net": "BAT_SW_RETURN",
+   "In1.Cu": {
+    "before_mm": 0.251,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 1.05,
+    "after_mm": 1.05,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   }
+  },
+  {
+   "pad": "J410.1",
+   "net": "PORT_4V8",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 1.751,
+    "after_mm": 1.751,
+    "nearest_before": "PORT_5V3",
+    "nearest_after": "PORT_5V3"
+   }
+  },
+  {
+   "pad": "J410.2",
+   "net": "GND",
+   "In1.Cu": {
+    "before_mm": 1.901,
+    "after_mm": 1.901,
+    "nearest_before": "J410.1:PORT_4V8",
+    "nearest_after": "J410.1:PORT_4V8"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "PORT_4V8",
+    "nearest_after": "PORT_4V8"
+   }
+  },
+  {
+   "pad": "J410.3",
+   "net": "GPS_TX_WIRE",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "PORT_4V8",
+    "nearest_after": "PORT_4V8"
+   }
+  },
+  {
+   "pad": "J410.4",
+   "net": "GPS_RX_WIRE",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "PORT_4V8",
+    "nearest_after": "PORT_4V8"
+   }
+  },
+  {
+   "pad": "J420.1",
+   "net": "PORT_4V8",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.9,
+    "after_mm": 0.9,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J420.2",
+   "net": "GND",
+   "In1.Cu": {
+    "before_mm": 1.901,
+    "after_mm": 1.901,
+    "nearest_before": "J420.1:PORT_4V8",
+    "nearest_after": "J420.1:PORT_4V8"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "PORT_4V8",
+    "nearest_after": "PORT_4V8"
+   }
+  },
+  {
+   "pad": "J420.3",
+   "net": "RADIO_TX_WIRE",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "PORT_4V8",
+    "nearest_after": "PORT_4V8"
+   }
+  },
+  {
+   "pad": "J420.4",
+   "net": "RADIO_RX_WIRE",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "PORT_4V8",
+    "nearest_after": "PORT_4V8"
+   }
+  },
+  {
+   "pad": "J440.1",
+   "net": "PORT_4V8",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J440.2",
+   "net": "GND",
+   "In1.Cu": {
+    "before_mm": 1.901,
+    "after_mm": 1.901,
+    "nearest_before": "J440.1:PORT_4V8",
+    "nearest_after": "J440.1:PORT_4V8"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J440.3",
+   "net": "AUX_TX_WIRE",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J440.4",
+   "net": "AUX_RX_WIRE",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J9.1",
+   "net": "CAM_5V",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J9.2",
+   "net": "GND",
+   "In1.Cu": {
+    "before_mm": 1.513,
+    "after_mm": 1.513,
+    "nearest_before": "CAM_IO_3V3",
+    "nearest_after": "CAM_IO_3V3"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J9.3",
+   "net": "CAM_RX_WIRE",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  },
+  {
+   "pad": "J9.4",
+   "net": "CAM_TX_WIRE",
+   "In1.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "GND",
+    "nearest_after": "GND"
+   },
+   "In2.Cu": {
+    "before_mm": 0.55,
+    "after_mm": 0.55,
+    "nearest_before": "3V3",
+    "nearest_after": "3V3"
+   }
+  }
+ ],
+ "files_changed": {
+  "generators": [
+   "m3_design/r10_sch.py",
+   "m3_design/r10_place.tsv",
+   "m3_design/r10_route_power.py",
+   "m3_design/r10_fanout.tsv",
+   "m3_design/r10_post.py"
+  ],
+  "checks": [
+   "tools/check_r10.py",
+   "tools/route_check.py",
+   "tools/critical_reference.py"
+  ],
+  "tests": [
+   "tools/test_r10_check.py",
+   "tools/test_route_check.py"
+  ],
+  "records": [
+   "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md (D-R21-01..09)",
+   "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md (round 21 section, reading guide)",
+   "m3_design/assembly_review/sources/r10_review/round21_fix_cad.md / .json"
+  ],
+  "regenerated": "everything m3_design/r10_build.sh writes: board, DRU, project, sheets, netlist, fab package, binding note, hot-plug inputs / results",
+  "library": "kilib/rocket.pretty unchanged"
+ },
+ "tests": {
+  "added_test_r10_check": [
+   "RealBoardSeeds.test_r21_jlc_hole_table_pinned_in_k_rules",
+   "RealBoardSeeds.test_r21_pth_holes_clear_inner_copper",
+   "RealBoardSeeds.test_r21_regulator_taps_survive_one_via_open",
+   "RealBoardSeeds.test_r21_en_pull_down_and_filter_at_u9",
+   "RealBoardSeeds.test_r21_tab_keepout_and_bands_held",
+   "RealBoardSeeds.test_r21_port_clamps_beside_their_pins",
+   "RealBoardSeeds.test_r21_fab_references_present_readable_and_apart",
+   "SchematicContract.test_r21_sheet_notes"
+  ],
+  "added_test_route_check": [
+   "R10AuditScope.test_r21_arming_chain_is_critical_slow_and_its_old_jog_fails"
+  ],
+  "changed_existing": [],
+  "seeds": {
+   "0.25 mm inner PTH": "DRU inner rule at 0.25 mm (K-rules, DRU re-pinned) and the round 20 DRU refilled (J1.2 / J400.2 at 0.25 mm, pth_inner_copper)",
+   "looser DRU": "inner dropped / narrowed, outer 0.25, hole-to-hole 0.4, later inner override 0.25, general 0.15",
+   "d07": "K-plane: 12.498 mm^2 3V3 under the west aft band, keep-out missing",
+   "d08": "K-ports: J440.3 6.975 mm",
+   "d06a": "Q120 carries 0 Fab references",
+   "d06b": "Fab text ['R143'] on R134",
+   "d06d": "R120 crosses Q120's Fab outline",
+   "d06e": "R119 0.100 mm high",
+   "U2.1": "run removed: via (23.20, 68.60) single point",
+   "stale entries": "U2.1 entry; round 20 R81 / C87 vias",
+   "jog": "round 20 BAT_ENABLE hop fails tiny_jog"
+  },
+  "counts": {
+   "shell": 10,
+   "procurement": "OK",
+   "fab_validation": 34,
+   "fit": 33,
+   "paste": 16,
+   "r10_parts": 5,
+   "route": 69,
+   "r10": 247,
+   "r10_numpy_skips": 6,
+   "numpy_hotplug_plate": 6
+  }
+ },
+ "render_check": {
+  "files": [
+   ".supervisor/r10_renders/r10_top.png",
+   ".supervisor/r10_renders/r10_bottom.png"
+  ],
+  "extra": "zoom-4 top of the U9 corner, zoom-5 bottom of U2 / L1 (kicad-cli 10.0.7)",
+  "seen": "R81 / C87 on the EN run west of C84 with readable designators; C80 / C89 / D8 / C126 / D123 / Q122 / R122 designators beside their parts; old R81 / C87 spots empty; no silkscreen over pads, vias or the edge; B.Cu runs under the mask too faint to judge (held by DRC / route_check / single-via check)"
+ },
+ "residuals": [
+  "R81.1 / C87.1 cross one via, (17.10, 82.80), to U9.1 on B.Cu (exact exceptions; respin: U9 west cell, D-R20-01)",
+  "U401.3 (TPS7A91 FB) on one via (29.75, 13.60) (respin: R402 / R403 beside U401 on B.Cu)",
+  "R87.1 on two single vias (USB over-voltage cut-off, bench power only)",
+  "TPS2553 ILIM legs R85.1 / R85.2 / R430.2 on single vias (fail-safe low limit; open-pin case an Inference)",
+  "east panel tabs over In2 RAW_PROTECTED / PORT_5V3 (owner tab plan, D-R20-08), held at their figures by K-plane",
+  "route_check counted, not gated: U2.1's new run starts 0.35 mm off the pad centre (pad_end_offcentre); R89's via (23.0, 70.0) is a two-layer 3V3 via 2.182 mm from the nearest GND via (power_via_no_gnd); BAT_ENABLE short_layer_hop 2.973 mm; 6 unrecorded noncritical leftovers",
+  "the 0.55 mm refill narrows four plane strips at J1 / J400 / J3 (item 1 plane_strips_mm); no fill splits"
+ ],
+ "not_done": [
+  "item 2: no second path for R87.1 (no clean local one: boxed by RAW_ACT / PYRO1_CONT_MID on B.Cu; a second In2 via would be a parallel-via loop and leave U10's end single); two exact exceptions instead"
+ ],
+ "decisions": [
+  "D-R21-01",
+  "D-R21-02",
+  "D-R21-03",
+  "D-R21-04",
+  "D-R21-05",
+  "D-R21-06",
+  "D-R21-07",
+  "D-R21-08",
+  "D-R21-09"
+ ],
+ "for_docs_lane": [
+  "board 5516eeec...: 983 segments, 300 vias (167 GND), 1871.611826 mm track; 93 designators hidden",
+  "R21-MFG-02: ORDERING 8.1 VIPPO via count: 300 = 295 at 0.5 / 0.3, 4 at 0.6 / 0.3, 1 at 1.0 / 0.5 mm (round 20: 302 = 297 / 4 / 1)",
+  "R21-SAF-01: the handoff's 'not fixable on this board' -> R81 / C87 at U9's end, one via left (D-R21-05)",
+  "J1.2 / J400.2 0.550 mm from inner copper again (JLC 0.3 mm); J3 shell holes 0.550 (was 0.451); correct records that call J1.2's 0.25 mm a via clearance",
+  "new gate content: K-rules JLC hole table and PTH geometry, K-power 26 taps / 8 exceptions, K-plane tab bands, K-ports, K-legends Fab references"
+ ],
+ "git_state_changed": false,
+ "native_cad_hand_edited": false,
+ "follow_up_circuit_check": {
+  "verdict": "PASS, six Minors; five fixed by this lane (none a copper change), the sixth (AGENTS section 3, AUD-2 partner-via exemption for the J400 chain) to the docs lane",
+  "fixes": [
+   "U2.1 run width 0.4 mm (W) in D-R21-02, AVA_LAYOUT, hand-back",
+   "battery_entry note names C88 and Q120 (fire path bypasses U9, R134 2 Ohm limits it)",
+   "R89's via (23.0, 70.0) INFO power_via_no_gnd 2.182 mm recorded",
+   "plane strips narrowed by the 0.55 mm refill measured and recorded (D-R21-01, item 1)",
+   "wording: J3.1-J3.4 were 0.451 mm; r10_sch.py comment: J3 NPTH holes 0.535 mm from the shell rings, 0.835 mm hole wall to slot wall"
+  ],
+  "build": {
+   "exit": 0,
+   "seconds": 1321,
+   "board_sha256": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+   "check_sh_exit": 0,
+   "r10_tests": 247,
+   "fab": "re-bound (battery_entry sheet changed)"
+  },
+  "files_changed": [
+   "m3_design/r10_sch.py",
+   "tools/test_r10_check.py",
+   "m3_design/assembly_review/battery_entry.kicad_sch (generated)",
+   "m3_design/assembly_review/fab/* (re-bound; date-stamped outputs and manifest)",
+   "R10_DECISIONS.md",
+   "AVA_LAYOUT.md",
+   "round21_fix_cad.md / .json"
+  ],
+  "note": "cost_check.json / stock_check.json refreshed at 2026-10-31T23:23Z by another lane, not by this build; left as found"
+ }
+}

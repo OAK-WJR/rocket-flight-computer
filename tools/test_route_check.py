@@ -940,6 +940,34 @@ class R10AuditScope(unittest.TestCase):
         rc.set_profile('r9')
         self.assertTrue(rc.return_required('ACT_GATE'))
 
+    def test_r21_arming_chain_is_critical_slow_and_its_old_jog_fails(self):
+        """D-R21-04 (R21-REQ-04): J400's arming chain (BAT_SW_SOURCE, BAT_SW_RETURN, BAT_ENABLE) is a pyro / arming net
+        with critical hygiene, on AUD-2's slow list (no GND partner via at its layer changes). Round 20's BAT_ENABLE
+        B.Cu hop, (19.675, 66.6) -> (21, 67.925) -> (21, 68.6) -> (21.3, 68.9), ends in a 0.424 mm jog 0.3 mm off the
+        F.Cu run below: gated. The round 21 hop, its last bend at (20.7, 68.3), passes."""
+        for net in ('BAT_SW_SOURCE', 'BAT_SW_RETURN', 'BAT_ENABLE'):
+            self.assertEqual(rc.net_class(net), 'pyro')
+            self.assertIn(rc.net_class(net), rc.SIGNAL_CRITICAL)
+            self.assertFalse(rc.return_required(net), net)
+        self.assertNotEqual(rc.net_class('BAT_IN'), 'pyro')
+
+        def hop(bends):
+            self.setUp()
+            h = self.helper
+            self.board.Add(pcbnew.NETINFO_ITEM(self.board, 'BAT_ENABLE'))
+            h.pad('A1', 16.3, 66.0, 'BAT_ENABLE'); h.pad('A2', 21.3, 75.2, 'BAT_ENABLE')
+            h.chain([(16.3, 66.0), (19.075, 66.0), (19.675, 66.6)], 'BAT_ENABLE')
+            h.via(19.675, 66.6, 'BAT_ENABLE', d=0.5)
+            h.chain([(19.675, 66.6)] + bends + [(21.3, 68.9)], 'BAT_ENABLE', layer=pcbnew.B_Cu)
+            h.via(21.3, 68.9, 'BAT_ENABLE', d=0.5)
+            h.track((21.3, 68.9), (21.3, 75.2), 'BAT_ENABLE')
+            failures, _, _ = rc.evaluate(rc.scan(self.board), allowlist=[])
+            return {d['cat'] for d in failures if d['net'] == 'BAT_ENABLE'}
+        old, new = hop([(21.0, 67.925), (21.0, 68.6)]), hop([(20.7, 67.625), (20.7, 68.3)])
+        self.assertIn('tiny_jog', old)                       # (the bare test board has no obstacle: extra_vias too)
+        self.assertNotIn('tiny_jog', new)
+        self.assertFalse({'critical_via_no_gnd', 'local_bump'} & (old | new), (old, new))
+
     def test_noncritical_metadata_is_informational_but_critical_faults_still_block(self):
         from contextlib import redirect_stdout
         import io

@@ -1,0 +1,183 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round21_mcu",
+ "reviewer": "claude",
+ "target_commit": "accfff4947266a23cf60a63f3d92be047f5391b5",
+ "board_sha256_before": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+ "board_sha256_after": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "findings": [
+  {
+   "id": "R21-MCU-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "R10_VALIDATION cites the port TX <= 3.6 V rule as 'binding note obligation 15'; counted from 1, entry 15 is the TPS2553 FAULT obligation",
+   "evidence": {
+    "file": "docs/R10_VALIDATION.md",
+    "reference": "line 1996, '**Rule (R20-MCU-02, binding note obligation 15):**'",
+    "measured_value": "r10_binding_note.json firmware_obligations has 36 entries. Counted from 1, entry 15 is 'Camera TPS2553 FAULT deglitch ...' and entry 16 holds the 3.6 V TX rule. The rule is index 15 only when counted from 0, and the note gives no numbers. No other document cites an obligation by number.",
+    "coordinates_mm": "n/a (text)",
+    "layer": "n/a"
+   },
+   "impact": "A reader who counts from 1 lands on the wrong obligation. The rule itself is stated correctly in the binding note, ORDERING 8, parts_qualification and M3_R10. This is an evidence-pointer defect only.",
+   "concrete_fix": "Replace 'binding note obligation 15' with 'binding note firmware_obligations entry starting \"On VLOGIC undervoltage/shutdown\" (R20-MCU-02)', or give the obligations stable IDs."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R20-03",
+   "claim": "U1 pad 74 has ZONE_CONNECTION_NONE; it keeps its own F.Cu stub and via (17.5,39.3); the via-less 0.282 mm^2 F.Cu GND piece is gone",
+   "measurement": "Board 0dc84776: U1.74 GND, local zone connection 0 (NONE); F.Cu segment (17.5,35.45)-(17.5,39.3) w 0.2 mm to a GND via (17.5,39.3) d 0.3 / 0.5 mm, which sits inside the filled R10_GND_F, R10_GND_B and R10_GND_In1. On board 50a39de5 the same stub and via existed, plus an F.Cu GND island of 0.2822 mm^2, bbox (17.10,34.20)-(17.90,34.76), with no via, touching only pad 74. That island is gone on 0dc84776. Pin 75 decoupling C17 B(17,37.48) still returns to the same via (17.5,39.3). The only U1 pad difference between the two boards is pad 74's zone connection: nets, positions and the other 99 pads are identical.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R20-02 (MCU side)",
+   "claim": "New PORT_4V8 FB-tap via (30.575,11.6) 0.25 mm from GPS_RX_MCU; GPS_RX_MCU run unchanged",
+   "measurement": "In the track diff between 50a39de5 and 0dc84776, the only changed nets are AUX_RX_WIRE, AUX_TX_WIRE, GND, USB_LIMITED and PORT_4V8 (+2 items). GPS_RX_MCU and every other U1 net have byte-identical tracks. DRC 0 / 0 / 0.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R20-09 (MCU side)",
+   "claim": "D440/D441 move to B.Cu under J440 on AUX_TX_WIRE / AUX_RX_WIRE; MCU side unchanged",
+   "measurement": "D440.1 AUX_TX_WIRE B(4.45,19.125), D440.2 GND; D441.1 AUX_RX_WIRE B(4.45,22.725), D441.2 GND. AUX_TX_MCU (U1.63, R471.1) and AUX_RX_MCU (U1.64, R470.2) are unchanged in pads and tracks. All 666 pad nets are identical to 50a39de5.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-14 (MCU)",
+   "claim": "GPS USART3 PD8/PD9 AF7, radio UART5 PB13/PB12 AF14, AUX USART6 PC6/PC7 AF7",
+   "measurement": "DS12110 Rev 8: PD8 AF7 USART3_TX and PD9 AF7 USART3_RX (Table 13, continued page p94); PC6 AF7 USART6_TX and PC7 AF7 USART6_RX (Table 12 p92); PB12 AF14 UART5_RX and PB13 AF14 UART5_TX (Table 11 p91). In Table 9, PD8 / PD9 / PC6 / PC7 are FT_h and PB12 / PB13 are FT_u. On the board, U1.55 GPS_TX_MCU-R441-GPS_TX_WIRE-J410.3, U1.56 GPS_RX_MCU-R440-J410.4, U1.52-R451-J420.3, U1.51-R450-J420.4, U1.63-R471-J440.3 and U1.64-R470-J440.4: TX goes to pin 3 and RX to pin 4 on all three ports.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "R19-MCU-01",
+   "claim": "Port TX enabled only while PA4 (U11 ST) reads low",
+   "measurement": "U11.9 ST is pulled up by R91 10 kOhm to 3V3 (inside TI's 6-20 kOhm RST band, SLVSEA3F p6) and goes to U1.28 PA4. IN2 = U11.2 RAW_PROTECTED and IN1 = U11.7 USB_LIMITED. SLVSEA3F Table 9-3 p18: 'ST is pulled high when the output is Hi-Z or IN1. It is pulled low when IN2 is powering the output.' The rule appears in the pin_table rows for PD8, PB13 and PC6 and in binding obligations 16 and 21.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "R20-MCU-01 / R19-MCU-04 (VREFBUF)",
+   "claim": "Never write VREFBUF_CSR; never clear HIZ",
+   "measurement": "Binding obligation 36 and M3_R10 'Firmware' now forbid any write to VREFBUF_CSR. U1.20 VREF+ and U1.21 VDDA are both on 3V3A (with U4.5, U4.8 and U5, through R164). R164 is 2.2 Ohm: LCSC C22939 = UNI-ROYAL 0603WAF220KT5E, 2.2 Ohm 1 %. RM0433 could not be downloaded (timeout), so the mode table is still an Inference, as the record already states.",
+   "verdict": "confirmed (record)"
+  },
+  {
+   "d_id": "R20-MCU-02 / -03 / -04",
+   "claim": "TX <= 3.6 V rule, unmapped-port analog rule, parts_qualification pin map",
+   "measurement": "Binding obligation 16 holds the 3.6 V rule and obligation 3 the unmapped-port rule. ORDERING line 595, M3_R10 line 796, R10_VEHICLE_HANDOFF line 43 and parts_qualification lines 82-89 / 730 carry the current pin map (R441 / R440 to PD8 / PD9, R471 / R470 to PC6 / PC7, D440 / D441). One cross-reference defect remains: R21-MCU-01.",
+   "verdict": "confirmed (one pointer defect)"
+  },
+  {
+   "d_id": "D-R19-04",
+   "claim": "Q122 gate: R122 1k series, R123 2k pull-down, C123 10 nF gate to GND",
+   "measurement": "ACT_EN_MCU = U1.16 PC1 and R122.1; ACT_EN = R122.2, Q122.1, R123.1 and C123.1. Values are R122 1k C11702, R123 2k C4109 and C123 10 nF C15195. Thevenin is 2.2 V through 667 Ohm, tau about 6.7 us before Ciss. PC1 is FT_ha with RTC_TAMP3/WKUP5 (DS12110 Rev 8 Table 9 p66), matching obligation 7.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "PE4 fire network (AGENTS 2.4)",
+   "claim": "R126 220R series, R127 1k pin pull-down, R128 10k + C126 220 nF gate-source",
+   "measurement": "PYRO1_GATE_N = U1.3, R126.1 and R127.1 (R127.2 GND); PYRO1_GATE = R126.2, R128.1, C126.1, Q124.4 and TP122. Values are as recorded.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-11 (IMU_INT1)",
+   "claim": "U4 ISM6HG256X INT1 to PE1 EXTI1; push-pull active high; output forced to ground by default",
+   "measurement": "IMU_INT1 = U1.98 PE1 and U4.4 only. ISM6HG256X datasheet pin table: pin 4 INT1, 'Default: output forced to ground'; PP_OD default 0. U4 is at B(17,45.9), rotation 180; x lever arm 17 - 23 = -6.0 mm, which matches the binding note.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-05",
+   "claim": "U1.19 VSSA no zone connection, own stub and via",
+   "measurement": "U1.19 GND, zone connection 0; 0.3 mm stub to via (26.0,46.75), which sits inside the F, B, In1 and In2_Y1 GND fills.",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R21-MCU-01",
+   "change": "docs/R10_VALIDATION.md line 1996: replace 'binding note obligation 15' with a content reference (the 'On VLOGIC undervoltage/shutdown' obligation, R20-MCU-02). Text only."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "U1.74 lost its ground connection with the pour",
+   "reason": "It keeps its stub and via, which are in three GND fills. The removed island had no via, and DRC reports 0 unconnected."
+  },
+  {
+   "candidate": "R164 MPN 0603WAF220KT5E might be 22 Ohm, not 2.2 Ohm",
+   "reason": "LCSC C22939 page: UNI-ROYAL 0603WAF220KT5E, 2.2 Ohm +/-1 %, 0603. Value, LCSC and MPN agree."
+  },
+  {
+   "candidate": "pin_table RX/TX rows do not repeat the 3.6 V and unmapped-port rules",
+   "reason": "Both rules are in binding obligations 3 and 16 and in M3_R10 'Firmware'. The pin_table rows give the port map and the PA4 rule. Not a defect."
+  },
+  {
+   "candidate": "R10_VALIDATION line 1575 still says 3.6-4.0 V",
+   "reason": "It is in the historical 'Confirmed by round 18' block. The current rule (3.6 V) is stated at line 1996 and in the binding note."
+  },
+  {
+   "candidate": "USB VBUS sensing on PC8 instead of PA9",
+   "reason": "The usb_sense sheet note says 'Do NOT enable native PA9 VBUS sensing (VBDEN)', and binding obligation 29 covers the PC8 threshold."
+  },
+  {
+   "candidate": "Back-feed from always-on ports",
+   "reason": "No change since round 20. port_states.port_device_backfeed and the e-match / USB / self-powered-module restriction stand; it is procedural, as recorded. PA4 ST low implies IN2 = RAW_PROTECTED is valid, which feeds U400 and then U401, so the TX enable rule is consistent. If U400 or U401 is in fault, the module is unpowered anyway."
+  },
+  {
+   "candidate": "PC1 is also ADC123_INN10 (negative input paired with PC0)",
+   "reason": "Only differential mode on channel 10 would involve PC1. Obligation 22 reads PC0 single-ended. Not a hazard."
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3.kicad_pcb before and after: 0dc84776... (unchanged)",
+  "pcbnew: all 100 U1 pads (net, position, local zone connection) on 0dc84776 and on 50a39de5 (git show 2ca63a1). Only difference: pad 74 zone connection INHERITED -> NONE",
+  "pcbnew: all 666 pad nets on both boards: 0 net differences; positions differ only for D440, D441 and TP82",
+  "pcbnew: track and via diff on both boards, by net: no U1 net changed",
+  "pcbnew: U1.74 / U1.19 / U1.99 stub, via and zone-fill containment; old 0.282 mm^2 island located (no via, touches only pad 74) and shown gone",
+  "pcbnew: no copper (track, via or F.Cu fill) on any of the 32 no-net U1 pads",
+  "kicad-cli 10.0.7 sch export netlist: 666 / 666 pin nets match the board and the committed schematic.net.xml",
+  "kicad-cli 10.0.7 pcb drc --schematic-parity --severity-all on a project copy: 0 violations / 0 unconnected / 0 parity",
+  "pin_table.tsv r10_net vs board: 100 / 100. Binding note u1_pins vs board: 100 / 100. Binding note board_sha256, netlist_sha256, pin_table_sha256 and circuit_sha256 match the files",
+  "DS12110 Rev 8 (cached PDF, revision history confirms Rev 8): Table 9 LQFP100 pin names parsed for 97 pins plus the Figure LQFP100 pinout for 17-20; all match pin_table. AF tables checked for PD8 / PD9, PC6 / PC7, PB12 / PB13 with page numbers; PC1 FT_ha RTC_TAMP3/WKUP5; Table 119 FT limit p212",
+  "TPS2121 SLVSEA3F (cached): pin map IN1 7 / IN2 2 / ST 9; Table 9-3 ST semantics; RST 6-20 kOhm",
+  "ISM6HG256X datasheet (cached): INT1 pin 4 default output forced to ground; PP_OD default 0",
+  "Component values and LCSC for U1, U4, R122, R123, C123, Q122, R126, R127, R128, C126, Q124, R91, R5, C19, C20, R164, port resistors and clamps; LCSC page fetched for C22939",
+  "Binding note firmware_obligations read in full (36 entries); cross-reference search in docs"
+ ],
+ "sources": [
+  {
+   "what": "STM32H743 DS12110 Rev 8",
+   "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+   "pages": "Table 9 pp. 64-79; Table 11 p91; Table 12 p92; Table 13 p94; Table 119 p212; Figure 95 p286"
+  },
+  {
+   "what": "TI TPS2121 SLVSEA3F",
+   "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+   "pages": "pin functions p4; RST p6; Table 9-3 p18"
+  },
+  {
+   "what": "ST ISM6HG256X DS15034",
+   "url": "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf",
+   "pages": "pin table (INT1 default output forced to ground); IF_CFG PP_OD"
+  },
+  {
+   "what": "LCSC C22939",
+   "url": "https://www.lcsc.com/product-detail/C22939.html",
+   "pages": "product page: 0603WAF220KT5E 2.2 Ohm 1 %"
+  },
+  {
+   "what": "VREFBUF mode table (secondary)",
+   "url": "https://community.st.com/s/question/0D50X0000Amjui2/use-of-vrefbuf-on-the-stm32h753",
+   "pages": "forum quote of the RM0433 mode table; RM0433 itself not retrieved"
+  }
+ ],
+ "coverage_limits": [
+  "RM0433 download timed out twice and AN5690 timed out. The VREFBUF mode table and HIZ reset value remain an Inference, as the records already state.",
+  "AN2606 loader roles were not re-read; the existing pin_table column was taken as context.",
+  "No firmware exists and no hardware was measured. Port endpoint TX levels, the PORT_4V8-to-3V3 lag and IMU axis signs remain bench items.",
+  "Signal integrity of the MCU-side routes (unchanged since round 20) was not re-analysed beyond the diff."
+ ]
+}

@@ -1,14 +1,16 @@
 # R10 AVA layout hand-off
 
-**How to read this file (R19-DOC-08).** For the current board `0dc84776…` read only "Round 20 CAD polish pass" at the
-end; it lists the changes from its predecessor `50a39de5…` ("Round19 CAD fix pass"). The current placement itself is
+**How to read this file (R19-DOC-08).** For the current board `5516eeec…` read only "Round 21 CAD fix pass" at the
+end; it lists the changes from its predecessor `0dc84776…` ("Round 20 CAD polish pass"). The current placement itself is
 `m3_design/r10_place.tsv` and the board; everything above the round 18 section is history of earlier boards.
 Sealed historical sections keep their original text, including run-together words and numbers (R19-DOC-04); only the
 current-status paragraphs were respaced in round 19.
 
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
-**Round 20 CAD polish pass (2026-10-31):** the current CAD candidate is the rebuilt PCB recorded in
-"Round 20 CAD polish pass" at the end (D-R20-01..11); "Round19 CAD fix pass" records its predecessor `50a39de5…`.
+**Round 21 CAD fix pass (2026-10-31):** the current CAD candidate is the rebuilt PCB recorded in
+"Round 21 CAD fix pass" at the end (D-R21-01..09); "Round 20 CAD polish pass" records its predecessor `0dc84776…`.
+**Round 20 CAD polish pass (2026-10-31):** the round 20 PCB is recorded in "Round 20 CAD polish pass"
+(D-R20-01..11); "Round19 CAD fix pass" records its predecessor `50a39de5…`.
 **Round 19 CAD fix pass (2026-10-30):** the round 19 PCB is recorded in "Round19 CAD fix pass"
 (D-R19-01..14); "Round18 CAD fix pass" records its predecessor `a3144b15…`.
 **Round 18 CAD fix pass (2026-10-30):** the round 18 PCB is recorded in "Round18 CAD fix pass" below
@@ -441,3 +443,23 @@ Silkscreen (D-R20-06): C400 re-placed and C94 / R461 hidden by the any-size cour
 moves R402, R463, C444, R470, D440 and D441 and J440's 3:TXO (to B(10.5,17.5)), shows C28, and hides C404, R90 and
 U401 (94 -> 96 hidden, all kept on F.Fab). Every other part pose, land, net and support is unchanged. U1's pin map and
 the IMU axis map (roll = -gyro_Y) are unchanged.
+
+## Round 21 CAD fix pass (new PCB; D-R21-01..09)
+
+The CAD lane's pass on round 21's ten lenses (0 Critical / 0 Major on `0dc84776…`; brief
+`.supervisor/r21_fix_brief.md`). Every change is in the generators and the checks, with two complete `r10_build.sh`
+builds (`../r10_review/round21_fix_cad.md`). PCB `5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1`,
+46 x 90 x 1.6 mm, 2,336,572 bytes; 215 footprints, 983 segments, 300 vias (167 GND), 1871.611826 mm track (round 20
+`0dc84776…`: 215 / 985 / 302 (169) / 1874.854252 mm).
+
+| Change | Placement / copper |
+|---|---|
+| Inner PTH hole clearance (D-R21-01) | DRU rule "JLC inner-layer PTH pad hole to copper" 0.55 mm (+ outer PTH to track 0.28, pad hole to hole 0.45): J1.2 In2 RAW_PROTECTED and J400.2 In1 GND 0.251 -> 0.550 mm, J3.1-4 In2 3V3 0.451 -> 0.550 mm; every other plated pad unchanged; plane strips at J1 / J400 1.40 -> 1.10 mm and at J3 0.479-0.633 -> 0.379-0.566 mm, no fill splits |
+| U2.1 second path (D-R21-02) | B.Cu 3V3 0.4 mm (24.05,68.95) -> (23.0,70.0) into R89's via; no single via cuts U2.1 off |
+| Schematic notes (D-R21-03) | text only (sensors, diagnostics, battery_entry) |
+| BAT_ENABLE hop (D-R21-04) | B.Cu (19.675,66.6) -> (20.7,67.625) -> (20.7,68.3) -> (21.3,68.9) (was (21,67.925) -> (21,68.6), a 0.424 mm jog); F.Cu corner (19.675,66.0) -> diagonal from (19.075,66.0) |
+| EN pull-down and filter (D-R21-05) | R81 F(20.5,65) -> F(18.8482,80.0) 0; C87 F(17,65) -> F(18.7232,81.8768) 0; pads 1 on the F.Cu EN run, pads 2 in U9.8's F.Cu GND; stubs and the GND vias (20.706,65.619), (16.639,63.939) removed |
+
+Silkscreen (D-R21-09): C126, Q122 and R122 shown again, and C80, C87, C89, D123, D8 and R81 re-placed by the designator
+search (96 -> 93 hidden, all kept on Fab); no legend moved. Every other part pose, land, net and support is unchanged.
+U1's pin map and the IMU axis map (roll = -gyro_Y) are unchanged. Items 6-8 (D-R21-06..08) are checks only.

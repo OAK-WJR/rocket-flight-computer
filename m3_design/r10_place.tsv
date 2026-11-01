@@ -60,7 +60,7 @@ C83	10.2	24.9	0	B	D-AVA-01: explicit cell placement; electrical contract unchang
 C84	27.5	78.5	90	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 C85	27.9	65.725	0.0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C86	16.775	25.3	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
-C87	17	65	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+C87	18.7232	81.8768	0	F	D-R21-05: EN filter beside R81 at U9's end, pad 1 on the run's last bend (was F(17,65))
 C88	19.4	83.95	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C89	14	84.7	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 C9	26.4	80.24	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
@@ -170,7 +170,7 @@ R64	11.23	52.28	-90	B	D-AVA-01: explicit cell placement; electrical contract unc
 R7	9	28.9	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R8	9	32.5	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R80	13.25	69.2	180	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
-R81	20.5	65	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
+R81	18.8482	80.0	0	F	D-R21-05: EN pull-down on the F.Cu EN run at U9's end, pad 1 on the run (was F(20.5,65))
 R82	16.325	83.9	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R83	10	81.8	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R84	21.6	81.825	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged

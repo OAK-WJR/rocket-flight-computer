@@ -53,6 +53,9 @@ R10_SD_SIGNAL = re.compile(r'^SD_(SCK|MISO|MOSI|CS|DAT[12])$')
 # reason that board does not give.
 R10_SLOW_RETURN_NETS = frozenset(
     {'VLOGIC_SENSE', 'CAM_5V_SENSE', 'ACT_EN', 'ACT_EN_MCU', 'ACT_DRV', 'ACT_GATE'}
+    # D-R21-04 (R21-REQ-04): the arming chain, a DC level filtered by R165 / R81 / C87 (tau about 50 ms): no fast edge
+    # needs a 1.5 mm return partner or one In2 reference region
+    | {'BAT_ENABLE', 'BAT_SW_SOURCE', 'BAT_SW_RETURN'}
     | {base + suffix for base in ('PYRO1_CONT', 'ARM1_SENSE') for suffix in ('', '_MID')}
     | {f'CAM_{signal}' for signal in ('PWR_EN', 'FAULT_N', 'UART_OE')})
 

@@ -30,7 +30,7 @@ Set `KICAD_PY` to the Python interpreter bundled with KiCad for the CPL check. A
 
 `jlc_stock.py` reports a line as thin when it has less than twice the order in stock; order promptly or reserve it in **Parts Manager**. Stock changes daily. Last result (`m3_design/assembly_review/fab/cost_check.json` and `stock_check.json`, live JLC data 2026-10-26 00:57–01:00Z (stock 00:59Z), 5 boards, run on the R9 board `4f841a0e…` by `FAB_NET=1 m3_design/r9_fab.sh`; `sources/r9_design/step10_evidence/fab.txt`): 92 unique codes, 52 of them Extended (the M3 limit, no margin); parts $81.23 per board, $109.38 per board with Standard PCBA's $1.53 feeder fee per code (cap $126.41; R8 on 2026-10-19: $106.00); $81.23 per board of parts once JLC's minimum purchases are counted; short: none (U4 showed 40 in JLC stock); thin: none. These figures go stale after 24 h: rerun before ordering. Standard's fixed fees for two-sided assembly are $83.96 per order (setup, stencils, fixture), and JLC may add a $14.93 handling fee. Economic cannot be used (section 4).
 
-**Two parts need attention before ordering:**
+**Two parts need attention before ordering (R9 board; for R10 see §8.1, where the stock check on `5516eeec…` fails on U4 and U9):**
 - **U4 (LSM6DSV320XTR, C26633007) has been out of JLC stock** (stock 0, available −33 on 2026-10-16 and 2026-10-17; 40 in stock on 2026-10-24 and 2026-10-26). If the order-day run shows it short or thin, buy 7–10 (attrition spares) from a franchised source (ST eStore listed it in stock at about $8.48 each for 5–9 on 2026-10-15) and consign them into JLC's parts inventory (Parts Manager) before placing the order; select the consigned stock for U4 when JLC matches the BOM. `jlc_stock.py` and therefore `check_procurement.py` have no consignment path: check a consigned quantity in Parts Manager by hand. Do not plan to hand-fit this bottom-side LGA-14.
 - **U30 (MAX-F10S-00B, C30005563): reserve it** (JLC parts pre-order) when ordering. It is not thin now (34 in stock on 2026-10-24 and 2026-10-26; 159 on 2026-10-19), but it had only 18 in stock on 2026-10-16, so reserve it anyway as a precaution. If it runs out, the MAX-M10S-00B (C4153167) fits the same land, with L30 changed to a 27 nH LQG15HS27NJ02D (C12669) for L1-only use; that is a BOM change and needs its own placement-correction run.
 
@@ -223,12 +223,12 @@ inspection and depaneling procedures only where restated here. R10 has one exter
 wired terminals (27 contacts), external GPS/radio, a spare AUX port, a hinged microSD socket, one bus-sense bank and no servo-power copper.
 There are no GH connectors, servo headers, servo tie holes, ARM link, pull-pin, on-board RF modules or SMA jacks.
 
-**Status.** PCB `0dc84776…` (46 × 90 mm), not accepted, nothing ordered. Round 20 (seven Claude board lenses) reviewed the previous PCB `50a39de5…` and found 0 Critical / 0 Major / 32 Minor; its polish pass changed the board, so rounds 21 and 22 will review `0dc84776…`. Review results, checks, cost and stock, retained
+**Status.** PCB `5516eeec…` (46 × 90 mm), not accepted, nothing ordered. Round 21 (ten Claude lenses) reviewed the previous PCB `0dc84776…` and found 0 Critical / 0 Major / 35 Minor; its fix pass changed the board, so rounds 22 and 23 will review `5516eeec…`. Review results, checks, cost and stock, retained
 deviations and what is not verified are in [M3_R10.md, "Current state"](M3_R10.md#current-state); they are not repeated here.
 The cost basis used by this section is in 8.1.
 
 Coordinates are KiCad millimetres, x=0 west, y=0 aft, y=90 forward; Gerber Y is −KiCad y.
-F/B mean top/bottom. Positions below describe the current `0dc84776…` native board and placement source (the polish pass moved only TP82, D440 and D441),
+F/B mean top/bottom. Positions below describe the current `5516eeec…` native board and placement source (the round 20 polish pass moved TP82, D440 and D441; the round 21 fix pass moved only R81 and C87),
 including west/east terminal rows at x=7.4/38.6 mm and the repaired bottom port/servo cells. Recheck every probe,
 coat mask and harness against its hash-bound assembly drawing before work. R10 remains unaccepted and unordered;
 this is not a flight release.
@@ -238,10 +238,10 @@ this is not a flight release.
 | Item | R10 ordering rule |
 |---|---|
 | PCB | 46 × 90 mm, four layers, 1.6 mm, ENIG, green mask, **1 oz outer and inner copper**, stackup **JLC041611-7628**. In1 GND; In2 power/GND regions. No on-board RF or impedance-control requirement. |
-| Rules | Ordinary clearance 0.15 mm; the S-8 foreign inner-copper barrel exclusion remains ≥ 1.0 mm and also covers the load-switch gate and enable barrels and, since round 19, In1 / In2 GND at the PYRO1_OUT barrels (fill-only keep-outs; D-R18-04, D-R19-01). Silkscreen ≥ 1.0 mm text /0.15 mm strokes. Final native DRC, schematic parity, ERC and the complete project gate must pass; old counts/filled areas are not new-layout evidence. |
+| Rules | Ordinary clearance 0.15 mm; the S-8 foreign inner-copper barrel exclusion remains ≥ 1.0 mm and also covers the load-switch gate and enable barrels and, since round 19, In1 / In2 GND at the PYRO1_OUT barrels (fill-only keep-outs; D-R18-04, D-R19-01). **Hole rules (D-R21-01):** inner-layer PTH pad hole to copper 0.55 mm (every plated pad on `5516eeec…` is at least 0.550 mm; J1.2, J400.2 and J3's shell holes were 0.251–0.451 mm before), outer-layer PTH hole to track 0.28 mm, pad hole to hole 0.45 mm; vias keep 0.25 mm. JLC's figures are 0.3 mm for an inner-layer PTH pad hole and 0.2 mm for an inner-layer via hole ([JLC capabilities](https://jlcpcb.com/capabilities/pcb-capabilities), read 2026-10-31); a component hole is not a via. Silkscreen ≥ 1.0 mm text /0.15 mm strokes. Final native DRC, schematic parity, ERC and the complete project gate must pass; old counts/filled areas are not new-layout evidence. |
 | Panel | JLC tab-routed rails, no V-cut. Use the tab plan below; obtain JLC acceptance of the actual rail and tab plan and confirm every span against T-1 and the mouse-bite clearances in §3. Do not enlarge or relocate tabs without checking the final board. |
 | Vias | Ordinary vias plugged only where JLC's 0.35 mm clearance/size rules permit; otherwise tent/mask-cover them without adding openings. Preserve the large BAT_IN via's supplied covering. **Only the two U401.11 vias use VIPPO (resin-filled and copper-capped): see "Via covering and the VIPPO fallback" below.** Preserve the supplied covering set; changed covering requires renewed DFM/paste checks. |
-| Electrical test | Keep JLC's bare-board electrical (open / short) test, and confirm it in the order. It is the first screen for an open via in the U9 EN chain: EN reaches its only pull-down R81 through three vias in series, (19.675,66.6), (21.3,68.9) and (17.1,82.8), and an open one would leave EN floating 0.2 mm from BAT_IN, so the board could come on with J400 open (R20-SAF-01, D-R20-01 not done; Inference). That JLC tests every four-layer bare board by default is also an Inference. The per-flight switch-off check (§8.3) is the second screen. |
+| Electrical test | Keep JLC's bare-board electrical (open / short) test, and confirm it in the order. It is the first screen for an open via in the U9 EN chain: since D-R21-05 EN reaches its only pull-down R81 (and C87) from U9.1 through one via, (17.10,82.80), over 3.890 mm, and an open there would leave EN floating 0.2 mm from BAT_IN, so the board could come on with J400 open (R21-SAF-01; Inference). That JLC tests every four-layer bare board by default is also an Inference. The per-flight switch-off check (§8.3) is the second screen. |
 | Uploads | Final `m3_gerber.zip`, `m3_bom_jlc.csv`, `m3_cpl_jlc.csv`; both assembly PDFs are inspection aids. `m3_bom_owner.csv` (C84, the hand-fitted part) is the owner's record and is not uploaded. `m3_fab_manifest.json` must bind all six outputs to the final CAD/export inputs, and is written only after the three content checks below pass. Cost/stock files are evidence, not uploads. |
 | Acceptance | Needed before any order: owner acceptance of the board-bound deviation list (the owner decision table in [R10_VALIDATION.md](R10_VALIDATION.md#r10-deviations-for-owner-acceptance)), factory process acceptance (panel, VIPPO, manual C84, no-wash, two U5 reflows) and stock and quote resolution. Review and build status: [M3_R10.md, "Current state"](M3_R10.md#current-state). |
 
@@ -259,28 +259,27 @@ python3 tools/check_procurement.py --profile r10
 **The $84.41 per-board target** is R3's cost per board ($54.94 + 48 × $3.07 / 5; [REQUIREMENTS M3](REQUIREMENTS.md#manufacturing-and-cost)).
 It counts parts plus JLC's per-code feeder fees only. The Extended-code count is informational.
 
-**Current supplier snapshot.** All 82 exact codes (81 JLC BOM lines, 45 Extended / 36 Basic, plus C84 on the owner BOM) were queried live from JLC for stock at 2026-10-31T08:22:17Z and for cost at 08:23:13Z; both reports'
-input hashes match the JLC BOM, owner BOM and CPL of `50a39de5…`. Cost and stock were not re-run after the round 20 polish pass: the BOM is unchanged and the parts and quantities are the same, but the CPL changed, so re-run both against the final files before ordering ([cost](../m3_design/assembly_review/fab/cost_check.json) and
+**Current supplier snapshot.** All 82 exact codes (81 JLC BOM lines, 45 Extended / 36 Basic, plus C84 on the owner BOM) were queried live from JLC on the final files of `5516eeec…`: stock at 2026-10-31T23:23:18Z and cost at 23:24:13Z. The cost report binds the JLC BOM `df6c0fc2…`, the owner BOM `c48868b3…` and the current CPL `905e4314…`; the stock report binds the BOM and owner BOM only, by design ([cost](../m3_design/assembly_review/fab/cost_check.json) and
 [stock](../m3_design/assembly_review/fab/stock_check.json)). At 5 boards:
 
 | Basis (JLC Standard, both sides) | Per board |
 |---|---|
-| Parts $60.57 (includes C84, bought by the owner) + feeder share $24.79 (81 charged codes × $1.53 / 5): the target basis | **$85.35** |
-| Same, with JLC minimum purchases | $85.35 (every minimum is 1) |
-| Plus JLC fixed fees, $83.96 per order (setup, stencils, fixture; $16.79 per board) | $102.14 |
-| Plus the handling fee JLC may add, $14.93 per order | $105.13 |
+| Parts $60.58 (includes C84, bought by the owner) + feeder share $24.79 (81 charged codes × $1.53 / 5): the target basis | **$85.37** |
+| Same, with JLC minimum purchases (U9's minimum is now 7) | about $85.91 (parts $61.12) |
+| Plus JLC fixed fees, $83.96 per order (two-sided: setup, stencils, fixture; $16.79 per board) | about $102.16 |
+| Plus the handling fee JLC may add, $14.93 per order | about $105.15 |
 | Not yet quoted: PCB and rails, VIPPO surcharge, manual C84 fit, attrition, shipping, tax | open |
 
-**The cost target is not met: $85.35 against $84.41, $0.94 over.** Items 1–13 of the round 19 fix pass alone gave $84.21 (U4 ISM6HG256XTR at $14.34 against $9.27 for the LSM6DSV320X line); the spare AUX port J440 (D-R19-14) adds $1.14 per board ($0.403 terminal, $0.271 22 µF, 2 × $0.231 ESD, the resistors and 100 nF). `check_procurement --cost-only` fails and was not weakened.
-**Owner decision pending:** accept the AUX port's $0.94 over R3's cost, or change its parts (any saving on its ESD diodes or 22 µF breaks the identical-port intent). The stock check passes: no line is short. Quote and
+**The cost target is not met: $85.37 against $84.41, $0.96 over.** In round 19, items 1–13 of the fix pass alone gave $84.21 (U4 ISM6HG256XTR at $14.34 against $9.27 for the LSM6DSV320X line); the spare AUX port J440 (D-R19-14) adds $1.14 per board ($0.403 terminal, $0.271 22 µF, 2 × $0.231 ESD, the resistors and 100 nF). `check_procurement --cost-only` fails and was not weakened.
+**Owner decision pending:** accept the $0.96 over R3's cost, or change the AUX parts (any saving on its ESD diodes or 22 µF breaks the identical-port intent). The stock check fails on U4 (2 orderable against 5) and U9 (−69 orderable, minimum 7) (`stock_check.json` 2026-10-31T23:23Z; rows below). Quote and
 process acceptance and the owner's cost and deviation acceptance remain pending; nothing is ordered. Refresh the exact-code supplier evidence within 24 h of ordering (`FAB_NET=1 m3_design/r10_fab.sh`).
 
 | Part | Snapshot / required action |
 |---|---|
-| U4 ISM6HG256XTR C51931514 (fitted, D-R19-11) | **9 in stock (`stockCount`) but only 2 orderable (`canPresaleNumber`) for 5 fitted** (JLC exact-code query 2026-10-31T09:54–09:57Z, R20-BOM-01); LCSC has 0, so JLC cannot restock from LCSC. The stock check now reads `canPresaleNumber` as the orderable quantity (an Inference about JLC's field) and fails: 2 against 5 (`stock_check.json` 2026-10-31T10:13Z). Minimum 1, Extended, $14.34. On order day, add U4 to the JLC cart first and confirm the quantity before paying; if it is short, use the LSM6DSV320X consignment path (next row). Same land, pins and axes as the LSM6DSV320X (ST DS15034 Rev 1 Figure 5 p9, Table 2 pp10–11, drawing p187). CPL rotation 180° (bottom side, from the EasyEDA BR footprint): confirm pin 1 in JLC's bottom-side placement preview. |
-| U4 alternate LSM6DSV320XTR C26633007 | 0 at JLC. Consign it **only if** the ISM6HG256XTR stock is gone: same land and board pose, but its CPL rotation comes from its own EasyEDA footprint (0°), so regenerate and re-verify the CPL; firmware must then use the LSM6DSV320X register map (the high-g full-scale codes differ, D-R19-11). Do not plan to hand-fit this bottom LGA. |
+| U4 ISM6HG256XTR C51931514 (fitted, D-R19-11) | **9 in stock (`stockCount`) but only 2 orderable (`canPresaleNumber`) for 5 fitted** (JLC exact-code queries 2026-10-31T09:54–09:57Z, R20-BOM-01, and 23:23Z, unchanged); LCSC has 0, so JLC cannot restock from LCSC. The stock check now reads `canPresaleNumber` as the orderable quantity (an Inference about JLC's field) and fails: 2 against 5 (`stock_check.json` 2026-10-31T10:13Z). Minimum 1, Extended, $14.34. On order day, add U4 to the JLC cart first and confirm the quantity before paying; if it is short, buy ISM6HG256XTR from a franchised distributor and consign it into JLC's parts inventory (same part, so the CPL 180° rotation and the fitted firmware register map stay; R21-BOM-02). The LSM6DSV320X path (next row) is only a second fallback: it was also unavailable at JLC (0 in stock, −18 orderable) and LCSC (0) at 2026-10-31T13:40Z. Same land, pins and axes as the LSM6DSV320X (ST DS15034 Rev 1 Figure 5 p9, Table 2 pp10–11, drawing p187). CPL rotation 180° (bottom side, from the EasyEDA BR footprint): confirm pin 1 in JLC's bottom-side placement preview. |
+| U4 alternate LSM6DSV320XTR C26633007 | 0 at JLC (−18 orderable) and 0 at LCSC (2026-10-31T13:40Z). Second fallback only, after consigned franchised ISM6HG256XTR (row above): same land and board pose, but its CPL rotation comes from its own EasyEDA footprint (0°), so regenerate and re-verify the CPL; firmware must then use the LSM6DSV320X register map (the high-g full-scale codes differ, D-R19-11). Do not plan to hand-fit this bottom LGA. |
 | R430 C2999509, 22.6 kΩ | In stock, minimum 1. FOJAN FRC0603F2262TS (1 %, ±100 ppm/°C, 0603) replaced C185349, which had 17 available against a 3610 minimum (D-R18-09). |
-| U9 C3662793 | 45 available at the previous snapshot, minimum 1 for five fitted. Refresh before ordering. |
+| U9 TPS259470LRPWR C3662793 | **Now short:** 40 in stock, `canPresaleNumber` −69, minimum purchase 7 (2026-10-31T23:23Z; it was 45 / 29 / 1 at 10:13Z). Confirm the quantity in the JLC cart on order day; if it is short, consign franchised TPS259470LRPWR into JLC's parts inventory. |
 | C2757925 (DB125-4) and C535146 (ESD103-B1-02EL) | Four and eight per board with the AUX port; 37,827 and 201 in stock (2026-10-31). |
 | C84 C46550466 | An owner purchase on the owner BOM, hand-fitted after both reflows (section 8.2). |
 | Other codes | No other thin line or model mismatch in this snapshot; refresh all final-BOM/CPL-bound evidence within 24 h of ordering. |
@@ -327,8 +326,8 @@ long-edge tabs also satisfy T-1 (the owner chooses which plan to ask JLC for). W
 mouse-bite hole edge at least 0.50 mm from copper on every layer (section 3), and do not enlarge or relocate tabs without re-running T-1 (`check_r10`, rule T-1, records the four windows). J3's shell overhangs the west edge by 0.45 mm; no rail or tab may touch it.
 
 **Via covering and the VIPPO fallback (R18-MFG-03).** Only the two U401.11 GND vias, at (27.3,13.6) and (27.9,13.6), 0.5 mm pad / 0.3 mm drill, are to be resin-filled, copper-capped and planarized (VIPPO). No fabrication file carries
-this: the saved board marks exactly those two vias as filled and capped, but the Gerber and drill files list them in the ordinary 0.3 mm via group, so the order remark and JLC's written confirmation are the only carrier. Of the 301 vias on `50a39de5…`,
-296 are 0.5 / 0.3 mm, 4 are 0.6 / 0.3 mm and one, the BAT_IN via at (17.5,87.3), is 1.0 mm pad / 0.5 mm drill, which equals JLC's plug maximum of 0.5 mm. Via covering is an order-level option on JLC's page; the reviewer's reading
+this: the saved board marks exactly those two vias as filled and capped, but the Gerber and drill files list them in the ordinary 0.3 mm via group, so the order remark and JLC's written confirmation are the only carrier. Of the 300 vias on `5516eeec…`,
+295 are 0.5 / 0.3 mm, 4 are 0.6 / 0.3 mm and one, the BAT_IN via at (17.5,87.3), is 1.0 mm pad / 0.5 mm drill, which equals JLC's plug maximum of 0.5 mm. Via covering is an order-level option on JLC's page; the reviewer's reading
 (https://jlcpcb.com/capabilities/pcb-capabilities, 2026-10-30; Inference, confirm in writing) is that fill-and-cap is offered for 0.15–0.55 mm vias and is not the 4-layer default. JLC may therefore refuse per-via mixing, apply the option
 to every via (cost), or silently ignore it and leave U401's exposed pad open to solder wicking. **Fallback if JLC cannot do it as requested:** (1) order the whole-board filled-and-capped option and accept the cost, after asking how JLC treats the
 BAT_IN via; (2) a board change that moves the two vias outside the pad, followed by requalification of the U401 thermal Inference (not done; needs the K-rules and a new review); or (3) do not order until one of these is agreed in writing. Ink plugging or
@@ -375,14 +374,14 @@ Evidence: [pad-energy calculation](../m3_design/assembly_review/sources/r10_revi
 
 ### 8.2 Assembly, order remarks and placement preview
 
-**Standard PCBA, both sides, including all eight THT terminals.** The current `0dc84776…` package has
+**Standard PCBA, both sides, including all eight THT terminals.** The current `5516eeec…` package has
 81 JLC BOM codes (45 Extended / 36 Basic) and 205 placed parts; C84, the 206th fitted part, is on the owner BOM `m3_bom_owner.csv` and not in the JLC files. The 205 CPL rows are 72 top + 133 bottom;
 independent pad reconstruction checks cover 191 parts (69 top + 122 bottom), plus 14 placement-only checks.
 Orientation passes, with worst reconstructed-pad residual 0.491 mm. Paste passes at 253 top + 375 bottom flashes,
 with no pasted pad missing a flash; C84's lands have no aperture (D-R19-07). The [manifest](../m3_design/assembly_review/fab/m3_fab_manifest.json)
-binds the six outputs to this PCB and its CAD/export inputs, after the BOM / CPL (S-4), CPL-orientation and paste checks pass. These are the round 20 polish pass's build results; the earlier
+binds the six outputs to this PCB and its CAD/export inputs, after the BOM / CPL (S-4), CPL-orientation and paste checks pass. These are the round 21 fix pass's build results; the earlier
 [manufacturing review](../m3_design/assembly_review/sources/r10_review/round11_manufacturing.md) describes `0c50b9fd…`.
-K-legends passes with zero silk/mask overlaps; 96 hidden designators require the Fab references / assembly drawings (round 20 hid C94, R461, C404, R90 and U401 and showed C28, D440 and D441 again; no designator sits inside another part's courtyard and no Fab reference crosses its own outline, D-R20-06 / -07).
+K-legends passes with zero silk/mask overlaps; 93 hidden designators require the Fab references / assembly drawings (round 21 showed C126, Q122 and R122 again, D-R21-09; round 20 hid C94, R461, C404, R90 and U401 and showed C28, D440 and D441 again; no designator sits inside another part's courtyard and no Fab reference crosses its own outline, D-R20-06 / -07, and K-legends now requires each Fab reference present, readable and apart, D-R21-08).
 Inspect every terminal role legend and pin 1/polarity mark in the factory preview. Since round 19 every top-side pin and word legend lies wholly outside the DB125 fit envelopes (D-R19-08); the pin 2 legends of J121 (2:E1+) and J400 (2:SW), and pins 2–4 of J440, are on the bottom beside their pins.
 
 Type the following current process requirements into the order remarks and obtain acceptance before payment:
@@ -413,14 +412,22 @@ Type the following current process requirements into the order remarks and obtai
   at 0.12 mm, and J430 requires 100% openings. Molex permits 0.10/0.12 mm and discourages 0.08 mm for this socket.
 - Preserve U4's 0.575 × 0.35 mm lands, its individual green-mask webs and its supplied paste. On the current board the webs are 0.150 mm (mask relief 0; paste unchanged at 88.4 % of the land, inside TN1383's 70–90 %). They were exactly 0.100 mm (+0.025 mm relief) on `632a9ad3…`, with no margin to JLC's green-mask minimum
   (R18-MFG-02); use the values in the final Gerbers. Use multilayer LDI, green mask and 1 oz outer copper. Do not merge or enlarge its openings.
-- **Hand/selective solder all eight DB125 bodies, not wave.** Inspect all **27 connected contacts**:
+- **Hand-solder the eight DB125 bodies (no selective or wave; R21-MEC-01)**, unless JLC confirms in writing that its
+  selective-solder nozzle keep-out is under 1.7 mm. Bottom-side parts sit 1.76–2.17 mm (copper edge to edge) from the
+  DB125 holes; keep the iron and any nozzle off them:
+  - J121: U5 and R13 (U5 is the barometer: **mask U5's pressure port**, e.g. with a Kapton dot removed afterwards, while J121 is soldered);
+  - J440: D440, D441, R90 and TP82;
+  - J410: D410 and D411; J420: D420, D421 and C421; J9: D400, D401 and C91;
+  - J122: R150–R153.
+  After THT soldering, inspect the TSLP port clamps (D400 / D401, D410 / D411, D420 / D421, D440 / D441) for shift or
+  bridges as part of first-article inspection. Inspect all **27 connected contacts**:
   J1/J400/J121 pins 1–2; J9/J410/J420/J440 pins 1–4; J122 pins 1–5. No contact is a dead servo-power row.
   All six GND contacts—J1.2/J9.2/J410.2/J420.2/J440.2/J122.5—have explicit local thermal overrides (zone_connect=1; J440.2's, added in round 19, read back as 1 on `50a39de5…`). The spoke count below was read on the earlier board and was not re-read for J440.2.
   Read-only inspection of current fills finds four separated spokes on F.Cu/In1.Cu/B.Cu at each contact;
   no In2 GND pour connects at these pads. The former four solid In1 contacts on `0c50b9fd…` are historical.
-  Thermal relief does not qualify solderability: inspect first-article hole fill and validate the selective/hand process.
+  Thermal relief does not qualify solderability: inspect first-article hole fill and validate the hand-soldering process.
 - Hand-finish all four J3 shell slots for hole fill, keeping the iron off bottom C83 and R8.
-  U4 is the stocked ISM6HG256XTR (C51931514); use consigned LSM6DSV320XTR only if that stock is gone (section 8.1). Choose “confirm parts placement” and inspect both-side body/pin-1/polarity previews; U4's CPL rotation is 180° on the bottom (confirm pin 1).
+  U4 is the ISM6HG256XTR (C51931514), short at JLC (2 orderable for 5): consign franchised ISM6HG256XTR, with the LSM6DSV320XTR only as a second fallback (section 8.1). Choose “confirm parts placement” and inspect both-side body/pin-1/polarity previews; U4's CPL rotation is 180° on the bottom (confirm pin 1).
 
 The [DORABO T0-1 drawing, p1](https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf)
 covers the DB125 family: 3.5 mm pitch, 28–16 AWG clamp, 4–5 mm strip and 0.2 N·m maximum torque.
@@ -495,7 +502,7 @@ Record the final board/firmware hashes. After coating/rework or any firmware cha
 J2 F(5,39.4) must be programmed before fitting the adjacent (4,44.3) support, or with that support removed:
 the TC2030 nose cannot seat with its hardware in place.
 
-**Current probe worksheet** (native contact positions on `0dc84776…`: TP121 is removed (D-R19-03) and TP82 moved twice (D-R19-14, D-R20-04); every other row is unchanged since round 19):
+**Current probe worksheet** (native contact positions on `5516eeec…`: TP121 is removed (D-R19-03) and TP82 moved twice (D-R19-14, D-R20-04); every other row is unchanged since round 19):
 
 | Probe / role | Face and exact contact centre (mm) | Use |
 |---|---|---|
@@ -661,11 +668,13 @@ are not vibration-release criteria. Physical fit, heat, coating process, clamp/h
 | `877d0199…` /reviewed fix `b337fe63…`, AUD/GAP | 225 footprints/215 CPL rows/82 codes, 317/365 paste flashes; $84.43 placed/feeder snapshot. Old GH/header positions, fixed coat rectangle, probe coordinates, support examples and 280.9 Hz model are historical. |
 | `6e73b6eb…`, circuit-only pass | 209 footprints/199 CPL rows/82 codes; radio parked west; $82.59 snapshot. Superseded by AVA placement. |
 | `0c50b9fd…`, frozen AVA review target | 209 footprints/981 segments/294 vias, 199 fitted/82 codes; 245/373 paste flashes. Its package binding and ten-lens review belong to this historical PCB. It was superseded by the R11–R14 fixes and reviewed as `7866d6b8…` in full R15. Full R16 and R17 then reviewed 632a9ad3 (the clean pair is earned) and full R18 reviewed it again; the SD_MOSI alternative, retained at the time for owner acceptance, was adopted in the round 18 fix pass. |
+| `0dc84776…`, board of round 21 (superseded by the round 21 fix pass) | 215 footprints / 205 CPL rows (72 / 133) / 81 JLC codes, 253 / 375 paste flashes; 302 vias (297 / 4 / 1); cost and stock not re-run on it ($85.35 from `50a39de5…`'s files). Reviewed by round 21 (0 Critical / 0 Major / 35 Minor). R81 / C87 at the switch end (three vias on EN). |
+| `50a39de5…`, board of round 20 (superseded by the round 20 polish pass) | 215 footprints / 205 CPL rows (74 / 131) / 81 JLC codes, 257 / 371 paste flashes; $85.35 placed / feeder snapshot (08:23Z), U4 2 orderable against 5 (10:13Z). Reviewed by round 20 (0 / 0 / 32 Minor). The spare AUX port J440 first appeared on it. |
 | `a3144b15…`, board of round 19 (superseded by the round 19 fix pass) | 208 footprints/197 CPL rows/81 JLC codes, 245/371 paste flashes; $79.12 placed/feeder snapshot, U4 LSM6DSV320X short. Reviewed in full by round 19 (0 Critical / 0 Major / 57 Minor). Seven terminals; TP121 at B(4,70); C87 2.2 µF. |
 | `632a9ad3…`, board of rounds 15 to 18 (superseded by the round 18 fix pass) | 209 footprints/199 CPL rows/82 codes, 245/373 paste flashes; $79.52 placed/feeder snapshot, with R430 and U4 short. Reviewed in full by rounds 16 and 17 (the clean pair) and by round 18. Its hash-bound values appear above only where marked. |
 
 Earlier R7–R9 instructions, including RF modules/SMA, GH mates, ARM link/fuses, servo headers/ties, old coating rectangles
 and old thermal/modal/copper/stock counts, do not become current through a designator substitution.
 Historical details remain in M3_R10, R10_VALIDATION and R10_DECISIONS. The current software/CAD and fabrication
-results belong to `0dc84776…` (build and check history: M3_R10, "Current state"). Resolve stock/quote requirements before any order. Factory approval, first-article processes, firmware, bench/thermal/e-match, coating, harness/tool/card
+results belong to `5516eeec…` (build and check history: M3_R10, "Current state"). Resolve stock/quote requirements before any order. Factory approval, first-article processes, firmware, bench/thermal/e-match, coating, harness/tool/card
 access and installed mechanical qualification remain open.

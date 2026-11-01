@@ -127,7 +127,7 @@ FIXED_REFS = {}  # D-AVA-01: references are placed against the new local cells.
 # D-R19-12: the round 19 copper (C123 beside Q122, the second power vias) reorders the designator search, which then
 # hid R80 / R81 / R123 / C5 and moved their neighbours; these keep their round 18 spots (side, x, y, angle), the search
 # still placing every other designator (it checks each fixed spot is free and nearest its own part).
-FIXED_REFS.update({'R80': ('F', 13.351, 71.197, 90), 'R81': ('F', 21.558, 66.697, 0), 'R123': ('F', 21.658, 72.357, 0),
+FIXED_REFS.update({'R80': ('F', 13.351, 71.197, 90), 'R123': ('F', 21.658, 72.357, 0),   # D-R21-05: R81 moved
                    'C5': ('B', 21.385, 70.291, 0), 'C407': ('F', 30.911, 16.635, 0), 'R89': ('F', 24.999, 71.328, 0),
                    # J121 / J400 read on the board-edge strip beside their bodies: the search would otherwise put them in
                    # the J121 / J400 and J400 / J1 gaps, on SWITCH's and BAT's lines.

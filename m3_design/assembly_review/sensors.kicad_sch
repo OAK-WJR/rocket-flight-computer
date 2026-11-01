@@ -1822,13 +1822,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 8b3f0ada-8ca9-51de-940b-4d8ce8e1b11e))
-	(text "U4: 4-wire SPI. INT2 open; OCS_aux/SDO_aux (pins 10/11) open, held by their internal pull-ups (DS14623 table 25)."
-		(at 20.32 205.74 0)
-		(effects
-			(font
-				(size 1.27 1.27))
-			(justify left))
-		(uuid 16f75807-9d0d-57b6-8d5f-fad27b2c7ea2))
 	(text "Firmware: keep OIS_PU_DIS = 0 (pins 10/11 rely on the internal pull-ups); WHO_AM_I 0x73."
 		(at 20.32 213.36 0)
 		(effects
@@ -1850,13 +1843,6 @@
 				(size 1.27 1.27))
 			(justify left))
 		(uuid 91e6e846-075b-5fd3-96bf-9d88c6b8acfe))
-	(text "U4 = ST LSM6DSV320X (R4): +/-16 g low-g + +/-32..320 g high-g accel, +/-4000 dps gyro, SPI <= 10 MHz. Pins 10/11 open per DS14623 table 2."
-		(at 20.32 260.35 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 9c18e7d8-18e7-555d-af5a-405a6b16d840))
 	(symbol
 		(lib_id "M3:IMU_SPI")
 		(at 200.66 78.74 0)
@@ -2102,6 +2088,20 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 8c100a66-bb45-5116-a869-a9b9f69a15c1))
+	(text "U4 = ST ISM6HG256X (D-R19-11; the LSM6DSV320X is the consigned alternate on the same land): +/-16 g low-g + +/-32..256 g high-g accel (DS15034 Rev 1 p1; use only high-g FS codes 001 / 010, which both parts share), +/-4000 dps gyro, SPI <= 10 MHz. Pins 10/11 open per DS15034 Table 25 p52."
+		(at 20.32 260.35 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 4854280c-d919-53ce-b72f-04db5d0995b9))
+	(text "U4: 4-wire SPI. INT2 open; OCS_aux/SDO_aux (pins 10/11) open, held by their internal pull-ups (DS15034 Table 25 p52; the alternate the same, DS14623 table 25)."
+		(at 20.32 205.74 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid b4f3d6ab-0fc8-5911-9694-05febaaa0dca))
 	(sheet_instances
 		(path "/"
 			(page "3"))))

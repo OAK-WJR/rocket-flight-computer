@@ -1425,14 +1425,13 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid df9168b9-92cf-4df0-9678-30c01a143634))
-	(text "CAM_5V_SENSE = CAM_5V x 1k/11k -> PB1 (pin 35, ADC12_INP5, TT_u 4.0 V max).\n5.25 V reads 0.477 V; even 19.9 V (TVS clamp, failed regulator) reads 1.81 V.\nLets the USB self-test verify the camera regulator (U8) without a meter."
-		(exclude_from_sim no)
+	(text "CAM_5V_SENSE = CAM_5V x 1k/11k -> PB1 (pin 35, ADC12_INP5, TT_u 4.0 V max).\n5.25 V reads 0.477 V; even 19.9 V (TVS clamp, failed regulator) reads 1.81 V.\nLets a battery-powered self-test check the camera supply (U400 buck, U402 switch) without a meter; on USB-only power PORT_5V3 and CAM_5V are off."
 		(at 96.52 217.17 0)
 		(effects
 			(font
-				(size 1.27 1.27))
-			(justify left bottom))
-		(uuid cc04a8e1-4d84-4c56-b019-d2a9801b2c00))
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 0c81ea9e-2dbb-5e7e-b1ec-9db3c5bcbdad))
 	(sheet_instances
 		(path "/"
 			(page "4"))))

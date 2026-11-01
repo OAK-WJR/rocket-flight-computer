@@ -332,6 +332,37 @@ class SchematicContract(unittest.TestCase):
         self.assertTrue(any('use only 001 (+/-64 g) or 010 (+/-128 g)' in r for r in note['firmware_obligations']))
         self.assertIn('Rev 8', note['sources']['mcu_revision'])
 
+    def test_r21_sheet_notes(self):
+        """D-R21-03 (R21-REQ-01 / -02): the sensors sheet names the fitted ISM6HG256X (DS15034) with the LSM6DSV320X as
+        the consigned alternate; the diagnostics note has no USB self-test of a camera regulator "U8" (the camera rail
+        is off on USB-only power); the battery_entry note states OQ-6's no-fuse decision, what is limited only by the
+        pack (C88 included), U9's limit and R134's on the RAW_ACT path, whose Q120 drain sits on BAT_IN."""
+        import shutil
+        import tempfile
+        sys.path.insert(0, str(gate.ROOT / 'm3_design'))
+        import r10_sch
+        import contextlib
+        import io
+        import warnings
+        d = Path(tempfile.mkdtemp(prefix='r10_sch_'))
+        self.addCleanup(shutil.rmtree, d, ignore_errors=True)
+        with contextlib.redirect_stdout(io.StringIO()), warnings.catch_warnings():   # keep check.sh's summary lines
+            warnings.simplefilter('ignore', ResourceWarning)
+            r10_sch.build(d, netlist=False)
+        sensors, diag, battery = ((d / f'{n}.kicad_sch').read_text() for n in ('sensors', 'diagnostics', 'battery_entry'))
+        self.assertIn('U4 = ST ISM6HG256X (D-R19-11; the LSM6DSV320X is the consigned alternate on the same land)', sensors)
+        self.assertIn('Pins 10/11 open per DS15034 Table 25 p52.', sensors)
+        self.assertNotIn('U4 = ST LSM6DSV320X (R4)', sensors)
+        self.assertNotIn('+/-32..320 g', sensors)
+        self.assertIn('on USB-only power PORT_5V3 and CAM_5V are off', diag)
+        self.assertNotIn('camera regulator (U8)', diag)
+        self.assertNotIn('USB self-test', diag)
+        self.assertIn('No battery-lead fuse (owner decision OQ-6, 2026-10-28)', battery)
+        self.assertIn('C88 (100 nF)', battery)
+        self.assertIn('U9 (TPS259470L) current-limits and latches off RAW_PROTECTED', battery)
+        self.assertIn("Q120's drain is on BAT_IN, so the RAW_ACT fire path bypasses U9; R134 (2 Ohm) limits it", battery)
+        self.assertNotIn('must be fused', battery)
+
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
 class BindingEvidence(unittest.TestCase):
@@ -4243,6 +4274,253 @@ class RealBoardSeeds(unittest.TestCase):
                     "R165 joins port nets ['AUX_TX_WIRE'] to pyro / arming nets ['BAT_ENABLE']")
         self.seeded('S-6', pad_net('R80', '1', 'GPS_TX_WIRE'),
                     "R80 joins port nets ['GPS_TX_WIRE'] to pyro / arming nets ['BAT_SW_SOURCE']")
+
+
+    # ------------------------------------------------------------------------------------------------ round 21 fix pass
+    def test_r21_jlc_hole_table_pinned_in_k_rules(self):
+        """D-R21-01 (R21-PWR-02 / R21-GATE-02): the DRU holds JLC's hole table (via hole to inner copper 0.2, PTH pad
+        hole to inner copper 0.3, PTH hole to outer track 0.28, pad hole to hole 0.45 mm) with the inner PTH rule at
+        0.55 mm; the inner rule at 0.25 mm, dropped or narrowed, the outer rule or the hole-to-hole rule looser, a later
+        rule that can override the inner one and a hole rule under 0.2 mm each fail, and the 0.25 mm inner rule fails
+        K-rules itself even with the DRU re-pinned."""
+        import hashlib
+        folder = real_project()
+        dru = (folder / 'm3.kicad_dru').read_text()
+        issues, ev = gate.jlc_hole_table(dru)
+        self.assertEqual(issues, [])
+        self.assertEqual([(e['rule'], e['min_mm'], e['jlc_min_mm']) for e in ev],
+                         [('General copper to hole clearance', 0.25, 0.2),
+                          ('JLC inner-layer PTH pad hole to copper', 0.55, 0.3),
+                          ('JLC outer-layer PTH hole to track', 0.28, 0.28), ('JLC pad hole to hole', 0.45, 0.45)])
+        a = dru.index('(rule "JLC inner-layer PTH pad hole to copper"')
+        block = dru[a:dru.index('(rule "JLC outer-layer PTH hole to track"')]
+        seeds = {
+            'inner at 0.25 mm': dru.replace(block, block.replace('(min 0.55mm)', '(min 0.25mm)')),
+            'inner dropped': dru.replace(block, ''),
+            'inner narrowed': dru.replace(block, block.replace(" && (B.Type != 'Pad' || B.Pad_Type == 'Through-hole')",
+                                                               '')),
+            'outer at 0.25 mm': dru.replace('(min 0.28mm)', '(min 0.25mm)'),
+            'hole to hole at 0.4 mm': dru.replace('(constraint hole_to_hole (min 0.45mm))',
+                                                  '(constraint hole_to_hole (min 0.4mm))'),
+            'later inner override': dru + '\n(rule "later"\n  (layer inner)\n  (condition "A.Type == \'Pad\'")\n'
+                                          '  (constraint hole_clearance (min 0.25mm)))\n',
+            'general under 0.2 mm': dru.replace('(constraint hole_clearance (min 0.25mm))',
+                                                '(constraint hole_clearance (min 0.15mm))', 1),
+        }
+        for name, text in seeds.items():
+            with self.subTest(seed=name):
+                self.assertNotEqual(text, dru)
+                self.assertTrue(gate.jlc_hole_table(text)[0], name)
+        # an outer-layer rule cannot override the inner one: a later 0.28 mm outer rule is not an inner finding
+        self.assertEqual(gate.jlc_hole_table(dru + '\n(rule "later outer"\n  (layer outer)\n  (condition "A.Type == '
+                                             '\'Pad\'")\n  (constraint hole_clearance (min 0.28mm)))\n')[0], [])
+        path, text = folder / 'm3.kicad_dru', seeds['inner at 0.25 mm']
+        try:
+            path.write_text(text)
+            with patch.object(gate, 'DRU_SHA256', hashlib.sha256(text.encode('utf-8')).hexdigest()):
+                found = self.run_rule('K-rules', self.load(), folder / 'm3.kicad_pcb')
+            self.assertTrue(any('JLC table' in i and "0.25 mm is below JLC's 0.3 mm" in i for i in found), sorted(found))
+        finally:
+            path.write_text(dru)
+
+    def test_r21_pth_holes_clear_inner_copper(self):
+        """D-R21-01 (R21-PWR-02): every plated pad hole wall is >= 0.3 mm (JLC) from foreign In1 / In2 copper on the
+        board, 0.550 mm at J1.2 (In2 RAW_PROTECTED) and J400.2 (In1 GND) (round 20: 0.250); refilled under the round 20
+        DRU (no inner PTH rule, the general 0.25 mm) both come back at 0.25 mm and K-rules names them."""
+        import shutil
+        import tempfile
+        issues, ev = gate.pth_inner_copper(self.load())
+        self.assertEqual(issues, [])
+        self.assertGreaterEqual(min(v[0] for pad in ev.values() for v in pad.values()), 0.549)
+        self.assertAlmostEqual(ev['J1.2']['In2.Cu'][0], 0.55, delta=0.002)
+        self.assertAlmostEqual(ev['J400.2']['In1.Cu'][0], 0.55, delta=0.002)
+        folder = real_project()
+        d = Path(tempfile.mkdtemp(prefix='r10_pth_'))
+        self.addCleanup(shutil.rmtree, d, ignore_errors=True)
+        for name in ('m3.kicad_pcb', 'm3.kicad_pro'):
+            shutil.copyfile(folder / name, d / name)
+        dru = (folder / 'm3.kicad_dru').read_text()
+        cut = dru.index('(rule "JLC inner-layer PTH pad hole to copper"'), dru.index('(rule "JLC outer-layer PTH')
+        (d / 'm3.kicad_dru').write_text(dru[:cut[0]] + dru[cut[1]:])
+        board = pcbnew.LoadBoard(str(d / 'm3.kicad_pcb'))
+        self.assertTrue(pcbnew.ZONE_FILLER(board).Fill(board.Zones()))
+        found = gate.pth_inner_copper(board)[0]
+        for pad, net, layer in (('J1.2', 'RAW_PROTECTED', 'In2.Cu'), ('J400.2', 'GND', 'In1.Cu')):
+            self.assertTrue(any(f'the {pad} ' in i and f'is 0.25' in i and f'{net} fill on {layer}' in i for i in found),
+                            (pad, found))
+        new = self.run_rule('K-rules', board, d / 'm3.kicad_pcb')
+        self.assertTrue(any('J1.2' in i and "JLC's 0.3 mm inner-layer PTH" in i for i in new), sorted(new)[:4])
+
+    def test_r21_regulator_taps_survive_one_via_open(self):
+        """D-R21-02 (R21-PWR-01 / R21-GATE-01): every regulator FB / OVLO / EN / ILIM tap in SINGLE_OPEN_TAPS reaches
+        its source with any one via open, except for the exact SINGLE_OPEN_EXCEPTIONS entries, each still met. U2.1 has
+        a second path (the f01b run into R89's via); without it the via (23.2, 68.6) is a single point K-power names.
+        An entry the board no longer meets is stale, and a tap whose entry is dropped fails."""
+        issues, ev = gate.single_via_opens(self.load())
+        self.assertEqual(issues, [])
+        self.assertEqual(len(gate.SINGLE_OPEN_TAPS), 26)
+        self.assertEqual(set(ev), {t[1] for t in gate.SINGLE_OPEN_TAPS})
+        self.assertEqual({tap: e['single_points'] for tap, e in ev.items() if e['single_points']}, {
+            'U401.3': ['via PORT_LDO_FB (29.75, 13.60)'],
+            'R81.1': ['via BAT_ENABLE (17.10, 82.80)'], 'C87.1': ['via BAT_ENABLE (17.10, 82.80)'],
+            'R87.1': ['via USB_LIMITED (16.00, 28.00)', 'via USB_LIMITED (22.00, 62.25)'],
+            'R85.1': ['via USB_ILIM (14.82, 26.00)'], 'R85.2': ['via GND (9.00, 27.84)'],
+            'R430.2': ['via GND (32.30, 59.50)']})
+
+        def no_run(board):
+            self.drop(board, next(t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == '3V3'
+                                  and {tuple(t.GetStart()), tuple(t.GetEnd())}
+                                  == {tuple(self.P(24.05, 68.95)), tuple(self.P(23.0, 70.0))}))
+        u2 = [t for t in gate.SINGLE_OPEN_TAPS if t[1] == 'U2.1']
+        board = self.load()
+        no_run(board)
+        self.assertEqual(gate.single_via_opens(board, taps=u2)[0],
+                         ["U2.1 (U2's FB / output-sense pin (R21-PWR-01)) hangs on one via: opening via 3V3 (23.20, 68.60) "
+                          'cuts it off from L1.2'])
+        self.assertEqual(gate.single_via_opens(self.load(), taps=u2,
+                                               exceptions=[('U2.1', 'via 3V3 (23.20, 68.60)', 'round 20')])[0],
+                         ['stale SINGLE_OPEN_EXCEPTIONS entry U2.1 / via 3V3 (23.20, 68.60) (round 20)'])
+        for tap, via, why in (('R85.1', 'via USB_ILIM (14.82, 26.00)', "U10's ILIM"),
+                              ('R81.1', 'via BAT_ENABLE (17.10, 82.80)', "U9's EN pull-down (R20-SAF-01)")):
+            with self.subTest(tap=tap):
+                one = [t for t in gate.SINGLE_OPEN_TAPS if t[1] == tap]
+                self.assertEqual(gate.single_via_opens(self.load(), taps=one, exceptions=[])[0],
+                                 [f'{tap} ({why}) hangs on one via: opening {via} cuts it off from {one[0][2][0]}'])
+
+    def test_r21_en_pull_down_and_filter_at_u9(self):
+        """D-R21-05 (R21-SAF-01): R81 and C87 sit on the F.Cu EN run at U9's end, pads 1 on the run (C87.1 on its last
+        bend) and pads 2 in the F.Cu GND of U9.8's via, so the via (17.1, 82.8) is the only one between them and U9.1
+        (3.890 / 2.013 mm of track; round 20: three vias, 20.920 / 24.295 mm); the switch-end stubs and the GND via
+        (20.706, 65.619), 0.196 mm from R134.2 (RAW_ACT), are gone. Round 20's two switch-end vias, as exceptions, are
+        stale."""
+        b = self.load()
+        for ref, xy in (('R81', (18.8482, 80.0)), ('C87', (18.7232, 81.8768))):
+            f = b.FindFootprintByReference(ref)
+            self.assertFalse(f.IsFlipped(), ref)
+            self.assertEqual(f.GetPosition(), self.P(*xy), ref)
+            self.assertEqual([p.GetNetname() for p in sorted(f.Pads(), key=lambda q: q.GetNumber())], ['BAT_ENABLE', 'GND'])
+        self.assertFalse([v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetPosition() == self.P(20.706, 65.619)])
+        self.assertFalse([t for t in b.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'BAT_ENABLE'
+                          and self.P(19.675, 65.0) in (t.GetStart(), t.GetEnd())])
+        taps = [t for t in gate.SINGLE_OPEN_TAPS if t[1] in ('R81.1', 'C87.1')]
+        old = [(tap, via, 'round 20') for tap in ('R81.1', 'C87.1')
+               for via in ('via BAT_ENABLE (19.68, 66.60)', 'via BAT_ENABLE (21.30, 68.90)')]
+        found = gate.single_via_opens(b, taps=taps, exceptions=list(gate.SINGLE_OPEN_EXCEPTIONS) + old)[0]
+        self.assertEqual(len(found), 4)
+        self.assertTrue(all(i.startswith('stale SINGLE_OPEN_EXCEPTIONS entry') for i in found), found)
+
+    def test_r21_tab_keepout_and_bands_held(self):
+        """D-R21-06 (R21-GATE-03): the west aft In2 keep-out is pinned (name, layer, outline, fill-only) and the non-GND
+        inner copper under the four tab bands is the recorded none / none / RAW_PROTECTED 7.497 + PORT_5V3 3.077 /
+        RAW_PROTECTED 12.244 mm^2. The gate lens's d07 (keep-out deleted and refilled: 12.498 mm^2 of In2 3V3 under the
+        tab) fails, as do a moved outline corner and a keep-out that also bars tracks; a figure above the board's is
+        stale."""
+        b = self.load()
+        issues, ev = gate.tab_keepouts(b)
+        self.assertEqual(issues, [])
+        self.assertEqual(ev['bands'], {'west aft': {}, 'west forward': {},
+                                       'east aft': {'In2.Cu PORT_5V3': 3.077, 'In2.Cu RAW_PROTECTED': 7.497},
+                                       'east forward': {'In2.Cu RAW_PROTECTED': 12.244}})
+        keepout = lambda board: next(z for z in board.Zones() if z.GetZoneName() == 'R20_TAB_KEEPOUT_WEST_AFT')  # noqa: E731
+
+        def d07(board):
+            self.drop(board, keepout(board))
+            board.BuildConnectivity()
+            pcbnew.ZONE_FILLER(board).Fill(board.Zones())
+        self.seeded('K-plane', d07, '3V3 on In2.Cu under the west aft tab band (0.0-3.0, 12.5-17.5) is 12.498 mm^2')
+        self.seeded('K-plane', lambda board: keepout(board).Outline().SetVertex(1, self.P(2.0, 12.5)),
+                    'tab keep-out R20_TAB_KEEPOUT_WEST_AFT outline')
+        self.seeded('K-plane', lambda board: keepout(board).SetDoNotAllowTracks(True), 'pinned fill-only')
+        bands = [(n, box, {**rec, ('In2.Cu', 'RAW_PROTECTED'): 13.0} if n == 'east forward' else rec)
+                 for n, box, rec in gate.TAB_BANDS_R10]
+        self.assertEqual(gate.tab_keepouts(b, bands=bands)[0],
+                         ['stale TAB_BANDS_R10 figure: RAW_PROTECTED on In2.Cu under the east forward tab band is '
+                          '12.244 mm^2, recorded 13.000 (re-record it)'])
+
+    def test_r21_port_clamps_beside_their_pins(self):
+        """D-R21-07 (R21-GATE-04): every port clamp is <= 4.5 mm of track from its terminal pin without passing the 1 k
+        resistor (3.975-4.388 mm centre to centre); the gate lens's d08 (D440 back on F.Cu at F(13.9, 17.2), round 19's
+        run) fails, and so does a clamp re-fed from its resistor's far side."""
+        issues, ev = gate.port_clamps(self.load())
+        self.assertEqual(issues, [])
+        self.assertEqual({k: v[1] for k, v in ev.items()},
+                         {'J410.3': 4.288, 'J410.4': 4.388, 'J420.3': 3.975, 'J420.4': 3.975, 'J440.3': 4.075,
+                          'J440.4': 4.175, 'J9.3': 3.975, 'J9.4': 3.975})
+
+        def track(board, net, a, c):
+            return next(t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == net
+                        and {tuple(t.GetStart()), tuple(t.GetEnd())} == {tuple(self.P(*a)), tuple(self.P(*c))})
+
+        def add(board, net, layer, a, c):
+            t = pcbnew.PCB_TRACK(board); t.SetLayer(layer); t.SetWidth(pcbnew.FromMM(0.2))
+            t.SetStart(self.P(*a)); t.SetEnd(self.P(*c)); t.SetNet(board.FindNet(net)); board.Add(t)
+
+        def via(board, net, xy):
+            v = pcbnew.PCB_VIA(board); v.SetPosition(self.P(*xy)); v.SetWidth(pcbnew.FromMM(0.5))
+            v.SetDrill(pcbnew.FromMM(0.3)); v.SetNet(board.FindNet(net)); board.Add(v)
+            return v
+
+        def d08(board):
+            for t in (track(board, 'AUX_TX_WIRE', (7.4, 18.0), (4.45, 18.0)),
+                      track(board, 'AUX_TX_WIRE', (4.45, 18.0), (4.45, 19.125)),
+                      track(board, 'GND', (4.45, 19.775), (3.75, 19.775)),
+                      next(v for v in board.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'GND'
+                           and v.GetPosition() == self.P(3.75, 19.775))):
+                self.drop(board, t)
+            f = board.FindFootprintByReference('D440')
+            f.Flip(f.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT)
+            f.SetPosition(self.P(13.9, 17.2)); f.SetOrientationDegrees(0)
+            add(board, 'AUX_TX_WIRE', pcbnew.F_Cu, (13.575, 18.0), (13.575, 17.2))
+            add(board, 'GND', pcbnew.F_Cu, (14.225, 17.2), (14.225, 16.45)); via(board, 'GND', (14.225, 16.45))
+        self.seeded('K-ports', d08, 'J440.3 (AUX_TX_WIRE): its clamp D440.1 is 6.975 mm of track from the pin')
+
+        def behind(board):            # J440.3's B.Cu run to D440 cut at the pin; D440 fed from R471.2 instead
+            self.drop(board, track(board, 'AUX_TX_WIRE', (7.4, 18.0), (4.45, 18.0)))
+            add(board, 'AUX_TX_WIRE', pcbnew.F_Cu, (15.275, 18.0), (15.275, 19.5)); via(board, 'AUX_TX_WIRE', (15.275, 19.5))
+            add(board, 'AUX_TX_WIRE', pcbnew.B_Cu, (15.275, 19.5), (4.45, 18.0))
+        self.seeded('K-ports', behind, 'J440.3 (AUX_TX_WIRE): its clamp D440.1 is reached only through R471')
+
+    def test_r21_fab_references_present_readable_and_apart(self):
+        """D-R21-08 (R21-GATE-05): every footprint has one visible Fab ${REFERENCE} on its own side, >= 0.3 mm high,
+        clear of every other footprint's Fab outline and reference, and LS120's '+' / '-' are the only other Fab texts.
+        The gate lens's d06a (Q120's deleted), d06b (R134's as the literal 'R143'), d06d (R120's on Q120's body) and
+        d06e (R119's 0.1 mm high) fail, and so do a stray Fab text, a reference on the other side's Fab layer and one
+        wholly on another part's body (R81's on C84's can)."""
+        b = self.load()
+        issues, ev = gate.fab_ref_crossings(b)
+        self.assertEqual(issues, [])
+        self.assertEqual((ev['fab_references_checked'], ev['neighbour_crossings']), (len(list(b.GetFootprints())), []))
+        self.assertAlmostEqual(ev['least_height_mm'], 0.3)
+        ref = lambda board, r: next(g for g in board.FindFootprintByReference(r).GraphicalItems()  # noqa: E731
+                                    if isinstance(g, pcbnew.PCB_TEXT) and g.GetText() == '${REFERENCE}')
+
+        def d06a(board):
+            f, t = board.FindFootprintByReference('Q120'), ref(board, 'Q120')
+            f.Remove(t)
+            t.thisown = False
+        self.seeded('K-legends', d06a, 'Q120 carries 0 Fab references')       # through the rule; the rest direct
+
+        def d06e(board):
+            t = ref(board, 'R119'); t.SetTextSize(self.P(0.1, 0.1)); t.SetTextThickness(pcbnew.FromMM(0.015))
+
+        def stray(board):
+            f = board.FindFootprintByReference('C87')
+            t = pcbnew.PCB_TEXT(f); t.SetText('R81'); t.SetLayer(pcbnew.F_Fab); t.SetPosition(f.GetPosition()); f.Add(t)
+        for name, seed, word in (
+                ('d06b', lambda board: ref(board, 'R134').SetText('R143'), "Fab text ['R143'] on R134"),
+                ('d06d', lambda board: ref(board, 'R120').SetPosition(self.P(13.5, 72.6)),
+                 "Fab reference R120 crosses Q120's Fab outline"),
+                ('d06e', d06e, 'Fab reference R119 is 0.100 mm high'),
+                ('stray', stray, "Fab text ['R81'] on C87"),
+                ('inside', lambda board: ref(board, 'R81').SetPosition(self.P(27.5, 76.0)),      # on C84's can
+                 "Fab reference R81 crosses C84's Fab outline box (inside it)"),
+                ('side', lambda board: ref(board, 'R81').SetLayer(pcbnew.B_Fab),
+                 'Fab reference R81 is on B.Fab, not its own side F.Fab')):
+            with self.subTest(seed=name):
+                board = self.load()
+                seed(board)
+                found = gate.fab_ref_crossings(board)[0]
+                self.assertTrue(any(i.startswith(word) for i in found), found)
 
 
 if __name__ == '__main__':

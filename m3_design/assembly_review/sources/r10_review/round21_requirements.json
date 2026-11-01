@@ -1,0 +1,141 @@
+{
+  "schema": "r10-review-v1",
+  "review": "round21_requirements",
+  "reviewer": "claude",
+  "target_commit": "accfff4947266a23cf60a63f3d92be047f5391b5",
+  "board_sha256_before": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+  "board_sha256_after": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 6},
+  "findings": [
+    {
+      "id": "R21-REQ-01",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Schematic sheet notes still describe superseded parts: U4 as LSM6DSV320X (+/-32..320 g, DS14623) and a camera-regulator 'U8' USB self-test",
+      "evidence": {
+        "file": "m3_design/assembly_review/sensors.kicad_sch (text at line 1853); m3_design/assembly_review/diagnostics.kicad_sch (CAM_5V_SENSE note); m3_design/assembly_review/m3.kicad_sch ('battery alone feeds camera')",
+        "measured": "sensors note reads 'U4 = ST LSM6DSV320X (R4): +/-16 g low-g + +/-32..320 g high-g accel ... Pins 10/11 open per DS14623 table 2'; the other U4 notes cite DS14623 table 25. Board U4 = ISM6HG256X, LCSC C51931514, MPN ISM6HG256XTR (pcbnew), symbol Value ISM6HG256X. DS15034 Rev 1 p1: high-g +/-32/64/128/256 g (no 320 g); D-R19-11 / binding note restrict firmware to high-g codes 001 / 010 because code 100 is +/-256 g on the ISM and +/-320 g on the LSM. The pins 10/11 obligation itself holds for the ISM: DS15034 Table 25 (p52) has the same internal pull-ups and OIS_PU_DIS in PIN_CTRL (02h). diagnostics note: 'Lets the USB self-test verify the camera regulator (U8)': no U8 among the 215 footprints (camera buck is U400, switch U402), and on USB-only power PORT_5V3 is off (camera rail from protected battery only).",
+        "maker": "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf p1, Table 25 p52"
+      },
+      "impact": "The schematic is the declared single source of truth (AGENTS section 3). A firmware author reading sheet 03 gets the alternate part's 320 g range and datasheet; on the fitted part the matching code is reserved / different (D-R19-11). The self-test note names a part that does not exist and a test that cannot run on USB power.",
+      "concrete_fix": "In r10_sch.py: replace the U4 note with 'U4 = ST ISM6HG256X (D-R19-11; LSM6DSV320X consigned alternate, same land): +/-16 g low-g, +/-32..256 g high-g (use FS codes 001/010 only), +/-4000 dps; pins 10/11 open, internal pull-ups, keep OIS_PU_DIS = 0 (DS15034 Table 25)', cite DS15034 in the two other U4 notes; change the CAM_5V_SENSE note to 'verifies U400/U402 on battery power'. Text only; schematic notes are not in the PCB hash."
+    },
+    {
+      "id": "R21-REQ-02",
+      "severity": "Minor",
+      "status": "new",
+      "title": "battery_entry note 'Input supply must be fused/current-limited externally' contradicts the owner's OQ-6 no-battery-lead-fuse decision",
+      "evidence": {
+        "file": "m3_design/assembly_review/battery_entry.kicad_sch (text at line 2242)",
+        "measured": "Note text verbatim: 'Input supply must be fused/current-limited externally. Board copper before U9 is not protected by its current limit.' docs/REQUIREMENTS.md Accepted risks 'R10 no battery-lead fuse (OQ-6, revised 2026-10-28, f202ec3)' and Battery harness row 'no battery-lead fuse or holder; strain relief, no chafe points, crimped or soldered leads'; F9 'R134 do not protect the unfused pack-to-U9/Q120 lead'."
+      },
+      "impact": "Two records disagree on whether a fuse belongs in the battery lead. A builder following the schematic adds a fuse holder; a reader of the requirements omits it. Neither is a hardware failure, but the owner decision is not reflected in the source-of-truth sheet.",
+      "concrete_fix": "Replace with: 'No battery-lead fuse (OQ-6, owner 2026-10-28): the pack lead, J1, BAT_IN copper, D8 and C80/C96/C89/C95 ahead of U9 are not current-limited; strain-relieve, no chafe points, crimped or soldered leads.' Text only."
+    },
+    {
+      "id": "R21-REQ-03",
+      "severity": "Minor",
+      "status": "new",
+      "title": "REQUIREMENTS 'Camera' operating-assumption row names only J410 / J420 as self-powered back-feed sources, not the AUX port J440",
+      "evidence": {
+        "file": "docs/REQUIREMENTS.md line 91 (Operating assumptions, Camera)",
+        "measured": "'R10: the same holds for a self- or USB-powered GPS on J410 or radio on J420 whenever connected to the port'. Board: J440.1 = PORT_4V8, the same net as J410.1 / J420.1 (pcbnew); D-R19-14 makes the three ports interchangeable. AGENTS 'Pad arming access' row, ORDERING.md line 599 and FMEA_REDUNDANCY.md lines 12 and 40 already say 'any port (GPS, radio, AUX or camera)'."
+      },
+      "impact": "The requirement row that states the back-feed premise for the e-match rule omits one of the three ports a self-powered device may now be wired to (any device on any port). Stale after D-R19-14.",
+      "concrete_fix": "Reword: 'the same holds for any self- or USB-powered device on J410, J420 or J440 (the three identical ports, D-R19-14)'. Text only."
+    },
+    {
+      "id": "R21-REQ-04",
+      "severity": "Minor",
+      "status": "new",
+      "title": "The single-switch arming chain (BAT_SW_SOURCE, BAT_SW_RETURN, BAT_ENABLE) is not in route_check's pyro/arming critical class, and no record says why",
+      "evidence": {
+        "file": "tools/route_check.py R10_CLASSES (lines 222-233); route report (probe .supervisor/r21_requirements/route.json)",
+        "measured": "The R10 pyro class regex covers PYRO1_*, ARM1_*, ACT_GATE/DRV/EN, ACT_EN_MCU only; route.json gives BAT_ENABLE cls 'other'. Instances that would be critical hygiene: tiny_jog BAT_ENABLE B.Cu (21.0, 68.6) -> (21.3, 68.9), mid 0.424 mm, offset 0.3 mm (counted as a noncritical leftover); short_layer_hop B.Cu (19.675, 66.6) 2.973 mm and extra_bends F.Cu (21.3, 68.9) -> (17.1, 82.8) (information). BAT_ENABLE has three vias, nearest GND via 1.423 / 1.866 / 2.902 mm, total track 27.93 mm (pcbnew). F8 / AGENTS section 2.1 make J400 the pad arming device; AGENTS section 3 and REQUIREMENTS M2 list 'pyro and arming' nets as critical.",
+        "physics": "BAT_ENABLE is a 227 kohm / 220 nF node (tau 50 ms), so the 1.5 mm GND partner-via rule has no return-path root there and would be AUD-2-exempt like ACT_GATE (which also has vias 1.707 / 5.916 mm from GND). The gap is the class and the critical hygiene, not return path."
+      },
+      "impact": "Under the R10 single-switch scope the arming device's nets get only noncritical hygiene, while the owner's clean-routing criterion (M2) gates arming nets. The classification is a silent scope choice rather than a recorded decision; S-6 (round 19 gate) already treats the chain as safety-relevant.",
+      "concrete_fix": "Either add ^(BAT_ENABLE|BAT_SW_SOURCE|BAT_SW_RETURN)$ to the R10 pyro class and to critical_reference.R10_SLOW_RETURN_NETS (AUD-2 partner-via exemption), then remove the (21.0, 68.6) jog at the next board change (it touches the D-R20-01 EN cell) or list it in the R10 deviation table; or record in M2 / R10_VALIDATION why the switch-enable chain is not an arming net. Gate / records only now."
+    },
+    {
+      "id": "R21-REQ-05",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Flight envelope: the flight-2 altitude and duration (3.4-3.6 km, 460-525 s) do not fit the Mach 1.9 design point, and flight 1 (K850DM) still has no envelope",
+      "evidence": {
+        "file": "docs/REQUIREMENTS.md lines 28-46 (flight table), line 89 (Temperature: 'flight 2 lasts up to 525 s'); ../../docs/VEHICLE.md (Mass and CG: K850DM budget not done)",
+        "measured": "Mach 1.9 is about 650 m/s near the ground. A drag-free coast gives v^2 / 2g = 650^2 / 19.6 = 21.5 km; a 54 mm minimum-diameter airframe loses much of that to drag, but the apogee is unlikely to be as low as 3.4-3.6 km (Inference; no trajectory run here). The table itself says 'update for the current vehicle and Mach 1.9 design point'; flight 1 says 'Recalculate for K850DM'.",
+        "board_effect": "None found (Inference): at a 6 km / 800 s flight the F5 log is about 500 Hz x 40 B x ~70 s + 50 Hz x 40 B x ~800 s = 3 MB against 16 MB QSPI; F3's 10 km barometer requirement then has a physical root rather than being spare margin; MCU thermal (Temperature row) is a steady-state argument at 200 MHz."
+      },
+      "impact": "Requirements that consume duration (Temperature row 525 s, pad-energy Q_flight, F5 log windows) and the F2 37 g peak are rooted in a pre-Mach-1.9 estimate. The board appears to cover the corrected case, but no record shows it.",
+      "concrete_fix": "Mark the 3.4-3.6 km / 460-525 s / 28-37 g row as a pre-Mach-1.9 estimate and replace it from the OpenRocket model of the current vehicle (both motors) before order acceptance; re-check F5 window, pad-energy Q_flight and the 525 s Temperature figure against it. Records only."
+    },
+    {
+      "id": "R21-REQ-06",
+      "severity": "Minor",
+      "status": "carried (R19-REQ-08, partly fixed)",
+      "title": "REQUIREMENTS current rows still carry R7-R9 rules: M2's R8 D10 detour amendment and R7/R8/R9 pour lists, and the Board position row's R9 coax-loop allocation",
+      "evidence": {
+        "file": "docs/REQUIREMENTS.md line 77 (M2) and line 88 (Board position)",
+        "measured": "M2 still contains 'R8, R8_DECISIONS D10 ... the U31 body for any non-GND net (F10)', 'RF-module keep-outs' and 'on R8: GND, 3V3, BAT_IN, RAW_ACT, ACT_FET_S; on R9 also RAW_PROTECTED ...; on R7 also 3V3A and CAM_5V'; Board position row carries 'R9: aft edge at joint >= +80...+83 mm with the coax loops', 'jack 9.5 + straight plug about 16-20 + RG316 loops at 13 mm bend radius' and 'Choose the plug and coax'. The round 19 docs lane moved the M2 / M3 history and the R7-R9 acceptance sections (file now 53,308 bytes, was 55,924) but not these."
+      },
+      "impact": "The R10 rule must be read out of R7-R9 text; the Board position row asks for a coax plug choice R10 does not have.",
+      "concrete_fix": "Move the R8 D10 / U31 / RF-module and R7-R9 pour-list clauses and the R9 coax-zone sentences to HISTORY.md section 3; leave the R10 sentences. Text only."
+    }
+  ],
+  "fix_verification": [
+    {"id": "D-R19-14", "claim": "J440 copy of J410 (DB125-4 C2757925, R471/R470 1 k, D440/D441 ESD103, C444/C445); GPS on USART3 PD8/PD9, AUX on USART6 PC6/PC7; three ports electrically identical; firmware port map, default words", "measurement": "pcbnew: J440 F(7.4,16.25) -90, pins PORT_4V8/GND/AUX_TX_WIRE/AUX_RX_WIRE; R471 AUX_TX_MCU->AUX_TX_WIRE, R470 AUX_RX_WIRE->AUX_RX_MCU, D440/D441 to GND, C444/C445 on PORT_4V8, same parts as J410/J420 cells; U1.55/56 GPS_TX/RX_MCU (PD8/PD9), U1.63/64 AUX (PC6/PC7), U1.51/52 radio (PB12/PB13); pin_table r10_net vs board 100/100 match; silkscreen AUX, 1:4V8 top, 2:GND/3:TXO/4:RXI bottom; schematic notes (mcu, telemetry, camera_power) updated; REQUIREMENTS Camera row not (R21-REQ-03)", "verdict": "confirmed (one stale requirement row)"},
+    {"id": "D-R19-10 / D-R20-11", "claim": "C87 220 nF; turn-on 30-129 ms; drop-out immunity 10.6/20.5/26.4 ms, 8.5 ms at 5.73 V, >= 5.92 V for 10 ms", "measurement": "C87 220nF 25V X7R C21120 CL10B224KA8NNNC on BAT_ENABLE/GND; recomputed nominal: tau 227.4 k x 220 nF = 50.0 ms, turn-on at 6.0 V 87.6 ms, drop-out tau 66 ms to 1.09 V 18.9 ms (matches 88 / 19 ms); worst-case figures appear consistently in REQUIREMENTS F6 and Accepted risks, AGENTS, battery_entry note; no stale 11.4 / 9.3 ms / 31-122 ms / 1.1 s string in current docs or sheets", "verdict": "confirmed"},
+    {"id": "D-R19-11", "claim": "U4 ISM6HG256X fitted, LSM6DSV320X alternate; gyro +/-4000 dps, high-g to +/-256 g", "measurement": "pcbnew U4 B(17,45.9) 180, C51931514, ISM6HG256XTR; DS15034 p1 +/-4000 dps, high-g +/-32..256 g; sensors sheet note stale (R21-REQ-01)", "verdict": "partly (schematic text)"},
+    {"id": "D-R19-04", "claim": "Q122 has R122 1 k series, R123 2 k pull-down, C123 10 nF gate-source", "measurement": "ACT_EN = Q122.1, R122.2 (1k), R123.1 (2k, to GND), C123.1 (10 nF, to GND); 3.6 V x 2k/33k = 0.218 V", "verdict": "confirmed"},
+    {"id": "D-R20-01", "claim": "Not done: EN pull-down stays at the switch end, three vias", "measurement": "BAT_ENABLE: R81 F(20.5,65), U9.1 B(18.5,81.6), three vias (19.675,66.6), (21.3,68.9), (17.1,82.8), 27.93 mm of track on the net; recorded as owner deviation / respin item", "verdict": "confirmed as recorded"},
+    {"id": "D-R20-02", "claim": "PORT_4V8 via (30.575,11.6) for R402.1", "measurement": "via present, PORT_4V8, 0.5/0.3 mm; R402.1 PORT_4V8 (single-via-open test not re-run)", "verdict": "confirmed (presence)"},
+    {"id": "D-R20-03", "claim": "U1.74 no pour connection", "measurement": "U1 pad 74 local zone connection = NONE (0); pad 19 NONE", "verdict": "confirmed"},
+    {"id": "D-R20-04", "claim": "TP82 B(11.2,20.7)", "measurement": "TP82 B 11.2, 20.7", "verdict": "confirmed"},
+    {"id": "D-R20-05", "claim": "J121.1, J400.2 (and J1.2) drop unconnected inner rings; J121.2 keeps", "measurement": "unconnected-layer mode 3 on J121.1, J400.2, J1.2; 0 on J121.2, J400.1, J1.1", "verdict": "confirmed"},
+    {"id": "D-R20-08", "claim": "R20_TAB_KEEPOUT_WEST_AFT In2 rule area", "measurement": "rule area present on In2.Cu", "verdict": "confirmed (presence)"},
+    {"id": "D-R20-09", "claim": "D440 B(4.45,19.45) / D441 B(4.45,23.05) -90; top GND vias removed", "measurement": "positions as claimed; vias (14.225,16.45)/(14.225,22.15) absent; GND vias (3.75,19.775)/(3.75,23.375) present", "verdict": "confirmed"},
+    {"id": "R19-REQ-03 / -04 / -05", "claim": "M3_ACTUATOR_MERGE banner; FMEA I-7 R123 2 k; F9 spaces", "measurement": "banner present; FMEA line 39 R123 2 kOhm; F9 reads 'exact R92 3.3 kOhm / R166 0.36 Ohm'", "verdict": "confirmed"},
+    {"id": "R19-REQ-08", "claim": "R7-R9 history moved out of current rows", "measurement": "M2 / Board position still carry R7-R9 clauses", "verdict": "partly (R21-REQ-06)"}
+  ],
+  "fix_now_recommendations": [
+    "R21-REQ-01 and R21-REQ-02: rewrite the three schematic notes in the generator (r10_sch.py): U4 = ISM6HG256X (+/-256 g, DS15034 Table 25), CAM_5V_SENSE 'verifies U400/U402 on battery power', and the OQ-6 no-fuse statement. Text only; netlist and PCB hash unchanged.",
+    "R21-REQ-03: add J440 to the REQUIREMENTS Camera row."
+  ],
+  "rejected_or_closed_candidates": [
+    "AUX 100 mA limit as an oversized margin: LR900-F maker maximum average consumption 1 W at 4.5-5 V (micoair.com LR900 manual, Specifications) is 222 mA at 4.5 V, so the 300 mA radio allocation is a modest cover for TX peaks; the GPS 150 mA allocation is 3x the Pack row's 0.05 A, but the AUX limit is a conservative user constraint, not a design cost. Closed.",
+    "Q120/Q121 fed from BAT_IN (not after U9) vs AGENTS 2.2 'pyro bus after the load switch': RAW_ACT is after the Q120/Q121 load switch, and the absence of a physical break while powered is the owner-accepted single-switch risk. No violation.",
+    "AGENTS 2.4 gate networks: Q124 R126 220R series, R128 10k pull-down at gate, C126 220 nF G-S, R127 1k on PE4 side; Q120/Q121 R121 10k series, R119/R120 100k to source, C120 1 uF; Q122 as above. All present.",
+    "Continuity bias: 3V3 -> D120 BAT54A -> R131 10 k -> PYRO1_OUT gives <= 0.33 mA through the e-match (no-fire 0.30 A, max test 40 mA); D120 blocks RAW_ACT back into 3V3 when the bus is on. Closed.",
+    "Removed hardware: J123, J124, TP121, R62, R63, R168, R170, C121, U410, U420 absent from the 215 footprints; PC13, PC3_C, PB0 NC.",
+    "Connector positions, mounting holes (Edge.Cuts circles r 1.6 mm at (4,4), (42,4), (4,44.3), (3.7,86), (42,86)), 46 x 90 mm outline, four layers, 1.6 mm: match AGENTS / P1 / P2.",
+    "Pin legends: every DB125 pin carries a legend (top or bottom) consistent with F8 / F10.",
+    "Parent VEHICLE.md R10 connector row stale (R19-REQ-09): known per the brief, not refiled.",
+    "Open owner decisions not filed: M3 cost $85.35 vs $84.41, P3 retention factor (R19-REQ-06), hold-up time (R19-REQ-07), pad-energy basis (R19-REQ-01), east panel tabs (D-R20-08), U4 stock 2 orderable vs 5."
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3.kicad_pcb before and after (unchanged 0dc84776...).",
+    "pcbnew read-only dump of all 215 footprints (value, side, pose, LCSC, MPN, pad nets) and net map; probes of vias, pad zone / unconnected-layer settings, Edge.Cuts, rule areas, silkscreen texts.",
+    "pin_table.tsv r10_net vs U1 pad nets: 100 / 100 agree.",
+    "kicad-cli 10.0.7 pcb drc --schematic-parity --severity-all into the probe dir: 0 violations, 0 unconnected, 0 parity.",
+    "tools/route_check.py --profile r10 (report into probe dir): 0 failing, 7 unrecorded noncritical leftovers.",
+    "BAT_ENABLE / ACT_GATE / PYRO1_GATE via-to-GND-via distances and track lengths.",
+    "Schematic text notes of all 15 sheets extracted and read.",
+    "DS15034 (cached copy from round 19 probe dir) text search: ranges p1, Table 25 p52 internal pull-ups / OIS_PU_DIS.",
+    "C87 timing recomputed by hand (nominal).",
+    "Fab package: BOM 81 lines, CPL 205 rows, owner BOM C84 only, cost_check 85.35, stock_check ok=false (read, not re-run).",
+    "Docs grep for stale C87 figures and for J420-without-J440 statements."
+  ],
+  "sources": [
+    "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (DS15034 Rev 1, p1, Table 25 p52)",
+    "https://www.ti.com/lit/ds/symlink/tps25947.pdf (SLVSFC9C p9, EN thresholds, as cited by the records)",
+    "https://micoair.com/en/docs/telemetry/lr900/lr900-telemetry (Specifications: 4.5-5 V, 1 W maximum average LR900-F)"
+  ],
+  "coverage_limits": [
+    "CAD / document lens: no bench, firmware or flight data; all Bench rows remain open as recorded.",
+    "R21-REQ-05's apogee argument is an Inference (drag-free bound only); no trajectory simulation was run and L1000W motor data were not retrieved.",
+    "D-R20-02 single-via-open and S-8 ring measurements were not re-run; presence only.",
+    "check_r10.py and check.sh were not run on the canonical tree (brief rule); DRC and route_check were run read-only with outputs in the probe dir.",
+    "HGLRC M100 Mini current not re-fetched (HTTP 429)."
+  ]
+}

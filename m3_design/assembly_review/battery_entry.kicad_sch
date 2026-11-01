@@ -2239,13 +2239,6 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid aabb3c1e-c2aa-5f7e-a714-26c7d9df9712))
-	(text "Input supply must be fused/current-limited externally. Board copper before U9 is not protected by its current limit."
-		(at 20.32 261.62 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 9e8e7e55-3791-5b37-8606-55fb80fa3a7a))
 	(text "Qualified source wiring, interruption ratings, hot-plug waveforms and fault coordination remain bench release gates."
 		(at 20.32 267.97 0)
 		(effects
@@ -3328,6 +3321,13 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 3eefb64e-bbbf-52be-aadf-8d4077bae59b))
+	(text "No battery-lead fuse (owner decision OQ-6, 2026-10-28). Limited only by the pack and lead: the lead, J1, the BAT_IN copper, D8, C80 / C96, C88 (100 nF) and C89 / C95. U9 (TPS259470L) current-limits and latches off RAW_PROTECTED. Q120's drain is on BAT_IN, so the RAW_ACT fire path bypasses U9; R134 (2 Ohm) limits it. Strain-relieve the lead; no chafe points; crimped or soldered leads."
+		(at 20.32 261.62 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 3c437a27-4510-57ed-9753-9a6923c8a1ab))
 	(sheet_instances
 		(path "/"
 			(page "7"))))

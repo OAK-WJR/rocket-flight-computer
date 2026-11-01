@@ -1,0 +1,162 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round21_routing",
+ "reviewer": "claude",
+ "target_commit": "accfff4947266a23cf60a63f3d92be047f5391b5",
+ "board_sha256_before": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+ "board_sha256_after": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "findings": [
+  {
+   "id": "R21-RTE-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The owner-acceptance deviation list is still bound to 50a39de5, and its section 6 detour table still carries a3144b15 figures",
+   "evidence": {
+    "file": "docs/R10_VALIDATION.md",
+    "references": [
+     "line 1765 (owner decision table header): \"The board is PCB `50a39de5\u2026` (round 19 fix pass) ... rounds 20 and 21 are planned.\"",
+     "line 1864 (Inventory basis): \"Inventory for PCB `50a39de5b76d\u2026`\"",
+     "lines 2146-2163 (section 6 per-net detour table): \"112 non-pour nets total 1454.9 mm against 1195.2 mm (1.217x) ... These are `a3144b15\u2026` figures ... the table was not re-run\""
+    ],
+    "requirement": "docs/REQUIREMENTS.md M2: the deviation list for owner acceptance is \"bound to the final board's SHA-256\"",
+    "measured_on_0dc84776": "116 non-pour nets (no fill zone, >=2 pads, routed): 1507.8 mm of track against an octilinear pad-centre spanning tree of 1243.0 mm, 1.213x (+264.8 mm). On 50a39de5 the same script gives 1504.3 / 1239.8 mm, 1.213x (round 20 routing lens: 1504.3 / 1239.9). Script .supervisor/r21_routing/scripts/detour.py on a pcbnew dump of each board.",
+    "note": "Section 6 itself was partly refreshed (route_check 148 instances on 0dc84776), so the list now mixes three boards."
+   },
+   "impact": "Documentation / evidence only. The owner is asked to accept the M2 routing deviations against a header and inventory that name the previous board, and a detour table two boards old. No copper defect.",
+   "concrete_fix": "Docs lane: rebind the deviation-list header (line 1765) and the inventory basis (line 1864) to 0dc84776 and state that rounds 21 and 22 are the closing pair for it. Replace the section 6 detour table summary with the 0dc84776 figures (116 nets, 1507.8 / 1243.0 mm, 1.213x), or label each figure with the board it was measured on."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R20-02",
+   "claim": "PORT_4V8 via (30.575,11.6) north of R402.1 into the In2 output plane, F.Cu stub; no single PORT_4V8 via open cuts R402.1 off; GPS_RX_MCU 0.25 mm away",
+   "measured": "Via 0.5/0.3 at (30.575,11.6), zone_layer_connections In2, inside the single In2 PORT_4V8 fill. F.Cu segment (30.575,11.6)-(30.575,12.6), 0.4 mm wide and 1.0 mm long, enters R402.1 at the pad centre from the north. The \"0.4 mm stub\" in the record is its width; bare track between the via ring and the pad edge is 0.275 mm. Independent graph test (pads, tracks, vias, fill pieces): opening each of the 9 PORT_4V8 vias in turn leaves R402.1 joined to U401.1/.2. On 50a39de5, opening (29.75,12.6) cut it off. GPS_RX_MCU edge (y 11.1) to via ring (y 11.35): 0.25 mm. The via void in In1 GND reaches y 11.19, so the plane under GPS_RX_MCU (edge y 11.1) stays whole. No B.Cu track, no new route_check instance.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-03",
+   "claim": "U1.74 has no pour connection; the 0.282 mm2 F.Cu GND piece is gone; 35 -> 34 pour pieces",
+   "measured": "U1.74 local zone connection 0 (NONE). No F.Cu fill at (17.5,34.4). The F.Cu GND fill has 13 pieces (was 14), 34 fill pieces in all. Scanning every fill piece on every layer finds no via-less piece (the smallest is F.Cu GND 0.365 mm2 with one via, unchanged). U1.74 keeps its 3.85 mm F.Cu run to via (17.5,39.3).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-04",
+   "claim": "TP82 at B(11.2,20.7); spur one 6.152 mm segment; 1.075 mm to foreign copper; pour at 1.0 mm",
+   "measured": "USB_LIMITED B.Cu (15.55,25.05)-(11.2,20.7), 6.152 mm, ends at the pad centre. Clearance by pcbnew shape collision: GND fill 1.001 mm, R90.1/.2 1.075 mm, 3V3 track 1.175 mm. route_check: USB_LIMITED extra_bends gone (149 -> 148 instances), nothing added. The whole dead-end spur from the last functional node (15.55,28.0) is 9.10 mm (R18 a3144b15: 9.25 mm, R19: 12.28 mm).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-05",
+   "claim": "J121.1 and J400.2 carry no unconnected inner rings; J121.2 keeps its rings; J1.2 loses its In2 ring",
+   "measured": "pcbnew FlashLayer: J121.1 and J400.2 flash no inner layer (remove-unconnected plus keep-ends set in the library pad); J1.2 flashes In1 only; J121.2 and every other terminal pad flash In1 and In2. Barrel wall to the nearest foreign inner fill: J121.1 1.050 / 1.050 mm (In1 / In2 GND); J400.2 In2 RAW_PROTECTED 1.050 mm, In1 GND 0.550 -> 0.250 mm (exempt, recorded); J1.2 In2 RAW_PROTECTED 0.550 -> 0.250 mm (recorded; equal to the DRC hole_clearance floor used for GND vias in RAW regions). Plane fills otherwise unchanged in topology.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-08",
+   "claim": "Fill-only In2 rule area x -0.5..3.0, y 12.5..17.5; In2 3V3 under the west aft tab 12.498 mm2 -> 0; 3V3 one piece",
+   "measured": "Rule area present on In2 only, zone fill disallowed. In2 3V3 area 1446.7074 -> 1434.2008 mm2 (-12.507), still one piece. No In2 fill sampled at x 1.0-2.9, y 12.5-15. The 3V3 band left beside the keep-out is at least 3.2 mm wide (y 12.5-17.5). No B.Cu track lies in x < 4, y 11.5-18.5, so no B.Cu reference is affected.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-09",
+   "claim": "D440 / D441 to B(4.45,19.45) / B(4.45,23.05) rot -90 under J440; B.Cu pin-to-clamp runs; returns to own GND vias 0.7 mm west; top taps and vias (14.225,16.45), (14.225,22.15) removed",
+   "measured": "Copper diff 50a39de5 -> 0dc84776: removed 4 F.Cu tap segments and the 2 GND vias; added AUX_TX B.Cu (7.4,18.0)-(4.45,18.0)-(4.45,19.125) and AUX_RX B.Cu (7.4,21.5)-(4.45,21.5)-(4.45,22.725), each one L into the clamp pad centre; GND B.Cu 0.7 mm runs to vias (3.75,19.775) and (3.75,23.375), each tied to F.Cu, In1 and B.Cu GND. Pin to clamp-pad copper 4.075 / 4.175 mm (centre-line); the record's 3.157 / 3.194 mm is pad edge to pad edge. The two F.Cu T-taps are gone (independent scan: 8 -> 6 T-junctions). The new B.Cu stubs reference only In2 3V3 (sampled at centre and both edges). Smallest clearances: pad gap 0.300 mm (library, as D410), GND fill 0.251 mm, via hole to pad edge 0.25 mm (M2 floor 0.1). No new route_check instance.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-01",
+   "claim": "Not done: no legal clean B.Cu spot for R81 at U9.1 (respin item)",
+   "measured": "Copper round U9 is unchanged (no diff in that region). Not re-searched.",
+   "verdict": "confirmed (as recorded, not re-derived)"
+  },
+  {
+   "id": "D-R20-10",
+   "claim": "R20-RTE-03 GPS jogs and R20-RTE-04 VLOGIC via pair not done",
+   "measured": "GPS_TX_MCU / GPS_RX_MCU and VLOGIC copper unchanged; both GPS extra_bends instances still listed.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-01 .. -05, -09, -14",
+   "claim": "Round 19 copper fixes",
+   "measured": "The full copper diff 50a39de5 -> 0dc84776 shows only the D-R20 changes above, so these copper fixes carry unchanged from the round 20 routing lens measurements. D-R19-14 AUX routing is now F.Cu to the pins plus the B.Cu clamp stubs (D-R20-09).",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R21-RTE-01",
+   "change": "Docs only, no board change: rebind docs/R10_VALIDATION.md \"R10 deviations for owner acceptance\" (header line 1765 and inventory basis line 1864) to 0dc84776, and refresh the section 6 detour summary to 116 non-pour nets, 1507.8 / 1243.0 mm, 1.213x (or label each figure with its board)."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "D440 rot 0 on the pin-3 row using the existing GND via (3.5,18.0)",
+   "reason": "Would make the TX clamp branch one straight segment and save one via (Inference, not DRC-run). Cleanliness only; the current L is clean and mirrors J410's cell (which uses three segments). Not worth restarting the clean pair."
+  },
+  {
+   "candidate": "AUX_RX_WIRE 45-degree jog (12.4,20.6)-(11.5,21.5)",
+   "reason": "Forced by the 2.6 mm resistor pitch (R470 / R471) against the 3.5 mm pin pitch. Moving R470 to y 21.5 only moves the jog to AUX_RX_MCU. Not removable."
+  },
+  {
+   "candidate": "TP82 spur as a stub",
+   "reason": "A test-point spur is a stub by nature. At 9.10 mm from (15.55,28.0) it is shorter than R18's 9.25 mm and has one bend fewer. Round 20 searched the TP82 position."
+  },
+  {
+   "candidate": "R463 designator above TP82 (TP82 designator hidden)",
+   "reason": "Silkscreen; recorded in round20_fix_cad.md (0.203 mm under 3:TXO ink, 0.967 mm from TP82). Manufacturing lens."
+  },
+  {
+   "candidate": "Nodes with a 45-degree interior angle (GND C80.2, BAT_IN D8.1 / C89.1, USB_FAULT_N U10.4, CAM_5V J9.1, USB_LIMITED C98.1)",
+   "reason": "All six are at pad centres (pad nodes), the same on 50a39de5, and none is at free copper."
+  },
+  {
+   "candidate": "J1.2 barrel 0.25 mm from In2 RAW_PROTECTED; J400.2 0.25 mm from In1 GND",
+   "reason": "Recorded in D-R20-05; equal to the DRC hole_clearance floor and to every GND via in a RAW region. Before the change the unconnected GND ring was already 0.25 mm from RAW copper."
+  },
+  {
+   "candidate": "Reference gaps under ACT_GATE, PYRO1_OUT, PYRO1_CONT_MID; CAM_PWR_EN 2 samples",
+   "reason": "S-8 barrel keep-outs and slow-return nets (AUD-2); the same on 50a39de5. No change."
+  },
+  {
+   "candidate": "Carried items R20-RTE-03, -04, -06, -08, -09, -10, -11",
+   "reason": "Copper unchanged; recorded in R10_VALIDATION section 6 as next-board-change or deviations. Not worse than recorded, except that the -09 figures in the docs are stale (R21-RTE-01)."
+  }
+ ],
+ "checks_actually_executed": [
+  "shasum -a 256 on the board before and after: 0dc84776... both times",
+  "git archive of accfff4 into .supervisor/r21_routing/tree; board hash matches",
+  "kicad-cli 10.0.7 pcb drc --severity-all --schematic-parity on the probe copy: 0 violations, 0 unconnected, 0 parity",
+  "tools/route_check.py --profile r10 --bumps-all on the probe copy: 0 failing, 148 information instances, 7 unrecorded leftovers, 45 bump windows; the same checker on the 50a39de5 board (git show 2ca63a1): 149; the only difference is USB_LIMITED extra_bends removed",
+  "pcbnew dump of 0dc84776 and 50a39de5 (tracks, vias, footprints, pads with zone connection, zones with fills) and a full copper / pad / zone diff (scripts/dump.py, diff.py)",
+  "Independent hygiene scan (scripts/hyg.py): angles, zero-length, dangling, T-junctions, overlap-only via joints, collinear overlaps, unmerged collinear segments, interior angles, short segments, via joints, vias in pads; both boards",
+  "Pour-piece scan for via-less or weakly stitched pieces on every layer (scripts/islands.py)",
+  "Single-via-open connectivity test of PORT_4V8 from R402.1 to U401.1/.2 on both boards (scripts/viaopen.py)",
+  "Pad clearance by pcbnew shape collision for TP82, D440/D441 pads, R402.1, J440.3/.4 (scripts/clr.py)",
+  "Inner-ring flashing of every terminal THT pad (scripts/rings.py) and barrel-wall-to-foreign-fill distances (both boards)",
+  "Reference-plane sampling under every critical-class track (centre and both edges, 0.05 mm step), and nearest GND via to every critical via (scripts/refscan.py), both boards",
+  "Plane-void measurement round the new FB via on In1 / In2 / B.Cu",
+  "West-aft tab keep-out: In2 fill sampling, 3V3 band width, B.Cu tracks in the band",
+  "Non-pour net routed length against an octilinear spanning tree (scripts/detour.py), both boards",
+  "kicad-cli pcb render, top and bottom, with crops of the J440 / TP82 corner, the U401 / R402 corner and U1 pin 74"
+ ],
+ "sources": [
+  "m3_design/assembly_review/m3.kicad_pcb @ accfff4 (0dc84776...)",
+  "m3_design/assembly_review/m3.kicad_pcb @ 2ca63a1 (50a39de5...), @ 1e60441 (a3144b15..., TP82 history only)",
+  "m3_design/assembly_review/sources/r10_review/round20_fix_cad.md, round20_routing.md",
+  "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R20-01 .. -11; AVA_LAYOUT.md \"Round 20 CAD polish pass\" and section 6",
+  "docs/REQUIREMENTS.md M2; docs/R10_VALIDATION.md \"R10 deviations for owner acceptance\" and section 6; docs/M3_R10.md",
+  "tools/route_check.py, tools/critical_reference.py (net classes, slow-return whitelist)"
+ ],
+ "coverage_limits": [
+  "CAD geometry only: no field solve, SI / ESD simulation or physical test.",
+  "tools/check.sh, check_r10.py and the self-tests were not run (the brief forbids the full gate on the canonical tree; route_check and DRC were run on a probe copy).",
+  "The rejected D440 in-line alternative is Inference, not DRC-run.",
+  "D-R20-01 (U9 west cell) was not re-searched; the copper there is unchanged.",
+  "Reference sampling uses the dumped fill polygons with a point-in-polygon test at 0.05 mm steps; via antipads narrower than the step could be missed."
+ ]
+}

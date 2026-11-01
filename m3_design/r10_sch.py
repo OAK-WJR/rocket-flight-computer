@@ -27,6 +27,7 @@ BASE = SOURCE / 'r9_input'
 NS = uuid.UUID('1af735a9-7221-5413-9d5c-c1284216d384')
 REV = 'M3-ASSY-R10'
 SILK_CLEARANCE = 0.15           # mm: m3.kicad_pro min_silk_clearance (JLC silkscreen clearance; R9 had 0)
+PTH_INNER_HOLE_CLEARANCE = 0.55  # mm: D-R21-01, inner-layer PTH pad hole to foreign copper (JLC 0.3 mm minimum)
 KEEP_RULES = ('General copper to hole clearance', 'HRO M-12 internal SMD lands to locating holes',
               'Small GND pad thermal relief', 'Tag-Connect contact to foreign copper',
               'R9 bare test pads to foreign copper')
@@ -230,6 +231,29 @@ R10_MCU_NOTE_PINS = {'8': 'BUZZ_DRV', '28': 'LOGIC_SOURCE_ST', '29': 'BAT_FAULT_
                      '43': 'NC', '2': 'NC', '4': 'NC', '5': 'NC', '32': 'NC'}  # R19-MCU-03 sentinels PE3 / PE5 / PE6 / PC4
 
 
+# D-R21-03 (R21-REQ-01 / R21-REQ-02): retained notes that named superseded parts or the pre-OQ-6 fuse, replaced in place.
+R21_SHEET_NOTES = {
+    'sensors.kicad_sch': {
+        'U4 = ST LSM6DSV320X (R4)': ('U4 = ST ISM6HG256X (D-R19-11; the LSM6DSV320X is the consigned alternate on the same land): '
+                                    '+/-16 g low-g + +/-32..256 g high-g accel (DS15034 Rev 1 p1; use only high-g FS codes '
+                                    '001 / 010, which both parts share), +/-4000 dps gyro, SPI <= 10 MHz. Pins 10/11 open '
+                                    'per DS15034 Table 25 p52.'),
+        'U4: 4-wire SPI.': ('U4: 4-wire SPI. INT2 open; OCS_aux/SDO_aux (pins 10/11) open, held by their internal pull-ups '
+                            '(DS15034 Table 25 p52; the alternate the same, DS14623 table 25).')},
+    'diagnostics.kicad_sch': {
+        'CAM_5V_SENSE = CAM_5V x 1k/11k': ('CAM_5V_SENSE = CAM_5V x 1k/11k -> PB1 (pin 35, ADC12_INP5, TT_u 4.0 V max).\\n'
+                                           '5.25 V reads 0.477 V; even 19.9 V (TVS clamp, failed regulator) reads 1.81 V.\\n'
+                                           'Lets a battery-powered self-test check the camera supply (U400 buck, U402 '
+                                           'switch) without a meter; on USB-only power PORT_5V3 and CAM_5V are off.')},
+    'battery_entry.kicad_sch': {
+        'Input supply must be fused': ('No battery-lead fuse (owner decision OQ-6, 2026-10-28). Limited only by the pack '
+                                       'and lead: the lead, J1, the BAT_IN copper, D8, C80 / C96, C88 (100 nF) and C89 / '
+                                       'C95. U9 (TPS259470L) current-limits and latches off RAW_PROTECTED. Q120\'s drain '
+                                       'is on BAT_IN, so the RAW_ACT fire path bypasses U9; R134 (2 Ohm) limits it. '
+                                       'Strain-relieve the lead; no chafe points; crimped or soldered leads.')},
+}
+
+
 # R19-MCU-03 / R19-REQ-02 / R19-MCU-02: retained R8 / R9 sheet notes that contradicted the R10 pin map, part values or
 # the single DS12110 revision, each replaced in place (matched by its opening words).
 R19_SHEET_NOTES = {
@@ -284,12 +308,33 @@ def generated_sheet(old, library, specs, title, page, notes):
     return text + f'\t(sheet_instances (path "/" (page "{page}"))))\n'
 
 
+# D-R21-01 (R21-PWR-02 / R21-GATE-02 / R21-MFG-01 / R21-BOM-01): JLCPCB's published hole rules
+# (https://jlcpcb.com/capabilities/pcb-capabilities, read 2026-10-31: "Inner layer PTH pad hole to copper clearance
+# 0.3mm", "PTH to Track 0.28mm" (0.35 recommended), "Pad Hole-to-Hole Spacing 0.45mm"; vias 0.2 mm, which the general
+# 0.25 mm rule covers). DRC and the zone filler apply them; check_r10 K-rules pins each against that table.
+JLC_HOLE_RULES = (
+    # The partner is copper (any non-pad item, or a plated pad): J3's NPTH locating holes sit 0.535 mm from its PTH
+    # shell pads' rings (0.835 mm hole wall to slot wall; the shield's geometry, held by the general and HRO rules), so
+    # an A-only condition fails them, and an NPTH hole is no inner copper. (A clause "B.Pad_Type != ..." alone is false
+    # for zones and tracks, so the rule then misses the fills.)
+    ('JLC inner-layer PTH pad hole to copper', 'inner',
+     "A.Type == 'Pad' && A.Pad_Type == 'Through-hole' && (B.Type != 'Pad' || B.Pad_Type == 'Through-hole')",
+     'hole_clearance', PTH_INNER_HOLE_CLEARANCE),
+    ('JLC outer-layer PTH hole to track', 'outer', "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'",
+     'hole_clearance', 0.28),
+    ('JLC pad hole to hole', None, "A.Type == 'Pad' && B.Type == 'Pad'", 'hole_to_hole', 0.45),
+)
+
+
 def dru(text):
     rules = []
     for m in re.finditer(r'\(rule "([^"]+)"', text):
         if m.group(1) in KEEP_RULES:
             rules.append(text[m.start():sch.close_paren(text, m.start())])
     assert len(rules) == len(KEEP_RULES)
+    for name, layer, condition, constraint, value in JLC_HOLE_RULES:
+        rules.append(f'(rule "{name}"\n' + (f'  (layer {layer})\n' if layer else '') +
+                     f'  (condition "{condition}")\n  (constraint {constraint} (min {value}mm)))')
     return ('(version 1)\n# R10 plan section 2 item 1: board-default copper clearance, no pyro/RF spacing overrides.\n'
             '# The external power switch arms the board; load-switch, reset and gate safety remain checked.\n' +
             '\n\n'.join(rules) + '\n')
@@ -398,6 +443,8 @@ def build(out, netlist=True):
                 t = t.replace('TP92 measures their junction.', 'Probe R9.2 / R110.1; TP92 removed (AUD-5).')
             for prefix, line in R19_SHEET_NOTES.get(file.name, {}).items():
                 t = replace_note(t, prefix, line, f'{file.stem}:r19:{prefix}')
+            for prefix, line in R21_SHEET_NOTES.get(file.name, {}).items():
+                t = replace_note(t, prefix, line, f'{file.stem}:r21:{prefix}')
             if file.stem in data['notes']:
                 t = replace_notes(t, data['notes'][file.stem])
         t = override_values(t, values)

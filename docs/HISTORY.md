@@ -70,3 +70,25 @@ the board kept at 102 mm; the gate, the hard rows and review passes 1 and 2 met 
 the 2026-10-26 00:57Z (UTC) supplier snapshot, U4 in JLC stock; and the fabrication outputs are bound to `4f841a0e…`.
 R9 is the revision to order after a fresh cost and stock run (ORDERING); R8 (accepted 2026-10-20) is its fallback.
 
+### Moved in round 21 (R21-REQ-06)
+
+#### M2: the R8 D10 detour amendment as worded for R8 (U31 body)
+
+; **R8**, R8_DECISIONS D10: where an edge of that tree crosses a hard keep-out, that edge counts as the shortest octilinear path around it. A hard keep-out is an area closed to tracks on every copper layer the net can use, the U31 body for any non-GND net (F10), an NPTH hole or the board edge. Parts and other nets' copper never count as keep-outs, and the tool lists every net judged this way with both ratios)
+
+#### M2: the R7–R9 pour lists
+
+(on R8: GND, 3V3, BAT_IN, RAW_ACT, ACT_FET_S; on R9 also RAW_PROTECTED, an F.Cu pour; on R7 also 3V3A and CAM_5V; the tool reads the pours from the board's zones; the two net-level tests cannot judge these nets)
+
+#### Board position: R9 aft-edge allocation
+
+**R9:** aft edge at joint ≥ +80…+83 mm with the coax loops on the side away from the camera shroud, or ≥ +91…+95 mm with the loops entirely forward of the shroud;
+
+#### Board position: R9 open position
+
+R9's position remains open until its shroud geometry is measured
+
+#### Board position: R7–R9 coax-loop zone
+
+R7 fits the coupler bore along its whole length (P1, P2 CAD envelopes), so the bore no longer limits the position; the coax loop zone aft of the board and the camera shroud do. Allocate about 44–48 mm for that zone: jack 9.5 + straight plug about 16–20 + RG316 loops at 13 mm bend radius, axially staggered by at least one cable OD (two equal U-turns otherwise cross under the board), or right-angle plugs. Choose the plug and coax and cite the plug's drawing (the CAD's 16 mm plug envelope has none). The former "aft edge about 70 mm below the coupler's forward end" (joint +50) is superseded: it put the mated plugs inside the battery bay (`sources/r7_review/pass2_mechanical.md` MECHANICAL-03/04, `pass1_layout.md` L3).
+

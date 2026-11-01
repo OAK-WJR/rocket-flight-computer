@@ -82,12 +82,18 @@ def control(d):
     t('BAT_SW_SOURCE','B',S,[p('J400.1'),(10.8,67.5),(10.8,69.2)]);v('BAT_SW_SOURCE',(10.8,69.2))
     t('BAT_SW_SOURCE','F',S,[(10.8,69.2),p('R80.2')])
     t('BAT_SW_RETURN','F',S,[p('J400.2'),(11.825,67.6),p('R165.1')])
-    t('BAT_ENABLE','F',S,[p('R165.2'),(15.3,67.0),(16.3,66.0),(19.675,66.0),p('R81.1')])
-    t('BAT_ENABLE','F',S,[(16.3,66.0),p('C87.1')])
     # D-R19-02 (R19-SAF-02): the via sits 0.2 mm further south, 0.500 mm from R134.2 (RAW_ACT) instead of 0.300 mm.
-    t('BAT_ENABLE','F',S,[(19.675,66.0),(19.675,66.6)]);v('BAT_ENABLE',(19.675,66.6))
-    t('BAT_ENABLE','B',S,[(19.675,66.6),(21,67.925),(21,68.6),(21.3,68.9)]);v('BAT_ENABLE',(21.3,68.9))
-    t('BAT_ENABLE','F',S,[(21.3,68.9),(21.3,75.2),(18.0232,78.4768),(18.0232,81.8768),(17.1,82.8)])
+    # D-R21-04: with R81's stub gone (D-R21-05) the run turns into the via on a 45 degree piece from (19.075, 66.0), not
+    # at (19.675, 66.0) (a removable local bump on this critical net).
+    t('BAT_ENABLE','F',S,[p('R165.2'),(15.3,67.0),(16.3,66.0),(19.075,66.0),(19.675,66.6)]);v('BAT_ENABLE',(19.675,66.6))
+    # D-R21-04 (R21-REQ-04): the B.Cu hop's last bend moves 0.3 mm west, so its final 45 degree run is 0.849 mm long
+    # into the via (21.3, 68.9) (was a 0.424 mm jog, 0.3 mm off the F.Cu run); TP120's 1.0 mm and R88.2 stay clear.
+    t('BAT_ENABLE','B',S,[(19.675,66.6),(20.7,67.625),(20.7,68.3),(21.3,68.9)]);v('BAT_ENABLE',(21.3,68.9))
+    # D-R21-05 (R21-SAF-01): R81 (EN's pull-down) and C87 (its filter) sit on the F.Cu EN run at U9's end, pads 1 on the
+    # run (C87.1 on its last bend, so no piece of the run lies inside a pad) and pads 2 in the F.Cu GND piece of U9.8's
+    # via (20.2, 81.0): an open anywhere up the switch run leaves EN held low by R81, and only the via (17.1, 82.8)
+    # stays in series between U9.1 and R81 / C87.
+    t('BAT_ENABLE','F',S,[(21.3,68.9),(21.3,75.2),(18.0232,78.4768),p('R81.1'),p('C87.1'),(17.1,82.8)])
     v('BAT_ENABLE',(17.1,82.8));t('BAT_ENABLE','B',S,[(17.1,82.8),p('U9.1')])
 
 
@@ -208,6 +214,10 @@ def logic(d):
     t('SW_NODE','B',W,[(24.4,72.5),(21.78,72.5),p('C5.1')])
     t('BST','B',.25,[p('U2.6'),(23.05,71.0),p('C5.2')])
     t('3V3','B',W,[p('U2.1'),(23.2,68.6)]);v('3V3',(23.2,68.6))
+    # D-R21-02 (R21-PWR-01): U2.1 (AP63203 FB, its output sense) also reaches the In2 3V3 plane through R89's via
+    # (23.0, 70.0): one 45 degree B.Cu run from the pad's south end (the gate lens's f01b). An in-line second via at
+    # (22.55, 68.6) would sit 0.886 mm (In2) from the BAT_ENABLE barrel (21.3, 68.9), under S-8's 1.0 mm.
+    t('3V3','B',W,[(24.05,68.95),(23.0,70.0)])
     t('3V3','B',W,[(24.2,77.0),(23.1,78.1)]);v('3V3',(23.1,78.1))
     t('3V3','B',W,[p('C8.1'),(25.4,79.26),p('C9.1')])
     # Bridge the buck and core plane regions across the RAW/VLOGIC corridor.
