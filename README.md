@@ -108,7 +108,10 @@ Other branches: `m3-assy-r3` … `m3-assy-r10` (Oct 2026) are later, unmerged re
 
 **Jerry Wu (Jiarui Wu):** the project and its requirements: one board that fits the 54.66 mm airframe, built-in USB diagnostics, at most three PCB iterations. I chose to merge the two earlier boards into one, set the system constraints, made the design decisions recorded as "owner rulings" (for example two independently fused parachute channels, and keeping the backup altimeter fully separate), and reviewed the layout, flagging routing problems such as unwanted zigzag traces.
 
-**AI coding assistants (Claude Code and Codex):** produced most of the schematics, PCB layout, simulations, firmware and scripts from my requirements and decisions. Commits made with Claude Code carry a `Co-Authored-By: Claude` line. `AGENTS.md` (read by Codex, and by Claude Code through `CLAUDE.md`) holds the safety and routing rules they had to follow.
+**AI coding assistants:** they produced most of the schematics, PCB layout, simulations, firmware and scripts from my requirements and decisions.
+- **Claude Code** wrote the design documents, drew the first schematics through the EasyEDA API, wrote the KiCad board, routing and check scripts, and ran the ngspice simulations. It proposed and chose the 2 Ω per-channel pulse resistors shown above; I approved them. It also merged pull requests #1–#5 on my account, so those merge commits show my name.
+- **Codex** did the quality audit, the single-board versions up to M3-ASSY-R1, the bench firmware v0.1–v0.8.1 and the USB diagnostic tools.
+- Commits made with Claude Code carry a `Co-Authored-By: Claude` line. `AGENTS.md` (read by Codex, and by Claude Code through `CLAUDE.md`) holds the safety and routing rules they had to follow.
 
 **Collaborator and existing work:**
 - **Ethan Huang** (collaborator) merged the four servo outputs, the two fused parachute channels with the arming break, the pull-pin and the buzzer into the board (pull request #1, 26 Sep 2026), also with Claude Code. He committed the later R3–R10 branches.
