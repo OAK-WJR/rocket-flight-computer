@@ -27,3 +27,10 @@ m3_design/sim_r2/out/
 .history/
 **/.history/
 *.lck
+
+# Never commit secrets or local agent state
+.env
+.env.*
+.claude/
+*.pem
+*.key
