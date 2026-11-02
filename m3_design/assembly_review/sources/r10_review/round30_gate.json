@@ -1,0 +1,83 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 30, lens gate",
+  "reviewer": "claude",
+  "target_commit": "0afaed38dafa86edf4453a8bf7b55f9337e41ae1",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 0
+  },
+  "findings": [],
+  "observations": [
+    "D-R28-01 seeds C1 (loaded_pack power back to 5.456 x (1.46 + aux_A)), C2 (ports_w with a 1.46 + aux_A literal) and F2 (port_A without aux_A, the D-R27-01 regression): r10_parts --check fails 'stale: parts_budget.json' until the budget is regenerated, then passes; no test pins the budget figures. Same class as R26-GATE obs 2 / R28-GATE obs 1 / R29-GATE obs 1 (no stated rule binds a budget figure to a check); D-R28-01 claims no test.",
+    "D-R29-01 / -02 seeds A1-A12 and A6 (rule 3's 47-58 us reverted, its label dropped, its range alone reverted; the turn-on label and each of round 29 triage (a)-(f) dropped): every one fails test_r23_binding_note_rules_and_pin_table, and K-binding fails on the saved note until it is regenerated (the regenerated A1 note is byte-identical to round 28's 30796f5e..., D-R29-01's before hash).",
+    "D-R28-02 ... -04 seeds B1-B13 (rule 3 label, MCU-high qualifier, all-but-one-corner qualifier, 'before first power', DS15034 Table 2 p. 11, U401 thermal label, chatter Calculation-only forms, 44 ms lead, rule 4 4.5 V criterion, rule 8 labels, meter 0.9 kOhm threshold): every one fails the pinned test (and K-binding before regeneration).",
+    "Pin coverage: all 62 assertIn loop pins in test_r23_binding_note_rules_and_pin_table occur exactly once in the committed note and all 36 assertNotIn pins zero times, so no pin can be satisfied by a sibling occurrence after one copy is dropped.",
+    "The chatter obligation's '; Inference:' prefix before \"C87's 0.72 x minimum ...\" is not inside a pin; dropping only that word leaves the parenthetical's pinned 'Calculation / Inference' label, so no unlabelled figure results (not a gate miss).",
+    "Rule 3's 47.8 us lower figure is written 'about 47' (47.78 rounds to 48); the qualifier 'about' and the conservative direction make it not false (rounding class).",
+    "Hand edit of the saved binding note only (47-58 -> 47-53 us in the JSON): K-binding fails; the pinned test reads the generator by design (R29-GATE obs 7).",
+    "D-R27-02 seed F1 (generator drops 'the two' from the Rev 11 sentence): pinned test and K-binding fail.",
+    "D-R27-03 seeds: D1 (PORT_TERMINAL_PINS 3 / 4 swapped in r10_parts) stops r10_sch.py at its PortTerminal assert and fails test_r27_port_terminal_pin_names; D2 (J410 back on M3:CameraTerminal in circuit.json, sheets regenerated) fails r10_sch_check (fresh-export pin names, F10 / D-R27-03) and the test.",
+    "D-R26-01 seeds: E1 (J440.3 partner via removed) and E2 (moved to 1.56 mm) fail route_check critical_via_no_gnd (layer 'pad') and test_r26_aux_pins_have_gnd_partner_vias.",
+    "D-R26-02 / -04 seeds: E3 (R173 0.3 mm back south) fails the PYRO1_OUT test at 0.782 mm plus route_check; E6 (R13's 3V3 via 0.25 mm south) fails it at 0.800 mm; E5 (R164's 3V3 via moved (-0.25, -0.3)) fails the gate-net test at 0.695 mm; E4 (C10 0.3 mm south, away from U5) keeps both gaps >= 1.0 mm and is legal.",
+    "right_angle seeds R01-R22 on 22 of the 77 chamfers (F.Cu, B.Cu, In2.Cu; 0.2-1.0 mm widths; critical and non-critical; square, overlap, overshoot, dup, partial, zerolen, tiny): every free square corner fails right_angle (R01, R03, R06, R09, R12, R15, R18, R19, R21, R22), the J9.1 pad corner R17 fails at 'pad' (inner corner (37.55, 52.95) outside the 1.9 mm land); overlap / overshoot / partial variants fail overlap_only_joint, dead_copper, fold_back or collinear_overlap.",
+    "right_angle passes that are by definition: R02 (GND corner at (15.475, 79.9) inside C80.2's land) and R20 (CAM_FAULT_N corner at (35.27, 58.05), inner corner inside R432.1) have the inner corner covered by pad copper; R11 (CAM_5V overshoot 0.2 mm inside J9.1) is a T, outside the rule (round 24 triage, three-way forks); R08 (zero-length segment at the corner) is DRC track_dangling (R25-GATE obs class); R14 (NRST 0.01 mm chamfer legs) is a counted non-critical micro_segment leftover (R24-GATE-01 class) while the critical-net R13 (3V3A 0.03 mm) fails micro_segment.",
+    "Baseline on the committed tree copy: route_check r10 0 FAIL (5 unrecorded non-critical leftovers, as recorded); pinned test OK; K-binding OK; binding note SHA-256 c5cd0fa3... and parts_budget.json 4267634... match D-R29-02 / D-R28-01.",
+    "D-R29-01's figure is carried consistently: M3_R10 lines 38 / 232 / 1118, FMEA_REDUNDANCY I-2, R10_VALIDATION and STATUS all read about 47-58 us; '47-53 us' remains only in history rows that describe the old error.",
+    "Gate self-tests on the committed tree copy: test_r10_check 268 OK (6 skipped), test_route_check 72 OK."
+  ],
+  "fix_verification": [
+    {
+      "item": "D-R29-01 (rule 3 time constant about 47-58 us over C126 +/-10 %, labelled)",
+      "measurement": "Committed note contains the phrase once; R = (220 + 50||50||1000)||10000 = 238.6 ohm, (C126 + 2.25 nF) gives 47.78 / 53.03 / 58.27 us at -10 % / nom / +10 %; seeds A1-A3 (revert, label-only, range-only) fail the pinned test; A1 regenerated note hash = 30796f5e... (the D-R29-01 before hash)",
+      "verdict": "confirmed"
+    },
+    {
+      "item": "D-R29-02 (pins for every D-R28-02 ... -04 label, turn-on label, (a)-(f); rejects '47-53 us' and 'EN turn-on delay. Resume')",
+      "measurement": "Seeds A4-A12 and A6 each drop one pinned label in r10_sch_check.py: all fail the pinned test before and after regenerating the note; all pins occur exactly once",
+      "verdict": "confirmed"
+    },
+    {
+      "item": "D-R28-01 (one port_A for ports_w and loaded_pack)",
+      "measurement": "Code reads port_A = 1.461 + aux_A for both; budget SHA 4267634...; literal seeds caught only as stale budget before regeneration (observation, no claimed test)",
+      "verdict": "confirmed"
+    },
+    {
+      "item": "D-R28-02 ... -04 (rule 3 meter criterion, labels, rule 4 criterion, obligation 15, DS15034 p. 11)",
+      "measurement": "Seeds B1-B13 all fail the pinned test",
+      "verdict": "confirmed"
+    },
+    {
+      "item": "Round 29 docs corrections in this lens (47-58 us carried to M3_R10, FMEA, R10_VALIDATION, STATUS)",
+      "measurement": "grep of docs, STATUS and the design records: every current statement reads about 47-58 us",
+      "verdict": "confirmed"
+    }
+  ],
+  "checks_actually_executed": [
+    "sha256 of the board before and after (a0ec075e... both); git archive of 0afaed3 into the probe tree",
+    "route_check --profile r10 on the base copy and on 28 seeded copies (22 right_angle, 6 D-R26)",
+    "test_r10_check SchematicContract.test_r23_binding_note_rules_and_pin_table and check_r10 --only K-binding on 28 generator seeds, before and after regenerating the note with r10_sch_check --binding-note",
+    "r10_parts --check before and after --budget-only on 3 budget seeds",
+    "r10_parts --library-only, r10_sch.py --out, r10_sch_check and test_r27_port_terminal_pin_names on 2 schematic seeds",
+    "RealBoardSeeds test_r26_* on 6 D-R26 board seeds",
+    "kicad-cli 10.0.7 pcb drc on the zero-length seed R08",
+    "a pin-occurrence count of every pin in the pinned test against the committed note",
+    "full test_r10_check (268 tests OK, 6 skipped, R10_BOARD = tree copy) and test_route_check (72 tests OK) on the tree copy"
+  ],
+  "sources": [
+    ".supervisor/r30_review_brief.md; .supervisor/r30_lens_queue.md (## gate)",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R26-01 ... D-R29-02",
+    "m3_design/assembly_review/sources/r10_review/round24_triage.json ... round29_triage.json (observations)",
+    "tools/test_r10_check.py, tools/route_check.py, tools/check_r10.py (K-binding), m3_design/r10_sch_check.py, m3_design/r10_parts.py",
+    "docs/M3_R10.md, docs/FMEA_REDUNDANCY.md, docs/R10_VALIDATION.md, STATUS.md",
+    "probe scripts and outputs: .supervisor/r30_gate/"
+  ],
+  "coverage_limits": [
+    "Seeds sample 22 of 77 chamfers, not all; the pad-corner case was exercised at J9.1, C80.2 and R432.1 only.",
+    "Budget seeds were run with r10_parts only, not the full r10_build.sh; no full tools/check.sh run (brief).",
+    "Docs were checked for the D-R29-01 figure only, not re-audited."
+  ]
+}

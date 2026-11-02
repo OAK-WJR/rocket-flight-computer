@@ -1,0 +1,91 @@
+{
+ "schema": "r10-review-v2",
+ "review": "R10 round 30, safety lens",
+ "reviewer": "claude",
+ "target_commit": "0afaed38dafa86edf4453a8bf7b55f9337e41ae1",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 2
+ },
+ "findings": [
+  {
+   "id": "R30-SAFETY-01",
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "The ARM1_SENSE-to-CAM_IO_3V3 bridge figures (about 1.73 V on RAW_ACT, about 0.15 mA through the match) omit the D120 / R131 cold pull-up, which is live whenever CAM_IO_3V3 is; the board-on values are about 2.19-2.21 V and 0.107-0.109 mA",
+   "contradicts": "docs/R10_VALIDATION.md line 2603 (section 1, surface inventory): 'ARM1_SENSE ... to U13.5 (CAM_IO_3V3), benign: at most 3.3 V on PC5 and about 1.73 V on RAW_ACT with the bus off, about 0.15 mA through the match against the J-Tek 0.30 A no-fire, and the cold screen then reads the bus as live and refuses (Calculation; ...)'. The source derivation (round22_safety.json, consequences_calculation) is '3.3 V x 11.2/(10.2+11.2) = 1.73 V', a divider of R132 + R175 (10.2 kOhm) against the CONT bank (11.2 kOhm) only.",
+   "evidence": "Board a0ec075e (pcbnew 10.0.7, read-only): CAM_IO_3V3 is U13 (TPS70933) pin 5, fed only from CAM_5V (U402 TPS2553, EN = CAM_PWR_EN = PE11 with R431 100 kOhm pull-down; U402 IN = PORT_5V3, off on USB-only power and with J400 open). So CAM_IO_3V3 is at 3.3 V only while the board runs, i.e. while 3V3 is up. The cold pull-up D120 (BAT54A, pin 3 = 3V3 anode, pin 1 = PYRO1_COLD) -> R131 10 kOhm (B(10.8,61.15)) -> PYRO1_OUT is then live. Nodal solve (.supervisor/r30_safety/camio_bridge.py, output camio_bridge.txt; ARM1_SENSE stiff at 3.3 V, R132 + R175 = 10.2 kOhm into RAW_ACT, R134 2 Ohm, match 2 Ohm, CONT bank 11.2 kOhm, Q120/Q121/Q124 off): without the pull-up RAW_ACT = 1.7274 V and I_match = 0.1542 mA (the record's figures, reproduced exactly); with it, Vf 0.20 / 0.24 V (JSCJ BAT54 VF1 <= 0.24 V at 0.1 mA, cached r14_parts_pdf/bat54.pdf p1): RAW_ACT = 2.2052 / 2.1913 V, I_match = 0.1073 / 0.1087 mA, CONT = 196.9 / 195.6 mV. The sentence's own condition ('the cold screen then reads ...') is the board-on state. Only with 3V3 off (a camera back-feeding J9.1 with the board off, which REQUIREMENTS F9 forbids) do 1.73 V / 0.154 mA apply.",
+   "impact": "A wrong safety-record value (27 % low on RAW_ACT). The conclusion is unchanged: about 0.11 mA is far below the 0.30 A no-fire, and PC5 reads 3.3 V, so the cold screen refuses.",
+   "concrete_fix": "Text only, R10_VALIDATION section 1: 'at most 3.3 V on PC5 and, with the board on (3V3 feeding the D120 / R131 cold pull-up), about 2.2 V on RAW_ACT with the bus off and about 0.11 mA through the match (0.15 mA and 1.73 V only with 3V3 off, a back-fed camera, which the procedure forbids) ...; Calculation / Inference: the BAT54 drop at 0.1 mA'."
+  },
+  {
+   "id": "R30-SAFETY-02",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The first-article 70 C chamber test cannot pass as written: its new criterion 'LS120 <= 70 C' in a 70 C chamber at the pad load is physically unattainable (the docs themselves put LS120 at 80-92 C there), so the 55 C interim site limit could never be lifted and none of the listed failure remedies addresses LS120",
+   "contradicts": "Kind 3 (a required procedure cannot be carried out correctly as written; documents contradict). REQUIREMENTS Temperature row: 'Until the first-article 70 C chamber test at the pad load passes (every 85 C part <= 85 C, and LS120 <= 70 C (thermocouple on LS120); ORDERING 8.3), the interim site limit is bay air <= 55 C'; the same criterion in ORDERING 8.3 'Board temperature at the pad load' ('Pass: every 85 C-rated part <= 85 C, and LS120 <= 70 C'), M3_R10 'Hot-end temperature', R10_VALIDATION owner rows 33 and 36 ('pass: LS120 <= 70 C'), parts_qualification 'Round 29'. The same sentences state that at the pad load LS120 'runs at about 80-92 C in a 70 C bay' (+10-22 K, Inference), and owner row 36 accepts buzzer annunciation as best-effort above about 48 C bay air.",
+   "evidence": "In a 70 C chamber with the board dissipating the pad load (1.0-1.5 W) and no cooler boundary, every board-mounted part is above 70 C in steady state (all heat sources are on the board; LS120 at F(23,58.5) is soldered to it). The docs' own model gives LS120 80-92 C there (70 + 10..22 K). So the LS120 clause fails on every board, and with it the whole chamber test; the listed failure remedies ('a camera / port duty limit on the pad, or X7R parts on the same lands', REQUIREMENTS / M3_R10 / owner row 33) do not lower LS120's pad-load rise, so the 'until it passes' 55 C limit becomes permanent, while owner row 36 treats LS120's out-of-rating state as accepted and non-gating. Introduced by the round 29 fix pass (R29-TRI-04).",
+   "impact": "The thermal acceptance gate for the 85 C parts can never be closed on this board, so the interim limit and the owner's 48 C best-effort disposition contradict each other; procedure unusable as written. No fire hazard; the buzzer is annunciation only (the stay-off checks also use telemetry).",
+   "concrete_fix": "Text only, in the six places: drop LS120 from the pass criterion (its hot end is owner row 36's accepted best-effort item) and instead 'record LS120's rise over chamber air at the pad load (thermocouple on LS120); the buzzer stays in rating for bay air <= 70 C minus that rise, which replaces the inferred 48 C'. Keep 'every 85 C part <= 85 C' as the pass criterion."
+  }
+ ],
+ "observations": [
+  "BAT_ENABLE to BAT_OVLO 0.200 mm (U9.1 to U9.2, B.Cu, TI land) is not in the section 1 table; fail-safe: J400 open, EN sits at about 0.57 V (OVLO divider 2 MOhm / 280 kOhm loaded by R81); J400 closed, OVLO rises to about 1.55 V and trips U9 off.",
+  "ACT_GATE to BAT_IN 0.2177 mm (B.Cu, the Q120 gate chamfer (14.475,72.2)-(15.262,72.987) to Q120.9) is not listed; a bridge holds the P-FET pair off (no inadvertent bus), and loss of the bus is caught by rule 4's powered-BUS refusal.",
+  "PYRO1_OUT to BUZZ_G 0.510 mm (R173.1 to the BUZZ_G track (17.92,58.70)-(17.75,58.87), B.Cu) is outside the section 1 rows; identical (0.510 mm) on 92c3ad59, so not a D-R26 change; R162 1 kOhm and R163 10 kOhm limit an enabled bus to about 10 mA: no fire.",
+  "U9.1-U9.5 row 'leak of at most 1.52-1.83 MOhm' spans both pack voltage and VUVLO(R) spread (1.83 uses 1.183 V at 8.4 V; the max-threshold bound at 8.4 V is 1.76 MOhm), while the RAW_ACT latch row uses the worst threshold at both ends (1.69-1.96 MOhm); inconsistent convention, ambiguous 'at most', not counted.",
+  "R134 '22-29 W' for a PYRO1_IGN-to-GND short: 3.3-3.75 A gives 21.8-28.1 W at 2 Ohm (28.4 W with hot R134 min); the 29 W top is a loose upper bound, conclusion unchanged.",
+  "The J440.3-chafe EN figure 1.28 V is right once the 1 kOhm TX series resistor is counted (3.3 x 300 / 771 = 1.284 V).",
+  "Rule 4 probe points match the copper: R120 and C120 sit on Q120's own B.Cu gate island (Q120.4-(15.262,72.987)-via (16.2,73.3)-C120.2-R120.2), R119 on Q121's; so a Q120 gate cut from R121 reads about 0 V at R120.2 against R120.1 (ACT_FET_S).",
+  "Rule 3 meter check: U3.3 is QSPI_IO2 and QSPI_IO2 has no pull-up, so the red-on-R127.1 path is GND clamp + 0.91 kOhm as stated (1 k || 10.22 k = 0.9109 kOhm).",
+  "Single-fault sweep with J400 open: ACT_GATE to GND / RAW_ACT (Q121.4-Q121.9 0.520 mm) / any low node, ACT_DRV to GND, Q122 or Q121 D-S short energise the bus without firing (Q124 held by R128, MCU off) and are screened by per-flight step 2 (J121.2 < 0.1 V) and owner row 2; EN-node paths (U9.1-U9.5, the (17.1,82.8) via-BAT_FAULT_N, ACT_EN / ACT_EN_MCU / RAW_ACT to BAT_ENABLE) are owner row 24 and steps 2/3. No single fault found that fires, or turns the board on with J400 open, outside the records.",
+  "AGENTS section 2.4 holds on the board: Q124 R126 220 Ohm series / R128 10 kOhm to source / C126 220 nF gate-source (source = GND); Q122 R122 / R123 / C123; Q120/Q121 R121 series, R119 / R120 to ACT_FET_S, C120 gate-source; PE4 also has R127 1 kOhm at the pin (gate <= 0.104 V against a 30 kOhm pull-up at 3.6 V)."
+ ],
+ "fix_verification": [
+  {
+   "item": "D-R29-01 (R29-TRI-02) rule 3 gate time constant",
+   "measurement": "238.6 Ohm x (C126 198 / 220 / 242 nF + Ciss 2.25 nF) = 47.78 / 53.03 / 58.28 us; phrase 'about 47-58 us over C126's +-10 % (53 us nominal; Calculation, driver resistances Inference)' present in the binding note (c5cd0fa3...), M3_R10 rule 3, FMEA I-2 / H-2 and R10_VALIDATION section 1",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R29-02 (R29-TRI-05) test pins",
+   "measurement": "tools/test_r10_check.py contains the (a)-(f) phrases and the turn-on qualifier, and rejects '47-53 us' / 'EN turn-on delay. Resume' (line 507); each pinned phrase is present in the regenerated binding note",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "R29-TRI-01 label places (safety figures)",
+   "measurement": "FMEA H-6 (c) and REQUIREMENTS F9 9.6 V: Calculation / Inference with the transfer and X7R reasons (1.2 uC / 158.4 nF + 2.063 V = 9.64 V); FMEA I-5 and owner row 1 991 microstrain labelled; section 2 fire currents labelled; 34.853 ms labelled in FMEA GAP-5, section 5, owner row 7 and AGENTS; M3_R10 gate-net 3.23 V and FMEA / section 1 gate-net rows labelled; 'Calculations on the budget' gone from STATUS and R10_VALIDATION. Fresh scan (labelscan.py, 54 hits of 'Calculation' without Inference in fire / gate / EN / bus sentences) found no further current safety figure resting on an unlabelled inferred input; the one wrong safety figure found is R30-SAFETY-01 (a calculation error, not a label)",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "R29-TRI-04 LS120 hot end (docs)",
+   "measurement": "LS120 named as a +70 C part with 80-92 / 65-77 C and 48 C (arithmetic correct) in REQUIREMENTS, M3_R10, ORDERING 8.3, owner rows 33 / 36, parts_qualification and AGENTS; but the added chamber pass clause is unattainable (R30-SAFETY-02)",
+   "verdict": "partly"
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after: a0ec075e... both; commit 0afaed3 confirmed",
+  "pcbnew 10.0.7 read-only net / pad dumps of the fire chain, load switch, EN network, buzzer, QSPI_IO2, camera supply (dump.py, refs.py, nettrk.py)",
+  "Shape-distance adjacency scan of PYRO1_OUT / PYRO1_GATE / PYRO1_GATE_N to 1.2 mm and of 15 arming / sense / EN nets to 0.6 mm on all four layers, zones included and excluded (adj.py, adj2.py; adj_fire.txt, adj_arm.txt); same fire-net scan on 92c3ad59 from git (adj_fire_92.txt) to check D-R26 deltas",
+  "Every section 1, owner row 1 / 2 / 24 and FMEA I-2 / I-5 / H-6 gap figure compared with the measurement (0.1768, 0.180, 0.500, 0.794, 1.040, 1.050, 1.0511, 1.0585, 1.065, 1.145, 0.415, 0.2005, 0.250, 0.330, 0.5197, 0.5000, 0.200, 0.1732, 0.3162, 0.150 mm): all agree to rounding",
+  "Recomputed: healthy / open cold CONT-BUS (99.369 / 146.23 mV), MID-RAW_ACT bridge 102.0 / 55.5 mV, OUT-3V3 0.295 V, CONT_MID-3V3 0.54 V, J400.2 chafes 2.88 / 1.87 / 1.28 V, EN leak thresholds, 9.6 / 7.5 V ESD, 5.55 / 6.49 / 7.43 V, 0.104 V PE4 hold-off, 7.1 us Q122, 0.91 kOhm meter path, rule 3 time constants",
+  "Nodal solve of the ARM1_SENSE-CAM_IO_3V3 bridge (camio_bridge.py)",
+  "Label scan of the committed AGENTS, STATUS, M3_R10, ORDERING, handoff, R10_VALIDATION, FMEA, REQUIREMENTS and parts_qualification (labelscan.py) and hand reading of each hit",
+  "Firmware rules 3 / 4 in M3_R10 vs the binding note vs the board (probe points, pins, nets); ORDERING 8.3 per-flight steps 1-7 against the circuit",
+  "Datasheets read from the cache: BAT54 (JSCJ), AON7524, AONR21357"
+ ],
+ "sources": [
+  "AGENTS.md, docs/REQUIREMENTS.md, docs/M3_R10.md, docs/ORDERING.md 8.3, docs/R10_VALIDATION.md (owner table, sections 1-5), docs/FMEA_REDUNDANCY.md, parts_qualification.md, r10_binding_note.json, tools/test_r10_check.py at 0afaed3",
+  "round29_triage.md, round29_fix_cad.md, round29_fix_docs.md; round26_triage.json (5.73 V places); round22_safety.json (1.73 V derivation)",
+  "JSCJ BAT54/A/C/S datasheet rev B Jul 2012 p1 (VF1 <= 0.24 V at 0.1 mA); AOS AON7524 (VGS(th) 0.4-1.2 V, Ciss 2250 pF); AOS AONR21357 Rev 2.1 p2 (VGS(th) -1.3/-1.7/-2.3 V); TI SLVSFC9C p9 (EN thresholds); MLT-5020 p2 item 6 (as quoted by the records)"
+ ],
+ "coverage_limits": [
+  "No physical, firmware or thermal test; no new zone refill; no gate seeds (gate lens scope).",
+  "Inner-layer S-8 barrel figures were not re-measured beyond the adjacency scan (In1 / In2 PYRO1_OUT 1.0209 mm and In2 3V3 1.0612 mm agree).",
+  "The 31.9 ms / 4.74 V load-switch figures, the fire budget and the EN timing models were not re-derived (power lens scope); only their labels were checked.",
+  "Other lenses' round 30 reports and probe directories were not opened."
+ ]
+}

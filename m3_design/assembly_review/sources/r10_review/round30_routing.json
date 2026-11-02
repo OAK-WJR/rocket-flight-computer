@@ -1,0 +1,58 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 30, routing lens",
+  "reviewer": "claude",
+  "target_commit": "0afaed3",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "route_check --profile r10 on a copy of a0ec075e: 0 failing, 0 allowlisted, 0 stale, 5 unrecorded noncritical leftovers (BAT_OVLO short segment, BUZZ_DRV / BAT_FAULT_N / I2C1_SDA tiny jogs, USB_ILIM detour), 28 bump windows; category counts pad_end_offcentre 70, segment_inside_pad 27, width_change_junction 11, short_layer_hop 18, power_via_no_gnd 28, as the records state.",
+    "Independent 45-degree audit (own scan, exact pcbnew shapes): 0 off-angle and 0 zero-length segments of 1059; 35 two-end 90-degree nodes, all at a pad or via whose copper covers the inner corner N + h_b u_a + h_a u_b; 8 acute (45-degree) branch pairs, all with the wedge apex inside the holding pad's copper; no fold-back outside a pad. Agrees with right_angle / acute_angle = 0.",
+    "Track-end audit: no free end, no overlap-only joint and no off-centre via joint on any net; the only via without a centred track end besides U401.11's two GAP-3 VIPPO vias is C98's GND stitch (23.8,62.95), the recorded via_on_track_in_fill item (0.300 mm offset, R10_VALIDATION §4/§6).",
+    "Near-coincident Ts (VBUS 0.05 mm, BUZZ_G 0.02 mm, the pad-internal C100.2 / C401.1 / C99.2 / C127.1 / C129.2 pieces, the six port-wire Ts) are as rounds 24-27 recorded; not re-reported (round 24 triage observation).",
+    "Critical-signal layer changes: 25 vias (CAM_MCU_RX/TX, GPS_RX/TX_MCU, RADIO_RX/TX_MCU, HSE_IN/OUT, IMU_CS, PYRO1_GATE, PYRO1_OUT, QSPI x6, SD x5, SPI1 x3), nearest GND via 0.770-1.492 mm (PYRO1_GATE 1.492); plated pins: only J440.3 / J440.4 carry a return-required net on two layers, GND partners 1.500 mm; J9, J410, J420, J121, J122 pins one layer each; J400.2 is AUD-2 slow and J1.1 power.",
+    "In2 under the 25 vias: 3V3 x17, PORT_4V8 x4, GND x3 (HSE_IN, HSE_OUT, PYRO1_GATE), PYRO1_OUT inside its S-8 void; J440.3 / J440.4 over 3V3: 23 of 27 over an In2 power rail, as R10_VALIDATION §6 states. Nearest rail-to-GND capacitor 1.29-6.19 mm, 13 of 21 beyond 4 mm (CAM_MCU_RX 4.02 mm to C29), J440.3 / .4 16.28 / 15.86 mm to C460: all as recorded.",
+    "Detour table recomputed on native geometry (octilinear MST of pad centres, 116 non-pour nets): 1500.8 / 1236.6 mm, 1.214x; every row of the R10_VALIDATION §6 table (23 nets at >= +3.5 mm, PYRO1_CONT_MID 10.57 / 6.81 mm, 0 vias) and the QSPI_IO2 +3.3 / USB_DM +3.1 mm notes reproduce.",
+    "USB pair: D+ / D- 1.90 mm apart over x 11.1-15.85 (DP y 31.55, DM y 29.65), 0.707 mm on the diagonals, trunks 14.70 (DP) / 16.45 (DM) mm from J3.B6 / J3.B7 to U1: as recorded.",
+    "Board contents: 1059 segments, 309 vias (170 GND; 304 x 0.5/0.3, 4 x 0.6/0.3, 1 x 1.0/0.5), 1866.794 mm of track, file 2,369,507 bytes: as M3_R10 'The board' states.",
+    "M2 via-hole rule: every via hole is >= 0.1 mm from every SMD pad opening except the two GAP-3 U401.11 VIPPO vias (27.3,13.6) / (27.9,13.6).",
+    "FMEA / R10_VALIDATION In2 3V3 edge figure (132.0 / 35.9 / 34.6 mm within 0.6 mm of RAW_PROTECTED / PORT_5V3 / PORT_4V8, min 0.300 mm): my outline-sampling method gives 138.2 / 35.8 / 34.8 mm on a0ec075e and 138.8 / 35.8 / 34.8 mm on 0dc84776, the board the figure is labelled with; the RAW_PROTECTED difference is a method difference (present on the labelled board too), not a board change, so no error is shown. Minimum 0.300 mm reproduces.",
+    "DRC (kicad-cli 10.0.7, --severity-all, board copy with the project .kicad_pro / .kicad_dru): 0 unconnected and no copper violations; the 199 lib_footprint_issues are an artefact of the copy's directory lacking the project kilib (the canonical gate reports DRC 0)."
+  ],
+  "fix_verification": [
+    {"change": "D-R29-01 / D-R29-02 (round 29 fix pass)", "measurement": "Text, labels and test pins only; no routing content. Board hash unchanged a0ec075e before and after.", "verdict": "confirmed (no routing change to verify)"},
+    {"change": "Round 28 audit-A correction of the J440 clamp figures (R10_VALIDATION §6 R20-RTE-05, M3_R10 D-R20-09 row, R10_VALIDATION:1757)", "measurement": "Track J440.3 -> D440.1 2.590 + 0.509 + 0.765 = 3.864 mm, J440.4 -> D441.1 2.590 + 0.509 + 0.865 = 3.964 mm (B.Cu, 0.2 mm); straight centre to centre 3.157 / 3.194 mm; pad edge to pad edge 1.865 / 1.900 mm (1.9 mm round pad to 0.35 x 0.6 land); chamfer 0.36 mm leg cuts 0.211 mm each", "verdict": "confirmed"},
+    {"change": "D-R26-01 J440.3 / J440.4 GND partner vias (still current)", "measurement": "GND vias (7.4,16.5) / (7.4,20.0), 0.5/0.3 mm: 1.500 mm from their pin centres, 0.300 mm ring to own pin pad, 0.800 mm to the neighbouring pin's pad; pins 3/4 of J410 / J420 / J440 / J9 flash no inner ring; current route_check fails exactly J440.3 (3.900 mm) and J440.4 (4.037 mm) on 92c3ad59 and passes a0ec075e", "verdict": "confirmed"},
+    {"change": "D-R24-17 right_angle (still current)", "measurement": "route_check on 5516eeec: 59 (B.Cu 31, F.Cu 25, In2 3); on a0ec075e 0; own independent corner-coverage scan agrees", "verdict": "confirmed"},
+    {"change": "D-R26-02 / -04 routing clearances quoted in M3_R10 / FMEA", "measurement": "PYRO1_OUT-3V3 1.0501 (F.Cu) / 1.0512 (B.Cu, R173.1-D120.3); PYRO1_OUT-3V3A 1.0400; PYRO1_OUT-GND 0.1802 / 0.1769; BUZZ_DRV-PYRO1_OUT 0.7936 (R162.1-R173.1); 3V3-PYRO1_GATE_N 1.0651 (R127.1), 3V3-PYRO1_GATE 1.0585 (R128.1), 3V3A-PYRO1_GATE 1.1451; R173.2-D120.3 0.4154; CONT_MID diagonal-Q123.1 0.2006, -R134.2 0.3862; via (19.55,55.825) to BUZZ_DRV 0.2334, LS120.3 (F.Cu) 0.2062, R162.2 0.997; EN run U9.1 -> via (17.10,82.80) -> C87.1 -> R81.1 3.890 mm; U9.1-BAT_IN 0.2001, BAT_ENABLE via-BAT_FAULT_N 0.2001, ACT_EN-BAT_ENABLE 0.3301", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after; git state unchanged (read-only)",
+    "tools/route_check.py --profile r10 on a copy of a0ec075e (route.json), on 92c3ad59 (git show c4bb56b, route_92c3.json) and on 5516eeec (git show ec8cb98, route_5516.json)",
+    "dump.py (pcbnew) -> geom.json: 1059 segments, 309 vias, 705 pads, 27 zones, 0 arcs",
+    "an1.py / corner.py / acute3b.py: off-angle, zero-length, 90-degree and acute bends with exact pad / via inner-corner and wedge-apex coverage, fold-backs, dangling ends",
+    "ends.py: free ends, overlap-only joints, off-centre via joints, vias without a centred track end",
+    "crit_vias2.py: every return-required critical-signal via, nearest GND via, In1 / In2 net around it; pth.py: plated-pin layer changes",
+    "detour.py: per-net routed length against the octilinear MST, 116 non-pour nets; nearest rail-to-GND capacitor per critical via",
+    "netdist.py / itemdist.py: exact copper clearances for the pyro / arming / gate figures quoted in M3_R10, FMEA and R10_VALIDATION",
+    "viapad.py: via hole to SMD pad opening (M2)",
+    "in2edge.py: In2 3V3 fill outline within 0.6 mm of RAW_PROTECTED / PORT_5V3 / PORT_4V8 on a0ec075e, 1407e850, 92c3ad59, 5516eeec and 0dc84776",
+    "kicad-cli 10.0.7 pcb drc --severity-all on the board copy"
+  ],
+  "sources": [
+    ".supervisor/r30_review_brief.md; .supervisor/r30_lens_queue.md (## routing only)",
+    "AGENTS.md §2, §3; docs/REQUIREMENTS.md M2",
+    "docs/M3_R10.md ('The board', round 26 / 24 change tables, 'Routing evidence'); docs/R10_VALIDATION.md §6 and the round 24-29 sections; docs/FMEA_REDUNDANCY.md H-6 / I-5; docs/ORDERING.md §8",
+    "m3_design/assembly_review/sources/r10_review/round29_triage.md, round29_fix_cad.md, round29_fix_docs.md; round24-27 routing / triage JSON (prior observations, searched for the near-coincident T nodes)",
+    "tools/route_check.py, tools/check_r10.py, tools/critical_reference.py"
+  ],
+  "coverage_limits": [
+    "Probe scripts and outputs are in .supervisor/r30_routing/.",
+    "Not re-run: route_check --bumps-all, the gate self-tests, the full tools/check.sh (forbidden on the canonical tree), check_r10 K-reference / K-region sampling (gate passes per the records; I checked only In1 / In2 nets around the layer-change vias).",
+    "IPC-2152 width adequacy was looked at only for the fire path (J121.1 -> Q124 F.Cu 0.5 mm, PYRO1_IGN B.Cu 0.5 mm, RAW_ACT 0.5 mm); current figures belong to the power lens.",
+    "The U401 / R402.1 residual alternatives (0.085 / 0.057 mm) were not re-drawn; the 0.325 mm off-centre figure reproduces in route_check.",
+    "No physical, SI or return-current measurement; all figures are native-geometry Calculations."
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 30, docs_binding lens",
+  "reviewer": "claude",
+  "target_commit": "0afaed3",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "R10_VALIDATION §1 (d') still gives R173 at B(16.87,59.70) and the a3144b15 OUT distances; the paragraph is the dated round 18 fix-pass record ('After the fix pass (a3144b15…)') and the current values (R173 B(16.87,59.05), CONT_MID 0.175 / 0.250 mm) are stated in the a0ec075e paragraph and the pair table; history, not a false current statement.",
+    "R10_VALIDATION:2602 cites `adjacency_a3144b15.json` and :2884 `detour.py`, neither tracked (they were .supervisor probe artefacts); both are provenance notes for measurements whose figures are reproduced in the text, not links or required procedures.",
+    "On a0ec075e a 3V3 via (26.4,79.26) sits 0.2505 mm from the In2 RAW_PROTECTED fill and a CAM_5V via (34.2,49.325) 0.2505 mm from the In2 3V3 fill; FMEA I-5 lists only the 0.300 mm fill edges and the J440.1 / J9.1 rings. Round 27's triage already ruled that the I-5 lists do not claim to be complete; nothing new beyond that ruling.",
+    "R10_VALIDATION:715 (GAP-5 row, 'Recorded worst intact-hardware allocation 34.853 ms is guarded at ≤36 ms') has no Inference label, but it sits in the dated 2026-10-28 requirements-audit preparatory pass table (its GAP-1 row still gives the superseded 1.550071 A), i.e. history, not a current statement.",
+    "AGENTS manufacturing row's 'orientation 192 reconstructed: 67 top + 125 bottom, + 14 placement-only' and the CPL's 70 top / 136 bottom rows both total 206; the two splits count different things (reconstruction vs CPL side) and M3_R10 states both.",
+    "Short relative paths such as `sources/r10_design/r10_binding_note.json` and `fab/m3_bom_owner.csv` in M3_R10 / ORDERING / handoff are abbreviations of `m3_design/assembly_review/...`; every one resolves to a tracked file of that basename."
+  ],
+  "fix_verification": [
+    {"item": "D-R29-01 (R29-TRI-02): binding note rule 3 gate time constant", "measurement": "c5cd0fa3 obligations[38] reads 'about 47–58 µs over C126's ±10 % (53 µs nominal; Calculation, driver resistances Inference)'; 238.6 Ω × (C126 + 2.25 nF) gives 47.8 / 53.0 / 58.3 µs at −10 % / nominal / +10 %; git diff 09a564e..0afaed3 of the note changes only that obligation; '47–53' absent from the note", "verdict": "confirmed"},
+    {"item": "Binding note c5cd0fa3 bound to the board and cited files", "measurement": "file SHA-256 c5cd0fa313d3…; board_sha256 = a0ec075e…; netlist 535a8fdf… = schematic.net.xml; pin_table b94133e6… and circuit 3220e5f9… match the files; all 100 u1_pins nets equal U1's pad nets on the board (0 mismatches); IMU pose B(17,45.9) rot 180 matches U4", "verdict": "confirmed"},
+    {"item": "Binding note hash in the records", "measurement": "c5cd0fa3 is cited as current in STATUS round 29 entry, M3_R10 round 29 fix-pass checks bullet and R10_VALIDATION round 29 fix pass; 30796f5e appears only as round 28 history marked 'c5cd0fa3… since the round 29 fix pass'", "verdict": "confirmed"},
+    {"item": "D-R29-02 (R29-TRI-05): test pins", "measurement": "tools/test_r10_check.py D-R28-03 block: 20 required phrases (was 9) and 14 rejected forms (was 12), as STATUS states; 268 test functions in test_r10_check.py, 72 in test_route_check.py, 34 / 33 / 16 / 5 in fab_validation / fit / paste / r10_parts, as the records state", "verdict": "confirmed"},
+    {"item": "R29-TRI-01 status lines and labels (docs lane)", "measurement": "AGENTS R10 status, M3_R10 summary and review-status row 28, STATUS round 28 / 29 entries now say round 28 'labelled the inferred-input figures it found' and round 29 labelled the listed places; FMEA H-6 9.6 V, REQUIREMENTS F9, FMEA I-5 991 microstrain, owner row 7 and AGENTS shorted-igniter row carry Calculation / Inference labels", "verdict": "confirmed"},
+    {"item": "R29-TRI-03 tail allocation record", "measurement": "R10_VALIDATION §8 (line 2981) says all 27 tails of the eight terminals; the 'not re-run' sentence is gone; 27 THT terminal holes (1.3 mm drill group T4 = 27) in m3-PTH.drl; handoff and REQUIREMENTS agree (27 contacts)", "verdict": "confirmed"},
+    {"item": "R29-TRI-04 LS120 records", "measurement": "AGENTS buzzer row, REQUIREMENTS Temperature, M3_R10 hot-end, ORDERING 8.3, owner rows 33 / 36 and parts_qualification name LS120 as +70 °C with the LS120 ≤ 70 °C chamber pass; arithmetic 70+10…22 = 80–92 °C, 55+10…22 = 65–77 °C, 70−22 = 48 °C; pad-load rise 1.0×10 … 1.5×15 W·K/W = 10–22.5 K", "verdict": "confirmed"},
+    {"item": "Round 29 counts in the records", "measurement": "round29 lens JSON totals: safety 1 Major; gate, MCU, mechanics, requirements 1 Minor each; others 0; triage 5 real / 139 observations / 0 not reproducible, as STATUS, M3_R10 and R10_VALIDATION state; decision IDs D-R18 … D-R29 sum to 103, plus 126 ledger IDs = 229", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3.kicad_pcb before and after (a0ec075e…, unchanged); git status shows no tracked change by this lens",
+    "KiCad pcbnew read-only extraction of all 216 footprints (position, side, rotation, value, MPN, LCSC, pad nets) and 309 vias; every 'Ref F/B(x,y)' coordinate in the ten current docs compared with the board (all mismatches are history 'from -> to' records or a coordinate of a neighbouring part)",
+    "Board statistics: file size 2,369,507 bytes; 1059 tracks, 0 arcs, 309 vias (170 GND; 304 / 4 / 1 by size), 1866.794 mm; 123 visible / 93 hidden references, 44 silkscreen legends, C18 hidden; outline 46 × 90 mm; five Edge.Cuts holes at the stated support positions",
+    "Silkscreen legend sides for every terminal pin against the handoff terminal table and R23-DOCS_BINDING-09 sentence",
+    "Net-pair copper distances (pcbnew shape Collide bisection, zones included and excluded): PYRO1_OUT–GND 0.1768 / 0.1801 mm, R173.1–R162.1 0.7936 mm, PYRO1_OUT–3V3 1.0501, –3V3A 1.0400, PYRO1_GATE_N–3V3 1.0651, PYRO1_GATE–3V3 1.0585, PYRO1_GATE–3V3A 1.145, RAW_ACT–GND 0.3163 (non-zone) / 0.2505 (fill), ARM1_SENSE–CAM_IO_3V3 0.1501, PYRO1_CONT_MID–GND 0.1729, –RAW_ACT 0.2501, –BUZZ_G 0.175, –3V3 0.4155, BAT_ENABLE–BAT_IN 0.200, –BAT_FAULT_N 0.200, ACT_EN–BAT_ENABLE 0.330, ACT_EN_MCU–BAT_FAULT_N 0.5501, BAT_FAULT_N–GND 0.1801, –3V3 0.175, BUZZ_DRV–3V3 0.2335, –GND 0.200, PYRO1_IGN–PYRO1_OUT 0.5753, In2 3V3 to RAW_PROTECTED / PORT_5V3 / PORT_4V8 fills 0.3001",
+    "Support-washer distances from (4,44.3): LED2.2 3.808, LED1.1 3.860, J2.1 3.880, J2.3 3.987 mm",
+    "Track lengths: D402 tap 4.114 mm (B.Cu), EN run U9.1 → via (17.10,82.80) → C87 → R81 3.890 mm; round 26 3V3A trunk, PYRO1_CONT_MID segments and moved vias as AVA_LAYOUT states",
+    "Probe worksheet pad centres (R119.1, R120.1/.2, C120.2, C24.1/.2, C15.1, R84.1, C88.1, C82.1, U9.5/.6) and test-point nets/positions",
+    "pin_table.tsv reset_contract component references (R10–R13, R32/R33, R89–R91, R102, R104/R105, R122/R123, R126–R128, R150–R157, R162/R163, R431/R432, R440/R441, R450/R451, R460–R464, R470/R471, D410/D411, D420/D421, D440/D441) against board values and nets",
+    "Fab package: 81 BOM lines, 206 CPL rows (70 top / 136 bottom), C535146 ×9, paste flashes 249 / 381 from the Gerber zip, drill groups (308 × 0.3 mm, 1 × 0.5, 4 × 0.6, 27 × 1.3), U401.11 vias (27.3,13.6) / (27.9,13.6), BAT_IN 1.0/0.5 via; manifest output hashes and cad/m3.kicad_pcb input hash; cost_check ($85.26, 45 Extended, $16.79 fixed share, $85.80 min-purchase, 12:44:13Z) and stock_check (U4 9/2, U9 30/−81/7, C2757925 35,895/35,052, C535146 196/189, 12:43:17Z)",
+    "parts_budget.json 4267634…: lines 91–92 5.880831 / 4.388491 V, fire currents 1.540851 / 1.475765 / 1.278747 A, four-stall BAT_IN 5.713190 V, servo return 0.6144 A",
+    "Markdown link and anchor check over AGENTS, STATUS, M3_R10, ORDERING, handoff, R10_VALIDATION, FMEA, REQUIREMENTS, parts_qualification, AVA_LAYOUT and R10_DECISIONS (GitHub slug rules): 0 broken; backticked path check: all resolve except two untracked probe-artefact names (observation)",
+    "Arithmetic re-checks: EN shift from D402 5.69 mV, J400.2 5.22 V at 8.4 V, 0.91 kΩ meter figure, 3.23 V gate bridge, F1 gyro budget (4.5°, 9.04 °C), $84.41 target, feeder share $24.79, $102.05 / $105.04 rows, 85.26−84.41 = 0.85"
+  ],
+  "sources": [
+    "Board m3_design/assembly_review/m3.kicad_pcb at 0afaed3 (a0ec075e…)",
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json (c5cd0fa3…), pin_table.tsv, circuit.json, parts_budget.json (4267634…)",
+    "m3_design/assembly_review/fab/* (BOM, CPL, owner BOM, Gerber zip, manifest, cost_check.json, stock_check.json)",
+    "AGENTS.md, STATUS.md, docs/M3_R10.md, docs/ORDERING.md §8, docs/R10_VEHICLE_HANDOFF.md, docs/R10_VALIDATION.md, docs/FMEA_REDUNDANCY.md, docs/REQUIREMENTS.md, parts_qualification.md, AVA_LAYOUT.md, R10_DECISIONS.md",
+    "round29_triage.md / .json, round29_fix_docs.md, round29_fix_cad.md, round29 lens JSON totals; tools/test_r10_check.py and the other test files"
+  ],
+  "coverage_limits": [
+    "R10_VALIDATION (3338 lines) and parts_qualification (1093 lines) were checked by targeted extraction (coordinates, hashes, counts, links, the round 29 changes and the current sections), not read line by line; their dated historical sections were not audited.",
+    "Datasheet-limit statements were not re-read against the maker PDFs in this lens; model outputs (EN timing, hold-up, hot-plug, plate model) were taken from their generators, not re-run.",
+    "No build, DRC or tools/check.sh was run (read-only rules); distances are pcbnew shape distances on the committed board, accurate to about 0.2 µm."
+  ]
+}
