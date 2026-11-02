@@ -375,8 +375,15 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
     all_shorts = limits['camera'][1] + ldo_short_max + .011
     # AP63201 (Diodes DS41326 Rev 3-2): 2 A continuous (p. 1), HS peak current limit 2.5 A min (p. 5), fSW 500 kHz
     # typ with +/-6 % spread spectrum (p. 5: 470 kHz taken as the low edge, Inference), ripple dI = Vo (Vi - Vo) /
-    # (Vi L fSW) (p. 13); L400 6.8 uH -20 % (Bourns SRP5030T). Inputs: 8.4 V (2S full, F9) and 9.97 V (U9's OVLO trip,
-    # 9.63-9.96 V, M3_R4 A2: the highest RAW_PROTECTED can reach); Vo over the buck tolerance band.
+    # (Vi L fSW) (p. 13); L400 6.8 uH -20 % (Bourns SRP5030T). Inputs: 8.4 V (2S full, F9) and U9's OVLO trip corner
+    # ovlo_max (below); Vo over the buck tolerance band.
+    # D-R25-03 (R25-TRI-04): U9's OVLO trip corner includes the OVLO pin leakage (TI SLVSFC9C section 6.5: VOV(R)
+    # 1.183-1.223 V, IOVLKG -0.1 to 0.1 uA): (VOV(R) + I x R82 || R83) x (R82 + R83) / R83 at R82 2 M / R83 280 k at their
+    # 0.1 % tolerance (their temperature drift is not included) gives 10.18 V; without the leakage it is 9.98 V (M3_R4 A2's
+    # 9.63-9.96 V trip range was the no-leakage figure).
+    r82_max, r83_min = 2e6 * 1.001, 280e3 * .999
+    ovlo_max = (1.223 + .1e-6 * r82_max * r83_min / (r82_max + r83_min)) * (r82_max + r83_min) / r83_min
+    assert round(ovlo_max, 2) == 10.18, ovlo_max            # the budget keys below name it
     def peak(vin, f, lmin=6.8e-6 * .8):
         return max(all_shorts + vo * (vin - vo) / (vin * lmin * f) / 2 for vo in (buck_min, buck_max))
     # Battery-lead-break ride-through (REQUIREMENTS F6, R3-PWR-02): C84 on VLOGIC back-feeds RAW_PROTECTED through
@@ -498,7 +505,7 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
         buck_all_shorts_A=all_shorts,
         buck_all_shorts_over_2A_continuous_pct=(all_shorts / 2 - 1) * 100,
         buck_prospective_all_shorts_peak_inductor_without_limiting_A={'8V4_470kHz': peak(8.4, 470e3), '8V4_500kHz': peak(8.4, 500e3),
-                                         '9V97_470kHz': peak(9.97, 470e3), '9V97_500kHz': peak(9.97, 500e3)},
+                                         '10V18_470kHz': peak(ovlo_max, 470e3), '10V18_500kHz': peak(ovlo_max, 500e3)},
         buck_peak_current_limit_min_A=2.5,
         buck_camera_short_radio_gps_normal_A=limits['camera'][1]+.3+.15+aux_A+.011,
         ldo_bleeder_min_A=ldo_min/(820*(1+thick)),
@@ -517,8 +524,8 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
         u9_prospective_input_without_buck_limiting_A=(buck_max*all_shorts/(.8*5.8))+.5+sd_write_w[1]/5.8,
         # DS41326 p5 high-side peak limit max3.1A bounds the instantaneous
         # gated input demand; use the whole pulse, no duty/hiccup reduction.
-        u9_port_fault_peak_bound_inference_A=3.1+(1.4+sd_write_w[1])/3.5+9.97/(3300*(1-thick))+.005,
-        u9_port_fault_peak_bound_basis='AP63201 max3.1A HS peak current plus(1.4W logic+0.825W SDwrite)/3.5V, R92 at9.97V and5mA allowance; excludes threshold overshoot/parasitic dips; bench required',
+        u9_port_fault_peak_bound_inference_A=3.1+(1.4+sd_write_w[1])/3.5+ovlo_max/(3300*(1-thick))+.005,
+        u9_port_fault_peak_bound_basis='AP63201 max3.1A HS peak current plus(1.4W logic+0.825W SDwrite)/3.5V, R92 at10.18V (U9 OVLO trip corner with its pin leakage, D-R25-03) and5mA allowance; excludes threshold overshoot/parasitic dips; bench required',
         # TI TPS25947 RevC p9/eq7 p32 at exact750ohm, scaled inversely
         # for R84 RT0603BRD07750RL0.1%/25ppm/K over the stated100K excursion.
         u9_current_limit_min_A=3.96/(1+thin),

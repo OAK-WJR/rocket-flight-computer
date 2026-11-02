@@ -1,0 +1,124 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round25_requirements",
+ "reviewer": "claude",
+ "target_commit": "c4bb56b01e3431e5f4309a01321d18935038e707",
+ "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 3
+ },
+ "findings": [
+  {
+   "id": "R25-REQUIREMENTS-01",
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "The 18 % chatter pass line rests on the averaged (zero-ripple) trip fraction; with drop-outs of a few ms, trains that pass both numeric criteria (< 10 ms, < 18 % of any 100 ms window) turn a worst-case U9 off at 5.73, 5.96 and 6.0 V",
+   "contradicts": "REQUIREMENTS F6 bench acceptance: 'the open fraction in any 100 ms window stays below 18 % (an open fraction above about 20-24 % turns U9 off however short each drop-out is; with D402 the worst-case trip is about 20 % at 5.73 V, so the root set the pass line at 18 % from that physics)'; the same rule in ORDERING 8.3 (line 617), R10_VEHICLE_HANDOFF line 68, R10_VALIDATION R23-POWER-02 / R24-TRI-02 rows and AGENTS section 1. TI SLVSFC9C p9 thresholds (VUVLO(F) 1.076-1.116 V, IENLKG +-0.1 uA).",
+   "evidence": {
+    "topology": "board 92c3ad59: BAT_IN-R80 470k-J400.1/J400.2 (D402.1 to GND)-R165 470k-BAT_ENABLE=U9.1; R81 300k and C87 220 nF from BAT_ENABLE to GND (pcbnew pad nets).",
+    "model": "Worst-case corner as the records use it (R80/R165 +1 %, R81 -1 %, C87 0.72 x 220 nF, U9 EN sink 0.1 uA, D402 50 nA, VUVLO(F) 1.116 V). Closed: C dV/dt = (Vb - Id R80 - V)/(R80+R165) - V/R81 - Ien; open: C dV/dt = -V/R81 - Ien - Id. tau_closed 35.8 ms, tau_open 47.0 ms. The averaged model reproduces the records (20.0 % / 24.4 % at 5.73 / 6.0 V, en_model.out), but that is only the d -> 0 limit: each drop-out of length d lowers EN by about (V/R81+I) d / C below the mean.",
+    "periodic_steady_state_trip_fraction": "5.73 V: 19.5 % (0.5 ms drop-outs), 18.9 % (1 ms), 17.7 % (2 ms), 13.6 % (5 ms), 5.8 % (8 ms). 6.0 V: 23.9 / 23.4 / 22.3 / 18.6 / 13.7 % at 0.5 / 1 / 2 / 5 / 8 ms (periodic_5V73.out, periodic_6V0.out).",
+    "time_domain_counterexamples": "Starting from the closed steady state (train_sim.out): 6.0 V, 8.0 ms open every 50 ms (max 16.0 % in any 100 ms window, longest 8 ms): U9 off at the 3rd drop-out. 6.0 V, 9.5 ms every 92 ms (17.5 %): off at the 2nd. 5.96 V (the stated 10 ms pack floor): 8.0 ms every 50-60 ms (16.0 %): off at the 2nd-3rd. 17 such trains at 5.96 V and 7 at 6.0 V on a coarse grid; all pass '< 10 ms' and '< 18 %'.",
+    "files": ".supervisor/r25_requirements/periodic.py, train_sim.py, en_model.py and their .out files"
+   },
+   "impact": "The two numeric criteria are the only part of the rule that covers a worst-case board (the functional 'U9 stays on' check runs on one bench board, whose nominal trip fraction is 26.4-30.4 %). As written they accept switch chatter that turns a worst-case U9 off at 5.73-6.0 V; the statement that the worst-case trip is about 20 % is true only for sub-millisecond drop-outs.",
+   "concrete_fix": "Restate the rule in F6, ORDERING 8.3, R10_VEHICLE_HANDOFF, R10_VALIDATION and AGENTS: record the J400 contact state (>= 10 kS/s) under flight vibration and pass only if that record, replayed through the worst-case EN model above at 5.73 V (or the chosen pack floor), keeps EN above 1.116 V; or give the allowed open fraction as a function of the longest drop-out (e.g. at 5.73 V: < 17 % for drop-outs <= 2 ms, < 13 % for <= 5 ms, < 5 % for <= 8 ms); or run the functional test with C87 replaced by 150 nF. Correct 'the worst-case trip is about 20 %' to the d -> 0 limit."
+  },
+  {
+   "id": "R25-REQUIREMENTS-02",
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "Post-trip hold-up 0.157-0.182 ms / 0.44-0.48 ms is computed from 5.3 V, above the stated PA6 trip window (VLOGIC 4.84-5.17 V); from the window it is 0.104-0.164 ms / 0.29-0.43 ms",
+   "contradicts": "REQUIREMENTS F6 'the trip window is VLOGIC about 4.8-5.2 V (PA6 0.44-0.47 V) ... hold-up after the trip is 0.157-0.182 ms with all ports on and 0.44-0.48 ms with the camera off / shed (Calculation, from 5.3 V at 300.8 uF)'; the same in M3_R10 lines 616 and 1017-1018, ORDERING 8.3 line 674, R10_VALIDATION rows 5 and 25 ('about a third of the break-to-3.8 V figures').",
+   "evidence": {
+    "divider": "PA6 = VLOGIC_SENSE: R60 100k (VLOGIC) / R61 10k (GND), C60 10 nF; ratio 11. 0.44-0.47 V x 11 = 4.84-5.17 V. C84 (470 uF, counted 300.8 uF) is on VLOGIC, the same node PA6 senses (pcbnew pad nets).",
+    "load_powers": "From parts_budget.json battery_break_ride_through_ms c_camera_radio_gps_on_C300.8uF_to_3.8V 0.4642-0.5391 ms over 7.4 -> 3.8 V: P = 0.5 x 300.8 uF x (7.4^2 - 3.8^2) / t = 13.06-11.25 W. Camera off / shed: 4.66-4.30 W (from the records' 0.441-0.478 ms at 5.3 V).",
+    "calculation": "t = 0.5 C (Vtrip^2 - 3.8^2) / P. 5.3 V: 0.157-0.182 ms (the records' figure). 5.17 V (window top): 0.142-0.164 ms; 4.84 V (window bottom): 0.104-0.120 ms. Camera off / shed: 0.397-0.430 ms at 5.17 V, 0.290-0.315 ms at 4.84 V. Fraction of the break-to-3.8 V figure: 0.22-0.30, not 'about a third' (0.339 at 5.3 V). holdup.out",
+    "origin": "round23_power.json computed trip_5.3V and trip_5.0V cases with the window not yet chosen; the records then fixed the window at 4.8-5.2 V but kept the 5.3 V figures."
+   },
+   "impact": "The owner hold-up question (R10_VALIDATION row 25) and firmware's shed budget are sized on a hold-up overstated by 11-52 %.",
+   "concrete_fix": "Quote the post-trip hold-up over the window: 0.104-0.164 ms with all ports on and 0.29-0.43 ms with the camera off / shed (300.8 uF, Calculation), and 'about a quarter' of the break-to-3.8 V figures, in F6, M3_R10, ORDERING 8.3 and R10_VALIDATION rows 5 / 25; or state a 5.3 V trip and move the window."
+  },
+  {
+   "id": "R25-REQUIREMENTS-03",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "Operating assumptions 'Pack' row still gives U9's turn-off corner without D402's leakage (4.778 / 4.811 / 4.851 V); with it the corner is 4.802 / 4.835 / 4.875 V, and F6 in the same file says 4.80 V",
+   "contradicts": "REQUIREMENTS F6 / R10_VALIDATION row 25 / D-R24-19: 'U9's 4.80 V BAT_IN turn-off corner (4.78 V before D402's leakage)'. The Pack row: 'R10 calculation: 4.778 V at 25 C resistor temperature; including the fitted resistors' +-100 ppm/K drift gives 4.811 V at 70 C ... The separate 125 C sensitivity is 4.851 V'.",
+   "evidence": {
+    "calculation": "Vin_off = (VUVLO(F) (1/(R80+R165) + 1/R81) + Ien)(R80+R165) + Id R80, VUVLO(F) max 1.116 V, Ien +0.1 uA (TI SLVSFC9C p9), Id 50 nA (Infineon ESD103 Rev 1.3, the records' figure), resistor corners +-1 % / +-1.45 % (70 C) / +-2 % (125 C): without D402 4.778 / 4.811 / 4.851 V (the row's figures), with D402 4.802 / 4.835 / 4.875 V (corner_tcr.out)."
+   },
+   "impact": "Two statements of the same corner in one file disagree; the Pack row's 70 C figure (4.811 V) understates the corner the PA6 trip edge (4.84 V) must stay above by 24 mV.",
+   "concrete_fix": "Pack row: '4.802 V at 25 C (with U9's +-0.1 uA and D402's <= 50 nA, D-R24-19); 4.835 V at 70 C with +-100 ppm/K; 4.875 V at 125 C (4.778 / 4.811 / 4.851 V before D402)'."
+  }
+ ],
+ "observations": [
+  "F6 / F9 EN figures reproduce exactly with D402: drop-out worst 6.30 / 8.20 / 10.35 / 20.11 / 26.02 ms (5.5 / 5.73 / 6.0 / 7.4 / 8.4 V), nominal 19 / 33 / 41 ms, pack floor 5.956 V, turn-on 30.3-130.3 ms and 88 / 56 / 45 ms, averaged trip 20.0 / 24.4 %.",
+  "F9 bench ramp window reproduces: turn-off 4.288-4.802 V (nominal 4.505), turn-on 4.723-5.251 V (nominal 4.960); leakage directions (to GND raises, from IN lowers) are right; outcome (b) 2-3 uA gives 6.4-7.5 V turn-off (records 'about 6.5-7.4 V').",
+  "F9 D402 numbers reproduce: 5.69 mV EN shift; 14.3 mV C87 rise; unclamped 7.48 V nominal / 9.6 V worst.",
+  "F1's 9 C allowance is for 30 s; for the 35 s window it is about 7.8 C, which F1 itself says to recompute (disclosed).",
+  "F2 (36.6 g < 64 g), F3 (ISA 316.6 hPa at 8.8 km MSL), F5 (1.9-3.5 MB), F7 (1.125 A), F8 (3.342171 V, 1.397 mA, 0.218 V), P3 (98-163 g), Storage (0.84 mA, 7.1 weeks), M3 ($60.81 + 81 x $1.53 / 5 = $85.60; +$0.54 min purchase) and M1 stock (U9 28 / -83 / 7; U4 9 / 2) reproduce against cost_check.json / stock_check.json.",
+  "Board-position stack -44.6 + 80 + 44-48 = 79.4-83.4 mm reproduces against ../../docs/VEHICLE.md (bulkplate top joint - 44.6, battery bay ~80, lead zone 44-48, shroud +4 ... +47).",
+  "Connector pin maps on the board match F4 / F8 / F10 (J122, J121, J9, J410, J420, J440, J1, J400); Q122's network R122 1k / R123 2k / C123 10 nF and Q124's R126 / R128 / C126 present.",
+  "U9 OVLO divider R82 2M / R83 280k gives 9.63-9.96 V rising (0.1 %), so a 3S pack below about 9.6 V (deeply discharged) is not blocked; F9 says 'wrong-3S protection' without a voltage; no stated requirement is contradicted."
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R24-19",
+   "claim": "EN worst cases with D402: 10.3 / 20.1 / 26.0 ms, 8.2 / 6.3 ms, 5.96 V, 30-130 ms, ramp on 4.72-5.25 / off 4.29-4.80 V, trip 20.0 / 24.4 %",
+   "measurement": "10.35 / 20.11 / 26.02, 8.20 / 6.30 ms, 5.956 V, 30.3-130.3 ms, 4.723-5.251 / 4.288-4.802 V, 20.0 / 24.4 % (averaged)",
+   "verdict": "confirmed (figures); the Pack row was not updated (R25-REQUIREMENTS-03) and the trip fraction's use as a pass line is R25-REQUIREMENTS-01"
+  },
+  {
+   "id": "R24-TRI-02 docs (18 % pass line)",
+   "claim": "F6 / ORDERING / HANDOFF / VALIDATION carry 18 %",
+   "measurement": "present in all; physics basis wrong for finite drop-outs",
+   "verdict": "partly"
+  },
+  {
+   "id": "R24-TRI-08 (P3 98-163 g)",
+   "claim": "v^2 / 2s at 6.2-8.0 m/s, 20 mm",
+   "measurement": "98.0-163.1 g",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "R24-TRI-09 (P2 J2 distances)",
+   "claim": "J2.1 3.880, J2.3 3.987, range 3.808-3.987 mm from (4,44.3)",
+   "measurement": "pcbnew shape distance: LED2.2 3.808, LED1.1 3.860, J2.1 3.880, J2.3 3.987 mm (F.Cu)",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R24-11 (F8 BAT_SW_RETURN set, F9 D402 placement)",
+   "claim": "{J400.2, R165.1, D402.1}, D402.2 GND, D402 at B(4.45,65.9)",
+   "measurement": "pad nets and pose as stated",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3.kicad_pcb before and after",
+  "pcbnew read-only: pad nets / poses of the EN, OVLO, PA6, pyro, servo and port parts; pad shape distances to the (4,44.3) support",
+  "EN corner model (en_model.py): drop-out, pack floor, turn-on, averaged chatter fraction, ramp windows; with and without D402",
+  "Periodic steady-state and time-domain chatter-train simulation at the worst corner (periodic.py, train_sim.py)",
+  "Resistor TCR corners for U9 turn-off (corner_tcr.py)",
+  "Hold-up energy recomputation from parts_budget.json load powers (holdup.out)",
+  "TPS25947 SLVSFC9C p7-p9 text extraction (EN thresholds, leakage, abs max 6.5 V)",
+  "Arithmetic re-checks of F1-F3, F5, F7, F8, P3, Storage, M1, M3 against fab/cost_check.json and fab/stock_check.json; Board-position stack against ../../docs/VEHICLE.md"
+ ],
+ "sources": [
+  "TI TPS25947 SLVSFC9C (May 2026) p7 abs max, p9 EN/UVLO table: https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+  "Infineon ESD103-B1-02EL Rev 1.3 (50 nA, as cited by the records)",
+  "../../docs/VEHICLE.md",
+  "m3_design/assembly_review/sources/r10_design/parts_budget.json",
+  "m3_design/assembly_review/fab/cost_check.json, stock_check.json",
+  "round23_power.json (origin of the 5.3 V and averaged-fraction figures)"
+ ],
+ "coverage_limits": [
+  "Firmware-only requirements (F10 boot, F12 LANDED, F11 pad readiness) checked for consistency only",
+  "No DRC / route_check / check.sh run (read-only brief)",
+  "P1/P2 bore fit and wire room not re-measured (mechanics lens)",
+  "X7R bias allowance (0.72 x) and D402's 50 nA at low voltage taken from the records"
+ ]
+}

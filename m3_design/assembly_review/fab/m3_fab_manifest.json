@@ -1,7 +1,7 @@
 {
   "inputs_sha256": {
     "cad/actuator_power.kicad_sch": "7bfb223c8ed746f025b73d984ab271a4a0202c75b824c036b6ffa33a6f8d9c89",
-    "cad/battery_entry.kicad_sch": "6ee1f33e84342af4f3b4cc57cf42df53ea97d6ff4850e9c941d4d0992c3ac94e",
+    "cad/battery_entry.kicad_sch": "52282fc357642f8e7aa76129d431cc67688ec9a4f0207bcee113644b76ce74d1",
     "cad/camera_connector.kicad_sch": "60a43eaea29272aec14c08dfa2b700bbbe98521e6faa9e697d7f375a3f7e3c52",
     "cad/camera_power.kicad_sch": "71953351600449fc420a098e81d6a2b5ac5a9d4b14c6b9556a2cb1d68f51f1d6",
     "cad/camera_uart.kicad_sch": "614b30c97baf2a2e94665039e4041a443f1162ad408f7a8d0d3675120e100cde",
@@ -195,12 +195,12 @@
     "tools/jlc_orient.py": "a23ab373cc7e13f7053a97e87a0f85cc37a5bf19391f774680e7433461701c88"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "bc5a3a0e55de30157b28abeb76ecf12c7b80b55cb5220463f745e468edce0c8a",
-    "m3_assembly_top.pdf": "f9bea800d102b97738ba20f372d2e9d861ab49cb3492099f46cacb1e773e927b",
+    "m3_assembly_bottom.pdf": "f3478b8c58ca91a64cea6ad61ab5574629dd138d918fb3f7e82fb5fd69baa73e",
+    "m3_assembly_top.pdf": "ee3eff7eedbc2ff9c468f229d7abb6686ea9815d2b988578105d2cb9724802c0",
     "m3_bom_jlc.csv": "00af5358a4043980e9c3a488b5e5a4bbe7a5d562054aaf9ce4ee6f99694e6b55",
     "m3_bom_owner.csv": "c48868b32f2680376e73c4ea93c98df8efd6df4cad909c83e64a7ee56b74c2c0",
     "m3_cpl_jlc.csv": "7984d2cbf080ae1b5a68ef00da1d2af1d8e35008565da27641eb0302f1411a13",
-    "m3_gerber.zip": "8eb579a0cd6965d9571f69ed72cfe76b8139dc406433206a8d458b3dd156efba"
+    "m3_gerber.zip": "388250130d2564f0d17402ce07bb988245272c084b25a92c317cb33c47542f1b"
   },
   "schema": 1
 }

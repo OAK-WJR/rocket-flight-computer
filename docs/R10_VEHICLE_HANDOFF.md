@@ -5,7 +5,7 @@ terminals on the x = 0 edge, a GH-2 power-switch connector near the forward edge
 the replacement facts without editing that worktree. Preserve the accepted R9 entry. R10 remains unaccepted and no physical
 fit is claimed.
 
-**Status.** PCB `92c3ad59…`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. Rounds 22 and 23 were the closing pair on `5516eeec…`. The round 24 board pass (D-R24-01 … D-R24-17) made `1407e850…` (among other changes it added D402, J400.2's ESD clamp, and moved C88, R92, TP88, R402 and R403); round 24's ten lenses found 0 Critical / 0 Major / 17 Minor real errors on it, and the round 24 fix pass (D-R24-18 … D-R24-23) changed the copper to `92c3ad59…` (one BAT_FAULT_N chamfer capped; no part, terminal or support moved), so no earlier review carries over to it. Rounds 25 and 26 review `92c3ad59…` under the owner's strict rule (only real errors count; iteration stops after two consecutive rounds with zero verified real errors). Review results, checks, cost and open items are
+**Status.** PCB `92c3ad59…`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. Rounds 22 and 23 were the closing pair on `5516eeec…`. The round 24 board pass (D-R24-01 … D-R24-17) made `1407e850…` (among other changes it added D402, J400.2's ESD clamp, and moved C88, R92, TP88, R402 and R403); round 24's ten lenses found 0 Critical / 0 Major / 17 Minor real errors on it, and the round 24 fix pass (D-R24-18 … D-R24-23) changed the copper to `92c3ad59…` (one BAT_FAULT_N chamfer capped; no part, terminal or support moved), so no earlier review carries over to it. Round 25 then found 10 Minor real errors on `92c3ad59…` (R25-TRI-01 … -10, none on the board), and its fix pass (D-R25-01 … -03) left the board unchanged, so rounds 26 and 27 review `92c3ad59…` under the owner's strict rule (only real errors count; iteration stops after two consecutive rounds with zero verified real errors). Review results, checks, cost and open items are
 in [M3_R10.md, "Current state"](M3_R10.md#current-state); the owner's decision list is in
 [R10_VALIDATION.md](R10_VALIDATION.md#r10-deviations-for-owner-acceptance).
 
@@ -64,8 +64,10 @@ power leads and from J440's leads, which leave the same west edge: a chafe from 
 y 23.5, and take them past the aft edge on the side away from the camera shroud, tied to the sled. Never run them forward
 along x = 0, where they would cross the USB-C plug zone, ride over the (4, 44.3) support head and run beside the J121 / J400
 exits. The same applies if the GPS or the radio is moved to J440.
-**J400 chatter (R23-POWER-02).** At 5.73–6.0 V under flight-level vibration, U9 must stay on for the whole run (RAW_PROTECTED at TP81 never below about 5 V,
-or no reset in the log), and the open fraction in any 100 ms window must stay below 18 % (was 20 %: with D402 the worst-case trip is about 20 % at 5.73 V, so the root set 18 % from that physics, R24-TRI-02); the < 10 ms single-drop-out rule stays (ORDERING 8.3).
+**J400 chatter (R23-POWER-02, R25-TRI-01).** Record the J400 contact state at 10 kS/s or faster under flight-level vibration. Pass only if the total
+open time in every sliding 100 ms window is under 7 ms and U9 stays on for the whole run at 5.73 V (RAW_PROTECTED at TP81 never below about 5 V, or no
+reset in the log); the worst-corner limit is 7.63 ms at 5.73 V (Calculation, D-R25-01). This replaces the < 10 ms and < 18 % rules; the root's round 24
+< 18 % decision was wrong, because open-fraction rules pass trains that trip a worst-case U9 (ORDERING 8.3).
 Preserve AGENTS section 2 and the electrically isolated Blue Jay. Qualify dry contacts, strain relief, ferrules and gauge, polarity and UART order and installed RF immunity.
 
 ## Board, supports and hardware
@@ -102,7 +104,7 @@ Keep the entire board, including axial mounting tolerance, forward of joint + 47
 lead zone as fit evidence. Fit the actual pack, external GPS and radio (and any AUX module), antenna, harness, accessible switch, sled and camera shroud together. Use
 [ORDERING section 8.1.1](ORDERING.md#811-pad-energy-worksheet-d-r17-01-calculationinference) (D-R17-01): C_tested_Ah ≥ (Q_pad_board + Q_pad_motors + Q_flight_all + Q_recovery) / 0.8. The conditional
 two-hour board-only capacities at camera 0 / 0.5 / 2 h are 2.265821 / 2.987991 / 5.154503 Ah under the stated 6 V and 80 % allocations; they exclude motor, flight and recovery charge and select no pack.
-**Battery-lead route (R23-MECHANICS-04):** below the sled, up round the forward edge (y > 90) and into J1 from the west, tied to the sled's forward end; never aft along the west top side. Give each terminal a sled tie point within about 20 mm of its wire face, and anchor J121's leads at the forward-bulkhead pass-through. **Sled under the east 1210 column (R23-MECHANICS-02):** a relief pocket at least 1.5 mm deep under C411 / C421 / C431 (x 31.5–41, y 20–60), or 4.5 mm standoffs with a plate ≤ 0.8 mm (the plate model puts C431 onto a 4 mm sled at 125 g, Calculation/Inference). Keep the camera off unless recording; verify aged and cold capacity, fire-time source reserve and resistance, transients and the installed mass and dimensions. The previous approximately 80 mm pack
+**Battery-lead route (R23-MECHANICS-04):** below the sled, up round the forward edge (y > 90) and into J1 from the west, tied to the sled's forward end; never aft along the west top side. Give each terminal a sled tie point within about 20 mm of its wire face, and anchor J121's leads at the forward-bulkhead pass-through. **Sled under the east 1210 column (R23-MECHANICS-02):** a relief pocket at least 1.5 mm deep under C411 / C421 / C431 (x 31.5–41, y 20–60), or 4.5 mm standoffs with a plate thinner than 0.8 mm (h + t < 5.3 mm at x 3.7; the plate model puts C431 onto a 4 mm sled at 125 g, Calculation/Inference). Keep the camera off unless recording; verify aged and cold capacity, fire-time source reserve and resistance, transients and the installed mass and dimensions. The previous approximately 80 mm pack
 description and the retired 2.6 / 4 Ah examples prove none of them.
 
 ## Boot, programming and retained deviations

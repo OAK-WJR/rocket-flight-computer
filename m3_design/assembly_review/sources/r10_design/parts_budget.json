@@ -53,8 +53,8 @@
   "buck_prospective_all_shorts_peak_inductor_without_limiting_A": {
     "8V4_470kHz": 3.53947933079595,
     "8V4_500kHz": 3.5167404535531115,
-    "9V97_470kHz": 3.6450662637093036,
-    "9V97_500kHz": 3.615992170491664
+    "10V18_470kHz": 3.6565243459539603,
+    "10V18_500kHz": 3.626762767801641
   },
   "buck_peak_current_limit_min_A": 2.5,
   "buck_camera_short_radio_gps_normal_A": 1.8104980434153073,
@@ -92,8 +92,8 @@
   "pack_6V0_four_stall_loaded_V": 4.414001778867496,
   "servo_star_board_return_max_A": 0.6144,
   "u9_prospective_input_without_buck_limiting_A": 4.420037344610338,
-  "u9_port_fault_peak_bound_inference_A": 3.7437971552257268,
-  "u9_port_fault_peak_bound_basis": "AP63201 max3.1A HS peak current plus(1.4W logic+0.825W SDwrite)/3.5V, R92 at9.97V and5mA allowance; excludes threshold overshoot/parasitic dips; bench required",
+  "u9_port_fault_peak_bound_inference_A": 3.743860978108597,
+  "u9_port_fault_peak_bound_basis": "AP63201 max3.1A HS peak current plus(1.4W logic+0.825W SDwrite)/3.5V, R92 at10.18V (U9 OVLO trip corner with its pin leakage, D-R25-03) and5mA allowance; excludes threshold overshoot/parasitic dips; bench required",
   "u9_current_limit_min_A": 3.9461883408071747,
   "u9_current_limit_max_A": 4.856999498243853,
   "u9_current_limit_basis": "Calc/Inference: exact750ohm TI table3.96..4.84A scaled inversely with R84 +/-0.35% (0.1% initial +25ppm/K x100K); not a new TI characterization or transient guarantee",

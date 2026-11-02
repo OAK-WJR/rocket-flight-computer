@@ -391,13 +391,23 @@ class SchematicContract(unittest.TestCase):
             self.assertIn(words, text)
         self.assertNotIn('TT_a pin', text)
         self.assertNotIn('consigned alternate', text)
-        # D-R24-19 (R24-TRI-02 / -04): rules 4, 5 and 8 and the chatter worst cases after D-R24-02 / -08 / -11
+        # D-R24-19 (R24-TRI-02 / -04): rules 4, 5 and 8 and the chatter worst cases after D-R24-02 / -08 / -11;
+        # D-R25-01 / -02 (R25-TRI-01 / -02): the sliding-window chatter criterion and rule 8's hold-up over the trip window
         for words in ('leaving Q120 off this way takes two opens', 'R91.1 and U1.28 each have a second via since D-R24-08',
-                      "above U9's 4.80 V BAT_IN turn-off corner", 'J400 drop-outs shorter than 10.3/20.1/26.0 ms worst case',
-                      'about 8.2 ms at the fire budget four-stall BAT_IN of 5.73 V', 'at or above 5.96 V (6.3 ms at 5.5 V)',
-                      'after a 30-130 ms EN turn-on delay'):
+                      "above U9's 4.80 V BAT_IN turn-off corner",
+                      'a single J400 drop-out shorter than 10.3/20.1/26.0 ms worst case',
+                      'about 8.2 ms at the fire budget four-stall BAT_IN of 5.73 V and 6.3 ms at 5.5 V cannot trip U9',
+                      'Repeated drop-outs add up (R25-TRI-01)', '20.0 / 24.4 % is only the fast-chatter limit',
+                      'total open time in every sliding 100 ms window is under 7 ms and U9 stays on for the whole run at 5.73 V',
+                      'worst-corner limit 7.63 ms per 100 ms window at 5.73 V',
+                      'replay of its recorded contact waveform through the worst-corner EN model',
+                      'after a 30-130 ms EN turn-on delay',
+                      'Hold-up after the trip is 0.103–0.164 ms with all ports on and 0.291–0.430 ms with the camera off / shed, '
+                      '0.22–0.31 of the break-to-3.8 V hold-up', 'from VLOGIC 4.84–5.17 V, the PA6 0.44–0.47 V window'):
             self.assertIn(words, text)
-        for gone in ('Respin: a second via', 'hang on one via', '4.78 V BAT_IN', '10.6/20.5/26.4', '5.92 V', '30-129 ms'):
+        for gone in ('Respin: a second via', 'hang on one via', '4.78 V BAT_IN', '10.6/20.5/26.4', '5.92 V', '30-129 ms',
+                     'J400 drop-outs shorter than', 'longest measured drop-out < 10 ms', '5.96 V', 'from 5.3 V at 300.8',
+                     '0.157–0.182', '0.44–0.48 ms', '18 %'):
             self.assertNotIn(gone, text)
         with (gate.ROOT / 'm3_design/assembly_review/sources/r10_design/pin_table.tsv').open() as table:
             rows = {r['port']: r for r in csv.DictReader(table, delimiter='\t')}
@@ -454,6 +464,10 @@ class SchematicContract(unittest.TestCase):
         self.assertIn('30-130 ms worst case', battery)
         for gone in ('UVLO on 4.89-5.05 V', 'off 4.45-4.61 V', '30-129 ms', '10.6/20.5/26.4'):
             self.assertNotIn(gone, battery)
+        # D-R25-01 (R25-TRI-01): the immunity figure is for a single drop-out; repeated ones add up
+        self.assertIn('so a single J400 drop-out shorter than 19/33/41 ms', battery)
+        self.assertIn('repeated drop-outs add up (D-R25-01)', battery)
+        self.assertNotIn('so J400 drop-outs shorter than', battery)
 
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')

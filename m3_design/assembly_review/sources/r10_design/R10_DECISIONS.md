@@ -4023,7 +4023,8 @@ Before -> after, measured on the round 24 board:
   - With the switch closed, J400.2 sits at about 5.2 V at 8.4 V. That leakage moves EN by at most
     50 nA x R80 x R81 / (R80 + R165 + R81) = 5.7 mV (Calculation).
   - That is the same as 25 nA at the EN node, a quarter of the 0.1 uA EN leakage D-R20-11's timing already carries.
-  - The EN timing figures are kept. Inference: there is no 85 C leakage figure.
+  - The EN timing figures are kept. Inference: there is no 85 C leakage figure. (Superseded: the two leakages add, so
+    D-R24-19 gives the figures with D402 included.)
   - A discharge at the screw is diverted before R165, so C87 rises about 14 mV (21 V on the 150 pF). Inference: there is
     no trigger tolerance.
 - **Cost:** the C535146 line goes 8 -> 9 at $0.2306 each. On the final files (cost 2026-11-02T01:43:55Z) the board
@@ -4147,7 +4148,8 @@ R24-TRI-02 / -03 / -04 (R24-SAFETY-02 / -03 / -04, R24-POWER-01 / -02, R24-REQUI
   220 nF, TI SLVSFC9C p9 thresholds, +/-0.1 uA, D402 50 nA at J400.2 with J400 closed and through R165 with it open):
   - Drop-out worst case: 10.6 / 20.5 / 26.4 -> 10.3 / 20.1 / 26.0 ms at 6.0 / 7.4 / 8.4 V; 8.5 -> 8.2 ms at 5.73 V;
     6.6 -> 6.3 ms at 5.5 V.
-  - The < 10 ms bench rule now needs a pack of at least 5.96 V (was 5.92 V).
+  - The < 10 ms bench rule now needs a pack of at least 5.96 V (was 5.92 V). (Superseded by D-R25-01: the bench rule is
+    now a sliding 100 ms window.)
   - Turn-on: 30-129 -> 30-130 ms.
   - EN at the 6.0 V worst corner: 1.407 -> 1.401 V.
   - The sheet note's pack window "on 4.89-5.05 V, off 4.45-4.61 V" (nominal ratio) -> "on 4.72-5.25 V, off
@@ -4156,9 +4158,12 @@ R24-TRI-02 / -03 / -04 (R24-SAFETY-02 / -03 / -04, R24-POWER-01 / -02, R24-REQUI
   - Rule 4: "Respin: a second via" -> each gate drive has two barrels since D-R24-02, so leaving Q120 off takes two
     opens.
   - Rule 5: "R91.1 and U1.28 each hang on one via" -> each has a second via since D-R24-08.
-  - The chatter trip fraction is 20.0 / 24.4 % at 5.73 / 6.0 V (was 20.6 / 25.0 %).
+  - The chatter trip fraction is 20.0 / 24.4 % at 5.73 / 6.0 V (was 20.6 / 25.0 %). (Corrected by D-R25-01: that is
+    only the fast-chatter limit, for drop-outs approaching 0 ms. Longer drop-outs trip at lower fractions.)
 - **Not in this lane:** the generated text carries no J400 chatter open-fraction rule (the "below 20 %" that becomes
   18 %). It is in REQUIREMENTS F6, ORDERING 8.3, R10_VEHICLE_HANDOFF and R10_VALIDATION, which the docs lane owns.
+  (Superseded by D-R25-01: both the < 10 ms and the < 18 % lines are replaced by the sliding-window rule, which the
+  generated text now carries.)
 - **Tests:** `test_r21_sheet_notes` and `test_r23_binding_note_rules_and_pin_table` now require the new words and fail on
   the old figures.
 
@@ -4213,4 +4218,71 @@ R24-TRI-13 (R24-DOCS_BINDING-04). `round24_board_cad.md` / `.json` now give the 
 70 + 136 (205 -> 206). The 69 + 122 -> 67 + 125 figures, which they had called the CPL rows per side, are jlc_orient's
 orientation-reconstructed counts, plus 14 placement-only. This changes the record only.
 
-The record index is now **213 unique D IDs through D-R24-23**.
+## Round 25 fix pass (2026-11-01)
+
+Round 25's ten lenses and triage (`sources/r10_review/round25_triage.md` / `.json`) found 0 Critical, 0 Major and 10
+Minor real errors, none on the board. This CAD lane fixes the generated text, the generated records and their tests;
+board `92c3ad59…` is unchanged.
+
+## D-R25-01. The J400 chatter bench criterion: a sliding 100 ms window (round 25 fix pass)
+
+R25-TRI-01 (R25-POWER-03, R25-REQUIREMENTS-01, R25-SAFETY observation 9).
+
+- **What:** the chatter obligation in `m3_design/r10_sch_check.py`, which the build regenerates into
+  `r10_binding_note.json`, and the battery_entry sheet note in `m3_design/r10_sch.py`. The words are pinned in
+  `test_r23_binding_note_rules_and_pin_table` and `test_r21_sheet_notes`.
+- **Why:** the old rule, "< 10 ms longest drop-out and < 18 % open fraction", passes trains that turn a worst-case U9
+  off. At 6.0 V, 8 ms open every 50 ms (16 %) takes EN to 1.095 V. At 5.73 V, 3 x 4 ms with 0.2 ms closures (12 %)
+  takes EN to 1.028 V. Both are below the 1.116 V threshold. 20.0 / 24.4 % is only the fast-chatter (d -> 0) limit.
+- **Before:** "drop-outs shorter than ... cannot trip U9", plus a bench pass of "longest drop-out < 10 ms (pack
+  >= 5.96 V)".
+- **After:**
+  - The immunity figures are for a single drop-out (10.3 / 20.1 / 26.0 ms at 6.0 / 7.4 / 8.4 V; 8.2 ms at 5.73 V;
+    6.3 ms at 5.5 V), and repeated drop-outs add up.
+  - Bench acceptance: record the J400 contact state at 10 kS/s or faster under flight-level vibration. Pass only if the
+    total open time in every sliding 100 ms window is under 7 ms, and U9 stays on for the whole run at 5.73 V.
+  - A switch that fails may still pass on a replay of its recorded waveform through the worst-corner EN model.
+  - The periodic trip fractions (19.9 % at 0.1 ms to 5.8 % at 8 ms at 5.73 V; 24.3 % to 8.3 % at 9.9 ms at 6.0 V) are
+    guidance only.
+- **Figures** (Calculation, the triage's chatter model at the worst corner: R80 / R165 +1 %, R81 -1 %, C87 0.72 x
+  220 nF, 0.1 uA EN sink, D402 50 nA, VUVLO(F) 1.116 V):
+  - One open block per 100 ms may last 7.629 ms at 5.73 V, 5.871 ms at 5.5 V and 9.594 ms at 6.0 V. I re-ran these
+    limits from the triage model.
+  - The triage's 4000-train adversarial search under 7.62 ms per window kept EN at or above 1.1173 V. I did not re-run
+    it.
+  - The 7 ms line leaves 0.63 ms margin at 5.73 V.
+- **Alternative:** raising C87 (BOM only, same land) stays the owner's alternative.
+
+## D-R25-02. Rule 8's hold-up over the PA6 trip window (round 25 fix pass)
+
+R25-TRI-02 (R25-SAFETY-02, R25-POWER-02, R25-MCU-01, R25-REQUIREMENTS-02).
+
+- **What:** firmware rule 8 in `m3_design/r10_sch_check.py`, which the build regenerates into the binding note. The
+  words are pinned in `test_r23_binding_note_rules_and_pin_table`.
+- **Why:** the hold-up after the trip was computed from 5.3 V, above the stated trip window. PA6 0.44-0.47 V is VLOGIC
+  4.84-5.17 V (x 11; at most 5.26 V even with 1 % parts).
+- **Before:** 0.157-0.182 ms with all ports on and 0.44-0.48 ms with the camera off / shed, "from 5.3 V".
+- **After:** 0.103-0.164 ms with all ports on and 0.291-0.430 ms shed, 0.22-0.31 of the break-to-3.8 V hold-up. The
+  shortest figure is at the window's lower edge.
+- **Basis** (Calculation): constant power from `parts_budget.json` battery_break_load_W (11.249-13.064 W all ports on,
+  4.295-4.650 W shed) at 300.8 uF, to 3.8 V. I re-ran it on the regenerated budget, whose loads are unchanged.
+
+## D-R25-03. U9's OVLO corner includes the OVLO pin leakage (round 25 fix pass)
+
+R25-TRI-04 (R25-POWER-04).
+
+- **What:** `m3_design/r10_parts.py` now computes the corner as ovlo_max = (VOV(R) max + IOVLKG x R82 || R83) x
+  (R82 + R83) / R83:
+  - VOV(R) max 1.223 V and IOVLKG 0.1 uA (TI SLVSFC9C section 6.5);
+  - R82 2 M and R83 280 k at their 0.1 % tolerance (temperature drift not included).
+- **Also changed:** the budget keys 9V97_* are renamed 10V18_*, and the comment and the U9 bound's basis are corrected.
+  `r10_parts.py --budget-only` regenerates `parts_budget.json`, and `r10_parts.py --check` passes.
+- **Why:** 9.97 V omitted the pin leakage.
+- **Before -> after** (Calculation):
+  - OVLO corner: 9.97 V (9.9762) -> 10.18 V (10.1764).
+  - Buck prospective all-shorts peak: 3.645 / 3.616 -> 3.657 / 3.627 A (470 / 500 kHz).
+  - U9 port-fault peak bound: 3.74380 -> 3.74386 A, still below U9's 3.946 A minimum limit. The generator's assert
+    holds.
+- **Not in this lane:** parts_qualification.md lines 137 and 639 and M3_R4 A2's 9.63-9.96 V belong to the docs lane.
+
+The record index is now **216 unique D IDs through D-R25-03**.

@@ -275,9 +275,9 @@ R19_SHEET_NOTES = {
         # turn-on / turn-off windows cover every 1 % resistor, threshold and leakage corner (not the nominal ratio only).
         'C87: EN/UVLO ride-through.': ('C87: EN/UVLO ride-through, 220 nF 25 V X7R (R19-REQ-02). (R80+R165)||R81 = 227k charges it '
                                        '(tau 50 ms; turn-on 88/56/45 ms at 6.0/7.4/8.4 V, 30-130 ms worst case); R81 alone '
-                                       'discharges it (tau 66 ms), so J400 drop-outs shorter than 19/33/41 ms (worst case '
+                                       'discharges it (tau 66 ms), so a single J400 drop-out shorter than 19/33/41 ms (worst case '
                                        '10.3/20.1/26.0 ms with 0.1 uA EN leakage plus D402\'s 50 nA, D-R20-11 / D-R24-19) cannot '
-                                       'trip U9 (25-64 us t_D,OFF). EN thresholds 1.183-1.223 V rising, 1.076-1.116 V falling '
+                                       'trip U9 (25-64 us t_D,OFF); repeated drop-outs add up (D-R25-01). EN thresholds 1.183-1.223 V rising, 1.076-1.116 V falling '
                                        '(TI SLVSFC9C p9): with 1 % resistors, 0.1 uA EN leakage and D402 <= 50 nA the pack turns '
                                        'U9 on at 4.72-5.25 V and off at 4.29-4.80 V (nominal 4.96 / 4.51 V).')},
     'usb_sense.kicad_sch': {
