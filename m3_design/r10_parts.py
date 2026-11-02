@@ -166,11 +166,15 @@ TERMINAL_X = {2: (-4.62, 3.70), 4: (-8.32, 7.20), 5: (-10.07, 8.95)}
 # D-R20-05 (R20-SAF-05): the S-8-protected terminal barrels J121.1 (PYRO1_OUT, BK pad 1) and J400.2 (BAT_SW_RETURN, GN
 # pad 2) carry no unconnected inner rings, so ring-to-copper equals their barrel walls' >= 1.0 mm. GN pad 2 is also J1.2
 # (GND: In1 thermal kept, its unconnected In2 ring goes). J121.2 (PYRO1_IGN, GND exempt) keeps its rings.
+# D-R26-01 (R26-TRI-09): the 4-position terminal's UART pins 3 and 4 (J410 / J420 / J440 / J9) drop their unconnected
+# inner rings too. J440.3 / J440.4 change layer and need a GND via within 1.5 mm; KiCad applies the DRU's 'JLC inner-layer
+# PTH pad hole to copper' 0.55 mm from that via's hole to the pin's 0.95 mm inner ring, so with the ring a via would sit
+# >= 1.65 mm away (DRC on the round 26 probe: 0.400 mm at 1.5 mm); without it the via's In1 ring is 0.60 mm from the pin hole.
 FOOTPRINTS = {'M3_GH_BM02B_GHS_TBT': gh2, 'M3_DB125_2P_BK': lambda: terminal('BK', bare=('1',)),
               'M3_DB125_2P_GN': lambda: terminal('GN', bare=('2',)), 'M3_TPS7A91_DSK10': ldo,
               'M3_MA_8x10': polymer, 'M3_AONR21357_DFN3x3A_EP1': load_switch,
               'M3_MICROSD_MOLEX_472192001': microsd,
-              'M3_DB125_4P_GN': lambda: terminal('GN', 4),
+              'M3_DB125_4P_GN': lambda: terminal('GN', 4, bare=('3', '4')),
               'M3_DB125_5P_GN': lambda: terminal('GN', 5), 'M3_SRP5030TA': srp5030t}
 # Boxes use millimetres, KiCad VRML scale .1in handled by r7_parts._box.
 MODELS = {
@@ -243,8 +247,8 @@ def geometry_checks():
                 for p in fp.Pads() if p.GetNumber()}
         assert all(p.GetLocalClearance() in (None, 0) for p in fp.Pads()), name
         result[name] = rows
-        if name.startswith('M3_DB125_'):            # D-R20-05: only the protected barrels drop unconnected rings
-            bare = {'M3_DB125_2P_BK': {'1'}, 'M3_DB125_2P_GN': {'2'}}.get(name, set())
+        if name.startswith('M3_DB125_'):            # D-R20-05 / D-R26-01: only the named barrels drop unconnected rings
+            bare = {'M3_DB125_2P_BK': {'1'}, 'M3_DB125_2P_GN': {'2'}, 'M3_DB125_4P_GN': {'3', '4'}}.get(name, set())
             assert {p.GetNumber() for p in fp.Pads() if p.Padstack().UnconnectedLayerMode()
                     == pcbnew.UNCONNECTED_LAYER_MODE_REMOVE_EXCEPT_START_AND_END} == bare, name
             assert all(p.Padstack().UnconnectedLayerMode() == pcbnew.UNCONNECTED_LAYER_MODE_KEEP_ALL

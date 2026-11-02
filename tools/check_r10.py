@@ -148,7 +148,8 @@ Kept contract and copper rules:
                centre line and on both edges pushed 0.1 mm outward) and every B.Cu SMD pad of such a net (0.05 mm grid
                over the pad grown by 0.1 mm) lies over exactly one In2 plane net and over In2 copper, outside its own
                vias' antipads (REF_OWN_R), the own through-hole pads' clearance voids (a no-copper region wholly
-               inside the disc pad half-size + zone clearance + 0.05 mm) and, for a BARREL_GND_HAZARD net, the S-8 void
+               inside the disc pad half-size + zone clearance + 0.05 mm; D-R26-01: or inside it and the antipad discs of
+               the pad's GND partner vias, centres within 1.5 mm) and, for a BARREL_GND_HAZARD net, the S-8 void
                round its own barrels (D-R19-01); each connected B.Cu chain sees one plane net
   K-plane      R18-RTE-01: an inner power fill in several pieces needs two >= 0.5 mm outer links per extra piece;
                R19-GATE-03: deflated by 0.25 mm (unfractured), a landing via cut off from the largest piece by a neck
@@ -593,23 +594,41 @@ def in_via_hole(table, net, x, y):
     return False
 
 
-def pad_void_regions(zones, cx, cy, radius):
+PARTNER_REACH = 1.5            # mm: D-R26-01: a GND via centre this near a through-hole pad's centre is its GND partner
+                               # (D-R19-15's 1.5 mm rule); its In2 antipad (pad radius + REGION_HOLE_REACH) cannot stay
+                               # apart from the pad's own void (J440.3 / J440.4: void 1.2 mm, antipad 0.40 mm, 1.5 mm apart)
+
+
+def pad_void_regions(zones, cx, cy, radius, partners=()):
     """[(free SHAPE_POLY_SET, outline index, escapes)]: the In2 no-copper regions inside the disc (cx, cy, radius) by
     polygon subtraction (no grid, so a 0.02 mm exit slot cannot slip through; R6-GATE-05); `escapes` when the region
-    reaches the disc's rim (a vertex on the rim polygon)."""
+    reaches the disc's rim (a vertex on the rim polygon). D-R26-01: `partners` [(x, y, r)] are the pad's GND partner
+    vias' antipad discs: the region may also fill them, and it escapes when a vertex lies on the rim of the union (on the
+    pad disc's rim outside every partner disc, or on a partner disc's rim outside the pad disc)."""
     import pcbnew
-    disc = pcbnew.SHAPE_POLY_SET()
-    disc.NewOutline()
-    for k in range(VOID_RIM_SIDES):
-        a = 2 * math.pi * k / VOID_RIM_SIDES
-        disc.Append(pcbnew.FromMM(cx + radius * math.cos(a)), pcbnew.FromMM(cy + radius * math.sin(a)))
+
+    def ngon(x, y, r):
+        ps = pcbnew.SHAPE_POLY_SET()
+        ps.NewOutline()
+        for k in range(VOID_RIM_SIDES):
+            a = 2 * math.pi * k / VOID_RIM_SIDES
+            ps.Append(pcbnew.FromMM(x + r * math.cos(a)), pcbnew.FromMM(y + r * math.sin(a)))
+        return ps
+    disc = ngon(cx, cy, radius)
+    for px, py, pr in partners:
+        disc.BooleanAdd(ngon(px, py, pr))
     for ps in zones.values():
         disc.BooleanSubtract(ps)
-    rim = radius * math.cos(math.pi / VOID_RIM_SIDES) - 0.002
+    shrink = math.cos(math.pi / VOID_RIM_SIDES)
+    rim = radius * shrink - 0.002
+    rims = [(px, py, pr * shrink - 0.002) for px, py, pr in partners]
+
+    def on_rim(x, y):
+        return math.hypot(x - cx, y - cy) >= rim and all(math.hypot(x - px, y - py) >= pr for px, py, pr in rims)
     out = []
     for i in range(disc.OutlineCount()):
         chain = disc.COutline(i)
-        escapes = any(math.hypot(pcbnew.ToMM(chain.CPoint(k).x) - cx, pcbnew.ToMM(chain.CPoint(k).y) - cy) >= rim
+        escapes = any(on_rim(pcbnew.ToMM(chain.CPoint(k).x), pcbnew.ToMM(chain.CPoint(k).y))
                       for k in range(chain.PointCount()))
         out.append((disc, i, escapes))
     return out
@@ -617,30 +636,36 @@ def pad_void_regions(zones, cx, cy, radius):
 
 class OwnPadVoids:
     """The plated through-hole pads' own clearance voids in the In2 planes: a sample is exempt only inside a no-copper
-    component that lies wholly in the disc (pad half-size + zone clearance + 0.05 mm) around the pad centre."""
+    component that lies wholly in the disc (pad half-size + zone clearance + 0.05 mm) around the pad centre. D-R26-01:
+    or wholly in that disc and the antipad discs (pad radius + REGION_HOLE_REACH) of the pad's GND partner vias (GND via
+    centres within PARTNER_REACH of the pad centre); the sample itself still lies in the pad disc."""
 
     def __init__(self, board, zones):
         import pcbnew
         self.zones, self.pads, self.cache = zones, {}, {}
         clearance = max((pcbnew.ToMM(z.GetOwnClearance(pcbnew.In2_Cu)) for z in board.Zones()
                          if not z.GetIsRuleArea() and z.IsOnLayer(pcbnew.In2_Cu)), default=0.0)
+        gnd = [(pcbnew.ToMM(v.GetPosition().x), pcbnew.ToMM(v.GetPosition().y), pcbnew.ToMM(v.GetWidth(pcbnew.F_Cu)) / 2)
+               for v in board.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'GND']
         for f in board.GetFootprints():
             for p in f.Pads():
                 if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH and p.GetNetname():
                     half = max(pcbnew.ToMM(p.GetSize().x), pcbnew.ToMM(p.GetSize().y)) / 2
+                    cx, cy = pcbnew.ToMM(p.GetPosition().x), pcbnew.ToMM(p.GetPosition().y)
+                    partners = tuple((vx, vy, vr + REGION_HOLE_REACH) for vx, vy, vr in gnd
+                                     if math.dist((vx, vy), (cx, cy)) <= PARTNER_REACH + 1e-6)
                     self.pads.setdefault(p.GetNetname(), []).append(
-                        (len(self.cache), pcbnew.ToMM(p.GetPosition().x), pcbnew.ToMM(p.GetPosition().y),
-                         half + clearance + 0.05))
+                        (len(self.cache), cx, cy, half + clearance + 0.05, partners))
                     self.cache[len(self.cache)] = None
 
     def exempt(self, net, x, y):
         import pcbnew
         pt = pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y))
-        for key, cx, cy, radius in self.pads.get(net, ()):
+        for key, cx, cy, radius, partners in self.pads.get(net, ()):
             if math.dist((x, y), (cx, cy)) > radius:
                 continue
             if self.cache[key] is None:
-                self.cache[key] = pad_void_regions(self.zones, cx, cy, radius)
+                self.cache[key] = pad_void_regions(self.zones, cx, cy, radius, partners)
             regions = self.cache[key]
             hit = [esc for ps, i, esc in regions if ps.Contains(pt, i, 1000, True)]
             if hit and not any(hit):
@@ -653,7 +678,8 @@ def region_issues(board):
     sampled every REGION_STEP on its centre line and on both edges pushed REGION_MARGIN outward, and every B.Cu SMD pad
     of such a net on a REGION_PAD_STEP grid over the pad grown by REGION_MARGIN; each sample lies over exactly one In2
     plane net, outside REF_OWN_R of the net's own vias and outside the net's own through-hole pads' clearance voids (a
-    no-copper region wholly inside the pad's disc, OwnPadVoids); a no-copper sample inside a hole of the fill that holds
+    no-copper region wholly inside the pad's disc, or inside it and its GND partner vias' antipad discs, D-R26-01,
+    OwnPadVoids); a no-copper sample inside a hole of the fill that holds
     another net's via (hole box <= 2 x (via pad radius + REGION_HOLE_REACH)) is a clearance hole, not a boundary. Each connected B.Cu chain (tracks joined end to end or
     through a pad of the net) sees exactly one In2 plane net in total. Returns (issues, evidence)."""
     import critical_reference as cr
@@ -4963,6 +4989,8 @@ def plane_links(board, net, pieces, width=PLANE_LINK_W, locate=None):
 # Necks narrower than PLANE_NECK_REPORT are reported. Calibrated on the R10 board (2026-10-31): only 3V3 In2 has
 # necks under 1.0 mm, 0.549 mm (vias (18.8, 60.25), (19.05, 55.9), (22.6, 52.15), (23.0, 70.0), (23.1, 78.1) and
 # (23.2, 68.6)), 0.589 mm ((9.2, 52.98)) and 0.706 mm ((19.5, 49.15)); PORT_4V8, PORT_5V3 and RAW_PROTECTED none.
+# D-R26-02 / -04 moved two of those vias, (19.05, 55.9) -> (19.55, 55.825) and (9.2, 52.98) -> (9.2, 52.55); the neck
+# widths are unchanged (0.549 / 0.549 / 0.589 / 0.706 mm).
 PLANE_NECK_REPORT = 1.0         # mm
 
 
@@ -5207,7 +5235,8 @@ GENERATED_SHA256 = {
     'M3_AONR21357_DFN3x3A_EP1': '98b34fd0b10c91fc0da1b4c3d45d92d8b8bb3ae4f6823ec7a751e82986fccc59',
     'M3_DB125_2P_BK': 'ca5722baf0962fcd555120c7360b958538408b0875eb3f59d970b7312f5c6967',
     'M3_DB125_2P_GN': '1898ccfb7f7cdd48402943955d673c8282f8dea6cadc967c855404ac23f650a7',
-    'M3_DB125_4P_GN': '747446dd144e6eaeefc8268d60e286510cf72af60f2268e2f405fc192874439b',
+    # D-R26-01: pins 3 / 4 drop their unconnected inner rings (was 747446dd...)
+    'M3_DB125_4P_GN': '5582eb2808a8e1e3bed547b5bef608854da161921ec61c847134f23e95edb78d',
     'M3_DB125_5P_GN': 'ca2aada63759dc14a4f130b89c3f264a28159c535bf0f4e5967a952782c07b5b',
     'M3_MA_8x10': '66db2b17c307081780c75c8a3c2b25c66e4720ef130c1c703e7d5f3182674993',
     'M3_MICROSD_MOLEX_472192001': 'ff60b0babf97df08f58030a70b4f929976b469ea4f131455be6c8d2cf310a97d',

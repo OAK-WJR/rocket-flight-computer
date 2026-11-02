@@ -14,21 +14,43 @@ from r10_route import CORE_SHIFT, Translated
 
 C32_R9 = {('3V3A', ((3.72, 48.15), (2.42, 48.15))), ('GND', ((1.58, 48.15), (0.85, 48.15)))}
 OWN_PADS = ('C32',)                  # pads asserted by this module (c32()), not by the R9 tables
+# D-R26-02 (R26-TRI-01's respin item): PYRO1_OUT >= 1.0 mm from 3V3 and 3V3A. The C11 / C10 / R164 column (the 3V3A
+# filter) moves north (R9 table y + COLUMN_DY): R164.2 sat 0.566 mm from PYRO1_OUT's B.Cu diagonal and 0.606 mm from
+# its run's end. R13's 3V3 via moves 0.43 mm north (its stub west, then 45 degrees): it sat 0.620 mm from J121.1's F.Cu
+# PYRO1_OUT run.
+# D-R26-04 (round 26 follow-up): C10 moves 0.60 mm, not 0.65, so its Fab / pad envelope keeps 3.0 mm from U5's body and
+# pads (ORDERING 8.3's coat exclusion; 2.994 mm at 0.65). R164's 3V3 via leaves (19.05, 55.25), 0.331 mm from R126.1
+# (PYRO1_GATE_N) on F.Cu, for (19.55, 55.825): 1.0 mm or more from PYRO1_GATE_N and PYRO1_GATE copper (R128.1 1.059,
+# R127.1 1.065, R126.1 1.081), on a strap east, then 45 degrees.
+COLUMN_DY = {'C11': -0.65, 'C10': -0.60, 'R164': -0.65}
+R13_VIA_R9 = (4.2, 54.05)            # R10 (9.2, 52.55); was V3['R13'] (4.2, 54.48), R10 (9.2, 52.98)
+R164_VIA_R9 = (14.55, 57.325)        # R10 (19.55, 55.825); was V3['R164'] (14.05, 57.4), R10 (19.05, 55.9)
 
 
 class CoreTable(Translated):
     def pad(self, ref, number, net=None, at=None):
         if ref == 'R13' and at is not None:
             at = (at[0] + .28, at[1])
+        if ref in COLUMN_DY and at is not None:
+            at = (at[0], round(at[1] + COLUMN_DY[ref], 4))
         return super().pad(ref, number, net, at)
 
     def track(self, net, layer, width, points):
+        # D-R26-02 / -04: the 3V3A trunk's pad nodes (R164.2, C10.1, C11.1) follow their parts; the trunk still runs on
+        # to Y_EAST. R164's 3V3 strap runs east from R164.1, then 45 degrees to its via.
+        node = {57.4: 'R164', 55.6: 'C10', 53.6: 'C11'}
+        if net == '3V3A' and layer == 'B' and points in ([(11.5, 57.4), (11.5, 55.6)], [(11.5, 55.6), (11.5, 53.6)],
+                                                         [(11.5, 53.6), (11.5, 51.7)]):
+            points = [(x, round(y + COLUMN_DY[node[y]], 4)) if y in node else (x, y) for x, y in points]
+        if net == '3V3' and layer == 'B' and points == [(13.15, 57.4), (14.05, 57.4)]:
+            y = round(57.4 + COLUMN_DY['R164'], 4)
+            points = [(13.15, y), (round(R164_VIA_R9[0] - (R164_VIA_R9[1] - y), 4), y), R164_VIA_R9]
         if net == 'I2C1_SDA' and layer == 'F' and points == [r9_route_imu_baro.u1_pin(96), (8.35,48.5), (4.97,51.88), (4.97,53.0)]:
             points = [points[0], (9.47,48.5), (4.97,53.0)]
         if net == 'I2C1_SDA' and layer == 'B' and points == [(4.97,53.0),(4.97,53.62)]:
             points = [(4.97,53.0),(5.25,53.28),(5.25,53.62)]
         if net == '3V3' and layer == 'B' and points == [(4.97,54.48),(4.2,54.48)]:
-            points = [(5.25,54.48),(4.2,54.48)]
+            points = [(5.25,54.48),(4.63,54.48),R13_VIA_R9]          # D-R26-02: west, then 45 degrees to the moved via
         if net == '3V3' and layer == 'B' and points == [(24.25,38.5),(23.87,38.12),(23.52,38.12)]:
             points = [(24.25,38.5),(24.25,37.7),(23.52,37.7),(22.44,37.7),(22.02,38.12)]
         if net == '3V3' and points == [(23.52,36.8),(23.52,38.12)]:
@@ -86,6 +108,10 @@ class CoreTable(Translated):
             return
         if net == 'GND' and tuple(at) == r9_route_imu_baro.G['C32']:
             return
+        if net == '3V3' and tuple(at) == r9_route_imu_baro.V3['R164']:         # D-R26-04
+            at = R164_VIA_R9
+        if net == '3V3' and tuple(at) == r9_route_imu_baro.V3['R13']:          # D-R26-02
+            at = R13_VIA_R9
         super().via(net, at, size)
 
 

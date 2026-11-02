@@ -1,0 +1,110 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round26_requirements",
+ "reviewer": "claude",
+ "target_commit": "3d8e845687dabc1f20df9391566f6ad497a1d3ec",
+ "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 2
+ },
+ "findings": [
+  {
+   "id": "R26-REQUIREMENTS-01",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The 'fire budget's four-stall BAT_IN of 5.73 V' is stale: the committed fire budget gives 5.713 V since the AUX allowance (D-R19-14)",
+   "contradicts": "m3_design/assembly_review/sources/r10_design/parts_budget.json fire_current_GAP1.primary_40mohm_FETs.pack_7V4_by_stall_count['4'].loaded_pack_V = 5.713190 V (secondary FETs 5.711161 V), the same budget whose 1.279 A four-stall fire current REQUIREMENTS F7 quotes. REQUIREMENTS F6 low-voltage corner ('about 8.2 ms at the fire budget's four-stall BAT_IN of 5.73 V'), F6 bench acceptance ('U9 stays on for the whole run at 5.73 V', 'worst-corner limit 7.63 ms at 5.73 V'), F4 ('the J400 chatter bench test, which runs at 5.73 V') and the Accepted-risks tab bullet ('8.2 ms at 5.73 V'); the same figure in r10_sch_check.py:295 -> r10_binding_note.json:589, D-R25-01 ('7 ms line leaves 0.63 ms margin at 5.73 V'), M3_R10 270/591, ORDERING 8.3 line 617, R10_VEHICLE_HANDOFF 68, R10_VALIDATION 2188, AGENTS section 1, STATUS 11/16.",
+   "evidence": "git history of parts_budget.json: four-stall loaded_pack_V 5.7318 V at acba196 (round 18, before the AUX port), 5.7132 V from 6628488 (round 19, D-R19-14 added the 100 mA AUX allowance: other load 12.371 -> 13.064 W) to 3d8e845. r10_parts.py fire_case(): V = (b + sqrt(b^2 - 4 a 0.15 P))/2a with b = 7.4 - 0.15 x 1.92 x 4, P = 13.064 W -> 5.713 V. Own worst-corner EN model (.supervisor/r26_requirements/en_model.py: R80/R165 +1 %, R81 -1 %, C87 0.72 x 220 nF, EN sink 0.1 uA, D402 50 nA, VUVLO(F) 1.116 V, TI SLVSFC9C p9), which reproduces every stated F6 figure at 5.73 V (8.204 ms, 7.629 ms window, 20.0 %), gives at 5.713 V: single drop-out 8.067 ms (not 8.2), one-block-per-100 ms limit 7.503 ms (not 7.63; the 7 ms line's margin is 0.50 ms, not 0.63), fast-chatter trip fraction 19.7 % (not 20.0). The bench rule itself (under 7 ms per window) still holds at 5.713 V (greedy worst train min EN 1.134 V at 5.73 V; limit 7.503 ms > 7 ms at 5.713 V).",
+   "impact": "The stated four-stall corner and its derived immunity, window limit and margin are wrong by 17 mV / 0.13 ms; the F6 bench run at 5.73 V is 17 mV above the corner the text says it represents. The 7 ms pass line remains sufficient, so no safety conclusion changes.",
+   "concrete_fix": "Text only: replace the fire-budget four-stall BAT_IN 5.73 V by 5.71 V (5.713 V, parts_budget.json) and the derived figures by 8.07 ms, 7.50 ms limit, 0.50 ms margin, 19.7 %, wherever quoted (REQUIREMENTS F4 / F6 / Accepted risks, r10_sch_check.py chatter obligation and its test pin, D-R25-01 note, M3_R10, ORDERING 8.3, R10_VEHICLE_HANDOFF, R10_VALIDATION, AGENTS, STATUS); run the bench at <= 5.71 V. Or, if 5.73 V is meant as the no-fire boost case, call it that and use 5.899 V (pack_7V4_four_stall_loaded_V)."
+  },
+  {
+   "id": "R26-REQUIREMENTS-02",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "F4 still accepts a 'pack >= 5.96 V under four stalls' on the single 10 ms drop-out criterion that F6 says is replaced; F6's own trains trip U9 at such a pack",
+   "contradicts": "REQUIREMENTS F6: 'This one rule [sliding 100 ms window < 7 ms] replaces both the < 10 ms single-drop-out rule and the < 18 % open-fraction rule'; 'repeated drop-outs add up'; '8 ms open every 50 ms (16 %) takes EN to 1.095 V at 6.0 V'. Against it, REQUIREMENTS F4 (R23-REQUIREMENTS-05) still lists as one sufficient alternative for flight-2 stall during boost 'a flight-2 pack that holds >= 5.96 V under four stalls (the pack at which a single 10 ms drop-out cannot trip a worst-case U9 ...)', separate from 'the J400 chatter bench test'.",
+   "evidence": "Own worst-corner EN model (same as R26-REQUIREMENTS-01, reproduces the F6 figures): at 5.96 V a single drop-out up to 10.03 ms cannot trip U9 (so the pack meets F4's option), yet a periodic train of 8 ms open / 42 ms closed (every drop-out < 10 ms) takes EN to 1.088 V, and 9.5 ms / 50 ms to 1.035 V, both below VUVLO(F) max 1.116 V (TI SLVSFC9C p9): U9 turns off. At 6.0 V the 8 ms / 50 ms train gives 1.095 V, F6's own counter-example. Nothing in the requirements now bounds J400 drop-outs to single events under 10 ms, so option (b) establishes no chatter immunity.",
+   "impact": "F4 lets the stall-during-boost case be closed by a pack figure that F6 shows does not keep U9 on; the two requirements disagree on what qualifies the J400 chatter case under four stalls.",
+   "concrete_fix": "In F4 delete the 5.96 V option, or restate it in F6's terms: 'a flight-2 pack whose measured four-stall BAT_IN is at or above the voltage at which F6's sliding-window bench test passed' (the bench run at 5.71 V then covers every pack). Keep 5.96 V only as the labelled single-drop-out figure."
+  }
+ ],
+ "observations": [
+  "F6 / D-R24-19 single drop-out figures reproduced: 6.30 / 8.20 / 10.35 / 20.11 / 26.02 ms at 5.5 / 5.73 / 6.0 / 7.4 / 8.4 V; nominal 18.5 / 32.4 / 40.8 ms (stated 19 / 33 / 41); pack for a single 10 ms drop-out 5.956 V.",
+  "F6 turn-on reproduced: 88.3 / 55.8 / 44.8 ms nominal; worst 30.3 ms (8.4 V, 0.72 C) to 130.2 ms (6.0 V, 1.27 C).",
+  "F9 pack windows reproduced over all 1 % / threshold / leakage corners: on 4.723-5.251 V, off 4.288-4.802 V; D402 closed-switch EN shift 5.69 mV; unclamped ESD 7.48 V nominal / 9.6 V worst; damaged-EN 2-3 uA turn-off 6.4-7.4 V.",
+  "Pack row turn-off corner reproduced: 4.802 V (25 C), 4.835 V (+/-1.45 %, 70 C), 4.875 V (+/-2 %, 125 C).",
+  "D-R25-01 window limits reproduced: 7.629 / 5.871 / 9.594 ms at 5.73 / 5.5 / 6.0 V; trip fractions 19.9 / 15.1 / 5.8 % and 24.3 / 8.3 %; counter-examples 1.095 V and 1.028 V. Own greedy and 400 random sliding-window-constrained trains at 5.73 V kept EN >= 1.134 V.",
+  "F6 hold-up reproduced: 0.464-0.539 / 1.304-1.412 ms (300.8 uF), 0.725-0.842 / 2.038-2.206 ms (470 uF); post-trip 0.1035-0.1643 / 0.291-0.430 ms; 0.22-0.31 ratio; 100-220 uF 0.034-0.120 ms.",
+  "F6 IWDG 28.571-32.653 ms matches DS12110 LSI 29.4-33.6 kHz (Tj to 125 C) with 960 LSI cycles.",
+  "F1 budget arithmetic correct (4.5 deg at 10 C, 0.030 deg noise, 9.04 C allowance); its 30 s versus the 35 s window is self-disclosed (round 25 triage obs).",
+  "F2 >= +/-64 g over the 36.6 g envelope max; F3 8.8 km MSL = 316.7 hPa ISA, above 300 hPa. The envelope's '>= 10 km barometer capability' (264 hPa) is a part capability the MS5611 meets; F3's 300 hPa bench floor does not contradict it (observation only).",
+  "F4 0.6144 A = 4 x 7.68 A x 1 mOhm / 50 mOhm (r10_parts.py), labelled Inference; 4 x 1.92 = 7.68 A <= 7.7 A.",
+  "F5 log volume 1.86-3.52 MB (40 B/sample) matches 'about 2-3.5 MB'.",
+  "F7 currents 1.541 / 1.476 / 1.279 A match parts_budget.json; seven 0.4 mm ACT_FET_S segments on B.Cu (Q120/Q121 source bridges); the RAW_ACT 0.4 mm run (13.5,68.6)-(18,68.6) is the TP120 test branch, not the fire path.",
+  "F8 BAT_SW_RETURN = {J400.2, R165.1, D402.1}, D402.2 GND; Q122 gate 0.218 V at 3.6 V / 30 k; divider fault 3.342 V (1 % + 100 ppm/K x 45 K) and 1.397 mA confirmed.",
+  "F4 / F10 / F8 connector pin nets on the board match the stated pin orders (J1, J400, J121, J122, J9, J410, J420, J440); 1 k / 10 k / SRV05-4 on all four servo lines.",
+  "F5 microSD pulls R460-R464 10 k to 3V3 on CS / MOSI / MISO / DAT1 / DAT2, C460 100 nF, C461 22 uF.",
+  "P1 / P2 outline 46 x 90 mm and the five support circles at (4,4), (42,4), (4,44.3), (3.7,86), (42,86) on Edge.Cuts.",
+  "P3 landing 98-163 g from 6.2-8.0 m/s over 20 mm; 2 x 163 = 326 g ('about 330 g').",
+  "Board position joint + 79.4-83.4 mm and the shroud / coupler figures agree with ../../docs/VEHICLE.md.",
+  "Storage: R167 10 k on BAT_IN, 0.84 mA at 8.4 V, 1 Ah in 7.1 weeks.",
+  "M1 / M3 supplier figures match fab/stock_check.json and cost_check.json (U9 28 / -83, min 7; U4 9 / 2; $85.60, +$1.19, min-purchase +$0.54).",
+  "D-R25-03 OVLO corner reproduced: 10.1764 V."
+ ],
+ "fix_verification": [
+  {
+   "item": "D-R24-19 EN timing with D402 leakage (F4/F6/F9 figures)",
+   "measurement": "own corner model: 10.35/20.11/26.02/8.20/6.30 ms, pack 5.956 V, turn-on 30.3-130.2 ms, windows 4.72-5.25/4.29-4.80 V",
+   "verdict": "confirmed (except the 5.73 V corner label, R26-REQUIREMENTS-01)"
+  },
+  {
+   "item": "D-R24-11 J400 ESD clamp D402 (F8/F9 net membership)",
+   "measurement": "board: BAT_SW_RETURN pads J400.2, R165.1, D402.1; D402.2 GND; D402 at B(4.45,65.9)",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R25-01 sliding-window chatter rule (F6)",
+   "measurement": "7.629/5.871/9.594 ms limits, 1.095/1.028 V counter-examples, trip fractions reproduced; random/greedy trains >= 1.134 V",
+   "verdict": "confirmed at 5.73 V; the 5.73 V corner itself is stale (R26-REQUIREMENTS-01) and F4 keeps the replaced 10 ms basis (R26-REQUIREMENTS-02)"
+  },
+  {
+   "item": "D-R25-02 post-trip hold-up (F6)",
+   "measurement": "0.1035-0.1643 / 0.291-0.430 ms at 300.8 uF from 4.84-5.17 V to 3.8 V",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R25-03 OVLO corner with pin leakage",
+   "measurement": "10.1764 V",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "shasum -a 256 of the board before and after",
+  ".supervisor/r26_requirements/en_model.py, en2.py, adv.py: EN/UVLO worst-corner model, pack windows, periodic and sliding-window trains (NumPy venv)",
+  "KiCad pcbnew read-only queries (board.py, w.py, ra.py, sv.py, sd.py, bi.py, holes.py): connector pin nets, fire-path widths, EN / J400 nets, servo and SD networks, support circles",
+  "git history of parts_budget.json four-stall loaded_pack_V (acba196 -> 6628488 -> 3d8e845)",
+  "hand arithmetic of F1, F3, F5, F6 hold-up, F8 divider, P3, Pack, Storage, M3 figures",
+  "pdftotext of the cached DS12110 (LSI) and TPS25947 (EN thresholds and leakage) tables"
+ ],
+ "sources": [
+  "docs/REQUIREMENTS.md",
+  "../../docs/VEHICLE.md",
+  "m3_design/assembly_review/sources/r10_design/parts_budget.json",
+  "m3_design/r10_parts.py",
+  "m3_design/r10_sch_check.py",
+  "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md (D-R19-10, D-R19-14, D-R20-11, D-R24-19, D-R25-01..03)",
+  "TI TPS25947 SLVSFC9C p9 (https://www.ti.com/lit/ds/symlink/tps25947.pdf)",
+  "ST DS12110 LSI table",
+  "m3_design/assembly_review/fab/cost_check.json, stock_check.json",
+  "round24_triage.json, round25_triage.json, round25_fix_docs.md (read after writing findings, for duplication only)"
+ ],
+ "coverage_limits": [
+  "F10 / F11 / F12 firmware and MCU facts, M2 routing hygiene and P2 wire-room geometry were spot-checked only; those belong to the MCU, routing and mechanics lenses",
+  "The derived flight envelope (thrustcurve samples, Cd) and the CFD hinge-moment fraction in F4 were not re-derived",
+  "The 4000-train adversarial search of D-R25-01 was not re-run; a 400-train random plus greedy search was"
+ ]
+}

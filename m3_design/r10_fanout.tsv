@@ -3,12 +3,14 @@
 # D-R21-05: R81.2 / C87.2's returns (20.706, 65.619) / (16.639, 63.939) go with the parts to U9's end (F.Cu pour, U9.8's via)
 # D-R24-09: R403.2's F.Cu return (31.4, 14.4) goes: R403 sits on B.Cu beside U401 and returns straight to U401.4
 # D-R24-15: R92.2's and TP88.1's returns move with the parts, 0.8 / 0.6 mm aft of the forward edge
+# D-R26-02: C11 / C10 move 0.65 mm north with R164; C11.2's return keeps its diagonal, C10.2's goes 1.15 mm east (the diagonal spot (19.423, 54.373) lies under R127.1, PYRO1_GATE_N, on F.Cu)
+# D-R26-04: C10 sits 0.60 mm north (pad 2 at (18.5, 53.5)); C10.2's return keeps its via (19.65, 53.45), its stub leaving the pad 0.05 mm north of centre (r10_route_ground), so the via stays 0.27 mm from R127.1
 net	pad	layer	x	y
 3V3	C90.1	F	26.425	32.075
 3V3	R89.1	F	23.0	70.0
 3V3	R91.1	B	28.1	60.0
-GND	C10.2	B	19.423	55.023
-GND	C11.2	B	19.423	53.023
+GND	C10.2	B	19.65	53.45
+GND	C11.2	B	19.423	52.373
 GND	C126.2	F	15.8	59.425
 GND	C128.2	B	12.775	59.025
 GND	C22.2	B	27.8	46.6

@@ -58,6 +58,10 @@ def port_wires(d):
     # degrees. D-R20-09 (R20-RTE-05): the clamps sit on the bottom under J440's body on the wire side, as D410 / D411 sit
     # under J410's (TX between pins 3 and 4, RX beyond pin 4, 3.2 mm from their pins, M-6 1.5 mm): each pin runs west on
     # B.Cu and drops into its clamp, and the clamp's return goes 0.7 mm further west to its own via.
+    # D-R26-01 (R26-TRI-09): with the clamps on B.Cu each wire changes layer through its plated pin, and D-R19-15 keeps
+    # the port UART nets under the 1.5 mm GND-partner rule, so each pin takes a GND via 1.5 mm north of its centre, on the
+    # pin column between the pins: 0.30 mm from its own pad on F.Cu and B.Cu (the pins keep no inner ring, r10_parts),
+    # 0.60 mm from its hole on In1, in the F.Cu / B.Cu pours and joined to In1 GND; the In2 3V3 fill clears it.
     for net,res,dio,jack in [('AUX_TX_WIRE','R471.2','D440','J440.3'),('AUX_RX_WIRE','R470.1','D441','J440.4')]:
         a=p(res);j=p(jack);b=p(dio+'.1')
         if a[1]==j[1]:
@@ -65,6 +69,7 @@ def port_wires(d):
         else:
             t(net,'F',S,[a,(12.4,a[1]),(12.4-(j[1]-a[1]),j[1]),j])
         t(net,'B',S,[j,(b[0],j[1]),b])
+        v('GND',(j[0],round(j[1]-1.5,4)))
         a=p(dio+'.2');at=(round(a[0]-.7,4),a[1])
         t('GND','B',S,[a,at]);v('GND',at)
 
@@ -181,7 +186,11 @@ def buzzer(d):
     v('BUZZ_OUT',(19.55,60.85));t('BUZZ_OUT','B',IO,[(19.55,60.85),(20.15,60.85),(20.5,60.5),p('Q123.3')])
     # D-R18-05 (R18-SAF-04): CH1's 5.1k-isolated PYRO1_CONT_MID run south of Q123, bounded by the gate lead and the
     # BUZZ_OUT via above (drawn after them, so the per-family gate judges it against the copper that shapes it).
-    t('PYRO1_CONT_MID','B',S,[p('R173.2'),(16.87,61.8),(20.83,61.8),(23.0,59.63),p('R129.1')])
+    # D-R26-02: R173 sits 0.65 mm further north, so the run turns 45 degrees at (16.87, 60.82) instead of a chamfered
+    # 90 at (16.87, 61.8): 10.58 mm against a 6.81 mm octilinear distance (1.55 x; straight down it would be 11.15 mm,
+    # 1.64 x, a detour). D-R26-04: the diagonal's ends sit 0.05 mm further south and west than first drawn, so it is
+    # 0.2005 mm from Q123.1 (BUZZ_G) (0.165 mm from (16.87, 60.77)) and the run's 0.175 mm stays the pair's minimum.
+    t('PYRO1_CONT_MID','B',S,[p('R173.2'),(16.87,60.82),(17.85,61.8),(20.83,61.8),(23.0,59.63),p('R129.1')])
     t('3V3','F',IO,[p('LS120.1'),(18.8,60.25),(18.8,61.9),(19.9,63),p('D123.1')])
     v('3V3',(18.8,60.25))
     t('3V3','F',IO,[(18.8,60.25),(17.05,60.25),(15.7,61.6)])

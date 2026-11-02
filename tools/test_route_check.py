@@ -1003,6 +1003,47 @@ class R10AuditScope(unittest.TestCase):
         rc.set_profile('r9')
         self.assertTrue(rc.return_required('ACT_GATE'))
 
+    def test_r26_plated_pad_layer_change_needs_a_gnd_via(self):
+        """D-R26-01 (R26-TRI-09): a plated (PTH) pad that carries a return-required critical signal net's tracks on two
+        copper layers is a layer change through its barrel, as J440.3 / J440.4's AUX wires are since D-R20-09. With no
+        GND via centre within 1.5 mm of the pad centre it fails as critical_via_no_gnd (layer 'pad'); a GND via 1.6 mm
+        away does not clear it, one 1.5 mm away does. Tracks on one layer, an AUD-2 slow net (J400.2's BAT_SW_RETURN) and
+        a power net (J1.1's BAT_IN) give no instance, and the R7-R9 profiles keep their via-only test."""
+        def build(net, layers=(pcbnew.F_Cu, pcbnew.B_Cu), gnd=()):
+            self.setUp()
+            h = self.helper
+            if not self.board.FindNet(net):
+                self.board.Add(pcbnew.NETINFO_ITEM(self.board, net))
+            f = pcbnew.FOOTPRINT(self.board); f.SetReference('J9'); self.board.Add(f)
+            p = pcbnew.PAD(f); p.SetNumber('3'); p.SetShape(pcbnew.PAD_SHAPE_CIRCLE)
+            p.SetAttribute(pcbnew.PAD_ATTRIB_PTH); p.SetSize(h.P(1.9, 1.9)); p.SetDrillSize(h.P(1.3, 1.3))
+            p.SetLayerSet(pcbnew.PAD.PTHMask()); p.SetNet(self.board.FindNet(net)); f.Add(p); p.SetPosition(h.P(5, 5))
+            h.pad('U1', 12, 5, net)
+            h.track((5, 5), (12, 5), net, layer=layers[0])
+            if len(layers) > 1:
+                h.pad('D1', 0, 5, net)
+                h.track((5, 5), (0, 5), net, layer=layers[1])
+            for xy in gnd:
+                h.via(*xy, 'GND')
+            return [d for d in rc.scan(self.board) if d['cat'] == 'critical_via_no_gnd']
+
+        hits = build('AUX_TX_WIRE')
+        self.assertEqual([(d['net'], d['layer'], d['pad'], d['x'], d['y'], d['gnd_mm'], d['layers']) for d in hits],
+                         [('AUX_TX_WIRE', 'pad', 'J9.3', 5.0, 5.0, None, ['F.Cu', 'B.Cu'])])
+        self.assertTrue(rc.gated(hits[0]) and rc.evaluate(hits, [])[0])
+        self.assertEqual([n for n, _, _, _ in rc.pad_layer_changes(self.board)], ['J9.3'])
+        self.assertEqual([d['gnd_mm'] for d in build('AUX_TX_WIRE', gnd=[(5, 6.6)])], [1.6])
+        self.assertEqual(build('AUX_TX_WIRE', gnd=[(5, 6.6), (5, 3.5)]), [])
+        self.assertEqual(build('AUX_TX_WIRE', layers=(pcbnew.F_Cu,)), [])
+        self.assertEqual(build('BAT_SW_RETURN'), [])                    # AUD-2: a slow filtered switch node
+        self.assertIn(rc.net_class('BAT_SW_RETURN'), rc.SIGNAL_CRITICAL)
+        self.assertEqual(build('BAT_IN'), [])                           # a power rail (power_via_no_gnd is for vias)
+        self.assertEqual(build('AUX_TX_WIRE', layers=(pcbnew.F_Cu, pcbnew.In2_Cu))[0]['layers'], ['F.Cu', 'In2.Cu'])
+        build('AUX_TX_WIRE')
+        rc.set_profile('r9')
+        self.assertEqual(rc.pad_layer_changes(self.board), [])
+        self.assertFalse([d for d in rc.scan(self.board) if d['cat'] == 'critical_via_no_gnd'])
+
     def test_r21_arming_chain_is_critical_slow_and_its_old_jog_fails(self):
         """D-R21-04 (R21-REQ-04): J400's arming chain (BAT_SW_SOURCE, BAT_SW_RETURN, BAT_ENABLE) is a pyro / arming net
         with critical hygiene, on AUD-2's slow list (no GND partner via at its layer changes). Round 20's BAT_ENABLE

@@ -59,7 +59,9 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
     critical_via_no_gnd   a via carrying a critical signal net's copper on >= 2 layers (its tracks, or a same-net pad
                           the via sits in: a layer change into a test pad counts, fix pass 5) with no GND via centre
                           within 1.5 mm (critical signal nets: RF, pyro/arm, HSE, USB data, SPI/QSPI/IMU_CS/radio
-                          SPI, the other RADIO_*/GNSS_* nets; r10: R10_CLASSES minus AUD-2's named slow-return list)
+                          SPI, the other RADIO_*/GNSS_* nets; r10: R10_CLASSES minus AUD-2's named slow-return list);
+                          profile r10 (D-R26-01): also a plated (PTH) pad whose barrel joins such a net's tracks on
+                          >= 2 layers (layer 'pad', measured from the pad centre: pad_layer_changes)
     arc_segment           profile r10 (R3-GATE-01): any arc track (PCB_ARC), on any net: AGENTS.md section 3 allows
                           only 0 / 45 / 90 degree straight segments, and the heading / jog / staircase tests skip arcs
   hygiene categories, gated on critical nets (the signal nets above and the power rails, GND included):
@@ -893,8 +895,41 @@ def loops(nc):
     return out
 
 
+def pad_layer_changes(board):
+    """D-R26-01 (R26-TRI-09), profile r10: the plated (PTH) pads of a return-required critical signal net that carry
+    that net's tracks on two or more copper layers. The barrel joins them, so the pad is a layer change as a via is
+    (D-R20-09 drew AUX_TX_WIRE / AUX_RX_WIRE on F.Cu from the cell and on B.Cu to the clamps through J440.3 / J440.4,
+    and the via-only test passed them). A layer counts when a track of the net ends in the pad's copper on it or in its
+    hole. [(pad name, net, (x, y) nm, sorted layer ids)]; the other profiles' records keep their via-only verdicts."""
+    if PROFILE != 'r10':
+        return []
+    by = defaultdict(list)
+    for t in board.GetTracks():
+        if t.GetClass() == 'PCB_TRACK' and net_class(t.GetNetname()) in SIGNAL_CRITICAL and return_required(t.GetNetname()):
+            by[t.GetNetname()].append((t.GetLayer(), (t.GetStart().x, t.GetStart().y), (t.GetEnd().x, t.GetEnd().y)))
+    out = []
+    for f in board.GetFootprints():
+        for pd in f.Pads():
+            net = pd.GetNetname()
+            if pd.GetAttribute() != pcbnew.PAD_ATTRIB_PTH or net not in by:
+                continue
+            c = (pd.GetPosition().x, pd.GetPosition().y)
+            hole = max(pd.GetDrillSize().x, pd.GetDrillSize().y) / 2
+            lays = set()
+            for lid, a, b in by[net]:
+                if lid in lays or not pd.IsOnLayer(lid):
+                    continue
+                shape = pd.GetEffectiveShape(lid)
+                if any(dist(q, c) <= hole or shape.Collide(P(q), 0) for q in (a, b)):
+                    lays.add(lid)
+            if len(lays) >= 2:
+                out.append((f'{f.GetReference()}.{pd.GetNumber()}', net, c, sorted(lays)))
+    return out
+
+
 def critical_transitions(board):
-    """Vias carrying a critical signal net's tracks on two or more layers: [(net, (x, y) nm, nearest GND via mm)]."""
+    """Vias carrying a critical signal net's tracks on two or more layers, and (profile r10, D-R26-01) plated pads that
+    do (pad_layer_changes): [(net, (x, y) nm, nearest GND via mm)]."""
     gnd, out = [], []
     by = defaultdict(list)
     for t in board.GetTracks():
@@ -912,6 +947,9 @@ def critical_transitions(board):
         if len(lays) >= 2:
             g = min((dist(q, p) for q in gnd), default=None)
             out.append((n, p, None if g is None else mm(g)))
+    for _, n, p, _ in pad_layer_changes(board):
+        g = min((dist(q, p) for q in gnd), default=None)
+        out.append((n, p, None if g is None else mm(g)))
     return out
 
 
@@ -2248,6 +2286,13 @@ def scan(board, baseline_log=None):
             if g is None or mm(g) > GND_REACH:
                 add('power_via_no_gnd' if power else 'critical_via_no_gnd', v['net'], 'via', v['pos'],
                     gnd_mm=None if g is None else round(mm(g), 3), into_pad=bool(padl - tracked))
+    # D-R26-01 (R26-TRI-09), profile r10: a plated pad carrying a return-required critical signal net's tracks on two or
+    # more layers is a layer change through its barrel; its GND partner is measured from the pad centre (layer 'pad')
+    for name, net, pos, lays in pad_layer_changes(board):
+        g = min((dist(q, pos) for q in gnd), default=None)
+        if g is None or mm(g) > GND_REACH:
+            add('critical_via_no_gnd', net, 'pad', pos, gnd_mm=None if g is None else round(mm(g), 3), pad=name,
+                layers=[board.GetLayerName(lid) for lid in lays])
     for net, vs in cu.vias_by_net.items():                          # same-net vias whose rings overlap
         for i, v in enumerate(vs):
             for w in vs[i + 1:]:

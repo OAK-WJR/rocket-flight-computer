@@ -1,15 +1,17 @@
 # R10 AVA layout hand-off
 
-**How to read this file (R19-DOC-08).** For the current board `92c3ad59…` read "Round 24 fix pass" at the end (one
-capped chamfer) and, before it, "Round 24 board pass", which lists the changes from `5516eeec…` ("Round 21 CAD fix
+**How to read this file (R19-DOC-08).** For the current board `a0ec075e…` read "Round 26 fix pass" at the end (two
+GND vias added at J440, and four bottom parts and four vias moved from `92c3ad59…`), then "Round 24 fix pass" (one
+capped chamfer, which made `92c3ad59…`) and, before it, "Round 24 board pass", which lists the changes from `5516eeec…` ("Round 21 CAD fix
 pass", the board of rounds 22 and 23) to `1407e850…`. The current placement itself is
 `m3_design/r10_place.tsv` and the board; everything above the round 18 section is history of earlier boards.
 Sealed historical sections keep their original text, including run-together words and numbers (R19-DOC-04); only the
 current-status paragraphs were respaced in round 19.
 
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
-**Round 24 fix pass (2026-11-01):** the current CAD candidate is the PCB recorded in "Round 24 fix pass" at the end
-(D-R24-18..23); "Round 24 board pass" records its predecessor `1407e850…`, which round 24 reviewed.
+**Round 26 fix pass (2026-11-02):** the current CAD candidate is the PCB recorded in "Round 26 fix pass" at the end
+(D-R26-01..04); "Round 24 fix pass" records its predecessor `92c3ad59…`, which rounds 25 and 26 reviewed, and "Round 24
+board pass" records `1407e850…`, which round 24 reviewed.
 **Round 24 board pass (2026-11-01):** the round 24 PCB is recorded in "Round 24 board pass"
 (D-R24-01..17); "Round 21 CAD fix pass" records its predecessor `5516eeec…`, which rounds 22 and 23 reviewed.
 **Round 21 CAD fix pass (2026-10-31):** the current CAD candidate is the rebuilt PCB recorded in
@@ -511,3 +513,32 @@ The CAD lane's pass on the round 24 triage (0 Critical / 0 Major, 17 Minor real 
 No via, pad, footprint, legend or support moved; the zone fills were re-poured around the new corner. D-R24-19 ..
 D-R24-23 change generated text, checks and records only (check_r10 rule M-8 holds every courtyard 2.5 mm from the
 short edges, with six recorded DFM queries). U1's pin map and the IMU axis map (roll = -gyro_Y) are unchanged.
+
+## Round 26 fix pass (new PCB; D-R26-01..04)
+
+The CAD lane's pass on the round 26 triage (0 Critical / 0 Major, 12 Minor real errors on `92c3ad59…`;
+`../r10_review/round26_fix_cad.md`), with the root's follow-up D-R26-04. Builds A and B gave the same board. PCB
+`a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c`, 46 x 90 x 1.6 mm, 2,369,507 bytes; 216 footprints,
+1059 segments, 309 vias (170 GND), 1866.794 mm track (`92c3ad59…`: 1057 segments, 307 vias (168 GND), 1867.046187 mm).
+Builds 2 and 3 had first given the intermediate `4108e6fa…` (1058 segments, 1866.026 mm; never committed or reviewed),
+on which R164's 3V3 via at (19.05,55.25) sat 0.331 mm from R126.1 (PE4's net PYRO1_GATE_N, F.Cu) and C10's Fab /
+pad envelope at B(17.5,53.45) 2.994 mm from U5's body-and-pad union (inside ORDERING 8.3's 3 mm coat exclusion);
+D-R26-04 moved that via, C10 and PYRO1_CONT_MID's diagonal again. C10's envelope is now 3.017 mm from that union
+(pads alone 3.449 mm).
+
+| Change | Placement / copper |
+|---|---|
+| AUX GND partner vias (D-R26-01) | GND vias 0.5 / 0.3 mm at (7.4,16.5) and (7.4,20.0), 1.500 mm from J440.3 / J440.4, in the F.Cu / B.Cu GND pours and joined to In1 GND (the In2 3V3 fill clears them); M3_DB125_4P_GN pins 3 / 4 keep no unconnected inner ring (J410, J420, J440, J9) |
+| 3V3A column and R173 (D-R26-02 / -04) | C11 B(17.5,52.1) -> B(17.5,51.45), C10 B(17.5,54.1) -> B(17.5,53.5) (0.60 mm, D-R26-04), R164 B(17.325,55.9) -> B(17.325,55.25), R173 B(16.87,59.7) -> B(16.87,59.05), rotations unchanged; 3V3A trunk (16.5,50.2)-(16.5,51.45)-(16.5,53.5)-(16.5,55.25); C11.2 return (18.5,51.45)-(19.423,52.373) to via (19.423,52.373); C10.2 return (18.5,53.45)-(19.65,53.45) to via (19.65,53.45), leaving the pad on the via's line, 0.05 mm from the pad centre inside the land (D-R26-04) |
+| R164's 3V3 via (D-R26-02 / -04) | (19.05,55.9) -> (19.55,55.825); strap (18.15,55.25)-(18.975,55.25)-(19.55,55.825) |
+| R13's 3V3 via (D-R26-02) | (9.2,52.98) -> (9.2,52.55); strap (10.25,52.98)-(9.63,52.98)-(9.2,52.55) |
+| PYRO1_OUT / PYRO1_CONT_MID (D-R26-02 / -04) | PYRO1_OUT's last vertical (16.87,57.97)-(16.87,58.62); PYRO1_CONT_MID (16.87,59.48)-(16.87,60.82)-(17.85,61.8)-(20.83,61.8) (the chamfered 90 at (16.87,61.8) is gone) |
+
+11 segments removed and 13 added; the zone fills were re-poured. C18's designator is hidden (its spot (19.32,50.38) now
+lies on C11.2; 92 -> 93 hidden, 123 visible, 44 legends); no other designator or legend moved. PYRO1_OUT is at least
+1.040 mm from 3V3 / 3V3A on every layer, and Q124's gate nets (PYRO1_GATE_N, PE4's net, and PYRO1_GATE) at least
+1.0585 mm (R128.1; D-R26-04; 0.835 / 0.676 mm on `92c3ad59…`). R164's new via is 0.2335 mm from BUZZ_DRV's B.Cu
+diagonal and 0.206 mm from LS120.3 (no net, F.Cu). BUZZ_DRV / PYRO1_OUT's minimum fell from 0.964 to 0.794 mm
+(R162.1 to R173.1, B.Cu): a bridge there may fire an enabled match (Inference, D-R26-04), and the cold screen refuses
+one present at power-up. D-R26-03 changes generated text only. Every other part pose, land, net and support is
+unchanged. U1's pin map and the IMU axis map (roll = -gyro_Y) are unchanged.

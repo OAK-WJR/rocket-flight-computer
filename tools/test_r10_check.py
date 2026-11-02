@@ -392,22 +392,33 @@ class SchematicContract(unittest.TestCase):
         self.assertNotIn('TT_a pin', text)
         self.assertNotIn('consigned alternate', text)
         # D-R24-19 (R24-TRI-02 / -04): rules 4, 5 and 8 and the chatter worst cases after D-R24-02 / -08 / -11;
-        # D-R25-01 / -02 (R25-TRI-01 / -02): the sliding-window chatter criterion and rule 8's hold-up over the trip window
+        # D-R25-01 / -02 (R25-TRI-01 / -02): the sliding-window chatter criterion and rule 8's hold-up over the trip window;
+        # D-R26-03 (R26-TRI-02 / -03 / -04): the bound four-stall point 5.71 V (with the AUX allowance), the late-block
+        # worst train in place of the sampled search, and rule 8's corner without the fire current counted twice
         for words in ('leaving Q120 off this way takes two opens', 'R91.1 and U1.28 each have a second via since D-R24-08',
                       "above U9's 4.80 V BAT_IN turn-off corner",
                       'a single J400 drop-out shorter than 10.3/20.1/26.0 ms worst case',
-                      'about 8.2 ms at the fire budget four-stall BAT_IN of 5.73 V and 6.3 ms at 5.5 V cannot trip U9',
-                      'Repeated drop-outs add up (R25-TRI-01)', '20.0 / 24.4 % is only the fast-chatter limit',
-                      'total open time in every sliding 100 ms window is under 7 ms and U9 stays on for the whole run at 5.73 V',
-                      'worst-corner limit 7.63 ms per 100 ms window at 5.73 V',
+                      'about 8.1 ms (8.07 ms) at the fire budget four-stall BAT_IN of 5.71 V (5.713 V, parts_budget.json',
+                      'and 6.3 ms at 5.5 V cannot trip U9',
+                      'Repeated drop-outs add up (R25-TRI-01)',
+                      'falls from 19.6 % at 0.1 ms drop-outs to 14.8 % at 4 ms and 4.5 % at 8 ms (5.71 V)',
+                      '19.7 / 24.4 % is only the fast-chatter limit',
+                      'total open time in every sliding 100 ms window is under 7 ms and U9 stays on for the whole run at 5.71 V',
+                      'worst-corner limit 7.50 ms per 100 ms window at 5.71 V, a 0.50 ms margin over the 7 ms line',
+                      'The worst admissible train is one open block per 100 ms placed late in the window',
+                      'at the 7 ms pass line it holds EN at 1.1295 V at 5.71 V (1.1330 V at 5.73 V) against 1.116 V',
                       'replay of its recorded contact waveform through the worst-corner EN model',
                       'after a 30-130 ms EN turn-on delay',
+                      'below the four-stall-plus-fire corner: BAT_IN 5.71 V with a healthy match',
+                      '5.55–5.56 V with the match shorted and 5.50 V with the match and leads shorted',
                       'Hold-up after the trip is 0.103–0.164 ms with all ports on and 0.291–0.430 ms with the camera off / shed, '
                       '0.22–0.31 of the break-to-3.8 V hold-up', 'from VLOGIC 4.84–5.17 V, the PA6 0.44–0.47 V window'):
             self.assertIn(words, text)
         for gone in ('Respin: a second via', 'hang on one via', '4.78 V BAT_IN', '10.6/20.5/26.4', '5.92 V', '30-129 ms',
                      'J400 drop-outs shorter than', 'longest measured drop-out < 10 ms', '5.96 V', 'from 5.3 V at 300.8',
-                     '0.157–0.182', '0.44–0.48 ms', '18 %'):
+                     '0.157–0.182', '0.44–0.48 ms', '18 %', 'about 8.2 ms', 'four-stall BAT_IN of 5.73 V',
+                     'whole run at 5.73 V', '7.63 ms per 100 ms window', 'adversarial search', '1.1173 V', '20.0 / 24.4 %',
+                     '19.9 % at 0.1 ms', '5.37 V'):
             self.assertNotIn(gone, text)
         with (gate.ROOT / 'm3_design/assembly_review/sources/r10_design/pin_table.tsv').open() as table:
             rows = {r['port']: r for r in csv.DictReader(table, delimiter='\t')}
@@ -1647,6 +1658,43 @@ class R4Synthetic(SyntheticBase):
         for width in (0.03, 0.02):
             with self.subTest(width=width):
                 self.assertFalse(gate.OwnPadVoids(self.board, fill(width)).exempt('SPI1_SCK', 5, 20.3))
+
+    def test_r26_own_pad_void_with_its_gnd_partner_via(self):
+        """D-R26-01 (R26-TRI-09): a GND via within 1.5 mm of a through-hole pad (its D-R19-15 partner) opens an In2
+        antipad that cannot stay apart from the pad's own void (J440.3 / J440.4: void 1.2 mm, antipad 0.40 mm, 1.5 mm
+        apart). The merged void stays exempt inside the pad disc and the partner's antipad disc. The same hole without
+        the via, with a 3V3 via there, with the GND via 1.6 mm away, or with a slot out of the partner's disc is not."""
+        def poly(*pts):
+            ps = pcbnew.SHAPE_POLY_SET(); ps.NewOutline()
+            for x, y in pts:
+                ps.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+            return ps
+
+        def disc(cx, cy, r):
+            return poly(*[(cx + r * math.cos(k * math.pi / 16), cy + r * math.sin(k * math.pi / 16)) for k in range(32)])
+
+        def fill(*holes):
+            ps = poly(*self.box(0, 10, 46, 40))
+            for h in holes:
+                ps.BooleanSubtract(h)
+            return {'3V3': ps}
+
+        def exempt(*holes):
+            return gate.OwnPadVoids(self.board, fill(*holes)).exempt('SPI1_SCK', 5, 20.3)
+        pad = self.r134.FindPadByNumber('2')                                         # the pad at (5, 20)
+        pad.SetNet(self.board.FindNet('SPI1_SCK'))
+        pad.SetSize(self.P(2.4, 2.4))           # no zone clearance on this board: the disc is 1.2 + 0.05, the board's 1.25
+        void, antipad = disc(5, 20, 1.2), disc(5, 18.5, 0.4)
+        self.assertTrue(exempt(void))
+        self.assertFalse(exempt(void, antipad))                                       # no via: a hole leaving the disc
+        v = self.via(5, 18.5, 'GND', d=0.5)
+        self.assertTrue(exempt(void, antipad))                                        # its GND partner
+        v.SetNet(self.board.FindNet('3V3'))
+        self.assertFalse(exempt(void, antipad))
+        v.SetNet(self.board.FindNet('GND')); v.SetPosition(self.P(5, 18.4))
+        self.assertFalse(exempt(void, disc(5, 18.4, 0.45)))                           # 1.6 mm: no partner
+        v.SetPosition(self.P(5, 18.5))
+        self.assertFalse(exempt(void, antipad, poly(*self.box(4.98, 17.0, 5.02, 18.5))))   # a slot out of its disc
 
     def test_k_region_foreign_via_hole_geometry(self):
         """R6-RTE-02 / R6-GATE-01: a no-copper sample is exempt only inside a via clearance hole of the fill."""
@@ -4950,6 +4998,103 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('M-8', move('C95', -1.5), 'M-8: stale SHORT_EDGE_QUERIES entry C95')
         self.seeded('M-8', lambda board: board.Delete(board.FindFootprintByReference('C403')),
                     'M-8: SHORT_EDGE_QUERIES entry C403: no such part on the board')
+
+    def test_r26_aux_pins_have_gnd_partner_vias(self):
+        """D-R26-01 (R26-TRI-09): J440.3 / J440.4 carry AUX_TX_WIRE / AUX_RX_WIRE on F.Cu (from the cell) and B.Cu (to
+        the clamps, D-R20-09), so route_check r10 counts each plated pin as a layer change. They are the board's only
+        such pins (J400.2's BAT_SW_RETURN is AUD-2-slow, J1.1's BAT_IN power). On the board each has its GND via 1.5 mm
+        north and no pad fails; with those two vias removed both fail again at the round 26 figures, 3.900 / 4.037 mm."""
+        import route_check as rc
+        rc.set_profile('r10')
+        self.addCleanup(rc.set_profile, 'r8')
+
+        def pads(board):
+            return sorted((d.get('pad'), d['gnd_mm']) for d in rc.scan(board) if d['cat'] == 'critical_via_no_gnd')
+        b = self.load()
+        self.assertEqual(sorted((n, net) for n, net, _, _ in rc.pad_layer_changes(b)),
+                         [('J440.3', 'AUX_TX_WIRE'), ('J440.4', 'AUX_RX_WIRE')])
+        self.assertEqual(pads(b), [])
+        partners = [t for t in b.GetTracks() if t.GetClass() == 'PCB_VIA' and t.GetNetname() == 'GND' and
+                    (round(pcbnew.ToMM(t.GetPosition().x), 4), round(pcbnew.ToMM(t.GetPosition().y), 4))
+                    in ((7.4, 16.5), (7.4, 20.0))]
+        self.assertEqual(len(partners), 2)
+        for v in partners:
+            self.drop(b, v)
+        self.assertEqual(pads(b), [('J440.3', 3.9), ('J440.4', 4.037)])
+
+    def copper_gap(self, board, nets_a, nets_b, limit=1.0):
+        """D-R26-02 / -04: the least edge-to-edge distance (mm) between copper of nets_a and of nets_b on one copper layer
+        (tracks, vias and pads where they are flashed, and nets_b's zone fills), or None when none is within limit +
+        0.1 mm. Bisected with KiCad's own shape collision to 1 nm."""
+        cu = (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu)
+
+        def shapes(nets):
+            out = []
+            for t in board.GetTracks():
+                if t.GetNetname() in nets:
+                    out += [(lid, t.GetEffectiveShape(lid)) for lid in cu
+                            if t.IsOnLayer(lid) and (t.GetClass() != 'PCB_VIA' or t.FlashLayer(lid))]
+            for f in board.GetFootprints():
+                for p in f.Pads():
+                    if p.GetNetname() in nets:
+                        out += [(lid, p.GetEffectiveShape(lid)) for lid in cu if p.IsOnLayer(lid) and p.FlashLayer(lid)]
+            return out
+        fills = [(lid, z.GetFilledPolysList(lid)) for z in board.Zones() if z.GetNetname() in nets_b
+                 and not z.GetIsRuleArea() for lid in cu if z.IsOnLayer(lid) and z.HasFilledPolysForLayer(lid)]
+        best = None
+        for la, sa in shapes(set(nets_a)):
+            for lb, sb in shapes(set(nets_b)) + fills:
+                if la != lb or not sb.Collide(sa, pcbnew.FromMM(limit + 0.1)):
+                    continue
+                lo, hi = 0.0, limit + 0.1
+                for _ in range(30):
+                    mid = (lo + hi) / 2
+                    lo, hi = (lo, mid) if sb.Collide(sa, pcbnew.FromMM(mid)) else (mid, hi)
+                best = hi if best is None else min(best, hi)
+        return best
+
+    def moved_via(self, net, frm, to):
+        """A copy of the board with the `net` via at `frm` (mm) put at `to`."""
+        board = self.load()
+        via = next(t for t in board.GetTracks() if t.GetClass() == 'PCB_VIA' and t.GetNetname() == net
+                   and abs(pcbnew.ToMM(t.GetPosition().x) - frm[0]) < 1e-3 and abs(pcbnew.ToMM(t.GetPosition().y) - frm[1]) < 1e-3)
+        via.SetPosition(self.P(*to))
+        return board
+
+    def test_r26_pyro1_out_clear_of_3v3_and_3v3a(self):
+        """D-R26-02 (R26-TRI-01's respin item): no PYRO1_OUT copper lies within 1.0 mm of 3V3 or 3V3A copper on any
+        layer, so a bridge that forms after PC1 is high cannot drive the bus through R134 and the match into a logic
+        rail. Round 26's three spots fail again with their parts or via put back: R173 at (16.87, 59.7) (OUT pad 0.5135
+        mm from D120.3), the C11 / C10 / R164 column back south (0.566 mm from R164.2) and R13's 3V3 via at
+        (9.2, 52.98) (0.620 mm from J121.1's F.Cu run)."""
+        rails = ('3V3', '3V3A')
+        self.assertGreaterEqual(round(self.copper_gap(self.load(), ('PYRO1_OUT',), rails), 3), 1.0)
+
+        def moved(dys):
+            board = self.load()
+            for ref, dy in dys.items():
+                board.FindFootprintByReference(ref).Move(self.P(0, dy))
+            return board
+        self.assertAlmostEqual(self.copper_gap(moved({'R173': 0.65}), ('PYRO1_OUT',), rails), 0.5135, places=3)
+        self.assertAlmostEqual(self.copper_gap(moved({'C11': 0.65, 'C10': 0.6, 'R164': 0.65}), ('PYRO1_OUT',), rails),
+                               0.566, places=2)
+        self.assertAlmostEqual(self.copper_gap(self.moved_via('3V3', (9.2, 52.55), (9.2, 52.98)), ('PYRO1_OUT',), rails),
+                               0.62, places=3)
+
+    def test_r26_gate_nets_clear_of_3v3_and_3v3a(self):
+        """D-R26-04 (round 26 follow-up): no 3V3 or 3V3A copper lies within 1.0 mm of PYRO1_GATE_N (PE4's net) or
+        PYRO1_GATE copper on any layer: a 3V3 bridge to PYRO1_GATE_N puts about 3.2 V on Q124's gate through R126 against
+        R128's 10 k, one to PYRO1_GATE 3.3 V directly, and either fires an enabled match. R164's 3V3 via (19.55, 55.825) is
+        1.059 mm from R128.1. Put back where D-R26-02
+        first drew it, (19.05, 55.25), it is 0.331 mm from R126.1; at its 92c3ad59 spot, (19.05, 55.9), 0.676 mm from
+        R128.1: both fail."""
+        rails, gates = ('3V3', '3V3A'), ('PYRO1_GATE_N', 'PYRO1_GATE')
+        self.assertGreaterEqual(round(self.copper_gap(self.load(), gates, rails), 3), 1.0)
+        for spot, want in (((19.05, 55.25), 0.331), ((19.05, 55.9), 0.676)):
+            with self.subTest(spot=spot):
+                got = self.copper_gap(self.moved_via('3V3', (19.55, 55.825), spot), gates, rails)
+                self.assertAlmostEqual(got, want, places=3)
+                self.assertLess(got, 1.0)
 
     def test_r22_clamp_gnd_returns(self):
         """D-R22-07 (R22-GATE-03): every port clamp's GND pad reaches a GND via through tracks within 1.0 mm (0.7 mm,

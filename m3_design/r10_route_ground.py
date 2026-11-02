@@ -170,6 +170,10 @@ def draw(d):
             if r['pad'] == 'U1.49':
                 # Exit the MCU pads before turning; C421's moved bottom land excludes the old via.
                 pts.insert(1, (at[0], pts[0][1]))
+            if r['pad'] == 'C10.2':
+                # D-R26-04: C10 sits 0.05 mm south of its fan-out via's line; the stub leaves the pad on the via's line
+                # (0.05 mm off its centre, inside the 1.35 mm land), so the via keeps 0.27 mm from R127.1 (PYRO1_GATE_N).
+                pts[0] = (pts[0][0], at[1])
             d.track(r['net'], r['layer'], 0.3, pts)
             d.via(r['net'], at)
     # R405 keeps its local return after the ESD clamp moves to the other legal pocket.

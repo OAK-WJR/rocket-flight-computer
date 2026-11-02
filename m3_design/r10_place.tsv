@@ -5,9 +5,9 @@ ref	x	y	rot	side	basis
 @M3	3.7	86	0	F	R10 forward-west support 0.3 mm west: J400 3.8 mm clear of the washer (D-R2-12)
 @M3	42	86	0	F	R10 mechanical proposal
 @M3	4	44.3	0	F	R10 west mid support 0.3 mm forward: J2 pads 3.8 mm clear of the washer (D-R2-12)
-C10	17.5	54.1	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+C10	17.5	53.5	0	B	D-R26-02 / -04: with the C11 / R164 column (0.65 mm north, R164.2 >= 1.0 mm from PYRO1_OUT) but 0.60 mm, so its Fab / pad envelope stays >= 3.0 mm from U5 (ORDERING 8.3)
 C100	28.85	39.97	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-C11	17.5	52.1	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+C11	17.5	51.45	0	B	D-R26-02: the C11 / C10 / R164 column north, C11 and R164 0.65 mm (R164.2 >= 1.0 mm from PYRO1_OUT)
 C120	17.1	72.525	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 C123	18.22	71.85	0	F	D-R19-04 (R19-SAF-06): Q122 gate-source 10nF, pad 1 straight below Q122.1, pad 2 to R123.2's GND via
 C126	16.85	57.675	-90	F	D-R11-01: clear moved Q124 courtyard; electrical contract unchanged
@@ -140,11 +140,11 @@ R156	30.55	68.4	90	B	D-AVA-01: explicit cell placement; electrical contract unch
 R157	32.45	68.4	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R162	19.5	57.7	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R163	21.8	59.3	-90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R164	17.325	55.9	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
+R164	17.325	55.25	180	B	D-R26-02: 0.65 mm north with C11 (C10 0.60 mm, D-R26-04): the 3V3A pad 1.04 mm from PYRO1_OUT's B.Cu run (was 0.566 mm)
 R165	13.25	67	0	F	D-R11-01: maximum DB125 envelope and local courtyard clearance
 R166	23.5	86.3	0	F	D-AVA-01: explicit cell placement; electrical contract unchanged
 R167	13	83.8	180	B	D-AVA-01: explicit cell placement; electrical contract unchanged
-R173	16.87	59.7	-90	B	D-R18-05: CONT divider top resistor at the PYRO1_OUT end; the 5.1k MID node, not OUT, crosses beside R134.2 and Q123; OUT pad >= 0.5 mm from D120.3 (3V3), BUZZ_G and C126's GND via
+R173	16.87	59.05	-90	B	D-R18-05: CONT divider top resistor at the PYRO1_OUT end; the 5.1k MID node, not OUT, crosses beside R134.2 and Q123; D-R26-02: 0.65 mm north, OUT pad >= 1.0 mm from D120.3 (3V3) and >= 0.5 mm from BUZZ_G, C126's GND via and Q124's source vias
 R175	28	55.8	90	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R178	23.43	54.85	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged
 R180	28.43	53.25	0	B	D-AVA-01: explicit cell placement; electrical contract unchanged

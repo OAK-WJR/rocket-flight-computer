@@ -4147,7 +4147,8 @@ R24-TRI-02 / -03 / -04 (R24-SAFETY-02 / -03 / -04, R24-POWER-01 / -02, R24-REQUI
 - **Before -> after,** by Calculation (the triage's corner model, re-run: R80 / R165 / R81 +/-1 %, C87 0.72-1.27 x
   220 nF, TI SLVSFC9C p9 thresholds, +/-0.1 uA, D402 50 nA at J400.2 with J400 closed and through R165 with it open):
   - Drop-out worst case: 10.6 / 20.5 / 26.4 -> 10.3 / 20.1 / 26.0 ms at 6.0 / 7.4 / 8.4 V; 8.5 -> 8.2 ms at 5.73 V;
-    6.6 -> 6.3 ms at 5.5 V.
+    6.6 -> 6.3 ms at 5.5 V. (Corrected by D-R26-03: 5.73 V predates D-R19-14's 100 mA AUX allowance; the bound
+    four-stall BAT_IN is 5.71 V (5.713 V), where a single drop-out may last 8.07 ms.)
   - The < 10 ms bench rule now needs a pack of at least 5.96 V (was 5.92 V). (Superseded by D-R25-01: the bench rule is
     now a sliding 100 ms window.)
   - Turn-on: 30-129 -> 30-130 ms.
@@ -4159,7 +4160,8 @@ R24-TRI-02 / -03 / -04 (R24-SAFETY-02 / -03 / -04, R24-POWER-01 / -02, R24-REQUI
     opens.
   - Rule 5: "R91.1 and U1.28 each hang on one via" -> each has a second via since D-R24-08.
   - The chatter trip fraction is 20.0 / 24.4 % at 5.73 / 6.0 V (was 20.6 / 25.0 %). (Corrected by D-R25-01: that is
-    only the fast-chatter limit, for drop-outs approaching 0 ms. Longer drop-outs trip at lower fractions.)
+    only the fast-chatter limit, for drop-outs approaching 0 ms. Longer drop-outs trip at lower fractions. D-R26-03:
+    19.7 % at the bound four-stall point 5.71 V.)
 - **Not in this lane:** the generated text carries no J400 chatter open-fraction rule (the "below 20 %" that becomes
   18 %). It is in REQUIREMENTS F6, ORDERING 8.3, R10_VEHICLE_HANDOFF and R10_VALIDATION, which the docs lane owns.
   (Superseded by D-R25-01: both the < 10 ms and the < 18 % lines are replaced by the sliding-window rule, which the
@@ -4238,19 +4240,23 @@ R25-TRI-01 (R25-POWER-03, R25-REQUIREMENTS-01, R25-SAFETY observation 9).
   >= 5.96 V)".
 - **After:**
   - The immunity figures are for a single drop-out (10.3 / 20.1 / 26.0 ms at 6.0 / 7.4 / 8.4 V; 8.2 ms at 5.73 V;
-    6.3 ms at 5.5 V), and repeated drop-outs add up.
+    6.3 ms at 5.5 V), and repeated drop-outs add up. (Corrected by D-R26-03: 8.07 ms at the bound four-stall point
+    5.71 V.)
   - Bench acceptance: record the J400 contact state at 10 kS/s or faster under flight-level vibration. Pass only if the
     total open time in every sliding 100 ms window is under 7 ms, and U9 stays on for the whole run at 5.73 V.
+    (Corrected by D-R26-03: at 5.71 V.)
   - A switch that fails may still pass on a replay of its recorded waveform through the worst-corner EN model.
   - The periodic trip fractions (19.9 % at 0.1 ms to 5.8 % at 8 ms at 5.73 V; 24.3 % to 8.3 % at 9.9 ms at 6.0 V) are
-    guidance only.
+    guidance only. (D-R26-03: 19.6 % at 0.1 ms to 4.5 % at 8 ms at 5.71 V.)
 - **Figures** (Calculation, the triage's chatter model at the worst corner: R80 / R165 +1 %, R81 -1 %, C87 0.72 x
   220 nF, 0.1 uA EN sink, D402 50 nA, VUVLO(F) 1.116 V):
   - One open block per 100 ms may last 7.629 ms at 5.73 V, 5.871 ms at 5.5 V and 9.594 ms at 6.0 V. I re-ran these
-    limits from the triage model.
+    limits from the triage model. (Corrected by D-R26-03: 7.50 ms at the bound four-stall point 5.71 V.)
   - The triage's 4000-train adversarial search under 7.62 ms per window kept EN at or above 1.1173 V. I did not re-run
-    it.
-  - The 7 ms line leaves 0.63 ms margin at 5.73 V.
+    it. (Corrected by D-R26-03, R26-TRI-03: a sampled result, not the worst case. The worst admissible train is one
+    open block per 100 ms placed late in the window; at 5.73 V it reaches 1.1162 V at 7.62 ms, and 1.1168 V at the
+    search's own 0.1 ms grid point, 7.6 ms.)
+  - The 7 ms line leaves 0.63 ms margin at 5.73 V. (Corrected by D-R26-03: 0.50 ms at 5.71 V.)
 - **Alternative:** raising C87 (BOM only, same land) stays the owner's alternative.
 
 ## D-R25-02. Rule 8's hold-up over the PA6 trip window (round 25 fix pass)
@@ -4286,3 +4292,239 @@ R25-TRI-04 (R25-POWER-04).
 - **Not in this lane:** parts_qualification.md lines 137 and 639 and M3_R4 A2's 9.63-9.96 V belong to the docs lane.
 
 The record index is now **216 unique D IDs through D-R25-03**.
+
+## Round 26 fix pass (2026-11-02)
+
+Round 26's ten lenses and triage (`sources/r10_review/round26_triage.md` / `.json`) found 0 Critical, 0 Major and 12
+Minor real errors. One of them, R26-TRI-09, changes the board. The root also took R26-TRI-01's respin item, because round
+26 is not clean and the clean-round count restarts anyway. This CAD lane changes the board (`92c3ad59…` -> `4108e6fa…`,
+then `a0ec075e…` after the root's follow-up, D-R26-04), the generated text and the checks; the docs lane follows.
+Hand-back: `sources/r10_review/round26_fix_cad.md` / `.json`.
+
+## D-R26-01. GND partner vias at J440.3 / J440.4; route_check counts a plated pin's layer change (round 26 fix pass)
+
+R26-TRI-09 (R26-ROUTING-03).
+
+- **What:**
+  - **Board** (`m3_design/r10_route_signals.py`, port_wires): a 0.5 / 0.3 mm GND via 1.5 mm north of each AUX pin,
+    (7.4, 16.5) for J440.3 and (7.4, 20.0) for J440.4, on the pin column between the pins. Each lies in the F.Cu and
+    B.Cu GND pours and joins In1 GND (pads kept on F.Cu, In1 and B.Cu); the In2 3V3 fill clears it.
+  - **Footprint** (`m3_design/r10_parts.py`): the 4-position terminal's pins 3 and 4 drop their unconnected inner
+    rings, as D-R20-05's protected barrels did. The footprint serves J410, J420, J440 and J9, and none of those eight
+    pins has an inner-layer connection. K-lands' GENERATED_SHA256 pin for M3_DB125_4P_GN moves from 747446dd… to
+    5582eb28…, and r10_parts' footprint assert names the bare pads.
+  - **Gate** (`tools/route_check.py`, profile r10): `pad_layer_changes` lists each plated (PTH) pad that carries a
+    return-required critical signal net's tracks on two or more copper layers. `critical_via_no_gnd` (layer 'pad')
+    fails it when no GND via centre lies within 1.5 mm of the pad centre, and `critical_transitions` includes it. The
+    R7-R9 profiles keep their via-only test, so their records' verdicts do not move.
+  - **Check** (`tools/check_r10.py`, K-region `OwnPadVoids` / `pad_void_regions`): a through-hole pad's own In2 void
+    may merge with the antipad of its GND partner via (centre within 1.5 mm, PARTNER_REACH). The exempt region is then
+    the pad disc plus the partner's antipad disc (pad radius + REGION_HOLE_REACH, 0.55 mm), and the sample itself must
+    still lie in the pad disc.
+- **Why:** D-R20-09 put the AUX clamps on B.Cu, so each wire changes layer through its plated pin, with the nearest GND
+  via 3.900 / 4.037 mm away. That breaks D-R19-15, which keeps the port UART nets under the 1.5 mm partner rule.
+  route_check iterated vias only, so it passed the board.
+- **Why the footprint and K-region changes** (measured on a probe copy of `92c3ad59…` with the two vias added):
+  - **DRC:** KiCad applies the DRU's 'JLC inner-layer PTH pad hole to copper' (0.55 mm) from the via's hole to the
+    pin's 0.95 mm inner ring. At 1.5 mm it read 0.400 mm (eight hole_clearance errors); with the ring, a partner would
+    need 1.65 mm. The triage's legality check measured only the other direction (the pin hole to the via's ring, 0.60
+    mm). Without the unconnected ring, the via's In1 ring is 0.600 mm from the pin hole and the holes are 0.700 mm
+    apart. The In2 fill keeps the same 1.2 mm void round each pin (hole 0.65 + 0.55 mm), so no fill moves.
+  - **K-region:** the via's In2 antipad (0.40 mm) cannot stay apart from the pin's 1.2 mm void at 1.5 mm. The merged
+    void left the 1.25 mm pad disc, so K-region failed both AUX B.Cu runs at 181 samples each, every one inside the
+    void it exempted before. On `92c3ad59…` the old and the new K-region give identical evidence.
+- **Before -> after** (board `4108e6fa…`; the same on `a0ec075e…`, D-R26-04):
+  - J440.3's GND partner: 3.900 -> 1.500 mm; J440.4's: 4.037 -> 1.500 mm (centre to centre).
+  - Each via is 0.300 mm from its own pin's pad on F.Cu and B.Cu and 0.800 mm from the neighbouring pin's.
+  - route_check (r10): 2 failing on `92c3ad59…` (the two pins) -> 0. It finds no other plated pad: J400.2 is
+    AUD-2-slow, J1.1 is power, and J121, J122, J410, J420, J9, J3 and J2 carry one copper layer each.
+  - DRC, K-region, K-reference, K-plane, K-rules, K-ports, S-6 and S-8 all pass.
+- **Seeds:**
+  - `test_route_check.R10AuditScope.test_r26_plated_pad_layer_change_needs_a_gnd_via` (synthetic). A pad with tracks
+    on F.Cu and B.Cu fails with no partner and with one 1.6 mm away, and passes with one at 1.5 mm. One layer, an
+    AUD-2 slow net and a power net give no instance, and profile r9 keeps the via-only test.
+  - `test_r10_check.RealBoardSeeds.test_r26_aux_pins_have_gnd_partner_vias`. The board's only such pins are J440.3 /
+    J440.4; with the two vias removed both fail at 3.900 / 4.037 mm.
+  - `test_r10_check.R4Synthetic.test_r26_own_pad_void_with_its_gnd_partner_via`. The merged void is exempt only with
+    its GND partner: not without the via, not with a 3V3 via there, not 1.6 mm away, and not with a slot out of the
+    partner's disc.
+
+## D-R26-02. PYRO1_OUT held 1.0 mm from 3V3 and 3V3A (round 26 fix pass, R26-TRI-01's respin item)
+
+R26-TRI-01 (R26-SAFETY-01), its board option.
+
+- **What:**
+  - R173 moves 0.65 mm north, (16.87, 59.7) -> (16.87, 59.05) (`r10_place.tsv`).
+  - Because R173 sits higher, PYRO1_CONT_MID's run from R173.2 turns 45 degrees at (16.87, 60.77) to (17.9, 61.8)
+    (`r10_route_signals.buzzer`). Drawn straight down to the old (16.87, 61.8) corner it was 11.15 mm against a 6.81 mm
+    octilinear distance (1.64 x), a gated detour. (Corrected by D-R26-04: the diagonal now runs (16.87, 60.82) to
+    (17.85, 61.8), 0.2005 mm from Q123.1, so the run's 0.175 mm stays the pair's minimum.)
+  - The C11 / C10 / R164 column (the 3V3A filter) moves 0.65 mm north: C11 (17.5, 52.1) -> (17.5, 51.45), C10
+    (17.5, 54.1) -> (17.5, 53.45), R164 (17.325, 55.9) -> (17.325, 55.25). `r10_route_core.CoreTable` moves the
+    3V3A trunk's pad nodes, R164's 3V3 strap and its via, (19.05, 55.9) -> (19.05, 55.25), with it. (Corrected by
+    D-R26-04: that via spot was 0.331 mm from R126.1 (PYRO1_GATE_N); the via is now at (19.55, 55.825), and C10 moves
+    0.60 mm, to (17.5, 53.5).)
+  - `r10_fanout.tsv`: C11.2's return via (19.423, 53.023) -> (19.423, 52.373), on the same diagonal. C10.2's
+    (19.423, 55.023) -> (19.65, 53.45), on a 1.15 mm east stub, because the diagonal spot (19.423, 54.373) lies under
+    R127.1 (PYRO1_GATE_N) on F.Cu.
+  - R13's 3V3 via moves 0.43 mm north, (9.2, 52.98) -> (9.2, 52.55), its stub running west from R13.2, then at 45
+    degrees.
+- **Why:** a PYRO1_OUT bridge to 3V3 or 3V3A that forms after PC1 is high drives the bus through R134 and the match into
+  the rail, and can fire an enabled match (TRI-01). The cold screen refuses such a bridge only when it is there at
+  power-up. This closes those two members of the class; the PYRO1_OUT-to-GND members remain.
+- **Before -> after,** edge to edge, pcbnew shape distance (`92c3ad59…` -> `4108e6fa…`; the same on `a0ec075e…`):
+  - R173.1 to D120.3 (3V3): 0.5135 -> 1.0511 mm.
+  - The diagonal (15.5, 56.6)-(16.87, 57.97) to R164.2 (3V3A): 0.5662 -> 1.0400 mm.
+  - The run (10.37, 56.6)-(15.5, 56.6) to R164.2: 0.6059 -> 1.0400 mm.
+  - J121.1's F.Cu run to R13's 3V3 via: 0.6200 -> 1.0500 mm; J121.1's pad to that via: 0.9200 -> 1.1754 mm.
+  - The run's vertical to D120.3 0.8027 mm, the 3V3A trunk to the diagonal / run 0.9771 / 0.9957 mm, R173.1 to
+    D120.3's 3V3 strap 1.0084 mm and J121.1 to R13's strap 1.0700 mm are each now more than 1.3 mm.
+  - The minimum on any layer: 0.5135 -> 1.0400 mm (inner layers: no PYRO1_OUT copper, and S-8 holds its barrels at
+    1.0 mm or more).
+- **New or nearer adjacencies:** (Corrected by D-R26-04: this list was incomplete. It omitted R164's 3V3 via at
+  (19.05, 55.25), 0.331 mm from R126.1 and 0.491 mm from R127.1 (PYRO1_GATE_N; 0.835 mm on `92c3ad59…`), whose bridge
+  turns Q124 on, and R162.1 (BUZZ_DRV) to R173.1, 0.964 -> 0.794 mm. D-R26-04 moves that via and holds the gate nets
+  1.0 mm or more from 3V3 / 3V3A; its whole-board audit lists every remaining regression.)
+  - R173.1 (PYRO1_OUT) to Q124's source via (15.85, 58.345): 0.7373 -> 0.5000 mm (GND). The PYRO1_OUT-to-GND minimum
+    stays 0.1768 / 0.1800 mm, and every PYRO1_OUT track runs 0.25 mm from the GND pour. R173.1 to C126's GND via
+    (15.8, 59.425): 0.5500 -> 0.7052 mm. R173.1 to BUZZ_G stays 0.51 mm.
+  - R173.2 (PYRO1_CONT_MID) to D120.3 (3V3): 0.4000 -> 0.4154 mm. A bridge there feeds at most about 1 mA through
+    R173's 5.1 kOhm and cannot fire.
+  - PYRO1_CONT_MID's new diagonal is 0.1652 mm from Q123.1 (BUZZ_G) and 0.3618 mm from R134.2 (RAW_ACT); its run
+    under them keeps 0.175 / 0.250 mm, as before. (Corrected by D-R26-04: the diagonal moved; it is now 0.2005 mm
+    from Q123.1 and 0.3862 mm from R134.2.)
+  - C18's designator: its spot (19.32, 50.38) is now on C11.2, and the search finds no other (none even placed first),
+    so it is hidden and kept on Fab (hidden 92 -> 93). No other designator or legend moved.
+- **Kept:**
+  - D-R18-05: the OUT pad stays 0.5 mm or more from BUZZ_G (0.51) and C126's GND via (0.705).
+  - No gate network moved and no via was added to one (S-3). AGENTS section 2 (S-1 ... S-9) holds.
+  - DRC, all 37 check_r10 rules and route_check (0 failing) pass.
+  - The hot-plug model passes all 2304 cases with unchanged results; only C10 / C11's pad positions in its capacitor
+    inventory moved.
+  - BOM and owner BOM are byte-identical. The CPL moves C10, C11, R164 and R173.
+- **Seed:** `test_r10_check.RealBoardSeeds.test_r26_pyro1_out_clear_of_3v3_and_3v3a`. On the board the minimum is
+  1.040 mm. With R173 put back, the column put back or R13's via put back, it fails again at 0.5135 / 0.566 / 0.620 mm.
+
+## D-R26-03. Generated text: the four-stall point with the AUX allowance, the late-block chatter train, rule 8's corner (round 26 fix pass)
+
+R26-TRI-02 (R26-POWER-02, R26-SAFETY-02, R26-REQUIREMENTS-01), R26-TRI-03 (R26-POWER-01, safety observation 2),
+R26-TRI-04 (R26-SAFETY-03).
+
+- **What:** the chatter obligation and firmware rule 8 in `m3_design/r10_sch_check.py`, which the build regenerates
+  into `r10_binding_note.json` (K-binding). `test_r23_binding_note_rules_and_pin_table` pins the new words and rejects
+  the old ones. The battery_entry sheet note carries none of these figures (only the single drop-out at 6.0 / 7.4 /
+  8.4 V, which do not change), so `m3_design/r10_sch.py` is unchanged.
+- **Why:**
+  - TRI-02: "the fire budget's four-stall BAT_IN of 5.73 V" predates D-R19-14's 100 mA AUX allowance. The bound budget
+    (`parts_budget.json`, fire_current_GAP1, primary FETs) gives 5.713 V; the typical-hot FETs give 5.711 V.
+  - TRI-03: the 4000-train search was a sample, not the worst case.
+  - TRI-04: rule 8's "5.37 V four-stall-plus-fire corner" subtracted the fire current a second time from a four-stall
+    point that already carries it.
+- **Before -> after** (Calculation; I re-ran the worst-corner EN model myself: R80 / R165 470 k +1 %, R81 300 k -1 %,
+  C87 0.72 x 220 nF, 0.1 uA EN sink, D402 50 nA, VUVLO(F) 1.116 V, TI SLVSFC9C p. 9):
+  - Four-stall BAT_IN: 5.73 -> 5.71 V (5.713 V).
+  - Single drop-out there: about 8.2 -> about 8.1 ms (8.204 -> 8.067 ms).
+  - One open block per 100 ms window: 7.63 -> 7.50 ms (7.629 -> 7.503 ms). The 5.5 V (5.871 ms) and 6.0 V (9.594 ms)
+    limits do not change. The 7 ms line's margin: 0.63 -> 0.50 ms; the line holds down to 5.65 V (5.6465 V).
+  - Fast-chatter trip fraction: 20.0 -> 19.7 % (19.72 %). Periodic fractions at 5.71 V: 19.6 / 18.6 / 17.4 / 14.8 /
+    11.4 / 4.5 % at 0.1 / 1 / 2 / 4 / 6 / 8 ms (19.9 ... 5.8 % at 5.73 V). The 6.0 V figures (24.3 -> 8.3 % at
+    9.9 ms, 24.4 % fast limit) do not change.
+  - Bench condition: "U9 stays on for the whole run at 5.73 V" -> "at 5.71 V".
+  - The search clause -> "the worst admissible train is one open block per 100 ms placed late in the window (exchange
+    argument: C(O(v)) - O(C(v)) = (1 - a)(1 - b)(vc - vo) > 0): at the corner it trips U9 at 7.50 ms at 5.71 V
+    (7.63 ms at 5.73 V), and at the 7 ms pass line it holds EN at 1.1295 V at 5.71 V (1.1330 V at 5.73 V) against
+    1.116 V". My re-run: the late-block train at 5.73 V reaches 1.1162 V at 7.62 ms and 1.1168 V at 7.6 ms, below the
+    search's 1.1173 V, and the exchange identity holds numerically (0.17625 V on both sides at 5.713 V, 7 ms).
+  - Rule 8's corner: "below the 5.37 V four-stall-plus-fire corner" -> "below the four-stall-plus-fire corner: BAT_IN
+    5.71 V with a healthy match (the fire budget's four-stall point, which includes the 1.28 A fire current),
+    5.55–5.56 V with the match shorted and 5.50 V with the match and leads shorted; VLOGIC is 0.09–0.16 V lower".
+    I re-solved the budget's equation V = 7.4 - 0.15 (V / rest + 1.92 x 4 + P / V), P 13.064 W: healthy 5.7132 V
+    at 1.279 A; match shorted, hot R134 5.5576 V; cold R134 (2.02 ohm) and 20 C copper 5.5555 V; match and 0.3 ohm
+    leads shorted, cold, 5.5085 V. 5.37 V would need 13.53 A from the pack. The PA6 window (top 5.27 V with 1 % R60 /
+    R61) stays below the corrected corner's VLOGIC, so no rule changes.
+- **Records:** D-R24-19's 8.2 ms and 20.0 % lines, and D-R25-01's 5.73 V bench condition, 8.2 ms, trip fractions,
+  7.629 ms limit, 1.1173 V search and 0.63 ms margin, now carry D-R26-03 corrections. D-R19-10 and D-R20-11 stay as
+  dated history.
+
+## D-R26-04. Gate nets held 1.0 mm from 3V3 and 3V3A, C10 back to 3.0 mm from U5, and a whole-board adjacency audit (round 26 follow-up)
+
+The root's follow-up to D-R26-02. The docs lane and then the root measured, by pcbnew shape distance, an adjacency
+D-R26-02 had introduced and its list omitted.
+
+- **What:**
+  - R164's 3V3 via moves from (19.05, 55.25) to (19.55, 55.825) (`r10_route_core.CoreTable`, R164_VIA_R9). Its strap
+    runs east from R164.1 to (18.975, 55.25), then 45 degrees to the via.
+  - C10 sits 0.60 mm north of its `92c3ad59…` spot instead of 0.65 mm: (17.5, 53.45) -> (17.5, 53.5) (`r10_place.tsv`,
+    `COLUMN_DY`). The 3V3A trunk's node follows it. C10.2's return keeps its via (19.65, 53.45), and its stub leaves the
+    pad on the via's line, 0.05 mm north of the pad centre, inside the 1.35 mm land (`r10_route_ground`).
+  - PYRO1_CONT_MID's diagonal moves from (16.87, 60.77)-(17.9, 61.8) to (16.87, 60.82)-(17.85, 61.8)
+    (`r10_route_signals.buzzer`).
+- **Why:**
+  - D-R26-02 put R164's 3V3 via 0.331 mm from R126.1 and 0.491 mm from R127.1 (PYRO1_GATE_N, PE4's net) on F.Cu. On
+    `92c3ad59…` that via sat 0.835 mm from R126.1 and 0.676 mm from R128.1 (PYRO1_GATE). A 3V3 bridge to PYRO1_GATE_N
+    puts about 3.23 V on Q124's gate through R126 (220 ohm) against R128 (10 kOhm): 3.3 x 10 / 10.22 (Calculation).
+    One to PYRO1_GATE puts 3.3 V on the gate directly. Either turns Q124 on and fires an enabled match by itself, the
+    class D-R26-02 was meant to close.
+  - C10's conservative Fab / pad envelope came 2.994 mm from U5's body-and-pad union, inside ORDERING 8.3's 3 mm coat
+    exclusion (3.333 mm on `92c3ad59…`).
+  - PYRO1_CONT_MID's diagonal came 0.165 mm from Q123.1 (BUZZ_G), nearer than the run's 0.175 mm.
+- **Target:** every 3V3 / 3V3A copper item at least 1.0 mm from all PYRO1_GATE_N and PYRO1_GATE copper on every layer,
+  with PYRO1_OUT still 1.0 mm or more from 3V3 / 3V3A.
+  - The via spot was searched on a 0.025 mm grid with real pcbnew shapes. Spots were legal when the via and its strap
+    stay 0.2 mm or more from foreign copper and 0.25 mm hole to hole.
+  - (19.55, 55.825) gives the largest smaller gate clearance, 1.0585 mm; root's grid suggested (19.55, 55.80-55.85).
+  - DRC, check_r10 and route_check pass on it.
+- **Before -> after** (pcbnew shape distance, edge to edge; `92c3ad59…` / `4108e6fa…` -> `a0ec075e…`):
+  - 3V3 to PYRO1_GATE_N: 0.835 / 0.331 -> 1.065 mm (R127.1; R126.1 1.081 mm).
+  - 3V3 to PYRO1_GATE: 0.676 / 1.270 -> 1.0585 mm (R128.1).
+  - 3V3A to PYRO1_GATE: 1.151 / 1.145 -> 1.145 mm (C10.1 to the PYRO1_GATE via (14.4, 53.3), B.Cu).
+  - 3V3A to PYRO1_GATE_N stays 1.600 mm (U1.3 to the 3V3A via (16.0, 50.2), F.Cu).
+  - Inner layers: the gate nets' only inner copper is the barrel of PYRO1_GATE's via (14.4, 53.3). S-8 holds it
+    1.0 mm or more from foreign inner copper, and the nearest 3V3 fill (In2) is 2.75 mm from it.
+  - Every 3V3 / 3V3A item is now 1.0 mm or more from both gate nets on every layer. The next nearest is U1.6 (3V3)
+    to U1.3 (PE4), 1.200 mm, on U1's own pins.
+  - PYRO1_OUT to 3V3 / 3V3A stays 1.040 mm (D-R26-02).
+  - C10's envelope to the U5 union: 3.333 / 2.994 -> 3.017 mm (pads alone 3.777 / 3.425 -> 3.449 mm).
+  - BUZZ_G / PYRO1_CONT_MID: 0.175 / 0.165 -> 0.175 mm.
+  - GND / PYRO1_GATE_N stays 0.270 mm (C10.2's via to R127.1); it was 0.263 mm on `92c3ad59…`.
+- **The new via's other neighbours** (no pyro or arming net):
+  - BUZZ_DRV's B.Cu diagonal: 0.2335 mm.
+  - LS120.3, an unconnected mechanical pad: 0.206 mm.
+  - R162.2 (BUZZ_G): 0.997 mm.
+  - A 3V3 bridge to BUZZ_DRV drives PC14's output and sounds the buzzer.
+- **Whole-board adjacency audit.** Root's `adjdiff.py` (tracks, vias and pads, x 6-25, y 47-66) was validated first: on
+  `4108e6fa…` it reports 3V3 / PYRO1_GATE_N 0.835 -> 0.331. It was then extended to the whole board: every copper layer,
+  every net pair, and zone fills as well. It compares `3d8e845`'s board with `a0ec075e…` and lists each pair whose minimum
+  is under 1.2 mm and dropped by more than 5 µm:
+
+  | Net pair | 92c3ad59 | a0ec075e | Where (a0ec075e) | Pyro / arming? | A bridge there |
+  |---|---|---|---|---|---|
+  | BUZZ_DRV / PYRO1_OUT | 0.964 | 0.794 | R162.1 to R173.1, B.Cu (D-R26-02's R173) | fire chain | Inference. With PC1 high and Q124 off, OUT follows the bus through R134 and the match, and the bridge ties it to PC14 (U1.8). PC14's output is characterised only at +/-3 mA (DS12110 Table 159), so it cannot hold the pin against the bus through about 4 ohm (R134 and the match): in any PC14 state the pin is driven far above its supply and its protection conducts. The current that passes before the pin fails is not known and may exceed the match's 0.30 A no-fire, so firing is not excluded. A bridge present at power-up moves the cold OUT reading to PC14's level, which the CONT / BUS bands refuse (R23 firmware rule 3 also toggles PC14 during the cold screen). |
+  | 3V3A / PYRO1_GATE | 1.151 | 1.145 | C10.1 to the PYRO1_GATE via (14.4, 53.3), B.Cu | pyro gate | Calculation: about 3.3 V straight onto Q124's gate (R128 10 kOhm to GND) turns it on and fires an enabled match. Meets the 1.0 mm target. |
+  | BUZZ_DRV / PYRO1_CONT_MID | over 1.2 | 1.133 | R162.1 to R173.2, B.Cu | pyro sense | Calculation: CONT_MID sits behind R173's 5.1 kOhm, so an enabled bus feeds PC14 at most 8.4 V / 5.1 k = 1.6 mA: no fire. Cold, CONT leaves its band and is refused. |
+  | 3V3 / BUZZ_DRV | 0.534 | 0.234 | R164's 3V3 via to BUZZ_DRV's diagonal, B.Cu | no | PC14's output held at 3.3 V; the buzzer sounds. |
+  | 3V3 / LS120.3 (no net) | 0.700 | 0.206 | R164's 3V3 via to the buzzer's mechanical pad, F.Cu | no | none |
+  | BUZZ_DRV / GND | 0.280 (0.251 with fills) | 0.200 | C10.2's via (19.65, 53.45) to BUZZ_DRV's vertical, B.Cu | no | PC14's output held low |
+  | GND / U1.5 (PE6, no net) | 1.144 | 0.847 | C11.2's via to U1.5, F.Cu (tracks, vias and pads only; the GND fill was already as near) | no | none |
+
+  With zone fills included the list is the same less the last row (6 rows; 711 net pairs under 1.2 mm on `a0ec075e…`).
+  Every other pair's minimum is the same or larger, so D-R26-01's vias and pad change, D-R26-02's moves and these
+  changes leave no other regression. The probes were the whole-board extension and root's region script, each run
+  against `3d8e845`'s board.
+- **Not restored:** BUZZ_DRV / PYRO1_OUT (R162.1 to R173.1).
+  - R173 cannot go back south without losing the 3V3 clearance.
+  - R162 cannot move 0.2 mm east without its courtyard crossing R163's.
+  - It cannot move north without crossing R164's via route.
+  - Optional per the root; recorded with the bridge analysis above.
+- **Seed:** `test_r10_check.RealBoardSeeds.test_r26_gate_nets_clear_of_3v3_and_3v3a`. The gate nets are at least
+  1.0 mm from 3V3 / 3V3A on the board. R164's via put back fails: at (19.05, 55.25) it reads 0.331 mm, at its
+  `92c3ad59…` spot (19.05, 55.9) 0.676 mm. `test_r26_pyro1_out_clear_of_3v3_and_3v3a` now puts C10 back by its own
+  0.60 mm. `copper_gap` and `moved_via` are shared test helpers.
+- **Kept:**
+  - S-1 ... S-9, DRC, all 37 check_r10 rules and route_check (0 failing; the information instances are as on
+    `4108e6fa…`) pass.
+  - The hot-plug model passes.
+  - BOM and owner BOM are byte-identical; the CPL moves C10 again.
+  - K-plane's 3V3 necks are unchanged in width (0.549 / 0.549 / 0.589 / 0.706 mm), with (19.55, 55.825) as a landing.
+
+The record index is now **220 unique D IDs through D-R26-04**.

@@ -1,0 +1,83 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 26, routing lens",
+  "reviewer": "claude",
+  "target_commit": "3d8e845",
+  "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 3},
+  "findings": [
+    {
+      "id": "R26-ROUTING-01",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "Owner row 8 (and the M2 / section 6 lists it cites) still count six 0603 resistors with a fan-out via under the body; on 92c3ad59 there are five, R403's via was removed by D-R24-09",
+      "contradicts": "docs/R10_VALIDATION.md owner decision table row 8 (bound to PCB 92c3ad59): 'six 0603 resistors with a fanout via under the body ... (table and list in section 6)'; section 6 R19-RTE-04 'Six 0603 resistors ... R403 F(31.4,14.4) GND via between PORT_LDO_FB / GND', marked 'recorded (owner M2 list)'; docs/REQUIREMENTS.md M2 'the six 0603 fan-out vias under R86, R89, R91, R101, R401 and R403'. Against D-R24-09 (R10_DECISIONS; R10_VALIDATION line 2002-2003; AVA_LAYOUT round 24 table): R403 moved to B(30.9,14.6) and its return via (31.4,14.4) was removed.",
+      "evidence": "pcbnew dump of m3_design/assembly_review/m3.kicad_pcb (92c3ad59): R403 is B(30.9,14.6) rot 180, pads R403.1 PORT_LDO_FB (31.725,14.6) and R403.2 GND (30.075,14.6); no via lies within 0.9 mm of its body, and no via exists at (31.4,14.4). R403.2 returns on B.Cu (30.075,14.6)-(29.575,14.1)-(28.75,14.1) to U401.4. A scan of every 2-pad part for a via between its pad centres (lateral offset < 0.45 mm) finds exactly five 0603 resistors: R86 GND (27.9,64.25), R89 3V3 (23.0,70.0), R91 3V3 (28.1,60.0), R101 CAM_UART_OE (34.0,42.0), R401 GND (13.0,1.8). The same scan on a3144b15 (acba196) and 5516eeec (9b27268) finds six, R403 (31.4,14.4) included. Probe: .supervisor/r26_routing/underbody.py on geo.json / geo_old.json / geo_5516.json.",
+      "impact": "The owner is asked to accept a deviation instance that no longer exists, and the current count in the acceptance row is wrong.",
+      "concrete_fix": "Row 8: 'five 0603 resistors with a fanout via under the body (R86, R89, R91, R101, R401; R403's went with D-R24-09)'. In section 6 R19-RTE-04 add 'R403's via (31.4,14.4) was removed by D-R24-09 on 1407e850; five remain'; in REQUIREMENTS M2 name the five (or say 'six on a3144b15, five since D-R24-09')."
+    },
+    {
+      "id": "R26-ROUTING-02",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "Section 6 layer-change returns: '12 of the 21 are beyond 4 mm' is 13 by the metric that reproduces every other figure in the sentence",
+      "contradicts": "docs/R10_VALIDATION.md section 6 'Layer-change returns (R18-RTE-02)': 'The nearest rail-to-GND capacitor is 1.29-6.19 mm away (SD_MISO 6.19 mm, SD_SCK 5.33, SD_MOSI 5.07, SD_CS 4.84, all to C17; SPI1 5.04-5.77; QSPI_NCS 5.32; 12 of the 21 are beyond 4 mm)'.",
+      "evidence": "For the 21 required critical-signal vias over an In2 power rail (3V3 x17, PORT_4V8 x4, In2 net sampled 0.75 mm round each via), distance from the via centre to the rail-side pad centre of the nearest capacitor joining that rail to GND: QSPI_IO3 1.29 (C29), QSPI_CLK 1.50 (C100), SD_DAT2 1.89 (C461), QSPI_IO0 2.13, QSPI_IO1 2.17 (C16), RADIO_RX_MCU 2.97 (C411), QSPI_IO2 3.13 (C17), GPS_TX_MCU 3.21 (C410), then CAM_MCU_RX 4.02 (C29.1 (28.0,43.1) from via (32.0,43.5); C29.2 4.024), CAM_MCU_TX 4.21, GPS_RX_MCU 4.33 (C406.1), SD_CS 4.84, IMU_CS 4.85, SPI1_MOSI 5.04, SD_MOSI 5.07, RADIO_TX_MCU 5.12, QSPI_NCS 5.32, SD_SCK 5.33, SPI1_SCK 5.63, SPI1_MISO 5.77, SD_MISO 6.19. Every figure the sentence quotes reproduces exactly (range 1.29-6.19, the four SD values, SPI1 5.04-5.77, QSPI_NCS 5.32, RADIO_TX 5.12 in round18_routing.md); 13 are beyond 4 mm. The centre-to-centre metric gives 12 but then SD_MISO is 6.10, not 6.19. Same result on a3144b15 (the round 18 board; via and capacitor positions unchanged). Probe: .supervisor/r26_routing/caps.py, caps_old.py, in2.py.",
+      "impact": "A wrong count in an owner-facing deviation record (the row 8 return-path item); also repeated in the round 18 ledger row R18-m21.",
+      "concrete_fix": "Change '12 of the 21' to '13 of the 21' in section 6 (and in the R18-m21 row), or state that CAM_MCU_RX sits at 4.02 mm."
+    },
+    {
+      "id": "R26-ROUTING-03",
+      "kind": "rule",
+      "severity": "Minor",
+      "title": "AUX_TX_WIRE / AUX_RX_WIRE change layer through J440.3 / J440.4 with no GND via within 1.5 mm (3.900 / 4.037 mm), although D-R19-15 keeps the port UART nets under the 1.5 mm partner-via rule; route_check only tests vias, so it passes",
+      "contradicts": "AGENTS.md section 3 ('a GND via within 1.5 mm (centre to centre) of every layer change of a critical signal net'); R10_DECISIONS D-R19-15 (R19-REQ-10): 'Decision: the GPS / RADIO / AUX / CAM port UART nets stay under the stricter 1.5 mm GND-partner-via and one-In2-region rules ... the frozen board meets them' (also tools/critical_reference.py comment above R10_SLOW_RETURN_NETS and M3_R10 'the port UARTs stay under the strict return-path rules'); REQUIREMENTS M2 names route_check --profile r10 as the R10 gate, whose R10_CLASSES put AUX_(TX|RX)_WIRE in class 'uart' (SIGNAL_CRITICAL, return_required true). New against the round 24 / 25 triage observation, which judged AUX 'not critical in AGENTS section 3' without D-R19-15.",
+      "evidence": "Board 92c3ad59: AUX_TX_WIRE runs F.Cu R471.2 (15.275,18.0) -> J440.3 (7.4,18.0) and B.Cu J440.3 -> (4.81,18.0) -> (4.45,18.36) -> D440.1 (4.45,19.125); AUX_RX_WIRE runs F.Cu R470.1 (15.275,20.6) -> (12.4,20.6) -> (11.5,21.5) -> J440.4 (7.4,21.5) and B.Cu J440.4 -> (4.81,21.5) -> (4.45,21.86) -> D441.1 (4.45,22.725). The plated pins are the only F.Cu-B.Cu transition of each net (no vias on either net). Nearest GND via centre: 3.900 mm from J440.3, 4.037 mm from J440.4 (pcbnew, .supervisor/r26_routing/tht.py). Every other port pin (J410.3/.4, J420.3/.4, J9.3/.4) carries one layer only. route_check --profile r10 on the board: 0 failing; its critical_via_no_gnd examines PCB_VIA items only ('a via carrying a critical signal net's copper on >= 2 layers'), so a plated pad used as the layer change is never tested. The layer change appeared with D-R20-09 (D440 / D441 moved under J440 on B.Cu, 0dc84776); on 50a39de5 the AUX pair was F.Cu only (M3_R10 'no layer change'), which is when D-R19-15 said the board meets the rule.",
+      "impact": "Two instances of the rule the R10 records keep blocking for port UARTs, not listed as a deviation; D-R19-15's 'the frozen board meets them' is false since D-R20-09; the gate cannot see a plated-pad layer change on any critical signal net.",
+      "concrete_fix": "Either put both J440 runs on B.Cu from R470 / R471 (as at J410 / J420; the layer change then moves to a via that can take a GND partner), or record the two pin layer changes as an owner deviation with a reason (or add AUX wire nets to an explicit, reasoned exemption). In route_check, count a plated pad that carries one critical signal net's tracks on two copper layers as a layer change for critical_via_no_gnd."
+    }
+  ],
+  "observations": [
+    "route_check --profile r10 on a copy of the board: 0 failing, 0 allowlisted, 0 stale, 5 unrecorded noncritical leftovers (BAT_OVLO short segment, BUZZ_DRV / BAT_FAULT_N / I2C1_SDA tiny jogs, USB_ILIM detour), 27 bump windows; matches section 6, M3_R10 and STATUS.",
+    "Independent scans: 1057 segments, 0 arcs, 0 off-angle headings; 0 free track ends (every end touches same-net track, via or pad copper).",
+    "All 25 required critical-signal layer-change vias have a GND via within 0.770-1.432 mm (QSPI_NCS / SD_SCK), each partner joined to In1 GND fill; the section 6 '0.77-1.43 mm' and '21 of 25 over an In2 rail (3V3 x17, PORT_4V8 x4)' reproduce.",
+    "Reference sampling (0.02 mm, centre line and both edges) of every critical signal track: unreferenced samples only at via / pin antipads and the S-8 voids (PYRO1_OUT, PYRO1_IGN at J121); USB_DP / USB_DM fully over In1 GND.",
+    "Section 6 detour table reproduces: 116 nets, 1501.8 / 1237.8 mm (1.213x, +264.0); every listed net's figures and via count match; BAT_FAULT_N 50.94 mm (+0.023 after D-R24-18).",
+    "USB pair: DP / DM 1.90 mm apart on y 31.55 / 29.65, 0.707 mm on the diagonals, trunks 16.448 / 14.702 mm, DM strap 2.838 mm (0.422 mm shorter than 5516eeec); VBUS via (11.95,30.6) and GND via (15.6,30.5) between them.",
+    "Owner row 8 'Detours and extra vias on ten nets' comes from round 18's 'ten nets hold 136 mm of the 260 mm excess'; the section 6 table it cites lists 23 nets with at least +3.5 mm (imprecise summary, not counted).",
+    "D8 (SMB, BAT_IN / GND) has a GND fan-out via (16.05,75.0) between its pads, 0.10 mm ring to D8.2's land edge; not in the R19-RTE-04 / R20-RTE-06 under-body lists (review item; the final-board list is not yet due).",
+    "Owner row 30's partner distances are labelled 5516eeec; on 92c3ad59 BAT_ENABLE (17.1,82.8) is 2.791 mm and BAT_SW_SOURCE (10.8,69.2) 6.713 mm from the nearest GND via (D402's via (5.15,65.575) and the U9 re-lay); the exemption is unaffected.",
+    "Information counts on 92c3ad59 (not yet summarised for this board; final list not due per round 24 / 25 triage): pad_end_offcentre 70, segment_inside_pad 27, power_via_no_gnd 28, short_layer_hop 18, extra_bends 14, width_change_junction 11, u_turn 5, passes_through_pad 1, via_on_track_in_fill 1.",
+    "BUZZ_G T 0.02 mm before its chamfer and the VBUS T 0.05 mm off the (11.35,30.0) node are as the round 24 triage recorded.",
+    "Review-only residual U401 OUT T (29.75,12.85): 0.075 mm inside R402.1's land (west edge 29.675), 0.325 mm from its centre; the alternatives' 0.085 mm (diagonal from C406.1 meeting x 30.075 at y 10.275, to via (30.5,9.95)) and 0.057 mm (OUT via at (29.475,11.65) to GPS_RX_MCU's (28.8,11.75)-(29.55,11.0) chamfer) reproduce.",
+    "New D-R24 copper (205 segments vs 5516eeec): smallest foreign clearance 0.150 mm (DRC floor), so 'pairs keep their pitch' shows no violation.",
+    "R19-RTE-03 (BAT_FAULT_N 0.180 mm to GND via (27.9,64.25), 0.380 mm to 3V3 via (28.1,60.0); also 0.380 to R91.1's second via (28.1,59.4)), R20-RTE-04 VLOGIC pair and R20-RTE-06 C89 / 1210 vias are unchanged on 92c3ad59."
+  ],
+  "fix_verification": [
+    {"change": "D-R24-17 (59 90-degree bends to 0)", "measurement": "Committed route_check on 5516eeec (9b27268): right_angle 59 (B.Cu 31, F.Cu 25, In2 3; 53 free, 4 via, 2 pad); on 92c3ad59: 0. Independent heading scan: all 1057 segments on multiples of 45 degrees. J440 clamp runs 3.864 / 3.964 mm (0.211 mm shorter each); USB_DM 19.7076 -> 19.2858 mm (0.422), USB_DP unchanged 16.4613 mm.", "verdict": "confirmed"},
+    {"change": "D-R24-18 (BAT_FAULT_N chamfer capped)", "measurement": "pcbnew Collide bisection from BAT_ENABLE via (17.1,82.8): legs 0.200 mm, chamfer (16.55,83.03)-(16.87,83.35) 0.2015 mm.", "verdict": "confirmed"},
+    {"change": "D-R24-09 (U401 divider on B.Cu)", "measurement": "R402 B(30.9,12.85), R403 B(30.9,14.6); vias (29.75,13.6), (30.575,11.6), (31.4,14.4), (29.75,12.6) absent; OUT via (29.75,11.65) present; PORT_LDO_FB joins U401.3 to R402.2 / R403.1 with no via; T 0.075 mm inside R402.1.", "verdict": "confirmed (records of R403's old via not updated: R26-ROUTING-01)"},
+    {"change": "D-R24-02 / -03 / -04 / -07 / -08 / -10 / -15 (second barrels and moved vias)", "measurement": "Vias present at (15.4,72.85), (11.74,72.3), (14.2,46.0), (18.3,36.8), (32.3,60.1), (34.5,62.4), (30.45,51.4), (28.1,59.4), (16.6,28.0), (30.175,85.9), (32.65,86.7), (36.6,86.4), (19.59,84.06), (17.5,87.15), (21.1,78.25), (14.1,8.5); (21.1,79.1) absent.", "verdict": "confirmed"},
+    {"change": "D-R24-11 (D402 tap)", "measurement": "BAT_SW_RETURN B.Cu (7.4,67.6)-(4.81,67.6)-(4.45,67.24)-(4.45,66.225) = 4.114 mm; D402.2 to GND via (5.15,65.575) 0.70 mm.", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after (unchanged 92c3ad59...)",
+    "tools/route_check.py --profile r10 (committed) on a copy in .supervisor/r26_routing/: 0 failing; same tool on the 5516eeec board from 9b27268: right_angle 59",
+    "pcbnew dump (r21 dump.py) of 92c3ad59, a3144b15 (acba196) and 5516eeec (9b27268); detour.py / det2.py per-net detours",
+    "Independent scans: headings, arcs, near-coincident ends, free track ends, via-under-body for every 2-pad part, THT pads with tracks on two layers, critical-signal via partners and In1 joins, In2 net under each via, rail-capacitor distances, reference-fill sampling of all critical signal tracks, foreign clearance of every new D-R24 segment, specific clearances (BAT_FAULT_N, PYRO1_OUT, ACT_EN_MCU)"
+  ],
+  "sources": [
+    "AGENTS.md section 3; docs/REQUIREMENTS.md M2",
+    "docs/R10_VALIDATION.md owner table and section 6; docs/M3_R10.md 'Routing evidence', 'Retained deviations and Minors', round 24 tables",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R19-15, D-R20-09, D-R24-09, D-R24-17, D-R24-18; AVA_LAYOUT.md round 24 sections",
+    "round18_routing.md (R18-RTE-02 source figures); round24_triage.json / round25_triage.json observations",
+    "tools/route_check.py, tools/critical_reference.py, tools/check_r10.py (SINGLE_OPEN_EXCEPTIONS 11 entries)"
+  ],
+  "coverage_limits": [
+    "No full tools/check.sh or DRC run (read-only brief); DRC clearance relied on the committed gate records plus spot pcbnew measurements.",
+    "The diagnostic-router recoveries in section 6 (USB_FAULT_N -8.2 mm etc.) were not re-run.",
+    "Pad-entry tidiness and noncritical hygiene were surveyed through route_check's information output, not instance by instance.",
+    "Board-level IPC-2152 widths were left to the power lens."
+  ]
+}
