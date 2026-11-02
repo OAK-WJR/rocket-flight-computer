@@ -1,0 +1,90 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round32_docs_binding",
+  "reviewer": "claude",
+  "target_commit": "3366287193ec7988fbc0fe41cb66b5f2a55791fa",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 0
+  },
+  "findings": [],
+  "observations": [
+    "Links: 0 broken relative links or anchors over STATUS, AGENTS, M3_R10, ORDERING, the handoff, R10_VALIDATION, FMEA, REQUIREMENTS, parts_qualification.md, AVA_LAYOUT.md and R10_DECISIONS.md (193 relative links in STATUS/AGENTS/docs alone).",
+    "Backticked paths that do not resolve in the tree are all outside it or untracked provenance (../../docs/VEHICLE.md in the parent repo; .supervisor/r18-r23 brief and probe files cited as history in AVA_LAYOUT and R10_VALIDATION); none is a current procedure input.",
+    "Coordinate scan: every REF F/B(x,y) mismatch against the board is a dated 'was / moved from' history entry (M3_R10 rows D-R20-04, D-R21-05; ORDERING TP82 row; AVA_LAYOUT round 18-26 delta tables); current poses all match within 0.05 mm.",
+    "R10_VALIDATION owner decision table rows are grouped, not in numeric order (rows 13, 22, 23, 36 sit between 7 and 8); every row number referenced (33, 36, 20) resolves to the right row.",
+    "AGENTS camera row 'U12/U13 isolate the UART': U12 is the TXU0202 translator and U13 the TPS70933 that powers its CAM_IO_3V3 side; read as the isolation block, not false.",
+    "REQUIREMENTS F4 '8 ms open every 50 ms at 5.96 V takes EN to 1.088 V': own periodic RC solve gives 1.085-1.105 V for an effective C87 of about 160-190 nF with 1 % resistors and 0.15 uA leakage; the figure depends on the labelled X7R bias Inference and is not shown wrong.",
+    "M3_R10 'R119.1 B(11.14,71.1)' is the pad position (footprint centre B(11.57,71.1)); both stated correctly where used."
+  ],
+  "fix_verification": [
+    {
+      "item": "R30-TRI-01 (R10_VALIDATION section 1, ARM1_SENSE to U13.5 bridge)",
+      "measurement": "docs/R10_VALIDATION.md:2637 now reads about 2.19-2.21 V on RAW_ACT and 0.107-0.109 mA at a BAT54 drop of 0.20-0.24 V, Calculation / Inference. Own nodal solve V(1/10.2k+1/10k+1/11.2k)=3.3/10.2k+(3.3-Vf)/10k gives 2.205 / 2.191 V and 0.107 / 0.109 mA. Board: D120.3=3V3, D120.1=PYRO1_COLD, R131 10k PYRO1_COLD-PYRO1_OUT, R175+R132 5.1k each RAW_ACT-ARM1_SENSE, R173+R129 5.1k, R130 / R178 2k, CAM_IO_3V3 only from U13.5.",
+      "verdict": "confirmed"
+    },
+    {
+      "item": "R30-TRI-01 sibling (EN load 5.6 kOhm with e-match or dummy)",
+      "measurement": "docs/R10_VALIDATION.md:2670 carries '(5.6 kOhm with the e-match or the step-3 dummy fitted, R30-TRI-01)'; 11.2k || (11.2k + about 4 Ohm) = 5.6 kOhm.",
+      "verdict": "confirmed"
+    },
+    {
+      "item": "R30-TRI-02 (chamber-test pass criterion, LS120 recorded rise)",
+      "measurement": "REQUIREMENTS:94, M3_R10:496-505, ORDERING:608, owner row 33 (R10_VALIDATION:2494), owner row 36 (:2461), parts_qualification.md:40, STATUS round 29 LS120 bullet, R29-TRI-04 row (:2366) and AGENTS buzzer row all pass on 'every 85 C part <= 85 C' alone and record LS120's rise as not a pass / fail gate, limit 70 C minus the rise; 48 C marked as the pre-test estimate (Inference). Arithmetic 80-92 / 65-77 / 48 C reproduces (+10-22 K).",
+      "verdict": "confirmed"
+    },
+    {
+      "item": "D-R29-01 / binding note c5cd0fa3 (lens coverage: binding)",
+      "measurement": "r10_binding_note.json SHA-256 c5cd0fa3...; board_sha256 = a0ec075e...; pin_table_sha256 b94133e6... equals the file; all 100 u1_pins nets equal the board's U1 pad nets; rule 3 carries 'about 47-58 us over C126's +/-10 %'; IWDG 960/33.6k-29.4k = 28.571-32.653 ms; guard 32.653+0.2+0.5+1.5 = 34.853 ms; lever arm x = 17.0-23 = -6.0 mm.",
+      "verdict": "confirmed"
+    }
+  ],
+  "checks_actually_executed": [
+    "Board SHA-256 before and after: a0ec075e... (unchanged); HEAD 3366287.",
+    "Relative link and anchor checker (GitHub slug rules) over the 11 in-scope Markdown files: 0 bad.",
+    "Backticked path existence check against git ls-files over the same files.",
+    "pcbnew dump of 216 footprints (pose, side, value, pad nets); regex scan of every 'REF F/B(x,y)' in AGENTS, STATUS, M3_R10, ORDERING, handoff, REQUIREMENTS, FMEA and AVA_LAYOUT against it.",
+    "Board counts: 1059 segments, 0 arcs, 309 vias (304 0.5/0.3, 4 0.6/0.3, 1 1.0/0.5; 170 GND), 1866.794 mm track, 2,369,507 bytes, 123 visible / 93 hidden references, 44 board silkscreen texts, five Edge.Cuts holes at (4,4) (42,4) (4,44.3) (3.7,86) (42,86): all match M3_R10 'The board', R10_VALIDATION 'Current PCB', AVA_LAYOUT and AGENTS.",
+    "S-8 barrel inventory: 12 barrels on 6 nets (ACT_GATE vias (11.14,71.7) (16.2,73.3) (15.4,72.85) (11.74,72.3); BAT_ENABLE (21.3,68.9) (17.1,82.8) (19.675,66.6); PYRO1_OUT (11.63,55.1) + J121.1; PYRO1_GATE (14.4,53.3); J121.2; J400.2).",
+    "pcbnew shape-distance (binary-searched Collide): PYRO1_OUT-BUZZ_DRV 0.7935 mm R173.1-R162.1 B.Cu; PYRO1_OUT-3V3/3V3A min 1.040 B.Cu; PYRO1_GATE_N 1.065, PYRO1_GATE 1.0585 (R128.1 to via (19.55,55.825)); PYRO1_OUT-GND 0.180 F / 0.1768 B; R164 via to BUZZ_DRV 0.2334 B, to LS120.3 0.2062 F; J440.1 / J9.1 In2 ring to 3V3 0.2505 mm; pins 3/4 of the 4-way terminals carry no In2 ring.",
+    "Silkscreen legends: bottom-side pin legends (J121 2:E1+, J400 2:SW, J440 2-4, J410/J420/J9 pins 2-3, J122 pins 2 and 4) match the handoff list.",
+    "Terminal pin nets J1, J400, J121, J122, J9, J410, J420, J440 match AGENTS rows, the handoff table and M3_R10 'Ports and signals'.",
+    "pin_table.tsv r10_net (100 rows) vs U1 pads: 0 mismatches; binding note u1_pins (100) vs U1 pads: 0 mismatches.",
+    "Binding-note obligations spot-checked against the board: MS5611 PS=3V3A, CSB=GND (0x77), R12/R13 4.7k, R10/R11 10k on QSPI_NCS/IMU_CS, PA6 = VLOGIC/11 (R60 100k / R61 10k), PB1 = CAM_5V/11 (R104 10k / R105 1k), PC0/PC5 /11.2, PC8 R9/R110 1k/1k, R162 1k, R123 2k, R127 1k, R460-R464 10k to 3V3, C126 220 nF gate / C128 100 nF drain, R431 100k on CAM_PWR_EN, per-port 100 nF + 22 uF on PORT_4V8.",
+    "Regulator setpoints: PORT_4V8 0.8 x (1 + 49.9/10) = 4.792 V; PORT_5V3 0.8 x (1 + 58.2/10) = 5.456 V; EN divider 8.4 x 300/1240 = 2.032 V, 1 % max 2.063 V.",
+    "Fab package: JLC BOM 81 lines; stock_check library 36 base + 46 expand incl. owner-only C84 = 45 Extended / 36 Basic JLC; CPL 206 rows (70 top / 136 bottom); C535146 qty 9; BOM/owner BOM/CPL hashes equal cost_check inputs_sha256.",
+    "Cost / stock: total 85.26 = 60.47 + 123.93/5; fixed 83.96/5 = 16.79; 0.85 over 84.41; short lines U9 30 / -81 / min 7 and U4 9 / 2 at 12:43:17Z; 'price movement on eight lines' reproduced (8 unit prices changed vs f2b8251's 01:43:55Z cost_check; parts 60.81 -> 60.47).",
+    "parts_budget.json (4267634...): board hash a0ec075e; four-stall 5.713190 V / 1.278747 A; pack sag 5.880831 / 4.388491 V; camera min 5.031682 V; LDO 4.7115-4.8733 V (4.71-4.87 V check); hold-up 0.464-0.539 ms; guard 34.853 ms: all match the docs.",
+    "Test-pad table (ORDERING 8.2) vs board TP poses and nets: TP74, TP80-TP83, TP88, TP120, TP122 match.",
+    "Hand checks: 0.218 V = 3.6 x 2/33; chute 98-163 g from v^2/2s at 20 mm; LS120 80-92 / 65-77 / 48 C."
+  ],
+  "sources": [
+    "AGENTS.md",
+    "STATUS.md",
+    "docs/M3_R10.md",
+    "docs/ORDERING.md",
+    "docs/R10_VEHICLE_HANDOFF.md",
+    "docs/R10_VALIDATION.md",
+    "docs/FMEA_REDUNDANCY.md",
+    "docs/REQUIREMENTS.md",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md",
+    "m3_design/assembly_review/sources/r10_design/pin_table.tsv",
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json (c5cd0fa3...)",
+    "m3_design/assembly_review/sources/r10_design/parts_budget.json (4267634...)",
+    "m3_design/assembly_review/fab/ (BOM, owner BOM, CPL, cost_check.json, stock_check.json)",
+    "m3_design/assembly_review/m3.kicad_pcb (a0ec075e...)",
+    "m3_design/assembly_review/sources/r10_review/round30_triage.md, round30_fix_docs.md",
+    "git show f2b8251:m3_design/assembly_review/fab/cost_check.json (previous cost run)"
+  ],
+  "coverage_limits": [
+    "Not every sentence of the 7,400-line document set was checked: the checks were mechanical scans (links, paths, coordinates, counts, pin maps, fab and budget figures) plus targeted reads of the AGENTS rows, M3_R10 'The board' / CH1 pyro / Power / Ports / IMU sections, the handoff terminal section, REQUIREMENTS sources and F1-F6, the R10_VALIDATION head and owner rows 32, 33, 36, and the round 30 fix places.",
+    "Historical (dated, superseded-board) sections were checked only for being labelled as history.",
+    "Maker datasheets were not re-read; datasheet-derived figures were checked only for internal arithmetic.",
+    "Zone-fill-dependent figures (In2 fill area 1430.05 mm2, fill-edge lengths) were not re-measured.",
+    "No gerber or paste flash recount; paste counts 249 / 381 taken as recorded."
+  ]
+}

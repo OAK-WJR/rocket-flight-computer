@@ -1,0 +1,63 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 31, mechanics lens",
+  "reviewer": "claude",
+  "target_commit": "3366287193ec7988fbc0fe41cb66b5f2a55791fa",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "fit_check --profile r10 on a0ec075e: OK, 0 issues; 216 footprints = 207 model rows + 9 excluded bare features (J2, TP74/80/81/82/83/88/120/122); J3 margin 0.886 mm (x -0.45); DB125 bodies 2.976 mm; 27 tails, minimum 7.558359 mm, 2.20 mm below the board, 1.80 mm to a 4 mm sled; L1 3.015825 mm below the bottom face; wire room 5.003-5.603 mm on all eight terminals; nearest bottom C32.2 4.536177 mm and top LED2.2 3.807887 mm from (4,44.3): all match P1/P2, ORDERING 8.4, the handoff, M3_R10 and R10_VALIDATION 8.",
+    "Exposed top lands at (4,44.3): LED2.2 GND 3.807887, LED1.1 GND 3.860052, J2.1 3V3 3.879838, J2.3 NRST 3.986965 mm (native shape distance), matching P2 / ORDERING 8.4 / handoff / R10_VALIDATION (0.008 mm margin at LED2.2). No exposed pad within 5 mm of the other four supports.",
+    "Vias within 4 mm of supports are all tented (board default front/back tenting); fills on all four layers stop 0.50 mm from each 3.2 mm hole edge.",
+    "Plate model re-run (tools/plate_model.py --profile r10, sources/r10_design/masses.json, fit report of a0ec075e): f1 180.8 Hz pinned D5, 255.6 D10, 287.8 / 407.0 clamped, 78.6 g, max 100 g deflection 1.27 mm at (46, 44.5). f1 and mass identical to the records; the D10 / clamped / 1.24 mm figures the records attribute to 632a9ad3 are labelled to that board.",
+    "100 g D5 gaps at 4 mm standoffs (plate tool's 0.25 mm box raster): C431 0.2613, C421 0.3199, L1 0.5240, C411 0.5582 mm; contact onsets 125 / 133 / 175 / 214 g (D10 250 / 265 / 351 / 428 g); at 3.5 mm C431 and C421 overlap (-0.239 / -0.180 mm) while L1 (0.024) and C411 (0.058) do not: all as ORDERING 8.4, P3, the handoff and M3_R10 state.",
+    "Terminal tails in the same model (0.05 mm raster) reach a 4 mm sled at J9.3 161.8 g and J420.1 167.5 g, before C411 and L1; ORDERING 8.4's contact list makes no completeness claim (round 30 observation). Both recorded vehicle remedies cover the 98-163 g landing range including tails: with the 1.5 mm pocket (x 31.5-41, y 20-60, which contains the J9 and J420 tails) the first contact is J122.5's tail at 209.1 g; with 4.5 mm standoffs it is C431 at 172.6 g.",
+    "East column mass J122 10 + J410 / J420 / J9 8 g each = 34 g of 78.6 g (plate run: 34.1 g of parts with x > 34.5); J9 / J122 body gap at x 42 = 62.55 - 55.82 = 6.73 mm.",
+    "Hardware bounds re-derived: plate-only h + t < 6.882 mm; nut-inclusive D = 4.7 + h + t gives 6.0184 mm at x 4 / 42 and 5.3653 mm at x 3.7 (recorded conservatively as 6.0 / 5.3); 5.5 mm AF standoff (3.175 + 0.3) and 6.4 mm round (3.2 + 0.3) both meet the 3.5 mm bottom gate; washer 3.5 + 0.3 = 3.8 mm gate.",
+    "Wire-room and bend arithmetic: sqrt(25.4^2 - 5^2) - 19.6 - 0.3 = 5.003 mm; 4.493 mm at 24.9 mm radius; 5.32 / 4.82 mm at 3 mm height; 0.5 + 2 x OD gives 3.9 / 4.1 / 5.1 / 5.7-6.5 mm for 22 / 20 / 18 / 16 AWG; 2 x OD for 22 AWG is 5.6 mm (nothing fits at 2x or 3x). Landing a = v^2/2s: 98.0-163.1 g.",
+    "Compass (x east, y forward, KiCad y down; M3_R10 IMU frame note): -90 deg DB125 rotation puts the wire face at x 3.40 (west), +90 deg at x 42.60 (east). Terminal centres and pins: J121 (7.4,55.85) pins y 54.1/57.6, J400 (7.4,65.85) 64.1/67.6, J1 (7.4,75.85) 74.1/77.6, J440 (7.4,16.25) 11.0-21.5, J410 (38.6,15.5), J420 (38.6,31.5), J9 (38.6,47.5), J122 (38.6,71.5): all match the handoff table.",
+    "ORDERING 8.4 / handoff directions checked: J440 forward body end y 23.45 (keep leads at y < 23.5); J440 envelope 3.93 mm from the (4,4) washer; J3 (USB-C) at F(4.6,30.8) lies between J440 and (4,44.3) on the west edge, so 'forward along x = 0' crosses the USB-C plug zone, the (4,44.3) head and the J121 / J400 exits as stated; battery route round the forward edge (y > 90) into J1 from the west, never aft along the west top side past J400, J121, (4,44.3) and J3: consistent; 'forward-west support' = (3.7,86); sled pocket x 31.5-41, y 20-60 contains C411 B(34.2,22.75), C421 B(33.8,36.75), C431 B(39.3,57.75) boxes; D402 B(4.45,65.9); J430 B(24,24.3) closed allocation 15.05 x 15.70 x 2.10 mm; L1 B(25,74.6).",
+    "Stack arithmetic: -44.6 + 80 + 44..48 = joint + 79.4..83.4 mm, 32.4 mm forward of joint + 47; matches parent VEHICLE.md lines 36-41 (coupler to joint + 120, bulkplate top -44.6, shroud + 4..+ 47, 18.4 mm).",
+    "Pin legends: bottom J121 2:E1+, J400 2:SW, J440 2:GND / 3:TXO / 4:RXI, J410 / J420 2:GND and 3:TXO, J9 2:GND and 3:RXI, J122 2:S2 and 4:S4; everything else on top: matches the handoff list.",
+    "U5 native model height 1.100074 mm (z -2.700074): 2.9 mm allocated gap at 4 mm standoffs, as recorded.",
+    "Courtyard centre-line gaps J440-J3 1.73 mm and J430-C23 0.46 mm; the records' 1.67 mm (D-R19-14) and 0.575 mm (J430 allocation to C23's stroked courtyard, round 13 method) use other measurement bases; already raised as round 29 mechanics observation 7, not a new fact.",
+    "Positions of J3, J440, C23 and J430 in r10_place.tsv have not changed since their introduction (git history of r10_place.tsv)."
+  ],
+  "fix_verification": [
+    {"item": "R29-TRI-03 (R10_VALIDATION section 8: all 27 tails, 7.558359 mm, 'not re-run' sentence deleted)", "measurement": "fit_check on a0ec075e: terminal_tails.count 27, minimum_bore_margin_mm 7.5583593625; R10_VALIDATION lines 3015-3017 state 'all 27 tails of the eight terminals ... 7.558359 mm (unchanged on a0ec075e)'", "verdict": "confirmed"},
+    {"item": "R29-TRI-01 labelling of the plate model's 125 / 133 g (owner row 32)", "measurement": "R10_VALIDATION line 2493 reads 'C421 at 133 g; plate model, Calculation / Inference'; ORDERING 8.4 'Landing' labels the onsets Calculation/Inference; re-run reproduces 124.7 / 132.4 g", "verdict": "confirmed"},
+    {"item": "R30-TRI-01 / R30-TRI-02 (ARM1_SENSE bridge figures; LS120 chamber clause)", "measurement": "outside the mechanics lens; no mechanical figure, position or mass changed (LS120 0.5 g in masses.json unchanged)", "verdict": "not applicable to this lens"}
+  ],
+  "checks_actually_executed": [
+    "git rev-parse HEAD = 3366287; shasum -a 256 of the board before and after (a0ec075e both times)",
+    "KiCad Python tools/fit_check.py m3.kicad_pcb --profile r10 --report .supervisor/r31_mechanics/fit_r10.json: OK, 0 issues",
+    "NumPy tools/plate_model.py fit_r10.json --profile r10 --mass-spec sources/r10_design/masses.json --json .supervisor/r31_mechanics/plate_r31.json",
+    ".supervisor/r31_mechanics/gaps.py: 100 g D5 / D10 gaps and onsets for every bottom body at 3.5 / 4.0 mm, east-column mass",
+    ".supervisor/r31_mechanics/tails.py: onsets for every bottom body and terminal tail at 4.0, 4.5 mm and 4.0 mm with the 1.5 mm pocket",
+    ".supervisor/r31_mechanics/probe1.py: exposed pads within 5 mm of each support (native shape distance), poses and pads of 23 parts",
+    ".supervisor/r31_mechanics/probe2.py: terminal pin legends and layers",
+    ".supervisor/r31_mechanics/probe3.py: vias and tenting near supports, fill distance to support holes on four layers",
+    ".supervisor/r31_mechanics/probe4.py / probe5.py: J440-J3 and J430-C23 courtyard gaps on a0ec075e and on 50a39de5 (git show 6628488 copy in the probe directory)",
+    "git log of m3_design/r10_place.tsv for J3, J440, C23, J430",
+    "Hand re-derivation of wire room, bend, hardware h + t, standoff / washer gates, landing g and stack arithmetic"
+  ],
+  "sources": [
+    "AGENTS.md section 1 mounting row and section 2",
+    "docs/REQUIREMENTS.md P1-P3, Board position row",
+    "docs/ORDERING.md 8.4",
+    "docs/R10_VEHICLE_HANDOFF.md",
+    "docs/M3_R10.md 'Current mechanical integration', 'Historical mechanical record', 'Retention at 100 g', IMU frame note",
+    "docs/R10_VALIDATION.md section 8 and owner rows",
+    "../../docs/VEHICLE.md lines 36-41 (stack, coupler, shroud)",
+    "m3_design/assembly_review/sources/r10_design/masses.json, parts_qualification.md (DB125 envelope union), R10_DECISIONS D-R11-01, D-R19-14",
+    "round29_triage.md, round30_triage.md, round30_mechanics.md (read after writing these findings)"
+  ],
+  "coverage_limits": [
+    "CAD envelopes and the optional plate model only; no physical fit, hardware, harness, vibration or weighing evidence exists",
+    "Plate model inputs (D, masses) are the records' Inferences and were not independently validated",
+    "No kicad-cli DRC or full check.sh on the canonical tree (read-only rule); no gate seeds were needed because no mechanical gate gap was identified",
+    "ORDERING 8.3 procedures outside the mechanics directions, electrical figures in the 8.4 rows (EN voltages) and the 8.1 tab plan were not reviewed"
+  ]
+}

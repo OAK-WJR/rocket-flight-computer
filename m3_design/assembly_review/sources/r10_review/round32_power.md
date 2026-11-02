@@ -1,0 +1,63 @@
+# R10 round 32 review: power lens
+
+Target commit `3366287`, board `a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c` (SHA-256 identical before and after). Reviewer: Claude. Strict real-error rule (`.supervisor/r32_review_brief.md`).
+
+**Totals: 0 Critical / 0 Major / 0 Minor real errors.**
+
+## Findings
+
+None. Every power figure checked reproduces from the board, the generator and the maker datasheets, and every rail sits inside its stated limits.
+
+## Fix verification
+
+- **R30-TRI-01 (R10_VALIDATION section 1 ARM1_SENSE-to-CAM_IO_3V3 bridge; RAW_ACT bridge EN load)**: confirmed. Own one-node solve (ARM1_SENSE held at 3.3 V through 10.2 k, D120 / R131 10 k from 3.3 V - Vf, 11.2 k CONT bank, 4 ohm match + R134): Vf 0.20 V gives RAW_ACT 2.2049 V and 0.1074 mA in the match. R10_VALIDATION:2637 now states 2.19-2.21 V and 0.107-0.109 mA with the cold pull-up; :2670 states 5.6 kOhm with the e-match or step-3 dummy fitted; record row :2416.
+- **R30-TRI-02 (chamber-test pass criterion: LS120 not a gate)**: confirmed. REQUIREMENTS:94, M3_R10:503, ORDERING 8.3 (608), owner rows 33 / 36 (R10_VALIDATION:2494 / 2461), STATUS:18 and record row :2417 give 'every 85 C part <= 85 C' as the pass and record LS120's measured rise as a non-gating measurement; no current 'LS120 <= 70 C' pass clause remains.
+- **D-R28-01 / D-R27-01 (budget's shared port current 1.461 A + 0.1 A AUX in loaded_pack)**: confirmed. r10_parts.py:416 port_A = 1.461 + aux_A feeds both ports_w and loaded_pack; regenerated values equal the stored 5.880831 / 4.388491 V.
+- **D-R29-01 / -02 (rule 3 gate tau, LS120, labels)**: outside the power lens (power-text labels seen: confirmed). Outside the power lens apart from the hold-up / budget labels, which carry Calculation / Inference tags where checked (M3_R10:741-747, ORDERING 8.3:677).
+
+## Observations (not counted)
+
+1. parts_budget.json regenerated: r10_parts.power_budget() run on a byte-identical copy of the board (KiCad Python, .supervisor/r32_power/rerun_budget.py) reproduces every stored key and value (no difference above 1e-9 relative), including pack_7V4/6V0_four_stall_loaded_V 5.880831 / 4.388491 V and the fire-path figures bound to a0ec075e.
+2. Four-stall pack sag recomputed by hand: logic 0.5 + 3.3 x 0.2 / (0.8 x 6) = 0.6375 A, ports 5.456 V x 1.561 A / 0.8, Rpack 0.15 ohm, servos 7.68 A: 5.8808 V from 7.4 V and 4.3885 V from 6.0 V; parts_qualification's stall-input paragraph and STATUS:43/54 match. The 4.39 V below the buck's output is the already-observed class (round 29 observation).
+3. Rail bounds recomputed from DS41326 Rev 3-2 p5 (VFB 792-808 mV, -40..85 C) and SBVS282A p5 (VREF 0.8 V +/-1 %, IFB +/-100 nA): buck 5.3667-5.5463 V, LDO 4.7115-4.8733 V, LDO headroom 0.4434 V vs 200 mV max dropout, camera >= 5.0317 V at 1 A, radio / GPS / AUX >= 4.6015 / 4.6315 / 4.6415 V, maximum 4.9233 V < LR900's 5 V; R405 bleeder >= 5.633 mA keeps U401 inside its 5 mA-1 A accuracy condition.
+4. U402 camera limit 1.0409-1.2495 A from SLVS841G eq. 1 / 3 with R430 22.6 k +/-2 %; U10 USB limit 0.3477-0.4530 A with R85 66.5 k. The record's 'SLVS841F equation 1 (p15)' cites the earlier revision; the cached Rev G carries the same constants (22980 / R^0.94, 25230 / R^1.016) on pp16-17, so no figure changes.
+5. U9 figures: OVLO trip corner (1.223 V + 0.1 uA x R82||R83) x (R82 + R83) / R83 = 10.176 V (SLVSFC9C p9); OVLO pin's 1.5 V recommended maximum is reached at about 12.2 V input (p8), as M3_R10 'Retained limits' says; current limit 3.946-4.857 A from the 750 ohm row 3.96-4.84 A; prospective input 4.420 A; port-fault peak bound 3.7439 A, 0.2023 A below the minimum limit.
+6. EN timing reproduced from SLVSFC9C p9 with R80 + R165 949.4 k, R81 297 k, C87 0.72 x 220 nF, 0.1 uA EN sink plus 50 nA D402: V_EN closed 1.4014 V at 6.0 V, open-switch decay to 1.116 V in 10.344 ms (record 10.3 ms); turn-off corner 4.778 V without D402 and 4.802 V with it (records 4.78 / 4.80 V); PA6 0.44 x 11 = 4.84 V stays above it.
+7. Hot-plug margins against TPS25947 Table 6.1 (p7): the minimum IN limit is max(-15, VOUT - 21) = -15 V at the 5.914 V retained output, so -14.807 V leaves the recorded 0.193 V; falling 8.995 V/us < 10, rising 5.088 V/us < 100; hotplug_inputs.json is bound to a0ec075e. EN 2.03-2.06 V and the OVLO pin stay below the 5 V / 1.5 V recommended maxima with R81 intact; C81 50 V >= VIN + 5 V.
+8. Battery-break table and hold-up recomputed: case (c) ports 9.856-10.822 W; 300.8 uF to 3.8 V 0.464-0.539 ms; from the PA6 trip (4.84-5.17 V) 0.1034-0.1643 ms all-on and 0.2906-0.4303 ms shed; OQ-5 VOFF 5.7265 V, VON 6.4845 V, 0.253 / 0.395 ms to VOFF, ride-through 3.84 / 6.00 / 1.57 / 2.46 ms; all match parts_qualification, M3_R10 and ORDERING 8.3.
+9. GAP-1 loop 4.467803 ohm without the pack; 0-4 stall fire currents 1.5409 / 1.4758 / 1.4104 / 1.3448 / 1.2787 A reproduce from the quadratic; GAP-3 0.4897 W, 109.2-123.9 C at 70 C, 112.3 C/W ceiling, 112 mA AUX allowance; GAP-5 28.571-32.653 ms watchdog, 1087.34 / 1109.09 ohm discharge, 0.6782 + 0.0610 ms tail, 34.853 ms bound, R134 35.797 W / 0.716 / 1.289 J, chart 61.20 / 44.13 W, 85 C 36.345 vs 35.851 W.
+10. C120 off tau 50 k x 1.02 x 1.265 uF = 64.52 ms (129.03 ms with one resistor open), 1 s = 15.5 / 7.75 tau; on-tau 10.7525 ms, 31.89 ms to |VGS| 4.5 V from 4.744 V settled; 140 nC step 0.2385 V on 0.587 uF.
+11. USB-only: 516.1 uF (C84, C6, C7, C99 on VLOGIC; C86, C98 on USB_LIMITED, board inventory) x 4.7 V = 2.426 mC, 5.35-6.98 ms at U10's limit; 2.225 W draws 0.4597 A at 4.84 V; 1.61 W guaranteed at 4.75 V; USB_LIMITED In2 track 0.0912 ohm at 63.605 mm x 0.4 mm x 30 um (board 63.115 mm, previously observed). U11's 470 nF soft start (166-196 V/s, SLVSEA3F Table 9-1 scaled) actually slews VLOGIC, so the at-limit figure is an upper current bound, which the record labels 'at the limit, ideal and no-load'; not false.
+12. TPS2121 pin map confirmed against SLVSEA3F p4: IN1 = pin 7 = USB_LIMITED (OV1 pin 5 = USB_OVLO), IN2 = pin 2 = RAW_PROTECTED; parts_qualification's 'U11's IN1' for USB_LIMITED is right. R86 80.6 k gives ILM about 1.49 A typical (eq. 2), 1-2 A table row.
+13. K-power and S-9 re-run on the board copy (check_r10 --only K-power,S-9): both OK; 14 paths with IPC-2152 floors 0.68 / 0.326 / 0.299 / 0.167 / 0.157 mm below the drawn 1.0 / 0.7 / 0.4 mm floors; the regulator FB taps (R400.1 on C403.1's pad, R402.1 on U401's OUT run, U2.1's two paths) are covered by its single-open-tap rule.
+14. Unlisted feeds checked by hand: U400's input is two parallel 0.4 mm F.Cu legs from the In2 RAW_PROTECTED vias (14.1,7.6) / (14.1,8.5) to U400.2 / U400.3 via C400 / C401, each carrying about half of at most about 2.2 A; the 0.2 mm segments on BAT_IN, VLOGIC, PORT_5V3, PORT_4V8, CAM_5V and RAW_ACT are sense, EN or bleeder branches. The C84 path carries several amperes only for the sub-millisecond battery-break transient; IPC-2152 is a steady-state basis. No stated rule is violated.
+15. U9 IN / OUT design current 2.9 A (D-R3-03) is below the 3.744 A port-fault peak bound, but that bound is a cycle-by-cycle buck peak during current limit / hiccup, not a continuous current; the IPC basis is not contradicted.
+16. The AGENTS.md text supplied in this reviewer's session context was an older version (5.73 V / 7.63 ms); the committed AGENTS.md at 3366287 has the D-R26-03 figures (5.71 V, about 8.1 ms, 7.50 ms limit), which agree with M3_R10, ORDERING 8.3, the handoff and STATUS. Reviewed as committed.
+
+## Checks executed
+
+- shasum -a 256 of m3.kicad_pcb before and after (a0ec075e...)
+- r10_parts.power_budget() regenerated on a byte-identical board copy and compared key by key with parts_budget.json (no difference)
+- check_r10.py --only K-power,S-9 on the board copy (OK; report .supervisor/r32_power/kpower.json)
+- pcbnew read-only: per-net track widths / lengths / vias / zones for BAT_IN, RAW_PROTECTED, VLOGIC, 3V3, 3V3A, PORT_5V3, PORT_4V8, CAM_5V, RAW_ACT, ACT_FET_S, PYRO1_IGN, PYRO1_OUT, VBUS, USB_LIMITED, GND; segment lists for RAW_PROTECTED, BAT_IN, VLOGIC, PORT_5V3, CAM_5V; part / pad inventory on the power and regulator-setting nets
+- Hand recomputation of: rail bounds, port minima, current limits (TPS2553, TPS25947, TPS2121), OVLO corner, EN drop-out and turn-off corners, hot-plug margins vs abs max, battery-break and PA6-trip hold-up, OQ-5, four-stall pack sag, GAP-1 / GAP-3 / GAP-5, C120 time constants, USB-only figures, servo-return bound, R30-TRI-01 bridge solve
+- Datasheet text extraction (pdftotext) of the cached AP6320x DS41326 Rev 3-2, TPS7A91 SBVS282A, TPS25947 SLVSFC9C, TPS2121 SLVSEA3F, TPS2553 SLVS841G, TPS709 SBVS186H
+
+## Sources
+
+- AGENTS.md, docs/REQUIREMENTS.md, docs/M3_R10.md, docs/ORDERING.md section 8, docs/R10_VALIDATION.md, STATUS.md (as committed at 3366287)
+- m3_design/r10_parts.py; m3_design/assembly_review/sources/r10_design/parts_budget.json, parts_qualification.md, hotplug_inputs.json, hotplug_results.json; tools/check_r10.py, tools/ipc2152.py
+- m3_design/assembly_review/sources/r10_review/round30_triage.md, round26_triage.json (R26-TRI-02), round26_fix_docs.md, round31_triage.json (observation reference only)
+- Diodes DS41326 Rev 3-2 p5 https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf
+- TI SBVS282A p5 https://www.ti.com/lit/ds/symlink/tps7a91.pdf
+- TI SLVSFC9C pp7-9 https://www.ti.com/lit/ds/symlink/tps25947.pdf
+- TI SLVSEA3F pp4, 13 https://www.ti.com/lit/ds/symlink/tps2121.pdf
+- TI SLVS841G pp6-7, 16-17 https://www.ti.com/lit/ds/symlink/tps2553.pdf
+- TI SBVS186H section 8.1.1 https://www.ti.com/lit/ds/symlink/tps709.pdf
+
+## Coverage limits
+
+- No transient, thermal or DC field solve was run; IPC-2152 and adiabatic estimates were not re-derived for every neck, only the K-power table and the unlisted power feeds above.
+- The hot-plug simulator was not re-run; its bound inputs and recorded extremes were checked against the TPS25947 limits.
+- The R166, D8 and D9 pulse ratings and the camera-loop copper solve (53.13 mOhm, labelled as not re-solved on a0ec075e) were not re-derived.
+- Datasheet pages read from the cached PDFs only; no new supplier pages were fetched.

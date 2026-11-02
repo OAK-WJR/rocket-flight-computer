@@ -35,7 +35,7 @@ spare AUX port J440 and the GPS move to USART3.
 | R19-MCU-04 | VREFBUF obligation (ENVR = 0, HIZ = 1; Figure 95 p286, Table 189 p291; Table 9 note 7 as Inference) | M3_R10 Firmware, AGENTS MCU row |
 | R19-MCU-05 | Carried (D-R15-02, bench-qualify VCAP) | R10_VALIDATION §5 |
 | R19-MEC-01 | Harness pin-identity continuity check before first power | ORDERING §8.3 / §8.4, R10_VEHICLE_HANDOFF Terminals, REQUIREMENTS F8, AGENTS pad row |
-| R19-MEC-02 | C84 hand-fit heat limit (Inference, no maker profile), top preheat with bottom supported, re-inspect L1, C7, C9, R166, measure 3V3 / VLOGIC | ORDERING §8.2 |
+| R19-MEC-02 | C84 hand-fit heat limit (Inference, no maker profile), top preheat (erratum, R32-TRI-02: ORDERING 8.2 asks for no preheat and no temperature limit, only top-only heating with the bottom supported, a short dwell and a recorded tip temperature and time) with bottom supported, re-inspect L1, C7, C9, R166, measure 3V3 / VLOGIC | ORDERING §8.2 |
 | R19-BOM-01 | U4 ISM6HG256X fitted (D-R19-11), LSM6DSV320X consigned alternate; R18-m14 sentence corrected; FS_XL_HG 001 / 010 obligation | M3_R10, REQUIREMENTS M1, AGENTS IMU row, parts_qualification, R10_VALIDATION §10 |
 | R19-BOM-03 | Temperature row lists LS120, J430, LED1, J3 with maker / supplier URLs and pages | REQUIREMENTS Temperature, parts_qualification |
 | R19-BOM-04 | Carried (DB125 1.30 mm holes; R18-m11) | R10_VALIDATION §9, parts_qualification |

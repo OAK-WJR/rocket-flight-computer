@@ -1,0 +1,62 @@
+# Round 32 mcu lens (claude)
+
+Target commit `3366287`, board SHA-256 `a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c` before and after (unchanged).
+
+**Totals:** 0 Critical / 0 Major / 0 Minor real errors.
+
+## Findings
+
+None.
+
+## Fix verification
+
+- **D-R29-01 (rule 3 gate time constant 47-58 us over C126 +/-10 %):** R = (220 + 50||50||1000) || 10000 = 238.6 ohm; C126 CL10B224KA8NNNC (K, +/-10 %) + Ciss 2.25 nF: 47.8 / 53.0 / 58.3 us; binding note and M3_R10 rule 3 both say 'about 47-58 us ... (53 us nominal; Calculation, driver resistances Inference)'. Verdict: confirmed.
+- **D-R28-02 (rule 3 both-polarity meter check):** U3.3 = QSPI_IO2, R127.1 = PYRO1_GATE_N; R127 1k || (R126 220 + R128 10k) = 0.911 kOhm to GND; red on R127.1 conducts through the VSS-side clamps of U1.1 / U3.3 (Inference as labelled); M3_R10 rule 3 text matches the note. Verdict: confirmed.
+- **D-R28-03 / D-R28-04 (rule 4 Q120 criterion, labels, DS15034 Table 2 p. 11):** R120.1 ACT_FET_S, R120.2 / C120.2 ACT_GATE; AONR21357 VSD 0.7 / 1.0 V p. 2; settled |VGS| min 4.744 V in parts_budget; DS15034 Table 2 on p. 11 (p. 9 Figure 5); obligation 15 lead 3.3/196+4 = 20.8 ms, 3.7/166+4 = 26.3 ms. Verdict: confirmed.
+- **R30-TRI-01 (ARM1_SENSE-to-CAM_IO_3V3 bridge with the D120 / R131 pull-up; EN load 5.6 kOhm):** own 2-source solve at Vf 0.20 V: RAW_ACT 2.205 V, match 0.107 mA; 11.2k || (11.2k + 4 ohm) = 5.60 kOhm; R10_VALIDATION section 1 lines 2637 and 2670 carry the corrected figures. Verdict: confirmed.
+- **R30-TRI-02 (LS120 not a chamber pass/fail gate):** outside the mcu lens (no MCU pin or binding-note obligation involved); not re-measured. Verdict: not checked (out of lens).
+
+## Observations (not counted)
+
+- U1 100 pads: board net = pin_table.tsv r10_net = binding note u1_pins net = schematic.net.xml net for all 100 pins (0 mismatches); port names and mode strings identical between pin table and note.
+- LQFP100 pin names for all 100 pins match DS12110 Rev 8 Table 9; every 'Table 9 p. N' citation in pin_table.tsv is on the cited page (PC2_C / PC3_C on p. 67 under the Pxy_C rows).
+- Every AF-table citation (Tables 10-14, pp. 89-96) is on the cited page; AF numbers checked by column: TIM5 AF2 (PA0-PA3), UART7 AF7 (PE7/PE8), UART5 AF14 (PB12/PB13), USART3 AF7 (PD8/PD9), USART6 AF7 (PC6/PC7), SPI3 AF6 (PC10-PC12), SPI1 AF5, I2C1 AF4 (PB8/PB9), QUADSPI AF9 (PB2, PE2, PD11-PD13) and AF10 (PB6), OTG_FS AF10, SWD AF0.
+- Pin-type statements reproduce: PE4/PD8/PD9/PC6/PC7/PD15 FT_h, PB12/PB13 FT_u, PA4/PC5 TT_a, PA5 TT_ha, PA6/PC0 FT_a, PB1 TT_u; ADC channels PC0 ADC123_INP10, PA6 ADC12_INP3, PC5 ADC12_INP8, PB1 ADC12_INP5; PC1 RTC_TAMP3/WKUP5 and AF0 TRACED0; PE2 TRACECLK, PE4 TRACED1.
+- DS12110 Rev 8 limit citations reproduce: Table 119 p. 212 (FT Min(...)+4.0 V, TT 4.0 V), note 4 p. 213, Table 120 note 3 p. 213, Table 122 note 3 p. 215, Table 126 p. 217, Tables 127/128 pp. 218-219, Table 146 p. 238 (LSI 29.4-33.6 kHz), Table 147 p. 239, Table 157 p. 246 (VIH 0.7 VDD) and note 7 p. 247, Table 159 p. 249, Table 160 note 2 p. 251, Figure 95 p. 286, Table 189 p. 291, Table 192 p. 293, Table 9 note 7 p. 88 (application labelled Inference).
+- IWDG: 4 x (239 + 1) = 960 LSI cycles; 960/32 kHz = 30.000 ms, 960/33.6 kHz = 28.571 ms, 960/29.4 kHz = 32.653 ms; 32.653 + 0.2 + 0.5 + 1.5 = 34.853 ms.
+- Gate networks: PE4 against a 30 kOhm pull-up at 3.6 V gives 0.1038 V at Q124 gate (<= 0.104 V); PC1 gives 3.6 x 2/33 = 0.218 V at Q122 gate; PC1 high gives 2.2 V / 1.1 mA; R127 || (R126 + R128) = 0.911 kOhm; dividers PA6 /11, PB1 /11, PC0 / PC5 /11.2 (two 2 kOhm in parallel under 10.2 kOhm); PA6 loader drive 0.363 mA.
+- Rule 3 / 4 copper: C126 220 nF (CL10B224KA8NNNC, K = +/-10 %) on PYRO1_GATE, C128 100 nF on PYRO1_OUT (Q124 drain), meter points U3.3 = QSPI_IO2 and R127.1 = PYRO1_GATE_N; R120.1 = ACT_FET_S (Q120 source), R120.2 / C120.2 = ACT_GATE; ACT_GATE vias at (16.2,73.3), (15.4,72.85), (11.14,71.7), (11.74,72.3), each pair in parallel between R121.1 (F.Cu) and the Q120 / Q121 gate pads (B.Cu).
+- Rule 5 vias: 3V3 (28.1,59.4) beside R91.1 and LOGIC_SOURCE_ST (30.45,51.4) + (30.85,51.8).
+- AONR21357 Rev 2.1 p. 2 VSD -0.7 typ / -1.0 max at IS = -1 A; AON7524 Rev 1.1 p. 2 VGS(th) min 0.4 V; AO3400A VGS(th) 0.65 / 1.05 / 1.45 V.
+- TPS2121 (U11): IN1 pin 7 = USB_LIMITED, IN2 pin 2 = RAW_PROTECTED, ST pin 9 = LOGIC_SOURCE_ST with R91 10 kOhm (inside the 6-20 kOhm recommended ST pull-up); Table 9-3: ST high = IN1 or Hi-Z, low = IN2, as the note states.
+- ISM6HG256X DS15034 Rev 1 and LSM6DSV320X DS14623 Rev 1 citations reproduce: Figure 5 p. 9, Table 2 p. 11, Ton 40 ms p. 15, SPI 10 MHz p. 17, IF_CFG PP_OD / H_LACTIVE default 0 p. 60, WHO_AM_I 0x73 p. 66, Table 150 p. 93 (100 = +/-256 g / 011 reserved on ISM6HG256X; 011 = +/-256 g, 100 = +/-320 g on LSM6DSV320X).
+- U4 nets: INT1 = IMU_INT1 (PE1), CS = IMU_CS (PB7), SCL/SDA/SDO on SPI1, SDx/SCx to GND (allowed in mode 1), OCS_aux/SDO_aux unconnected (allowed). U5 PS = 3V3A, CSB = GND (0x77). TXU0202 U12: A2Y (pin 4) drives PE7 RX, A1 (pin 5) takes PE8 TX, VCCA = 3V3.
+- Binding note hashes reproduce: board a0ec075e..., pin_table b94133e6..., circuit 3220e5f9..., committed schematic.net.xml 535a8fdf...; note itself c5cd0fa3....
+- PA3 loader row's '<= 0.83 V' is 3.3 V x 10/40 (0.825 V) at VDD 3.3 V; at VDD 3.6 V it would be 0.90 V, still far below any servo pulse threshold concern; not counted (rounding at the stated nominal VDD).
+- The IMU axis sign (roll = -gyro_Y for bottom / 180) was not re-derived from Figure 5's isometric drawing; the note keeps bench_sign_check 'required'.
+
+## Checks executed
+
+- pcbnew read-only: U1 pad nets vs pin_table.tsv r10_net vs binding note u1_pins (.supervisor/r32_mcu/u1_cmp.py): 0 mismatches of 100
+- schematic.net.xml U1 nets vs pin_table.tsv (.supervisor/r32_mcu/net_u1.py): 0 mismatches of 100
+- DS12110 Rev 8 text extraction: LQFP100 Table 9 rows, page of each pin, I/O structure, AF table column positions and pages (.supervisor/r32_mcu/ds_pins.py and inline scripts)
+- pcbnew pad / via / track dumps for the PE4, PC1, ACT_GATE, sense-divider, U3, U4, U5, U11, U12 and port networks (.supervisor/r32_mcu/pads.py, netparts.py, vias.py, tracks.py)
+- Hand calculations: IWDG periods, gate hold-off voltages, divider ratios, R127 network, rule 3 time constant, R30-TRI-01 bridge solve
+- DS15034 / DS14623 cited pages read (pdftotext, page 9 rendered)
+- SHA-256 of board, pin table, circuit, committed netlist and binding note
+
+## Sources
+
+- DS12110 Rev 8 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (cached .supervisor/r14_parts_pdf/st_h743.pdf)
+- DS15034 Rev 1 https://www.st.com/resource/en/datasheet/ism6hg256x.pdf
+- DS14623 Rev 1 https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf
+- TI SLVSEA3F https://www.ti.com/lit/ds/symlink/tps2121.pdf
+- TI TXU0202 https://www.ti.com/lit/ds/symlink/txu0202.pdf
+- AOS AONR21357 Rev 2.1, AON7524 Rev 1.1, AO3400A (cached in .supervisor/r14_parts_pdf)
+
+## Coverage limits
+
+- AN2606 and RM0433 not available locally: loader pin roles (Table 119 pp. 277-280, Rev 70 Table 2 / Table 135) and RM0433-based items (VREFBUF modes, DBGMCU, option bytes) not re-read; they are labelled Inference or cited to AN2606 in the records.
+- IMU axis sign not re-derived from DS15034 Figure 5.
+- Rule 3 fight-current simulation and rule 8 hold-up figures not re-simulated; only their inputs and labels checked.
+- No firmware exists; no physical measurement.

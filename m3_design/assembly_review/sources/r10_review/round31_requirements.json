@@ -1,0 +1,61 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 31, requirements lens",
+  "reviewer": "claude",
+  "target_commit": "3366287",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "Board outline and supports: Edge.Cuts 46 x 90 mm; five r = 1.6 mm support circles at (4,4), (42,4), (4,44.3), (3.7,86), (42,86): P1 / P2 hold.",
+    "U1 nets against pin_table.tsv r10_net: 100 of 100 rows agree (NC rows unconnected); F5 SPI3 PC10/11/12 + PD0, F8 PC1 / PE4 / PC0 / PC5, F10 PD8/PD9, PB13/PB12, PC6/PC7, PE8/PE7 and the six EXTI lines (PE1, PA4, PA5, PD6, PC8, PE12), F11 PC14 / PB1 / PA6, PC3_C and PC13 NC all match the board.",
+    "F4: J122.1-4 = SERVO1-4_OUT through R150-R153 1 k from PA0-PA3, R154-R157 10 k pull-downs, D121 SRV05-4 on the MCU side, J122.5 = GND; no servo + contact on the board.",
+    "F10 / F8 legends: every DB125 pin carries a legend whose pin number and function match its pad net (J9 1:5V4 / 2:GND / 3:RXI / 4:TXO; J410 / J420 / J440 1:4V8 / 2:GND / 3:TXO / 4:RXI; J121 1:E1- = PYRO1_OUT, 2:E1+ = PYRO1_IGN; J400 1:SW / 2:SW; J1 1:BAT+ / 2:GND; J122 1:S1 ... 5:GND); J121 is the black C52993880 body, the others green.",
+    "F10 rails: PORT_5V3 = 0.8 x (1 + 58.2 k / 10 k) = 5.456 V (U400 AP63201, R400 56.2 k + R404 2 k / R401 10 k); PORT_4V8 = 0.8 x (1 + 49.9 / 10) = 4.792 V (U401 TPS7A91); U401.11 GND vias exactly at (27.3,13.6) and (27.9,13.6), 0.5 / 0.3 mm (M2 GAP-3).",
+    "F6 / F9 parts: R80 / R165 470 k, R81 300 k, C87 220 nF CL10B224KA8NNNC (25 V X7R, C21120), C84 470 uF / 25 V C46550466, R92 3.3 k, R166 0.36 Ohm, R84 750 Ohm, U11 C_SS (C85) 470 nF; TPS2121 Table 9-1 gives about 166-187 V/s at 470 nF by scaling, consistent with F9's 166-196 V/s (Inference label kept).",
+    "F9 D402: B(4.45,65.9); BAT_SW_RETURN tap from J400.2 (7.4,67.6) on B.Cu 2.590 + 0.509 + 1.015 = 4.114 mm; GND via at (5.15,65.575), 0.700 mm from D402.2's pad centre.",
+    "F7 widths: BAT_IN J1-to-Q120 fire feed 1.0 mm (B.Cu (7.4,74.1)-(13.0,74.1)-(13.5,73.6)); ACT_FET_S carries exactly seven 0.4 mm segments (the source-pin bridges), its 0.3 mm segments are the gate-bias branch; PYRO1_IGN 0.5 mm; PYRO1_OUT fire path 0.5 mm F.Cu, the 0.2 mm B.Cu are sense / cold-pull-up branches; RAW_ACT 0.5 mm with 0.4 / 0.2 mm test-pad and sense branches.",
+    "F8 figures: Q122 gate 3.6 x 2 k / 33 k = 0.218 V; top-short / bottom-open 19.9 x 1014.5 / (5026.05 + 1014.5) = 3.342171 V; top-short current 8.4 / (5026.05 + 985.5) = 1.397 mA; cold CONT / BUS recomputed 99.370 / 99.335 mV (healthy, 4 Ohm match + R134) and 146.226 mV open, against the stated approximate 99.369 / 99.338 / 146.23 mV: same to 3 uV, inside the stated approximation.",
+    "F6 / Pack: four-stall BAT_IN 5.713 V and fire currents 1.541 / 1.476 / 1.279 A, hold-up 0.464-0.539 / 1.304-1.412 / 0.725-0.842 / 2.038-2.206 ms equal parts_budget.json; U9 turn-off corner recomputed 4.802 V (EN 1.116 V max, 1 % resistors, 0.1 uA EN + 50 nA D402 at the R80 / R165 node); single drop-out at 6.0 V recomputed 10.34 ms (C87 0.72 x 220 nF, R81 297 k).",
+    "F6 IWDG 960 / 33.6 kHz = 28.571 ms, 960 / 29.4 kHz = 32.653 ms; DS12110 Rev 8 Table 146 gives 29.4-33.6 kHz for TJ -40 to 125 C.",
+    "Temperature row: DS12110 Table 229 LQFP100 theta_JA 45.0 C/W and suffix-6 TJ -40 to 125 C confirm the MCU statements; LED2 KT-0805Y -40..85, C84 -55..105, NDK crystal -40..85, ISM6HG256X -40..105 C; LS120 -20..+70 C (MLT-5020 p2 item 6).",
+    "F1 against DS15034 Rev 1 pp. 12-13: G_So% +/-1 %, G_TyOff +/-2 dps, G_TCOff +/-0.015 dps/C, Rn 4.5 typ / 5.5 max mdps/rtHz; budget arithmetic 4.5 deg, 0.030 deg, 9.04 C reproduces. F1's 30 s versus the 35 s window is self-disclosed (earlier triage).",
+    "VEHICLE.md derivations: board aft edge -44.6 + 80 + 44...48 = joint + 79.4...83.4 mm; battery bay top +35.4; margin to joint + 47 about 32 mm; motors 54 x 635 mm in 721 mm boosters for both flights, as the envelope row says; apogee 7.6 km AGL + 1.2 km = 8.8 km MSL = about 317 hPa ISA, above F3's 300 hPa.",
+    "F4 hinge range: R28 script method reproduces 63.9 % at M1.59 / 142.2 kPa (25.5 N x 13.25 mm = 0.338 N.m against 0.5296 N.m) and the 84 % top; the HV6120 5.4 kg.cm stall figure was not re-sourced (no cached maker sheet).",
+    "P2 washer gate: nearest exposed lands to the (4,44.3) support are LED2.2 GND 3.808 mm, LED1.1 GND 3.860 mm, J2.1 3V3 3.881 mm, J2.3 NRST 3.989 mm (polygon distance); the 3.808-3.987 mm range is within polygon approximation, as already ruled.",
+    "P3 relief pocket window (x 31.5-41, y 20-60) contains C411 (34.2,22.75), C421 (33.8,36.75) and C431 (39.3,57.75) with their 1210 bodies; P3 landing figures reproduce from round 23's inputs (2.42-3.52 kg, Cd 1.5, 0 / 1200 m: 6.3-8.0 m/s, 98-163 g).",
+    "M1 / M3: stock_check.json (2026-11-02T12:43:17Z) short list is exactly U4 (stockCount 9, orderable 2) and U9 (stockCount 30, orderable -81, minimum 7); cost_check.json (12:44:13Z) $60.47 + 81 x $1.53 / 5 = $85.26, $0.85 over $84.41, min-purchase parts $61.01 (+$0.54).",
+    "Storage row: R167 10 k from BAT_IN to GND, 8.4 V / 10 k = 0.84 mA, 1 Ah / 0.84 mA = 7.1 weeks; the R82 2 M OVLO divider adds only microamps.",
+    "Sources '>= 10 km barometer capability' versus F3's 300 hPa bench floor: already dismissed as no contradiction (round 26 triage); nothing new.",
+    "M3 '$102-$105 per board' with fixed and handling fees: $102.05-$105.04 without, $102.59-$105.58 with the minimum purchases; 'about' covers both."
+  ],
+  "fix_verification": [
+    {"item": "R30-TRI-02 (REQUIREMENTS Temperature row)", "measurement": "Committed text: pass criterion 'every 85 C part <= 85 C; ORDERING 8.3'; LS120 rise recorded by thermocouple, 'LS120 is not a pass / fail gate', limit '70 C minus that measured rise, which replaces the inferred 48 C'; 48 C marked as the pre-test estimate. Same criterion in M3_R10:501-503, ORDERING:608, owner rows 33 and 36; no 'LS120 <= 70' left outside history rows and status notes.", "verdict": "confirmed"},
+    {"item": "R30-TRI-01 (R10_VALIDATION section 1; no REQUIREMENTS text)", "measurement": "R10_VALIDATION carries 2.19-2.21 V on RAW_ACT, 0.107-0.109 mA, BAT54 0.20-0.24 V (Calculation / Inference) and 'EN is loaded by 10 kOhm, 11.2 kOhm (5.6 kOhm with the e-match or the step-3 dummy fitted, R30-TRI-01) or 2 kOhm'; REQUIREMENTS has no bridge figure to update.", "verdict": "confirmed"},
+    {"item": "R29-TRI-04 (LS120 +70 C part in the Temperature row)", "measurement": "Temperature row lists LS120 -20...+70 C, 80-92 C in a 70 C bay and 65-77 C at 55 C (Inference), best-effort above about 48 C, owner row 36, respin option a +85 C buzzer; MLT-5020 p2 item 6 reads -20 to +70 C.", "verdict": "confirmed"},
+    {"item": "R29-TRI-01 labels in F6 / F8 / F9", "measurement": "F6 PA6-trip and hold-up figures, F8 cold-screen levels, F9 PORT_4V8-before-3V3 timing and EN overstress figures carry Calculation / Inference labels.", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3_design/assembly_review/m3.kicad_pcb before and after (a0ec075e...); HEAD 3366287; tracked files unchanged.",
+    "KiCad pcbnew read-only dumps (.supervisor/r31_requirements/dump.py, edges.py, widths.py, net_tracks.py, silk.py, near.py): 216 footprints, pads and nets, Edge.Cuts, fire-path track widths, D402 tap, U401 vias, silkscreen legends, support-to-land distances.",
+    "pin_table.tsv r10_net compared with every U1 pad net (100 / 100).",
+    "parts_budget.json, stock_check.json and cost_check.json values compared with REQUIREMENTS F6 / F7 / M1 / M3.",
+    "Hand / numpy recomputation of F1, F3, F6 (EN corner and single drop-out), F8 (fault ceilings, cold-screen levels), IWDG, storage, P3 landing and the F4 hinge low end.",
+    "Datasheet reads (pdftotext of cached PDFs): DS12110 Rev 8 Tables 49, 146, 229 and TJ range; DS15034 Rev 1 pp. 12-13; TPS2121 Table 9-1; temperature ranges of LED1 / LED2 / C84 / NDK / LS120 and others."
+  ],
+  "sources": [
+    "docs/REQUIREMENTS.md, AGENTS.md (committed at 3366287), ../../docs/VEHICLE.md",
+    "m3_design/assembly_review/m3.kicad_pcb (a0ec075e...)",
+    "m3_design/assembly_review/sources/r10_design/pin_table.tsv, parts_budget.json, parts_qualification.md, r10_binding_note.json",
+    "m3_design/assembly_review/fab/stock_check.json, cost_check.json, m3_bom_jlc.csv",
+    "round30_triage.md, round30_fix_docs.md; round26 / round28 requirements and triage records (context, after own checks)",
+    "ST DS12110 Rev 8 (https://www.st.com/resource/en/datasheet/stm32h743vi.pdf), ST DS15034 Rev 1 (https://www.st.com/resource/en/datasheet/ism6hg256x.pdf), TI TPS2121 SLVSEA3F, Huaneng MLT-5020, Nationstar NCD0805R1, KT-0805Y, jieerrui MA25V470M8x10, NDK crystal (cached PDFs)"
+  ],
+  "coverage_limits": [
+    "No DRC, check.sh, route_check or fab regeneration run (read-only brief); gate behaviour is other lenses' scope.",
+    "HV6120 stall torque, K850DM certification masses and the derived flight envelope were not re-sourced; the R23 / R28 envelope scripts were not re-run beyond one hinge spot check.",
+    "DB125 terminal temperature rating not readable from the cached drawing (image PDF).",
+    "Live JLC stock and price not re-queried."
+  ]
+}
