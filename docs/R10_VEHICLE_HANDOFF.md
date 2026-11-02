@@ -5,8 +5,7 @@ terminals on the x = 0 edge, a GH-2 power-switch connector near the forward edge
 the replacement facts without editing that worktree. Preserve the accepted R9 entry. R10 remains unaccepted and no physical
 fit is claimed.
 
-**Status.** PCB `5516eeec…`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. It replaces `0dc84776…` (round 21 fix pass, which moved R81 and C87 to U9's
-end of the EN run; the round 19 fix pass had added the spare AUX port J440), so no earlier review carries over to it. Round 22 found 0 Critical / 0 Major / 22 Minor on `5516eeec…`; round 23 is the second review of the closing pair (R23-DOCS_BINDING-01). Review results, checks, cost and open items are
+**Status.** PCB `1407e850…`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. It replaces `5516eeec…`, on which rounds 22 and 23 were the closing pair; the round 24 board pass (D-R24-01 … D-R24-17) changed the board (among other changes it added D402, J400.2's ESD clamp, and moved C88, R92, TP88, R402 and R403), so no earlier review carries over to it. Rounds 24 and 25 review `1407e850…` under the owner's strict rule (only real errors count; iteration stops after two consecutive rounds with zero verified real errors). Review results, checks, cost and open items are
 in [M3_R10.md, "Current state"](M3_R10.md#current-state); the owner's decision list is in
 [R10_VALIDATION.md](R10_VALIDATION.md#r10-deviations-for-owner-acceptance).
 
@@ -21,7 +20,7 @@ bodies can hide the top legends, so **check every lead's pin identity by continu
 | Terminal | Centre / rotation | Wire entry | Pins (silkscreen legend) |
 |---|---|---|---|
 | J121 black DB125-2 (igniter) | (7.4,55.85), −90° | west | 1 OUT (`1:E1−`), 2 IGN (`2:E1+`) |
-| J400 green DB125-2 (switch) | (7.4,65.85), −90° | west | 1 and 2: the external screw-switch pair (`1:SW`, `2:SW`) |
+| J400 green DB125-2 (switch) | (7.4,65.85), −90° | west | 1 and 2: the external screw-switch pair (`1:SW`, `2:SW`); J400.2 is clamped to GND by D402 at B(4.45,65.9), between the pins (D-R24-11) |
 | J1 green DB125-2 (battery) | (7.4,75.85), −90° | west | 1 BAT+ (`1:BAT+`), 2 GND (`2:GND`) |
 | J440 green DB125-4 (spare AUX port) | (7.4,16.25), −90° | west | 1 supply (`1:4V8`, top), 2 GND, 3 board TXO, 4 board RXI (`2:GND`, `3:TXO`, `4:RXI` on the bottom) |
 | J410 green DB125-4 (GPS by default) | (38.6,15.5), 90° | east | 1 supply (`1:4V8`), 2 GND, 3 board TXO, 4 board RXI |
@@ -53,12 +52,12 @@ The sole J400 screw switch is the power and pad-arming device, reachable on the 
 any self-powered module (GPS, radio, AUX or camera) attached. USB bench work requires the pack or the e-match to be disconnected.
 **The GPS, radio and AUX ports are fed from the battery path, so they are off on USB-only power:** during a USB-only session either disconnect the J410, J420
 and J440 leads or check that pins J410.3, J420.3 and J440.3 stay near 0 V (the board's TX lines must not drive an unpowered module). **Per-flight checks: use the one numbered list in [ORDERING section 8.3](ORDERING.md#83-after-delivery-probes-coating-staking-and-bench-gates), "Per-flight checklist"** (R23-DOCS_BINDING-06). In short:
-touch the airframe or pad ground before J400, and keep the screwdriver grounded (ESD handling); board off with J400 open and J121.2 below 0.1 V before any
+touch the airframe or pad ground before J400, and keep the screwdriver grounded (ESD handling; the second layer behind D402, J400.2's clamp to GND, which cannot turn the board on and, if shorted, only holds it off, which the closed-switch check sees); board off with J400 open and J121.2 below 0.1 V before any
 e-match; the closed-switch check with a 1–2 Ω dummy in J121 (PC1 raised, powered BUS / CONT and the PA6 / PA4 log checked: PA6 = VLOGIC / 11, PA4 low; then J400
 open, board off within 1 s and J121.2 below 0.1 V); the igniter resistance on a meter under 40 mA; no telemetry or buzzer before closing J400 and a fresh power-up when it
 closes; and the recovery order (J400 open, board off, match fired or disconnected, pack disconnected, only then USB). The NRST check is per installation, with the
 board off the sled. Surface leaks at U9's EN node or a chafed J400.2 lead can hold the board on (R19-SAF-02), and an open in the one via left between EN and its
-pull-down R81 can let it come on with J400 open (R21-SAF-01, Inference). R81 and C87 now sit at U9's end of the EN run, so one via, (17.10,82.80), is left (D-R21-05); the respin item is U9's west cell. Run the J400 pair twisted, on its own ties, away from the battery and servo
+pull-down R81 can let it come on with J400 open (R21-SAF-01, Inference). R81 and C87 now sit at U9's end of the EN run, so one via, (17.10,82.80), is left (D-R21-05; kept after the round 24 re-lay of U9's input, D-R24-05); the respin item is U9's west cell. Run the J400 pair twisted, on its own ties, away from the battery and servo
 power leads and from J440's leads, which leave the same west edge: a chafe from J440.1 (4.79 V) or J440.3 (TX) onto J400.2 holds U9 on
 (EN 1.87 V or 1.28 V, Calculation), and J440.1 or J440.2 onto J121.1 with the bus on joins the OUT-to-GND fire class. Keep J440's leads apart from the igniter leads too.
 **J440 lead routing (R20-MEC-01):** route J440's leads aft, over or around the (4, 4) nylon screw head, keep them south of
@@ -75,7 +74,7 @@ The board is 46 × 90 × 1.6 mm. Retain the five supports at (4,4), (42,4), (4,4
 **Use nylon (or otherwise insulated) screws and washers at all five supports:** at (4,44.3) the exposed LED2, LED1 and J2 lands (GND, GND, 3V3 and NRST) lie
 only 3.808–3.918 mm from the support centre, against a 3.8 mm washer gate. Start with the selected 4 mm standoffs, nut on the sled side and head on top; keep the nut-inclusive
 h + t below 6.0 mm at x = 4 and 42 and below 5.3 mm at x = 3.7. Program J2 before installing the adjacent mid support, or remove it for programming.
-Hardware maxima, eccentricity, solder tails, plate strength and shock clearance remain unqualified. The optional 100 g / D5 model, re-run on `50a39de5…` by the round 20 mechanics lens (R20-MEC-02) and again on `5516eeec…` by the round 22 mechanics lens, with identical figures, gives a first mode of 180.8 Hz pinned (was 181.1)
+Hardware maxima, eccentricity, solder tails, plate strength and shock clearance remain unqualified. The optional 100 g / D5 model, re-run on `50a39de5…` by the round 20 mechanics lens (R20-MEC-02) and again on `5516eeec…` by the round 22 mechanics lens, with identical figures (not re-run on `1407e850…`), gives a first mode of 180.8 Hz pinned (was 181.1)
 for an estimated 78.6 g (was 70.5 g), and leaves only 0.261 mm below C431 (was 0.271) and 0.320 mm below C421 at h = 4 mm at 100 g; it predicts overlap at
 h = 3.5 mm. These are Calculation/Inference, not physical results. The east edge carries 34 g of the board mass on an unsupported 82 mm edge
 (see M3_R10, "East-edge asymmetry"): require a first-article vibration and shock check.
@@ -121,8 +120,8 @@ no production copper change and no full PCB, CLI or gate qualification of that M
 
 ## Cost
 
-The target is $84.41 per board, R3's cost per board for parts plus JLC feeder fees only. The supplier data, run on the final files of `5516eeec…` (cost 2026-10-31T23:24Z, bound to the JLC BOM, owner BOM and current CPL; stock 23:23Z, bound to the BOM and owner BOM), give $85.37 placed (about $85.91 with JLC minimum purchases);
-JLC's fixed fees add $16.79 per board (5 boards). **The cost target fails by $0.96** because of the owner-approved AUX port (+$1.14); the owner decides whether to accept it. U4 (now the ISM6HG256X) shows 9 in stock but only 2 orderable, so the stock check (`stock_check.json` 2026-10-31T23:23Z) fails on U4, 2 orderable against 5, and now also on U9 (TPS259470LRPWR C3662793: 40 in stock, −69 orderable, minimum purchase 7); it reads JLC's `canPresaleNumber` as the orderable quantity, an Inference about JLC's field. For both, confirm the quantity in the JLC cart on order day, else consign franchised parts (R20-BOM-01); for U4 that means consigning franchised ISM6HG256XTR (same CPL rotation and register map), with the LSM6DSV320X, also unavailable at JLC and LCSC, only as the second-fallback alternate (needs part fields, BOM and CPL regenerated: ORDERING 8.1; R21-BOM-02, R23-DOCS_BINDING-08).
+The target is $84.41 per board, R3's cost per board for parts plus JLC feeder fees only. The supplier data, run on the final files of `1407e850…` (cost 2026-11-02T01:43:55Z, bound to the JLC BOM, owner BOM and current CPL; stock 2026-11-02T01:42:53Z, bound to the BOM and owner BOM), give $85.60 placed (about $86.14 with JLC minimum purchases);
+JLC's fixed fees add $16.79 per board (5 boards). **The cost target fails by $1.19:** the owner-approved AUX port (+$1.14) and, since round 24, D402 (a ninth C535146 at $0.2306; with price movement the files went from $85.36 to $85.60, D-R24-11); the owner decides whether to accept it. U4 (now the ISM6HG256X) shows 9 in stock but only 2 orderable, so the stock check (`stock_check.json` 2026-11-02T01:42:53Z) fails on U4, 2 orderable against 5, and also on U9 (TPS259470LRPWR C3662793: 28 in stock, −83 orderable, minimum purchase 7); it reads JLC's `canPresaleNumber` as the orderable quantity, an Inference about JLC's field. For both, confirm the quantity in the JLC cart on order day, else consign franchised parts (R20-BOM-01); for U4 that means consigning franchised ISM6HG256XTR (same CPL rotation and register map), with the LSM6DSV320X, also unavailable at JLC and LCSC, only as the second-fallback alternate (needs part fields, BOM and CPL regenerated: ORDERING 8.1; R21-BOM-02, R23-DOCS_BINDING-08).
 Quote, process and owner acceptance are open. C84 is on the owner BOM, bought by the owner and hand-fitted after both reflows. No physical fit, firmware or order is qualified. Table and basis: [M3_R10.md, "Cost and stock"](M3_R10.md#cost-and-stock).
 
 Current source and qualification details: [M3_R10.md](M3_R10.md), [ORDERING.md section 8](ORDERING.md), and the maker-linked `sources/r10_design/parts_qualification.md`. Apply the parent mirror update only within its

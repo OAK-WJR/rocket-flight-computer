@@ -18,6 +18,8 @@ from pathlib import Path
 
 import pcbnew
 
+import r10_route
+
 TABLE = Path(__file__).resolve().parent / 'r10_fanout.tsv'
 POUR = [(0.3, 0.3), (45.7, 0.3), (45.7, 89.7), (0.3, 89.7)]
 STITCH = (
@@ -184,10 +186,18 @@ def draw(d):
     d.track('GND','B',.3,[(32.8,52.5),(32.8,53.3)]);d.via('GND',(32.8,53.3))
     # Explicit dogleg keeps the U402 return clear of the moved VLOGIC divider.
     d.track('GND','B',.3,[d.pad('U402.2'),(31.8,59.0),(32.3,59.5)]);d.via('GND',(32.3,59.5))
+    # D-R24-07 (R22-POWER-01, D-R22-02): U402's GND island gets a second barrel 0.6 mm south of the first.
+    d.track('GND','B',.3,[(32.3,59.5),(32.3,60.1)]);d.via('GND',(32.3,60.1))
+    # D-R24-08 (R22-POWER-02): R91.1's 3V3 (PA4's pull-up) gets a second In2 barrel 0.6 mm north of the first.
+    d.track('3V3','B',.3,[(28.1,60.0),(28.1,59.4)]);d.via('3V3',(28.1,59.4))
     for at in STITCH:
         d.via('GND', at)
     for name, layers, centre, radius in barrel_keepouts(d):
         barrel_keepout(d, name, layers, centre, radius)
+    # D-R24-17: with every family drawn, each plain 90-degree bend becomes one 45-degree diagonal (r10_route).
+    if not d.dry:
+        done = r10_route.chamfer_right_angles(d.board)
+        print(f'r10_route ground: {len(done)} right-angle bends chamfered')
     if not d.dry:
         for v in d.board.GetTracks():
             if v.GetClass() == 'PCB_VIA':

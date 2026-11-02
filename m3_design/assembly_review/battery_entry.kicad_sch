@@ -799,6 +799,126 @@
 							(font
 								(size 1.05 1.05))))))
 			(embedded_fonts no))
+		(symbol "M3:ESD_Bidir"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 1.016)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "ESD_Bidir"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Bidirectional low-capacitance ESD protection diode (RF line)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "diode TVS thyrector"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "ESD_Bidir_0_1"
+				(polyline
+					(pts
+						(xy -2.54 1.27)
+						(xy -2.54 -1.27)
+						(xy 2.54 1.27)
+						(xy 2.54 -1.27)
+						(xy -2.54 1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 0.508 1.27)
+						(xy 0 1.27)
+						(xy 0 -1.27)
+						(xy -0.508 -1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 1.27 0)
+						(xy -1.27 0))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "ESD_Bidir_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "A1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A2"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TSLP_2_20"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
 )
 	(text "07 | Battery input, contact and protection"
 		(at 20.32 20.32 0)
@@ -3314,6 +3434,98 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 1c89241f-d370-5f19-902d-a3d99f9e819b))
+	(symbol
+		(lib_id "M3:ESD_Bidir")
+		(at 370.84 238.76 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 3abd9587-9fb1-5f19-bd24-ed6e5487f74f)
+		(property "Reference" "D402"
+			(at 368.3 234.95 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "ESD103-B1-02EL"
+			(at 368.3 242.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TSLP_2_20"
+			(at 370.84 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146"
+			(at 370.84 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C535146"
+			(at 370.84 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Infineon Technologies"
+			(at 370.84 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "ESD103-B1-02EL E6327"
+			(at 370.84 238.76 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/69ee5338-a377-5d7b-bbd8-28b781c5d2c5"
+					(reference "D402")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 367.03 238.76)
+			(xy 361.95 238.76))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6e2aae16-b375-5bbb-9d0e-20c0ca5ad392))
+	(global_label "BAT_SW_RETURN"
+		(shape passive)
+		(at 361.95 238.76 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f52a1434-3cd4-5689-9e6d-dd25b83b5fd0))
+	(wire
+		(pts
+			(xy 374.65 238.76)
+			(xy 379.73 238.76))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 071e849f-7331-5289-9864-d54a18e37c6a))
+	(global_label "GND"
+		(shape passive)
+		(at 379.73 238.76 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 1b8eab85-e7c6-52d2-ba24-4cd007b28474))
 	(text "C87: EN/UVLO ride-through, 220 nF 25 V X7R (R19-REQ-02). (R80+R165)||R81 = 227k charges it (tau 50 ms; turn-on 88/56/45 ms at 6.0/7.4/8.4 V, 30-129 ms worst case); R81 alone discharges it (tau 66 ms), so J400 drop-outs shorter than 19/33/41 ms (worst case 10.6/20.5/26.4 ms with 0.1 uA EN leakage, D-R20-11) cannot trip U9 (25-64 us t_D,OFF). EN thresholds 1.183-1.223 V rising, 1.076-1.116 V falling (TI SLVSFC9C p9): UVLO on 4.89-5.05 V, off 4.45-4.61 V."
 		(at 20.32 280.67 0)
 		(effects

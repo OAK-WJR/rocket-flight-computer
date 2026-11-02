@@ -12,8 +12,9 @@ library tables; the board itself is not touched):
   unconnected items: before `signals`, no more than after the previous family (--state carries the count); after
       `signals`, only on the pending nets; after `ground`, none;
   route_check --profile r10 (the empty-allowlist clean-routing gate): before `ground`, failing instances only on those
-      pending nets, or critical_via_no_gnd (the GND partner vias come with the ground family's plane-via table);
-      after `ground`, none.
+      pending nets, or critical_via_no_gnd (the GND partner vias come with the ground family's plane-via table), or
+      right_angle (the ground family's last step chamfers the plain 90-degree bends, D-R24-17), or parallel_via (a named
+      second barrel drawn by a later family, D-R24-10); after `ground`, none.
 Exit 0 when the family's gate holds.
 """
 import argparse
@@ -95,8 +96,10 @@ def main():
     elif previous is not None and total > previous:
         issues.append(f'unconnected items rose from {previous} to {total}')
     # before `ground`, a layer change's GND partner may still be pending: the ground family places the plane-via table
-    # (r10_fanout.tsv) that the R10 port nets' critical_via_no_gnd test counts (R3-RTE-01); after `ground` it is final
-    later = () if final else ('FAIL critical_via_no_gnd ',)
+    # (r10_fanout.tsv) that the R10 port nets' critical_via_no_gnd test counts (R3-RTE-01), and its last step chamfers
+    # every plain 90-degree bend (D-R24-17, r10_route.chamfer_right_angles); a named second barrel (route_check's
+    # PARALLEL_VIAS) may come with a later family than its net's first tracks (D-R24-10); after `ground` all are final
+    later = () if final else ('FAIL critical_via_no_gnd ', 'FAIL right_angle ', 'FAIL parallel_via ')
     bad = [line for line in route if final or not (any(f' {n} ' in line for n in pending) or line.startswith(later))]
     if bad:
         issues.append(f'route_check: {len(bad)} failing instances outside the pending nets, e.g. {bad[:3]}')

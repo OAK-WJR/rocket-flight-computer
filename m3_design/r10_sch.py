@@ -424,6 +424,8 @@ def build(out, netlist=True):
                 t = sch.insert(t, sch.note('CH1 sense: filtered PYRO1_CONT -> PC0 ADC123_INP10; filtered ARM1_SENSE -> PC5 ADC12_INP8, the sole RAW_ACT bus reading (historical ARM1_SENSE name). Split divider safety retained; audit2 removes R168/R170 and _MCU tails (single-resistor fault maximum3.342V at19.9V clamp). AVA follow-up removes the duplicate six-part RAW_ACT_SENSE chain; PB0 U1.34 is NC/analog, never driven. Ground bus/continuity readings are hard refusals; in flight they never veto fire.', 20.32, 279.4, 'mcu:r10:sense'))
             if file.name == 'battery_entry.kicad_sch':
                 t = add(t, library, 'J400', changed['J400'], 330.2, 238.76)
+                # D-R24-11: J400.2's contact clamp (a ninth ESD103-B1-02EL) from BAT_SW_RETURN to GND, ahead of R165.
+                t = add(t, library, 'D402', changed['D402'], 370.84, 238.76)
                 # R18-REQ-02 / R18-SAF-05: the arming contact is J400.1 / J400.2 and the damper R166 is 0.36 ohm.
                 t = replace_once(t, '"J1.3--4: external dry contact. Closed = battery enabled;',
                                  '"J400.1 / J400.2 (BAT_SW_SOURCE / BAT_SW_RETURN): external dry screw-switch contact. '

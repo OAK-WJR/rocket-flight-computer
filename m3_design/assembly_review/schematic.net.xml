@@ -3422,6 +3422,37 @@
         </unit>
       </units>
     </comp>
+    <comp ref="D402">
+      <value>ESD103-B1-02EL</value>
+      <footprint>rocket:M3_TSLP_2_20</footprint>
+      <datasheet>https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146</datasheet>
+      <fields>
+        <field name="LCSC">C535146</field>
+        <field name="Manufacturer">Infineon Technologies</field>
+        <field name="Manufacturer Part">ESD103-B1-02EL E6327</field>
+        <field name="Footprint">rocket:M3_TSLP_2_20</field>
+        <field name="Datasheet">https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146</field>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="ESD_Bidir" description="Bidirectional low-capacitance ESD protection diode (RF line)"/>
+      <property name="LCSC" value="C535146"/>
+      <property name="Manufacturer" value="Infineon Technologies"/>
+      <property name="Manufacturer Part" value="ESD103-B1-02EL E6327"/>
+      <property name="Sheetname" value="07 | Battery input, contact and protection"/>
+      <property name="Sheetfile" value="battery_entry.kicad_sch"/>
+      <property name="ki_keywords" value="diode TVS thyrector"/>
+      <property name="ki_fp_filters" value="M3_TSLP_2_20"/>
+      <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/69ee5338-a377-5d7b-bbd8-28b781c5d2c5/"/>
+      <tstamps>3abd9587-9fb1-5f19-bd24-ed6e5487f74f</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
     <comp ref="J1">
       <value>DB125-3.5-2P-GN-S</value>
       <footprint>rocket:M3_DB125_2P_GN</footprint>
@@ -8102,6 +8133,7 @@
       <node ref="U9" pin="2" pinfunction="OVLO_2" pintype="input"/>
     </net>
     <net code="22" name="BAT_SW_RETURN" class="Default">
+      <node ref="D402" pin="1" pinfunction="A1_1" pintype="passive"/>
       <node ref="J400" pin="2" pinfunction="2_2" pintype="passive"/>
       <node ref="R165" pin="1" pintype="passive"/>
     </net>
@@ -8278,6 +8310,7 @@
       <node ref="D4" pin="2" pinfunction="GND_2" pintype="passive"/>
       <node ref="D400" pin="2" pinfunction="A2_2" pintype="passive"/>
       <node ref="D401" pin="2" pinfunction="A2_2" pintype="passive"/>
+      <node ref="D402" pin="2" pinfunction="A2_2" pintype="passive"/>
       <node ref="D410" pin="2" pinfunction="A2_2" pintype="passive"/>
       <node ref="D411" pin="2" pinfunction="A2_2" pintype="passive"/>
       <node ref="D420" pin="2" pinfunction="A2_2" pintype="passive"/>

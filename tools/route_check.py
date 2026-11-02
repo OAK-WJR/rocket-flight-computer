@@ -36,6 +36,12 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
     acute_angle           two branches at a node meeting at 0.5°-89.5°; at a pad or via only when the wedge
                           between the branches' inner edges opens outside that pad's or via's copper; every branch
                           pair at the node is tested, not only the sharpest (fix pass 5)
+    right_angle           D-R24-17 (the owner, 2026-11-01: "why not 45"): two track ends of one layer and net meeting at
+                          89.5°-90.5° (a 90-degree bend) where nothing else meets them; at a pad or via only when the
+                          inner corner of the two tracks' copper, N + h_b u_a + h_a u_b (u the unit branch directions,
+                          h the half-widths), lies outside that pad's or via's copper (at a via of radius r, a bend of
+                          equal half-widths h is exempt when h sqrt(2) <= r); a T or three or more track ends is not a
+                          bend. Every such bend is chamfered with one 45-degree diagonal
     pour_stub             a track end touching nothing but its own net's pour whose run (back to the first junction,
                           pad or via) lies inside that pour's fill for more than POUR_STUB (1.0 mm): copper the fill
                           already provides, a stub (fix pass 5; a whole such run whose removal changes nothing is
@@ -88,7 +94,9 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
                           points: duplicate copper); one instance per independent loop. Profile r10 (D-R19-09): a via
                           named in PARALLEL_VIAS (a second barrel beside a supply's single-via layer change, with its
                           measured reason) is left out of the loop search; a named via that is missing or not parallel
-                          (without it a pad of its net is cut off) is a parallel_via instance (gated)
+                          (without it a pad of its net is cut off) is a parallel_via instance (gated). D-R24-02: a
+                          named via is also left out of the net's via count (extra_vias) and of the needless-hop pairs
+                          (a redundant barrel is the point, not a hop); every other via still counts
     detour                a net without a pour whose track copper is longer than DETOUR_MAX (1.6) x the octilinear
                           minimum spanning tree of its pad centres and more than DETOUR_SLACK (2 mm) longer than it
                           (for a two-pad net: the copper path against the octilinear pad-to-pad distance); profile r8
@@ -237,7 +245,7 @@ SIGNAL_CRITICAL = {'rf', 'pyro', 'crystal', 'usb', 'spi', 'rfif', 'uart', 'portc
 # AUD-2 omits only the named slow-return whitelist from companion-via checks; these critical classes stay intact.
 CRITICAL = SIGNAL_CRITICAL | {'power'}
 RULE = ('off_angle', 'staircase', 'acute_angle', 'fold_back', 'dead_copper', 'pour_stub', 'dangling_via',
-        'critical_via_no_gnd', 'arc_segment', 'parallel_via')
+        'critical_via_no_gnd', 'arc_segment', 'parallel_via', 'right_angle')
 HYGIENE = ('micro_segment', 'short_segment', 'tiny_jog', 'collinear_unmerged', 'duplicate_segment',
            'collinear_overlap', 'side_by_side_overlap', 'crossing_without_node', 'overlap_only_joint',
            'via_offcentre_joint', 'neck_down', 'track_loop', 'via_overlap', 'detour', 'extra_vias', 'chain_detour',
@@ -313,6 +321,29 @@ PARALLEL_VIAS_R10 = [
      "D-R19-09: C84.1, the 470 uF hold-up, reaches the 0.4 mm B.Cu VLOGIC trunk through the original via (29.5, 82.05) and "
      "this one 0.95 mm away; the loop is the B.Cu trunk end (0.6 mm and the 0.42 mm diagonal) and the two 0.4 mm F.Cu "
      "diagonals (0.42 / 0.85 mm) meeting at the C84.1 run's bend (29.2, 81.75); either barrel alone carries the pad"),
+    # D-R24-02 / -04 / -08: second barrels beside single-via layer changes that a one-via open would cut (K-power's
+    # SINGLE_OPEN_TAPS); each joins the same two copper pieces as its partner, so either barrel alone carries the tap.
+    ('ACT_GATE', (15.4, 72.85),
+     "D-R24-02 (R23-SAFETY-05): Q120's gate drive from R121; the barrel sits between the parallel F.Cu (15.2, 72.3)-(16.2, "
+     "73.3) and B.Cu (14.475, 72.2)-(15.575, 73.3) diagonals (0.442 mm apart) on 0.247 / 0.194 mm stubs inside its own "
+     "pad, beside the first barrel (16.2, 73.3)"),
+    ('ACT_GATE', (11.74, 72.3),
+     "D-R24-02: Q121's gate drive from R121; the barrel sits at the F.Cu run's corner, joined to the first (11.14, 71.7) "
+     "by a 0.849 mm B.Cu diagonal under the F.Cu one (a direct B.Cu link to Q121.4 would cross the ACT_FET_S bridge)"),
+    ('VCAP2', (18.3, 36.8),
+     "D-R24-04 (R23-MCU-02): U1.73 to C20; a 0.3 mm F.Cu stub to U1.73's drop and a 0.5 mm B.Cu stub to C20.1's run, "
+     "beside the first barrel (18.0, 37.3)"),
+    ('VLOGIC', (34.5, 62.4),
+     "D-R24-08 (R22-POWER-02): PA6's sense R60.1 on the F.Cu drop, 0.6 mm north of the first barrel (34.5, 63.0), joined "
+     "to it on B.Cu"),
+    ('LOGIC_SOURCE_ST', (30.45, 51.4),
+     "D-R24-08 (R22-POWER-02): PA4's ST line; 0.566 mm diagonals on F.Cu and B.Cu to the first barrel (30.85, 51.8)"),
+    ('BOOT0', (14.2, 46.0),
+     "D-R24-05 (R23-MCU-02): BOOT0's pull-down R5; at the F.Cu run's corner, joined to the first barrel (13.8, 45.6) by "
+     "a 0.566 mm B.Cu diagonal under the F.Cu one"),
+    ('USB_LIMITED', (16.6, 28.0),
+     "D-R24-10: U10.6's output into the In2 run toward R87.1 (U11's USB over-voltage divider); 0.6 mm east of the "
+     "first barrel (16.0, 28.0), joined to it on B.Cu and In2"),
 ]
 PARALLEL_VIAS = []
 KEEPOUT_BASELINE = True
@@ -884,11 +915,12 @@ def critical_transitions(board):
     return out
 
 
-def net_route(nc):
+def net_route(nc, skip=frozenset()):
     """Route metrics of a net without a pour (pads closer than 0.1 mm are one point): dict(pads (distinct points), len
     (track copper, mm), mst (octilinear minimum spanning tree of the pad centres, mm), vias (vias carrying the net's
-    tracks on two or more layers), need (0 when every pad shares a copper layer, else 1), at (centre of the first pad by
-    name, nm), first (its name)). For a two-pad net, len / mst is the detour ratio of its one connection."""
+    tracks on two or more layers, the named PARALLEL_VIAS ids in `skip` left out, D-R24-02), need (0 when every pad
+    shares a copper layer, else 1), at (centre of the first pad by name, nm), first (its name)). For a two-pad net,
+    len / mst is the detour ratio of its one connection."""
     tracks = [t for _, t in _route_tracks(nc.tracks)]
     pts = []
     for p in sorted(nc.pads, key=lambda q: q['key']):
@@ -911,6 +943,8 @@ def net_route(nc):
                 best[v] = min(best[v], octile(pts[u]['pos'], pts[v]['pos']))
     vias = 0
     for v in nc.vias:
+        if id(v['obj']) in skip:
+            continue
         if len({t['lid'] for t in tracks if dist(t['a'], v['pos']) <= v['r'] or dist(t['b'], v['pos']) <= v['r']}) >= 2:
             vias += 1
     common = set.intersection(*[set(p['layers']) for p in pts]) if pts else set()
@@ -1697,6 +1731,12 @@ def needless_hops(board, cu, chains, via_ends, poured):
     clr = default_clearance_nm(board)
     out = []
     other_l1 = {}
+    # D-R24-02: a via named in PARALLEL_VIAS is a deliberate second barrel beside a single-via layer change; the run
+    # joining it to its partner is the redundancy itself, not a hop (every other pure-via pair is still tested).
+    named = [(n, (xy[0] / NM, xy[1] / NM)) for n, xy, _ in PARALLEL_VIAS]
+
+    def is_named(v):
+        return any(n == v['net'] and dist(v['pos'], p) <= 0.02 / NM for n, p in named)
 
     def obstacles(lid):
         if lid not in other_l1:
@@ -1724,7 +1764,7 @@ def needless_hops(board, cu, chains, via_ends, poured):
         if net in poured or net_class(net) not in SIGNAL_CRITICAL:
             continue
         v0, v1 = n0['via'], n1['via']
-        if v0 is None or v1 is None or v0 is v1:
+        if v0 is None or v1 is None or v0 is v1 or is_named(v0) or is_named(v1):
             continue
         lay0, lay1 = pure_layers(v0), pure_layers(v1)
         if not lay0 or not lay1 or len(lay0) != 2 or lay0 != lay1 or l2 not in lay0:
@@ -1973,6 +2013,19 @@ def scan(board, baseline_log=None):
                 add('acute_angle', n['net'], n['layer'], p, deg=round(a, 2),
                     at='free' if holder is None else 'pad/via')
                 break
+        # D-R24-17: a 90-degree bend of two track ends (no T); at a pad or via only when the inner corner of the two
+        # tracks' copper lies outside the holder's copper (the acute_angle wedge idea)
+        if len(n['m']) == 2 and not n['through'] and len(br) == 2:
+            (u, s1), (v, s2) = br
+            ang = vang(u, v)
+            if ang is not None and abs(ang - 90) <= ANG_TOL:
+                nu, nv = math.hypot(*u), math.hypot(*v)
+                corner = (p[0] + s2['w'] / 2 * u[0] / nu + s1['w'] / 2 * v[0] / nv,
+                          p[1] + s2['w'] / 2 * u[1] / nu + s1['w'] / 2 * v[1] / nv)
+                if holder is None or not holder.GetEffectiveShape(n['lid']).Collide(P(corner), 0):
+                    add('right_angle', n['net'], n['layer'], p, deg=round(ang, 2),
+                        at='free' if holder is None else ('via' if n['via'] else 'pad'),
+                        widths=sorted({round(mm(s1['w']), 3), round(mm(s2['w']), 3)}))
         if len(br) == 2 and plain(n) and abs(vang(br[0][0], br[1][0]) - 180) <= ANG_TOL and br[0][1]['w'] == br[1][1]['w']:
             add('collinear_unmerged', n['net'], n['layer'], p, lens=(round(br[0][1]['len'], 3), round(br[1][1]['len'], 3)))
         if not n['pads'] and len({x[1]['w'] for x in br}) > 1:
@@ -2245,7 +2298,7 @@ def scan(board, baseline_log=None):
                     add('parallel_via', net, 'via', v['pos'], problem='not parallel: without it a pad of the net is cut off')
         if nc.zones:
             continue
-        r = net_route(nc)
+        r = net_route(nc, skip=skip)                                   # D-R24-02: named parallel vias not counted
         if r['pads'] < 2:
             continue
         kw = dict(pads=r['pads'], first=r['first'], len_mm=round(r['len'], 2), mst_mm=round(r['mst'], 2),

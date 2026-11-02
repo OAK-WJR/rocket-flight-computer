@@ -1,6 +1,8 @@
 # r10_fanout_aid.py output (frozen): net, pad, pad layer, via x, via y; stub 0.3 mm pad centre -> via
 # D-R19-14: C23.2 moves from (27.1, 34.2) to (25.95, 34.15), freeing U1.55 (PD8, J410 TX); C444.2 / C445.2 are the AUX cell returns
 # D-R21-05: R81.2 / C87.2's returns (20.706, 65.619) / (16.639, 63.939) go with the parts to U9's end (F.Cu pour, U9.8's via)
+# D-R24-09: R403.2's F.Cu return (31.4, 14.4) goes: R403 sits on B.Cu beside U401 and returns straight to U401.4
+# D-R24-15: R92.2's and TP88.1's returns move with the parts, 0.8 / 0.6 mm aft of the forward edge
 net	pad	layer	x	y
 3V3	C90.1	F	26.425	32.075
 3V3	R89.1	F	23.0	70.0
@@ -52,7 +54,6 @@ GND	R156.2	B	31.333	67.97
 GND	R157.2	B	32.968	67.452
 GND	R167.2	B	13.536	85.161
 GND	R401.2	F	13.0	1.8
-GND	R403.2	F	31.4	14.4
 GND	R430.2	B	36.825	59.175
 GND	R431.2	F	37.1	57.875
 GND	R64.2	B	11.23	53.343
@@ -61,9 +62,9 @@ GND	R83.2	B	8.35	81.8
 GND	R84.2	B	23.25	81.825
 GND	R86.2	B	27.9	64.25
 GND	R88.2	B	22.825	67.825
-GND	R92.2	F	32.65	87.5
+GND	R92.2	F	32.65	86.7
 GND	TP74.1	B	43.6	58.0
-GND	TP88.1	F	36.6	87.0
+GND	TP88.1	F	36.6	86.4
 GND	U1.19	F	26.0	46.75
 GND	U1.49	F	31.85	38.25
 GND	U1.99	F	13.75	48.5

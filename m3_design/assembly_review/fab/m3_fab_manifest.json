@@ -1,7 +1,7 @@
 {
   "inputs_sha256": {
     "cad/actuator_power.kicad_sch": "7bfb223c8ed746f025b73d984ab271a4a0202c75b824c036b6ffa33a6f8d9c89",
-    "cad/battery_entry.kicad_sch": "1a03aaff1bf495e60cb1feb4ac482293b60a27a47c69824ed489c3f1cc66bb53",
+    "cad/battery_entry.kicad_sch": "c0a780ec013d9e022eef0d0a4bd2bfef78b76cbda450310b25c6170706e320b9",
     "cad/camera_connector.kicad_sch": "60a43eaea29272aec14c08dfa2b700bbbe98521e6faa9e697d7f375a3f7e3c52",
     "cad/camera_power.kicad_sch": "71953351600449fc420a098e81d6a2b5ac5a9d4b14c6b9556a2cb1d68f51f1d6",
     "cad/camera_uart.kicad_sch": "614b30c97baf2a2e94665039e4041a443f1162ad408f7a8d0d3675120e100cde",
@@ -176,7 +176,7 @@
     "cad/kilib/rocket.pretty/USB-C_SMD-TYPE-C-31-M-12_1.kicad_mod": "f77f08eb642c6ec21933dc0cf3e2e4866e5b54717d8f1c237a4159bbdc6e8ce6",
     "cad/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
     "cad/m3.kicad_dru": "1d2dbe77f0331e4013964ffa0823994c947843c89f5e3886ca36ff2d7e2f0ff9",
-    "cad/m3.kicad_pcb": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+    "cad/m3.kicad_pcb": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
     "cad/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
     "cad/m3.kicad_sch": "7ea1809b32ae0878476f174a2ba1ff0f0b84b0ecb4808d0bc5a3e3ad35fc0380",
     "cad/mcu.kicad_sch": "fda8d2d94805cd0ea5660e969499eb156180abc01a9f1e3a4239cec6023c2f19",
@@ -195,12 +195,12 @@
     "tools/jlc_orient.py": "a23ab373cc7e13f7053a97e87a0f85cc37a5bf19391f774680e7433461701c88"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "8a21d578ad323a465106e2d433b29022c8b95edfc9bf6175a641fd748aa38f17",
-    "m3_assembly_top.pdf": "b514639b9a17dc870b9533aeebc5c1961551277f7649b9633bbe4fc8b58002bc",
-    "m3_bom_jlc.csv": "df6c0fc2c86fc0be0a55583c417a48c0b06a48ca11a09e3abea2acab72003272",
+    "m3_assembly_bottom.pdf": "f901f3cdd569334812b0f31e370a703019afb59d5236f51c47d183901e6b9efd",
+    "m3_assembly_top.pdf": "5ff7635637efaeb0964ece0e66436743be468aef8d321bdd5af118f40a3c9093",
+    "m3_bom_jlc.csv": "00af5358a4043980e9c3a488b5e5a4bbe7a5d562054aaf9ce4ee6f99694e6b55",
     "m3_bom_owner.csv": "c48868b32f2680376e73c4ea93c98df8efd6df4cad909c83e64a7ee56b74c2c0",
-    "m3_cpl_jlc.csv": "905e431462a7ee9ceb9d902820d8c91d8b1c9e787ef67cbb9a89a64a6391ae6b",
-    "m3_gerber.zip": "fcf1134c85cab5e95e32f8a2bd09c602f49a61c19041ebdc604b4d22b27bed02"
+    "m3_cpl_jlc.csv": "7984d2cbf080ae1b5a68ef00da1d2af1d8e35008565da27641eb0302f1411a13",
+    "m3_gerber.zip": "8c55e1de89a405f7c6664b285db1aa4b4efcbc3345602fbc01d647b4e8e594d9"
   },
   "schema": 1
 }

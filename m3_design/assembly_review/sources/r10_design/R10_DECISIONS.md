@@ -3845,4 +3845,266 @@ U4.3 reach GND another way). Taps ('GND', U4.6 / U4.7, J1.2) with exact entries 
 does not fire (fail-safe; the Blue Jay covers recovery) and roll control is lost. Respin: a second via. C19 / C20 are
 D-R23-01. Seeds: each tap with its entry dropped fails naming the via.
 
-The record index is now **190 unique D IDs through D-R23-11**.
+## D-R24-01. U4.6 / U4.7's ground via stays single: no second legal spot (2026-11-01)
+
+R23-GATE-07 / D-R23-11 (P1 item 1; kept, measured on the round 24 scratch board). A second GND via for the IMU's power
+ground must sit outside M-7's U4 body keep-out (centre y >= 47.545), between the 3V3A legs of U4.8 (x 15.79) and U4.5
+(x 17.5) on B.Cu (centre x 16.315-16.975), and clear F.Cu, where U1.98's IMU_INT1 escape runs at y 48.0 and 48.36
+(centre y <= 47.5 west of x 16.3, <= x + 30.993 on its diagonal): the legal region is about 0.38 x 0.32 mm round the
+existing via (16.75, 47.6), room for one 0.5 mm via. A trial moved C30 0.59 mm south and lowered the 3V3A "U" (B.Cu
+then held a second via at (16.75, 48.2)), but DRC shorted it to the F.Cu IMU_INT1 run; reverted. The fix needs U1.98's
+IMU_INT1 escape or the F.Cu QSPI_IO2 run under U1 moved (an MCU-core reroute): next board change. The D-R23-11 entries
+and their consequence text stand.
+
+## D-R24-02. Second barrels for Q120 / Q121's gate drive; named parallel vias leave the via count and hop test (2026-11-01)
+
+R23-SAFETY-05 / D-R23-02 (P1 item 2). Q120: a barrel (15.4, 72.85) between the parallel F.Cu (15.2, 72.3)-(16.2, 73.3)
+and B.Cu (14.475, 72.2)-(15.575, 73.3) diagonals (0.442 mm apart) on 0.247 / 0.194 mm stubs inside its own pad, T'd
+into both at right angles; B.Cu 0.361 mm from Q120.9 (BAT_IN), F.Cu 1.042 mm from R121.2, hole edge 0.618 mm from the
+first barrel (16.2, 73.3). Q121: a barrel at the F.Cu run's corner (11.74, 72.3), joined to the first (11.14, 71.7) by a
+0.849 mm B.Cu diagonal under the F.Cu one (the brief's "no direct B.Cu link to Q121.4" holds: the ACT_FET_S bridge at y
+71.1 is not crossed); B.Cu 0.342 mm from ACT_FET_S, F.Cu 0.421 mm from BAT_IN, hole edge 0.549 mm. The gate networks
+(R120 / C120 at Q120, R119 at Q121) stay local on via-free B.Cu. S-8 holds through the ground family's automatic
+In1 / In2 barrel keep-outs. The Q120.4 / Q121.4 SINGLE_OPEN_EXCEPTIONS entries are gone (taps kept).
+route_check (checks): a via named in PARALLEL_VIAS (a deliberate second barrel) is now also left out of the net's
+via count (extra_vias) and of the needless-hop pairs, as it already was of the loop search; every other via counts
+and a named via that is missing or not parallel still fails. Seeded test
+`RouteCheck.test_r24_named_parallel_via_on_a_critical_net` (unnamed: track_loop, extra_vias and a hop; named: none;
+a non-parallel name: parallel_via). New entries: ACT_GATE (15.4, 72.85), (11.74, 72.3).
+
+## D-R24-03. BOOT0's second via (2026-11-01)
+
+R23-MCU-02 / D-R23-01 (P1 item 3). R5 stays on B.Cu: on F.Cu U1.94's run is boxed by U1.93's IMU_CS run and U1.95's
+I2C1_SCL (y 45.5 / 46.5), so an F.Cu R5 needs its pad 0.05 mm off U1.94's line. Instead a second barrel at the F.Cu
+run's corner (14.2, 46.0), joined to the first (13.8, 45.6) by a 0.566 mm B.Cu diagonal under the F.Cu one: F.Cu
+0.150 mm from I2C1_SCL (the board clearance floor, exactly; DRC 0), B.Cu 0.211 mm from C31.1, hole edge 0.266 mm. Named
+in PARALLEL_VIAS (BOOT0 (14.2, 46.0)); the U1.94 entry is gone.
+
+## D-R24-04. VCAP2's second via; VCAP1 stays single (2026-11-01)
+
+R23-MCU-02 / D-R23-01 (P1 item 4). VCAP2: a barrel (18.3, 36.8) on a 0.3 mm F.Cu stub to U1.73's drop and a 0.5 mm B.Cu
+stub to C20.1's run (B.Cu 0.211 mm from NRST, F.Cu 0.328 mm from U1.72, hole edge 0.283 mm); PARALLEL_VIAS VCAP2
+(18.3, 36.8); the U1.73 entry is gone. VCAP1 kept (measured): on B.Cu C19 is boxed by the 3V3 vias (29.25, 37.0) /
+(29.25, 38.65), C19.2 and C16 (no spot >= 0.55 mm from the via and >= 0.1 mm from C19.1); on F.Cu east of the via is
+U1.48's own pad (29.75-31.35). C19 to F.Cu east of U1.48 needs U1.49's GND fan-out via (31.85, 38.25) moved: next board
+change.
+
+## D-R24-05. U9's EN pull-down stays across one via (2026-11-01)
+
+D-R20-01 / owner row 29 (P1 item 5; kept, measured with this round's U9 input re-lay). Re-laying U9's input trunk
+(D-R24-17: C88 on U9.5's axis) leaves the B.Cu pocket at U9.1 about 1.4 x 2.2 mm (OVLO's x 16.4 run, the 0.3 / 0.7 mm
+trunk at x 18.25, the tap at y 85.3): R81 and C87 (two 0603s) need about 2.0 x 2.45 mm side by side, and their GND pads
+would sit in a pour island enclosed by BAT_IN and BAT_OVLO (two GND vias inside). A via pair from the F.Cu EN node was
+tried on the new trunk: no pair 0.55 mm apart fits between U9.1's L-shaped land, the trunk, C88.1 and OVLO without
+moving BAT_FAULT_N's F.Cu run to y >= 83.6, where it meets the BAT_DAMP run (y 84.7) of the hot-plug damper. The
+D-R21-05 layout, its exception entries and the per-flight check stand; next board change: U9's west cell re-laid with
+the OVLO divider (R82 / R83) and the R82 / R167 tap moved west.
+
+## D-R24-06. Row 22's three feeds stay single (2026-11-01)
+
+R19-PWR-01 / owner row 22 (P1 item 6; kept, measured). U11.2 RAW_PROTECTED (24.3, 66.0): every legal spot (for example
+(24.3, 66.6), 0.402 mm edge from the F.Cu ACT_EN_MCU run) is under D-R18-03's 0.5 mm floor for strong nodes beside the
+PC1 enable. 3V3A (16.0, 50.2): on the B.Cu trunk (16.5, 49.5)-(16.5, 49.65) a via is 0.131-0.15 mm from U1.1's pad or
+0.150 mm from QSPI_IO2 on F.Cu, and below the In2 run USB_LIMITED (y 50.85) blocks; (27.0, 49.25): D-R19-09's reasons
+(U1.19's GND stub, the pin row; a spot joining In2 only through the first via's pad) still hold. First-article pack-only
+power-up stays the screen.
+
+## D-R24-07. U402's GND island gets a second via; U10 / R8 keep theirs (2026-11-01)
+
+D-R22-02 (P2 item 7). U402.2 / R430.2: a second GND via (32.3, 60.1) 0.6 mm south of (32.3, 59.5) on a 0.3 mm B.Cu link
+(B.Cu 0.200 mm from U402.6, F.Cu 0.210 mm from SERVO4_MCU); both entries are gone. Kept (measured): U10.2 / R7.2 /
+R85.2 (9.0, 27.84): the island is enclosed by the VBUS ring (C83.1, U10.3, the J3 feed via (7.95, 27.9), y 30.0, U10.1)
+and holds two vias (GND, VBUS_SENSE (9.95, 27.7)); no third fits 0.15 mm from the ring and 0.1 mm from U10.2. R8.2 (9.95,
+30.6): every island spot is under F.Cu D4 / USB_DP (0.0-0.034 mm) or the In2 USB_LIMITED run (0.0-0.145 mm).
+
+## D-R24-08. Second vias for the power-state monitor taps (2026-11-01)
+
+D-R22-02 (P2 item 8). R60.1 (PA6's VLOGIC sense): a barrel (34.5, 62.4) on the F.Cu drop, 0.6 mm north of (34.5, 63.0),
+joined on B.Cu (B.Cu 0.150 mm from PORT_5V3, exactly the floor). U1.28 (PA4): a barrel (30.45, 51.4) joined to (30.85,
+51.8) by 0.566 mm diagonals on F.Cu and B.Cu (0.171 mm from the GND via (30.15, 52.0)). R91.1 (3V3): a second In2 via
+(28.1, 59.4) on a 0.6 mm B.Cu link north of (28.1, 60.0) (0.255 mm from R91.2). PARALLEL_VIAS VLOGIC (34.5, 62.4) and
+LOGIC_SOURCE_ST (30.45, 51.4); the three entries are gone.
+
+## D-R24-09. U401's feedback divider beside U401 on B.Cu (2026-11-01)
+
+Round 21 power lens / U401.3 entry (P2 item 9). R402 B(30.9, 12.85) rot 0 and R403 B(30.9, 14.6) rot 180 (were F(31.4,
+12.6) / F(31.4, 14.4)): the OUT run continues past its T to R402.1, FB runs straight east from U401.3 to the T at
+(31.725, 13.6) between R402.2 and R403.1, and R403.2 returns straight to U401.4 (GND): no via between U401 and its
+divider. Removed: the FB via (29.75, 13.6) and its F.Cu run, R402.1's own via (30.575, 11.6) (D-R20-02) and R403.2's
+F.Cu return via (31.4, 14.4) (`r10_fanout.tsv`). U401's OUT via moves (29.75, 12.6) -> (29.75, 11.65) on the C406.1 run
+(off R402.1's land); U401 OUT keeps two In2 vias. Courtyards: R402 / R403 0.03 / 0.05 mm from U401 / R441. PASTE_TOTALS
+253 / 375 -> 249 / 379 (four pads to B.Paste). The U401.3 entry is gone; R402.1, U401.3 and R403.2 have no single point.
+The OUT run's T (29.75, 12.85) lies 0.075 mm inside R402.1's land (route_check review items pad_end_offcentre /
+segment_inside_pad, 0.325 mm; not blocking, AUD-10). Measured alternatives: the C406.1 drop on the land's centre line
+(x 30.075) passes 0.085 mm from J440's second via (30.5, 9.95), and a T clear of the land (drop at x <= 29.475) puts the
+OUT via 0.057 mm from GPS_RX_MCU's F.Cu chamfer unless it, the F.Cu split via (29.75, 9.95) and C406.1's exit all move
+(C406.1 then leaves its land off-centre instead): kept. `test_r20_fb_tap_survives_one_via_open` cuts all three pieces
+at the T.
+
+## D-R24-10. USB OV and ILIM legs (2026-11-01)
+
+D-R21 R87.1 / R85.1 entries (P2 item 10). R87.1's input layer change (16.0, 28.0) gets a second barrel (16.6, 28.0) on
+0.2 mm B.Cu and 0.4 mm In2 links (PARALLEL_VIAS USB_LIMITED (16.6, 28.0)); its entry is gone. Kept (measured): R87.1's
+drop (22.0, 62.25): F.Cu BUZZ_OUT (y 61.55), B.Cu RAW_ACT (x 22.8) and PYRO1_CONT_MID close every spot but (21.4, 62.25),
+where the second barrel and its In2 link neck the In2 3V3 fill under 0.5 mm (K-plane); R85.1 (14.82, 26.0): no legal
+spot (search, 1.6 mm radius). r10_stage_check now lets a named second barrel come with a later family (final stage
+unchanged).
+
+## D-R24-11. J400.2's ESD clamp D402 fitted (2026-11-01)
+
+R22-REQUIREMENTS-03 / R23-SAFETY-06 (P3 item 11). The root decided this on 2026-11-01, under the owner's standing
+instruction to decide from the flight physics. No AGENTS section 2 rule changes.
+
+- **Why:** J400 is turned with a metal screwdriver on the rail every flight, so a discharge into it is a realistic event.
+  Unclamped, EN sees 7.5-9.6 V against its 6.5 V absolute maximum (TI SLVSFC9C).
+- **Why a clamp to GND is safe:** it cannot turn the board on or bypass the switch. Shorted, it only holds the board off,
+  which the pad check sees. Open, the board is back to the old state, and the handling rule stays as a second layer.
+- **Datasheet survey (round 24 research):** no clamp on the EN node meets both the leakage and the clamp limit.
+  - Infineon ESD103-B1-02EL (on the BOM): leakage 50 nA max at 15 V, but trigger 21 V typ, with no minimum or maximum.
+  - Semtech SRV05-4: VBR >= 6 V, no maximum, 5 uA at 5 V.
+  - ST USBLC6-2SC6: VBR >= 6 V, 150 nA at 5.25 V.
+  - Littelfuse SMBJ12CA: VBR 13.3 V min.
+  - JSCJ BAT54A: clamps only to a rail that is dead with the board off.
+  - Nexperia BZX84-B5V1: clamps (<= 5.92 V at 17 mA, Calculation) but leaks 2 uA at 2 V. EN's Thevenin is 227 kOhm, so
+    about 1 uA stops a 6.0 V pack turning on.
+  - None of them gives a leakage limit at 85 C.
+
+  An ESD103-B1-02EL from J400.2 to GND, at the terminal and ahead of R165, meets both limits.
+
+Before -> after, measured on the round 24 board:
+
+- **Part:** D402 is a ninth Infineon ESD103-B1-02EL E6327, on the port clamps' line C535146 (`circuit.json`, battery_entry
+  sheet). The C535146 line goes 8 -> 9 per board: no new code or feeder fee, still 81 JLC codes.
+  - Placed parts: 205 -> 206.
+  - Footprints: 215 -> 216.
+  - CPL: one new B.Cu row.
+  - B.Paste: 379 -> 381.
+- **Placement:** B(4.45, 65.9), rot 90 (`r10_place.tsv`), under J400's body on the wire side. It sits between pins 1 and
+  2, as D440 sits between J440's pins 3 and 4.
+  - Its centre is 3.405 mm from J400.2's.
+  - M-6 gaps are 1.768 / 1.808 mm to J400.2 / J400.1, against the 1.5 mm floor.
+  - It is clear of the 2:SW legend below it, and its via is clear of the J400 designator and the BAT legend on top.
+- **Tap:** B.Cu from J400.2's own pad, west then north into D402.1 (`r10_route_power.control`): (7.4, 67.6) ->
+  (4.81, 67.6) -> (4.45, 67.24) -> (4.45, 66.225). D-R24-17's pass chamfers the bend.
+  - Length: 4.114 mm, pin centre to clamp pad centre.
+  - R165 is fed by the separate F.Cu run, so a discharge into the screw reaches D402 before R165.
+- **Return:** D402.2 runs 0.7 mm east to its own GND via (5.15, 65.575), on In1 GND and In2's GND region. The via ring
+  is 1.79 / 2.127 mm from J400.1 / J400.2's barrel walls.
+- **Gates (`tools/check_r10.py`, `m3_design/check_actuators.py`, `m3_design/r10_sch_check.py`):**
+  - S-5: BAT_SW_RETURN's parts go {J400, R165} -> {J400, R165, D402}. Its pads must now be exactly {J400.2, R165.1,
+    D402.1}. D402.2 must be GND, and D402 must be the two-pad ESD103-B1-02EL C535146.
+  - K-actuators (r10 profile): members {J400.2, R165.1} -> {J400.2, R165.1, D402.1}, plus D402.2 on GND and D402 coded
+    C535146.
+  - S-4: D402 joins SAFETY_FITTED, so it must be fitted and in the BOM and CPL.
+  - K-contract: PARTS pins D402 as C535146 on M3_TSLP_2_20.
+  - K-ports: PORT_CLAMPS gains (J400, 2, D402.1, R165). The clamp must be within 4.5 mm of track from J400.2 without
+    passing R165, and its GND via within 1.0 mm (it is 0.7 mm).
+  - r10_sch_check seeds: the clamp removed; its return moved off GND.
+- **Seeded tests:**
+  - `RealBoardSeeds.test_r24_j400_contact_clamp`. Each seed fails:
+    - D402.2 on BAT_ENABLE, BAT_SW_RETURN or 3V3;
+    - R81.2 added as a fourth member;
+    - D402 deleted (S-5, K-actuators and S-4 all fail);
+    - D402 re-coded;
+    - D402 fed only through R165 (K-ports).
+  - `test_s5_switch_topology_and_resistor_values` and `test_s5_switch_contact_cannot_be_bypassed`, on the synthetic board
+    with D402. A fourth member fails the exact pad set.
+  - `test_single_switch_contract_and_seeds`.
+  - `test_r21_port_clamps_beside_their_pins` (J400.2 4.114 mm) and `test_r22_clamp_gnd_returns` (D402.2 0.7 mm).
+- **Kept:**
+  - D-R19-02's spacing and the BAT_ENABLE keep-outs: no copper east of J400 moved.
+  - S-8, K-plane and T-1: the via is outside the west forward tab band.
+  - The 45-degree rule and route_check at 0.
+  - The J400 chain's AUD-2 status.
+  - DRC 0 and the 2304 hot-plug cases.
+- **EN:** D402 leaks at most 50 nA at 15 V (Infineon ESD103 Rev 1.3).
+  - With the switch closed, J400.2 sits at about 5.2 V at 8.4 V. That leakage moves EN by at most
+    50 nA x R80 x R81 / (R80 + R165 + R81) = 5.7 mV (Calculation).
+  - That is the same as 25 nA at the EN node, a quarter of the 0.1 uA EN leakage D-R20-11's timing already carries.
+  - The EN timing figures are kept. Inference: there is no 85 C leakage figure.
+  - A discharge at the screw is diverted before R165, so C87 rises about 14 mV (21 V on the 150 pF). Inference: there is
+    no trigger tolerance.
+- **Cost:** the C535146 line goes 8 -> 9 at $0.2306 each. On the final files (cost 2026-11-02T01:43:55Z) the board
+  is $85.60 per board at 5 boards, $1.19 over the $84.41 cap (was $85.36 before D402). C535146 has 201 in stock
+  (194 orderable) against 45 needed (stock 2026-11-02T01:42:53Z). The cap stays the owner's row.
+
+Sources: TI SLVSFC9C; Infineon ESD103 Rev 1.3 (LCSC C535146); Semtech SRV05-4; ST USBLC6-2SC6 Rev 5; Littelfuse SMBJ v4;
+JSCJ BAT54A rev B; Nexperia BZX84 Rev 7 (LCSC datasheets, read 2026-11-01).
+
+## D-R24-12. Fab body outlines: not drawn in this pass (2026-11-01)
+
+R22-MANUFACTURING-02 (P3 item 12; not done). The 14 parts' lands (Q122, Q123, D120, D123, J2, U1, U2, U3, U4, U5, D4,
+D121, Y1, J3) are vendor footprints pinned by SHA-256 (K-lands) whose R9 instances are kept, not re-read (r10_pcb;
+r10_post.sync_silk syncs silkscreen only). Drawing bodies needs 11 library edits, a Fab sync in r10_post and 11 re-pins;
+deferred to the next board pass with this round's time spent on items 1-11 and 17. The root kept it deferred
+(2026-11-01): no stated rule requires Fab body outlines. The Fab references keep using the courtyard box for these parts
+(D-R22-06).
+
+## D-R24-13. JLC's order-number placeholder removed (2026-11-01)
+
+R23-MANUFACTURING-02 / D-R23-04 (P3 item 13). r10_post no longer draws JLCJLCJLCJLC and K-legends' silkscreen allowlist
+no longer admits it (`JLC_ORDER_MARK` kept as the withdrawn text). Seeded test: `test_silk_allowlist` (the placeholder now
+fails like any other text).
+
+## D-R24-14. East panel tabs stay over In2 power: deviation kept (2026-11-01)
+
+Owner rows 16 / 28 (P3 item 14; kept, measured). The In2 RAW_PROTECTED strip (x 44.0-45.7, y 4.4-63.3, U400's forward
+feed) and the PORT_5V3 band (x 41.0-43.7, y 4.7-63.0) run side by side the whole east edge, and the strip joins the
+forward RAW region only at its forward end (y 63.3), inside the east forward band (y 63.75-68.75). Any east tab band (x
+43-46) therefore lies over one of them; stepping both inboard over a tab length needs the PORT_5V3 band re-cut and the
+strip fed from a new junction: a plane redesign, not a local move. The west tabs (aft keep-out, forward GND) stay the
+GND-only option; T-1 and the tab bands are unchanged.
+
+## D-R24-15. Short-edge parts: R92 and TP88 moved; the rest stay expected DFM queries (2026-11-01)
+
+R23-MANUFACTURING-05 (P3 item 15). R92 F(31, 87.5) -> F(31, 86.7) and TP88 F(35.5, 87) -> F(35.5, 86.4), courtyards >= 2.5
+mm from the forward edge; their RAW_PROTECTED / GND vias move with them ((30.175, 85.9); (32.65, 86.7); (36.6, 86.4)).
+Kept: C95 (C89 sits 1.0 mm aft of it), R166 (the hot-plug damper's 2512, on the BAT_DAMP run), and the aft R400 / R401 /
+R404 / C403 (U400's feedback divider row and input cap under the buck loop): each needs 0.5-1.5 mm of a re-laid
+maker loop or hot-plug feed.
+
+## D-R24-16. Optional cleanliness: not taken (2026-11-01)
+
+P3 item 16. The GPS pair's forced jogs (R20-RTE-03) and the VLOGIC in-line via pair (R20-RTE-04) did not fall out of
+the moves above; unchanged.
+
+## D-R24-17. Every 90-degree bend chamfered; route_check fails any that remain (2026-11-01)
+
+The owner (2026-11-01): "I see 90 degree bends lol. why not 45". route_check's new RULE category `right_angle` (every
+net, every copper layer): two track ends of one layer and net meeting at 89.5-90.5 degrees with nothing else there; at
+a pad or via only when the inner corner N + h_b u_a + h_a u_b lies outside the holder's copper (a bend of half-width h
+at a via of radius r is exempt when h sqrt(2) <= r); a T or three or more ends is not a bend. Seeded tests
+`RouteCheck.test_r24_right_angle` (a plain bend fails; its chamfered form passes; bends inside a 0.6 mm via and a 0.6 mm
+pad pass; a 0.5 mm track at a 0.5 mm via fails; a T passes); the clean-route and real-board tests updated. K-ports'
+measured J440.3 / J440.4 clamp runs go 4.075 / 4.175 -> 3.864 / 3.964 mm (each loses 0.211 mm to the chamfer at its
+clamp corner; `test_r21_port_clamps_beside_their_pins`, whose d08 seed now drops the chamfered pieces).
+On 5516eeec: 59 bends (F.Cu 25: 24 plain + 1 via; B.Cu 31: 26 plain + 3 via + 2 pad; In2 3 plain). After: 0.
+- The 6 pad / via bends are redrawn at source (below); the ground family's last step,
+  `r10_route.chamfer_right_angles`, chamfers the 53 plain bends of the drawn board (54 with D-R24-11's D402 tap): each
+  becomes one 45-degree diagonal with a fixed cut (0.36 mm per axis-aligned leg, a 0.509 mm diagonal; 0.26 mm per axis
+  on diagonal legs), or the
+  bend's own named cut in CHAMFER_CUTS: pairs turning together keep their pitch (CAM_FAULT_N 0.65 outside CAM_PWR_EN,
+  pitch 0.5; SD_SCK 0.77 outside SD_MISO, pitch 0.7: inner + 0.586 p); wide or short legs (BAT_IN F.Cu 0.72 for the
+  1.0 mm feed, 3V3A 0.25, GND 0.3 / 0.33, ARM1_SENSE 0.35); clearance-bound corners (BUZZ_G 0.15 / 0.17 by Q123.2,
+  LED_YEL 0.2 by U1.89, RAW_ACT 0.34 by R87.1); >= 1 mm chamfers where a sub-1 mm one would make a staircase (GPS_TX_MCU,
+  GPS_RX_MCU, USB_LIMITED In2 x 2: 0.75). USB: the only USB data bends are the two corners of USB_DM's strap between
+  J3.B7 and J3.A7, west of the receptacle's contacts ((5.75, 30.05) / (5.75, 31.05), F.Cu). Each takes the fixed cut,
+  so the strap, a stub between the two D- contacts and not on the D+ / D- run to D4 / U1, is 0.422 mm shorter
+  (USB_DM copper 19.708 -> 19.286 mm). USB_DP has no bend, so the pair's run is unchanged (full-speed USB: the stub
+  change is immaterial, Inference). A cut never leaves a leg piece under max(width, 0.2 mm), never removes
+  copper another item joins and never makes a chamfer under max(width, 0.2 mm): such a bend fails the build.
+- Redrawn at source: U9's input trunk runs straight up U9.5's axis through C88.1 (C88 B(18.67, 83.56) rot 0, was
+  B(19.4, 83.95) rot 90; its GND via (19.59, 84.06)), the 1.0 mm run reaches the IN via (now (17.5, 87.15)) on one
+  diagonal, and the R82 / R167 tap leaves the trunk at a T (y 85.3): the C88.1 pad bend, the trunk corner and the 90
+  degrees at the IN via are gone, and the F.Cu feed's corner takes a 1.018 mm chamfer; C82.1's two In2 vias each leave
+  its edge on their own 0.7 mm leg ((20.3, 79.1); (21.1, 78.25), was a 0.4 mm link to (21.1, 79.1)); U400's second
+  input via sits on the drop (14.1, 8.5) before a 45-degree turn into C401.1; U401's OUT run leaves the U401.1 / U401.2
+  link at a T between the pins, and the C406.1 run meets it at a T (its In2 via at (29.75, 11.65)); CAM_FAULT_N's B.Cu
+  drop is one chamfered bend into R432.1 (was a 0.67 mm piece between two diagonals); RAW_ACT's sense tap leaves
+  R134.2's 2512 land on its own line (no 0.177 mm step beside the chamfer).
+POWER_NARROW re-measured (U9 IN 0.3 mm bar entry to C88.1 1.96 mm, 0.7 mm C88.1 feed 1.74 mm; U401 OUT 0.25 mm pin links
+2 x 0.25 mm; the RAW_PROTECTED via link is gone). The hot-plug model passes all 2304 cases (minimum -14.81 V, steepest
+fall 8.99 V/us, rise 5.09 V/us; C88 still intercepts the feed). r10_stage_check treats right_angle as pending before the
+ground family (whose last step chamfers); the final stage and check.sh gate it.
+
+The record index is now **207 unique D IDs through D-R24-17**.

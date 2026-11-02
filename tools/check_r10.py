@@ -240,6 +240,7 @@ PARTS = {'J1': ('C466970', 'M3_DB125_2P_GN'),
          'Q121': ('C431196', 'M3_AONR21357_DFN3x3A_EP1')}
 PARTS['R432'] = ('C25744', 'R0402')  # AUD-7, retained camera switch FAULT pull-up.
 PARTS['J430'] = ('C164170', 'M3_MICROSD_MOLEX_472192001')
+PARTS['D402'] = ('C535146', 'M3_TSLP_2_20')  # D-R24-11: J400.2's contact clamp, the port clamps' ESD103-B1-02EL line
 REMOVED = {'U30', 'U31', 'J30', 'J31', 'C121', 'C150', 'C151', 'U7', 'U8', 'L3', 'J124'}
 # AUD-4 / AUD-5 / AUD-8: reject stale parts as well as removing required-population obligations.
 AUD_REMOVED = {'J123', 'R160', 'R161', 'C160', 'D122', 'TP84', 'TP85', 'TP86', 'TP87', 'TP89', 'TP92',
@@ -871,7 +872,8 @@ def functional(text):
 # part and check_actuators' pinned parts.
 SAFETY_FITTED = {'R134', 'R126', 'R127', 'R128', 'C126', 'Q124', 'Q120', 'Q121', 'R119', 'R120', 'C120', 'R121', 'Q122',
                  'J400', 'R80', 'R165', 'R122', 'R123', 'J121', 'D120', 'R129', 'R130', 'R131', 'R132', 'R133', 'R173', 'R175', 'R178', 'R180',
-                 'C127', 'C128', 'C129'}
+                 'C127', 'C128', 'C129',
+                 'D402'}      # D-R24-11: J400.2's ESD clamp to GND, ahead of R165 (EN absolute maximum 6.5 V)
 REQUIRED_FITTED |= SAFETY_FITTED
 RAW = 'RAW_ACT'
 ARMED = (RAW, 'PYRO1_IGN', 'PYRO1_OUT')
@@ -2403,18 +2405,32 @@ def s4(ctx):
 
 
 def s5(ctx):
-    """The external J400 screw switch is the arming contact, isolated by 470 k on each side."""
+    """The external J400 screw switch is the arming contact, isolated by 470 k on each side; D-R24-11: J400.2's own
+    ESD clamp D402 (ESD103-B1-02EL) to GND is the one further member of BAT_SW_RETURN, ahead of R165."""
     issues, ev = [], {}
     pins = {f'{ref}.{p.GetNumber()}': p.GetNetname() for ref, f in ctx.fps.items() for p in f.Pads()}
     members = net_parts(ctx.board)
-    for net, want in (('BAT_SW_SOURCE', {'J400', 'R80'}), ('BAT_SW_RETURN', {'J400', 'R165'})):
+    for net, want in (('BAT_SW_SOURCE', {'J400', 'R80'}), ('BAT_SW_RETURN', {'J400', 'R165', 'D402'})):
         if members.get(net) != want:
             issues.append(f'S-5: {net} must touch only {sorted(want)}')
+    for net, want in (('BAT_SW_SOURCE', {'J400.1', 'R80.2'}), ('BAT_SW_RETURN', {'J400.2', 'R165.1', 'D402.1'})):
+        got = {pin for pin, n in pins.items() if n == net}
+        if got != want:
+            issues.append(f'S-5: {net} pads must be exactly {sorted(want)} (are {sorted(got)})')
     expected = {'J400.1': 'BAT_SW_SOURCE', 'J400.2': 'BAT_SW_RETURN', 'R80.1': 'BAT_IN',
-                'R80.2': 'BAT_SW_SOURCE', 'R165.1': 'BAT_SW_RETURN', 'R165.2': 'BAT_ENABLE', 'U9.1': 'BAT_ENABLE'}
+                'R80.2': 'BAT_SW_SOURCE', 'R165.1': 'BAT_SW_RETURN', 'R165.2': 'BAT_ENABLE', 'U9.1': 'BAT_ENABLE',
+                'D402.1': 'BAT_SW_RETURN', 'D402.2': 'GND'}
     for pin, net in expected.items():
         if pins.get(pin) != net:
             issues.append(f'S-5: {pin} must be {net} (is {pins.get(pin)})')
+    clamp = ctx.fps.get('D402')
+    if clamp is None:
+        issues.append("S-5: D402 (J400.2's ESD clamp, D-R24-11) is missing")
+    else:
+        code = next((fld.GetText() for fld in clamp.GetFields() if fld.GetName() == 'LCSC'), None)
+        if code != 'C535146' or clamp.GetValue() != 'ESD103-B1-02EL' or \
+                sorted(p.GetNumber() for p in clamp.Pads() if p.GetNumber()) != ['1', '2']:
+            issues.append(f'S-5: D402 must be the two-pad ESD103-B1-02EL C535146 (is {clamp.GetValue()} {code})')
     j400 = ctx.fps.get('J400')
     if j400 is not None and sorted(p.GetNumber() for p in j400.Pads() if p.GetNumber()) != ['1', '2']:
         issues.append('S-5: J400 must have exactly two switch contacts')
@@ -2713,7 +2729,8 @@ POWER_PATHS = (   # end None: every via of the net (the plane transitions) ends 
          amps=1.249, vias=dict(count=2, drill=0.3, pad=0.5, plane='In2.Cu')),
     # D-R19-14: the AUX port's F.Cu feed (In2 under J440 is 3V3) leaves the In2 PORT_4V8 region through two vias,
     # (29.75, 9.95) and (30.5, 9.95). Its path is held to F.Cu: through (29.75, 9.95) U401's B.Cu run reaches a third
-    # via (29.75, 12.6), which would otherwise count for the feed and hide the loss of (30.5, 9.95) (CAD hand-back).
+    # via (29.75, 11.65 since D-R24-09), which would otherwise count for the feed and hide the loss of (30.5, 9.95)
+    # (CAD hand-back).
     dict(name='J440 feed', net='PORT_4V8', start={'J440': ('1',)}, end=None, through={}, floor=0.4, amps=1.9,
          layers=('F.Cu',), vias=dict(count=2, drill=0.3, pad=0.5, plane='In2.Cu')),
     # R19-GATE-04: the GPS and radio ports' B.Cu feeds from their In2 PORT_4V8 via (one each, as drawn).
@@ -2740,14 +2757,16 @@ POWER_PATHS = (   # end None: every via of the net (the plane transitions) ends 
                                             'measured on the R10 board (D-R19-09)'),))),
 )
 POWER_NARROW = [  # (net, layer, width mm, length mm, (x0, y0, x1, y1) ends sorted, reason), measured on the R10 board
-    ('BAT_IN', 'B.Cu', 0.7, 1.03, (19.4, 84.37, 19.4, 85.4), 'C88.1 local feed from the IN via run'),
-    ('BAT_IN', 'B.Cu', 0.7, 1.15, (18.25, 84.37, 19.4, 84.37), 'C88.1 to the U9.5 entry'),
-    ('BAT_IN', 'B.Cu', 0.7, 0.97, (18.25, 83.4, 18.25, 84.37), 'C88 local feed down to the U9.5 entry'),
-    ('BAT_IN', 'B.Cu', 0.3, 1.8, (18.25, 81.6, 18.25, 83.4), 'U9.5 IN bar entry at its 0.3 mm width (0.6 mm outside it)'),
+    # D-R24-17: U9's input runs straight up U9.5's axis through C88.1 (C88 on that axis below U9), so the bar entry runs
+    # on to C88.1 at its 0.3 mm width (0.76 mm outside the bar; K-width's 2 mm limit holds) and the 0.7 mm bypass section
+    # is the one straight piece from the IN run's tap T to C88.1.
+    ('BAT_IN', 'B.Cu', 0.3, 1.96, (18.25, 81.6, 18.25, 83.56), 'U9.5 IN bar entry to C88.1 at its 0.3 mm width'),
+    ('BAT_IN', 'B.Cu', 0.7, 1.74, (18.25, 83.56, 18.25, 85.3), 'C88.1 local feed from the IN run\'s tap T'),
     ('RAW_PROTECTED', 'B.Cu', 0.3, 1.8, (18.75, 79.8, 18.75, 81.6), 'U9.6 OUT bar entry at its 0.3 mm width'),
-    ('RAW_PROTECTED', 'B.Cu', 0.4, 0.8, (20.3, 79.1, 21.1, 79.1), 'link between the two U9 OUT In2 vias'),
     ('PORT_5V3', 'B.Cu', 0.25, 0.5, (26.45, 12.6, 26.45, 13.1), 'U401.10 to U401.9 IN pin link at the 0.5 mm DSK pitch'),
-    ('PORT_4V8', 'B.Cu', 0.25, 0.5, (28.75, 12.6, 28.75, 13.1), 'U401.1 to U401.2 OUT pin link at the 0.5 mm DSK pitch'),
+    # D-R24-17: U401's OUT run leaves the U401.1 / U401.2 link at a T between the pins (no 90-degree bend in a pad).
+    ('PORT_4V8', 'B.Cu', 0.25, 0.25, (28.75, 12.6, 28.75, 12.85), 'U401.1 to the OUT run\'s T at the 0.5 mm DSK pitch'),
+    ('PORT_4V8', 'B.Cu', 0.25, 0.25, (28.75, 12.85, 28.75, 13.1), 'U401.2 to the OUT run\'s T at the 0.5 mm DSK pitch'),
 ]
 # The fire current returns from Q124's source pads 1-3 to In1 GND through an F.Cu bar and two via stubs (D-R3-03: the
 # 0.3 mm bar rises 16 C at 4.2 A for 20 ms, adiabatic Inference) and >= 2 vias into the In1 GND fill.
@@ -2996,64 +3015,32 @@ _ILIM_OPEN = ('TPS2553 SLVS841G section 8.5.1 p16: the current-limit threshold i
               'by TI: Inference)')
 _U10_GND_OPEN = ("U10's only GND via (a B.Cu island with U10.2 and R7.2): open floats the TPS2553's ground (TI SLVS841G "
                  'states no open-GND behaviour: Inference); bench USB loss only. Second via at the next board change')
-_U402_GND_OPEN = ("U402's only GND via (a B.Cu island with U402.2): open floats the TPS2553's ground (TI SLVS841G states "
-                  'no open-GND behaviour: Inference); camera supply loss only, no flight hazard. Second via at the next '
-                  'board change')
 _U4_GND_OPEN = ("the IMU's only power-ground via (pins 6 / 7, 'GND, 0 V supply', DS15034 Rev 1 pin table): open, U4's "
                 'supply ground floats and the IMU is dead (behaviour not stated by ST: Inference), so launch is not detected '
                 'and the primary does not fire (fail-safe; the Blue Jay covers recovery) and roll control is lost. Second '
                 'via at the next board change')
 SINGLE_OPEN_EXCEPTIONS = [
-    ('U401.3', 'via PORT_LDO_FB (29.75, 13.60)',
-     "U401's FB to its F.Cu divider R402 / R403: no legal second via spot (round 21 power lens scan); open, FB floats on "
-     "+/-100 nA (SBVS282A p5) and PORT_4V8 is undefined up to dropout. Respin item: R402 / R403 beside U401 on B.Cu"),
     ('R87.1', 'via USB_LIMITED (22.00, 62.25)',
      "U11's USB over-voltage divider top off its In2 run: RAW_ACT (x 22.8) and PYRO1_CONT_MID (y 61.8) leave no B.Cu "
      'second path; open, the USB over-voltage cut-off is lost (USB is bench power only)'),
-    ('R87.1', 'via USB_LIMITED (16.00, 28.00)',
-     'the USB input via U10.6 -> In2: open, U11 IN1 loses USB with R87 (no over-voltage reaches the board)'),
+    # D-R24-10: R87.1's USB input via (16.0, 28.0) has a second barrel (16.6, 28.0); its entry is gone.
     ('R85.1', 'via USB_ILIM (14.82, 26.00)', "U10's ILIM: " + _ILIM_OPEN),
-    # D-R22-02 (R22-POWER-01): each of these two GND vias is a TPS2553's only ground, so an open floats the IC's
-    # ground, not only R_ILIM's return.
+    # D-R22-02 (R22-POWER-01): this GND via is a TPS2553's only ground, so an open floats the IC's ground, not only
+    # R_ILIM's return. D-R24-07: U402's island (U402.2 / R430.2) has a second via (32.3, 60.1); its entries are gone.
     ('R85.2', 'via GND (9.00, 27.84)', _U10_GND_OPEN),
-    ('R430.2', 'via GND (32.30, 59.50)', _U402_GND_OPEN),
     ('U10.2', 'via GND (9.00, 27.84)', _U10_GND_OPEN),
     ('R7.2', 'via GND (9.00, 27.84)', 'R7 (CC1 Rd) shares U10.2\'s island: ' + _U10_GND_OPEN),
-    ('U402.2', 'via GND (32.30, 59.50)', _U402_GND_OPEN),
     ('R8.2', 'via GND (9.95, 30.60)',
      "R8 (CC2 Rd)'s only GND via (a B.Cu island): open, a USB-C source sees no CC2 sink (with R7's island open too, no "
      'sink at all); bench USB only. Second via at the next board change'),
-    # D-R22-02 (R22-POWER-02): the power-state monitor inputs, each on one via (second vias at the next board change).
-    ('R60.1', 'via VLOGIC (34.50, 63.00)',
-     "PA6's VLOGIC sense: open, R61 holds PA6 at 0 V, which the documented firmware rule reads as a permanent brown-out "
-     '(logging and UARTs shed for the rest of the flight; no pyro, deployment or servo effect: Inference); a bench check '
-     'reads PA6 = VLOGIC / 11. Second via (or an F.Cu feed from C84.1) at the next board change'),
-    ('U1.28', 'via LOGIC_SOURCE_ST (30.85, 51.80)',
-     "PA4's ST line from U11.9 and R91: open floats PA4, so the port UARTs may flap or stay off (Inference). Second via "
-     'at the next board change'),
-    ('R91.1', 'via 3V3 (28.10, 60.00)',
-     "R91 (ST pull-up)'s 3V3: open, PA4 can read 'battery' on USB-only power (Inference). Second via at the next board "
-     'change'),
-    # D-R23-01 (R23-MCU-02): measured on 5516eeec; each the net's only via, a second via (or R5 on F.Cu beside U1.94) at
-    # the next board change.
-    ('U1.94', 'via BOOT0 (13.80, 45.60)',
-     "BOOT0's only link to its pull-down R5 10 kOhm: open, BOOT0 floats (DS12110 Rev 8 gives BOOT0 no pull: Inference), so "
-     'at the next reset the MCU may enter the ROM loader and the primary recovery and roll control go silent; fire stays '
-     'safe (PC1 / PE4 stay analog with R123 / R127); on the pad the missing telemetry shows it, after an in-flight reset '
-     'the Blue Jay is the only deployment'),
+    # D-R22-02 (R22-POWER-02): the power-state monitor inputs R60.1 / U1.28 / R91.1 each have a second via since
+    # D-R24-08; their entries are gone.
+    # D-R23-01 (R23-MCU-02): measured on 5516eeec; each the net's only via. D-R24-04 / -05 give VCAP2 (U1.73) and BOOT0
+    # (U1.94) a second via; D-R24-09 puts U401's divider beside it (U401.3: no via).
     ('U1.48', 'via VCAP1 (29.25, 38.00)',
      "VCAP1's only link to C19: open, the core LDO keeps one 2.2 uF instead of DS12110 Rev 8's two (Table 124 p. 216: CEXT "
      '2.2 uF +/-20 %, ESR < 100 mOhm); its stability then is an Inference'),
-    ('U1.73', 'via VCAP2 (18.00, 37.30)', "VCAP2's only link to C20: as U1.48 (DS12110 Rev 8 Table 124 p. 216)"),
-    # D-R23-02 (R23-SAFETY-05): the only link from R121 to each FET's gate (they meet only at R121.1 on F.Cu); the off
-    # state stays defined locally (R120 / C120 at Q120, R119 at Q121, D-R18-02). A second via each at the next board change.
-    ('Q120.4', 'via ACT_GATE (16.20, 73.30)',
-     'open, Q120 stays off and, with PC1 high, the bus is fed through its body diode (AONR21357 VSD 0.7 typ / 1.0 V max at '
-     '1 A, p. 2): the four-stall fire current falls to 1.128 / 1.063 A against the 1.125 A floor (still >= 1.39 x the '
-     "maker's 0.75 A all-fire); the ground refusal 'powered BUS >= 0.96 x the VLOGIC_SENSE pack voltage after 100 ms' "
-     '(firmware rule 4) catches it'),
-    ('Q121.4', 'via ACT_GATE (11.14, 71.70)',
-     'open, Q121 stays off and the bus stays dead: the powered-bus check refuses (fail-safe)'),
+    # D-R23-02 (R23-SAFETY-05): the Q120.4 / Q121.4 gate drives from R121 each have a second via since D-R24-02.
     # D-R23-11 (R23-GATE-07): the GND via under U4 alone carries U4.6 / U4.7 (U4.2 / U4.3 reach GND another way).
     ('U4.6', 'via GND (16.75, 47.60)', _U4_GND_OPEN),
     ('U4.7', 'via GND (16.75, 47.60)', _U4_GND_OPEN),
@@ -3210,7 +3197,10 @@ def s7(ctx):
 PORT_CLAMPS = (('J410', '3', 'D410.1', 'R441'), ('J410', '4', 'D411.1', 'R440'),
                ('J420', '3', 'D420.1', 'R451'), ('J420', '4', 'D421.1', 'R450'),
                ('J440', '3', 'D440.1', 'R471'), ('J440', '4', 'D441.1', 'R470'),
-               ('J9', '3', 'D401.1', 'R100'), ('J9', '4', 'D400.1', 'R101'))
+               ('J9', '3', 'D401.1', 'R100'), ('J9', '4', 'D400.1', 'R101'),
+               # D-R24-11: J400.2's contact clamp, on the screw side of R165 (470 k) as the port clamps sit on the wire side
+               # of their 1 k resistors; measured on the round 24 board 4.114 mm (pin to clamp) / 0.7 mm (clamp to via).
+               ('J400', '2', 'D402.1', 'R165'))
 CLAMP_PATH_MAX = 4.5           # mm, pin centre to clamp pad centre along the track graph
 
 
@@ -4095,12 +4085,14 @@ def word_legends(board, items=None, subjects=WORD_LEGENDS_R10, seams=WORD_SEAMS,
     return issues, evidence
 
 
-# R19-GATE-07: AGENTS.md section 3 allows on silkscreen only designators, the terminal, arming and connector legends, the
-# revision legend and JLC's order-number placeholder. Every visible silkscreen text (board text, text box, footprint
-# text and field, either face) must be one of: a footprint's own Reference field (or a board text naming a footprint), a
-# TERMINAL_PINS_R10 pin legend, a WORD_LEGENDS_R10 word, a PORT_LEGENDS_R10 row, SERVO_HARNESS_NOTE, a PINNED_TEXTS
-# text or the placeholder. Which legend sits where stays with the other K-legends checks.
-JLC_ORDER_MARK = 'JLCJLCJLCJLC'     # m3_design/r8_post.ORDER_MARK (docs/ORDERING.md)
+# R19-GATE-07: AGENTS.md section 3 allows on silkscreen only designators, the terminal, arming and connector legends and
+# the revision legend. Every visible silkscreen text (board text, text box, footprint text and field, either face) must
+# be one of: a footprint's own Reference field (or a board text naming a footprint), a TERMINAL_PINS_R10 pin legend, a
+# WORD_LEGENDS_R10 word, a PORT_LEGENDS_R10 row, SERVO_HARNESS_NOTE or a PINNED_TEXTS text. Which legend sits where stays
+# with the other K-legends checks. D-R24-13 (R23-MANUFACTURING-02): JLC withdrew the order-number mark in May 2026 and
+# asks for no JLCJLCJLCJLC text (https://jlcpcb.com/help/article/How-to-mark-on-PCB, updated 2026-05-22), so the
+# placeholder is no longer allowed.
+JLC_ORDER_MARK = 'JLCJLCJLCJLC'     # withdrawn (D-R24-13): not allowed on silkscreen
 
 
 def silk_allowlist(board, items=None):
@@ -4108,7 +4100,7 @@ def silk_allowlist(board, items=None):
     import pcbnew
     refs = {f.GetReference() for f in board.GetFootprints()}
     allowed = ({f'{n}:{name}' for _, pins in TERMINAL_PINS_R10 for n, name in pins} | set(WORD_LEGENDS_R10)
-               | {SERVO_HARNESS_NOTE, JLC_ORDER_MARK} | {text for _, text in PINNED_TEXTS})
+               | {SERVO_HARNESS_NOTE} | {text for _, text in PINNED_TEXTS})
 
     def port_row(text):
         m = re.fullmatch(r'(J\d+)((?:\s+\d+:\S+)+)', text)
@@ -5167,7 +5159,8 @@ GENERATED_SHA256 = {
     'M3_SRP5030TA': '33ab57ef2aecc64a129326274e1cce2abb16e5e27cdce55a2394a4fe12ffade0',
     'M3_TPS7A91_DSK10': '4d4f03f099a74f3a576cce028c3ff91cbe698e7bd22c2d573ca73d072321629d',
 }
-PASTE_TOTALS = {'F.Paste': 253, 'B.Paste': 375}
+PASTE_TOTALS = {'F.Paste': 249, 'B.Paste': 381}     # D-R24-11: D402's two B.Paste apertures (D-R24-09: R402 / R403
+#                                                      moved to B.Cu, 253 / 375 -> 249 / 379; D-R23-09)
 
 
 def paste_totals(board, totals=None):

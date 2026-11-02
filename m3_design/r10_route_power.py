@@ -64,12 +64,16 @@ def battery(d):
     # capacitor bus within its pad rather than introducing a tiny diagonal.
     t('BAT_IN','F',BAT,[p('D8.1'),(12.525,75.825),(12.525,79.5),p('C96.1'),p('C89.1'),p('C95.1')])
     t('BAT_IN','B',BAT,[p('J1.1'),(13.0,74.1),p('Q120.9')])
-    feed=(17.5,87.3)
+    # D-R24-17: U9's input runs straight up its pad's axis through C88.1 (C88 now sits on that axis below U9), so no
+    # track turns 90 degrees at C88, at the trunk or at the 1.0 mm IN via: the via climbs 0.15 mm (its 1.0 mm F.Cu feed
+    # keeps a 1.02 mm leg past its chamfer), the 1.0 mm run reaches the via on one diagonal, and the R82 / R167 tap
+    # leaves the trunk at a T, where the run narrows to the 0.7 mm bypass section.
+    feed=(17.5,87.15)
     t('BAT_IN','F',BAT,[p('C95.1'),(14.116,88.891),(17.5,88.891),feed]);v('BAT_IN',feed,size=(1.,.5))
-    t('BAT_IN','B',BAT,[feed,(19.4,85.4)])
-    t('BAT_IN','B',BYPASS_W,[(19.4,85.4),p('C88.1'),(18.25,84.37),(18.25,83.4)])
-    t('BAT_IN','B',PAD_W,[(18.25,83.4),p('U9.5')])
-    t('BAT_IN','B',W,[feed,(15.5,85.3),p('R82.1')])
+    t('BAT_IN','B',BAT,[feed,(18.25,86.4),(18.25,85.3)])
+    t('BAT_IN','B',BYPASS_W,[(18.25,85.3),p('C88.1')])
+    t('BAT_IN','B',PAD_W,[p('C88.1'),p('U9.5')])
+    t('BAT_IN','B',W,[(18.25,85.3),(15.5,85.3),p('R82.1')])
     t('BAT_IN','B',W,[p('R82.1'),(13.925,83.9),p('R167.1')])
     t('BAT_IN','F',S,[p('D8.1'),(10.2,71.85),(10.2,70.2),(13.075,70.2),p('R80.1')])
     t('BAT_IN','F',W,[p('C89.1'),(11.625,83.8),p('TP80.1')])
@@ -82,6 +86,14 @@ def control(d):
     t('BAT_SW_SOURCE','B',S,[p('J400.1'),(10.8,67.5),(10.8,69.2)]);v('BAT_SW_SOURCE',(10.8,69.2))
     t('BAT_SW_SOURCE','F',S,[(10.8,69.2),p('R80.2')])
     t('BAT_SW_RETURN','F',S,[p('J400.2'),(11.825,67.6),p('R165.1')])
+    # D-R24-11: J400.2's contact clamp D402 sits on the bottom under J400's body on the wire side, between pins 1 and 2,
+    # as D440 sits between J440's pins 3 and 4 (M-6 1.5 mm): the tap leaves J400.2's own pad west on B.Cu and turns
+    # north into D402.1, so a discharge into the screw reaches the clamp before R165. The clamp's return goes 0.7 mm east
+    # to its own GND via (In1 / In2 GND there), clear of the J400 designator and BAT legends on the top and 2:SW below.
+    j,b=p('J400.2'),p('D402.1')
+    t('BAT_SW_RETURN','B',S,[j,(b[0],j[1]),b])
+    a=p('D402.2');at=(round(a[0]+.7,4),a[1])
+    t('GND','B',S,[a,at]);v('GND',at)
     # D-R19-02 (R19-SAF-02): the via sits 0.2 mm further south, 0.500 mm from R134.2 (RAW_ACT) instead of 0.300 mm.
     # D-R21-04: with R81's stub gone (D-R21-05) the run turns into the via on a 45 degree piece from (19.075, 66.0), not
     # at (19.675, 66.0) (a removable local bump on this critical net).
@@ -104,9 +116,11 @@ def efuse(d):
     t(rp,'B',BYPASS_W,[(18.75,79.8),(19.3,79.25),p('C82.1')])
     # D9 remains beside OUT; its cathode faces north, and its return shares the input-capacitor ground via.
     t(rp,'B',BYPASS_W,[(18.75,79.8),(16.25,77.3),p('D9.1')])
+    # D-R24-17: the two In2 vias each leave C82.1's edge on their own 0.7 mm leg (south, and east), so no track turns
+    # 90 degrees at a via (was south to the first via, then a 0.4 mm link east to the second).
     t(rp,'B',BYPASS_W,[p('C82.1'),(20.3,78.25),(20.3,79.1)])
-    for at in ((20.3,79.1),(21.1,79.1)):v(rp,at)
-    t(rp,'B',W,[(20.3,79.1),(21.1,79.1)])
+    for at in ((20.3,79.1),(21.1,78.25)):v(rp,at)
+    t(rp,'B',BYPASS_W,[(20.3,78.25),(21.1,78.25)])
     t('GND','B',W,[p('C82.2'),(20.45,76.4),(20.85,76.4)]);v('GND',(20.85,76.4))
     t('GND','B',W,[p('D9.2'),(16.4,79.9),(17.2,79.9)]);v('GND',(17.2,79.9))
     t('GND','F',W,[p('C96.2'),(15.475,79.5),(15.875,79.9),(17.2,79.9)])
@@ -115,11 +129,11 @@ def efuse(d):
     t('BAT_OVLO','B',S,[p('U9.2'),(16.9,81.825),(16.4,82.325),(16.4,83.0)])
     t('BAT_OVLO','B',S,[p('R83.1'),(12.025,83.0),(16.4,83.0),(16.4,83.15),p('R82.2')])
     t('GND','B',S,[p('U9.8'),(19.825,81.375),(20.2,81.0)]);v('GND',(20.2,81.0))
-    t('GND','B',P,[p('C88.2'),(20.9,83.53)]);v('GND',(20.9,83.53))
+    t('GND','B',P,[p('C88.2'),(19.59,84.06)]);v('GND',(19.59,84.06))
     for layer,pad in [('B','U11.2'),('F','C97.1')]:t(rp,layer,P,[p(pad),(24.3,66.0)])
     v(rp,(24.3,66.0))
     t(rp,'B',W,[p('TP81.1'),(31.0,83.6)]);v(rp,(31.0,83.6))
-    t(rp,'F',W,[p('R92.1'),(30.175,86.5)]);v(rp,(30.175,86.5))
+    t(rp,'F',W,[p('R92.1'),(30.175,85.9)]);v(rp,(30.175,85.9))      # D-R24-15: with R92, 0.8 mm aft
 
 
 P=.3
@@ -128,8 +142,9 @@ def port_supply(d):
     t,p,v=d.track,d.pad,d.via;rp='RAW_PROTECTED'
     # Maker-derived buck loop, unchanged in its local frame.
     t(rp,'F',W,[p('C400.1'),p('U400.2'),p('U400.3'),(15.8,9.0)])
-    t(rp,'F',W,[p('C400.1'),(14.1,7.6),(14.1,9.0),p('C401.1')])
-    for at in ((14.1,7.6),(14.1,9.0)):v(rp,at)
+    # D-R24-17: the second input via sits on the drop, before a 45-degree turn into C401.1 (was at a 90-degree corner).
+    t(rp,'F',W,[p('C400.1'),(14.1,7.6),(14.1,8.5),(14.6,9.0),p('C401.1')])
+    for at in ((14.1,7.6),(14.1,8.5)):v(rp,at)
     t('PORT_SW','F',W,[p('U400.5'),p('C402.2'),p('L400.1')])
     t('PORT_BST','F',.25,[p('U400.6'),(18.6,4.0),p('C402.1')])
     t('PORT_FB','F',S,[p('U400.1'),p('R404.2'),p('R401.1')])
@@ -148,18 +163,19 @@ def port_supply(d):
     t('PORT_5V3','B',S,[(25.65,14.9),(24.9,14.9)]);v('PORT_5V3',(24.9,14.9))   # D-R19-09: EN's second In2 via
     d.link('PORT_LDO_SS','B',S,'U401.8','C408.1')
     for at in ((27.3,13.6),(27.9,13.6)):v('GND',at,filled=True,capped=True)
-    d.link('PORT_4V8','B',.25,'U401.1','U401.2')
-    t('PORT_4V8','B',W,[p('U401.1'),(29.75,12.6)]);v('PORT_4V8',(29.75,12.6))
-    t('PORT_LDO_FB','B',S,[p('U401.3'),(29.75,13.6)]);v('PORT_LDO_FB',(29.75,13.6))
-    t('PORT_4V8','F',W,[(29.75,12.6),p('R402.1')])
-    t('PORT_LDO_FB','F',S,[(29.75,13.6),(32.225,13.6)])
-    t('PORT_LDO_FB','F',S,[p('R402.2'),(32.225,13.6),p('R403.1')])
-    t('PORT_4V8','B',W,[p('C406.1'),(29.75,9.95),(29.75,12.6)])
+    # D-R24-17: the OUT run leaves the U401.1 / U401.2 link at a T between the two pins (was a 90-degree bend in U401.1's
+    # pad), on y 12.85 to R402.1 (R402 0.25 mm south with it).
+    t('PORT_4V8','B',.25,[p('U401.1'),(28.75,12.85),p('U401.2')])
+    # D-R24-09 (round 21 power lens; D-R20-02 / D-R21 U401.3 exception): R402 / R403 sit on B.Cu beside U401, so the
+    # output tap, the FB node and the divider's ground all join U401's pins on bottom copper with no via: the divider
+    # top on the OUT run past its via, FB straight east from U401.3, the bottom straight to U401.4 (GND).
+    # The OUT run's In2 via moves 0.95 mm north on the C406.1 run, off R402.1's land.
+    t('PORT_4V8','B',W,[(28.75,12.85),(29.75,12.85),p('R402.1')])
+    t('PORT_LDO_FB','B',S,[p('U401.3'),(31.725,13.6)])
+    t('PORT_LDO_FB','B',S,[p('R402.2'),(31.725,13.6),p('R403.1')])
+    t('GND','B',S,[p('R403.2'),(29.575,14.1),p('U401.4')])
+    t('PORT_4V8','B',W,[p('C406.1'),(29.75,9.95),(29.75,11.65),(29.75,12.85)]);v('PORT_4V8',(29.75,11.65))
     v('PORT_4V8',(29.75,9.95))                    # D-R19-09: the LDO output's second In2 via, at C406.1's run bend
-    # D-R20-02 (R20-PWR-02): the feedback divider's top, R402.1, also joins the output after both OUT vias: its own via
-    # straight north of it lands in the In2 PORT_4V8 plane that both OUT vias feed. Either via can open and FB still
-    # senses PORT_4V8 (it no longer falls to GND through R403 and drives the ports to the LDO's dropout).
-    v('PORT_4V8',(30.575,11.6));t('PORT_4V8','F',W,[(30.575,11.6),p('R402.1')])
     t('PORT_4V8','F',W,[p('C407.1'),(31.1,20.3),(30.3,20.3)]);v('PORT_4V8',(30.3,20.3))
     t('PORT_4V8','B',S,[p('R405.1'),(33.725,16.35),(33.725,17.3)])
     # Always-on port bypass cells and terminal feeds.
@@ -206,7 +222,10 @@ def logic(d):
     # Probe and divider share a direct trunk above the mux, kept out of the switch node.
     t('VLOGIC','B',W,[(29.8,81.75),(34.25,81.75),p('TP83.1')])
     t('VLOGIC','B',S,[(29.8,68.6),(29.8,67.7),(34.5,63)])
-    v('VLOGIC',(34.5,63));t('VLOGIC','F',S,[(34.5,63),(34.5,59.47),p('R60.1')])
+    v('VLOGIC',(34.5,63));t('VLOGIC','F',S,[(34.5,63),(34.5,62.4),(34.5,59.47),p('R60.1')])
+    # D-R24-08 (R22-POWER-02): PA6's VLOGIC sense gets a second barrel on its F.Cu drop, 0.6 mm north of the first,
+    # joined to it on B.Cu: either barrel alone feeds R60.1.
+    v('VLOGIC',(34.5,62.4));t('VLOGIC','B',S,[(34.5,62.4),(34.5,63)])
     d.link('LOGIC_ILIM','B',S,'U11.10','R86.1')
     t('LOGIC_SS','B',S,[p('U11.11'),(26.15,64.75),p('C85.1')])
     t('USB_OVLO','B',S,[p('R87.2'),(22.5,64.25),p('U11.5')]);t('USB_OVLO','B',S,[p('R87.2'),p('R88.1')])

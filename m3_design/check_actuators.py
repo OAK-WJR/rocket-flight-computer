@@ -574,7 +574,14 @@ def check(text, dru=None, profile="r9"):
     # 12. external power contact: a 470k on each side, so no wire fault puts the pack on U9 EN (F8/F9)
     switch_a, switch_b = ('J400.1', 'J400.2') if r10 else ('J1.3', 'J1.4')
     req(members.get('BAT_SW_SOURCE') == {switch_a, 'R80.2'} and pin.get('R80.1') == 'BAT_IN', 'J1.3 only through R80 to BAT_IN')
-    req(members.get('BAT_SW_RETURN') == {switch_b, 'R165.1'} and pin.get('R165.2') == 'BAT_ENABLE', 'J1.4 only through R165 to EN')
+    if r10:
+        # D-R24-11: J400.2's own ESD clamp D402 (ESD103-B1-02EL C535146) to GND is the one further member; a clamp to GND
+        # cannot turn the board on or bypass the switch (shorted, it only holds the board off)
+        req(members.get('BAT_SW_RETURN') == {switch_b, 'R165.1', 'D402.1'} and pin.get('R165.2') == 'BAT_ENABLE'
+            and pin.get('D402.2') == 'GND' and part.get('D402') == 'C535146',
+            'J400.2 only through R165 to EN, with its clamp D402 (C535146) to GND')
+    else:
+        req(members.get('BAT_SW_RETURN') == {switch_b, 'R165.1'} and pin.get('R165.2') == 'BAT_ENABLE', 'J1.4 only through R165 to EN')
     # 13. input TVS: bidirectional, VBR >= 13.3 V, so a wrong 3S pack (12.6 V) cannot drive it (F9)
     req(val.get('D8') in ('SMBJ12CA', 'SMBJ13CA') and {pin.get('D8.1'), pin.get('D8.2')} == {'BAT_IN', 'GND'},
         'D8 must be an SMBJ12CA/13CA across BAT_IN-GND')

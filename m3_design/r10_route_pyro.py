@@ -51,7 +51,9 @@ def draw(d):
     t('PYRO1_CONT','B',S,[p('C127.1'),(24.0,52.15)])
     v('PYRO1_CONT',(24.0,52.15))
     t('PYRO1_CONT','F',S,[(24.0,52.15),p('U1.15')])
-    t('RAW_ACT','B',S,[p('R134.2'),(19.2,63.875),(22.8,63.875),(22.8,61.4),(26.17,58.03),p('R132.1')])
+    # D-R24-17: the sense tap leaves R134.2's 2512 land on its own line (y 63.875, inside the land), so the chamfered corner
+    # at (22.8, 63.875) makes no staircase with a 0.177 mm step.
+    t('RAW_ACT','B',S,[(19.075,63.875),(22.8,63.875),(22.8,61.4),(26.17,58.03),p('R132.1')])
     t('ARM1_SENSE','B',S,[p('C129.1'),(29.75,49.4),(29.75,45.5),(29.2,45.5)])
     v('ARM1_SENSE',(29.2,45.5))
     t('ARM1_SENSE','F',S,[(29.2,45.5),p('U1.33')])
@@ -61,14 +63,22 @@ def draw(d):
         for n in ('2','3'):
             a=p(q+'.'+n);t('ACT_FET_S','B',.4,[a,(a[0],71.1)])
     t('ACT_FET_S','B',P,[(14.475,71.1),(16.45,71.1),p('C120.1'),(17.52,72.17),p('R120.1')])
-    t('ACT_GATE','B',P,[p('Q120.4'),(15.575,73.3),(16.2,73.3),p('C120.2'),(18.23,73.3),p('R120.2')])
+    t('ACT_GATE','B',P,[p('Q120.4'),(15.2625,72.9875),(15.575,73.3),(16.2,73.3),p('C120.2'),(18.23,73.3),p('R120.2')])
     v('ACT_GATE',(16.2,73.3))
+    # D-R24-02 (R23-SAFETY-05, D-R23-02): each FET's gate drive gets a second barrel. Q120's sits between the parallel
+    # F.Cu and B.Cu diagonals (0.44 mm apart) on two stubs inside its own pad, so either barrel alone joins R121 to
+    # Q120.4; the gate networks themselves stay local on via-free bottom copper.
+    v('ACT_GATE',(15.4,72.85))
+    t('ACT_GATE','B',P,[(15.4,72.85),(15.2625,72.9875)])
+    t('ACT_GATE','F',P,[(15.4,72.85),(15.575,72.675)])
     # D-R18-02 (R18-SAF-02): Q121's gate keeps its own 100k (R119) to the source bridge on via-free bottom copper, so
     # an open in either ACT_GATE layer change leaves both P-FETs biased off; the island's single via now sits below
     # R119. D-R19-03 (R19-SAF-03): the bare probe pad TP121 and its stub are removed; probe ACT_GATE at R119.1 or R120.2.
     t('ACT_GATE','B',P,[p('Q121.4'),(11.14,70.0),p('R119.1'),(11.14,71.7)]);v('ACT_GATE',(11.14,71.7))
+    # D-R24-02: Q121's second barrel at the F.Cu run's corner, joined to the first by a B.Cu diagonal under the F.Cu one.
+    t('ACT_GATE','B',P,[(11.14,71.7),(11.74,72.3)]);v('ACT_GATE',(11.74,72.3))
     t('ACT_FET_S','B',P,[p('R119.2'),(12.525,71.1)])
-    t('ACT_GATE','F',P,[(11.14,71.7),(11.74,72.3),p('R121.1'),(15.2,72.3),(16.2,73.3)])
+    t('ACT_GATE','F',P,[(11.14,71.7),(11.74,72.3),p('R121.1'),(15.2,72.3),(15.575,72.675),(16.2,73.3)])
     d.link('ACT_DRV','F',P,'Q122.3','R121.2',((15.8,70.14),))
     # D-R18-03 (R18-SAF-03): >= 0.5 mm edge to BAT_FAULT_N (moved east, r10_route_signals.status) on the run and the
     # turn, and >= 0.5 mm to the buzzer's BUZZ_OUT pad LS120.2 (a 3V3-strong node through the coil); the U11.12 GND via

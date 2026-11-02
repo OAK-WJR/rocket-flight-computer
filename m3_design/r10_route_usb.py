@@ -113,6 +113,13 @@ def power_feed(d):
     d.track('USB_LIMITED','In2',.4,[(16,28),(15,29),(8.5,29),(8.5,30.3),(9.6,31.4),(9.6,50.85),(26.2,50.85),(26.2,61.8),(26.2,62.4),(25.6,63.0)])
     d.track('USB_LIMITED','In2',.4,[(26.2,61.8),(22.45,61.8),(22,62.25)])
     for at in ((25.6,63.0),(22,62.25)):d.via('USB_LIMITED',at)
+    # D-R24-10 (R21 R87.1 entry): U10.6's layer change into the In2 run toward R87.1 (U11's USB over-voltage divider
+    # top) gets a second barrel 0.6 mm east of the first, joined to it on B.Cu and on In2. The run's drop at R87.1
+    # (22.0, 62.25) keeps one (measured: F.Cu BUZZ_OUT at y 61.55, B.Cu RAW_ACT at x 22.8, and a second barrel west of
+    # it necks the In2 3V3 fill to under 0.5 mm, K-plane).
+    d.via('USB_LIMITED',(16.6,28))
+    d.track('USB_LIMITED','B',.2,[(16,28),(16.6,28)])
+    d.track('USB_LIMITED','In2',.4,[(16,28),(16.6,28)])
     d.track('USB_LIMITED','B',.3,[(25.6,63.0),(25.35,62.75),d.pad('C98.1')])
     d.track('USB_LIMITED','B',.3,[d.pad('C98.1'),(24.3,63.25),d.pad('U11.7')])
     d.track('USB_LIMITED','B',.4,[(22,62.25),d.pad('R87.1')])

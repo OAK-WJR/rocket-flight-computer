@@ -1,0 +1,855 @@
+{
+ "schema": 1,
+ "lane": "round 24 board pass, CAD lane",
+ "date": "2026-11-01",
+ "brief": ".supervisor/r24_board_brief.md items 1-16, plus the owner item 17 (2026-11-01: every 90-degree bend chamfered, and the gate fails any that remain); mid-pass root decisions (2026-11-01): item 11 fit a ninth ESD103-B1-02EL from J400.2 to GND (D402), item 12 stays deferred",
+ "board": {
+  "sha256": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "previous": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+  "fallback_commit": "9b27268",
+  "changed": true,
+  "bytes": 2363869,
+  "size_mm": [
+   46,
+   90,
+   1.6
+  ],
+  "counts": {
+   "footprints": [
+    215,
+    216
+   ],
+   "segments": [
+    983,
+    1057
+   ],
+   "vias": [
+    300,
+    307
+   ],
+   "gnd_vias": [
+    167,
+    168
+   ],
+   "track_mm": [
+    1871.611826,
+    1867.022756
+   ],
+   "hidden_designators": [
+    93,
+    92
+   ]
+  },
+  "hidden_designators": {
+   "newly_hidden": [
+    "C87",
+    "R402"
+   ],
+   "now_shown": [
+    "C16",
+    "C20",
+    "C404"
+   ],
+   "list": [
+    "C10",
+    "C100",
+    "C11",
+    "C123",
+    "C127",
+    "C129",
+    "C13",
+    "C14",
+    "C15",
+    "C19",
+    "C21",
+    "C22",
+    "C23",
+    "C24",
+    "C25",
+    "C26",
+    "C30",
+    "C31",
+    "C32",
+    "C410",
+    "C411",
+    "C421",
+    "C6",
+    "C7",
+    "C81",
+    "C82",
+    "C85",
+    "C87",
+    "C88",
+    "C92",
+    "C94",
+    "C99",
+    "D121",
+    "D400",
+    "D401",
+    "D410",
+    "D420",
+    "D421",
+    "LED1",
+    "Q123",
+    "R10",
+    "R100",
+    "R101",
+    "R103",
+    "R104",
+    "R105",
+    "R110",
+    "R120",
+    "R121",
+    "R126",
+    "R127",
+    "R128",
+    "R129",
+    "R13",
+    "R130",
+    "R133",
+    "R151",
+    "R152",
+    "R155",
+    "R162",
+    "R164",
+    "R173",
+    "R175",
+    "R178",
+    "R180",
+    "R32",
+    "R402",
+    "R403",
+    "R405",
+    "R432",
+    "R441",
+    "R450",
+    "R451",
+    "R461",
+    "R5",
+    "R64",
+    "R87",
+    "R88",
+    "R9",
+    "R90",
+    "R91",
+    "TP120",
+    "TP122",
+    "TP82",
+    "U11",
+    "U12",
+    "U2",
+    "U4",
+    "U401",
+    "U402",
+    "U5",
+    "U9"
+   ],
+   "d402": "shown on B.Silk"
+  },
+  "vias": {
+   "removed": [
+    [
+     "BAT_IN",
+     17.5,
+     87.3
+    ],
+    [
+     "GND",
+     20.9,
+     83.53
+    ],
+    [
+     "GND",
+     31.4,
+     14.4
+    ],
+    [
+     "GND",
+     32.65,
+     87.5
+    ],
+    [
+     "GND",
+     36.6,
+     87.0
+    ],
+    [
+     "PORT_4V8",
+     29.75,
+     12.6
+    ],
+    [
+     "PORT_4V8",
+     30.575,
+     11.6
+    ],
+    [
+     "PORT_LDO_FB",
+     29.75,
+     13.6
+    ],
+    [
+     "RAW_PROTECTED",
+     14.1,
+     9.0
+    ],
+    [
+     "RAW_PROTECTED",
+     21.1,
+     79.1
+    ],
+    [
+     "RAW_PROTECTED",
+     30.175,
+     86.5
+    ]
+   ],
+   "added": [
+    [
+     "3V3",
+     28.1,
+     59.4
+    ],
+    [
+     "ACT_GATE",
+     11.74,
+     72.3
+    ],
+    [
+     "ACT_GATE",
+     15.4,
+     72.85
+    ],
+    [
+     "BAT_IN",
+     17.5,
+     87.15
+    ],
+    [
+     "BOOT0",
+     14.2,
+     46.0
+    ],
+    [
+     "GND",
+     5.15,
+     65.575
+    ],
+    [
+     "GND",
+     19.59,
+     84.06
+    ],
+    [
+     "GND",
+     32.3,
+     60.1
+    ],
+    [
+     "GND",
+     32.65,
+     86.7
+    ],
+    [
+     "GND",
+     36.6,
+     86.4
+    ],
+    [
+     "LOGIC_SOURCE_ST",
+     30.45,
+     51.4
+    ],
+    [
+     "PORT_4V8",
+     29.75,
+     11.65
+    ],
+    [
+     "RAW_PROTECTED",
+     14.1,
+     8.5
+    ],
+    [
+     "RAW_PROTECTED",
+     21.1,
+     78.25
+    ],
+    [
+     "RAW_PROTECTED",
+     30.175,
+     85.9
+    ],
+    [
+     "USB_LIMITED",
+     16.6,
+     28.0
+    ],
+    [
+     "VCAP2",
+     18.3,
+     36.8
+    ],
+    [
+     "VLOGIC",
+     34.5,
+     62.4
+    ]
+   ],
+   "count": [
+    300,
+    307
+   ]
+  }
+ },
+ "build": {
+  "kicad_cli": "10.0.7",
+  "numpy_py": ".supervisor/venv/bin/python",
+  "complete_builds": 4,
+  "runs": {
+   "a": {
+    "exit": 1,
+    "seconds": 1474,
+    "board_sha256": "e7e9f7570e5a7204d73b2b4d85154453f77c6f22fb69e7b18c821e92d7bec5eb",
+    "note": "complete run; every generation, DRC, contract, route and fab step passed; check.sh exit 1 at the R10 self-test: three seeded tests (test_r19_doubled_feeds_keep_two_vias, test_r20_fb_tap_survives_one_via_open, test_r21_port_clamps_beside_their_pins) still named pre-chamfer / pre-move copper; fixed in tests only (tools/test_r10_check.py, one comment in tools/check_r10.py), no generator or board change; superseded (board before D402)"
+   },
+   "b": {
+    "exit": 0,
+    "seconds": 1590,
+    "board_sha256": "e7e9f7570e5a7204d73b2b4d85154453f77c6f22fb69e7b18c821e92d7bec5eb",
+    "note": "exit 0 on the board before D402 (e7e9f757...); superseded by builds c / d"
+   },
+   "c": {
+    "exit": 0,
+    "seconds": 1642,
+    "board_sha256": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e"
+   },
+   "d": {
+    "exit": 0,
+    "seconds": 1637,
+    "board_sha256": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e"
+   }
+  },
+  "identical_hash": true,
+  "r10_fab_sh": "ran inside every build: S-4 BOM / CPL, CPL rebuilt from JLC footprints (67 top + 125 bottom, 206 rows) and paste (249 / 381) content checks pass; six-output manifest bound",
+  "check_sh_exit": 0,
+  "drc": 0,
+  "unconnected": 0,
+  "schematic_parity": 0,
+  "erc": 0,
+  "check_r10": "36 / 36 rules OK (S-1 .. S-9 and every K-rule)",
+  "route_check": "0 failing, 0 allowlisted, 0 stale allowlist entries; right_angle 0; 5 unrecorded noncritical leftovers (counted for review, as before)",
+  "hotplug": {
+   "cases": 2304,
+   "failures": 0,
+   "passed": true,
+   "minimum_V": -14.807,
+   "steepest_fall_V_per_us": 8.995,
+   "steepest_rise_V_per_us": 5.088,
+   "limits": {
+    "minimum_V": -15.0,
+    "maximum_V": 28.0,
+    "falling_V_per_us": 10.0,
+    "rising_V_per_us": 100.0
+   }
+  },
+  "check_sh": "exit 0 in builds c and d; changed after build d: fab/cost_check.json and fab/stock_check.json (supplier run), R10_DECISIONS.md text and these hand-back files, none read by a gate step",
+  "files_differing_a_to_b": [
+   "fab/m3_assembly_top.pdf, m3_assembly_bottom.pdf, m3_gerber.zip, m3_fab_manifest.json (export timestamps; manifest re-bound)",
+   "R10_DECISIONS.md, tools/check_r10.py (comment), tools/test_r10_check.py (the post-A edits)"
+  ],
+  "files_identical_a_to_b": 890,
+  "identical_hash_builds": [
+   "c",
+   "d"
+  ],
+  "r10_sch_check": "OK in builds c / d: sheets and netlist regenerated with D402 (battery_entry); seeds catch the clamp removed and its return off GND"
+ },
+ "manufacturing": {
+  "bom": "81 JLC codes (45 Extended / 36 Basic); the C535146 (ESD103-B1-02EL) line 8 -> 9 per board with D402, no new code or feeder fee; placed parts 205 -> 206; C84 owner-fitted",
+  "cpl": {
+   "changed_rows": {
+    "C88": [
+     "C88,19.4000mm,-83.9500mm,Bottom,90",
+     "C88,18.6700mm,-83.5600mm,Bottom,180"
+    ],
+    "R92": [
+     "R92,31.0000mm,-87.5000mm,Top,0",
+     "R92,31.0000mm,-86.7000mm,Top,0"
+    ],
+    "R402": [
+     "R402,31.4000mm,-12.6000mm,Top,0",
+     "R402,30.9000mm,-12.8500mm,Bottom,180"
+    ],
+    "R403": [
+     "R403,31.4000mm,-14.4000mm,Top,180",
+     "R403,30.9000mm,-14.6000mm,Bottom,0"
+    ]
+   },
+   "sides": "69 top + 122 bottom -> 67 top + 125 bottom",
+   "added_rows": {
+    "D402": "D402,4.4500mm,-65.9000mm,Bottom,90"
+   }
+  },
+  "paste": {
+   "F.Paste": [
+    253,
+    249
+   ],
+   "B.Paste": [
+    375,
+    381
+   ]
+  },
+  "supplier": {
+   "cost_checked_utc": "2026-11-02T01:43:55Z",
+   "stock_checked_utc": "2026-11-02T01:42:53Z",
+   "total_usd_per_board": 85.6,
+   "target_usd": 84.41,
+   "over_usd": 1.19,
+   "previous": "85.36 (2026-11-01T23:44:48Z, before D402)",
+   "fixed_fees_usd_per_board": 16.79,
+   "cost_ok": false,
+   "stock_short": [
+    "C3662793 U9 orderable -83 (stockCount 28, canPresaleNumber -83) < 7",
+    "C51931514 U4 orderable 2 (stockCount 9, canPresaleNumber 2) < 5"
+   ],
+   "log": [
+    "jlc_stock: exit 1, short U9 (C3662793) and U4 (C51931514)",
+    "jlc_cost --profile r10: exit 1, $85.36 / board, target $84.41 missed",
+    "check_procurement --profile r10 --cost-only: exit 1, target not met (owner decision, as before)"
+   ],
+   "files": [
+    "m3_design/assembly_review/fab/cost_check.json",
+    "m3_design/assembly_review/fab/stock_check.json"
+   ],
+   "parts_usd_per_board": 60.81,
+   "c535146": {
+    "stock": {
+     "refs": "D400,D401,D402,D410,D411,D420,D421,D440,D441",
+     "qty_per_board": 9,
+     "order_qty": 45,
+     "jlc_stock": 201,
+     "orderable": 194,
+     "library": "expand"
+    },
+    "cost": {
+     "lcsc": "C535146",
+     "refs": "D400,D401,D402,D410,D411,D420,D421,D440,D441",
+     "qty_per_board": 9,
+     "jlc_qty_per_board": 9,
+     "owner_qty_per_board": 0,
+     "assembly": "SMT",
+     "unit_usd": 0.2306,
+     "line_usd_per_board": 2.0754,
+     "min_purchase": 1,
+     "order_qty": 45,
+     "order_usd_per_board": 2.0754,
+     "library": "expand",
+     "preferred": false,
+     "stock": 201,
+     "owner_fitted": false
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "n": 1,
+   "item": "U4.6 / U4.7 GND second via",
+   "decision": "D-R24-01",
+   "status": "kept",
+   "measured": "legal region about 0.38 x 0.32 mm round (16.75, 47.6): M-7 U4 body keep-out (via centre y >= 47.545), the 3V3A legs (x 15.79 / 17.5), U1.98 IMU_INT1 F.Cu escape (y 48.0 / 48.36); a C30-move trial shorted to IMU_INT1 and was reverted",
+   "next_board_change": "MCU-core reroute of U1.98 IMU_INT1 or the F.Cu QSPI_IO2 run",
+   "files": []
+  },
+  {
+   "n": 2,
+   "item": "Q120 / Q121 gate vias",
+   "decision": "D-R24-02",
+   "status": "done",
+   "before": "one via each: ACT_GATE (16.2, 73.3), (11.14, 71.7)",
+   "after": "second barrels ACT_GATE (15.4, 72.85) and (11.74, 72.3); B.Cu 0.361 / 0.342 mm, hole edges 0.618 / 0.549 mm; gate networks local on via-free B.Cu; ACT_FET_S bridge not crossed; 2 exception entries removed",
+   "checks": "route_check: PARALLEL_VIAS names also leave extra_vias and needless_hops (RouteCheck.test_r24_named_parallel_via_on_a_critical_net)",
+   "files": [
+    "m3_design/r10_route_pyro.py",
+    "tools/route_check.py",
+    "tools/check_r10.py"
+   ]
+  },
+  {
+   "n": 3,
+   "item": "BOOT0",
+   "decision": "D-R24-03",
+   "status": "done",
+   "before": "one via (13.8, 45.6)",
+   "after": "second barrel (14.2, 46.0), B.Cu link; F.Cu 0.150 mm from I2C1_SCL (floor; DRC 0)",
+   "files": [
+    "m3_design/r10_route_core.py",
+    "tools/route_check.py",
+    "tools/check_r10.py"
+   ]
+  },
+  {
+   "n": 4,
+   "item": "VCAP1 / VCAP2",
+   "decision": "D-R24-04",
+   "status": "VCAP2 done, VCAP1 kept",
+   "before": "one via each: VCAP2 (18.0, 37.3), VCAP1 (29.25, 38.0)",
+   "after": "VCAP2 second barrel (18.3, 36.8); VCAP1 kept: C19 boxed on B.Cu, U1.48 pad east on F.Cu",
+   "next_board_change": "C19 to F.Cu with U1.49 GND via (31.85, 38.25) moved",
+   "files": [
+    "m3_design/r10_route_core.py",
+    "tools/route_check.py",
+    "tools/check_r10.py"
+   ]
+  },
+  {
+   "n": 5,
+   "item": "U9 EN west cell (R81 / C87)",
+   "decision": "D-R24-05",
+   "status": "kept",
+   "measured": "B.Cu pocket at U9.1 about 1.4 x 2.2 mm vs about 2.0 x 2.45 mm for two 0603s; GND would be an island inside BAT_IN / BAT_OVLO; a via pair needs BAT_FAULT_N F.Cu at y >= 83.6 (meets BAT_DAMP y 84.7)",
+   "next_board_change": "U9 west cell re-laid with the OVLO divider moved",
+   "files": []
+  },
+  {
+   "n": 6,
+   "item": "Row 22's feeds",
+   "decision": "D-R24-06",
+   "status": "kept",
+   "measured": "U11.2: best spot 0.402 mm from ACT_EN_MCU (D-R18-03 floor 0.5); 3V3A (16.0, 50.2): 0.131-0.150 mm to U1.1 / QSPI_IO2, In2 USB_LIMITED below; 3V3A (27.0, 49.25): D-R19-09's reasons hold",
+   "files": []
+  },
+  {
+   "n": 7,
+   "item": "TPS2553 grounds",
+   "decision": "D-R24-07",
+   "status": "U402 done, U10 / R8 kept",
+   "after": "U402.2 / R430.2 second GND via (32.3, 60.1); U10 island already holds two vias inside the VBUS ring; R8.2 island under D4 / USB_DP and In2 USB_LIMITED",
+   "files": [
+    "m3_design/r10_route_ground.py",
+    "tools/check_r10.py"
+   ]
+  },
+  {
+   "n": 8,
+   "item": "Monitor taps",
+   "decision": "D-R24-08",
+   "status": "done",
+   "after": "R60.1 VLOGIC (34.5, 62.4); U1.28 LOGIC_SOURCE_ST (30.45, 51.4); R91.1 3V3 (28.1, 59.4); 3 entries removed",
+   "files": [
+    "m3_design/r10_route_power.py",
+    "m3_design/r10_route_signals.py",
+    "m3_design/r10_route_ground.py",
+    "tools/route_check.py",
+    "tools/check_r10.py"
+   ]
+  },
+  {
+   "n": 9,
+   "item": "U401.3 FB",
+   "decision": "D-R24-09",
+   "status": "done",
+   "before": "R402 F(31.4, 12.6), R403 F(31.4, 14.4); FB via (29.75, 13.6), vias (30.575, 11.6), (31.4, 14.4)",
+   "after": "R402 B(30.9, 12.85) rot 0, R403 B(30.9, 14.6) rot 180; FB, divider top and bottom join U401 with no via; 3 vias removed; OUT via (29.75, 12.6) -> (29.75, 11.65); paste 253 / 375 -> 249 / 379",
+   "note": "the OUT T (29.75, 12.85) lies 0.075 mm inside R402.1 land (route_check review: pad_end_offcentre / segment_inside_pad 0.325 mm, not blocking); measured alternatives: drop on the land centre line 0.085 mm from J440 second via (30.5, 9.95); T clear of the land puts the OUT via 0.057 mm from GPS_RX_MCU F.Cu chamfer unless C406.1 exit and the F.Cu split via move too: kept",
+   "files": [
+    "m3_design/r10_place.tsv",
+    "m3_design/r10_fanout.tsv",
+    "m3_design/r10_route_power.py",
+    "tools/check_r10.py"
+   ]
+  },
+  {
+   "n": 10,
+   "item": "ILIM / USB OV legs",
+   "decision": "D-R24-10",
+   "status": "R87.1 (16, 28) done; R87.1 drop (22, 62.25) and R85.1 kept",
+   "after": "second barrel USB_LIMITED (16.6, 28.0); (21.4, 62.25) necks the In2 3V3 fill under 0.5 mm (K-plane), BUZZ_OUT / RAW_ACT / PYRO1_CONT_MID close the other spots; R85.1 no legal spot (1.6 mm search)",
+   "files": [
+    "m3_design/r10_route_usb.py",
+    "m3_design/r10_stage_check.py",
+    "tools/route_check.py",
+    "tools/check_r10.py"
+   ]
+  },
+  {
+   "n": 11,
+   "item": "J400 ESD",
+   "decision": "D-R24-11",
+   "status": "done (the root decided, 2026-11-01)",
+   "before": "no clamp; D-R24-11 recorded the datasheet survey and left the fix to an owner decision",
+   "after": "D402, a ninth Infineon ESD103-B1-02EL E6327 (C535146, the port clamps line: BOM 8 -> 9, no new code or fee) at B(4.45, 65.9) rot 90, under J400 between pins 1 / 2 (M-6 1.768 / 1.808 mm); B.Cu tap from J400.2 own pad (7.4, 67.6) -> (4.81, 67.6) -> (4.45, 67.24) -> D402.1, 4.114 mm, ahead of R165 (fed by the separate F.Cu run); D402.2 0.7 mm to its own GND via (5.15, 65.575), ring 1.79 / 2.127 mm from J400.1 / J400.2 barrel walls",
+   "gates": [
+    "S-5: BAT_SW_RETURN parts {J400, R165, D402}; pads exactly {J400.2, R165.1, D402.1}; D402.2 GND; D402 the two-pad ESD103-B1-02EL C535146",
+    "K-actuators (r10): members {J400.2, R165.1, D402.1}; D402.2 GND; D402 C535146",
+    "S-4: D402 in SAFETY_FITTED (required in board, BOM and CPL)",
+    "K-contract: PARTS D402 C535146 on M3_TSLP_2_20",
+    "K-ports: PORT_CLAMPS (J400, 2, D402.1, R165): <= 4.5 mm without passing R165; GND via <= 1.0 mm",
+    "r10_sch_check seeds: clamp removed; return off GND"
+   ],
+   "tests": [
+    "RealBoardSeeds.test_r24_j400_contact_clamp (D402.2 on BAT_ENABLE / BAT_SW_RETURN / 3V3; fourth member R81.2; D402 deleted (S-5, K-actuators, S-4); D402 re-coded; fed only through R165 (K-ports))",
+    "test_s5_switch_topology_and_resistor_values / test_s5_switch_contact_cannot_be_bypassed (synthetic, with D402)",
+    "test_single_switch_contract_and_seeds (new seeds)",
+    "test_r21_port_clamps_beside_their_pins (J400.2 4.114)",
+    "test_r22_clamp_gnd_returns (D402.2 0.7)"
+   ],
+   "kept": [
+    "D-R19-02 spacing and BAT_ENABLE keep-outs (no copper east of J400 moved)",
+    "S-8",
+    "K-plane",
+    "T-1 (via outside the west forward tab band)",
+    "45-degree rule (the tap bend chamfered)",
+    "J400 chain AUD-2 status",
+    "DRC 0",
+    "2304 hot-plug cases"
+   ],
+   "en": "D402 leaks <= 50 nA at 15 V (Infineon ESD103 Rev 1.3); with the switch closed EN moves by <= 50 nA x R80 x R81 / (R80 + R165 + R81) = 5.7 mV (Calculation), as 25 nA at the EN node would, a quarter of the 0.1 uA EN leakage D-R20-11 already carries; the EN timing figures are kept (Inference: no 85 C leakage figure)",
+   "safety": "a clamp to GND cannot turn the board on or bypass the switch; shorted it only holds the board off (the closed-switch pad check sees it); open, the handling rule remains",
+   "files": [
+    "m3_design/assembly_review/sources/r10_design/circuit.json",
+    "m3_design/r10_sch.py",
+    "m3_design/r10_place.tsv",
+    "m3_design/r10_route_power.py",
+    "m3_design/r10_post.py",
+    "tools/check_r10.py",
+    "m3_design/check_actuators.py",
+    "m3_design/r10_sch_check.py",
+    "tools/test_r10_check.py"
+   ]
+  },
+  {
+   "n": 12,
+   "item": "Fab body outlines (14 parts)",
+   "decision": "D-R24-12",
+   "status": "deferred (the root, 2026-11-01: no stated rule requires Fab body outlines)",
+   "measured": "SHA-pinned vendor footprints (K-lands); needs 11 library edits, a Fab sync in r10_post and 11 re-pins",
+   "files": []
+  },
+  {
+   "n": 13,
+   "item": "Order-mark placeholder",
+   "decision": "D-R24-13",
+   "status": "done",
+   "after": "JLCJLCJLCJLC not drawn (r10_post) and not admitted (K-legends); test_silk_allowlist fails it",
+   "files": [
+    "m3_design/r10_post.py",
+    "tools/check_r10.py",
+    "tools/test_r10_check.py"
+   ]
+  },
+  {
+   "n": 14,
+   "item": "Tabs over GND only",
+   "decision": "D-R24-14",
+   "status": "kept (deviation)",
+   "measured": "In2 RAW_PROTECTED strip (x 44.0-45.7) and PORT_5V3 band (x 41.0-43.7) run the whole east edge; the strip joins only at y 63.3: a plane redesign",
+   "files": []
+  },
+  {
+   "n": 15,
+   "item": "Short-edge parts",
+   "decision": "D-R24-15",
+   "status": "R92, TP88 moved; rest kept as DFM queries",
+   "before": "R92 F(31, 87.5), TP88 F(35.5, 87)",
+   "after": "R92 F(31, 86.7), TP88 F(35.5, 86.4); courtyards >= 2.5 mm from the forward edge; kept: C95, R166, R400 / R401 / R404, C403",
+   "files": [
+    "m3_design/r10_place.tsv",
+    "m3_design/r10_fanout.tsv",
+    "m3_design/r10_route_power.py"
+   ]
+  },
+  {
+   "n": 16,
+   "item": "Optional cleanliness",
+   "decision": "D-R24-16",
+   "status": "not taken",
+   "files": []
+  },
+  {
+   "n": 17,
+   "item": "90-degree bends chamfered; gate fails any that remain",
+   "decision": "D-R24-17",
+   "status": "done",
+   "before": {
+    "total": 59,
+    "F.Cu": {
+     "plain": 24,
+     "via": 1
+    },
+    "B.Cu": {
+     "plain": 26,
+     "via": 3,
+     "pad": 2
+    },
+    "In2.Cu": {
+     "plain": 3
+    }
+   },
+   "after": {
+    "total": 0,
+    "F.Cu": 0,
+    "B.Cu": 0,
+    "In2.Cu": 0
+   },
+   "method": "53 plain bends (54 with D402 tap) chamfered by r10_route.chamfer_right_angles (ground family, last step; fixed cut 0.36 mm axis legs / 0.26 mm diagonal legs, or CHAMFER_CUTS: pairs keep pitch, outer = inner + p(2 - sqrt 2)); 6 pad / via bends redrawn at source (U9 input trunk, C88 B(18.67, 83.56) rot 0, C82.1 legs, U400 input, U401 OUT, CAM_FAULT_N, RAW_ACT tap)",
+   "gate": "route_check RULE 'right_angle' (every net, every copper layer; exempt only when the inner corner lies inside the pad / via copper); allowlist empty",
+   "tests": "RouteCheck.test_r24_right_angle (plain fails, chamfered passes, via and pad exempt, 0.5 mm track at 0.5 mm via fails, T passes)",
+   "side_effects": "K-ports J440.3 / J440.4 clamp runs 4.075 / 4.175 -> 3.864 / 3.964 mm (limit 4.5); route_check review categories shift (pad_end_offcentre 57 -> 70, segment_inside_pad 22 -> 27, short_layer_hop 8 -> 18 with the named second barrels, extra_bends 8 -> 14), all counted, none blocking",
+   "files": [
+    "m3_design/r10_route.py",
+    "m3_design/r10_route_ground.py",
+    "m3_design/r10_route_power.py",
+    "m3_design/r10_route_signals.py",
+    "m3_design/r10_route_pyro.py",
+    "m3_design/r10_stage_check.py",
+    "m3_design/r10_place.tsv",
+    "tools/route_check.py",
+    "tools/test_route_check.py",
+    "tools/check_r10.py",
+    "tools/test_r10_check.py"
+   ],
+   "pairs": "outer cut = inner + p(2 - sqrt 2): CAM_FAULT_N 0.65 outside CAM_PWR_EN (pitch 0.5), SD_SCK 0.77 outside SD_MISO (pitch 0.7)",
+   "usb": "only USB_DM's strap between J3.B7 and J3.A7 had bends ((5.75, 30.05) / (5.75, 31.05), F.Cu): fixed 0.36 mm cuts, strap 0.422 mm shorter (USB_DM copper 19.708 -> 19.286 mm); USB_DP has no bend; the D+ / D- run to D4 / U1 is unchanged (full-speed USB: stub change immaterial, Inference)"
+  }
+ ],
+ "right_angle": {
+  "total": 59,
+  "F.Cu": {
+   "plain": 24,
+   "via": 1
+  },
+  "B.Cu": {
+   "plain": 26,
+   "via": 3,
+   "pad": 2
+  },
+  "In2.Cu": {
+   "plain": 3
+  },
+  "after": 0,
+  "pass_chamfered": 54
+ },
+ "tests": {
+  "counts": {
+   "shell": 11,
+   "procurement": "OK",
+   "fab_validation": 34,
+   "fit": 33,
+   "paste": 16,
+   "r10_parts": 5,
+   "route": 71,
+   "r10": 262,
+   "r10_numpy_skips": 6,
+   "numpy_hotplug_plate": 6
+  },
+  "ran_per_suite_build_d": [
+   11,
+   34,
+   33,
+   16,
+   5,
+   71,
+   262,
+   6
+  ],
+  "added": [
+   "RouteCheck.test_r24_named_parallel_via_on_a_critical_net",
+   "RouteCheck.test_r24_right_angle",
+   "RealBoardSeeds.test_r24_j400_contact_clamp"
+  ],
+  "changed_route": [
+   "test_clean_route_has_no_gated_instance",
+   "test_aud10_real_target_exact_duplicate_has_no_collateral_failures",
+   "test_r19_named_parallel_via_closes_only_its_own_loop"
+  ],
+  "changed_r10": [
+   "test_r18_u9_power_path_seeds",
+   "test_r19_adversary_c01_drawing_keeps_fire_and_budget_copper",
+   "test_r19_doubled_feeds_keep_two_vias",
+   "test_r19_rail_runs_at_0_2_mm_fail_k_power",
+   "test_r19_second_u9_in_via_passes",
+   "test_r20_fb_tap_survives_one_via_open",
+   "test_r21_port_clamps_beside_their_pins",
+   "test_r21_regulator_taps_survive_one_via_open",
+   "test_r22_clamp_gnd_returns",
+   "test_r22_monitor_and_ic_ground_taps",
+   "test_r23_boot0_vcap_and_gate_drive_taps",
+   "test_r23_generated_footprints_and_paste_totals",
+   "test_s5_switch_contact_cannot_be_bypassed",
+   "test_s5_switch_topology_and_resistor_values",
+   "test_silk_allowlist"
+  ],
+  "seed_rule": "every check change has a seed that fails it; removed exception entries stay referenced and re-fail when their second via is dropped",
+  "not_run": "no simulation beyond the hot-plug model; no physical test"
+ },
+ "decisions": [
+  "D-R24-01",
+  "D-R24-02",
+  "D-R24-03",
+  "D-R24-04",
+  "D-R24-05",
+  "D-R24-06",
+  "D-R24-07",
+  "D-R24-08",
+  "D-R24-09",
+  "D-R24-10",
+  "D-R24-11",
+  "D-R24-12",
+  "D-R24-13",
+  "D-R24-14",
+  "D-R24-15",
+  "D-R24-16",
+  "D-R24-17"
+ ],
+ "record_index": "207 unique D IDs through D-R24-17",
+ "for_docs_lane": [
+  "new board hash 1407e850..., counts, paste 249 / 381, 206 placed parts, hidden-designator list; cost $85.60 ($1.19 over); stock short U4 / U9",
+  "D402 (J400.2 ESD clamp, D-R24-11) for the J400 rows and the ESD handling text: the clamp is the first layer, the handling rule the second; per-flight checks unchanged (a shorted clamp keeps the board off)",
+  "single points left: U4.6 / U4.7, VCAP1, U9 EN (R81 / C87), U11.2 and 3V3A x 2, U10 / R7 / R85.2, R8.2, R85.1, R87.1's drop; owner rows 22 / 29 text",
+  "order form needs no mark (D-R24-13); east tabs stay a deviation (rows 16 / 28); Fab bodies stay deferred (D-R24-12)",
+  "add right_angle to the AGENTS section 3 / REQUIREMENTS M2 wording (D-R24-17)"
+ ],
+ "git_state_changed": false,
+ "native_cad_hand_edited": false,
+ "files_changed": [
+  "m3_design/r10_route.py (chamfer_right_angles, CHAMFER_CUTS)",
+  "m3_design/r10_route_core.py",
+  "m3_design/r10_route_pyro.py",
+  "m3_design/r10_route_power.py",
+  "m3_design/r10_route_signals.py",
+  "m3_design/r10_route_usb.py",
+  "m3_design/r10_route_ground.py",
+  "m3_design/r10_post.py",
+  "m3_design/r10_stage_check.py",
+  "m3_design/r10_place.tsv",
+  "m3_design/r10_fanout.tsv",
+  "tools/route_check.py",
+  "tools/check_r10.py",
+  "tools/test_route_check.py",
+  "tools/test_r10_check.py",
+  "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md (D-R24-01..17)",
+  "regenerated: m3_design/assembly_review/m3.kicad_pcb, r10_binding_note.json, hotplug_inputs.json / hotplug_results.json, parts_budget.json, fab/*",
+  "supplier evidence: fab/cost_check.json, fab/stock_check.json",
+  "m3_design/assembly_review/sources/r10_design/circuit.json (D402)",
+  "m3_design/r10_sch.py (D402 on battery_entry)",
+  "m3_design/r10_sch_check.py (two D402 seeds)",
+  "m3_design/check_actuators.py (r10 BAT_SW_RETURN members)",
+  "regenerated: the sheets and schematic.net.xml (D402)",
+  "round24_board_cad.md / .json"
+ ],
+ "not_done": {
+  "1": "U4.6 / U4.7 GND second via (D-R24-01)",
+  "4": "VCAP1 (D-R24-04)",
+  "5": "U9 EN west cell (D-R24-05)",
+  "6": "row 22's three feeds (D-R24-06)",
+  "7": "U10 / R7 / R85.2 and R8.2 islands (D-R24-07)",
+  "10": "R87.1's drop (22, 62.25) and R85.1 (D-R24-10)",
+  "12": "Fab body outlines (D-R24-12)",
+  "14": "east tabs over In2 power (D-R24-14)",
+  "15": "C95, R166, R400 / R401 / R404, C403 short-edge DFM queries (D-R24-15)",
+  "16": "optional cleanliness (D-R24-16)"
+ }
+}

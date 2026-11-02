@@ -952,6 +952,22 @@
       },
       "kind": "fit"
     },
+    "D402": {
+      "lib": "M3:ESD_Bidir",
+      "value": "ESD103-B1-02EL",
+      "footprint": "rocket:M3_TSLP_2_20",
+      "fields": {
+        "LCSC": "C535146",
+        "Manufacturer": "Infineon Technologies",
+        "Manufacturer Part": "ESD103-B1-02EL E6327",
+        "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146"
+      },
+      "nets": {
+        "1": "BAT_SW_RETURN",
+        "2": "GND"
+      },
+      "kind": "fit"
+    },
     "C444": {
       "lib": "M3:C",
       "value": "100nF 50V X7R 10%",
@@ -1456,6 +1472,7 @@
     "R471": "telemetry",
     "D440": "telemetry",
     "D441": "telemetry",
+    "D402": "battery_entry",
     "C444": "power",
     "C445": "power"
   },

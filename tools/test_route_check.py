@@ -58,7 +58,7 @@ class RouteCheck(unittest.TestCase):
     # --- a clean route ------------------------------------------------------------------------------------------------
     def test_clean_route_has_no_gated_instance(self):
         self.two_pads()
-        self.chain([(0, 0), (4, 0), (6, 2), (10, 2), (10, 0)])
+        self.chain([(0, 0), (4, 0), (6, 2), (8, 2), (10, 0)])      # D-R24-17: 45-degree turns only (no right_angle)
         failures, allowed, stale = rc.evaluate(rc.scan(self.board), allowlist=[])
         self.assertEqual(failures, [])
 
@@ -78,6 +78,39 @@ class RouteCheck(unittest.TestCase):
         self.chain([(0, 0), (2, 0), (3.5, 1.5), (5, 1.5), (6.5, 3), (10, 3), (10, 0)])
         self.assertFalse(self.cats('staircase'))
         self.assertTrue(self.cats('extra_bends'))
+
+    def test_r24_right_angle(self):
+        """D-R24-17 (the owner: "why not 45"): a 90-degree bend of two track ends fails on every net; its chamfered form
+        passes; at a pad or via it counts only when the inner corner of the two tracks' copper lies outside the holder
+        (a 0.2 mm track at a 0.6 mm via or a 0.6 mm pad passes); a 0.5 mm track bending at a 0.5 mm via fails; a T is not
+        a bend."""
+        def cats():
+            return [d for d in rc.scan(self.board) if d['cat'] == 'right_angle']
+        self.two_pads()
+        self.chain([(0, 0), (5, 0), (5, 3), (10, 3), (10, 0)])        # three plain 90-degree corners
+        found = cats()
+        self.assertEqual(sorted((d['x'], d['y'], d['at']) for d in found),
+                         [(5.0, 0.0, 'free'), (5.0, 3.0, 'free'), (10.0, 3.0, 'free')])
+        self.assertTrue(all(rc.gated(d) for d in found))
+        self.assertTrue(rc.evaluate(found, [])[0])
+        self.board = pcbnew.BOARD(); self.setUp(); self.two_pads()
+        self.chain([(0, 0), (4.5, 0), (5, 0.5), (5, 2.5), (5.5, 3), (9.5, 3), (10, 2.5), (10, 0)])    # the chamfered form
+        self.assertEqual(cats(), [])
+        self.board = pcbnew.BOARD(); self.setUp(); self.two_pads()
+        self.chain([(0, 0), (5, 0)]); self.via(5, 0, d=0.6); self.chain([(5, 0), (5, 3)], layer=pcbnew.B_Cu)
+        self.chain([(5, 0), (5, -3)])                                 # a 90-degree turn inside the 0.6 mm via's copper
+        self.assertEqual(cats(), [])
+        self.pad('A3', 5, 6, size=(0.6, 0.6))
+        self.chain([(5, 6), (8, 6)]); self.chain([(5, 6), (5, 8)])    # ... and inside a 0.6 mm pad
+        self.assertEqual(cats(), [])
+        self.board = pcbnew.BOARD(); self.setUp(); self.two_pads()
+        self.track((0, 0), (5, 0), width=0.5); self.via(5, 0, d=0.5)
+        self.track((5, 0), (5, -3), width=0.5)                        # 0.25 x sqrt 2 = 0.354 mm > the 0.25 mm radius
+        self.assertEqual([(d['x'], d['y'], d['at']) for d in cats()], [(5.0, 0.0, 'via')])
+        self.board = pcbnew.BOARD(); self.setUp(); self.two_pads()
+        self.pad('A3', 5, 4)
+        self.chain([(0, 0), (10, 0)]); self.chain([(5, 0), (5, 4)])   # a T on the run's body: not a bend
+        self.assertEqual(cats(), [])
 
     def test_acute_t_flagged_and_square_t_not(self):
         self.two_pads()
@@ -917,7 +950,37 @@ class R10AuditScope(unittest.TestCase):
         self.assertEqual(found([('VLOGIC', (8.0, 0.0), 'not parallel')]), ['parallel_via', 'track_loop'])
         h.chain([(0, 0), (1, 1), (2, 0)], 'VLOGIC', 0.4)                 # a second, unrelated loop on F.Cu
         self.assertEqual(found([('VLOGIC', (2.75, 0.75), 'test')]), ['track_loop'])
-        self.assertEqual([e[:2] for e in rc.PARALLEL_VIAS], [('VLOGIC', (29.8, 81.15))])
+        self.assertIn(('VLOGIC', (29.8, 81.15)), [e[:2] for e in rc.PARALLEL_VIAS])
+
+    def test_r24_named_parallel_via_on_a_critical_net(self):
+        """D-R24-02: on a critical signal net a named second barrel beside a single-via layer change is left out of the
+        net's via count (extra_vias) and of the needless-hop pairs as well as the loop search; unnamed, the same barrel
+        fails all three ways, and a named via that is not parallel still fails."""
+        from unittest.mock import patch
+        h = self.helper
+        for net in ('ACT_GATE', 'OTHER'):
+            self.board.Add(pcbnew.NETINFO_ITEM(self.board, net))
+        h.pad('A1', 0, 0, 'ACT_GATE'); h.pad('A2', 10, 0, 'ACT_GATE')
+        h.track((0, 0), (2, 0), 'ACT_GATE', 0.3); h.via(2, 0, 'ACT_GATE', d=0.5)
+        h.track((2, 0), (8, 0), 'ACT_GATE', 0.3, pcbnew.B_Cu); h.via(8, 0, 'ACT_GATE', d=0.5)
+        h.track((8, 0), (10, 0), 'ACT_GATE', 0.3)
+        h.track((5, -2), (5, 2), 'OTHER', 0.2)                         # the B.Cu run crosses it: a needed hop
+        h.via(2.75, 0.75, 'ACT_GATE', d=0.5)                         # the second barrel and its two stubs
+        h.track((2.75, 0.75), (2, 0), 'ACT_GATE', 0.3)
+        h.track((2.75, 0.75), (2.75, 0), 'ACT_GATE', 0.3, pcbnew.B_Cu)
+
+        def found(entries):
+            with patch.object(rc, 'PARALLEL_VIAS', entries):
+                inst = rc.scan(self.board)
+            hits = [d for d in inst if d['net'] == 'ACT_GATE' and d['cat'] in ('track_loop', 'parallel_via',
+                                                                                 'extra_vias')]
+            self.assertTrue(all(rc.gated(d) for d in hits))
+            return sorted({(d['cat'], bool(d.get('hop'))) for d in hits})
+        self.assertEqual(found([]), [('extra_vias', False), ('extra_vias', True), ('track_loop', False)])
+        self.assertEqual(found([('ACT_GATE', (2.75, 0.75), 'test')]), [])
+        # a named via that is not parallel fails as parallel_via, and the real barrel's loop and hop still fail
+        self.assertEqual(found([('ACT_GATE', (8.0, 0.0), 'not parallel')]),
+                         [('extra_vias', True), ('parallel_via', False), ('track_loop', False)])
 
     def test_aud2_return_exclusions_keep_other_critical_checks(self):
         slow = ('ARM1_SENSE_MID', 'ARM1_SENSE', 'ACT_GATE', 'ACT_DRV', 'ACT_EN_MCU', 'CAM_PWR_EN', 'CAM_UART_OE')
@@ -1111,7 +1174,8 @@ class R10AuditScope(unittest.TestCase):
         board = pcbnew.LoadBoard(str(Path(__file__).resolve().parents[1] / 'm3_design/assembly_review/m3.kicad_pcb'))
         baseline = rc.scan(board)
         self.assertEqual(rc.evaluate(baseline, [])[0], [])
-        a, b = self.helper.P(28.8, 29.6), self.helper.P(28.8, 11.0)      # D-R19-14: GPS_RX's run now starts at PD9
+        # D-R19-14: GPS_RX's run now starts at PD9; D-R24-17: its corner at (28.8, 11.0) is chamfered 0.75 mm back
+        a, b = self.helper.P(28.8, 29.6), self.helper.P(28.8, 11.75)
         matches = [t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'GPS_RX_MCU'
                    and t.GetLayer() == pcbnew.F_Cu and t.GetWidth() == pcbnew.FromMM(.2)
                    and {tuple(t.GetStart()), tuple(t.GetEnd())} == {tuple(a), tuple(b)}]

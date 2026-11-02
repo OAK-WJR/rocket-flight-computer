@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """R10 copper primitives and explicit routing-family dispatcher; no path search."""
 import argparse
+import collections
 import importlib
 import math
 import sys
@@ -122,6 +123,125 @@ class Translated:
     def pad(self, ref, number, net=None, at=None):
         result = self.draw.pad(ref, number, net, self.move(at) if at else None)
         return tuple(a - b for a, b in zip(result, self.shift))
+
+
+# D-R24-17 (the owner, 2026-11-01: "I see 90 degree bends lol. why not 45"): every 90-degree bend where two track ends
+# of one layer and net meet with nothing else there (route_check's right_angle at a plain node) becomes one 45-degree
+# diagonal. The cut is fixed, not searched: along an axis-aligned leg CHAMFER_CUT (a 0.509 mm diagonal), along a
+# diagonal leg CHAMFER_CUT_DIAG per axis (a 0.52 mm axis-aligned chamfer), unless CHAMFER_CUTS names the bend's own cut
+# (pairs turning together keep their pitch p: the outer cut is the inner + p(2 - sqrt 2); wide tracks keep the chamfer
+# at least their width). A cut never leaves a leg piece shorter than max(width, 0.2 mm) (half each when two bends share
+# a leg), never removes copper another item joins, and never yields a chamfer shorter than max(width, 0.2 mm): such a
+# bend fails the build instead, so it is redrawn in its own family's table.
+CHAMFER_CUT = 0.36
+CHAMFER_CUT_DIAG = 0.26
+CHAMFER_CUTS = {    # (net, layer, x, y) of the bend: cut, mm along an axis-aligned leg / per axis on a diagonal one
+    ('CAM_FAULT_N', 'F', 36.0, 41.0): 0.65,   # outer of CAM_PWR_EN's turn, pitch 0.5 mm: 0.36 + 0.5 x 0.586
+    ('SD_SCK', 'B', 19.4, 32.1): 0.77,        # outer of SD_MISO's turn, pitch 0.7 mm: 0.36 + 0.7 x 0.586
+    ('BAT_IN', 'F', 17.5, 88.891): 0.72,      # the 1.0 mm feed: a 1.018 mm chamfer and a 1.021 mm leg to its via
+    ('3V3A', 'F', 26.5, 49.25): 0.25,         # 0.5 mm leg into the VDDA / VREF+ via: the rest lies in the via
+    ('GND', 'B', 14.7, 48.0): 0.3,            # C31.2's 0.51 / 0.5 mm legs to its pad and via
+    ('GND', 'B', 22.33, 59.73): 0.33,         # R163.2's 0.53 mm leg
+    ('ARM1_SENSE', 'B', 29.75, 45.5): 0.35,   # 0.55 mm leg to the U1.33 via
+    ('BUZZ_G', 'B', 20.5, 58.87): 0.15,       # the Q123 gate lead's T at (20.5, 58.7), 0.17 mm up the leg (D-R18-05)
+    ('BUZZ_G', 'B', 17.75, 58.7): 0.17,       # Q123.2 (GND) 0.15 mm inside the corner (D-R18-05): 0.17 keeps 0.15 mm
+    ('LED_YEL', 'F', 14.4, 43.0): 0.2,        # U1.89 (SPI1_SCK) inside the corner: 0.2 keeps 0.183 mm
+    ('GPS_TX_MCU', 'F', 29.3, 16.0): 0.75,    # a >= 1 mm chamfer: no second sub-1 mm piece in the run (staircase)
+    ('GPS_RX_MCU', 'F', 28.8, 11.0): 0.75,    # as GPS_TX_MCU
+    ('USB_LIMITED', 'In2', 8.5, 29.0): 0.75,  # as GPS_TX_MCU, on the 0.4 mm In2 run
+    ('USB_LIMITED', 'In2', 9.6, 50.85): 0.75,
+    ('RAW_ACT', 'B', 22.8, 63.875): 0.34,     # R87.1 (USB_LIMITED) inside the corner: 0.34 keeps 0.152 mm
+}
+
+
+def chamfer_right_angles(board, cuts=CHAMFER_CUTS):
+    """Chamfer every plain 90-degree bend on the board (D-R24-17); returns [(net, layer, x, y, cut)] in board order."""
+    nm = pcbnew.FromMM
+    tracks = [t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK']
+    vias = [t for t in board.GetTracks() if t.GetClass() == 'PCB_VIA']
+    pads = [p for f in board.GetFootprints() for p in f.Pads()]
+    by = collections.defaultdict(list)
+    for t in tracks:
+        by[(t.GetLayer(), t.GetNetCode())].append(t)
+    ends = collections.defaultdict(list)
+    for (lid, code), group in by.items():
+        for t in group:
+            for e, q in ((0, t.GetStart()), (1, t.GetEnd())):
+                ends[(lid, code, q.x, q.y)].append((t, e))
+
+    def on_body(t, q):
+        a, b = t.GetStart(), t.GetEnd()
+        return q not in (a, b) and pcbnew.SEG(a, b).Distance(q) <= 1
+
+    def occupied(lid, code, q, skip):
+        """Another item of the net joins copper at q on lid: a track end or body, a via, a pad."""
+        if any(id(t) not in skip and (q in (t.GetStart(), t.GetEnd()) or on_body(t, q)) for t in by[(lid, code)]):
+            return True
+        if any(v.GetNetCode() == code and (v.GetPosition() - q).EuclideanNorm() <= v.GetWidth(lid) // 2 for v in vias):
+            return True
+        return any(p.GetNetCode() == code and p.IsOnLayer(lid) and p.HitTest(q) for p in pads)
+
+    bends = {}
+    for (lid, code, x, y), es in sorted(ends.items()):
+        if len(es) != 2 or es[0][0] is es[1][0]:
+            continue
+        q = pcbnew.VECTOR2I(x, y)
+        (t1, e1), (t2, e2) = es
+        if occupied(lid, code, q, {id(t1), id(t2)}):
+            continue
+        far1 = t1.GetEnd() if e1 == 0 else t1.GetStart()
+        far2 = t2.GetEnd() if e2 == 0 else t2.GetStart()
+        u, v = far1 - q, far2 - q
+        cos = (u.x * v.x + u.y * v.y) / (math.hypot(u.x, u.y) * math.hypot(v.x, v.y))
+        if abs(cos) > math.sin(math.radians(0.5)) or t1.GetWidth() != t2.GetWidth():
+            continue                                          # not 90 degrees (or a neck, route_check's own case)
+        bends[(lid, code, x, y)] = (t1, e1, far1, t2, e2, far2)
+    moves = {}
+    out = []
+    problems = []
+    for key, (t1, e1, far1, t2, e2, far2) in bends.items():
+        lid, code, x, y = key
+        net = board.GetNetInfo().GetNetItem(code).GetNetname()
+        name = board.GetLayerName(lid)[0] if board.GetLayerName(lid) in ('F.Cu', 'B.Cu') else board.GetLayerName(lid)[:3]
+        here = (round(pcbnew.ToMM(x), 4), round(pcbnew.ToMM(y), 4))
+        cut = cuts.get((net, name, *here))
+        w = pcbnew.ToMM(t1.GetWidth())
+        floor = max(w, 0.2)
+        pts = []
+        for t, far in ((t1, far1), (t2, far2)):
+            dx, dy = far.x - x, far.y - y
+            diag = dx != 0 and dy != 0
+            c = cut if cut is not None else (CHAMFER_CUT_DIAG if diag else CHAMFER_CUT)
+            length = pcbnew.ToMM(int(math.hypot(dx, dy)))
+            along = c * math.sqrt(2) if diag else c
+            shared = (lid, code, far.x, far.y) in bends
+            limit = (length - floor) / 2 if shared else length - floor
+            if c != (CHAMFER_CUT_DIAG if diag else CHAMFER_CUT):
+                limit = (length - floor) / 2 if shared else length - min(floor, length / 2)   # a named cut: its own
+            if along > limit + 1e-6:
+                problems.append(f'{net} {name} {here}: a {c} mm cut leaves less than {floor} mm of a {length:.3f} mm leg')
+            sx, sy = (1 if dx > 0 else -1 if dx < 0 else 0), (1 if dy > 0 else -1 if dy < 0 else 0)
+            p = pcbnew.VECTOR2I(x + sx * nm(c), y + sy * nm(c))
+            seg = pcbnew.SEG(pcbnew.VECTOR2I(x, y), p)
+            joins = [r for o in by[(lid, code)] if o is not t1 and o is not t2 for r in (o.GetStart(), o.GetEnd())]
+            joins += [v.GetPosition() for v in vias if v.GetNetCode() == code]
+            if not all(seg.Distance(r) > 1 for r in joins):
+                problems.append(f'{net} {name} {here}: the cut removes copper another item joins')
+            pts.append(p)
+        chamfer = pcbnew.ToMM(int((pts[0] - pts[1]).EuclideanNorm()))
+        if chamfer < floor - 1e-6:
+            problems.append(f'{net} {name} {here}: {chamfer:.3f} mm chamfer is shorter than {floor} mm')
+        moves[(id(t1), e1)], moves[(id(t2), e2)] = (t1, pts[0]), (t2, pts[1])
+        out.append((net, name, *here, cut if cut is not None else CHAMFER_CUT, pts, t1))
+    assert not problems, 'right-angle bends the fixed chamfer cannot take:\n  ' + '\n  '.join(problems)
+    for (_, e), (t, p) in moves.items():
+        (t.SetStart if e == 0 else t.SetEnd)(p)
+    for net, name, x, y, c, pts, t1 in out:
+        n = pcbnew.PCB_TRACK(board)
+        n.SetStart(pts[0]); n.SetEnd(pts[1])
+        n.SetWidth(t1.GetWidth()); n.SetLayer(t1.GetLayer()); n.SetNet(t1.GetNet())
+        board.Add(n)
+    return [o[:5] for o in out]
 
 
 def main():

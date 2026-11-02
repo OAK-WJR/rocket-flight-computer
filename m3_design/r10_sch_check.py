@@ -161,6 +161,9 @@ def seeds(parts, pins):
         'AUX always-on feed split': lambda p, n: n.update({('J440', '1'): 'AUX_4V8'}),
         'AUX TX series bypass': lambda p, n: n.update({('U1', '63'): 'AUX_TX_WIRE'}),
         'AUX port ESD clamp removed': lambda p, n: p.pop('D441'),
+        # D-R24-11: J400.2's contact clamp is required, and its second pad is GND only
+        'J400 contact clamp removed': lambda p, n: p.pop('D402'),
+        'J400 contact clamp return off GND': lambda p, n: n.update({('D402', '2'): 'BAT_ENABLE'}),
         'retained camera isolation removed': lambda p, n: p.pop('U12'),
         'retained camera switch removed': lambda p, n: p.pop('U402'),
         'pyro load switch removed': lambda p, n: p.pop('Q120'),

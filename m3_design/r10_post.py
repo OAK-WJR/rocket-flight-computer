@@ -22,7 +22,8 @@ board-level silkscreen item is deleted and every footprint field hidden, then, i
   2. the terminal pin legends (check_r10.TERMINAL_PINS_R10: J121 1:E1- 2:E1+, J1 1:BAT+ 2:GND,
      J400 1:SW 2:SW), each at the free spot nearest its own pin whose text box has that pin as its
      nearest connector pin by OWN_MARGIN (r9_post.put_pin), top face first;
-  3. the revision legend M3-ASSY-R10 and JLC's order-number placeholder JLCJLCJLCJLC (ORDERING), both required;
+  3. the revision legend M3-ASSY-R10, required (D-R24-13: JLC withdrew the order number in May 2026, so the
+     JLCJLCJLCJLC placeholder is no longer drawn);
   4. J122's top-side row key (J122_TOP_ROWS beside the rows; the harness note is on the top), where the top has room
      (optional);
   5. pin-1 dots beside pad 1 of DOT_PARTS (pin1_dots: r9_post's mark and search, plus the dot nearer its own pad 1 than
@@ -113,7 +114,6 @@ SUBJECT_MARGIN = 1.0            # mm: a note / port table centre is this much ne
 # J122's top-side key (R3-REQ-06(b)): the plugs mate on the top, where only SERVO was; row labels beside the rows
 J122_TOP_ROWS = ()  # Five screw contacts have individual S1-S4/GND legends, no header rows.
 TERMINAL_PINS = check_r10.TERMINAL_PINS_R10
-ORDER_MARK = r8_post.ORDER_MARK
 PIN_REACH = r9_post.PIN_REACH
 CONNECTOR = check_r8.CONNECTOR
 # pin-1 dots: R10's ICs whose footprints carry no pin-1 mark (R9's list less the removed U7 / U8, plus the port supply
@@ -618,6 +618,7 @@ FAB_REFERENCE_CLEARANCES_R13 = {
     'C99': (0.0, 0.1, 0.4),
     'D400': (0.15, 1.1, 0.8),
     'D401': (0.0, 1.1, 0.8),
+    'D402': (0.0, -1.0, 0.8),    # D-R24-11: J400.2's clamp, beside its body as D441
     'D410': (0.05, -1.0, 0.8),
     'D411': (0.0, -1.0, 0.8),
     'D420': (0.0, 1.1, 0.8),
@@ -781,9 +782,10 @@ def finish(b, lib):
             placed[key] = None if result is None else list(result)
             if result is None:
                 missing.append(key)
-    # 3. revision legend and JLC's order-number placeholder
+    # 3. revision legend (D-R24-13, R23-MANUFACTURING-02: JLC withdrew the order-number mark in May 2026 and asks for no
+    # JLCJLCJLCJLC text; the placeholder is gone)
     whole = (EDGE_MM, EDGE_MM, silk.W - EDGE_MM, silk.L - EDGE_MM)
-    for text, near in ((REV, (silk.W / 2, silk.L - 6.0)), (ORDER_MARK, (silk.W / 2, silk.L / 2))):
+    for text, near in ((REV, (silk.W / 2, silk.L - 6.0)),):
         result = silk.label(b, silks, text, near, whole, (0, 90), ('B', 'F'), size=1.0)
         placed[text] = None if result is None else list(result)
         if result is None:

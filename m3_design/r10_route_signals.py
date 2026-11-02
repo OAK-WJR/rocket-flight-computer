@@ -103,7 +103,9 @@ def camera(d):
     t('CAM_PWR_EN','F',S,[(35.5,57.4),(34.4,57.4)]);v('CAM_PWR_EN',(34.4,57.4))
     t('CAM_PWR_EN','B',S,[(34.4,57.4),(31.35,57.4),p('U402.3')])
     t('CAM_FAULT_N','F',S,[p('U1.42'),(36,41),(36,56.3),(36.5,56.8)]);v('CAM_FAULT_N',(36.5,56.8))
-    t('CAM_FAULT_N','B',S,[(36.5,56.8),(35.6,56.8),(35.6,57.47),p('R432.1'),(35.02,58.05),p('U402.4')])
+    # D-R24-17: west to above R432.1 and straight down into it (one bend, chamfered with the rest), not a 0.67 mm drop
+    # between two diagonals.
+    t('CAM_FAULT_N','B',S,[(36.5,56.8),(35.27,56.8),p('R432.1'),(35.02,58.05),p('U402.4')])
     t('3V3','B',S,[p('R432.2'),(36.13,58.8)]);v('3V3',(36.13,58.8))
     t('CAM_5V_SENSE','F',S,[p('U1.35'),(31.7,44.5),(32.77,45.57),p('R104.2'),p('R105.1'),(32.77,51.0),p('C94.1')])
     t('CAM_5V','F',S,[p('R104.1'),(34.2,47.07),(34.2,49.325)]);v('CAM_5V',(34.2,49.325))
@@ -150,6 +152,10 @@ def status(d):
                              (32.3,54.47),(32.3,56.6),p('C60.1'),(32.77,57.93),p('R60.2')])
     t('LOGIC_SOURCE_ST','F',S,[p('U1.28'),(31.65,48),(31.65,51.0),(30.85,51.8)])
     v('LOGIC_SOURCE_ST',(30.85,51.8))
+    # D-R24-08 (R22-POWER-02): PA4's ST line gets a second barrel south-west of the first, joined to it on both layers.
+    v('LOGIC_SOURCE_ST',(30.45,51.4))
+    for layer in ('F','B'):
+        t('LOGIC_SOURCE_ST',layer,S,[(30.45,51.4),(30.85,51.8)])
     t('LOGIC_SOURCE_ST','B',S,[(30.85,51.8),(30.85,53.1),(29.8,54.15),(29.8,59.125),p('R91.2')])
     t('LOGIC_SOURCE_ST','B',S,[p('R91.2'),(28.925,60.625),p('U11.9')])
     t('BAT_FAULT_N','F',S,[p('U1.29'),(28.2,47.5)]);v('BAT_FAULT_N',(28.2,47.5))

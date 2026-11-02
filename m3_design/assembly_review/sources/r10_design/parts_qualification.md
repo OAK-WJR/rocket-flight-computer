@@ -10,12 +10,22 @@ tests were performed. The current always-on ports, screw terminals, microSD and 
 
 ## Current circuit amendment and review status
 
-Review status, checks, cost and open items are stated once, in [M3_R10.md, "Current state"](../../../../docs/M3_R10.md#current-state). In short: PCB `5516eeec…` (46 × 90 mm) is not accepted and nothing is ordered. Round 21 (ten Claude lenses) reviewed the previous PCB `0dc84776…` and found 0 Critical / 0 Major / 35 Minor; its fix pass changed the board. Round 22 found 0 / 0 / 22 on `5516eeec…`; round 23 is the second review of the closing pair. AGENTS section 2 is unchanged. This file is the component contract; where a section below is marked historical it describes
+Review status, checks, cost and open items are stated once, in [M3_R10.md, "Current state"](../../../../docs/M3_R10.md#current-state). In short: PCB `1407e850…` (46 × 90 mm) is not accepted and nothing is ordered. Rounds 22 and 23 (ten Claude lenses each) were the closing pair on the previous PCB `5516eeec…` (0 Critical / 0 Major; 22 and 55 Minor). The round 24 board pass (D-R24-01 … D-R24-17) then changed the board, so rounds 24 and 25 review `1407e850…` under the owner's strict rule (only verified real errors count). AGENTS section 2 is unchanged. This file is the component contract; where a section below is marked historical it describes
 hardware that was removed from R10 and is kept only for the record. The round 19 amendments below supersede earlier text in this file where they differ.
+
+## Round 24 component amendment (2026-11-01; D-R24-11)
+
+| Ref | Part | Change and evidence |
+|---|---|---|
+| D402 | Infineon **ESD103-B1-02EL E6327**, LCSC C535146 (the port clamps' existing line) | New: J400.2's contact clamp (R22-REQUIREMENTS-03, R23-SAFETY-06), from J400.2 to GND at B(4.45,65.9), rot 90, under J400 between its pins. Its 4.114 mm B.Cu tap leaves J400.2's own pad, so a discharge at the screw reaches D402 before R165; D402.2 returns 0.7 mm to its own GND via (5.15,65.575). BAT_SW_RETURN is now exactly {J400.2, R165.1, D402.1} (S-5, K-actuators). Leakage I_R ≤ 50 nA ([Infineon product page](https://www.infineon.com/de/part/ESD103-B1-02EL), parametrics; ESD103 datasheet Rev 1.3, at 15 V per D-R24-11): with J400 closed (J400.2 about 5.2 V at 8.4 V) it moves EN by at most 50 nA × R80 × R81 / (R80 + R165 + R81) = 5.7 mV (Calculation), a quarter of the 0.1 µA EN leakage the D-R20-11 timing already carries, so the EN figures stand. Inference: Infineon gives no 85 °C leakage and no trigger tolerance (21 V typical), so a screw discharge raises C87 by about 14 mV (21 V on 150 pF). Failure modes: shorted, it holds the board off (seen by the closed-switch check); open, the board is back to the unclamped state, with the ORDERING 8.3 handling rule as the second layer. Datasheet survey of the alternatives (SRV05-4, USBLC6-2SC6, SMBJ12CA, BAT54A, BZX84-B5V1): none meets both the leakage and the clamp limit (D-R24-11). Cost: the C535146 line goes 8 → 9 per board at $0.2306, no new code or feeder fee. |
+
+Board totals with D402: JLC BOM 81 lines (45 Extended / 36 Basic) plus C84 on the owner BOM; 206 placed parts. Live JLC 2026-11-02T01:43:55Z (cost) and 01:42:53Z (stock), final files of `1407e850…`: **$85.60 per board** against the $84.41 cap, $1.19 over (was $85.36 before D402; owner decision pending; see M3_R10 "Cost and stock"). U4 shows 9 in stock and only 2 orderable against 5; U9 (TPS259470LRPWR C3662793) 28 in stock, −83 orderable, minimum purchase 7; C535146 201 in stock, 194 orderable against 45. The stock check fails on U4 and U9; it reads JLC's `canPresaleNumber` as the orderable quantity, an Inference about JLC's field. For both, confirm in the JLC cart on order day, else consign franchised parts (R20-BOM-01).
+
+Other round 24 placement changes, same parts and codes: C88 B(18.67,83.56) rot 0 on U9.5's axis (D-R24-17; was B(19.4,83.95) rot 90), R402 / R403 B(30.9,12.85) / B(30.9,14.6) beside U401 on B.Cu (D-R24-09; were on F.Cu), R92 F(31,86.7) and TP88 F(35.5,86.4) off the forward edge (D-R24-15).
 
 ## Round 19 component amendments (2026-10-30/31; D-R19-04, -07, -10, -11, -14)
 
-No new BOM code except U4's. JLC BOM 81 lines (45 Extended / 36 Basic) plus C84 on the owner BOM; 205 placed parts. Live JLC 2026-10-31T23:24Z (final files of `5516eeec…`): $85.37 per board against the $84.41 cap (owner decision pending; see M3_R10 "Cost and stock"); U4 shows 9 in stock and only 2 orderable, so the stock check (`stock_check.json` 2026-10-31T23:23Z) fails on U4, 2 orderable against 5, and now also on U9 (TPS259470LRPWR C3662793: 40 in stock, −69 orderable, minimum purchase 7); it reads JLC's `canPresaleNumber` as the orderable quantity, an Inference about JLC's field. For both, confirm in the JLC cart on order day, else consign franchised parts (R20-BOM-01).
+No new BOM code except U4's. JLC BOM 81 lines (45 Extended / 36 Basic) plus C84 on the owner BOM; 205 placed parts at the time (206 since D402, above). Live JLC 2026-10-31T23:24Z (final files of `5516eeec…`, superseded by the round 24 figures above): $85.37 per board against the $84.41 cap; U4 shows 9 in stock and only 2 orderable, so the stock check (`stock_check.json` 2026-10-31T23:23Z) failed on U4, 2 orderable against 5, and also on U9 (TPS259470LRPWR C3662793: 40 in stock, −69 orderable, minimum purchase 7); it reads JLC's `canPresaleNumber` as the orderable quantity, an Inference about JLC's field. For both, confirm in the JLC cart on order day, else consign franchised parts (R20-BOM-01).
 
 | Ref | Part | Change and evidence |
 |---|---|---|
@@ -451,7 +461,7 @@ after pad/flight drain, Rpack ≤ 0.15 Ω, servo stall 1.92 A each. Solve
 Ifire=V/Rfire. Retain conservative 2 Ω e-match and ≤ 0.3 Ω external leads/harness,
 R134 tolerance/hot corner 2.02909 Ω, hot FETs, 5 mΩ ground/10 mΩ contact allowances.
 The current `parts_budget.json` is regenerated and bound to PCB
-`5516eeec…` (fire-path figures unchanged from `50a39de5…`) instead of carrying circuit-pass length literals. Native fire-path pruning
+`1407e850…` (fire-path figures unchanged from `50a39de5…`) instead of carrying circuit-pass length literals. Native fire-path pruning
 gives BAT_IN 6.307107 mm / 1.0 mm, RAW_ACT 5.886133 mm, IGN 10.523276 mm and
 OUT 7.854478 mm at 0.5 mm, plus one aligned 2.2 mm/0.4 mm source path. BAT_IN includes
 the additional 0.707107 mm routed entry inside Q120's common drain pad; dead sense
@@ -461,7 +471,7 @@ With the primary 40 mΩ/FET ceiling, total loop 4.617802565 Ω gives 0/1/2/3/4-s
 currents 1.540851284/1.475765326/1.410415927/1.344760704/1.278747143 A
 (other converter load 13.064 W with the 100 mA AUX allowance);
 all exceed 1.125 A. D-R11-03 binds the generator to native geometry. The regenerated
-budget SHA-256 is `d2e22ea3ea39479a4787dff2b76cd9b63b3f93c5c26891e397be70ee69722f88` (round 21 docs lane read, on `5516eeec…`; only its board hash changed).
+budget SHA-256 is `f734dff71e98160ce9344c995a041784f162f02653121c551eedca170925173e` (round 24 docs lane read, on `1407e850…`; only its board hash changed; on `5516eeec…` it was `d2e22ea3…`).
 On `a3144b15…` the same loop gave 1.544251030/1.479327596/1.414158454/1.348704524/1.282917526 A
 (budget SHA-256 `61727af7baec761ded6d75c963bf6442f702a827e59b7e5656de08e526ce54fa`); the AUX allowance's extra load accounts for the change.
 On `632a9ad3…` (IGN 10.230382 mm, copper 29.362412 mΩ/35.132126 mΩ) the loop was 4.617458126 Ω with
@@ -721,7 +731,7 @@ behaviors (D-SS-01).
 The camera back-feed prohibition (REQUIREMENTS
 "Camera") extends to J410 and J420.
 
-**Port UART ESD (R3-MCU-05; current direct-port amendment).** D400/D401, D410/D411, D420/D421 and D440/D441 are ESD103-B1-02EL
+**Port UART ESD (R3-MCU-05; current direct-port amendment).** D400/D401, D410/D411, D420/D421 and D440/D441 (and, since D-R24-11, D402 at J400.2; see the round 24 amendment) are ESD103-B1-02EL
 (shared code with R9's RF clamps): ±15 V working, clamping at about20/36/48 V at
 1/8/16 A TLP (Infineon ESD103-B1-02 datasheet; R3 review read rev 1.3 Tables 3/5
 p6, R7 pass 2 v2.0 Tables 2/4/6). That clamp is far above a 3.3–5 V I/O, so the

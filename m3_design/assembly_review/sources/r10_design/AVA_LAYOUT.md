@@ -1,12 +1,14 @@
 # R10 AVA layout hand-off
 
-**How to read this file (R19-DOC-08).** For the current board `5516eeec…` read only "Round 21 CAD fix pass" at the
-end; it lists the changes from its predecessor `0dc84776…` ("Round 20 CAD polish pass"). The current placement itself is
+**How to read this file (R19-DOC-08).** For the current board `1407e850…` read only "Round 24 board pass" at the
+end; it lists the changes from its predecessor `5516eeec…` ("Round 21 CAD fix pass", the board of rounds 22 and 23). The current placement itself is
 `m3_design/r10_place.tsv` and the board; everything above the round 18 section is history of earlier boards.
 Sealed historical sections keep their original text, including run-together words and numbers (R19-DOC-04); only the
 current-status paragraphs were respaced in round 19.
 
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
+**Round 24 board pass (2026-11-01):** the current CAD candidate is the rebuilt PCB recorded in "Round 24 board pass"
+at the end (D-R24-01..17); "Round 21 CAD fix pass" records its predecessor `5516eeec…`, which rounds 22 and 23 reviewed.
 **Round 21 CAD fix pass (2026-10-31):** the current CAD candidate is the rebuilt PCB recorded in
 "Round 21 CAD fix pass" at the end (D-R21-01..09); "Round 20 CAD polish pass" records its predecessor `0dc84776…`.
 **Round 20 CAD polish pass (2026-10-31):** the round 20 PCB is recorded in "Round 20 CAD polish pass"
@@ -463,3 +465,31 @@ builds (`../r10_review/round21_fix_cad.md`). PCB `5516eeec5b9e79b49d157146baf6f7
 Silkscreen (D-R21-09): C126, Q122 and R122 shown again, and C80, C87, C89, D123, D8 and R81 re-placed by the designator
 search (96 -> 93 hidden, all kept on Fab); no legend moved. Every other part pose, land, net and support is unchanged.
 U1's pin map and the IMU axis map (roll = -gyro_Y) are unchanged. Items 6-8 (D-R21-06..08) are checks only.
+
+## Round 24 board pass (new PCB; D-R24-01..17)
+
+The CAD lane's pass after the closing pair (rounds 22 and 23, 0 Critical / 0 Major on `5516eeec…`). Every change is in
+the generators and the checks, with complete `r10_build.sh` builds C and D giving the same board
+(`../r10_review/round24_board_cad.md`). PCB `1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e`,
+46 x 90 x 1.6 mm, 2,363,869 bytes; 216 footprints, 1057 segments, 307 vias (168 GND; 302 at 0.5 / 0.3, 4 at 0.6 / 0.3,
+1 at 1.0 / 0.5 mm), 1867.022756 mm track (`5516eeec…`: 215 / 983 / 300 (167) / 1871.611826 mm).
+
+| Change | Placement / copper |
+|---|---|
+| J400.2 ESD clamp (D-R24-11) | New D402 (ESD103-B1-02EL, C535146) B(4.45,65.9) rot 90 under J400 between its pins; B.Cu tap from J400.2's own pad (7.4,67.6) -> (4.81,67.6) -> (4.45,67.24) -> (4.45,66.225), 4.114 mm, ahead of R165; D402.2 0.7 mm to its own GND via (5.15,65.575) |
+| Q120 / Q121 gate drive (D-R24-02) | Second ACT_GATE barrels (15.4,72.85) and (11.74,72.3), each joined on F.Cu and B.Cu to the first |
+| BOOT0 (D-R24-03) | Second barrel (14.2,46.0), B.Cu diagonal to (13.8,45.6); R5 stays on B.Cu |
+| VCAP2 (D-R24-04) | Second barrel (18.3,36.8) on stubs to U1.73's drop and C20.1's run; VCAP1 unchanged (no legal spot) |
+| U402.2 GND island (D-R24-07) | Second GND via (32.3,60.1) on a 0.3 mm B.Cu link; U10.2 / R8.2 islands unchanged |
+| Monitor taps (D-R24-08) | Second vias R60.1 (34.5,62.4), U1.28 (30.45,51.4), R91.1 (28.1,59.4) |
+| U401 divider (D-R24-09) | R402 F(31.4,12.6) -> B(30.9,12.85) rot 0; R403 F(31.4,14.4) -> B(30.9,14.6) rot 180; vias (29.75,13.6), (30.575,11.6), (31.4,14.4) removed; U401 OUT via (29.75,12.6) -> (29.75,11.65) |
+| USB OV leg (D-R24-10) | Second barrel (16.6,28.0) at R87.1's input layer change |
+| Order mark (D-R24-13) | JLCJLCJLCJLC no longer drawn |
+| Short-edge parts (D-R24-15) | R92 F(31,87.5) -> F(31,86.7); TP88 F(35.5,87) -> F(35.5,86.4); their vias (30.175,85.9), (32.65,86.7), (36.6,86.4) |
+| 90-degree bends (D-R24-17) | 59 -> 0, chamfered or redrawn at source; C88 B(19.4,83.95) rot 90 -> B(18.67,83.56) rot 0 with its GND via (19.59,84.06); U9's IN via now (17.5,87.15); C82.1's second In2 via (21.1,79.1) -> (21.1,78.25); U400's second input via (14.1,8.5) |
+
+Kept, measured (no change): U4.6 / U4.7's GND via (D-R24-01), U9's EN cell (D-R24-05), U11.2 and the two 3V3A feeds
+(D-R24-06), R87.1's drop and R85.1 (D-R24-10), the east tabs (D-R24-14), the Fab body outlines (D-R24-12) and the
+optional cleanliness items (D-R24-16). Silkscreen: C87 and R402 hidden, C16, C20 and C404 shown again, D402's designator
+shown (93 -> 92 hidden, 124 visible, 44 legends; all hidden references kept on Fab). Every other part pose, land, net
+and support is unchanged. U1's pin map and the IMU axis map (roll = -gyro_Y) are unchanged.

@@ -13,6 +13,7 @@ import r9_route_imu_baro
 from r10_route import CORE_SHIFT, Translated
 
 C32_R9 = {('3V3A', ((3.72, 48.15), (2.42, 48.15))), ('GND', ((1.58, 48.15), (0.85, 48.15)))}
+OWN_PADS = ('C32',)                  # pads asserted by this module (c32()), not by the R9 tables
 
 
 class CoreTable(Translated):
@@ -36,6 +37,11 @@ class CoreTable(Translated):
             points = [(24.2,50.0),(24.05,49.85),(24.05,49.32)]
         if net == 'GND' and points == [(24.2,48.48),(24.2,47.7)]:
             points = [(24.05,48.48),(24.2,48.33),(24.2,47.7)]
+        # D-R24-04 (R23-MCU-02): VCAP2's F.Cu drop and B.Cu run each get the vertex of the second barrel's stub.
+        if net == 'VCAP2' and layer == 'F' and points == [(13.0,36.95),(13.0,38.8)]:
+            points = [(13.0,36.95),(13.0,38.3),(13.0,38.8)]
+        if net == 'VCAP2' and layer == 'B' and points == [(13.0,38.8),(14.1,38.8)]:
+            points = [(13.0,38.8),(13.3,38.8),(14.1,38.8)]
         if net == 'VCAP1' and layer == 'B' and points == [(24.25,39.5),(23.35,39.5)]:
             points = [(24.25,39.5),(23.35,38.6)]
         if net == 'GND' and points == [(23.35,40.65),(24.25,40.65)]:
@@ -90,15 +96,32 @@ def c32(d):
     d.via('GND', (8.72, 44.8))
 
 
+def vcap2(d):
+    """D-R24-04 (R23-MCU-02, D-R23-01): a second VCAP2 barrel north-east of the first, on a 0.3 mm F.Cu stub to U1.73's
+    drop and a 0.5 mm B.Cu stub to C20.1's run: either barrel alone joins C20 to the pin."""
+    d.via('VCAP2', (18.3, 36.8))
+    d.track('VCAP2', 'F', 0.2, [(18.3, 36.8), (18.0, 36.8)])
+    d.track('VCAP2', 'B', 0.2, [(18.3, 36.8), (18.3, 37.3)])
+
+
+def boot0(d):
+    """D-R24-05 (R23-MCU-02, D-R23-01): a second BOOT0 barrel at the F.Cu run's corner (14.2, 46.0), joined to the
+    first (13.8, 45.6) by a B.Cu diagonal under the F.Cu one: either barrel alone holds BOOT0 to R5."""
+    d.via('BOOT0', (14.2, 46.0))
+    d.track('BOOT0', 'B', 0.2, [(13.8, 45.6), (14.2, 46.0)])
+
+
 def draw(d):
     translated = CoreTable(d, CORE_SHIFT)
     for family in (r9_route_qspi_hse, r9_route_imu_baro):
         for ref, num, net, at in getattr(family, 'PADS', ()):
-            if ref != 'C32':
+            if ref not in OWN_PADS:
                 translated.pad(ref, num, net, at)
         family.draw(translated)
     r9_power.decoupling(translated, None)
     c32(d)
+    vcap2(d)
+    boot0(d)
     # Analog supply uses one straight inner-layer trunk below the crystal keep-out.
     d.track('3V3A','B',.25,[(16.5,50.2),(16,50.2)]);d.via('3V3A',(16,50.2))
     d.track('3V3A','In2',.25,[(16,50.2),(26.05,50.2),(27,49.25)])

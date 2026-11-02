@@ -1133,22 +1133,39 @@ class Synthetic(SyntheticBase):
         self.part('R80', [('1', 0, 0, 'BAT_IN'), ('2', 1.5, 0, 'BAT_SW_SOURCE')], at=(15, 10)).SetValue('470k 1%')
         self.part('R165', [('1', 0, 0, 'BAT_SW_RETURN'), ('2', 1.5, 0, 'BAT_ENABLE')], at=(20, 10)).SetValue('470k 1%')
         self.part('U9', [('1', 0, 0, 'BAT_ENABLE')], at=(25, 10))
+        # D-R24-11: J400.2's ESD clamp to GND, the one further member of BAT_SW_RETURN
+        d = self.part('D402', [('1', 0, 0, 'BAT_SW_RETURN'), ('2', 0.65, 0, 'GND')], at=(5, 14))
+        d.SetValue('ESD103-B1-02EL'); d.SetField('LCSC', 'C535146')
+        return d
 
     def test_s5_switch_topology_and_resistor_values(self):
-        self.power_switch()
+        clamp = self.power_switch()
         self.assertEqual(gate.s5(self.ctx())[0], [])
-        for ref, num, net in (('J400', '1', 'BAT_IN'), ('R165', '2', 'RAW_PROTECTED'), ('U9', '1', 'RAW_ACT')):
+        for ref, num, net in (('J400', '1', 'BAT_IN'), ('R165', '2', 'RAW_PROTECTED'), ('U9', '1', 'RAW_ACT'),
+                              ('D402', '2', 'BAT_ENABLE'), ('D402', '2', 'BAT_SW_RETURN'), ('D402', '1', 'GND')):
             p = self.board.FindFootprintByReference(ref).FindPadByNumber(num)
             old = p.GetNet(); p.SetNet(self.board.FindNet(net))
             self.assertTrue(any(f'{ref}.{num} must be' in i for i in gate.s5(self.ctx())[0]))
             p.SetNet(old)
+        self.assertEqual(gate.s5(self.ctx())[0], [])
+        clamp.SetValue('SMBJ12CA')
+        self.assertTrue(any('D402 must be the two-pad ESD103-B1-02EL C535146' in i for i in gate.s5(self.ctx())[0]))
+        clamp.SetValue('ESD103-B1-02EL')
+        clamp.SetReference('D999')          # the clamp missing (renamed, not removed: KiCad 10 SWIG ownership)
+        found = gate.s5(self.ctx())[0]
+        self.assertTrue(any("D402 (J400.2's ESD clamp, D-R24-11) is missing" in i for i in found), found)
+        self.assertTrue(any("BAT_SW_RETURN must touch only ['D402', 'J400', 'R165']" in i for i in found), found)
+        clamp.SetReference('D402')
         self.board.FindFootprintByReference('R80').SetValue('0R')
         self.assertTrue(any('R80 must be 470k' in i for i in gate.s5(self.ctx())[0]))
 
     def test_s5_switch_contact_cannot_be_bypassed(self):
         self.power_switch()
         f = self.part('R999', [('1', 0, 0, 'BAT_SW_SOURCE'), ('2', 1.5, 0, 'BAT_SW_RETURN')], at=(30, 10))
-        self.assertTrue(any('bypasses the open J400 switch' in i for i in gate.s5(self.ctx())[0]))
+        found = gate.s5(self.ctx())[0]
+        self.assertTrue(any('bypasses the open J400 switch' in i for i in found))
+        # D-R24-11: any fourth member of BAT_SW_RETURN fails the exact pad set as well
+        self.assertTrue(any("BAT_SW_RETURN pads must be exactly ['D402.1', 'J400.2', 'R165.1']" in i for i in found), found)
         self.board.Remove(f)
         self.track((5, 10), (8.5, 10), None)
         self.assertTrue(any('switch contact / resistor bypass' in i for i in gate.s5(self.ctx())[0]))
@@ -2357,10 +2374,11 @@ class R19GateFix(SyntheticBase):
         """R19-GATE-07: only designators and the allowed legends on silkscreen."""
         r5 = self.part('R5', [('1', 0, 0, '3V3')], at=(30, 30))
         r5.Reference().SetLayer(pcbnew.F_SilkS); r5.Reference().SetVisible(True)
-        for text in ('J2 1:3V3', 'J2 4:SWCLK 5:GND', 'M3-ASSY-R10', gate.JLC_ORDER_MARK, 'GPS', '1:BAT+', 'R134'):
+        for text in ('J2 1:3V3', 'J2 4:SWCLK 5:GND', 'M3-ASSY-R10', 'GPS', '1:BAT+', 'R134'):
             self.word(text, 20, 20)
         self.assertEqual(gate.silk_allowlist(self.board)[0], [])
-        for text in ('BATT+', 'J2 1:SWDIO', 'IGN2'):
+        # D-R24-13: JLC withdrew the order-number mark; its JLCJLCJLCJLC placeholder now fails like any other text
+        for text in ('BATT+', 'J2 1:SWDIO', 'IGN2', gate.JLC_ORDER_MARK):
             bad = self.word(text, 20, 40)
             found = gate.silk_allowlist(self.board)[0]
             self.assertTrue(any(repr(text) in i for i in found), (text, found))
@@ -3523,16 +3541,17 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('K-power', neck('U9 OUT', 0.7), 'U9 OUT: RAW_PROTECTED track 0.310 mm wide')
         self.seeded('K-power', neck('U9 IN', 1.0, pcbnew.F_Cu), 'U9 IN: BAT_IN track 0.310 mm wide')
 
-        def local(b):
-            t = next(t for t in self.path_tracks(b, 'U9 IN') if abs(pcbnew.ToMM(t.GetLength()) - 1.15) < .001)
+        def local(b):                       # D-R24-17: the C88-local 0.7 mm piece is 1.74 mm (tap T to C88.1)
+            t = next(t for t in self.path_tracks(b, 'U9 IN') if abs(pcbnew.ToMM(t.GetLength()) - 1.74) < .001)
             t.SetWidth(pcbnew.FromMM(0.6))
         self.seeded('K-power', local, 'U9 IN: BAT_IN track 0.600 mm wide')
 
-        def one_via(b):
+        def one_via(b):                     # D-R24-17: the second OUT via sits east of C82.1's edge on its own leg
             via = next(v for v in b.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'RAW_PROTECTED'
-                       and v.GetPosition() == self.P(21.1, 79.1))
-            link = next(t for t in self.path_tracks(b, 'U9 OUT') if abs(pcbnew.ToMM(t.GetWidth()) - 0.4) < .001)
-            b.Remove(via); b.Remove(link)
+                       and v.GetPosition() == self.P(21.1, 78.25))
+            leg = next(t for t in b.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == 'RAW_PROTECTED'
+                       and self.P(21.1, 78.25) in (t.GetStart(), t.GetEnd()))
+            b.Remove(via); b.Remove(leg)
         self.seeded('K-power', one_via, 'U9 OUT: 1 via(s) on the path; at least 2 required')
 
         def small_feed_via(b):
@@ -3581,8 +3600,9 @@ class RealBoardSeeds(unittest.TestCase):
     def test_r19_doubled_feeds_keep_two_vias(self):
         """D-R19-09 (R19-PWR-01 / R19-GATE-04): removing either via of a doubled feed, one of L400.2's two In2 vias (the
         round 19 reviewer's seed) or L1.2's direct via fails K-power; dropping the F/B-only bridge via fails it as a
-        missing named bridge. D-R20-02: U401 OUT also reaches In2 through R402.1's own via (30.575, 11.6) on its 0.4 mm
-        F.Cu run, so it falls to one via only with both that via and (29.75, 9.95) gone."""
+        missing named bridge. D-R24-09: R402 / R403 sit on B.Cu beside U401 (R402.1's own via is gone) and U401's OUT
+        run reaches In2 through (29.75, 11.65) and (29.75, 9.95) on the C406.1 run, and through the latter's F.Cu run
+        J440's (30.5, 9.95): dropping (29.75, 9.95) leaves one (dropping (29.75, 11.65) leaves two by the count)."""
         def drop(net, *xys):
             def seed(b):
                 for xy in xys:
@@ -3591,7 +3611,7 @@ class RealBoardSeeds(unittest.TestCase):
             return seed
         for name, net, xys in (('U401 IN', 'PORT_5V3', [(26.45, 11.95)]), ('U401 IN', 'PORT_5V3', [(25.9, 8.6)]),
                                ('U401 EN', 'PORT_5V3', [(24.9, 14.9)]),
-                               ('U401 OUT', 'PORT_4V8', [(29.75, 9.95), (30.575, 11.6)]),
+                               ('U401 OUT', 'PORT_4V8', [(29.75, 9.95)]),
                                ('U402 IN', 'PORT_5V3', [(42.75, 61.8)]), ('C84 hold-up', 'VLOGIC', [(29.8, 81.15)]),
                                ('U400 OUT', 'PORT_5V3', [(26.0, 8.0)]), ('U2 OUT', '3V3', [(23.1, 78.1)])):
             self.seeded('K-power', drop(net, *xys), f'{name}: 1 via(s) on the path; at least 2 required')
@@ -4122,11 +4142,12 @@ class RealBoardSeeds(unittest.TestCase):
             self.assertLessEqual(ev[name]['ipc_floor_mm'], next(p for p in gate.POWER_PATHS if p['name'] == name)['floor'])
 
     def second_in_via(self, b, dia, drill):
-        """The legitimate second U9 IN via of seeds c01 / c01b, drawn cleanly on the post-CAD board."""
-        v = pcbnew.PCB_VIA(b); v.SetPosition(self.P(17.5, 88.891)); v.SetWidth(pcbnew.FromMM(dia))
+        """The legitimate second U9 IN via of seeds c01 / c01b, drawn cleanly on the post-CAD board: since D-R24-17 at
+        the 1.0 mm F.Cu feed's chamfer end (17.5, 88.171), 1.021 mm below the IN via (17.5, 87.15)."""
+        v = pcbnew.PCB_VIA(b); v.SetPosition(self.P(17.5, 88.171)); v.SetWidth(pcbnew.FromMM(dia))
         v.SetDrill(pcbnew.FromMM(drill)); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(b.FindNet('BAT_IN')); b.Add(v)
         t = pcbnew.PCB_TRACK(b); t.SetLayer(pcbnew.B_Cu); t.SetWidth(pcbnew.FromMM(1.0)); t.SetNet(b.FindNet('BAT_IN'))
-        t.SetStart(self.P(17.5, 88.891)); t.SetEnd(self.P(17.5, 87.3)); b.Add(t)
+        t.SetStart(self.P(17.5, 88.171)); t.SetEnd(self.P(17.5, 87.15)); b.Add(t)
         pcbnew.ZONE_FILLER(b).Fill(b.Zones())
 
     def test_r19_second_u9_in_via_passes(self):
@@ -4152,7 +4173,7 @@ class RealBoardSeeds(unittest.TestCase):
                 rc.set_profile('r10')
                 loops = [d for d in rc.scan(b) if d['cat'] == 'track_loop' and d['net'] == 'BAT_IN']
                 self.assertTrue(loops)
-                entry = ('BAT_IN', (17.5, 88.891), 'second U9 IN via beside (17.5, 87.3) (seed)')
+                entry = ('BAT_IN', (17.5, 88.171), 'second U9 IN via beside (17.5, 87.15) (seed)')
                 with patch.object(rc, 'PARALLEL_VIAS', rc.PARALLEL_VIAS + [entry]):
                     failing = [d for d in rc.scan(b) if rc.gated(d) and d['net'] == 'BAT_IN']
                 self.assertEqual(failing, [])
@@ -4163,8 +4184,9 @@ class RealBoardSeeds(unittest.TestCase):
         sys.path.insert(0, str(gate.ROOT / 'm3_design'))
         import r10_parts
         b = self.load()
-        for lay, a, c in ((pcbnew.F_Cu, (17.5, 88.891), (18.9, 88.891)), (pcbnew.B_Cu, (18.9, 88.891), (19.4, 88.391)),
-                          (pcbnew.B_Cu, (19.4, 88.391), (19.4, 85.4))):
+        # D-R24-17: the drawing re-attached to the new feed (F.Cu run at y 88.891 west of its chamfer, B.Cu IN trunk at x 18.25)
+        for lay, a, c in ((pcbnew.F_Cu, (16.0, 88.891), (18.9, 88.891)), (pcbnew.B_Cu, (18.9, 88.891), (18.9, 86.65)),
+                          (pcbnew.B_Cu, (18.9, 86.65), (18.25, 86.0))):
             t = pcbnew.PCB_TRACK(b); t.SetLayer(lay); t.SetWidth(pcbnew.FromMM(1.0)); t.SetNet(b.FindNet('BAT_IN'))
             t.SetStart(self.P(*a)); t.SetEnd(self.P(*c)); b.Add(t)
         v = pcbnew.PCB_VIA(b); v.SetPosition(self.P(18.9, 88.891)); v.SetWidth(pcbnew.FromMM(1.0))
@@ -4314,19 +4336,22 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('S-8', rings('J400', '2'), 'RAW_PROTECTED copper on In2.Cu is 0.750 mm from the J400.2 inner ring')
 
     def test_r20_fb_tap_survives_one_via_open(self):
-        """D-R20-02 (R20-PWR-02): U401's feedback divider top R402.1 stays joined to U401's OUT pads with any one PORT_4V8
-        via removed; without its own via into the In2 output plane (the round 19 copper) opening the OUT via (29.75,
-        12.6) cuts it off, which K-power names."""
+        """D-R20-02 (R20-PWR-02) / D-R24-09: U401's feedback divider sits on B.Cu beside U401, so R402.1 (its top),
+        U401.3 (FB) and R403.2 (its bottom) join U401's pins with no via: no single point. The OUT run's T (29.75,
+        12.85) lies 0.075 mm inside R402.1's land, so its three pieces (the link from U401's pins, the C406.1 drop and
+        the stub to the land centre) all reach the land; with the three cut, K-power names R402.1 as not joined (round
+        19's via-only route and round 20's extra via are gone)."""
         issues, ev = gate.single_via_opens(self.load())
         self.assertEqual(issues, [])
-        self.assertEqual(ev['R402.1']['single_points'], [])
+        for tap in ('R402.1', 'U401.3', 'R403.2'):
+            self.assertEqual(ev[tap]['single_points'], [], tap)
 
-        def round19(board):
-            self.drop(board, [v for v in board.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'PORT_4V8'
-                              and v.GetPosition() == self.P(30.575, 11.6)][0])
-            pcbnew.ZONE_FILLER(board).Fill(board.Zones())
-        self.seeded('K-power', round19, 'R402.1 (U401\'s feedback divider top (R20-PWR-02)) hangs on one via: opening '
-                    'via PORT_4V8 (29.75, 12.60)')
+        def cut(board):
+            for a in ((28.75, 12.85), (29.75, 11.65), (30.075, 12.85)):
+                self.drop(board, next(t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK'
+                                      and t.GetNetname() == 'PORT_4V8' and {tuple(t.GetStart()), tuple(t.GetEnd())}
+                                      == {tuple(self.P(29.75, 12.85)), tuple(self.P(*a))}))
+        self.seeded('K-power', cut, "R402.1 (U401's feedback divider top (R20-PWR-02)) is not joined to U401.1/U401.2")
 
     def test_r20_s6_sees_aux_and_the_switch_enable_chain(self):
         """R20-SAF-02: each new S-6 pattern seeded on the board. AUX_ (port): the reviewer's AUX_TX_WIRE track 0.100 mm
@@ -4438,17 +4463,13 @@ class RealBoardSeeds(unittest.TestCase):
         self.assertEqual(issues, [])
         self.assertEqual(len(gate.SINGLE_OPEN_TAPS), 40)    # 26 (round 21) + 7 (D-R22-02) + 5 (D-R23-01 / -02) + 2 (D-R23-11)
         self.assertEqual(set(ev), {t[1] for t in gate.SINGLE_OPEN_TAPS})
+        # D-R24-02 / -04 / -05 / -07 / -08 / -09 / -10: second vias (and U401's divider beside it) leave these single points
         self.assertEqual({tap: e['single_points'] for tap, e in ev.items() if e['single_points']}, {
-            'U401.3': ['via PORT_LDO_FB (29.75, 13.60)'],
             'R81.1': ['via BAT_ENABLE (17.10, 82.80)'], 'C87.1': ['via BAT_ENABLE (17.10, 82.80)'],
-            'R87.1': ['via USB_LIMITED (16.00, 28.00)', 'via USB_LIMITED (22.00, 62.25)'],
+            'R87.1': ['via USB_LIMITED (22.00, 62.25)'],
             'R85.1': ['via USB_ILIM (14.82, 26.00)'], 'R85.2': ['via GND (9.00, 27.84)'],
-            'R430.2': ['via GND (32.30, 59.50)'],
-            'U10.2': ['via GND (9.00, 27.84)'], 'R7.2': ['via GND (9.00, 27.84)'], 'U402.2': ['via GND (32.30, 59.50)'],
-            'R8.2': ['via GND (9.95, 30.60)'], 'R60.1': ['via VLOGIC (34.50, 63.00)'],
-            'U1.28': ['via LOGIC_SOURCE_ST (30.85, 51.80)'], 'R91.1': ['via 3V3 (28.10, 60.00)'],
-            'U1.94': ['via BOOT0 (13.80, 45.60)'], 'U1.48': ['via VCAP1 (29.25, 38.00)'], 'U1.73': ['via VCAP2 (18.00, 37.30)'],
-            'Q120.4': ['via ACT_GATE (16.20, 73.30)'], 'Q121.4': ['via ACT_GATE (11.14, 71.70)'],
+            'U10.2': ['via GND (9.00, 27.84)'], 'R7.2': ['via GND (9.00, 27.84)'],
+            'R8.2': ['via GND (9.95, 30.60)'], 'U1.48': ['via VCAP1 (29.25, 38.00)'],
             'U4.6': ['via GND (16.75, 47.60)'], 'U4.7': ['via GND (16.75, 47.60)']})
 
         def no_run(board):
@@ -4523,13 +4544,15 @@ class RealBoardSeeds(unittest.TestCase):
 
     def test_r21_port_clamps_beside_their_pins(self):
         """D-R21-07 (R21-GATE-04): every port clamp is <= 4.5 mm of track from its terminal pin without passing the 1 k
-        resistor (3.975-4.388 mm centre to centre); the gate lens's d08 (D440 back on F.Cu at F(13.9, 17.2), round 19's
-        run) fails, and so does a clamp re-fed from its resistor's far side."""
+        resistor (3.864-4.388 mm centre to centre; D-R24-17's chamfer at J440's clamp corners took 0.211 mm off each;
+        D-R24-11's J400.2 clamp D402, on the screw side of R165, 4.114 mm);
+        the gate lens's d08 (D440 back on F.Cu at F(13.9, 17.2), round 19's run) fails, and so does a clamp re-fed from
+        its resistor's far side."""
         issues, ev = gate.port_clamps(self.load())
         self.assertEqual(issues, [])
         self.assertEqual({k: v[1] for k, v in ev.items()},
-                         {'J410.3': 4.288, 'J410.4': 4.388, 'J420.3': 3.975, 'J420.4': 3.975, 'J440.3': 4.075,
-                          'J440.4': 4.175, 'J9.3': 3.975, 'J9.4': 3.975})
+                         {'J410.3': 4.288, 'J410.4': 4.388, 'J420.3': 3.975, 'J420.4': 3.975, 'J440.3': 3.864,
+                          'J440.4': 3.964, 'J9.3': 3.975, 'J9.4': 3.975, 'J400.2': 4.114})
 
         def track(board, net, a, c):
             return next(t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == net
@@ -4545,8 +4568,9 @@ class RealBoardSeeds(unittest.TestCase):
             return v
 
         def d08(board):
-            for t in (track(board, 'AUX_TX_WIRE', (7.4, 18.0), (4.45, 18.0)),
-                      track(board, 'AUX_TX_WIRE', (4.45, 18.0), (4.45, 19.125)),
+            for t in (track(board, 'AUX_TX_WIRE', (7.4, 18.0), (4.81, 18.0)),
+                      track(board, 'AUX_TX_WIRE', (4.81, 18.0), (4.45, 18.36)),
+                      track(board, 'AUX_TX_WIRE', (4.45, 18.36), (4.45, 19.125)),
                       track(board, 'GND', (4.45, 19.775), (3.75, 19.775)),
                       next(v for v in board.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'GND'
                            and v.GetPosition() == self.P(3.75, 19.775))):
@@ -4559,9 +4583,9 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('K-ports', d08, 'J440.3 (AUX_TX_WIRE): its clamp D440.1 is 6.975 mm of track from the pin')
 
         def behind(board):            # J440.3's B.Cu run to D440 cut at the pin; D440 fed from R471.2 instead
-            self.drop(board, track(board, 'AUX_TX_WIRE', (7.4, 18.0), (4.45, 18.0)))
+            self.drop(board, track(board, 'AUX_TX_WIRE', (7.4, 18.0), (4.81, 18.0)))
             add(board, 'AUX_TX_WIRE', pcbnew.F_Cu, (15.275, 18.0), (15.275, 19.5)); via(board, 'AUX_TX_WIRE', (15.275, 19.5))
-            add(board, 'AUX_TX_WIRE', pcbnew.B_Cu, (15.275, 19.5), (4.45, 18.0))
+            add(board, 'AUX_TX_WIRE', pcbnew.B_Cu, (15.275, 19.5), (4.81, 18.0))
         self.seeded('K-ports', behind, 'J440.3 (AUX_TX_WIRE): its clamp D440.1 is reached only through R471')
 
     def test_r21_fab_references_present_readable_and_apart(self):
@@ -4663,26 +4687,34 @@ class RealBoardSeeds(unittest.TestCase):
         self.seeded('K-rules', lambda b: j122_5(b, 1.7), "J122.5 annular ring 0.100 mm on F.Cu is under JLC's 0.2 mm")
 
     def test_r22_monitor_and_ic_ground_taps(self):
-        """D-R22-02 (R22-POWER-01 / -02): the TPS2553 GND pins (U10.2 with R7.2, U402.2), R8.2 and the power-state
-        monitor taps (R60.1 for PA6, U1.28 for PA4, R91.1) are single-open taps held to their one via by exact entries;
-        the R85.2 / R430.2 entries name the floating IC ground. With its entry dropped a tap fails, and an entry the
-        board does not meet is stale."""
+        """D-R22-02 (R22-POWER-01 / -02) / D-R24-07 / -08: the TPS2553 GND pins, R8.2 and the power-state monitor taps
+        are single-open taps. Since round 24 U402.2 (with R430.2), R60.1 (PA6), U1.28 (PA4) and R91.1 have a second via
+        and no entry; U10.2 (with R7.2, R85.2) and R8.2 keep theirs (measured). With its second via dropped (kept
+        referenced) each fixed tap hangs on the first again and fails naming it; an entry the board does not meet is
+        stale."""
         taps = {t[1]: t for t in gate.SINGLE_OPEN_TAPS}
-        self.assertEqual((len(gate.SINGLE_OPEN_TAPS), len(gate.SINGLE_OPEN_EXCEPTIONS)), (40, 22))   # + D-R23-01 / -02 / -11
-        want = {'U10.2': 'via GND (9.00, 27.84)', 'R7.2': 'via GND (9.00, 27.84)', 'U402.2': 'via GND (32.30, 59.50)',
-                'R8.2': 'via GND (9.95, 30.60)', 'R60.1': 'via VLOGIC (34.50, 63.00)',
-                'U1.28': 'via LOGIC_SOURCE_ST (30.85, 51.80)', 'R91.1': 'via 3V3 (28.10, 60.00)'}
+        self.assertEqual((len(gate.SINGLE_OPEN_TAPS), len(gate.SINGLE_OPEN_EXCEPTIONS)), (40, 11))   # D-R24: 22 -> 11
+        kept = {'U10.2': 'via GND (9.00, 27.84)', 'R7.2': 'via GND (9.00, 27.84)', 'R8.2': 'via GND (9.95, 30.60)'}
+        fixed = {'U402.2': ('GND', (32.3, 60.1), 'via GND (32.30, 59.50)'),
+                 'R60.1': ('VLOGIC', (34.5, 62.4), 'via VLOGIC (34.50, 63.00)'),
+                 'U1.28': ('LOGIC_SOURCE_ST', (30.45, 51.4), 'via LOGIC_SOURCE_ST (30.85, 51.80)'),
+                 'R91.1': ('3V3', (28.1, 59.4), 'via 3V3 (28.10, 60.00)')}
         b = self.load()
-        issues, ev = gate.single_via_opens(b, taps=[taps[t] for t in want])
+        issues, ev = gate.single_via_opens(b, taps=[taps[t] for t in [*kept, *fixed]])
         self.assertEqual(issues, [])
-        self.assertEqual({t: ev[t]['single_points'] for t in want}, {t: [v] for t, v in want.items()})
-        for tap in ('R85.2', 'R430.2', 'U10.2', 'U402.2'):
+        self.assertEqual({t: ev[t]['single_points'] for t in [*kept, *fixed]},
+                         {**{t: [v] for t, v in kept.items()}, **{t: [] for t in fixed}})
+        for tap in ('R85.2', 'U10.2'):
             self.assertIn("floats the TPS2553's ground", next(x[2] for x in gate.SINGLE_OPEN_EXCEPTIONS if x[0] == tap))
-        for tap in ('U402.2', 'R60.1', 'U1.28', 'R91.1'):
+        for tap, (net, second, first) in fixed.items():
             with self.subTest(tap=tap):
+                board = self.load()
+                self.drop(board, next(v for v in board.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == net
+                                      and v.GetPosition() == self.P(*second)))
+                pcbnew.ZONE_FILLER(board).Fill(board.Zones())
                 t = taps[tap]
-                self.assertEqual(gate.single_via_opens(b, taps=[t], exceptions=[])[0],
-                                 [f'{tap} ({t[3]}) hangs on one via: opening {want[tap]} cuts it off from {"/".join(t[2])}'])
+                self.assertEqual(gate.single_via_opens(board, taps=[t])[0],
+                                 [f'{tap} ({t[3]}) hangs on one via: opening {first} cuts it off from {"/".join(t[2])}'])
         extra = list(gate.SINGLE_OPEN_EXCEPTIONS) + [('R60.1', 'via VLOGIC (29.80, 67.70)', 'not met')]
         self.assertEqual(gate.single_via_opens(b, taps=[taps['R60.1']], exceptions=extra)[0],
                          ['stale SINGLE_OPEN_EXCEPTIONS entry R60.1 / via VLOGIC (29.80, 67.70) (not met)'])
@@ -4820,15 +4852,57 @@ class RealBoardSeeds(unittest.TestCase):
                 self.assertTrue(any(i.startswith(word) for i in found), found)
         self.seeded('K-legends', g08c, "board-level text 'Q121' on B.Fab")
 
+    def test_r24_j400_contact_clamp(self):
+        """D-R24-11: J400.2's ESD clamp D402 (a ninth ESD103-B1-02EL, C535146) sits on BAT_SW_RETURN on the screw side of
+        R165 with its second pad on GND only. S-5 and K-actuators pin BAT_SW_RETURN to exactly J400.2, R165.1 and
+        D402.1, and each fails with the clamp's second pad on another net, with a fourth member on the net and with the
+        clamp missing (S-4 too: it is a required safety part). K-ports fails a clamp fed only through R165."""
+        b = self.load()
+        self.assertEqual(self.run_rule('S-5', b), set())
+        self.assertEqual(self.run_rule('K-actuators', b), set())
+        self.assertEqual({f'{f.GetReference()}.{q.GetNumber()}' for f in b.GetFootprints() for q in f.Pads()
+                          if q.GetNetname() == 'BAT_SW_RETURN'}, {'J400.2', 'R165.1', 'D402.1'})
+        self.assertIn('D402', gate.SAFETY_FITTED)
+
+        def net(ref, num, name):
+            return lambda board: self.pad(board, ref, num).SetNet(board.FindNet(name))
+        for other in ('BAT_ENABLE', 'BAT_SW_RETURN', '3V3'):
+            self.seeded('S-5', net('D402', '2', other), 'S-5: D402.2 must be GND')
+            self.seeded('K-actuators', net('D402', '2', other), 'with its clamp D402 (C535146) to GND')
+        fourth = net('R81', '2', 'BAT_SW_RETURN')            # a fourth member on the switch return
+        self.seeded('S-5', fourth, "S-5: BAT_SW_RETURN pads must be exactly ['D402.1', 'J400.2', 'R165.1']")
+        self.seeded('K-actuators', fourth, 'with its clamp D402 (C535146) to GND')
+
+        def missing(board):
+            board.Delete(board.FindFootprintByReference('D402'))
+        self.seeded('S-5', missing, "S-5: D402 (J400.2's ESD clamp, D-R24-11) is missing")
+        self.seeded('K-actuators', missing, 'with its clamp D402 (C535146) to GND')
+        self.seeded('S-4', missing, 'D402')
+        self.seeded('K-actuators', lambda board: board.FindFootprintByReference('D402').SetField('LCSC', 'C15195'),
+                    'with its clamp D402 (C535146) to GND')
+
+        def track(board, net, a, c):
+            return next(t for t in board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == net
+                        and {tuple(t.GetStart()), tuple(t.GetEnd())} == {tuple(self.P(*a)), tuple(self.P(*c))})
+
+        def behind(board):            # J400.2's B.Cu tap cut at the pin; D402 fed from R165.1 instead
+            self.drop(board, track(board, 'BAT_SW_RETURN', (7.4, 67.6), (4.81, 67.6)))
+            for layer, a, c in ((pcbnew.F_Cu, (12.425, 67.0), (12.425, 66.0)), (pcbnew.B_Cu, (12.425, 66.0), (4.81, 67.6))):
+                t = pcbnew.PCB_TRACK(board); t.SetLayer(layer); t.SetWidth(pcbnew.FromMM(0.2))
+                t.SetStart(self.P(*a)); t.SetEnd(self.P(*c)); t.SetNet(board.FindNet('BAT_SW_RETURN')); board.Add(t)
+            v = pcbnew.PCB_VIA(board); v.SetPosition(self.P(12.425, 66.0)); v.SetWidth(pcbnew.FromMM(0.5))
+            v.SetDrill(pcbnew.FromMM(0.3)); v.SetNet(board.FindNet('BAT_SW_RETURN')); board.Add(v)
+        self.seeded('K-ports', behind, 'J400.2 (BAT_SW_RETURN): its clamp D402.1 is reached only through R165')
+
     def test_r22_clamp_gnd_returns(self):
         """D-R22-07 (R22-GATE-03): every port clamp's GND pad reaches a GND via through tracks within 1.0 mm (0.7 mm,
-        D400 / D401 0.8 mm, today). The gate lens's g07b (D420's GND stub and via removed: the pour alone) fails, and so
+        D400 / D401 0.8 mm, today; D-R24-11's D402 0.7 mm). The gate lens's g07b (D420's GND stub and via removed: the pour alone) fails, and so
         does D410's return re-drawn 1.5 mm long."""
         issues, ev = gate.clamp_returns(self.load())
         self.assertEqual(issues, [])
         self.assertEqual({k: v[0] for k, v in ev.items()},
                          {'D400.2': 0.8, 'D401.2': 0.8, 'D410.2': 0.7, 'D411.2': 0.7, 'D420.2': 0.7, 'D421.2': 0.7,
-                          'D440.2': 0.7, 'D441.2': 0.7})
+                          'D440.2': 0.7, 'D441.2': 0.7, 'D402.2': 0.7})
 
         def find(board, cls, net, pts):
             want = {tuple(self.P(*q)) for q in pts}
@@ -4857,34 +4931,43 @@ class RealBoardSeeds(unittest.TestCase):
 
     # ------------------------------------------------------------------------------------------------ round 23 pass
     def test_r23_boot0_vcap_and_gate_drive_taps(self):
-        """D-R23-01 / -02 (R23-MCU-02, R23-SAFETY-05): BOOT0's pull-down, both VCAP capacitors and the gate drive from
-        R121 to Q120 / Q121 are single-open taps, each held to its one via by an exact entry with its consequence. With
-        its entry dropped each fails naming its via; an entry the board does not meet is stale; and with Q120's gate via
-        removed from the board (kept referenced) Q120.4 is cut off from R121 entirely."""
+        """D-R23-01 / -02 (R23-MCU-02, R23-SAFETY-05) / D-R24-02 / -04 / -05: BOOT0's pull-down, both VCAP capacitors and
+        the gate drive from R121 to Q120 / Q121 are single-open taps. Since round 24 BOOT0, VCAP2 and both gate drives
+        have a second via and no entry; VCAP1 keeps its entry (measured). With its second via dropped (kept referenced)
+        each fixed tap hangs on its first via again and fails naming it, with both gate vias gone Q120.4 is cut off from
+        R121 entirely, and an entry the board does not meet is stale."""
         taps = {t[1]: t for t in gate.SINGLE_OPEN_TAPS}
-        want = {'U1.94': 'via BOOT0 (13.80, 45.60)', 'U1.48': 'via VCAP1 (29.25, 38.00)', 'U1.73': 'via VCAP2 (18.00, 37.30)',
-                'Q120.4': 'via ACT_GATE (16.20, 73.30)', 'Q121.4': 'via ACT_GATE (11.14, 71.70)'}
+        fixed = {'U1.94': ('BOOT0', (14.2, 46.0), 'via BOOT0 (13.80, 45.60)'),
+                 'U1.73': ('VCAP2', (18.3, 36.8), 'via VCAP2 (18.00, 37.30)'),
+                 'Q120.4': ('ACT_GATE', (15.4, 72.85), 'via ACT_GATE (16.20, 73.30)'),
+                 'Q121.4': ('ACT_GATE', (11.74, 72.3), 'via ACT_GATE (11.14, 71.70)')}
         b = self.load()
-        issues, ev = gate.single_via_opens(b, taps=[taps[t] for t in want])
+        issues, ev = gate.single_via_opens(b, taps=[taps[t] for t in [*fixed, 'U1.48']])
         self.assertEqual(issues, [])
-        self.assertEqual({t: ev[t]['single_points'] for t in want}, {t: [v] for t, v in want.items()})
-        reasons = {x[0]: x[2] for x in gate.SINGLE_OPEN_EXCEPTIONS}
-        self.assertIn('ROM loader', reasons['U1.94'])
-        self.assertIn('Table 124 p. 216', reasons['U1.48'])
-        self.assertIn('1.128 / 1.063 A against the 1.125 A floor', reasons['Q120.4'])
-        for tap, via in want.items():
-            with self.subTest(tap=tap):
-                t = taps[tap]
-                self.assertEqual(gate.single_via_opens(b, taps=[t], exceptions=[])[0],
-                                 [f'{tap} ({t[3]}) hangs on one via: opening {via} cuts it off from {"/".join(t[2])}'])
-        extra = list(gate.SINGLE_OPEN_EXCEPTIONS) + [('U1.94', 'via BOOT0 (13.00, 45.60)', 'not met')]
-        self.assertEqual(gate.single_via_opens(b, taps=[taps['U1.94']], exceptions=extra)[0],
-                         ['stale SINGLE_OPEN_EXCEPTIONS entry U1.94 / via BOOT0 (13.00, 45.60) (not met)'])
+        self.assertEqual({t: ev[t]['single_points'] for t in [*fixed, 'U1.48']},
+                         {**{t: [] for t in fixed}, 'U1.48': ['via VCAP1 (29.25, 38.00)']})
+        self.assertIn('Table 124 p. 216', next(x[2] for x in gate.SINGLE_OPEN_EXCEPTIONS if x[0] == 'U1.48'))
 
-        def no_gate_via(board):
-            self.drop(board, next(v for v in board.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == 'ACT_GATE'
-                                  and v.GetPosition() == self.P(16.2, 73.3)))
-        self.seeded('K-power', no_gate_via, "Q120.4 (Q120's gate drive from R121 (R23-SAFETY-05)) is not joined to R121.1")
+        def drop(net, xy):
+            def seed(board):
+                self.drop(board, next(v for v in board.GetTracks() if v.GetClass() == 'PCB_VIA' and v.GetNetname() == net
+                                      and v.GetPosition() == self.P(*xy)))
+            return seed
+        for tap, (net, second, first) in fixed.items():
+            with self.subTest(tap=tap):
+                board = self.load()
+                drop(net, second)(board)
+                t = taps[tap]
+                self.assertEqual(gate.single_via_opens(board, taps=[t])[0],
+                                 [f'{tap} ({t[3]}) hangs on one via: opening {first} cuts it off from {"/".join(t[2])}'])
+        extra = list(gate.SINGLE_OPEN_EXCEPTIONS) + [('U1.94', 'via BOOT0 (13.80, 45.60)', 'not met')]
+        self.assertEqual(gate.single_via_opens(b, taps=[taps['U1.94']], exceptions=extra)[0],
+                         ['stale SINGLE_OPEN_EXCEPTIONS entry U1.94 / via BOOT0 (13.80, 45.60) (not met)'])
+
+        def no_gate_vias(board):
+            drop('ACT_GATE', (16.2, 73.3))(board)
+            drop('ACT_GATE', (15.4, 72.85))(board)
+        self.seeded('K-power', no_gate_vias, "Q120.4 (Q120's gate drive from R121 (R23-SAFETY-05)) is not joined to R121.1")
 
 
     def test_r23_dru_reader_spellings_and_floors(self):
@@ -5002,17 +5085,19 @@ class RealBoardSeeds(unittest.TestCase):
 
     def test_r23_generated_footprints_and_paste_totals(self):
         """D-R23-09 (R23-GATE-05): K-lands pins r10_parts' own footprint files by SHA-256 and the board's pasted pads
-        per side (253 F.Paste / 375 B.Paste). The gate lens's x02 (Q120 / Q121's paste stripped by a generator edit: the
-        library file changes and the board's 18 pads lose paste, 375 -> 357) fails both ways."""
+        per side (249 F.Paste / 381 B.Paste since D-R24-09 moved R402 / R403 to B.Cu and D-R24-11 added D402). The gate
+        lens's x02 (Q120 / Q121's paste stripped by a generator edit: the library file changes and the board's 18 pads lose
+        paste, 381 -> 363)
+        fails both ways."""
         import shutil
         import tempfile
-        self.assertEqual(gate.paste_totals(self.load()), ([], {'F.Paste': 253, 'B.Paste': 375}))
+        self.assertEqual(gate.paste_totals(self.load()), ([], {'F.Paste': 249, 'B.Paste': 381}))
 
         def unpaste(board):
             for ref in ('Q120', 'Q121'):
                 for q in board.FindFootprintByReference(ref).Pads():
                     ls = q.GetLayerSet(); ls.RemoveLayer(pcbnew.B_Paste); ls.RemoveLayer(pcbnew.F_Paste); q.SetLayerSet(ls)
-        self.seeded('K-lands', unpaste, 'B.Paste: 357 pasted pads, pinned 375')
+        self.seeded('K-lands', unpaste, 'B.Paste: 363 pasted pads, pinned 381')
         src = gate.ROOT / 'm3_design/assembly_review'
         d = Path(tempfile.mkdtemp(prefix='r10_x02_'))
         self.addCleanup(shutil.rmtree, d, ignore_errors=True)
