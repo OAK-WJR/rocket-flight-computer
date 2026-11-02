@@ -151,6 +151,10 @@ CHAMFER_CUTS = {    # (net, layer, x, y) of the bend: cut, mm along an axis-alig
     ('USB_LIMITED', 'In2', 8.5, 29.0): 0.75,  # as GPS_TX_MCU, on the 0.4 mm In2 run
     ('USB_LIMITED', 'In2', 9.6, 50.85): 0.75,
     ('RAW_ACT', 'B', 22.8, 63.875): 0.34,     # R87.1 (USB_LIMITED) inside the corner: 0.34 keeps 0.152 mm
+    # D-R24-18 (R24-TRI-01): the BAT_ENABLE via (17.1, 82.8) sits inside this corner, a recorded leak path to EN (owner
+    # row 24, FMEA H-6 / V-18, D-R19-02): 0.32 keeps it 0.2015 mm from the chamfer ((1.1 - c) / sqrt 2 - 0.35; the fixed
+    # 0.36 left 0.173 mm), with a 0.453 mm diagonal
+    ('BAT_FAULT_N', 'F', 16.55, 83.35): 0.32,
 }
 
 

@@ -5,7 +5,7 @@ terminals on the x = 0 edge, a GH-2 power-switch connector near the forward edge
 the replacement facts without editing that worktree. Preserve the accepted R9 entry. R10 remains unaccepted and no physical
 fit is claimed.
 
-**Status.** PCB `1407e850…`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. It replaces `5516eeec…`, on which rounds 22 and 23 were the closing pair; the round 24 board pass (D-R24-01 … D-R24-17) changed the board (among other changes it added D402, J400.2's ESD clamp, and moved C88, R92, TP88, R402 and R403), so no earlier review carries over to it. Rounds 24 and 25 review `1407e850…` under the owner's strict rule (only real errors count; iteration stops after two consecutive rounds with zero verified real errors). Review results, checks, cost and open items are
+**Status.** PCB `92c3ad59…`, 46 × 90 × 1.6 mm; not accepted, nothing ordered. Rounds 22 and 23 were the closing pair on `5516eeec…`. The round 24 board pass (D-R24-01 … D-R24-17) made `1407e850…` (among other changes it added D402, J400.2's ESD clamp, and moved C88, R92, TP88, R402 and R403); round 24's ten lenses found 0 Critical / 0 Major / 17 Minor real errors on it, and the round 24 fix pass (D-R24-18 … D-R24-23) changed the copper to `92c3ad59…` (one BAT_FAULT_N chamfer capped; no part, terminal or support moved), so no earlier review carries over to it. Rounds 25 and 26 review `92c3ad59…` under the owner's strict rule (only real errors count; iteration stops after two consecutive rounds with zero verified real errors). Review results, checks, cost and open items are
 in [M3_R10.md, "Current state"](M3_R10.md#current-state); the owner's decision list is in
 [R10_VALIDATION.md](R10_VALIDATION.md#r10-deviations-for-owner-acceptance).
 
@@ -65,16 +65,16 @@ y 23.5, and take them past the aft edge on the side away from the camera shroud,
 along x = 0, where they would cross the USB-C plug zone, ride over the (4, 44.3) support head and run beside the J121 / J400
 exits. The same applies if the GPS or the radio is moved to J440.
 **J400 chatter (R23-POWER-02).** At 5.73–6.0 V under flight-level vibration, U9 must stay on for the whole run (RAW_PROTECTED at TP81 never below about 5 V,
-or no reset in the log), and the open fraction in any 100 ms window must stay below 20 %; the < 10 ms single-drop-out rule stays (ORDERING 8.3).
+or no reset in the log), and the open fraction in any 100 ms window must stay below 18 % (was 20 %: with D402 the worst-case trip is about 20 % at 5.73 V, so the root set 18 % from that physics, R24-TRI-02); the < 10 ms single-drop-out rule stays (ORDERING 8.3).
 Preserve AGENTS section 2 and the electrically isolated Blue Jay. Qualify dry contacts, strain relief, ferrules and gauge, polarity and UART order and installed RF immunity.
 
 ## Board, supports and hardware
 
 The board is 46 × 90 × 1.6 mm. Retain the five supports at (4,4), (42,4), (4,44.3), (3.7,86) and (42,86) and underside insulation.
 **Use nylon (or otherwise insulated) screws and washers at all five supports:** at (4,44.3) the exposed LED2, LED1 and J2 lands (GND, GND, 3V3 and NRST) lie
-only 3.808–3.918 mm from the support centre, against a 3.8 mm washer gate. Start with the selected 4 mm standoffs, nut on the sled side and head on top; keep the nut-inclusive
+only 3.808–3.987 mm from the support centre (J2.1 3.880 mm, J2.3 3.987 mm to the round lands), against a 3.8 mm washer gate. Start with the selected 4 mm standoffs, nut on the sled side and head on top; keep the nut-inclusive
 h + t below 6.0 mm at x = 4 and 42 and below 5.3 mm at x = 3.7. Program J2 before installing the adjacent mid support, or remove it for programming.
-Hardware maxima, eccentricity, solder tails, plate strength and shock clearance remain unqualified. The optional 100 g / D5 model, re-run on `50a39de5…` by the round 20 mechanics lens (R20-MEC-02) and again on `5516eeec…` by the round 22 mechanics lens, with identical figures (not re-run on `1407e850…`), gives a first mode of 180.8 Hz pinned (was 181.1)
+Hardware maxima, eccentricity, solder tails, plate strength and shock clearance remain unqualified. The optional 100 g / D5 model, re-run on `50a39de5…` by the round 20 mechanics lens (R20-MEC-02) and again on `5516eeec…` by the round 22 mechanics lens, with identical figures (not re-run on `1407e850…` or `92c3ad59…`), gives a first mode of 180.8 Hz pinned (was 181.1)
 for an estimated 78.6 g (was 70.5 g), and leaves only 0.261 mm below C431 (was 0.271) and 0.320 mm below C421 at h = 4 mm at 100 g; it predicts overlap at
 h = 3.5 mm. These are Calculation/Inference, not physical results. The east edge carries 34 g of the board mass on an unsupported 82 mm edge
 (see M3_R10, "East-edge asymmetry"): require a first-article vibration and shock check.
@@ -120,7 +120,7 @@ no production copper change and no full PCB, CLI or gate qualification of that M
 
 ## Cost
 
-The target is $84.41 per board, R3's cost per board for parts plus JLC feeder fees only. The supplier data, run on the final files of `1407e850…` (cost 2026-11-02T01:43:55Z, bound to the JLC BOM, owner BOM and current CPL; stock 2026-11-02T01:42:53Z, bound to the BOM and owner BOM), give $85.60 placed (about $86.14 with JLC minimum purchases);
+The target is $84.41 per board, R3's cost per board for parts plus JLC feeder fees only. The supplier data, run on the final files of `1407e850…`, whose BOM and CPL `92c3ad59…` keeps byte for byte (cost 2026-11-02T01:43:55Z, bound to the JLC BOM, owner BOM and current CPL; stock 2026-11-02T01:42:53Z, bound to the BOM and owner BOM), give $85.60 placed (about $86.14 with JLC minimum purchases);
 JLC's fixed fees add $16.79 per board (5 boards). **The cost target fails by $1.19:** the owner-approved AUX port (+$1.14) and, since round 24, D402 (a ninth C535146 at $0.2306; with price movement the files went from $85.36 to $85.60, D-R24-11); the owner decides whether to accept it. U4 (now the ISM6HG256X) shows 9 in stock but only 2 orderable, so the stock check (`stock_check.json` 2026-11-02T01:42:53Z) fails on U4, 2 orderable against 5, and also on U9 (TPS259470LRPWR C3662793: 28 in stock, −83 orderable, minimum purchase 7); it reads JLC's `canPresaleNumber` as the orderable quantity, an Inference about JLC's field. For both, confirm the quantity in the JLC cart on order day, else consign franchised parts (R20-BOM-01); for U4 that means consigning franchised ISM6HG256XTR (same CPL rotation and register map), with the LSM6DSV320X, also unavailable at JLC and LCSC, only as the second-fallback alternate (needs part fields, BOM and CPL regenerated: ORDERING 8.1; R21-BOM-02, R23-DOCS_BINDING-08).
 Quote, process and owner acceptance are open. C84 is on the owner BOM, bought by the owner and hand-fitted after both reflows. No physical fit, firmware or order is qualified. Table and basis: [M3_R10.md, "Cost and stock"](M3_R10.md#cost-and-stock).
 

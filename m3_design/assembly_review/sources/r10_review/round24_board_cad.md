@@ -53,7 +53,8 @@ board before D402; they are superseded. The board is 46 x 90 x 1.6 mm, outline u
   - C88 moves to B(18.67, 83.56).
   - R92 moves to F(31.0, 86.7).
   - R402 and R403 move from F.Cu to B.Cu, at (30.9, 12.85) and (30.9, 14.6).
-  - Rows per side go from 69 top + 122 bottom to 67 + 125.
+  - CPL rows go from 72 top + 133 bottom to 70 + 136 (205 -> 206). The orientation-reconstructed counts go from
+    69 + 122 to 67 + 125, plus 14 placement-only (corrected in the fix pass, D-R24-23).
 - **Paste:** F 253 -> 249, B 375 -> 381.
 - **Supplier evidence,** re-run on the final files (`fab/cost_check.json`, `fab/stock_check.json`):
   - Cost (2026-11-02T01:43:55Z): $85.60 per board at 5 boards (parts $60.81 + 81 codes x $1.53 / 5). That is $1.19

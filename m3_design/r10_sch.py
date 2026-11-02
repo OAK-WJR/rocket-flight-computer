@@ -271,12 +271,15 @@ R19_SHEET_NOTES = {
                                    'PE10); off the ROM loader\'s USART3. R10: PE9/pin39 CAM_UART_OE drives OE as a GPIO; R102 '
                                    '10k holds it low (R19-MCU-03).')},
     'battery_entry.kicad_sch': {
+        # D-R24-19 (R24-TRI-02 / -03): the worst cases carry D402's 50 nA with U9's 0.1 uA EN leakage, and the pack
+        # turn-on / turn-off windows cover every 1 % resistor, threshold and leakage corner (not the nominal ratio only).
         'C87: EN/UVLO ride-through.': ('C87: EN/UVLO ride-through, 220 nF 25 V X7R (R19-REQ-02). (R80+R165)||R81 = 227k charges it '
-                                       '(tau 50 ms; turn-on 88/56/45 ms at 6.0/7.4/8.4 V, 30-129 ms worst case); R81 alone '
+                                       '(tau 50 ms; turn-on 88/56/45 ms at 6.0/7.4/8.4 V, 30-130 ms worst case); R81 alone '
                                        'discharges it (tau 66 ms), so J400 drop-outs shorter than 19/33/41 ms (worst case '
-                                       '10.6/20.5/26.4 ms with 0.1 uA EN leakage, D-R20-11) cannot trip U9 (25-64 us t_D,OFF). '
-                                       'EN thresholds 1.183-1.223 V rising, 1.076-1.116 V falling (TI SLVSFC9C p9): UVLO on '
-                                       '4.89-5.05 V, off 4.45-4.61 V.')},
+                                       '10.3/20.1/26.0 ms with 0.1 uA EN leakage plus D402\'s 50 nA, D-R20-11 / D-R24-19) cannot '
+                                       'trip U9 (25-64 us t_D,OFF). EN thresholds 1.183-1.223 V rising, 1.076-1.116 V falling '
+                                       '(TI SLVSFC9C p9): with 1 % resistors, 0.1 uA EN leakage and D402 <= 50 nA the pack turns '
+                                       'U9 on at 4.72-5.25 V and off at 4.29-4.80 V (nominal 4.96 / 4.51 V).')},
     'usb_sense.kicad_sch': {
         'Input range and tolerance calculation uses DS12110': ('Input range and tolerance calculation uses DS12110 Rev 8, rev V '
                                                               'chapter: Table 122 pp214-215 and Table 157 pp246-247 '

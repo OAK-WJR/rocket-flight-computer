@@ -1,0 +1,55 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 24, routing lens",
+  "reviewer": "claude",
+  "target_commit": "f2b8251",
+  "board_sha256_before": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "board_sha256_after": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "Seven three-way junctions that are not T's keep a bare 90-degree wedge between two branches (the third branch is diagonal): 3V3A B(16.5,48.31) [0,90,225]; IMU_CS B(14.2,44.7) [0,135,270]; RAW_PROTECTED B(18.75,79.8) [90,225,315]; USB_LIMITED B(15.55,28.0) [0,135,270]; VBUS B(9.3,26.55) [0,135,270]; VLOGIC B(29.8,81.75) [0,135,270]; VLOGIC F(29.2,81.75) [45,180,315]. All were on 5516eeec. Each branch meets another at 135 degrees, so the 90-degree pair is a branch pair, as at a T. AGENTS section 3 / M2 define right_angle as two ends with nothing else there (a T or three or more ends is not a bend), so these are outside the rule.",
+    "BUZZ_G B.Cu: the Q123-gate lead's T at (20.5,58.70) sits 0.020 mm before the chamfer start (20.5,58.72): CHAMFER_CUTS gives 0.15 at (20.5,58.87), not 0.17. A 0.17 cut lands the chamfer on the T, and it clears all other copper by more than 0.4 mm (measured). The T is a centre-line joint and no segment is under 50 um, so no stated rule is broken. VBUS B.Cu (11.30 vs 11.35, 30.0) has the same 0.05 mm pattern, inherited from 5516eeec.",
+    "Five chamfers now start inside a pad land, so the run leaves the land on its 45-degree diagonal. The depths inside the land edge are D121.3 SERVO2_MCU 0.096 mm, D121.4 SERVO3_MCU 0.046 mm, U1.28 LOGIC_SOURCE_ST 0.060 mm, C31.2 GND 0.060 mm and R163.2 GND 0.083 mm. route_check information categories changed from 5516eeec as follows: pad_end_offcentre 57 -> 70 and segment_inside_pad 22 -> 27 (raw report rows, duplicates included; AUD-10 counted review items). The records name only R402.1 (D-R24-09) as a new review-only residual. The U1.28 diagonal clears U1.27's roundrect land by 0.168 mm (DRC 0).",
+    "J440.3 / J440.4 (AUX_TX_WIRE / AUX_RX_WIRE) carry F.Cu and B.Cu (clamp tap) tracks at the plated terminal pins. The nearest GND via is 3.900 / 4.037 mm away and the plated GND pin J440.2 3.5 mm away. The partner-via rule and route_check test vias, not terminal pins. Inherited from 5516eeec (D-R20-09 / D-R21 clamp layout).",
+    "Pair pitch at the chamfers: CAM_FAULT_N / CAM_PWR_EN diagonal pitch is 0.502 mm against 0.500 mm on the legs, because the cut is 0.65 against the exact 0.36 + 0.586 x 0.5 = 0.653. SD_SCK / SD_MISO is 0.700 / 0.700 mm. No other new parallel diagonal pair lies within 2 mm.",
+    "Other route_check information changes from 5516eeec: extra_bends 8 -> 14 (AUX_TX_MCU, AUX_RX_MCU, GPS_TX_MCU re-anchored, QSPI_IO2, SD_MISO, USB_FAULT_N, In2 USB_LIMITED; each has one chamfer piece under 1 mm, so none is a staircase); short_layer_hop 8 -> 18 (the named parallel vias); power_via_no_gnd 27 -> 28; width_change_junction 12 -> 11; the USB_FAULT_N detour leftover is gone (6 -> 5 leftovers).",
+    "The 1407e850 text in R10_VALIDATION section 6 gives the noncritical leftover count (5) but not their locations. Those are BAT_OVLO short segment B(16.4,83.0), tiny jogs BUZZ_DRV F(20.5,51.8), BAT_FAULT_N B(28.2,47.5) and I2C1_SDA B(9.97,51.5), and the USB_ILIM detour at (14.825,27.2). The location inventory in r10_final_deviations.json is bound to 632a9ad3 and lists six. M2 requires the locations only in the final board's deviation list, so this is not a finding.",
+    "BAT_IN B.Cu: the trunk narrows 1.0 -> 0.7 mm at the T (18.25,85.3), 1.74 mm from C88.1. A T is exempt from neck_down, and the 0.7 mm feed is recorded in POWER_NARROW (D-R24-17)."
+  ],
+  "fix_verification": [
+    {"change": "D-R24-17 right_angle 59 -> 0", "measurement": "Independent scan of all 1057 segments: 0 off-angle (0.1 degree); every two-end 90-degree pair at a node has its inner corner inside pad or via copper (35 such bends, all covered); the other 90-degree branch pairs are at three-end nodes (T's and the 7 forks above). The old board broke down as F.Cu 24 free + 1 via, B.Cu 26 free + 3 via + 2 pad, In2 3 free (route_check on 5516eeec), matching the record. route_check on 1407e850: 0 failing, right_angle 0.", "verdict": "confirmed"},
+    {"change": "D-R24-17 pairs keep pitch", "measurement": "CAM_FAULT_N / CAM_PWR_EN 0.502 vs 0.500 mm; SD_SCK / SD_MISO 0.700 vs 0.700 mm", "verdict": "confirmed"},
+    {"change": "D-R24-17 USB pair", "measurement": "USB_DP 9 segments, 16.461 mm, identical to 5516eeec; USB_DM 19.708 -> 19.286 mm, only the J3 strap changed (3.26 -> 2.838 mm, -0.422); no USB vias; partner and reference rules pass", "verdict": "confirmed"},
+    {"change": "D-R24-17 J440 clamp runs", "measurement": "AUX_TX_WIRE B.Cu 2.59 + 0.509 + 0.765 = 3.864 mm; AUX_RX_WIRE 2.59 + 0.509 + 0.865 = 3.964 mm", "verdict": "confirmed"},
+    {"change": "D-R24-17 chamfer hygiene", "measurement": "No new staircase, tiny jog, acute angle or short segment from the cuts. New segments shorter than max(w, 0.2) are all inside a via or pad, or exactly 0.2 mm. DRC 0 on a copy (only library-table warnings, from the probe location). Copper clearances of new segments are at least 0.1536 mm.", "verdict": "confirmed"},
+    {"change": "D-R24-17 U9 trunk redraw", "measurement": "BAT_IN B.Cu: 0.3 mm U9.5 -> C88.1 (1.96 mm), 0.7 mm C88.1 -> T (18.25,85.3) (1.74 mm), 1.0 mm T -> (18.25,86.4) -> IN via (17.5,87.15); 0.4 mm tap west to R82.1 with one chamfer; F.Cu feed cut 0.72 (1.018 mm chamfer)", "verdict": "confirmed"},
+    {"change": "D-R24-02 / -03 / -04 / -07 / -08 / -10 second barrels", "measurement": "All ten added vias are present at the stated coordinates; 3 removed and 8 moved as recorded; totals 307 vias (168 GND; 302 at 0.5/0.3, 4 at 0.6/0.3, 1 at 1.0/0.5), 1057 segments, 1867.022756 mm. The ACT_GATE stubs are 0.247 (F) and 0.194 (B) mm, T'd into the diagonals at nodes. ACT_GATE is on the AUD-2 list, so it needs no GND partner.", "verdict": "confirmed"},
+    {"change": "D-R24-09 U401 divider on B.Cu", "measurement": "R402 B(30.075,12.85) and R403 B(31.725,14.6) lands; FB T at (31.725,13.6); the OUT T (29.75,12.85) is 0.075 mm inside R402.1's land (0.325 mm segment inside the pad), as recorded", "verdict": "confirmed"},
+    {"change": "D-R24-11 D402 routing", "measurement": "BAT_SW_RETURN B.Cu tap 2.59 + 0.509 + 1.015 = 4.114 mm from J400.2 to D402.1, chamfered; D402.2 to the GND via (5.15,65.575) 0.7 mm; BAT_SW_RETURN is on the AUD-2 list", "verdict": "confirmed"},
+    {"change": "GND partner vias (whole board)", "measurement": "Of 57 signal-critical nets, all non-AUD-2 layer-change vias have a GND via within 1.5 mm. The largest distances are PYRO1_GATE (14.4,53.3) 1.492, SD_SCK (11.7,38.0) 1.432 and PYRO1_OUT (11.63,55.1) 1.421 mm.", "verdict": "confirmed"},
+    {"change": "Reference planes (whole board)", "measurement": "Fast-net tracks were sampled every 0.02 mm on the centre line and both edges: F.Cu over In1 GND, B.Cu over In2 fill, inner layers over the outer GND. The only unreferenced samples are inside own-via antipads, own plated-pad voids or PYRO1_OUT's S-8 barrel voids (all within 1.218 mm of their barrels, inside the 1.221 mm reach), plus the 5 recorded REF_STRAY SPI1 samples. No B.Cu segment lies over two In2 nets.", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3_design/assembly_review/m3.kicad_pcb before and after (both 1407e850...)",
+    "tools/route_check.py --profile r10 on a probe copy of 1407e850 (0 failing, 27 bump windows, 5 unrecorded leftovers) and on a probe copy of 5516eeec from 9b27268 (66 failing: 59 right_angle + 7 parallel_via, as expected with the new checker); instance-level diff of both reports",
+    "kicad-cli 10.0.7 pcb drc --severity-all on the probe copy with the project .kicad_pro / .kicad_dru: 0 copper violations, 0 unconnected (199 lib_footprint_issues warnings only, from the probe directory having no library table)",
+    "Independent pcbnew dump of tracks, vias and pad polygons (old and new), then NumPy-free Python scans: headings, all branch-pair angles at every node with inner-corner coverage by pads, vias and other copper, end-on-body joints, new-segment clearances, parallel-pair pitch, short pieces, USB pair lengths, GND-partner distances for critical vias and plated-pin layer changes",
+    "Independent pcbnew reference-plane sampling of fast nets against the saved zone fills"
+  ],
+  "sources": [
+    "AGENTS.md section 3 (routing rule incl. D-R24-17 wording)",
+    "docs/REQUIREMENTS.md M2",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R24-01 ... D-R24-17",
+    "m3_design/assembly_review/sources/r10_review/round24_board_cad.md",
+    "docs/M3_R10.md Routing evidence; docs/R10_VALIDATION.md section 6",
+    "tools/route_check.py, tools/critical_reference.py, tools/check_r10.py (K-reference, K-region, BARREL_VOID_REACH)",
+    "m3_design/r10_route.py CHAMFER_CUTS"
+  ],
+  "coverage_limits": [
+    "Geometry and rule review only; no electrical, SI or physical test.",
+    "The reference sampling exempts own plated-pad voids with a fixed 1.2 mm margin beyond the pad half-size, rather than check_r10's exact void geometry. K-reference (gate) passed on the build.",
+    "route_check was run without --bumps-all; the critical-net bump audit (27 windows) is as gated.",
+    "The detour table in R10_VALIDATION section 6 was not recomputed."
+  ]
+}

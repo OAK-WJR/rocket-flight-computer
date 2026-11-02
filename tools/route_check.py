@@ -339,7 +339,7 @@ PARALLEL_VIAS_R10 = [
     ('LOGIC_SOURCE_ST', (30.45, 51.4),
      "D-R24-08 (R22-POWER-02): PA4's ST line; 0.566 mm diagonals on F.Cu and B.Cu to the first barrel (30.85, 51.8)"),
     ('BOOT0', (14.2, 46.0),
-     "D-R24-05 (R23-MCU-02): BOOT0's pull-down R5; at the F.Cu run's corner, joined to the first barrel (13.8, 45.6) by "
+     "D-R24-03 (R23-MCU-02): BOOT0's pull-down R5; at the F.Cu run's corner, joined to the first barrel (13.8, 45.6) by "
      "a 0.566 mm B.Cu diagonal under the F.Cu one"),
     ('USB_LIMITED', (16.6, 28.0),
      "D-R24-10: U10.6's output into the In2 run toward R87.1 (U11's USB over-voltage divider); 0.6 mm east of the "

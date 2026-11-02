@@ -331,7 +331,7 @@
    }
   },
   "identical_hash": true,
-  "r10_fab_sh": "ran inside every build: S-4 BOM / CPL, CPL rebuilt from JLC footprints (67 top + 125 bottom, 206 rows) and paste (249 / 381) content checks pass; six-output manifest bound",
+  "r10_fab_sh": "ran inside every build: S-4 BOM / CPL, CPL rebuilt from JLC footprints (206 rows, 70 top + 136 bottom: 67 + 125 reconstructed, plus 14 placement-only) and paste (249 / 381) content checks pass; six-output manifest bound",
   "check_sh_exit": 0,
   "drc": 0,
   "unconnected": 0,
@@ -386,7 +386,7 @@
      "R403,30.9000mm,-14.6000mm,Bottom,0"
     ]
    },
-   "sides": "69 top + 122 bottom -> 67 top + 125 bottom",
+   "sides": "CPL rows 72 top + 133 bottom -> 70 top + 136 bottom (205 -> 206); orientation reconstructed 69 + 122 -> 67 + 125, plus 14 placement-only (D-R24-23)",
    "added_rows": {
     "D402": "D402,4.4500mm,-65.9000mm,Bottom,90"
    }

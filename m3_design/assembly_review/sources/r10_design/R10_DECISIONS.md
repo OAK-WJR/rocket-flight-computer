@@ -4012,7 +4012,9 @@ Before -> after, measured on the round 24 board:
   - `test_single_switch_contract_and_seeds`.
   - `test_r21_port_clamps_beside_their_pins` (J400.2 4.114 mm) and `test_r22_clamp_gnd_returns` (D402.2 0.7 mm).
 - **Kept:**
-  - D-R19-02's spacing and the BAT_ENABLE keep-outs: no copper east of J400 moved.
+  - D-R19-02's spacing and the BAT_ENABLE keep-outs: D402 moved no copper east of J400. (Corrected in the fix pass:
+    D-R24-17's fixed cut had put BAT_FAULT_N 0.173 mm from the BAT_ENABLE via (17.1, 82.8) on 1407e850, against
+    D-R19-02's 0.200 mm; D-R24-18 restores 0.200 mm.)
   - S-8, K-plane and T-1: the via is outside the west forward tab band.
   - The 45-degree rule and route_check at 0.
   - The J400 chain's AUD-2 status.
@@ -4082,11 +4084,11 @@ On 5516eeec: 59 bends (F.Cu 25: 24 plain + 1 via; B.Cu 31: 26 plain + 3 via + 2 
 - The 6 pad / via bends are redrawn at source (below); the ground family's last step,
   `r10_route.chamfer_right_angles`, chamfers the 53 plain bends of the drawn board (54 with D-R24-11's D402 tap): each
   becomes one 45-degree diagonal with a fixed cut (0.36 mm per axis-aligned leg, a 0.509 mm diagonal; 0.26 mm per axis
-  on diagonal legs), or the
-  bend's own named cut in CHAMFER_CUTS: pairs turning together keep their pitch (CAM_FAULT_N 0.65 outside CAM_PWR_EN,
+  on diagonal legs), or the bend's own named cut in CHAMFER_CUTS: pairs turning together keep their pitch (CAM_FAULT_N 0.65 outside CAM_PWR_EN,
   pitch 0.5; SD_SCK 0.77 outside SD_MISO, pitch 0.7: inner + 0.586 p); wide or short legs (BAT_IN F.Cu 0.72 for the
   1.0 mm feed, 3V3A 0.25, GND 0.3 / 0.33, ARM1_SENSE 0.35); clearance-bound corners (BUZZ_G 0.15 / 0.17 by Q123.2,
-  LED_YEL 0.2 by U1.89, RAW_ACT 0.34 by R87.1); >= 1 mm chamfers where a sub-1 mm one would make a staircase (GPS_TX_MCU,
+  LED_YEL 0.2 by U1.89, RAW_ACT 0.34 by R87.1, and since the fix pass BAT_FAULT_N 0.32 by the BAT_ENABLE via
+  (17.1, 82.8), D-R24-18: the fixed 0.36 had left that recorded leak path 0.173 mm); >= 1 mm chamfers where a sub-1 mm one would make a staircase (GPS_TX_MCU,
   GPS_RX_MCU, USB_LIMITED In2 x 2: 0.75). USB: the only USB data bends are the two corners of USB_DM's strap between
   J3.B7 and J3.A7, west of the receptacle's contacts ((5.75, 30.05) / (5.75, 31.05), F.Cu). Each takes the fixed cut,
   so the strap, a stub between the two D- contacts and not on the D+ / D- run to D4 / U1, is 0.422 mm shorter
@@ -4107,4 +4109,108 @@ POWER_NARROW re-measured (U9 IN 0.3 mm bar entry to C88.1 1.96 mm, 0.7 mm C88.1 
 fall 8.99 V/us, rise 5.09 V/us; C88 still intercepts the feed). r10_stage_check treats right_angle as pending before the
 ground family (whose last step chamfers); the final stage and check.sh gate it.
 
-The record index is now **207 unique D IDs through D-R24-17**.
+## D-R24-18. BAT_FAULT_N's chamfer at the EN via capped (round 24 fix pass, 2026-11-01)
+
+R24-TRI-01 (R24-SAFETY-01, R24-DOCS_BINDING-01). The triage recommended a text fix; the root took the board route.
+
+- **What:** a CHAMFER_CUTS entry ('BAT_FAULT_N', 'F', 16.55, 83.35): 0.32 in `m3_design/r10_route.py`.
+- **Why:** D-R24-17's fixed 0.36 mm cut moved BAT_FAULT_N's F.Cu corner to 0.173 mm from the BAT_ENABLE via
+  (17.1, 82.8). That via is a recorded leak path to EN (owner row 24, FMEA H-6 / V-18, D-R19-02 at 0.200 mm), and the
+  records said the gap was unchanged. A cosmetic chamfer must not narrow a recorded safety leak path.
+- **Before -> after,** measured by pcbnew shape distance at 1 nm:
+  - 5516eeec: 0.200 mm (the corner's legs).
+  - 1407e850: 0.1733 mm (the chamfer; the legs 0.200 mm).
+  - Now: 0.200 mm (the legs, as on 5516eeec). The chamfer is at 0.2015 mm ((1.1 - c) / sqrt 2 - 0.35), with a
+    0.453 mm diagonal (at least the 0.2 mm floor).
+- **Nothing else changed:** the copper diff against 1407e850 is exactly BAT_FAULT_N's three F.Cu pieces at that corner.
+  - (16.55, 80.9)-(16.55, 82.99) -> (16.55, 80.9)-(16.55, 83.03).
+  - (16.55, 82.99)-(16.91, 83.35) -> (16.55, 83.03)-(16.87, 83.35).
+  - (16.91, 83.35)-(19.3, 83.35) -> (16.87, 83.35)-(19.3, 83.35).
+  - No via, pad or footprint moved (every track, via and footprint pose compared; the zone fills are re-poured
+    around the new corner). Segments (1057), vias (307) and hidden designators (92) are unchanged; track length is
+    1867.023 -> 1867.046 mm.
+- **Records:** D-R24-11's "Kept" line and D-R24-17's named-cut list are corrected.
+
+## D-R24-19. Generated EN text: D402's leakage, the pack windows and the second vias (round 24 fix pass, 2026-11-01)
+
+R24-TRI-02 / -03 / -04 (R24-SAFETY-02 / -03 / -04, R24-POWER-01 / -02, R24-REQUIREMENTS-01, R24-MCU-01 / -02).
+
+- **What:** the battery_entry sheet note (`m3_design/r10_sch.py`, R19_SHEET_NOTES) and the binding-note obligations
+  (`m3_design/r10_sch_check.py`: the chatter obligation and firmware rules 4, 5 and 8). The build regenerates the sheet
+  and `r10_binding_note.json` (K-binding).
+- **Why:**
+  - D402's leakage (at most 50 nA) adds to U9's own +/-0.1 uA EN leakage rather than replacing it, so D-R24-11's "the
+    EN timing figures are kept" was wrong (TRI-02).
+  - The sheet note's pack window used only the nominal divider ratio (TRI-03).
+  - Rules 4 and 5 still said Q120's gate, R91.1 and U1.28 each hang on one via (TRI-04).
+- **Before -> after,** by Calculation (the triage's corner model, re-run: R80 / R165 / R81 +/-1 %, C87 0.72-1.27 x
+  220 nF, TI SLVSFC9C p9 thresholds, +/-0.1 uA, D402 50 nA at J400.2 with J400 closed and through R165 with it open):
+  - Drop-out worst case: 10.6 / 20.5 / 26.4 -> 10.3 / 20.1 / 26.0 ms at 6.0 / 7.4 / 8.4 V; 8.5 -> 8.2 ms at 5.73 V;
+    6.6 -> 6.3 ms at 5.5 V.
+  - The < 10 ms bench rule now needs a pack of at least 5.96 V (was 5.92 V).
+  - Turn-on: 30-129 -> 30-130 ms.
+  - EN at the 6.0 V worst corner: 1.407 -> 1.401 V.
+  - The sheet note's pack window "on 4.89-5.05 V, off 4.45-4.61 V" (nominal ratio) -> "on 4.72-5.25 V, off
+    4.29-4.80 V" over every corner (nominal 4.96 / 4.51 V).
+  - Rule 8's turn-off corner: 4.78 -> 4.80 V. PA6's lower edge, 0.44 V x 11 = 4.84 V, is still above it.
+  - Rule 4: "Respin: a second via" -> each gate drive has two barrels since D-R24-02, so leaving Q120 off takes two
+    opens.
+  - Rule 5: "R91.1 and U1.28 each hang on one via" -> each has a second via since D-R24-08.
+  - The chatter trip fraction is 20.0 / 24.4 % at 5.73 / 6.0 V (was 20.6 / 25.0 %).
+- **Not in this lane:** the generated text carries no J400 chatter open-fraction rule (the "below 20 %" that becomes
+  18 %). It is in REQUIREMENTS F6, ORDERING 8.3, R10_VEHICLE_HANDOFF and R10_VALIDATION, which the docs lane owns.
+- **Tests:** `test_r21_sheet_notes` and `test_r23_binding_note_rules_and_pin_table` now require the new words and fail on
+  the old figures.
+
+## D-R24-20. M-8: courtyards 2.5 mm from the rail-less short edges (round 24 fix pass, 2026-11-01)
+
+R24-TRI-15 (R24-GATE-02).
+
+- **What:** a new check_r10 rule, M-8, in the placement and full stages. Every footprint courtyard must stay at least
+  2.5 mm from the y = 0 and y = 90 edges: JLC assembly terms section 2.3 (ORDERING 8.1), with rails on the long edges
+  only. The exception list SHORT_EDGE_QUERIES holds D-R24-15's kept DFM queries at their measured courtyard distances:
+  - R400 / R401 / R404, aft, 1.025 mm;
+  - C403, aft, 1.955 mm;
+  - C95, forward, 1.505 mm;
+  - R166, forward, 1.755 mm.
+- **Why:** no gate held the clearance D-R24-15 restored. R92 and TP88 moved back to their 5516eeec poses passed every
+  check.
+- **Before -> after:** no rule -> M-8. Each of these fails:
+  - a part nearer than 2.5 mm that is not listed;
+  - a listed part nearer than recorded, or at another distance (re-record);
+  - a listed part now clear (stale);
+  - a listed part not on the board (missing).
+  The next nearest parts are L400 at 2.505 mm, R92 at 2.525 mm and TP88 at 2.555 mm.
+- **Seeded test:** `RealBoardSeeds.test_r24_short_edge_clearance`. Each seed fails:
+  - R92 back at F(31, 87.5), 1.725 mm;
+  - TP88 back at F(35.5, 87.0), 1.955 mm;
+  - R166 0.2 mm nearer, 1.555 mm;
+  - R400 0.1 mm further (re-record);
+  - C95 moved clear (stale);
+  - C403 deleted (missing).
+
+## D-R24-21. BOOT0's second via cited as D-R24-03 (round 24 fix pass, 2026-11-01)
+
+R24-TRI-16 (R24-GATE-03, R24-MCU observation 6). Five places now cite D-R24-03 instead of D-R24-05, which keeps U9's EN
+on one via:
+
+- route_check's PARALLEL_VIAS reason for BOOT0 (14.2, 46.0);
+- `r10_route_core.boot0`'s docstring;
+- check_r10's SINGLE_OPEN_EXCEPTIONS comment;
+- two comments / docstrings in `tools/test_r10_check.py`.
+
+These are comments and docstrings only.
+
+## D-R24-22. check_actuators names R10's own switch pins (round 24 fix pass, 2026-11-01)
+
+R24-TRI-17 (R24-GATE observation 5). In `m3_design/check_actuators.py`, item 12's messages now use the profile's pins.
+On r10 the message is "J400.1 only through R80 to BAT_IN" (was the fixed R9 text "J1.3 ..."); r9 keeps J1.3 / J1.4. The
+check logic is unchanged. Seed: `test_screw_switch_contacts_and_protection` (R80.2 on BAT_IN names J400.1).
+
+## D-R24-23. round24_board_cad: the CPL counts (round 24 fix pass, 2026-11-01)
+
+R24-TRI-13 (R24-DOCS_BINDING-04). `round24_board_cad.md` / `.json` now give the CPL rows as 72 top + 133 bottom ->
+70 + 136 (205 -> 206). The 69 + 122 -> 67 + 125 figures, which they had called the CPL rows per side, are jlc_orient's
+orientation-reconstructed counts, plus 14 placement-only. This changes the record only.
+
+The record index is now **213 unique D IDs through D-R24-23**.

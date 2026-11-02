@@ -1,0 +1,85 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round24_mechanics",
+  "reviewer": "claude",
+  "target_commit": "f2b8251f34e6e84dbf28bfa686a8f79aafc56045",
+  "board_sha256_before": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "board_sha256_after": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 0
+  },
+  "findings": [],
+  "observations": [
+    "Plate model re-run on 1407e850 (fit_check --profile r10 report, plate_model --profile r10 with sources/r10_design/masses.json): 180.8 Hz pinned D5, 255.6 / 287.8 / 407.0 Hz, 78.6 g, 100 g gap to a 4 mm standoff plane 0.261 mm under C431 and 0.320 mm under C421: identical to the recorded figures, so the docs' \"not re-run on 1407e850\" figures remain correct for this board.",
+    "Next smallest 100 g / 4 mm gaps: L1 0.524 mm, C411 0.558 mm, J9 tails 0.691-0.727 mm (Calculation/Inference, same model).",
+    "R402 / R403 courtyards (B.Cu) sit 0.13 mm from U401 and 0.15 mm from R441; C88 0.055 mm from R82 and 0.10 mm from U9; none overlap (no rule requires more; DRC courtyard check reported 0 by the board pass).",
+    "TP88 is a bare board feature (excluded from body fit); its exposed top pad is 5.505 mm (courtyard to centre) from the (42,86) support against the 3.8 mm washer gate.",
+    "D402 (0.32 mm tall, B.Cu, x 4.12-4.78) is the worst bottom-body bore margin at 5.60 mm, equal to D440 / D441; deepest bottom part is still L1 (z -4.62 mm).",
+    "Nearest bottom/pin envelope to a support is unchanged: C32.2 4.536 mm from (4,44.3); nearest top hardware LED2.2 3.808 mm from (4,44.3) (3.8 mm gate)."
+  ],
+  "fix_verification": [
+    {
+      "change": "D-R24-11 D402 at B(4.45,65.9) rot 90 under J400",
+      "measurement": "courtyard x 3.955-4.945, y 65.205-66.595; 1.768 mm to J400.2 THT pad (M-6 floor 1.5); 19.457 mm to the nearest support (3.7,86); no tail/body overlap; bore margin 5.60 mm",
+      "verdict": "confirmed"
+    },
+    {
+      "change": "C88 to B(18.67,83.56) rot 0 (D-R24-05 / -17)",
+      "measurement": "courtyard 17.805-19.535 x 83.095-84.025; 14.299 mm to (3.7,86); no THT pad within 5 mm; bore margin far above floor",
+      "verdict": "confirmed"
+    },
+    {
+      "change": "D-R24-15 R92 to F(31,86.7)",
+      "measurement": "courtyard 2.525 mm from the forward edge; 9.525 mm to (42,86) (top washer 3.8)",
+      "verdict": "confirmed"
+    },
+    {
+      "change": "D-R24-15 TP88 to F(35.5,86.4)",
+      "measurement": "courtyard 2.555 mm from the forward edge; 5.505 mm to (42,86)",
+      "verdict": "confirmed"
+    },
+    {
+      "change": "D-R24-09 R402 / R403 to B(30.9,12.85) / B(30.9,14.6)",
+      "measurement": "courtyards 12.596 / 13.790 mm from (42,4); no THT pad within 5 mm (M-6); clear of J430 (y >= 18.3) and the C411/C421/C431 relief region (y 20-60)",
+      "verdict": "confirmed"
+    },
+    {
+      "change": "All eight DB125 terminals and wire room",
+      "measurement": "bodies x 3.40-11.50 (west) / 34.50-42.60 (east), z 0-8.90, bore margin 2.976 mm each; wire room 5.003-5.603 mm for all eight (floor 4.95); 27 tails, max 2.2 mm below board, 1.8 mm to a 4 mm standoff plane",
+      "verdict": "confirmed"
+    },
+    {
+      "change": "Five supports and keep-outs",
+      "measurement": "supports (4,4), (42,4), (4,44.3), (3.7,86), (42,86); fit_check, M-1, M-3, M-5, M-6, M-7, P-11 all OK on 1407e850",
+      "verdict": "confirmed"
+    }
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after (1407e850... both times)",
+    "tools/fit_check.py --profile r10 --report .supervisor/r24_mechanics/fit_r10.json: OK, 0 issues",
+    "tools/plate_model.py --profile r10 --mass-spec sources/r10_design/masses.json on that report (.supervisor/r24_mechanics/plate_r10.json)",
+    ".supervisor/r24_mechanics/gap.py: 100 g deflection plus depth against a 4 mm standoff plane for every bottom body / tail",
+    ".supervisor/r24_mechanics/probe_parts.py: courtyards, support gaps, THT gaps, edge gaps and courtyard neighbours of D402, C88, R92, R402, R403, TP88",
+    "tools/check_r10.py --only M-1,M-3,M-5,M-6,M-7,P-11 with the fit and plate reports: all OK",
+    "diff of m3_design/r10_place.tsv between 9b27268 and f2b8251 (only C88, R402, R403, R92, TP88 moved; D402 added)",
+    "doc statements on the moved parts, the plate model and the wire room in AGENTS.md, REQUIREMENTS P1-P3, M3_R10.md, R10_VEHICLE_HANDOFF.md and ORDERING.md checked against the measurements"
+  ],
+  "sources": [
+    "docs/REQUIREMENTS.md P1-P3",
+    "AGENTS.md section 1 table",
+    "round24_board_cad.md",
+    "R10_DECISIONS.md D-R24-05/-09/-11/-15/-17",
+    "tools/fit_check.py",
+    "tools/plate_model.py",
+    "tools/check_r10.py M-6",
+    "DORABO DB125 sheet (fit_check source URL) for the 3.8 mm tail"
+  ],
+  "coverage_limits": [
+    "CAD envelopes and model boxes only; no physical sled, harness, screwdriver or standoff fit",
+    "plate model is the existing Kirchhoff Rayleigh-Ritz model with inferred stiffness and masses; not vibration qualification",
+    "did not re-derive the nut-inclusive h + t limits at the supports (unchanged by this pass)",
+    "did not open other round 24 lenses' reports"
+  ]
+}

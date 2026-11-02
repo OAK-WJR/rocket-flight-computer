@@ -1,14 +1,17 @@
 # R10 AVA layout hand-off
 
-**How to read this file (R19-DOC-08).** For the current board `1407e850…` read only "Round 24 board pass" at the
-end; it lists the changes from its predecessor `5516eeec…` ("Round 21 CAD fix pass", the board of rounds 22 and 23). The current placement itself is
+**How to read this file (R19-DOC-08).** For the current board `92c3ad59…` read "Round 24 fix pass" at the end (one
+capped chamfer) and, before it, "Round 24 board pass", which lists the changes from `5516eeec…` ("Round 21 CAD fix
+pass", the board of rounds 22 and 23) to `1407e850…`. The current placement itself is
 `m3_design/r10_place.tsv` and the board; everything above the round 18 section is history of earlier boards.
 Sealed historical sections keep their original text, including run-together words and numbers (R19-DOC-04); only the
 current-status paragraphs were respaced in round 19.
 
 This is the immutable hand-off measurement record for `0c50b9fd…` below.
-**Round 24 board pass (2026-11-01):** the current CAD candidate is the rebuilt PCB recorded in "Round 24 board pass"
-at the end (D-R24-01..17); "Round 21 CAD fix pass" records its predecessor `5516eeec…`, which rounds 22 and 23 reviewed.
+**Round 24 fix pass (2026-11-01):** the current CAD candidate is the PCB recorded in "Round 24 fix pass" at the end
+(D-R24-18..23); "Round 24 board pass" records its predecessor `1407e850…`, which round 24 reviewed.
+**Round 24 board pass (2026-11-01):** the round 24 PCB is recorded in "Round 24 board pass"
+(D-R24-01..17); "Round 21 CAD fix pass" records its predecessor `5516eeec…`, which rounds 22 and 23 reviewed.
 **Round 21 CAD fix pass (2026-10-31):** the current CAD candidate is the rebuilt PCB recorded in
 "Round 21 CAD fix pass" at the end (D-R21-01..09); "Round 20 CAD polish pass" records its predecessor `0dc84776…`.
 **Round 20 CAD polish pass (2026-10-31):** the round 20 PCB is recorded in "Round 20 CAD polish pass"
@@ -493,3 +496,18 @@ Kept, measured (no change): U4.6 / U4.7's GND via (D-R24-01), U9's EN cell (D-R2
 optional cleanliness items (D-R24-16). Silkscreen: C87 and R402 hidden, C16, C20 and C404 shown again, D402's designator
 shown (93 -> 92 hidden, 124 visible, 44 legends; all hidden references kept on Fab). Every other part pose, land, net
 and support is unchanged. U1's pin map and the IMU axis map (roll = -gyro_Y) are unchanged.
+
+## Round 24 fix pass (new PCB; D-R24-18..23)
+
+The CAD lane's pass on the round 24 triage (0 Critical / 0 Major, 17 Minor real errors on `1407e850…`;
+`../r10_review/round24_fix_cad.md`). Builds E and F gave the same board. PCB
+`92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f`, 46 x 90 x 1.6 mm, 2,363,951 bytes; 216 footprints,
+1057 segments, 307 vias (168 GND), 1867.046187 mm track (`1407e850…`: the same counts, 1867.022756 mm).
+
+| Change | Placement / copper |
+|---|---|
+| BAT_FAULT_N chamfer at the EN via (D-R24-18) | CHAMFER_CUTS ('BAT_FAULT_N', 'F', 16.55, 83.35): 0.32 (was the fixed 0.36): (16.55,80.9)-(16.55,82.99) -> (16.55,80.9)-(16.55,83.03); (16.55,82.99)-(16.91,83.35) -> (16.55,83.03)-(16.87,83.35); (16.91,83.35)-(19.3,83.35) -> (16.87,83.35)-(19.3,83.35). BAT_ENABLE via (17.1,82.8) to BAT_FAULT_N 0.173 -> 0.200 mm (the legs; the chamfer 0.2015 mm) |
+
+No via, pad, footprint, legend or support moved; the zone fills were re-poured around the new corner. D-R24-19 ..
+D-R24-23 change generated text, checks and records only (check_r10 rule M-8 holds every courtyard 2.5 mm from the
+short edges, with six recorded DFM queries). U1's pin map and the IMU axis map (roll = -gyro_Y) are unchanged.

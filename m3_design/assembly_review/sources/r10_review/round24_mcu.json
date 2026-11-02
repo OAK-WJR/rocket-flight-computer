@@ -1,0 +1,94 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 24, mcu lens",
+  "reviewer": "claude",
+  "target_commit": "f2b8251",
+  "board_sha256_before": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "board_sha256_after": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 4},
+  "findings": [
+    {
+      "id": "R24-MCU-01",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "Firmware rule 5 still says R91.1 and U1.28 each hang on one via; D-R24-08 gave both a second via",
+      "contradicts": "The board 1407e850 (vias LOGIC_SOURCE_ST (30.45, 51.4) and 3V3 (28.1, 59.4), D-R24-08); docs/FMEA_REDUNDANCY.md line 41 ('since D-R24-08 R91.1 and U1.28 each have a second via, so they no longer hang on one'); docs/M3_R10.md line 44 (round 24 table, 'Second vias for R60.1 ..., U1.28 / PA4 (30.45,51.4) and R91.1 (28.1,59.4)'); tools/check_r10.py comment at the removed entries.",
+      "evidence": "docs/M3_R10.md lines 965-967 (Firmware, rule 5): 'R91.1 and U1.28 each hang on one via (D-R22-02), so this is an extra barrier, not a guarantee.' The same sentence is firmware obligation 40 of m3_design/assembly_review/sources/r10_design/r10_binding_note.json (line 612, bound to board 1407e850), generated from m3_design/r10_sch_check.py line 319. On the board: LOGIC_SOURCE_ST has vias (30.85, 51.8) and (30.45, 51.4), joined on F.Cu and on B.Cu by 0.566 mm diagonals; 3V3 at R91.1 has (28.1, 60.0) and (28.1, 59.4). check_r10.single_via_opens on the committed board, taps U1.28 and R91.1: single_points [] for both.",
+      "impact": "The firmware rule and the binding note's obligation give a false copper premise to whoever writes the firmware; the docs contradict each other (FMEA versus M3_R10 / binding note).",
+      "concrete_fix": "In m3_design/r10_sch_check.py (rule 5 text) and docs/M3_R10.md Firmware rule 5, replace the sentence with: 'Since D-R24-08 R91.1 and U1.28 each have a second via; the rule stays an extra barrier, not a guarantee.' Regenerate the binding note."
+    },
+    {
+      "id": "R24-MCU-02",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "Firmware rule 4, its binding-note obligation and the owner list still give Q120's gate a single via (16.2,73.3) and list a second via as a respin item",
+      "contradicts": "The board 1407e850: ACT_GATE barrel (15.4, 72.85) beside (16.2, 73.3) (D-R24-02); docs/M3_R10.md lines 348-351 ('Fixed in round 24: ... Q120 / Q121's gate drive one each at (15.4,72.85) and (11.74,72.3) ... now needs two opens'); docs/ORDERING.md line 650; docs/R10_VALIDATION.md round 24 section line 1994.",
+      "evidence": "docs/M3_R10.md lines 963-964 (Firmware, rule 4): 'Respin: a second via at Q120's gate (16.2,73.3).' r10_binding_note.json firmware obligation 39 (line 611; source m3_design/r10_sch_check.py line 318): '... Respin: a second via.' docs/R10_VALIDATION.md line 2250, owner list section 1 (current inventory for 1407e850, the row names no older board): 'Q120's gate via (16.2,73.3), the only link from R121 to Q120.4 ... | single via |'. On the board ACT_GATE has F.Cu (15.2,72.3)-(15.575,72.675)-(16.2,73.3) and (15.575,72.675)-(15.4,72.85), B.Cu (14.475,72.2)-(15.262,72.987)-(15.575,73.3)-(16.2,73.3) and (15.4,72.85)-(15.262,72.987), vias (16.2,73.3) and (15.4,72.85); check_r10.single_via_opens tap Q120.4: single_points [].",
+      "impact": "The owner deviation list asks the owner to accept a single-via exposure that no longer exists, and the firmware rule names a respin that is already done; the docs contradict M3_R10's own retained-deviation text and ORDERING 8.3.",
+      "concrete_fix": "M3_R10 rule 4 and r10_sch_check.py rule 4 text: replace the respin sentence with 'Since D-R24-02 Q120's gate has a second barrel (15.4,72.85), so the Q120-off case needs two opens.' R10_VALIDATION line 2250: re-word the row to the two barrels (16.2,73.3) and (15.4,72.85), both open, or move it to the history. Regenerate the binding note."
+    },
+    {
+      "id": "R24-MCU-03",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "Owner list section 6 gives BOOT0's maximum GND companion as 1.662077 mm; D-R24-03's second via makes it 2.000 mm",
+      "contradicts": "The board 1407e850: BOOT0 via (14.2, 46.0) (D-R24-03), nearest GND via (14.2, 48.0).",
+      "evidence": "docs/R10_VALIDATION.md lines 2492-2493 (owner list section 6, current for 1407e850 per its inventory basis; names no older board): 'NRST/BOOT0/I2C companions remain outside the named fast numeric rule: maximum 3.679674/1.662077/2.232543 mm respectively.' Measured centre to centre to the nearest GND via (the AGENTS section 3 measure): BOOT0 (13.8, 45.6) 1.6621 mm to its nearest GND via, BOOT0 (14.2, 46.0) 2.000 mm to GND (14.2, 48.0) (next: 2.173 mm to (13.35, 44.0)). NRST 3.6797 and I2C1_SDA 2.2325 still match.",
+      "impact": "The owner is shown a BOOT0 return figure that is 0.338 mm short of the current worst case.",
+      "concrete_fix": "Change the BOOT0 figure to 2.000 mm ('2.000 mm at the second via (14.2,46.0), 1.662 mm at (13.8,45.6)')."
+    },
+    {
+      "id": "R24-MCU-04",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "Owner list section 5 gives the QSPI track lengths as 4.110955-14.524012 mm; D-R24-17's chamfers shortened QSPI_IO2 to 14.102245 mm",
+      "contradicts": "The board 1407e850 (D-R24-17 chamfered QSPI_IO2 and QSPI_CLK).",
+      "evidence": "docs/R10_VALIDATION.md lines 2402-2403 (owner list section 5, current for 1407e850; names no older board): 'QSPI lengths span 4.110955-14.524012 mm, one via each'. Sum of track segment lengths (pcbnew GetLength) on 1407e850: QSPI_CLK 7.428234, IO0 4.110955, IO1 9.714966, IO2 14.102245, IO3 9.760408, NCS 6.165635 mm, one via each. On 5516eeec (commit 9b27268) IO2 was 14.524012 and CLK 7.850 mm, so the stated span is the previous board's.",
+      "impact": "A stated board figure is the previous board's; the upper end is 0.422 mm too long.",
+      "concrete_fix": "Change the span to 4.110955-14.102245 mm (or name it as a 5516eeec figure)."
+    }
+  ],
+  "observations": [
+    "U1: all 100 pads' nets match pin_table.tsv r10_net and r10_binding_note.json u1_pins (port and net); the pin to port map matches DS12110 Rev 8 Figure 5 p. 55 (LQFP100); pin_table, circuit and netlist hashes in the binding note match the files.",
+    "BOOT0 (D-R24-03): vias (13.8,45.6) and (14.2,46.0), F.Cu 0.150 mm to I2C1_SCL (floor), B.Cu 0.211 mm to C31.1, hole edge 0.266 mm; R5 10k on B.Cu, R5.2 on the B.Cu GND pour; no single point.",
+    "VCAP2 (D-R24-04): vias (18.0,37.3) and (18.3,36.8), B.Cu 0.211 mm to NRST, F.Cu 0.328 mm to U1.72, hole edge 0.283 mm; no single point. Both T nodes are T junctions, not bends.",
+    "VCAP1 kept single (disclosed respin item). A lenient via-only search finds DRC-legal spots west of C19.1 (e.g. (27.6,37.3); seeded copy with refill: DRC 0 errors), but joining it to the net fails route_check (detour 5.41 / 2.63 mm, ratio 2.05, and track_loop), so D-R24-04's keep decision holds; its parenthetical 'no spot ... >= 0.1 mm from C19.1' describes only the B.Cu box east of C19.",
+    "C19 / C20 2.2 uF X5R 10 % fit DS12110 Rev 8 Table 124 p. 216 (2.2 uF typical, +/-20 % tolerated, ESR < 100 mOhm) nominally; operating C / ESR stay owner row 10. C19.2 / C20.2 touch the B.Cu GND pour besides their GND vias.",
+    "tools/check_r10.py comment above the U1.48 entry says 'D-R24-04 / -05 give VCAP2 (U1.73) and BOOT0 (U1.94) a second via'; BOOT0's is D-R24-03 (code comment only).",
+    "Firmware rules checked against copper and found consistent: PE4 network R127 1k / R126 220R / R128 10k / C126 220 nF to Q124 (source GND), 0.104 V against 30 kOhm; PC1 R122 1k / R123 2k / C123 10 nF on Q122, 0.218 V; C128 on PYRO1_OUT; U3.3 = QSPI_IO2, R127.1 = PYRO1_GATE_N; ACT_GATE at R120.2 / C120.2; PA4 = U11.9 ST with R91 10k (IN1 = pin 7 USB_LIMITED, IN2 = pin 2 RAW_PROTECTED, TPS2121 SLVSEA3F p. 4); PA6 = VLOGIC/11 (R60 100k / R61 10k); PB1 = CAM_5V/11 (R104 / R105); PC0 / PC5 = node / 11.2 (2 x 5.1k, 2k || 2k, 10 nF); PC8 = VBUS/2 (R9 / R110); U5 PS high, CSB low (0x77), R12 / R13 4.7k; R10 / R11 / R460-R464 pull-ups; VBAT on 3V3; VREF+ / VDDA on 3V3A behind R164; IWDG 960 LSI cycles 28.571-32.653 ms; 34.853 ms sum.",
+    "QSPI_IO2 to U1.3 is 0.550 mm (F.Cu (17.36,49.1)-(18.54,49.1)), as R10_VALIDATION states; U4-body B.Cu crossings unchanged from 5516eeec.",
+    "Single-open evidence: check_r10.single_via_opens on the board gives no single point for U1.28, R91.1, U1.94, U1.73, Q120.4, Q121.4 and one for U1.48 (via VCAP1 (29.25,38.00), the listed exception); SINGLE_OPEN_EXCEPTIONS has 11 entries as documented."
+  ],
+  "fix_verification": [
+    {"decision": "D-R24-03", "item": "BOOT0 second via (14.2,46.0), R5 on B.Cu", "measurement": "vias (13.8,45.6)+(14.2,46.0) joined on F.Cu and B.Cu; F.Cu 0.150 mm I2C1_SCL, B.Cu 0.211 mm C31.1, hole edge 0.266 mm; single_points []; DRC 0", "verdict": "confirmed"},
+    {"decision": "D-R24-04", "item": "VCAP2 second via (18.3,36.8); VCAP1 kept", "measurement": "VCAP2 vias (18.0,37.3)+(18.3,36.8); 0.211 mm NRST (B.Cu), 0.328 mm U1.72 (F.Cu), hole edge 0.283 mm; single_points []. VCAP1 single at (29.25,38.0), still an exact exception", "verdict": "confirmed"},
+    {"decision": "D-R24-08 (U1.28 / R91.1 part)", "item": "PA4 and R91.1 second vias", "measurement": "LOGIC_SOURCE_ST (30.45,51.4), 0.171 mm to GND via (30.15,52.0); 3V3 (28.1,59.4), 0.2545 mm to R91.2; single_points [] for both; firmware rule 5 text not updated (R24-MCU-01)", "verdict": "confirmed (copper); records partly"},
+    {"decision": "D-R24-02 (as it bears on firmware rule 4)", "item": "Q120 gate second barrel", "measurement": "ACT_GATE (15.4,72.85) present, Q120.4 single_points []; rule 4 / binding note / owner row not updated (R24-MCU-02)", "verdict": "confirmed (copper); records partly"},
+    {"decision": "D-R24-17 (U1 nets)", "item": "chamfers on U1 nets", "measurement": "route_check --profile r10: 0 failing, right_angle 0; QSPI_CLK / IO2 shortened 0.422 mm each (R24-MCU-04)", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after (1407e850... both)",
+    "pcbnew: U1 pad nets versus pin_table.tsv and r10_binding_note.json (100 / 100); pin-to-port against DS12110 Rev 8 Figure 5 (pdftotext)",
+    "pcbnew net dumps for BOOT0, VCAP1, VCAP2, LOGIC_SOURCE_ST, ACT_GATE; clearance bisection with SHAPE.Collide for the new vias",
+    "check_r10.single_via_opens on the committed board for the BOOT0 / VCAP / PA4 / R91.1 / ACT_GATE taps",
+    "kicad-cli 10.0.7 pcb drc (error severity) on a probe copy: 0 violations, 0 unconnected",
+    "route_check.py --profile r10 on the committed board (report into the probe dir): 0 failing",
+    "Seeded copy: second VCAP1 via (27.6,37.3) with F.Cu / B.Cu links, zones refilled: DRC 0 errors; route_check fails track_loop and detour",
+    "Per-net length and via diff of U1 nets between 5516eeec (9b27268) and 1407e850; QSPI lengths",
+    "Nearest-GND-via distances for BOOT0 / NRST / I2C / VCAP vias",
+    "Part / net dump of every footprint for the firmware-rule cross-check; TPS2121 and TXU0202 pin tables (pdftotext)",
+    "Text search of docs, AGENTS, STATUS, binding note and generators for stale single-via statements"
+  ],
+  "sources": [
+    "DS12110 Rev 8 (STM32H742/743), https://www.st.com/resource/en/datasheet/stm32h743vi.pdf: Figure 5 p. 55, Table 124 p. 216 (cached copy)",
+    "TI SLVSEA3F (TPS2121), https://www.ti.com/lit/ds/symlink/tps2121.pdf: pin functions p. 4, ST behaviour (section 10.2.3)",
+    "TI TXU0202 datasheet: Table 6-1 pin functions (cached copy)",
+    "AGENTS.md, docs/REQUIREMENTS.md M2, docs/M3_R10.md, docs/R10_VALIDATION.md, docs/FMEA_REDUNDANCY.md, docs/ORDERING.md, R10_DECISIONS.md D-R24-01..17, round24_board_cad.md"
+  ],
+  "coverage_limits": [
+    "Alternate-function numbers in pin_table.tsv were not re-parsed from DS12110 Tables 10-14 (pin_table.tsv unchanged since round 23, hash b94133e6...).",
+    "IMU axis map and lever arm were not re-derived (U4 unchanged).",
+    "RM0433 not read; option-byte and register claims are labelled Inference in the records.",
+    "No firmware, bench or physical test; VCAP operating C / ESR not assessed beyond the nominal rule."
+  ]
+}

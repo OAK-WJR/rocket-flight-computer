@@ -3035,7 +3035,7 @@ SINGLE_OPEN_EXCEPTIONS = [
      'sink at all); bench USB only. Second via at the next board change'),
     # D-R22-02 (R22-POWER-02): the power-state monitor inputs R60.1 / U1.28 / R91.1 each have a second via since
     # D-R24-08; their entries are gone.
-    # D-R23-01 (R23-MCU-02): measured on 5516eeec; each the net's only via. D-R24-04 / -05 give VCAP2 (U1.73) and BOOT0
+    # D-R23-01 (R23-MCU-02): measured on 5516eeec; each the net's only via. D-R24-04 / -03 give VCAP2 (U1.73) and BOOT0
     # (U1.94) a second via; D-R24-09 puts U401's divider beside it (U401.3: no via).
     ('U1.48', 'via VCAP1 (29.25, 38.00)',
      "VCAP1's only link to C19: open, the core LDO keeps one 2.2 uF instead of DS12110 Rev 8's two (Table 124 p. 216: CEXT "
@@ -3456,6 +3456,61 @@ def m6(ctx):
 def pcbnew_mm(v):
     import pcbnew
     return pcbnew.ToMM(v)
+
+
+# D-R24-20 (R24-TRI-15): JLC's assembly terms section 2.3 require 2.5 mm from a component body to the board edge
+# (ORDERING 8.1). JLC adds rails on the two long edges only, so the rail-less short edges (y = 0 aft, y = 90 forward)
+# keep that distance from every footprint's courtyard (a body never reaches past its courtyard), except the recorded DFM
+# queries D-R24-15 kept, each at its measured courtyard distance (round 24, board 1407e850). A part nearer than 2.5 mm
+# that is not listed, a listed part now nearer than recorded (grown) or at another distance (re-record), a listed part
+# now clear (stale) and a listed part not on the board (missing) each fail.
+SHORT_EDGE_MIN = 2.5            # mm, courtyard to the y = 0 / y = 90 board edge
+SHORT_EDGE_TOL = 0.005          # mm
+SHORT_EDGE_QUERIES = {          # ref: (edge, courtyard distance mm, why the part stays)
+    'R400': ('aft', 1.025, "U400's feedback divider row under the buck loop"),
+    'R401': ('aft', 1.025, "U400's feedback divider row under the buck loop"),
+    'R404': ('aft', 1.025, "U400's feedback divider row under the buck loop"),
+    'C403': ('aft', 1.955, "U400's input capacitor in the buck loop"),
+    'C95': ('forward', 1.505, 'the hot-plug feed: C89 sits 1.0 mm aft of it'),
+    'R166': ('forward', 1.755, "the hot-plug damper's 2512 on the BAT_DAMP run"),
+}
+
+
+def m8(ctx, queries=None, minimum=SHORT_EDGE_MIN, tol=SHORT_EDGE_TOL):
+    """(issues, evidence): every footprint courtyard >= `minimum` from the rail-less short edges, but the recorded
+    SHORT_EDGE_QUERIES at their measured distances."""
+    import pcbnew
+    import check_r8 as r8
+    queries = SHORT_EDGE_QUERIES if queries is None else queries
+    mm = pcbnew.ToMM
+    _, y0, _, y1 = ctx.outline
+    issues, near, seen = [], {}, set()
+    for f in ctx.board.GetFootprints():
+        ref = f.GetReference()
+        bb = r8.courtyard(f).BBox()
+        aft, fwd = mm(bb.GetTop()) - y0, y1 - mm(bb.GetBottom())
+        edge, d = ('aft', aft) if aft <= fwd else ('forward', fwd)
+        d = round(d, 3)
+        q = queries.get(ref)
+        seen.add(ref)
+        if d >= minimum - EPS:
+            if q is not None:
+                issues.append(f'M-8: stale SHORT_EDGE_QUERIES entry {ref}: its courtyard is now {d:.3f} mm from the '
+                              f'{edge} short edge (at least {minimum} mm)')
+            continue
+        near[ref] = [edge, d]
+        if q is None:
+            issues.append(f'M-8: {ref} courtyard is {d:.3f} mm from the {edge} short edge, under {minimum} mm (JLC '
+                          'assembly terms section 2.3, ORDERING 8.1) and not a recorded DFM query (SHORT_EDGE_QUERIES)')
+        elif q[0] != edge or d < q[1] - tol:
+            issues.append(f'M-8: {ref} courtyard is {d:.3f} mm from the {edge} short edge, nearer than the recorded '
+                          f'{q[1]} mm ({q[0]})')
+        elif d > q[1] + tol:
+            issues.append(f'M-8: SHORT_EDGE_QUERIES {ref} records {q[1]} mm, the board gives {d:.3f} mm (re-record it)')
+    issues += [f'M-8: SHORT_EDGE_QUERIES entry {ref}: no such part on the board' for ref in sorted(queries)
+               if ref not in seen]
+    return issues, dict(minimum_mm=minimum, edges_mm=[round(y0, 3), round(y1, 3)], near=near,
+                        queries={k: list(v[:2]) for k, v in queries.items()})
 
 
 def m7(ctx):
@@ -5299,6 +5354,8 @@ RULES = [
     ('M-5', 'fit (profile r10)', lambda c, s: m5(c, s)),
     ('M-6', 'bottom keep-outs', lambda c, s: m6(c)),
     ('M-7', 'IMU and MEMS', lambda c, s: m7(c)),
+    ('M-8', 'courtyards >= 2.5 mm from the rail-less short edges y = 0 / y = 90 (JLC assembly terms section 2.3, '
+            'ORDERING 8.1), six recorded DFM queries (D-R24-15 / D-R24-20)', lambda c, s: m8(c)),
     ('P-11', 'terminal entry and owner-accepted 4.95 mm wire room', lambda c, s: p11(c)),
     ('F9-1', 'R10 reverse hot-plug model pass (OQ-2)', lambda c, s: f9(c)),
     ('F9-2', 'GAP-2 U9 output capacitor and Schottky local copper loops', lambda c, s: output_loop(c)),
@@ -5327,7 +5384,7 @@ RULES = [
     ('K-retained', 'flash/camera/microSD bypass, TP122', lambda c, s: retained_routing(c)),
 ]
 STAGES = {'functional': {'S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'K-contract', 'K-loader', 'K-actuators'}}
-STAGES['placement'] = STAGES['functional'] | {'LC-1', 'M-1', 'M-3', 'M-5', 'M-6', 'M-7', 'P-11', 'F9-1', 'T-1',
+STAGES['placement'] = STAGES['functional'] | {'LC-1', 'M-1', 'M-3', 'M-5', 'M-6', 'M-7', 'M-8', 'P-11', 'F9-1', 'T-1',
                                               'K-legends', 'K-width'}
 STAGES['full'] = {rid for rid, _, _ in RULES}
 

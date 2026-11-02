@@ -391,6 +391,14 @@ class SchematicContract(unittest.TestCase):
             self.assertIn(words, text)
         self.assertNotIn('TT_a pin', text)
         self.assertNotIn('consigned alternate', text)
+        # D-R24-19 (R24-TRI-02 / -04): rules 4, 5 and 8 and the chatter worst cases after D-R24-02 / -08 / -11
+        for words in ('leaving Q120 off this way takes two opens', 'R91.1 and U1.28 each have a second via since D-R24-08',
+                      "above U9's 4.80 V BAT_IN turn-off corner", 'J400 drop-outs shorter than 10.3/20.1/26.0 ms worst case',
+                      'about 8.2 ms at the fire budget four-stall BAT_IN of 5.73 V', 'at or above 5.96 V (6.3 ms at 5.5 V)',
+                      'after a 30-130 ms EN turn-on delay'):
+            self.assertIn(words, text)
+        for gone in ('Respin: a second via', 'hang on one via', '4.78 V BAT_IN', '10.6/20.5/26.4', '5.92 V', '30-129 ms'):
+            self.assertNotIn(gone, text)
         with (gate.ROOT / 'm3_design/assembly_review/sources/r10_design/pin_table.tsv').open() as table:
             rows = {r['port']: r for r in csv.DictReader(table, delimiter='\t')}
         pulls = {'PA0': 'R154 10k to GND', 'PA1': 'R155 10k to GND', 'PA2': 'R156 10k to GND', 'PA3': 'R157 10k to GND',
@@ -440,6 +448,12 @@ class SchematicContract(unittest.TestCase):
         self.assertIn('U9 (TPS259470L) current-limits and latches off RAW_PROTECTED', battery)
         self.assertIn("Q120's drain is on BAT_IN, so the RAW_ACT fire path bypasses U9; R134 (2 Ohm) limits it", battery)
         self.assertNotIn('must be fused', battery)
+        # D-R24-19 (R24-TRI-02 / -03): D402's leakage in the worst cases; the pack windows over every corner
+        self.assertIn("worst case 10.3/20.1/26.0 ms with 0.1 uA EN leakage plus D402's 50 nA", battery)
+        self.assertIn('the pack turns U9 on at 4.72-5.25 V and off at 4.29-4.80 V (nominal 4.96 / 4.51 V)', battery)
+        self.assertIn('30-130 ms worst case', battery)
+        for gone in ('UVLO on 4.89-5.05 V', 'off 4.45-4.61 V', '30-129 ms', '10.6/20.5/26.4'):
+            self.assertNotIn(gone, battery)
 
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
@@ -3022,6 +3036,9 @@ class RealBoardSeeds(unittest.TestCase):
 
     def test_screw_switch_contacts_and_protection(self):
         self.seeded('S-5', lambda b: self.pad(b, 'J400', '1').SetNet(b.FindNet('BAT_IN')), 'J400.1 must be')
+        # D-R24-22 (R24-TRI-17): K-actuators names R10's own switch pins, not R9's J1.3 / J1.4
+        self.seeded('K-actuators', lambda b: self.pad(b, 'R80', '2').SetNet(b.FindNet('BAT_IN')),
+                    'J400.1 only through R80 to BAT_IN')
         self.seeded('S-5', lambda b: b.FindFootprintByReference('R165').SetValue('0R'), 'R165 must be 470k')
         def bridge(b):
             p1, p2 = self.pad(b, 'J400', '1'), self.pad(b, 'J400', '2')
@@ -4463,7 +4480,7 @@ class RealBoardSeeds(unittest.TestCase):
         self.assertEqual(issues, [])
         self.assertEqual(len(gate.SINGLE_OPEN_TAPS), 40)    # 26 (round 21) + 7 (D-R22-02) + 5 (D-R23-01 / -02) + 2 (D-R23-11)
         self.assertEqual(set(ev), {t[1] for t in gate.SINGLE_OPEN_TAPS})
-        # D-R24-02 / -04 / -05 / -07 / -08 / -09 / -10: second vias (and U401's divider beside it) leave these single points
+        # D-R24-02 / -03 / -04 / -07 / -08 / -09 / -10: second vias (and U401's divider beside it) leave these single points
         self.assertEqual({tap: e['single_points'] for tap, e in ev.items() if e['single_points']}, {
             'R81.1': ['via BAT_ENABLE (17.10, 82.80)'], 'C87.1': ['via BAT_ENABLE (17.10, 82.80)'],
             'R87.1': ['via USB_LIMITED (22.00, 62.25)'],
@@ -4894,6 +4911,32 @@ class RealBoardSeeds(unittest.TestCase):
             v.SetDrill(pcbnew.FromMM(0.3)); v.SetNet(board.FindNet('BAT_SW_RETURN')); board.Add(v)
         self.seeded('K-ports', behind, 'J400.2 (BAT_SW_RETURN): its clamp D402.1 is reached only through R165')
 
+    def test_r24_short_edge_clearance(self):
+        """D-R24-20 (R24-TRI-15): M-8 holds every courtyard 2.5 mm from the rail-less short edges (JLC assembly terms
+        section 2.3, ORDERING 8.1) but the six recorded DFM queries at their measured distances. R92 back at its
+        5516eeec pose F(31, 87.5) fails (the gate lens's F1), and so do TP88 back at F(35.5, 87.0), R166 0.2 mm nearer
+        the edge (grown), R400 0.1 mm further (re-record), C95 moved clear (stale) and C403 deleted (missing)."""
+        b = self.load()
+        self.assertEqual(self.run_rule('M-8', b), set())
+        issues, ev = gate.m8(gate.make_ctx(b))
+        self.assertEqual(issues, [])
+        self.assertEqual(ev['near'], {'R400': ['aft', 1.025], 'R401': ['aft', 1.025], 'R404': ['aft', 1.025],
+                                      'C403': ['aft', 1.955], 'C95': ['forward', 1.505], 'R166': ['forward', 1.755]})
+
+        def put(ref, x, y):
+            return lambda board: board.FindFootprintByReference(ref).SetPosition(self.P(x, y))
+
+        def move(ref, dy):
+            return lambda board: board.FindFootprintByReference(ref).Move(self.P(0, dy))
+        self.seeded('M-8', put('R92', 31.0, 87.5),
+                    'M-8: R92 courtyard is 1.725 mm from the forward short edge, under 2.5 mm')
+        self.seeded('M-8', put('TP88', 35.5, 87.0), 'M-8: TP88 courtyard is 1.955 mm from the forward short edge')
+        self.seeded('M-8', move('R166', 0.2), 'M-8: R166 courtyard is 1.555 mm from the forward short edge, nearer than')
+        self.seeded('M-8', move('R400', 0.1), 'M-8: SHORT_EDGE_QUERIES R400 records 1.025 mm, the board gives 1.125 mm')
+        self.seeded('M-8', move('C95', -1.5), 'M-8: stale SHORT_EDGE_QUERIES entry C95')
+        self.seeded('M-8', lambda board: board.Delete(board.FindFootprintByReference('C403')),
+                    'M-8: SHORT_EDGE_QUERIES entry C403: no such part on the board')
+
     def test_r22_clamp_gnd_returns(self):
         """D-R22-07 (R22-GATE-03): every port clamp's GND pad reaches a GND via through tracks within 1.0 mm (0.7 mm,
         D400 / D401 0.8 mm, today; D-R24-11's D402 0.7 mm). The gate lens's g07b (D420's GND stub and via removed: the pour alone) fails, and so
@@ -4931,7 +4974,7 @@ class RealBoardSeeds(unittest.TestCase):
 
     # ------------------------------------------------------------------------------------------------ round 23 pass
     def test_r23_boot0_vcap_and_gate_drive_taps(self):
-        """D-R23-01 / -02 (R23-MCU-02, R23-SAFETY-05) / D-R24-02 / -04 / -05: BOOT0's pull-down, both VCAP capacitors and
+        """D-R23-01 / -02 (R23-MCU-02, R23-SAFETY-05) / D-R24-02 / -03 / -04: BOOT0's pull-down, both VCAP capacitors and
         the gate drive from R121 to Q120 / Q121 are single-open taps. Since round 24 BOOT0, VCAP2 and both gate drives
         have a second via and no entry; VCAP1 keeps its entry (measured). With its second via dropped (kept referenced)
         each fixed tap hangs on its first via again and fails naming it, with both gate vias gone Q120.4 is cut off from

@@ -1,0 +1,90 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 24, requirements lens",
+  "reviewer": "claude",
+  "target_commit": "f2b8251f34e6e84dbf28bfa686a8f79aafc56045",
+  "board_sha256_before": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "board_sha256_after": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 4},
+  "findings": [
+    {
+      "id": "R24-REQUIREMENTS-01",
+      "kind": "calc",
+      "severity": "Minor",
+      "title": "F9 / D-R24-11: 'the EN timing figures stand' is false under the record's own 50 nA bound for D402",
+      "contradicts": "docs/REQUIREMENTS.md F9: 'D402 leaks at most 50 nA at 15 V (Infineon ESD103 Rev 1.3), which moves EN by at most 5.7 mV with J400 closed, so the EN timing figures stand (Calculation ...)'; R10_DECISIONS D-R24-11 'EN' bullets ('the same as 25 nA at the EN node, a quarter of the 0.1 uA EN leakage D-R20-11's timing already carries. The EN timing figures are kept'). The figures are D-R20-11's worst case (10.6 / 20.5 / 26.4 ms at 6.0 / 7.4 / 8.4 V, 8.5 ms at 5.73 V, 6.6 ms at 5.5 V, pack >= 5.92 V for 10 ms, turn-on 30-129 ms), quoted in F4, F6, F9 and the Accepted-risks list.",
+      "evidence": "Board: D402 B(4.45,65.9) pad 1 BAT_SW_RETURN (J400.2 node, R165.1), pad 2 GND; R80 / R165 470k 1 %, R81 300k 1 %, C87 220 nF. ESD103-B1-02EL datasheet Rev 1.3 Table 3: IR max 50 nA at VR = 15 V (no lower-voltage maximum). Model (.supervisor/r24_requirements/en_timing.py) = D-R20-11's method (C87 0.72-1.27 x, 1 % divider, EN 1.183-1.223 V rising / 1.076-1.116 V falling, I_ENLKG +/-0.1 uA); it reproduces D-R20-11 exactly with D402 = 0 (6.58 / 8.50 / 10.65 / 20.47 / 26.41 ms; 5.917 V; 30.3-128.6 ms). Two errors in the record's reasoning: (1) the +/-0.1 uA in D-R20-11 is U9's own EN pin leakage (SLVSFC9C p9), so D402's leakage adds to it rather than fitting inside it; (2) during a J400 drop-out the source (R80) is disconnected, J400.2 floats on R165 and D402, so the clamp drains C87 with its full current through R165 (50 nA at EN, not 25 nA). With D402 at the 50 nA bound the record itself uses: drop-out immunity 6.30 ms at 5.5 V, 8.20 ms at 5.73 V, 10.35 ms at 6.0 V, 20.11 ms at 7.4 V, 26.02 ms at 8.4 V; pack for the 10 ms criterion 5.956 V (was 5.92 V); turn-on 30.4-130.3 ms (was 30-129 ms).",
+      "impact": "Worst-case figures that F4 (flight-2 pack option '>= 5.92 V under four stalls'), F6 (bench acceptance, 8.5 ms at 5.73 V) and F9 rely on are stated about 0.3 ms / 0.04 V optimistic; no safety effect (6.0 V still above 10 ms).",
+      "concrete_fix": "Either restate the D-R20-11 figures with D402's bound added (10.3 / 20.1 / 26.0 ms, 8.2 ms at 5.73 V, 6.3 ms at 5.5 V, pack >= 5.96 V for 10 ms, turn-on 30-130 ms) in F4, F6, F9, Accepted risks, AGENTS, M3_R10 and the binding-note obligation; or cite a datasheet maximum for D402's leakage at <= 5.3 V that makes the change negligible and say so, replacing the 'quarter of the 0.1 uA' argument."
+    },
+    {
+      "id": "R24-REQUIREMENTS-02",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "M1 quotes a stock snapshot the committed stock_check.json no longer contains",
+      "contradicts": "docs/REQUIREMENTS.md M1: 'the stock check (`stock_check.json` 2026-10-31T23:23Z) fails on U4, 2 orderable against 5, and now also on U9 (TPS259470LRPWR C3662793: 40 in stock, -69 orderable, minimum purchase 7)'. M3 in the same file and docs/M3_R10.md 'Cost and stock' use the 2026-11-02 run.",
+      "evidence": "m3_design/assembly_review/fab/stock_check.json at f2b8251: checked_utc 2026-11-02T01:42:53Z; C3662793 (U9) jlc_stock 28, orderable -83, min_purchase 7; C51931514 (U4) jlc_stock 9, orderable 2. docs/M3_R10.md line ~277 already gives 28 / -83 and calls 40 / -69 the 23:23Z value. The round 24 diff of REQUIREMENTS.md updated F7 / F8 / F9 / M2 / M3 but not M1.",
+      "impact": "The requirement row cites figures and a timestamp for a file that now says otherwise; M1's pass/fail outcome (U4 and U9 short) is unchanged.",
+      "concrete_fix": "M1: '(`stock_check.json` 2026-11-02T01:42:53Z) fails on U4, 2 orderable against 5, and on U9 (TPS259470LRPWR C3662793: 28 in stock, -83 orderable, minimum purchase 7)'."
+    },
+    {
+      "id": "R24-REQUIREMENTS-03",
+      "kind": "calc",
+      "severity": "Minor",
+      "title": "P3 landing load: 8.0 m/s at 20 mm crush is 163 g, not 168 g",
+      "contradicts": "docs/REQUIREMENTS.md P3: 'a = v^2 / 2s with s = 20 mm crush. A 36 in flat chute gives 6.2-8.0 m/s, so 98-168 g (Inference)'; repeated in docs/ORDERING.md 8.4 'Sled/supports' and docs/R10_VALIDATION.md owner rows 12 and 32.",
+      "evidence": "8.0^2 / (2 x 0.020) = 1600 m/s^2 = 163.2 g (g = 9.80665). 168 g needs 8.11 m/s. The source (round23_mechanics.md R23-MECHANICS-02) used 6.1-8.1 m/s -> 95-168 g; the requirement narrowed the speed range to 6.2-8.0 but kept 168. The lower end (6.2 m/s -> 98.0 g) is consistent.",
+      "impact": "Stated result does not follow from its stated input (about 3 % high); the 2 x option (about 330 g) and the sled-relief conclusion are unchanged.",
+      "concrete_fix": "Write '6.2-8.0 m/s, so 98-163 g' (or keep 168 g with '6.2-8.1 m/s') in P3, ORDERING 8.4 and R10_VALIDATION rows 12 and 32."
+    },
+    {
+      "id": "R24-REQUIREMENTS-04",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "P2's J2 land distances to the (4,44.3) support are pad-bounding-box figures, not the round lands",
+      "contradicts": "docs/REQUIREMENTS.md P2: 'the exposed GND, 3V3 and NRST lands at LED2, LED1 and J2 lie only 3.808-3.918 mm from the (4,44.3) support centre'; docs/M3_R10.md (J2.1 3.871 mm, J2.3 3.918 mm), R10_VALIDATION line ~2645, ORDERING 8.4, R10_VEHICLE_HANDOFF.",
+      "evidence": "Board (pcbnew, F.Cu, mask expansion 0 on board and pads): J2 (TC2030) pads are circles Ø0.7874 mm; J2.1 (3V3) centre (3.73, 40.035) -> 4.2735 - 0.3937 = 3.880 mm; J2.3 (NRST) centre (5.0, 40.035) -> 4.3807 - 0.3937 = 3.987 mm. The recorded 3.871 / 3.918 mm are the distances to the pads' bounding squares (nearest corner/edge: 44.3 - 40.429 = 3.871; sqrt(0.606^2 + 3.871^2) = 3.918). LED2.2 3.808 and LED1.1 3.860 (rectangular pads) are correct. True range 3.808-3.987 mm.",
+      "impact": "Measured values in the requirement contradict the board (conservative direction); the nylon-hardware requirement and its 3.8 mm gate conclusion are unchanged.",
+      "concrete_fix": "Replace 3.871 / 3.918 with 3.880 / 3.987 mm and the range with 3.808-3.987 mm in P2, M3_R10, R10_VALIDATION, ORDERING 8.4 and R10_VEHICLE_HANDOFF (or state that the figures are bounding-box distances)."
+    }
+  ],
+  "observations": [
+    "BUZZ_G B.Cu: the west branch's T at (20.5, 58.70) now sits 0.02 mm from the start of D-R24-17's chamfer (20.5, 58.72) (was 0.17 mm from the 90-degree corner); route_check's short_segment tests track objects, so this 0.02 mm T-to-bend piece on a non-critical net is not counted among the 5 leftovers.",
+    "Independent 90-degree scan (bends.py): 0 bends on 1407e850 with an uncovered inner corner (35 right angles at pads / vias, all with the inner corner covered); 59 on 5516eeec (F.Cu 25, B.Cu 31, In2 3; 50 plain, 4 via, 2 pad, 3 In2) matching D-R24-17's breakdown.",
+    "Seven acute branch pairs at pads (C80.2, J9.1, C89.1, D8.1 x2, U10.4, C98.1) are pre-existing and pass route_check's wedge rule.",
+    "Six pre-existing T joints onto track interiors (CAM_RX/TX_WIRE, RADIO_RX/TX_WIRE, VBUS, BUZZ_G) are centre-line T nodes in route_check, unchanged from 5516eeec.",
+    "Seeded copy: removing BUZZ_G's (17.75,58.87) chamfer gives a right_angle FAIL; making it an overlap-only corner gives dead_copper FAILs, so neither form escapes the gate.",
+    "F1's 9 degC bay-temperature allowance is computed for a 30 s window while the row says the window is the 35 s control window (recompute disclosed as open); at 35 s it is about 7.75 degC.",
+    "M3 'about $102-$105 per board': with the minimum purchase and the handling fee the top is $105.92.",
+    "D402 clamps J400.2 only; a discharge into J400.1 with the switch open reaches only R80 (0603 470 k) and BAT_IN, not EN, and any R80 damage is fail-safe (off) or still gated by J400.",
+    "ESD103-B1-02EL contact-discharge rating is +/-10 kV (Rev 1.3 Table 2), above F9's 8 kV case; operating -55 to 125 degC.",
+    "F5's 2-3.5 MB log size, F2's 37 g, F3's 300 hPa (ISA 316.6 hPa at 8.8 km MSL), the Board-position stack arithmetic (-44.6 + 80 + 44-48 = 79.4-83.4 mm), F8's 3.342171 V / 1.397 mA / 0.218 V and F6's 88 / 56 / 45 ms and 19 / 33 / 41 ms reproduce."
+  ],
+  "fix_verification": [
+    {"change": "D-R24-17 (M2 45-degree rule, route_check right_angle)", "measurement": "Own scan: 0 uncovered 90-degree bends on 1407e850 (59 on 5516eeec, same layer/holder split); 0 off-angle, 0 arcs; route_check --profile r10 on a copy: 0 failing, 0 allowlisted, 5 unrecorded noncritical leftovers; seeded plain bend fails right_angle", "verdict": "confirmed"},
+    {"change": "D-R24-11 (F8 / F9 J400 network, D402)", "measurement": "D402 ESD103-B1-02EL E6327 C535146 at B(4.45,65.9) rot 90; BAT_SW_RETURN pads exactly {J400.2, R165.1, D402.1}; D402.2 GND; tap 2.59 + 0.509 + 1.015 = 4.114 mm from J400.2's pad on B.Cu, R165 fed by a separate F.Cu run; GND via (5.15,65.575) 0.7 mm; BOM line 9 pcs, CPL row present; 5.7 mV EN shift and 14 mV / 7.5 V figures reproduce; timing claim fails (R24-REQUIREMENTS-01)", "verdict": "partly"},
+    {"change": "D-R24-13 (order mark)", "measurement": "no JLCJLCJLCJLC text in the board file", "verdict": "confirmed"},
+    {"change": "D-R24-02..10 / D-R24-15 (vias, R92 / TP88) as they bear on F7 / F8 / M2", "measurement": "fire-path widths unchanged (BAT_IN 1.0 mm near Q120, RAW_ACT / IGN / OUT 0.5 mm, seven 0.4 mm ACT_FET_S bridges, 0.3 mm ACT_FET_S only to C120 / R119 / R120); only U401.11's two GND vias touch an SMD pad; min via-hole to other SMD pad 0.15 mm; silkscreen text >= 1.0 mm; check_r10 full on a project copy: all rules OK except S-4 / K-binding, which need the schematic and binding note beside the copy", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after",
+    "pcbnew scans (KiCad 10 Python, read-only): 90-degree bends with inner-corner test, acute pairs, loose ends / T joints, fire-net widths, J400 / D402 / divider / servo / port pin nets and values, via-in-pad and via-hole-to-pad distance, silkscreen text heights, courtyard enclosure, support-to-land distances",
+    "tools/route_check.py --profile r10 on a copy in the probe dir, and on two seeded copies (plain 90-degree corner, overlap corner)",
+    "tools/check_r10.py full on a project copy (pro / dru / fp-lib-table / kilib beside it) with the committed BOM / CPL",
+    "en_timing.py: D-R20-11 EN model with and without D402's 50 nA",
+    "Arithmetic: P3 landing load, F1 budget, F3 ISA pressure, M3 cost, Storage bleed, stack position",
+    "Read: fab/stock_check.json, fab/cost_check.json, parts_budget.json, Infineon ESD103 Rev 1.3 (cached PDF)"
+  ],
+  "sources": [
+    "docs/REQUIREMENTS.md, AGENTS.md, docs/M3_R10.md, docs/ORDERING.md 8.4, docs/R10_VALIDATION.md (owner rows)",
+    "R10_DECISIONS.md D-R20-11, D-R24-01..17; round24_board_cad.md; round23_mechanics.md (R23-MECHANICS-02 source speeds)",
+    "../../docs/VEHICLE.md (coupler bore, bulkplate, stack, shroud)",
+    "Infineon ESD103-B1-02EL Rev 1.3 Tables 2-3 (LCSC C535146); TI SLVSFC9C p9 (EN thresholds and I_ENLKG, as used by D-R20-11)"
+  ],
+  "coverage_limits": [
+    "No full tools/check.sh, DRC or ERC run (forbidden on the canonical tree); check_r10 on a copy lacked the schematic and binding note (S-4, K-binding not judged).",
+    "Firmware-only requirements (F5 latency, F6 watchdog timing, F10 boot settings, F11 / F12 behaviour) cannot be mapped to the board and were not judged.",
+    "Hot-plug model, plate model and fit_check not re-run independently; their recorded results were taken as reported.",
+    "D402's leakage below 15 V and at temperature is not given by the maker; finding 01 uses the 50 nA bound the record itself uses."
+  ]
+}

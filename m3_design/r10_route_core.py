@@ -105,7 +105,7 @@ def vcap2(d):
 
 
 def boot0(d):
-    """D-R24-05 (R23-MCU-02, D-R23-01): a second BOOT0 barrel at the F.Cu run's corner (14.2, 46.0), joined to the
+    """D-R24-03 (R23-MCU-02, D-R23-01): a second BOOT0 barrel at the F.Cu run's corner (14.2, 46.0), joined to the
     first (13.8, 45.6) by a B.Cu diagonal under the F.Cu one: either barrel alone holds BOOT0 to R5."""
     d.via('BOOT0', (14.2, 46.0))
     d.track('BOOT0', 'B', 0.2, [(13.8, 45.6), (14.2, 46.0)])
