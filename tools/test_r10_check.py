@@ -257,6 +257,31 @@ class SchematicContract(unittest.TestCase):
                          'load switch enable pull-down missing', 'C92 split assembly footprint',
                          'C120 split assembly footprint'} <= seeded.keys())
 
+    def test_r27_port_terminal_pin_names(self):
+        """D-R27-03 (R27-TRI-07): J410 / J420 / J440 use M3:PortTerminal, whose pin names are REQUIREMENTS F10's and the
+        board legends' (1 4V8, 2 GND, 3 TXO, 4 RXI); J9 keeps M3:CameraTerminal. With the camera terminal's names back on
+        the ports (round 27's netlist) the gate fails, and its four seeded name faults are each caught."""
+        import json
+        import r10_sch_check as sch
+        sys.path.insert(0, str(gate.ROOT / 'm3_design'))
+        import r10_parts
+        names = sch.read_pin_names(gate.ROOT / 'm3_design/assembly_review/schematic.net.xml')
+        self.assertEqual(sch.terminal_pin_issues(names), [])
+        legends = dict(gate.TERMINAL_PINS_R10)
+        for ref in ('J410', 'J420', 'J440'):
+            self.assertEqual(dict(legends[ref]), sch.PORT_PIN_NAMES, ref)
+        self.assertEqual(dict(r10_parts.PORT_TERMINAL_PINS), sch.PORT_PIN_NAMES)
+        circuit = json.loads((gate.ROOT / 'm3_design/assembly_review/sources/r10_design/circuit.json').read_text())
+        self.assertEqual({ref: circuit['parts'][ref]['lib'] for ref in ('J410', 'J420', 'J440')},
+                         dict.fromkeys(('J410', 'J420', 'J440'), 'M3:PortTerminal'))
+        self.assertEqual(circuit['replacements']['J9']['lib'], 'M3:CameraTerminal')
+        old = dict(names)
+        old.update({(ref, pin): name for ref in ('J410', 'J420', 'J440') for pin, name in sch.CAMERA_PIN_NAMES.items()})
+        self.assertEqual(len(sch.terminal_pin_issues(old)), 3)
+        seeded = sch.name_seeds(names)
+        self.assertEqual(len(seeded), 4)
+        self.assertTrue(all(seeded.values()), seeded)
+
     def test_assembly_groups_match_separate_owner_and_jlc_boms(self):
         import xml.etree.ElementTree as ET
         import r10_sch_check as sch
@@ -420,6 +445,13 @@ class SchematicContract(unittest.TestCase):
                      'whole run at 5.73 V', '7.63 ms per 100 ms window', 'adversarial search', '1.1173 V', '20.0 / 24.4 %',
                      '19.9 % at 0.1 ms', '5.37 V'):
             self.assertNotIn(gone, text)
+        # D-R27-02 (R27-TRI-04): the note's Rev 8 statement names the R5-MCU-04 obligation's two Rev 11 limits
+        revision = note['sources']['mcu_revision']
+        self.assertIn('the LCSC copy is byte-identical), except the two design limits labelled as read from Rev 11 '
+                      'Table 109 in round 14 (the 6.0 V FT cap and the 4.0 V ADC-mode maximum; R5-MCU-04 obligation, '
+                      'Inference); Rev 11 and RM0433 were not re-read in round 19 (R19-MCU-02)', revision)
+        self.assertNotIn('byte-identical); Rev 11', revision)
+        self.assertIn('were read from Rev 11 Table 109 in round 14', text)
         with (gate.ROOT / 'm3_design/assembly_review/sources/r10_design/pin_table.tsv').open() as table:
             rows = {r['port']: r for r in csv.DictReader(table, delimiter='\t')}
         pulls = {'PA0': 'R154 10k to GND', 'PA1': 'R155 10k to GND', 'PA2': 'R156 10k to GND', 'PA3': 'R157 10k to GND',

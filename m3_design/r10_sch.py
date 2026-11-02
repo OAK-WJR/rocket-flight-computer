@@ -375,10 +375,14 @@ def build(out, netlist=True):
         library = library.rstrip()[:-1] + r10_parts.microsd_symbol() + '\n)\n'
     if '(symbol "ServoTerminal"' not in library:
         library = library.rstrip()[:-1] + r10_parts.servo_terminal_symbol() + '\n)\n'
+    # D-R27-03 (R27-TRI-07): J410 / J420 / J440's own symbol (4V8 / GND / TXO / RXI); J9 keeps CameraTerminal.
+    if '(symbol "PortTerminal"' not in library:
+        library = library.rstrip()[:-1] + r10_parts.port_terminal_symbol() + '\n)\n'
     library = library.replace('(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT"', '(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT M3_DB125_4P_GN"')
     # R18-REQ-01: no GH 4-pin header remains on R10; the 4-position terminal symbol filters the DB125 land only.
     library = library.replace('(property "ki_fp_filters" "M3_GH_BM04B_GHS_TBT M3_DB125_4P_GN"',
                               '(property "ki_fp_filters" "M3_DB125_4P_GN"')
+    assert r10_parts.port_terminal_symbol() in library, 'kilib/m3.kicad_sym PortTerminal differs from r10_parts'
     library_path.write_text(library)
     sch.NS = NS
     pins.NS = NS
@@ -467,6 +471,7 @@ def build(out, netlist=True):
             t = t.replace('15 | GNSS and telemetry radio (R7)', data['titles']['telemetry'])
         t = sch.refresh_embedded(t, library, 'PolarCap')
         t = sch.refresh_embedded(t, library, 'CameraTerminal')
+        t = sch.refresh_embedded(t, library, 'PortTerminal')
         t = re.sub(r'\n(?:\s*\n)+', '\n', t)
         assert t.count(f'(rev "{REV}")') == 1, file.name
         (out / file.name).write_text(t)

@@ -7378,4 +7378,106 @@
 							(size 1.05 1.05))))))
 		(embedded_fonts no))
 
+	(symbol "PortTerminal"
+		(pin_names
+			(offset 1.016))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "J"
+			(at 0 8.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "PortTerminal"
+			(at 0 -8.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "DORABO DB125-3.5-4P-GN-S always-on port (D-R19-14): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "port terminal UART"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_fp_filters" "M3_DB125_4P_GN"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "PortTerminal_0_1"
+			(rectangle
+				(start -10.16 6.35)
+				(end 10.16 -6.35)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "PortTerminal_1_1"
+			(pin passive line
+				(at -15.24 3.81 0)
+				(length 5.08)
+				(name "4V8"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 1.27 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 -1.27 0)
+				(length 5.08)
+				(name "TXO"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 -3.81 0)
+				(length 5.08)
+				(name "RXI"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+
 )

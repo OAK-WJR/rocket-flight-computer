@@ -2718,12 +2718,14 @@ def s9(ctx, floor=FIRE_MIN_W, narrow=FIRE_NARROW):
     return issues, ev
 
 
-# K-power (R18-GATE-02 / R18-GATE-03). U9's input and output carry the whole board load (GAP-1: 11.5 W normal, about
-# 1.56 A at 7.4 V; U9's current limit 3.95-4.86 A, calculated). Their copper is held at its designed width the way S-9
-# holds the fire path: J1.1 -> U9.5 (IN, through C88) at BAT_IN's 1.0 mm, U9.6 -> its In2 RAW_PROTECTED vias (OUT) at
-# 0.7 mm (tools/ipc2152.py: 0.68 mm for a 30 C rise at 2.9 A, external, no plane credit; Inference). Only the named,
-# measured POWER_NARROW entries are excepted, matched exactly (a narrower, longer, moved or unused entry fails). The vias
-# on each path keep their designed count and size, the OUT vias joined to the In2 RAW_PROTECTED fill.
+# K-power (R18-GATE-02 / R18-GATE-03). U9's input and output carry the whole board load (parts_budget.json
+# c_camera_radio_gps_on: 11.25-13.06 W with every port on, the AUX allowance included, at most about 1.77 A at 7.4 V;
+# D-R27-01 replaces round 18's pre-AUX 11.5 W; U9's current limit 3.95-4.86 A, calculated). Their copper is held at its
+# designed width the way S-9 holds the fire path: J1.1 -> U9.5 (IN, through C88) at BAT_IN's 1.0 mm, U9.6 -> its In2
+# RAW_PROTECTED vias (OUT) at 0.7 mm (tools/ipc2152.py: 0.68 mm for a 30 C rise at 2.9 A, external, no plane credit;
+# Inference). Only the named, measured POWER_NARROW entries are excepted, matched exactly (a narrower, longer, moved or
+# unused entry fails). The vias on each path keep their designed count and size, the OUT vias joined to the In2
+# RAW_PROTECTED fill.
 # R19-GATE-04: every path also names its design current (amps, with its basis); its floor, the reviewed drawn width, must
 # be at least the IPC-2152 width for that current at a POWER_RISE rise (tools/ipc2152.py: external fit, 35 um, no plane
 # credit, a long-conductor upper bound; Inference), or the table fails. The R19 rails (D-R18-11's VLOGIC, PORT_5V3,

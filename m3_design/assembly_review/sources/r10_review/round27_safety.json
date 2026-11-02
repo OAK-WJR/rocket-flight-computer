@@ -1,0 +1,102 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round27_safety",
+ "reviewer": "claude",
+ "target_commit": "816038c",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "findings": [
+  {
+   "id": "R27-SAFETY-01",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "FMEA I-5 (R10) and R10_VALIDATION §1 name the 3V3 over-voltage clamp 'H-9', but the FMEA's H-9 is the load-switch gate-source capacitor (fitted on R10 as C120)",
+   "contradicts": "docs/FMEA_REDUNDANCY.md §4.2 (line 385): 'H-9 — A 1 µF/50 V 0603 (C15849, zero new part numbers) from GATE_SW to the common-source node (not to ground). +1 part, rated \"consider\".' and docs/R2_VERIFICATION.md line 108: '| H-9 gate-source capacitor on the load switch | Done (C120 2.2 µF) |'. The FMEA change list (§4, H-1 ... H-10) defines no 3V3 clamp or crowbar.",
+   "evidence": "Committed text at 816038c: docs/FMEA_REDUNDANCY.md line 37 (I-5 (R10) row, current R10 disposition): 'Respin options: a 3V3 over-voltage clamp or crowbar (H-9), In2 3V3 ≥ 1 mm or GND-guarded from RAW_PROTECTED, ...'; docs/R10_VALIDATION.md line 2406 (§1 (a)/(b), owner-facing): 'Respin options: a 3V3 over-voltage clamp or crowbar (the FMEA's optional H-9), ...'. The label comes from the original I-5 row, docs/FMEA_REDUNDANCY.md line 111: 'Optional H-9 (3.6 V clamp on 3V3, which fails short = board dies on the bench)', which already disagrees with the same file's §4.2 definition of H-9. On board a0ec075e… the item H-9 describes is fitted: C120 (1 µF 25 V X7R) from ACT_GATE (C120.2, B(17.1,73.3)) to ACT_FET_S (C120.1, B(17.1,71.75)), the Q120 / Q121 gate-source capacitor that AGENTS §2.4 requires. git grep 'H-9' finds no other definition.",
+   "impact": "The I-5 respin option (the only hardware remedy the records give for the battery-or-port-voltage-onto-3V3 fire class) points the owner at an FMEA item that is a different part, already fitted on R10 and recorded 'Done'. A reader who follows the reference can conclude the clamp is a one-0603 change or is already implemented; the clamp/crowbar itself is defined and analysed nowhere in the FMEA change list. No board or procedure change follows.",
+   "concrete_fix": "In docs/FMEA_REDUNDANCY.md line 37 replace '(H-9)' and in docs/R10_VALIDATION.md line 2406 replace '(the FMEA's optional H-9)' with '(not an FMEA change-list item: the original I-5 row calls a 3.6 V 3V3 clamp \"H-9\", but §4.2's H-9 is the load-switch gate-source capacitor, fitted on R10 as C120)'. Annotate line 111's 'Optional H-9' as a mislabel for the 3.6 V 3V3 clamp (historical row; §4.2's H-9 is the GATE_SW capacitor)."
+  }
+ ],
+ "observations": [
+  "Independent fire-chain audit (18 pyro / arming / gate / sense nets against every net, four layers, fills and unflashed barrels) on a0ec075e reproduces every §1 / owner-row / FMEA figure: OUT-GND 0.1768 / 0.1800 mm, R173.1-Q124 source via 0.5000, R173.1-R162.1 (BUZZ_DRV) 0.7935, R173.1-BUZZ_G 0.5100, CONT_MID-BUZZ_G 0.1750 (diagonal 0.2005), CONT_MID-R134.2 0.2500 (diagonal 0.387), R173.2-D120.3 0.4154, R173.2-R162.1 1.1328, ARM1_SENSE-U13.5 0.1500, RAW_ACT-GND 0.3162 (pads / tracks / vias), EN-node pairs 0.200 / 0.330 / 0.500 / 0.5197 mm.",
+  "Two bus-to-3V3 pairs lie outside the records' 0.6 mm inventory band: PYRO1_IGN-3V3 0.7359 mm (R134.1 to the 3V3 via (15.7,61.6), B.Cu) and RAW_ACT-3V3 0.8370 mm (R132.1 to the 3V3 via (28.1,59.4), B.Cu); with PC1 high each puts bus voltage onto 3V3 through at most 2 Ω (the I-5 mechanism, Inference) but drives no match current (both match ends rise together); members of the disclosed I-5 class (owner row 1 says 'include'), not enumerated, and nearer than the 1.040 mm D-R26-02 holds for the OUT members.",
+  "Other I-5 members the route lists do not enumerate (non-exhaustive, round 22 safety listed most): In2 barrels 0.2505 mm inside the opposite fill (3V3 via (26.4,79.26) in RAW_PROTECTED; VLOGIC (34.5,62.4), CAM_5V (34.2,49.325), VBUS (7.95,27.9) vias and the In2 USB_LIMITED track in the 3V3 fill), U2.1-U2.2 (3V3-VLOGIC) 0.400 mm, U9.4-U9.5 (BAT_FAULT_N-BAT_IN) 0.200 mm; the stated fill-to-fill gaps (3V3 to RAW_PROTECTED / PORT_5V3 / PORT_4V8) are 0.300 mm as recorded.",
+  "PE4's net is 1.369 mm from the IMU_INT1 track (17.5,48.36)-(18.21,47.65), F.Cu under U1 behind mask: a push-pull 3.3 V output, the QSPI_IO2 row's class, beyond the 1.2 mm audit band.",
+  "D-R26-04 audit: my whole-board comparison with 3d8e845's board reproduces its seven rows exactly without fills and six with fills (BUZZ_DRV/PYRO1_OUT 0.9635 -> 0.7935). Per-layer views add drops that leave every net-pair minimum unchanged (3V3/I2C1_SDA F.Cu 1.168 -> 0.802 at R13's moved via vs the I2C via (9.97,51.5); BUZZ_DRV/GND inner barrels 0.907 -> 0.524; new AUX/GND at J440), so the per-pair list is complete by its own definition; none is pyro.",
+  "Pair count under 1.2 mm with fills: 775 by my extractor (744 flashed copper only; 542 / 511 without the unconnected-pin nets) against D-R26-04's 711: method-dependent; no statement or conclusion depends on it.",
+  "§1's 'least RAW_ACT-to-GND gap is 0.316 mm' keeps the preceding sentence's pad / track / via scope; the B.Cu GND fill is 0.2505 mm from RAW_ACT (22.8,61.4)-(26.17,58.03).",
+  "Owner row 24's 0.5205 / 0.5008 mm (ACT_EN_MCU / RAW_ACT to BAT_ENABLE) against exact 0.5197 / 0.5000 mm (the §1 table gives 0.500): KiCad circle polygonization, under 1 µm; no conclusion depends on it.",
+  "ACT_DRV-ACT_EN (Q122.3-Q122.1, 1.044 mm): R123 then pulls ACT_GATE through R121 (VGS about -6 V), so the bus comes on with J400 open and PC1 low; row 2's load-switch / PC1-enable class; per-flight step 2 (J121.2 < 0.1 V) screens it before the e-match.",
+  "ACT_EN_MCU-RAW_PROTECTED 0.8266 mm (PC1's F.Cu run to the via (24.3,66.0)) and ACT_EN_MCU-USB_LIMITED 0.670 mm (via (25.6,63.0)) enable Q122 whenever PC1 is not driven and over-drive the PC1 pin; row 2 class; the cold screen's bus-live refusal and step 6 apply.",
+  "BAT_IN-RAW_PROTECTED at U9.5-U9.6 (0.200 mm) and the BAT_IN via (17.5,87.15) barrel 0.2505 mm from In2 RAW_PROTECTED turn the board on with J400 open (round 25 safety observation 3); per-flight step 2 screens the symptom.",
+  "U9.1-U9.2 (EN-OVLO, 0.200 mm): with J400 open EN = 8.4 V x (280 k || 300 k) / (2 M + 145 k) = 0.57 V, no turn-on; with J400 closed OVLO trips (about 1.55 V): fail-safe.",
+  "BAT_SW_SOURCE via (10.8,69.2) and J400.1's In2 ring 0.2505 mm from In2 RAW_PROTECTED / GND: no turn-on or latch (470 kΩ path; an open J400 separates it from EN); a short holds EN low: fail-safe.",
+  "AGENTS §2 on the board as built: Q124 R126 220 Ω / R128 10 kΩ / C126 220 nF (plus R127 1 kΩ at PE4); Q120 / Q121 R121 10 kΩ / R119 || R120 50 kΩ / C120 1 µF; Q122 R122 1 kΩ / R123 2 kΩ / C123 10 nF; RAW_ACT is reached only through Q121; S-1 ... S-9 pass on a copy with the project files.",
+  "AON7524 VGS(th) is 0.4-1.2 V with RDS(on) < 5.8 mΩ at 2.5 V (AOS datasheet p2), so the 3.23 V gate-net bridge and the 1.19-1.98 V QSPI_IO2 fight fire an enabled match as the records state.",
+  "The load switch's 'worst-case settled |VGS| 4.74 V' uses parts_budget's 6.0 V minimum loaded BAT_IN (the pad check); the same formula at the fire budget's four-stall 5.713 V gives about 4.60 V with the 1.28 A fire current (4.50 V with the budget's 4.2 A term), still at the -4.5 V RDS(on) point; the fire budget already takes 40 mΩ per FET.",
+  "REQUIREMENTS F6 'No sensor, bus or loop failure may block deployment' against F8 / firmware rule 1 'with the barometer invalid the primary channel does not fire': F6 reads as a software-robustness clause (no blocking I/O), and AGENTS §2.1 requires the barometer.",
+  "Cold-screen arithmetic reproduced: healthy 99.37 / 99.34 mV, open 146.23 / 0 mV (Vf 0.20 V); OUT-3V3 0.295 V; CONT_MID-RAW_ACT with an open match 102.0 / 55.5 mV (Vf 0.30 V) and with an intact match about 139 / 76 mV, both out of band.",
+  "Rule 8 corner reproduced from the budget equation V = 7.4 - 0.15 (V / R + 7.68 + 13.064 / V): 5.7132 / 5.5576 / 5.5555 / 5.5085 V.",
+  "C10's Fab / pad envelope is 3.0166 mm from U5's pad-extent corner (12.78,51.15): the whole-part coat selection stands as ORDERING 8.3 says.",
+  "M3_R10's 'within the FT limit of VDD + 4 V' follows DS12110 Rev 8 Table 119 (Rev 11 adds a 6 V cap; 4.6 V is within both); PC14 is FT in the Rev 8 pin table.",
+  "DRC (kicad-cli 10.0.7) on a copy: 0 clearance / short violations, 0 unconnected (199 lib_footprint_issues from the copy's location only; parity not run). route_check r10 on a copy: 0 failing; pyro-class items are information only (pad_end_offcentre 2, segment_inside_pad 1, short_layer_hop 3, u_turn 1).",
+  "No tracked text quotes a pre-fix coordinate (R173 (16.87,59.70), the column, R164's or R13's old 3V3 via, the old CONT_MID corner) as current; every hit is labelled history or a before figure."
+ ],
+ "fix_verification": [
+  {
+   "change": "D-R26-01 (safety-relevant parts)",
+   "measurement": "J440.3 / J440.4 (and pins 3 / 4 of J410, J420, J9) are not flashed on In1 / In2; J440.1 and J9.1 keep In2 rings 0.2505 mm from the In2 3V3 fill, so the I-5 statement about them stands; GND vias (7.4,16.5) / (7.4,20.0) present; S-6 and S-8 pass; route_check r10 0 failing on a copy",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R26-02 (PYRO1_OUT >= 1.040 mm from 3V3 / 3V3A on every layer)",
+   "measurement": "3V3: F.Cu 1.0500 (J121.1 run (7.4,54.1)-(10.63,54.1) to via (9.2,52.55)), B.Cu 1.0511 (R173.1-D120.3), In2 1.0612 (J121.1 barrel to the 3V3 fill), In1 1.5754; 3V3A: B.Cu 1.04001 by KiCad shape-collision bisection (1.0404 with my 1 µm inside polygons; R164.2's rounded corner to the run (10.37,56.6)-(15.5,56.6)); before figures 0.5135 / 0.5662 / 0.6200 and R173.1 to Q124's source via 0.7373 -> 0.5000 reproduced on 92c3ad59",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R26-03 (rule 8 corner; the safety half of R26-TRI-04)",
+   "measurement": "re-solved the budget's loaded-pack equation: 5.7132 (healthy) / 5.5576 (match shorted, hot R134) / 5.5555 (cold) / 5.5085 V (match and leads shorted); parts_budget.json bound to a0ec075e; binding note obligation 43 carries the corrected text; the PA6 window top (5.27 V) stays below the corrected VLOGIC corner",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R26-04 (gate nets >= 1.0 mm from 3V3 / 3V3A; whole-board audit)",
+   "measurement": "3V3 to PYRO1_GATE 1.0585 (R128.1; 1.05847 by KiCad shape-collision bisection), to PYRO1_GATE_N 1.0650 (R127.1) / 1.0808 (R126.1), all to via (19.55,55.825), F.Cu; 3V3A to PYRO1_GATE 1.1450 (C10.1-via (14.4,53.3), B.Cu), to PYRO1_GATE_N 1.6000 (U1.3-via (16.0,50.2)); inner: PYRO1_GATE barrel 2.7505 to the In2 3V3 fill, 3.354 to In1 3V3; old 0.6761 / 0.8352 / 1.1506 / C10.2 via 0.2630 reproduced; audit reproduced exactly (7 rows without fills, 6 with), BUZZ_DRV/PYRO1_OUT 0.9635 -> 0.7935 (R162.1-R173.1, B.Cu); new via's other neighbours 0.2334 (BUZZ_DRV) / 0.2062 (LS120.3) / 0.9969 (R162.2)",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of the board before and after (working tree and git show 816038c): a0ec075e…, unchanged; the 92c3ad59 board from 3d8e845 for comparison",
+  "Independent read-only copper extraction with KiCad 10 pcbnew (pads as flashed polygons or barrel circles on unflashed layers, tracks as capsules, arcs, vias, zone fills; footprint zones and copper drawings checked: none) and a NumPy segment-distance engine",
+  "Fire-chain audit: 18 pyro / arming / gate / sense nets against every net, four layers, 1.5 mm band, on a0ec075e and 92c3ad59",
+  "Whole-board all-pairs comparison (1.2 mm band), with and without fills, per net pair and per layer, a0ec075e against 92c3ad59",
+  "Element-level checks of every D-R26-02 / -04 before / after figure and the §1 / owner-row / FMEA / M3_R10 figures",
+  "KiCad SHAPE.Collide bisection (as tools/test_r10_check.copper_gap does, flashed copper) for PYRO1_OUT-3V3A / PYRO1_OUT-3V3 / gate nets-3V3, 3V3A / PYRO1_OUT-BUZZ_DRV: 1.04001 / 1.05000 / 1.05847 / 0.79350 mm",
+  "Inner-layer (In1 / In2) clearance of every protected net; flash state of terminal pads and the relevant vias",
+  "tools/check_r10.py --only S-1,S-2,S-3,S-5,S-6,S-7,S-8,S-9 on a copy with m3.kicad_pro / .kicad_dru (all OK; S-6 fails only on a bare copy without the project file, default clearance 0.2 mm, an artefact)",
+  "kicad-cli 10.0.7 pcb drc --severity-all on a copy (no schematic, so no parity)",
+  "tools/route_check.py --profile r10 on a copy",
+  "Datasheet reads (pdftotext of the cached PDFs): DS12110 Rev 8 Table 119 p212, Table 159 p249 and the pin table (PC14 FT); AON7524; AONR21357; AO3400A; Diodes DS41326 PFM section",
+  "Calculations: cold-screen readings, CONT_MID-RAW_ACT bridge readings, rule-8 corner re-solve, gate-net bridge voltages, EN-OVLO and ACT_DRV-ACT_EN bridges, load-switch |VGS| at 5.713 V, C10's envelope to U5",
+  "Document cross-checks: R10_VALIDATION §1 table and summary, owner rows 1 / 2 / 24 / 27, FMEA I-5 and I-2 / H-2 and the §4 H-list, R2_VERIFICATION, AGENTS §1 pyro row and §2, M3_R10 CH1 pyro / retained deviations / Firmware, ORDERING 8.3 per-flight checklist and coating worksheet, ORDERING 8.4 harness rows, REQUIREMENTS F6 / F8, D-R26-01 … -04; git grep for stale pre-fix coordinates and for H-9"
+ ],
+ "sources": [
+  "ST DS12110 Rev 8 (STM32H743): https://www.st.com/resource/en/datasheet/stm32h743vi.pdf, Table 119 p212, Table 159 p249, pin table (PC14 FT)",
+  "AOS AON7524: https://www.aosmd.com/res/datasheets/AON7524.pdf p2 (VGS(th) 0.4-1.2 V, RDS(on) < 5.8 mΩ at 2.5 V, VGS ±12 V)",
+  "AOS AONR21357: https://www.aosmd.com/res/datasheets/AONR21357.pdf p2 (VGS(th) -1.3 / -1.7 / -2.3 V, VGS ±25 V)",
+  "AOS AO3400A: https://www.aosmd.com/res/datasheets/AO3400A.pdf p2 (VGS(th) 0.65-1.45 V)",
+  "Diodes DS41326 (AP63203): https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf, 'Pulse Frequency Modulation' (no sink in PFM)",
+  "Board m3_design/assembly_review/m3.kicad_pcb at 816038c; parts_budget.json; r10_binding_note.json; docs/*.md and R10_DECISIONS.md at 816038c"
+ ],
+ "coverage_limits": [
+  "No physical, bench or firmware evidence; consequences of MCU pin or rail over-voltage (I-5, PC14) are Inference, as in the records",
+  "DRC ran on a copy without the schematic (no parity); the copy's location produced lib_footprint_issues only",
+  "My geometry models an unflashed layer of a via or plated pad as the drill-radius barrel; pads are polygonized inside the true shape to 1 µm, so curved-pad distances can read up to about 1 µm high",
+  "Hot-plug, EN chatter, TCR and plate models were not re-run; only the rule-8 corner equation",
+  "The probe directory is .supervisor/r27_safety/; other lenses' round 27 files and probe directories were not opened; round 26 safety's report was not opened, although two keyword greps (BUZZ_OUT, U9 bypass) printed one line each from round25_safety.json / round26_safety.json before this report was written"
+ ]
+}

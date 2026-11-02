@@ -3,7 +3,7 @@
 
 Usage: python3 -B m3_design/r10_sch_check.py --project DIR [--json FILE]
 Checks every pin and fitted component, retained functional safety, camera isolation,
-strict ERC, a fresh netlist export and deterministic sheet regeneration. Seeded
+the terminal pin names (D-R27-03), strict ERC, a fresh netlist export and deterministic sheet regeneration. Seeded
 contract mutations run in memory and never modify the checked project.
 This is a schematic gate; it makes no routing, thermal or bench qualification claim.
 """
@@ -30,6 +30,47 @@ def read_netlist(path):
     pins = {(p.get('ref'), p.get('pin')): None if n.get('name').startswith('unconnected-') else n.get('name')
             for n in root.findall('./nets/net') for p in n.findall('node')}
     return parts, pins
+
+
+# D-R27-03 (R27-TRI-07): the terminal pin names the schematic shows, as the netlist gives them (KiCad writes each node's
+# pinfunction as NAME_NUMBER, spaces as underscores). The three always-on ports carry REQUIREMENTS F10's names, which are
+# also their board legends (1:4V8 2:GND 3:TXO 4:RXI); J9 keeps the camera terminal's, whose pin 3 is the board's RX.
+PORT_PIN_NAMES = {'1': '4V8', '2': 'GND', '3': 'TXO', '4': 'RXI'}
+CAMERA_PIN_NAMES = {'1': '5V_OUT', '2': 'GND', '3': 'RX_FROM_CAMERA_TX', '4': 'TX_TO_CAMERA_RX'}
+TERMINAL_PIN_NAMES = {'J410': PORT_PIN_NAMES, 'J420': PORT_PIN_NAMES, 'J440': PORT_PIN_NAMES, 'J9': CAMERA_PIN_NAMES}
+
+
+def read_pin_names(path):
+    names = {}
+    for net in ET.parse(path).getroot().findall('./nets/net'):
+        for node in net.findall('node'):
+            function, suffix = node.get('pinfunction') or '', '_' + node.get('pin')
+            names[node.get('ref'), node.get('pin')] = function[:-len(suffix)] if function.endswith(suffix) else function
+    return names
+
+
+def terminal_pin_issues(names):
+    issues = []
+    for ref, want in TERMINAL_PIN_NAMES.items():
+        got = {pin: names.get((ref, pin)) for pin in want}
+        if got != want:
+            issues.append(f'{ref}: pin names {got}, expected {want} (REQUIREMENTS F10, D-R27-03)')
+    return issues
+
+
+def name_seeds(names):
+    mutations = {
+        'port pins named as the camera terminal': lambda m: m.update({('J410', p): v for p, v in CAMERA_PIN_NAMES.items()}),
+        'port TXO / RXI swapped': lambda m: m.update({('J440', '3'): 'RXI', ('J440', '4'): 'TXO'}),
+        'port supply named 5V OUT': lambda m: m.update({('J420', '1'): '5V_OUT'}),
+        'camera terminal given the port names': lambda m: m.update({('J9', p): v for p, v in PORT_PIN_NAMES.items()}),
+    }
+    results = {}
+    for label, mutate in mutations.items():
+        mutant = dict(names)
+        mutate(mutant)
+        results[label] = bool(terminal_pin_issues(mutant))
+    return results
 
 
 def assembly_groups(parts):
@@ -189,6 +230,9 @@ def check(project):
     parts, pins = read_netlist(project / 'schematic.net.xml')
     issues = contract(parts, pins)
     seeded = seeds(parts, pins)
+    names = read_pin_names(project / 'schematic.net.xml')
+    issues += terminal_pin_issues(names)
+    seeded.update(name_seeds(names))
     issues += [f'seed survived: {name}' for name, caught in seeded.items() if not caught]
     if (project / 'm3.kicad_dru').read_text() != gen.dru((gen.BASE / 'm3.kicad_dru').read_text()):
         issues.append('DRU differs from authorized default-clearance transform')
@@ -216,6 +260,8 @@ def check(project):
         gen.sch.export_netlist(fresh)
         p2, n2 = read_netlist(fresh / 'schematic.net.xml')
         issues += ['fresh schematic export: ' + issue for issue in contract(p2, n2)]
+        issues += ['fresh schematic export: ' + issue
+                   for issue in terminal_pin_issues(read_pin_names(fresh / 'schematic.net.xml'))]
     return {'ok': not issues, 'issues': issues, 'components': len(parts), 'pins': len(pins),
             'erc_violations': len(violations), 'seeded_faults': seeded,
             'netlist_sha256': hashlib.sha256((project / 'schematic.net.xml').read_bytes()).hexdigest(),
@@ -239,8 +285,11 @@ def binding_note(project, board=None):
         'imu': {'status': 'pending final PCB orientation and lever-arm measurement'},
         'sources': {
             'mcu': 'https://www.st.com/resource/en/datasheet/stm32h743vi.pdf',
+            # D-R27-02 (R27-TRI-04): the R5-MCU-04 obligation's two Rev 11 limits are the labelled exceptions.
             'mcu_revision': ('every DS12110 citation in this note is Rev 8 (April 2021), revision V electrical chapter (section 7; '
-                             'the LCSC copy is byte-identical); Rev 11 and RM0433 were not re-read in round 19 (R19-MCU-02)'),
+                             'the LCSC copy is byte-identical), except the two design limits labelled as read from Rev 11 '
+                             'Table 109 in round 14 (the 6.0 V FT cap and the 4.0 V ADC-mode maximum; R5-MCU-04 obligation, '
+                             'Inference); Rev 11 and RM0433 were not re-read in round 19 (R19-MCU-02)'),
             'imu': 'https://www.st.com/resource/en/datasheet/ism6hg256x.pdf',
             'imu_alternate': 'https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf',
             'source_selector': 'https://www.ti.com/lit/ds/symlink/tps2121.pdf',

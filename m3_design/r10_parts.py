@@ -226,6 +226,19 @@ def servo_terminal_symbol():
                           (-5.08, '5', 'GND', 'passive')], [])
 
 
+# D-R27-03 (R27-TRI-07): J410 / J420 / J440's own symbol. CameraTerminal's names ("5V OUT", "RX FROM CAMERA TX", "TX TO
+# CAMERA RX") describe J9; on a port, pin 1 is PORT_4V8, pin 3 the board's TX and pin 4 its RX (REQUIREMENTS F10, the
+# board legends 1:4V8 2:GND 3:TXO 4:RXI). The pin numbers, the passive types and the 4-position land are CameraTerminal's.
+PORT_TERMINAL_PINS = (('1', '4V8'), ('2', 'GND'), ('3', 'TXO'), ('4', 'RXI'))
+
+
+def port_terminal_symbol():
+    return module_symbol('PortTerminal', 'J', 'DORABO DB125-3.5-4P-GN-S always-on port (D-R19-14): 1 PORT_4V8, 2 GND, '
+                         '3 board TXO, 4 board RXI', 'port terminal UART', 'M3_DB125_4P_GN', 10.16, 6.35,
+                         [(y, number, name, 'passive') for y, (number, name) in zip((3.81, 1.27, -1.27, -3.81),
+                                                                                    PORT_TERMINAL_PINS)], [])
+
+
 def generated():
     files = {PRETTY / (n + '.kicad_mod'): f() for n, f in FOOTPRINTS.items()}
     for name, box in MODELS.items():
@@ -429,8 +442,10 @@ def power_budget(board_path=PROJECT / 'm3.kicad_pcb'):
                                             ('ports_on_then_logic_no_shed', loads_w['c_camera_radio_gps_on'][1], 1.5+sd_write_w[1]+r92_bleed_w))
                        for c in (300.8e-6, 470e-6) for v in (3.5, 3.8)}
     # Equation roots include input power as constant power, not a guessed current.
+    # D-R27-01 (R27-TRI-02): the ports draw camera 1 A + radio .3 + GPS .15 + 11 mA + the AUX allowance at the 5.456 V
+    # buck output, as ports_w does; 1.46 A alone left out D-R19-14's AUX 100 mA.
     def loaded_pack(open_v, servos):
-        r, logic, power, efficiency = .15, .5+3.3*.2/(.8*6), 5.456 * 1.46, .8
+        r, logic, power, efficiency = .15, .5+3.3*.2/(.8*6), 5.456 * (1.46 + aux_A), .8
         a = open_v - r * (servos + logic)
         return (a + (a*a - 4*r*power/efficiency)**.5) / 2
     # GAP-1 / D-R11-03: current native paths; rho=1.72e-8 ohm m, nominal 35 um outer copper at 20 C.

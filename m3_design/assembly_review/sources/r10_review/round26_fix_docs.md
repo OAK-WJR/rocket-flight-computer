@@ -73,6 +73,7 @@ README.md, 0 bad (scripted, GitHub slugs). No link points at the renamed M3_R10 
    was 0.9939 mm. Both are corrected (M3_R10, R10_VALIDATION, FMEA). `round26_fix_cad.md` lists the pairs correctly.
 5. **Round 26 triage observation (TCR), unchanged.** The 7.31 / 7.18 ms at 70 °C were computed at 5.73 V and not re-run
    at the corrected 5.71 V; the index says so.
+   **Erratum (R27-TRI-01):** 7.18 ms is the 5.713 V figure (`round26_safety.md`); only 7.31 ms is at 5.73 V.
 
 ## Files and statements changed
 

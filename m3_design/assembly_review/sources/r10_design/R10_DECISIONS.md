@@ -4528,3 +4528,84 @@ D-R26-02 had introduced and its list omitted.
   - K-plane's 3V3 necks are unchanged in width (0.549 / 0.549 / 0.589 / 0.706 mm), with (19.55, 55.825) as a landing.
 
 The record index is now **220 unique D IDs through D-R26-04**.
+
+## Round 27 fix pass (2026-11-02)
+
+Round 27's ten lenses and triage (`sources/r10_review/round27_triage.md` / `.json`) found 0 Critical, 0 Major and 7
+Minor real errors, none on the board copper. This CAD lane takes R27-TRI-02's generator part, R27-TRI-04 and R27-TRI-07:
+generators, generated files, a check and records. The board stays `a0ec075e…` (one complete build reproduced it); the
+docs lane takes the rest. Hand-back: `sources/r10_review/round27_fix_cad.md` / `.json`.
+
+## D-R27-01. The budget's four-stall pack sag counts the AUX allowance (round 27 fix pass)
+
+R27-TRI-02, its generator part (the triage's sibling of R27-POWER-02).
+
+- **What:** `m3_design/r10_parts.py` `loaded_pack` takes the ports' input power as 5.456 V x (1.46 A + `aux_A`), the
+  way `ports_w` does, in place of 5.456 V x 1.46 A. The build regenerates `parts_budget.json`.
+- **Why:** D-R19-14 added the AUX port's 100 mA to the port-load figures (`ports_w`, the battery-break loads, the
+  camera-short buck case and U401's loss all carry `aux_A`) but not to this one, so `pack_7V4_four_stall_loaded_V` /
+  `pack_6V0_four_stall_loaded_V` still described the pre-AUX ports.
+- **Before -> after** (Calculation; pack 0.15 ohm, logic 0.6375 A, four 1.92 A stalls, 80 % efficiency):
+  - `pack_7V4_four_stall_loaded_V`: 5.899 -> 5.881 V (5.881014 V).
+  - `pack_6V0_four_stall_loaded_V`: 4.414 -> 4.389 V (4.388745 V).
+  - `parts_budget.json` SHA-256: `5204280e…` -> `ecc45417a4b9ec6ad021f52153cf2f59b547ac8e1afbd39dbd7d6e4c39f9a8bb`.
+    Those two lines are its only change; the fire budget (5.713 V four-stall BAT_IN, 1.279 A) already used `ports_w`.
+- **Sweep of the generators** for the pre-AUX allocation (460 mA, 1.46 A without AUX):
+  - `r10_parts.py`: every other port figure carries `aux_A`. The LDO-short cases are bounded by U401's shared
+    1.5-1.9 A limit, which covers all three ports.
+  - `r10_sch.py` / `circuit.json` sheet notes and the binding-note obligations quote D-R19-14's 100 mA allowance.
+  - `tools/r10_hotplug.py` models capacitance and harness, not port current.
+  - `tools/check_r10.py`'s K-power comment quoted round 18's pre-AUX "11.5 W normal, about 1.56 A at 7.4 V". It now
+    quotes the budget's c_camera_radio_gps_on, 11.25-13.06 W, at most about 1.77 A at 7.4 V. Comment only: the
+    rule's 2.9 A design current is D-R3-03's U9 sizing.
+- **Not in this lane:** parts_qualification.md's GAP-3 and stall-input paragraphs and the budget SHA it quotes (docs
+  lane).
+- **Kept:** the board, the hot-plug inputs and results (byte-identical; 2304 cases pass) and every check.
+
+## D-R27-02. The binding note's DS12110 revision sentence names its two Rev 11 limits (round 27 fix pass)
+
+R27-TRI-04 (R27-MCU-01).
+
+- **What:** the `mcu_revision` source line in `m3_design/r10_sch_check.py`, which the build regenerates into
+  `r10_binding_note.json`, now reads: "every DS12110 citation in this note is Rev 8 (April 2021), revision V electrical
+  chapter (section 7; the LCSC copy is byte-identical), except the two design limits labelled as read from Rev 11 Table
+  109 in round 14 (the 6.0 V FT cap and the 4.0 V ADC-mode maximum; R5-MCU-04 obligation, Inference); Rev 11 and
+  RM0433 were not re-read in round 19 (R19-MCU-02)".
+- **Why:** the same note's R5-MCU-04 obligation cites Rev 11 Table 109, so "every citation is Rev 8" was false.
+  R19-MCU-02 already labels the two limits, so no older decision changes.
+- **Before -> after:** binding note SHA-256 `b2112fb3…` ->
+  `e8f10fb3ef1c4bd8428035dc17a08accde8b69675f1449bbc30c037b6cf37a3b` (with D-R27-03's netlist and circuit hashes).
+  K-binding passes.
+- **Test:** `test_r23_binding_note_rules_and_pin_table` pins the new words, rejects "byte-identical); Rev 11" and checks
+  that the obligation the exception names still says "were read from Rev 11 Table 109 in round 14".
+
+## D-R27-03. J410 / J420 / J440 get their own symbol, M3:PortTerminal (round 27 fix pass)
+
+R27-TRI-07 (R27-REQUIREMENTS-01).
+
+- **What:**
+  - `r10_parts.port_terminal_symbol()`: M3:PortTerminal, a box symbol with pins 1 "4V8", 2 "GND", 3 "TXO" and 4
+    "RXI" (`PORT_TERMINAL_PINS`), all passive like CameraTerminal's, filtered to M3_DB125_4P_GN. `r10_sch.py` adds it to
+    `kilib/m3.kicad_sym` (a copy already there must equal the generator's) and refreshes embedded copies.
+  - `circuit.json`: J410, J420 and J440 take `M3:PortTerminal`; J9 keeps `M3:CameraTerminal`.
+  - `r10_sch_check.py`: the netlist's pin names (each node's pinfunction) must be 4V8 / GND / TXO / RXI on J410 / J420 /
+    J440 and the camera terminal's on J9, in the checked netlist and in the fresh export. Four seeded name faults run in
+    memory: the camera names on a port, TXO / RXI swapped, a port supply named 5V OUT, the port names on J9.
+- **Why:** CameraTerminal's names ("5V OUT", "RX FROM CAMERA TX", "TX TO CAMERA RX") describe J9. On a port, pin 1 is
+  PORT_4V8 and pin 3 the board's TX (PD8 / PB13 / PC6), so the sheet and the netlist named the port pins against
+  REQUIREMENTS F10 and the board legends (1:4V8 2:GND 3:TXO 4:RXI).
+- **Before -> after:**
+  - `schematic.net.xml`: J410 / J420 / J440 pin functions 5V_OUT_1 / GND_2 / RX_FROM_CAMERA_TX_3 / TX_TO_CAMERA_RX_4 ->
+    4V8_1 / GND_2 / TXO_3 / RXI_4. Their nets, values, footprints and fields are unchanged. SHA-256 `762bc13d…` ->
+    `535a8fdfe96c3a771a901db2bb9d2cd1a6674b001dfe1e18aa7d600e3aea7e9a`.
+  - `telemetry.kicad_sch`: the three symbols' lib_id and their pin leads (the box is narrower). The other 14 sheets are
+    byte-identical. `circuit.json` `aeb1674f…` -> `3220e5f9…`.
+  - The PCB stays `a0ec075e…`: the board takes nets, values, footprints and fields from the netlist (none changed) and
+    carries no pin names. ERC 0, schematic parity 0, DRC 0.
+  - The fab outputs differ only in their creation dates; BOM, owner BOM, CPL and paste are byte-identical, so the
+    supplier evidence still binds. The manifest re-binds the changed sheet and symbol library.
+- **Seed:** `test_r10_check.SchematicContract.test_r27_port_terminal_pin_names`. The board's netlist passes; the port
+  names equal check_r10's TERMINAL_PINS_R10 legends; with the camera names back on the three ports (round 27's netlist)
+  the check fails three times; the four name seeds are each caught.
+
+The record index is now **223 unique D IDs through D-R27-03**.

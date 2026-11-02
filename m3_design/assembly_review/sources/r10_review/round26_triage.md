@@ -126,6 +126,7 @@ So it can fire, on the pad or in flight.
      count.
    - A GND guard is not a fix at PYRO1_OUT, because GND is foreign there (S-8).
    - H-9's 3V3 clamp does not close these routes either: a clamped rail lets about 1 A through the match.
+     (Erratum, R27-TRI-05: the 3V3 clamp is not FMEA H-9; §4.2's H-9 is the load-switch gate-source capacitor, C120 on R10.)
 3. **Procedure.** Owner row 18 (PC1 low until launch detection) covers both pairs on the pad. Nothing but spacing covers
    them in flight, as for OUT–GND and C128.
 

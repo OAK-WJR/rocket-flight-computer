@@ -129,7 +129,7 @@ its one edit (D-R19-10's C87 figures).
 | R20-PWR-01 | AUX allowance and port thermal margin provisional; first-article power-knot measurement on U401, U400 and L400; U400 ≈ 0.46 W, ≈ 41 °C rise at 89 °C/W (Diodes DS41326 p4); no pyro hazard | ORDERING 8.3, M3_R10 Simulation and Firmware, R10_VALIDATION row 26, REQUIREMENTS F10, handoff |
 | R20-PWR-02 | PORT_4V8 4.71–4.87 V check at J410.1 / J420.1 / J440.1 before any module, first article and pre-flight; R402 tap "fix at the next board change" | ORDERING 8.3, M3_R10 Power, R10_VALIDATION row 27, handoff |
 | R20-PWR-03 | "U11 blocks reverse current" reworded: C84 may back-feed until IRCB 0.2 / 1 / 2 A (SLVSEA3F p8); the budget assumes the ports stay on | M3_R10 Power and Firmware, R10_VALIDATION §3 |
-| R20-MEC-01 | J440 lead routing row (aft, round the (4,4) head, south of y 23.5, past the aft edge away from the shroud, never forward along x = 0) | ORDERING 8.4, handoff |
+| R20-MEC-01 | J440 lead routing row (aft, round the (4,4) head, south of y 23.5 (erratum, R27-TRI-06: aft of y 23.5, y < 23.5), past the aft edge away from the shroud, never forward along x = 0) | ORDERING 8.4, handoff |
 | R20-MEC-02 | Plate model 180.8 Hz, 78.6 g, C431 0.261 mm, C421 0.320 mm; bore margin 2.98 mm with J440 (Calculation/Inference) | M3_R10, AGENTS, handoff, ORDERING 8.4, R10_VALIDATION §8 |
 
 The CAD-pass count places listed under "Places that still need the gate lane's counts" now carry the gate pass's

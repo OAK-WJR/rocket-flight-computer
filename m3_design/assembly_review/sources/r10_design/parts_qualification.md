@@ -10,7 +10,7 @@ tests were performed. The current always-on ports, screw terminals, microSD and 
 
 ## Current circuit amendment and review status
 
-Review status, checks, cost and open items are stated once, in [M3_R10.md, "Current state"](../../../../docs/M3_R10.md#current-state). In short: PCB `a0ec075e…` (46 × 90 mm) is not accepted and nothing is ordered. Rounds 22 and 23 (ten Claude lenses each) were the closing pair on `5516eeec…` (0 Critical / 0 Major; 22 and 55 Minor). The round 24 board pass (D-R24-01 … D-R24-17) made `1407e850…`; round 24's ten lenses and triage found 17 Minor real errors on it (R24-TRI-01 … -17), and the round 24 fix pass (D-R24-18 … D-R24-23) changed the board to `92c3ad59…` (one capped chamfer; no part or code changed). Round 25 then found 10 Minor real errors on `92c3ad59…` (R25-TRI-01 … -10, none on the board), and its fix pass (D-R25-01 … -03) left the board unchanged. Round 26 found 12 Minor real errors on `92c3ad59…` (R26-TRI-01 … -12), and its fix pass (D-R26-01 … -04) changed the board to `a0ec075e…` (two GND vias at J440, and C10, C11, R164, R173 and R164's 3V3 via moved; no part number or code changed), so rounds 27 and 28 review it under the owner's strict rule (only verified real errors count). AGENTS section 2 is unchanged. This file is the component contract; where a section below is marked historical it describes
+Review status, checks, cost and open items are stated once, in [M3_R10.md, "Current state"](../../../../docs/M3_R10.md#current-state). In short: PCB `a0ec075e…` (46 × 90 mm) is not accepted and nothing is ordered. Rounds 22 and 23 (ten Claude lenses each) were the closing pair on `5516eeec…` (0 Critical / 0 Major; 22 and 55 Minor). The round 24 board pass (D-R24-01 … D-R24-17) made `1407e850…`; round 24's ten lenses and triage found 17 Minor real errors on it (R24-TRI-01 … -17), and the round 24 fix pass (D-R24-18 … D-R24-23) changed the board to `92c3ad59…` (one capped chamfer; no part or code changed). Round 25 then found 10 Minor real errors on `92c3ad59…` (R25-TRI-01 … -10, none on the board), and its fix pass (D-R25-01 … -03) left the board unchanged. Round 26 found 12 Minor real errors on `92c3ad59…` (R26-TRI-01 … -12), and its fix pass (D-R26-01 … -04) changed the board to `a0ec075e…` (two GND vias at J440, and C10, C11, R164, R173 and R164's 3V3 via moved; no part number or code changed). Round 27 then found 7 Minor real errors on `a0ec075e…` (R27-TRI-01 … -07, none on the board), and its fix pass left the board unchanged, so rounds 28 and 29 review it under the owner's strict rule (only verified real errors count). AGENTS section 2 is unchanged. This file is the component contract; where a section below is marked historical it describes
 hardware that was removed from R10 and is kept only for the record. The round 19 amendments below supersede earlier text in this file where they differ.
 
 ## Round 24 component amendment (2026-11-01; D-R24-11)
@@ -472,7 +472,7 @@ With the primary 40 mΩ/FET ceiling, total loop 4.617802565 Ω gives 0/1/2/3/4-s
 currents 1.540851284/1.475765326/1.410415927/1.344760704/1.278747143 A
 (other converter load 13.064 W with the 100 mA AUX allowance);
 all exceed 1.125 A. D-R11-03 binds the generator to native geometry. The regenerated
-budget SHA-256 is `5204280e098eea4981b968789840d97ca3d8f2f4565ca7b5043c3918215ae3bc` (round 26 docs lane read, on `a0ec075e…`; only its board hash changed in round 26; it was `f92611a8…` on `92c3ad59…` after D-R25-03 changed the OVLO-corner keys, 9V97_* → 10V18_*, and the U9 bound, with the fire-path figures unchanged, `52ada1ed…` after the round 24 fix pass, `f734dff7…` on `1407e850…`, `d2e22ea3…` on `5516eeec…`).
+budget SHA-256 is `ecc45417a4b9ec6ad021f52153cf2f59b547ac8e1afbd39dbd7d6e4c39f9a8bb` (round 27 docs lane read, on `a0ec075e…`; D-R27-01 changed only its two four-stall loaded-pack lines, 5.899 / 4.414 → 5.881 / 4.389 V; it was `5204280e…` after the round 26 fix pass, which changed only its board hash, `f92611a8…` on `92c3ad59…` after D-R25-03 changed the OVLO-corner keys, 9V97_* → 10V18_*, and the U9 bound, with the fire-path figures unchanged, `52ada1ed…` after the round 24 fix pass, `f734dff7…` on `1407e850…`, `d2e22ea3…` on `5516eeec…`).
 On `a3144b15…` the same loop gave 1.544251030/1.479327596/1.414158454/1.348704524/1.282917526 A
 (budget SHA-256 `61727af7baec761ded6d75c963bf6442f702a827e59b7e5656de08e526ce54fa`); the AUX allowance's extra load accounts for the change.
 On `632a9ad3…` (IGN 10.230382 mm, copper 29.362412 mΩ/35.132126 mΩ) the loop was 4.617458126 Ω with
@@ -658,10 +658,12 @@ selectivity. Starting the2 A logic mux and all peripherals together is prohibite
 port enables default off and firmware sequences their startup. Test a short on
 one port and all ports while checking3V3 and VLOGIC remain in regulation.
 
-**Inference, stall input:** for0.15Ω pack resistance,7.68 A stalled servos,
-0.5 A board input logic allocation,1.46 A at5.456 V peripheral output and80%
-efficiency, solving the constant-power pack sag gives5.921 V from a7.4 V open-pack
-floor, before U9 and board losses. A6 V open pack gives4.436 V. Buck near-100%
+**Inference, stall input:** for 0.15 Ω pack resistance, 7.68 A stalled servos,
+0.6375 A board input logic allocation (0.5 A plus a 0.2 A microSD write at 3.3 V, referred to the input at 80 % from
+6 V), 1.56 A at 5.456 V peripheral output (1.46 A plus the 0.1 A AUX allowance, D-R19-14) and 80 %
+efficiency, solving the constant-power pack sag gives 5.881 V from a 7.4 V open-pack
+floor, before U9 and board losses. A 6 V open pack gives 4.389 V (`parts_budget.json`
+`pack_7V4_four_stall_loaded_V` / `pack_6V0_four_stall_loaded_V`, 5.881014 / 4.388745 V; 5.899 / 4.414 V before the AUX allowance, R27-TRI-02, D-R27-01). Buck near-100%
 duty cannot boost either case. No all-load camera guarantee exists at the low-pack
 four-stall corner. Shed all port enables before RAW_PROTECTED falls below6.2 V;
 accept loss of peripheral operation while retaining logic/recovery. The MCU's
@@ -670,8 +672,9 @@ simulation and bench testing. Even at6 V loaded input, loaded-dropout qualificat
 is open because AP63201 only gives typical switch resistance; never label that
 corner guaranteed from the nominal duty calculation.
 
-**GAP-3, LDO thermal (Calc / Inference):** allocated 460 mA output, extreme
-rail tolerances and 4 mA quiescent draw give 0.406177 W. U401 pad 11 is
+**GAP-3, LDO thermal (Calc / Inference):** allocated 560 mA output (460 mA plus the 100 mA AUX allowance,
+D-R19-14), extreme rail tolerances and 4 mA quiescent draw give 0.490 W (0.406 W before the AUX allowance;
+R27-TRI-02). U401 pad 11 is
 1.2 × 2.0 mm, centred at (27.6,13.6), and now has two GND vias at
 (27.3,13.6)/(27.9,13.6), 0.5 mm ring / 0.3 mm drill. These two vias require
 resin filling, copper capping and planar VIPPO; the maker's paste windows stay
@@ -679,10 +682,10 @@ unchanged. Fabricator acceptance is pending. TI TPS7A91 §7.1.4 / layout guidanc
 calls for thermal vias; its 62.5°C/W JEDEC thetaJA is not this board's thermal
 resistance. Retain 80–110°C/W as a conservative **Inference**, without claiming
 that the vias establish or improve that number. Junction estimate is
-102.494–114.679°C at the 70°C bay ambient, below 125°C recommended maximum;
-at 85°C it is 117.494–129.679°C, an unqualified unshaded sensitivity. Full-load
-thermal measurement remains required; the inferred theta ceiling for 125°C at
-70°C is 135.409°C/W. Measure the complete power knot and qualify the actual
+109.2–123.9 °C at the 70 °C bay ambient, below the 125 °C recommended maximum;
+at 85 °C it is 124.2–138.9 °C, an unqualified unshaded sensitivity. Full-load
+thermal measurement remains required; the inferred theta ceiling for 125 °C at
+70 °C is 112.3 °C/W. Measure the complete power knot and qualify the actual
 fabricated via process; do not substitute an unfilled hole or shrink the paste.
 Buck thermal qualification remains open:89°C/W is a reference-board metric,
 maximum MOSFET resistance and switching loss are not specified, and80% conversion

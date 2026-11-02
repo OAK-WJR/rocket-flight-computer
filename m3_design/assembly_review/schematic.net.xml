@@ -6653,12 +6653,13 @@
         <field name="Datasheet">https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf</field>
         <field name="Description"/>
       </fields>
-      <libsource lib="M3" part="CameraTerminal" description=""/>
+      <libsource lib="M3" part="PortTerminal" description="DORABO DB125-3.5-4P-GN-S always-on port (D-R19-14): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI"/>
       <property name="LCSC" value="C2757925"/>
       <property name="Manufacturer" value="DORABO"/>
       <property name="Manufacturer Part" value="DB125-3.5-4P-GN-S"/>
       <property name="Sheetname" value="15 | Always-on GPS / radio / AUX UARTs and microSD log"/>
       <property name="Sheetfile" value="telemetry.kicad_sch"/>
+      <property name="ki_keywords" value="port terminal UART"/>
       <property name="ki_fp_filters" value="M3_DB125_4P_GN"/>
       <sheetpath names="/15 | Always-on GPS / radio / AUX UARTs and microSD log/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
       <tstamps>e9385389-e8da-5eee-90dc-572023b6cd48</tstamps>
@@ -6685,12 +6686,13 @@
         <field name="Datasheet">https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf</field>
         <field name="Description"/>
       </fields>
-      <libsource lib="M3" part="CameraTerminal" description=""/>
+      <libsource lib="M3" part="PortTerminal" description="DORABO DB125-3.5-4P-GN-S always-on port (D-R19-14): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI"/>
       <property name="LCSC" value="C2757925"/>
       <property name="Manufacturer" value="DORABO"/>
       <property name="Manufacturer Part" value="DB125-3.5-4P-GN-S"/>
       <property name="Sheetname" value="15 | Always-on GPS / radio / AUX UARTs and microSD log"/>
       <property name="Sheetfile" value="telemetry.kicad_sch"/>
+      <property name="ki_keywords" value="port terminal UART"/>
       <property name="ki_fp_filters" value="M3_DB125_4P_GN"/>
       <sheetpath names="/15 | Always-on GPS / radio / AUX UARTs and microSD log/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
       <tstamps>97192e4d-0904-5ecf-b85e-67fb2fe86f2b</tstamps>
@@ -6758,12 +6760,13 @@
         <field name="Datasheet">https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf</field>
         <field name="Description"/>
       </fields>
-      <libsource lib="M3" part="CameraTerminal" description=""/>
+      <libsource lib="M3" part="PortTerminal" description="DORABO DB125-3.5-4P-GN-S always-on port (D-R19-14): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI"/>
       <property name="LCSC" value="C2757925"/>
       <property name="Manufacturer" value="DORABO"/>
       <property name="Manufacturer Part" value="DB125-3.5-4P-GN-S"/>
       <property name="Sheetname" value="15 | Always-on GPS / radio / AUX UARTs and microSD log"/>
       <property name="Sheetfile" value="telemetry.kicad_sch"/>
+      <property name="ki_keywords" value="port terminal UART"/>
       <property name="ki_fp_filters" value="M3_DB125_4P_GN"/>
       <sheetpath names="/15 | Always-on GPS / radio / AUX UARTs and microSD log/" tstamps="/05a85211-bc24-59d4-a8a4-ff7347ee84fc/"/>
       <tstamps>a4f50b73-d045-580b-a7e8-d8f48e1e41b4</tstamps>
@@ -7770,6 +7773,25 @@
         <pin num="11" name="PAD" type="power_in"/>
       </pins>
     </libpart>
+    <libpart lib="M3" part="PortTerminal">
+      <description>DORABO DB125-3.5-4P-GN-S always-on port (D-R19-14): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI</description>
+      <footprints>
+        <fp>M3_DB125_4P_GN</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">PortTerminal</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">DORABO DB125-3.5-4P-GN-S always-on port (D-R19-14): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI</field>
+      </fields>
+      <pins>
+        <pin num="1" name="4V8" type="passive"/>
+        <pin num="2" name="GND" type="passive"/>
+        <pin num="3" name="TXO" type="passive"/>
+        <pin num="4" name="RXI" type="passive"/>
+      </pins>
+    </libpart>
     <libpart lib="M3" part="R">
       <description>Resistor</description>
       <footprints>
@@ -8068,7 +8090,7 @@
     </net>
     <net code="11" name="AUX_RX_WIRE" class="Default">
       <node ref="D441" pin="1" pinfunction="A1_1" pintype="passive"/>
-      <node ref="J440" pin="4" pinfunction="TX_TO_CAMERA_RX_4" pintype="passive"/>
+      <node ref="J440" pin="4" pinfunction="RXI_4" pintype="passive"/>
       <node ref="R470" pin="1" pintype="passive"/>
     </net>
     <net code="12" name="AUX_TX_MCU" class="Default">
@@ -8077,7 +8099,7 @@
     </net>
     <net code="13" name="AUX_TX_WIRE" class="Default">
       <node ref="D440" pin="1" pinfunction="A1_1" pintype="passive"/>
-      <node ref="J440" pin="3" pinfunction="RX_FROM_CAMERA_TX_3" pintype="passive"/>
+      <node ref="J440" pin="3" pinfunction="TXO_3" pintype="passive"/>
       <node ref="R471" pin="2" pintype="passive"/>
     </net>
     <net code="14" name="BARO_SDO" class="Default">
@@ -8418,7 +8440,7 @@
     </net>
     <net code="46" name="GPS_RX_WIRE" class="Default">
       <node ref="D411" pin="1" pinfunction="A1_1" pintype="passive"/>
-      <node ref="J410" pin="4" pinfunction="TX_TO_CAMERA_RX_4" pintype="passive"/>
+      <node ref="J410" pin="4" pinfunction="RXI_4" pintype="passive"/>
       <node ref="R440" pin="1" pintype="passive"/>
     </net>
     <net code="47" name="GPS_TX_MCU" class="Default">
@@ -8427,7 +8449,7 @@
     </net>
     <net code="48" name="GPS_TX_WIRE" class="Default">
       <node ref="D410" pin="1" pinfunction="A1_1" pintype="passive"/>
-      <node ref="J410" pin="3" pinfunction="RX_FROM_CAMERA_TX_3" pintype="passive"/>
+      <node ref="J410" pin="3" pinfunction="TXO_3" pintype="passive"/>
       <node ref="R441" pin="2" pintype="passive"/>
     </net>
     <net code="49" name="HSE_IN" class="Default">
@@ -8502,9 +8524,9 @@
       <node ref="C421" pin="1" pintype="passive"/>
       <node ref="C444" pin="1" pintype="passive"/>
       <node ref="C445" pin="1" pintype="passive"/>
-      <node ref="J410" pin="1" pinfunction="5V_OUT_1" pintype="passive"/>
-      <node ref="J420" pin="1" pinfunction="5V_OUT_1" pintype="passive"/>
-      <node ref="J440" pin="1" pinfunction="5V_OUT_1" pintype="passive"/>
+      <node ref="J410" pin="1" pinfunction="4V8_1" pintype="passive"/>
+      <node ref="J420" pin="1" pinfunction="4V8_1" pintype="passive"/>
+      <node ref="J440" pin="1" pinfunction="4V8_1" pintype="passive"/>
       <node ref="R402" pin="1" pintype="passive"/>
       <node ref="R405" pin="1" pintype="passive"/>
       <node ref="U401" pin="1" pinfunction="OUT_1" pintype="power_out"/>
@@ -8618,7 +8640,7 @@
     </net>
     <net code="85" name="RADIO_RX_WIRE" class="Default">
       <node ref="D421" pin="1" pinfunction="A1_1" pintype="passive"/>
-      <node ref="J420" pin="4" pinfunction="TX_TO_CAMERA_RX_4" pintype="passive"/>
+      <node ref="J420" pin="4" pinfunction="RXI_4" pintype="passive"/>
       <node ref="R450" pin="1" pintype="passive"/>
     </net>
     <net code="86" name="RADIO_TX_MCU" class="Default">
@@ -8627,7 +8649,7 @@
     </net>
     <net code="87" name="RADIO_TX_WIRE" class="Default">
       <node ref="D420" pin="1" pinfunction="A1_1" pintype="passive"/>
-      <node ref="J420" pin="3" pinfunction="RX_FROM_CAMERA_TX_3" pintype="passive"/>
+      <node ref="J420" pin="3" pinfunction="TXO_3" pintype="passive"/>
       <node ref="R451" pin="2" pintype="passive"/>
     </net>
     <net code="88" name="RAW_ACT" class="Default">

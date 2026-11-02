@@ -13,7 +13,7 @@
     "cad/kilib/generic.3dshapes/PinHeader_1x02_P2.54mm_Vertical.step": "ea4d0799007ebdd3945072bf255d673d2fe87eb05fda85fd8d7993ad9397da41",
     "cad/kilib/generic.3dshapes/PinHeader_1x06_P2.54mm_Vertical.step": "d6113af109a14a67c50dcefd1cfc7b43b59b59afa85d808b2319e2452da91318",
     "cad/kilib/generic.3dshapes/R_2512_6332Metric.step": "76b2052a3c120193de7cdc0af99157b6f375e9a4af7721e3e3d012968c877f27",
-    "cad/kilib/m3.kicad_sym": "979cf095dca39c9b0f5ddc0761924b042e902e98860b93495823b569837a6626",
+    "cad/kilib/m3.kicad_sym": "7a3c7d8dbd5c0bc770eefd0c879e692133c8aa890ee5458c637bae011369236c",
     "cad/kilib/rocket.3dshapes/BUZ-SMD_4P-L8.5-W8.5-H3.0.wrl": "c16c41a2915b8f78e2ec8670cb3ad79ff779227374a4890a87361ee14640bcbe",
     "cad/kilib/rocket.3dshapes/C0402_L1.0-W0.5-H0.5.wrl": "c20fe21cf8899edf2ae6dbf00c69756b1e5f5bc4029d9c1ce67875d905c8a199",
     "cad/kilib/rocket.3dshapes/C0603_L1.6-W0.8-H0.8.wrl": "125791465c37d0e6cda3b2f45f84e01af226d81a462bfbecb7a4513327e9f22a",
@@ -185,7 +185,7 @@
     "cad/sensors.kicad_sch": "ee77a74f893000724702a820630ea65162dcf5ffa6776548fa86351f6cbd77cf",
     "cad/servos.kicad_sch": "c9d0d4661e6d30337fb9fa094219678f38a8a8b0c3dc48fa35e392ab2c1c1e0f",
     "cad/sym-lib-table": "4efd2ba454e433efeb8a4a72562b389141aa0b8fabf60041f03c34171402d37f",
-    "cad/telemetry.kicad_sch": "6e310ef4a30cddc8b5bd1aa06c39dd8a72d61e642709073bbc31ece01767628a",
+    "cad/telemetry.kicad_sch": "695cfa0d09a99670b0b45511cfc53373eb4b01518664a96b3a5e03d9f80fffb9",
     "cad/usb_sense.kicad_sch": "8b53579f08d4c01427ff7f832f837f8c6f73014f48dfd7b731edb6be891898f3",
     "quality_audit/sexpr.py": "32f5b57f3716ff98a6eebd2ec125cded7a97b003e0c6bc9d062a7abfea3da64a",
     "tools/export_fab.py": "41b0a43a24f7b223136095fb9ad9f8908b4a110de8fe1f0202bbc26a887ddc0f",
@@ -195,12 +195,12 @@
     "tools/jlc_orient.py": "a23ab373cc7e13f7053a97e87a0f85cc37a5bf19391f774680e7433461701c88"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "924c065f62e5b5422478ddbfc1e5734e4cefb801a168009324d50ef0d7a245e2",
-    "m3_assembly_top.pdf": "43e8978517a7d64b046d58cae29731cee14d714bd5af8f54f79b4cf0fedbbb8d",
+    "m3_assembly_bottom.pdf": "7873553b0a5fed245ff3f895d3fddd2a6e8490f5bdec9fb568aa5b90ed7dc198",
+    "m3_assembly_top.pdf": "cd16cb88a7f1cbeab6567972c8e258914dfef1d7c8295db1710b4e549d7bad98",
     "m3_bom_jlc.csv": "00af5358a4043980e9c3a488b5e5a4bbe7a5d562054aaf9ce4ee6f99694e6b55",
     "m3_bom_owner.csv": "c48868b32f2680376e73c4ea93c98df8efd6df4cad909c83e64a7ee56b74c2c0",
     "m3_cpl_jlc.csv": "1f89975052e0745c5579b7fcfd6edda8e09d3a5ad77a11464ab1e6070e63a7ac",
-    "m3_gerber.zip": "c905fd6e5b4718cdeceedcbbeab9d4c4ff8714b061b5d5e3dfe51453e5fbd500"
+    "m3_gerber.zip": "ef04ca26f7baef518907e715eddaf2d4a44998d08d03b54c325606118b6fa253"
   },
   "schema": 1
 }

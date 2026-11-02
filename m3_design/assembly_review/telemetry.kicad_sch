@@ -112,71 +112,6 @@
 					(font
 						(size 1.27 1.27))
 					(hide yes))))
-		(symbol "M3:CameraTerminal"
-			(pin_names
-				(offset 1.016))
-			(in_bom yes)
-			(on_board yes)
-			(symbol "CameraTerminal_0_1"
-				(rectangle
-					(start -22.86 6.35)
-					(end 22.86 -6.35)
-					(stroke
-						(width 0.254)
-						(type default))
-					(fill
-						(type background))))
-			(symbol "CameraTerminal_1_1"
-				(pin passive line
-					(at -27.939999999999998 3.8099999999999996 0)
-					(length 5.08)
-					(name "5V OUT"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "1"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -27.939999999999998 1.2699999999999996 0)
-					(length 5.08)
-					(name "GND"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "2"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -27.939999999999998 -1.2700000000000005 0)
-					(length 5.08)
-					(name "RX FROM CAMERA TX"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "3"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -27.939999999999998 -3.8100000000000005 0)
-					(length 5.08)
-					(name "TX TO CAMERA RX"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "4"
-						(effects
-							(font
-								(size 1.05 1.05))))))
-			(property "ki_fp_filters" "M3_DB125_4P_GN"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27))
-					(hide yes))))
 		(symbol "M3:ESD_Bidir"
 			(pin_numbers
 				(hide yes))
@@ -486,6 +421,107 @@
 							(font
 								(size 1.05 1.05))))))
 			(embedded_fonts no))
+		(symbol "M3:PortTerminal"
+			(pin_names
+				(offset 1.016))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 8.89 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "PortTerminal"
+				(at 0 -8.89 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "DORABO DB125-3.5-4P-GN-S always-on port (D-R19-14): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "port terminal UART"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_fp_filters" "M3_DB125_4P_GN"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "PortTerminal_0_1"
+				(rectangle
+					(start -10.16 6.35)
+					(end 10.16 -6.35)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "PortTerminal_1_1"
+				(pin passive line
+					(at -15.24 3.81 0)
+					(length 5.08)
+					(name "4V8"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 1.27 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -1.27 0)
+					(length 5.08)
+					(name "TXO"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -3.81 0)
+					(length 5.08)
+					(name "RXI"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
 		(symbol "M3:R"
 			(pin_numbers
 				(hide yes))
@@ -583,7 +619,7 @@
 					(hide yes))))
 	)
 	(symbol
-		(lib_id "M3:CameraTerminal")
+		(lib_id "M3:PortTerminal")
 		(at 86.36 88.9 0)
 		(unit 1)
 		(in_bom yes)
@@ -644,15 +680,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 58.42 85.09)
-			(xy 53.34 85.09))
+			(xy 71.12 85.09)
+			(xy 66.04 85.09))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid ef65a165-4f87-5feb-a3a4-b8c798488b21))
 	(global_label "PORT_4V8"
 		(shape passive)
-		(at 53.34 85.09 0)
+		(at 66.04 85.09 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -660,15 +696,15 @@
 		(uuid 28b93024-b5e7-54dd-89cc-51a72eabb887))
 	(wire
 		(pts
-			(xy 58.42 87.63)
-			(xy 53.34 87.63))
+			(xy 71.12 87.63)
+			(xy 66.04 87.63))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid ace02bc4-b746-5485-8ca0-9f479bc576bb))
 	(global_label "GND"
 		(shape passive)
-		(at 53.34 87.63 0)
+		(at 66.04 87.63 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -676,15 +712,15 @@
 		(uuid 6b8cd66b-41fc-5807-a342-df1843876fa6))
 	(wire
 		(pts
-			(xy 58.42 90.17)
-			(xy 53.34 90.17))
+			(xy 71.12 90.17)
+			(xy 66.04 90.17))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 3687ccfa-a773-5fcb-8580-058e5a0c6213))
 	(global_label "GPS_TX_WIRE"
 		(shape passive)
-		(at 53.34 90.17 0)
+		(at 66.04 90.17 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -692,15 +728,15 @@
 		(uuid a1f89da4-a1f8-5916-9be1-a8d43e6e3005))
 	(wire
 		(pts
-			(xy 58.42 92.71)
-			(xy 53.34 92.71))
+			(xy 71.12 92.71)
+			(xy 66.04 92.71))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 429c540b-0f79-59c9-981e-f0e7553944b1))
 	(global_label "GPS_RX_WIRE"
 		(shape passive)
-		(at 53.34 92.71 0)
+		(at 66.04 92.71 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1075,7 +1111,7 @@
 			(justify left))
 		(uuid b9a7fe78-92ed-5403-9030-c88da8d369b6))
 	(symbol
-		(lib_id "M3:CameraTerminal")
+		(lib_id "M3:PortTerminal")
 		(at 86.36 137.16 0)
 		(unit 1)
 		(in_bom yes)
@@ -1136,15 +1172,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 58.42 133.35)
-			(xy 53.34 133.35))
+			(xy 71.12 133.35)
+			(xy 66.04 133.35))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 5ebd5e6f-97eb-55b9-94c6-245fd8af0d79))
 	(global_label "PORT_4V8"
 		(shape passive)
-		(at 53.34 133.35 0)
+		(at 66.04 133.35 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1152,15 +1188,15 @@
 		(uuid 70e7fce3-816e-5198-8db6-8d443473249e))
 	(wire
 		(pts
-			(xy 58.42 135.89)
-			(xy 53.34 135.89))
+			(xy 71.12 135.89)
+			(xy 66.04 135.89))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid a22cc258-67f8-57d0-9ecf-50cdcae0ccd2))
 	(global_label "GND"
 		(shape passive)
-		(at 53.34 135.89 0)
+		(at 66.04 135.89 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1168,15 +1204,15 @@
 		(uuid d935d795-9080-574c-91e5-7a97636ac8b6))
 	(wire
 		(pts
-			(xy 58.42 138.43)
-			(xy 53.34 138.43))
+			(xy 71.12 138.43)
+			(xy 66.04 138.43))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 290fbd1a-ac59-5e85-a2e1-75b9520883d6))
 	(global_label "RADIO_TX_WIRE"
 		(shape passive)
-		(at 53.34 138.43 0)
+		(at 66.04 138.43 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1184,15 +1220,15 @@
 		(uuid 1afa5876-31c7-591b-a75b-c39cfcf6397e))
 	(wire
 		(pts
-			(xy 58.42 140.97)
-			(xy 53.34 140.97))
+			(xy 71.12 140.97)
+			(xy 66.04 140.97))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 22faaa0a-52db-5468-9ba3-64c04207084b))
 	(global_label "RADIO_RX_WIRE"
 		(shape passive)
-		(at 53.34 140.97 0)
+		(at 66.04 140.97 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2463,7 +2499,7 @@
 			(justify right))
 		(uuid 98da06a1-6ad3-50b5-b74f-15d66f5cfe43))
 	(symbol
-		(lib_id "M3:CameraTerminal")
+		(lib_id "M3:PortTerminal")
 		(at 505.46 233.68 0)
 		(unit 1)
 		(in_bom yes)
@@ -2524,15 +2560,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 477.52 229.87)
-			(xy 472.44 229.87))
+			(xy 490.22 229.87)
+			(xy 485.14 229.87))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid c17308f0-ad90-5b47-90cc-7ed949ca553b))
 	(global_label "PORT_4V8"
 		(shape passive)
-		(at 472.44 229.87 0)
+		(at 485.14 229.87 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2540,15 +2576,15 @@
 		(uuid 2776f8e8-97cc-5e11-b7fc-1c9a9106eca0))
 	(wire
 		(pts
-			(xy 477.52 232.41)
-			(xy 472.44 232.41))
+			(xy 490.22 232.41)
+			(xy 485.14 232.41))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid b6b58d2a-83e7-50b6-a745-88c6f7834635))
 	(global_label "GND"
 		(shape passive)
-		(at 472.44 232.41 0)
+		(at 485.14 232.41 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2556,15 +2592,15 @@
 		(uuid 1f02efb7-cfa2-5273-8c14-a24a9535b517))
 	(wire
 		(pts
-			(xy 477.52 234.95)
-			(xy 472.44 234.95))
+			(xy 490.22 234.95)
+			(xy 485.14 234.95))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 1d8fe620-f19b-55aa-bdc8-7c67fdf0eeb1))
 	(global_label "AUX_TX_WIRE"
 		(shape passive)
-		(at 472.44 234.95 0)
+		(at 485.14 234.95 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2572,15 +2608,15 @@
 		(uuid 3b0f1b7a-dd4a-50e7-a4f2-3c5ffe533d7a))
 	(wire
 		(pts
-			(xy 477.52 237.49)
-			(xy 472.44 237.49))
+			(xy 490.22 237.49)
+			(xy 485.14 237.49))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid eca35603-ab0a-50b9-bbb3-a83b5f16e18c))
 	(global_label "AUX_RX_WIRE"
 		(shape passive)
-		(at 472.44 237.49 0)
+		(at 485.14 237.49 0)
 		(effects
 			(font
 				(size 1.05 1.05))

@@ -24,7 +24,7 @@
   },
   "parts": {
     "J410": {
-      "lib": "M3:CameraTerminal",
+      "lib": "M3:PortTerminal",
       "value": "DB125-3.5-4P-GN-S",
       "footprint": "rocket:M3_DB125_4P_GN",
       "fields": {
@@ -106,7 +106,7 @@
       "kind": "fit"
     },
     "J420": {
-      "lib": "M3:CameraTerminal",
+      "lib": "M3:PortTerminal",
       "value": "DB125-3.5-4P-GN-S",
       "footprint": "rocket:M3_DB125_4P_GN",
       "fields": {
@@ -871,7 +871,7 @@
       "kind": "fit"
     },
     "J440": {
-      "lib": "M3:CameraTerminal",
+      "lib": "M3:PortTerminal",
       "value": "DB125-3.5-4P-GN-S",
       "footprint": "rocket:M3_DB125_4P_GN",
       "fields": {
