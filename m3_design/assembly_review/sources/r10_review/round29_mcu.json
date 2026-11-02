@@ -1,0 +1,106 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round29_mcu",
+ "reviewer": "claude",
+ "target_commit": "09a564e582865e58b5a94f5823789356f88442c8",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "findings": [
+  {
+   "id": "R29-MCU-01",
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "Firmware rule 3 gives Q124's gate time constant as 47–53 µs; with the fitted C126's +10 % tolerance it reaches about 58–61 µs",
+   "contradicts": "The fitted C126 is Samsung CL10B224KA8NNNC (JLC BOM m3_bom_jlc.csv line 15, C21120; tools/verified_part_metadata.json), tolerance code K = ±10 % (Samsung MLCC part-numbering guide, cached .supervisor/r14_parts_pdf/samsung.pdf p. 4, '5. TOLERANCE CODE ... K = 10%'; parts_qualification.md:34 and :521 also call C21120 '220 nF X7R ±10%'). The statement's own source, round23_safety_severity_check.md:68 (and .json 'value': '47-50 (C126 -10 % + Ciss), 53.0 nominal'), computed only the −10 % and nominal cases; the generated text and the docs present 47–53 µs as the gate time constant without that qualifier.",
+   "evidence": "Board a0ec075e (pcbnew dump): PYRO1_GATE_N = {U1.3, R126.1, R127.1}; PYRO1_GATE = {R126.2, R128.1, C126.1, Q124.4, TP122.1}; R126 220 Ω, R127 1 kΩ, R128 10 kΩ, C126 220 nF (C126.2 GND). Source model (round23_safety_severity_check.md:68-76): drivers ≤ 50 Ω, Ciss 2.25 nF (AON7524 Rev 1.1 p2); Thevenin R = (220 + (50∥50∥1000)) ∥ 10000 = 238.6 Ω. τ = R × (C126 + Ciss): −10 % 200.25 nF → 47.8 µs; nominal 222.25 nF → 53.0 µs (both reproduce the source); +10 % 244.25 nF → 58.3 µs. Over the source's driver range (source 18.4–35.5 Ω) the ±10 % envelope is 46.6–60.9 µs (script .supervisor/r29_mcu, Calculation). Stated as '47–53 µs' in: generated rule 3 (r10_binding_note.json firmware_obligations[38], SHA 30796f5e…, from m3_design/r10_sch_check.py:366), docs/M3_R10.md:1095, docs/FMEA_REDUNDANCY.md:39, docs/R10_VALIDATION.md:2561. Regenerating the note on a probe copy reproduces the committed file byte for byte, so the generator is the origin.",
+   "impact": "Text and record only. A larger τ only slows the gate, so the rule's safety conclusions (fire after about 0.55 ms of a sustained fight; ≤ 6 mA RMS at ≥ 25 MHz logging) stay conservative; no procedure or check uses the figure. The range as written is still false for a board whose C126 sits in the upper half of its tolerance.",
+   "concrete_fix": "In r10_sch_check.py:366 (regenerate the binding note and update the pinned string in tools/test_r10_check.py if it pins it), M3_R10.md:1095, FMEA_REDUNDANCY.md:39 and R10_VALIDATION.md:2561, replace 'the gate time constant is 47–53 µs' with 'the gate time constant is about 47–61 µs over C126's ±10 % (53 µs nominal; Calculation, driver resistances Inference)', or keep '47–53 µs' and qualify it as 'from C126 at −10 % to nominal (53 µs; about 58–61 µs at +10 %)'. No board change."
+  }
+ ],
+ "observations": [
+  "U1: all 100 pads on a0ec075e equal pin_table.tsv r10_net, and binding-note u1_pins equal pin_table port / net / mode for all 100 pins (0 mismatches); 31 no-net pins match the NC rows.",
+  "Every pin_table port name matches DS12110 Rev 8 Table 9's LQFP100 column (scripted parse of the cached PDF, pins 17/18 PC2_C/PC3_C and wrapped rows read by hand); every 'Table 9 p. N' citation in pin_table is on the cited page.",
+  "Pin types (I/O structure) for every connected pin read from Table 9; every type stated in pin_table, the binding note, M3_R10, REQUIREMENTS, ORDERING, FMEA (current rows), parts_qualification, STATUS and AGENTS matches (PE4 FT_h, PC1 FT_ha, PA4 TT_a, PA5 TT_ha, PA6 FT_a, PC0 FT_a, PC5 TT_a, PB1 TT_u, PB12/13 FT_u, PD8/9 FT_h, PC6/7 FT_h, PC14 FT; PE7/PE8 are TT_ha and are only driven through U12 at VCCA = 3V3).",
+  "docs/M3_ACTUATOR_MERGE.md:52 calls PC1 'FT_a' (Table 9: FT_ha); it sits in the file's labelled historical R2 record (header: only section 2.6 is current) and PC1's role there (R2 PYRO2_CONT ADC) is gone; the 'a' is right, the missing 'h' changes nothing. Same class as R28's 'generic FT in labelled R1/R2 history'.",
+  "docs/ROCKET_FC_FROZEN_DESIGN.md:191-192 give PB8/PB9 as 'FT_f, suffix unverified' (Table 9: FT_fh); R1 frozen record and already flagged unverified.",
+  "AF numbers re-read from Tables 10-14: TIM5 AF2 PA0-3; QUADSPI AF9 PE2/PB2/PD11-13 and AF10 PB6; SPI1 AF5 PB3-5; SPI3 AF6 PC10-12; I2C1 AF4 PB8/9; USART3 AF7 PD8/9; UART5 AF14 PB12/13; USART6 AF7 PC6/7; UART7 AF7 PE7/8; PC1 AF0 TRACED0, PE4 AF0 TRACED1, PE2 AF0 TRACECLK.",
+  "Port wiring: J410/J420/J440 pin 3 = MCU TX via R441/R451/R471, pin 4 = MCU RX via R440/R450/R470, clamps D410/D411, D420/D421, D440/D441 exactly as pin_table rows 51-56, 63-64 and binding obligation 1; J9 RX/TX through U12 (TXU0202 pins 1/4 B2->A2Y, 5/8 A1->B1Y, VCCA = 3V3) as pin_table rows 37-38.",
+  "Binding note regenerated by r10_sch_check.py --binding-note on a probe copy of assembly_review: byte-identical to the committed note (SHA 30796f5e…); board / netlist / pin-table / circuit hashes in it match the files; test_r23_binding_note_rules_and_pin_table passes.",
+  "Rule 3 meter check re-derived: R127.1 to GND = 1 kΩ ∥ (220 Ω + 10 kΩ) = 910.9 Ω (R127 C11702 1 %); red lead on R127.1 forward-biases the GND-side clamps of U1.1 (PE2) and U3.3; a meter whose open-circuit voltage cannot forward-bias them reads open, which the criterion also passes; a U1.1-U1.3 bridge reads near 0 Ω both ways and fails. No polarity or parallel-path flaw left.",
+  "Rule 4 criterion re-derived: ACT_GATE = {C120.2, Q120.4, Q121.4, R119.1, R120.2, R121.1}; settled |VGS| = V(ACT_FET_S) x (R119∥R120)/(R119∥R120 + R121) = 0.833 x; with both gate vias (16.2,73.3)/(15.4,72.85) removed on a probe copy, R120.2 / C120.2 / Q120.4 form one island and R119.1 / R121.1 / Q121.4 the other, so probing R120.2 against R120.1 (ACT_FET_S, B(18.5,72.17)) sees the cut-off gate at about 0 V as stated; AONR21357 VSD 0.7 / 1.0 V at 1 A (p2) and RDS(on) <= 12.3 mOhm at -4.5 V make the 0.2 V BAT_IN - RAW_ACT line discriminating.",
+  "Rule 4's '0.93-1.01x the 1.125 A floor' spans the source table's variants (incl. the -20 C Inference case 1.043 A and Q120's 0.04 Ohm removed 1.137 A), slightly wider than 1.063/1.128 A alone give (0.945-1.003x); a bound, not a false ratio.",
+  "DS15034 Rev 1 citations: Figure 5 p9, Table 2 p11 (pins 1-14 and notes), section 3.1 / Figure 6 p10, section 4 from p12; WHO_AM_I 73h p66; IF_CFG PP_OD / H_LACTIVE p60; Table 150 p93 (100 = ±256, 011 reserved); Ton 40 ms p15; SPI 10 MHz p17; LA_So 3.904 mg/LSB at ±128 g p12. DS14623 Rev 1 Table 150 p93 (011 = ±256, 100 = ±320) and Figure 5 p9 likewise.",
+  "Every other DS12110 Rev 8 citation in the binding note re-read: Table 146 p238 (LSI 29.4-33.6 kHz), Table 119 p212 with notes 3-4 p213, Table 120 note 3 p213, Table 122 note 3 p215, Table 157 note 7 p247, Table 159 p249, Table 160 note 2 p251, Tables 127-128 pp218-219, Table 192 p293, Figure 95 p286, Table 189 p291, Table 9 note 7 p88, Table 126 p217, Table 147 p239, section 3.8 p32, section 3.19 p37.",
+  "D-R28-04 port-lead text: TPS2121 Table 9-1 (SLVSEA3F p13) scaled to 470 nF (C85 is 470 nF on LOGIC_SS) gives 166-196 V/s; AP63203 VIN UVLO rising 3.30-3.70 V and tSS 4 ms are on DS41326 p5; 3.3/196 + 4 ms = 20.8 ms and 3.7/166 + 4 ms = 26.3 ms; labelled Calculation / Inference.",
+  "Pull-up arithmetic re-run: PE4 node 0.106 V / gate 0.104 V and Q122 gate 0.218 V against a 30 kOhm pull-up at 3.6 V; PC1 high 2.2 V / 1.1 mA; PC8 2.20 V at 4.4 V vs VIH 0.7 VDD = 2.31 V (Table 157); PA3 0.825 V; scales PA6 /11, PB1 /11, PC0/PC5 /11.2; IWDG 960 LSI cycles 28.571-32.653 ms, fault bound 34.853 ms; PA6 window 0.44-0.47 V x 11 = 4.84-5.17 V.",
+  "U4 / U5 pins: U4 SDO/CS/SCL/SDA on SPI1_MISO/IMU_CS/SPI1_SCK/SPI1_MOSI, INT1 on PE1, SDx/SCx to GND, OCS_aux/SDO_aux/INT2 unconnected; U5 PS = 3V3A and CSB = GND (I2C, 0x77), SDA/SCL on PB9/PB8 with R13/R12 4.7 kOhm; U4 at B(17,45.9) rotation 180, lever arm x -6 mm.",
+  "Table 120 (p213) gives PA4 / PA5 an injected-current limit of -0/0 mA; both are TT pins driven only by 3V3 pull-ups (R91, R89) and open-drain outputs (TPS2121 ST, TPS25947 FLT), so no stated path injects; not stated in the docs and not needed by any requirement."
+ ],
+ "fix_verification": [
+  {
+   "item": "D-R28-02 (R28-TRI-05): rule 3 first-article meter check, both polarities, unpowered, before first power",
+   "measurement": "binding note obligation 38, M3_R10:1103-1108, ORDERING:652, FMEA:39 carry the same criterion (> 0.9 kOhm or open both ways; beep or < 100 Ohm either way rejects; 0.91 kOhm = 1k ∥ 10.22k); physics re-derived against the board nets",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R28-03 (R28-TRI-09): Inference labels on rule 3 and the swept obligations",
+   "measurement": "rule 3 now carries '(Calculation / Simulation; driver resistances, flash drive, the AON7524 sub-amp curve and the match thermal model are Inference)' in the note, M3_R10:1099, FMEA:39 and ORDERING:652 ('Calculation / Inference'); port-map, GAP-5, chatter, rule 4 and rule 8 labels present as D-R28-03 lists",
+   "verdict": "confirmed (the separate 47–53 µs range in the same sentence is R29-MCU-01)"
+  },
+  {
+   "item": "D-R28-04: port-supply lead 'tens of ms' with 166–196 V/s and 21–26 ms",
+   "measurement": "SLVSEA3F Table 9-1 p13 (88–92 V/s at 1 µF, 780–880 at 100 nF) scaled to C85 470 nF; DS41326 p5 UVLO 3.30–3.70 V, tSS 4 ms; arithmetic reproduces 20.8 / 26.3 ms",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R28-04: rule 4 Q120 first-article criterion (|VGS| ≥ 4.5 V at R120.2 vs R120.1; BAT_IN − RAW_ACT > 0.2 V fails)",
+   "measurement": "ACT_GATE island split reproduced on a probe copy with both gate vias removed (Q120.4 / R120.2 / C120.2 vs Q121.4 / R119.1 / R121.1); R120.1 = ACT_FET_S at B(18.5,72.17); settled VGS 0.833 × V_S ≥ 4.74 V at the lowest loaded pack (ORDERING:615)",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R28-04: DS15034 Table 2 p. 11",
+   "measurement": "cached DS15034 Rev 1 (SHA c867695b…): Figure 5 p9, section 3.1 / Figure 6 p10, Table 2 p11, section 4 p12; obligation 34 now cites 'Figure 5 p. 9 and Table 2 p. 11'",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "R28-TRI-06 (docs/audit lane): PB1 TT_u",
+   "measurement": "parts_qualification.md:958 'TT_u ... Table 9 p70' and R10_VALIDATION:1916 updated; Table 9 p70 PB1 TT_u; no other TT_a claim for PB1 in current text",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Binding note SHA 30796f5e… (D-R28-04)",
+   "measurement": "committed file hashes to 30796f5e…; regeneration on a probe copy is byte-identical",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "sha256 of the board before and after; git status read-only check",
+  "pcbnew (KiCad Python, read-only): all footprint pads and nets dumped (216 footprints); U1 100 pads vs pin_table r10_net and binding-note u1_pins",
+  "pdftotext of cached DS12110 Rev 8; scripted Table 9 LQFP100 parse (pin number, name, I/O structure, page), wrapped rows by hand; page check of every Table 9 citation in pin_table; AF rows from Tables 10-14 for every used pin",
+  "regex sweep of every Pxx + FT_x/TT_x pairing in tracked docs, m3_design, tools, STATUS, AGENTS against Table 9",
+  "regex sweep of 'PXn (U1.N / pin N)' and 'U1.N <net>' statements in current docs against pin_table and the board",
+  "r10_sch_check.py --binding-note on a probe copy of m3_design/assembly_review (kicad-cli 10.0.7): byte-identical note; probe copy deleted afterwards",
+  "tools/test_r10_check SchematicContract.test_r23_binding_note_rules_and_pin_table (passes)",
+  "ACT_GATE copper connectivity with and without the two Q120 gate vias (pcbnew shape intersection) on the loaded board object (not saved)",
+  "pdftotext of cached DS15034 Rev 1, DS14623 Rev 1, TPS2121 SLVSEA3F, AP63203 DS41326, AONR21357, AON7524, W25Q128JV Rev G, TXU0202, TPS25947, Samsung MLCC guide; page and value checks of every cited figure",
+  "Recalculation of rule 3 / rule 4 / pull-up / divider / IWDG / gate time-constant figures"
+ ],
+ "sources": [
+  "ST DS12110 Rev 8 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (cached .supervisor/r14_parts_pdf/st_h743.pdf)",
+  "ST DS15034 Rev 1 https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (cached .supervisor/r19_parts/pdf_ism6hg256x/ism6hg256x.pdf)",
+  "ST DS14623 Rev 1 https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf (cached .supervisor/r14_mechanics/lsm6dsv320x.pdf)",
+  "TI SLVSEA3F https://www.ti.com/lit/ds/symlink/tps2121.pdf; Diodes DS41326 Rev 3-2 (AP63203); AOS AONR21357 and AON7524; Winbond W25Q128JV Rev G; TI TXU0202; TI SLVSFC9C (TPS25947)",
+  "Samsung MLCC part-numbering guide (cached .supervisor/r14_parts_pdf/samsung.pdf p4, tolerance code K = 10 %)",
+  "m3_design/assembly_review/sources/r10_review/round23_safety_severity_check.md (gate time-constant source)"
+ ],
+ "coverage_limits": [
+  "AN2606 (Rev 64 / Rev 70) and RM0433 were not available locally and were not re-read; loader-pin roles and RM0433 items are taken as the records state (the records label the RM0433 items Inference).",
+  "Electrical, thermal and timing figures owned by the power and safety lenses (chatter, hold-up, fire budget, Q122 settling 31.9 ms) were checked only where they appear in MCU obligations.",
+  "No physical measurement; meter behaviour through the input clamps remains the records' labelled Inference."
+ ]
+}

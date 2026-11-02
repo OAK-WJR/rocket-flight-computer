@@ -4705,6 +4705,8 @@ generated obligations for figures that rest on inferred inputs.
 - **Older records:** D-R19-10, D-R23-02 (rule 4's figures), D-R24-19, D-R25-01 / -02 and D-R26-03 derived these
   figures and name their inputs; their "Calculation" labels are to be read with this decision's.
 - **Test:** `test_r23_binding_note_rules_and_pin_table` pins each new label and rejects the old Calculation-only forms.
+  (Corrected by D-R29-02, 2026-11-02: it did not pin the 30-130 ms turn-on label or six other D-R28-02 … -04
+  qualifiers, R29-TRI-05; D-R29-02 pins them all.)
 - **Hashes:** binding note SHA-256 `e8f10fb3…` ->
   `a40e21a4c115d88bcfdfecedada26e5253a0fef8c8b0972b6bba5c5aeabce046` (D-R28-02, -03 and -04). K-binding passes.
 
@@ -4736,3 +4738,54 @@ The root's addition to this pass: two siblings that audit lane B found and fixed
 - **Not in this lane:** M3_R10 and REQUIREMENTS (docs lane), parts_qualification.md (audit lane A).
 
 The record index is now **227 unique D IDs through D-R28-04**.
+
+## Round 29 fix pass (2026-11-02)
+
+Round 29's ten lenses and triage (`sources/r10_review/round29_triage.md` / `.json`) found 0 Critical, 1 Major and 4
+Minor real errors, none on the board copper. This CAD lane takes R29-TRI-02 in the generated firmware rule 3 and
+R29-TRI-05 (the test pins), and checked the generated text for R29-TRI-01's places: of those, only rule 3's gate time
+constant is generated, and D-R29-01 labels it. The board stays `a0ec075e…` (one complete build reproduced it); the
+docs lane takes the rest. Hand-back: `sources/r10_review/round29_fix_cad.md` / `.json`.
+
+## D-R29-01. Rule 3's gate time constant covers C126's full ±10 % (round 29 fix pass)
+
+R29-TRI-02 (R29-MCU-01, round 29 safety observation 12); the R29-TRI-01 label on the same figure.
+
+- **What:** rule 3 in `m3_design/r10_sch_check.py`, regenerated into `r10_binding_note.json`: "the gate time constant
+  is 47–53 µs" -> "the gate time constant is about 47–58 µs over C126's ±10 % (53 µs nominal; Calculation, driver
+  resistances Inference)".
+- **Why:** C126 is CL10B224KA8NNNC (C21120, tolerance code K, ±10 %). With the source model
+  (`round23_safety_severity_check.md`: R = (220 + 50 || 50 || 1000) || 10000 = 238.6 ohm, Ciss 2.25 nF) the time
+  constant is 47.8 / 53.0 / 58.3 µs at C126 −10 % / nominal / +10 % (Calculation). The old range, carried since
+  D-R23-03, stopped at nominal, so it covered only half the tolerance. The model's driver resistances are inferred (rule
+  3 already labels them Inference for its other figures), so this figure carries the label too (AGENTS 2.5,
+  R29-TRI-01).
+- **Test:** `test_r23_binding_note_rules_and_pin_table` pins the new phrase and rejects "47–53 µs".
+- **Not in this lane:** docs/M3_R10.md, docs/FMEA_REDUNDANCY.md and docs/R10_VALIDATION.md carry the same figure
+  (docs lane).
+
+## D-R29-02. The binding-note test pins every label D-R28-02 … -04 added (round 29 fix pass)
+
+R29-TRI-05 (R29-GATE-01, gate observations 3–5).
+
+- **What:** `tools/test_r10_check.py` `test_r23_binding_note_rules_and_pin_table`:
+  - **Pinned (before -> after):** the turn-on delay "after a 30-130 ms EN turn-on delay" -> "after a 30-130 ms EN
+    turn-on delay (the same model over C87 0.72-1.27 x)", and the triage's (a)–(f):
+    - (a) GAP-5: "and the 1.5 ms covers a 0.74 ms gate-discharge model whose 0.4 V off criterion and hot gate charge
+      are Inference";
+    - (b) chatter: "and the 5.71 V point is the fire budget's, whose hot Q124 factor is inferred";
+    - (c) rule 8: "; the loads are the budget's allocations, and C84 has no cold-capacitance factor";
+    - (d) obligation 15: "Calculation / Inference: the table is scaled linearly and the settling time is not
+      quantified; measure the PORT_4V8-to-3V3 lag on first articles";
+    - (e) rule 4: "At first article, before coating, with PC1 high and a dummy load in J121:", "against Q120's source
+      at R120.1, must settle", "(R23-SAFETY-05's criterion: Q120's body diode adds 0.7–1.0 V)" and "(0.7 / 1.0 V
+      drop: AONR21357 VSD typical / maximum at 1 A, p. 2;";
+    - (f) the port map: "junction <= 125 C at the 70 C bay with the inferred 110 C/W theta-JA, Inference".
+  - **Rejected:** "EN turn-on delay. Resume" (the round 27 form, which drops the label) and "47–53 µs" (D-R29-01).
+- **Why:** the old pin stopped before the label, so a revert to the round 27 text passed every check while D-R28-03
+  said the test "pins each new label". Each pin is the generated text exactly; the test passes on the regenerated note.
+- **Records:** D-R28-03's test line carries a correcting note.
+- **Hashes:** binding note SHA-256 `30796f5e…` -> `c5cd0fa313d3e973bf0542e806f82ae1bfea357943ec49d3c84e522449836cca` (D-R29-01; D-R29-02 changes only the test).
+  K-binding passes.
+
+The record index is now **229 unique D IDs through D-R29-02**.

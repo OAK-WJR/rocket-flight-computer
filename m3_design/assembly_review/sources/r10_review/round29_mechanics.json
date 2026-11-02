@@ -1,0 +1,66 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 29, mechanics lens",
+  "reviewer": "claude",
+  "target_commit": "09a564e582865e58b5a94f5823789356f88442c8",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 1},
+  "findings": [
+    {
+      "id": "R29-MECHANICS-01",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "R10_VALIDATION section 8 says J440's four tails are not in the tail allocation and it was not re-run; the fit checker allocates all 27 tails, J440's included, on every run",
+      "contradicts": "docs/R10_VEHICLE_HANDOFF.md line 84: 'The fit checker separately allocates all 27 solder tails to their native pad XY boxes'; tools/fit_check.py lines 446-454 (profile r10 adds a tail box for every PTH pad of every M3_DB125_* footprint, so J440 is included automatically); tools/check.sh line 59 runs fit_check --profile r10 on every gate run.",
+      "evidence": "docs/R10_VALIDATION.md line 2923-2928, in the current owner section 'R10 deviations for owner acceptance' / '8. Mechanics, access and retention': 'all 23 tails of the seven earlier terminals have separate fit allocations ... Minimum tail/bore clearance 7.558359 mm ... J440's four tails were not added to that tail allocation (not re-run).' Run on a0ec075e: KiCad python -I -B tools/fit_check.py m3_design/assembly_review/m3.kicad_pcb --profile r10 --report .supervisor/r29_mechanics/fit.json -> terminal_tails.count = 27, minimum_bore_margin_mm = 7.5583593625; rows 'J440.1 terminal tail' ... 'J440.4 terminal tail' present (x 6.45-8.35, y 10.05-22.45, z -3.80..-1.60, margin 7.558 mm each). The sentence and the handoff's '27 solder tails' were written in the same commit (6628488, round 19), when fit_check already had this generic DB125 tail loop (unchanged since), so J440's tails have been allocated and re-checked on every board since 50a39de5. The recorded minimum 7.558359 mm is unchanged with them.",
+      "impact": "The owner list tells the owner that J440's solder tails have no fit allocation, which is false and contradicts the handoff; no physical consequence (the J440 tails clear by 7.558 mm, as the other 23).",
+      "concrete_fix": "Text only, R10_VALIDATION line 2923-2928: 'all 27 tails of the eight terminals (J440 included since 50a39de5) have separate fit allocations ... Minimum tail/bore clearance 7.558359 mm (unchanged on a0ec075e)'; delete 'J440's four tails were not added to that tail allocation (not re-run).'"
+    }
+  ],
+  "observations": [
+    "Plate model re-run on a0ec075e (tools/plate_model.py --profile r10, masses.json): 180.8 / 255.6 Hz pinned D5 / D10, 287.8 / 407.0 Hz clamped, 78.6 g, max 100 g deflection 1.27 mm at (46,44.5); 0.5 mm raster gaps at 4 mm standoffs C431 0.261, C421 0.320, C411 0.558, L1 0.524 mm; contact onset C431 125 (250) g, C421 133 (265) g, C411 175 (350.5) g, L1 214 (428) g; all match ORDERING 8.4 and the handoff.",
+    "The records say the plate model was 'not re-run on 1407e850, 92c3ad59 or a0ec075e', but review probes (r24 to r28 mechanics, and this round) re-ran it with identical figures; the records describe their own provenance and the figures hold, so not counted.",
+    "The 256.1 / 287.9 / 407.1 Hz and 1.24 mm figures quoted in M3_R10 'Current mechanical integration' and R10_VALIDATION section 8 are labelled as 632a9ad3 figures; the current board gives 255.6 / 287.8 / 407.0 Hz and 1.27 mm (labelled to their board; judged in round 28).",
+    "J9 / J420 tail allocations reach a 4 mm sled at 162-176 g (D5), before C411 and L1; they lie in the x 31.5-41 / y 20-60 pocket window (already ruled in rounds 25 / 26).",
+    "C128 strain 991 microstrain at 100 g reproduced (R10_VALIDATION row 1); C431 1221, J410 1421, J420 1414, J9 1313, J400 1157 (row 11's 1.2-1.4 millistrain holds).",
+    "Nut-inclusive h + t limits recomputed: 6.018 mm at x 4 / 42 and 5.365 mm at x 3.7 (stated as < 6.0 and < 5.3, conservative).",
+    "The 'C23 courtyard gap 0.575 mm' in R10_VALIDATION section 8 is J430's closed fit envelope (y 34.0) to C23's courtyard (y 34.575); the courtyard-to-courtyard gap is 0.45 mm. The sentence is about the closed allocation, so not counted.",
+    "J3's courtyard 1.67 mm from J440 is the courtyard line-centre gap (23.675 to 25.345); polygon edge gap 1.73 mm."
+  ],
+  "fix_verification": [
+    {"item": "D-R28-01 ... -04 (budget variable, generated rules 3 / 4, labels, DS15034 citation)", "measurement": "No mechanical content; not in this lens.", "verdict": "not applicable"},
+    {"item": "Audit B #17: handoff 'east edge carries 34 g ... (Inference)'", "measurement": "Handoff line 80 carries '(Inference)'; masses.json J122 7.5+2.5, J410 / J420 / J9 6+2 each = 34 g; east supports (42,4) / (42,86) leave an 82 mm span.", "verdict": "confirmed"},
+    {"item": "Audit B #3: ORDERING 8.2 'on the top R166's courtyard is 0.56 mm from C84's'", "measurement": "C84 F.CrtYd y max 83.795, R166 F.CrtYd y min 84.355: 0.560 mm.", "verdict": "confirmed"},
+    {"item": "Audit B section 8.4 rows (switch current, routes, wire arithmetic, washer lands, C32.2)", "measurement": "8.4 V / 1.24 MOhm = 6.8 uA; wire arithmetic 3.9 / 4.1 / 5.1 / 5.7-6.5 mm and 4.493 mm recomputed; LED2.2 3.808, LED1.1 3.860, J2.1 3.880, J2.3 3.987 mm (exact circle for J2); C32.2 4.536177 mm; routes agree with the compass (north = smaller y = aft; J1 y 71.2-79.6 forward of J400, J121, (4,44.3) and J3).", "verdict": "confirmed"},
+    {"item": "Audit B handoff: sled-pocket box contains C411 / C421 / C431", "measurement": "C411 x 32.85-35.55 y 21.0-24.5; C421 x 32.05-35.55 y 35.4-38.1; C431 x 37.95-40.65 y 56.0-59.5; with +-0.3 mm sled tolerance inside x 31.5-41, y 20-60.", "verdict": "confirmed"},
+    {"item": "R27-TRI-06 carry: J440 leads aft of y 23.5", "measurement": "J440 fit envelope y 7.93-23.45, courtyard to 23.695; J3 y 26.33-35.27.", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of m3.kicad_pcb before and after: a0ec075e... both times",
+    "tools/fit_check.py --profile r10 on the canonical board (read-only), report to .supervisor/r29_mechanics/fit.json: OK; J3 margin 0.89 mm; all eight DB125 bodies 2.976 mm; wire room 5.003-5.603 mm on all eight; 27 tails, minimum 7.558359 mm; deepest bottom L1 z -4.6158 (3.015825 mm below); nearest bottom C32.2 4.536177 mm and top LED2.2 3.807887 mm, both from (4,44.3)",
+    "tools/plate_model.py --profile r10 with sources/r10_design/masses.json (NumPy venv): .supervisor/r29_mechanics/plate.json",
+    "Own deflection / onset script (defl.py) on 0.1 / 0.25 / 0.5 mm rasters and strain script (strain.py) for C128, C126, C431, J410",
+    "pcbnew dump of every terminal pose, pad nets, rotations, courtyards; the five Edge.Cuts Ø3.2 mm holes at (4,4), (42,4), (4,44.3), (3.7,86), (42,86); outline 46 x 90",
+    "Exact distances from (4,44.3) to LED1, LED2 and J2 lands (circle / rectangle geometry)",
+    "Silkscreen pin-legend sides for all eight terminals against the handoff list",
+    "Probe positions in ORDERING 8.3 (TP80-TP122, C82.1, C88.1, R84.1, R119.1, R120.2) against the board",
+    "J430 / C23, J440 / J3 courtyard gaps on a0ec075e and on 6628488 / acba196 copies (deleted after use)",
+    "git history of tools/fit_check.py and of the R10_VALIDATION sentence (git log -S)"
+  ],
+  "sources": [
+    "docs/ORDERING.md section 8.4 (lines 690-728), 8.3 probe worksheet and coating notes",
+    "docs/R10_VEHICLE_HANDOFF.md",
+    "docs/REQUIREMENTS.md P1-P3, Board position",
+    "docs/M3_R10.md 'Current mechanical integration', 'Retention at 100 g'",
+    "docs/R10_VALIDATION.md owner rows 1, 11, 31, 32 and section 8",
+    "AGENTS.md section 1 table",
+    "tools/fit_check.py, tools/plate_model.py, sources/r10_design/masses.json",
+    "round24-28 triage observations"
+  ],
+  "coverage_limits": [
+    "No physical hardware, harness, sled or bore measurement; all CAD / Calculation / Inference.",
+    "Parent VEHICLE.md stack figures not re-read; joint + 79-83 mm arithmetic checked only as arithmetic.",
+    "Nut / washer limits checked under the records' stated assumptions only."
+  ]
+}

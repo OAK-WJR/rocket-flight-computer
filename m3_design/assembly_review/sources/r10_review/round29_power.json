@@ -1,0 +1,64 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 29, power lens",
+  "reviewer": "claude",
+  "target_commit": "09a564e",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "Low-pack four-stall corner vs U9 turn-off: pack_6V0_four_stall_loaded_V 4.388491 V (4.63 V with the camera shed, same model) is below U9's 4.505 V nominal / 4.802 V worst EN turn-off corner, so a 6 V open pack with four stalls would turn U9 off; parts_qualification 'Inference, stall input' says 'accept loss of peripheral operation while retaining logic/recovery'. Not counted: the 6 V open pack is below REQUIREMENTS' Pack row floor (>= 7.4 V resting at launch), whose four-stall requirement (BAT_IN above the 4.802 / 4.835 V corner) the 7.4 V case meets at 5.881 V; the sentence is a shedding policy, not a computed retention claim. Naming the U9 turn-off at that corner would remove the ambiguity (optional).",
+      "Rule 4 / D-R23-02 body-diode fire current: re-solving the bound budget (4.467803 ohm branch, 0.15 ohm pack, 13.064091 W, four 1.92 A stalls, VSD 0.7 / 1.0 V) gives 1.12747 / 1.06264 A; the records quote 1.128 / 1.063 A (round 23's whole 0.7 V column sits about +0.0005 A above this solve: 1.38948 / 1.19345 vs 1.390 / 1.194). 0.04 % difference, both above the 1.125 A floor; the 0.93-1.01x envelope and the >= 1.39x / >= 1.04x ratios hold. Model-precision noise, not counted.",
+    "M3_R10 USB-only bullet's 63.605 mm In2 USB_LIMITED track (0.0912 ohm) is 63.115 mm on a0ec075e (0.0905 ohm; 58.13 mm in series): already round 27 power observation; labelled a Round 18 calculation and conservative.",
+    "U400's RAW_PROTECTED input feed (In2 vias (14.1,7.6) / (14.1,8.5), 0.4 mm F.Cu to U400.2 / .3 through C400.1 / C401.1, two parallel routes) is not a K-power path; at 1.85 A (10.82 W at 5.85 V) a single 0.4 mm external run rises about 22.5 C by tools/ipc2152.py, and the current splits over two routes; K-width holds it >= 0.3 mm with <= 2 mm narrow runs. Seen in round 27; not a rule violation.",
+    "U400 / L400 loss '1.2-2.2 W' (M3_R10 Simulation, R10_VALIDATION row 26): with the budget's 85 / 80 % efficiencies the loss at 1.561 A is 1.48-2.16 W; the 1.2 W low end corresponds to about 88 % (round 20's basis). Labelled Inference; upper bound agrees; already a round 28 triage observation.",
+    "PORT_5V3 out of U400 design current 1.81 A (camera shorted): a single PORT_4V8 short with the camera on is 2.511-2.911 A prospective; the buck's 2.5-3.1 A peak limit and U401's thermal shutdown (about 8 W in a hard short) bound it to a non-continuous state, as 'Shared port fault budget' states. Not a continuous IPC-2152 design point.",
+    "One-via feeds outside SINGLE_OPEN_TAPS (in-memory taps run): U11.2 RAW_PROTECTED (24.3,66.0) is a recorded respin item (D-R19-09, owner row 22); U1.11 (one VDD pin) hangs on via 3V3 (22.60,52.15) while U1's other VDD pins and the In2 3V3 fill remain; not a regulator tap. All U11 / U9 / U400 / U401 / U2 GND ties, SS / dVdt / EN ties and the port feeds survive any single via open.",
+    "TPS25947 IN minimum is max(-15, VOUT-21) below -10 C (SLVSFC9C 6.1): the hot-plug retained-OUT bound 5.914 V after 2 s (1643.90 uF, R92 3354.66 ohm) gives VOUT-21 = -15.09 V, so the -15 V floor binds; ORDERING 8.3's 'wait >= 2 s after unplugging' matches the model's 2 s.",
+    "Datasheet confirmations: TPS7A91 IGND 4 mA max at 1 A, ILIM 1.5-1.9 A, VDO 200 mV, VIN 6.5 V, no COUT maximum (SBVS282A 5.3 / 5.5); TPS25947 VUVLO(F) 1.076-1.116 V, VUVLO(R) 1.183-1.223 V, IENLKG +/-0.1 uA, RON 45 mOhm max, ILIM 3.96-4.84 A at 750 ohm, RILM 549-6650 ohm (SLVSFC9C p9); TPS2553 IOS equations 22980 / R^0.94, 25230 / R^1.016 (SLVS841G eq 1 / 3, pp16-17); TPS2121 Table 9-1 (780-880 V/s at 100 nF, 88-92 V/s at 1 uF), IRCB 0.2-2 A, RILM 80.6 kOhm in the 1-2 A row; AP63201 VFB 792-808 mV, IPEAK 2.5-3.1 A, VEN_L 1.05-1.15 V, VEN_H 1.15-1.23 V, IEN 1.5 / 5.5 uA, Eq. 1-2 (DS41326 pp5, 10); DS12110 Rev 8 Table 146 p238 LSI 29.4-33.6 kHz through Tj 125 C.",
+    "D-R24-19 EN model independently re-solved: EN 1.4014 V at 6.0 V; single drop-out 6.300 / 8.066 / 8.204 / 10.345 / 20.111 / 26.023 ms at 5.5 / 5.713 / 5.73 / 6.0 / 7.4 / 8.4 V; 10 ms floor 5.956 V; turn-on 30.3-129.7 ms; ramp turn-off 4.288-4.802 V and turn-on 4.723-5.251 V (nominal 4.505 / 4.960 V). All quoted figures (AGENTS row, M3_R10, REQUIREMENTS F6, ORDERING 8.3, binding note) match.",
+    "USB-only bullet reproduced: 0.4596 A at VBUS 5.00 V (VLOGIC 4.84 V), 0.4856 A at 4.75 V, 1.61 W guaranteed at the 0.3477 A minimum, 0.785 W left for logic, 0.281-0.296 A for the lower allocation.",
+    "Hold-up and PA6-trip figures reproduced: 0.464-0.539 / 1.304-1.412 ms (300.8 uF to 3.8 V), 0.725-0.842 / 2.038-2.206 ms (470 uF); from the trip (VLOGIC 4.84-5.17 V) 0.1035-0.1643 / 0.2906-0.4303 ms, 0.22-0.31 of break-to-3.8 V; 100-220 uF gives 0.034-0.120 ms all ports on.",
+    "Four-stall-plus-fire corners reproduced from the budget: match shorted 5.551-5.558 V, match and leads shorted 5.503-5.511 V (quoted 5.55-5.56 / 5.50 V)."
+  ],
+  "fix_verification": [
+    {"item": "D-R28-01 (R28-TRI-03): one port_A = 1.461 A + aux_A for ports_w and loaded_pack", "measurement": "r10_parts.py lines 414-417 / 449-452 use port_A in both; git diff 19dd0b5..09a564e of parts_budget.json changes only lines 91-92 (5.881013614959047 -> 5.8808312447840425, 4.388744837110238 -> 4.388490666810671); power_budget() re-run on a byte-identical copy of the board reproduces parts_budget.json byte for byte (SHA-256 4267634220f4254aef28dfc9756c68b29784560c11b994c14274790dd631fab2); hand solve a = Voc - 0.15 x (7.68 + 0.6375), P = 5.456 x 1.561 / 0.8: 5.880831 / 4.388491 V", "verdict": "confirmed"},
+    {"item": "D-R28-01 records: parts_qualification stall-input paragraph and GAP-1 budget SHA; STATUS lines 19 / 30; R10_VALIDATION R28-TRI-03 row", "measurement": "parts_qualification 693-701 states 1.561 A = 1.461 A + 0.1 A, 5.881 / 4.388 V and 5.880831 / 4.388491 V; line 493 names 4267634220f4...; STATUS and R10_VALIDATION quote the same; no current sibling still quotes 1.56 A / 4.389 V outside labelled history", "verdict": "confirmed"},
+    {"item": "D-R28-03 power labels in the binding note (AUX allowance theta-JA, GAP-5 allocations, rule 4 VSD, rule 8 Calculation / Inference)", "measurement": "binding note SHA-256 30796f5e...; each label present with the stated wording; GAP-5 34.853 ms = 32.653 + 0.2 + 0.5 + 1.5 ms re-derived", "verdict": "confirmed"},
+    {"item": "D-R28-04 port-supply lead (obligation 15) and parts_qualification port-lead correction (audit A item 7)", "measurement": "3.3 V / 196 V/s + 4 ms = 20.8 ms, 3.7 V / 166 V/s + 4 ms = 26.3 ms; 166-196 V/s is the union of SLVSEA3F Table 9-1 scaled to 470 nF (780-880 V/s x 100/470 = 166-187; 88-92 V/s x 1000/470 = 187-196); U2 EN tied to VIN (U2.2 = U2.3 = VLOGIC) so UVLO 3.30-3.70 V (DS41326 p5) governs; labelled Calculation / Inference", "verdict": "confirmed"},
+    {"item": "Audit A: USB attach inventory (item 42)", "measurement": "board: VLOGIC caps C84 470 + C6 22 + C7 22 + C99 0.1 = 514.1 uF; USB_LIMITED = {C86, C98, R87, TP82, U10.6, U11.7}, C86 / C98 1 uF -> 516.1 uF; 516.1 uF x 4.7 V = 2.4257 mC; at 453.05 / 347.69 mA (R85 66.5 kOhm +/-2 %, SLVS841G eq 1 / 3): 5.354-6.977 ms; siblings M3_R10:734 and R10_VALIDATION:2692 carry the same", "verdict": "confirmed"},
+    {"item": "Audit A: C120 off time constant (items 21, 23)", "measurement": "board: C120 ACT_FET_S-ACT_GATE, R119 / R120 100 kOhm both ACT_GATE-ACT_FET_S, R121 to ACT_DRV = {Q122.3, R121.2} only (open when Q122 off); 50 kOhm x 1.02 x 1.265 uF = 64.52 ms, 100 kOhm x 1.02 x 1.265 uF = 129.03 ms; 1 s = 15.5 / 7.75 tau", "verdict": "confirmed"},
+    {"item": "Audit A: GAP-1 (items 1, 3, R28-TRI-02)", "measurement": "13.064091 W = 5.546269 x 1.561 / 0.8 + 1.4 + 0.825 + 0.016933; 12.370807 W with 1.461 A; fire currents 1.540851 / 1.475765 / 1.410416 / 1.344761 / 1.278747 A equal the regenerated budget; Calculation / Inference label present", "verdict": "confirmed"},
+    {"item": "Audit A: GAP-3", "measurement": "(5.546269 - 4.711504) x 0.56 + 5.546269 x 0.004 = 0.48965 W; 109.17-123.86 C at 70 C, 124.17-138.86 C at 85 C, ceiling 112.32 C/W; IGND 4 mA max at 1 A (SBVS282A 5.5)", "verdict": "confirmed"},
+    {"item": "Audit A: GAP-5 (item 25)", "measurement": "960 / 33600-29400 Hz = 28.571-32.653 ms; Rdis 1109.09 ohm, C126 278.3 nF, RC to 0.4 V 0.6782 ms, + 0.061 ms = 0.7392 ms; total 34.8531 ms; R134 1.97109 ohm, 35.7975 W, 0.71595 / 1.28871 J; Bourns log fit 61.204 / 44.134 W; 1.233x; 85 C 36.345 vs 35.851 W; DS12110 Rev 8 Table 146 p238 29.4-33.6 kHz through Tj 125 C (29.76 kHz through 110 C) read on the cached PDF", "verdict": "confirmed"},
+    {"item": "Audit A: ride-through table (item 35)", "measurement": "every cell equals battery_break_ride_through_ms; case (c) ports 9.856-10.822 W at 1.561 A; case (d) 0.561 A; U402 toff p6 cited", "verdict": "confirmed"},
+    {"item": "Audit A: OQ-5 (item 36)", "measurement": "DS41326 Eq. 2 inverted: VOFF = 1.1 x (1 + R5/R6) - 5.5 uA x R5 -> 5.7265 / 6.0115 / 6.2965 V; VON 6.4845 / 6.6555 / 6.9405 V; ports-only leg 0.2529 / 0.3951 ms at 13.064 W from 7.4 V to 5.7265 V; ride-through 3.8426 / 6.0041 / 1.5722 / 2.4565 ms equal the budget", "verdict": "confirmed"},
+    {"item": "Audit A: shared port fault budget / upstream coordination (items 15, 31)", "measurement": "2.911 / 3.160498 A; R92 3.147 mA at 10.18 V; 3.743861 A; U9 3.946188-4.856999 A (750 ohm row p9 / 1.0035, / 0.9965); 4.420037 A prospective; AUX 4.641504 V", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3.kicad_pcb before and after: a0ec075e... both times; git status clean",
+    "KiCad Python (read-only, on a byte-identical copy in .supervisor/r29_power/): footprint / pad / net dump (fps.json), track / via / zone dump (tracks.json)",
+    "r10_parts.power_budget() on the board copy: output byte-identical to parts_budget.json (SHA-256 42676342...)",
+    "check_r10 functions on the board copy: power_paths (0 issues; IPC floors 0.68 / 0.326 / 0.157 / 0.167 / 0.299 / 0.356 mm against drawn floors), fire_return (0), k_width (0; longest 0.3 mm runs 1.96 / 1.8 mm), single_via_opens canonical list (0) and 23 extra in-memory taps (GND ties of U11 CP2 / OV2 / PR1, U9, U400, U401, U2; SS / dVdt / EN ties; port and rail feeds), plane_necks (3V3 In2 0.549 / 0.549 / 0.589 / 0.706 mm; PORT_4V8, PORT_5V3, RAW_PROTECTED none)",
+    "tools/ipc2152.py widths for every K-power design current and a 0.4 mm U400-input check",
+    "hotplug_inputs.json canonical digest = results inputs_sha256 (f4d1b57d...); board_sha256 a0ec075e; extremes, damper 579.049 W / 2.979359 mJ, retained 1643.90 uF / 5.914 V re-read from rows",
+    "Independent solves: loaded_pack, fire_case variants (body diode, shorted match / leads), EN drop-out / turn-on / ramp model, USB-only operating points, USB attach charge, hold-up from break and from PA6 trip, OQ-5, GAP-3, GAP-5, buck / LDO tolerance chains",
+    "pdftotext of cached TPS25947, TPS2121, TPS2553, AP6320x, TPS7A91, DS12110 Rev 8 and the limits read above"
+  ],
+  "sources": [
+    "TI TPS25947 SLVSFC9C (cached .supervisor/r14_parts_pdf/tps25947.pdf): 6.1 abs max p6-7, 6.3 p7, 6.5 p9",
+    "TI TPS2121 SLVSEA3F (cached tps2121.pdf): pin table p4-5, 7.5 ILM / IRCB p8, Table 9-1 p13",
+    "TI TPS2553 SLVS841G (cached tps2553.pdf): 6.5 IOS table, eq 1-3 pp16-17",
+    "Diodes AP63200/1/3/5 DS41326 Rev 3-2 (cached ap6320.pdf): p5 electrical table, p10 Eq. 1-2",
+    "TI TPS7A91 SBVS282A (cached tps7a91.pdf): 5.3, 5.5",
+    "ST DS12110 Rev 8 (cached st_h743.pdf): Table 146 p238",
+    "Repository: parts_budget.json, r10_parts.py, parts_qualification.md, hotplug.md / inputs / results, r10_binding_note.json, check_r10.py, ipc2152.py, AGENTS.md, docs/M3_R10.md, REQUIREMENTS.md, ORDERING.md 8.3, R10_VALIDATION.md, STATUS.md, R10_DECISIONS D-R23-02, D-R24-19, D-R27-01, D-R28-01 ... -04, round28_audit_pq.md, round28_triage.md"
+  ],
+  "coverage_limits": [
+    "No full build, no tools/check.sh, no hot-plug re-simulation (the committed results were checked for binding and extremes only).",
+    "No DC copper or thermal solve of the power knot; IPC-2152 widths use the repository's external / internal fit without plane credit.",
+    "DS12110 Rev 11 and SLVS841F citations not re-read (no cached copy); Winbond tPP not re-read.",
+    "The round 28 power report and other round 29 lenses were not consulted before writing; only round 24-28 triage observations were read to avoid repeats."
+  ]
+}

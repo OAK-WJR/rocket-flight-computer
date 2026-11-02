@@ -1,0 +1,692 @@
+{
+ "schema": "r10-triage-v1",
+ "target_commit": "09a564e582865e58b5a94f5823789356f88442c8",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "real_errors": [
+  {
+   "id": "R29-TRI-01",
+   "merged_ids": [
+    "R29-SAFETY-01"
+   ],
+   "kind": "rule",
+   "severity": "Major",
+   "title": "AGENTS section 2.5: current safety statements still give figures that rest on inferred inputs as 'Calculation' or bare model output, and four round 28 status lines claim every such figure is labelled",
+   "evidence": "Reproduced. ESD: 1.2 uC / 220 nF + 2.032 V = 7.49 V nominal; 1.2 uC / (0.72 x 220 nF) + 2.063 V = 9.65 V ('about 9.6 V'); the 0.72 x minimum carries the X7R DC-bias allowance that D-R19-10 (R10_DECISIONS.md:2997) labels Inference, and the full charge transfer is an assumption; M3_R10.md:455-457 and ORDERING.md:651 label the same figures Inference, FMEA:37 and REQUIREMENTS:64 do not. C128's 991 microstrain is 'Calculation/Inference' at R10_VALIDATION.md:2534 and '(R21-SAF-03, Inference)' in owner row 1, bare 'plate model' at FMEA:38. Fire budget: Q124's inherited hot factor is an Inference (parts_qualification.md:490; M3_R10.md:650 'Calculation / Inference'), but R10_VALIDATION.md:2642-2647 gives 1.540851 ... 1.278747 A with only 'the stated ... assumptions'. Watchdog guard: AGENTS.md:25 and the binding note say 'Calculation on allocations / Inference' (gate-discharge model's 0.4 V criterion and hot gate charge inferred); R10_VALIDATION.md:2712-2714 says 'calculated 34.853 ms' and owner row 7 (R10_VALIDATION.md:2369) titles the 20 ms firing and the guard 'calculations'. Plate model 125 / 133 g in owner row 32 (R10_VALIDATION.md:2404) is unlabelled while ORDERING.md:702 labels it Calculation/Inference. Sweep additions: M3_R10.md:415-418 gives the 3V3-to-gate-net bridge as '(about 3.23 V ...; Calculation)', but its premise (a hard 3V3 bridge holds PE4's net at 3.3 V against PE4's low driver) is labelled Inference at FMEA:39 and R10_VALIDATION.md:2569; STATUS.md:26 and R10_VALIDATION.md:2346 call the four-stall pack sag 'Calculations on the budget model', while its owning record parts_qualification.md:693 heads it 'Inference, stall input' and the round 27 records (STATUS.md:37, R10_VALIDATION.md:2269) say 'Calculations / Inferences'. Scanner (.supervisor/r29_triage/labelscan.py, 448 hits over the scoped current text, block- and heading-aware, then read by hand): every other current statement of the EN-timing, chatter, hold-up, cold-screen, Q122-drive, fire-budget, plate, thermal, ESD, gate-fight and port-lead figures is labelled in its sentence, its row or bullet, or its section heading. The status claims at AGENTS.md:32, M3_R10.md:32-34, M3_R10.md:182 and STATUS.md:18 are therefore false.",
+   "all_places": [
+    "docs/FMEA_REDUNDANCY.md:37 (H-6, ESD outcome (c): 'about 9.6 V (Calculation, against EN's 6.5 V absolute maximum)')",
+    "docs/REQUIREMENTS.md:64 (F9: 'Unclamped, ... about 9.6 V worst case' unlabelled; '(R23-SAFETY-06, Calculation)'; '(c) ... the worst case is about 9.6 V')",
+    "docs/FMEA_REDUNDANCY.md:38 (I-5: '991 microstrain at 100 g, plate model')",
+    "docs/R10_VALIDATION.md:2642-2647 (section 2: the 4.617803 ohm loop and 1.540851 / 1.475765 / 1.410416 / 1.344761 / 1.278747 A)",
+    "docs/R10_VALIDATION.md:2712-2714 (section 5: 'calculated 34.853 ms against 36 ms')",
+    "docs/R10_VALIDATION.md:2369 (owner row 7: '... the 36 ms watchdog guard are calculations'; the 34.853 ms guard allocation)",
+    "docs/R10_VALIDATION.md:2404 (owner row 32: 'the 125 g at which the plate model puts C431 onto a 4 mm sled (C421 at 133 g')",
+    "docs/M3_R10.md:415-418 (gate nets to 3V3 / 3V3A: 'about 3.23 V through R126 against R128, or 3.3 V directly; Calculation')",
+    "STATUS.md:26 and STATUS.md:19 (round 28 entry: pack sag 5.881 / 4.388 V 'are Calculations on the budget model')",
+    "docs/R10_VALIDATION.md:2346 (round 28 fix pass: 'The pack-sag figures are Calculations on the budget model')",
+    "AGENTS.md:32 (status claim: '... labelled every model figure that rests on an inferred input')",
+    "docs/M3_R10.md:32-34 (same claim)",
+    "docs/M3_R10.md:182 (review-status row: 'every model figure resting on an inferred input labelled')",
+    "STATUS.md:18 ('The fire-budget, EN-timing, hold-up, cold-screen and load-switch figures that rest on inferred inputs are now labelled')",
+    "Also: the rule 3 gate time constant (47-53 us) rests on the inferred <= 50 ohm driver resistances; its corrected text under R29-TRI-02 carries the label (r10_sch_check.py:366, M3_R10.md:1095, FMEA:39, R10_VALIDATION.md:2561)"
+   ],
+   "borderline_consistency_places": [
+    "docs/M3_R10.md:66 and STATUS.md:44 (round 26 change records quoting 8.07 ms, 7.50 ms and 5.71 / 5.55-5.56 / 5.50 V without a label; change records, the current statements are labelled)",
+    "docs/FMEA_REDUNDANCY.md:52-53 (GAP-5: 'With the stated reset / tail allowances, fault current ends within 36 ms'; conditional on allowances, no figure)",
+    "docs/M3_R10.md:407 (about 0.9-1.8 A 'if the rail held 3.3 V'; an explicit hypothetical, FMEA:38 labels it Calculation / Inference)"
+   ],
+   "concrete_fix": "Text and records only. (1) FMEA:37 (c) and REQUIREMENTS F9 (both places): '(Calculation / Inference: a full transfer of the 150 pF / 8 kV charge into C87 is assumed, and the 9.6 V uses C87's 0.72 x minimum, whose <= 6 % X7R DC-bias part is an Inference, D-R19-10)'; F9's '(R23-SAFETY-06, Calculation)' -> '(R23-SAFETY-06, Calculation / Inference)'. (2) FMEA:38 '991 microstrain at 100 g, plate model, Calculation / Inference'. (3) R10_VALIDATION section 2 after the currents: '(Calculation / Inference: Q124's inherited hot factor is an Inference; FET, hot R134, harness, contact and converter-load figures are unmeasured allowances)'. (4) R10_VALIDATION section 5 and owner row 7: 'calculated 34.853 ms' -> '34.853 ms (Calculation on allocations / Inference: the 0.2 / 0.5 / 1.5 ms allocations need bench tests, and the gate-discharge model's 0.4 V off criterion and hot gate charge are inferred)'; row 7 title '... are calculations on allocations and inferred models'. (5) Owner row 32: '(plate model, Calculation / Inference)'. (6) M3_R10:418: '(... or 3.3 V directly; Calculation / Inference: that a hard bridge holds PE4's net at 3.3 V against its low driver is an Inference)'. (7) STATUS:26 and R10_VALIDATION:2346: 'Calculations / Inferences on the budget model (stall input, parts_qualification)'. (8) The four status claims: narrowing alone is not enough, and labelling alone does not make them true (the round 28 pass did not label these places). Reword each to say the round 28 pass labelled the figures it found and the round 29 fix pass labelled the rest (list). Optional: the three borderline places.",
+   "board_change": false
+  },
+  {
+   "id": "R29-TRI-02",
+   "merged_ids": [
+    "R29-MCU-01",
+    "R29-SAFETY observation 12"
+   ],
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "Firmware rule 3 gives Q124's gate time constant as 47-53 us; that range covers C126 from -10 % to nominal only, and the fitted part's +10 % gives about 58 us",
+   "evidence": "C126 is CL10B224KA8NNNC (m3_bom_jlc.csv:15, C21120; tolerance code K = +/-10 %). Source model (round23_safety_severity_check.md:68): R = (220 + 50||50||1000) || 10000 = 238.6 ohm, Ciss 2.25 nF. Recomputed: -10 % 47.8 us, nominal 53.0 us, +10 % 58.3 us; over the source's driver range the envelope is about 45-61 us. The source itself states only '-10 % plus Ciss' and nominal; the docs present 47-53 us as the range. Sweep of the safety / firmware text for other ranges that cover part of a part's tolerance: none found. C87 0.72-1.27 x, C120's 1.265 uF maximum in the 31.9 ms, the LSI range in 28.571-32.653 ms, the PA6 window and R84's tolerance cover their full ranges; the 0.218 V and 0.104 V pull-up bounds are nominal-resistor figures (0.2203 / 0.1048 V with 1 % parts), already ruled observations (R28-POWER obs 2, R19-DOC-05); the 7.1 us and 0.91 kOhm figures are stated as nominal ('about').",
+   "all_places": [
+    "m3_design/r10_sch_check.py:366 (rule 3 text; generates r10_binding_note.json firmware_obligations rule 3)",
+    "docs/M3_R10.md:1095",
+    "docs/FMEA_REDUNDANCY.md:39",
+    "docs/R10_VALIDATION.md:2561"
+   ],
+   "concrete_fix": "Replace 'the gate time constant is 47-53 us' with 'the gate time constant is about 47-58 us over C126's +/-10 % (53 us nominal; Calculation, driver resistances Inference)' in all four places; regenerate the binding note (K-binding) and pin the new phrase in test_r23_binding_note_rules_and_pin_table with '47–53 µs' as a rejected form. No board change.",
+   "board_change": false
+  },
+  {
+   "id": "R29-TRI-03",
+   "merged_ids": [
+    "R29-MECHANICS-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "R10_VALIDATION section 8 says 23 tails of seven terminals are allocated and J440's four tails were not added (not re-run); the fit checker allocates all 27, J440's included, on every gate run",
+   "evidence": "Reproduced: tools/fit_check.py --profile r10 on a copy of the board with the project's kilib (.supervisor/r29_triage/fit/fit.json): terminal_tails.count 27, rows 'J440.1 ... J440.4 terminal tail' present, minimum_bore_margin_mm 7.5583593625 (the recorded 7.558359 mm). fit_check.py:446-454 adds a tail box for every PTH pad of every M3_DB125_* footprint; tools/check.sh:59 runs it. R10_VEHICLE_HANDOFF.md:84 says 27. Sibling sweep of 'not run' / 'not re-run' statements: the plate-model 'not re-run on 1407e850 / 92c3ad59 / a0ec075e' lines are true (the plate model is optional and outside check.sh, check.sh:5 and :9); the other hits are labelled history.",
+   "all_places": [
+    "docs/R10_VALIDATION.md:2923-2924 ('all 23 tails of the seven earlier terminals have separate fit allocations')",
+    "docs/R10_VALIDATION.md:2928 ('J440's four tails were not added to that tail allocation (not re-run).')"
+   ],
+   "concrete_fix": "Text only: 'all 27 tails of the eight terminals (J440's since its addition) have separate fit allocations ... Minimum tail/bore clearance 7.558359 mm (unchanged on a0ec075e)'; delete the 'not added ... (not re-run)' sentence.",
+   "board_change": false
+  },
+  {
+   "id": "R29-TRI-04",
+   "merged_ids": [
+    "R29-REQUIREMENTS-01"
+   ],
+   "kind": "rule",
+   "severity": "Minor",
+   "title": "LS120 (MLT-5020) is rated -20...+70 C operating, so at the stated 70 C bay it is out of rating, and the hot-end disposition, the 55 C interim limit and the chamber test cover only 85 C parts",
+   "evidence": "Huawha MLT-5020 specification p2 item 6 (cached .supervisor/r14_parts_pdf/buzzer.pdf, SHA-256 db73c860..., the sheet the M1 row cites for reflow): operating -20~+70 C, SPL >= 75 dB; storage -30~+85 C (item 7). LS120 is fitted (JLC BOM C94598, F(23,58.5)); F11 makes it the pad and post-landing annunciator. The Temperature row's own board rise, +10-22 K at the pad load (Inference), puts LS120 at 80-92 C in a 70 C bay and 65-77 C at the 55 C interim limit; the row's logic for 85 C parts (85 - 22 ~ 60 C) gives about 48 C bay air for a 70 C part. The chamber test passes on 'every 85 C part <= 85 C' and never checks LS120. Parts rated below 85 C at the hot end: LS120 (+70 C) and J3 (+80 C, disclosed as unmated in flight, parts_qualification.md:46 and REQUIREMENTS:94; not counted). Every other fitted part is rated +85 C or wider per the records. No round 24-28 triage observation covers LS120's hot end.",
+   "all_places": [
+    "docs/REQUIREMENTS.md:94 (Temperature row: hot-end judgement, 55 C interim limit, chamber test; lists LS120 only for its cold end)",
+    "docs/M3_R10.md:471-475 (Hot-end temperature)",
+    "docs/ORDERING.md:608 (Board temperature at the pad load; pass 'every 85 C-rated part <= 85 C')",
+    "docs/R10_VALIDATION.md:2405 (owner row 33)",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:40 (round 23 note, 85 C parts) and :43 (LS120: 'no cold margin' only)"
+   ],
+   "concrete_fix": "Text only. In all five places name LS120 as a +70 C part (MLT-5020 p2 item 6); add 'LS120 <= 70 C (thermocouple on LS120)' to the chamber-test pass criterion; state that at a 70 C bay LS120 is out of rating and either set the buzzer's interim limit to bay air <= about 48 C (70 - 22 K, Inference) or record buzzer annunciation as best-effort above that as an owner row; respin option: a +85 C buzzer on the same land.",
+   "board_change": false
+  },
+  {
+   "id": "R29-TRI-05",
+   "merged_ids": [
+    "R29-GATE-01",
+    "R29-GATE observations 3, 4, 5 (siblings)"
+   ],
+   "kind": "gate",
+   "severity": "Minor",
+   "title": "D-R28-03 says the test pins each new label, but the chatter obligation's turn-on label '(the same model over C87 0.72-1.27 x)' is not pinned: reverting it to the round 27 text passes every check",
+   "evidence": "tools/test_r10_check.py:452 pins only 'after a 30-130 ms EN turn-on delay', a prefix of both the labelled and the round 27 form ('... EN turn-on delay. Resume flight state ...', git show 19dd0b5:m3_design/r10_sch_check.py); no rejected form covers it. Reproduced in memory on m3_design/r10_sch_check.py: the seeded text keeps the positive pin and matches none of the 38 rejected forms; K-binding compares the saved note with the generator, so a regenerated note passes. The unlabelled form states a figure resting on C87's inferred 0.72-1.27 x (the class R28-TRI-09 made Major). Diff of the generator 19dd0b5 -> 09a564e against the test's 55 pinned phrases (.supervisor/r29_triage/gen_diff.txt): other D-R28-02 ... -04 additions with no pin: (a) GAP-5 ', and the 1.5 ms covers a 0.74 ms gate-discharge model whose 0.4 V off criterion and hot gate charge are Inference'; (b) chatter ', and the 5.71 V point is the fire budget's, whose hot Q124 factor is inferred'; (c) rule 8 hold-up '; the loads are the budget's allocations, and C84 has no cold-capacitance factor'; (d) obligation 15 ' / Inference: the table is scaled linearly and the settling time is not quantified; measure the PORT_4V8-to-3V3 lag on first articles' (only the 'Calculation / Inference' word is pinned); (e) rule 4 'before coating, with PC1 high and a dummy load in J121:', ', against Q120's source at R120.1', '(R23-SAFETY-05's criterion: Q120's body diode adds 0.7–1.0 V)' and 'AONR21357 VSD typical / maximum at 1 A, p. 2'; (f) port map 'junction <= 125 C at the 70 C bay'. Of these only the turn-on label leaves a figure unlabelled when dropped; the rest leave an Inference word or a usable criterion (the gate lens's seeds F3, F8, C5).",
+   "all_places": [
+    "tools/test_r10_check.py:452 (pin stops before the label; no rejected form 'EN turn-on delay. Resume')",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4707 (D-R28-03: 'pins each new label')",
+    "unpinned D-R28-02 ... -04 qualifiers (a)-(f) in m3_design/r10_sch_check.py (GAP-5, chatter, rule 8, obligation 15, rule 4, port map)"
+   ],
+   "concrete_fix": "Checks only: in test_r23_binding_note_rules_and_pin_table add 'after a 30-130 ms EN turn-on delay (the same model over C87 0.72-1.27 x)' to the D-R28-03 assertIn list and 'EN turn-on delay. Resume' to its assertNotIn list; pin (a)-(f) as well, so that D-R28-03's statement becomes true. No board change.",
+   "board_change": false
+  }
+ ],
+ "observations": [
+  {
+   "id": "R29-SAFETY obs 1",
+   "reason": "Clarity of a firmware obligation; the fight level at 100 % drive is labelled Inference in the same rule and rule 3 already forbids 100 % drive while PC1 is high."
+  },
+  {
+   "id": "R29-SAFETY obs 2",
+   "reason": "Q124 gate-to-drain 0.520 mm: in the OUT-to-lower-potential class considered by the round 25 triage; no record states a contrary figure."
+  },
+  {
+   "id": "R29-SAFETY obs 3",
+   "reason": "Further OUT-to-GND approaches (0.237 mm etc.) are in the disclosed class whose minima (0.177 / 0.180 mm) the records name; no record claims the list is complete (R10_VALIDATION:3063 lists the 0.2370 mm pair in its labelled round 10 table)."
+  },
+  {
+   "id": "R29-SAFETY obs 4",
+   "reason": "Benign by the lens's own bound (<= 8.4 mA); the cold screen refuses; no record contradicted."
+  },
+  {
+   "id": "R29-SAFETY obs 5",
+   "reason": "Fail-safe direction; screened by the powered-BUS refusal."
+  },
+  {
+   "id": "R29-SAFETY obs 6",
+   "reason": "Already ruled (R25-SAFETY obs 3); unchanged on a0ec075e."
+  },
+  {
+   "id": "R29-SAFETY obs 7",
+   "reason": "Covered by the I-5 lists' 'include' wording (round 27 ruling)."
+  },
+  {
+   "id": "R29-SAFETY obs 8",
+   "reason": "Round 27 triage: the fill-edge lengths are method-dependent (138.84 / 138.24 mm with one method on both boards) and the 0.300 mm minimum is unchanged; R10_VALIDATION labels the board."
+  },
+  {
+   "id": "R29-SAFETY obs 9",
+   "reason": "Conservative overstatement in a hazard record (the match may fire); not a false safety claim."
+  },
+  {
+   "id": "R29-SAFETY obs 10",
+   "reason": "Load dependence covered by 'Qualify the band on first articles'."
+  },
+  {
+   "id": "R29-SAFETY obs 11",
+   "reason": "Already ruled conservative (R27-MCU obs 5)."
+  },
+  {
+   "id": "R29-SAFETY obs 13",
+   "reason": "Agreed: the cell / row labels the same EN model's X7R allowance an Inference."
+  },
+  {
+   "id": "R29-SAFETY obs 14",
+   "reason": "Labelled history (R25-SAFETY obs)."
+  },
+  {
+   "id": "R29-SAFETY obs 15",
+   "reason": "Wording: the intact criterion (> 0.9 kOhm or open both ways) is stated, so any other reading is not intact."
+  },
+  {
+   "id": "R29-SAFETY obs 16",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-SAFETY obs 17",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-SAFETY obs 18",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-SAFETY obs 19",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-POWER obs 1",
+   "reason": "Not a real error: the 6 V open pack is below the REQUIREMENTS Pack-row floor (>= 7.4 V resting at launch), whose four-stall requirement the 7.4 V case meets (5.881 V > 4.835 V); the stall-input sentence is a shedding policy for a sub-requirement corner, not a computed retention claim, and the same paragraph says no all-load guarantee exists there. Naming U9's turn-off at that corner is optional."
+  },
+  {
+   "id": "R29-POWER obs 2",
+   "reason": "Model precision: the triage's own reconstruction of this model does not reproduce the budget's normal four-stall current either, so a 0.5 mA difference against round 23's table cannot be shown to be the records' error; both values clear 1.125 A and all stated ratios hold."
+  },
+  {
+   "id": "R29-POWER obs 3",
+   "reason": "Already a round 27 observation; labelled Round 18 and conservative."
+  },
+  {
+   "id": "R29-POWER obs 4",
+   "reason": "Not a K-power path; no rule violated (seen in round 27)."
+  },
+  {
+   "id": "R29-POWER obs 5",
+   "reason": "Already a round 28 triage observation; labelled Inference, upper bound agrees."
+  },
+  {
+   "id": "R29-POWER obs 6",
+   "reason": "Non-continuous fault state, disclosed in 'Shared port fault budget'."
+  },
+  {
+   "id": "R29-POWER obs 7",
+   "reason": "U11.2 is a recorded respin item (owner row 22); U1.11's single via is not a regulator tap and the In2 3V3 fill remains."
+  },
+  {
+   "id": "R29-POWER obs 8",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-POWER obs 9",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-POWER obs 10",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-POWER obs 11",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-POWER obs 12",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-POWER obs 13",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 1",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 2",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 3",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 4",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 5",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 6",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 7",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 8",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 9",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 10",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 11",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 12",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 13",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 14",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 15",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 16",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 17",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 18",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-ROUTING obs 19",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 1",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 2",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 3",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 4",
+   "reason": "Labelled historical R2 record; the 'a' is right and PC1's role there is gone."
+  },
+  {
+   "id": "R29-MCU obs 5",
+   "reason": "R1 frozen record, already flagged unverified."
+  },
+  {
+   "id": "R29-MCU obs 6",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 7",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 8",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 9",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 10",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 11",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 12",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 13",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 14",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 15",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 16",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MCU obs 17",
+   "reason": "No stated path injects; no requirement needs the statement."
+  },
+  {
+   "id": "R29-GATE obs 1",
+   "reason": "Same class as R26-GATE obs 2 / R28-GATE obs 1: no stated rule binds a budget figure to a check; the stale-budget check fires until regeneration."
+  },
+  {
+   "id": "R29-GATE obs 2",
+   "reason": "Same as gate obs 1."
+  },
+  {
+   "id": "R29-GATE obs 3",
+   "reason": "Merged into R29-TRI-05 as an unpinned sibling (a); dropping it leaves the allocations marked unmeasured, so not a separate error."
+  },
+  {
+   "id": "R29-GATE obs 4",
+   "reason": "Merged into R29-TRI-05 as an unpinned sibling (b); the obligation keeps its pinned Calculation / Inference label."
+  },
+  {
+   "id": "R29-GATE obs 5",
+   "reason": "Merged into R29-TRI-05 as an unpinned sibling (e); the criterion stays usable."
+  },
+  {
+   "id": "R29-GATE obs 6",
+   "reason": "A dead negative pin; the positive pin rejects the interim form (seed B2 fails), so no defect passes."
+  },
+  {
+   "id": "R29-GATE obs 7",
+   "reason": "By design; the pinned SchematicContract test is the guard."
+  },
+  {
+   "id": "R29-GATE obs 8",
+   "reason": "Non-critical leftover, counted not blocking (AGENTS section 3, R28-GATE obs 3 class); the 45-degree letter holds."
+  },
+  {
+   "id": "R29-GATE obs 9",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-GATE obs 10",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-GATE obs 11",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-PARTS obs 1",
+   "reason": "Not a real error: the table's 'Plus JLC fixed fees' row is built on the target basis ($85.26 + $16.79 = $102.05), as R10_VALIDATION:2994 states; on the minimum-purchase row it would be $102.59, which 'about $102.05' does not contradict materially. Table composition, not a false figure (the requirements lens's M3 sentence likewise)."
+  },
+  {
+   "id": "R29-PARTS obs 2",
+   "reason": "Buzzer drive current and timing are disclosed as pending firmware and bench qualification (AGENTS buzzer row); the 100 mA is the maker's test-condition current at 3.0 Vo-p, 1/2 duty."
+  },
+  {
+   "id": "R29-PARTS obs 3",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-PARTS obs 4",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-PARTS obs 5",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-PARTS obs 6",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-PARTS obs 7",
+   "reason": "Coverage limit of the lens; the MCU lens re-read DS15034 Table 2 p11 and confirmed it."
+  },
+  {
+   "id": "R29-PARTS obs 8",
+   "reason": "The session-context copy is not the repository; the committed AGENTS.md agrees with cost_check.json."
+  },
+  {
+   "id": "R29-MECHANICS obs 1",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MECHANICS obs 2",
+   "reason": "True provenance: the plate model is optional and outside check.sh; the records describe their own runs and the figures hold."
+  },
+  {
+   "id": "R29-MECHANICS obs 3",
+   "reason": "Labelled to their board (judged in round 28)."
+  },
+  {
+   "id": "R29-MECHANICS obs 4",
+   "reason": "Already ruled in rounds 25 / 26 (pocket window)."
+  },
+  {
+   "id": "R29-MECHANICS obs 5",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MECHANICS obs 6",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MECHANICS obs 7",
+   "reason": "The sentence is about J430's closed allocation envelope, for which 0.575 mm is right."
+  },
+  {
+   "id": "R29-MECHANICS obs 8",
+   "reason": "Measurement-method difference (line centre vs polygon edge); no record contradicted."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 1",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 2",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 3",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 4",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 5",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 6",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 7",
+   "reason": "Text-extraction artefact; the Fab ink boxes are apart (gate D-R21-08 passes)."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 8",
+   "reason": "Different quantities (courtyard vs shell overhang)."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 9",
+   "reason": "JLC matches by LCSC code and MPN, which agree with the board fields."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 10",
+   "reason": "Informational; JLC builds to its own JLC041611-7628 stackup."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 11",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-MANUFACTURING obs 12",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 1",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 2",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 3",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 4",
+   "reason": "Cd values unsourced and labelled Inference; no citable source shows them wrong."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 5",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 6",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 7",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 8",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 9",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 10",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 11",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 12",
+   "reason": "Already raised as R23-REQUIREMENTS-08 and handled by F1's logging requirement."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 13",
+   "reason": "Disclosed: the Pack row lists local resistor temperature as unqualified and F6 the divider and ADC tolerances."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 14",
+   "reason": "Ambiguous, not wrong: 'about $102-$105' is right on the target basis."
+  },
+  {
+   "id": "R29-REQUIREMENTS obs 15",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 1",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 2",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 3",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 4",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 5",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 6",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 7",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 8",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 9",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 10",
+   "reason": "Measurement-method difference already ruled in round 28."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 11",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 12",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 13",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 14",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 15",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 16",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 17",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  },
+  {
+   "id": "R29-DOCS_BINDING obs 18",
+   "reason": "A reproduction or confirmation that agrees with the records; no error claimed."
+  }
+ ],
+ "not_reproducible": [],
+ "totals": {
+  "Critical": 0,
+  "Major": 1,
+  "Minor": 4,
+  "real_errors": 5,
+  "raw_findings": 5,
+  "raw_findings_confirmed": 5,
+  "promoted_observations": 0,
+  "merged_observations": 4,
+  "observations_not_counted": 139,
+  "not_reproducible": 0,
+  "board_changes": 0
+ },
+ "method": [
+  "Reproduced every finding from the committed files: ESD and gate time-constant arithmetic, fit_check on a board copy with the project kilib, an in-memory seed of the generator against the test's parsed pins, the MLT-5020 sheet.",
+  "Section 2.5 sweep: .supervisor/r29_triage/labelscan.py (448 figure hits in the scoped current text; paragraph-, row- and heading-aware label detection), then every unlabelled hit read in context by hand; targeted greps for plate, thermal, watchdog, ESD, match-model, pack-sag and DC-bias figures.",
+  "Generator diff 19dd0b5 -> 09a564e against the 55 pinned and 38 rejected phrases of test_r23_binding_note_rules_and_pin_table (.supervisor/r29_triage/gen_diff.txt).",
+  "Read-only: no tracked file edited, no build, no git state change."
+ ]
+}

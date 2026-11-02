@@ -478,14 +478,33 @@ class SchematicContract(unittest.TestCase):
                       'against 1.116 V (Calculation / Inference, R26-TRI-03: the same EN model)',
                       "Calculation / Inference: the fire budget's hot Q124 factor is inferred",
                       'fire_current_GAP1 model, Calculation / Inference: its hot Q124 factor is inferred',
-                      '(Calculation / Inference, D-R25-02: constant power at 300.8 µF'):
+                      '(Calculation / Inference, D-R25-02: constant power at 300.8 µF',
+                      # D-R29-02 (R29-TRI-05): every label or qualifier D-R28-02 ... -04 added is pinned, the turn-on
+                      # label included, (a)-(f) of round29_triage
+                      'after a 30-130 ms EN turn-on delay (the same model over C87 0.72-1.27 x)',
+                      'and the 1.5 ms covers a 0.74 ms gate-discharge model whose 0.4 V off criterion and hot gate '
+                      'charge are Inference',
+                      "and the 5.71 V point is the fire budget's, whose hot Q124 factor is inferred",
+                      "; the loads are the budget's allocations, and C84 has no cold-capacitance factor",
+                      'Calculation / Inference: the table is scaled linearly and the settling time is not quantified; '
+                      'measure the PORT_4V8-to-3V3 lag on first articles',
+                      'At first article, before coating, with PC1 high and a dummy load in J121:',
+                      "against Q120's source at R120.1, must settle",
+                      "(R23-SAFETY-05's criterion: Q120's body diode adds 0.7–1.0 V)",
+                      '(0.7 / 1.0 V drop: AONR21357 VSD typical / maximum at 1 A, p. 2;',
+                      'junction <= 125 C at the 70 C bay with the inferred 110 C/W theta-JA, Inference',
+                      # D-R29-01 (R29-TRI-02): rule 3's time constant covers C126's full ±10 %
+                      "the gate time constant is about 47–58 µs over C126's ±10 % (53 µs nominal; Calculation, driver "
+                      'resistances Inference)'):
             self.assertIn(words, text)
         for gone in ('it must read open', 'reads above 0.9 kOhm both ways', 'fight puts 1.19',
                      'First article, before coating', 'and record the dummy-load drop',
                      'rises about 44 ms or more before 3V3',
                      'cannot trip U9 (Calculation, R20', 'against 1.116 V (Calculation, R26',
                      '(fire_current_GAP1 model, Calculation, R26', '(Calculation, D-R25-02',
-                     '(U401 thermal floor, parts_budget.json)', '=34.853ms, within the 36ms contract. '):
+                     '(U401 thermal floor, parts_budget.json)', '=34.853ms, within the 36ms contract. ',
+                     # D-R29-01 / -02 (R29-TRI-02 / -05): the partial-tolerance range and the unlabelled turn-on delay
+                     '47–53 µs', 'EN turn-on delay. Resume'):
             self.assertNotIn(gone, text)
         # D-R28-04: DS15034 Rev 1's Table 2 (pin description) is on p. 11; p. 10 is section 3.1 / Figure 6
         self.assertIn('DS15034 Rev 1 Figure 5 p. 9 and Table 2 p. 11', text)
