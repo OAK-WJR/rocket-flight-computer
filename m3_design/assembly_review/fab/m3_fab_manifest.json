@@ -195,12 +195,12 @@
     "tools/jlc_orient.py": "a23ab373cc7e13f7053a97e87a0f85cc37a5bf19391f774680e7433461701c88"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "7873553b0a5fed245ff3f895d3fddd2a6e8490f5bdec9fb568aa5b90ed7dc198",
-    "m3_assembly_top.pdf": "cd16cb88a7f1cbeab6567972c8e258914dfef1d7c8295db1710b4e549d7bad98",
+    "m3_assembly_bottom.pdf": "5f57522360dc9e03a504dbb78a53374c07900449e90e4bf8683a2169887f5bff",
+    "m3_assembly_top.pdf": "080e6bc3103ba305b7def325a58cb48f8fae13b9ef4489fc961f3901cf1a1f72",
     "m3_bom_jlc.csv": "00af5358a4043980e9c3a488b5e5a4bbe7a5d562054aaf9ce4ee6f99694e6b55",
     "m3_bom_owner.csv": "c48868b32f2680376e73c4ea93c98df8efd6df4cad909c83e64a7ee56b74c2c0",
     "m3_cpl_jlc.csv": "1f89975052e0745c5579b7fcfd6edda8e09d3a5ad77a11464ab1e6070e63a7ac",
-    "m3_gerber.zip": "ef04ca26f7baef518907e715eddaf2d4a44998d08d03b54c325606118b6fa253"
+    "m3_gerber.zip": "98bfc1acbf931104ea45eaf530eed899db1c6f02840390a86c8b84a600826b76"
   },
   "schema": 1
 }

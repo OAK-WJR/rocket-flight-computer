@@ -3017,7 +3017,8 @@ if the bench drop-out exceeds these, C87 is re-sized (BOM only, same land).
 R19-BOM-01. LSM6DSV320X (C26633007) had 0 JLC stock. **ST ISM6HG256XTR, LCSC C51931514** (live 2026-10-31T04:01Z:
 9 in stock, Extended, $14.34 at 1-9) is fitted on the same `LGA-14_L3.0-W2.5-P0.50-TL` land (K-lands pin unchanged).
 [DS15034 Rev 1](https://www.st.com/resource/en/datasheet/ism6hg256x.pdf): LGA-14L 2.5 x 3.0 x 0.83 mm, drawing p187
-the same as DS14623's (14 x 0.475 x 0.25 mm pads); Figure 5 p9 and Table 2 pp10-11 give the same pin map and axis
+the same as DS14623's (14 x 0.475 x 0.25 mm pads); Figure 5 p9 and Table 2 pp10-11 (Table 2 is on p11 alone; p10 is
+section 3.1 / Figure 6: D-R28-04) give the same pin map and axis
 directions as DS14623 Rev 1 p9, so roll stays -gyro_Y and the lever arm is unchanged; F1 / F2: gyro +/-4000 dps,
 low-g +/-16 g and high-g +/-32..256 g (>= +/-64 g); -40..105 C. WHO_AM_I reads 0x73 on both (p66), and the high-g
 full-scale codes differ (Table 150 p93: ISM 100 = +/-256 g, 011 reserved; LSM 011 = +/-256, 100 = +/-320), so the
@@ -3561,7 +3562,11 @@ d08). New rule K-ports: for each clamp of J410, J420, J440 and J9 (pins 3 and 4)
 centre to the clamp pad's centre, with the port's 1 k series resistor's pads removed, must exist and be at most 4.5 mm
 (`PORT_CLAMPS`, `CLAMP_PATH_MAX`). Measured (centre to centre): J410 4.288 / 4.388, J420 3.975 / 3.975, J440 4.075 /
 4.175 (3.157 / 3.194 pad edge to pad edge, D-R20-09), J9 3.975 / 3.975 mm. Seeded tests: d08 fails at 6.975 mm; a
-clamp re-fed from its resistor's far side fails as reached only through the resistor.
+clamp re-fed from its resistor's far side fails as reached only through the resistor. (Corrected 2026-11-02, round 28
+fix pass, from audit lane A's `round28_audit_pq.md` §4: 3.157 / 3.194 mm is the straight-line distance between the pad
+centres, J440.3 (7.4, 18.0) to D440.1 (4.45, 19.125) and J440.4 (7.4, 21.5) to D441.1 (4.45, 22.725), not a pad-edge
+gap; pad edge to pad edge is 1.865 / 1.900 mm. Since D-R24-17 chamfered the bend, the J440 clamp paths on `a0ec075e…`
+are 3.864 / 3.964 mm of track (pcbnew: check_r10 `port_clamps` on the board; 4.075 / 4.175 mm on `5516eeec…`).)
 
 ## D-R21-08. Fab references present, readable and apart (K-legends) (2026-10-31)
 
@@ -4541,7 +4546,9 @@ docs lane takes the rest. Hand-back: `sources/r10_review/round27_fix_cad.md` / `
 R27-TRI-02, its generator part (the triage's sibling of R27-POWER-02).
 
 - **What:** `m3_design/r10_parts.py` `loaded_pack` takes the ports' input power as 5.456 V x (1.46 A + `aux_A`), the
-  way `ports_w` does, in place of 5.456 V x 1.46 A. The build regenerates `parts_budget.json`.
+  way `ports_w` does, in place of 5.456 V x 1.46 A. The build regenerates `parts_budget.json`. (Corrected by D-R28-01:
+  `ports_w` uses 1.461 A + `aux_A`, so this code still left out the 11 mA; both now take one variable, `port_A`, and
+  the figures below are 5.880831 / 4.388491 V.)
 - **Why:** D-R19-14 added the AUX port's 100 mA to the port-load figures (`ports_w`, the battery-break loads, the
   camera-short buck case and U401's loss all carry `aux_A`) but not to this one, so `pack_7V4_four_stall_loaded_V` /
   `pack_6V0_four_stall_loaded_V` still described the pre-AUX ports.
@@ -4550,6 +4557,8 @@ R27-TRI-02, its generator part (the triage's sibling of R27-POWER-02).
   - `pack_6V0_four_stall_loaded_V`: 4.414 -> 4.389 V (4.388745 V).
   - `parts_budget.json` SHA-256: `5204280e…` -> `ecc45417a4b9ec6ad021f52153cf2f59b547ac8e1afbd39dbd7d6e4c39f9a8bb`.
     Those two lines are its only change; the fire budget (5.713 V four-stall BAT_IN, 1.279 A) already used `ports_w`.
+  - (Corrected by D-R28-01: on 1.56 A, not ports_w's 1.561 A. With 1.561 A the figures are 5.881 / 4.388 V
+    (5.880831 / 4.388491 V), and the budget SHA-256 is D-R28-01's.)
 - **Sweep of the generators** for the pre-AUX allocation (460 mA, 1.46 A without AUX):
   - `r10_parts.py`: every other port figure carries `aux_A`. The LDO-short cases are bounded by U401's shared
     1.5-1.9 A limit, which covers all three ports.
@@ -4609,3 +4618,121 @@ R27-TRI-07 (R27-REQUIREMENTS-01).
   the check fails three times; the four name seeds are each caught.
 
 The record index is now **223 unique D IDs through D-R27-03**.
+
+## Round 28 fix pass (2026-11-02)
+
+Round 28's ten lenses and triage (`sources/r10_review/round28_triage.md` / `.json`) found 0 Critical, 1 Major and 8
+Minor real errors, none on the board copper. This CAD lane takes R28-TRI-03 (the generator), R28-TRI-05 and
+R28-TRI-09 (the generated firmware rule 3) and the triage-requested sweep of the generated obligations for other
+unlabelled inferences. The board stays `a0ec075e…` (one complete build reproduced it); the docs lane and the two audit
+lanes take the rest. Hand-back: `sources/r10_review/round28_fix_cad.md` / `.json`.
+
+## D-R28-01. One port current for ports_w and the four-stall pack sag (round 28 fix pass)
+
+R28-TRI-03 (R28-POWER-02).
+
+- **What:** `m3_design/r10_parts.py` names the port current once, `port_A = 1.461 + aux_A` (camera 1 A, radio 0.3 A,
+  GPS 0.15 A, 11 mA quiescent and the AUX allowance). `ports_w` and `loaded_pack` both take it; `loaded_pack`'s power
+  is 5.456 V x `port_A`. The build regenerates `parts_budget.json`.
+- **Why:** D-R27-01 wrote 5.456 V x (1.46 A + `aux_A`) while its comment and record said it matched `ports_w`, which
+  uses 1.461 A + `aux_A`. The 11 mA is a real buck-output load that every other port figure carries, so the code was
+  wrong.
+- **Before -> after** (Calculation; pack 0.15 ohm, logic 0.6375 A, four 1.92 A stalls, 80 % efficiency):
+  - `pack_7V4_four_stall_loaded_V`: 5.881014 -> 5.880831 V (5.881 V).
+  - `pack_6V0_four_stall_loaded_V`: 4.388745 -> 4.388491 V (4.388 V; D-R27-01's 4.389 V was 1.56 A's figure).
+  - `parts_budget.json` SHA-256: `ecc45417…` -> `4267634220f4254aef28dfc9756c68b29784560c11b994c14274790dd631fab2`.
+    Those two lines are its only change: `ports_w`'s values are the same expression, so the battery-break loads, the
+    fire budget (5.713 V, 1.279 A) and the rest are unchanged.
+- **Records:** D-R27-01 carries a correcting note.
+- **Not in this lane:** parts_qualification.md's stall-input paragraph and its budget SHA (audit lane A), STATUS.md
+  and R10_VALIDATION (docs lane).
+
+## D-R28-02. Firmware rule 3's first-article meter check reads both polarities (round 28 fix pass)
+
+R28-TRI-05 (R28-MCU-01).
+
+- **What:** rule 3 in `m3_design/r10_sch_check.py`, regenerated into `r10_binding_note.json`: "... and meter U3.3
+  (QSPI_IO2) to R127.1 (the PE4 gate network): it must read open" -> "... and, with the board unpowered (pack and
+  USB disconnected), meter U3.3 (QSPI_IO2) to R127.1 (the PE4 gate network) in resistance mode, both polarities:
+  an intact board reads above 0.9 kΩ, or open, both ways (red lead on R127.1: a diode drop plus about 0.91 kΩ
+  through the U1 / U3 input clamps; reversed: open or slowly rising); a continuity beep or under 100 Ω in either
+  polarity is a bridge: reject (0.91 kΩ is R127's 1 kΩ in parallel with R126 + R128, Calculation; the meter's
+  reading through the clamps is an Inference)", and the step itself runs "before first power and coating". The
+  wording is the triage's criterion with the root's additions, as docs/M3_R10.md and ORDERING 8.3 now word it:
+  before first power, unpowered, and "or open".
+- **Why:** R127.1 reaches GND through R127 1 kOhm || (R126 220 ohm + R128 10 kOhm) = 0.911 kOhm (Calculation).
+  With the meter's positive lead on R127.1, the VSS-side input clamps of U1.1 (PE2, DS12110 Rev 8 Table 9) and U3.3
+  conduct, so an intact board reads a diode drop plus about 0.91 kOhm, not open (Inference: the reading through the
+  clamps is not measured). The old criterion rejected a good board in that polarity.
+- **Test:** `test_r23_binding_note_rules_and_pin_table` pins the new words and rejects "it must read open" and
+  the round's interim "reads above 0.9 kOhm both ways".
+- **Not in this lane:** ORDERING 8.3 (audit lane B), M3_R10 and FMEA (docs lane).
+
+## D-R28-03. Inference labels on the generated obligations (round 28 fix pass)
+
+R28-TRI-09 (R28-SAFETY observation 4, promoted Major under AGENTS section 2.5), and the brief's sweep of the other
+generated obligations for figures that rest on inferred inputs.
+
+- **Rule 3 (TRI-09):** after "... at least 50x below the 0.30 A no-fire" the note now says "(Calculation /
+  Simulation; driver resistances, flash drive, the AON7524 sub-amp curve and the match thermal model are Inference)",
+  the triage's label (round23_safety_severity_check.md "Coverage limits"). With the root's addition, the fight
+  figures are stated for their modelled case, as M3_R10 words them: "a steady IO2-against-PE4 fight with the MCU
+  driving IO2 high puts 1.19–1.98 V on the gate and fires the match after about 0.55 ms in all but one modelled
+  corner".
+- **Sweep:** each of the 49 obligations, `port_states`, `imu` and `fire_timing` read against its inputs. Five more
+  figures rested on an inferred input and were stated as fact or labelled Calculation only:
+  - **Port map (AUX allowance):** "(U401 thermal floor, parts_budget.json)" -> "(U401 thermal floor: junction <= 125 C
+    at the 70 C bay with the inferred 110 C/W theta-JA, Inference; parts_budget.json)".
+  - **GAP-5:** the 34.853 ms fault bound now says "(Calculation on allocations: the 0.2 / 0.5 / 1.5 ms need bench
+    tests, and the 1.5 ms covers a 0.74 ms gate-discharge model whose 0.4 V off criterion and hot gate charge are
+    Inference; parts_budget.json pyro_fault_GAP5)", as the budget's own note says.
+  - **Chatter:** "Calculation" -> "Calculation / Inference" for the drop-out times and the window limits, naming the
+    inferred inputs: C87's 0.72 x minimum takes the X7R DC-bias loss as at most 6 % without the maker's curve
+    (D-R19-10), and the 5.71 V point is the fire budget's, whose hot Q124 factor is inferred. The 30-130 ms turn-on
+    delay is marked as the same model.
+  - **Rule 4:** the body-diode fire currents 1.128 / 1.063 A now cite AONR21357's VSD (p. 2) and say "Calculation /
+    Inference: the fire budget's hot Q124 factor is inferred". The thermal model already said Inference.
+  - **Rule 8:** the four-stall-plus-fire corner "(fire_current_GAP1 model, Calculation, ...)" -> "Calculation /
+    Inference: its hot Q124 factor is inferred"; the hold-up after the trip "(Calculation, D-R25-02 ...)" ->
+    "Calculation / Inference", noting that the loads are the budget's allocations and C84 has no cold-capacitance factor
+    (the budget labels these ride-through loads Calc / Inference itself).
+- **Already labelled, unchanged:** PA15's reset state, the trace override, VREFBUF, the port back-feed, R5-MCU-04's Rev
+  11 limits, rules 7, 10 and 12, the IMU lever arm's z. The datasheet figures (watchdog, deglitch, W25Q erase, IMU
+  codes, VIH) and plain divider or resistor arithmetic are Calculation from datasheet values and stay as they are.
+- **Missed by this sweep:** the port supply's lead over 3V3 (obligation 15), which this sweep took for a datasheet
+  calculation. Audit lane B showed that its 44 ms was VLOGIC's full slew, not a lower bound; D-R28-04 corrects and
+  labels it.
+- **Older records:** D-R19-10, D-R23-02 (rule 4's figures), D-R24-19, D-R25-01 / -02 and D-R26-03 derived these
+  figures and name their inputs; their "Calculation" labels are to be read with this decision's.
+- **Test:** `test_r23_binding_note_rules_and_pin_table` pins each new label and rejects the old Calculation-only forms.
+- **Hashes:** binding note SHA-256 `e8f10fb3…` ->
+  `a40e21a4c115d88bcfdfecedada26e5253a0fef8c8b0972b6bba5c5aeabce046` (D-R28-02, -03 and -04). K-binding passes.
+
+## D-R28-04. The generated obligations follow ORDERING 8.3's corrected procedures (round 28 fix pass)
+
+The root's addition to this pass: two siblings that audit lane B found and fixed in ORDERING 8.3
+(`sources/r10_review/round28_audit_proc.md`), carried into the generator so the binding note does not overclaim.
+
+- **Port supply lead (obligation 15, audit B row 9):** "PORT_4V8 rises about 44 ms or more before 3V3 (U11 C85 slew,
+  TI SLVSEA3F Table 9-1 p. 13, Calculation)" -> "PORT_4V8 can rise tens of ms before 3V3 (the 470 nF U11 soft-start
+  (C85) slews VLOGIC at about 166–196 V/s after its settling time, TI SLVSEA3F Table 9-1 p. 13 scaled to 470 nF, and
+  U2 (AP63203) starts at 3.3–3.7 V with a 4 ms soft-start, Diodes DS41326 p. 5, so 3V3 regulates about 21–26 ms into
+  the slew; Calculation / Inference: the table is scaled linearly and the settling time is not quantified; measure
+  the PORT_4V8-to-3V3 lag on first articles)". 44 ms was VLOGIC's full slew to 7.4 V plus tSET (round 20), not a
+  lower bound; 3.3 V / 196 V/s + 4 ms = 20.8 ms and 3.7 V / 166 V/s + 4 ms = 26.3 ms (Calculation).
+- **Rule 4's Q120 first-article criterion:** "At first article, probe ACT_GATE at R120.2 / C120.2 and record the
+  dummy-load drop" -> "At first article, before coating, with PC1 high and a dummy load in J121: ACT_GATE at R120.2 /
+  C120.2, against Q120's source at R120.1, must settle at |VGS| of at least 4.5 V (a Q120 gate cut off from R121 sits
+  near 0 V), and during the dummy-load fire BAT_IN − RAW_ACT above 0.2 V fails the board (R23-SAFETY-05's criterion:
+  Q120's body diode adds 0.7–1.0 V)".
+- **Rule 3:** "First article, before coating" -> "First article, before first power and coating" (D-R28-02).
+- **Test:** `test_r23_binding_note_rules_and_pin_table` pins the three and rejects "rises about 44 ms or more before
+  3V3", "and record the dummy-load drop" and "First article, before coating".
+- **IMU obligation:** "DS15034 Rev 1 Figure 5 p. 9 and Table 2 pp. 10-11" -> "... and Table 2 p. 11". Checked on
+  the PDF: Table 2 (pins 1-14 and its notes) is on p. 11, p. 10 is section 3.1 / Figure 6, and p. 12 starts section
+  4. The binding note was regenerated by the build's own `r10_sch_check.py --binding-note` step (SHA-256
+  `30796f5ece9f3660264ca855dd6e4c1dbd8f97ee3f37983aed200ea27ef32ede`); K-binding passes. D-R19-11's line carries a
+  note.
+- **Not in this lane:** M3_R10 and REQUIREMENTS (docs lane), parts_qualification.md (audit lane A).
+
+The record index is now **227 unique D IDs through D-R28-04**.

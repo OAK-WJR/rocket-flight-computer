@@ -1,0 +1,79 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round28_manufacturing",
+  "reviewer": "claude",
+  "target_commit": "19dd0b52482c6cb2648de206715ab02a9a4b5394",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 0
+  },
+  "findings": [],
+  "observations": [
+    "Drill file lists the two U401.11 VIPPO vias in the ordinary 0.300 mm group (308 holes); the board marks them filled/capped. Already disclosed in ORDERING 8.1; order remark is the carrier.",
+    "Gerber job file (m3-job.gbrjob) lists no drill files in FilesAttributes; KiCad default, JLC does not require it.",
+    "jlc_orient worst reconstructed-pad residual 0.491 mm is within the tool's two-pad 0.6 mm tolerance; disclosed in ORDERING 8.2.",
+    "The five M3 supports are \u00d83.2 mm Edge.Cuts circles (milled, unplated), not drill-file holes; copper keeps the 0.5 mm edge clearance to them (DRC 0).",
+    "Silkscreen uses 0.150 mm strokes, equal to JLC's 0.15 mm legend minimum (capabilities page read 2026-11-02); text height >= 1.0 mm (DRC text_height 0).",
+    "Edge vias at x 0.9 (e.g. (0.9,64.0) under the west forward tab band) are GND and their copper is 0.65 mm from the edge; the mouse-bite rule in ORDERING section 3 assumes hole centres outside the board.",
+    "JLC BOM Comment cells merge differing value text for one code (e.g. '10k; 10k 1%', '1k 1%; 1k 0603'); JLC matches by LCSC code and S-4 decodes values from the MPN."
+  ],
+  "fix_verification": [
+    {
+      "item": "D-R27-03 (fab side)",
+      "measurement": "Fab Gerbers, drills, PDFs identical to round 26's apart from dates; BOM/owner BOM/CPL byte-identical; manifest re-binds telemetry.kicad_sch and kilib/m3.kicad_sym and verifies against the current tree",
+      "verdict": "confirmed"
+    },
+    {
+      "item": "D-R27-01 / -02",
+      "measurement": "No fab output depends on parts_budget.json or the binding note; package unchanged",
+      "verdict": "confirmed (no fab effect)"
+    },
+    {
+      "item": "D-R26-01 (fab side)",
+      "measurement": "GND vias (7.4,16.5)/(7.4,20.0) in PTH.drl T1 and on F/In1/B copper; 0.300 mm pad-edge gap to J440.3/.4 as ORDERING 8.2 states; no inner pads at pins 3/4 of the four ports",
+      "verdict": "confirmed"
+    },
+    {
+      "item": "D-R26-02 / -04 (fab side)",
+      "measurement": "CPL rows C10 (17.5,-53.5), C11 (17.5,-51.45), R164 (17.325,-55.25), R173 (16.87,-59.05) match the placement source; DRC 0",
+      "verdict": "confirmed"
+    }
+  ],
+  "checks_actually_executed": [
+    "Board SHA-256 before/after; manifest hash binding (tools/fab_manifest.py, read-only) OK, 6 outputs; inputs_sha256 equals a fresh input_hashes().",
+    "Fresh kicad-cli 10.0.7 Gerber (same layer list, --no-protel-ext --subtract-soldermask) and Excellon (--excellon-separate-th) export from a probe copy: all 14 files identical to the packaged zip apart from creation-date lines.",
+    "Round 26 (816038c) vs round 27 (19dd0b5) Gerber zip: all files identical apart from dates; assembly PDF text identical; BOM/owner BOM/CPL byte-identical.",
+    "kicad-cli DRC --severity-all --schematic-parity on a probe copy with schematics: 0 violations, 0 unconnected, 0 parity; .kicad_pro has no ignored rule types and 0 exclusions.",
+    "Content checks on probe copies: check_r10 --only S-4 OK; jlc_orient --verify-cpl 67 top + 125 bottom reconstructed, 14 placement-only, 206 rows, errors none; paste_check F 249 / B 381 flashes, 0 dry pads.",
+    "pcbnew geometry: 309 vias (304 at 0.5/0.3, 4 at 0.6/0.3, 1 at 1.0/0.5; 170 GND), min via annular 0.10 mm; 1059 tracks, min width 0.20 mm; 1866.794 mm; 27 DB125 PTH 1.3/1.9 mm (annular 0.30); J3 plated slots 0.6 x 1.4 / 1.7 mm; NPTH 0.6 and 0.9906 mm; 123 visible / 93 hidden references; file 2,369,507 bytes.",
+    "Drill file tool counts: T1 0.300 x308, T2 0.500 x1, T3 0.600 slots x4 (G85), T4 1.300 x27; NPTH 0.600 x2, 0.991 x3.",
+    "Solder-mask web scan (pad and via mask shapes, both sides): no web under 0.13 mm between separate openings except same-footprint drain/EP overlaps of Q120, Q121, U9 (same net); U4 webs 0.150 mm.",
+    "Layer extents: all copper 0.5005 mm inside the 46 x 90 outline; silkscreen within the outline.",
+    "Inner-layer flashes: J410/J420/J440/J9 pins 3/4 carry no In1/In2 pads; J440 GND partner vias (7.4,16.5)/(7.4,20.0) on F/In1/B, in PTH.drl; pad-edge gap 0.300 mm.",
+    "West tab bands (x 0-3, y 12.5-17.5 and 60-65): no non-GND copper on any layer; GND 12.5 mm2 per layer except In2 in the west aft keep-out.",
+    "Bottom SMD pad to DB125 / J3 PTH pad copper gaps: 1.763-2.171 mm; hand-solder list in ORDERING 8.2 complete; J3 C83/R7/R8 1.952/2.010/2.146 mm; R102 1.998, C431 2.050, C410/C420 2.003 mm.",
+    "BOM/CPL: 81 lines, qty sum 206 = 206 unique refs = 206 CPL rows (70 top / 136 bottom); no duplicate LCSC code; C10/C11/R164/R173 CPL rows match r10_place.tsv; owner BOM C84 only.",
+    "Assembly PDFs: every top-side reference on the top PDF, every bottom-side reference on the bottom PDF, none foreign (pdftotext).",
+    "Cost/stock: cost_check inputs bind current BOM/owner BOM/CPL; 45 expand / 36 base JLC codes + 1 owner; parts 60.47 + feeder 24.79 = 85.26; min-purchase 61.01; fixed 16.79 per board; stock rows U4 2, U9 -81, C2757925 35052, C535146 189 orderable match ORDERING 8.1.",
+    "JLC capabilities page fetched 2026-11-02 and compared: traces 0.09 mm, via 0.15/0.25 mm, PTH annular 0.15 mm, plated slot 0.35 mm, copper to routed edge 0.2 mm, NPTH 0.5 mm, mask bridge 0.10 mm, legend 0.15 mm / 1.0 mm; all met."
+  ],
+  "sources": [
+    "https://jlcpcb.com/capabilities/pcb-capabilities (fetched 2026-11-02)",
+    "docs/ORDERING.md section 8",
+    "docs/M3_R10.md",
+    "AGENTS.md",
+    "tools/fab_manifest.py",
+    "tools/export_fab.py",
+    "m3_design/r10_fab.sh",
+    "tools/check_r10.py (M-6, T-1, tab bands)"
+  ],
+  "coverage_limits": [
+    "No physical inspection, no JLC DFM upload or quote",
+    "Mask web scan used first outlines of pad/via mask shapes only",
+    "Feeder-fee basis ($1.53 per code on all 81 codes) taken from the tool's JLC data, not re-derived",
+    "Stackup layer thicknesses not re-checked against JLC's published JLC041611-7628 figures (round 27 observation)"
+  ]
+}

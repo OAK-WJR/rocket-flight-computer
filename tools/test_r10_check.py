@@ -404,7 +404,23 @@ class SchematicContract(unittest.TestCase):
         for words in ('LIFTOFF from the accelerometer AND a barometric altitude gain (LAUNCH_CORROBORATED)',
                       'wait at least 1 s, and verify that RAW_ACT has discharged and ACT_GATE is off',
                       "Q124's gate capacitor is C126, 220 nF, not C128", 'run a QSPI quad read-verify of a known pattern',
-                      'meter U3.3 (QSPI_IO2) to R127.1 (the PE4 gate network): it must read open',
+                      # D-R28-02 (R28-TRI-05): unpowered, both polarities, since the U1 / U3 input clamps conduct one
+                      # way; the fight figures with the MCU driving IO2 high, in all but one modelled corner
+                      'with the board unpowered (pack and USB disconnected), meter U3.3 (QSPI_IO2) to R127.1 (the PE4 '
+                      'gate network) in resistance mode, both polarities: an intact board reads above 0.9 kΩ, or open, '
+                      'both ways (red lead on R127.1: a diode drop plus about 0.91 kΩ through the U1 / U3 input clamps; '
+                      'reversed: open or slowly rising); a continuity beep or under 100 Ω in either polarity is a '
+                      "bridge: reject (0.91 kΩ is R127's 1 kΩ in parallel with R126 + R128, Calculation; the meter's "
+                      'reading through the clamps is an Inference)',
+                      'a steady IO2-against-PE4 fight with the MCU driving IO2 high puts 1.19–1.98 V on the gate and '
+                      'fires the match after about 0.55 ms in all but one modelled corner',
+                      'First article, before first power and coating: inspect U1 pins 1–5 for bridges',
+                      # the root's round 28 siblings from ORDERING 8.3: rule 4's Q120 pass criterion, and the port
+                      # supply's lead over 3V3 (44 ms was VLOGIC's full slew plus tSET, not a lower bound)
+                      'must settle at |VGS| of at least 4.5 V (a Q120 gate cut off from R121 sits near 0 V)',
+                      'during the dummy-load fire BAT_IN − RAW_ACT above 0.2 V fails the board',
+                      'because PORT_4V8 can rise tens of ms before 3V3',
+                      'so 3V3 regulates about 21–26 ms into the slew; Calculation / Inference',
                       'the powered BUS must read at least 0.96 × the pack voltage derived from VLOGIC_SENSE',
                       'PC1 may go high only while PA4 reads low', 'PC1 never re-enables in the same power session',
                       'PA5 low also means U9 is blocking reverse current (SLVSFC9C Table 7-3 p38)',
@@ -452,6 +468,28 @@ class SchematicContract(unittest.TestCase):
                       'Inference); Rev 11 and RM0433 were not re-read in round 19 (R19-MCU-02)', revision)
         self.assertNotIn('byte-identical); Rev 11', revision)
         self.assertIn('were read from Rev 11 Table 109 in round 14', text)
+        # D-R28-03 (R28-TRI-09 and the AGENTS 2.5 sweep): figures resting on inferred inputs carry their label
+        for words in ('at least 50× below the 0.30 A no-fire (Calculation / Simulation; driver resistances, flash drive, '
+                      'the AON7524 sub-amp curve and the match thermal model are Inference)',
+                      'with the inferred 110 C/W theta-JA, Inference; parts_budget.json',
+                      'within the 36ms contract (Calculation on allocations: the 0.2 / 0.5 / 1.5 ms need bench tests',
+                      'cannot trip U9 (Calculation / Inference, R20-SAF-04 / R24-TRI-02',
+                      "C87's 0.72 x minimum takes its X7R DC-bias loss as at most 6 % without the maker's curve",
+                      'against 1.116 V (Calculation / Inference, R26-TRI-03: the same EN model)',
+                      "Calculation / Inference: the fire budget's hot Q124 factor is inferred",
+                      'fire_current_GAP1 model, Calculation / Inference: its hot Q124 factor is inferred',
+                      '(Calculation / Inference, D-R25-02: constant power at 300.8 µF'):
+            self.assertIn(words, text)
+        for gone in ('it must read open', 'reads above 0.9 kOhm both ways', 'fight puts 1.19',
+                     'First article, before coating', 'and record the dummy-load drop',
+                     'rises about 44 ms or more before 3V3',
+                     'cannot trip U9 (Calculation, R20', 'against 1.116 V (Calculation, R26',
+                     '(fire_current_GAP1 model, Calculation, R26', '(Calculation, D-R25-02',
+                     '(U401 thermal floor, parts_budget.json)', '=34.853ms, within the 36ms contract. '):
+            self.assertNotIn(gone, text)
+        # D-R28-04: DS15034 Rev 1's Table 2 (pin description) is on p. 11; p. 10 is section 3.1 / Figure 6
+        self.assertIn('DS15034 Rev 1 Figure 5 p. 9 and Table 2 p. 11', text)
+        self.assertNotIn('Table 2 pp. 10-11', text)
         with (gate.ROOT / 'm3_design/assembly_review/sources/r10_design/pin_table.tsv').open() as table:
             rows = {r['port']: r for r in csv.DictReader(table, delimiter='\t')}
         pulls = {'PA0': 'R154 10k to GND', 'PA1': 'R155 10k to GND', 'PA2': 'R156 10k to GND', 'PA3': 'R157 10k to GND',

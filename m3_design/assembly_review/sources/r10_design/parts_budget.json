@@ -88,8 +88,8 @@
     124.1722709778099,
     138.8618725944886
   ],
-  "pack_7V4_four_stall_loaded_V": 5.881013614959047,
-  "pack_6V0_four_stall_loaded_V": 4.388744837110238,
+  "pack_7V4_four_stall_loaded_V": 5.8808312447840425,
+  "pack_6V0_four_stall_loaded_V": 4.388490666810671,
   "servo_star_board_return_max_A": 0.6144,
   "u9_prospective_input_without_buck_limiting_A": 4.420037344610338,
   "u9_port_fault_peak_bound_inference_A": 3.743860978108597,
